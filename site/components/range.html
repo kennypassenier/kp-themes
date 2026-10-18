@@ -265,6 +265,65 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-range&quot;</span> <span class="kp-code__keyword">data-kp-range</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">data-kp-range-presets</span><span class="kp-code__string">=&quot;1h 6h 24h 7d 30d&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Metrics range&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Own presets, a custom window and its limits</figcaption>
+                        <p class="kp-text-muted">`data-kp-range-presets` is any number with m, h, d or w. `data-kp-range-start` and `-end` open the picker on a custom window (ISO moments); `data-kp-range-max-days` refuses a longer custom window and `data-kp-range-future` lets one end in the future, the panel saying under the fields what is wrong and holding Apply’s result until it is right. `data-kp-time-zone` changes the zone the line and the times are read in. `data-kp-range-disabled` turns the presets and Custom… off while the line still names the window.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-range" data-kp-range="" data-kp-range-presets="15m 2h 3d 2w" data-kp-range-start="2026-10-10T08:00:00Z" data-kp-range-end="2026-10-12T20:30:00Z" data-kp-range-max-days="14" data-kp-time-zone="Europe/London" aria-label="Report window"></div>
+    <div class="kp-range" data-kp-range="7d" data-kp-range-presets="1d 7d 30d" data-kp-range-future aria-label="Forecast window"></div>
+    <div class="kp-range" data-kp-range="24h" data-kp-range-disabled aria-label="Fixed window"></div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-range&quot;</span> <span class="kp-code__keyword">data-kp-range</span><span class="kp-code__string">=&quot;&quot;</span> <span class="kp-code__keyword">data-kp-range-presets</span><span class="kp-code__string">=&quot;15m 2h 3d 2w&quot;</span> <span class="kp-code__keyword">data-kp-range-start</span><span class="kp-code__string">=&quot;2026-10-10T08:00:00Z&quot;</span> <span class="kp-code__keyword">data-kp-range-end</span><span class="kp-code__string">=&quot;2026-10-12T20:30:00Z&quot;</span> <span class="kp-code__keyword">data-kp-range-max-days</span><span class="kp-code__string">=&quot;14&quot;</span> <span class="kp-code__keyword">data-kp-time-zone</span><span class="kp-code__string">=&quot;Europe/London&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Report window&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-range&quot;</span> <span class="kp-code__keyword">data-kp-range</span><span class="kp-code__string">=&quot;7d&quot;</span> <span class="kp-code__keyword">data-kp-range-presets</span><span class="kp-code__string">=&quot;1d 7d 30d&quot;</span> <span class="kp-code__keyword">data-kp-range-future</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Forecast window&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-range&quot;</span> <span class="kp-code__keyword">data-kp-range</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">data-kp-range-disabled</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Fixed window&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Redrawing from the event</figcaption>
+                        <p class="kp-text-muted">`kp-range-change` carries `{ preset, start, end, label }` when a person chooses a preset or applies a custom window: the preset’s key (or null), the two moments as ISO strings in UTC, and the line. `setRange(el, { preset })` or `setRange(el, { start, end })` sets the window from a script without the event, `rangeOf(el)` reads it and `rangeFaults(start, end, rules)` is the check the panel uses.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-range" id="doc-range-live" data-kp-range="24h" aria-label="Metrics range"></div>
+    <p id="doc-range-log" aria-live="polite">Window: not chosen yet.</p>
+    <button class="kp-button" type="button" id="doc-range-week">Show the last 7 days</button>
+</div>
+                            <script type="module">
+import { rangeOf, setRange } from '../../js/range.js';
+
+const picker = document.getElementById('doc-range-live');
+const log = document.getElementById('doc-range-log');
+picker.addEventListener('kp-range-change', (event) => {
+    const { preset, start, end, label } = event.detail;
+    log.textContent = 'Redraw ' + (preset ?? 'custom') + ': ' + start + ' to ' + end + ' (' + label + ')';
+});
+document.getElementById('doc-range-week').addEventListener('click', () => {
+    setRange(picker, { preset: '7d' });
+    log.textContent = 'Set from the page: ' + rangeOf(picker).preset;
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-range&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-range-live&quot;</span> <span class="kp-code__keyword">data-kp-range</span><span class="kp-code__string">=&quot;24h&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Metrics range&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-range-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Window: not chosen yet.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-range-week&quot;</span>&gt;Show the last 7 days&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { rangeOf, setRange } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/range'</span>;
+
+<span class="kp-code__keyword">const</span> picker = document.getElementById(<span class="kp-code__string">'doc-range-live'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-range-log'</span>);
+picker.addEventListener(<span class="kp-code__string">'kp-range-change'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> { preset, start, end, label } = event.detail;
+    log.textContent = <span class="kp-code__string">'Redraw '</span> + (preset ?? <span class="kp-code__string">'custom'</span>) + <span class="kp-code__string">': '</span> + start + <span class="kp-code__string">' to '</span> + end + <span class="kp-code__string">' ('</span> + label + <span class="kp-code__string">')'</span>;
+});
+document.getElementById(<span class="kp-code__string">'doc-range-week'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    setRange(picker, { preset: <span class="kp-code__string">'7d'</span> });
+    log.textContent = <span class="kp-code__string">'Set from the page: '</span> + rangeOf(picker).preset;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

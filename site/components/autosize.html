@@ -271,6 +271,96 @@
     &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;msg&quot;</span> <span class="kp-code__keyword">rows</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">maxlength</span><span class="kp-code__string">=&quot;4000&quot;</span> <span class="kp-code__keyword">data-kp-autosize</span> <span class="kp-code__keyword">data-kp-counter</span><span class="kp-code__string">=&quot;chars&quot;</span>&gt;&lt;/<span class="kp-code__keyword">textarea</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A cap, a counter, a draft and a send key</figcaption>
+                        <p class="kp-text-muted">`data-kp-autosize-max=&quot;5&quot;` stops the growth at five lines and the box scrolls inside from there; `rows` is the least. `data-kp-counter=&quot;both&quot;` writes an exact count under the box, and with `maxlength` it reads “312 of 400”, in a warning tone from 90 %. `data-kp-autosize-shrink=&quot;off&quot;` keeps the tallest height, `data-kp-resize=&quot;none&quot;` removes the drag handle, `data-kp-remember` keeps an unsent draft on this device until the form is sent, and `data-kp-submit-key=&quot;mod-enter&quot;` makes Ctrl or Command with Enter submit the form (the shortcut sheet lists it). `kp-autosize-resize` carries `{ height, lines, capped }` whenever the height changes.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<form id="doc-autosize-form" class="kp-stack">
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-autosize-note">Reply</label>
+        <textarea class="kp-field__input kp-field__input--multiline" id="doc-autosize-note" name="note" rows="2" maxlength="400" data-kp-autosize data-kp-autosize-max="5" data-kp-autosize-shrink="off" data-kp-resize="none" data-kp-counter="both" data-kp-submit-key="mod-enter" data-kp-remember="doc-autosize-draft">Hello, thank you for the invitation. I can join on Friday at 10:00 and bring the signed contract. Please let me know whether the room is booked, and whether parking is free for visitors. I will also bring the two printed copies you asked for, and my laptop in case the projector needs a different cable. Kind regards, Kenny</textarea>
+    </div>
+    <div class="kp-row"><button class="kp-button kp-button--primary" type="submit">Send</button><span class="kp-text-muted" id="doc-autosize-log" aria-live="polite">Press Ctrl+Enter to send.</span></div>
+</form>
+                            <script type="module">
+const form = document.getElementById('doc-autosize-form');
+const note = document.getElementById('doc-autosize-note');
+const log = document.getElementById('doc-autosize-log');
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    log.textContent = 'Sent ' + note.value.length + ' characters.';
+});
+note.addEventListener('kp-autosize-resize', (event) => {
+    log.textContent = event.detail.lines + ' lines' + (event.detail.capped ? ', at the cap' : '') + '.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-autosize-form&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-autosize-note&quot;</span>&gt;Reply&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-autosize-note&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;note&quot;</span> <span class="kp-code__keyword">rows</span><span class="kp-code__string">=&quot;2&quot;</span> <span class="kp-code__keyword">maxlength</span><span class="kp-code__string">=&quot;400&quot;</span> <span class="kp-code__keyword">data-kp-autosize</span> <span class="kp-code__keyword">data-kp-autosize-max</span><span class="kp-code__string">=&quot;5&quot;</span> <span class="kp-code__keyword">data-kp-autosize-shrink</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-resize</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-kp-counter</span><span class="kp-code__string">=&quot;both&quot;</span> <span class="kp-code__keyword">data-kp-submit-key</span><span class="kp-code__string">=&quot;mod-enter&quot;</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;doc-autosize-draft&quot;</span>&gt;Hello, thank you for the invitation. I can join on Friday at 10:00 and bring the signed contract. Please let me know whether the room is booked, and whether parking is free for visitors. I will also bring the two printed copies you asked for, and my laptop in case the projector needs a different cable. Kind regards, Kenny&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;submit&quot;</span>&gt;Send&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-autosize-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press Ctrl+Enter to send.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">form</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">const</span> form = document.getElementById(<span class="kp-code__string">'doc-autosize-form'</span>);
+<span class="kp-code__keyword">const</span> note = document.getElementById(<span class="kp-code__string">'doc-autosize-note'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-autosize-log'</span>);
+form.addEventListener(<span class="kp-code__string">'submit'</span>, (event) =&gt; {
+    event.preventDefault();
+    log.textContent = <span class="kp-code__string">'Sent '</span> + note.value.length + <span class="kp-code__string">' characters.'</span>;
+});
+note.addEventListener(<span class="kp-code__string">'kp-autosize-resize'</span>, (event) =&gt; {
+    log.textContent = event.detail.lines + <span class="kp-code__string">' lines'</span> + (event.detail.capped ? <span class="kp-code__string">', at the cap'</span> : <span class="kp-code__string">''</span>) + <span class="kp-code__string">'.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, a failed save, off with a reason and a fixed engine</figcaption>
+                        <p class="kp-text-muted">`setAutosizeState(el, &quot;loading&quot;)` lays the busy card over the box at its least height and makes it read-only; `setAutosizeState(el, &quot;error&quot;, sentence)` keeps the text and the height and writes the sentence in the field’s error line; `&quot;ready&quot;` puts it back. A disabled box grows to show its whole value and says why through `data-kp-disabled-reason`. `data-kp-autosize-engine` is `auto` (the browser’s own `field-sizing` where it has it), `css` or `js`; `refreshAutosize(el)` measures again after a script wrote a value some other way.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-autosize-load">Message being fetched</label>
+        <textarea class="kp-field__input kp-field__input--multiline" id="doc-autosize-load" rows="3" data-kp-autosize></textarea>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-autosize-fail">Message that did not save</label>
+        <textarea class="kp-field__input kp-field__input--multiline" id="doc-autosize-fail" rows="3" data-kp-autosize data-kp-autosize-engine="js">Meet at the station at 09:30.</textarea>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-autosize-off">Locked message</label>
+        <textarea class="kp-field__input kp-field__input--multiline" id="doc-autosize-off" rows="2" data-kp-autosize disabled data-kp-disabled-reason="The thread was closed on 12/10/2026.">This thread was closed. The final answer was sent on 12/10/2026, and every attachment was archived with it, so nothing more can be added here.</textarea>
+    </div>
+</div>
+                            <script type="module">
+import { attachAutosize, setAutosizeState } from '../../js/autosize.js';
+
+attachAutosize(document.getElementById('doc-autosize-load').closest('.kp-stack'));
+setAutosizeState(document.getElementById('doc-autosize-load'), 'loading');
+setAutosizeState(document.getElementById('doc-autosize-fail'), 'error', 'The message could not be saved. Try again.');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-autosize-load&quot;</span>&gt;Message being fetched&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-autosize-load&quot;</span> <span class="kp-code__keyword">rows</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-autosize</span>&gt;&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-autosize-fail&quot;</span>&gt;Message that did not save&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-autosize-fail&quot;</span> <span class="kp-code__keyword">rows</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-autosize</span> <span class="kp-code__keyword">data-kp-autosize-engine</span><span class="kp-code__string">=&quot;js&quot;</span>&gt;Meet at the station at 09:30.&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-autosize-off&quot;</span>&gt;Locked message&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-autosize-off&quot;</span> <span class="kp-code__keyword">rows</span><span class="kp-code__string">=&quot;2&quot;</span> <span class="kp-code__keyword">data-kp-autosize</span> <span class="kp-code__keyword">disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;The thread was closed on 12/10/2026.&quot;</span>&gt;This thread was closed. The final answer was sent on 12/10/2026, and every attachment was archived with it, so nothing more can be added here.&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachAutosize, setAutosizeState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/autosize'</span>;
+
+attachAutosize(document.getElementById(<span class="kp-code__string">'doc-autosize-load'</span>).closest(<span class="kp-code__string">'.kp-stack'</span>));
+setAutosizeState(document.getElementById(<span class="kp-code__string">'doc-autosize-load'</span>), <span class="kp-code__string">'loading'</span>);
+setAutosizeState(document.getElementById(<span class="kp-code__string">'doc-autosize-fail'</span>), <span class="kp-code__string">'error'</span>, <span class="kp-code__string">'The message could not be saved. Try again.'</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

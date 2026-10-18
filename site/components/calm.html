@@ -271,6 +271,71 @@
     &lt;<span class="kp-code__keyword">span</span>&gt;Calm mode&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">label</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Calm for part of the page, and set from a script</figcaption>
+                        <p class="kp-text-muted">`data-kp-calm` on `&lt;html&gt;` makes the whole page calm; `data-kp-calm-scope` is `motion` (transitions only), `effects` (the default: also entrances, glow, flicker and glitch) or `all` (loading holds still too); `data-kp-calm-loading` is `slow` (a loading part breathes as one slow pulse, its length is `--kp-calm-pulse`, 2400 ms) or `still`; `data-kp-calm-remember=&quot;false&quot;` stops the choice being kept. `setCalm(on)` and `isCalm()` read and write the flag, `calmScope()` gives its scope, `motionAllowed(el)` is the question every script asks instead of the media query, `systemReduced()` says whether the system asks for less motion (and then wins), and `kp-calm-change` fires with the new state. `applyStoredCalm()` puts the remembered choice back before the first frame.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" data-kp-calm-switch><span>Calm mode</span></label>
+    <div class="kp-row">
+        <button class="kp-button" type="button" data-doc-calm="motion">Calm: motion only</button>
+        <button class="kp-button" type="button" data-doc-calm="all">Calm: everything, loading still</button>
+        <button class="kp-button" type="button" data-doc-calm="off">Back to normal</button>
+    </div>
+    <div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export" data-kp-indeterminate>
+        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+    </div>
+    <p class="kp-text-muted" id="doc-calm-log" aria-live="polite"></p>
+</div>
+                            <script type="module">
+import { calmScope, isCalm, motionAllowed, setCalm, systemReduced } from '../../js/calm.js';
+
+const log = document.getElementById('doc-calm-log');
+const say = () => {
+    log.textContent = 'Calm: ' + (isCalm() ? 'on, scope ' + calmScope() : 'off') +
+        '. Motion allowed: ' + motionAllowed(log) + '. The system asks for less motion: ' + systemReduced() + '.';
+};
+say();
+for (const button of document.querySelectorAll('[data-doc-calm]')) {
+    button.addEventListener('click', () => {
+        const choice = button.dataset.docCalm;
+        if (choice === 'off') setCalm(false, { remember: false });
+        else setCalm(true, { scope: choice, loading: choice === 'all' ? 'still' : 'slow', remember: false });
+    });
+}
+document.addEventListener('kp-calm-change', say);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">data-kp-calm-switch</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Calm mode&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-doc-calm</span><span class="kp-code__string">=&quot;motion&quot;</span>&gt;Calm: motion only&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-doc-calm</span><span class="kp-code__string">=&quot;all&quot;</span>&gt;Calm: everything, loading still&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-doc-calm</span><span class="kp-code__string">=&quot;off&quot;</span>&gt;Back to normal&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export&quot;</span> <span class="kp-code__keyword">data-kp-indeterminate</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-calm-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { calmScope, isCalm, motionAllowed, setCalm, systemReduced } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/calm'</span>;
+
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-calm-log'</span>);
+<span class="kp-code__keyword">const</span> say = () =&gt; {
+    log.textContent = <span class="kp-code__string">'Calm: '</span> + (isCalm() ? <span class="kp-code__string">'on, scope '</span> + calmScope() : <span class="kp-code__string">'off'</span>) +
+        <span class="kp-code__string">'. Motion allowed: '</span> + motionAllowed(log) + <span class="kp-code__string">'. The system asks for less motion: '</span> + systemReduced() + <span class="kp-code__string">'.'</span>;
+};
+say();
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-calm]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+        <span class="kp-code__keyword">const</span> choice = button.dataset.docCalm;
+        <span class="kp-code__keyword">if</span> (choice === <span class="kp-code__string">'off'</span>) setCalm(<span class="kp-code__keyword">false</span>, { remember: <span class="kp-code__keyword">false</span> });
+        <span class="kp-code__keyword">else</span> setCalm(<span class="kp-code__keyword">true</span>, { scope: choice, loading: choice === <span class="kp-code__string">'all'</span> ? <span class="kp-code__string">'still'</span> : <span class="kp-code__string">'slow'</span>, remember: <span class="kp-code__keyword">false</span> });
+    });
+}
+document.addEventListener(<span class="kp-code__string">'kp-calm-change'</span>, say);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

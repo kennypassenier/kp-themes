@@ -265,6 +265,193 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-availability&quot;</span> <span class="kp-code__keyword">data-kp-availability</span> <span class="kp-code__keyword">data-kp-availability-choose</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Who can come&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Periods, answered by four people</figcaption>
+                        <p class="kp-text-muted">`setAvailability(el, spec)` hands the grid its columns, people and answers; the person marked `mine: true` is the only row that can be changed (`data-kp-heat-edit=&quot;own&quot;`). A press opens the answers, a drag across the row paints one, and `y`, `m`, `n` or Backspace on a focused cell of your own row sets it. `kp-availability-change` is cancelable and carries `settle(promise)`: the pressed cells wait on a spinner until the promise resolves, and a rejection puts them back and marks them refused. The best column is outlined, and `data-kp-availability-choose` offers Choose these dates under it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-availability" id="doc-av-periods" data-kp-availability data-kp-availability-choose aria-label="Who can come to the trip"></div>
+<p class="kp-text-muted" id="doc-av-log" aria-live="polite">Press a cell on the Kenny row.</p>
+                            <script type="module">
+import { setAvailability, availabilityRange } from '../../js/availability.js';
+
+const grid = document.getElementById('doc-av-periods');
+const log = document.getElementById('doc-av-log');
+setAvailability(grid, {
+    unit: 'range',
+    columns: [
+        availabilityRange('2026-06-19', '2026-06-21'),
+        availabilityRange('2026-06-26', '2026-06-28'),
+        availabilityRange('2026-07-03', '2026-07-05'),
+    ],
+    people: [
+        { id: 'kenny', name: 'Kenny', mine: true },
+        { id: 'tom', name: 'Tom' },
+        { id: 'lies', name: 'Lies' },
+        { id: 'jan', name: 'Jan' },
+    ],
+    answers: {
+        kenny: { '2026-06-19/2026-06-21': 'yes', '2026-06-26/2026-06-28': 'maybe' },
+        tom: { '2026-06-19/2026-06-21': 'yes', '2026-06-26/2026-06-28': 'no', '2026-07-03/2026-07-05': 'yes' },
+        lies: { '2026-06-19/2026-06-21': 'yes', '2026-06-26/2026-06-28': 'yes', '2026-07-03/2026-07-05': 'maybe' },
+        jan: { '2026-06-19/2026-06-21': 'maybe' },
+    },
+});
+grid.addEventListener('kp-availability-change', (event) => {
+    const { person, keys, answer } = event.detail;
+    // The page decides what saving is: here it takes a moment and never fails.
+    event.detail.settle(new Promise((done) => setTimeout(done, 700)));
+    log.textContent = person + ': ' + (answer ?? 'cleared') + ' for ' + keys.length + ' column(s).';
+});
+grid.addEventListener('kp-availability-choose', (event) => {
+    log.textContent = 'Chosen: ' + event.detail.keys.join(', ');
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-availability&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-av-periods&quot;</span> <span class="kp-code__keyword">data-kp-availability</span> <span class="kp-code__keyword">data-kp-availability-choose</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Who can come to the trip&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-av-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press a cell on the Kenny row.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setAvailability, availabilityRange } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/availability'</span>;
+
+<span class="kp-code__keyword">const</span> grid = document.getElementById(<span class="kp-code__string">'doc-av-periods'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-av-log'</span>);
+setAvailability(grid, {
+    unit: <span class="kp-code__string">'range'</span>,
+    columns: [
+        availabilityRange(<span class="kp-code__string">'2026-06-19'</span>, <span class="kp-code__string">'2026-06-21'</span>),
+        availabilityRange(<span class="kp-code__string">'2026-06-26'</span>, <span class="kp-code__string">'2026-06-28'</span>),
+        availabilityRange(<span class="kp-code__string">'2026-07-03'</span>, <span class="kp-code__string">'2026-07-05'</span>),
+    ],
+    people: [
+        { id: <span class="kp-code__string">'kenny'</span>, name: <span class="kp-code__string">'Kenny'</span>, mine: <span class="kp-code__keyword">true</span> },
+        { id: <span class="kp-code__string">'tom'</span>, name: <span class="kp-code__string">'Tom'</span> },
+        { id: <span class="kp-code__string">'lies'</span>, name: <span class="kp-code__string">'Lies'</span> },
+        { id: <span class="kp-code__string">'jan'</span>, name: <span class="kp-code__string">'Jan'</span> },
+    ],
+    answers: {
+        kenny: { <span class="kp-code__string">'2026-06-19/2026-06-21'</span>: <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'2026-06-26/2026-06-28'</span>: <span class="kp-code__string">'maybe'</span> },
+        tom: { <span class="kp-code__string">'2026-06-19/2026-06-21'</span>: <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'2026-06-26/2026-06-28'</span>: <span class="kp-code__string">'no'</span>, <span class="kp-code__string">'2026-07-03/2026-07-05'</span>: <span class="kp-code__string">'yes'</span> },
+        lies: { <span class="kp-code__string">'2026-06-19/2026-06-21'</span>: <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'2026-06-26/2026-06-28'</span>: <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'2026-07-03/2026-07-05'</span>: <span class="kp-code__string">'maybe'</span> },
+        jan: { <span class="kp-code__string">'2026-06-19/2026-06-21'</span>: <span class="kp-code__string">'maybe'</span> },
+    },
+});
+grid.addEventListener(<span class="kp-code__string">'kp-availability-change'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> { person, keys, answer } = event.detail;
+    <span class="kp-code__comment">// The page decides what saving is: here it takes a moment and never fails.</span>
+    event.detail.settle(<span class="kp-code__keyword">new</span> Promise((done) =&gt; setTimeout(done, <span class="kp-code__string">700</span>)));
+    log.textContent = person + <span class="kp-code__string">': '</span> + (answer ?? <span class="kp-code__string">'cleared'</span>) + <span class="kp-code__string">' for '</span> + keys.length + <span class="kp-code__string">' column(s).'</span>;
+});
+grid.addEventListener(<span class="kp-code__string">'kp-availability-choose'</span>, (event) =&gt; {
+    log.textContent = <span class="kp-code__string">'Chosen: '</span> + event.detail.keys.join(<span class="kp-code__string">', '</span>);
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Days or periods, one set each</figcaption>
+                        <p class="kp-text-muted">A spec may carry both kinds of column as `sets: { range, day }` with `canSwitchUnit: true` (or `data-kp-availability-unit-switch=&quot;on&quot;`): a segmented switch above the grid fires `kp-availability-unit` and the grid shows the chosen set. `availabilityDays(start, count)` writes the day labels in dd/mm. In day mode `data-kp-availability-window` marks the best stretch of that many days, `data-kp-availability-quorum` says how many must answer before a column can be best, and `data-kp-availability-summary=&quot;count&quot;` keeps only the number in the summary row.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-availability" id="doc-av-days" data-kp-availability data-kp-availability-window="3" data-kp-availability-quorum="2" data-kp-availability-summary="count" data-kp-availability-sort="given" aria-label="Which days suit"></div>
+                            <script type="module">
+import { setAvailability, availabilityDays, availabilityRange } from '../../js/availability.js';
+
+const grid = document.getElementById('doc-av-days');
+const days = availabilityDays('2026-06-19', 6);
+const answer = (...list) => Object.fromEntries(list.map((value, i) => [days[i].key, value]).filter(([, value]) => value));
+setAvailability(grid, {
+    unit: 'day',
+    canSwitchUnit: true,
+    people: [
+        { id: 'kenny', name: 'Kenny', mine: true },
+        { id: 'tom', name: 'Tom' },
+        { id: 'lies', name: 'Lies' },
+    ],
+    sets: {
+        day: {
+            columns: days,
+            answers: {
+                kenny: answer('yes', 'yes', 'yes', 'maybe', 'no', 'no'),
+                tom: answer('no', 'yes', 'yes', 'yes', 'yes', null),
+                lies: answer('yes', 'yes', 'maybe', 'yes', null, 'no'),
+            },
+        },
+        range: {
+            columns: [availabilityRange('2026-06-19', '2026-06-21'), availabilityRange('2026-06-24', '2026-06-26')],
+            answers: { kenny: {}, tom: {}, lies: {} },
+        },
+    },
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-availability&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-av-days&quot;</span> <span class="kp-code__keyword">data-kp-availability</span> <span class="kp-code__keyword">data-kp-availability-window</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-availability-quorum</span><span class="kp-code__string">=&quot;2&quot;</span> <span class="kp-code__keyword">data-kp-availability-summary</span><span class="kp-code__string">=&quot;count&quot;</span> <span class="kp-code__keyword">data-kp-availability-sort</span><span class="kp-code__string">=&quot;given&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Which days suit&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setAvailability, availabilityDays, availabilityRange } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/availability'</span>;
+
+<span class="kp-code__keyword">const</span> grid = document.getElementById(<span class="kp-code__string">'doc-av-days'</span>);
+<span class="kp-code__keyword">const</span> days = availabilityDays(<span class="kp-code__string">'2026-06-19'</span>, <span class="kp-code__string">6</span>);
+<span class="kp-code__keyword">const</span> answer = (...list) =&gt; Object.fromEntries(list.map((value, i) =&gt; [days[i].key, value]).filter(([, value]) =&gt; value));
+setAvailability(grid, {
+    unit: <span class="kp-code__string">'day'</span>,
+    canSwitchUnit: <span class="kp-code__keyword">true</span>,
+    people: [
+        { id: <span class="kp-code__string">'kenny'</span>, name: <span class="kp-code__string">'Kenny'</span>, mine: <span class="kp-code__keyword">true</span> },
+        { id: <span class="kp-code__string">'tom'</span>, name: <span class="kp-code__string">'Tom'</span> },
+        { id: <span class="kp-code__string">'lies'</span>, name: <span class="kp-code__string">'Lies'</span> },
+    ],
+    sets: {
+        day: {
+            columns: days,
+            answers: {
+                kenny: answer(<span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'maybe'</span>, <span class="kp-code__string">'no'</span>, <span class="kp-code__string">'no'</span>),
+                tom: answer(<span class="kp-code__string">'no'</span>, <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'yes'</span>, <span class="kp-code__keyword">null</span>),
+                lies: answer(<span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'yes'</span>, <span class="kp-code__string">'maybe'</span>, <span class="kp-code__string">'yes'</span>, <span class="kp-code__keyword">null</span>, <span class="kp-code__string">'no'</span>),
+            },
+        },
+        range: {
+            columns: [availabilityRange(<span class="kp-code__string">'2026-06-19'</span>, <span class="kp-code__string">'2026-06-21'</span>), availabilityRange(<span class="kp-code__string">'2026-06-24'</span>, <span class="kp-code__string">'2026-06-26'</span>)],
+            answers: { kenny: {}, tom: {}, lies: {} },
+        },
+    },
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, empty and failed</figcaption>
+                        <p class="kp-text-muted">`state` in the spec is `ready`, `loading`, `empty` or `error`. Loading draws the heat grid’s busy card at the grid’s final size; empty and error are plates in the same place, with `message`, an `emptyAction` and a Retry that fires `kp-availability-retry`. `data-kp-disabled-reason` with `disabled` makes every cell inert and says why.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-availability" id="doc-av-loading" data-kp-availability aria-label="Loading answers"></div>
+    <div class="kp-availability" id="doc-av-failed" data-kp-availability aria-label="Answers that could not be read"></div>
+    <div class="kp-availability" id="doc-av-locked" data-kp-availability disabled data-kp-disabled-reason="The trip is booked, so the answers are closed." aria-label="Answers of a booked trip"></div>
+</div>
+                            <script type="module">
+import { setAvailability, availabilityRange } from '../../js/availability.js';
+
+const people = [{ id: 'kenny', name: 'Kenny', mine: true }, { id: 'tom', name: 'Tom' }];
+const columns = [availabilityRange('2026-06-19', '2026-06-21'), availabilityRange('2026-06-26', '2026-06-28')];
+setAvailability(document.getElementById('doc-av-loading'), { state: 'loading', columns, people });
+setAvailability(document.getElementById('doc-av-failed'), { state: 'error', columns: [], people });
+setAvailability(document.getElementById('doc-av-locked'), {
+    columns,
+    people,
+    answers: { kenny: { [columns[0].key]: 'yes' }, tom: { [columns[0].key]: 'yes', [columns[1].key]: 'no' } },
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-availability&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-av-loading&quot;</span> <span class="kp-code__keyword">data-kp-availability</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading answers&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-availability&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-av-failed&quot;</span> <span class="kp-code__keyword">data-kp-availability</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Answers that could not be read&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-availability&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-av-locked&quot;</span> <span class="kp-code__keyword">data-kp-availability</span> <span class="kp-code__keyword">disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;The trip is booked, so the answers are closed.&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Answers of a booked trip&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setAvailability, availabilityRange } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/availability'</span>;
+
+<span class="kp-code__keyword">const</span> people = [{ id: <span class="kp-code__string">'kenny'</span>, name: <span class="kp-code__string">'Kenny'</span>, mine: <span class="kp-code__keyword">true</span> }, { id: <span class="kp-code__string">'tom'</span>, name: <span class="kp-code__string">'Tom'</span> }];
+<span class="kp-code__keyword">const</span> columns = [availabilityRange(<span class="kp-code__string">'2026-06-19'</span>, <span class="kp-code__string">'2026-06-21'</span>), availabilityRange(<span class="kp-code__string">'2026-06-26'</span>, <span class="kp-code__string">'2026-06-28'</span>)];
+setAvailability(document.getElementById(<span class="kp-code__string">'doc-av-loading'</span>), { state: <span class="kp-code__string">'loading'</span>, columns, people });
+setAvailability(document.getElementById(<span class="kp-code__string">'doc-av-failed'</span>), { state: <span class="kp-code__string">'error'</span>, columns: [], people });
+setAvailability(document.getElementById(<span class="kp-code__string">'doc-av-locked'</span>), {
+    columns,
+    people,
+    answers: { kenny: { [columns[<span class="kp-code__string">0</span>].key]: <span class="kp-code__string">'yes'</span> }, tom: { [columns[<span class="kp-code__string">0</span>].key]: <span class="kp-code__string">'yes'</span>, [columns[<span class="kp-code__string">1</span>].key]: <span class="kp-code__string">'no'</span> } },
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

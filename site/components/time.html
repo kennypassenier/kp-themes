@@ -271,6 +271,125 @@
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-time-id</span><span class="kp-code__string">=&quot;backup-at&quot;</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;at&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;03:00&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Steps, a window, presets and a busy moment</figcaption>
+                        <p class="kp-text-muted">`data-kp-time-step` is what the arrow keys and the list move by (typing allows any minute); `data-kp-time-min` and `-max` bound the choices, and a minimum later than the maximum wraps midnight (22:00 to 06:00). `data-kp-time-presets` puts the app’s own words as chips above the list, `data-kp-time-now` adds a Now entry, `data-kp-time-clear` an explicit no time, and `data-kp-time-near` marks list entries within `data-kp-time-near-width` minutes of a moment that is already busy. `data-kp-time-zone` adds a quiet line saying whose clock it is.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-time-night">Maintenance window start</label>
+        <div class="kp-time" data-kp-time data-kp-time-id="doc-time-night" data-kp-name="start" data-kp-value="23:30" data-kp-time-step="15" data-kp-time-min="22:00" data-kp-time-max="06:00" data-kp-time-presets="Late=23:00,Night=02:00,Early=05:00" data-kp-time-near="03:00" data-kp-time-near-width="30" data-kp-time-zone="Europe/Brussels"></div>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-time-log">Log entry at</label>
+        <div class="kp-time" data-kp-time data-kp-time-id="doc-time-log" data-kp-name="at" data-kp-value="14:05:30" data-kp-time-seconds data-kp-time-now data-kp-time-clear></div>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-time-night&quot;</span>&gt;Maintenance window start&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-time-id</span><span class="kp-code__string">=&quot;doc-time-night&quot;</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;start&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;23:30&quot;</span> <span class="kp-code__keyword">data-kp-time-step</span><span class="kp-code__string">=&quot;15&quot;</span> <span class="kp-code__keyword">data-kp-time-min</span><span class="kp-code__string">=&quot;22:00&quot;</span> <span class="kp-code__keyword">data-kp-time-max</span><span class="kp-code__string">=&quot;06:00&quot;</span> <span class="kp-code__keyword">data-kp-time-presets</span><span class="kp-code__string">=&quot;Late=23:00,Night=02:00,Early=05:00&quot;</span> <span class="kp-code__keyword">data-kp-time-near</span><span class="kp-code__string">=&quot;03:00&quot;</span> <span class="kp-code__keyword">data-kp-time-near-width</span><span class="kp-code__string">=&quot;30&quot;</span> <span class="kp-code__keyword">data-kp-time-zone</span><span class="kp-code__string">=&quot;Europe/Brussels&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-time-log&quot;</span>&gt;Log entry at&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-time-id</span><span class="kp-code__string">=&quot;doc-time-log&quot;</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;at&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;14:05:30&quot;</span> <span class="kp-code__keyword">data-kp-time-seconds</span> <span class="kp-code__keyword">data-kp-time-now</span> <span class="kp-code__keyword">data-kp-time-clear</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Typed text, an inline field, a required field, off and loading</figcaption>
+                        <p class="kp-text-muted">Typing is forgiving: `0230`, `2:30`, `02.30` and `2h30` all give 02:30, and pasting `2:30 PM` is converted to 14:30 and the field says so. An unreadable text is kept and marked, with the sentence “Use a time like 03:00”. `data-kp-time-look=&quot;inline&quot;` is the underline form inside a sentence, `data-kp-time-required` makes empty invalid once the field was left, `data-kp-disabled-reason` with `disabled` says why it cannot be used, `data-kp-time-popup=&quot;none&quot;` leaves only typing and keys, and `data-kp-state=&quot;loading&quot;` shows the field’s own skeleton at its final width.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <p>Send the report at <span class="kp-time" data-kp-time data-kp-time-look="inline" data-kp-value="07:30" data-kp-label="Report time" data-kp-time-popup="none"></span> every morning.</p>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-time-req">Reminder time</label>
+        <div class="kp-time" data-kp-time data-kp-time-id="doc-time-req" data-kp-name="reminder" data-kp-time-required></div>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-time-off">Backup time</label>
+        <div class="kp-time" data-kp-time data-kp-time-id="doc-time-off" data-kp-name="off" data-kp-value="03:00" disabled data-kp-disabled-reason="The schedule is managed by the host."></div>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-time-load">Wake-up time</label>
+        <div class="kp-time" data-kp-time data-kp-time-id="doc-time-load" data-kp-name="load" data-kp-state="loading"></div>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Send the report at &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-time-look</span><span class="kp-code__string">=&quot;inline&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;07:30&quot;</span> <span class="kp-code__keyword">data-kp-label</span><span class="kp-code__string">=&quot;Report time&quot;</span> <span class="kp-code__keyword">data-kp-time-popup</span><span class="kp-code__string">=&quot;none&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; every morning.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-time-req&quot;</span>&gt;Reminder time&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-time-id</span><span class="kp-code__string">=&quot;doc-time-req&quot;</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;reminder&quot;</span> <span class="kp-code__keyword">data-kp-time-required</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-time-off&quot;</span>&gt;Backup time&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-time-id</span><span class="kp-code__string">=&quot;doc-time-off&quot;</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;03:00&quot;</span> <span class="kp-code__keyword">disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;The schedule is managed by the host.&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-time-load&quot;</span>&gt;Wake-up time&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-time-id</span><span class="kp-code__string">=&quot;doc-time-load&quot;</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;load&quot;</span> <span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Presets that arrive later, and a change heard by the page</figcaption>
+                        <p class="kp-text-muted">`setTimePresets(el, list | &quot;loading&quot; | &quot;error&quot;)` gives the chips their data: while they load the list shows its own skeleton, and an error offers Retry, which fires `kp-time-retry`. `kp-time-change` fires on every change with `{ value, text, converted }`; `timeValue(el)` and `timeValid(el)` read the field.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-field">
+    <label class="kp-field__label" for="doc-time-late">Schedule at</label>
+    <div class="kp-time" id="doc-time-late" data-kp-time data-kp-time-id="doc-time-late-input" data-kp-name="at" data-kp-value="03:00" data-kp-time-step="30"></div>
+</div>
+<p class="kp-text-muted" id="doc-time-log2" aria-live="polite">Open the list: the presets are being fetched.</p>
+                            <script type="module">
+import { setTimePresets } from '../../js/timefield.js';
+
+const field = document.getElementById('doc-time-late');
+const log = document.getElementById('doc-time-log2');
+let tries = 0;
+const fetchPresets = () => {
+    setTimePresets(field, 'loading');
+    setTimeout(() => {
+        tries += 1;
+        // The first answer fails, so the Retry can be seen; the second works.
+        if (tries === 1) setTimePresets(field, 'error');
+        else setTimePresets(field, [{ label: 'Night', value: '03:00' }, { label: 'Morning', value: '08:00' }, { label: 'Evening', value: '20:00' }]);
+    }, 900);
+};
+fetchPresets();
+field.addEventListener('kp-time-retry', fetchPresets);
+field.addEventListener('kp-time-change', (event) => {
+    log.textContent = 'Time is now ' + event.detail.text + (event.detail.converted ? ' (converted from 12 hours)' : '') + '.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-time-late&quot;</span>&gt;Schedule at&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-time&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-time-late&quot;</span> <span class="kp-code__keyword">data-kp-time</span> <span class="kp-code__keyword">data-kp-time-id</span><span class="kp-code__string">=&quot;doc-time-late-input&quot;</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;at&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;03:00&quot;</span> <span class="kp-code__keyword">data-kp-time-step</span><span class="kp-code__string">=&quot;30&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-time-log2&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Open the list: the presets are being fetched.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setTimePresets } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/timefield'</span>;
+
+<span class="kp-code__keyword">const</span> field = document.getElementById(<span class="kp-code__string">'doc-time-late'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-time-log2'</span>);
+<span class="kp-code__keyword">let</span> tries = <span class="kp-code__string">0</span>;
+<span class="kp-code__keyword">const</span> fetchPresets = () =&gt; {
+    setTimePresets(field, <span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; {
+        tries += <span class="kp-code__string">1</span>;
+        <span class="kp-code__comment">// The first answer fails, so the Retry can be seen; the second works.</span>
+        <span class="kp-code__keyword">if</span> (tries === <span class="kp-code__string">1</span>) setTimePresets(field, <span class="kp-code__string">'error'</span>);
+        <span class="kp-code__keyword">else</span> setTimePresets(field, [{ label: <span class="kp-code__string">'Night'</span>, value: <span class="kp-code__string">'03:00'</span> }, { label: <span class="kp-code__string">'Morning'</span>, value: <span class="kp-code__string">'08:00'</span> }, { label: <span class="kp-code__string">'Evening'</span>, value: <span class="kp-code__string">'20:00'</span> }]);
+    }, <span class="kp-code__string">900</span>);
+};
+fetchPresets();
+field.addEventListener(<span class="kp-code__string">'kp-time-retry'</span>, fetchPresets);
+field.addEventListener(<span class="kp-code__string">'kp-time-change'</span>, (event) =&gt; {
+    log.textContent = <span class="kp-code__string">'Time is now '</span> + event.detail.text + (event.detail.converted ? <span class="kp-code__string">' (converted from 12 hours)'</span> : <span class="kp-code__string">''</span>) + <span class="kp-code__string">'.'</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

@@ -300,6 +300,87 @@ setProblems(box, [
     { key: <span class="kp-code__string">'token'</span>, what: <span class="kp-code__string">'The API token has expired'</span>, why: <span class="kp-code__string">'Requests are refused.'</span>, remedy: <span class="kp-code__string">'Create a new one.'</span>, command: <span class="kp-code__string">'chassis token renew'</span>, severity: <span class="kp-code__string">'critical'</span> },
 ]);</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The parts, the severities and a command to copy</figcaption>
+                        <p class="kp-text-muted">An alert is three fixed parts in the theme’s own plate: `.kp-alert__what` (the line the eye reads first), `__why` and `__remedy` (with `__remedy-label`, “What now”). `__actions` holds the fix beside the text, and under it on a narrow container. A `__command` is a command with its Copy button; `data-kp-remedy-label` changes the word before the remedy. The severity is the alert’s tone: `kp-alert--destructive`, `--warning` or `--info`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-alert kp-alert--destructive" role="alert">
+        <strong class="kp-alert__what">The API token has expired</strong>
+        <span class="kp-alert__why">Every request is refused since 03:00.</span>
+        <span class="kp-alert__remedy"><span class="kp-alert__remedy-label">What now</span> Create a new token and paste it in Settings.</span>
+        <span class="kp-alert__actions"><button class="kp-button kp-button--primary" type="button">Open Settings</button></span>
+    </div>
+    <div class="kp-alert kp-alert--info" role="status">
+        <strong class="kp-alert__what">The disk will be full in nine days</strong>
+        <span class="kp-alert__why">It grows by 4 GB a day.</span>
+        <span class="kp-alert__remedy"><span class="kp-alert__remedy-label">Free some space</span> Remove old snapshots.</span>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;alert&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__what&quot;</span>&gt;The API token has expired&lt;/<span class="kp-code__keyword">strong</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__why&quot;</span>&gt;Every request is refused since 03:00.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__remedy&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__remedy-label&quot;</span>&gt;What now&lt;/<span class="kp-code__keyword">span</span>&gt; Create a new token and paste it in Settings.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span>&gt;Open Settings&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--info&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__what&quot;</span>&gt;The disk will be full in nine days&lt;/<span class="kp-code__keyword">strong</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__why&quot;</span>&gt;It grows by 4 GB a day.&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__remedy&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__remedy-label&quot;</span>&gt;Free some space&lt;/<span class="kp-code__keyword">span</span>&gt; Remove old snapshots.&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Each mode, dismissing and the problem layout</figcaption>
+                        <p class="kp-text-muted">`data-kp-problems-mode` is `each` (an alert per problem, the worst first), `list` (one alert holding every problem, in the tone of the worst, as `__summary` and `__list` of `__item`s) or `fold` (from `data-kp-problems-fold-from` problems the worst stays open and “Show the other N” holds the rest). `data-kp-problem-layout=&quot;inline&quot;` runs what, why and remedy into one paragraph. A problem is `dismissible` only when the page says so, and a dismissal fires `kp-problem-dismiss` with the problem’s key. An item takes `severity`, `command` (set in code, with its Copy), `action` and `dismissible`. The container keeps its place when it holds none, so the page does not jump. Knobs: `--kp-problem-gap`, `--kp-problem-tint` and `--kp-problem-icon`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-problems" id="doc-problems-list" data-kp-problems data-kp-problems-mode="list" aria-label="Problems in a list"></div>
+    <div class="kp-problems" id="doc-problems-fold" data-kp-problems data-kp-problems-mode="fold" data-kp-problems-fold-from="3" data-kp-remedy-label="Fix" aria-label="Problems folded"></div>
+    <div class="kp-problems" id="doc-problems-each" data-kp-problems data-kp-problems-mode="each" data-kp-problem-layout="inline" aria-label="Problems that can be dismissed"></div>
+    <p class="kp-text-muted" id="doc-problems-log" aria-live="polite"></p>
+</div>
+                            <script type="module">
+import { setProblems } from '../../js/problems.js';
+
+const items = [
+    { key: 'token', what: 'The API token has expired', why: 'Requests are refused.', remedy: 'Create a new one.', command: 'chassis token renew', severity: 'critical' },
+    { key: 'calendar', what: 'The calendar is not shared', why: 'Almanac cannot read it.', remedy: 'Share it with the service account.', severity: 'warning', dismissible: true },
+    { key: 'disk', what: 'The disk is 91 % full', why: 'Backups may fail.', remedy: 'Remove old snapshots.', severity: 'info', dismissible: true },
+    { key: 'cert', what: 'A certificate runs out in 9 days', why: 'Browsers will warn.', remedy: 'Renew it.', severity: 'warning' },
+];
+setProblems(document.getElementById('doc-problems-list'), items.slice(0, 3));
+setProblems(document.getElementById('doc-problems-fold'), items);
+setProblems(document.getElementById('doc-problems-each'), items.slice(1, 3));
+document.addEventListener('kp-problem-dismiss', (event) => {
+    document.getElementById('doc-problems-log').textContent = 'Dismissed: ' + event.detail.key;
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-problems&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-problems-list&quot;</span> <span class="kp-code__keyword">data-kp-problems</span> <span class="kp-code__keyword">data-kp-problems-mode</span><span class="kp-code__string">=&quot;list&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Problems in a list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-problems&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-problems-fold&quot;</span> <span class="kp-code__keyword">data-kp-problems</span> <span class="kp-code__keyword">data-kp-problems-mode</span><span class="kp-code__string">=&quot;fold&quot;</span> <span class="kp-code__keyword">data-kp-problems-fold-from</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-remedy-label</span><span class="kp-code__string">=&quot;Fix&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Problems folded&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-problems&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-problems-each&quot;</span> <span class="kp-code__keyword">data-kp-problems</span> <span class="kp-code__keyword">data-kp-problems-mode</span><span class="kp-code__string">=&quot;each&quot;</span> <span class="kp-code__keyword">data-kp-problem-layout</span><span class="kp-code__string">=&quot;inline&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Problems that can be dismissed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-problems-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setProblems } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/problems'</span>;
+
+<span class="kp-code__keyword">const</span> items = [
+    { key: <span class="kp-code__string">'token'</span>, what: <span class="kp-code__string">'The API token has expired'</span>, why: <span class="kp-code__string">'Requests are refused.'</span>, remedy: <span class="kp-code__string">'Create a new one.'</span>, command: <span class="kp-code__string">'chassis token renew'</span>, severity: <span class="kp-code__string">'critical'</span> },
+    { key: <span class="kp-code__string">'calendar'</span>, what: <span class="kp-code__string">'The calendar is not shared'</span>, why: <span class="kp-code__string">'Almanac cannot read it.'</span>, remedy: <span class="kp-code__string">'Share it with the service account.'</span>, severity: <span class="kp-code__string">'warning'</span>, dismissible: <span class="kp-code__keyword">true</span> },
+    { key: <span class="kp-code__string">'disk'</span>, what: <span class="kp-code__string">'The disk is 91 % full'</span>, why: <span class="kp-code__string">'Backups may fail.'</span>, remedy: <span class="kp-code__string">'Remove old snapshots.'</span>, severity: <span class="kp-code__string">'info'</span>, dismissible: <span class="kp-code__keyword">true</span> },
+    { key: <span class="kp-code__string">'cert'</span>, what: <span class="kp-code__string">'A certificate runs out in 9 days'</span>, why: <span class="kp-code__string">'Browsers will warn.'</span>, remedy: <span class="kp-code__string">'Renew it.'</span>, severity: <span class="kp-code__string">'warning'</span> },
+];
+setProblems(document.getElementById(<span class="kp-code__string">'doc-problems-list'</span>), items.slice(<span class="kp-code__string">0</span>, <span class="kp-code__string">3</span>));
+setProblems(document.getElementById(<span class="kp-code__string">'doc-problems-fold'</span>), items);
+setProblems(document.getElementById(<span class="kp-code__string">'doc-problems-each'</span>), items.slice(<span class="kp-code__string">1</span>, <span class="kp-code__string">3</span>));
+document.addEventListener(<span class="kp-code__string">'kp-problem-dismiss'</span>, (event) =&gt; {
+    document.getElementById(<span class="kp-code__string">'doc-problems-log'</span>).textContent = <span class="kp-code__string">'Dismissed: '</span> + event.detail.key;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

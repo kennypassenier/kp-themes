@@ -265,6 +265,55 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-countdown&quot;</span> <span class="kp-code__keyword">data-kp-countdown</span><span class="kp-code__string">=&quot;3:00&quot;</span> <span class="kp-code__keyword">data-kp-countdown-name</span><span class="kp-code__string">=&quot;Tea&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A long timer, a step and a timer that is off</figcaption>
+                        <p class="kp-text-muted">The format follows the length: `1:30:00` is h:mm:ss, `3:00` is m:ss, and it changes only when a press changes the length. `data-kp-countdown-step` is what the “more” button adds (60 seconds by default, written in seconds), and `data-kp-countdown-disabled` turns every button off. The digits stand in cells one `ch` wide, so no time ever moves the layout.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-countdown" data-kp-countdown="1:30:00" data-kp-countdown-name="Oven" data-kp-countdown-step="300"></div>
+    <div class="kp-countdown" data-kp-countdown="25m" data-kp-countdown-name="Focus"></div>
+    <div class="kp-countdown" data-kp-countdown="45s" data-kp-countdown-name="Not now" data-kp-countdown-disabled></div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-countdown&quot;</span> <span class="kp-code__keyword">data-kp-countdown</span><span class="kp-code__string">=&quot;1:30:00&quot;</span> <span class="kp-code__keyword">data-kp-countdown-name</span><span class="kp-code__string">=&quot;Oven&quot;</span> <span class="kp-code__keyword">data-kp-countdown-step</span><span class="kp-code__string">=&quot;300&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-countdown&quot;</span> <span class="kp-code__keyword">data-kp-countdown</span><span class="kp-code__string">=&quot;25m&quot;</span> <span class="kp-code__keyword">data-kp-countdown-name</span><span class="kp-code__string">=&quot;Focus&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-countdown&quot;</span> <span class="kp-code__keyword">data-kp-countdown</span><span class="kp-code__string">=&quot;45s&quot;</span> <span class="kp-code__keyword">data-kp-countdown-name</span><span class="kp-code__string">=&quot;Not now&quot;</span> <span class="kp-code__keyword">data-kp-countdown-disabled</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Running, and the end</figcaption>
+                        <p class="kp-text-muted">`countdownOf(el)` is the clock of an attached timer: `start()`, `pause()`, `reset(seconds)` and `add(seconds)`, with `remaining()` and `state()`. `data-kp-countdown-state` on the element follows it: `idle`, `running`, `paused` or `ended`. `kp-countdown-change` carries `{ state, remaining, total }` when a timer starts, pauses, resets or gains time, and `kp-countdown-end` carries `{ total }` when it is up; the plate then breathes three times and the line says “Time is up”.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-countdown" id="doc-countdown-run" data-kp-countdown="0:08" data-kp-countdown-name="Eight seconds"></div>
+<p class="kp-text-muted" id="doc-countdown-log" aria-live="polite">Starting in a moment.</p>
+                            <script type="module">
+import { attachCountdowns, countdownOf } from '../../js/countdown.js';
+
+const timer = document.getElementById('doc-countdown-run');
+const log = document.getElementById('doc-countdown-log');
+attachCountdowns(timer.parentElement);
+timer.addEventListener('kp-countdown-change', (event) => {
+    log.textContent = 'State: ' + event.detail.state + ', ' + Math.ceil(event.detail.remaining / 1000) + ' s left of ' + event.detail.total / 1000 + ' s.';
+});
+timer.addEventListener('kp-countdown-end', () => { log.textContent = 'The time is up.'; });
+setTimeout(() => countdownOf(timer)?.start(), 800);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-countdown&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-countdown-run&quot;</span> <span class="kp-code__keyword">data-kp-countdown</span><span class="kp-code__string">=&quot;0:08&quot;</span> <span class="kp-code__keyword">data-kp-countdown-name</span><span class="kp-code__string">=&quot;Eight seconds&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-countdown-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Starting in a moment.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachCountdowns, countdownOf } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/countdown'</span>;
+
+<span class="kp-code__keyword">const</span> timer = document.getElementById(<span class="kp-code__string">'doc-countdown-run'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-countdown-log'</span>);
+attachCountdowns(timer.parentElement);
+timer.addEventListener(<span class="kp-code__string">'kp-countdown-change'</span>, (event) =&gt; {
+    log.textContent = <span class="kp-code__string">'State: '</span> + event.detail.state + <span class="kp-code__string">', '</span> + Math.ceil(event.detail.remaining / <span class="kp-code__string">1000</span>) + <span class="kp-code__string">' s left of '</span> + event.detail.total / <span class="kp-code__string">1000</span> + <span class="kp-code__string">' s.'</span>;
+});
+timer.addEventListener(<span class="kp-code__string">'kp-countdown-end'</span>, () =&gt; { log.textContent = <span class="kp-code__string">'The time is up.'</span>; });
+setTimeout(() =&gt; countdownOf(timer)?.start(), <span class="kp-code__string">800</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
