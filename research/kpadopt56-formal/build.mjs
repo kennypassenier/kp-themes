@@ -87,9 +87,9 @@ const CHANGED = [
         topic: 'checklist',
         title: 'Checklists',
         changed:
-            'In the checklist on screen, the small detail beside an item used to squeeze the item name to a few letters (broken words) at phone width. Now the detail wraps inside at most half of the row and the name keeps its words.',
-        expect: '<b>Changed, at 390 (use the width switch):</b> in <b>The list on screen</b> every item name keeps whole words; a long detail wraps in at most half of the row; a short detail stays on one line; nothing runs past the list. The four paper sheets are not affected.',
-        look: 'At phone width the detail beside an item wraps inside at most half the row, and the item name keeps its whole words; a short detail stays on one line and the list never runs past its frame.',
+            'In your last review (18/10) sheets 1 to 3 looked wrong and the title seemed far too far left. Each sheet is now a true A4 page (210 by 297 mm, the 15 mm margin the package prints with), scaled down as a whole, so line breaks and margins are those of paper. The title, the list and the <b>Printed</b> line all start at the same 15 mm margin (the date line used to touch the sheet&rsquo;s left edge), every sheet carries the same title the package prints (<b>Packing list: weekend in Ghent</b>), and the sheets stand two by two: the two lists, then the two states.',
+        expect: '<b>Changed since your last review:</b> each sheet looks like an A4 page: the title, the groups and the <b>Printed 17/10/2026 14:05</b> line start at the same left margin, nothing touches the sheet&rsquo;s edge, and all four sheets share one title. The two lists stand side by side, the loading and the empty sheet under them.',
+        look: 'Every sheet is an A4 page with an even margin: the title, the list and the Printed line start at the same left edge and nothing touches the sheet&rsquo;s border; the four sheets share one title and stand two by two.',
         width: true,
     },
     {
@@ -107,7 +107,8 @@ const CHANGED = [
         demo: 'kpadopt6-ops',
         id: 'entity-behaviour',
         topic: 'entity',
-        changed: 'The same folding of entity card actions: the card&rsquo;s More menu and the +N menu open on a readable plate, the same as the package&rsquo;s own menu button.',
+        changed:
+            'The same folding of entity card actions: the card&rsquo;s More menu and the +N menu open on a readable plate, the same as the package&rsquo;s own menu button.',
         expect: '<b>Changed:</b> <b>Open a card&rsquo;s More</b>, <b>Open the +N</b> and <b>Open the package&rsquo;s menu</b> each show a readable menu plate; the options above redraw the cards at the same height.',
         look: 'The More and +N menus are readable plates like the package&rsquo;s own menu; ticking, one flag, compact and names as links keep the cards at one height.',
     },
@@ -134,7 +135,8 @@ const CHANGED = [
         demo: 'kpadopt5-people',
         id: 'chart-annotations-runs',
         topic: 'chart',
-        changed: 'The same chart changes, in the run chart: the first and the last date label stand inside the plot, and a chart that could not be read is one plate with a normal-size Retry.',
+        changed:
+            'The same chart changes, in the run chart: the first and the last date label stand inside the plot, and a chart that could not be read is one plate with a normal-size Retry.',
         expect: '<b>Changed:</b> the first date label starts at the left edge of the plot and the last one ends at its right edge. <b>Press Failed</b> (in the first chart&rsquo;s controls) and this chart shows one red-edged plate over the plot with a normal <b>Retry</b>.',
         look: 'The first and last labels under the run chart stand inside the plot; Failed is one plate over the plot with a normal-size Retry.',
     },
@@ -142,9 +144,10 @@ const CHANGED = [
         demo: 'kpadopt5-people',
         id: 'chart-annotations-few',
         topic: 'chart',
-        changed: 'The same chart changes, in the chart with too few readings: its date labels stand inside the plot.',
-        expect: '<b>Changed:</b> the first and the last date label stand inside the plot, at both widths; press <b>Enough readings</b> and the chart draws itself with its labels inside the plot.',
-        look: 'The first and last labels under the three-point chart stand inside the plot; nothing crosses the chart frame.',
+        changed:
+            'In your last review (18/10) a line still showed through the translucent &ldquo;3 of 7 days&rdquo; text. Now a chart with too few readings draws no line, no area and no point at all: only the empty plot with its axes, and the sentence on an opaque plate in the middle, so nothing can show through it.',
+        expect: '<b>Changed since your last review:</b> with <b>3 readings</b> no line, area or point is drawn; the sentence &ldquo;3 of 7 days needed&hellip;&rdquo; stands on an opaque plate in the middle of the empty plot. Press <b>Enough readings</b> and the chart draws itself, with the first and last date labels inside the plot.',
+        look: 'With too few readings there is no line, area or point behind the sentence; its plate is opaque, nothing shows through it; Enough readings draws the chart.',
     },
     {
         demo: 'kpadopt6-social',
@@ -319,9 +322,9 @@ const ADDED = [
         topic: 'rating',
         title: 'Star rating',
         changed:
-            'When the rating could not be read, the plate was laid over only the stars, which are narrow, so a rating in a wide row showed a small patch the width of the stars. Now the plate covers the whole rating box, at the same height as the stars had, with a normal-size Retry.',
-        expect: '<b>Changed:</b> press <b>Could not read</b>: one red-edged plate covers the whole rating box (as wide as the box, as tall as the ready rating) with <b>Could not read the rating</b> centred and a normal <b>Retry</b>.',
-        look: 'A failed rating is one plate over the whole rating box, as tall as the ready rating, centred, with a normal-size Retry; the stars are not left beside it.',
+            'In your last review (18/10) the state buttons did nothing. Their wiring waited for a rating that stands in another section, so on this page, where the section stands alone, it never ran. Every section is now wired by its own elements, and a check presses every state button of every section in the review dialog and fails when the component does not change. The change of the rating itself is the one you saw: when the rating could not be read, one plate covers the whole rating box at the height the stars had, with a normal-size Retry.',
+        expect: '<b>Changed since your last review:</b> the buttons above the first case work: <b>Loading</b> shows the breathing outlines, <b>Could not read</b> one red-edged plate over the whole rating box with <b>Could not read the rating</b> centred and a normal <b>Retry</b>, <b>Ready</b> brings the stars back; with <b>Next save is refused</b> a press on a star is refused.',
+        look: 'Every state button changes the rating: loading, could not read (one plate over the whole box, as tall as the ready rating, a normal-size Retry) and ready again; a refused save puts the old stars back.',
     },
     {
         demo: 'kpadopt6-calm',
@@ -329,9 +332,9 @@ const ADDED = [
         topic: 'plate',
         title: 'Buttons inside a state plate',
         changed:
-            'The button inside every empty or failed plate (<b>Retry</b>, <b>Add</b>) used to inherit the plate&rsquo;s heading size: its text was about 24 px in a 36 px button. Now the button is a normal control: body-size text, the same size as any other button. The usual picker&rsquo;s loading case also grows to 448 px, and its busy card stays inside it.',
-        expect: '<b>Changed:</b> press <b>Empty</b> and <b>Could not read</b> after <b>Ready</b>: <b>Add</b> and <b>Retry</b> are normal-size buttons under the plate&rsquo;s heading, not oversized.',
-        look: 'The Add and Retry buttons in the plates are normal buttons: body-size text, the size of any other button, under a heading-size title.',
+            'In your last review (18/10) the state buttons did nothing. Their wiring waited for the options section of the same picker, which is not on this page, so it never ran. Every section is now wired by its own elements, and a check presses every state button of every section in the review dialog and fails when the component does not change. The change itself is the one you saw: the <b>Retry</b> and <b>Add</b> button inside an empty or failed plate is a normal control, not heading size.',
+        expect: '<b>Changed since your last review:</b> the buttons above the first picker work: press <b>Loading</b>, <b>Empty</b> and <b>Could not read</b>; <b>Add</b> and <b>Retry</b> are normal-size buttons under the plate&rsquo;s heading.',
+        look: 'Every state button changes the first picker; the Add and Retry buttons in the plates are normal buttons, body-size text, under a heading-size title.',
     },
     {
         demo: 'kpadopt6-calm',
@@ -339,9 +342,9 @@ const ADDED = [
         topic: 'focus',
         title: 'Questions, one per screen',
         changed:
-            'The case with a long question and long answers was too short: its body scrolled and the last answer (<b>Hard to say</b>) sat hidden under the Back and Done buttons. The case is now 864 px high, with no scrollbar, and every answer is in view.',
-        expect: '<b>Changed:</b> in the long-text case every answer, <b>Hard to say</b> included, is in view above the Back and Done buttons, and the body has no scrollbar.',
-        look: 'The long-text case is 864 px high with no scrollbar; the last answer is whole and clear of the footer.',
+            'In your last review (18/10) the state buttons did nothing and no questions appeared. The three views of this section were only filled with their questions when the main check-in section stood on the same page; here it does not, so the views stayed empty. Every view is now filled and wired by its own element, and a check presses every state button of every section in the review dialog and fails when the component does not change. The change itself is the one you saw: the long-text case is 864 px high, with every answer in view.',
+        expect: '<b>Changed since your last review:</b> every view shows its questions. The state buttons above the first view work (<b>Loading</b>, <b>No questions</b>, <b>Could not read</b>, <b>Could not save</b>, <b>Ready</b>), <b>Resume</b> changes how a half-done check-in comes back, and in the long-text case every answer, <b>Hard to say</b> included, is in view above Back and Done, with no scrollbar.',
+        look: 'The views show their questions; every state and resume button changes the view; the long-text case is 864 px high with no scrollbar and the last answer clear of the footer.',
     },
 ];
 
@@ -615,7 +618,7 @@ ${styles.map((s) => `        <link rel="stylesheet" href="${s}" />`).join('\n')}
             <header class="k56-intro">
                 <h1>Approved in formal, changed since: judge it again</h1>
                 <p class="cat-intro">
-                    You approved these components in formal. The shared package code changed after that, so formal looks different here and
+                    ${received.length ? `This round asks only the ${pairs} sections you did not approve in your last review; each says under <b>What changed since you approved it</b> what was done about your words. ` : ''}You approved these components in formal. The shared package code changed after that, so formal looks different here and
                     needs your eye again: ${pairs} sections, one step in the review dialog. Each section says under <b>What changed since you
                     approved it</b> what is different, and under <b>Expected</b> what to check; where it helps, a <b>Width</b> switch in the
                     dialog shows the section at 1280 and at 390 (a phone).

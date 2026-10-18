@@ -43,10 +43,11 @@
             <header class="k56-intro">
                 <h1>Approved in formal, changed since: judge it again</h1>
                 <p class="cat-intro">
-                    You approved these components in formal. The shared package code changed after that, so formal looks different here and needs your
-                    eye again: 5 sections, one step in the review dialog. Each section says under <b>What changed since you approved it</b> what is
-                    different, and under <b>Expected</b> what to check; where it helps, a <b>Width</b> switch in the dialog shows the section at 1280
-                    and at 390 (a phone).
+                    This round asks only the 5 sections you did not approve in your last review; each says under
+                    <b>What changed since you approved it</b> what was done about your words. You approved these components in formal. The shared
+                    package code changed after that, so formal looks different here and needs your eye again: 5 sections, one step in the review
+                    dialog. Each section says under <b>What changed since you approved it</b> what is different, and under <b>Expected</b> what to
+                    check; where it helps, a <b>Width</b> switch in the dialog shows the section at 1280 and at 390 (a phone).
                 </p>
             </header>
             <section
@@ -68,9 +69,12 @@
                 </div>
                 <div class="k56f-changed">
                     <p>
-                        <b>What changed since you approved it:</b> In the checklist on screen, the small detail beside an item used to squeeze the
-                        item name to a few letters (broken words) at phone width. Now the detail wraps inside at most half of the row and the name
-                        keeps its words.
+                        <b>What changed since you approved it:</b> In your last review (18/10) sheets 1 to 3 looked wrong and the title seemed far too
+                        far left. Each sheet is now a true A4 page (210 by 297 mm, the 15 mm margin the package prints with), scaled down as a whole,
+                        so line breaks and margins are those of paper. The title, the list and the <b>Printed</b> line all start at the same 15 mm
+                        margin (the date line used to touch the sheet&rsquo;s left edge), every sheet carries the same title the package prints (<b
+                            >Packing list: weekend in Ghent</b
+                        >), and the sheets stand two by two: the two lists, then the two states.
                     </p>
                 </div>
                 <div class="km-expected">
@@ -93,16 +97,16 @@
                             the ticked items left off). The list on screen above the sheets does not change: the rules are for paper only.
                         </li>
                         <li class="k56f-expect-changed">
-                            <b>Changed, at 390 (use the width switch):</b> in <b>The list on screen</b> every item name keeps whole words; a long
-                            detail wraps in at most half of the row; a short detail stays on one line; nothing runs past the list. The four paper
-                            sheets are not affected.
+                            <b>Changed since your last review:</b> each sheet looks like an A4 page: the title, the groups and the
+                            <b>Printed 17/10/2026 14:05</b> line start at the same left margin, nothing touches the sheet&rsquo;s edge, and all four
+                            sheets share one title. The two lists stand side by side, the loading and the empty sheet under them.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        At phone width the detail beside an item wraps inside at most half the row, and the item name keeps its whole words; a short
-                        detail stays on one line and the list never runs past its frame.
+                        Every sheet is an A4 page with an even margin: the title, the list and the Printed line start at the same left edge and
+                        nothing touches the sheet&rsquo;s border; the four sheets share one title and stand two by two.
                     </p>
                 </div>
                 <div class="k56f-controls" data-review-controls data-review-controls-for="print-checklist-component">
@@ -121,19 +125,23 @@
                     <div class="km-sheets">
                         <div class="km-case">
                             <p class="km-label">Sheet 1: ticked boxes (the choice drives it)</p>
-                            <iframe class="km-sheet" title="Print preview: the list with ticked items" id="km-sheet-1"></iframe>
+                            <div class="km-sheet-box">
+                                <iframe class="km-sheet" title="Print preview: the list with ticked items" id="km-sheet-1"></iframe>
+                            </div>
                         </div>
                         <div class="km-case">
                             <p class="km-label">Sheet 2: two columns and lines for notes</p>
-                            <iframe class="km-sheet" title="Print preview: two columns" id="km-sheet-2"></iframe>
+                            <div class="km-sheet-box"><iframe class="km-sheet" title="Print preview: two columns" id="km-sheet-2"></iframe></div>
                         </div>
                         <div class="km-case">
                             <p class="km-label">Sheet 3: the list was still loading</p>
-                            <iframe class="km-sheet" title="Print preview: a list that was loading" id="km-sheet-3"></iframe>
+                            <div class="km-sheet-box">
+                                <iframe class="km-sheet" title="Print preview: a list that was loading" id="km-sheet-3"></iframe>
+                            </div>
                         </div>
                         <div class="km-case">
                             <p class="km-label">Sheet 4: nothing on the list</p>
-                            <iframe class="km-sheet" title="Print preview: an empty list" id="km-sheet-4"></iframe>
+                            <div class="km-sheet-box"><iframe class="km-sheet" title="Print preview: an empty list" id="km-sheet-4"></iframe></div>
                         </div>
                     </div>
                 </div>
@@ -154,26 +162,29 @@
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        The first and last labels under the three-point chart stand inside the plot; nothing crosses the chart frame.
+                        With too few readings there is no line, area or point behind the sentence; its plate is opaque, nothing shows through it;
+                        Enough readings draws the chart.
                     </p>
                 </div>
                 <div class="k56f-changed">
                     <p>
-                        <b>What changed since you approved it:</b> The same chart changes, in the chart with too few readings: its date labels stand
-                        inside the plot.
+                        <b>What changed since you approved it:</b> In your last review (18/10) a line still showed through the translucent &ldquo;3 of
+                        7 days&rdquo; text. Now a chart with too few readings draws no line, no area and no point at all: only the empty plot with its
+                        axes, and the sentence on an opaque plate in the middle, so nothing can show through it.
                     </p>
                 </div>
                 <div class="kp5-expect">
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>Third chart</b> (3 readings, 7 needed): the three points faint, and in the middle of the plot&rsquo;s full height
-                            &ldquo;3 of 7 days needed before a trend means something&rdquo; at heading size. Press &ldquo;Enough readings&rdquo; and
-                            the chart draws itself.
+                            <b>Third chart</b> (3 readings, 7 needed): no line, area or point is drawn, only the empty plot, and in the middle of the
+                            plot&rsquo;s full height &ldquo;3 of 7 days needed before a trend means something&rdquo; at heading size on an opaque
+                            plate. Press &ldquo;Enough readings&rdquo; and the chart draws itself.
                         </li>
                         <li class="k56f-expect-changed">
-                            <b>Changed:</b> the first and the last date label stand inside the plot, at both widths; press <b>Enough readings</b> and
-                            the chart draws itself with its labels inside the plot.
+                            <b>Changed since your last review:</b> with <b>3 readings</b> no line, area or point is drawn; the sentence &ldquo;3 of 7
+                            days needed&hellip;&rdquo; stands on an opaque plate in the middle of the empty plot. Press <b>Enough readings</b> and the
+                            chart draws itself, with the first and last date labels inside the plot.
                         </li>
                     </ul>
                 </div>
@@ -221,9 +232,11 @@
                 </div>
                 <div class="k56f-changed">
                     <p>
-                        <b>What changed since you approved it:</b> When the rating could not be read, the plate was laid over only the stars, which
-                        are narrow, so a rating in a wide row showed a small patch the width of the stars. Now the plate covers the whole rating box,
-                        at the same height as the stars had, with a normal-size Retry.
+                        <b>What changed since you approved it:</b> In your last review (18/10) the state buttons did nothing. Their wiring waited for
+                        a rating that stands in another section, so on this page, where the section stands alone, it never ran. Every section is now
+                        wired by its own elements, and a check presses every state button of every section in the review dialog and fails when the
+                        component does not change. The change of the rating itself is the one you saw: when the rating could not be read, one plate
+                        covers the whole rating box at the height the stars had, with a normal-size Retry.
                     </p>
                 </div>
                 <div class="kc-expected">
@@ -250,15 +263,16 @@
                             Clear button (a phone has no pointer; press the chosen star again to remove).
                         </li>
                         <li class="k56f-expect-changed">
-                            <b>Changed:</b> press <b>Could not read</b>: one red-edged plate covers the whole rating box (as wide as the box, as tall
-                            as the ready rating) with <b>Could not read the rating</b> centred and a normal <b>Retry</b>.
+                            <b>Changed since your last review:</b> the buttons above the first case work: <b>Loading</b> shows the breathing outlines,
+                            <b>Could not read</b> one red-edged plate over the whole rating box with <b>Could not read the rating</b> centred and a
+                            normal <b>Retry</b>, <b>Ready</b> brings the stars back; with <b>Next save is refused</b> a press on a star is refused.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        A failed rating is one plate over the whole rating box, as tall as the ready rating, centred, with a normal-size Retry; the
-                        stars are not left beside it.
+                        Every state button changes the rating: loading, could not read (one plate over the whole box, as tall as the ready rating, a
+                        normal-size Retry) and ready again; a refused save puts the old stars back.
                     </p>
                 </div>
                 <div data-review-controls data-review-controls-for="rating-states-component">
@@ -267,7 +281,7 @@
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-rating-state="loading">Loading</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-rating-state="error">Could not read</button>
                     </div>
-                    <div role="group" aria-label="What the next save does" class="kc-actions">
+                    <div role="group" aria-label="What the next save does" class="kc-actions" data-review-latent>
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-rating-save="ok">Next save works</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-rating-save="refused">Next save is refused</button>
                     </div>
@@ -429,10 +443,11 @@
                 </div>
                 <div class="k56f-changed">
                     <p>
-                        <b>What changed since you approved it:</b> The button inside every empty or failed plate (<b>Retry</b>, <b>Add</b>) used to
-                        inherit the plate&rsquo;s heading size: its text was about 24 px in a 36 px button. Now the button is a normal control:
-                        body-size text, the same size as any other button. The usual picker&rsquo;s loading case also grows to 448 px, and its busy
-                        card stays inside it.
+                        <b>What changed since you approved it:</b> In your last review (18/10) the state buttons did nothing. Their wiring waited for
+                        the options section of the same picker, which is not on this page, so it never ran. Every section is now wired by its own
+                        elements, and a check presses every state button of every section in the review dialog and fails when the component does not
+                        change. The change itself is the one you saw: the <b>Retry</b> and <b>Add</b> button inside an empty or failed plate is a
+                        normal control, not heading size.
                     </p>
                 </div>
                 <div class="kc-expected">
@@ -457,15 +472,15 @@
                             box): the list opens full width under the input with the band first, rows 48 px, <b>Show all 38</b> a full-width row.
                         </li>
                         <li class="k56f-expect-changed">
-                            <b>Changed:</b> press <b>Empty</b> and <b>Could not read</b> after <b>Ready</b>: <b>Add</b> and <b>Retry</b> are
-                            normal-size buttons under the plate&rsquo;s heading, not oversized.
+                            <b>Changed since your last review:</b> the buttons above the first picker work: press <b>Loading</b>, <b>Empty</b> and
+                            <b>Could not read</b>; <b>Add</b> and <b>Retry</b> are normal-size buttons under the plate&rsquo;s heading.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        The Add and Retry buttons in the plates are normal buttons: body-size text, the size of any other button, under a heading-size
-                        title.
+                        Every state button changes the first picker; the Add and Retry buttons in the plates are normal buttons, body-size text, under
+                        a heading-size title.
                     </p>
                 </div>
                 <div data-review-controls data-review-controls-for="usual-states-component">
@@ -754,9 +769,11 @@
                 </div>
                 <div class="k56f-changed">
                     <p>
-                        <b>What changed since you approved it:</b> The case with a long question and long answers was too short: its body scrolled and
-                        the last answer (<b>Hard to say</b>) sat hidden under the Back and Done buttons. The case is now 864 px high, with no
-                        scrollbar, and every answer is in view.
+                        <b>What changed since you approved it:</b> In your last review (18/10) the state buttons did nothing and no questions
+                        appeared. The three views of this section were only filled with their questions when the main check-in section stood on the
+                        same page; here it does not, so the views stayed empty. Every view is now filled and wired by its own element, and a check
+                        presses every state button of every section in the review dialog and fails when the component does not change. The change
+                        itself is the one you saw: the long-text case is 864 px high, with every answer in view.
                     </p>
                 </div>
                 <div class="kc-expected">
@@ -782,13 +799,18 @@
                             in a tooltip.
                         </li>
                         <li class="k56f-expect-changed">
-                            <b>Changed:</b> in the long-text case every answer, <b>Hard to say</b> included, is in view above the Back and Done
-                            buttons, and the body has no scrollbar.
+                            <b>Changed since your last review:</b> every view shows its questions. The state buttons above the first view work
+                            (<b>Loading</b>, <b>No questions</b>, <b>Could not read</b>, <b>Could not save</b>, <b>Ready</b>), <b>Resume</b> changes
+                            how a half-done check-in comes back, and in the long-text case every answer, <b>Hard to say</b> included, is in view above
+                            Back and Done, with no scrollbar.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">The long-text case is 864 px high with no scrollbar; the last answer is whole and clear of the footer.</p>
+                    <p data-for="formal">
+                        The views show their questions; every state and resume button changes the view; the long-text case is 864 px high with no
+                        scrollbar and the last answer clear of the footer.
+                    </p>
                 </div>
                 <div data-review-controls data-review-controls-for="focus-states-component">
                     <div role="group" aria-label="State of the first view" class="kc-actions">
