@@ -31,7 +31,6 @@
         </script>
         <link rel="stylesheet" href="../../catalogue/catalogue.css" />
         <link rel="stylesheet" href="../kpadopt56/part.css" />
-        <link rel="stylesheet" href="../kpadopt56/src/kpadopt5-time/page.css" />
         <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-ops/page.css" />
         <link rel="stylesheet" href="../kpadopt56/src/kpadopt5-basics/page.css" />
     </head>
@@ -42,287 +41,15 @@
             <header class="k56-intro">
                 <h1>The fifth and sixth adoption rounds, part 3 of 14: Dated options, toggles and keys</h1>
                 <p class="cat-intro">
-                    Formal is approved. Options with a date, a button that stays pressed, and keys that know their own list. This part asks the eleven
-                    other themes for 5 sections (55 pairs), one theme per step in the review dialog. The sections were approved in formal in several
-                    rounds; each is shown here in its latest version, with the defaults you chose.
+                    Formal is approved. Options with a date, a button that stays pressed, and keys that know their own list. This round asks only what
+                    you did not approve in your last review: 2 sections (22 pairs), one theme per step in the review dialog; each says under
+                    <b>What changed since your last review</b> what was done about your words.
                 </p>
                 <p>
                     Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
                     &ldquo;What to look at&rdquo; says what is the theme&rsquo;s own).
                 </p>
             </header>
-
-            <section
-                class="kt-sec"
-                id="dated"
-                data-review-item="dated"
-                data-review-components="dated"
-                data-review-topic="dated"
-                data-review-topic-title="Options with a date and an age"
-                data-review-title="Dated options: radio rows, and a search for a long list"
-                aria-labelledby="h-dated"
-            >
-                <div class="kt-sec__head">
-                    <h2 id="h-dated">Dated options: radio rows, and a search for a long list</h2>
-                    <p>
-                        <code>&lt;div class="kp-dated" data-kp-dated&gt;</code> (js/dated-options.js): choose a snapshot, a backup or a version; every
-                        option carries its date, its age and a size. The demo clock stands at Saturday 17/10/2026 14:05.
-                    </p>
-                </div>
-                <div class="kt-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>Six snapshots:</b> radio rows, the newest first and <b>already chosen</b>: <b>17/10/2026 04:00</b> with a blue
-                            <b>Latest</b> badge, <b>10 h 5 min ago</b> under it, and <b>4.3 GB</b> at the end of the row. The sizes (4.3 GB, 812 MB)
-                            end on one line down the page.
-                        </li>
-                        <li>
-                            Choose another row (click, or the arrow keys): the row takes the primary edge and the grey box shows the
-                            <code>kp-dated-change</code> event. Type <b>b</b> on the focused rows of the second picker and the option starting with b
-                            is chosen.
-                        </li>
-                        <li>
-                            <b>Named options:</b> each has its name in bold and, under it, the age and the date. <b>Being written</b> is dashed and
-                            grey, says why, and cannot be chosen.
-                        </li>
-                        <li>
-                            <b>Twelve snapshots</b> are too many for rows: one search field. Type <b>04/10</b> and the list narrows to the options
-                            with that date; choosing one writes only its date in the field. The list is shown open in its own frame too.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="dark">
-                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
-                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
-                        from the left over its own box and never just faded, and that text keeps clear of every edge.
-                    </p>
-                    <p data-for="cyberpunk">
-                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
-                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
-                        ease or a glide), and that no text sits against a cut corner or the rim.
-                    </p>
-                    <p data-for="synthwave">
-                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
-                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
-                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
-                    </p>
-                    <p data-for="pastel">
-                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
-                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
-                        keeps clear of the sticker edge and the tape.
-                    </p>
-                    <p data-for="forest">
-                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
-                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
-                        text keeps clear of the corners and the blazes.
-                    </p>
-                    <p data-for="blueprint">
-                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
-                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
-                        that no lettering touches a line or a bracket.
-                    </p>
-                    <p data-for="solstice">
-                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
-                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
-                        faded, and that text keeps clear of the lit edge.
-                    </p>
-                    <p data-for="brutalism">
-                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
-                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
-                        glow), and that text keeps clear of the line and the shadow.
-                    </p>
-                    <p data-for="deco">
-                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
-                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
-                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
-                    </p>
-                    <p data-for="nostromo">
-                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
-                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
-                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
-                    </p>
-                    <p data-for="titanium">
-                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
-                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
-                        or swells, and that text keeps clear of the milled edge.
-                    </p>
-                </div>
-                <div class="kt-pair">
-                    <div class="kt-case">
-                        <p class="kt-label">Six snapshots, the newest chosen</p>
-                        <div
-                            class="kp-dated"
-                            data-kp-dated
-                            aria-label="Snapshot to restore"
-                            data-kp-now="2026-10-17T14:05:00+02:00"
-                            id="kt-dated-a"
-                        ></div>
-                        <pre class="kt-log" id="kt-dated-log" aria-live="polite"></pre>
-                    </div>
-                    <div class="kt-case">
-                        <p class="kt-label">With names, one that cannot be chosen</p>
-                        <div
-                            class="kp-dated"
-                            data-kp-dated
-                            aria-label="Backup to restore"
-                            data-kp-now="2026-10-17T14:05:00+02:00"
-                            id="kt-dated-b"
-                        ></div>
-                    </div>
-                    <div class="kt-case">
-                        <p class="kt-label">Twelve snapshots: a search</p>
-                        <div
-                            class="kp-dated"
-                            data-kp-dated
-                            aria-label="Snapshot to restore, long list"
-                            data-kp-now="2026-10-17T14:05:00+02:00"
-                            id="kt-dated-c"
-                        ></div>
-                    </div>
-                    <div class="kt-case">
-                        <p class="kt-label">The search, opened</p>
-                        <div class="kt-frame kt-frame--menu">
-                            <div
-                                class="kp-dated"
-                                data-kp-dated
-                                aria-label="Snapshot to restore, opened list"
-                                data-kp-now="2026-10-17T14:05:00+02:00"
-                                id="kt-dated-open"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="kt-sec"
-                id="dated-states"
-                data-review-item="dated-states"
-                data-review-components="dated"
-                data-review-topic="dated"
-                data-review-title="Dated options: states, order and phone width"
-                aria-labelledby="h-dated-states"
-            >
-                <div class="kt-sec__head">
-                    <h2 id="h-dated-states">Dated options: states, order and phone width</h2>
-                    <p>Ready, empty, loading and failed in the same height; the oldest first without the badge; the picker in a 390 px box.</p>
-                </div>
-                <div class="kt-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Press <b>Ready</b>, <b>Empty</b>, <b>Loading</b> and <b>Failed</b> in the box above the pickers: the first picker changes
-                            and its frame <b>never changes height</b>. <b>Empty</b>: <b>No snapshots yet</b> in the middle at heading size with a
-                            normal <b>Take a snapshot</b> button. <b>Loading</b>: the busy card over four grey bars. <b>Failed</b>: the red alert with
-                            <b>Could not load the snapshots</b> and a normal <b>Try again</b>, which loads and then fills the rows.
-                        </li>
-                        <li>
-                            <b>Oldest first, no badge:</b> 17/09/2026 04:00 at the top and nothing is labelled Latest; the newest is still the one
-                            chosen.
-                        </li>
-                        <li>
-                            In the 390 px box the size drops under the name and the age, in the same column as the text; the radios stay centred on
-                            their rows; no text touches an edge.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="dark">
-                        In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size
-                        with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width
-                        nothing is cut or touches an edge.
-                    </p>
-                    <p data-for="cyberpunk">
-                        In cyberpunk, waiting is signal loss: the word and the plate glitch while the whole component stays in place. Check loading,
-                        empty and failed keep the full footprint, the red is used only for a real failure, and at phone width the cut corners clip no
-                        text.
-                    </p>
-                    <p data-for="synthwave">
-                        In synthwave, waiting is the marquee chasing along the whole component. Check loading, empty and failed keep the full
-                        footprint, the chase is visible and moving, and at phone width the bloom clips nothing.
-                    </p>
-                    <p data-for="pastel">
-                        In pastel, waiting is washi tape fluttering over the whole component. Check loading, empty and failed keep the full footprint,
-                        the misregistered second ink is visible but readable, and at phone width nothing is cut.
-                    </p>
-                    <p data-for="forest">
-                        In forest, waiting is the row of planted trees along the whole component. Check loading, empty and failed keep the full
-                        footprint, the trees stand and grow as the bar fills, and at phone width nothing is cut.
-                    </p>
-                    <p data-for="blueprint">
-                        In blueprint, waiting is the section hatched across the whole component. Check loading, empty and failed keep the full
-                        footprint, the hatching moves, a failure is flagged in amber or red and not just a colour change, and at phone width nothing
-                        is cut.
-                    </p>
-                    <p data-for="solstice">
-                        In solstice, waiting is the sun crossing the whole component and a warning reddens the sky. Check loading, empty and failed
-                        keep the full footprint, the crossing is visible and calm, and at phone width nothing is cut.
-                    </p>
-                    <p data-for="brutalism">
-                        In brutalism, waiting is a lintel hoisted across the whole component and a warning is taped off. Check loading, empty and
-                        failed keep the full footprint, the hard steps are visible, and at phone width the shadow clips nothing.
-                    </p>
-                    <p data-for="deco">
-                        In deco, waiting is lift doors over the whole component. Check loading, empty and failed keep the full footprint, the doors
-                        and the inlay move slowly and cleanly, and at phone width the gold edge cuts no text.
-                    </p>
-                    <p data-for="nostromo">
-                        In nostromo, waiting is the raster building up on the screen across the whole component. Check loading, empty and failed keep
-                        the full footprint, the lamps tell the state, and at phone width nothing is cut.
-                    </p>
-                    <p data-for="titanium">
-                        In titanium, waiting is the machined film sweeping the whole component. Check loading, empty and failed keep the full
-                        footprint, the sweep is visible, and at phone width nothing is cut.
-                    </p>
-                </div>
-                <div data-review-controls data-review-controls-for="dated-states-component">
-                    <div role="group" aria-label="State of the first picker" class="kt-actions">
-                        <button type="button" class="kp-button" aria-pressed="true" data-kt-dated-state="ready">Ready</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-kt-dated-state="empty">Empty</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-kt-dated-state="loading">Loading</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-kt-dated-state="error">Failed</button>
-                    </div>
-                </div>
-                <div id="dated-states-component" class="kt-pair">
-                    <div class="kt-case">
-                        <p class="kt-label">The picker the buttons drive</p>
-                        <div
-                            class="kp-dated"
-                            data-kp-dated
-                            aria-label="Snapshot, states"
-                            data-kp-now="2026-10-17T14:05:00+02:00"
-                            id="kt-dated-live"
-                            data-kp-rows="6"
-                        ></div>
-                    </div>
-                    <div class="kt-case">
-                        <p class="kt-label">Oldest first, no Latest badge</p>
-                        <div
-                            class="kp-dated"
-                            data-kp-dated
-                            data-kp-order="oldest"
-                            data-kp-latest="none"
-                            aria-label="Snapshot, oldest first"
-                            data-kp-now="2026-10-17T14:05:00+02:00"
-                            id="kt-dated-old"
-                        ></div>
-                    </div>
-                    <div class="kt-case">
-                        <p class="kt-label">Phone width</p>
-                        <div class="kt-frame kt-frame--phone">
-                            <div
-                                class="kp-dated"
-                                data-kp-dated
-                                aria-label="Snapshot, phone"
-                                data-kp-now="2026-10-17T14:05:00+02:00"
-                                id="kt-dated-phone"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <section
                 class="kv-sec"
@@ -334,6 +61,16 @@
                 data-review-title="Toggle button: one, filters and a one-of switch"
                 aria-labelledby="h-toggle"
             >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since your last review:</b> You saw no tick on <b>Only errors</b> and its words sat above the middle. The
+                        button had a hint row under the words that was empty while it was off, so the words stood in the top half; and the tick, off
+                        by default, was drawn in the words&rsquo; colour in a slot that collapsed. Now the words and the tick are centred in the
+                        button in both states (the hint row is laid over the foot of the button and takes no room while it is off), the button is as
+                        wide as its longest line from the start, and the tick is on by default with its slot kept, so pressing moves nothing.
+                        <b>Tick</b> still switches it off.
+                    </p>
+                </div>
                 <div class="kv-sec__head">
                     <h2 id="h-toggle">Toggle button: one, filters and a one-of switch</h2>
                     <p>
@@ -575,200 +312,6 @@
             </section>
 
             <section
-                class="kv-sec"
-                id="toggle-states"
-                data-review-item="toggle-states"
-                data-review-components="toggles toggle"
-                data-review-topic="toggle"
-                data-review-title="Toggle button: every state, a long label and phone width"
-                aria-labelledby="h-toggle-states"
-            >
-                <div class="kv-sec__head">
-                    <h2 id="h-toggle-states">Toggle button: every state, a long label and phone width</h2>
-                    <p>
-                        The same toggle while the app is slow, refuses, is still counting, or cannot be pressed; and the filters at the width of a
-                        phone. Use the buttons to put each one in its state.
-                    </p>
-                </div>
-                <div class="kv-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>The app answers slowly:</b> <b>Pin to top</b> is pressed, the theme&rsquo;s spinner takes the place of the words for
-                            about a second (the words keep their room and the button keeps its size), then it stays on. With
-                            <b>The app will refuse</b> on, the same press goes busy, then the state goes back and the word <b>Refused</b> stands on
-                            the button for 3 s on a red plate; the line below says why.
-                        </li>
-                        <li>
-                            <b>Still counting:</b> <b>Error</b> shows a small pulsing block where the number goes (never 0).
-                            <b>The count arrives</b> writes 12; <b>A count past 99</b> writes 1534 and the room for the next digit is held, with the
-                            real number shown.
-                        </li>
-                        <li>
-                            <b>Mixed:</b> <b>All services</b> is a dashed pill on a half wash with a dash before the words (some of them are on);
-                            press it and it becomes plainly on. <b>Cannot be pressed:</b> <b>Follow</b> is dimmed; hover or focus it and the reason
-                            shows (&ldquo;Nothing is running&rdquo;).
-                        </li>
-                        <li>
-                            <b>A long label</b> wraps inside a narrow box and the button grows taller; it is never cut and never breaks inside a word.
-                            At <b>phone width</b> the pills wrap to the next row and every button is 44 px tall.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="dark">
-                        In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size
-                        with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width
-                        nothing is cut or touches an edge.
-                    </p>
-                    <p data-for="cyberpunk">
-                        In cyberpunk, waiting is signal loss: the word and the plate glitch while the whole component stays in place. Check loading,
-                        empty and failed keep the full footprint, the red is used only for a real failure, and at phone width the cut corners clip no
-                        text.
-                    </p>
-                    <p data-for="synthwave">
-                        In synthwave, waiting is the marquee chasing along the whole component. Check loading, empty and failed keep the full
-                        footprint, the chase is visible and moving, and at phone width the bloom clips nothing.
-                    </p>
-                    <p data-for="pastel">
-                        In pastel, waiting is washi tape fluttering over the whole component. Check loading, empty and failed keep the full footprint,
-                        the misregistered second ink is visible but readable, and at phone width nothing is cut.
-                    </p>
-                    <p data-for="forest">
-                        In forest, waiting is the row of planted trees along the whole component. Check loading, empty and failed keep the full
-                        footprint, the trees stand and grow as the bar fills, and at phone width nothing is cut.
-                    </p>
-                    <p data-for="blueprint">
-                        In blueprint, waiting is the section hatched across the whole component. Check loading, empty and failed keep the full
-                        footprint, the hatching moves, a failure is flagged in amber or red and not just a colour change, and at phone width nothing
-                        is cut.
-                    </p>
-                    <p data-for="solstice">
-                        In solstice, waiting is the sun crossing the whole component and a warning reddens the sky. Check loading, empty and failed
-                        keep the full footprint, the crossing is visible and calm, and at phone width nothing is cut.
-                    </p>
-                    <p data-for="brutalism">
-                        In brutalism, waiting is a lintel hoisted across the whole component and a warning is taped off. Check loading, empty and
-                        failed keep the full footprint, the hard steps are visible, and at phone width the shadow clips nothing.
-                    </p>
-                    <p data-for="deco">
-                        In deco, waiting is lift doors over the whole component. Check loading, empty and failed keep the full footprint, the doors
-                        and the inlay move slowly and cleanly, and at phone width the gold edge cuts no text.
-                    </p>
-                    <p data-for="nostromo">
-                        In nostromo, waiting is the raster building up on the screen across the whole component. Check loading, empty and failed keep
-                        the full footprint, the lamps tell the state, and at phone width nothing is cut.
-                    </p>
-                    <p data-for="titanium">
-                        In titanium, waiting is the machined film sweeping the whole component. Check loading, empty and failed keep the full
-                        footprint, the sweep is visible, and at phone width nothing is cut.
-                    </p>
-                </div>
-                <div class="kv-controls" data-review-controls data-review-controls-for="toggle-states-component">
-                    <div role="group" aria-label="Async answer" data-review-latent>
-                        <b>The app:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kv-refuse aria-pressed="false">The app will refuse</button>
-                    </div>
-                    <div role="group" aria-label="Count">
-                        <b>Count:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kv-count="loading">Still counting</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kv-count="12">The count arrives</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kv-count="1534">A count past 99</button>
-                    </div>
-                </div>
-                <div id="toggle-states-component" class="kv-pair">
-                    <div class="kv-case">
-                        <p class="kv-label">The app takes a second</p>
-                        <div class="kv-row">
-                            <button class="kp-button" type="button" id="kv-toggle-async" data-kp-toggle data-kp-toggle-async aria-pressed="false">
-                                Pin to top
-                            </button>
-                        </div>
-                        <pre class="kv-log" id="kv-toggle-async-log" aria-live="polite"></pre>
-                    </div>
-                    <div class="kv-case">
-                        <p class="kv-label">A count that is still being counted</p>
-                        <div class="kv-row">
-                            <button
-                                class="kp-button"
-                                type="button"
-                                id="kv-toggle-count"
-                                data-kp-toggle
-                                data-kp-look="chip"
-                                data-kp-count="loading"
-                                aria-pressed="false"
-                            >
-                                Error
-                            </button>
-                        </div>
-                    </div>
-                    <div class="kv-case">
-                        <p class="kv-label">Some on, and one that cannot be pressed</p>
-                        <div class="kv-row">
-                            <button
-                                class="kp-button"
-                                type="button"
-                                data-kp-toggle
-                                data-kp-look="chip"
-                                aria-pressed="mixed"
-                                data-kp-pressed-mark="check"
-                            >
-                                All services
-                            </button>
-                            <button
-                                class="kp-button"
-                                type="button"
-                                data-kp-toggle
-                                disabled
-                                aria-pressed="false"
-                                data-kp-disabled-reason="Nothing is running"
-                            >
-                                Follow
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="kv-pair">
-                    <div class="kv-case">
-                        <p class="kv-label">A long label in a narrow box</p>
-                        <div class="kv-frame kv-frame--narrow">
-                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false" data-kp-count="3">
-                                Show only the containers that restarted since the last backup
-                            </button>
-                        </div>
-                    </div>
-                    <div class="kv-case">
-                        <p class="kv-label">Phone width</p>
-                        <div class="kv-frame kv-frame--phone">
-                            <div
-                                class="kp-toggles"
-                                role="group"
-                                aria-label="Level, on a phone"
-                                data-kp-toggle-group="level-phone"
-                                data-kp-toggle-clear
-                            >
-                                <button
-                                    class="kp-button"
-                                    type="button"
-                                    data-kp-toggle
-                                    data-kp-toggle-all
-                                    data-kp-look="chip"
-                                    aria-pressed="true"
-                                    data-kp-count="138"
-                                >
-                                    All
-                                </button>
-                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="12">Error</button>
-                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="31">Warning</button>
-                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="95">Info</button>
-                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="1534">Debug</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section
                 class="kb-sec"
                 id="shortcuts"
                 data-review-item="shortcut-engine"
@@ -778,6 +321,15 @@
                 data-review-title="Shortcuts that know their own list"
                 aria-labelledby="h-shortcuts"
             >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since your last review:</b> You typed <b>g</b> and nothing happened, and after a click anywhere the keys
+                        stopped. The keys went to the review dialog, not to the demo, as soon as the focus left the demo&rsquo;s frame. Now every key
+                        the dialog does not use itself goes to the demo in view, wherever you clicked, and a key the dialog also uses goes to the demo
+                        while the demo has the focus. The chord&rsquo;s small cap (<b>g …</b>) stood at the top of the screen; it is now an option of
+                        the component, <b>Centre</b> (the default) or <b>Bottom centre</b>, always on screen where you look.
+                    </p>
+                </div>
                 <div class="kb-sec__head">
                     <h2 id="h-shortcuts">Shortcuts that know their own list</h2>
                     <p>
@@ -932,10 +484,9 @@
             </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "toggles-e92b701d-1184-4cb0-b8e4-1c0c899ad4a7", "received": [] }
+            { "round": "toggles-b460e963-8760-4ee0-81ed-4635f4c3abee", "received": ["toggles-e92b701d-1184-4cb0-b8e4-1c0c899ad4a7"] }
         </script>
         <script type="module" src="../../js/auto.js"></script>
-        <script type="module" src="../kpadopt56/src/kpadopt5-time/demo.js"></script>
         <script type="module" src="../kpadopt56/src/kpadopt6-ops/demo.js"></script>
         <script type="module" src="../kpadopt56/src/kpadopt5-basics/demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
