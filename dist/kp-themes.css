@@ -79264,6 +79264,13 @@
         white-space: normal;
         overflow-wrap: anywhere;
     }
+
+    /* A question card stands on a tone's plate (amber, red or green). Its destructive button is the same red as the urgent and
+       refused plates and had no edge of its own, so on those cards "Stop" was words on the plate, not a button. It carries the
+       sheet's dark line. */
+    [data-theme='blueprint'] .kp-question .kp-button--destructive {
+        border-color: var(--background);
+    }
 }
 
 @layer kp.register {
