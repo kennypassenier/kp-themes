@@ -13707,8 +13707,29 @@ __export(listbox_exports, {
   HIGHLIGHT_EVENT: () => HIGHLIGHT_EVENT,
   OPTION_SELECTOR: () => OPTION_SELECTOR,
   createListbox: () => createListbox,
+  scrollWithin: () => scrollWithin,
   subsequence: () => subsequence
 });
+function scrollWithin(el14, block = "nearest") {
+  let box = el14.parentElement;
+  while (box && box !== document.body && box !== document.documentElement) {
+    const { overflowY } = getComputedStyle(box);
+    if ((overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay") && box.scrollHeight > box.clientHeight) break;
+    box = box.parentElement;
+  }
+  if (!box || box === document.body || box === document.documentElement) return;
+  const view = box.getBoundingClientRect();
+  const rect = el14.getBoundingClientRect();
+  const top = rect.top - view.top - box.clientTop;
+  const bottom = top + rect.height;
+  let delta = 0;
+  if (block === "start") delta = top;
+  else if (block === "end") delta = bottom - box.clientHeight;
+  else if (block === "center") delta = top + rect.height / 2 - box.clientHeight / 2;
+  else if (top < 0) delta = top;
+  else if (bottom > box.clientHeight) delta = Math.min(bottom - box.clientHeight, top);
+  if (delta) box.scrollTop += delta;
+}
 function createListbox({
   input,
   list,
@@ -13772,7 +13793,7 @@ function createListbox({
       option2.classList.toggle(activeClass, current2);
       if (current2) {
         input.setAttribute("aria-activedescendant", option2.id);
-        if (scrollIntoView !== false) option2.scrollIntoView(scrollIntoView === true ? { block: "nearest" } : scrollIntoView);
+        if (scrollIntoView !== false) scrollWithin(option2, scrollIntoView === true ? "nearest" : scrollIntoView.block ?? "nearest");
       }
     });
     const option = all[index] ?? null;
@@ -41370,7 +41391,7 @@ function wire9(rootEl, historyOption) {
     selected = item ? key : null;
     paint13();
     if (item && how.focus) item.focus({ preventScroll: false });
-    if (item) item.scrollIntoView({ block: "nearest" });
+    if (item) scrollWithin(item);
     rootEl.dispatchEvent(new CustomEvent(PANE_SELECT_EVENT, { bubbles: true, detail: { key: selected, item } }));
   };
   const heading = () => (
@@ -41525,6 +41546,7 @@ var MASTER_DETAIL, PANE_SELECT_EVENT, PANE_OPEN_EVENT, PANE_CLOSE_EVENT, PANE_RE
 var init_master_detail = __esm({
   "js/master-detail.js"() {
     "use strict";
+    init_listbox();
     init_busy_card();
     init_motion();
     init_state_plate();
@@ -59538,6 +59560,7 @@ export {
   runs_exports as runsExports,
   runsRelative,
   scriptSide,
+  scrollWithin,
   segmented_exports as segmentedExports,
   selectPane,
   selectTab,
