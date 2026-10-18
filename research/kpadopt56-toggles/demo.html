@@ -63,12 +63,15 @@
             >
                 <div class="k56-changed">
                     <p>
-                        <b>What changed since your last review:</b> You saw no tick on <b>Only errors</b> and its words sat above the middle. The
-                        button had a hint row under the words that was empty while it was off, so the words stood in the top half; and the tick, off
-                        by default, was drawn in the words&rsquo; colour in a slot that collapsed. Now the words and the tick are centred in the
-                        button in both states (the hint row is laid over the foot of the button and takes no room while it is off), the button is as
-                        wide as its longest line from the start, and the tick is on by default with its slot kept, so pressing moves nothing.
-                        <b>Tick</b> still switches it off.
+                        <b>What changed since your last review:</b> You saw no tick on <b>Only errors</b> and its words sat above the middle. Two
+                        faults in the package, found and fixed at their cause. First, in nine of the twelve themes a pressed toggle looked exactly
+                        like a released one (the theme&rsquo;s own button paint won over the pressed face), so with <b>Tick</b> on, <b>All</b> and
+                        <b>Week</b>, which start pressed, showed their tick while <b>Only errors</b> showed nothing you could see change. Now every
+                        theme turns the face round when it is pressed (formal, pastel and solstice look as before). Second, the line under the words
+                        was empty while the button was off, so the words stood in the top half; now the same room is kept over them, so the words and
+                        the tick are in the middle of the button in both states, and the button is as wide as its longest line from the start, so
+                        pressing moves nothing beside it. The tick stays an option: <b>Tick: On</b> above the component; off by default, as approved
+                        in formal.
                     </p>
                 </div>
                 <div class="kv-sec__head">
@@ -323,11 +326,13 @@
             >
                 <div class="k56-changed">
                     <p>
-                        <b>What changed since your last review:</b> You typed <b>g</b> and nothing happened, and after a click anywhere the keys
-                        stopped. The keys went to the review dialog, not to the demo, as soon as the focus left the demo&rsquo;s frame. Now every key
-                        the dialog does not use itself goes to the demo in view, wherever you clicked, and a key the dialog also uses goes to the demo
-                        while the demo has the focus. The chord&rsquo;s small cap (<b>g …</b>) stood at the top of the screen; it is now an option of
-                        the component, <b>Centre</b> (the default) or <b>Bottom centre</b>, always on screen where you look.
+                        <b>What changed since your last review:</b> You typed <b>g</b> and nothing happened, and the keys stopped after a click. The
+                        review dialog took them: <b>g</b> is also the dialog&rsquo;s own key, so the demo never heard it, and with the focus on the
+                        dialog no key reached the demo at all. Now the demo&rsquo;s own keys work wherever you clicked: on the component they are the
+                        demo&rsquo;s (the dialog&rsquo;s <b>G</b>, <b>X</b> and <b>C</b> give way there), and on the dialog&rsquo;s header or panel
+                        every key the dialog does not use goes to the demo; the second key of a chord always goes to the demo. The cap
+                        <b>g …</b> stood at the top; where it stands is now an option of the component, <b>Chord cap</b> above it: <b>Centre</b> (the
+                        default, in the middle of what you see) or <b>Bottom centre</b>.
                     </p>
                 </div>
                 <div class="kb-sec__head">
@@ -341,9 +346,15 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            Press <kbd class="kp-kbd">g</kbd>: a small cap “g …” appears near the bottom edge and leaves after 1.5 s. Then press
-                            <kbd class="kp-kbd">i</kbd>, <kbd class="kp-kbd">h</kbd> or <kbd class="kp-kbd">c</kbd>: the line under the list says
-                            where you went. Typing in the field never fires a letter.
+                            Press <kbd class="kp-kbd">g</kbd>: a small cap “g …” appears in the middle of what you see and leaves after 1.5 s. Then
+                            press <kbd class="kp-kbd">i</kbd>, <kbd class="kp-kbd">h</kbd> or <kbd class="kp-kbd">c</kbd>: the line under the list
+                            says where you went. Typing in the field never fires a letter. In the review dialog the keys work wherever you clicked
+                            last: on the component, on the dialog&rsquo;s header or on the verdict panel.
+                        </li>
+                        <li>
+                            <b>Where the cap stands</b> is an option of the component (<code>data-kp-shortcuts-hint</code> on the page, or
+                            <code>configureShortcuts({ hintPlace })</code>): <b>Centre</b> (the default) or <b>Bottom centre</b>, at the foot of what
+                            you see. Switch it with <b>Chord cap</b> above the component and press <kbd class="kp-kbd">g</kbd> again.
                         </li>
                         <li>
                             Click a row (or Tab into the list) and press <kbd class="kp-kbd">j</kbd> / <kbd class="kp-kbd">k</kbd> to move,
@@ -427,7 +438,16 @@
                         <span>Say “No shortcut on …” after a chord that does nothing</span>
                     </label>
                 </div>
-                <div class="kb-grid">
+                <div class="kb-controls" data-review-controls data-review-controls-for="shortcut-engine-component" data-review-latent>
+                    <div role="group" aria-label="Where the chord's cap stands">
+                        <b>Chord cap:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kb-hint-place="centre" aria-pressed="true">Centre</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kb-hint-place="bottom-centre" aria-pressed="false">
+                            Bottom centre
+                        </button>
+                    </div>
+                </div>
+                <div id="shortcut-engine-component" class="kb-grid">
                     <div>
                         <p class="kb-label">A list with its own keys</p>
                         <ul class="kb-rows" id="kb-keys-list" aria-label="Schedules" data-kp-keys-scope>

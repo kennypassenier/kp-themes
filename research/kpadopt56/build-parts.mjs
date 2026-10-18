@@ -340,17 +340,22 @@ function lookBlock(id, themes) {
  */
 const CHANGED = {
     'toggles/toggle':
-        'You saw no tick on <b>Only errors</b> and its words sat above the middle. The button had a hint row under the words that ' +
-        'was empty while it was off, so the words stood in the top half; and the tick, off by default, was drawn in the words&rsquo; ' +
-        'colour in a slot that collapsed. Now the words and the tick are centred in the button in both states (the hint row is laid ' +
-        'over the foot of the button and takes no room while it is off), the button is as wide as its longest line from the start, ' +
-        'and the tick is on by default with its slot kept, so pressing moves nothing. <b>Tick</b> still switches it off.',
+        'You saw no tick on <b>Only errors</b> and its words sat above the middle. Two faults in the package, found and fixed at ' +
+        'their cause. First, in nine of the twelve themes a pressed toggle looked exactly like a released one (the theme&rsquo;s ' +
+        'own button paint won over the pressed face), so with <b>Tick</b> on, <b>All</b> and <b>Week</b>, which start pressed, ' +
+        'showed their tick while <b>Only errors</b> showed nothing you could see change. Now every theme turns the face round ' +
+        'when it is pressed (formal, pastel and solstice look as before). Second, the line under the words was empty while the ' +
+        'button was off, so the words stood in the top half; now the same room is kept over them, so the words and the tick are ' +
+        'in the middle of the button in both states, and the button is as wide as its longest line from the start, so pressing ' +
+        'moves nothing beside it. The tick stays an option: <b>Tick: On</b> above the component; off by default, as approved in formal.',
     'toggles/shortcut-engine':
-        'You typed <b>g</b> and nothing happened, and after a click anywhere the keys stopped. The keys went to the review dialog, ' +
-        'not to the demo, as soon as the focus left the demo&rsquo;s frame. Now every key the dialog does not use itself goes to the ' +
-        'demo in view, wherever you clicked, and a key the dialog also uses goes to the demo while the demo has the focus. The ' +
-        'chord&rsquo;s small cap (<b>g …</b>) stood at the top of the screen; it is now an option of the component, <b>Centre</b> ' +
-        '(the default) or <b>Bottom centre</b>, always on screen where you look.',
+        'You typed <b>g</b> and nothing happened, and the keys stopped after a click. The review dialog took them: <b>g</b> is ' +
+        'also the dialog&rsquo;s own key, so the demo never heard it, and with the focus on the dialog no key reached the demo at ' +
+        'all. Now the demo&rsquo;s own keys work wherever you clicked: on the component they are the demo&rsquo;s (the dialog&rsquo;s ' +
+        '<b>G</b>, <b>X</b> and <b>C</b> give way there), and on the dialog&rsquo;s header or panel every key the dialog does not use ' +
+        'goes to the demo; the second key of a chord always goes to the demo. The cap <b>g …</b> stood at the top; where it stands is ' +
+        'now an option of the component, <b>Chord cap</b> above it: <b>Centre</b> (the default, in the middle of what you see) or ' +
+        '<b>Bottom centre</b>.',
 };
 
 /**
