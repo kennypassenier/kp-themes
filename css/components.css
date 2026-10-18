@@ -20578,10 +20578,10 @@
 
     /* Two fixed slots: Mark read / Mark unread is always the first, at the same place in every row; the fix, when the
      * notice has one, is the second. Never placed by the flow of what comes before it [kpadopt5-r2]. Knob
-     * --kp-notices-read-col (7.5rem, wide enough for "Mark unread"). */
+     * --kp-notices-read-col (default: as wide as the longer word, "Mark unread"). */
     .kp-notices__actions {
         display: grid;
-        grid-template-columns: var(--kp-notices-read-col, 7.5rem) minmax(0, max-content);
+        grid-template-columns: var(--kp-notices-read-col, max-content) minmax(0, max-content);
         justify-content: start;
         align-items: center;
         gap: var(--kp-space-sm, 0.5rem);
@@ -20597,6 +20597,26 @@
 
     .kp-notices__actions > .kp-notices__fix {
         grid-column: 2;
+    }
+
+    /* The two words of the read button (Mark read, Mark unread) share one cell: the shown one, and the other (--kp-notices-sizer, written by js/notices.js) as an invisible
+     * sizer, so the button is as wide as the longer in whatever type the theme gives a button. */
+    .kp-notices__mark-face {
+        display: inline-grid;
+        justify-items: center;
+    }
+
+    .kp-notices__mark-label,
+    .kp-notices__mark-face::after {
+        grid-area: 1 / 1;
+    }
+
+    .kp-notices__mark-face::after {
+        content: var(--kp-notices-sizer);
+        content: var(--kp-notices-sizer) / '';
+        visibility: hidden;
+        block-size: 0;
+        overflow: hidden;
     }
 
     .kp-notices__foot {
