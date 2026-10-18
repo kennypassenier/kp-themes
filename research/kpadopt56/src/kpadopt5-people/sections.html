@@ -195,42 +195,31 @@
                 data-review-item="conversation-thread"
                 data-review-topic="conversation-thread"
                 data-review-topic-title="Conversation"
-                data-review-title="Conversation in bubbles"
+                data-review-title="Conversation in bubbles: states and sending"
                 data-review-components="thread"
-                aria-label="Conversation in bubbles"
+                aria-label="Conversation in bubbles: states and sending"
             >
                 <div class="kp5-sec__head">
-                    <h2>Conversation in bubbles</h2>
+                    <h2>Conversation in bubbles: states and sending</h2>
                     <p>
-                        Messages as bubbles: theirs on the start side, yours on the end side, status changes as centred lines, a day divider between
-                        days, attachments as tags. Only the newest message is shown whole; older long ones fold to three lines with &ldquo;Show all N
-                        lines&rdquo; (configurable).
+                        Messages as bubbles: theirs on the start side, yours on the end side, status changes as centred lines, a day divider between days, attachments as tags. This section shows the states and sending a reply.
                     </p>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Bubbles are soft plates with a small corner where the sender&rsquo;s side begins; the sender&rsquo;s mark stands beside the
-                        first bubble of a run. Look at the folded older mails fading out, the day dividers, the failed message with its Retry, and at
-                        the box that keeps its height in loading, empty and failed.
+                        Bubbles are soft plates with a small corner where the sender&rsquo;s side begins. Look at the failed message with its Retry and at the box that keeps its height in loading, empty and failed.
                     </p>
                 </div>
                 <div class="kp5-expect">
                     <p>
-                        <b>Expected:</b> every setting below is a documented option of the component with a default (shown
-                        pressed) and switches live by changing an attribute; the look is a fifth option whose default is yours on a wash of the
-                        primary colour.
+                        <b>Expected:</b> the states fill the same box, and sending is pretended.
                     </p>
                     <ul>
                         <li>
-                            <b>Long messages</b> (<code>data-kp-thread-fold</code>: newest, a number, full) and
-                            <b>Order</b> (<code>data-kp-thread-order</code>: oldest, newest) redraw the conversation when pressed; so do
-                            <b>Look</b> (<code>data-kp-thread-bubble</code>: tinted, plain, filled), <b>Marks</b> and <b>Days</b>. The line under the
-                            box names the attribute that was just set.
+                            On load: seven messages over three days, oldest first, only the newest whole, your bubbles on a light wash of the primary colour with a primary edge. The states <b>Loading</b>, <b>Empty</b> and <b>Failed</b> fill the same box at the same height, the failed one with a normal-size Retry.
                         </li>
                         <li>
-                            On load: seven messages over three days, oldest first, only the newest whole, your bubbles on a light wash of the primary
-                            colour with a primary edge. <b>Send a reply</b> and <b>Send one that fails</b> still work; the states Loading, Empty and
-                            Failed fill the same box.
+                            <b>Send a reply</b> adds your bubble faded with &ldquo;Sending&hellip;&rdquo;, then a normal bubble; <b>Send one that fails</b> ends in &ldquo;Not sent&rdquo; with Retry on the message. The line under the box says what happened.
                         </li>
                     </ul>
                 </div>
@@ -242,14 +231,56 @@
                         <button type="button" class="kp-button kp-button--sm" data-kp5-th-state="empty" aria-pressed="false">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" data-kp5-th-state="error" aria-pressed="false">Failed</button>
                     </div>
-                    <div role="group" aria-label="Long messages">
-                        <b>Long messages:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="newest" aria-pressed="true">
-                            Only the newest whole
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="12" aria-pressed="false">Fold after 12 lines</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="full" aria-pressed="false">Everything whole</button>
+                    <div role="group" aria-label="Send">
+                        <b>Send:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-send="ok">Send a reply</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-send="fail">Send one that fails</button>
                     </div>
+                </div>
+                <div class="kp5-block">
+                    <h3>The conversation, at the desk width and at 390 px</h3>
+                    <div class="kp5-pair">
+                        <div class="kp5-card"><div data-kp5-thread="desk"></div></div>
+                        <div class="kp5-phone">
+                            <p class="kp5-caption">390 px wide</p>
+                            <div class="kp5-card"><div data-kp5-thread="phone"></div></div>
+                        </div>
+                    </div>
+                    <p class="kp5-readout" data-kp5-th-log aria-live="polite"></p>
+                </div>
+            </section>
+
+<!-- ===== item: conversation-thread-look (from the last round) -->
+<section
+                class="kp5-sec"
+                data-review-item="conversation-thread-look"
+                data-review-topic="conversation-thread"
+                data-review-title="Conversation in bubbles: look, marks and days"
+                data-review-components="thread"
+                aria-label="Conversation in bubbles: look, marks and days"
+            >
+                <div class="kp5-sec__head">
+                    <h2>Conversation in bubbles: look, marks and days</h2>
+                    <p>
+                        Messages as bubbles: theirs on the start side, yours on the end side, status changes as centred lines, a day divider between days, attachments as tags. This section shows how the bubbles look.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Soft plates with a small corner where the sender&rsquo;s side begins; the sender&rsquo;s mark stands beside the first bubble of a run. Look at the three looks of your bubbles and at the day dividers.
+                    </p>
+                </div>
+                <div class="kp5-expect">
+                    <p>
+                        <b>Expected:</b> every setting below is a documented option of the component with a default (shown pressed) and switches live by changing an attribute.
+                    </p>
+                    <ul>
+                        <li>
+                            <b>Look</b> (<code>data-kp-thread-bubble</code>: tinted, plain, filled) changes the colour of your bubbles; <b>Marks</b> (<code>data-kp-thread-avatar</code>) shows the sender&rsquo;s mark beside theirs, both or none; <b>Days</b> (<code>data-kp-thread-days</code>) shows or hides the day dividers. The line under the box names the attribute that was just set.
+                        </li>
+                    </ul>
+                </div>
+                <div class="kp5-controls" data-review-controls>
                     <div role="group" aria-label="Look">
                         <b>Look:</b>
                         <button type="button" class="kp-button kp-button--sm" data-kp5-th-bubble="tinted" aria-pressed="true">Yours on a wash</button>
@@ -259,11 +290,6 @@
                         <button type="button" class="kp-button kp-button--sm" data-kp5-th-bubble="filled" aria-pressed="false">
                             Yours in the primary
                         </button>
-                    </div>
-                    <div role="group" aria-label="Order">
-                        <b>Order:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-order="oldest" aria-pressed="true">Oldest first</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-order="newest" aria-pressed="false">Newest first</button>
                     </div>
                     <div role="group" aria-label="Marks">
                         <b>Marks:</b>
@@ -276,10 +302,63 @@
                         <button type="button" class="kp-button kp-button--sm" data-kp5-th-days="on" aria-pressed="true">Dividers</button>
                         <button type="button" class="kp-button kp-button--sm" data-kp5-th-days="off" aria-pressed="false">None</button>
                     </div>
-                    <div role="group" aria-label="Send">
-                        <b>Send:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-send="ok">Send a reply</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-send="fail">Send one that fails</button>
+                </div>
+                <div class="kp5-block">
+                    <h3>The conversation, at the desk width and at 390 px</h3>
+                    <div class="kp5-pair">
+                        <div class="kp5-card"><div data-kp5-thread="desk"></div></div>
+                        <div class="kp5-phone">
+                            <p class="kp5-caption">390 px wide</p>
+                            <div class="kp5-card"><div data-kp5-thread="phone"></div></div>
+                        </div>
+                    </div>
+                    <p class="kp5-readout" data-kp5-th-log aria-live="polite"></p>
+                </div>
+            </section>
+
+<!-- ===== item: conversation-thread-fold (from the last round) -->
+<section
+                class="kp5-sec"
+                data-review-item="conversation-thread-fold"
+                data-review-topic="conversation-thread"
+                data-review-title="Conversation in bubbles: long messages and order"
+                data-review-components="thread"
+                aria-label="Conversation in bubbles: long messages and order"
+            >
+                <div class="kp5-sec__head">
+                    <h2>Conversation in bubbles: long messages and order</h2>
+                    <p>
+                        Messages as bubbles: theirs on the start side, yours on the end side, status changes as centred lines, a day divider between days, attachments as tags. This section shows how long messages fold and in which order the messages stand.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Look at the folded older mails fading out with their &ldquo;Show all&rdquo; line, and at the day dividers when the order is turned round.
+                    </p>
+                </div>
+                <div class="kp5-expect">
+                    <p>
+                        <b>Expected:</b> every setting below is a documented option of the component with a default (shown pressed) and switches live by changing an attribute.
+                    </p>
+                    <ul>
+                        <li>
+                            <b>Long messages</b> (<code>data-kp-thread-fold</code>: newest, a number, full): by default only the newest message is whole and older long ones fold to three lines, faded out, with &ldquo;Show all N lines&rdquo;; <b>Fold after 12 lines</b> and <b>Everything whole</b> redraw the conversation. <b>Order</b> (<code>data-kp-thread-order</code>: oldest, newest) turns it round, day dividers included.
+                        </li>
+                    </ul>
+                </div>
+                <div class="kp5-controls" data-review-controls>
+                    <div role="group" aria-label="Long messages">
+                        <b>Long messages:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="newest" aria-pressed="true">
+                            Only the newest whole
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="12" aria-pressed="false">Fold after 12 lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="full" aria-pressed="false">Everything whole</button>
+                    </div>
+                    <div role="group" aria-label="Order">
+                        <b>Order:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-order="oldest" aria-pressed="true">Oldest first</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-order="newest" aria-pressed="false">Newest first</button>
                     </div>
                 </div>
                 <div class="kp5-block">

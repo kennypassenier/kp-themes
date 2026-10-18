@@ -176,7 +176,7 @@ export const PAGES = [
                 href: 'research/kpadopt56-people/demo.html',
                 rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 11 of 11: People and cards',
-                about: 'Who is who: the avatar, the list of ways to sign in, the conversation in bubbles, and the entity card. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+                about: 'Who is who: the avatar, the list of ways to sign in, the conversation in bubbles, and the entity card. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             // Kenny, 2026-10-18 (formal again): components he approved in formal whose shared package code changed afterwards (the refresh bar and request filter stay in their card, a scrolling segmented bar snaps and fades, the version badge and checklist detail wrap, entity actions fold into More, the chart's end labels stay inside the plot, the availability answers stand under the name), judged again in formal alone, generated from research/kpadopt56/src by research/kpadopt56-formal/build.mjs.
             {
