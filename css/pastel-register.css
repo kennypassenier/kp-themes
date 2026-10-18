@@ -3773,7 +3773,7 @@
        shadow together, so the page shows through, and the lip is the corner
        folded onto the plate, the sticker's back with the plate's own rounded
        corner and border, the crease one line. */
-    [data-theme='pastel'] .kp-empty {
+    [data-theme='pastel'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed])) {
         --kp-sig-pa-lip: 1.9rem;
         position: relative;
         padding: 1.25rem 1.5rem 1.6rem;
@@ -3791,7 +3791,7 @@
         );
     }
 
-    [data-theme='pastel'] .kp-empty:dir(rtl) {
+    [data-theme='pastel'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed])):dir(rtl) {
         clip-path: polygon(
             calc(100% + 1rem) -1rem,
             -1rem -1rem,
@@ -3801,7 +3801,7 @@
         );
     }
 
-    [data-theme='pastel'] .kp-empty::before {
+    [data-theme='pastel'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed]))::before {
         content: '';
         display: block;
         inline-size: 3.25rem;
@@ -3813,7 +3813,7 @@
         mask: radial-gradient(circle closest-side, black 0 calc(100% - 1px), transparent 100%);
     }
 
-    [data-theme='pastel'] .kp-empty::after {
+    [data-theme='pastel'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed]))::after {
         content: '';
         position: absolute;
         inset-block-end: 0;
@@ -5794,5 +5794,20 @@
         block-size: 0.7rem;
         min-block-size: 0;
         margin-block: 0;
+    }
+
+    /* The checklist's "nothing yet" box is the empty plate above; its failed box is the destructive alert's plate with the pass. */
+    [data-theme='pastel'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-color: var(--destructive);
+        border-radius: var(--kp-sig-pa-r-plate);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+
+    /* Retry in the checklist's failed box is a normal button in the middle, not a strip across the box (the grid stretched it). */
+    [data-theme='pastel'] .kp-checklist__empty .kp-claim__retry {
+        justify-self: center;
+        font-size: var(--kp-text-md, 1rem);
     }
 }

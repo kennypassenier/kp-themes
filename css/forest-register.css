@@ -2155,51 +2155,66 @@
        the survey's trig point in clay at the plot's corner. One ink, one clay;
        drawn at 1 px = 1/16 rem so the dashes stay crisp. The seedling grows
        once, 1000 ms on the growth curve; reduced motion shows it grown. */
-    [data-theme='forest'] .kp-empty {
+    /* The clearing, its seedling and the trig point are ONE picture on the `::before` (three masks, three inks), so they stay
+       together wherever the plate puts it: in a plate that centres its words the clearing sits in the middle and the seedling
+       used to stay at the plate's top (absolute `::after`). The seedling's ink is a layer that rises from the foot of its
+       box (`--kp-fo-sprout-rise`, 1000 ms on the growth curve; reduced motion shows it grown). The checklist's "nothing
+       yet" box is the same plate. */
+    @property --kp-fo-sprout-rise {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+    }
+
+    [data-theme='forest'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed])) {
         --kp-fo-clearing: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 52'%3E%3Cpath d='M2 2H56A14 14 0 0 1 70 16V50H16A14 14 0 0 1 2 36Z' fill='none' stroke='%23000' stroke-width='1.25' stroke-dasharray='4 3'/%3E%3Cellipse cx='36' cy='43' rx='8' ry='2'/%3E%3C/svg%3E");
         --kp-fo-sprout: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 52'%3E%3Crect x='35.4' y='27' width='1.2' height='16'/%3E%3Cellipse cx='31.8' cy='27.5' rx='5.2' ry='2.4' transform='rotate(-48 31.8 27.5)'/%3E%3Cellipse cx='40.2' cy='27.5' rx='5.2' ry='2.4' transform='rotate(48 40.2 27.5)'/%3E%3C/svg%3E");
+        --kp-fo-trig: radial-gradient(circle, var(--foreground) 0 1.5px, transparent 2px 4px, var(--foreground) 4px 5px, transparent 5.5px);
         position: relative;
         padding: 1.25rem 1rem 1.4rem;
         border: 1px solid var(--border);
-        background:
-            radial-gradient(circle, var(--accent-foreground) 0 1.5px, transparent 2px 4px, var(--accent-foreground) 4px 5px, transparent 5.5px)
-                calc(50% + 1.375rem) 1.75rem / 0.75rem 0.75rem no-repeat,
-            var(--card);
+        background: var(--card);
     }
 
-    [data-theme='forest'] .kp-empty::before,
-    [data-theme='forest'] .kp-empty::after {
+    [data-theme='forest'] .kp-checklist__empty:not([data-kp-checklist-failed]) {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+
+    [data-theme='forest'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed]))::before {
         content: '';
         display: block;
         inline-size: 4.5rem;
         block-size: 3.25rem;
-        pointer-events: none;
-        background: var(--border-strong);
-        mask: var(--kp-fo-clearing) 50% 50% / 100% 100% no-repeat;
-    }
-
-    [data-theme='forest'] .kp-empty::before {
         margin: 0 auto 0.6rem;
-    }
-
-    [data-theme='forest'] .kp-empty::after {
-        position: absolute;
-        inset-block-start: 1.25rem;
-        inset-inline-start: calc(50% - 2.25rem);
-        background: var(--primary);
-        mask-image: var(--kp-fo-sprout);
+        pointer-events: none;
+        background:
+            linear-gradient(to top, var(--primary) var(--kp-fo-sprout-rise), transparent 0) 50% 70% / 30% 42% no-repeat,
+            linear-gradient(var(--accent-foreground), var(--accent-foreground)) 87% 0.125rem / 0.75rem 0.75rem no-repeat,
+            var(--border-strong);
+        mask-image: var(--kp-fo-clearing), var(--kp-fo-sprout), var(--kp-fo-trig);
+        mask-position: 50% 50%, 50% 50%, 87% 0.125rem;
+        mask-size: 100% 100%, 100% 100%, 0.75rem 0.75rem;
+        mask-repeat: no-repeat;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='forest'] .kp-empty::after {
+        [data-theme='forest'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed]))::before {
             animation: kp-sig-forest-sprout var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
         }
     }
 
     @keyframes kp-sig-forest-sprout {
         from {
-            clip-path: inset(100% 0 0);
+            --kp-fo-sprout-rise: 0%;
         }
+    }
+
+    /* The failed checklist box is the package's destructive alert plate (leaf corners, the destructive ground). */
+    [data-theme='forest'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-radius: var(--kp-sig-fo-plate);
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
     }
 
     [data-theme='forest'] .kp-empty__title {
@@ -5780,19 +5795,10 @@
         gap: 0.25rem;
     }
 
-    [data-theme='forest'] .kp-runs__empty::before,
-    [data-theme='forest'] .kp-runs__empty::after {
+    [data-theme='forest'] .kp-runs__empty::before {
         inline-size: 3.1rem;
         block-size: 2.25rem;
-    }
-
-    [data-theme='forest'] .kp-runs__empty::before {
         margin: 0 auto;
-    }
-
-    [data-theme='forest'] .kp-runs__empty::after {
-        inset-block-start: calc(50% - 1.95rem);
-        inset-inline-start: calc(50% - 1.55rem);
     }
 
     [data-theme='forest'] .kp-runs__empty-title {
@@ -5803,5 +5809,17 @@
        row's 1 rem, so the trees stood on the letters. The panel's foot padding clears the row by 6 px. */
     [data-theme='forest'] .kp-datatable__busy-panel {
         padding-block-end: calc(var(--kp-fo-h, 1rem) + 0.375rem);
+    }
+
+    /* The plate of an empty or failed area is set at heading size (`.kp-stateplate`, 1.125 to 1.5 rem), and its action inherited
+       that size: Retry was 23.7 px high text in a 36 px button. The action is a normal button, the size of every other one. */
+    [data-theme='forest'] .kp-stateplate__action {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* Retry in the checklist's failed box is a normal button in the middle, not a strip across the box (the grid stretched it). */
+    [data-theme='forest'] .kp-checklist__empty .kp-claim__retry {
+        justify-self: center;
+        font-size: var(--kp-text-md, 1rem);
     }
 }

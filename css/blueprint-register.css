@@ -6051,4 +6051,45 @@
         border-radius: var(--radius);
         box-shadow: none;
     }
+
+    /* The plate of an empty or failed area is set at heading size (`.kp-stateplate`, 1.125 to 1.5 rem), and its action inherited
+       that size: Retry was 23.7 px high text in a 36 px button. The action is a normal button, the size of every other one. */
+    [data-theme='blueprint'] .kp-stateplate__action {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* The checklist's "nothing yet" box is the sheet's empty plate (dashed frame, compass circle); its failed box is the
+       destructive alert's plate. */
+    [data-theme='blueprint'] .kp-checklist__empty:not([data-kp-checklist-failed]) {
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.45);
+        border-radius: 2px;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.05) 1px, transparent 1px) 0 0 / 12px 12px,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.05) 1px, transparent 1px) 0 0 / 12px 12px;
+    }
+
+    [data-theme='blueprint'] .kp-checklist__empty:not([data-kp-checklist-failed])::before {
+        content: '';
+        display: block;
+        inline-size: 2.75rem;
+        block-size: 2.75rem;
+        margin: 0 auto 0.7rem;
+        background:
+            radial-gradient(circle closest-side, transparent calc(55% - 1px), var(--primary) calc(55% - 1px) 55%, transparent 55%),
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border: 1px solid var(--destructive);
+        border-radius: 2px;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* Retry in the checklist's failed box is a normal button in the middle, not a strip across the box (the grid stretched it). */
+    [data-theme='blueprint'] .kp-checklist__empty .kp-claim__retry {
+        justify-self: center;
+        font-size: var(--kp-text-md, 1rem);
+    }
 }
