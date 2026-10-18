@@ -3773,7 +3773,7 @@
        shadow together, so the page shows through, and the lip is the corner
        folded onto the plate, the sticker's back with the plate's own rounded
        corner and border, the crease one line. */
-    [data-theme='pastel'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed])) {
+    [data-theme='pastel'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed]))) {
         --kp-sig-pa-lip: 1.9rem;
         position: relative;
         padding: 1.25rem 1.5rem 1.6rem;
@@ -3791,7 +3791,7 @@
         );
     }
 
-    [data-theme='pastel'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed])):dir(rtl) {
+    [data-theme='pastel'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed]))):dir(rtl) {
         clip-path: polygon(
             calc(100% + 1rem) -1rem,
             -1rem -1rem,
@@ -3801,7 +3801,7 @@
         );
     }
 
-    [data-theme='pastel'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed]))::before {
+    [data-theme='pastel'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::before {
         content: '';
         display: block;
         inline-size: 3.25rem;
@@ -3813,7 +3813,7 @@
         mask: radial-gradient(circle closest-side, black 0 calc(100% - 1px), transparent 100%);
     }
 
-    [data-theme='pastel'] :is(.kp-empty, .kp-checklist__empty:not([data-kp-checklist-failed]))::after {
+    [data-theme='pastel'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::after {
         content: '';
         position: absolute;
         inset-block-end: 0;

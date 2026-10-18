@@ -6154,4 +6154,23 @@
         min-block-size: 2.25rem;
         padding-inline: 1rem;
     }
+
+    /* The next-times list keeps the height of three rows in every state (166 px); the empty plate with its title at the heading
+       size (two lines on a phone) needed 171 to 198 px, so Empty moved the page (kpadopt5-time/runs-states). In this footprint the
+       compass is 2 rem, the padding 0.5 rem and the tracking is tighter. */
+    [data-theme='blueprint'] .kp-runs__empty {
+        padding: 0.5rem 1rem;
+        gap: 0.25rem;
+    }
+
+    [data-theme='blueprint'] .kp-runs__empty::before {
+        inline-size: 2rem;
+        block-size: 2rem;
+        margin: 0 auto;
+    }
+
+    [data-theme='blueprint'] .kp-runs__empty-title {
+        margin: 0;
+        letter-spacing: 0.04em;
+    }
 }
