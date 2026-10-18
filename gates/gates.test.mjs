@@ -941,7 +941,12 @@ test('CF1: the tarball is the manifest minus the fonts and the source maps', asy
     for (const file of ['js/theme-core.js', 'js/components.js', 'css/cyberpunk-register.css', 'css/layout.css', 'css/utilities.css']) {
         assert.ok(files.includes(file), `${file} is what CF1 exists about and is not in the tarball`);
     }
-    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 16, 'all sixteen registers travel in the tarball');
+    const shippedThemes = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+    assert.equal(
+        files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length,
+        shippedThemes.length,
+        `all ${shippedThemes.length} registers travel in the tarball`,
+    );
     // A malformed manifest line must not smuggle an empty path into tar.
     assert.deepEqual(contents('abc  a.css\n\n   \nxyz  b.css\n'), ['a.css', 'b.css']);
 });
@@ -1187,7 +1192,12 @@ test('fix-13: a gate module that another module imports does not run on import',
             const text = readFileSync(new URL(other, dir), 'utf8');
             if (text.includes(`from './${entry.name}'`) || text.includes(`import './${entry.name}'`)) imported = true;
         }
-        if (imported && !source.includes('import.meta.url ===')) offenders.push(entry.name);
+        // Two spellings of the entry-point check are accepted: the template-string
+        // comparison against `file://${process.argv[1]}` and the
+        // `process.argv[1] === fileURLToPath(import.meta.url)` form that
+        // check-rereview.mjs uses. Both keep the run off the import path.
+        const guarded = source.includes('import.meta.url ===') || /process\.argv\[1\]\s*===\s*fileURLToPath\(import\.meta\.url\)/.test(source);
+        if (imported && !guarded) offenders.push(entry.name);
     }
     assert.deepEqual(offenders, [], 'these gates run their check on import, so importing one ends the importing process');
 });
@@ -1433,7 +1443,8 @@ test("every showcase page carries its own theme's register [Phase 7]", () => {
     // dark for a knob dark's own register declares.
     const dir = new URL('../showcase/themes/', import.meta.url);
     const pages = readdirSync(dir).filter((f) => f.endsWith('.html'));
-    assert.ok(pages.length >= 16, `only ${pages.length} showcase pages, which cannot be right`);
+    const shipped = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+    assert.ok(pages.length >= shipped.length, `only ${pages.length} showcase pages for ${shipped.length} shipped themes, which cannot be right`);
 
     const registers = readdirSync(new URL('../css/', import.meta.url)).filter((f) => f.endsWith('-register.css'));
     const missing = [];
@@ -1457,7 +1468,9 @@ test('the frozen list does not describe a theme the package no longer ships [Pha
     const features = readFileSync(new URL('../docs/FEATURES.md', import.meta.url), 'utf8');
     const order = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
     const live = new Set(Array.isArray(order) ? order : Object.keys(order));
-    assert.ok(live.size >= 16, `only ${live.size} themes, which cannot be right`);
+    // 12 themes remain since 2026-10-17 (terminal, phantom, light and grotesk left, retro earlier);
+    // the floor guards against an empty or truncated list, not against a theme leaving again.
+    assert.ok(live.size >= 12, `only ${live.size} themes, which cannot be right`);
 
     const unmarked = [];
     for (const line of features.split('\n')) {
