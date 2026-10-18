@@ -145,6 +145,8 @@ export const NEEDS = [
     // Tiles of one height across a board, and the ticking freshness line
     // (port spec H and I.4).
     { name: 'tiles', when: '[data-kp-tiles-set]', load: () => import('./tiles.js'), attach: (m, root) => [m.attachTileSets(root)] },
+    // The arrow keys over a board of tiles, one place in the tab order [gap-tab-count].
+    { name: 'tile-keys', when: '[data-kp-tiles-keys]', load: () => import('./tiles.js'), attach: (m, root) => [m.attachTileKeys(root)] },
     { name: 'freshness', when: '[data-kp-ago]', load: () => import('./freshness.js'), attach: (m, root) => [m.attachAgo(root)] },
     { name: 'chart', when: '[data-kp-chart]', load: () => import('./chart.js'), attach: (m, root) => [m.attachCharts(root)] },
     // A bar that folds what does not fit behind a More menu, and the phone's
@@ -152,6 +154,13 @@ export const NEEDS = [
     // button's module, which it imports itself.
     { name: 'nav-fold', when: '[data-kp-nav-fold]', load: () => import('./nav-fold.js'), attach: (m, root) => [m.attachNavFolds(root)] },
     { name: 'tabbar', when: '.kp-tabbar', load: () => import('./tabbar.js'), attach: (m, root) => [m.attachTabbars(root)] },
+    // The count on a tab of the underline row, drawn from its attributes [gap-tab-count].
+    {
+        name: 'tab-count',
+        when: '.kp-tab[data-kp-tab-count], .kp-tab[data-kp-tab-count-state]',
+        load: () => import('./tabbar.js'),
+        attach: (m, root) => [m.attachTabCounts(root)],
+    },
     // The menu button with its rich menu [scope-143]: every other action, grouped.
     { name: 'menu-button', when: '[data-kp-menu-button]', load: () => import('./menu-button.js'), attach: (m, root) => [m.attachMenuButtons(root)] },
     // The segmented control, the list toolbar and the inline key line [kpadopt-controls].

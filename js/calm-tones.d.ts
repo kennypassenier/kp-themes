@@ -27,3 +27,12 @@ export declare function calmWord(tone: string): string | null;
  * @param {string} iso
  */
 export declare function inPausedRange(range: string | null | undefined, iso: string): boolean;
+/**
+ * The legend of a calm component: logged, nothing logged, paused, in the words of the dictionary (`calmLegend…`). A heat grid draws
+ * it by itself (js/heat.js) unless `data-kp-legend="hide"`.
+ * @returns {{ tone: 'logged' | 'quiet' | 'paused', label: string }[]}
+ */
+export declare function calmLegendEntries(): {
+    tone: 'logged' | 'quiet' | 'paused';
+    label: string;
+}[];

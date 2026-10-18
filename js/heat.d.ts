@@ -106,6 +106,50 @@ export type HeatSpec = {
      * the grid's accessible name, when the element has none
      */
     label?: string;
+    /**
+     * the legend under the grid (setHeatLegend); `false` takes it away
+     */
+    legend?: readonly HeatLegendEntry[] | false;
+    /**
+     * the key line at the end of the legend
+     */
+    legendKeys?: HeatLegendOptions['keys'];
+};
+export type HeatLegendEntry = {
+    /**
+     * a swatch of this tone (with `label`)
+     */
+    tone?: GridTone;
+    /**
+     * its words
+     */
+    label?: string;
+    /**
+     * instead of a tone: the value scale, `less` then `steps` swatches of rising level then `more`
+     */
+    ramp?: boolean;
+    /**
+     * how many swatches the ramp has (default 5, 2 to 9)
+     */
+    steps?: number;
+    /**
+     * the ramp's low end (default "Less")
+     */
+    less?: string;
+    /**
+     * the ramp's high end (default "More")
+     */
+    more?: string;
+};
+export type HeatLegendOptions = {
+    /**
+     * `true`: the keys of a heat grid (move, pick a column, drop the pick, earlier or later); or the pairs to show; at the end of the legend
+     */
+    keys?: boolean | readonly import('./keys.js').KeyPair[];
+    /**
+     * the legend's name for a screen reader (default "Legend")
+     */
+    label?: string;
 };
 export type MatrixCell = {
     tone?: GridTone;
@@ -204,6 +248,20 @@ export declare function setHeatPick(el: HTMLElement, key: string | null): void;
  * @param {readonly string[]} keys
  */
 export declare function setHeatRows(el: HTMLElement, keys: readonly string[]): void;
+/**
+ * The legend under a heat grid: a swatch and its words per entry, in the order given, a value ramp where an entry asks for one,
+ * and at the end the line of keys. The list is the one right after the grid (made when there is none), named in the grid's
+ * `aria-describedby`; no entries and no keys hides it. Called again, it rewrites in place, so the legend keeps its place while the
+ * grid loads.
+ *
+ * @param {HTMLElement} el the heat grid
+ * @param {readonly HeatLegendEntry[]} entries
+ * @param {HeatLegendOptions & { source?: 'auto' }} [options]
+ * @returns {HTMLElement | null} the legend, null for a grid that is not in a page
+ */
+export declare function setHeatLegend(el: HTMLElement, entries: readonly HeatLegendEntry[], options?: HeatLegendOptions & {
+    source?: 'auto';
+}): HTMLElement | null;
 /**
  * Wire every heat grid under `root`: pick, row labels, keys.
  * @param {ParentNode} [root]

@@ -62,6 +62,8 @@ var init_strings = __esm({
     DEFAULT_STRINGS = Object.freeze({
       // The toggle button (js/toggle.js) [kpadopt6-ops].
       toggleCounting: "counting",
+      tabCountCounting: "counting",
+      tabCountFailed: "could not be counted",
       toggleOn: (label, count) => count === null ? `${label} on` : `${label} on, ${count} shown`,
       toggleOff: (label, count) => count === null ? `${label} off` : `${label} off, ${count} shown`,
       toggleCount: (label, n) => `${label}: ${n}`,
@@ -603,6 +605,13 @@ var init_strings = __esm({
       heatLoading: "Reading\u2026",
       heatEmpty: "Nothing to show.",
       heatFailed: "Could not be read.",
+      heatLegendLess: "Less",
+      heatLegendMore: "More",
+      heatLegendLabel: "Legend",
+      heatKeysMove: "move",
+      heatKeysPick: "pick a column",
+      heatKeysDrop: "drop the pick",
+      heatKeysPage: "earlier or later",
       matrixSelf: "itself",
       matrixUnknown: "unknown",
       tableClearSearch: "Clear the search and filters",
@@ -22642,11 +22651,17 @@ var init_hovercard = __esm({
 // js/tiles.js
 var tiles_exports = {};
 __export(tiles_exports, {
+  TILES_EXIT_EVENT: () => TILES_EXIT_EVENT,
+  TILES_KEYS: () => TILES_KEYS,
+  TILES_MOVE_EVENT: () => TILES_MOVE_EVENT,
   TILES_SET: () => TILES_SET,
   TILE_ROW_MIN: () => TILE_ROW_MIN,
+  attachTileKeys: () => attachTileKeys,
   attachTileSets: () => attachTileSets,
   evenTileSet: () => evenTileSet,
-  tileSets: () => tileSets
+  nextTile: () => nextTile,
+  tileSets: () => tileSets,
+  tileStop: () => tileStop
 });
 function tileSets(root) {
   const sets = /* @__PURE__ */ new Map();
@@ -22806,7 +22821,216 @@ function attachTileSets(root = document) {
     moving.clear();
   };
 }
-var TILES_SET, TILE_ROW_MIN, visible;
+function tileStop(tile) {
+  const marked = tile.querySelector("[data-kp-tile-stop]");
+  if (marked instanceof HTMLElement) return marked;
+  if (tile instanceof HTMLElement && tile.matches(STOP_CANDIDATES)) return tile;
+  const first = [...tile.querySelectorAll(STOP_CANDIDATES)].find((el14) => !el14.hasAttribute("data-kp-tile-secondary"));
+  return first instanceof HTMLElement ? first : null;
+}
+function keyTiles(board) {
+  const grids = [...board.matches(".kp-tiles") ? [board] : [], ...board.querySelectorAll(".kp-tiles")];
+  return grids.flatMap((grid2) => [...grid2.children]).filter((tile) => tile instanceof HTMLElement && visible(tile) && tileStop(tile) !== null).map((tile) => (
+    /** @type {HTMLElement} */
+    tile
+  ));
+}
+function nextTile(boxes, from, way) {
+  const box = boxes[from];
+  if (!box) return null;
+  if (way === "first") return boxes.length ? 0 : null;
+  if (way === "last") return boxes.length ? boxes.length - 1 : null;
+  const cx = (b) => (b.left + b.right) / 2;
+  const cy = (b) => (b.top + b.bottom) / 2;
+  const half = (b) => (b.bottom - b.top) / 2;
+  const sameRow = (a, b) => Math.abs(cy(a) - cy(b)) <= Math.min(half(a), half(b));
+  const others = boxes.map((b, i) => ({ b, i })).filter(({ i }) => i !== from);
+  if (way === "left" || way === "right") {
+    const sign2 = way === "right" ? 1 : -1;
+    const row = others.filter(({ b }) => sameRow(box, b) && (cx(b) - cx(box)) * sign2 > 0);
+    if (row.length) return row.reduce((best, c) => Math.abs(cx(c.b) - cx(box)) < Math.abs(cx(best.b) - cx(box)) ? c : best).i;
+    const rows = others.filter(({ b }) => !sameRow(box, b) && (cy(b) - cy(box)) * sign2 > 0);
+    if (!rows.length) return null;
+    const near3 = rows.reduce((best, c) => Math.abs(cy(c.b) - cy(box)) < Math.abs(cy(best.b) - cy(box)) ? c : best);
+    const inRow2 = rows.filter(({ b }) => sameRow(near3.b, b));
+    return inRow2.reduce((best, c) => cx(c.b) * sign2 < cx(best.b) * sign2 ? c : best).i;
+  }
+  const sign = way === "down" ? 1 : -1;
+  const beyond = others.filter(({ b }) => !sameRow(box, b) && (cy(b) - cy(box)) * sign > 0);
+  if (!beyond.length) return null;
+  const near2 = beyond.reduce((best, c) => Math.abs(cy(c.b) - cy(box)) < Math.abs(cy(best.b) - cy(box)) ? c : best);
+  const inRow = beyond.filter(({ b }) => sameRow(near2.b, b));
+  return inRow.reduce((best, c) => Math.abs(cx(c.b) - cx(box)) < Math.abs(cx(best.b) - cx(box)) ? c : best).i;
+}
+function attachTileKeys(root = document) {
+  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
+  const view = doc.defaultView;
+  if (!view) return () => {
+  };
+  const boards2 = [];
+  if (root instanceof HTMLElement && root.matches(TILES_KEYS)) boards2.push(root);
+  for (const el14 of root.querySelectorAll(TILES_KEYS)) boards2.push(
+    /** @type {HTMLElement} */
+    el14
+  );
+  const undo = [];
+  for (const board of boards2) {
+    if (wiredBoards.has(board)) continue;
+    wiredBoards.add(board);
+    const off = wireBoard(board, view);
+    undo.push(() => {
+      off();
+      wiredBoards.delete(board);
+    });
+  }
+  return () => undo.splice(0).forEach((off) => off());
+}
+function wireBoard(board, view) {
+  const doc = board.ownerDocument;
+  let stop = null;
+  const taken = /* @__PURE__ */ new Map();
+  let queued2 = 0;
+  const on = () => board.getAttribute("data-kp-tiles-keys") !== "off";
+  const restore2 = () => {
+    for (const [el14, was] of taken) {
+      if (was === null) el14.removeAttribute("tabindex");
+      else el14.setAttribute("tabindex", was);
+    }
+    taken.clear();
+  };
+  const sync4 = () => {
+    queued2 = 0;
+    if (!on()) return restore2();
+    const tiles = keyTiles(board);
+    if (!stop || !tiles.includes(
+      /** @type {HTMLElement} */
+      stop
+    )) stop = tiles[0] ?? null;
+    for (const tile of tiles) {
+      const el14 = tileStop(tile);
+      if (!el14) continue;
+      if (!taken.has(el14)) taken.set(el14, el14.getAttribute("tabindex"));
+      const want = tile === stop ? "0" : "-1";
+      if (el14.getAttribute("tabindex") !== want) el14.setAttribute("tabindex", want);
+    }
+    for (const [el14, was] of taken) {
+      if (!board.contains(el14)) taken.delete(el14);
+      else if (!tiles.some((tile) => tileStop(tile) === el14)) {
+        if (was === null) el14.removeAttribute("tabindex");
+        else el14.setAttribute("tabindex", was);
+        taken.delete(el14);
+      }
+    }
+  };
+  const queue = () => {
+    if (!queued2) queued2 = view.requestAnimationFrame(sync4);
+  };
+  const tileOf = (target) => {
+    if (!(target instanceof Element)) return null;
+    return keyTiles(board).find((tile) => tile.contains(target)) ?? null;
+  };
+  const onFocus = (event) => {
+    if (!on()) return;
+    const tile = tileOf(event.target);
+    if (tile && tile !== stop) {
+      stop = tile;
+      sync4();
+    }
+  };
+  const onKey3 = (event) => {
+    if (!on() || !MOVES.has(event.key) || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
+    const target = (
+      /** @type {Element} */
+      event.target
+    );
+    if (target.closest(
+      'input:not([type="checkbox"]):not([type="radio"]):not([type="button"]), textarea, select, [contenteditable=""], [contenteditable="true"], [role="slider"], [role="menu"], [role="listbox"], [data-kp-tiles-keys-ignore]'
+    ))
+      return;
+    const tiles = keyTiles(board);
+    const from = tiles.findIndex((tile) => tile.contains(target));
+    if (from < 0) return;
+    const boxes = tiles.map((tile) => tile.getBoundingClientRect());
+    const rtl = view.getComputedStyle(board).direction === "rtl";
+    const ways = {
+      ArrowLeft: rtl ? "right" : "left",
+      ArrowRight: rtl ? "left" : "right",
+      ArrowUp: "up",
+      ArrowDown: "down",
+      Home: "first",
+      End: "last"
+    };
+    let way = ways[event.key];
+    let to = from;
+    let exit = false;
+    if (event.key === "PageUp" || event.key === "PageDown") {
+      const down = event.key === "PageDown";
+      const rows = Math.max(1, Math.floor(view.innerHeight / Math.max(1, boxes[from].height + 16)) - 1);
+      way = down ? "down" : "up";
+      for (let i = 0; i < rows; i += 1) {
+        const next2 = nextTile(boxes, to, way);
+        if (next2 === null) {
+          exit = !down && to === from;
+          break;
+        }
+        to = next2;
+      }
+    } else {
+      const next2 = nextTile(boxes, from, way);
+      if (next2 === null) exit = way === "up";
+      else to = next2;
+    }
+    event.preventDefault();
+    if (to === from) {
+      if (exit) leave2();
+      return;
+    }
+    const key = event.key;
+    const el14 = tileStop(tiles[to]);
+    if (!el14) return;
+    stop = tiles[to];
+    sync4();
+    el14.focus();
+    board.dispatchEvent(new CustomEvent(TILES_MOVE_EVENT, { bubbles: true, detail: { from: tiles[from], to: tiles[to], key } }));
+  };
+  const leave2 = () => {
+    board.dispatchEvent(new CustomEvent(TILES_EXIT_EVENT, { bubbles: true, detail: { direction: "up" } }));
+    const named = board.getAttribute("data-kp-tiles-keys-exit");
+    if (!named) return;
+    let aim = doc.getElementById(named);
+    if (!aim) {
+      try {
+        aim = doc.querySelector(named);
+      } catch {
+        aim = null;
+      }
+    }
+    if (aim instanceof HTMLElement) aim.focus();
+  };
+  board.addEventListener("keydown", onKey3);
+  board.addEventListener("focusin", onFocus);
+  const sizes = typeof view.ResizeObserver === "function" ? new view.ResizeObserver(queue) : null;
+  sizes?.observe(board);
+  const changes = new view.MutationObserver(queue);
+  changes.observe(board, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"]
+  });
+  board.addEventListener("toggle", queue, true);
+  sync4();
+  return () => {
+    board.removeEventListener("keydown", onKey3);
+    board.removeEventListener("focusin", onFocus);
+    board.removeEventListener("toggle", queue, true);
+    changes.disconnect();
+    sizes?.disconnect();
+    if (queued2) view.cancelAnimationFrame(queued2);
+    restore2();
+  };
+}
+var TILES_SET, TILE_ROW_MIN, visible, TILES_KEYS, TILES_MOVE_EVENT, TILES_EXIT_EVENT, STOP_CANDIDATES, MOVES, wiredBoards;
 var init_tiles = __esm({
   "js/tiles.js"() {
     "use strict";
@@ -22819,6 +23043,12 @@ var init_tiles = __esm({
       if (fold2 && !tile.closest("summary")) return false;
       return tile.getClientRects().length > 0;
     };
+    TILES_KEYS = "[data-kp-tiles-keys]";
+    TILES_MOVE_EVENT = "kp-tiles-move";
+    TILES_EXIT_EVENT = "kp-tiles-exit";
+    STOP_CANDIDATES = 'a[href], button:not(:disabled), input:not([type="hidden"]):not(:disabled), select:not(:disabled), textarea:not(:disabled), summary, [tabindex]';
+    MOVES = /* @__PURE__ */ new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"]);
+    wiredBoards = /* @__PURE__ */ new WeakSet();
   }
 });
 
@@ -25018,14 +25248,21 @@ var init_nav_fold = __esm({
 // js/tabbar.js
 var tabbar_exports = {};
 __export(tabbar_exports, {
+  TAB: () => TAB,
   TABBAR: () => TABBAR,
   TABBAR_HEIGHT_PROPERTY: () => TABBAR_HEIGHT_PROPERTY,
+  TAB_COUNT_EVENT: () => TAB_COUNT_EVENT,
+  TAB_COUNT_TONES: () => TAB_COUNT_TONES,
+  attachTabCounts: () => attachTabCounts,
   attachTabbars: () => attachTabbars,
+  drawTabCount: () => drawTabCount,
+  setTabCount: () => setTabCount,
   setTabbarBadge: () => setTabbarBadge,
   setTabbarBusy: () => setTabbarBusy,
   setTabbarCurrent: () => setTabbarCurrent
 });
 function setTabbarBadge(tab, count) {
+  if (tab.matches(".kp-tab") && !tab.matches(".kp-tabbar__tab")) return setTabCount(tab, count);
   let badge = (
     /** @type {HTMLElement | null} */
     tab.querySelector(".kp-tabbar__badge")
@@ -25062,6 +25299,143 @@ function setTabbarBusy(tab, busy) {
     made6.setAttribute("aria-hidden", "true");
     icon.append(made6);
   } else if (!busy) spinner?.remove();
+}
+function countOf(tab) {
+  const raw = tab.getAttribute("data-kp-tab-count");
+  const asked = tab.getAttribute("data-kp-tab-count-state");
+  const number = raw === null || raw.trim() === "" || Number.isNaN(Number(raw)) ? null : Math.max(0, Math.trunc(Number(raw)));
+  const state2 = raw === "loading" || asked === "loading" ? "loading" : raw === "error" || asked === "error" ? "error" : number === null ? "none" : "ready";
+  const tone = (
+    /** @type {TabCountTone} */
+    TAB_COUNT_TONES.find((t) => t === tab.getAttribute("data-kp-tab-count-tone")) ?? "neutral"
+  );
+  const unit2 = (tab.getAttribute("data-kp-tab-count-unit") ?? "").split(",").map((word) => word.trim()).filter(Boolean);
+  return {
+    state: state2,
+    count: number,
+    tone,
+    unit: unit2,
+    zero: tab.getAttribute("data-kp-tab-count-zero") === "show",
+    showUnit: tab.hasAttribute("data-kp-tab-count-show-unit")
+  };
+}
+function drawTabCount(tab) {
+  const doc = tab.ownerDocument;
+  const s2 = getStrings();
+  const { state: state2, count, tone, unit: unit2, zero, showUnit } = countOf(tab);
+  let part7 = (
+    /** @type {HTMLElement | null} */
+    tab.querySelector(":scope > .kp-tab__count")
+  );
+  const shown4 = state2 === "loading" || state2 === "error" || state2 === "ready" && (zero || (count ?? 0) > 0);
+  if (!shown4) {
+    part7?.remove();
+    if (DRAWN.has(tab)) {
+      DRAWN.delete(tab);
+      tab.dispatchEvent(new CustomEvent(TAB_COUNT_EVENT, { bubbles: true, detail: { tab, count: null, state: "none", tone } }));
+    }
+    return null;
+  }
+  if (!part7) {
+    part7 = doc.createElement("span");
+    tab.append(part7);
+  }
+  const word = unit2.length === 0 ? "" : count === 1 || unit2.length === 1 ? unit2[0] : unit2[1];
+  const key = [state2, count, tone, word, showUnit].join("|");
+  if (DRAWN.get(tab) === key && part7.isConnected) return part7;
+  DRAWN.set(tab, key);
+  part7.className = `kp-badge kp-tab__count${TONE_CLASS[tone] ? ` ${TONE_CLASS[tone]}` : ""}`;
+  part7.setAttribute("data-kp-tone", tone);
+  part7.setAttribute("data-kp-state", state2);
+  part7.removeAttribute("title");
+  if (state2 === "ready" && count !== null) part7.style.setProperty("--kp-tab-count-digits", String(Math.max(2, String(count).length)));
+  else if (!part7.style.getPropertyValue("--kp-tab-count-digits")) part7.style.setProperty("--kp-tab-count-digits", "2");
+  const span3 = (text, className) => {
+    const node = doc.createElement("span");
+    if (className) node.className = className;
+    node.textContent = text;
+    return node;
+  };
+  const lead = span3(", ", "kp-sr-only");
+  if (state2 === "loading") {
+    const bone = doc.createElement("span");
+    bone.className = "kp-skeleton kp-tab__bone";
+    bone.setAttribute("role", "img");
+    bone.setAttribute("aria-label", s2.tabCountCounting);
+    part7.replaceChildren(lead, bone);
+  } else if (state2 === "error") {
+    const dash = span3("\u2013");
+    dash.setAttribute("aria-hidden", "true");
+    part7.replaceChildren(lead, dash, span3(s2.tabCountFailed, "kp-sr-only"));
+    part7.title = s2.tabCountFailed;
+  } else {
+    const nodes = [lead, span3(String(count))];
+    if (word) nodes.push(showUnit ? span3(` ${word}`, "kp-tab__unit") : span3(` ${word}`, "kp-sr-only"));
+    part7.replaceChildren(...nodes);
+  }
+  tab.dispatchEvent(new CustomEvent(TAB_COUNT_EVENT, { bubbles: true, detail: { tab, count: state2 === "ready" ? count : null, state: state2, tone } }));
+  return part7;
+}
+function setTabCount(tab, count, options = {}) {
+  if (count === "loading" || count === "error") {
+    tab.setAttribute("data-kp-tab-count-state", count);
+  } else {
+    tab.removeAttribute("data-kp-tab-count-state");
+    const whole = count === null || !Number.isFinite(count) ? null : Math.max(0, Math.trunc(count));
+    if (whole === null) tab.removeAttribute("data-kp-tab-count");
+    else tab.setAttribute("data-kp-tab-count", String(whole));
+  }
+  const put = (name, value) => {
+    if (value === void 0) return;
+    if (value === null || value === "") tab.removeAttribute(name);
+    else tab.setAttribute(name, value);
+  };
+  put("data-kp-tab-count-tone", options.tone);
+  put("data-kp-tab-count-unit", options.unit);
+  put("data-kp-tab-count-zero", options.zero === "hide" ? null : options.zero);
+  if (options.showUnit !== void 0) tab.toggleAttribute("data-kp-tab-count-show-unit", options.showUnit === true);
+  return drawTabCount(tab);
+}
+function attachTabCounts(root = document) {
+  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
+  const view = doc.defaultView;
+  const asked = `${TAB}[data-kp-tab-count], ${TAB}[data-kp-tab-count-state]`;
+  const all = () => {
+    const found = (
+      /** @type {Element[]} */
+      []
+    );
+    if (root instanceof Element && root.matches(asked)) found.push(root);
+    for (const tab of root.querySelectorAll(asked)) found.push(tab);
+    return found;
+  };
+  for (const tab of all()) drawTabCount(tab);
+  if (!view || typeof view.MutationObserver !== "function") return () => {
+  };
+  const watch2 = new view.MutationObserver((records) => {
+    const todo = /* @__PURE__ */ new Set();
+    for (const record of records) {
+      if (record.type === "attributes") {
+        if (record.target instanceof view.Element && record.target.matches(TAB)) todo.add(record.target);
+      } else
+        for (const node of record.addedNodes)
+          if (node instanceof view.Element) {
+            if (node.matches(asked)) todo.add(node);
+            for (const tab of node.querySelectorAll(asked)) todo.add(tab);
+          }
+    }
+    for (const tab of todo) drawTabCount(tab);
+  });
+  watch2.observe(root instanceof Document ? root.documentElement : (
+    /** @type {Node} */
+    root
+  ), {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: COUNT_ATTRIBUTES
+  });
+  return () => watch2.disconnect();
 }
 function wire2(bar) {
   const doc = bar.ownerDocument;
@@ -25156,12 +25530,27 @@ function attachTabbars(root = document) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var TABBAR, TABBAR_HEIGHT_PROPERTY, wired;
+var TABBAR, TABBAR_HEIGHT_PROPERTY, TAB, TAB_COUNT_TONES, TAB_COUNT_EVENT, COUNT_ATTRIBUTES, TONE_CLASS, DRAWN, wired;
 var init_tabbar = __esm({
   "js/tabbar.js"() {
     "use strict";
+    init_strings();
     TABBAR = ".kp-tabbar";
     TABBAR_HEIGHT_PROPERTY = "--kp-tabbar-height";
+    TAB = ".kp-tab";
+    TAB_COUNT_TONES = /** @type {const} */
+    ["neutral", "info", "success", "warning", "error"];
+    TAB_COUNT_EVENT = "kp-tab-count";
+    COUNT_ATTRIBUTES = [
+      "data-kp-tab-count",
+      "data-kp-tab-count-tone",
+      "data-kp-tab-count-unit",
+      "data-kp-tab-count-state",
+      "data-kp-tab-count-zero",
+      "data-kp-tab-count-show-unit"
+    ];
+    TONE_CLASS = { info: "kp-badge--info", success: "kp-badge--success", warning: "kp-badge--warning", error: "kp-badge--destructive" };
+    DRAWN = /* @__PURE__ */ new WeakMap();
     wired = /* @__PURE__ */ new WeakSet();
   }
 });
@@ -26604,7 +26993,7 @@ function setIdmark(el14, name, { slot, hue, title = true } = {}) {
   letters.textContent = mark.empty ? getStrings().idmarkUnknown : idmarkLetters(mark.name, xs ? 1 : 2);
   el14.replaceChildren(letters, ...mark.empty ? [] : [patternSvg(doc, mark.cells)]);
   decorateAvatar(el14, mark.name);
-  DRAWN.set(el14, { base: baseKey(el14), slot: slot ?? mark.slot });
+  DRAWN2.set(el14, { base: baseKey(el14), slot: slot ?? mark.slot });
 }
 function decorateAvatar(el14, name) {
   const doc = el14.ownerDocument;
@@ -26786,7 +27175,7 @@ function attachIdmarks(root = document) {
     }
     for (const el14 of all) {
       const name = el14.getAttribute("data-kp-idmark") ?? "";
-      const before = DRAWN.get(el14);
+      const before = DRAWN2.get(el14);
       const want = slots.get(el14);
       if (before?.base === baseKey(el14) && (want === void 0 || want === before.slot) && el14.querySelector(":scope > .kp-idmark__letters")) continue;
       setIdmark(el14, name, { slot: want });
@@ -26811,7 +27200,7 @@ function attachIdmarks(root = document) {
   observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-kp-idmark", ...AVATAR_ATTRIBUTES] });
   return () => observer.disconnect();
 }
-var IDMARK, IDMARK_SLOTS, IDMARK_GLYPHS, SVG_NS2, DRAWN, baseKey, AVATAR_ATTRIBUTES, IDMARK_STATUSES, OWN_LABEL, ASKED, moreSeq;
+var IDMARK, IDMARK_SLOTS, IDMARK_GLYPHS, SVG_NS2, DRAWN2, baseKey, AVATAR_ATTRIBUTES, IDMARK_STATUSES, OWN_LABEL, ASKED, moreSeq;
 var init_idmark = __esm({
   "js/idmark.js"() {
     "use strict";
@@ -26821,7 +27210,7 @@ var init_idmark = __esm({
     IDMARK_SLOTS = 5;
     IDMARK_GLYPHS = Object.freeze(["circle", "square", "triangle", "diamond"]);
     SVG_NS2 = "http://www.w3.org/2000/svg";
-    DRAWN = /* @__PURE__ */ new WeakMap();
+    DRAWN2 = /* @__PURE__ */ new WeakMap();
     baseKey = (el14) => `${el14.getAttribute("data-kp-idmark") ?? ""}|${AVATAR_ATTRIBUTES.map((attr14) => el14.getAttribute(attr14) ?? "").join("|")}|${el14.className}`;
     AVATAR_ATTRIBUTES = ["data-kp-idmark-hue", "data-kp-idmark-src", "data-kp-idmark-status", "data-kp-idmark-alt", "data-kp-idmark-loading"];
     IDMARK_STATUSES = Object.freeze(["online", "away", "busy"]);
@@ -34605,6 +34994,7 @@ var calm_tones_exports = {};
 __export(calm_tones_exports, {
   CALM_TONES: () => CALM_TONES,
   CALM_TONES_ATTRIBUTE: () => CALM_TONES_ATTRIBUTE,
+  calmLegendEntries: () => calmLegendEntries,
   calmTone: () => calmTone,
   calmWord: () => calmWord,
   inPausedRange: () => inPausedRange,
@@ -34635,6 +35025,14 @@ function inPausedRange(range, iso) {
   if (!range) return false;
   const [from = "", to = ""] = range.split("/");
   return (from === "" || iso >= from) && (to === "" || iso <= to);
+}
+function calmLegendEntries() {
+  const s2 = getStrings();
+  return [
+    { tone: "logged", label: s2.calmLegendLogged },
+    { tone: "quiet", label: s2.calmLegendQuiet },
+    { tone: "paused", label: s2.calmLegendPaused }
+  ];
 }
 var CALM_TONES_ATTRIBUTE, CALM_TONES, warned3, isCalmTones;
 var init_calm_tones = __esm({
@@ -35645,6 +36043,7 @@ __export(heat_exports, {
   attachHeats: () => attachHeats,
   attachMatrices: () => attachMatrices,
   setHeat: () => setHeat,
+  setHeatLegend: () => setHeatLegend,
   setHeatPick: () => setHeatPick,
   setHeatRows: () => setHeatRows,
   setMatrix: () => setMatrix,
@@ -35683,7 +36082,7 @@ function waitForCard(el14, spec, loading, draw8) {
   return true;
 }
 function syncCard2(el14, loading, words, area, className) {
-  const first = !DRAWN2.has(el14);
+  const first = !DRAWN3.has(el14);
   markDrawn(el14);
   const card = CARDS.get(el14);
   if (!loading) {
@@ -35701,10 +36100,10 @@ function syncCard2(el14, loading, words, area, className) {
   CARDS.set(el14, openBusyCard(el14, { words, area, className, arrive: !first }));
 }
 function markDrawn(el14) {
-  if (DRAWN2.has(el14)) return;
+  if (DRAWN3.has(el14)) return;
   const view = el14.ownerDocument.defaultView;
-  if (view) view.requestAnimationFrame(() => DRAWN2.add(el14));
-  else DRAWN2.add(el14);
+  if (view) view.requestAnimationFrame(() => DRAWN3.add(el14));
+  else DRAWN3.add(el14);
 }
 function replaceKeepingCard(el14, nodes) {
   const keep = CARDS.get(el14)?.layer;
@@ -35741,6 +36140,10 @@ function setHeat(el14, spec) {
   const s2 = getStrings();
   const state2 = spec.state ?? "ready";
   const loading = state2 === "loading";
+  if (spec.legend !== void 0) {
+    if (spec.legend === false) removeLegend(el14);
+    else setHeatLegend(el14, spec.legend, { keys: spec.legendKeys });
+  } else syncCalmLegend(el14);
   if (waitForCard(el14, spec, loading, setHeat)) return;
   const every = Math.max(1, spec.every ?? 3);
   const toggle2 = spec.toggle ?? el14.hasAttribute("data-kp-heat-toggle");
@@ -35917,6 +36320,86 @@ function setHeatRows(el14, keys) {
     button.setAttribute("aria-pressed", String(set.has(button.dataset.key ?? "")));
   }
 }
+function legendOf(el14) {
+  const next2 = el14.nextElementSibling;
+  return next2 instanceof HTMLElement && next2.matches(".kp-heat__legend") ? next2 : null;
+}
+function describedBy(el14, legend, on) {
+  if (!legend) return;
+  const ids = (el14.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id && id !== legend.id);
+  if (on) ids.push(legend.id);
+  if (ids.length) el14.setAttribute("aria-describedby", ids.join(" "));
+  else el14.removeAttribute("aria-describedby");
+}
+function removeLegend(el14) {
+  const legend = legendOf(el14);
+  if (!legend) return;
+  legend.hidden = true;
+  legend.replaceChildren();
+  legend.removeAttribute("data-kp-legend-source");
+  describedBy(el14, legend, false);
+}
+function syncCalmLegend(el14) {
+  const legend = legendOf(el14);
+  const own = legend?.getAttribute("data-kp-legend-source") === "auto";
+  if (legend && !own && legend.childElementCount > 0) return;
+  if (isCalmTones(el14) && el14.getAttribute("data-kp-legend") !== "hide") {
+    if (own && !legend?.hidden) return;
+    setHeatLegend(el14, calmLegendEntries(), { source: "auto" });
+  } else if (own) removeLegend(el14);
+}
+function setHeatLegend(el14, entries3, options = {}) {
+  const doc = el14.ownerDocument;
+  const s2 = getStrings();
+  let legend = legendOf(el14);
+  if (!legend) {
+    if (!el14.parentNode) return null;
+    legend = make11(doc, "ul", "kp-heat__legend");
+    el14.after(legend);
+  }
+  if (!legend.id) legend.id = `${el14.id || "kp-heat"}-legend${el14.id ? "" : `-${legendCount += 1}`}`;
+  const keys = options.keys === true ? defaultHeatKeys(s2) : options.keys || null;
+  legend.setAttribute("aria-label", options.label ?? s2.heatLegendLabel);
+  if (options.source) legend.setAttribute("data-kp-legend-source", options.source);
+  else legend.removeAttribute("data-kp-legend-source");
+  const items = [];
+  for (const entry of entries3) {
+    const li = make11(doc, "li");
+    if (entry.ramp) {
+      const steps = Math.min(9, Math.max(2, Math.trunc(entry.steps ?? 5)));
+      const ramp = make11(doc, "span", "kp-heat__ramp", { "aria-hidden": "true" });
+      for (let i = 0; i < steps; i += 1) {
+        const swatch = make11(doc, "span", "kp-heat__swatch", { "data-kp-tone": "level" });
+        swatch.style.setProperty("--kp-heat-level", String(Math.round(i / (steps - 1) * 100) / 100));
+        ramp.append(swatch);
+      }
+      li.append(entry.less ?? s2.heatLegendLess, ramp, entry.more ?? s2.heatLegendMore);
+    } else {
+      const swatch = make11(doc, "span", "kp-heat__swatch", { "data-kp-tone": entry.tone ?? "muted", "aria-hidden": "true" });
+      li.append(swatch, ` ${entry.label ?? ""}`);
+    }
+    items.push(li);
+  }
+  if (keys && keys.length) {
+    const end = make11(doc, "li", "kp-heat__legend-end");
+    const line = make11(doc, "div", "kp-keys");
+    setKeys(line, keys);
+    end.append(line);
+    items.push(end);
+  }
+  legend.replaceChildren(...items);
+  legend.hidden = items.length === 0;
+  describedBy(el14, legend, items.length > 0);
+  return legend;
+}
+function defaultHeatKeys(s2) {
+  return [
+    [["\u2190", "\u2191", "\u2193", "\u2192"], s2.heatKeysMove],
+    ["Enter", s2.heatKeysPick],
+    ["Esc", s2.heatKeysDrop],
+    [["PgUp", "PgDn"], s2.heatKeysPage]
+  ];
+}
 function wireHeat(el14) {
   const onClick = (event) => {
     const target = (
@@ -36008,6 +36491,9 @@ function wireHeat(el14) {
   el14.addEventListener("click", onClick);
   el14.addEventListener("keydown", onKey3);
   el14.addEventListener("focusin", onFocus);
+  syncCalmLegend(el14);
+  const legendWatch = new MutationObserver(() => syncCalmLegend(el14));
+  legendWatch.observe(el14, { attributes: true, attributeFilter: ["data-kp-tones", "data-kp-legend"] });
   if (el14.querySelector(HEAT_CELL)) {
     const pressed = (
       /** @type {NodeListOf<HTMLElement>} */
@@ -36020,6 +36506,7 @@ function wireHeat(el14) {
     el14.removeEventListener("click", onClick);
     el14.removeEventListener("keydown", onKey3);
     el14.removeEventListener("focusin", onFocus);
+    legendWatch.disconnect();
   };
 }
 function attachHeats(root = document) {
@@ -36398,7 +36885,7 @@ function attachMatrices(root = document) {
   }
   return () => undo.forEach((fn) => fn());
 }
-var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, MATRIX_LIGHT_EVENT, TONES, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN2, HEAT_CELL, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
+var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, MATRIX_LIGHT_EVENT, TONES, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, HEAT_CELL, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
 var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
@@ -36407,6 +36894,7 @@ var init_heat = __esm({
     init_busy_card();
     init_uses_map();
     init_calm_tones();
+    init_keys();
     HEAT = "[data-kp-heat]";
     MATRIX = "[data-kp-matrix]";
     HEAT_PICK_EVENT = "kp-heat-pick";
@@ -36427,8 +36915,9 @@ var init_heat = __esm({
     LIT = /* @__PURE__ */ new WeakMap();
     CARDS = /* @__PURE__ */ new WeakMap();
     WAITING = /* @__PURE__ */ new WeakMap();
-    DRAWN2 = /* @__PURE__ */ new WeakSet();
+    DRAWN3 = /* @__PURE__ */ new WeakSet();
     HEAT_CELL = ".kp-heat__cell[data-c]:not(.kp-skeleton)";
+    legendCount = 0;
     WIRED6 = /* @__PURE__ */ new WeakMap();
     MATRIX_CELL = ".kp-matrix__cell[data-c]:not([data-kp-inert])";
     GLYPHS3 = Object.freeze({ ok: "\u2713", warn: "!", bad: "\xD7", muted: "\u2013", none: "\u2013" });
@@ -39050,7 +39539,7 @@ function draw6(el14, spec) {
   const loading = state2 === "loading";
   const failed = state2 === "error";
   const label = spec.label ?? el14.dataset.kpUptimeLabel ?? "";
-  const count = periods.length > 0 && !loading ? periods.length : spec.count ?? countOf(el14);
+  const count = periods.length > 0 && !loading ? periods.length : spec.count ?? countOf2(el14);
   const figures = uptimeFigures(loading || failed ? [] : periods);
   const focusedKey = el14.contains(el14.ownerDocument.activeElement) ? (
     /** @type {HTMLElement} */
@@ -39163,11 +39652,11 @@ function draw6(el14, spec) {
     if (roving2) roving2.tabIndex = 0;
     if (focusedKey !== void 0 && roving2?.dataset.kpKey === focusedKey) roving2.focus({ preventScroll: true });
   }
-  const first = !DRAWN3.has(el14);
-  if (!DRAWN3.has(el14)) {
+  const first = !DRAWN4.has(el14);
+  if (!DRAWN4.has(el14)) {
     const view = el14.ownerDocument.defaultView;
-    if (view) view.requestAnimationFrame(() => DRAWN3.add(el14));
-    else DRAWN3.add(el14);
+    if (view) view.requestAnimationFrame(() => DRAWN4.add(el14));
+    else DRAWN4.add(el14);
   }
   const card = CARDS2.get(el14);
   if (loading) {
@@ -39483,7 +39972,7 @@ function attachUptimes(root = document) {
     for (const c of cleanups) c();
   };
 }
-var toneFor, wordFor, UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, UNPINNED, DRAWN3, INFO, infoMade, infoMode, countOf, make15;
+var toneFor, wordFor, UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, UNPINNED, DRAWN4, INFO, infoMade, infoMode, countOf2, make15;
 var init_uptime = __esm({
   "js/uptime.js"() {
     "use strict";
@@ -39509,11 +39998,11 @@ var init_uptime = __esm({
     CARDS2 = /* @__PURE__ */ new WeakMap();
     WAITING2 = /* @__PURE__ */ new WeakMap();
     UNPINNED = /* @__PURE__ */ new WeakSet();
-    DRAWN3 = /* @__PURE__ */ new WeakSet();
+    DRAWN4 = /* @__PURE__ */ new WeakSet();
     INFO = /* @__PURE__ */ new WeakMap();
     infoMade = 0;
     infoMode = (el14) => (SPECS.get(el14)?.open ?? el14.dataset.kpUptimeOpen) === "info";
-    countOf = (el14) => {
+    countOf2 = (el14) => {
       const n = Number.parseInt(el14.dataset.kpUptimeCount ?? "", 10);
       return Number.isFinite(n) && n > 0 ? n : UPTIME_COUNT;
     };
@@ -46306,7 +46795,7 @@ function columnsFor(host, inline) {
   let most = 0;
   let more = false;
   for (const card of cards2) {
-    const data = DRAWN4.get(card)?.data;
+    const data = DRAWN5.get(card)?.data;
     if (!data || data.status === "loading") continue;
     const n = (data.actions ?? []).length;
     most = Math.max(most, Math.min(n, inline));
@@ -46321,7 +46810,7 @@ function fitFlags(card, shown4) {
     if (!row || !card.isConnected || shown4 <= 0) return;
     if (row.scrollWidth > row.clientWidth + 1) {
       card.dataset.kpFlagsFit = String(shown4 - 1);
-      const was = DRAWN4.get(card);
+      const was = DRAWN5.get(card);
       if (was) {
         delete was.drawn.flags;
         setEntity(card, was.data);
@@ -46352,7 +46841,7 @@ function fitActions(host, inline) {
 }
 function redraw(cards2, slots = ["actions"]) {
   for (const card of cards2) {
-    const was = DRAWN4.get(card);
+    const was = DRAWN5.get(card);
     if (!was) continue;
     for (const name of slots) delete was.drawn[name];
     setEntity(card, was.data);
@@ -46362,9 +46851,9 @@ function setEntity(card, data) {
   frame2(card);
   const doc = card.ownerDocument;
   const s2 = getStrings();
-  const before = DRAWN4.get(card);
+  const before = DRAWN5.get(card);
   const drawn2 = before?.drawn ?? {};
-  DRAWN4.set(card, { data, drawn: drawn2 });
+  DRAWN5.set(card, { data, drawn: drawn2 });
   card.setAttribute("data-kp-row-key", data.key);
   card.setAttribute("data-kp-entity-key", data.key);
   const status = data.status ?? "ready";
@@ -46703,7 +47192,7 @@ function attachEntityCards(root = document) {
         /** @type {HTMLElement[]} */
         [...grid2.querySelectorAll(":scope > .kp-card--entity")]
       ) {
-        const was = DRAWN4.get(card);
+        const was = DRAWN5.get(card);
         if (!was) continue;
         was.drawn = {};
         setEntity(card, was.data);
@@ -46727,7 +47216,7 @@ function attachEntityCards(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN4, opt2, made5, sig, SLOTS, slotOf, ACTIONS_QUEUED, BUSY2;
+var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN5, opt2, made5, sig, SLOTS, slotOf, ACTIONS_QUEUED, BUSY2;
 var init_entity_card = __esm({
   "js/entity-card.js"() {
     "use strict";
@@ -46745,7 +47234,7 @@ var init_entity_card = __esm({
     ENTITY_RETRY_EVENT = "kp-entity-retry";
     ENTITY_NEW_EVENT = "kp-entity-new";
     ENTITY_GRID_RETRY_EVENT = "kp-entity-grid-retry";
-    DRAWN4 = /* @__PURE__ */ new WeakMap();
+    DRAWN5 = /* @__PURE__ */ new WeakMap();
     opt2 = (el14, name) => el14.getAttribute(name) ?? el14.closest(ENTITY_GRID)?.getAttribute(name) ?? null;
     made5 = (doc, tag, className) => {
       const el14 = doc.createElement(tag);
@@ -57619,6 +58108,8 @@ var NEEDS = [
   // Tiles of one height across a board, and the ticking freshness line
   // (port spec H and I.4).
   { name: "tiles", when: "[data-kp-tiles-set]", load: () => Promise.resolve().then(() => (init_tiles(), tiles_exports)), attach: (m, root) => [m.attachTileSets(root)] },
+  // The arrow keys over a board of tiles, one place in the tab order [gap-tab-count].
+  { name: "tile-keys", when: "[data-kp-tiles-keys]", load: () => Promise.resolve().then(() => (init_tiles(), tiles_exports)), attach: (m, root) => [m.attachTileKeys(root)] },
   { name: "freshness", when: "[data-kp-ago]", load: () => Promise.resolve().then(() => (init_freshness(), freshness_exports)), attach: (m, root) => [m.attachAgo(root)] },
   { name: "chart", when: "[data-kp-chart]", load: () => Promise.resolve().then(() => (init_chart(), chart_exports)), attach: (m, root) => [m.attachCharts(root)] },
   // A bar that folds what does not fit behind a More menu, and the phone's
@@ -57626,6 +58117,13 @@ var NEEDS = [
   // button's module, which it imports itself.
   { name: "nav-fold", when: "[data-kp-nav-fold]", load: () => Promise.resolve().then(() => (init_nav_fold(), nav_fold_exports)), attach: (m, root) => [m.attachNavFolds(root)] },
   { name: "tabbar", when: ".kp-tabbar", load: () => Promise.resolve().then(() => (init_tabbar(), tabbar_exports)), attach: (m, root) => [m.attachTabbars(root)] },
+  // The count on a tab of the underline row, drawn from its attributes [gap-tab-count].
+  {
+    name: "tab-count",
+    when: ".kp-tab[data-kp-tab-count], .kp-tab[data-kp-tab-count-state]",
+    load: () => Promise.resolve().then(() => (init_tabbar(), tabbar_exports)),
+    attach: (m, root) => [m.attachTabCounts(root)]
+  },
   // The menu button with its rich menu [scope-143]: every other action, grouped.
   { name: "menu-button", when: "[data-kp-menu-button]", load: () => Promise.resolve().then(() => (init_menu_button(), menu_button_exports)), attach: (m, root) => [m.attachMenuButtons(root)] },
   // The segmented control, the list toolbar and the inline key line [kpadopt-controls].
@@ -59368,10 +59866,13 @@ export {
   STORAGE_KEY,
   SURFACES,
   SWIPE_DISTANCE,
+  TAB,
   TABBAR,
   TABBAR_HEIGHT_PROPERTY,
   TABS_OVERFLOW,
   TAB_CHANGE_EVENT,
+  TAB_COUNT_EVENT,
+  TAB_COUNT_TONES,
   TEXT_ATTRIBUTE,
   THEMES,
   THEME_ATTRIBUTE,
@@ -59388,6 +59889,9 @@ export {
   TICK_EVENT,
   TICK_KNOB,
   TICK_MS2 as TICK_MS,
+  TILES_EXIT_EVENT,
+  TILES_KEYS,
+  TILES_MOVE_EVENT,
   TILES_SET,
   TILE_ROW_MIN,
   TIME,
@@ -59625,12 +60129,14 @@ export {
   attachStickyNavs,
   attachStructure,
   attachSwitches,
+  attachTabCounts,
   attachTabbars,
   attachTableRegions,
   attachTabs,
   attachThemePickers,
   attachThreads,
   attachTicks,
+  attachTileKeys,
   attachTileSets,
   attachTimerDiscs,
   attachTimers,
@@ -59676,6 +60182,7 @@ export {
   calendarMonth,
   calendarSelect,
   calm_exports as calmExports,
+  calmLegendEntries,
   calmScope,
   calmTone,
   calm_tones_exports as calmTonesExports,
@@ -59760,6 +60267,7 @@ export {
   docpreview_exports as docpreviewExports,
   drawArt,
   drawSparkline,
+  drawTabCount,
   drawUsesMap,
   drawnSelect,
   drawsSelect,
@@ -59899,6 +60407,7 @@ export {
   newpill_exports as newpillExports,
   nextSelection,
   nextSorts,
+  nextTile,
   niceMax,
   no_flash_exports as noFlashExports,
   noFlashSnippet,
@@ -60094,6 +60603,7 @@ export {
   setGraphData,
   setGraphState,
   setHeat,
+  setHeatLegend,
   setHeatPick,
   setHeatRows,
   setIdmark,
@@ -60145,6 +60655,7 @@ export {
   setStatus,
   setStep,
   setStrings,
+  setTabCount,
   setTabbarBadge,
   setTabbarBusy,
   setTabbarCurrent,
@@ -60239,6 +60750,7 @@ export {
   tickStride,
   tickTo,
   tileSets,
+  tileStop,
   tiles_exports as tilesExports,
   timeInWindow,
   timeMinutes,

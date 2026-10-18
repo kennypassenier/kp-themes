@@ -4,6 +4,14 @@ export type Strings = {
      */
     toggleCounting: string;
     /**
+     * The count on a tab, while it is still being counted: its name for a screen reader (js/tabbar.js, setTabCount) [gap-tab-count]
+     */
+    tabCountCounting: string;
+    /**
+     * The count on a tab that could not be counted, in words (the dash on the tab says nothing) [gap-tab-count]
+     */
+    tabCountFailed: string;
+    /**
      * The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
      */
     toggleOn: (label: string, count: number | null) => string;
@@ -1817,6 +1825,34 @@ export type Strings = {
      * A heat grid or matrix that could not be read [kpadopt2-grids]
      */
     heatFailed: string;
+    /**
+     * The less end of a heat legend's value ramp (js/heat.js, setHeatLegend) [gap-tab-count]
+     */
+    heatLegendLess: string;
+    /**
+     * The more end of the ramp [gap-tab-count]
+     */
+    heatLegendMore: string;
+    /**
+     * The name of a heat grid's legend for a screen reader [gap-tab-count]
+     */
+    heatLegendLabel: string;
+    /**
+     * The heat legend's key line: the arrow keys [gap-tab-count]
+     */
+    heatKeysMove: string;
+    /**
+     * Enter or Space on a cell: pick the column [gap-tab-count]
+     */
+    heatKeysPick: string;
+    /**
+     * Escape: drop the picked column [gap-tab-count]
+     */
+    heatKeysDrop: string;
+    /**
+     * Page Up and Page Down: show earlier or later columns [gap-tab-count]
+     */
+    heatKeysPage: string;
     /**
      * A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
      */
@@ -5399,6 +5435,8 @@ export type Strings = {
 /**
  * @typedef {object} Strings
  * @property {string} toggleCounting  The count's name while it is still being counted (js/toggle.js) [kpadopt6-ops]
+ * @property {string} tabCountCounting  The count on a tab, while it is still being counted: its name for a screen reader (js/tabbar.js, setTabCount) [gap-tab-count]
+ * @property {string} tabCountFailed  The count on a tab that could not be counted, in words (the dash on the tab says nothing) [gap-tab-count]
  * @property {(label: string, count: number | null) => string} toggleOn  The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
  * @property {(label: string, count: number | null) => string} toggleOff  The line said once it is switched off [kpadopt6-ops]
  * @property {(label: string, n: number) => string} toggleCount  The line said when the count beside a toggle changed (data-kp-announce="all") [kpadopt6-ops]
@@ -5875,6 +5913,13 @@ export type Strings = {
  * @property {string} heatLoading           What a heat grid's or matrix's cell says while its value is being read (js/heat.js) [kpadopt2-grids]
  * @property {string} heatEmpty             A heat grid or matrix with no rows [kpadopt2-grids]
  * @property {string} heatFailed            A heat grid or matrix that could not be read [kpadopt2-grids]
+ * @property {string} heatLegendLess        The less end of a heat legend's value ramp (js/heat.js, setHeatLegend) [gap-tab-count]
+ * @property {string} heatLegendMore        The more end of the ramp [gap-tab-count]
+ * @property {string} heatLegendLabel       The name of a heat grid's legend for a screen reader [gap-tab-count]
+ * @property {string} heatKeysMove          The heat legend's key line: the arrow keys [gap-tab-count]
+ * @property {string} heatKeysPick          Enter or Space on a cell: pick the column [gap-tab-count]
+ * @property {string} heatKeysDrop          Escape: drop the picked column [gap-tab-count]
+ * @property {string} heatKeysPage          Page Up and Page Down: show earlier or later columns [gap-tab-count]
  * @property {string} matrixSelf            A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
  * @property {string} matrixUnknown         A matrix cell with no answer, for a screen reader [kpadopt2-grids]
  * @property {string} tableClearSearch      The way out of the no-match state

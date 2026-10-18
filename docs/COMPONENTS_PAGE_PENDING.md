@@ -31,3 +31,5 @@ card; and the sentence that the toasts and the back-to-top control rise by the t
 example `script`, run live and printed under the markup. Not on a page, because it is a catalogue block and not a components-page line: the tab bar's
 own block in the review catalogue, still listed in `catalogue/coverage.json`. The pass of 2026-10-15 brought the date picker's `data-kp-date-format`,
 the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; the pass of 2026-10-14 every line before them.)
+
+- Tab count, tile keys and heat legend [gap-tab-count; research/gap-tab-count, on the Agenda]: tabs.html gets the count on a `.kp-tab` (`setTabCount`, `data-kp-tab-count` with `-tone`, `-unit`, `-show-unit`, `-state` loading and error, `-zero`) with an example of each tone and state; tiles.html gets `data-kp-tiles-keys` (roving tab stop, Left/Right/Up/Down/Home/End/PageUp/PageDown, `data-kp-tiles-keys-exit`, `kp-tiles-move`, `kp-tiles-exit`); heat.html gets `setHeatLegend` (entries, ramp, keys), the `legend` and `legendKeys` of `setHeat`, and the calm grid's own legend with `data-kp-legend="hide"`.
