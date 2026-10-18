@@ -284,6 +284,10 @@
             "types": "./js/lede.d.ts",
             "default": "./js/lede.js"
         },
+        "./js/footprint": {
+            "types": "./js/footprint.d.ts",
+            "default": "./js/footprint.js"
+        },
         "./js/problems": {
             "types": "./js/problems.d.ts",
             "default": "./js/problems.js"

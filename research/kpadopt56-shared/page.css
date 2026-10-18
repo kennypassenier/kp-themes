@@ -24,3 +24,7 @@
 .measured tr[data-current] > * { font-weight: 700; border-block: 2px solid var(--primary); }
 .measured .worse { color: var(--destructive-foreground, #fff); background: var(--destructive, #b00020); font-weight: 700; }
 .measured .note { margin-block: 0.5rem 0; max-inline-size: 90ch; color: var(--muted-foreground); }
+.frame--640 { inline-size: 640px; }
+.statebar { display: flex; flex-wrap: wrap; gap: 0.375rem; align-items: center; }
+.pair[data-width='640'] { flex-wrap: nowrap; overflow-x: auto; }
+.frame--room { min-block-size: 26rem; }

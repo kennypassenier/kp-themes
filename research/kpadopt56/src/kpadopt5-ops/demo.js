@@ -277,6 +277,8 @@ function initMasterDetail() {
             }, 700),
         );
     };
+    /** The panes a state button is setting right now. @type {WeakSet<HTMLElement>} */
+    const setting = new WeakSet();
     for (const root of roots) {
         const name = root.dataset.koMd ?? '';
         root.addEventListener('kp-pane-select', (e) => log('master-detail', `${name}: select ${/** @type {CustomEvent} */ (e).detail.key}`));
@@ -293,6 +295,8 @@ function initMasterDetail() {
         // Arrow keys change the detail without opening a folded pane: load what the selection moved to.
         root.addEventListener('kp-pane-select', (e) => {
             const key = /** @type {CustomEvent} */ (e).detail.key;
+            // A state button selects an item itself: that is not a reader's choice, and its load would end in Ready over the state pressed.
+            if (setting.has(root)) return;
             if (key !== null && !masterDetail(root)?.narrow()) load(root, Number(key));
         });
     }
@@ -304,6 +308,7 @@ function initMasterDetail() {
             for (const root of roots) {
                 const md = /** @type {NonNullable<ReturnType<typeof masterDetail>>} */ (await until(root, () => masterDetail(root)));
                 clearTimeout(timers.get(root));
+                setting.add(root);
                 if (state === 'empty') {
                     md.select(null);
                     md.close();
@@ -316,6 +321,7 @@ function initMasterDetail() {
                     else if (state === 'loading') setPaneState(root, 'loading');
                     else setPaneState(root, 'error', { text: 'The vault did not answer. Nothing was changed.' });
                 }
+                setting.delete(root);
             }
         });
     }

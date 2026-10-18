@@ -2616,8 +2616,26 @@
         margin: 0;
     }
 
+    /* A failed chart is a plate over the plot's height: tinted and bordered in the destructive tone, the sentence at heading size
+ * (`--kp-stateplate-text`, as every other failed area) with a normal Retry under it [t56-statefix-1018]. */
     .kp-chart__state[data-kp-state='error'] {
+        align-content: center;
+        gap: var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-lg, 1.5rem);
+        border: 1px solid hsl(from var(--destructive) h s l / 0.55);
+        background: hsl(from var(--destructive) h s l / 0.08);
         color: var(--foreground);
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        font-weight: 600;
+        line-height: 1.35;
+    }
+
+    .kp-chart__state[data-kp-state='error'] .kp-chart__state-text {
+        max-inline-size: 36ch;
+    }
+
+    .kp-chart__retry {
+        min-block-size: 2.25rem;
     }
 
     .kp-chart__state-text > .kp-chart__dot {
@@ -15459,6 +15477,8 @@
         --kp-checklist-body-min: calc(var(--kp-checklist-min-rows, 10) * (var(--kp-checklist-row, 2.75rem) + 1px));
         display: grid;
         grid-template-columns: minmax(0, 1fr);
+        /* The bar is one line; the body takes what the host is held at while a state shows (js/footprint.js). */
+        grid-template-rows: auto minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
     }
@@ -15594,6 +15614,8 @@
     .kp-checklist__empty {
         display: grid;
         place-content: center;
+        /* The words and the Retry under them sit in the middle: a button is as wide as its words, never a strip across the box. */
+        justify-items: center;
         min-block-size: var(--kp-checklist-body-min);
         box-sizing: border-box;
         margin: 0;
@@ -15617,6 +15639,17 @@
         border-style: solid;
         border-color: var(--destructive);
         color: var(--foreground);
+    }
+
+    /* A failed list shows the failed plate and nothing else: the rows it had are not the truth any more, and they stay in the
+       list's memory for the next ready. The plate fills the body, which fills the footprint the list had [t56-statefix-1018]. */
+    .kp-checklist[data-kp-checklist-error] .kp-checklist__group {
+        display: none;
+    }
+
+    .kp-checklist[data-kp-checklist-error] .kp-checklist__body,
+    .kp-checklist[data-kp-state='empty'] .kp-checklist__body {
+        align-content: stretch;
     }
 
     @media (pointer: coarse) {
@@ -19356,8 +19389,11 @@
         color: var(--foreground);
     }
 
+    /* The action is a normal button: it took the plate's heading size (Retry was 23.7 px text in a 36 px button), so it reads at
+     * the control size and the title carries the heading. A register's own button size still wins [t56-statefix-1018]. */
     .kp-stateplate__action {
         margin-block-start: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-md, 1rem);
     }
 
     /* kpadopt5-ops:stateplate:end */
@@ -19562,6 +19598,8 @@
      *   data-kp-ops-width   80vw (default, never under 64rem) | full | measure (64rem)
      *   data-kp-ops-cards   the default span of a card: 12 | 8 | 6 (default) | 4 | 3
      *   data-kp-ops-sticky  toolbar (default) | head | none: the part that stays reachable
+     *   data-kp-ops-failed  plate (default) | keep: what a failed page (`data-kp-state="error"`) shows; plate = the alert takes the body,
+     *                       centred, at the height the page had, the stale cards hidden; keep = the cards stay, the alert is a band on top
      *   data-kp-uniform     off: cards in a row keep their own height (default: one height per row)
      *   data-kp-density     comfortable (default) | compact
      * and on a card `data-kp-span="3|4|6|8|12"`. Spans are 12 / 8 / 6 / 4 / 3 on a wide
@@ -23522,7 +23560,9 @@
     }
 
     /* Failed to read: the stars' place is one plate of the same size, the words centred and a normal-size Retry. */
-    .kp-rating[data-kp-state='error'] .kp-rating__body {
+    /* The failed plate covers the rating's whole box, not the body's: an input is as wide as its row (100%) while its body is only as
+     * wide as the stars, so the plate was a patch the width of the stars [t56-statefix-1018]. */
+    .kp-rating[data-kp-state='error'] {
         position: relative;
     }
 
@@ -25505,6 +25545,7 @@
 
     .kp-claim__retry {
         margin-block-start: var(--kp-space-md, 0.75rem);
+        min-block-size: 2.25rem;
     }
 
     .kp-checklist__empty:has(.kp-claim__retry) {
@@ -27713,5 +27754,110 @@
 
     .kp-card--ghost {
         pointer-events: none;
+    }
+}
+
+/* --- State plates in the last layer [t56-statefix-1018] ---------------------------------------------------------------
+ * Kenny's rule (2026-10-17 15:37, docs/RULES.md): an empty or failed area is prominent, centred in the component, at heading
+ * size, with a normal-size action, and fills the footprint. A register sets the title of a card's note by its own selector
+ * (solstice 20 px, titanium 18 px, nostromo 16 px, brutalism and deco their capitals) and a register beats kp.components, so
+ * the plate is stated here, in the last layer, as the tour's dim and the side navigation's variants are; a utility still wins.
+ * Every rule hangs on the plate's own class, so nothing here touches a card that does not fail.
+ *
+ * A card's failure: the destructive alert turned into the state plate. Its words are centred in the stage, its title at
+ * `--kp-stateplate-text` (heading size, the same knob the empty plate and the picker's plates read), its sentence at body size,
+ * and its Try again is a normal button (2.25rem) under them. The card grows to hold it: a heading, a sentence and a button need
+ * more room than one alert row did. */
+@layer kp.layout {
+    .kp-card__state:has(> .kp-card__failure) {
+        align-content: stretch;
+    }
+
+    .kp-card__state > .kp-card__failure {
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        padding: var(--kp-space-lg, 1.5rem);
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        line-height: 1.35;
+        text-align: center;
+        text-wrap: balance;
+    }
+
+    .kp-card__failure > .kp-alert__body {
+        justify-items: center;
+        flex: none;
+    }
+
+    .kp-card__state > .kp-card__failure .kp-card__state-title {
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        font-weight: 600;
+        line-height: 1.35;
+    }
+
+    .kp-card__failure .kp-card__state-text {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-card__failure > .kp-card__retry {
+        min-block-size: 2.25rem;
+    }
+}
+
+/* A failed operations page [t56-statefix-1018, S12]. `data-kp-ops-failed` on `.kp-ops`, switchable at runtime (an attribute change
+ * is all it takes, there is no script): `plate` (the default) shows the failure whole, the alert taking the page's body, centred at
+ * heading size and holding the height the page had (js/footprint.js), the cards of the last read hidden; `keep` is what the page did
+ * before, its cards staying under one attention band on top (the page says "what is shown is from earlier"). It needs the page to
+ * write `data-kp-state="error"` on `.kp-ops`. In the last layer, because a register styles `.kp-attention__item` and beats
+ * kp.components. */
+@layer kp.layout {
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) > :is(.kp-ops__kpis, .kp-ops__toolbar, .kp-ops__body) {
+        display: none;
+    }
+
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) > .kp-ops__attention {
+        display: grid;
+        flex: 1 1 auto;
+        min-block-size: 24rem;
+    }
+
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) .kp-attention__item {
+        grid-template-columns: minmax(0, 1fr);
+        place-content: center;
+        justify-items: center;
+        text-align: center;
+        padding: var(--kp-space-xl, 2rem);
+    }
+
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) .kp-attention__text > strong {
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+    }
+
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) .kp-attention__actions {
+        justify-content: center;
+    }
+}
+
+/* A waiting gallery tile keeps the final tile's square footprint [t56-statefix-1018]. `block-size: auto` on `.kp-gallery__tile.kp-skeleton`
+ * (kp.components) lets the tile's aspect ratio make it as tall as it is wide, but a register sets `.kp-skeleton` to a line of 1 to 1.5 rem
+ * and a register beats kp.components, so the tiles collapsed to 16 to 24 px (formal drew 24 px of a 146 px tile): restated in the last layer. */
+@layer kp.layout {
+    .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+    }
+}
+
+/* A failed rating's plate is laid over the rating's whole box [t56-statefix-1018]. A register gives `.kp-alert` its own `position`
+ * (pastel's is relative, for its printed pass) and beats the absolute placement in kp.components, which put the plate back in the
+ * flow, narrow and taller than the stars it was to cover; restated in the last layer. */
+@layer kp.layout {
+    .kp-rating[data-kp-state='error'] .kp-rating__failure:not([hidden]) {
+        position: absolute;
+        inset: 0;
     }
 }

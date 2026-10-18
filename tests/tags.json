@@ -200,6 +200,7 @@
         { "path": "js/calm.js", "tags": ["@component:foundations"], "why": "calm mode [kpadopt5]" },
         { "path": "js/shortcuts.js", "tags": ["@component:foundations"], "why": "the shortcut engine [kpadopt5]" },
         { "path": "js/lede.js", "tags": ["@component:foundations"], "why": "the lede [kpadopt5]" },
+        { "path": "js/footprint.js", "tags": ["@component:data"], "why": "a data component holds its loaded height while a state shows [t56-statefix-1018]" },
         { "path": "js/problems.js", "tags": ["@component:feedback"], "why": "the problem alert [kpadopt5]" },
         { "path": "js/console.js", "tags": ["@component:data"], "why": "the interactive console [kpadopt6]" },
         { "path": "js/timefield.js", "tags": ["@component:field"], "why": "the time of day field [kpadopt6]" },

@@ -104,6 +104,8 @@ export const CHART_SELECT_EVENT = 'kp-chart-select';
 export const CHART_ZOOM_EVENT = 'kp-chart-zoom';
 /** Fired on a group, bubbling, when a range button is pressed, before the charts redraw: `detail` `{ range, span }`. */
 export const CHART_RANGE_EVENT = 'kp-chart-range';
+/** Fired on a chart, bubbling, when the Retry of a failed chart (`{ error }` in its data) is pressed: the page reads again and draws again. */
+export const CHART_RETRY_EVENT = 'kp-chart-retry';
 /** The zone a chart prints its times in and aligns its time axis to, unless attachCharts() is given another (rule 52). */
 export const CHART_TIME_ZONE = 'Europe/Brussels';
 /** A key figure's 24-hour trend: the spark variant without its head line. */
@@ -228,6 +230,7 @@ export function chartWords(overrides) {
         same: s.chartSame,
         now: s.chartNow,
         empty: s.chartEmpty,
+        retry: s.chartRetry,
         onePoint: s.chartOnePoint,
         loading: s.chartLoading,
         pinnedOutside: s.chartPinnedOutside,
@@ -1531,7 +1534,14 @@ function plotChart(host, group, locale, ctx) {
         box.style.blockSize = `${H}px`;
         const words = kind === 'loading' ? strings.loading : kind === 'error' ? (data.error ?? '') : strings.empty;
         if (kind === 'loading') box.append(h(doc, 'span', { class: 'kp-sr-only' }, words));
-        else if (kind === 'error')
+        else if (kind === 'error') {
+            // The failed plate: what failed, and a normal Retry under it (`kp-chart-retry`). The button goes with the state, so the
+            // focus moves to the plot first, as a card's Try again hands it to its stage.
+            const retry = h(doc, 'button', { type: 'button', class: 'kp-button kp-button--sm kp-chart__retry' }, strings.retry);
+            retry.addEventListener('click', () => {
+                plot.focus({ preventScroll: true });
+                host.dispatchEvent(new CustomEvent(CHART_RETRY_EVENT, { bubbles: true }));
+            });
             box.append(
                 h(
                     doc,
@@ -1540,7 +1550,9 @@ function plotChart(host, group, locale, ctx) {
                     h(doc, 'i', { class: 'kp-chart__dot', 'data-kp-tone': 'critical', 'aria-hidden': 'true' }),
                     words,
                 ),
+                retry,
             );
+        }
         else box.append(h(doc, 'div', { class: 'kp-chart__state-text' }, words));
         plot.replaceChildren(box);
         // Said once, not on every redraw.

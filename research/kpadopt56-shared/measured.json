@@ -34,6 +34,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 458,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 458,
+    "hEmpty": 458,
+    "hError": 458
+   },
+   "s9-claim": {
+    "ready": 629,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 629,
+    "hEmpty": 629,
+    "hError": 629
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1142,
+    "dy": 155,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 629,
+    "dy": 21,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 495,
+    "dy": 2,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1378,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 314,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 229,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 79,
+    "off": 57,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 236,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 236,
+    "ctrl": 61,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 236,
+    "ctrl": 18,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -70,6 +210,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 458,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 458,
+    "hEmpty": 458,
+    "hError": 458
+   },
+   "s9-claim": {
+    "ready": 629,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 629,
+    "hEmpty": 629,
+    "hError": 629
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1142,
+    "dy": 155,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 629,
+    "dy": 21,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 495,
+    "dy": 2,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1378,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 314,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 229,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 79,
+    "off": 57,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 236,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 236,
+    "ctrl": 61,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 236,
+    "ctrl": 18,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -115,6 +395,147 @@
    },
    "s8-badge": {
     "radius": 999
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 650,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 650,
+    "hEmpty": 650,
+    "hError": 650
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 650,
+    "dy": 37,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 478,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1533,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 178,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 342,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 258,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 0,
+    "off": null,
+    "fs": null,
+    "btn": null,
+    "none": true
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 227,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 227,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 227,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -151,6 +572,147 @@
    },
    "s8-badge": {
     "radius": 999
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 650,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 650,
+    "hEmpty": 650,
+    "hError": 650
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 650,
+    "dy": 36,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 478,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1533,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 178,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 342,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 258,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 0,
+    "off": null,
+    "fs": null,
+    "btn": null,
+    "none": true
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 227,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 227,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 227,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -196,6 +758,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 452,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 452,
+    "hEmpty": 452,
+    "hError": 452
+   },
+   "s9-claim": {
+    "ready": 677,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 677,
+    "hEmpty": 677,
+    "hError": 677
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1117,
+    "dy": 161,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 677,
+    "dy": 37,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 478,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1688,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 176,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 340,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 260,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 161,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 235,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 235,
+    "ctrl": 54,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 235,
+    "ctrl": 27,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -232,6 +934,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 452,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 452,
+    "hEmpty": 452,
+    "hError": 452
+   },
+   "s9-claim": {
+    "ready": 677,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 677,
+    "hEmpty": 677,
+    "hError": 677
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1117,
+    "dy": 161,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 677,
+    "dy": 37,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 478,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1688,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 176,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 340,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 260,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 161,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 235,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 235,
+    "ctrl": 54,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 235,
+    "ctrl": 27,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -277,6 +1119,147 @@
    },
    "s8-badge": {
     "radius": 2
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 523,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 523,
+    "hEmpty": 523,
+    "hError": 523
+   },
+   "s9-claim": {
+    "ready": 692,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 692,
+    "hEmpty": 692,
+    "hError": 692
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1290,
+    "dy": 196,
+    "dx": 204,
+    "own": 8
+   },
+   "s10-claim": {
+    "h": 692,
+    "dy": 37,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 478,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1900,
+    "dy": 30,
+    "dx": 0,
+    "own": 30
+   },
+   "s11-quote": {
+    "h": 214,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 378,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 308,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 0,
+    "off": null,
+    "fs": null,
+    "btn": null,
+    "none": true
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 79,
+    "off": 56,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 79,
+    "off": 139,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 229,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 229,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 229,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -313,6 +1296,147 @@
    },
    "s8-badge": {
     "radius": 2
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 523,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 523,
+    "hEmpty": 523,
+    "hError": 523
+   },
+   "s9-claim": {
+    "ready": 692,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 692,
+    "hEmpty": 692,
+    "hError": 692
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1290,
+    "dy": 196,
+    "dx": 204,
+    "own": 8
+   },
+   "s10-claim": {
+    "h": 692,
+    "dy": 37,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 478,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1900,
+    "dy": 30,
+    "dx": 0,
+    "own": 30
+   },
+   "s11-quote": {
+    "h": 214,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 378,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 308,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 0,
+    "off": null,
+    "fs": null,
+    "btn": null,
+    "none": true
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 79,
+    "off": 56,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 79,
+    "off": 139,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 229,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 229,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 229,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -358,6 +1482,146 @@
    },
    "s8-badge": {
     "radius": 999
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 89,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 565,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 644,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 644,
+    "hEmpty": 644,
+    "hError": 644
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 644,
+    "dy": 22,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 480,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1394,
+    "dy": 43,
+    "dx": 0,
+    "own": 43
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 354,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 257,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 141,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 246,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 246,
+    "ctrl": 62,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 246,
+    "ctrl": 30,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -394,6 +1658,146 @@
    },
    "s8-badge": {
     "radius": 999
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 89,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 565,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 644,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 644,
+    "hEmpty": 644,
+    "hError": 644
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 644,
+    "dy": 22,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 480,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1394,
+    "dy": 43,
+    "dx": 0,
+    "own": 43
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 354,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 257,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 141,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 246,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 246,
+    "ctrl": 62,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 246,
+    "ctrl": 30,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -439,6 +1843,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 671,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 671,
+    "hEmpty": 671,
+    "hError": 671
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 671,
+    "dy": 21,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 478,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1378,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 342,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 229,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 227,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 227,
+    "ctrl": 52,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 227,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -475,6 +2019,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 671,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 671,
+    "hEmpty": 671,
+    "hError": 671
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 671,
+    "dy": 21,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 478,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1378,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 342,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 229,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 227,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 227,
+    "ctrl": 52,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 227,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -520,6 +2204,146 @@
    },
    "s8-badge": {
     "radius": 2
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 619,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 619,
+    "hEmpty": 619,
+    "hError": 619
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 619,
+    "dy": 20,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 488,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1451,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 324,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 251,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 227,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 227,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 227,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -556,6 +2380,146 @@
    },
    "s8-badge": {
     "radius": 2
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 619,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 619,
+    "hEmpty": 619,
+    "hError": 619
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 619,
+    "dy": 20,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 488,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1451,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 324,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 251,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 227,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 227,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 227,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -601,6 +2565,146 @@
    },
    "s8-badge": {
     "radius": 10
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 639,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 639,
+    "hEmpty": 639,
+    "hError": 639
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 639,
+    "dy": 21,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 479,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1479,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 342,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 229,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 138,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 230,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 230,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 230,
+    "ctrl": 18,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -637,6 +2741,146 @@
    },
    "s8-badge": {
     "radius": 10
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 639,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 639,
+    "hEmpty": 639,
+    "hError": 639
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 639,
+    "dy": 21,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 479,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1479,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 342,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 229,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 138,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 230,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 230,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 230,
+    "ctrl": 18,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -682,6 +2926,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 464,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 464,
+    "hEmpty": 464,
+    "hError": 464
+   },
+   "s9-claim": {
+    "ready": 705,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 705,
+    "hEmpty": 705,
+    "hError": 705
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1177,
+    "dy": 152,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 705,
+    "dy": 40,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 496,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1722,
+    "dy": 43,
+    "dx": 0,
+    "own": 43
+   },
+   "s11-quote": {
+    "h": 176,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 374,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 267,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 77,
+    "off": 65,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 145,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 237,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 237,
+    "ctrl": 56,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 237,
+    "ctrl": 28,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -718,6 +3102,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 464,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 464,
+    "hEmpty": 464,
+    "hError": 464
+   },
+   "s9-claim": {
+    "ready": 705,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 705,
+    "hEmpty": 705,
+    "hError": 705
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1177,
+    "dy": 152,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 705,
+    "dy": 40,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 496,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1722,
+    "dy": 43,
+    "dx": 0,
+    "own": 43
+   },
+   "s11-quote": {
+    "h": 176,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 374,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 267,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 77,
+    "off": 65,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 145,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 237,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 237,
+    "ctrl": 56,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 237,
+    "ctrl": 28,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -763,6 +3287,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 469,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 469,
+    "hEmpty": 469,
+    "hError": 469
+   },
+   "s9-claim": {
+    "ready": 687,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 687,
+    "hEmpty": 687,
+    "hError": 687
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1136,
+    "dy": 152,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 687,
+    "dy": 38,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 490,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1617,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 166,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 363,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 255,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 79,
+    "off": 56,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 145,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 231,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 231,
+    "ctrl": 52,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 231,
+    "ctrl": 22,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -799,6 +3463,146 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 469,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 469,
+    "hEmpty": 469,
+    "hError": 469
+   },
+   "s9-claim": {
+    "ready": 687,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 687,
+    "hEmpty": 687,
+    "hError": 687
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1136,
+    "dy": 153,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 687,
+    "dy": 38,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 490,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1617,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 166,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 363,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 255,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 79,
+    "off": 56,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 145,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 231,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 231,
+    "ctrl": 52,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 231,
+    "ctrl": 22,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -844,6 +3648,146 @@
    },
    "s8-badge": {
     "radius": 2
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 687,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 687,
+    "hEmpty": 687,
+    "hError": 687
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 687,
+    "dy": 38,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 488,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1631,
+    "dy": 55,
+    "dx": 0,
+    "own": 55
+   },
+   "s11-quote": {
+    "h": 178,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 336,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 229,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 20,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 138,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 232,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 232,
+    "ctrl": 54,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 232,
+    "ctrl": 24,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -880,6 +3824,146 @@
    },
    "s8-badge": {
     "radius": 2
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 687,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 687,
+    "hEmpty": 687,
+    "hError": 687
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 687,
+    "dy": 37,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 488,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1631,
+    "dy": 55,
+    "dx": 0,
+    "own": 55
+   },
+   "s11-quote": {
+    "h": 178,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 336,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 229,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 20,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 138,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 232,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 232,
+    "ctrl": 54,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 232,
+    "ctrl": 24,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -925,6 +4009,147 @@
    },
    "s8-badge": {
     "radius": 999
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 650,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 650,
+    "hEmpty": 650,
+    "hError": 650
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 650,
+    "dy": 37,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 488,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1594,
+    "dy": 55,
+    "dx": 0,
+    "own": 55
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 336,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 258,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 0,
+    "off": null,
+    "fs": null,
+    "btn": null,
+    "none": true
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 396,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 228,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 228,
+    "ctrl": 51,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 228,
+    "ctrl": 21,
+    "card": 0,
+    "over": 0
    }
   },
   "prop": {
@@ -961,6 +4186,147 @@
    },
    "s8-badge": {
     "radius": 0
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 650,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 650,
+    "hEmpty": 650,
+    "hError": 650
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 650,
+    "dy": 37,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 488,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1594,
+    "dy": 55,
+    "dx": 0,
+    "own": 55
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 336,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 258,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 0,
+    "off": null,
+    "fs": null,
+    "btn": null,
+    "none": true
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 396,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 228,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 228,
+    "ctrl": 51,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 228,
+    "ctrl": 21,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {

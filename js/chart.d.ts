@@ -8,6 +8,8 @@ export declare const CHART_SELECT_EVENT = "kp-chart-select";
 export declare const CHART_ZOOM_EVENT = "kp-chart-zoom";
 /** Fired on a group, bubbling, when a range button is pressed, before the charts redraw: `detail` `{ range, span }`. */
 export declare const CHART_RANGE_EVENT = "kp-chart-range";
+/** Fired on a chart, bubbling, when the Retry of a failed chart (`{ error }` in its data) is pressed: the page reads again and draws again. */
+export declare const CHART_RETRY_EVENT = "kp-chart-retry";
 /** The zone a chart prints its times in and aligns its time axis to, unless attachCharts() is given another (rule 52). */
 export declare const CHART_TIME_ZONE = "Europe/Brussels";
 /** A key figure's 24-hour trend: the spark variant without its head line. */
@@ -344,6 +346,7 @@ export declare function chartWords(overrides?: Partial<Strings>): {
     same: string;
     now: string;
     empty: string;
+    retry: string;
     onePoint: string;
     loading: string;
     pinnedOutside: string;

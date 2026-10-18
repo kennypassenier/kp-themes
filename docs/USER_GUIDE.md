@@ -1504,7 +1504,10 @@ its readings arrive. `data-kp-chart-loading` makes the plot pulse (it stands sti
 under reduced motion) and keeps the legend row for
 `data-kp-chart-sources="N"` sources; `setChartData()` ends it. No readings
 show the `chartEmpty` words in the middle; `{ error: '…' }` shows the
-page's sentence with a red dot; a single reading is a dot, with
+page's sentence with a red dot on a tinted, bordered plate at heading size
+(`--kp-stateplate-text`) with a Retry under it that fires `kp-chart-retry` on
+the chart (`CHART_RETRY_EVENT`; the page reads again and calls `setChartData()`;
+the words are `chartRetry`); a single reading is a dot, with
 `onePointNote` the `chartOnePoint` words under it.
 
 `setChartData()` on an attached chart is a live update: the crosshair stays
@@ -1863,8 +1866,10 @@ theme's spinner and plate, `js/busy-card.js`); data already there stays
 under it, dimmed and inert, so a refresh never blanks the card, and a
 first load has `--kp-card-stage-min` (7.5rem) of room. Empty fills the
 stage with the package's empty state (title, sentence, optional action);
-error is the destructive alert with Try again, which fires `kp-card-retry`
-on the card. In both the data keeps its room, hidden, with the note
+error is the destructive alert turned into a state plate (centred in the
+stage, its title at heading size, `--kp-stateplate-text`, a normal 2.25rem
+Try again under the sentence), which fires `kp-card-retry` on the card; the
+card is as high as the plate needs, more than one alert row. In both the data keeps its room, hidden, with the note
 centred in it, so a failed refresh of a full card does not collapse it;
 clear the data when it no longer holds and the stage falls back to its
 least height. When the focused Try again goes with its state, the focus moves to
@@ -1875,6 +1880,18 @@ note in a `.kp-card__state` inside the stage. Exports: `setCardState`,
 (`kp-card-state`, `{ card, state, previous }`), `CARD_RETRY_EVENT`.
 Strings: `cardLoading`, `cardEmpty`, `cardFailed`, `cardRetry`. Knobs:
 `--kp-card-stage-min`, `--kp-card-stage-gap`.
+
+### A data component holds its height while a state shows
+
+A data component that is loading, empty or failed fills the height it had when it was loaded, so the page under it does not
+jump twice [t56-statefix-1018; Kenny, 2026-10-16: "de hele grootte van de component gebruiken"]. The matrix, the entity grid,
+the checklist, the notices, the gallery, the availability grid, the request inspector and the operations page (`.kp-ops`) write `data-kp-state` on their host, and
+`js/footprint.js` follows that one attribute (loaded by `js/auto.js`; `attachFootprints(root)` for a subtree you render yourself, `holdFootprint(host)` for one host):
+while the host is ready it remembers its height, and while it is `loading`, `empty` or `error` it holds that height as `min-block-size`.
+The first load has nothing remembered and is left alone. The hold is capped by `--kp-footprint-max` (default `48rem`; set it on the host or on any
+ancestor), because a plate in the middle of 1600 px is out of sight; a `min-block-size` you set yourself is kept (the host is held at the larger
+of the two); a content-box host is held at its content height. A checklist with no items writes `data-kp-state="empty"` itself, and a
+checklist set to `error` shows the failed plate alone (its rows stay in memory for the next ready).
 
 ### Rows with a lead: an inbox, a backlog, files, appointments
 
