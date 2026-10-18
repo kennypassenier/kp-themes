@@ -39,21 +39,28 @@ const log = (box, text) => {
 };
 
 // ---- 1 · picker with the usual on top -------------------------------------------------------------
-if (document.getElementById('kc-usual-a')) {
-    const a = document.getElementById('kc-usual-a');
-    const write = (/** @type {string} */ text) => {
-        const box = document.getElementById('kc-usual-log');
-        if (!box) return;
-        box.textContent = `${box.textContent ? `${box.textContent}\n` : ''}${text}`.split('\n').slice(-5).join('\n');
-    };
-    for (const kind of ['pick', 'add', 'not-today']) {
-        a?.addEventListener(`kp-usual-${kind}`, (event) => write(`kp-usual-${kind} ${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`));
+if (document.querySelector('[data-kc-usual-target]')) {
+    // Every symptom picker marked `data-kc-usual-target` is wired with the buttons and the log of its own section.
+    for (const picker of all('[data-kc-usual-target]')) {
+        const section = picker.closest('section') ?? document.body;
+        const write = (/** @type {string} */ text) => {
+            const box = section.querySelector('.kc-log');
+            if (!box) return;
+            box.textContent = `${box.textContent ? `${box.textContent}\n` : ''}${text}`.split('\n').slice(-5).join('\n');
+        };
+        for (const kind of ['pick', 'add', 'not-today']) {
+            picker.addEventListener(`kp-usual-${kind}`, (event) => write(`kp-usual-${kind} ${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`));
+        }
+        for (const button of all('[data-kc-usual-opt]', section)) {
+            button.addEventListener('click', () => {
+                pressOnly(button);
+                const name = button.getAttribute('data-kc-usual-opt') ?? '';
+                const value = button.dataset.value ?? '';
+                // The options are real attributes: changing one redraws the picker (the states section's pickers follow too).
+                for (const target of [picker, document.getElementById('kc-usual-s'), document.getElementById('kc-usual-p')]) target?.setAttribute(`data-kp-${name}`, value);
+            });
+        }
     }
-    onButtons('data-kc-usual-opt', (name, button) => {
-        const value = button.dataset.value ?? '';
-        // The options are real attributes: changing one redraws the picker.
-        for (const id of ['kc-usual-a', 'kc-usual-s', 'kc-usual-p']) document.getElementById(id)?.setAttribute(`data-kp-${name}`, value);
-    });
     const driven = document.getElementById('kc-usual-s');
     driven?.addEventListener('kp-usual-retry', () => {
         setUsualState(driven, 'loading');
@@ -91,7 +98,7 @@ if (document.getElementById('kc-usual-a')) {
 }
 
 // ---- 2 · questions, one per screen ----------------------------------------------------------------
-if (document.getElementById('kc-focus-a')) {
+if (document.querySelector('[data-kc-focus-main]')) {
     /** The check-in: yesterday's and the usual answers come from the app. @returns {import('../../../../js/focus-steps.js').FocusStep[]} */
     const checkin = () => [
         { text: 'How is your mood today?', answer: { id: 'mood', kind: 'choice', previous: 'matig', usual: 'good', choices: [{ value: 'rough', label: 'Rough' }, { value: 'matig', label: 'Matig' }, { value: 'good', label: 'Good' }, { value: 'great', label: 'Great' }] } },
@@ -101,34 +108,41 @@ if (document.getElementById('kc-focus-a')) {
         { text: 'How much did you move?', answer: { id: 'move', kind: 'choice', usual: 'short', choices: [{ value: 'none', label: 'Not at all' }, { value: 'short', label: 'A short walk' }, { value: 'long', label: 'A long walk' }, { value: 'sport', label: 'Sport', disabled: true, reason: 'Not while the moves are paused' }] } },
         { text: 'One sentence about today, if you like.', answer: { id: 'line', kind: 'text', placeholder: 'Write what you want, or press Not today' } },
     ];
-    const root = /** @type {HTMLElement} */ (document.getElementById('kc-focus-a'));
-    const logBox = document.getElementById('kc-focus-log');
-    const lines = /** @type {string[]} */ ([]);
-    const note = (/** @type {string} */ text) => {
-        lines.push(text);
-        log(logBox, lines.slice(-6).join('\n'));
-    };
-    setFocusSteps(root, checkin());
-    root.addEventListener('kp-focus-steps-answer', (event) => {
-        const d = /** @type {CustomEvent} */ (event).detail;
-        note(`answer { id: '${d.id}', value: ${JSON.stringify(d.value)}, source: '${d.source}' }`);
-    });
-    root.addEventListener('kp-focus-steps-done', (event) => {
-        const d = /** @type {CustomEvent} */ (event).detail;
-        note(`done { total: ${d.total}, answers: ${Object.keys(d.answers ?? {}).length} }`);
-    });
-    const phone = /** @type {HTMLElement} */ (document.getElementById('kc-focus-p'));
-    setFocusSteps(phone, checkin());
-    onButtons('data-kc-focus-opt', (name, button) => {
-        const value = button.dataset.value ?? '';
-        // The options are real attributes: changing one redraws the view.
-        for (const view of [root, phone]) view.setAttribute(`data-kp-${name}`, value);
-    });
-    document.querySelector('[data-kc-focus-restart]')?.addEventListener('click', () => {
+    // Every check-in section (a part holds only the sections it asks) is wired alone: its views, its log and its buttons.
+    for (const root of all('[data-kc-focus-main]')) {
+        const section = root.closest('section') ?? document.body;
+        const phone = /** @type {HTMLElement | null} */ (section.querySelector('[data-kc-focus-phone]'));
+        const logBox = /** @type {HTMLElement | null} */ (section.querySelector('.kc-log'));
+        const lines = /** @type {string[]} */ ([]);
+        const note = (/** @type {string} */ text) => {
+            lines.push(text);
+            log(logBox, lines.slice(-6).join('\n'));
+        };
         setFocusSteps(root, checkin());
-        lines.length = 0;
-        log(logBox, '');
-    });
+        root.addEventListener('kp-focus-steps-answer', (event) => {
+            const d = /** @type {CustomEvent} */ (event).detail;
+            note(`answer { id: '${d.id}', value: ${JSON.stringify(d.value)}, source: '${d.source}' }`);
+        });
+        root.addEventListener('kp-focus-steps-done', (event) => {
+            const d = /** @type {CustomEvent} */ (event).detail;
+            note(`done { total: ${d.total}, answers: ${Object.keys(d.answers ?? {}).length} }`);
+        });
+        if (phone) setFocusSteps(phone, checkin());
+        for (const button of all('[data-kc-focus-opt]', section)) {
+            button.addEventListener('click', () => {
+                pressOnly(button);
+                const name = button.getAttribute('data-kc-focus-opt') ?? '';
+                const value = button.dataset.value ?? '';
+                // The options are real attributes: changing one redraws the view.
+                for (const view of [root, phone]) view?.setAttribute(`data-kp-${name}`, value);
+            });
+        }
+        section.querySelector('[data-kc-focus-restart]')?.addEventListener('click', () => {
+            setFocusSteps(root, checkin());
+            lines.length = 0;
+            log(logBox, '');
+        });
+    }
     // states
     const driven = /** @type {HTMLElement} */ (document.getElementById('kc-focus-s'));
     const sLog = document.getElementById('kc-focus-s-log');

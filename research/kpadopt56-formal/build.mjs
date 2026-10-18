@@ -105,6 +105,14 @@ const CHANGED = [
     },
     {
         demo: 'kpadopt6-ops',
+        id: 'entity-behaviour',
+        topic: 'entity',
+        changed: 'The same folding of entity card actions: the card&rsquo;s More menu and the +N menu open on a readable plate, the same as the package&rsquo;s own menu button.',
+        expect: '<b>Changed:</b> <b>Open a card&rsquo;s More</b>, <b>Open the +N</b> and <b>Open the package&rsquo;s menu</b> each show a readable menu plate; the options above redraw the cards at the same height.',
+        look: 'The More and +N menus are readable plates like the package&rsquo;s own menu; ticking, one flag, compact and names as links keep the cards at one height.',
+    },
+    {
+        demo: 'kpadopt6-ops',
         id: 'entity-states',
         topic: 'entity',
         changed:
@@ -123,13 +131,65 @@ const CHANGED = [
         look: 'The first and last labels under the time axis stand inside the plot, at both widths, and nothing crosses the chart frame. Failed is one plate over the plot with a normal-size Retry, not a dot and a line of small text.',
     },
     {
+        demo: 'kpadopt5-people',
+        id: 'chart-annotations-runs',
+        topic: 'chart',
+        changed: 'The same chart changes, in the run chart: the first and the last date label stand inside the plot, and a chart that could not be read is one plate with a normal-size Retry.',
+        expect: '<b>Changed:</b> the first date label starts at the left edge of the plot and the last one ends at its right edge. <b>Press Failed</b> (in the first chart&rsquo;s controls) and this chart shows one red-edged plate over the plot with a normal <b>Retry</b>.',
+        look: 'The first and last labels under the run chart stand inside the plot; Failed is one plate over the plot with a normal-size Retry.',
+    },
+    {
+        demo: 'kpadopt5-people',
+        id: 'chart-annotations-few',
+        topic: 'chart',
+        changed: 'The same chart changes, in the chart with too few readings: its date labels stand inside the plot.',
+        expect: '<b>Changed:</b> the first and the last date label stand inside the plot, at both widths; press <b>Enough readings</b> and the chart draws itself with its labels inside the plot.',
+        look: 'The first and last labels under the three-point chart stand inside the plot; nothing crosses the chart frame.',
+    },
+    {
         demo: 'kpadopt6-social',
-        id: 'availability-grid',
+        id: 'availability-grid-states',
         topic: 'availability',
         title: 'Availability grid',
         changed:
             'On a phone, the row with your own answer put the answer buttons beside your name and squeezed the name to a few pixels. Now the answers stand under the name. Also, in the 390 px frame with "A list per column", pressing <b>Loading</b> used to show an empty frame; now the waiting grid fills the frame the list had, with the busy card centred over it.',
         expect: '<b>Changed, in the 390 px frames:</b> in your own row the name <b>Kenny (you)</b> has the full width of the row and the answer buttons are on a line under it. Choose <b>A list per column</b> and press <b>Loading</b>: the frame is not empty, the busy card is centred over the waiting grid. At desktop width the grid is as approved.',
+        look: 'On a phone your own name has the full row and the answer buttons stand under it; nothing is squeezed or cut. At desktop width the grid is as approved.',
+    },
+    {
+        demo: 'kpadopt6-social',
+        id: 'availability-grid-answering',
+        topic: 'availability',
+        changed:
+            'This section holds the grid&rsquo;s live options; they are as approved, and the phone changes are judged in the states and the phone sections. Press, answers, dragging and who edits.',
+        expect: '<b>As approved:</b> the options of how people answer work as before and the grid redraws at once; nothing in this section changed.',
+        look: 'How people answer: the menu or the cycle, the answers offered, dragging along your row and who may edit; as approved.',
+    },
+    {
+        demo: 'kpadopt6-social',
+        id: 'availability-grid-best',
+        topic: 'availability',
+        changed:
+            'This section holds the grid&rsquo;s live options; they are as approved, and the phone changes are judged in the states and the phone sections. The best column, the tie rule, the quorum and the choose button.',
+        expect: '<b>As approved:</b> the ring and star on the best column, the quorum and the choose button work as before; nothing in this section changed.',
+        look: 'The best column&rsquo;s ring and star, the choose button and the strict grid beneath; as approved.',
+    },
+    {
+        demo: 'kpadopt6-social',
+        id: 'availability-grid-layout',
+        topic: 'availability',
+        changed:
+            'This section holds the grid&rsquo;s live options; they are as approved, and the phone changes are judged in the states and the phone sections. The summary row, the rows and the periods or days switch.',
+        expect: '<b>As approved:</b> the summary in its three forms, the order of the rows and the switch work as before; nothing in this section changed.',
+        look: 'The summary row in its three forms, the order of the names and the switch above the grid; as approved.',
+    },
+    {
+        demo: 'kpadopt6-social',
+        id: 'availability-grid-phone',
+        topic: 'availability',
+        changed:
+            'On a phone, the row with your own answer put the answer buttons beside your name and squeezed the name to a few pixels. Now the answers stand under the name. Also, in the 390 px frame with "A list per column", pressing <b>Loading</b> used to show an empty frame; now the waiting grid fills the frame the list had, with the busy card centred over it.',
+        expect: '<b>Changed, in the 390 px frame:</b> in your own row the name <b>Kenny (you)</b> has the full width of the row and the answer buttons are on a line under it. Choose <b>A list per column</b>: the frame shows the list per column. At desktop width the grid is as approved.',
         look: 'On a phone your own name has the full row and the answer buttons stand under it; nothing is squeezed or cut. At desktop width the grid is as approved.',
     },
 ];

@@ -561,19 +561,24 @@ if (document.getElementById('kv-entity-grid')) {
         },
     ];
     const grid = document.getElementById('kv-entity-grid');
-    const log = document.getElementById('kv-entity-log');
-    /** @param {string} text */
-    const say = (text) => {
+    // The menus-and-refresh section has a grid of its own (a part holds one section per concern), wired the same way.
+    const tryGrid = document.getElementById('kv-entity-behaviour-grid');
+    /** The log line of the section a grid or a button stands in. @param {Element | null} from @param {string} text */
+    const sayIn = (from, text) => {
+        const log = from?.closest('section')?.querySelector('.kv-log');
         if (log) log.textContent = text;
     };
-    if (grid) {
-        grid.setAttribute('data-kp-entity-meters', '2');
-        setEntityGrid(grid, make());
-        grid.addEventListener('kp-entity-action', (e) => say(`kp-entity-action\n${JSON.stringify(/** @type {CustomEvent} */ (e).detail)}`));
-        grid.addEventListener('kp-entity-flag', (e) => say(`kp-entity-flag\n${JSON.stringify(/** @type {CustomEvent} */ (e).detail)}`));
-        grid.addEventListener('kp-entity-tick', () => {
-            const keys = [...grid.querySelectorAll('.is-ticked')].map((c) => c.getAttribute('data-kp-entity-key'));
-            say(`ticked: ${keys.join(', ') || 'none'}`);
+    /** @param {string} text */
+    const say = (text) => sayIn(grid, text);
+    for (const g of [grid, tryGrid]) {
+        if (!g) continue;
+        g.setAttribute('data-kp-entity-meters', '2');
+        setEntityGrid(g, make());
+        g.addEventListener('kp-entity-action', (e) => sayIn(g, `kp-entity-action\n${JSON.stringify(/** @type {CustomEvent} */ (e).detail)}`));
+        g.addEventListener('kp-entity-flag', (e) => sayIn(g, `kp-entity-flag\n${JSON.stringify(/** @type {CustomEvent} */ (e).detail)}`));
+        g.addEventListener('kp-entity-tick', () => {
+            const keys = [...g.querySelectorAll('.is-ticked')].map((c) => c.getAttribute('data-kp-entity-key'));
+            sayIn(g, `ticked: ${keys.join(', ') || 'none'}`);
         });
     }
     for (const b of document.querySelectorAll('[data-kv-entity-opt]'))
@@ -581,17 +586,15 @@ if (document.getElementById('kv-entity-grid')) {
             const on = b.getAttribute('aria-pressed') !== 'true';
             b.setAttribute('aria-pressed', String(on));
             const kind = b.getAttribute('data-kv-entity-opt');
-            if (!grid) return;
+            const target = b.closest('section')?.querySelector('[data-kp-entity-grid]');
+            if (!target) return;
             if (kind === 'selectable') {
-                grid.toggleAttribute('data-kp-selectable', on);
-                grid.toggleAttribute('data-kp-select-keys', on);
-            } else if (kind === 'flags') grid.setAttribute('data-kp-entity-flags-max', on ? '1' : '3');
-            else if (kind === 'compact') grid.setAttribute('data-kp-density', on ? 'compact' : 'comfortable');
-            else grid.toggleAttribute('data-kp-entity-link', on) || null;
-            if (kind === 'link') {
-                if (on) grid.setAttribute('data-kp-entity-link', '#stack-{key}');
-                else grid.removeAttribute('data-kp-entity-link');
-            }
+                target.toggleAttribute('data-kp-selectable', on);
+                target.toggleAttribute('data-kp-select-keys', on);
+            } else if (kind === 'flags') target.setAttribute('data-kp-entity-flags-max', on ? '1' : '3');
+            else if (kind === 'compact') target.setAttribute('data-kp-density', on ? 'compact' : 'comfortable');
+            else if (on) target.setAttribute('data-kp-entity-link', '#stack-{key}');
+            else target.removeAttribute('data-kp-entity-link');
         });
     /** @param {string} n */
     const setMeters = (n) => {
@@ -618,18 +621,18 @@ if (document.getElementById('kv-entity-grid')) {
     onChoice('entity-inline', setInline);
     for (const b of document.querySelectorAll('[data-kv-entity-refresh]'))
         b.addEventListener('click', () => {
-            if (!grid) return;
+            const g = b.closest('section')?.querySelector('[data-kp-entity-grid]');
+            if (!g) return;
             const list = make();
             const first = list[0];
             first.meters = meters(0.55 + Math.random() * 0.1, 0.72, '5.8 of 8 GB');
             first.flags = [{ label: 'update available', tone: 'warning' }, { label: 'restarted just now' }];
-            const same = grid.firstElementChild;
-            setEntityGrid(grid, list);
-            say(`A live refresh: the first card is ${grid.firstElementChild === same ? 'the same element' : 'a new element'}.`);
+            const same = g.firstElementChild;
+            setEntityGrid(g, list);
+            sayIn(g, `A live refresh: the first card is ${g.firstElementChild === same ? 'the same element' : 'a new element'}.`);
         });
-    const compare = document.getElementById('kv-entity-compare');
-    if (compare)
-        setMenu(compare, [
+    for (const compare of document.querySelectorAll('[data-kp-menu-button][id^="kv-entity-"]'))
+        setMenu(/** @type {HTMLElement} */ (compare), [
             {
                 group: '',
                 items: [
@@ -640,17 +643,19 @@ if (document.getElementById('kv-entity-grid')) {
                 ],
             },
         ]);
-    const wrappers = () =>
-        [grid?.querySelector('[data-kp-key="media-more"]'), grid?.querySelector('[data-kp-key="gateway-flags"]'), compare].filter(Boolean);
     for (const b of document.querySelectorAll('[data-kv-entity-menu]'))
         b.addEventListener('click', () => {
+            const section = b.closest('section');
+            const g = section?.querySelector('[data-kp-entity-grid]');
+            const compare = section?.querySelector('[data-kp-menu-button][id^="kv-entity-"]');
+            const wrappers = [g?.querySelector('[data-kp-key="media-more"]'), g?.querySelector('[data-kp-key="gateway-flags"]'), compare].filter(Boolean);
             const which = b.getAttribute('data-kv-entity-menu');
-            for (const w of wrappers()) closeMenu(/** @type {HTMLElement} */ (w));
+            for (const w of wrappers) closeMenu(/** @type {HTMLElement} */ (w));
             const target =
                 which === 'more'
-                    ? grid?.querySelector('[data-kp-key="media-more"]')
+                    ? g?.querySelector('[data-kp-key="media-more"]')
                     : which === 'flags'
-                      ? grid?.querySelector('[data-kp-key="gateway-flags"]')
+                      ? g?.querySelector('[data-kp-key="gateway-flags"]')
                       : which === 'compare'
                         ? compare
                         : null;

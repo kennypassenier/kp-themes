@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kpadopt5 and 6 in the other themes, part 9 of 12: Calm screens</title>
+        <title>kpadopt5 and 6 in the other themes, part 10 of 14: Calm screens</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -39,10 +39,10 @@
 
         <main id="main" class="cat-main k56-page">
             <header class="k56-intro">
-                <h1>The fifth and sixth adoption rounds, part 9 of 12: Calm screens</h1>
+                <h1>The fifth and sixth adoption rounds, part 10 of 14: Calm screens</h1>
                 <p class="cat-intro">
                     Formal is approved. A quiet daily check-in: calm mode, calm days, the quote card and questions one per screen. This part asks the
-                    eleven other themes for 7 sections (77 pairs), one theme per step in the review dialog. The sections were approved in formal in
+                    eleven other themes for 8 sections (88 pairs), one theme per step in the review dialog. The sections were approved in formal in
                     several rounds; each is shown here in its latest version, with the defaults you chose.
                 </p>
                 <p>
@@ -893,11 +893,11 @@
                 data-review-components="focus-steps"
                 data-review-topic="focus"
                 data-review-topic-title="Questions, one per screen"
-                data-review-title="Questions, one per screen: a daily check-in"
+                data-review-title="Questions, one per screen: the check-in"
                 aria-labelledby="h-focus"
             >
                 <div class="kc-sec__head">
-                    <h2 id="h-focus">Questions, one per screen: a daily check-in</h2>
+                    <h2 id="h-focus">Questions, one per screen: the check-in</h2>
                     <p>
                         The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big
                         answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode
@@ -925,8 +925,8 @@
                             and on. No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
                         </li>
                         <li>
-                            <b>Buttons above</b> switch the options while you look (progress, advance, the same buttons, a summary screen, the
-                            answers&rsquo; layout): the view redraws at once, keeping your place and your answers.
+                            <b>Buttons above</b> switch the options while you look (progress, advance): the view redraws at once, keeping your place
+                            and your answers. <b>Start over</b> asks the six questions again.
                         </li>
                     </ul>
                 </div>
@@ -998,6 +998,130 @@
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-opt="advance" data-value="auto">Auto</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-opt="advance" data-value="button">Button</button>
                     </div>
+                    <div role="group" aria-label="Start over" class="kc-actions">
+                        <button type="button" class="kp-button" data-kc-focus-restart>Start over</button>
+                    </div>
+                </div>
+                <div id="focus-component" class="kc-pair">
+                    <div class="kc-case">
+                        <p class="kc-label">The check-in</p>
+                        <div
+                            class="kp-focus-steps kc-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            id="kc-focus-a"
+                            data-kc-focus-main
+                            aria-label="Daily check-in"
+                        ></div>
+                        <pre class="kc-log" id="kc-focus-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kc-case">
+                        <p class="kc-label">Phone width (390 px): the answers stack, full width</p>
+                        <div class="kc-frame kc-frame--phone">
+                            <div
+                                class="kp-focus-steps kc-focus"
+                                data-kp-focus-steps
+                                data-kp-focus-mode="answer"
+                                data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]'
+                                id="kc-focus-p"
+                                data-kc-focus-phone
+                                aria-label="Daily check-in"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="focus-options"
+                data-review-item="focus-options"
+                data-review-components="focus-steps"
+                data-review-topic="focus"
+                data-review-title="Questions, one per screen: the same buttons and a summary"
+                aria-labelledby="h-focus-options"
+            >
+                <div class="kc-sec__head">
+                    <h2 id="h-focus-options">Questions, one per screen: the same buttons and a summary</h2>
+                    <p>
+                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big
+                        answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode
+                        itself does not change. This section shows the shortcuts and the summary screen.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Same</b> shows <b>Same as yesterday</b> and <b>Same as usual</b> (both, only one of them, or neither); <b>Summary</b>
+                            <b>On</b> adds a summary screen at the end of the check-in. Both redraw the view at once, keeping your place and your
+                            answers; <b>Start over</b> asks the six questions again.
+                        </li>
+                        <li>
+                            <b>Keys</b> (focus inside the view, click a question first): ArrowUp and ArrowDown move between the answers, Enter
+                            chooses, <b>s</b> takes the same as yesterday, <b>u</b> the usual, <b>n</b> Not today, ArrowLeft and ArrowRight go back
+                            and on. No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="focus-options-component">
                     <div role="group" aria-label="The same buttons" class="kc-actions">
                         <b>Same:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-opt="same" data-value="both">Both</button>
@@ -1016,17 +1140,18 @@
                         <button type="button" class="kp-button" data-kc-focus-restart>Start over</button>
                     </div>
                 </div>
-                <div id="focus-component" class="kc-pair">
+                <div id="focus-options-component" class="kc-pair">
                     <div class="kc-case">
                         <p class="kc-label">The check-in</p>
                         <div
                             class="kp-focus-steps kc-focus"
                             data-kp-focus-steps
                             data-kp-focus-mode="answer"
-                            id="kc-focus-a"
+                            id="kc-focus-o"
+                            data-kc-focus-main
                             aria-label="Daily check-in"
                         ></div>
-                        <pre class="kc-log" id="kc-focus-log" aria-live="polite"></pre>
+                        <pre class="kc-log" id="kc-focus-o-log" aria-live="polite"></pre>
                     </div>
                     <div class="kc-case">
                         <p class="kc-label">Phone width (390 px): the answers stack, full width</p>
@@ -1036,7 +1161,8 @@
                                 data-kp-focus-steps
                                 data-kp-focus-mode="answer"
                                 data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]'
-                                id="kc-focus-p"
+                                id="kc-focus-op"
+                                data-kc-focus-phone
                                 aria-label="Daily check-in"
                             ></div>
                         </div>

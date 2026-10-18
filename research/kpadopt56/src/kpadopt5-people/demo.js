@@ -352,9 +352,9 @@ const MESSAGES = [
 let thState = 'ready';
 let thMessages = MESSAGES.map((m) => ({ ...m }));
 let sentCount = 0;
-const thLog = document.querySelector('[data-kp5-th-log]');
 const logTh = (/** @type {string} */ text) => {
-    if (thLog) thLog.textContent = text;
+    // Each conversation section carries its own line under the box (a part holds only the sections it asks).
+    for (const line of all('[data-kp5-th-log]')) line.textContent = text;
 };
 
 function drawThreads() {

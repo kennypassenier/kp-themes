@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kpadopt5 and 6 in the other themes, part 3 of 12: Fields and inputs</title>
+        <title>kpadopt5 and 6 in the other themes, part 4 of 14: Fields and inputs</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -42,10 +42,10 @@
 
         <main id="main" class="cat-main k56-page">
             <header class="k56-intro">
-                <h1>The fifth and sixth adoption rounds, part 3 of 12: Fields and inputs</h1>
+                <h1>The fifth and sixth adoption rounds, part 4 of 14: Fields and inputs</h1>
                 <p class="cat-intro">
                     Formal is approved. Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that
-                    checks what you type, and a star rating. This part asks the eleven other themes for 8 sections (88 pairs), one theme per step in
+                    checks what you type, and a star rating. This part asks the eleven other themes for 9 sections (99 pairs), one theme per step in
                     the review dialog. The sections were approved in formal in several rounds; each is shown here in its latest version, with the
                     defaults you chose.
                 </p>
@@ -393,14 +393,14 @@
                 data-review-topic="time-field"
                 data-review-topic-title="Time field"
                 data-review-components="time"
-                data-review-title="A field for a time of day, in 24 hours"
+                data-review-title="Time field: states"
                 aria-labelledby="h-time-field"
             >
                 <div class="ks-sec__head">
-                    <h2 id="h-time-field">Time field</h2>
+                    <h2 id="h-time-field">Time field: states</h2>
                     <p>
                         One field for a time of day in 24 hours: typed, stepped with the arrow keys or picked from the package's own list. Unlike the
-                        browser's own time box it never shows AM and PM, and it looks like the rest of the theme.
+                        browser's own time box it never shows AM and PM, and it looks like the rest of the theme. This section shows its states.
                     </p>
                 </div>
                 <div class="ks-expected">
@@ -424,10 +424,6 @@
                         <li>
                             At 390 px the field fills the line, 44 px high, and the list is a sheet at the foot of the screen with a title and rows 44
                             px high.
-                        </li>
-                        <li>
-                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once,
-                            nothing reloads: every choice you are asked about is a real option with a default.
                         </li>
                     </ul>
                 </div>
@@ -508,36 +504,6 @@
                         </button>
                         <button type="button" class="kp-button kp-button--sm" data-ks-time-open="" aria-pressed="false">Show it open</button>
                     </div>
-                    <div role="group" aria-label="Step (live option)">
-                        <b>Step (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|5" aria-pressed="true">
-                            5 min
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|15" aria-pressed="false">
-                            15 min
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|1" aria-pressed="false">
-                            1 min
-                        </button>
-                    </div>
-                    <div role="group" aria-label="List (live option)">
-                        <b>List (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-popup|list" aria-pressed="true">
-                            List
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-popup|none" aria-pressed="false">
-                            None
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Look (live option)">
-                        <b>Look (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-look|field" aria-pressed="true">
-                            Box
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-look|inline" aria-pressed="false">
-                            Underline
-                        </button>
-                    </div>
                 </div>
                 <p class="ks-readout" role="status" data-ks-time-readout>Nothing changed yet.</p>
                 <div id="time-field-component" class="ks-pair">
@@ -617,6 +583,241 @@
                                     data-kp-time-presets="Night=03:00,Morning=08:00"
                                     data-kp-time-near="03:00"
                                     id="ks-time-phone"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ks-sec"
+                id="time-field-options"
+                data-review-item="time-field-options"
+                data-review-topic="time-field"
+                data-review-components="time"
+                data-review-title="Time field: step, list and look"
+                aria-labelledby="h-time-field-options"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-time-field-options">Time field: step, list and look</h2>
+                    <p>
+                        The same field, with the settings that decide how it steps, whether it has a list and how it looks. Each live option changes
+                        one setting of this field while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Step</b>: <b>5 min</b> (default), <b>15 min</b> or <b>1 min</b> is how far <b>Up</b> and <b>Down</b> move the time and
+                            the grain of the list. <b>List</b>: with <b>None</b> the clock button and the list are gone, only typing and keys remain.
+                            <b>Look</b>: <b>Box</b> is the input box; <b>Underline</b> is the field as it stands in a sentence. The three fields under
+                            &ldquo;Each choice, side by side&rdquo; show the same choices fixed, for comparison.
+                        </li>
+                        <li>
+                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once,
+                            nothing reloads: every choice you are asked about is a real option with a default.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="time-field-options-component">
+                    <div role="group" aria-label="Step (live option)">
+                        <b>Step (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-step|5" aria-pressed="true">
+                            5 min
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-time-options|data-kp-time-step|15"
+                            aria-pressed="false"
+                        >
+                            15 min
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-time-options|data-kp-time-step|1"
+                            aria-pressed="false"
+                        >
+                            1 min
+                        </button>
+                    </div>
+                    <div role="group" aria-label="List (live option)">
+                        <b>List (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-time-options|data-kp-time-popup|list"
+                            aria-pressed="true"
+                        >
+                            List
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-time-options|data-kp-time-popup|none"
+                            aria-pressed="false"
+                        >
+                            None
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Look (live option)">
+                        <b>Look (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-time-options|data-kp-time-look|field"
+                            aria-pressed="true"
+                        >
+                            Box
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-time-options|data-kp-time-look|inline"
+                            aria-pressed="false"
+                        >
+                            Underline
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-time-readout>Nothing changed yet.</p>
+                <div id="time-field-options-component" class="ks-pair">
+                    <div class="ks-stack">
+                        <p class="ks-label">In a form (inside a flex row too)</p>
+                        <div class="ks-flexrow">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-a">Backup time</label>
+                                <div
+                                    class="kp-time"
+                                    data-kp-time
+                                    data-kp-time-id="ks-time-opt-a"
+                                    data-kp-name="at"
+                                    data-kp-value="03:00"
+                                    data-kp-time-presets="Night=03:00,Morning=08:00,Evening=19:30"
+                                    data-kp-time-near="03:00"
+                                    data-kp-time-near-width="60"
+                                    data-kp-time-zone="Europe/Brussels"
+                                    id="ks-time-options"
+                                ></div>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-b">Quiet hours end (window 22:00 to 06:00)</label>
+                                <div
+                                    class="kp-time"
+                                    data-kp-time
+                                    data-kp-time-id="ks-time-opt-b"
+                                    data-kp-name="quiet"
+                                    data-kp-value="06:00"
+                                    data-kp-time-min="22:00"
+                                    data-kp-time-max="06:00"
+                                    data-kp-time-step="30"
+                                    data-kp-time-clear
+                                    id="ks-time-opt-window"
+                                ></div>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-c">Log a time (with Now)</label>
+                                <div
+                                    class="kp-time"
+                                    data-kp-time
+                                    data-kp-time-id="ks-time-opt-c"
+                                    data-kp-time-now
+                                    data-kp-time-required
+                                    id="ks-time-opt-now"
+                                ></div>
+                            </div>
+                        </div>
+                        <p class="ks-label">In a sentence</p>
+                        <form class="kp-sentence" data-kp-sentence id="ks-time-opt-sentence">
+                            <p class="kp-sentence__text">
+                                Back up every day at
+                                <span class="kp-sentence__field"
+                                    ><span
+                                        class="kp-time"
+                                        data-kp-time
+                                        data-kp-time-look="inline"
+                                        data-kp-label="At"
+                                        data-kp-value="03:00"
+                                        data-kp-time-presets="Night=03:00,Morning=08:00"
+                                    ></span></span
+                                >.
+                            </p>
+                        </form>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-label">390 px</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-p">Backup time</label>
+                                <div
+                                    class="kp-time"
+                                    data-kp-time
+                                    data-kp-time-id="ks-time-opt-p"
+                                    data-kp-name="at"
+                                    data-kp-value="03:00"
+                                    data-kp-time-presets="Night=03:00,Morning=08:00"
+                                    data-kp-time-near="03:00"
+                                    id="ks-time-opt-phone"
                                 ></div>
                             </div>
                         </div>

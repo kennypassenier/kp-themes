@@ -1,0 +1,929 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="formal"
+    data-review="kpadopt56-availability"
+    data-review-themes="dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kpadopt5 and 6 in the other themes, part 12 of 14: Who can come</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-social/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>The fifth and sixth adoption rounds, part 12 of 14: Who can come</h1>
+                <p class="cat-intro">
+                    Formal is approved. People over days or periods, in five sections of the same grid: its states, how people answer, the best
+                    column, the rows and the summary, and the phone and density. This part asks the eleven other themes for 5 sections (55 pairs), one
+                    theme per step in the review dialog. The sections were approved in formal in several rounds; each is shown here in its latest
+                    version, with the defaults you chose.
+                </p>
+                <p>
+                    Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
+                    &ldquo;What to look at&rdquo; says what is the theme&rsquo;s own).
+                </p>
+            </header>
+
+            <section
+                class="ks-sec"
+                id="availability-grid-states"
+                data-review-item="availability-grid-states"
+                data-review-topic="availability-grid"
+                data-review-topic-title="Who can come"
+                data-review-components="availability"
+                data-review-title="Who can come: states"
+                aria-labelledby="h-availability-grid-states"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-states">Who can come: states</h2>
+                    <p>
+                        People in the rows, days or proposed periods in the columns. Each person sets their own row; the column everybody can is
+                        ringed and starred. It is the package&rsquo;s heat grid, made editable. This section shows the grid in every state of its data
+                        and of the server.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Your own row (Kenny, on top, with a blue edge round its cells) answers a press that opens a small menu:
+                            <b>empty, can, maybe, cannot</b>, each a glyph (check, tilde, cross) and a tone. The other rows do not react. The summary
+                            row fills from the bottom with the number who can; under the grid the legend explains the three glyphs and the ring.
+                            <b>Choose these dates</b> appears once the best column is known.
+                        </li>
+                        <li>
+                            Press a cell and pick an answer: only that cell shows the spinner for a moment, then the answer. Press
+                            <b>Make the server refuse</b> first and the cell goes back, shows a <b>!</b> on red for 3 seconds and a line says which
+                            cell was not saved. <b>Lies answers the empty cells</b> fills them as a push update, with no event.
+                        </li>
+                        <li>
+                            Loading keeps the grid&rsquo;s shape with the busy card over it and the names beside it; <b>No dates yet</b> and
+                            <b>Failed</b> are plates at the grid&rsquo;s full height, the failed one with Retry; <b>Nobody answered</b> leaves the
+                            rows empty; <b>Dates chosen</b> makes every cell inert and says why. At 390 px the name column stays and the columns
+                            scroll; the second phone frame shows the list per column.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size
+                        with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width
+                        nothing is cut or touches an edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, waiting is signal loss: the word and the plate glitch while the whole component stays in place. Check loading,
+                        empty and failed keep the full footprint, the red is used only for a real failure, and at phone width the cut corners clip no
+                        text.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, waiting is the marquee chasing along the whole component. Check loading, empty and failed keep the full
+                        footprint, the chase is visible and moving, and at phone width the bloom clips nothing.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, waiting is washi tape fluttering over the whole component. Check loading, empty and failed keep the full footprint,
+                        the misregistered second ink is visible but readable, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="forest">
+                        In forest, waiting is the row of planted trees along the whole component. Check loading, empty and failed keep the full
+                        footprint, the trees stand and grow as the bar fills, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, waiting is the section hatched across the whole component. Check loading, empty and failed keep the full
+                        footprint, the hatching moves, a failure is flagged in amber or red and not just a colour change, and at phone width nothing
+                        is cut.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, waiting is the sun crossing the whole component and a warning reddens the sky. Check loading, empty and failed
+                        keep the full footprint, the crossing is visible and calm, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, waiting is a lintel hoisted across the whole component and a warning is taped off. Check loading, empty and
+                        failed keep the full footprint, the hard steps are visible, and at phone width the shadow clips nothing.
+                    </p>
+                    <p data-for="deco">
+                        In deco, waiting is lift doors over the whole component. Check loading, empty and failed keep the full footprint, the doors
+                        and the inlay move slowly and cleanly, and at phone width the gold edge cuts no text.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, waiting is the raster building up on the screen across the whole component. Check loading, empty and failed keep
+                        the full footprint, the lamps tell the state, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, waiting is the machined film sweeping the whole component. Check loading, empty and failed keep the full
+                        footprint, the sweep is visible, and at phone width nothing is cut.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="availability-grid-states-component">
+                    <div role="group" aria-label="Grid state">
+                        <b>Grid state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-state="empty" aria-pressed="false">No dates yet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-state="nobody" aria-pressed="false">Nobody answered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-state="error" aria-pressed="false">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-state="chosen" aria-pressed="false">Dates chosen</button>
+                    </div>
+                    <div role="group" aria-label="The server">
+                        <b>The server:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-server="saves" aria-pressed="true">Saves</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-server="refuses" aria-pressed="false">
+                            Make the server refuse
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Another person answers">
+                        <b>Another person acts:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-av-push="">Lies answers the empty cells (a push update)</button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div id="availability-grid-states-component" class="ks-pair">
+                    <div class="ks-stack">
+                        <p class="ks-label">The trip, full width (inside a flex row too)</p>
+                        <div class="ks-flexrow">
+                            <div
+                                class="kp-availability"
+                                data-kp-availability
+                                data-kp-availability-choose
+                                data-ks-av-main
+                                data-kp-remember="av-main"
+                                id="ks-av"
+                                aria-label="Who can come to the Ardennes weekend"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-label">390 px, scrolling sideways</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div class="kp-availability" data-kp-availability id="ks-av-phone" aria-label="Who can come, phone"></div>
+                        </div>
+                        <p class="ks-label">390 px, a list per column</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div
+                                class="kp-availability"
+                                data-kp-availability
+                                data-kp-availability-narrow="by-column"
+                                data-kp-availability-keys="false"
+                                id="ks-av-list"
+                                aria-label="Who can come, list"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ks-sec"
+                id="availability-grid-answering"
+                data-review-item="availability-grid-answering"
+                data-review-topic="availability-grid"
+                data-review-components="availability"
+                data-review-title="Who can come: how people answer"
+                aria-labelledby="h-availability-grid-answering"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-answering">Who can come: how people answer</h2>
+                    <p>
+                        The same grid, with the settings that decide how an answer is given and who may give it. Each live option changes one setting
+                        of this grid while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Press</b>: <b>Menu</b> opens a small menu per cell (empty, can, maybe, cannot); <b>Cycle</b> steps through them one
+                            press at a time (the second grid always cycles, for comparison). <b>Answers</b>: with <b>Can, cannot</b> the maybe answer
+                            leaves the menu and the cycle.
+                        </li>
+                        <li>
+                            <b>Drag across a row</b> (mouse, your own row): every cell you cross gets the same answer and one Undo (6 seconds) takes
+                            the whole stroke back; with it <b>Off</b> a drag does nothing. With a cell focused, <b>y</b> <b>m</b> <b>n</b> set can,
+                            maybe and cannot, <b>Backspace</b> clears; in someone else&#39;s row they do nothing.
+                        </li>
+                        <li>
+                            <b>Who edits</b>: <b>Own row</b> (default) lets only Kenny&#39;s row answer; <b>Every row</b> lets any row answer;
+                            <b>Nobody</b> makes every cell inert.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="availability-grid-answering-component">
+                    <div role="group" aria-label="Press (live option)">
+                        <b>Press (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-press|cycle"
+                            aria-pressed="false"
+                        >
+                            Cycle
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-press|menu"
+                            aria-pressed="true"
+                        >
+                            Menu (default)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Answers (live option)">
+                        <b>Answers (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-answers|3"
+                            aria-pressed="true"
+                        >
+                            Can, maybe, cannot (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-answers|2"
+                            aria-pressed="false"
+                        >
+                            Can, cannot
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Paint (live option)">
+                        <b>Drag across a row (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-paint|on"
+                            aria-pressed="true"
+                        >
+                            On (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-paint|false"
+                            aria-pressed="false"
+                        >
+                            Off
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Who edits (live option)">
+                        <b>Who edits (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-answer|data-kp-heat-edit|own" aria-pressed="true">
+                            Own row (default)
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-answer|data-kp-heat-edit|all" aria-pressed="false">
+                            Every row
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-answer|data-kp-heat-edit|off" aria-pressed="false">
+                            Nobody
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div id="availability-grid-answering-component" class="ks-stack">
+                    <p class="ks-label">The trip, full width</p>
+                    <div class="ks-flexrow">
+                        <div class="kp-availability" data-kp-availability id="ks-av-answer" aria-label="Who can come, answering"></div>
+                    </div>
+                </div>
+                <div class="ks-stack">
+                    <p class="ks-label">A press steps through the answers (cycle)</p>
+                    <div class="ks-flexrow">
+                        <div
+                            class="kp-availability"
+                            data-kp-availability
+                            data-kp-availability-press="cycle"
+                            data-kp-availability-keys="false"
+                            id="ks-av-cycle"
+                            aria-label="Who can come, cycle"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ks-sec"
+                id="availability-grid-best"
+                data-review-item="availability-grid-best"
+                data-review-topic="availability-grid"
+                data-review-components="availability"
+                data-review-title="Who can come: the best column"
+                aria-labelledby="h-availability-grid-best"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-best">Who can come: the best column</h2>
+                    <p>
+                        The same grid, with the settings that decide which column is the best one and whether it can be chosen. Each live option
+                        changes one setting of this grid while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Best column</b>: <b>Most can</b> rings and stars the column with the most who can; <b>Only everybody</b> only when
+                            every person can; <b>No best column</b> rings nothing. <b>Tie rule</b>: with a tie, <b>Most who can</b> or
+                            <b>Fewest who cannot</b> decides, and the ring may move to another column.
+                        </li>
+                        <li>
+                            <b>A column counts once</b>: <b>Everybody answered</b> (all five), <b>Three answered</b> or <b>Anyone answered</b> sets
+                            how many answers a column needs before it can be the best one, so the ring appears sooner or later.
+                        </li>
+                        <li>
+                            <b>Choose these dates</b>: <b>Offered</b> shows the button once the best column is known; <b>Not offered</b> removes it.
+                            The second grid is the strict combination (only everybody, number only, can or cannot), for comparison.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="availability-grid-best-component">
+                    <div role="group" aria-label="Best column (live option)">
+                        <b>Best column (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best|most"
+                            aria-pressed="true"
+                        >
+                            Most can (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best|everyone"
+                            aria-pressed="false"
+                        >
+                            Only everybody
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best|none"
+                            aria-pressed="false"
+                        >
+                            No best column
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Tie rule (live option)">
+                        <b>Tie rule (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best-rule|yes-count"
+                            aria-pressed="true"
+                        >
+                            Most who can (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best-rule|no-nobody"
+                            aria-pressed="false"
+                        >
+                            Fewest who cannot
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Quorum (live option)">
+                        <b>A column counts once (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-quorum|5"
+                            aria-pressed="true"
+                        >
+                            Everybody answered (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-quorum|3"
+                            aria-pressed="false"
+                        >
+                            Three answered
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-quorum|1"
+                            aria-pressed="false"
+                        >
+                            Anyone answered
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Choose button (live option)">
+                        <b>Choose these dates (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-choose|"
+                            aria-pressed="true"
+                        >
+                            Offered (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-choose|-"
+                            aria-pressed="false"
+                        >
+                            Not offered
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div id="availability-grid-best-component" class="ks-stack">
+                    <p class="ks-label">The trip, full width</p>
+                    <div class="ks-flexrow">
+                        <div
+                            class="kp-availability"
+                            data-kp-availability
+                            data-kp-availability-choose
+                            id="ks-av-best"
+                            aria-label="Who can come, the best column"
+                        ></div>
+                    </div>
+                </div>
+                <div class="ks-stack">
+                    <p class="ks-label">Best only where everybody can; number only; can or cannot</p>
+                    <div class="ks-flexrow">
+                        <div
+                            class="kp-availability"
+                            data-kp-availability
+                            data-kp-availability-best="everyone"
+                            data-kp-availability-summary="count"
+                            data-kp-availability-answers="2"
+                            data-kp-availability-keys="false"
+                            id="ks-av-strict"
+                            aria-label="Who can come, strict"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ks-sec"
+                id="availability-grid-layout"
+                data-review-item="availability-grid-layout"
+                data-review-topic="availability-grid"
+                data-review-components="availability"
+                data-review-title="Who can come: rows and summary"
+                aria-labelledby="h-availability-grid-layout"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-layout">Who can come: rows and summary</h2>
+                    <p>
+                        The same grid, with the settings that decide what the summary row shows, how the rows are ordered and whether the organiser
+                        can switch between periods and days. Each live option changes one setting of this grid while it runs and it redraws at once,
+                        nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Summary</b>: <b>Number and fill</b> shows the count and the bar that fills from the bottom; <b>Number</b> only the
+                            count; <b>Fill</b> only the bar. <b>Rows</b>: <b>Mine first</b> puts Kenny on top, <b>As given</b> keeps the order of the
+                            list, <b>Most answered first</b> sorts by the number of answers.
+                        </li>
+                        <li>
+                            <b>Periods or days switch</b>: with <b>Organiser switches</b> the <b>Periods / Days</b> switch swaps the columns (the
+                            answers are kept per set); with <b>Periods only</b> the switch is gone. A column header press picks the column; a summary
+                            cell&#39;s hover card names who can, maybe and cannot.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="availability-grid-layout-component">
+                    <div role="group" aria-label="Summary (live option)">
+                        <b>Summary (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-summary|both"
+                            aria-pressed="true"
+                        >
+                            Number and fill (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-summary|count"
+                            aria-pressed="false"
+                        >
+                            Number
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-summary|bar"
+                            aria-pressed="false"
+                        >
+                            Fill
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Periods or days switch (live option)">
+                        <b>Periods or days switch (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-unit-switch|on"
+                            aria-pressed="true"
+                        >
+                            Organiser switches (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-unit-switch|off"
+                            aria-pressed="false"
+                        >
+                            Periods only
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Row order (live option)">
+                        <b>Rows (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-sort|mine-first"
+                            aria-pressed="true"
+                        >
+                            Mine first (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-sort|given"
+                            aria-pressed="false"
+                        >
+                            As given
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-sort|answered-first"
+                            aria-pressed="false"
+                        >
+                            Most answered first
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div id="availability-grid-layout-component" class="ks-stack">
+                    <p class="ks-label">The trip, full width</p>
+                    <div class="ks-flexrow">
+                        <div
+                            class="kp-availability"
+                            data-kp-availability
+                            data-ks-av-main
+                            id="ks-av-layout"
+                            aria-label="Who can come, rows and summary"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ks-sec"
+                id="availability-grid-phone"
+                data-review-item="availability-grid-phone"
+                data-review-topic="availability-grid"
+                data-review-components="availability"
+                data-review-title="Who can come: phone and density"
+                aria-labelledby="h-availability-grid-phone"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-phone">Who can come: phone and density</h2>
+                    <p>
+                        The same grid at phone width and the density of its cells. Each live option changes one setting of this grid while it runs and
+                        it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>On a phone</b>: <b>Scroll sideways</b> keeps the name column and scrolls the columns; <b>A list per column</b> shows
+                            one list per column instead (it acts on the 390 px frame). <b>Density</b>: <b>Comfortable</b> or <b>Compact</b> sets the
+                            size of the cells in both grids.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="availability-grid-phone-component">
+                    <div role="group" aria-label="Narrow (live option)">
+                        <b>On a phone (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-phone-view|data-kp-availability-narrow|scroll"
+                            aria-pressed="true"
+                        >
+                            Scroll sideways (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-phone-view|data-kp-availability-narrow|by-column"
+                            aria-pressed="false"
+                        >
+                            A list per column
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Density (live option)">
+                        <b>Density (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-phone-view,#ks-av-density|data-kp-availability-density|comfortable"
+                            aria-pressed="true"
+                        >
+                            Comfortable (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-phone-view,#ks-av-density|data-kp-availability-density|compact"
+                            aria-pressed="false"
+                        >
+                            Compact
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div id="availability-grid-phone-component" class="ks-pair">
+                    <div class="ks-stack">
+                        <p class="ks-label">390 px, scrolling sideways</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div class="kp-availability" data-kp-availability id="ks-av-phone-view" aria-label="Who can come, phone"></div>
+                        </div>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-label">The same grid at desktop width</p>
+                        <div class="ks-flexrow">
+                            <div class="kp-availability" data-kp-availability id="ks-av-density" aria-label="Who can come, density"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "availability-3b7837b8-66ce-46ff-b65a-9c5fccc152d2", "received": [] }
+        </script>
+        <script type="module" src="../kpadopt56/src/kpadopt6-social/demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

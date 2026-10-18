@@ -212,63 +212,40 @@
                 </div>
             </section>
 
-<!-- ===== item: availability-grid (from the last round) -->
+<!-- ===== item: availability-grid-states (from the last round) -->
 <section
                 class="ks-sec"
-                id="availability-grid"
-                data-review-item="availability-grid"
+                id="availability-grid-states"
+                data-review-item="availability-grid-states"
                 data-review-topic="availability-grid"
                 data-review-topic-title="Who can come"
                 data-review-components="availability"
-                data-review-title="Who can come: people over days or periods"
-                aria-labelledby="h-availability-grid"
+                data-review-title="Who can come: states"
+                aria-labelledby="h-availability-grid-states"
             >
                 <div class="ks-sec__head">
-                    <h2 id="h-availability-grid">Who can come</h2>
+                    <h2 id="h-availability-grid-states">Who can come: states</h2>
                     <p>
-                        People in the rows, days or proposed periods in the columns. Each person sets their own row; the column everybody can is
-                        ringed and starred. It is the package's heat grid, made editable. An organiser can switch a trip between periods and days.
+                        People in the rows, days or proposed periods in the columns. Each person sets their own row; the column everybody can is ringed and starred. It is the package&rsquo;s heat grid, made editable. This section shows the grid in every state of its data and of the server.
                     </p>
                 </div>
                 <div class="ks-expected">
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            Your own row (Kenny, on top, with a blue edge round its cells) answers a press that opens a small menu:
-                            <b>empty, can, maybe, cannot</b> (or, as the Cycle option, one press steps through them), each a glyph (check, tilde,
-                            cross) and a tone. The other rows do not react. The summary row fills from the bottom with the number who can; under the
-                            grid the legend explains the three glyphs and the ring.
+                            Your own row (Kenny, on top, with a blue edge round its cells) answers a press that opens a small menu: <b>empty, can, maybe, cannot</b>, each a glyph (check, tilde, cross) and a tone. The other rows do not react. The summary row fills from the bottom with the number who can; under the grid the legend explains the three glyphs and the ring. <b>Choose these dates</b> appears once the best column is known.
                         </li>
                         <li>
-                            Press a cell and pick an answer: only that cell shows the spinner for a moment, then the answer. Press
-                            <b>Make the server refuse</b> first and the cell goes back, shows a <b>!</b> on red for 3 seconds and a line says which
-                            cell was not saved.
+                            Press a cell and pick an answer: only that cell shows the spinner for a moment, then the answer. Press <b>Make the server refuse</b> first and the cell goes back, shows a <b>!</b> on red for 3 seconds and a line says which cell was not saved. <b>Lies answers the empty cells</b> fills them as a push update, with no event.
                         </li>
                         <li>
-                            <b>Drag across your own row</b> (mouse): every cell you cross gets the same answer, and one Undo (6 seconds) takes the
-                            whole stroke back. With a cell focused, <b>y</b> <b>m</b> <b>n</b> set can, maybe and cannot, <b>Backspace</b> clears; in
-                            someone else's row they do nothing.
-                        </li>
-                        <li>
-                            <b>Choose these dates</b> appears once the best column is known. The switch <b>Periods / Days</b> swaps the columns (the
-                            answers are kept per set). A column header press picks the column; a summary cell's hover card names who can, maybe and
-                            cannot.
-                        </li>
-                        <li>
-                            Loading keeps the grid's shape with the busy card over it and the names beside it; <b>No dates yet</b> and
-                            <b>Failed</b> are plates at the grid's full height, the failed one with Retry; <b>Dates chosen</b> makes every cell inert
-                            and says why. At 390 px the name column stays and the columns scroll; the second phone frame shows the list per column.
-                        </li>
-                        <li>
-                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once,
-                            nothing reloads: every choice you are asked about is a real option with a default.
+                            Loading keeps the grid&rsquo;s shape with the busy card over it and the names beside it; <b>No dates yet</b> and <b>Failed</b> are plates at the grid&rsquo;s full height, the failed one with Retry; <b>Nobody answered</b> leaves the rows empty; <b>Dates chosen</b> makes every cell inert and says why. At 390 px the name column stays and the columns scroll; the second phone frame shows the list per column.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Formal's plain ground: the tones are the package's own quiet green, amber and red, the best column a 2 px navy ring, and your
-                        row's cells carry a thin navy edge so it is the one that looks pressable.
+                        Formal&#39;s plain ground: the tones are the package&#39;s own quiet green, amber and red, the best column a 2 px navy ring, and your row&#39;s cells carry a thin navy edge so it is the one that looks pressable.
                     </p>
                 </div>
                 <div class="ks-controls" data-review-controls>
@@ -292,263 +269,6 @@
                         <b>Another person acts:</b>
                         <button type="button" class="kp-button kp-button--sm" data-ks-av-push="">Lies answers the empty cells (a push update)</button>
                     </div>
-                    <div role="group" aria-label="Press (live option)">
-                        <b>Press (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-press|cycle"
-                            aria-pressed="false"
-                        >
-                            Cycle
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-press|menu"
-                            aria-pressed="true"
-                        >
-                            Menu (default)
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Best column (live option)">
-                        <b>Best column (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-best|most"
-                            aria-pressed="true"
-                        >
-                            Most can (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-best|everyone"
-                            aria-pressed="false"
-                        >
-                            Only everybody
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-best|none"
-                            aria-pressed="false"
-                        >
-                            No best column
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Summary (live option)">
-                        <b>Summary (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-summary|both"
-                            aria-pressed="true"
-                        >
-                            Number and fill (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-summary|count"
-                            aria-pressed="false"
-                        >
-                            Number
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-summary|bar"
-                            aria-pressed="false"
-                        >
-                            Fill
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Answers (live option)">
-                        <b>Answers (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-answers|3"
-                            aria-pressed="true"
-                        >
-                            Can, maybe, cannot (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-answers|2"
-                            aria-pressed="false"
-                        >
-                            Can, cannot
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Tie rule (live option)">
-                        <b>Tie rule (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-best-rule|yes-count"
-                            aria-pressed="true"
-                        >
-                            Most who can (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-best-rule|no-nobody"
-                            aria-pressed="false"
-                        >
-                            Fewest who cannot
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Quorum (live option)">
-                        <b>A column counts once (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av|data-kp-availability-quorum|5" aria-pressed="true">
-                            Everybody answered (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-quorum|3"
-                            aria-pressed="false"
-                        >
-                            Three answered
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-quorum|1"
-                            aria-pressed="false"
-                        >
-                            Anyone answered
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Periods or days switch (live option)">
-                        <b>Periods or days switch (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-unit-switch|on"
-                            aria-pressed="true"
-                        >
-                            Organiser switches (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-unit-switch|off"
-                            aria-pressed="false"
-                        >
-                            Periods only
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Row order (live option)">
-                        <b>Rows (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-sort|mine-first"
-                            aria-pressed="true"
-                        >
-                            Mine first (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-sort|given"
-                            aria-pressed="false"
-                        >
-                            As given
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-sort|answered-first"
-                            aria-pressed="false"
-                        >
-                            Most answered first
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Who edits (live option)">
-                        <b>Who edits (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av|data-kp-heat-edit|own" aria-pressed="true">
-                            Own row (default)
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av|data-kp-heat-edit|all" aria-pressed="false">
-                            Every row
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av|data-kp-heat-edit|off" aria-pressed="false">
-                            Nobody
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Paint (live option)">
-                        <b>Drag across a row (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av|data-kp-availability-paint|on" aria-pressed="true">
-                            On (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-paint|false"
-                            aria-pressed="false"
-                        >
-                            Off
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Narrow (live option)">
-                        <b>On a phone (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-narrow|scroll"
-                            aria-pressed="true"
-                        >
-                            Scroll sideways (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-narrow|by-column"
-                            aria-pressed="false"
-                        >
-                            A list per column
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Density (live option)">
-                        <b>Density (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-density|comfortable"
-                            aria-pressed="true"
-                        >
-                            Comfortable (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-density|compact"
-                            aria-pressed="false"
-                        >
-                            Compact
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Choose button (live option)">
-                        <b>Choose these dates (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av|data-kp-availability-choose|" aria-pressed="true">
-                            Offered (default)
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-av|data-kp-availability-choose|-"
-                            aria-pressed="false"
-                        >
-                            Not offered
-                        </button>
-                    </div>
                 </div>
                 <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
                 <div class="ks-pair">
@@ -559,6 +279,7 @@
                                 class="kp-availability"
                                 data-kp-availability
                                 data-kp-availability-choose
+                                data-ks-av-main
                                 data-kp-remember="av-main"
                                 id="ks-av"
                                 aria-label="Who can come to the Ardennes weekend"
@@ -583,31 +304,485 @@
                         </div>
                     </div>
                 </div>
-                <p class="ks-label">Each choice, side by side</p>
-                <div class="ks-trio">
-                    <div class="ks-stack">
-                        <p class="ks-note"><b>A press steps through the answers (cycle)</b></p>
+            </section>
+
+<!-- ===== item: availability-grid-answering (from the last round) -->
+<section
+                class="ks-sec"
+                id="availability-grid-answering"
+                data-review-item="availability-grid-answering"
+                data-review-topic="availability-grid"
+                data-review-components="availability"
+                data-review-title="Who can come: how people answer"
+                aria-labelledby="h-availability-grid-answering"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-answering">Who can come: how people answer</h2>
+                    <p>
+                        The same grid, with the settings that decide how an answer is given and who may give it. Each live option changes one setting of this grid while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Press</b>: <b>Menu</b> opens a small menu per cell (empty, can, maybe, cannot); <b>Cycle</b> steps through them one press at a time (the second grid always cycles, for comparison). <b>Answers</b>: with <b>Can, cannot</b> the maybe answer leaves the menu and the cycle.
+                        </li>
+                        <li>
+                            <b>Drag across a row</b> (mouse, your own row): every cell you cross gets the same answer and one Undo (6 seconds) takes the whole stroke back; with it <b>Off</b> a drag does nothing. With a cell focused, <b>y</b> <b>m</b> <b>n</b> set can, maybe and cannot, <b>Backspace</b> clears; in someone else&#39;s row they do nothing.
+                        </li>
+                        <li>
+                            <b>Who edits</b>: <b>Own row</b> (default) lets only Kenny&#39;s row answer; <b>Every row</b> lets any row answer; <b>Nobody</b> makes every cell inert.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The menu or the cycle on a press, the glyph and tone of each answer, and the blue edge round the cells that answer; nothing else may look pressable.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls>
+                    <div role="group" aria-label="Press (live option)">
+                        <b>Press (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-press|cycle"
+                            aria-pressed="false"
+                        >
+                            Cycle
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-press|menu"
+                            aria-pressed="true"
+                        >
+                            Menu (default)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Answers (live option)">
+                        <b>Answers (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-answers|3"
+                            aria-pressed="true"
+                        >
+                            Can, maybe, cannot (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-answers|2"
+                            aria-pressed="false"
+                        >
+                            Can, cannot
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Paint (live option)">
+                        <b>Drag across a row (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-answer|data-kp-availability-paint|on" aria-pressed="true">
+                            On (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-answer|data-kp-availability-paint|false"
+                            aria-pressed="false"
+                        >
+                            Off
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Who edits (live option)">
+                        <b>Who edits (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-answer|data-kp-heat-edit|own" aria-pressed="true">
+                            Own row (default)
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-answer|data-kp-heat-edit|all" aria-pressed="false">
+                            Every row
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-answer|data-kp-heat-edit|off" aria-pressed="false">
+                            Nobody
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div class="ks-stack">
+                    <p class="ks-label">The trip, full width</p>
+                    <div class="ks-flexrow">
                         <div
                             class="kp-availability"
                             data-kp-availability
-                            data-kp-availability-press="cycle"
+                            id="ks-av-answer"
+                            aria-label="Who can come, answering"
+                        ></div>
+                    </div>
+                </div>
+                <div class="ks-stack">
+                    <p class="ks-label">A press steps through the answers (cycle)</p>
+                    <div class="ks-flexrow">
+                        <div
+                            class="kp-availability"
+                            data-kp-availability data-kp-availability-press="cycle"
                             data-kp-availability-keys="false"
                             id="ks-av-cycle"
                             aria-label="Who can come, cycle"
                         ></div>
                     </div>
-                    <div class="ks-stack">
-                        <p class="ks-note"><b>Best only where everybody can; number only; can or cannot</b></p>
+                </div>
+            </section>
+
+<!-- ===== item: availability-grid-best (from the last round) -->
+<section
+                class="ks-sec"
+                id="availability-grid-best"
+                data-review-item="availability-grid-best"
+                data-review-topic="availability-grid"
+                data-review-components="availability"
+                data-review-title="Who can come: the best column"
+                aria-labelledby="h-availability-grid-best"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-best">Who can come: the best column</h2>
+                    <p>
+                        The same grid, with the settings that decide which column is the best one and whether it can be chosen. Each live option changes one setting of this grid while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Best column</b>: <b>Most can</b> rings and stars the column with the most who can; <b>Only everybody</b> only when every person can; <b>No best column</b> rings nothing. <b>Tie rule</b>: with a tie, <b>Most who can</b> or <b>Fewest who cannot</b> decides, and the ring may move to another column.
+                        </li>
+                        <li>
+                            <b>A column counts once</b>: <b>Everybody answered</b> (all five), <b>Three answered</b> or <b>Anyone answered</b> sets how many answers a column needs before it can be the best one, so the ring appears sooner or later.
+                        </li>
+                        <li>
+                            <b>Choose these dates</b>: <b>Offered</b> shows the button once the best column is known; <b>Not offered</b> removes it. The second grid is the strict combination (only everybody, number only, can or cannot), for comparison.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The 2 px ring and the star on the best column, the button that appears with it, and the strict grid beneath, whose ring appears in fewer columns.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls>
+                    <div role="group" aria-label="Best column (live option)">
+                        <b>Best column (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best|most"
+                            aria-pressed="true"
+                        >
+                            Most can (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best|everyone"
+                            aria-pressed="false"
+                        >
+                            Only everybody
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best|none"
+                            aria-pressed="false"
+                        >
+                            No best column
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Tie rule (live option)">
+                        <b>Tie rule (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best-rule|yes-count"
+                            aria-pressed="true"
+                        >
+                            Most who can (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-best-rule|no-nobody"
+                            aria-pressed="false"
+                        >
+                            Fewest who cannot
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Quorum (live option)">
+                        <b>A column counts once (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-best|data-kp-availability-quorum|5" aria-pressed="true">
+                            Everybody answered (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-quorum|3"
+                            aria-pressed="false"
+                        >
+                            Three answered
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-quorum|1"
+                            aria-pressed="false"
+                        >
+                            Anyone answered
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Choose button (live option)">
+                        <b>Choose these dates (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-av-best|data-kp-availability-choose|" aria-pressed="true">
+                            Offered (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-best|data-kp-availability-choose|-"
+                            aria-pressed="false"
+                        >
+                            Not offered
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div class="ks-stack">
+                    <p class="ks-label">The trip, full width</p>
+                    <div class="ks-flexrow">
                         <div
                             class="kp-availability"
-                            data-kp-availability
-                            data-kp-availability-best="everyone"
+                            data-kp-availability data-kp-availability-choose
+                            id="ks-av-best"
+                            aria-label="Who can come, the best column"
+                        ></div>
+                    </div>
+                </div>
+                <div class="ks-stack">
+                    <p class="ks-label">Best only where everybody can; number only; can or cannot</p>
+                    <div class="ks-flexrow">
+                        <div
+                            class="kp-availability"
+                            data-kp-availability data-kp-availability-best="everyone"
                             data-kp-availability-summary="count"
                             data-kp-availability-answers="2"
                             data-kp-availability-keys="false"
                             id="ks-av-strict"
                             aria-label="Who can come, strict"
                         ></div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: availability-grid-layout (from the last round) -->
+<section
+                class="ks-sec"
+                id="availability-grid-layout"
+                data-review-item="availability-grid-layout"
+                data-review-topic="availability-grid"
+                data-review-components="availability"
+                data-review-title="Who can come: rows and summary"
+                aria-labelledby="h-availability-grid-layout"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-layout">Who can come: rows and summary</h2>
+                    <p>
+                        The same grid, with the settings that decide what the summary row shows, how the rows are ordered and whether the organiser can switch between periods and days. Each live option changes one setting of this grid while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Summary</b>: <b>Number and fill</b> shows the count and the bar that fills from the bottom; <b>Number</b> only the count; <b>Fill</b> only the bar. <b>Rows</b>: <b>Mine first</b> puts Kenny on top, <b>As given</b> keeps the order of the list, <b>Most answered first</b> sorts by the number of answers.
+                        </li>
+                        <li>
+                            <b>Periods or days switch</b>: with <b>Organiser switches</b> the <b>Periods / Days</b> switch swaps the columns (the answers are kept per set); with <b>Periods only</b> the switch is gone. A column header press picks the column; a summary cell&#39;s hover card names who can, maybe and cannot.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The summary row in its three forms, the order of the names, and the switch above the grid that appears and disappears.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls>
+                    <div role="group" aria-label="Summary (live option)">
+                        <b>Summary (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-summary|both"
+                            aria-pressed="true"
+                        >
+                            Number and fill (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-summary|count"
+                            aria-pressed="false"
+                        >
+                            Number
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-summary|bar"
+                            aria-pressed="false"
+                        >
+                            Fill
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Periods or days switch (live option)">
+                        <b>Periods or days switch (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-unit-switch|on"
+                            aria-pressed="true"
+                        >
+                            Organiser switches (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-unit-switch|off"
+                            aria-pressed="false"
+                        >
+                            Periods only
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Row order (live option)">
+                        <b>Rows (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-sort|mine-first"
+                            aria-pressed="true"
+                        >
+                            Mine first (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-sort|given"
+                            aria-pressed="false"
+                        >
+                            As given
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-layout|data-kp-availability-sort|answered-first"
+                            aria-pressed="false"
+                        >
+                            Most answered first
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div class="ks-stack">
+                    <p class="ks-label">The trip, full width</p>
+                    <div class="ks-flexrow">
+                        <div
+                            class="kp-availability"
+                            data-kp-availability data-ks-av-main
+                            id="ks-av-layout"
+                            aria-label="Who can come, rows and summary"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: availability-grid-phone (from the last round) -->
+<section
+                class="ks-sec"
+                id="availability-grid-phone"
+                data-review-item="availability-grid-phone"
+                data-review-topic="availability-grid"
+                data-review-components="availability"
+                data-review-title="Who can come: phone and density"
+                aria-labelledby="h-availability-grid-phone"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-availability-grid-phone">Who can come: phone and density</h2>
+                    <p>
+                        The same grid at phone width and the density of its cells. Each live option changes one setting of this grid while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>On a phone</b>: <b>Scroll sideways</b> keeps the name column and scrolls the columns; <b>A list per column</b> shows one list per column instead (it acts on the 390 px frame). <b>Density</b>: <b>Comfortable</b> or <b>Compact</b> sets the size of the cells in both grids.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        At 390 px the name column stays and nothing is cut; compact cells keep a target a finger can hit.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls>
+                    <div role="group" aria-label="Narrow (live option)">
+                        <b>On a phone (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-phone-view|data-kp-availability-narrow|scroll"
+                            aria-pressed="true"
+                        >
+                            Scroll sideways (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-phone-view|data-kp-availability-narrow|by-column"
+                            aria-pressed="false"
+                        >
+                            A list per column
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Density (live option)">
+                        <b>Density (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-phone-view,#ks-av-density|data-kp-availability-density|comfortable"
+                            aria-pressed="true"
+                        >
+                            Comfortable (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-av-phone-view,#ks-av-density|data-kp-availability-density|compact"
+                            aria-pressed="false"
+                        >
+                            Compact
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-av-readout>Nothing pressed yet.</p>
+                <div class="ks-pair">
+                    <div class="ks-stack">
+                        <p class="ks-label">390 px, scrolling sideways</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div class="kp-availability" data-kp-availability id="ks-av-phone-view" aria-label="Who can come, phone"></div>
+                        </div>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-label">The same grid at desktop width</p>
+                        <div class="ks-flexrow">
+                            <div class="kp-availability" data-kp-availability id="ks-av-density" aria-label="Who can come, density"></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -763,14 +938,13 @@
                 data-review-topic="time-field"
                 data-review-topic-title="Time field"
                 data-review-components="time"
-                data-review-title="A field for a time of day, in 24 hours"
+                data-review-title="Time field: states"
                 aria-labelledby="h-time-field"
             >
                 <div class="ks-sec__head">
-                    <h2 id="h-time-field">Time field</h2>
+                    <h2 id="h-time-field">Time field: states</h2>
                     <p>
-                        One field for a time of day in 24 hours: typed, stepped with the arrow keys or picked from the package's own list. Unlike the
-                        browser's own time box it never shows AM and PM, and it looks like the rest of the theme.
+                        One field for a time of day in 24 hours: typed, stepped with the arrow keys or picked from the package's own list. Unlike the browser's own time box it never shows AM and PM, and it looks like the rest of the theme. This section shows its states.
                     </p>
                 </div>
                 <div class="ks-expected">
@@ -791,14 +965,14 @@
                             The sentence below keeps its underline look; the field with a reason is off and says why; the loading one shows its own
                             skeleton at its final width; the one whose presets failed shows a compact plate with Retry in the list.
                         </li>
-                        <li>At 390 px the field fills the line, 44 px high, and the list is a sheet at the foot of the screen with a title and rows 44 px high.</li>
-                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
+                        <li>
+                            At 390 px the field fills the line, 44 px high, and the list is a sheet at the foot of the screen with a title and rows 44 px high.
+                        </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Formal's plain input box (navy focus ring, white ground) with a quiet clock at its end; the list is the same raised plate as a
-                        menu, the nearest time on a navy wash. In the sentence the same field is the navy underline in semibold.
+                        Formal's plain input box (navy focus ring, white ground) with a quiet clock at its end; the list is the same raised plate as a menu, the nearest time on a navy wash. In the sentence the same field is the navy underline in semibold.
                     </p>
                 </div>
                 <div class="ks-controls" data-review-controls>
@@ -816,22 +990,6 @@
                         <button type="button" class="kp-button kp-button--sm" data-ks-time-presets="loading" aria-pressed="false">Presets loading</button>
                         <button type="button" class="kp-button kp-button--sm" data-ks-time-presets="error" aria-pressed="false">Presets failed</button>
                         <button type="button" class="kp-button kp-button--sm" data-ks-time-open="" aria-pressed="false">Show it open</button>
-                    </div>
-                    <div role="group" aria-label="Step (live option)">
-                        <b>Step (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|5" aria-pressed="true">5 min</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|15" aria-pressed="false">15 min</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|1" aria-pressed="false">1 min</button>
-                    </div>
-                    <div role="group" aria-label="List (live option)">
-                        <b>List (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-popup|list" aria-pressed="true">List</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-popup|none" aria-pressed="false">None</button>
-                    </div>
-                    <div role="group" aria-label="Look (live option)">
-                        <b>Look (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-look|field" aria-pressed="true">Box</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-look|inline" aria-pressed="false">Underline</button>
                     </div>
                 </div>
                 <p class="ks-readout" role="status" data-ks-time-readout>Nothing changed yet.</p>
@@ -877,6 +1035,105 @@
                             <div class="kp-field">
                                 <label class="kp-field__label" for="ks-time-p">Backup time</label>
                                 <div class="kp-time" data-kp-time data-kp-time-id="ks-time-p" data-kp-name="at" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00" data-kp-time-near="03:00" id="ks-time-phone"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: time-field-options (from 77cabb06) -->
+<section
+                class="ks-sec"
+                id="time-field-options"
+                data-review-item="time-field-options"
+                data-review-topic="time-field"
+                data-review-components="time"
+                data-review-title="Time field: step, list and look"
+                aria-labelledby="h-time-field-options"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-time-field-options">Time field: step, list and look</h2>
+                    <p>
+                        The same field, with the settings that decide how it steps, whether it has a list and how it looks. Each live option changes one setting of this field while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Step</b>: <b>5 min</b> (default), <b>15 min</b> or <b>1 min</b> is how far <b>Up</b> and <b>Down</b> move the time and the grain of the list. <b>List</b>: with <b>None</b> the clock button and the list are gone, only typing and keys remain. <b>Look</b>: <b>Box</b> is the input box; <b>Underline</b> is the field as it stands in a sentence. The three fields under &ldquo;Each choice, side by side&rdquo; show the same choices fixed, for comparison.
+                        </li>
+                        <li>
+                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's plain input box with its quiet clock, and the same field as the navy underline; the list, when there is one, is the raised plate of a menu.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls>
+                    <div role="group" aria-label="Step (live option)">
+                        <b>Step (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-step|5" aria-pressed="true">5 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-step|15" aria-pressed="false">15 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-step|1" aria-pressed="false">1 min</button>
+                    </div>
+                    <div role="group" aria-label="List (live option)">
+                        <b>List (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-popup|list" aria-pressed="true">List</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-popup|none" aria-pressed="false">None</button>
+                    </div>
+                    <div role="group" aria-label="Look (live option)">
+                        <b>Look (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-look|field" aria-pressed="true">Box</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-look|inline" aria-pressed="false">Underline</button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-time-readout>Nothing changed yet.</p>
+                <div class="ks-pair">
+                    <div class="ks-stack">
+                        <p class="ks-label">In a form (inside a flex row too)</p>
+                        <div class="ks-flexrow">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-a">Backup time</label>
+                                <div
+                                    class="kp-time"
+                                    data-kp-time
+                                    data-kp-time-id="ks-time-opt-a"
+                                    data-kp-name="at"
+                                    data-kp-value="03:00"
+                                    data-kp-time-presets="Night=03:00,Morning=08:00,Evening=19:30"
+                                    data-kp-time-near="03:00"
+                                    data-kp-time-near-width="60"
+                                    data-kp-time-zone="Europe/Brussels"
+                                    id="ks-time-options"
+                                ></div>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-b">Quiet hours end (window 22:00 to 06:00)</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="ks-time-opt-b" data-kp-name="quiet" data-kp-value="06:00" data-kp-time-min="22:00" data-kp-time-max="06:00" data-kp-time-step="30" data-kp-time-clear id="ks-time-opt-window"></div>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-c">Log a time (with Now)</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="ks-time-opt-c" data-kp-time-now data-kp-time-required id="ks-time-opt-now"></div>
+                            </div>
+                        </div>
+                        <p class="ks-label">In a sentence</p>
+                        <form class="kp-sentence" data-kp-sentence id="ks-time-opt-sentence">
+                            <p class="kp-sentence__text">
+                                Back up every day at
+                                <span class="kp-sentence__field"><span class="kp-time" data-kp-time data-kp-time-look="inline" data-kp-label="At" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00"></span></span>.
+                            </p>
+                        </form>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-label">390 px</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-p">Backup time</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="ks-time-opt-p" data-kp-name="at" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00" data-kp-time-near="03:00" id="ks-time-opt-phone"></div>
                             </div>
                         </div>
                     </div>

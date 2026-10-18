@@ -6,15 +6,13 @@
                 data-review-components="combobox usual"
                 data-review-topic="usual"
                 data-review-topic-title="Picker with the usual on top"
-                data-review-title="Picker with the usual on top: symptoms and a meal"
+                data-review-title="Picker with the usual on top: the list"
                 aria-labelledby="h-usual"
             >
                 <div class="kc-sec__head">
-                    <h2 id="h-usual">Picker with the usual on top: symptoms and a meal</h2>
+                    <h2 id="h-usual">Picker with the usual on top: the list</h2>
                     <p>
-                        The combobox (<code>data-kp-combobox</code>) with <code>data-kp-usual</code>: the choices you use most stand first, the rest
-                        alphabetical below, and a name typed with a slip is not added a second time. Nothing re-sorts per tap: the band is given by
-                        the app and changes slowly.
+                        The combobox (<code>data-kp-combobox</code>) with <code>data-kp-usual</code>: the choices you use most stand first, the rest alphabetical below, and a name typed with a slip is not added a second time. Nothing re-sorts per tap: the band is given by the app and changes slowly. This section shows how the list behaves.
                     </p>
                 </div>
                 <div class="kc-expected">
@@ -39,17 +37,11 @@
                             Type <b>Fatigu</b>, which is close to a name you have: <b>Did you mean Fatigue?</b> stands first, then
                             <b>Add &lsquo;Fatigu&rsquo; as new</b>, which always works.
                         </li>
-                        <li>
-                            <b>Alt U</b> with the field empty jumps to the first usual choice (a bare <b>u</b> would eat the first letter of a name);
-                            it is on the <b>?</b> sheet. <b>Meal</b> (single): the band is ranked by how often each was used (the counts are in the
-                            markup), no folding, because the list is short. <b>Buttons above</b> change the options while you look.
-                        </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        The list is formal&rsquo;s own combobox plate; the group labels are its muted small text and nothing else is added. Look at
-                        the band against the rest, the margin inside each row, and the tags with Not today.
+                        The list is formal&rsquo;s own combobox plate; the group labels are its muted small text and nothing else is added. Look at the band against the rest, the margin inside each row, and the tags with Not today.
                     </p>
                 </div>
                 <div data-review-controls>
@@ -84,26 +76,6 @@
                         </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="order" data-value="given">As given</button>
                     </div>
-                    <div role="group" aria-label="Band size" class="kc-actions">
-                        <b>Band size:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="usual-max" data-value="5">5 (default)</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-max" data-value="3">3</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-max" data-value="7">7</button>
-                    </div>
-                    <div role="group" aria-label="Not today button" class="kc-actions">
-                        <b>Not today:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="not-today" data-value="on">
-                            On (default)
-                        </button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="not-today" data-value="off">Off</button>
-                    </div>
-                    <div role="group" aria-label="Add a new name" class="kc-actions">
-                        <b>Add a new name:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="add" data-value="inline">
-                            Inline (default)
-                        </button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="add" data-value="off">Off</button>
-                    </div>
                 </div>
                 <div class="kc-pair kc-pair--tall">
                     <div class="kc-case kc-case--room">
@@ -112,6 +84,7 @@
                             class="kp-combobox"
                             data-kp-combobox
                             id="kc-usual-a"
+                            data-kc-usual-target
                             data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'
                             data-kp-multiple
                             data-kp-add="inline"
@@ -173,6 +146,136 @@
                             <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
                         </div>
                         <pre class="kc-log" id="kc-usual-log" aria-live="polite"></pre>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: usual-band (from the last round) -->
+<section
+                class="kc-sec"
+                id="usual-band"
+                data-review-item="usual-band"
+                data-review-components="combobox usual"
+                data-review-topic="usual"
+                data-review-title="Picker with the usual on top: band, Not today and adding"
+                aria-labelledby="h-usual-band"
+            >
+                <div class="kc-sec__head">
+                    <h2 id="h-usual-band">Picker with the usual on top: band, Not today and adding</h2>
+                    <p>
+                        The combobox (<code>data-kp-combobox</code>) with <code>data-kp-usual</code>: the choices you use most stand first, the rest alphabetical below, and a name typed with a slip is not added a second time. Nothing re-sorts per tap: the band is given by the app and changes slowly. This section shows the band, the Not today button and adding a name, and a single-choice picker ranked by use.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Band size</b> 3, 5 (default) or 7 sets how many usual choices stand first; <b>Not today</b> <b>Off</b> removes the small button from each tag; <b>Add a new name</b> <b>Off</b> makes a new name impossible (Enter only picks what exists, and the &ldquo;Add &hellip; as new&rdquo; row is gone). <b>Pick</b> Headache and Fatigue first: they become tags with a small <b>Not today</b> button each.
+                        </li>
+                        <li>
+                            <b>Alt U</b> with the field empty jumps to the first usual choice (a bare <b>u</b> would eat the first letter of a name); it is on the <b>?</b> sheet.
+                        </li>
+                        <li>
+                            <b>Meal</b> (single): the band is ranked by how often each was used (the counts are in the markup), no folding, because the list is short.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The list is formal&rsquo;s own combobox plate; the group labels are its muted small text and nothing else is added. Look at the band against the rest, the margin inside each row, and the tags with Not today.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="Band size" class="kc-actions">
+                        <b>Band size:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="usual-max" data-value="5">5 (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-max" data-value="3">3</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-max" data-value="7">7</button>
+                    </div>
+                    <div role="group" aria-label="Not today button" class="kc-actions">
+                        <b>Not today:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="not-today" data-value="on">
+                            On (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="not-today" data-value="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="Add a new name" class="kc-actions">
+                        <b>Add a new name:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="add" data-value="inline">
+                            Inline (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="add" data-value="off">Off</button>
+                    </div>
+                </div>
+                <div class="kc-pair kc-pair--tall">
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">Symptoms: the band, Not today and adding</p>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="kc-usual-m"
+                            data-kc-usual-target
+                            data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'
+                            data-kp-multiple
+                            data-kp-add="inline"
+                            data-kp-not-today
+                            data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'
+                            data-kp-hint="Last time you wrote: tired and a stiff neck"
+                        >
+                            <label class="kp-field__label" for="kc-usual-m-input">Symptoms today</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="kc-usual-m-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="kc-usual-m-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="kc-usual-m-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                        <pre class="kc-log" id="kc-usual-m-log" aria-live="polite"></pre>
                     </div>
                     <div class="kc-case kc-case--room">
                         <p class="kc-label">Meal: one, ranked by how often</p>
@@ -450,15 +553,13 @@
                 data-review-components="focus-steps"
                 data-review-topic="focus"
                 data-review-topic-title="Questions, one per screen"
-                data-review-title="Questions, one per screen: a daily check-in"
+                data-review-title="Questions, one per screen: the check-in"
                 aria-labelledby="h-focus"
             >
                 <div class="kc-sec__head">
-                    <h2 id="h-focus">Questions, one per screen: a daily check-in</h2>
+                    <h2 id="h-focus">Questions, one per screen: the check-in</h2>
                     <p>
-                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big
-                        answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode
-                        itself does not change.
+                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode itself does not change.
                     </p>
                 </div>
                 <div class="kc-expected">
@@ -482,15 +583,13 @@
                             and on. No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
                         </li>
                         <li>
-                            <b>Buttons above</b> switch the options while you look (progress, advance, the same buttons, a summary screen, the
-                            answers&rsquo; layout): the view redraws at once, keeping your place and your answers.
+                            <b>Buttons above</b> switch the options while you look (progress, advance): the view redraws at once, keeping your place and your answers. <b>Start over</b> asks the six questions again.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Formal&rsquo;s buttons at their large size; a chosen answer is the navy primary with a ruled check; the bar is formal&rsquo;s
-                        ruled bar. Look at the answers filling the width, the mark never touching the words, and Back and Next staying put.
+                        Formal&rsquo;s buttons at their large size; a chosen answer is the navy primary with a ruled check; the bar is formal&rsquo;s ruled bar. Look at the answers filling the width, the mark never touching the words, and Back and Next staying put.
                     </p>
                 </div>
                 <div data-review-controls>
@@ -504,6 +603,75 @@
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-opt="advance" data-value="auto">Auto</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-opt="advance" data-value="button">Button</button>
                     </div>
+                    <div role="group" aria-label="Start over" class="kc-actions">
+                        <button type="button" class="kp-button" data-kc-focus-restart>Start over</button>
+                    </div>
+                </div>
+                <div class="kc-pair">
+                    <div class="kc-case">
+                        <p class="kc-label">The check-in</p>
+                        <div
+                            class="kp-focus-steps kc-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            id="kc-focus-a"
+                            data-kc-focus-main
+                            aria-label="Daily check-in"
+                        ></div>
+                        <pre class="kc-log" id="kc-focus-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kc-case">
+                        <p class="kc-label">Phone width (390 px): the answers stack, full width</p>
+                        <div class="kc-frame kc-frame--phone">
+                            <div
+                                class="kp-focus-steps kc-focus"
+                                data-kp-focus-steps
+                                data-kp-focus-mode="answer"
+                                data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]'
+                                id="kc-focus-p"
+                                data-kc-focus-phone
+                                aria-label="Daily check-in"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: focus-options (from the last round) -->
+<section
+                class="kc-sec"
+                id="focus-options"
+                data-review-item="focus-options"
+                data-review-components="focus-steps"
+                data-review-topic="focus"
+                data-review-title="Questions, one per screen: the same buttons and a summary"
+                aria-labelledby="h-focus-options"
+            >
+                <div class="kc-sec__head">
+                    <h2 id="h-focus-options">Questions, one per screen: the same buttons and a summary</h2>
+                    <p>
+                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode itself does not change. This section shows the shortcuts and the summary screen.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Same</b> shows <b>Same as yesterday</b> and <b>Same as usual</b> (both, only one of them, or neither); <b>Summary</b> <b>On</b> adds a summary screen at the end of the check-in. Both redraw the view at once, keeping your place and your answers; <b>Start over</b> asks the six questions again.
+                        </li>
+                        <li>
+                            <b>Keys</b> (focus inside the view, click a question first): ArrowUp and ArrowDown move between the answers, Enter
+                            chooses, <b>s</b> takes the same as yesterday, <b>u</b> the usual, <b>n</b> Not today, ArrowLeft and ArrowRight go back
+                            and on. No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s buttons at their large size; the two same-as buttons side by side where there is room, and the summary screen at the end.
+                    </p>
+                </div>
+                <div data-review-controls>
                     <div role="group" aria-label="The same buttons" class="kc-actions">
                         <b>Same:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-opt="same" data-value="both">Both</button>
@@ -529,10 +697,11 @@
                             class="kp-focus-steps kc-focus"
                             data-kp-focus-steps
                             data-kp-focus-mode="answer"
-                            id="kc-focus-a"
+                            id="kc-focus-o"
+                            data-kc-focus-main
                             aria-label="Daily check-in"
                         ></div>
-                        <pre class="kc-log" id="kc-focus-log" aria-live="polite"></pre>
+                        <pre class="kc-log" id="kc-focus-o-log" aria-live="polite"></pre>
                     </div>
                     <div class="kc-case">
                         <p class="kc-label">Phone width (390 px): the answers stack, full width</p>
@@ -542,7 +711,8 @@
                                 data-kp-focus-steps
                                 data-kp-focus-mode="answer"
                                 data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]'
-                                id="kc-focus-p"
+                                id="kc-focus-op"
+                                data-kc-focus-phone
                                 aria-label="Daily check-in"
                             ></div>
                         </div>
