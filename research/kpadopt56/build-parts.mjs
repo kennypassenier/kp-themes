@@ -168,6 +168,7 @@ const PARTS = [
             ['kpadopt6-calm', 'quote'],
             ['kpadopt6-calm', 'quote-states'],
             ['kpadopt6-calm', 'focus'],
+            ['kpadopt6-calm', 'focus-options'],
             ['kpadopt6-calm', 'focus-states'],
         ],
     },

@@ -153,7 +153,7 @@ export const PAGES = [
                 href: 'research/kpadopt56-calm/demo.html',
                 rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 8 of 11: Calm screens',
-                about: 'A quiet daily check-in: calm mode, calm days, the quote card and questions one per screen. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+                about: 'A quiet daily check-in: calm mode, calm days, the quote card and questions one per screen. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-charts/demo.html',

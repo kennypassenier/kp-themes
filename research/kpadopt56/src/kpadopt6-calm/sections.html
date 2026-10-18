@@ -450,15 +450,13 @@
                 data-review-components="focus-steps"
                 data-review-topic="focus"
                 data-review-topic-title="Questions, one per screen"
-                data-review-title="Questions, one per screen: a daily check-in"
+                data-review-title="Questions, one per screen: the check-in"
                 aria-labelledby="h-focus"
             >
                 <div class="kc-sec__head">
-                    <h2 id="h-focus">Questions, one per screen: a daily check-in</h2>
+                    <h2 id="h-focus">Questions, one per screen: the check-in</h2>
                     <p>
-                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big
-                        answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode
-                        itself does not change.
+                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode itself does not change.
                     </p>
                 </div>
                 <div class="kc-expected">
@@ -482,15 +480,13 @@
                             and on. No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
                         </li>
                         <li>
-                            <b>Buttons above</b> switch the options while you look (progress, advance, the same buttons, a summary screen, the
-                            answers&rsquo; layout): the view redraws at once, keeping your place and your answers.
+                            <b>Buttons above</b> switch the options while you look (progress, advance): the view redraws at once, keeping your place and your answers. <b>Start over</b> asks the six questions again.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Formal&rsquo;s buttons at their large size; a chosen answer is the navy primary with a ruled check; the bar is formal&rsquo;s
-                        ruled bar. Look at the answers filling the width, the mark never touching the words, and Back and Next staying put.
+                        Formal&rsquo;s buttons at their large size; a chosen answer is the navy primary with a ruled check; the bar is formal&rsquo;s ruled bar. Look at the answers filling the width, the mark never touching the words, and Back and Next staying put.
                     </p>
                 </div>
                 <div data-review-controls>
@@ -504,6 +500,75 @@
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-opt="advance" data-value="auto">Auto</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-opt="advance" data-value="button">Button</button>
                     </div>
+                    <div role="group" aria-label="Start over" class="kc-actions">
+                        <button type="button" class="kp-button" data-kc-focus-restart>Start over</button>
+                    </div>
+                </div>
+                <div class="kc-pair">
+                    <div class="kc-case">
+                        <p class="kc-label">The check-in</p>
+                        <div
+                            class="kp-focus-steps kc-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            id="kc-focus-a"
+                            data-kc-focus-main
+                            aria-label="Daily check-in"
+                        ></div>
+                        <pre class="kc-log" id="kc-focus-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kc-case">
+                        <p class="kc-label">Phone width (390 px): the answers stack, full width</p>
+                        <div class="kc-frame kc-frame--phone">
+                            <div
+                                class="kp-focus-steps kc-focus"
+                                data-kp-focus-steps
+                                data-kp-focus-mode="answer"
+                                data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]'
+                                id="kc-focus-p"
+                                data-kc-focus-phone
+                                aria-label="Daily check-in"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: focus-options (from the last round) -->
+<section
+                class="kc-sec"
+                id="focus-options"
+                data-review-item="focus-options"
+                data-review-components="focus-steps"
+                data-review-topic="focus"
+                data-review-title="Questions, one per screen: the same buttons and a summary"
+                aria-labelledby="h-focus-options"
+            >
+                <div class="kc-sec__head">
+                    <h2 id="h-focus-options">Questions, one per screen: the same buttons and a summary</h2>
+                    <p>
+                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode itself does not change. This section shows the shortcuts and the summary screen.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Same</b> shows <b>Same as yesterday</b> and <b>Same as usual</b> (both, only one of them, or neither); <b>Summary</b> <b>On</b> adds a summary screen at the end of the check-in. Both redraw the view at once, keeping your place and your answers; <b>Start over</b> asks the six questions again.
+                        </li>
+                        <li>
+                            <b>Keys</b> (focus inside the view, click a question first): ArrowUp and ArrowDown move between the answers, Enter
+                            chooses, <b>s</b> takes the same as yesterday, <b>u</b> the usual, <b>n</b> Not today, ArrowLeft and ArrowRight go back
+                            and on. No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s buttons at their large size; the two same-as buttons side by side where there is room, and the summary screen at the end.
+                    </p>
+                </div>
+                <div data-review-controls>
                     <div role="group" aria-label="The same buttons" class="kc-actions">
                         <b>Same:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-opt="same" data-value="both">Both</button>
@@ -529,10 +594,11 @@
                             class="kp-focus-steps kc-focus"
                             data-kp-focus-steps
                             data-kp-focus-mode="answer"
-                            id="kc-focus-a"
+                            id="kc-focus-o"
+                            data-kc-focus-main
                             aria-label="Daily check-in"
                         ></div>
-                        <pre class="kc-log" id="kc-focus-log" aria-live="polite"></pre>
+                        <pre class="kc-log" id="kc-focus-o-log" aria-live="polite"></pre>
                     </div>
                     <div class="kc-case">
                         <p class="kc-label">Phone width (390 px): the answers stack, full width</p>
@@ -542,7 +608,8 @@
                                 data-kp-focus-steps
                                 data-kp-focus-mode="answer"
                                 data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]'
-                                id="kc-focus-p"
+                                id="kc-focus-op"
+                                data-kc-focus-phone
                                 aria-label="Daily check-in"
                             ></div>
                         </div>
