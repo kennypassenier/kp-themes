@@ -1,0 +1,181 @@
+/* research/gap-tab-count: the frame of the page. Everything with a kp- class is the package; these gtc- rules lay out the sections. */
+
+.gtc-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.gtc-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gtc-intro :is(h1, p) {
+    margin: 0;
+}
+
+.gtc-intro p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.gtc-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+}
+
+.gtc-head > :is(h2, p) {
+    margin: 0;
+}
+
+.gtc-head > p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.gtc-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.gtc-expected :is(p, ul) {
+    margin: 0;
+}
+
+.gtc-expected ul {
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+.gtc-controls {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.gtc-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+/* One component, one column: a note above it, the thing, a line of readings under it. */
+.gtc-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.gtc-note {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.gtc-panel-list {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gtc-panel-list > li {
+    display: grid;
+    grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    padding-block: var(--kp-space-xs, 0.25rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.gtc-panel-list > li > :last-child {
+    justify-self: end;
+}
+
+/* The board: a search box, the groups of tiles, the key line, the readings. */
+.gtc-board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    margin-inline: auto;
+    inline-size: 100%;
+}
+
+.gtc-board[data-gtc-width='wide'] {
+    max-inline-size: 72rem;
+}
+
+.gtc-board[data-gtc-width='medium'] {
+    max-inline-size: 48rem;
+}
+
+.gtc-board[data-gtc-width='narrow'] {
+    max-inline-size: 32rem;
+}
+
+.gtc-board[data-gtc-width='phone'] {
+    max-inline-size: 20rem;
+}
+
+.gtc-groups {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.gtc-group > summary {
+    cursor: pointer;
+    padding-block: var(--kp-space-xs, 0.25rem);
+    font-weight: 600;
+}
+
+.gtc-group > .kp-tiles {
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+    --kp-tile-min: 13rem;
+}
+
+.gtc-tile__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gtc-tile__head > .kp-card__title {
+    margin: 0;
+    min-inline-size: 0;
+}
+
+.gtc-tile__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gtc-readings {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    margin: 0;
+}
+
+.gtc-readings dt {
+    color: var(--muted-foreground);
+}
+
+.gtc-readings dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+/* The heat sections: the grid, then its legend (the package's own), kept to one height whatever the state. */
+.gtc-heat {
+    min-block-size: 14rem;
+}

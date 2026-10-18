@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="gap-tab-count" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Three small gaps the admin dashboard found: a count on a tab, arrow keys over tiles, the heat grid's legend</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main gtc-page">
+            <header class="gtc-intro">
+                <h1>Three gaps the admin dashboard found</h1>
+                <p class="cat-intro">
+                    The homelab admin dashboard drew three small things for itself because the package had none: the number on a tab, the arrow keys
+                    over a board of tiles, and the key under a heat grid. Each is now a part of the package. Four sections, in formal only: the count
+                    on a tab, the arrow keys over a board of app tiles, the legend of the backup grid, and the legend a calm grid draws by itself. The
+                    stacks, tiles and log lines are made-up samples of the dashboard&rsquo;s data.
+                </p>
+            </header>
+
+            <section
+                class="gtc-sec"
+                id="tab-count"
+                data-review-item="tab-count"
+                data-review-topic="gap"
+                data-review-topic-title="Three gaps from the admin dashboard"
+                data-review-components="tab"
+                data-review-title="A count on a tab: Apps 7, Logs 12"
+                aria-labelledby="h-tab-count"
+            >
+                <div class="gtc-head">
+                    <h2 id="h-tab-count">A count on a tab: Apps 7, Logs 12</h2>
+                    <p>
+                        A tab can carry the exact number of what is behind it, in a colour that says how urgent it is, and it can say that it is still
+                        counting. The Logs tab below is the one the buttons drive; Apps and History show the same count with their own tone and word.
+                    </p>
+                </div>
+                <div class="gtc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The number</b> is the whole number: 1534 reads 1534, never &ldquo;1.5k&rdquo; or &ldquo;99+&rdquo;. A number with no
+                            count (<b>Not counted yet</b>) and a 0 draw nothing; <b>0, shown</b> draws the 0, as History does for &ldquo;0
+                            incidents&rdquo;.
+                        </li>
+                        <li>
+                            <b>Tone</b> changes the colour of the count only. <b>Counting</b> turns the count into a pulsing bar as wide as the number
+                            was, and <b>Could not count</b> into a dash; the tabs beside it do not move in either.
+                        </li>
+                        <li>
+                            <b>Number and word</b> writes the unit after the number (&ldquo;12 errors&rdquo;, and &ldquo;1 error&rdquo; for one). The
+                            word is always there for a screen reader, which hears &ldquo;Logs, 12 errors&rdquo;.
+                        </li>
+                        <li>Select another tab: its count stays readable on the selected tab, and no tab changes width when it is selected.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is ruled paper: an opaque plate in a strong hairline, a 3 px navy rule, nothing fades. Check that the count sits on the
+                        tab like a small stamp on the same baseline as the label, that its colours are the status plates the badges already have, and
+                        that there is clear space between the label and the count and between the count and the tab&rsquo;s edge.
+                    </p>
+                </div>
+                <div class="gtc-controls" data-review-controls data-review-controls-for="tab-count-component">
+                    <div role="group" aria-label="The number on Logs">
+                        <b>The number on Logs:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-count="12" aria-pressed="true">12</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-count="1" aria-pressed="false">1</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-count="1534" aria-pressed="false">1534</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-count="0" aria-pressed="false">0</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-count="0-shown" aria-pressed="false">0, shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-count="none" aria-pressed="false">Not counted yet</button>
+                    </div>
+                    <div role="group" aria-label="Tone of the count on Logs">
+                        <b>Tone:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-tone="neutral" aria-pressed="false">Neutral</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-tone="info" aria-pressed="false">Info</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-tone="success" aria-pressed="false">Success</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-tone="warning" aria-pressed="false">Warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-tone="error" aria-pressed="true">Error</button>
+                    </div>
+                    <div role="group" aria-label="State of the count on Logs">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-state="ready" aria-pressed="true">Counted</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-state="loading" aria-pressed="false">Counting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-state="error" aria-pressed="false">Could not count</button>
+                    </div>
+                    <div role="group" aria-label="Words on the counts">
+                        <b>Words:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-unit="hide" aria-pressed="true">Number only</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-unit="show" aria-pressed="false">Number and word</button>
+                    </div>
+                </div>
+                <div id="tab-count-component" class="gtc-stack">
+                    <p class="gtc-note">
+                        The stack &ldquo;media&rdquo;: its apps, the latest log lines and its incidents, behind three tabs (the other two have no
+                        count).
+                    </p>
+                    <div class="kp-tabs gtc-tabs">
+                        <div class="kp-tabs__list" role="tablist" aria-label="Stack media">
+                            <button
+                                type="button"
+                                class="kp-tab"
+                                role="tab"
+                                id="gtc-tab-apps"
+                                aria-controls="gtc-panel-apps"
+                                aria-selected="false"
+                                data-kp-tab-count="7"
+                                data-kp-tab-count-unit="app,apps"
+                            >
+                                Apps
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-tab"
+                                role="tab"
+                                id="gtc-tab-logs"
+                                aria-controls="gtc-panel-logs"
+                                aria-selected="true"
+                                data-kp-tab-count="12"
+                                data-kp-tab-count-tone="error"
+                                data-kp-tab-count-unit="error,errors"
+                                data-gtc-logs
+                            >
+                                Logs
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-tab"
+                                role="tab"
+                                id="gtc-tab-history"
+                                aria-controls="gtc-panel-history"
+                                aria-selected="false"
+                                data-kp-tab-count="2"
+                                data-kp-tab-count-tone="warning"
+                                data-kp-tab-count-unit="incident,incidents"
+                                data-kp-tab-count-zero="show"
+                            >
+                                History
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-tab"
+                                role="tab"
+                                id="gtc-tab-backups"
+                                aria-controls="gtc-panel-backups"
+                                aria-selected="false"
+                            >
+                                Backups
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-tab"
+                                role="tab"
+                                id="gtc-tab-settings"
+                                aria-controls="gtc-panel-settings"
+                                aria-selected="false"
+                            >
+                                Settings
+                            </button>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-apps" aria-labelledby="gtc-tab-apps" hidden>
+                            <ul class="gtc-panel-list">
+                                <li><b>jellyfin</b><span>Movies, shows and music</span><span class="kp-badge kp-badge--success">Running</span></li>
+                                <li><b>sonarr</b><span>Series downloads</span><span class="kp-badge kp-badge--success">Running</span></li>
+                                <li><b>radarr</b><span>Film downloads</span><span class="kp-badge kp-badge--success">Running</span></li>
+                                <li>
+                                    <b>prowlarr</b><span>Indexers for sonarr and radarr</span><span class="kp-badge kp-badge--success">Running</span>
+                                </li>
+                                <li><b>qbittorrent</b><span>Download client</span><span class="kp-badge kp-badge--warning">Updating</span></li>
+                                <li><b>bazarr</b><span>Subtitles</span><span class="kp-badge kp-badge--destructive">Down</span></li>
+                                <li><b>jellyseerr</b><span>Requests from the family</span><span class="kp-badge kp-badge--success">Running</span></li>
+                            </ul>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-logs" aria-labelledby="gtc-tab-logs">
+                            <div class="kp-log">
+                                <p class="kp-log__line" data-kp-severity="info">
+                                    <time class="kp-log__time">03:12:08</time>
+                                    <span class="kp-log__source" data-kp-source="jellyfin">jellyfin</span>
+                                    <span class="kp-log__level">info</span>
+                                    <span class="kp-log__message">Library scan finished: 4 new items in Films</span>
+                                </p>
+                                <p class="kp-log__line" data-kp-severity="warning">
+                                    <time class="kp-log__time">03:14:51</time>
+                                    <span class="kp-log__source" data-kp-source="sonarr">sonarr</span>
+                                    <span class="kp-log__level">warning</span>
+                                    <span class="kp-log__message">Indexer NZBgeek returned 429, retrying in 30 min</span>
+                                </p>
+                                <p class="kp-log__line" data-kp-severity="error">
+                                    <time class="kp-log__time">03:20:17</time>
+                                    <span class="kp-log__source" data-kp-source="bazarr">bazarr</span>
+                                    <span class="kp-log__level">error</span>
+                                    <span class="kp-log__message">OpenSubtitles login failed: HTTP 401, check the API key</span>
+                                </p>
+                                <p class="kp-log__line" data-kp-severity="error">
+                                    <time class="kp-log__time">03:20:48</time>
+                                    <span class="kp-log__source" data-kp-source="bazarr">bazarr</span>
+                                    <span class="kp-log__level">error</span>
+                                    <span class="kp-log__message">Could not fetch subtitles for 3 episodes of Severance S02</span>
+                                </p>
+                                <p class="kp-log__line" data-kp-severity="info">
+                                    <time class="kp-log__time">03:31:02</time>
+                                    <span class="kp-log__source" data-kp-source="traefik">traefik</span>
+                                    <span class="kp-log__level">info</span>
+                                    <span class="kp-log__message">Certificate for jellyfin.kp-soft.dev renewed, valid until 17/01/2027</span>
+                                </p>
+                                <p class="kp-log__line" data-kp-severity="error">
+                                    <time class="kp-log__time">03:44:39</time>
+                                    <span class="kp-log__source" data-kp-source="qbittorrent">qbittorrent</span>
+                                    <span class="kp-log__level">error</span>
+                                    <span class="kp-log__message">Tracker returned: connection timed out after 30 s</span>
+                                </p>
+                                <p class="kp-log__line" data-kp-severity="warning">
+                                    <time class="kp-log__time">03:52:10</time>
+                                    <span class="kp-log__source" data-kp-source="jellyfin">jellyfin</span>
+                                    <span class="kp-log__level">warning</span>
+                                    <span class="kp-log__message">Transcode of Dune.mkv fell back to software: no free VAAPI slot</span>
+                                </p>
+                                <p class="kp-log__line" data-kp-severity="info">
+                                    <time class="kp-log__time">04:05:00</time>
+                                    <span class="kp-log__source" data-kp-source="restic">restic</span>
+                                    <span class="kp-log__level">info</span>
+                                    <span class="kp-log__message">Snapshot 7d3e1a9c saved: media, 41.8 GB, 2 min 41 s</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-history" aria-labelledby="gtc-tab-history" hidden>
+                            <ol class="kp-timeline">
+                                <li class="kp-timeline__item">
+                                    <span class="kp-timeline__marker" aria-hidden="true"></span>
+                                    <span
+                                        ><time class="kp-timeline__when" datetime="2026-10-18T22:40">18/10/2026 22:40</time>bazarr is down since the
+                                        update to 1.5.2</span
+                                    >
+                                </li>
+                                <li class="kp-timeline__item">
+                                    <span class="kp-timeline__marker" aria-hidden="true"></span>
+                                    <span
+                                        ><time class="kp-timeline__when" datetime="2026-10-16T04:05">16/10/2026 04:05</time>Nightly snapshot of media
+                                        missed, disk was 94 percent full</span
+                                    >
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-backups" aria-labelledby="gtc-tab-backups" hidden>
+                            Last snapshot of media: 19/10/2026 03:02, 41.8 GB, kept for 30 nights.
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-settings" aria-labelledby="gtc-tab-settings" hidden>
+                            Compose file, environment and the update schedule of the media stack.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="gtc-sec"
+                id="tile-keys"
+                data-review-item="tile-keys"
+                data-review-topic="gap"
+                data-review-components="tiles"
+                data-review-title="Arrow keys over a board of tiles"
+                aria-labelledby="h-tile-keys"
+            >
+                <div class="gtc-head">
+                    <h2 id="h-tile-keys">Arrow keys over a board of tiles</h2>
+                    <p>
+                        A board of app tiles is one place in the tab order: Tab enters it once, the arrow keys move between the tiles by where they
+                        are drawn, and Tab leaves it. Click a tile (or use <b>Put the focus on the board</b>) and press the arrow keys.
+                    </p>
+                </div>
+                <div class="gtc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Keys on:</b> the readings under the board say one tab stop for all the tiles. Right and Left walk a row and go on to
+                            the next row; Up and Down go to the tile above or below in the same column, and from the last tile of a short row to the
+                            last tile of the next row, never skipping a row. Home and End go to the first and last tile. Up on the first row lands in
+                            the search box.
+                        </li>
+                        <li>
+                            <b>Keys off</b> gives the ordinary tab order back: every tile is a tab stop (the readings say so) and the arrow keys do
+                            nothing.
+                        </li>
+                        <li>
+                            <b>Board width</b> changes how many tiles stand in a row (four, three, two, one); the keys follow whatever is drawn.
+                            <b>Folded</b> and <b>Only apps with a problem</b> take tiles out; the keys skip them.
+                        </li>
+                        <li>Press <b>S</b> on a tile to star it; the star is in the key line because it is not a tab stop of its own.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is ruled paper. Check that the focused tile shows the package&rsquo;s focus ring with clear space round the tile, that
+                        the ring moves with the key at once, and that the tiles keep one height in every width.
+                    </p>
+                </div>
+                <div class="gtc-controls" data-review-controls data-review-controls-for="tile-keys-component">
+                    <div role="group" aria-label="Arrow keys">
+                        <b>Arrow keys:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-keys="on" aria-pressed="true">On</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-keys="off" aria-pressed="false">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-focus>Put the focus on the board</button>
+                    </div>
+                    <div role="group" aria-label="Board width">
+                        <b>Board width:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-width="wide" aria-pressed="true">Wide</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-width="medium" aria-pressed="false">Medium</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-width="narrow" aria-pressed="false">Narrow</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-width="phone" aria-pressed="false">Phone</button>
+                    </div>
+                    <div role="group" aria-label="The platform group">
+                        <b>Platform group:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-fold="open" aria-pressed="true">Open</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-fold="folded" aria-pressed="false">Folded</button>
+                    </div>
+                    <div role="group" aria-label="Which apps">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-show="all" aria-pressed="true">All 19 apps</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-show="problem" aria-pressed="false">
+                            Only apps with a problem
+                        </button>
+                    </div>
+                </div>
+                <div id="tile-keys-component" class="gtc-board" data-gtc-width="wide">
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="gtc-search">Find an app</label>
+                        <input
+                            class="kp-field__input"
+                            id="gtc-search"
+                            type="search"
+                            autocomplete="off"
+                            placeholder="jellyfin, traefik, zigbee2mqtt"
+                        />
+                    </div>
+                    <div class="gtc-groups" id="gtc-board" data-kp-tiles-set="apps" data-kp-tiles-keys data-kp-tiles-keys-exit="gtc-search"></div>
+                    <div id="gtc-keyline"></div>
+                    <dl class="gtc-readings" aria-live="off">
+                        <dt>Tab stops on the board</dt>
+                        <dd data-gtc-stops></dd>
+                        <dt>Tile in focus</dt>
+                        <dd data-gtc-focus-name></dd>
+                        <dt>Tiles shown</dt>
+                        <dd data-gtc-shown></dd>
+                    </dl>
+                </div>
+            </section>
+
+            <section
+                class="gtc-sec"
+                id="heat-legend"
+                data-review-item="heat-legend"
+                data-review-topic="gap"
+                data-review-components="heat"
+                data-review-title="The legend under a heat grid"
+                aria-labelledby="h-heat-legend"
+            >
+                <div class="gtc-head">
+                    <h2 id="h-heat-legend">The legend under a heat grid</h2>
+                    <p>
+                        A heat grid can write its own legend: a swatch and its words per state, a scale from less to more for a grid of values, and at
+                        the end the line of keys. The legend keeps its place while the grid loads or fails.
+                    </p>
+                </div>
+                <div class="gtc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Nightly backups:</b> five states in words (backed up, some missed, missed, before any history, keeps no data by design)
+                            and the key line at the end. <b>Requests per hour</b> swaps the grid for values, and the legend for a scale from fewer to
+                            more requests.
+                        </li>
+                        <li><b>Words only</b> drops the key line, <b>Hidden</b> removes the legend; neither moves the grid.</li>
+                        <li><b>Loading</b> and <b>Could not be read</b> leave the legend where it is, under a grid that keeps its size.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is ruled paper. Check that every swatch is the same colour and pattern as the cell it describes, that the words have
+                        clear space from the swatch and from each other, and that the key line stands at the end and wraps whole when it does not fit.
+                    </p>
+                </div>
+                <div class="gtc-controls" data-review-controls data-review-controls-for="heat-legend-component">
+                    <div role="group" aria-label="What the grid shows">
+                        <b>The grid shows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-data="nights" aria-pressed="true">Nightly backups</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-data="requests" aria-pressed="false">Requests per hour</button>
+                    </div>
+                    <div role="group" aria-label="The legend">
+                        <b>Legend:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-legend="keys" aria-pressed="true">With the key line</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-legend="words" aria-pressed="false">Words only</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-legend="none" aria-pressed="false">Hidden</button>
+                    </div>
+                    <div role="group" aria-label="State of the grid">
+                        <b>Grid:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-grid="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-grid="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-grid="error" aria-pressed="false">Could not be read</button>
+                    </div>
+                </div>
+                <div id="heat-legend-component" class="gtc-stack">
+                    <div class="gtc-heat">
+                        <div class="kp-heat" id="gtc-heat" data-kp-heat data-kp-heat-latest="end" data-kp-heat-toggle></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="gtc-sec"
+                id="heat-calm"
+                data-review-item="heat-calm"
+                data-review-topic="gap"
+                data-review-components="heat"
+                data-review-title="A calm grid draws its own legend"
+                aria-labelledby="h-heat-calm"
+            >
+                <div class="gtc-head">
+                    <h2 id="h-heat-calm">A calm grid draws its own legend</h2>
+                    <p>
+                        A tracker where a day without an entry is simply empty never shows red. A heat grid in the calm vocabulary now says what its
+                        three tones mean by itself: Logged, Nothing logged, Paused.
+                    </p>
+                </div>
+                <div class="gtc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The legend appears with the grid and names the three tones, in words that never say &ldquo;missed&rdquo;.</li>
+                        <li><b>Hidden</b> takes the legend away and <b>Automatic</b> brings it back, without the grid being drawn again.</li>
+                        <li><b>Paused for 3 days</b> turns the middle of the week hatched, and the legend already names that tone.</li>
+                        <li><b>Loading</b> keeps the legend where it is.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is ruled paper. Check that the three swatches match the cells (filled, empty, hatched) and that nothing in the grid or
+                        the legend reads as a failure.
+                    </p>
+                </div>
+                <div class="gtc-controls" data-review-controls data-review-controls-for="heat-calm-component">
+                    <div role="group" aria-label="The legend">
+                        <b>Legend:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-calm-legend="auto" aria-pressed="true">Automatic</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-calm-legend="hide" aria-pressed="false">Hidden</button>
+                    </div>
+                    <div role="group" aria-label="Paused days">
+                        <b>Pause:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-pause="none" aria-pressed="true">None</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-pause="three" aria-pressed="false">Paused for 3 days</button>
+                    </div>
+                    <div role="group" aria-label="State of the grid">
+                        <b>Grid:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-calm-grid="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gtc-calm-grid="loading" aria-pressed="false">Loading</button>
+                    </div>
+                </div>
+                <div id="heat-calm-component" class="gtc-stack">
+                    <div class="gtc-heat">
+                        <div class="kp-heat" id="gtc-calm" data-kp-heat data-kp-tones="calm" aria-label="Habits this week"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "gap-tab-count-9718e977-ecfa-461b-aada-e522db179a46" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
