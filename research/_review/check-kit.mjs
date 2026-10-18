@@ -45,7 +45,8 @@ async function go(url) {
     const response = await page.goto(url);
     // A page that is not there must never read as clear: another server on the same port once answered 404 and
     // every measurement said clear [port-1017].
-    if (!response || !response.ok())
+    // 304 is the server saying the cached copy stands (the second visit of a page), not a missing page.
+    if (!response || !(response.ok() || response.status() === 304))
         throw new Error(`${url} answered ${response ? response.status() : 'nothing'}; is this worktree's server on that port?`);
     await page.waitForLoadState('load');
     leaving = false;
