@@ -430,5 +430,77 @@
             ],
             "choices": []
         }
+    ],
+    "reopened": [
+        {
+            "item": "usual-states",
+            "theme": "dark",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "cyberpunk",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "synthwave",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "pastel",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "forest",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "blueprint",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "solstice",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "brutalism",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "deco",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "nostromo",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "titanium",
+            "reason": "Approved in round 2 (Kenny, 2026-10-18 21:37); the package fix of round 3 changes its pickers (tags light up, Did you mean first, Undo line under the field, Not today leaves the tags), so it is judged again."
+        },
+        {
+            "item": "usual",
+            "theme": "formal",
+            "reason": "Formal was approved in earlier rounds (formal re-review, kpadopt6-calm); the package fix of round 3 changes the usual picker there (tags light up, Did you mean first, Undo line under the field, the usual choices' own Not today check), so it is judged again."
+        },
+        {
+            "item": "usual-band",
+            "theme": "formal",
+            "reason": "Formal was approved in earlier rounds (formal re-review, kpadopt6-calm); the package fix of round 3 changes the usual picker there (tags light up, Did you mean first, Undo line under the field, the usual choices' own Not today check), so it is judged again."
+        },
+        {
+            "item": "usual-states",
+            "theme": "formal",
+            "reason": "Formal was approved in earlier rounds (formal re-review, kpadopt6-calm); the package fix of round 3 changes the usual picker there (tags light up, Did you mean first, Undo line under the field, the usual choices' own Not today check), so it is judged again."
+        }
     ]
 }

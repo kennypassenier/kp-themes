@@ -78,6 +78,8 @@ const PARTS = [
             ['kpadopt6-ops', 'intent'],
             ['kpadopt6-ops', 'intent-states'],
         ],
+        // Sections this round asks in formal too: the package change alters approved work there (Kenny, 2026-10-18 22:07).
+        formal: ['usual', 'usual-band', 'usual-states'],
     },
     {
         topic: 'toggles',
@@ -367,7 +369,10 @@ const CHANGED = {
         'window, cut off in the review dialog. It is now a line right under the field, <b>Added &lsquo;Neksteun&rsquo; as new</b> with ' +
         '<b>Undo</b>; the toast stays an option in the next section. A box above the field now says what to type and where the ' +
         'answer shows. You also found a pill inside each tag: the tags are now one pill each, a name and a remove &times;; Not ' +
-        'today moved to its own check under the field (next section).',
+        'today moved to its own check under the field (next section). ' +
+        'Formal is asked this section too: it was approved there, and the same fix changes it. In formal a pick lights its tag with ' +
+        'the ledger&rsquo;s inner rule, <b>Did you mean &hellip;?</b> stands first in the list, and the Undo after adding is the ' +
+        'line under the field, so you judge all of that in formal as well.',
     'choose/usual-band':
         'You did not see what <b>Not today</b> was for, and the pill inside each tag was not wanted. Not today is for a choice you ' +
         'log nearly every day: it records that it did not happen today, which is different from leaving it blank. It is no longer ' +
@@ -375,8 +380,16 @@ const CHANGED = {
         'what Not today means, and each usual choice answered there as <b>Had it</b> (the same as picking it: its tag appears) or ' +
         '<b>Not today</b>, or left blank. That check has two looks, both options of the component: <b>Rows</b> (the default, the ' +
         'words on every row) and <b>Chips</b> (the package&rsquo;s three-way chips: a tick for had it, a cross and the name struck ' +
-        'through for not today). <b>Undo after adding</b> is a new option: under the field (default) or in a toast.',
+        'through for not today). <b>Undo after adding</b> is a new option: under the field (default) or in a toast. ' +
+        'Formal is asked this section too: it was approved there, and the usual choices&rsquo; own check, <b>Your usual today</b>, ' +
+        'with its Rows and Chips looks and the Undo line under the field, is new in formal as well.',
     'choose/usual-states':
+        'You approved this section (eleven themes in the last round; formal earlier), and it is asked again because the package fix ' +
+        'changes it. Every picker in it now behaves as the usual section does: a pick lights its tag, <b>Did you mean &hellip;?</b> ' +
+        'stands first in the list for every close name with <b>Add &lsquo;&hellip;&rsquo; as new</b> last, a name already picked says ' +
+        '<b>already picked</b> and lights its tag, the Undo after adding is a line under the field and no longer a toast at the ' +
+        'window&rsquo;s corner, and Not today is no longer a pill in the tags (the usual choices have their own check). The list ' +
+        'that opens once on screen (your earlier fix) is unchanged. Formal is asked again too, for the same changes. ' +
         'In your last review (18/10) the two samples shown opened kept opening and closing when only part of them was in view. The ' +
         'page closed them whenever less than 90% was on screen, and opening them made their box taller, so half in view they ' +
         'closed, shrank, were in view again and reopened, several times a second. They now open once, the first time they come ' +
