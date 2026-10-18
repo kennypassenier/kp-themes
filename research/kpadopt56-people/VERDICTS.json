@@ -374,6 +374,60 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "2",
+            "page": "people-c6c9bd45-d742-4bc4-a118-c74cf1bd4cf5",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 21:37: 11 of 11 judged, 11 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "entity-behaviour",
+                    "theme": "dark"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "forest"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "deco"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
         }
     ]
 }

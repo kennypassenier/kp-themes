@@ -1,4 +1,323 @@
 {
     "demo": "kpadopt56-status",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "status-312266b9-89a0-4867-8769-ef5dcd22ec1c",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 21:37: 77 of 77 judged, 77 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "problem-alert",
+                    "theme": "dark"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "forest"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "deco"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "problem-alert",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "connection",
+                    "theme": "dark"
+                },
+                {
+                    "item": "connection",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "connection",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "connection",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "connection",
+                    "theme": "forest"
+                },
+                {
+                    "item": "connection",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "connection",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "connection",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "connection",
+                    "theme": "deco"
+                },
+                {
+                    "item": "connection",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "connection",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "dark"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "forest"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "deco"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "notices",
+                    "theme": "dark"
+                },
+                {
+                    "item": "notices",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "notices",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "notices",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "notices",
+                    "theme": "forest"
+                },
+                {
+                    "item": "notices",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "notices",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "notices",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "notices",
+                    "theme": "deco"
+                },
+                {
+                    "item": "notices",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "notices",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "dark"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "forest"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "deco"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "today",
+                    "theme": "dark"
+                },
+                {
+                    "item": "today",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "today",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "today",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "today",
+                    "theme": "forest"
+                },
+                {
+                    "item": "today",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "today",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "today",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "today",
+                    "theme": "deco"
+                },
+                {
+                    "item": "today",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "today",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }

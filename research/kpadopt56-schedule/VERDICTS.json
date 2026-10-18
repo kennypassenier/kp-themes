@@ -1,4 +1,367 @@
 {
     "demo": "kpadopt56-schedule",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "schedule-aca643d6-5832-4bea-b5e9-1eca20d30df4",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 21:37: 88 of 88 judged, 88 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "weekdays",
+                    "theme": "dark"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "forest"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "deco"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "weekdays",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "weekdays-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "runs",
+                    "theme": "dark"
+                },
+                {
+                    "item": "runs",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "runs",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "runs",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "runs",
+                    "theme": "forest"
+                },
+                {
+                    "item": "runs",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "runs",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "runs",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "runs",
+                    "theme": "deco"
+                },
+                {
+                    "item": "runs",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "runs",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "runs-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "dark"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "forest"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "deco"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "snooze",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "snooze-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "dark"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "forest"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "deco"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "sentence",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }

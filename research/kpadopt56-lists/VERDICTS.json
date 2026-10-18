@@ -276,6 +276,20 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "2",
+            "page": "lists-4ab496cb-31f1-4bac-a773-cebc100bce59",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 21:37: 1 of 1 judged, 1 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "dark"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
         }
     ]
 }
