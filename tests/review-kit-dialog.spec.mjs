@@ -405,7 +405,11 @@ test.describe('the menu demo close', () => {
                         window.__leave.frames.push(
                             shown.map((menu) => ({
                                 leaving: menu.hasAttribute('data-mb-leaving'),
-                                reverse: getComputedStyle(menu).animationDirection.includes('reverse'),
+                                // A reverse is the open played backwards: `animation-direction: reverse`, or keyframes of its own
+                                // named `…-out` that step the same poses the other way (cyberpunk's approved split, r3-cy-open-1).
+                                reverse:
+                                    getComputedStyle(menu).animationDirection.includes('reverse') ||
+                                    getComputedStyle(menu).animationName.split(',').some((name) => name.trim().endsWith('-out')),
                                 running: menu.getAnimations().some((a) => a.playState === 'running'),
                             })),
                         );
