@@ -104,8 +104,6 @@ await ready;
                 const retries = card.querySelector('[data-hs-retries-value]');
                 if (retries) {
                     retries.textContent = String(p.retries);
-                    const attempts = /** @type {HTMLElement} */ (card.querySelector('[data-hs-attempts-value]'));
-                    attempts.textContent = `${p.retries + 1} (the first try${p.retries ? ` and ${p.retries} ${p.retries === 1 ? 'retry' : 'retries'}` : ' only'})`;
                 }
             }
         };

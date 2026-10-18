@@ -75,7 +75,7 @@
                     <ul>
                         <li>
                             Two profile cards. Each lists <b>Source</b>, <b>Destination host</b>, <b>Content type</b>, <b>Timeout</b>,
-                            <b>Retries</b>, <b>Max attempts</b> and <b>Lease</b>, then <b>Retry budget</b>: a bar with the words
+                            <b>Retries</b> (the switchboard's own tries per hand-out), <b>Max attempts</b> (how many times the hub hands one message out before it becomes a dead letter) and <b>Lease</b>, then <b>Retry budget</b>: a bar with the words
                             &ldquo;27 s of 60 s lease (45 %)&rdquo;. The labels share one column as wide as the longest label; the values line up.
                         </li>
                         <li>
@@ -89,7 +89,7 @@
                             &ldquo;5 s over the lease&rdquo; with the Over budget badge. The destination shows the host and port only, never the path.
                         </li>
                         <li>
-                            <b>Retries</b> (alertmanager): 0 to 5. The Retries and Max attempts rows, the words and the bar follow at once; at 5
+                            <b>Retries</b> (alertmanager): 0 to 5. The Retries row, the words and the bar follow at once; Max attempts does not move, because it is the hub's own limit and not the switchboard's retries; at 5
                             retries alertmanager is 61 s of 60 s and goes over too. <b>Past the end</b> flips the sign live.
                             <b>Settings list</b> flips the ruling. <b>Loading</b> pulses the bars and shows the waiting line in every value
                             at the same row height.
@@ -167,7 +167,7 @@
                             </div>
                             <div class="kp-kv__row">
                                 <dt>Max attempts</dt>
-                                <dd data-hs-static data-hs-attempts-value>4 (the first try and 3 retries)</dd>
+                                <dd data-hs-static>5 hand-outs by the hub, then a dead letter</dd>
                             </div>
                             <div class="kp-kv__row">
                                 <dt>Lease</dt>
@@ -212,7 +212,7 @@
                             </div>
                             <div class="kp-kv__row">
                                 <dt>Max attempts</dt>
-                                <dd data-hs-static>5 (the first try and 4 retries)</dd>
+                                <dd data-hs-static>5 hand-outs by the hub, then a dead letter</dd>
                             </div>
                             <div class="kp-kv__row">
                                 <dt>Lease</dt>
