@@ -85,7 +85,8 @@ if (document.getElementById('km-uses')) {
         corner: 'CV ↓ application →',
         rows: cvs,
         columns: apps,
-        cell: (/** @type {string} */ row, /** @type {string} */ column) => (uses[column] === row ? { tone: 'ok', label: 'uses it' } : { tone: 'none' }),
+        cell: (/** @type {string} */ row, /** @type {string} */ column) =>
+            uses[column] === row ? { tone: 'ok', label: 'uses it' } : { tone: 'none' },
         countLabel: (/** @type {number} */ n) => `${n} ${n === 1 ? 'application' : 'applications'}`,
         sourcesLabel: 'CVs',
         usersLabel: 'Applications',
@@ -176,7 +177,9 @@ if (document.getElementById('km-gal')) {
         alt: caption.split('.')[0].split(';')[0],
         caption,
         uploader: names[i % names.length],
-        at: at(`2026-10-${String(5 + (i % 12)).padStart(2, '0')}T${String(8 + (i % 9)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:00+02:00`),
+        at: at(
+            `2026-10-${String(5 + (i % 12)).padStart(2, '0')}T${String(8 + (i % 9)).padStart(2, '0')}:${String((i * 7) % 60).padStart(2, '0')}:00+02:00`,
+        ),
     }));
     all.push({
         id: '13',
@@ -220,7 +223,15 @@ if (document.getElementById('km-gal')) {
             for (const file of files) {
                 if (!file.type.startsWith('image/')) continue;
                 const url = URL.createObjectURL(file);
-                items.push({ id: `u${Date.now()}${items.length}`, src: url, thumb: url, alt: file.name, caption: file.name, uploader: 'You', at: Date.now() });
+                items.push({
+                    id: `u${Date.now()}${items.length}`,
+                    src: url,
+                    thumb: url,
+                    alt: file.name,
+                    caption: file.name,
+                    uploader: 'You',
+                    at: Date.now(),
+                });
             }
             setGalleryUploading(main, null);
             draw();
@@ -269,7 +280,15 @@ if (document.getElementById('km-gal')) {
         items: [
             all[0],
             all[1],
-            { id: 'x', src: '../kpadopt56/src/kpadopt6-media/files/missing-picture.svg', width: 3200, height: 2133, alt: 'A picture whose file is gone', caption: 'This file is gone from the server.', uploader: 'Noor' },
+            {
+                id: 'x',
+                src: '../kpadopt56/src/kpadopt6-media/files/missing-picture.svg',
+                width: 3200,
+                height: 2133,
+                alt: 'A picture whose file is gone',
+                caption: 'This file is gone from the server.',
+                uploader: 'Noor',
+            },
             all[3],
             all[4],
             all[5],
@@ -293,7 +312,9 @@ if (document.getElementById('km-auto-mail')) {
     };
     document.getElementById('km-auto-paste40')?.addEventListener('click', () => put(mail, lines(40)));
     document.getElementById('km-auto-paste5')?.addEventListener('click', () => put(mail, lines(5)));
-    document.getElementById('km-auto-paste-long')?.addEventListener('click', () => put(mail, `${'Hello, this is a long mail. '.repeat(130)}`.slice(0, 3700)));
+    document
+        .getElementById('km-auto-paste-long')
+        ?.addEventListener('click', () => put(mail, `${'Hello, this is a long mail. '.repeat(130)}`.slice(0, 3700)));
     document.getElementById('km-auto-clear')?.addEventListener('click', () => put(mail, ''));
     document.getElementById('km-auto-form')?.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -374,7 +395,11 @@ if (document.getElementById('km-print-list')) {
     /** @type {string[]} */
     let fetched = [];
     try {
-        fetched = await Promise.all(['../../../../css/themes.css', '../../../../css/components.css', '../../../../css/formal-register.css', '../../../../css/fonts.css'].map((u) => fetch(u).then((r) => r.text())));
+        fetched = await Promise.all(
+            ['../../../../css/themes.css', '../../../../css/components.css', '../../../../css/formal-register.css', '../../../../css/fonts.css'].map(
+                (u) => fetch(u).then((r) => r.text()),
+            ),
+        );
     } catch {
         // The page is being left: nothing to draw.
     }
@@ -391,11 +416,15 @@ if (document.getElementById('km-print-list')) {
         const doc = /** @type {Document} */ (frame.contentDocument);
         doc.open();
         doc.write(
-            `<!doctype html><html lang="en-GB" data-theme="formal"><head><meta charset="utf-8"><link rel="stylesheet" href="${sheetUrl}"><style>body{margin:0;padding:6% 7% 14%}</style></head><body>${attrs.__title === "none" ? "" : `<h1 style="margin:0 0 1rem;font-size:1.4rem">Weekend in Ghent</h1>`}${listHtml}</body></html>`,
+            // The frame is a true A4 page; the body stands where the @page margin of css/_print.css (15 mm) puts the page
+            // area, and the date stamp, fixed to the foot of the page area on paper, stands at that margin here too.
+            `<!doctype html><html lang="en-GB" data-theme="formal"><head><meta charset="utf-8"><link rel="stylesheet" href="${sheetUrl}"><style>html{background:#fff}body{margin:0;padding:15mm 15mm 24mm}.kp-print-stamp{inset-inline:15mm;inset-block-end:15mm}</style></head><body>${listHtml}</body></html>`,
         );
         doc.close();
         const list = doc.querySelector('[data-kp-checklist]');
-        for (const [name, value] of Object.entries(attrs)) if (name !== '__title') list?.setAttribute(name, value);
+        // Every sheet carries its title the package's way (data-kp-print-title), so the four sheets share one heading.
+        list?.setAttribute('data-kp-print-title', 'Packing list: weekend in Ghent');
+        for (const [name, value] of Object.entries(attrs)) list?.setAttribute(name, value);
         for (const box of doc.querySelectorAll('input.kp-checklist__check')) {
             if (/** @type {HTMLInputElement} */ (box).checked) box.setAttribute('checked', '');
         }
@@ -422,10 +451,19 @@ if (document.getElementById('km-print-list')) {
         );
         once(
             'km-sheet-4',
-            { 'data-kp-print-title': 'Packing list: weekend in Ghent', __title: 'none' },
+            {},
             '<div class="kp-checklist" data-kp-checklist><div class="kp-checklist__body"><p class="kp-checklist__empty">Nothing on this list yet.</p></div></div>',
         );
     };
+    // Each A4 frame is scaled as a whole to the box it stands in.
+    const fit = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+            const box = /** @type {HTMLElement} */ (entry.target);
+            const frame = /** @type {HTMLElement | null} */ (box.querySelector('.km-sheet'));
+            if (frame && frame.offsetWidth > 0) box.style.setProperty('--km-sheet-scale', String(box.clientWidth / frame.offsetWidth));
+        }
+    });
+    for (const box of document.querySelectorAll('.km-sheet-box')) fit.observe(box);
     if (fetched.length > 0) draw('show');
     onChoice('print-checklist', (id, value) => {
         if (id === 'ticked') draw(value);
