@@ -6979,3 +6979,80 @@ thread.
 **8 · The fallback if the measurement fails.** The kit stops dropping an answer whose round equals the page's own round.
 
 **9 · When we review the measure.** At the release suite.
+
+## visual-form-1018 · A visual question was asked as a form, and the posted form was cut down (2026-10-18)
+
+Kenny, 2026-10-18 04:03 and 04:04. Recorded here from his words; the fields below wait for his approval.
+
+**1 · What went wrong.** Two faults in one thread (the shared-fixes form of the kpadopt56 round). First, questions about how
+the shared fixes look and behave (a fix to approved work, Now against Proposed) were asked as a form with a separate
+evidence page (research/kpadopt56-shared/evidence.html) instead of as a review demo in the review dialog. Kenny, 04:03:
+"Dit moest allemaal in een demo, dus in een dialog en met de al-gebruikte tools om goed/af te keuren. Het is goed voor
+één keer, maar laat het niet nog is gebeuren". Second, after the form was posted, three of its four items were voided on a
+coordinator nudge, so that only one choice counted. Kenny, 04:04: "geef me geen heel formulier om me dan te zeggen dat je
+maar één keuze nodig hebt op het einde. Ten eerste, waarom vraag je me die dingen als je toch geen antwoord wil? en ten
+tweede, je laat me al het werk doen, om op het einde te zeggen dat het niet nodig was".
+
+**2 · Which gate let it through.** None. DEMO_RULES said how a review demo is built but not that every visual question
+must be one, and nothing compared a posted form with the questions Claude later said it needed.
+
+**3 · Where else the same fault sits.** Property: a question about how something looks or behaves that is asked outside a
+review demo, and a form whose items are withdrawn after posting. Not searched beyond the shared-fixes evidence page, which is the known case (it carries no `data-review` and is not in
+catalogue/pages.js, by design, see research/kpadopt56/shared-proposals.md); its items 9 to 14 are now measured on the
+package, with Now equal to Proposed.
+
+**4 · How we prevent recurrence.** research/_review/DEMO_RULES.md ch. 7 carries the rule "Every question about how something
+looks or behaves (a fix to approved work, a proposed change, Now against Proposed) is asked as a review demo on the Agenda,
+judged in the review dialog with its approve/reject tools; never as a form with a separate evidence page. A form is only
+for choices that are not visual." The formal re-review demo (research/kpadopt56-formal/demo.html) is that demo for this
+round. The second rule, "a posted form's questions stand", lives in Kenny's central memory
+(feedback_form_questions_fixed): Claude decides before posting which items truly need Kenny, and applies whatever he answers
+exactly; it is not written in a file of this repository.
+
+**5 · What the remedy costs.** A review demo is built before the question is asked, which takes longer than a form; the cost
+of deciding which items need Kenny falls before posting, not after.
+
+**6 · Who or what enforces it.** Discipline, by the rule in DEMO_RULES ch. 7 (marked "by hand: a visual question in a reply
+links the Agenda, not a form") and the memory entry. Not a gate: whether a question is visual is a judgement.
+
+**7 · How we measure that it works, and at which moment.** The next visual question Claude has for Kenny in this project
+arrives as a review demo on the Agenda and not as a form; and no posted form has an item withdrawn afterwards.
+
+**8 · The fallback if the measurement fails.** A check in the commit gates that refuses a research page asking for a verdict
+(`data-review-round` missing) that is not in catalogue/pages.js.
+
+**9 · When we review the measure.** At the answer to the formal re-review demo and at the release suite.
+
+## gate-tests-1018 · Helpers ran the gate unit tests without Kenny's release go (2026-10-18)
+
+Recorded from the night's transcripts; the fields below wait for Kenny's approval.
+
+**1 · What went wrong.** Helpers of the eleven-theme round ran `npm run gates`, whose final step is `npm test`, the unit
+tests, without Kenny's go for a release. The rule (Kenny, 2026-09-30: "tests draaien we vanaf nu pas na dat ik de
+toestemming geef voor een release", in AGENTS.md) allows no test run before that go. The briefs Claude wrote for those
+helpers allowed `npm run gates` as a whole, so the helpers followed their brief and still broke the rule.
+
+**2 · Which gate let it through.** None. The commit hook runs the gates chain without the unit tests (the cache reports
+"unit-tests overgeslagen, tests draaien pas bij de release"); `npm run gates` run by hand does not, and no brief or check
+told a helper the difference.
+
+**3 · Where else the same fault sits.** Property: a helper brief that names `npm run gates` or another command that ends in
+a test run. Read in AGENTS.md: the table lists `npm run gates` as "the blocking code
+checks, seconds" and names the hook as its runner, which reads as safe by hand. The earlier correction fix-118 (no test
+run of any kind in a brief) is the same family, closed on 2026-10-14 for briefs that named tests, not for this chain.
+
+**4 · How we prevent recurrence.** Briefs forbid a full `npm run gates`; the only chain a helper runs is the one the commit
+hook runs, by committing. A helper that wants a single check runs that check's own script.
+
+**5 · What the remedy costs.** Nothing at build time; a helper no longer runs the whole chain by hand and sees its result
+only at the commit.
+
+**6 · Who or what enforces it.** Discipline in the brief Claude writes, until a script refuses the unit-test step without
+`.claude/release-go`.
+
+**7 · How we measure that it works, and at which moment.** The next brief Claude gives a helper in kp-themes forbids a full
+`npm run gates` in so many words, and no `npm test` run appears in the transcripts of those helpers without Kenny's go.
+
+**8 · The fallback if the measurement fails.** `npm test` itself refuses to start without `.claude/release-go`.
+
+**9 · When we review the measure.** At the next release suite.
