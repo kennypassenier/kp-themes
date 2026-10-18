@@ -126,6 +126,12 @@ export const PAGES = [
                 label: 'HTTPSwitchboard: the profiles view',
                 about: 'How HTTPSwitchboard would show its profiles with kp-themes 11.0.0: a map or cards as the main view (you set the default), the path of one profile and where it stops, and the card that opens on a profile name.',
             },
+            // Kenny, 2026-10-19 (11.0.0 adoption plan rows 6, 7, 13): HTTPSwitchboard's key figures, hourly uptime strips and ways to stay current, formal only.
+            {
+                href: 'research/app-hsb-history/demo.html',
+                label: 'HTTPSwitchboard: figures and history',
+                about: 'What the HTTPSwitchboard status page could show over the last 24 hours, in formal only: four key figures with their trend that count up as messages arrive, one strip of hour cells per profile with a hover card, and a list that stays current by a refresh chooser or by live push with a count of new alerts. The hourly history is a new capability of the service.',
+            },
         ],
     },
     {
