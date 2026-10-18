@@ -19,11 +19,15 @@ if (!port || !path) {
 }
 const MIN = 4;
 
-/** In the page: every component text closer than MIN to a neighbour or its plate's edge. @param {number} min */
-function measure(min) {
+/**
+ * In the page: every component text closer than MIN to a neighbour or its plate's edge.
+ * @param {[number, string]} args min, and the id of the one section to measure
+ */
+function measure([min, only]) {
     const res = [];
     const visible = (/** @type {DOMRect} */ r) => r.width > 0.5 && r.height > 0.5;
     for (const section of document.querySelectorAll('[data-review-item]')) {
+        if (section.getAttribute('data-review-item') !== only) continue;
         const id = section.getAttribute('data-review-item');
         // The package's parts only: the demo's prose, readouts and Expected blocks are not the component.
         const scope = [...section.querySelectorAll('[class^="kp-"], [class*=" kp-"]')]
@@ -135,7 +139,22 @@ for (const width of widthArg.split(',').map(Number))
             process.exit(2);
         }
         await page.waitForTimeout(1500);
-        const out = await page.evaluate(measure, MIN);
+        // One section at a time, scrolled to the top of the window: a raised list (a combobox opened at load) is placed against
+        // the window, so measured while its field is far below the fold it lands over unrelated text and the reading changes
+        // with the scroll position and the timing [t56-gapscroll-1018].
+        const ids = await page.evaluate(() =>
+            [...document.querySelectorAll('[data-review-item]')].map((s) => String(s.getAttribute('data-review-item'))),
+        );
+        /** @type {string[]} */
+        let out = [];
+        for (const id of ids) {
+            await page.evaluate(
+                (i) => document.querySelector(`[data-review-item="${i}"]`)?.scrollIntoView({ block: 'start', behavior: 'instant' }),
+                id,
+            );
+            await page.waitForTimeout(250);
+            out = out.concat(await page.evaluate(measure, /** @type {[number, string]} */ ([MIN, id])));
+        }
         found += out.length;
         console.log(`${theme} ${width}: ${out.length ? `${out.length} text(s) closer than ${MIN}px` : 'clear'}`);
         for (const line of out) console.log(`  ${line}`);
