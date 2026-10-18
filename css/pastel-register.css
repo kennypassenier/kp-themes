@@ -5640,4 +5640,18 @@
         --kp-sig-pa-plate: color-mix(in oklab, var(--kp-problem-tone, var(--muted)) 14%, var(--card));
         color: var(--foreground);
     }
+
+    /* The version badge (`.kp-badge--version`): a raw version such as a 28-character commit hash has no place to break, so the badge
+       grew past its section (2 px to 165 px in the review of kpadopt6-ops/version-states). The badge may now be as wide as its
+       place and a part longer than that breaks inside its word; a version that fits is never broken. */
+    [data-theme='pastel'] .kp-badge--version {
+        max-inline-size: 100%;
+        white-space: normal;
+    }
+
+    [data-theme='pastel'] .kp-badge--version > * {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        overflow-wrap: break-word;
+    }
 }
