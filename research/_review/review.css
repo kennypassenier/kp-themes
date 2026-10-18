@@ -502,6 +502,17 @@ html[data-rv-lane] .cat-main {
     padding: 0 !important;
 }
 
+/* A bar that floats at the foot of the window (`.kp-selection[data-kp-placement='floating-bottom']`, position fixed) floats at
+ * the foot of the FRAME in a lane, and a lane's frame is as tall as its section, far taller than what the dialog shows of it:
+ * the bar stood below the visible part and the reviewer never saw it (Kenny, 2026-10-18, on selection-bar-place in dark:
+ * "ik zie de balk nergens?"). It stands at the foot of the part of the frame that is in the dialog's view instead
+ * (review.js `lane()` sets --kp-shortcuts-view-top/-height from `rv-lane-view`; without the message it is the frame's foot). */
+html[data-rv-lane] .kp-selection[data-kp-placement='floating-bottom'] {
+    inset-block-end: auto;
+    inset-block-start: calc(var(--kp-shortcuts-view-top, 0px) + var(--kp-shortcuts-view-height, 100%) - var(--kp-space-md, 1rem));
+    transform: translateY(-100%);
+}
+
 [data-rv-compact] {
     box-sizing: border-box;
     max-inline-size: none !important;

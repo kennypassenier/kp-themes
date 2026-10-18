@@ -73,20 +73,21 @@ const log = (box, text) => {
         // After a change of the options the picker reads them again.
         driven.setAttribute('data-kp-add', 'inline');
     });
-    // The opened list is shown open on the page: opened once its case is on screen, so it is placed where there is room.
+    // The opened list is shown open on the page: opened once, the first time its case comes on screen, so it is placed
+    // where there is room, and then left open (it follows its input while the page scrolls, js/top-layer.js). It used to
+    // close whenever less than 90% of its case was on screen and open again once 90% was back; opening makes the case taller,
+    // so a case half in view closed it, shrank, was in view again and reopened, several times a second.
     for (const openedId of ['k6-usual-o', 'k6-usual-c']) {
         const opened = document.getElementById(openedId);
         if (!opened || !('IntersectionObserver' in window)) continue;
-        new IntersectionObserver((entries) => {
-            for (const entry of entries) {
-                const handle = combobox(opened);
-                if (!handle) continue;
-                if (entry.isIntersecting) {
-                    handle.close();
-                    handle.open();
-                } else handle.close();
-            }
-        }, { threshold: 0.9 }).observe(opened.closest('.k6-case') ?? opened);
+        const watch = new IntersectionObserver((entries) => {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            const handle = combobox(opened);
+            if (!handle) return;
+            watch.disconnect();
+            handle.open();
+        });
+        watch.observe(opened.closest('.k6-case') ?? opened);
     }
 }
 
