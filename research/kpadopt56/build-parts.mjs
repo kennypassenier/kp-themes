@@ -370,8 +370,8 @@ const CHANGED = {
         '<b>Undo</b>; the toast stays an option in the next section. A box above the field now says what to type and where the ' +
         'answer shows. You also found a pill inside each tag: the tags are now one pill each, a name and a remove &times;; Not ' +
         'today moved to its own check under the field (next section). ' +
-        'Formal is asked this section too: it was approved there, and the same fix changes it. In formal a pick lights its tag with ' +
-        'the ledger&rsquo;s inner rule, <b>Did you mean &hellip;?</b> stands first in the list, and the Undo after adding is the ' +
+        'Formal is asked this section too: it was approved there, and the same fix changes it. In formal a pick lights its tag, ' +
+        '<b>Did you mean &hellip;?</b> stands first in the list, and the Undo after adding is the ' +
         'line under the field, so you judge all of that in formal as well.',
     'choose/usual-band':
         'You did not see what <b>Not today</b> was for, and the pill inside each tag was not wanted. Not today is for a choice you ' +
