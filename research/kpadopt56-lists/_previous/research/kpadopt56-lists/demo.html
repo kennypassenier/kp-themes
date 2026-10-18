@@ -1,0 +1,1104 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="formal"
+    data-review="kpadopt56-lists"
+    data-review-themes="dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kpadopt5 and 6 in the other themes, part 7 of 14: Lists, records and pages</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt5-rows/page.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-social/page.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt5-ops/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>The fifth and sixth adoption rounds, part 7 of 14: Lists, records and pages</h1>
+                <p class="cat-intro">
+                    Formal is approved. Rows and what sits in them: ticking with the keyboard, who brings what, a list with its detail, new lines on a
+                    live list and payloads. This part asks the eleven other themes for 6 sections (66 pairs), one theme per step in the review dialog.
+                    The sections were approved in formal in several rounds; each is shown here in its latest version, with the defaults you chose.
+                </p>
+                <p>
+                    Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
+                    &ldquo;What to look at&rdquo; says what is the theme&rsquo;s own).
+                </p>
+            </header>
+
+            <section
+                class="k5-sec"
+                id="row-keyboard-select"
+                data-review-item="row-keyboard-select"
+                data-review-topic="row-keyboard-select"
+                data-review-topic-title="Ticking rows with the keyboard"
+                data-review-components="datatable"
+                data-review-title="Ticking rows with the keyboard and Shift-click"
+                aria-labelledby="h-row-keyboard-select"
+            >
+                <div class="k5-sec__head">
+                    <h2 id="h-row-keyboard-select">Ticking rows with the keyboard and Shift-click</h2>
+                    <p>
+                        A table (or a list) of rows with a tick box is worked without the mouse: <b>j</b> and <b>k</b> walk a cursor, <b>x</b> ticks
+                        the row, <b>Shift+x</b> ticks everything up to the cursor, <b>Esc</b> unticks all. Shift-click on a box ticks a range. It is
+                        on for every data table that has a select column (<code>data-kp-select-keys</code> turns it on elsewhere,
+                        <code>="false"</code> off).
+                    </p>
+                </div>
+                <div class="k5-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Click the first row's words, press <b>j</b> a few times: a ring (not a fill) walks down the rows and the line under the
+                            table says which row it is on. <b>x</b> ticks the row and the ring stays; a ticked row has the selected tint, the cursor
+                            row the ring, so the two read apart.
+                        </li>
+                        <li>
+                            Tick the first row, then <b>Shift-click</b> the fifth box: rows two to four follow. The locked row (order 1008, its box
+                            disabled) is walked over and the readout says <b>1 skipped: cannot be selected</b>. A plain click on a box still toggles
+                            one row, no Shift needed.
+                        </li>
+                        <li>
+                            <b>Search "Ghent"</b>: the rows that do not match are hidden, and a Shift range or <b>Ctrl+A</b> never ticks them. The
+                            cursor and the ticks stay on their rows (by key) when the table is sorted or searched.
+                        </li>
+                        <li>
+                            <b>Esc</b> unticks everything and says so; <b>Enter</b> on the row writes "Opened: …" in the readout. Nothing moves in the
+                            page when the keys are used.
+                        </li>
+                        <li>
+                            The 390 px column is the same list as cards: no keys there; <b>press and hold a card</b> (a long press on a phone) starts
+                            selection mode, then a tap ticks the next one.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="k5-controls" data-review-controls data-review-controls-for="row-keyboard-select-component">
+                    <div role="group" aria-label="Search the table">
+                        <b>Search the table:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-search="" aria-pressed="true">Show every row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-search="Ghent" aria-pressed="false">Only Ghent</button>
+                    </div>
+                    <div role="group" aria-label="Arrow keys">
+                        <b>Arrow keys:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-arrows="off" aria-pressed="true">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-arrows="on" aria-pressed="false">On</button>
+                    </div>
+                    <div role="group" aria-label="Ctrl+A">
+                        <b>Ctrl+A ticks all shown:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-allkey="off" aria-pressed="true">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-allkey="on" aria-pressed="false">On</button>
+                    </div>
+                </div>
+                <p class="k5-readout" role="status" data-k5-rows-readout>Nothing ticked yet.</p>
+                <div id="row-keyboard-select-component" class="k5-pair">
+                    <div class="k5-stack">
+                        <p class="k5-label">The orders table, full width</p>
+                        <div class="kp-datatable" data-kp-datatable data-kp-cards id="k5-orders">
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-datatable__search"
+                                    type="search"
+                                    data-kp-datatable-search
+                                    aria-label="Search orders"
+                                    placeholder="Search orders"
+                                />
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Orders
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="k5-col-select">
+                                                <input
+                                                    class="kp-field__check"
+                                                    type="checkbox"
+                                                    data-kp-select-all
+                                                    aria-label="Select all shown orders"
+                                                />
+                                            </th>
+                                            <th scope="col" data-kp-sort="text">Order</th>
+                                            <th scope="col" data-kp-sort="text">Customer</th>
+                                            <th scope="col" data-kp-sort="text">City</th>
+                                            <th scope="col" data-kp-sort="text">Status</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-k5-orders></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div data-kp-select-hint="k5-orders"></div>
+                    </div>
+                    <div class="k5-stack">
+                        <p class="k5-label">390 px, the same orders as cards</p>
+                        <div class="k5-frame k5-frame--phone">
+                            <ul class="k5-cards" aria-label="Orders on a phone" data-kp-select-keys id="k5-orders-phone" data-k5-orders-phone></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ks-sec"
+                id="claim-row-states"
+                data-review-item="claim-row-states"
+                data-review-topic="claim-row"
+                data-review-topic-title="Who brings it"
+                data-review-components="claim"
+                data-review-title="Who brings it: a claim on every row of a packing list: states"
+                aria-labelledby="h-claim-row-states"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-claim-row-states">Who brings it: states</h2>
+                    <p>
+                        A packing list where each item shows who brings it, and an item nobody brings is loud. Several people may bring one item (a
+                        pot for the stove, two people for the tent). It is the package's checklist with
+                        <code>data-kp-checklist-claim</code> added; the page says who is looking and answers each press.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Each row ends in a column of its own: the people who bring it (their coloured mark and name) and one button. Rows nobody
+                            brings have a red edge, a <b>!</b> and the words <b>Nobody yet</b>; the bar says how many.
+                        </li>
+                        <li>
+                            Press <b>I&rsquo;ll bring it</b> on Gas stove: the button shows the spinner for a moment (the row does not move), then
+                            your name joins and the button says <b>I&rsquo;m bringing it</b>. Press it again to let go: a toast offers Undo for 6
+                            seconds.
+                        </li>
+                        <li>
+                            Press <b>I&rsquo;ll bring it</b> on Tent: the pretend server answers that Tom took it first. The row gets a red outline
+                            for 3 seconds, says so in words and goes back to what Tom&rsquo;s claim makes of it. Nothing you typed or ticked is lost.
+                        </li>
+                        <li>
+                            The chips <b>All, Nobody yet, Mine</b> carry exact counts. <b>Nobody yet</b> shows only the rows nobody brings; when none
+                            is left the list says <b>Everything is taken</b> and offers all items back. The key <b>c</b> on a focused row takes or
+                            lets go; <b>Shift C</b> toggles the gaps (press <b>?</b> for the list).
+                        </li>
+                        <li>
+                            Not signed in, the buttons are off and say why on hover or focus. The state buttons show loading (the busy card over the
+                            list), empty and failed (with Retry), each at the list&rsquo;s full height. <b>Another person acts</b> lets Anna take the
+                            first free item and the list follows. At 390 px the claim cell moves under the label and the button fills the line, 44 px
+                            high.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size
+                        with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width
+                        nothing is cut or touches an edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, waiting is signal loss: the word and the plate glitch while the whole component stays in place. Check loading,
+                        empty and failed keep the full footprint, the red is used only for a real failure, and at phone width the cut corners clip no
+                        text.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, waiting is the marquee chasing along the whole component. Check loading, empty and failed keep the full
+                        footprint, the chase is visible and moving, and at phone width the bloom clips nothing.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, waiting is washi tape fluttering over the whole component. Check loading, empty and failed keep the full footprint,
+                        the misregistered second ink is visible but readable, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="forest">
+                        In forest, waiting is the row of planted trees along the whole component. Check loading, empty and failed keep the full
+                        footprint, the trees stand and grow as the bar fills, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, waiting is the section hatched across the whole component. Check loading, empty and failed keep the full
+                        footprint, the hatching moves, a failure is flagged in amber or red and not just a colour change, and at phone width nothing
+                        is cut.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, waiting is the sun crossing the whole component and a warning reddens the sky. Check loading, empty and failed
+                        keep the full footprint, the crossing is visible and calm, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, waiting is a lintel hoisted across the whole component and a warning is taped off. Check loading, empty and
+                        failed keep the full footprint, the hard steps are visible, and at phone width the shadow clips nothing.
+                    </p>
+                    <p data-for="deco">
+                        In deco, waiting is lift doors over the whole component. Check loading, empty and failed keep the full footprint, the doors
+                        and the inlay move slowly and cleanly, and at phone width the gold edge cuts no text.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, waiting is the raster building up on the screen across the whole component. Check loading, empty and failed keep
+                        the full footprint, the lamps tell the state, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, waiting is the machined film sweeping the whole component. Check loading, empty and failed keep the full
+                        footprint, the sweep is visible, and at phone width nothing is cut.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="claim-row-states-component">
+                    <div role="group" aria-label="List state">
+                        <b>List state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-claim-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-claim-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-claim-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-claim-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Who is looking">
+                        <b>Who is looking:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-claim-viewer="kenny" aria-pressed="true">Kenny</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-claim-viewer="" aria-pressed="false">Nobody signed in</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-claim-viewer="locked" aria-pressed="false">
+                            Trip is closed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Push an update">
+                        <b>Another person acts:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-claim-push="">Anna takes the first free item</button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-claim-readout>Nothing pressed yet.</p>
+                <div id="claim-row-states-component" class="ks-pair">
+                    <div class="ks-stack">
+                        <p class="ks-label">The packing list, full width (inside a flex row too)</p>
+                        <div class="ks-flexrow">
+                            <div
+                                class="kp-checklist"
+                                data-kp-checklist
+                                data-kp-checklist-claim
+                                data-kp-claim-viewer="kenny"
+                                data-kp-claim-viewer-name="Kenny"
+                                data-kp-claim-take-all
+                                data-kp-claim-copy
+                                data-kp-checklist-empty="Nothing on the packing list yet."
+                                id="ks-claim"
+                                aria-label="Packing list for the Ardennes weekend"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-label">390 px</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div
+                                class="kp-checklist"
+                                data-kp-checklist
+                                data-kp-checklist-claim
+                                data-kp-claim-viewer="kenny"
+                                data-kp-claim-viewer-name="Kenny"
+                                data-kp-claim-keys="false"
+                                data-kp-claim-person="idmark"
+                                style="--kp-checklist-min-rows: 6"
+                                id="ks-claim-phone"
+                                aria-label="Packing list, phone"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ks-sec"
+                id="claim-row"
+                data-review-item="claim-row"
+                data-review-topic="claim-row"
+                data-review-components="claim"
+                data-review-title="Who brings it: a claim on every row of a packing list: options"
+                aria-labelledby="h-claim-row"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-claim-row">Who brings it: options</h2>
+                    <p>
+                        A packing list where each item shows who brings it, and an item nobody brings is loud. Several people may bring one item (a
+                        pot for the stove, two people for the tent). It is the package's checklist with
+                        <code>data-kp-checklist-claim</code> added; the page says who is looking and answers each press.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The component is the packing list. Each group below the heading changes one setting and the list redraws at once, nothing
+                            reloads.
+                        </li>
+                        <li>
+                            <b>Gap</b>: an item nobody brings is loud (red edge, <b>!</b>) or quiet. <b>People shown</b>: mark and name, name only or
+                            mark only. <b>Gaps first</b>: keep the order, or put the open items at the top of each group. <b>Mode</b>: a button on
+                            each row, or a person menu where one person hands out the jobs.
+                        </li>
+                        <li>
+                            The three small lists under the heading show a choice each side by side (quiet and names only, gaps first, assign mode).
+                        </li>
+                        <li>
+                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once,
+                            nothing reloads: every choice you are asked about is a real option with a default.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-claim-opt">
+                    <div role="group" aria-label="Gap (live option)">
+                        <b>Gap (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-claim-opt|data-kp-claim-gap|loud" aria-pressed="true">
+                            Loud
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-claim-opt|data-kp-claim-gap|quiet"
+                            aria-pressed="false"
+                        >
+                            Quiet
+                        </button>
+                    </div>
+                    <div role="group" aria-label="People shown (live option)">
+                        <b>People shown (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-claim-opt|data-kp-claim-person|both"
+                            aria-pressed="true"
+                        >
+                            Mark and name
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-claim-opt|data-kp-claim-person|name"
+                            aria-pressed="false"
+                        >
+                            Name only
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-claim-opt|data-kp-claim-person|idmark"
+                            aria-pressed="false"
+                        >
+                            Mark only
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Gaps first (live option)">
+                        <b>Gaps first (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-claim-opt|data-kp-claim-gap-sort|keep"
+                            aria-pressed="true"
+                        >
+                            Keep order
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-claim-opt|data-kp-claim-gap-sort|top"
+                            aria-pressed="false"
+                        >
+                            Gaps first
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Mode (live option)">
+                        <b>Mode (live option):</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-claim-opt|data-kp-claim-mode|claim"
+                            aria-pressed="true"
+                        >
+                            A button on each row
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ks-attr="#ks-claim-opt|data-kp-claim-mode|assign"
+                            aria-pressed="false"
+                        >
+                            A person menu
+                        </button>
+                    </div>
+                </div>
+                <div
+                    class="kp-checklist"
+                    data-kp-checklist
+                    data-kp-checklist-claim
+                    data-kp-claim-viewer="kenny"
+                    data-kp-claim-viewer-name="Kenny"
+                    data-kp-claim-take-all
+                    data-kp-claim-copy
+                    data-kp-checklist-empty="Nothing on the packing list yet."
+                    id="ks-claim-opt"
+                    aria-label="Packing list for the Ardennes weekend, options"
+                ></div>
+                <p class="ks-label">The same list with each choice, side by side</p>
+                <div class="ks-trio">
+                    <div class="ks-stack">
+                        <p class="ks-note"><b>Quiet gap, names only</b></p>
+                        <div
+                            class="kp-checklist"
+                            data-kp-checklist
+                            data-kp-checklist-claim
+                            data-kp-claim-gap="quiet"
+                            data-kp-claim-person="name"
+                            data-kp-claim-keys="false"
+                            data-kp-claim-viewer="kenny"
+                            data-kp-claim-viewer-name="Kenny"
+                            style="--kp-checklist-min-rows: 5"
+                            id="ks-claim-quiet"
+                            aria-label="Packing list, quiet"
+                        ></div>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-note"><b>Gaps first in each group</b></p>
+                        <div
+                            class="kp-checklist"
+                            data-kp-checklist
+                            data-kp-checklist-claim
+                            data-kp-claim-gap-sort="top"
+                            data-kp-claim-keys="false"
+                            data-kp-claim-viewer="kenny"
+                            data-kp-claim-viewer-name="Kenny"
+                            style="--kp-checklist-min-rows: 5"
+                            id="ks-claim-top"
+                            aria-label="Packing list, gaps first"
+                        ></div>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-note"><b>Assign mode: one person hands out the jobs</b></p>
+                        <div
+                            class="kp-checklist"
+                            data-kp-checklist
+                            data-kp-checklist-claim
+                            data-kp-claim-mode="assign"
+                            data-kp-claim-keys="false"
+                            data-kp-claim-viewer="kenny"
+                            data-kp-claim-viewer-name="Kenny"
+                            style="--kp-checklist-min-rows: 5"
+                            id="ks-claim-assign"
+                            aria-label="Chores, assigned"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ko-sec"
+                id="master-detail"
+                data-review-item="master-detail"
+                data-review-topic="ops-master-detail"
+                data-review-topic-title="A list and its detail that folds on a phone"
+                data-review-components="split"
+                data-review-title="A list and its detail that folds on a phone"
+                aria-labelledby="h-master-detail"
+            >
+                <div class="ko-sec__head">
+                    <h2 id="h-master-detail">A list and its detail that folds on a phone</h2>
+                    <p>
+                        <code>.kp-split--panes</code> with <code>js/master-detail.js</code>: a list, a detail and an optional side panel next to each
+                        other; on a narrow screen one pane at a time, with a Back button.
+                    </p>
+                </div>
+                <div class="ko-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three panes side by side in a ruled frame: the list of secrets (17 rem), the detail (the rest) and, when the page is wide
+                            enough, a History panel (18 rem). Nothing is picked yet, so the detail is an empty plate that says
+                            <b>Pick an item on the left</b> large, in the middle of the whole pane, with the list still usable.
+                        </li>
+                        <li>
+                            Press an item, or move with the up and down arrow keys (the focus stays in the list, Home and End jump): the detail fills
+                            for the item you are on after a short load. The picked row has a navy bar along its start. A long name wraps, it is never
+                            cut.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays formal's busy card over the detail pane only; the list stays usable. <b>Failed</b> fills the pane with
+                            the red-ink plate, the sentence large, and a normal-size <b>Retry</b> that loads the item again.
+                            <b>Nothing picked</b> brings the empty plate back. The pane keeps its size in every state.
+                        </li>
+                        <li>
+                            The phone frame (390 px) shows the same layout folded: the list alone. Press an item: the detail arrives (the theme's way)
+                            with <b>Back to the list</b> at the top and the focus on the heading. Back, the browser's Back, or Esc returns to the list
+                            at the same scroll with the same row picked and the focus on it. <b>What a phone shows</b> switches between one pane (the
+                            default), a sheet that slides over the list and everything stacked.
+                        </li>
+                        <li>The log shows each select, open, close and retry event.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="ko-controls" data-review-controls data-review-controls-for="master-detail-component">
+                    <div role="group" aria-label="State of the detail">
+                        <b>State of the detail:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="ready" aria-pressed="false">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="error" aria-pressed="false">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="empty" aria-pressed="true">Nothing picked</button>
+                    </div>
+                    <div role="group" aria-label="What a phone shows">
+                        <b>What a phone shows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="one-pane" aria-pressed="true">One pane</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="sheet" aria-pressed="false">Sheet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="stack" aria-pressed="false">Stacked</button>
+                    </div>
+                </div>
+                <div id="master-detail-component" class="ko-stack">
+                    <div>
+                        <p class="ko-label">Wide, with the History panel</p>
+                        <div
+                            class="kp-split kp-split--panes"
+                            data-kp-master-detail
+                            data-kp-aside-closable
+                            data-kp-pane-widths="17rem 1fr 18rem"
+                            data-kp-aside-fold-at="52rem"
+                            data-ko-md="wide"
+                        >
+                            <section data-kp-pane="list" aria-label="Secrets">
+                                <ul class="kp-pane__list" role="listbox" aria-label="Secrets" data-ko-md-list></ul>
+                            </section>
+                            <section data-kp-pane="detail" aria-label="Secret">
+                                <h3 data-kp-pane-heading tabindex="-1"></h3>
+                                <div class="kp-pane__body" data-ko-md-body></div>
+                            </section>
+                            <aside data-kp-pane="aside" aria-label="History">
+                                <h3 class="ko-label">History</h3>
+                                <ul class="ko-history" data-ko-md-history></ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Phone width (390 px)</p>
+                        <div class="ko-frame ko-frame--phone">
+                            <div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="12rem 1fr" data-ko-md="phone">
+                                <section data-kp-pane="list" aria-label="Secrets">
+                                    <ul class="kp-pane__list" role="listbox" aria-label="Secrets" data-ko-md-list></ul>
+                                </section>
+                                <section data-kp-pane="detail" aria-label="Secret">
+                                    <h3 data-kp-pane-heading tabindex="-1"></h3>
+                                    <div class="kp-pane__body" data-ko-md-body></div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <pre class="ko-log" data-ko-log="master-detail" aria-live="polite">Nothing happened yet.</pre>
+            </section>
+
+            <section
+                class="k5-sec"
+                id="new-items-pill"
+                data-review-item="new-items-pill"
+                data-review-topic="new-items-pill"
+                data-review-topic-title="The N new lines pill"
+                data-review-components="newpill"
+                data-review-title="The pill for new lines on a live list"
+                aria-labelledby="h-new-items-pill"
+            >
+                <div class="k5-sec__head">
+                    <h2 id="h-new-items-pill">The pill for new lines on a live list</h2>
+                    <p>
+                        A log or a feed follows its newest line while you are at that end. Scroll away and the lines that arrive out of sight are
+                        counted in a pill: "12 new lines · back to the tail". One press jumps there. Scrolling back to the end follows again by
+                        itself.
+                    </p>
+                </div>
+                <div class="k5-expected">
+                    <p>
+                        <b>Expected:</b> in the log rows the time, the level (INFO or ERROR) and the line each have their own column and never touch
+                        or cover each other, at the desk width and at 390 px; the &ldquo;New since&rdquo; divider is on by default
+                        (<code>data-kp-since-left</code>, <code>off</code> turns it off).
+                    </p>
+                    <ul>
+                        <li>
+                            <b>Add 5 lines</b> and read the rows: 14:32:08, INFO or ERROR, the line. Scroll up, add lines, press the pill; switch the
+                            tab away and back (or press the <b>Divider on return</b> buttons to compare): the ruled line &ldquo;New since
+                            &hellip;&rdquo; stands before the first line that came while you were away.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="k5-controls" data-review-controls data-review-controls-for="new-items-pill-component">
+                    <div role="group" aria-label="Feed the log">
+                        <b>Feed the log:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-add="1">Add 1 line</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-add="5">Add 5 lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-add="120">Add 120 lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-run aria-pressed="false">Run for 10 s</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-clear>Clear the log</button>
+                    </div>
+                    <div role="group" aria-label="Filter">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-level="all" aria-pressed="true">Every line</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-level="error" aria-pressed="false">Only errors</button>
+                    </div>
+                    <div role="group" aria-label="Following">
+                        <b>Following:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kp-follow-toggle="k5-log" aria-pressed="false">Pause</button>
+                    </div>
+                    <div role="group" aria-label="Divider">
+                        <b>Divider on return:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-since="on" aria-pressed="true">On</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-since="off" aria-pressed="false">Off</button>
+                    </div>
+                </div>
+                <p class="k5-readout" role="status" data-k5-follow-readout>Following the latest line.</p>
+                <div id="new-items-pill-component" class="k5-pair">
+                    <div class="k5-stack">
+                        <p class="k5-label">The log, newest at the foot</p>
+                        <div data-kp-newpill-host>
+                            <ol
+                                class="k5-log"
+                                id="k5-log"
+                                tabindex="0"
+                                aria-label="Log"
+                                data-kp-follow="tail"
+                                data-kp-follow-space
+                                data-kp-pill-unit="line,lines"
+                            ></ol>
+                        </div>
+                        <p class="k5-label">A list with the newest on top</p>
+                        <div data-kp-newpill-host>
+                            <ul
+                                class="k5-messages k5-list-frame"
+                                id="k5-messages"
+                                tabindex="0"
+                                aria-label="Messages"
+                                data-kp-follow="head"
+                                data-kp-pill-unit="message,messages"
+                            ></ul>
+                        </div>
+                        <p class="k5-readout"><button type="button" class="kp-button kp-button--sm" data-k5-message>Add a message</button></p>
+                    </div>
+                    <div class="k5-stack">
+                        <p class="k5-label">390 px</p>
+                        <div class="k5-frame k5-frame--phone">
+                            <div data-kp-newpill-host>
+                                <ol
+                                    class="k5-log"
+                                    id="k5-log-phone"
+                                    tabindex="0"
+                                    aria-label="Log on a phone"
+                                    data-kp-follow="tail"
+                                    data-kp-pill-unit="line,lines"
+                                ></ol>
+                            </div>
+                            <p class="k5-readout"><button type="button" class="kp-button kp-button--sm" data-k5-add-phone>Add 5 lines</button></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="k5-sec"
+                id="payload-cell"
+                data-review-item="payload-cell"
+                data-review-topic="payload-cell"
+                data-review-topic-title="The payload cell"
+                data-review-components="code"
+                data-review-title="The payload cell in a table"
+                aria-labelledby="h-payload-cell"
+            >
+                <div class="k5-sec__head">
+                    <h2 id="h-payload-cell">The payload cell in a table</h2>
+                    <p>
+                        A table cell that folds long content to three lines, says "binary, 2.1 kB" for binary data, shows a foot line when only the
+                        start was kept, and can lay JSON out. It is the code block as a cell (<code>.kp-code--cell</code>): the words wrap, so a row
+                        never scrolls sideways.
+                    </p>
+                </div>
+                <div class="k5-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Seven rows, one payload each: plain text; a short JSON object (keys in the key colour, <b>Pretty</b> and <b>Raw</b> in a
+                            slim line under it); a JSON body of 38 lines folded to three with a fade and <b>Show all 38 lines</b>; binary data as one
+                            muted line <b>binary, 2.1 kB</b> with <b>Download</b>; a body of which only <b>the first 1 kB of 4 kB</b> was kept (foot
+                            line); an <b>empty payload</b> line; and a last row that you set with the control.
+                        </li>
+                        <li>
+                            <b>Show all 38 lines</b> opens it (in place, or in a dialog with "Where it opens" set to a dialog);
+                            <b>Show less</b> closes. The other columns do not move in either case. <b>Copy</b> copies the whole payload, folded or
+                            not.
+                        </li>
+                        <li>
+                            The last row: <b>Loading</b> shows a skeleton line, <b>Binary</b>, <b>Empty</b> and <b>Failed</b> one line each, in the
+                            height of a cell; nothing under it shifts.
+                        </li>
+                        <li>The 390 px column: the table turns into cards and the payload takes the card's whole width.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="k5-controls" data-review-controls data-review-controls-for="payload-cell-component">
+                    <div role="group" aria-label="Where it opens">
+                        <b>Where it opens:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-open="inline" aria-pressed="true">In place</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-open="dialog" aria-pressed="false">In a dialog</button>
+                    </div>
+                    <div role="group" aria-label="The last row">
+                        <b>The last row:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-last="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-last="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-last="binary" aria-pressed="false">Binary</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-last="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-last="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div id="payload-cell-component" class="k5-pair">
+                    <div class="k5-stack">
+                        <p class="k5-label">Messages of a topic, full width</p>
+                        <div class="kp-datatable" data-kp-datatable data-kp-cards>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Messages
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Received</th>
+                                            <th scope="col">Topic</th>
+                                            <th scope="col" class="k5-col-payload">Payload</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-k5-payloads></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="k5-stack">
+                        <p class="k5-label">390 px, as cards</p>
+                        <div class="k5-frame k5-frame--phone">
+                            <div class="kp-datatable" data-kp-datatable data-kp-cards>
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">
+                                            Messages on a phone
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Received</th>
+                                                <th scope="col">Topic</th>
+                                                <th scope="col">Payload</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-k5-payloads-phone></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "lists-fd0135f1-5f88-417b-9f1e-2f26abb4c594", "received": [] }
+        </script>
+        <script type="module" src="../kpadopt56/src/kpadopt5-rows/demo.js"></script>
+        <script type="module" src="../kpadopt56/src/kpadopt6-social/demo.js"></script>
+        <script type="module" src="../kpadopt56/src/kpadopt5-ops/demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        </body>
+</html>

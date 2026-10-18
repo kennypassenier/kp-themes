@@ -1,4 +1,379 @@
 {
     "demo": "kpadopt56-people",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "people-4e5f79a9-d626-44a0-a2e0-5696ab2673db",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:08: 88 of 88 judged, 77 approved, 11 not approved.",
+            "approved": [
+                {
+                    "item": "avatar",
+                    "theme": "dark"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "forest"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "deco"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "avatar",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "dark"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "forest"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "deco"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "dark"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "forest"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "deco"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "dark"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "forest"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "deco"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "conversation-thread-look",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "dark"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "forest"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "deco"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "conversation-thread-fold",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "entity",
+                    "theme": "dark"
+                },
+                {
+                    "item": "entity",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "entity",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "entity",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "entity",
+                    "theme": "forest"
+                },
+                {
+                    "item": "entity",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "entity",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "entity",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "entity",
+                    "theme": "deco"
+                },
+                {
+                    "item": "entity",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "entity",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "entity-behaviour",
+                    "theme": "dark",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "cyberpunk",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "synthwave",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "pastel",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "forest",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "blueprint",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "solstice",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "brutalism",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "deco",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "nostromo",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "titanium",
+                    "note": "de \"open the package menu\" menu opent niet aan de \"more\" knop?"
+                }
+            ],
+            "choices": []
+        }
+    ]
 }

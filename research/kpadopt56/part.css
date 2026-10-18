@@ -22,3 +22,15 @@
     max-inline-size: 80ch;
     color: var(--muted-foreground);
 }
+
+/* A section a later round asks again says what was done about Kenny's words, above its Expected block. */
+.k56-changed {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.k56-changed p {
+    margin: 0;
+}
