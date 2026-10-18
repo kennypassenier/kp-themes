@@ -636,9 +636,12 @@ const pairOf = (item, theme) => ({ key: `${theme}|${item.id}`, label: `${item.id
  */
 // A one-theme round whose sections name two or more topics walks them topic by topic too (2026-10-16, the one
 // kpadopt4 page: 51 formal sections in nine topics would otherwise be one endless step).
+// A page whose sections name a topic is always laid out as topic lanes, also when a later round asks one section in one
+// theme (round 2 of kpadopt56-lists: row-keyboard-select in dark only): the dialog has ONE layout (DEMO_RULES ch. 7), and
+// the in-page theme layout moved the section into the dialog, where check-kit found no lane to measure.
 const TOPIC_MODE =
     !ASPECT_MODE &&
-    (new Set(items.flatMap(askedThemes)).size > 1 || new Set(items.map((item) => item.section.dataset.reviewTopic).filter(Boolean)).size > 1);
+    (new Set(items.flatMap(askedThemes)).size > 1 || items.some((item) => Boolean(item.section.dataset.reviewTopic)));
 
 /** @type {Step[]} */
 const steps = TOPIC_MODE ? topicSteps() : themeSteps();
