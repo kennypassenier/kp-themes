@@ -1,0 +1,65 @@
+/* research/findings-1019: the frame of the page. Everything with a kp- class is the package; the f19- rules only lay out. */
+
+/* A 390 px phone: the page margin and the card round a component leave it about 270 px. The frame is drawn at the phone's width
+   (it shrinks only when the window is narrower), the column inside it is the width the fault showed at. */
+.f19-phone {
+    box-sizing: border-box;
+    inline-size: 390px;
+    max-inline-size: 100%;
+    margin-inline: auto;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.f19-phone__label {
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    text-align: center;
+}
+
+.f19-col {
+    inline-size: min(270px, 100%);
+    margin-inline: auto;
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.f19-col .kp-focus-steps {
+    block-size: 34rem;
+}
+
+.f19-row {
+    display: grid;
+    grid-template-columns: minmax(0, 14rem) minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    max-inline-size: 48rem;
+}
+
+.f19-row__name {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    overflow-wrap: anywhere;
+}
+
+.f19-row > div {
+    min-inline-size: 0;
+}
+
+@media (max-width: 40rem) {
+    .f19-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.f19-ledes {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 48rem;
+}
+
+.f19-ledes h3 {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}

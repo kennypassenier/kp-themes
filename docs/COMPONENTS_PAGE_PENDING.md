@@ -12,6 +12,10 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- findings-1019 (2026-10-19), site/components/flash.html: the `data-kp-width` row says "`keep` (default) or `grow`"; make it say that `grow` works set by hand (the button is as wide as what it says: its own words at rest and busy, the result's width while the result stands) and that a width set by hand stays after a refusal on the button. Also its example may show a `grow` button.
+- findings-1019, site/components/lede.html: the sentence "(on a lede of its own: a folded lede takes no link)" is no longer true: `data-kp-lede-collapsible` with `data-kp-lede-link` folds, and Learn more stands at the end after the folded part.
+- findings-1019, site/components/command.html and site/components/focus-steps.html: one sentence each: in a column too narrow for the head the Copy button goes under the terminal's name and the badge, and Back and Next stand one under the other when two do not fit side by side; neither breaks a word.
+
 (The pass of 2026-10-18, on Kenny's go "components-page: Nu bijwerken", brought every line that stood here onto its page: the new components rating,
 quote, passkeys, thread, idmark, stackbar, bullets, kv, formrows, code, pipeline, quantity, checklist (with its claim part), timers, focus steps,
 wheel, uptime, command, weekdays, runs, snooze, dated options, sentence, gallery, viewer, docpreview, slider, availability, qr, time, console,
