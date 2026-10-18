@@ -15715,6 +15715,7 @@
         min-inline-size: 0;
         block-size: var(--kp-heat-cell-height, 22px);
         padding: 0;
+        font: inherit;
         cursor: pointer;
     }
 
@@ -21096,6 +21097,7 @@
         border: 0;
         background: transparent;
         appearance: none;
+        font: inherit;
         cursor: pointer;
         outline: none;
         -webkit-tap-highlight-color: transparent;
@@ -27900,6 +27902,7 @@
         border: 0;
         border-radius: inherit;
         background: none;
+        font: inherit;
         cursor: zoom-in;
     }
 
@@ -28042,6 +28045,10 @@
 
     .kp-gallery__state > .kp-stateplate {
         block-size: 100%;
+    }
+
+    .kp-gallery__file {
+        font: inherit;
     }
 
     .kp-gallery__file[hidden] {
@@ -29177,7 +29184,12 @@
         border-radius: calc(var(--radius, 0.5rem) - 1px);
         background: transparent;
         color: var(--muted-foreground);
+        font: inherit;
         cursor: pointer;
+    }
+
+    .kp-time__value {
+        font: inherit;
     }
 
     .kp-time__toggle:hover:not(:disabled) {
