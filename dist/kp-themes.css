@@ -38147,6 +38147,36 @@
 }
 /* ── end t56 ── */
 
+/* ── t56: the gallery tile ── */
+@layer kp.signature {
+    /* A picture is a jacked-in feed: the plate's notch, a scan raster over the picture and a tag caption. Pointing at it
+       burns the hazard yellow on the edge. */
+    [data-theme='cyberpunk'] .kp-gallery__tile {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-gallery__tile:not(.kp-skeleton)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--kp-cp-scan);
+        mix-blend-mode: multiply;
+        pointer-events: none;
+    }
+    [data-theme='cyberpunk'] .kp-gallery__tile:hover,
+    [data-theme='cyberpunk'] .kp-gallery__tile:focus-within {
+        border-color: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-gallery__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-inline-start: 3px solid var(--primary);
+    }
+}
+/* ── end t56 ── */
+
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
@@ -44173,6 +44203,30 @@
         position: absolute;
         inset-block-start: 0.875rem;
         inset-inline-end: 0.875rem;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the gallery tile ── */
+@layer kp.signature {
+    /* A picture is a lit screen: a pink-to-cyan tube round the edge (the card's stripe), and a glow when pointed at. */
+    [data-theme='synthwave'] .kp-gallery__tile:not(.kp-skeleton, [data-kp-state='error']) {
+        border-radius: 0;
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--muted), var(--muted)) padding-box,
+            linear-gradient(135deg, var(--kp-pink-text), var(--kp-core)) border-box;
+    }
+    [data-theme='synthwave'] .kp-gallery__tile:hover,
+    [data-theme='synthwave'] .kp-gallery__tile:focus-within {
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-gallery__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-block-start: 1px solid var(--kp-hairline);
     }
 }
 /* ── end t56 ── */
@@ -90237,6 +90291,28 @@
     [data-theme='dark'] .kp-badge--version {
         box-sizing: border-box;
         font-size: 0.75rem;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the gallery tile ── */
+@layer kp.signature {
+    /* A picture is a plate like every dark part: cut on two opposite corners, its edge the strong line; pointing at it rests
+       the film's cyan on the edge (the line stops at the start edge, G15). The caption is the ticker's mono. */
+    [data-theme='dark'] .kp-gallery__tile {
+        border-radius: 0;
+        border-color: var(--border-strong);
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-gallery__tile:hover,
+    [data-theme='dark'] .kp-gallery__tile:focus-within {
+        border-color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-gallery__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        border-block-start: 1px solid var(--chart-1);
     }
 }
 /* ── end t56 ── */
