@@ -10270,6 +10270,7 @@
         "||||[data-kp-nav-more][data-kp-nav-idle]": "b965e0591f0906c8",
         "||||[data-kp-nav-sticky-root]:has(.kp-nav-wrap--sticky)": "a319654a8a72b35a",
         "||||[data-kp-newpill-host]": "feaf4c0bd01a4204",
+        "||||[data-kp-notices][data-kp-notices-look='page']:not([data-kp-state='ready'])": "7a46f7da8b5d1531",
         "||||[data-kp-ops-narrow]": "a4d1a2b5c043f112",
         "||||[data-kp-pane-heading]": "24d4a9f06875f120",
         "||||[data-kp-pane-key]": "5a957baa26886433",

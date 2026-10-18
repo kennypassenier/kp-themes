@@ -20628,6 +20628,13 @@
         color: var(--card-foreground);
     }
 
+    /* The footprint hold (js/footprint.js) sets a min-block-size on the host while a state shows: the page look stretches over it,
+     * so the failed or empty plate fills the held height instead of stopping short of the frame [t56-footprint-1018]. */
+    [data-kp-notices][data-kp-notices-look='page']:not([data-kp-state='ready']) {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr);
+    }
+
     @media (max-width: 48rem) {
         .kp-notices__panel {
             position: fixed;
