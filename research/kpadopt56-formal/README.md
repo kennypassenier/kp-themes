@@ -1,5 +1,7 @@
 # research/kpadopt56-formal: approved in formal, changed since, judged again
 
+**Decided (2026-10-18 18:42):** Kenny approved every section in formal over two rounds. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Kenny approved these components in formal earlier (`research/kpadopt5-*`, `research/kpadopt6-*`). The shared package code changed
 afterwards (css/components.css, js/), so formal looks different there and needs his eye again (a visual question is a review demo,
 never a form, DEMO_RULES ch. 7). Formal only (`data-review-themes="formal"`); 22 sections, 22 pairs, grouped by the kind of component.

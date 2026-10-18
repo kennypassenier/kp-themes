@@ -181,12 +181,6 @@ export const PAGES = [
                 label: 'Fifth and sixth adoption rounds in the other themes, part 14 of 14: People and cards',
                 about: 'Who is who: the avatar, the list of ways to sign in, the conversation in bubbles, and the entity card. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
-            // Kenny, 2026-10-18 (formal again): components he approved in formal whose shared package code changed afterwards (the refresh bar and request filter stay in their card, a scrolling segmented bar snaps and fades, the version badge and checklist detail wrap, entity actions fold into More, the chart's end labels stay inside the plot, the availability answers stand under the name), judged again in formal alone, generated from research/kpadopt56/src by research/kpadopt56-formal/build.mjs.
-            {
-                href: 'research/kpadopt56-formal/demo.html',
-                label: 'Approved in formal, changed since: judge it again',
-                about: 'Eleven components you approved in formal that look different now because the shared package code changed: bars that scroll sideways at phone width, version badges, checklist detail, entity card actions, chart labels and the availability grid. Each says what changed and what to check; a width switch shows 1280 and 390.',
-            },
         ],
     },
     {
@@ -197,6 +191,12 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-18 18:42: Kenny approved every formal re-review section over two rounds (research/kpadopt56-formal/decided.json).
+            {
+                href: 'research/kpadopt56-formal/demo.html',
+                label: 'Approved in formal, changed since: judge it again',
+                about: 'Eleven components you approved in formal that look different now because the shared package code changed: bars that scroll sideways at phone width, version badges, checklist detail, entity card actions, chart labels and the availability grid. Each says what changed and what to check; a width switch shows 1280 and 390.',
+            },
             // Decided 2026-10-18 01:21: Kenny approved every kpadopt6 ops part in formal, defaults kept (research/kpadopt6-ops/decided.json).
             {
                 href: 'research/kpadopt6-ops/demo.html',
