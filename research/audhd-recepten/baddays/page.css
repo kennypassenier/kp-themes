@@ -1,0 +1,232 @@
+/* research/audhd-recepten/baddays: the frame of the page. Everything with a kp- class is the package; the bd- rules only lay out
+   and turn the package's own knobs (--kp-action-*, --kp-actions-*, --kp-card-stage-min). */
+
+.bd-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.bd-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.bd-intro :is(h1, p),
+.bd-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.bd-intro p,
+.bd-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.bd-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.bd-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.bd-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.bd-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.bd-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+/* The buttons that drive a state or an option, in the review dialog's toolbar. */
+.bd-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+/* ---- 1 · safe dishes: the tiles are big because a tired thumb needs a target. Both sizes turn the package's own knobs. */
+.bd-card {
+    --kp-card-stage-min: 21rem;
+}
+
+.bd-card[data-bd-size='big'] {
+    --kp-actions-min: 16rem;
+    --kp-actions-gap: var(--kp-space-md, 1rem);
+    --kp-action-pad: 1.125rem 1.25rem;
+    --kp-action-title-size: 1.25rem;
+    --kp-action-mark: 1.5rem;
+    --kp-action-gap: 0.375rem;
+}
+
+.bd-card[data-bd-size='huge'] {
+    --kp-actions-min: 20rem;
+    --kp-actions-gap: var(--kp-space-lg, 1.5rem);
+    --kp-action-pad: 1.75rem 1.75rem;
+    --kp-action-title-size: 1.625rem;
+    --kp-action-mark: 1.75rem;
+    --kp-action-gap: 0.5rem;
+    --bd-tile-min: 9rem;
+}
+
+.bd-safe .kp-action {
+    min-block-size: var(--bd-tile-min, 7rem);
+}
+
+.bd-card[data-bd-size='huge'] .kp-action__text {
+    font-size: 1rem;
+}
+
+.bd-card[data-bd-meta='time'] .bd-lastmade,
+.bd-card[data-bd-meta='off'] .bd-lastmade {
+    display: none;
+}
+
+.bd-card[data-bd-meta='off'] .kp-action__meta {
+    display: none;
+}
+
+.bd-card .kp-action__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--kp-space-md, 0.75rem);
+}
+
+.bd-readout {
+    margin: 0;
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    min-block-size: 1.5em;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* ---- 2 · the freezer: the table, its empty and failed states and the undo bed keep one footprint. */
+.bd-freezer {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.bd-freezer .kp-table-wrap {
+    min-block-size: 22rem;
+}
+
+.bd-freezer .bd-state {
+    box-sizing: border-box;
+    min-block-size: 22rem;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    text-align: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.bd-freezer .bd-state[hidden] {
+    display: none;
+}
+
+.bd-freezer .kp-empty__title {
+    font-size: var(--kp-text-xl, 1.5rem);
+}
+
+.bd-freezer[data-bd-hint='off'] .bd-hint {
+    visibility: hidden;
+}
+
+.bd-hint--none {
+    visibility: hidden;
+}
+
+.bd-toastbed {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: stretch;
+    min-block-size: 5.5rem;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.bd-toastbed > .kp-toast {
+    inline-size: 100%;
+    max-inline-size: none;
+}
+
+.bd-toastbed__empty {
+    margin: auto;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.bd-toastbed:has(.kp-toast) > .bd-toastbed__empty {
+    display: none;
+}
+
+/* ---- 3 · the shelf keeps its stage height whatever the filter leaves. */
+#bd-shelf-card {
+    --kp-card-stage-min: 27rem;
+}
+
+/* ---- 4 · the mini recipe */
+.bd-mini {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.bd-mini__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.bd-mini__title,
+.bd-mini__lede {
+    margin: 0;
+}
+
+.bd-mini__lede {
+    min-block-size: 3.5em;
+    max-inline-size: 80ch;
+}
+
+.bd-mini__steps {
+    block-size: 28rem;
+}
+
+/* ---- 5 · the month */
+.bd-calwrap {
+    min-inline-size: 0;
+    max-inline-size: 44rem;
+}
+
+/* An empty or failed table shows its notice in the table's own place, not under a blank table. */
+.bd-freezer .kp-datatable:has(> .bd-state:not([hidden])) > .kp-table-wrap {
+    display: none;
+}

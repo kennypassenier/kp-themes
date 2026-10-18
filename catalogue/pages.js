@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's bad-days screen, formal only (new demo). research/audhd-recepten/.
+            {
+                href: 'research/audhd-recepten/baddays/demo.html',
+                label: 'Recipe app: bad days (safe dishes, freezer, zero-prep shelf)',
+                about: 'The AuDHD recipe app screen for days with no energy: six safe dishes as big tiles, the freezer as a table with take one portion and undo, the zero-prep shelf, a mini recipe and a calm calendar. 5 sections, formal only.',
+            },
             // Kenny, 2026-10-19 (almanac on kp-themes 11.0.0), formal only.
             {
                 href: 'research/almanac-calendars/demo.html',

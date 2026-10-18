@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="audhd-baddays" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Bad days: safe dishes, the freezer, the zero-prep shelf and a mini recipe · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../../css/fonts.css" />
+        <link rel="stylesheet" href="../../../css/themes.css" />
+        <link rel="stylesheet" href="../../../css/components.css" />
+        <link rel="stylesheet" href="../../../css/layout.css" />
+        <link rel="stylesheet" href="../../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main bd-page">
+            <header class="bd-intro">
+                <h1>Bad days: food that works when nothing else does</h1>
+                <p class="cat-intro">
+                    The screen for a day with no energy. Five parts, each answering one question without asking for effort: which dishes always work,
+                    what is in the freezer, what can be eaten without cooking, how a recipe shrinks to its smallest version, and when things went
+                    in. Nothing here counts calories or weight, nothing turns red, and every action can be taken back. This page asks formal only.
+                    The dish names and dates are sample content; the portions, the clock and the server are pretend.
+                </p>
+            </header>
+
+            <!-- 1 · Safe dishes -->
+            <section
+                class="bd-sec"
+                id="safe-dishes"
+                data-review-item="safe-dishes"
+                data-review-components="action-tiles"
+                data-review-title="Safe dishes: big tiles that always work"
+                data-review-choices='[
+                    {"id":"safe-size","label":"How big the tiles are","default":"big","options":[
+                        {"value":"big","label":"Big (recommended)","hint":"Tiles about 7 rem tall with a 20 px title: easy to hit with a tired thumb, six fit on a desktop in two rows."},
+                        {"value":"huge","label":"Huge","hint":"Tiles about 9 rem tall with a 26 px title: for the worst days, one or two per row on a phone."}]},
+                    {"id":"safe-meta","label":"The small line under each dish","default":"full","options":[
+                        {"value":"full","label":"Time, pans and when you last made it (recommended)","hint":"Says how little it asks, and that you have made it before."},
+                        {"value":"time","label":"Time and pans only","hint":"Leaves out the date of the last time, so nothing can read as a streak."},
+                        {"value":"off","label":"Nothing","hint":"Only the dish and its one sentence."}]},
+                    {"id":"safe-press","label":"What pressing a tile does","default":"recipe","options":[
+                        {"value":"recipe","label":"Opens its mini recipe (recommended)","hint":"The tile shows a spinner for a moment, then says it is opening the mini version."},
+                        {"value":"tonight","label":"Makes it tonight&#39;s dinner","hint":"The choice is the whole decision: it is written down and nothing else is asked."}]}]'
+                aria-labelledby="h-safe-dishes"
+            >
+                <div class="bd-sec__head">
+                    <h2 id="h-safe-dishes">Safe dishes: always possible</h2>
+                    <p>
+                        A short, fixed row of dishes that work on any day, as large tiles with one sentence each. They never reorder, so the thumb
+                        learns where they are.
+                    </p>
+                </div>
+                <div class="bd-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Six large tiles in a grid, all one height; each has a title, one sentence and a small line (time, pans, last made).</li>
+                        <li>Press a tile: a spinner shows in its right-hand corner, the tile does nothing a second time while it works, and a line under the grid says what happened.</li>
+                        <li><b>Loading</b> puts the package&rsquo;s busy card over the tiles; <b>Empty</b> and <b>Could not open</b> fill the same area, centred, with a button.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: six tiles of one size, the title in the heavier weight, the sentence and the small line quieter underneath, the busy
+                        corner empty at rest.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="bd-safe-card">
+                    <div role="group" aria-label="State of the safe dishes" class="bd-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="empty">No dishes yet</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="error">Could not open</button>
+                    </div>
+                    <div role="group" aria-label="Tile size" class="bd-actions">
+                        <b>Size:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="safe-size" data-value="big">Big (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="safe-size" data-value="huge">Huge</button>
+                    </div>
+                    <div role="group" aria-label="Small line" class="bd-actions">
+                        <b>Small line:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="safe-meta" data-value="full">Time, pans, last made (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="safe-meta" data-value="time">Time and pans</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="safe-meta" data-value="off">None</button>
+                    </div>
+                    <div role="group" aria-label="When pressed" class="bd-actions">
+                        <b>Pressing:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="safe-press" data-value="recipe">Opens mini recipe (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="safe-press" data-value="tonight">Makes it tonight&rsquo;s</button>
+                    </div>
+                </div>
+                <section class="kp-card bd-card" id="bd-safe-card" data-kp-state="loading" data-bd-size="big" data-bd-meta="full" aria-labelledby="bd-safe-t" data-kp-loading-words="Opening your safe dishes…">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="bd-safe-t">Your safe dishes</h3>
+                        <div class="kp-card__actions"><span class="kp-timestamp" data-bd-safe-count>6 dishes</span></div>
+                    </div>
+                    <p class="kp-card__body">Pick one and that is dinner decided. Each one needs one pan or less and nothing to chop.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data">
+                            <ul class="kp-actions bd-safe" aria-label="Safe dishes" data-bd-safe></ul>
+                        </div>
+                    </div>
+                    <div class="kp-card__footer"><p class="bd-readout" role="status" data-bd-safe-readout>Nothing chosen yet.</p></div>
+                </section>
+            </section>
+
+            <!-- 2 · The freezer -->
+            <section
+                class="bd-sec"
+                id="freezer"
+                data-review-item="freezer"
+                data-review-components="datatable"
+                data-review-title="The freezer: what is in, how long, take one portion"
+                data-review-choices='[
+                    {"id":"fr-clock","label":"The clock on the Undo message","default":"ring","options":[
+                        {"value":"ring","label":"A ring with the seconds (recommended)","hint":"A circle that empties; you see the time left without reading it."},
+                        {"value":"bar","label":"A bar","hint":"A thin line that shrinks under the message."},
+                        {"value":"text","label":"Words","hint":"The seconds as text, ticking down."},
+                        {"value":"none","label":"No clock","hint":"The message and Undo, nothing counting."}]},
+                    {"id":"fr-ms","label":"How long Undo stays","default":"10000","options":[
+                        {"value":"6000","label":"6 seconds","hint":"The package default."},
+                        {"value":"10000","label":"10 seconds (recommended)","hint":"Longer than the default: slow reactions and a lost thumb are not penalised."},
+                        {"value":"20000","label":"20 seconds","hint":"For the days when everything is slow."}]},
+                    {"id":"fr-hint","label":"The hint for old portions","default":"badge","options":[
+                        {"value":"badge","label":"A quiet word: Use these next (recommended)","hint":"A plain grey badge after about two months. No colour, no warning sign."},
+                        {"value":"off","label":"Only the length of time","hint":"The How long column says it; no word is added."}]}]'
+                aria-labelledby="h-freezer"
+            >
+                <div class="bd-sec__head">
+                    <h2 id="h-freezer">The freezer</h2>
+                    <p>
+                        A table of what is frozen: the oldest on top, how long each has been in, and one button to take a portion. Taking a portion
+                        can be undone; nothing asks &ldquo;are you sure&rdquo;.
+                    </p>
+                </div>
+                <div class="bd-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Seven dishes, the oldest first. The columns are Dish, Portions, Frozen on (dd/mm/yyyy), How long (it ticks) and a quiet hint; Take one portion stands in the last column in every row.</li>
+                        <li>Press <b>Take one portion</b>: the count drops at once and a message offers Undo with a clock. Take the last portion of a dish and the row leaves; Undo brings it back.</li>
+                        <li>An old dish never turns red or amber: after about two months it only gets the grey words <b>Use these next</b>.</li>
+                        <li><b>Loading</b> lays the busy card over the rows; <b>Empty freezer</b> says kindly that this is fine and offers a button; <b>Could not read</b> is the alert with Try again. All three keep the table&rsquo;s height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: a ruled table, the oldest dish on top, the grey hint beside the oldest two, and the empty freezer as a large, calm
+                        notice in the middle of the table&rsquo;s own area.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="bd-freezer">
+                    <div role="group" aria-label="State of the freezer" class="bd-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="empty">Empty freezer</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="error">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="Clock on Undo" class="bd-actions">
+                        <b>Undo clock:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="fr-clock" data-value="ring">Ring (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="fr-clock" data-value="bar">Bar</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="fr-clock" data-value="text">Words</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="fr-clock" data-value="none">None</button>
+                    </div>
+                    <div role="group" aria-label="How long Undo stays" class="bd-actions">
+                        <b>Undo stays:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="fr-ms" data-value="6000">6 s</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="fr-ms" data-value="10000">10 s (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="fr-ms" data-value="20000">20 s</button>
+                    </div>
+                    <div role="group" aria-label="Hint for old portions" class="bd-actions">
+                        <b>Old portions:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="fr-hint" data-value="badge">Quiet word (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="fr-hint" data-value="off">Time only</button>
+                    </div>
+                </div>
+                <div class="bd-freezer" data-bd-hint="badge">
+                    <div class="kp-datatable" id="bd-freezer" data-kp-datatable data-kp-cards data-kp-page-sizes="none" data-kp-key="freezer" data-kp-state="loading" data-kp-busy-overlay>
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search" data-kp-datatable-search type="search" aria-label="Find a dish in the freezer" placeholder="Find a dish" />
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Freezer, the oldest dish first
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Dish</th>
+                                        <th scope="col" data-kp-sort="number">Portions</th>
+                                        <th scope="col" data-kp-sort="number">Frozen on</th>
+                                        <th scope="col">How long</th>
+                                        <th scope="col">Hint</th>
+                                        <th scope="col"><span class="kp-sr-only">Action</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody data-bd-rows></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty bd-state" data-kp-art="none" data-kp-art-size="lg" data-kp-datatable-empty hidden>
+                            <p class="kp-empty__title" data-kp-datatable-empty-none>The freezer is empty, and that is fine</p>
+                            <p class="kp-empty__body" data-kp-datatable-empty-none>
+                                Nothing to defrost today. The safe dishes and the zero-prep shelf work without it. Whenever you cook too much, put the
+                                extra here and it waits for you.
+                            </p>
+                            <button type="button" class="kp-button kp-button--primary" data-kp-datatable-empty-none data-bd-add>Add a portion I froze today</button>
+                            <p class="kp-empty__title" data-kp-datatable-empty-nomatch>No dish in the freezer matches that</p>
+                            <p class="kp-empty__body" data-kp-datatable-empty-nomatch>Try fewer letters, or clear the search to see everything.</p>
+                            <button type="button" class="kp-button" data-kp-datatable-empty-nomatch data-kp-datatable-clear>Clear the search</button>
+                        </div>
+                        <div class="kp-alert kp-alert--destructive bd-state" data-kp-datatable-failed role="alert" hidden>
+                            <p data-kp-datatable-failed-reason>The freezer list could not be read.</p>
+                            <button type="button" class="kp-button" data-kp-datatable-retry>Try again</button>
+                        </div>
+                    </div>
+                    <div class="bd-toastbed" data-bd-bed aria-label="Undo messages">
+                        <p class="bd-toastbed__empty">The Undo message shows here after Take one portion.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3 · Zero-prep shelf -->
+            <section
+                class="bd-sec"
+                id="zero-prep"
+                data-review-item="zero-prep"
+                data-review-components="card-state"
+                data-review-title="The zero-prep shelf: food that needs no cooking"
+                data-review-choices='[
+                    {"id":"shelf-lead","label":"What stands before each food","default":"minutes","options":[
+                        {"value":"minutes","label":"The minutes it takes (recommended)","hint":"0 min, 2 min, 5 min: a number says how little it asks."},
+                        {"value":"effort","label":"A plain word","hint":"Open, Easy, Simple: no number, nothing to compare."}]}]'
+                aria-labelledby="h-zero-prep"
+            >
+                <div class="bd-sec__head">
+                    <h2 id="h-zero-prep">The zero-prep shelf</h2>
+                    <p>
+                        Food that is eaten without cooking, sorted by how much you can manage today. Say how much that is, and the list shrinks to
+                        what fits.
+                    </p>
+                </div>
+                <div class="bd-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Nine foods in rows, each with a lead (minutes or a word), a sentence, what it needs and a <b>This one</b> button in one column.</li>
+                        <li>The three choices above the rows filter them: <b>Just open it</b> 4, <b>One easy step</b> 7, <b>Anything here</b> 9. The numbers are exact and never move the rows.</li>
+                        <li>Press <b>This one</b>: a line under the list says it is chosen. <b>Loading</b>, <b>Nothing on the shelf</b> and <b>Could not open</b> fill the same area.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the three choices as one segmented control, the rows ruled, every title starting at one edge and every button in one
+                        column.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="bd-shelf-card">
+                    <div role="group" aria-label="State of the shelf" class="bd-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="empty">Nothing on the shelf</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="error">Could not open</button>
+                    </div>
+                    <div role="group" aria-label="Lead of each food" class="bd-actions">
+                        <b>Lead:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="shelf-lead" data-value="minutes">Minutes (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="shelf-lead" data-value="effort">A word</button>
+                    </div>
+                </div>
+                <section class="kp-card bd-card" id="bd-shelf-card" data-kp-state="loading" aria-labelledby="bd-shelf-t" data-kp-loading-words="Opening the shelf…">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="bd-shelf-t">What I can manage today</h3>
+                        <div class="kp-card__actions">
+                            <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="How much I can manage today" data-bd-level>
+                                <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="0">
+                                    <span class="kp-segmented__label">Just open it</span><span class="kp-segmented__count" data-bd-count="0">4</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="1">
+                                    <span class="kp-segmented__label">One easy step</span><span class="kp-segmented__count" data-bd-count="1">7</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="2">
+                                    <span class="kp-segmented__label">Anything here</span><span class="kp-segmented__count" data-bd-count="2">9</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="kp-card__body">No stove, no oven, no pan. Choose what fits today, not what you think you should manage.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data">
+                            <ul class="kp-action-list kp-action-list--lead bd-shelf" aria-label="Foods without cooking" data-bd-shelf></ul>
+                        </div>
+                    </div>
+                    <div class="kp-card__footer"><p class="bd-readout" role="status" data-bd-shelf-readout>Nothing chosen yet.</p></div>
+                </section>
+            </section>
+
+            <!-- 4 · Mini recipe -->
+            <section
+                class="bd-sec"
+                id="mini-recipe"
+                data-review-item="mini-recipe"
+                data-review-components="focus-steps"
+                data-review-title="A mini version of a recipe"
+                data-review-choices='[
+                    {"id":"mini-wake","label":"The screen while you follow the steps","default":"on","options":[
+                        {"value":"on","label":"Stays on (recommended)","hint":"The screen does not dim while you stand at the stove, and the head says so."},
+                        {"value":"off","label":"May dim","hint":"The phone behaves as usual; the head says the screen may dim."}]}]'
+                aria-labelledby="h-mini-recipe"
+            >
+                <div class="bd-sec__head">
+                    <h2 id="h-mini-recipe">A mini version of a recipe</h2>
+                    <p>
+                        The same dish in its smallest form: fewer steps, one pot, one portion. Switch between the mini and the full recipe, then
+                        follow one step at a time.
+                    </p>
+                </div>
+                <div class="bd-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>It opens on <b>Mini version</b>: three steps, about 12 minutes. The line under the switch says what was dropped from the full recipe.</li>
+                        <li><b>Full recipe</b> shows the nine real steps; Back and Next stay in the same place whatever the step&rsquo;s length.</li>
+                        <li><b>Loading</b>, <b>No steps</b> and <b>Could not open</b> fill the same area as a step.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: one large step, the bar of progress above it, the two buttons the same size at the foot, the line of what changed in
+                        quiet ink.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="bd-mini">
+                    <div role="group" aria-label="State of the recipe" class="bd-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="empty">No steps</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="error">Could not open</button>
+                    </div>
+                    <div role="group" aria-label="Screen" class="bd-actions">
+                        <b>Screen:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="mini-wake" data-value="on">Stays on (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="mini-wake" data-value="off">May dim</button>
+                    </div>
+                </div>
+                <div class="bd-mini" id="bd-mini">
+                    <div class="bd-mini__head">
+                        <h3 class="bd-mini__title">Spaghetti bolognese</h3>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Which version" data-bd-version>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="mini">
+                                <span class="kp-segmented__label">Mini version</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="full">
+                                <span class="kp-segmented__label">Full recipe</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="kp-lede bd-mini__lede" data-bd-mini-lede></p>
+                    <div class="kp-focus-steps bd-mini__steps" data-kp-focus-steps aria-label="Spaghetti bolognese" data-bd-steps></div>
+                </div>
+            </section>
+
+            <!-- 5 · Freezer month -->
+            <section
+                class="bd-sec"
+                id="freezer-month"
+                data-review-item="freezer-month"
+                data-review-components="calendar"
+                data-review-title="When things went into the freezer"
+                data-review-choices='[
+                    {"id":"cal-fill","label":"The colour of a day something went in","default":"accent","options":[
+                        {"value":"accent","label":"The theme&#39;s accent (recommended)","hint":"The same calm fill as the other tracking pages."},
+                        {"value":"success","label":"The success plate","hint":"A green plate for the days something went in."}]},
+                    {"id":"cal-pause","label":"A time away","default":"none","options":[
+                        {"value":"none","label":"No pause marked (recommended)","hint":"Every quiet day is just quiet."},
+                        {"value":"holiday","label":"Mark the holiday","hint":"A week away is hatched, so it is not read as a gap."}]}]'
+                aria-labelledby="h-freezer-month"
+            >
+                <div class="bd-sec__head">
+                    <h2 id="h-freezer-month">When things went in</h2>
+                    <p>
+                        A month of days: the days you froze something are filled, every other day is quiet. It helps you remember cooking days, and it
+                        can never show a day as missed.
+                    </p>
+                </div>
+                <div class="bd-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The days something went in are filled with the number of portions; other past days are lighter, with no border, no number and no word like &ldquo;missed&rdquo;.</li>
+                        <li><b>Mark the holiday</b> hatches one week; press a quiet day and it behaves like any day.</li>
+                        <li><b>Loading</b>, <b>Nothing frozen this month</b> and <b>Could not read</b> keep the six rows of the month.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: filled days in the accent with a small count, quiet days barely darker than the paper, the legend with three plain
+                        words.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="bd-cal">
+                    <div role="group" aria-label="State of the month" class="bd-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="empty">Nothing frozen this month</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-state="error">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="Fill of a logged day" class="bd-actions">
+                        <b>Fill:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="cal-fill" data-value="accent">Accent (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="cal-fill" data-value="success">Success plate</button>
+                    </div>
+                    <div role="group" aria-label="A time away" class="bd-actions">
+                        <b>Time away:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="cal-pause" data-value="none">Not marked (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="cal-pause" data-value="holiday">Holiday week</button>
+                    </div>
+                </div>
+                <div class="bd-calwrap">
+                    <section class="kp-calendar kp-calendar--busy-whole" id="bd-cal" data-kp-calendar data-kp-tones="calm" aria-label="Days something went into the freezer"></section>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "audhd-baddays-1", "received": [] }
+        </script>
+        <script type="module" src="../../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../../_review/review.js"></script>
+        <script src="../../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../../catalogue/catalogue.js"></script>
+    </body>
+</html>
