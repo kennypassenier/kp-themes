@@ -3,7 +3,7 @@
     lang="en"
     data-theme="formal"
     data-review="kpadopt56-toggles"
-    data-review-themes="dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+    data-review-themes="formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
 >
     <head>
         <meta charset="utf-8" />
@@ -41,9 +41,10 @@
             <header class="k56-intro">
                 <h1>The fifth and sixth adoption rounds, part 3 of 14: Dated options, toggles and keys</h1>
                 <p class="cat-intro">
-                    Formal is approved. Options with a date, a button that stays pressed, and keys that know their own list. This round asks only what
-                    you did not approve in your last review: 2 sections (22 pairs), one theme per step in the review dialog; each says under
-                    <b>What changed since your last review</b> what was done about your words.
+                    Formal is approved, except where the package change below alters what you approved there. Options with a date, a button that stays
+                    pressed, and keys that know their own list. This round asks only what you did not approve in your last review: 3 sections (36
+                    pairs), one theme per step in the review dialog; each says under <b>What changed since your last review</b> what was done about
+                    your words.
                 </p>
                 <p>
                     Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
@@ -67,11 +68,12 @@
                         faults in the package, found and fixed at their cause. First, in nine of the twelve themes a pressed toggle looked exactly
                         like a released one (the theme&rsquo;s own button paint won over the pressed face), so with <b>Tick</b> on, <b>All</b> and
                         <b>Week</b>, which start pressed, showed their tick while <b>Only errors</b> showed nothing you could see change. Now every
-                        theme turns the face round when it is pressed (formal, pastel and solstice look as before). Second, the line under the words
-                        was empty while the button was off, so the words stood in the top half; now the same room is kept over them, so the words and
-                        the tick are in the middle of the button in both states, and the button is as wide as its longest line from the start, so
-                        pressing moves nothing beside it. The tick stays an option: <b>Tick: On</b> above the component; off by default, as approved
-                        in formal.
+                        theme turns the face round when it is pressed (formal, pastel and solstice already did). Second, the line under the words was
+                        empty while the button was off, so the words stood in the top half; now the same room is kept over them, so the words and the
+                        tick are in the middle of the button in both states, and the button is as wide as its longest line from the start, so pressing
+                        moves nothing beside it. The tick stays an option: <b>Tick: On</b> above the component; off by default, as approved in formal.
+                        In formal this is asked again too, because the same change alters what you approved there: <b>Only errors</b> is now 61 px
+                        tall instead of 46, its words and tick stand in the middle, and pressing it does not make it grow.
                     </p>
                 </div>
                 <div class="kv-sec__head">
@@ -118,6 +120,12 @@
                     </ul>
                 </div>
                 <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a ledger: navy rules on paper, plates that keep their small corner, a rule drawn 2 px inside a control when you
+                        point at it, and a press that doubles that rule and nothing else. Check that the pressed face still reads as pressed with the
+                        second rule, that the button’s words (and tick) stand in the middle and the button does not grow when pressed, and that
+                        nothing sits against a rule.
+                    </p>
                     <p data-for="dark">
                         Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
                         edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
@@ -315,6 +323,213 @@
             </section>
 
             <section
+                class="kv-sec"
+                id="toggle-states"
+                data-review-item="toggle-states"
+                data-review-components="toggles toggle"
+                data-review-topic="toggle"
+                data-review-title="Toggle button: every state, a long label and phone width"
+                aria-labelledby="h-toggle-states"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since your last review:</b> You approved this section, and it is asked again because the package fix changes
+                        it. A pressed toggle now shows its pressed face in every theme (in nine of the twelve it looked like a released one before),
+                        its words and tick stand in the middle, and the button is as wide as its longest line from the start. In formal the toggle is
+                        61 px tall instead of 46, its words and tick are centred, and it does not grow when pressed, so formal is asked again too.
+                    </p>
+                </div>
+                <div class="kv-sec__head">
+                    <h2 id="h-toggle-states">Toggle button: every state, a long label and phone width</h2>
+                    <p>
+                        The same toggle while the app is slow, refuses, is still counting, or cannot be pressed; and the filters at the width of a
+                        phone. Use the buttons to put each one in its state.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The app answers slowly:</b> <b>Pin to top</b> is pressed, the theme&rsquo;s spinner takes the place of the words for
+                            about a second (the words keep their room and the button keeps its size), then it stays on. With
+                            <b>The app will refuse</b> on, the same press goes busy, then the state goes back and the word <b>Refused</b> stands on
+                            the button for 3 s on a red plate; the line below says why.
+                        </li>
+                        <li>
+                            <b>Still counting:</b> <b>Error</b> shows a small pulsing block where the number goes (never 0).
+                            <b>The count arrives</b> writes 12; <b>A count past 99</b> writes 1534 and the room for the next digit is held, with the
+                            real number shown.
+                        </li>
+                        <li>
+                            <b>Mixed:</b> <b>All services</b> is a dashed pill on a half wash with a dash before the words (some of them are on);
+                            press it and it becomes plainly on. <b>Cannot be pressed:</b> <b>Follow</b> is dimmed; hover or focus it and the reason
+                            shows (&ldquo;Nothing is running&rdquo;).
+                        </li>
+                        <li>
+                            <b>A long label</b> wraps inside a narrow box and the button grows taller; it is never cut and never breaks inside a word.
+                            At <b>phone width</b> the pills wrap to the next row and every button is 44 px tall.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        In formal, waiting is the ledger’s lines ruled one after the other; empty and failed are one centred plate at normal size with
+                        a normal-size button. Check each sample keeps the component’s footprint, the rules stay square, and at phone width nothing is
+                        cut or touches an edge.
+                    </p>
+                    <p data-for="dark">
+                        In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size
+                        with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width
+                        nothing is cut or touches an edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, waiting is signal loss: the word and the plate glitch while the whole component stays in place. Check loading,
+                        empty and failed keep the full footprint, the red is used only for a real failure, and at phone width the cut corners clip no
+                        text.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, waiting is the marquee chasing along the whole component. Check loading, empty and failed keep the full
+                        footprint, the chase is visible and moving, and at phone width the bloom clips nothing.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, waiting is washi tape fluttering over the whole component. Check loading, empty and failed keep the full footprint,
+                        the misregistered second ink is visible but readable, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="forest">
+                        In forest, waiting is the row of planted trees along the whole component. Check loading, empty and failed keep the full
+                        footprint, the trees stand and grow as the bar fills, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, waiting is the section hatched across the whole component. Check loading, empty and failed keep the full
+                        footprint, the hatching moves, a failure is flagged in amber or red and not just a colour change, and at phone width nothing
+                        is cut.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, waiting is the sun crossing the whole component and a warning reddens the sky. Check loading, empty and failed
+                        keep the full footprint, the crossing is visible and calm, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, waiting is a lintel hoisted across the whole component and a warning is taped off. Check loading, empty and
+                        failed keep the full footprint, the hard steps are visible, and at phone width the shadow clips nothing.
+                    </p>
+                    <p data-for="deco">
+                        In deco, waiting is lift doors over the whole component. Check loading, empty and failed keep the full footprint, the doors
+                        and the inlay move slowly and cleanly, and at phone width the gold edge cuts no text.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, waiting is the raster building up on the screen across the whole component. Check loading, empty and failed keep
+                        the full footprint, the lamps tell the state, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, waiting is the machined film sweeping the whole component. Check loading, empty and failed keep the full
+                        footprint, the sweep is visible, and at phone width nothing is cut.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls data-review-controls-for="toggle-states-component">
+                    <div role="group" aria-label="Async answer" data-review-latent>
+                        <b>The app:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-refuse aria-pressed="false">The app will refuse</button>
+                    </div>
+                    <div role="group" aria-label="Count">
+                        <b>Count:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-count="loading">Still counting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-count="12">The count arrives</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-count="1534">A count past 99</button>
+                    </div>
+                </div>
+                <div id="toggle-states-component" class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">The app takes a second</p>
+                        <div class="kv-row">
+                            <button class="kp-button" type="button" id="kv-toggle-async" data-kp-toggle data-kp-toggle-async aria-pressed="false">
+                                Pin to top
+                            </button>
+                        </div>
+                        <pre class="kv-log" id="kv-toggle-async-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">A count that is still being counted</p>
+                        <div class="kv-row">
+                            <button
+                                class="kp-button"
+                                type="button"
+                                id="kv-toggle-count"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                data-kp-count="loading"
+                                aria-pressed="false"
+                            >
+                                Error
+                            </button>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Some on, and one that cannot be pressed</p>
+                        <div class="kv-row">
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                aria-pressed="mixed"
+                                data-kp-pressed-mark="check"
+                            >
+                                All services
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                disabled
+                                aria-pressed="false"
+                                data-kp-disabled-reason="Nothing is running"
+                            >
+                                Follow
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">A long label in a narrow box</p>
+                        <div class="kv-frame kv-frame--narrow">
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false" data-kp-count="3">
+                                Show only the containers that restarted since the last backup
+                            </button>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <div
+                                class="kp-toggles"
+                                role="group"
+                                aria-label="Level, on a phone"
+                                data-kp-toggle-group="level-phone"
+                                data-kp-toggle-clear
+                            >
+                                <button
+                                    class="kp-button"
+                                    type="button"
+                                    data-kp-toggle
+                                    data-kp-toggle-all
+                                    data-kp-look="chip"
+                                    aria-pressed="true"
+                                    data-kp-count="138"
+                                >
+                                    All
+                                </button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="12">Error</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="31">Warning</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="95">Info</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="1534">Debug</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
                 class="kb-sec"
                 id="shortcuts"
                 data-review-item="shortcut-engine"
@@ -332,7 +547,8 @@
                         demo&rsquo;s (the dialog&rsquo;s <b>G</b>, <b>X</b> and <b>C</b> give way there), and on the dialog&rsquo;s header or panel
                         every key the dialog does not use goes to the demo; the second key of a chord always goes to the demo. The cap
                         <b>g …</b> stood at the top; where it stands is now an option of the component, <b>Chord cap</b> above it: <b>Centre</b> (the
-                        default, in the middle of what you see) or <b>Bottom centre</b>.
+                        default, in the middle of what you see) or <b>Bottom centre</b>. In formal this is asked again too, because the cap&rsquo;s
+                        position changed there as well: the chord cap now stands in the middle of the view, with bottom centre as the other option.
                     </p>
                 </div>
                 <div class="kb-sec__head">
@@ -373,6 +589,12 @@
                     </ul>
                 </div>
                 <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a ledger: navy rules on paper, plates that keep their small corner, a rule drawn 2 px inside a control when you
+                        point at it, and a press that doubles that rule and nothing else. Check that the pressed face still reads as pressed with the
+                        second rule, that the button’s words (and tick) stand in the middle and the button does not grow when pressed, and that
+                        nothing sits against a rule.
+                    </p>
                     <p data-for="dark">
                         Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
                         edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
