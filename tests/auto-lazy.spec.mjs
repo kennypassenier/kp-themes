@@ -50,9 +50,10 @@ const EXTRA = NEEDS.flatMap((need) => {
     if (!names.length) throw new Error(`NEEDS entry ${need.name}: its attach() calls nothing as m.name(root)`);
     return names.filter((name) => !new RegExp(`\\b${name}\\b`).test(EAGER_6_1_0)).map((name) => [from, name]);
 });
-const EAGER = EAGER_6_1_0
-    .replace(/^/, EXTRA.map(([from, name], i) => `import { ${name} as extra${i} } from '${from}';\n`).join(''))
-    .replace('        attachGrids(root),\n    ];', `        attachGrids(root),\n${EXTRA.map((_, i) => `        extra${i}(root),\n`).join('')}    ];`);
+const EAGER = EAGER_6_1_0.replace(/^/, EXTRA.map(([from, name], i) => `import { ${name} as extra${i} } from '${from}';\n`).join('')).replace(
+    '        attachGrids(root),\n    ];',
+    `        attachGrids(root),\n${EXTRA.map((_, i) => `        extra${i}(root),\n`).join('')}    ];`,
+);
 if (!EAGER.includes('extra0(root)')) throw new Error('the eager entry no longer ends its attach list with attachGrids(root)');
 /** js/effects.js as 6.1.0 shipped it, one module with every hook in it [scope-117]. */
 const EFFECTS_EAGER = readFileSync(new URL('fixtures/effects-eager.txt', import.meta.url), 'utf8');
@@ -143,11 +144,50 @@ const markup = (page) =>
             const ids = new RegExp(idLike);
             const out = [];
             const walk = (/** @type {Element} */ el, /** @type {string} */ path) => {
-                // `<time class="kp-ago">` writes datetime and title from the
-                // clock: two loads a second apart differ there, in both channels.
-                const clock = el.matches('time.kp-ago');
+                // Attributes a module writes from the clock: two loads a second
+                // apart differ there, in both channels, and the catalogue index
+                // composes for long enough that its two loads straddle a minute,
+                // or a ten-minute step of a trend (2026-10-19). `<time
+                // class="kp-ago">` writes datetime and title, and the minute in
+                // aria-description; the run timeline's now line says the minute
+                // in its label; a key figure's trend (js/chart.js) draws the
+                // window that ends now, so its path moves one sample on at each
+                // step. The element, its other attributes and its paths' classes
+                // are still compared.
+                const clock = el.matches('time.kp-ago')
+                    ? ['datetime', 'title', 'aria-description']
+                    : el.matches('.kp-gantt__now')
+                      ? ['aria-label']
+                      : el.matches('.kp-kpi__chart-plot path')
+                        ? ['d']
+                        : [];
+                // An option a filter hid keeps what the listbox stamped while it
+                // was shown (its id, aria-selected, is-active), and whether it
+                // was shown when the palette attached is a race between the
+                // page's own script and the network, not the loader: the
+                // palette page types "upd jelly" 300 ms after load, and the
+                // eager entry, fetching every module, lost that race under four
+                // workers while the lazy one won it (2026-10-19, reproduced in
+                // six of six parallel loads, in none of three alone). Both are
+                // what a consumer gets when the reader types before or after
+                // the attach. The shown options, the input's active descendant
+                // and the status line are still compared, and a palette never
+                // attached leaves all of those unstamped.
+                const filtered = el.matches('[role="option"][hidden]');
                 const attrs = [...el.attributes]
-                    .filter((a) => !skip.has(a.name) && !(clock && (a.name === 'datetime' || a.name === 'title')))
+                    .filter((a) => !skip.has(a.name) && !clock.includes(a.name))
+                    .filter((a) => !(filtered && (a.name === 'id' || a.name === 'aria-selected')))
+                    .map((a) =>
+                        filtered && a.name === 'class'
+                            ? {
+                                  name: a.name,
+                                  value: a.value
+                                      .split(/\s+/)
+                                      .filter((c) => c !== 'is-active')
+                                      .join(' '),
+                              }
+                            : a,
+                    )
                     .map((a) => `${a.name}=${ids.test(a.name) ? a.value.replace(/[-_][A-Za-z0-9]+$/, '-*').replace(/\d+/g, 'N') : a.value}`)
                     .sort();
                 // By depth, not by sibling position: an element one side adds at
@@ -183,7 +223,10 @@ const unclocked = (line) =>
         .replace(/\b1\d{12}\b/g, 'EPOCH')
         .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g, 'UUID')
         .replace(/\btm[a-z0-9]{8,}\b/g, 'TIMER-ID')
-        .replace(/(kp-selection-)[A-Za-z0-9]{3,8}-/g, '$1RAND-');
+        // The selection bar's id is five random base-36 characters, fewer when
+        // Math.random() happens to be short (2026-10-19: `kp-selection-Ns-` once
+        // its digits were masked).
+        .replace(/(kp-selection-)[A-Za-z0-9]{1,8}-/g, '$1RAND-');
 
 /**
  * The markup once it has stopped moving: read until two readings 300ms apart
@@ -242,7 +285,8 @@ for (const path of PAGES) {
             // may attach it too. With no `[data-kp-hovercard]` on the page it
             // is no sign of a missing `when`, on either side.
             const dropCard = (await page.locator('[data-kp-hovercard]').count()) === 0;
-            const withoutCard = (/** @type {string[]} */ lines) => (dropCard ? lines.filter((line) => !line.includes('data-kp-hovercard-card')) : lines);
+            const withoutCard = (/** @type {string[]} */ lines) =>
+                dropCard ? lines.filter((line) => !line.includes('data-kp-hovercard-card')) : lines;
             const eagerLines = withoutCard(whole);
             const lazyLines = withoutCard(lazy);
 

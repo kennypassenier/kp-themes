@@ -9,6 +9,10 @@ export type Need = {
     when: string;
     load: () => Promise<any>;
     attach: (module: any, root: ParentNode) => unknown[];
+    /**
+     * attaches after every other module the same attachAll() fetched, and is asked for then
+     */
+    late?: boolean;
 };
 /**
  * @typedef {object} Need
@@ -16,6 +20,7 @@ export type Need = {
  * @property {string} when every selector through which the module's attach functions act
  * @property {() => Promise<any>} load
  * @property {(module: any, root: ParentNode) => unknown[]} attach
+ * @property {boolean} [late] attaches after every other module the same attachAll() fetched, and is asked for then
  */
 /** @type {Need[]} */
 export declare const NEEDS: Need[];
