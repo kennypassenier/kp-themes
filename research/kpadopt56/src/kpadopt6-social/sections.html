@@ -881,14 +881,13 @@
                 data-review-topic="time-field"
                 data-review-topic-title="Time field"
                 data-review-components="time"
-                data-review-title="A field for a time of day, in 24 hours"
+                data-review-title="Time field: states"
                 aria-labelledby="h-time-field"
             >
                 <div class="ks-sec__head">
-                    <h2 id="h-time-field">Time field</h2>
+                    <h2 id="h-time-field">Time field: states</h2>
                     <p>
-                        One field for a time of day in 24 hours: typed, stepped with the arrow keys or picked from the package's own list. Unlike the
-                        browser's own time box it never shows AM and PM, and it looks like the rest of the theme.
+                        One field for a time of day in 24 hours: typed, stepped with the arrow keys or picked from the package's own list. Unlike the browser's own time box it never shows AM and PM, and it looks like the rest of the theme. This section shows its states.
                     </p>
                 </div>
                 <div class="ks-expected">
@@ -909,14 +908,14 @@
                             The sentence below keeps its underline look; the field with a reason is off and says why; the loading one shows its own
                             skeleton at its final width; the one whose presets failed shows a compact plate with Retry in the list.
                         </li>
-                        <li>At 390 px the field fills the line, 44 px high, and the list is a sheet at the foot of the screen with a title and rows 44 px high.</li>
-                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
+                        <li>
+                            At 390 px the field fills the line, 44 px high, and the list is a sheet at the foot of the screen with a title and rows 44 px high.
+                        </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Formal's plain input box (navy focus ring, white ground) with a quiet clock at its end; the list is the same raised plate as a
-                        menu, the nearest time on a navy wash. In the sentence the same field is the navy underline in semibold.
+                        Formal's plain input box (navy focus ring, white ground) with a quiet clock at its end; the list is the same raised plate as a menu, the nearest time on a navy wash. In the sentence the same field is the navy underline in semibold.
                     </p>
                 </div>
                 <div class="ks-controls" data-review-controls>
@@ -934,22 +933,6 @@
                         <button type="button" class="kp-button kp-button--sm" data-ks-time-presets="loading" aria-pressed="false">Presets loading</button>
                         <button type="button" class="kp-button kp-button--sm" data-ks-time-presets="error" aria-pressed="false">Presets failed</button>
                         <button type="button" class="kp-button kp-button--sm" data-ks-time-open="" aria-pressed="false">Show it open</button>
-                    </div>
-                    <div role="group" aria-label="Step (live option)">
-                        <b>Step (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|5" aria-pressed="true">5 min</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|15" aria-pressed="false">15 min</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-step|1" aria-pressed="false">1 min</button>
-                    </div>
-                    <div role="group" aria-label="List (live option)">
-                        <b>List (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-popup|list" aria-pressed="true">List</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-popup|none" aria-pressed="false">None</button>
-                    </div>
-                    <div role="group" aria-label="Look (live option)">
-                        <b>Look (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-look|field" aria-pressed="true">Box</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time|data-kp-time-look|inline" aria-pressed="false">Underline</button>
                     </div>
                 </div>
                 <p class="ks-readout" role="status" data-ks-time-readout>Nothing changed yet.</p>
@@ -995,6 +978,105 @@
                             <div class="kp-field">
                                 <label class="kp-field__label" for="ks-time-p">Backup time</label>
                                 <div class="kp-time" data-kp-time data-kp-time-id="ks-time-p" data-kp-name="at" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00" data-kp-time-near="03:00" id="ks-time-phone"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: time-field-options (from 77cabb06) -->
+<section
+                class="ks-sec"
+                id="time-field-options"
+                data-review-item="time-field-options"
+                data-review-topic="time-field"
+                data-review-components="time"
+                data-review-title="Time field: step, list and look"
+                aria-labelledby="h-time-field-options"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-time-field-options">Time field: step, list and look</h2>
+                    <p>
+                        The same field, with the settings that decide how it steps, whether it has a list and how it looks. Each live option changes one setting of this field while it runs and it redraws at once, nothing reloads; the default is already set.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Step</b>: <b>5 min</b> (default), <b>15 min</b> or <b>1 min</b> is how far <b>Up</b> and <b>Down</b> move the time and the grain of the list. <b>List</b>: with <b>None</b> the clock button and the list are gone, only typing and keys remain. <b>Look</b>: <b>Box</b> is the input box; <b>Underline</b> is the field as it stands in a sentence. The three fields under &ldquo;Each choice, side by side&rdquo; show the same choices fixed, for comparison.
+                        </li>
+                        <li>
+                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's plain input box with its quiet clock, and the same field as the navy underline; the list, when there is one, is the raised plate of a menu.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls>
+                    <div role="group" aria-label="Step (live option)">
+                        <b>Step (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-step|5" aria-pressed="true">5 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-step|15" aria-pressed="false">15 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-step|1" aria-pressed="false">1 min</button>
+                    </div>
+                    <div role="group" aria-label="List (live option)">
+                        <b>List (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-popup|list" aria-pressed="true">List</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-popup|none" aria-pressed="false">None</button>
+                    </div>
+                    <div role="group" aria-label="Look (live option)">
+                        <b>Look (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-look|field" aria-pressed="true">Box</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-time-options|data-kp-time-look|inline" aria-pressed="false">Underline</button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-time-readout>Nothing changed yet.</p>
+                <div class="ks-pair">
+                    <div class="ks-stack">
+                        <p class="ks-label">In a form (inside a flex row too)</p>
+                        <div class="ks-flexrow">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-a">Backup time</label>
+                                <div
+                                    class="kp-time"
+                                    data-kp-time
+                                    data-kp-time-id="ks-time-opt-a"
+                                    data-kp-name="at"
+                                    data-kp-value="03:00"
+                                    data-kp-time-presets="Night=03:00,Morning=08:00,Evening=19:30"
+                                    data-kp-time-near="03:00"
+                                    data-kp-time-near-width="60"
+                                    data-kp-time-zone="Europe/Brussels"
+                                    id="ks-time-options"
+                                ></div>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-b">Quiet hours end (window 22:00 to 06:00)</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="ks-time-opt-b" data-kp-name="quiet" data-kp-value="06:00" data-kp-time-min="22:00" data-kp-time-max="06:00" data-kp-time-step="30" data-kp-time-clear id="ks-time-opt-window"></div>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-c">Log a time (with Now)</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="ks-time-opt-c" data-kp-time-now data-kp-time-required id="ks-time-opt-now"></div>
+                            </div>
+                        </div>
+                        <p class="ks-label">In a sentence</p>
+                        <form class="kp-sentence" data-kp-sentence id="ks-time-opt-sentence">
+                            <p class="kp-sentence__text">
+                                Back up every day at
+                                <span class="kp-sentence__field"><span class="kp-time" data-kp-time data-kp-time-look="inline" data-kp-label="At" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00"></span></span>.
+                            </p>
+                        </form>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-label">390 px</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="ks-time-opt-p">Backup time</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="ks-time-opt-p" data-kp-name="at" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00" data-kp-time-near="03:00" id="ks-time-opt-phone"></div>
                             </div>
                         </div>
                     </div>

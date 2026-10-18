@@ -338,10 +338,11 @@ onReady(() => {
 
 // ---------------------------------------------------------------- time-field
 
-const timeReadout = $('[data-ks-time-readout]');
 for (const field of $$('[data-kp-time]')) {
     field.addEventListener('kp-time-change', (event) => {
         const d = /** @type {CustomEvent} */ (event).detail;
+        // Each time-field section has its own readout.
+        const timeReadout = $('[data-ks-time-readout]', field.closest('section') ?? document);
         if (timeReadout) timeReadout.textContent = `Value: ${d.value || '(empty)'}${d.converted ? ' (read from 12 hours)' : ''}`;
     });
 }

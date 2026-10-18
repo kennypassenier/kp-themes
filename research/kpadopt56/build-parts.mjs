@@ -91,6 +91,7 @@ const PARTS = [
             ['kpadopt5-time', 'slider'],
             ['kpadopt5-time', 'slider-states'],
             ['kpadopt6-social', 'time-field'],
+            ['kpadopt6-social', 'time-field-options'],
             ['kpadopt6-media', 'autosize-grow'],
             ['kpadopt6-media', 'autosize-states'],
             ['kpadopt5-rows', 'json-textarea'],

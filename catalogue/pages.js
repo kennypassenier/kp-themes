@@ -124,7 +124,7 @@ export const PAGES = [
                 href: 'research/kpadopt56-fields/demo.html',
                 rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 3 of 11: Fields and inputs',
-                about: 'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+                about: 'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating. 9 sections (99 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-updates/demo.html',
