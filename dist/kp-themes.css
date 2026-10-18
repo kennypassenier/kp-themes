@@ -62114,7 +62114,7 @@
     @media (max-width: 30rem) {
         [data-theme='pastel'] .kp-refresh__segments {
             display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(min-content, 1fr));
             inline-size: 100%;
         }
 
@@ -67987,7 +67987,7 @@
     @media (max-width: 30rem) {
         [data-theme='forest'] .kp-refresh__segments {
             display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(min-content, 1fr));
             inline-size: 100%;
         }
 
@@ -80423,7 +80423,7 @@
     @media (max-width: 30rem) {
         [data-theme='blueprint'] .kp-refresh__segments {
             display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(min-content, 1fr));
             inline-size: 100%;
         }
 
