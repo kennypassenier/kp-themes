@@ -78,6 +78,32 @@
             "fingerprint": "cff66b25a66c1cdf",
             "update": null
         },
+        "research/app-hsb-align/demo.html": {
+            "facts": {
+                "id": "app-hsb-align",
+                "themes": "formal",
+                "ask": null,
+                "askText": "You asked again for everything to be aligned vertically and laid out on a grid instead of left-aligned. These are layout-only fixes to HTTPSwitchboard views you already approved, plus the views of the real status page and the “Try a translation” page that the approved demos left open. Nothing changes in what a view shows, says or offers: each section is the same view with its parts standing on shared columns and rows (the package’s form grid, .kp-formgrid, and subgrids), with one sentence saying what moved. 12 sections, formal only; the sample data is the same as in the approved demos. A new measurement holds every section to a 1 px alignment at 1280 and 390 px.",
+                "sections": [
+                    { "item": "top", "themes": "formal", "topic": "top", "mode": null },
+                    { "item": "freshness", "themes": "formal", "topic": "freshness", "mode": null },
+                    { "item": "h24", "themes": "formal", "topic": "h24", "mode": null },
+                    { "item": "pickers", "themes": "formal", "topic": "pickers", "mode": null },
+                    { "item": "cards", "themes": "formal", "topic": "cards", "mode": null },
+                    { "item": "path", "themes": "formal", "topic": "path", "mode": null },
+                    { "item": "settings", "themes": "formal", "topic": "settings", "mode": null },
+                    { "item": "recheck", "themes": "formal", "topic": "recheck", "mode": null },
+                    { "item": "reloads", "themes": "formal", "topic": "reloads", "mode": null },
+                    { "item": "hover", "themes": "formal", "topic": "hover", "mode": null },
+                    { "item": "try", "themes": "formal", "topic": "try", "mode": null },
+                    { "item": "diff", "themes": "formal", "topic": "diff", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"app-hsb-align-d902e1f2-6fff-4797-8ccd-38668fd32d44\", \"received\": [] }\n        "
+            },
+            "fingerprint": "dc9623031b041613",
+            "update": null
+        },
         "research/state-plates-1019/demo.html": {
             "facts": {
                 "id": "state-plates-1019",

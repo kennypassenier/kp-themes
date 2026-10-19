@@ -1,0 +1,784 @@
+/* research/app-hsb-align: the frame of the page and the grids of the HTTPSwitchboard views. Everything with a kp- class is the
+   package; the hsa- rules only lay the views out, and every one of them is a grid: tracks shared by the rows, never a flex row that
+   sizes each row by its own words (Kenny, 2026-10-19). Colours, spacing and radii are the theme's tokens. */
+
+.hsa-page {
+    /* The page's one label column: every picker's label is at least this wide, so a label and its first button stand at one x in
+       every card (the app's --hsb-label). */
+    --kp-formgrid-label-min: 7rem;
+    --hsa-track: 8rem;
+    --hsa-stage-rows: 10;
+}
+
+.hsa-sec {
+    container: hsa / inline-size;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hsa-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hsa-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hsa-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hsa-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hsa-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hsa-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+[data-review-look] p {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* A plate the view stands on: the status page's card. */
+.hsa-card {
+    box-sizing: border-box;
+    min-inline-size: 0;
+}
+
+.hsa-card:not(.kp-card) {
+    padding: var(--kp-space-lg, 1rem);
+}
+
+/* The review dialog's controls of a section: a row of groups over the component they drive. */
+.hsa-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.hsa-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+/* ── choices: a word, then its buttons on equal tracks ── */
+
+.hsa-choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(7rem, var(--hsa-track)));
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    justify-content: start;
+}
+
+/* A choice fills its track, so the same-role buttons of every picker stand in the same columns. */
+.hsa-choices > button {
+    inline-size: 100%;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── 1 · the band beside the alerts ── */
+
+.hsa-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(var(--hsa-rows, 2), auto);
+    column-gap: var(--kp-space-md, 1rem);
+    row-gap: var(--kp-space-sm, 0.5rem);
+    align-items: stretch;
+}
+
+/* Each list spans the pair's rows as a subgrid, its items one row each: the Nth band item and the Nth alert share a top and a
+   bottom. Inside, the icon, the words and the button are three tracks every item shares. */
+.hsa-pair > :is(.kp-attention, .kp-problems):has(> *) {
+    display: grid;
+    grid-row: 1 / span var(--hsa-rows, 2);
+    grid-template-rows: subgrid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--kp-space-md, 1rem);
+    row-gap: inherit;
+    inline-size: auto;
+}
+
+/* The alerts have a fourth track, the dismiss cross of a note that may be closed; it is empty (no width) while none can be. */
+.hsa-pair > .kp-problems:has(> *) {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+}
+
+.hsa-pair > .kp-attention > .kp-attention__item,
+.hsa-pair > .kp-problems > .kp-problem {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: first baseline;
+}
+
+/* The words of a band item and of an alert start on one line, and so do their icon and button: all on the first baseline. */
+.hsa-pair :is(.kp-attention__actions, .kp-problem > .kp-alert__actions) {
+    grid-column: 3;
+    align-self: first baseline;
+    align-items: baseline;
+}
+
+.hsa-pair .kp-alert__close {
+    grid-column: 4;
+    align-self: start;
+    margin: 0;
+}
+
+/* The icon and the cross stand at the top; only the words and the button share a baseline. */
+.hsa-pair :is(.kp-attention__icon, .kp-alert__icon) {
+    align-self: start;
+}
+
+.hsa-pair :is(.kp-attention__actions, .kp-alert__actions) > .kp-button {
+    flex: 1 1 auto;
+}
+
+/* Narrow: one list under the other, each item on two tracks (the icon, the words) with the button under the words. */
+@container hsa (max-width: 44rem) {
+    .hsa-pair {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+    }
+
+    .hsa-pair > :is(.kp-attention, .kp-problems):has(> *) {
+        grid-row: auto;
+        grid-template-rows: none;
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .hsa-pair :is(.kp-attention__actions, .kp-problem > .kp-alert__actions) {
+        grid-column: 2;
+    }
+
+    .hsa-pair > .kp-problems:has(> *) {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    .hsa-pair .kp-problem > .kp-alert__close {
+        grid-column: 3;
+        grid-row: 1;
+    }
+}
+
+/* ── 2 · the profile rows ── */
+
+.hsa-figures {
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.hsa-fresh {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--kp-space-2xs, 0.125rem);
+}
+
+/* ── 3 · Last 24 hours ── */
+
+.hsa-h24 {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.hsa-note {
+    margin: 0;
+}
+
+.hsa-refresh-host {
+    min-inline-size: 0;
+}
+
+.hsa-recent {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.hsa-recent__title {
+    margin: 0;
+}
+
+/* Latest deliveries: four tracks shared by every row (the first three a fixed width), so a time, an outcome and a duration stand in
+   one column row to row. */
+.hsa-rows {
+    display: grid;
+    grid-template-columns: 10.5rem 7rem 5rem minmax(0, 1fr);
+    column-gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hsa-rows > li {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+    padding-block: var(--kp-space-xs, 0.25rem);
+    padding-inline: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.hsa-rows time,
+.hsa-rows__ms {
+    font-variant-numeric: tabular-nums;
+}
+
+.hsa-rows .kp-badge {
+    justify-self: stretch;
+    text-align: center;
+}
+
+.hsa-rows__ms {
+    text-align: end;
+}
+
+.hsa-rows__why {
+    min-inline-size: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* A phone: three tracks, the outcome and the duration of a fixed width. The time runs over the first two and ends on one edge in every
+   row; the words stand under it. */
+@container hsa (max-width: 40rem) {
+    .hsa-rows {
+        grid-template-columns: 7rem minmax(0, 1fr) 6rem;
+    }
+
+    .hsa-rows > li {
+        grid-template-areas:
+            'time time ms'
+            'why why why'
+            'outcome . .';
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .hsa-rows time {
+        grid-area: time;
+    }
+
+    .hsa-rows .kp-badge {
+        grid-area: outcome;
+    }
+
+    .hsa-rows__ms {
+        grid-area: ms;
+    }
+
+    .hsa-rows__why {
+        grid-area: why;
+    }
+}
+
+/* ── 5 · the profile cards ── */
+
+.hsa-area .kp-entity__actions {
+    grid-template-columns: repeat(var(--kp-entity-cols, 3), minmax(0, 1fr));
+    align-items: stretch;
+}
+
+.hsa-area .kp-entity__actions > .kp-button {
+    white-space: normal;
+    line-height: 1.2;
+}
+
+.hsa-fresh-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    margin-block-start: var(--kp-space-xs, 0.25rem);
+}
+
+.hsa-fresh-line .hsa-quiet {
+    text-align: end;
+}
+
+@container hsa (max-width: 36rem) {
+    .hsa-fresh-line {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hsa-fresh-line .hsa-quiet {
+        text-align: start;
+    }
+}
+
+.hsa-quiet {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* ── 6 · the path ── */
+
+.hsa-trace {
+    min-block-size: 12rem;
+}
+
+.hsa-trace .kp-steplist--trace .kp-steplist__time {
+    /* The state word's column has one width in every hop ("Allowed" and "Not Reached" alike), so every hop's words end on one edge
+       (the trace sets this floor to 0; kp-gaps http-switchboard). */
+    min-inline-size: 5.5rem;
+}
+
+.hsa-badge {
+    justify-self: start;
+}
+
+/* ── 7 · the settings cards ── */
+
+.hsa-stage {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(var(--hsa-stage-rows), auto);
+    column-gap: var(--kp-space-lg, 1.5rem);
+    row-gap: 0;
+    align-items: stretch;
+}
+
+/* A profile card is a grid of two columns (label, value) whose rows are a subgrid of the stage's: Source beside Source, Retry budget
+   beside Retry budget. (A form grid is a layout container and cannot take its rows from the stage, so the card carries the form
+   grid's own pair of tracks.) */
+.hsa-profile {
+    display: grid;
+    grid-row: span var(--hsa-stage-rows);
+    grid-template-rows: subgrid;
+    grid-template-columns: fit-content(40%) minmax(0, 1fr);
+    column-gap: var(--kp-space-lg, 1rem);
+    row-gap: 0;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1rem);
+}
+
+.hsa-profile > .hsa-head {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(min-content, 1fr) auto auto;
+    grid-template-areas: 'title meter badge';
+    align-items: center;
+    column-gap: var(--kp-space-md, 1rem);
+    padding-block-end: var(--kp-space-sm, 0.5rem);
+}
+
+.hsa-head .kp-card__title {
+    grid-area: title;
+    margin: 0;
+}
+
+.hsa-head .kp-meter {
+    grid-area: meter;
+}
+
+.hsa-head .kp-badge {
+    grid-area: badge;
+}
+
+.hsa-profile > .kp-kv {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-row: span calc(var(--hsa-stage-rows) - 1);
+    grid-template-rows: subgrid;
+    grid-template-columns: subgrid;
+    margin: 0;
+}
+
+.hsa-profile .kp-kv__row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: first baseline;
+    padding-block: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.hsa-profile .kp-kv__row > dd {
+    min-inline-size: 0;
+    margin: 0;
+}
+
+.hsa-budget {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hsa-budget > .hsa-quiet {
+    text-wrap: pretty;
+}
+
+.hsa-budget .kp-meter {
+    inline-size: 100%;
+    margin-block: var(--kp-space-xs, 0.25rem);
+    max-inline-size: calc(100% - 1rem);
+}
+
+@container hsa (max-width: 44rem) {
+    .hsa-stage {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
+        row-gap: var(--kp-space-md, 1rem);
+    }
+
+    .hsa-profile {
+        grid-row: auto;
+        grid-template-rows: none;
+    }
+
+    .hsa-profile > .kp-kv {
+        grid-row: auto;
+        grid-template-rows: none;
+    }
+
+    .hsa-profile > .hsa-head {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            'title title'
+            'meter badge';
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+}
+
+/* ── 8 · the recheck table ── */
+
+.hsa-bar2 {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+    margin-block-end: var(--kp-space-md, 1rem);
+}
+
+.hsa-table .hsa-col-act {
+    inline-size: 12rem;
+    text-align: end;
+    white-space: nowrap;
+}
+
+/* The budget cell: the meter and the words are two tracks of the cell, the same in every row. */
+.hsa-table [data-hsa-budget] {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hsa-table [data-hsa-budget] > .kp-meter {
+    inline-size: 100%;
+    margin: 0;
+}
+
+.hsa-table [data-hsa-budget] > .hsa-budget__words {
+    grid-column: 2;
+}
+
+/* ── 9 · reloads ── */
+
+.hsa-reloads .kp-card__header {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: var(--kp-space-lg, 1.5rem);
+}
+
+.hsa-counts {
+    margin: 0;
+    justify-self: end;
+    text-align: end;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.hsa-reloads__list {
+    max-block-size: 19rem;
+    overflow: auto;
+    padding-inline-end: var(--kp-space-sm, 0.5rem);
+}
+
+.hsa-reload {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    align-items: start;
+    min-inline-size: 0;
+}
+
+.hsa-reload > time {
+    grid-column: 1 / -1;
+}
+
+.hsa-reload__outcome {
+    display: grid;
+}
+
+.hsa-reload__outcome > .kp-badge {
+    justify-self: stretch;
+    text-align: center;
+}
+
+.hsa-reload__what {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.hsa-reload__what > span:first-child {
+    font-weight: 600;
+}
+
+.hsa-reload__what > span:last-child {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+@container hsa (max-width: 40rem) {
+    .hsa-reloads .kp-card__header {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .hsa-counts {
+        justify-self: start;
+        text-align: start;
+    }
+
+    .hsa-reload {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ── 10 · the names ── */
+
+.hsa-names {
+    display: grid;
+    grid-template-columns: minmax(10rem, max-content) 7rem minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hsa-names > li {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    align-items: center;
+    padding-block: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.hsa-names__hint {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hsa-names__name {
+    justify-self: stretch;
+    font-weight: 600;
+}
+
+.hsa-names .kp-badge {
+    justify-self: stretch;
+    text-align: center;
+}
+
+.hsa-card.hsa-names-wrap--room {
+    padding-block-end: 21rem;
+}
+
+.hsa-card-kv {
+    min-inline-size: min(22rem, 80vw);
+}
+
+.hsa-card-kv dd {
+    font-variant-caps: normal;
+    letter-spacing: normal;
+}
+
+@container hsa (max-width: 40rem) {
+    .hsa-names {
+        grid-template-columns: minmax(0, 1fr) 7rem;
+    }
+
+    .hsa-names__hint {
+        display: none;
+    }
+}
+
+/* ── 11 · Try a translation ── */
+
+.hsa-try {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+}
+
+/* The profile row shares the two columns below it: the chooser over the input, the note over the result. */
+.hsa-try__profile {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    align-items: center;
+}
+
+.hsa-try__profile > .kp-segmented {
+    grid-column: 1 / span 5;
+    justify-self: start;
+}
+
+.hsa-try__profile > .hsa-try__input :is(.kp-code, .kp-jsonfield) {
+    min-inline-size: 0;
+}
+
+/* The field fills its column (the field's own cap is 28 rem), so the box, the template and the result stand on one width. */
+.hsa-try__input .kp-field {
+    --kp-field-max-width: none;
+}
+
+/* The box's tools stand on the tracks of the template's: Format and Minify at the start, Wrap and Copy at the end edge, where the
+   template's and the result's own Wrap and Copy stand. */
+.hsa-try .kp-jsonfield__tools {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    column-gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hsa-try .kp-jsonfield__tools > [data-kp-json-tool='wrap'] {
+    grid-column: 4;
+}
+
+.hsa-try .kp-jsonfield__tools > [data-kp-json-tool='copy'] {
+    grid-column: 5;
+}
+
+.hsa-meta {
+    grid-column: 6 / -1;
+}
+
+.hsa-try__input {
+    grid-column: span 5;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    /* The template block takes what is left of the column, so its bottom edge stands on the result card's. */
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.hsa-try .hsa-try__result {
+    grid-column: span 7;
+    min-inline-size: 0;
+    block-size: auto;
+}
+
+.hsa-meta {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* Side by side: the card beside the column starts its title one border and one padding lower; the label stands on that line. */
+@container hsa (min-width: 52rem) {
+    .hsa-try__input {
+        padding-block-start: var(--hsa-try-label-drop, 0.87rem);
+    }
+}
+
+@container hsa (max-width: 52rem) {
+    .hsa-try .hsa-try__input,
+    .hsa-try .hsa-try__result,
+    .hsa-try__profile > .kp-segmented,
+    .hsa-try__profile > .hsa-meta {
+        grid-column: 1 / -1;
+    }
+}
+
+.hsa-refresh-label {
+    grid-column: label;
+}
+
+.hsa-card__data {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.hsa-try__result {
+    --kp-card-stage-min: 22rem;
+}
+
+/* ── 12 · the diff ── */
+
+.hsa-diffcard {
+    --kp-card-stage-min: 18rem;
+}
+
+.hsa-diffcard .kp-card__header {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: var(--kp-space-lg, 1.5rem);
+}
+
+@container hsa (max-width: 40rem) {
+    .hsa-diffcard .kp-card__header {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .hsa-diffcard .hsa-counts {
+        justify-self: start;
+        text-align: start;
+    }
+
+    .hsa-diffcard .hsa-diff .kp-diff__line {
+        grid-template-columns: 2rem 1ch minmax(0, 1fr);
+    }
+}
+
+.hsa-diff {
+    max-block-size: 24rem;
+    overflow: auto;
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+/* A diff line: the number, the sign and the text are three columns, and the text column is minmax(0, 1fr), not 1fr, so a long token
+   wraps inside the card instead of running past the others (kp-gaps http-switchboard). */
+.hsa-diff .kp-diff__line {
+    grid-template-columns: 3rem 1ch minmax(0, 1fr);
+    overflow-wrap: anywhere;
+}

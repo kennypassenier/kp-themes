@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-hsb-align" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>HTTPSwitchboard: everything on the grid · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get("theme");
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem("theme", t);
+                    t = t || localStorage.getItem("theme");
+                } catch (e) {}
+                if (t) d.setAttribute("data-theme", t);
+                var theme = d.getAttribute("data-theme") || "formal";
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page hsa-page">
+            <header class="k56-intro">
+                <h1>HTTPSwitchboard: everything on the grid</h1>
+                <p class="cat-intro">
+                    You asked again for everything to be aligned vertically and laid out on a grid instead of left-aligned. These are
+                    layout-only fixes to HTTPSwitchboard views you already approved, plus the views of the real status page and the
+                    &ldquo;Try a translation&rdquo; page that the approved demos left open. Nothing changes in what a view shows, says or
+                    offers: each section is the same view with its parts standing on shared columns and rows (the package&rsquo;s form grid,
+                    <code>.kp-formgrid</code>, and subgrids), with one sentence saying what moved. 12 sections, formal only; the sample data
+                    is the same as in the approved demos. A new measurement holds every section to a 1 px alignment at 1280 and 390 px.
+                </p>
+            </header>
+
+            <section
+                class="hsa-sec"
+                id="top"
+                data-review-item="top"
+                data-review-components="attention problems"
+                data-review-title="Needs attention: the band beside the problem alerts"
+                data-review-themes="formal"
+                data-review-topic="top"
+                data-review-topic-title="Needs attention: the band beside the problem alerts"
+                aria-labelledby="h-top"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> the band and the alerts stand on the same rows (the Nth band item and the Nth alert share a top
+                        and a bottom, no script measures it), and inside each the icon, the words and the button are three columns every
+                        item shares, so &ldquo;See the fix&rdquo; and the alerts&rsquo; buttons each start on one edge and have one width.
+                    </p>
+                    <p>
+                        <b>The grid:</b> two columns, each with three tracks (icon, words, button); two rows shared by both columns; under
+                        56 rem one column of the same three tracks.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-top">Needs attention: the band beside the problem alerts</h2>
+                    <p>
+                        The top of the status page: the profiles that are not well, worst first, and next to them what is wrong, why and
+                        what to do.
+                    </p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The red item of the band and the red alert start and end on the same lines; so do the two blue ones.</li>
+                        <li>The three buttons of the band share one left and one right edge; the two alert buttons share another pair.</li>
+                        <li>
+                            The note of the blue alert keeps its dismiss cross, now in a track of its own at the alert&rsquo;s end; nothing
+                            is cut.
+                        </li>
+                        <li>
+                            At 390 px the band stands above the alerts, each item still on its three tracks (the button under the words, on
+                            the words&rsquo; edge).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the tops and bottoms of the red pair and the blue pair, and the edges of the buttons.</p>
+                </div>
+
+                <div class="hsa-card">
+                    <div class="hsa-pair" id="hsa-top">
+                        <div
+                            class="kp-attention"
+                            id="hsa-band"
+                            data-kp-subgrid
+                            role="region"
+                            aria-label="Profiles that need attention"
+                        ></div>
+                        <div class="kp-problems" id="hsa-problems" data-kp-subgrid data-kp-problems data-kp-problems-mode="each"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="freshness"
+                data-review-item="freshness"
+                data-review-components="formgrid freshness"
+                data-review-title="Profiles: the figures and the last delivery in rows"
+                data-review-themes="formal"
+                data-review-topic="freshness"
+                data-review-topic-title="Profiles: the figures and the last delivery in rows"
+                aria-labelledby="h-freshness"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> the figures and the freshness were each as wide as their own row; they are now two columns every
+                        row shares, so they start and end on the same edges row to row.
+                    </p>
+                    <p>
+                        <b>The grid:</b> the form grid&rsquo;s label (name and route), control (figures) and value (freshness) columns, a
+                        rule under every row.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-freshness">Profiles: the figures and the last delivery in rows</h2>
+                    <p>
+                        One row per profile: its name and route, how many messages it received, delivered and failed, and when it last
+                        delivered.
+                    </p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The figures of both rows start on one edge and the freshness lines on another.</li>
+                        <li>
+                            The name and its route are one block in the label column; the quiet time sits under the freshness, not beside a
+                            longer line.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the left edge of the figures and of the freshness in both rows.</p>
+                </div>
+
+                <div class="kp-card hsa-card">
+                    <div class="kp-card__header"><h3 class="kp-card__title" id="hsa-fresh-t">Profiles</h3></div>
+                    <div
+                        class="kp-formgrid"
+                        data-kp-formgrid-label="wide"
+                        data-kp-formgrid-lines="lines"
+                        role="list"
+                        aria-label="Profiles and their last delivery"
+                    >
+                        <div class="kp-formgrid__row" role="listitem">
+                            <span class="kp-formgrid__label"><b>alertmanager</b><small>kyu alerts.raw → Home Assistant</small></span>
+                            <div class="kp-formgrid__control hsa-figures">received 1284 · delivered 1281 · failed 3</div>
+                            <div class="kp-formgrid__value hsa-fresh">
+                                <time
+                                    class="kp-ago"
+                                    id="hsa-ago-a"
+                                    data-kp-ago
+                                    data-kp-ago-verb="last delivery"
+                                    data-kp-stale-after="3600"
+                                    data-kp-ago-announce="state"
+                                    >last delivery 3 min ago</time
+                                ><span>Quiet time allowed: 1 h</span>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row" role="listitem">
+                            <span class="kp-formgrid__label"
+                                ><b>uptime-kuma</b><small>POST /uptime-kuma → Home Assistant (mock)</small></span
+                            >
+                            <div class="kp-formgrid__control hsa-figures">received 0 · delivered 0 · failed 0</div>
+                            <div class="kp-formgrid__value hsa-fresh">
+                                <time
+                                    class="kp-ago"
+                                    id="hsa-ago-k"
+                                    data-kp-ago
+                                    data-kp-ago-verb="last delivery"
+                                    data-kp-stale-after="300"
+                                    data-kp-ago-announce="state"
+                                    >no delivery yet</time
+                                ><span>Quiet time allowed: 5 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="h24"
+                data-review-item="h24"
+                data-review-components="formgrid refresh card"
+                data-review-title="Last 24 hours: refresh, pickers, head and latest deliveries"
+                data-review-themes="formal"
+                data-review-topic="h24"
+                data-review-topic-title="Last 24 hours: refresh, pickers, head and latest deliveries"
+                aria-labelledby="h-h24"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> Page refresh, its chooser, Refresh now and the history note were four pieces on two flex lines;
+                        they are one row now. Profile and Tiles were flex rows; they stand on the same label column and the same button
+                        tracks. The card&rsquo;s title and timestamp share one baseline, and the latest deliveries share four columns row to
+                        row.
+                    </p>
+                    <p>
+                        <b>The grid:</b> one form grid: label | control | value | actions. Row 1 the refresh bar (chooser in control, the
+                        note in value, Refresh now in actions), rows 2 and 3 the pickers; below, the deliveries on four tracks (time,
+                        outcome, duration, why), the first three of one fixed width.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-h24">Last 24 hours: refresh, pickers, head and latest deliveries</h2>
+                    <p>
+                        The history card of the status page: how often the page reads again, which profile and which tiles, and the
+                        deliveries of the last hours.
+                    </p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            &ldquo;Page refresh&rdquo;, &ldquo;Profile&rdquo; and &ldquo;Tiles&rdquo; are in one column; the chooser, the
+                            two profile buttons and the two tile buttons start on one edge.
+                        </li>
+                        <li>
+                            &ldquo;Refresh now&rdquo; ends on the right edge of the card&rsquo;s content; the history note stands on the
+                            value column.
+                        </li>
+                        <li>
+                            In the card: the title and &ldquo;read &hellip;&rdquo; share a line; the time, the outcome and the duration of
+                            every delivery are in their own columns.
+                        </li>
+                        <li>
+                            At 390 px every row reads top to bottom on one left edge, and a delivery is a time and a duration over its
+                            outcome and its words, still on shared columns.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the left edges of the labels and of the buttons, and the right edge of Refresh now.</p>
+                </div>
+
+                <div class="hsa-card hsa-h24">
+                    <div class="kp-formgrid" id="hsa-h24-grid">
+                        <div class="kp-refresh" data-kp-refresh="30" data-kp-look="segmented" data-hsa-refresh></div>
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label" aria-hidden="true"></span>
+                            <div class="kp-formgrid__control" data-kp-formgrid-span="wide">
+                                <p class="hsa-note">History since the last start, at most 24 hours.</p>
+                            </div>
+                        </div>
+
+                        <div class="kp-formgrid__row">
+                            <b class="kp-formgrid__label" id="hsa-h24-profile">Profile</b>
+                            <div class="kp-formgrid__control">
+                                <div class="hsa-choices" role="group" aria-labelledby="hsa-h24-profile">
+                                    <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hsa-h24="alertmanager">
+                                        alertmanager
+                                    </button>
+                                    <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hsa-h24="uptime-kuma">
+                                        uptime-kuma
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kp-formgrid__row">
+                            <b class="kp-formgrid__label" id="hsa-h24-tiles">Tiles</b>
+                            <div class="kp-formgrid__control">
+                                <div class="hsa-choices" role="group" aria-labelledby="hsa-h24-tiles">
+                                    <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hsa-tiles="trend">
+                                        Trend
+                                    </button>
+                                    <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hsa-tiles="spark">
+                                        Sparklines
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <section class="kp-card hsa-h24__card" aria-labelledby="hsa-h24-t">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hsa-h24-t">Last 24 hours of alertmanager</h3>
+                            <div class="kp-card__actions"><span class="kp-timestamp">read 19/10/2026 14:40</span></div>
+                        </div>
+                        <p class="kp-card__body">Counted per hour since the service started recording on 18/10/2026 19:00.</p>
+                        <div class="hsa-recent">
+                            <h4 class="hsa-recent__title">Latest deliveries</h4>
+                            <ul class="hsa-rows" aria-label="Deliveries" data-hsa-recent></ul>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="pickers"
+                data-review-item="pickers"
+                data-review-components="formgrid"
+                data-review-title="Pickers: View, Profile and Press a cell"
+                data-review-themes="formal"
+                data-review-topic="pickers"
+                data-review-topic-title="Pickers: View, Profile and Press a cell"
+                aria-labelledby="h-pickers"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> each picker was a flex row sized by its own words; all of them are now a label column and three
+                        equal button tracks, so the first button of every picker stands at one x and the second at another, in every card.
+                    </p>
+                    <p>
+                        <b>The grid:</b> the form grid: one label column (at least 7 rem), then equal button tracks (7 to 8 rem each), the
+                        same for every picker; the headings only say where each lives on the status page.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-pickers">Pickers: View, Profile and Press a cell</h2>
+                    <p>The small choices above the profile cards, the path of a profile and the hourly strips: a word, then its buttons.</p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            &ldquo;View&rdquo;, &ldquo;Profile&rdquo; and &ldquo;Press a cell&rdquo; stand in one column; Cards,
+                            alertmanager and Quick info start on one edge; Map, uptime-kuma and Hover card only on the next.
+                        </li>
+                        <li>Every button of a track has the same width, whatever its words.</li>
+                        <li>At 390 px each picker reads top to bottom: its label, then its buttons on the same equal tracks.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the left edge of the first button of the three cards, and of the second.</p>
+                </div>
+
+                <section class="kp-card hsa-card" aria-label="The pickers of the status page">
+                    <div class="kp-formgrid">
+                        <div class="kp-formgrid__group">
+                            <p class="kp-formgrid__heading">Profiles card</p>
+
+                            <div class="kp-formgrid__row">
+                                <b class="kp-formgrid__label" id="hsa-p-view">View</b>
+                                <div class="kp-formgrid__control">
+                                    <div class="hsa-choices" role="group" aria-labelledby="hsa-p-view">
+                                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hsa-view="cards">
+                                            Cards
+                                        </button>
+                                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hsa-view="map">
+                                            Map
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__group">
+                            <p class="kp-formgrid__heading">Path of a profile</p>
+
+                            <div class="kp-formgrid__row">
+                                <b class="kp-formgrid__label" id="hsa-p-prof">Profile</b>
+                                <div class="kp-formgrid__control">
+                                    <div class="hsa-choices" role="group" aria-labelledby="hsa-p-prof">
+                                        <button
+                                            type="button"
+                                            class="kp-button kp-button--sm"
+                                            aria-pressed="true"
+                                            data-hsa-pick="alertmanager"
+                                        >
+                                            alertmanager
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="kp-button kp-button--sm"
+                                            aria-pressed="false"
+                                            data-hsa-pick="uptime-kuma"
+                                        >
+                                            uptime-kuma
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__group">
+                            <p class="kp-formgrid__heading">Last 24 hours: the hourly strips</p>
+
+                            <div class="kp-formgrid__row">
+                                <b class="kp-formgrid__label" id="hsa-p-press">Press a cell</b>
+                                <div class="kp-formgrid__control">
+                                    <div class="hsa-choices" role="group" aria-labelledby="hsa-p-press">
+                                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hsa-press="info">
+                                            Quick info
+                                        </button>
+                                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hsa-press="hover">
+                                            Hover card only
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="cards"
+                data-review-item="cards"
+                data-review-components="entity-card ago"
+                data-review-title="Profile cards: three actions on one track, the freshness on the card&rsquo;s tracks"
+                data-review-themes="formal"
+                data-review-topic="cards"
+                data-review-topic-title="Profile cards: three actions on one track, the freshness on the card&rsquo;s tracks"
+                aria-labelledby="h-cards"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> the three actions each took their own width; they are three equal tracks of one grid now, the
+                        same in every card. The freshness line is two columns of the card&rsquo;s own grid: the moment on the start edge,
+                        the quiet time on the end edge.
+                    </p>
+                    <p>
+                        <b>The grid:</b> a card: one column; its actions three equal tracks under the meter; its last line two tracks (the
+                        moment, the allowance), the allowance ending on the card&rsquo;s end edge, in the column of the meter&rsquo;s value
+                        above it.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-cards">Profile cards: three actions on one track, the freshness on the card&rsquo;s tracks</h2>
+                    <p>One card per profile with its state, three figures, what it takes and delivers, and three actions.</p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            &ldquo;Recheck this profile&rdquo;, &ldquo;Copy test command&rdquo; and &ldquo;Try a translation&rdquo; are one
+                            height and one width in a card, and in the same columns in the other.
+                        </li>
+                        <li>&ldquo;Quiet time allowed&rdquo; ends where the state badge and the meter&rsquo;s value end.</li>
+                        <li>At 390 px the card folds its actions into one &ldquo;More&rdquo; button, as before, full width of the card.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the three buttons of each card: one width, one row, the same edges card to card.</p>
+                </div>
+
+                <section class="kp-card hsa-card hsa-area" aria-label="Profiles">
+                    <div
+                        class="kp-entity-grid"
+                        id="hsa-grid"
+                        data-kp-entity-grid
+                        data-kp-entity-min="22rem"
+                        data-kp-entity-meters="1"
+                    ></div>
+                </section>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="path"
+                data-review-item="path"
+                data-review-components="formgrid trace"
+                data-review-title="Path of a profile: the picker, the name, its state and the hops"
+                data-review-themes="formal"
+                data-review-topic="path"
+                data-review-topic-title="Path of a profile: the picker, the name, its state and the hops"
+                aria-labelledby="h-path"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> the profile&rsquo;s name and its state badge were a flex row apart from the picker above; the
+                        name now stands in the label column and the badge in the first button track, under the picker&rsquo;s own columns.
+                    </p>
+                    <p>
+                        <b>The grid:</b> the form grid: row 1 the picker (label, buttons on tracks), row 2 the profile&rsquo;s name in the
+                        label column and its state in the control column; the trace under it from the label edge.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-path">Path of a profile: the picker, the name, its state and the hops</h2>
+                    <p>Follows one message from its sender to the destination and stops at the first hop that refuses it.</p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            &ldquo;Profile&rdquo; and the name stand on one edge; the first picker button and the state badge on the next.
+                        </li>
+                        <li>The name and the badge share one line (one baseline).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the name over the label, the badge under the first button.</p>
+                </div>
+                <div class="hsa-controls" data-review-controls data-review-controls-for="hsa-path-card">
+                    <div role="group" aria-label="Health of the profile">
+                        <b>Health of the profile:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hsa-health="working" aria-pressed="false">
+                            Working
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-hsa-health="starting" aria-pressed="false">
+                            Starting
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-hsa-health="failing" aria-pressed="false">
+                            Failing
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-hsa-health="denied" aria-pressed="true">Denied</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hsa-health="hub-down" aria-pressed="false">
+                            Hub down
+                        </button>
+                    </div>
+                </div>
+                <div class="kp-card hsa-card" id="hsa-path-card">
+                    <div class="kp-formgrid">
+                        <div class="kp-formgrid__row">
+                            <b class="kp-formgrid__label" id="hsa-path-pick">Profile</b>
+                            <div class="kp-formgrid__control">
+                                <div class="hsa-choices" role="group" aria-labelledby="hsa-path-pick">
+                                    <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hsa-pick2="alertmanager">
+                                        alertmanager
+                                    </button>
+                                    <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hsa-pick2="uptime-kuma">
+                                        uptime-kuma
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <b class="kp-formgrid__label" id="hsa-trace-name" data-kp-hovercard data-hsa-profile="alertmanager" tabindex="0"
+                                >alertmanager</b
+                            >
+                            <div class="kp-formgrid__control">
+                                <span class="kp-badge kp-badge--destructive hsa-badge" id="hsa-trace-badge">denied</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hsa-trace"><div class="kp-trace" data-kp-trace data-kp-trace-copy id="hsa-trace"></div></div>
+                </div>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="settings"
+                data-review-item="settings"
+                data-review-components="formgrid kv card"
+                data-review-title="Settings and retry budget: both cards on the same rows"
+                data-review-themes="formal"
+                data-review-topic="settings"
+                data-review-topic-title="Settings and retry budget: both cards on the same rows"
+                aria-labelledby="h-settings"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> the two profile cards were two grids side by side with rows of their own; every row now stands on
+                        the same line in both (Source beside Source, Retry budget beside Retry budget), and in each card the label and value
+                        columns are the form grid&rsquo;s. The head of a card is a grid: the name, the meter and the badge.
+                    </p>
+                    <p>
+                        <b>The grid:</b> two cards on one set of rows (a subgrid of ten rows: the head and the eight settings); in each card
+                        the form grid&rsquo;s label and value columns; under 56 rem one card under the other.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-settings">Settings and retry budget: both cards on the same rows</h2>
+                    <p>
+                        What each profile does in plain rows, and one bar for how long its retries can take compared to the time the hub
+                        holds a message (the lease).
+                    </p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            &ldquo;Source&rdquo; of both cards stand on one line; so do all eight rows, and the budget row is as tall in the
+                            second card as in the first.
+                        </li>
+                        <li>The values of one card start on one edge.</li>
+                        <li>
+                            The head: the name on the start edge, the small meter and the badge on the end edge, one line; at 390 px the
+                            name has a line and the meter and badge share the second, on their own tracks.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        the horizontal rules between the rows, running from the first card into the second without a step.
+                    </p>
+                </div>
+
+                <div class="hsa-stage" id="hsa-stage"></div>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="recheck"
+                data-review-item="recheck"
+                data-review-components="datatable menu-button"
+                data-review-title="Recheck: the table and its budget column"
+                data-review-themes="formal"
+                data-review-topic="recheck"
+                data-review-topic-title="Recheck: the table and its budget column"
+                aria-labelledby="h-recheck"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> in the Retry budget column the meter and the words stand in two tracks of the cell, so the meters
+                        of every row start on one edge and the words of every row on another (the row with no lease keeps the words&rsquo;
+                        track).
+                    </p>
+                    <p>
+                        <b>The grid:</b> the table&rsquo;s four columns; inside the budget cell two tracks (the meter, the words), the
+                        actions column ending on the table&rsquo;s end edge.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-recheck">Recheck: the table and its budget column</h2>
+                    <p>Puts every profile, or just one, back to starting so the service tries its destination again.</p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The meter of alertmanager and the words of uptime-kuma (no lease) start on the same edges as the other
+                            row&rsquo;s meter and words.
+                        </li>
+                        <li>&ldquo;Recheck profiles&rdquo; keeps its place above the table.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the left edge of the meters and of the words in the Retry budget column.</p>
+                </div>
+
+                <div class="kp-card hsa-card">
+                    <div class="hsa-bar2"><button type="button" class="kp-button" id="hsa-recheck-all">Recheck profiles</button></div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-key="hsa-profiles">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table hsa-table">
+                                <caption class="kp-sr-only">
+                                    Profiles
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Profile</th>
+                                        <th scope="col" data-kp-sort="text">State</th>
+                                        <th scope="col" data-kp-sort="number">Retry budget</th>
+                                        <th scope="col" class="hsa-col-act">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="alertmanager" data-hsa-row="alertmanager">
+                                        <td data-label="Profile"><b>alertmanager</b></td>
+                                        <td data-label="State"><span class="kp-badge kp-badge--destructive">Denied</span></td>
+                                        <td data-label="Retry budget" data-kp-sort-value="45" data-hsa-budget="alertmanager"></td>
+                                        <td data-label="Actions" class="hsa-col-act">
+                                            <div class="kp-menu-button" data-kp-menu-button data-kp-key="hsa-menu-a">
+                                                <button type="button" class="kp-button kp-button--sm" aria-label="Actions for alertmanager">
+                                                    Actions
+                                                </button>
+                                                <div
+                                                    class="kp-menu kp-menu--rich"
+                                                    role="menu"
+                                                    aria-label="Actions for alertmanager"
+                                                    hidden
+                                                ></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="uptime-kuma" data-hsa-row="uptime-kuma">
+                                        <td data-label="Profile"><b>uptime-kuma</b></td>
+                                        <td data-label="State"><span class="kp-badge kp-badge--info">Starting</span></td>
+                                        <td data-label="Retry budget" data-kp-sort-value="0" data-hsa-budget="uptime-kuma"></td>
+                                        <td data-label="Actions" class="hsa-col-act">
+                                            <div class="kp-menu-button" data-kp-menu-button data-kp-key="hsa-menu-k">
+                                                <button type="button" class="kp-button kp-button--sm" aria-label="Actions for uptime-kuma">
+                                                    Actions
+                                                </button>
+                                                <div
+                                                    class="kp-menu kp-menu--rich"
+                                                    role="menu"
+                                                    aria-label="Actions for uptime-kuma"
+                                                    hidden
+                                                ></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="jellyfin" data-hsa-row="jellyfin">
+                                        <td data-label="Profile"><b>jellyfin</b></td>
+                                        <td data-label="State"><span class="kp-badge kp-badge--success">Working</span></td>
+                                        <td data-label="Retry budget" data-kp-sort-value="30" data-hsa-budget="jellyfin"></td>
+                                        <td data-label="Actions" class="hsa-col-act">
+                                            <div class="kp-menu-button" data-kp-menu-button data-kp-key="hsa-menu-j">
+                                                <button type="button" class="kp-button kp-button--sm" aria-label="Actions for jellyfin">
+                                                    Actions
+                                                </button>
+                                                <div
+                                                    class="kp-menu kp-menu--rich"
+                                                    role="menu"
+                                                    aria-label="Actions for jellyfin"
+                                                    hidden
+                                                ></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="reloads"
+                data-review-item="reloads"
+                data-review-components="card timeline problems"
+                data-review-title="Reloads: the card head and the rows"
+                data-review-themes="formal"
+                data-review-topic="reloads"
+                data-review-topic-title="Reloads: the card head and the rows"
+                aria-labelledby="h-reloads"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> the title and the count of the card share one baseline in a grid of their own (the count wraps
+                        under the title on a phone, never beside a broken word); in the rows the time stands over its outcome and its words,
+                        and the outcome and the words are two columns every row shares.
+                    </p>
+                    <p>
+                        <b>The grid:</b> the card head: the title and the count on two tracks; each reload: a marker, then the time on its
+                        own line over an outcome track (9.5 rem) and a words track.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-reloads">Reloads: the card head and the rows</h2>
+                    <p>The history of the profile file being read again, newest first.</p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The title and the count are on one baseline.</li>
+                        <li>Every outcome word starts on one edge and every headline on another.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the outcome badges in one column and the headlines in the next.</p>
+                </div>
+
+                <section class="kp-card hsa-card hsa-reloads" aria-labelledby="hsa-reloads-t">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="hsa-reloads-t">Reloads</h3>
+                        <p class="hsa-counts">4 reloads · 2 applied · 1 needs a restart · 1 invalid</p>
+                    </div>
+                    <div class="kp-problems" data-kp-problems data-kp-problems-mode="each" id="hsa-reloads-alert"></div>
+                    <ol
+                        class="kp-timeline hsa-reloads__list"
+                        aria-label="Reloads of the profile file, newest first"
+                        id="hsa-reloads-list"
+                    ></ol>
+                </section>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="hover"
+                data-review-item="hover"
+                data-review-components="hovercard kv"
+                data-review-title="Profile names with their hover card"
+                data-review-themes="formal"
+                data-review-topic="hover"
+                data-review-topic-title="Profile names with their hover card"
+                aria-labelledby="h-hover"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> the name, its state badge and its hint were three flex pieces; they are three columns every row
+                        shares (the name and the state fill theirs), and the card&rsquo;s labels and values are a form grid of two columns.
+                    </p>
+                    <p>
+                        <b>The grid:</b> the list: names | state (7 rem) | hint; the hover card: a key-value list whose label column is as
+                        wide as its longest label.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-hover">Profile names with their hover card</h2>
+                    <p>Rest on a profile name (or focus it) and a card with its full shape opens.</p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The names of both rows end on one edge and the state badges are one width.</li>
+                        <li>The hover card shows the same nine rows as before.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the state badges: one width, one column.</p>
+                </div>
+                <div class="hsa-controls" data-review-controls data-review-controls-for="hsa-names">
+                    <div role="group" aria-label="alertmanager is">
+                        <b>alertmanager is:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hsa-names-health="working" aria-pressed="false">
+                            Working
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-hsa-names-health="denied" aria-pressed="true">
+                            Denied
+                        </button>
+                    </div>
+                </div>
+                <div class="hsa-card hsa-names-wrap" id="hsa-names">
+                    <ul class="hsa-names" aria-label="Profiles">
+                        <li>
+                            <a class="hsa-names__name" href="#alertmanager" data-kp-hovercard data-hsa-profile="alertmanager"
+                                >alertmanager</a
+                            ><span class="kp-badge kp-badge--destructive" data-hsa-names-badge="alertmanager">denied</span
+                            ><span class="hsa-names__hint">kyu topic alerts.raw to Home Assistant</span>
+                        </li>
+                        <li>
+                            <a class="hsa-names__name" href="#uptime-kuma" data-kp-hovercard data-hsa-profile="uptime-kuma">uptime-kuma</a
+                            ><span class="kp-badge kp-badge--info" data-hsa-names-badge="uptime-kuma">starting</span
+                            ><span class="hsa-names__hint">POST /uptime-kuma to Home Assistant (mock)</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="try"
+                data-review-item="try"
+                data-review-components="formgrid json-field code card problems segmented"
+                data-review-title="Try a translation: the sample box, its template and the result"
+                data-review-themes="formal"
+                data-review-topic="try"
+                data-review-topic-title="Try a translation: the sample box, its template and the result"
+                aria-labelledby="h-try"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> the profile note stands on the result column&rsquo;s edge; the sample box and the template block
+                        run down to the result card&rsquo;s foot; the label of the box stands on the line of the card&rsquo;s title; and the
+                        tool rows of the box, the template and the result are one height with Wrap and Copy in the same two columns.
+                    </p>
+                    <p>
+                        <b>The grid:</b> twelve columns: the profile row (the chooser over the input&rsquo;s five columns, the note on the
+                        result&rsquo;s seven), the input in five and the result in seven, one row; the tool rows three tracks (title, Wrap,
+                        Copy), the same in every block.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-try">Try a translation: the sample box, its template and the result</h2>
+                    <p>Pick a profile, paste a sample message and see the body that would be delivered. Nothing is delivered.</p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The note under &ldquo;Profile to try&rdquo; starts on the left edge of the result card.</li>
+                        <li>
+                            &ldquo;Sample message&rdquo; stands on the line of &ldquo;Translated body&rdquo;; the template block and the
+                            result card end on one line.
+                        </li>
+                        <li>
+                            The tools of the box (Format, Minify, Wrap), the template (Wrap, Copy) and the result (Wrap, Copy) are one
+                            height; Wrap and Copy of the template and of the result start on the same distance from their blocks&rsquo; end
+                            edges.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the top line, the bottom line and the tool rows of the two columns.</p>
+                </div>
+
+                <div class="hsa-try" id="hsa-try">
+                    <div class="hsa-try__profile">
+                        <div
+                            class="kp-segmented"
+                            data-kp-segmented="single"
+                            role="radiogroup"
+                            aria-label="Profile to try"
+                            id="hsa-try-profile"
+                        >
+                            <button type="button" class="kp-segmented__item" data-value="alertmanager" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">alertmanager</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="uptime-kuma" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">uptime-kuma (mock)</span>
+                            </button>
+                        </div>
+                        <p class="hsa-meta" id="hsa-try-takes">Takes POST /alertmanager · delivers to Home Assistant</p>
+                    </div>
+                    <div class="hsa-try__input">
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="hsa-message">Sample message</label>
+                            <textarea
+                                class="kp-field__input kp-field__input--multiline"
+                                id="hsa-message"
+                                rows="10"
+                                data-kp-json="strict"
+                                data-kp-json-wrap="false"
+                                spellcheck="false"
+                                aria-describedby="hsa-message-hint"
+                            ></textarea>
+                            <p class="kp-field__hint" id="hsa-message-hint">
+                                Paste the message as the sender posts it. Nothing is sent anywhere. The most this page takes is 1 MiB.
+                            </p>
+                        </div>
+                        <figure
+                            class="kp-code"
+                            data-kp-code
+                            id="hsa-template"
+                            data-kp-code-title="Template of alertmanager"
+                            data-kp-code-language="minijinja"
+                            data-kp-code-state="loading"
+                        >
+                            <pre class="kp-code__body"><code></code></pre>
+                        </figure>
+                    </div>
+                    <section
+                        class="kp-card hsa-card hsa-try__result"
+                        id="hsa-result"
+                        data-kp-state="loading"
+                        aria-labelledby="hsa-result-t"
+                    >
+                        <div class="kp-card__header"><h3 class="kp-card__title" id="hsa-result-t">Translated body</h3></div>
+                        <p class="kp-card__body">What Home Assistant would receive for this message.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hsa-card__data">
+                                <div class="kp-problems" data-kp-problems data-kp-problems-mode="each" id="hsa-try-problems"></div>
+                                <figure
+                                    class="kp-code"
+                                    data-kp-code
+                                    id="hsa-body"
+                                    data-kp-code-title="Translated body"
+                                    data-kp-code-language="JSON"
+                                    data-kp-code-state="loading"
+                                >
+                                    <pre class="kp-code__body"><code></code></pre>
+                                </figure>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section
+                class="hsa-sec"
+                id="diff"
+                data-review-item="diff"
+                data-review-components="diff card"
+                data-review-title="Before and after: the diff at a phone&rsquo;s width"
+                data-review-themes="formal"
+                data-review-topic="diff"
+                data-review-topic-title="Before and after: the diff at a phone&rsquo;s width"
+                aria-labelledby="h-diff"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What moved:</b> a changed line wraps inside the card, so at 390 px every line ends on the card&rsquo;s edge
+                        instead of one long line running 97 px past the others; the card head&rsquo;s title and count stand on one baseline.
+                    </p>
+                    <p>
+                        <b>The grid:</b> each diff line: line number (3 rem), sign (1 character), text (the rest of the card), the same
+                        three columns in every line.
+                    </p>
+                </div>
+                <div class="hsa-sec__head">
+                    <h2 id="h-diff">Before and after: the diff at a phone&rsquo;s width</h2>
+                    <p>The message as it arrived against the body that is delivered. Indentation is ignored when lines are matched.</p>
+                </div>
+                <div class="hsa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Every line ends on the card&rsquo;s inner edge.</li>
+                        <li>The line numbers and the signs are two columns.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">the right edge of the lines at 390 px: one edge.</p>
+                </div>
+
+                <section class="kp-card hsa-card hsa-diffcard" aria-labelledby="hsa-diff-t">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="hsa-diff-t">Before and after</h3>
+                        <p class="hsa-counts" id="hsa-diffcount"></p>
+                    </div>
+                    <p class="kp-card__body">
+                        The message as it arrived against the body that is delivered. Indentation is ignored when lines are matched.
+                    </p>
+                    <pre class="kp-diff hsa-diff" id="hsa-diff" tabindex="0"></pre>
+                </section>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "app-hsb-align-d902e1f2-6fff-4797-8ccd-38668fd32d44", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
