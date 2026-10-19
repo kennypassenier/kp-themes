@@ -6560,7 +6560,10 @@
         flex-direction: column;
         /* --kp-space-xs is 0.25rem, which is what this was [TH94, TH105]. */
         gap: var(--kp-field-gap, var(--kp-space-xs));
-        max-width: var(--kp-field-max-width, 28rem);
+        /* field-problems-1019 [field-fills]: a field fills the place it stands in (card, stack, dialog, grid
+         * column), as its label, help and neighbours do; it was capped at 28rem and ended 42 to 47 px short of
+         * the edge they ran to. `--kp-field-max-width` caps it again where a page wants a measure. */
+        max-width: var(--kp-field-max-width, none);
         min-inline-size: 0;
     }
 
@@ -23761,6 +23764,54 @@
         }
     }
     /* align-pkg-1019:problems:end */
+
+    /* field-problems-1019:problems-subgrid:start
+     * data-kp-subgrid makes the list no container (a container cannot be a subgrid), so `@container kp-problems`
+     * above never matched and each fix took the width of its own words (108 px apart between "Run the backup now"
+     * and "Share"). The rows are subgrids of the list's tracks here at every width, and fold with the form grid
+     * around the list (36rem), as the rest of data-kp-subgrid does. */
+    .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) > .kp-problem:not(.kp-problem--list) {
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: start;
+    }
+
+    /* A list placed straight in a form grid spans all its tracks; it took the first track's width. */
+    .kp-formgrid > .kp-problems,
+    .kp-formgrid__group > .kp-problems {
+        grid-column: 1 / -1;
+    }
+
+    .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
+        grid-column: 3;
+    }
+
+    .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__close {
+        grid-column: -2 / -1;
+        margin-inline-start: 0;
+    }
+
+    @container kp-formgrid (max-width: 36rem) {
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions):has(> .kp-problem > .kp-alert__close),
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) > .kp-problem:not(.kp-problem--list) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
+            flex: 1 0 100%;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions > * {
+            flex: 1 1 auto;
+        }
+    }
+    /* field-problems-1019:problems-subgrid:end */
 
     .kp-problems__more {
         justify-self: start;
