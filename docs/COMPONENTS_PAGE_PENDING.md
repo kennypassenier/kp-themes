@@ -12,6 +12,11 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- rule-fixes-1019, site/components/wheel.html: item option `short` (a shorter name for the face of the wheel); the sentence that a long name is cut on its segment is no longer true (largest type, two lines, `short`, else not drawn and the segment's tooltip).
+- rule-fixes-1019, site/components/new-pill.html: remove the `--kp-newpill-digits` row (the pill is as wide as its words).
+- rule-fixes-1019, site/components/dialog.html: knob `--kp-dialog-section-inset` (0.5rem), the room between a section's text and the ends of its rule.
+- rule-fixes-1019, site/components/code.html: say that a long line scrolls inside the plate's padding, and that the focusable scroller is the `code` element.
+- rule-fixes-1019, site/components/heat.html: a long row name wraps (the row grows), it is never cut.
 - findings-1019 (2026-10-19), site/components/flash.html: the `data-kp-width` row says "`keep` (default) or `grow`"; make it say that `grow` works set by hand (the button is as wide as what it says: its own words at rest and busy, the result's width while the result stands) and that a width set by hand stays after a refusal on the button. Also its example may show a `grow` button.
 - findings-1019, site/components/lede.html: the sentence "(on a lede of its own: a folded lede takes no link)" is no longer true: `data-kp-lede-collapsible` with `data-kp-lede-link` folds, and Learn more stands at the end after the folded part.
 - findings-1019, site/components/command.html and site/components/focus-steps.html: one sentence each: in a column too narrow for the head the Copy button goes under the terminal's name and the badge, and Back and Next stand one under the other when two do not fit side by side; neither breaks a word.
