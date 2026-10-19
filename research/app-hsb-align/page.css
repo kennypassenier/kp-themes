@@ -7,7 +7,6 @@
        every card (the app's --hsb-label). */
     --kp-formgrid-label-min: 7rem;
     --hsa-track: 8rem;
-    --hsa-stage-rows: 10;
 }
 
 .hsa-sec {
@@ -115,39 +114,27 @@
 }
 
 /* Each list spans the pair's rows as a subgrid, its items one row each: the Nth band item and the Nth alert share a top and a
-   bottom. Inside, the icon, the words and the button are three tracks every item shares. */
+   bottom. The icon | words | actions tracks, the item subgrids, the dismiss cross's track and the narrow fold are the package's
+   (data-kp-subgrid, gapform-1019); the page only shares the rows. */
 .hsa-pair > :is(.kp-attention, .kp-problems):has(> *) {
-    display: grid;
     grid-row: 1 / span var(--hsa-rows, 2);
     grid-template-rows: subgrid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    column-gap: var(--kp-space-md, 1rem);
     row-gap: inherit;
     inline-size: auto;
 }
 
-/* The alerts have a fourth track, the dismiss cross of a note that may be closed; it is empty (no width) while none can be. */
-.hsa-pair > .kp-problems:has(> *) {
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
-}
-
 .hsa-pair > .kp-attention > .kp-attention__item,
 .hsa-pair > .kp-problems > .kp-problem {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: subgrid;
     align-items: first baseline;
 }
 
 /* The words of a band item and of an alert start on one line, and so do their icon and button: all on the first baseline. */
 .hsa-pair :is(.kp-attention__actions, .kp-problem > .kp-alert__actions) {
-    grid-column: 3;
     align-self: first baseline;
     align-items: baseline;
 }
 
 .hsa-pair .kp-alert__close {
-    grid-column: 4;
     align-self: start;
     margin: 0;
 }
@@ -161,7 +148,7 @@
     flex: 1 1 auto;
 }
 
-/* Narrow: one list under the other, each item on two tracks (the icon, the words) with the button under the words. */
+/* Narrow: one list under the other. */
 @container hsa (max-width: 44rem) {
     .hsa-pair {
         grid-template-columns: minmax(0, 1fr);
@@ -171,20 +158,6 @@
     .hsa-pair > :is(.kp-attention, .kp-problems):has(> *) {
         grid-row: auto;
         grid-template-rows: none;
-        grid-template-columns: auto minmax(0, 1fr);
-    }
-
-    .hsa-pair :is(.kp-attention__actions, .kp-problem > .kp-alert__actions) {
-        grid-column: 2;
-    }
-
-    .hsa-pair > .kp-problems:has(> *) {
-        grid-template-columns: auto minmax(0, 1fr) auto;
-    }
-
-    .hsa-pair .kp-problem > .kp-alert__close {
-        grid-column: 3;
-        grid-row: 1;
     }
 }
 
@@ -351,32 +324,16 @@
 
 /* ── 7 · the settings cards ── */
 
-.hsa-stage {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(var(--hsa-stage-rows), auto);
-    column-gap: var(--kp-space-lg, 1.5rem);
-    row-gap: 0;
-    align-items: stretch;
-}
-
-/* A profile card is a grid of two columns (label, value) whose rows are a subgrid of the stage's: Source beside Source, Retry budget
-   beside Retry budget. (A form grid is a layout container and cannot take its rows from the stage, so the card carries the form
-   grid's own pair of tracks.) */
+/* The stage and the cards are the package's ([data-kp-formgrid-stage], a .kp-formgrid with data-kp-formgrid-rows="subgrid";
+   gapform-1019): every card takes its rows from the stage, so Source stands beside Source and Retry budget beside Retry
+   budget, and the label | value tracks are the form grid's own. The page sets the cards' padding and its head. */
 .hsa-profile {
-    display: grid;
-    grid-row: span var(--hsa-stage-rows);
-    grid-template-rows: subgrid;
-    grid-template-columns: fit-content(40%) minmax(0, 1fr);
-    column-gap: var(--kp-space-lg, 1rem);
-    row-gap: 0;
-    box-sizing: border-box;
-    min-inline-size: 0;
     padding: var(--kp-space-lg, 1rem);
+    row-gap: 0;
+    min-inline-size: 0;
 }
 
 .hsa-profile > .hsa-head {
-    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: minmax(min-content, 1fr) auto auto;
     grid-template-areas: 'title meter badge';
@@ -398,29 +355,6 @@
     grid-area: badge;
 }
 
-.hsa-profile > .kp-kv {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-row: span calc(var(--hsa-stage-rows) - 1);
-    grid-template-rows: subgrid;
-    grid-template-columns: subgrid;
-    margin: 0;
-}
-
-.hsa-profile .kp-kv__row {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: subgrid;
-    align-items: first baseline;
-    padding-block: var(--kp-space-sm, 0.5rem);
-    border-block-end: 1px solid var(--border);
-}
-
-.hsa-profile .kp-kv__row > dd {
-    min-inline-size: 0;
-    margin: 0;
-}
-
 .hsa-budget {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -438,22 +372,6 @@
 }
 
 @container hsa (max-width: 44rem) {
-    .hsa-stage {
-        grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: none;
-        row-gap: var(--kp-space-md, 1rem);
-    }
-
-    .hsa-profile {
-        grid-row: auto;
-        grid-template-rows: none;
-    }
-
-    .hsa-profile > .kp-kv {
-        grid-row: auto;
-        grid-template-rows: none;
-    }
-
     .hsa-profile > .hsa-head {
         grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas:
@@ -656,11 +574,6 @@
 
 .hsa-try__profile > .hsa-try__input :is(.kp-code, .kp-jsonfield) {
     min-inline-size: 0;
-}
-
-/* The field fills its column (the field's own cap is 28 rem), so the box, the template and the result stand on one width. */
-.hsa-try__input .kp-field {
-    --kp-field-max-width: none;
 }
 
 /* The box's tools stand on the tracks of the template's: Format and Minify at the start, Wrap and Copy at the end edge, where the

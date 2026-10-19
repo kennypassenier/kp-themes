@@ -20322,6 +20322,7 @@ __export(forms_exports, {
   FIELD_EVENT: () => FIELD_EVENT,
   INVALID_EVENT: () => INVALID_EVENT,
   VALID_EVENT: () => VALID_EVENT,
+  attachFormgridStages: () => attachFormgridStages,
   attachForms: () => attachForms,
   attachSwitches: () => attachSwitches,
   clearError: () => clearError,
@@ -20593,7 +20594,40 @@ function attachSwitches(root = document, { strings } = {}) {
     for (const state2 of filled) state2.replaceChildren();
   };
 }
-var FORM, SUMMARY, FIELD_ERROR, SUBMIT, VALID_EVENT, INVALID_EVENT, FIELD_EVENT, DONE_EVENT, fallback, counter3, handles8, SWITCH, SWITCH_STATE;
+function formgridRows(grid2, depth = 0) {
+  let rows = 0;
+  for (const child of grid2.children) {
+    if (child instanceof HTMLElement && child.hidden) continue;
+    if (child.matches("template, script, style")) continue;
+    rows += depth < 2 && child.matches(FORMGRID_BLOCK) ? formgridRows(child, depth + 1) : 1;
+  }
+  return rows;
+}
+function attachFormgridStages(root = document) {
+  const undo = [];
+  for (const stage of root.querySelectorAll("[data-kp-formgrid-stage]")) {
+    if (!(stage instanceof HTMLElement)) continue;
+    const count2 = () => {
+      let rows = 0;
+      for (const grid2 of stage.querySelectorAll(":scope > .kp-formgrid[data-kp-formgrid-rows='subgrid']")) {
+        rows = Math.max(rows, formgridRows(grid2));
+      }
+      const value = String(Math.max(rows, 1));
+      if (stage.style.getPropertyValue("--kp-formgrid-rows") !== value) stage.style.setProperty("--kp-formgrid-rows", value);
+    };
+    count2();
+    const watch2 = new MutationObserver(count2);
+    watch2.observe(stage, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden", "data-kp-formgrid-rows"] });
+    undo.push(() => {
+      watch2.disconnect();
+      stage.style.removeProperty("--kp-formgrid-rows");
+    });
+  }
+  return () => {
+    for (const fn of undo) fn();
+  };
+}
+var FORM, SUMMARY, FIELD_ERROR, SUBMIT, VALID_EVENT, INVALID_EVENT, FIELD_EVENT, DONE_EVENT, fallback, counter3, handles8, SWITCH, SWITCH_STATE, FORMGRID_BLOCK;
 var init_forms = __esm({
   "js/forms.js"() {
     "use strict";
@@ -20611,6 +20645,7 @@ var init_forms = __esm({
     handles8 = /* @__PURE__ */ new WeakMap();
     SWITCH = ".kp-switch";
     SWITCH_STATE = ".kp-switch__state";
+    FORMGRID_BLOCK = ".kp-formgrid__group, .kp-formrows, .kp-kv, form";
   }
 });
 
@@ -62475,9 +62510,9 @@ var NEEDS = [
   { name: "tables", when: ".kp-table-wrap", load: () => Promise.resolve().then(() => (init_tables(), tables_exports)), attach: (m, root) => [m.attachTableRegions(root)] },
   {
     name: "forms",
-    when: "[data-kp-form], [data-kp-submit], .kp-switch",
+    when: "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]",
     load: () => Promise.resolve().then(() => (init_forms(), forms_exports)),
-    attach: (m, root) => [m.attachForms(root), m.attachSwitches(root)]
+    attach: (m, root) => [m.attachForms(root), m.attachSwitches(root), m.attachFormgridStages(root)]
   },
   {
     name: "patterns",
@@ -64536,6 +64571,7 @@ export {
   attachFlashButtons,
   attachFocusSteps,
   attachFootprints,
+  attachFormgridStages,
   attachForms,
   attachGalleries,
   attachGantts,

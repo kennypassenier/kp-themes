@@ -281,8 +281,12 @@ for (const group of document.querySelectorAll('.hsa-choices')) {
     const stage = byId('hsa-stage');
     const code = (/** @type {string} */ text) => el('code', 'kp-id', text);
     for (const [i, p] of PROFILES.entries()) {
-        const card = el('article', 'kp-card hsa-profile');
+        // A form grid that takes its rows from the stage (data-kp-formgrid-rows="subgrid", gapform-1019): Source beside Source.
+        const card = el('article', 'kp-card kp-formgrid hsa-profile');
+        card.setAttribute('data-kp-formgrid-rows', 'subgrid');
+        card.setAttribute('data-kp-formgrid-lines', 'lines');
         const head = el('header', 'hsa-head');
+        head.setAttribute('data-kp-formgrid-span', 'all');
         const title = el('h3', 'kp-card__title', p.name);
         title.id = `hsa-p-${i}`;
         card.setAttribute('aria-labelledby', title.id);

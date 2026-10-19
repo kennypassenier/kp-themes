@@ -91,7 +91,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"app-hsb-align-d902e1f2-6fff-4797-8ccd-38668fd32d44\", \"received\": [] }\n        "
             },
-            "fingerprint": "3e7ec0f217ab8a84",
+            "fingerprint": "5d72730db5c02021",
             "update": null
         },
         "research/app-homelab-backups/demo.html": {
@@ -130,7 +130,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"app-homelab-backups-3b6f0e0a-6f4c-4a3e-9d0c-51a8b7c2e1f4\" }\n        "
             },
-            "fingerprint": "c8a82e4a38c710b6",
+            "fingerprint": "1e76529025b2a151",
             "update": null
         },
         "research/state-plates-1019/demo.html": {
@@ -401,7 +401,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"almanacalign-6d3f1b8a-52c7-4e09-b1a4-9e7c2d05f318\", \"received\": [] }\n        "
             },
-            "fingerprint": "0293d3312e95a890",
+            "fingerprint": "e6ae118787e6f25c",
             "update": null
         },
         "research/app-hsb-settings/demo.html": {

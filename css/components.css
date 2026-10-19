@@ -3211,18 +3211,86 @@
     /* data-kp-subgrid [align-grid-1019; HTTPSwitchboard gap 25]: an inline-size container is layout-contained, and a
      * layout-contained grid cannot be a subgrid, so a band and its neighbours could not share rows. With the attribute
      * the band (and .kp-problems) is no container: its rows may be subgrids of the page's grid, and the narrow fold
-     * follows the form grid around it (36rem) instead of its own width. */
+     * follows the nearest size container around it (36rem; below) instead of its own width. */
     .kp-attention[data-kp-subgrid],
     .kp-problems[data-kp-subgrid] {
         container-type: normal;
     }
 
-    @container kp-formgrid (max-width: 36rem) {
-        .kp-attention[data-kp-subgrid] .kp-attention__item {
-            grid-template-columns: auto minmax(0, 1fr);
+    /* The band's own tracks [gapform-1019; HTTPSwitchboard 28, almanac 21]. With data-kp-subgrid the band is a grid of three
+       named tracks, icon | words | actions, and every item is a subgrid of them: the icons, the words and the fix buttons of
+       all items stand in three columns that run down the band, also outside a form grid (a page wrote the tracks, the item
+       subgrids and the fold itself). One fix fills the actions track, so every fix has one width. A page that lets the band
+       share rows with a neighbour (item N beside alert N) adds `grid-row: span N; grid-template-rows: subgrid` to the band. */
+    .kp-attention[data-kp-subgrid] {
+        grid-template-columns: [icon-start] auto [icon-end words-start] minmax(0, 1fr) [words-end actions-start] auto [actions-end];
+        column-gap: var(--kp-space-md, 1rem);
+    }
+
+    .kp-attention[data-kp-subgrid] > .kp-attention__item {
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        column-gap: inherit;
+    }
+
+    .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__icon {
+        grid-column: icon;
+    }
+
+    .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__text {
+        grid-column: words;
+        min-inline-size: 0;
+    }
+
+    .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__actions {
+        grid-column: actions;
+    }
+
+    .kp-attention[data-kp-subgrid] .kp-attention__actions > :only-child {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+
+    /* In a form grid the band takes the grid's tracks: the icon in the label track, the words from the control edge (where
+       every field starts) to the value track's end, the fix in the actions column of the rows around it. The names icon,
+       words and actions are given to the grid's own lines, so the items need no second set of rules. */
+    .kp-formgrid > .kp-attention[data-kp-subgrid],
+    .kp-formgrid__group > .kp-attention[data-kp-subgrid] {
+        grid-column: label-start / actions-end;
+        grid-template-columns: subgrid [icon-start] [icon-end words-start] [] [words-end actions-start] [actions-end];
+        column-gap: inherit;
+        align-self: start;
+    }
+
+    /* The narrow fold, inside a form grid or not: under 36rem of the nearest size container (the form grid, a card, the
+       page), or of the screen where there is none, each item is two tracks, the icon and the words, with its fix under
+       them on the full width. Written twice, once per query, as a container query cannot fall back to the viewport. */
+    @container (max-width: 36rem) {
+        :is(.kp-formgrid, .kp-formgrid__group, *) > .kp-attention[data-kp-subgrid] {
+            grid-template-columns: [icon-start] auto [icon-end words-start] minmax(0, 1fr) [words-end actions-start actions-end];
         }
 
-        .kp-attention[data-kp-subgrid] .kp-attention__actions {
+        .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__actions {
+            grid-column: 1 / -1;
+            justify-content: flex-start;
+        }
+
+        .kp-problems[data-kp-subgrid] .kp-alert__item {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-problems[data-kp-subgrid] .kp-alert__item > .kp-alert__actions {
+            grid-column: 1;
+            grid-row: auto;
+        }
+    }
+
+    @media (max-width: 40rem) {
+        :is(.kp-formgrid, .kp-formgrid__group, *) > .kp-attention[data-kp-subgrid] {
+            grid-template-columns: [icon-start] auto [icon-end words-start] minmax(0, 1fr) [words-end actions-start actions-end];
+        }
+
+        .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__actions {
             grid-column: 1 / -1;
             justify-content: flex-start;
         }
@@ -7431,6 +7499,22 @@
         margin: 0;
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* A combobox row in a form grid that has value text of its own [gapform-1019; homelab 55]: the value track is taken, so
+       attachComboboxes leaves the status under the input, and it made the row taller than its label. There it is read,
+       not shown: the live region stays in place for a screen reader ("11 results") and takes no room. A row without value
+       text of its own shows the status in its value track (js/combobox.js). */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__value, .kp-formrow__aside):not(.kp-combobox__status))
+        > :is(.kp-formgrid__control, .kp-formrow__control)
+        .kp-combobox__status {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
     }
 
     /* The drawn select [scope-54]: `select[data-kp-select]` gets a listbox in
@@ -13216,6 +13300,46 @@
         margin: 0;
         font-size: clamp(var(--kp-text-sm, 0.8125rem), 5.4cqi, var(--kp-calendar-title-size, 1.125rem));
         text-align: center;
+    }
+
+    /* The nav on the days' tracks [gapform-1019; almanac 21]: `data-kp-calendar-nav="spread"` on the calendar lays the nav
+       on seven tracks with the days' own gap, so every button edge is a day's edge. Wide (the nav at least
+       --kp-calendar-nav-spread-fit, 40rem, where one day holds a button's word): Prev over the first day, the month's
+       title centred over the middle three, Next and Today over the last two. Narrower: the title on a row of its own, Prev
+       over the first two days, Next over the middle three, Today over the last two. "start" (the default) is the nav
+       above. Read by CSS alone, so a change at run time re-lays the nav at once. */
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        justify-content: stretch;
+        column-gap: var(--kp-calendar-gap, 6px);
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > * {
+        justify-self: stretch;
+        min-inline-size: 0;
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > .kp-calendar__title {
+        grid-row: 1;
+        grid-column: calc(3 - 2 * max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi))) / span
+            calc(3 + 4 * max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > [data-kp-calendar-prev] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+        grid-column: 1 / span calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > [data-kp-calendar-next] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+        grid-column: calc(6 - 3 * max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi))) / span
+            calc(1 + 2 * max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+    }
+
+    .kp-calendar[data-kp-calendar-nav='spread'] > .kp-calendar__nav > [data-kp-calendar-today] {
+        grid-row: calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
+        grid-column: calc(7 - max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi))) / span
+            calc(1 + max(0, sign(var(--kp-calendar-nav-spread-fit, 40rem) - 100cqi)));
     }
 
     .kp-calendar__state {
@@ -20670,20 +20794,52 @@
         margin-inline-start: 0;
     }
 
-    @container kp-formgrid (max-width: 36rem) {
-        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions):has(> .kp-problem > .kp-alert__close),
+    /* The fold follows the nearest size container (the form grid, a card, the page), or the screen where there is none
+       [gapform-1019; HTTPSwitchboard 28]: it listened to `@container kp-formgrid` only, so a list outside a form grid never
+       folded. Folded, an item is icon | words | the cross, the cross's track shared by every item so all words end on one
+       edge, and the fix runs under them on the full width; the cross stays on the words' line [HTTPSwitchboard 29]:
+       js/problems.js appends it after the fix, and a fix on a line of its own pushed it onto a third. */
+    @container (max-width: 36rem) {
         .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) {
-            grid-template-columns: minmax(0, 1fr);
+            grid-template-columns: auto minmax(0, 1fr);
         }
 
-        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) > .kp-problem:not(.kp-problem--list) {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions):has(> .kp-problem > .kp-alert__close) {
+            grid-template-columns: auto minmax(0, 1fr) auto;
         }
 
         .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
-            flex: 1 0 100%;
+            grid-column: 1 / -1;
+            grid-row: 2;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__close {
+            grid-column: -2 / -1;
+            grid-row: 1;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions > * {
+            flex: 1 1 auto;
+        }
+    }
+
+    @media (max-width: 40rem) {
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions) {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-problems[data-kp-subgrid]:has(> .kp-problem > .kp-alert__actions):has(> .kp-problem > .kp-alert__close) {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
+            grid-column: 1 / -1;
+            grid-row: 2;
+        }
+
+        .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__close {
+            grid-column: -2 / -1;
+            grid-row: 1;
         }
 
         .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions > * {
@@ -20704,6 +20860,12 @@
 
         .kp-problem > .kp-alert__actions {
             flex: 1 0 100%;
+            /* The cross stays on the words' line [gapform-1019; HTTPSwitchboard 29]. */
+            order: 2;
+        }
+
+        .kp-problem > .kp-alert__close {
+            order: 1;
         }
 
         .kp-problem > .kp-alert__actions > * {
@@ -21403,7 +21565,10 @@
      * wrap onto a second row. */
     .kp-refresh__bar {
         display: grid;
-        grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
+        /* The freshness track is never narrower than its words [gapform-1019; HTTPSwitchboard 30]: at minmax(0, 1fr) a bar in
+           a narrow column on a wide screen (homelab settings, 436 px at 1280) gave it no width at all, and "not updated yet"
+           ran under "Refresh now". The chooser gives way instead; its track scrolls. */
+        grid-template-columns: minmax(0, auto) minmax(min-content, 1fr) auto;
         align-items: center;
         gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
     }
@@ -24424,6 +24589,38 @@
         --kp-formgrid-label-min: 14rem;
     }
 
+    /* Form grids that share rows [gapform-1019; HTTPSwitchboard 31]. A form grid is a size container (its fold reads its
+       own width), and a size container is layout-contained, so it could never be a subgrid of a page grid: two settings
+       cards side by side could not put "Source" beside "Source", and the page carried the form grid's tracks by hand.
+       `data-kp-formgrid-stage` holds the container instead (the same name, kp-formgrid, so every rule of the grid folds on the
+       stage's width) and lays its cards side by side, each at least --kp-formgrid-stage-min (24rem) wide, one under the
+       other when they do not fit; then a card is the stage's width, and the fold is its own again. A form grid in it with `data-kp-formgrid-rows="subgrid"` is no
+       container: it spans --kp-formgrid-rows rows of the stage (attachFormgridStages in js/forms.js writes the count of
+       the longest card; a page may set it) and takes them as a subgrid, so row N of every card has one height. Its blocks
+       (.kp-kv, .kp-formrows, .kp-formgrid__group, form) give their rows to the grid itself. Knobs: --kp-formgrid-stage-min,
+       --kp-formgrid-stage-gap (the lg step, between the cards), --kp-formgrid-rows. */
+    [data-kp-formgrid-stage] {
+        container: kp-formgrid / inline-size;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-formgrid-stage-min, 24rem)), 1fr));
+        gap: var(--kp-formgrid-stage-gap, var(--kp-space-lg, 1rem));
+        align-items: stretch;
+        min-inline-size: 0;
+    }
+
+    [data-kp-formgrid-stage] > .kp-formgrid[data-kp-formgrid-rows='subgrid'] {
+        container-type: normal;
+        grid-row: span var(--kp-formgrid-rows, 1);
+        grid-template-rows: subgrid;
+        align-self: stretch;
+        box-sizing: border-box;
+    }
+
+    .kp-formgrid[data-kp-formgrid-rows='subgrid'] > :is(.kp-formgrid__group, .kp-formrows, .kp-kv, form),
+    .kp-formgrid[data-kp-formgrid-rows='subgrid'] > :is(.kp-formgrid__group, .kp-formrows, .kp-kv, form) > :is(.kp-formgrid__group, .kp-formrows, .kp-kv, form) {
+        display: contents;
+    }
+
     /* A block inside the grid (a form, a key-value list, a fieldset, a group
        of rows with its own heading) spans every column and passes the tracks
        on, so its rows line up with the rows outside it. */
@@ -24443,6 +24640,10 @@
            grid (a container of its own) fell back to one column and floated its rows in the middle of the panel
            (facts, 2026-10-19 11:22). Inside the grid it is no container; the grid's own query lays it out. */
         container-type: normal;
+        /* The block stands alone on its row of the outer grid, so it has no line to share. On the grid's first baseline
+           Chromium (151 measured; 153 is fixed) took the baseline of a subgrid of subgrids as -2^25 px and laid the whole
+           block at y = -33554328, so the facts vanished [gapform-1019; AuDHD 34]. Its own rows keep the first baseline. */
+        align-self: start;
     }
 
     /* A group is its heading and its rows: the heading sits close on its rows, the groups stand apart by the grid's
@@ -24742,6 +24943,34 @@
     .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control) > .kp-quantity {
         grid-template-columns: auto minmax(0, 1fr) auto;
         min-inline-size: max-content;
+    }
+
+    /* A date picker is a short control too [gapform-1019; AuDHD 41]: its input box is the short step, so it ends on the
+       edge where a stepper's, a time field's and a number's box end, and the calendar button stands after it. In a
+       .kp-formgrid__short the box was the step minus the button, and ended 50 px short of the stepper above it; straight
+       in the control cell it filled the whole track. The panel still hangs from the picker's start. */
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control) > .kp-formgrid__short:has(> .kp-datepicker) {
+        inline-size: auto;
+        max-inline-size: 100%;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-datepicker {
+        display: grid;
+        grid-template-columns: minmax(0, var(--kp-formgrid-short, 14rem)) auto;
+        justify-content: start;
+        justify-self: start;
+        align-items: end;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        max-inline-size: 100%;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-datepicker > .kp-field__label {
+        grid-column: 1 / -1;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-datepicker > :is(.kp-field__input, .kp-field) {
+        grid-column: 1;
+        inline-size: 100%;
     }
 
     /* A group of buttons in a cell: one line, one height, on the cell's

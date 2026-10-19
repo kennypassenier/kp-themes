@@ -311,8 +311,8 @@ const s5 = section({
 });
 
 // ---- 6 · History: month head -----------------------------------------------------------------------------------------------------------
-const month = (cls) =>
-    `<div class="aa-month ${cls}"><section class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-calendar-month="2026-10" data-kp-calendar-selected="2026-10-19" data-kp-time-zone="Europe/Brussels" lang="en-GB" aria-label="Events delivered per day (sample data)" data-aa-calendar></section></div>`;
+const month = (cls, nav = '') =>
+    `<div class="aa-month ${cls}"><section class="kp-calendar kp-calendar--busy-whole"${nav} data-kp-calendar data-kp-calendar-month="2026-10" data-kp-calendar-selected="2026-10-19" data-kp-time-zone="Europe/Brussels" lang="en-GB" aria-label="Events delivered per day (sample data)" data-aa-calendar></section></div>`;
 
 const s6 = section({
     id: 'history-month-head',
@@ -325,13 +325,13 @@ const s6 = section({
     expected: [
         'In Fixed <b>‹ Prev</b> starts on the left edge of the Monday column, <b>Today</b> ends on the right edge of the Sunday column, <b>OCTOBER 2026</b> is centred between Prev and Next, and the four share one centre line. Prev and Next, Today share one height.',
         'Press <b>Next</b>: the month changes and nothing in the head moves. Press Now: the approved run of four at the left.',
-        '<b>The grid:</b> four tracks, Prev (as wide as its word) | the month (the rest) | Next | Today; at 390 px and under 21rem the title takes a row of its own over three equal tracks, Prev | Next | Today, edge to edge. Needs only page CSS on the package&rsquo;s nav grid; the package itself keeps its left run.',
+        '<b>The grid:</b> the days&rsquo; own seven tracks: Prev over Monday, the month centred over the middle three days, Next and Today over Saturday and Sunday; under 40rem (and at 390 px) the month takes a row of its own and Prev | Next | Today stand over two, three and two days, edge to edge. It is the package&rsquo;s <code>data-kp-calendar-nav=&quot;spread&quot;</code>; the default stays the left run.',
     ],
     look: 'Press Fixed: Prev starts above Monday&rsquo;s plate edge, Today ends above Sunday&rsquo;s plate edge, the month sits in the middle on the buttons&rsquo; centre line.',
     groups: [group('history-month-head', 'width', 'Width of the calendar', [['full', 'Wide (44rem)', true], ['phone', 'Phone (390)', false]])],
     stage: ' data-aa-width="full"',
     now: month('aa-month--now'),
-    fixed: month('aa-month--fixed'),
+    fixed: month('aa-month--fixed', ' data-kp-calendar-nav="spread"'),
 });
 
 // ---- 7 · Calendars: page header -------------------------------------------------------------------------------------------------------

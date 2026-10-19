@@ -313,7 +313,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // with the pictures Kenny rejected, the form grid fix added and removed some: 1020.
     // Recounted 2026-10-19 [gapmisc-1019]: --kp-touch-target added: 1021.
     // Re-pinned 2026-10-19 [gapviz-1019]: the legend is one subgrid: --kp-stackbar-value-w and --kp-stackbar-legend-min left, --kp-stackbar-legend-columns came: 1021 - 2 = 1019.
-    assert.equal(result.expected, 1019, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-19 [gapform-1019]: the form grid stage (--kp-formgrid-stage-min, -stage-gap, --kp-formgrid-rows) and the
+    // calendar's spread nav (--kp-calendar-nav-spread-fit), all read through var(): 1019 + 4.
+    assert.equal(result.expected, 1023, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -387,7 +389,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Recounted 2026-10-19 [graph-loading-1019]: 1012.
     // Recounted 2026-10-19 [gapmisc-1019]: --kp-touch-target read through var(): 1013.
     // Recounted 2026-10-19 [gapviz-1019]: the same three stackbar knobs, read through var(): 1013 - 2 = 1011.
-    assert.equal(result.readCount, 1011);
+    // Recounted 2026-10-19 [gapform-1019]: the form grid stage's three knobs and the calendar's spread fit: 1011 + 4.
+    assert.equal(result.readCount, 1015);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

@@ -1223,6 +1223,23 @@ one arrives or changes severity, so a screen reader meets them in the order
 the eye does; `sortAttention(band)` does it once. In a band under 34rem the
 actions go under the words.
 
+**`data-kp-subgrid`: the band on shared tracks** [gapform-1019]. With the
+attribute the band is three named tracks, `icon | words | actions`, and every
+item is a subgrid of them: the icons, the words and the fixes of all items
+stand in three columns down the band, and a single fix fills the actions
+track, so every fix has one width. The band is no size container then (a
+container cannot be a subgrid), so a page may also let it share rows with a
+neighbour: `grid-row: span 2; grid-template-rows: subgrid` on the band puts
+item N beside the neighbour's item N. Placed straight in a `.kp-formgrid` the
+band takes the form grid's tracks: the icon in the label track, the words
+from the control edge where every field starts, the fix in the actions
+column. Under 36rem of the nearest size container (the form grid, a card,
+the page), or of the screen where there is none, each item folds to icon |
+words with the fix under them. `.kp-problems[data-kp-subgrid]` does the same
+for problem alerts, with a fourth track for the dismiss cross when one may be
+closed; folded, the cross keeps its own track on the words' line, so every
+alert's words end on one edge.
+
 The item's plate is `--kp-attention-tint` of its severity's colour mixed
 into `--card`, 8 % by default. Lower it on an item when the page's text
 reads too faint on the tint, for example
@@ -1395,7 +1412,14 @@ calendar.addEventListener(CALENDAR_PICK_EVENT, (event) => showNight(event.detail
   today's by default), `data-kp-calendar-selected`, `data-kp-locale` (the
   month and weekday names; else the nearest `lang`), `data-kp-week-starts-on`
   (0 = Sunday; else the locale's), `data-kp-heading-level` (the title's, 2),
-  `data-kp-key` (handed to `decorate`).
+  `data-kp-key` (handed to `decorate`), `data-kp-calendar-nav` (`start`, the
+  default: Prev, the title, Next and Today in a run from the start edge;
+  `spread`: the nav stands on the days' own seven tracks, so every button
+  edge is a day's edge: Prev over the first day, the title centred over the
+  middle three, Next and Today over the last two; on a nav narrower than
+  `--kp-calendar-nav-spread-fit` (40rem) the title takes a row of its own
+  and Prev, Next and Today stand over two, three and two days. CSS alone, so
+  a change at run time re-lays the nav) [gapform-1019].
 - **Words**: the dictionary's `calendarNav`, `calendarPrev`, `calendarNext`,
   `calendarToday`, `calendarTodayTitle`, `calendarDay`, `calendarFuture`,
   `calendarLoading`, `calendarUnknown`, with `previousMonth`, `nextMonth`,
@@ -1404,7 +1428,8 @@ calendar.addEventListener(CALENDAR_PICK_EVENT, (event) => showNight(event.detail
 - **Knobs**: `--kp-calendar-aside` (16rem, the detail's width),
   `--kp-calendar-gap` (6px), `--kp-calendar-cell-height` (3.25rem),
   `--kp-calendar-cell-font` (`clamp(0.85rem, 1.4vw, 1.15rem)`),
-  `--kp-calendar-title-size` (1.125rem).
+  `--kp-calendar-title-size` (1.125rem), `--kp-calendar-nav-spread-fit`
+  (40rem, where `spread` puts the four on one line).
 
 `decorate(part, info)` is called with the three buttons (`month-prev`,
 `month-next`, `today`) and every day (`day`, with `index` and `value`, again
@@ -1855,12 +1880,16 @@ What it does for you, without hand work:
   the edge where the fields start. A `legend` or `.kp-formgrid__heading` in a group spans the whole width and sits close on
   its rows (`--kp-space-xs`); groups stand apart by the grid's row gap. Inside the grid a `.kp-formrows` or `.kp-kv` is no
   size container (a size container cannot be a subgrid), and facts keep the key-value list's own gap, `--kp-kv-gap`
-  (0.375rem), so a facts panel reads as one compact list.
+  (0.375rem), so a facts panel reads as one compact list. Such a block stands on the top of its own row
+  (`align-self: start`) while its rows keep the first baseline: on the grid's first baseline Chromium 151 laid a
+  key-value list in a form grid at y = -33554328 and the facts vanished [gapform-1019].
 - **One edge per kind of control.** Every control starts on the control track's edge. A field, select, combobox, textarea,
   secret, code block or command fills the track; a short control (stepper, time, number, date, `.kp-field__input--short`,
   `.kp-formgrid__short`) takes one fixed step, `--kp-formgrid-short` (14rem), and a stepper is never squeezed under its unit;
-  a switch or a checkbox keeps its own size. So the column ends on at most two edges.
-- **A combobox's status is the row's value text.** In a row whose control is a `.kp-combobox` and that has no `.kp-formgrid__value` of its own, `attachComboboxes` moves the combobox's status line ("11 results") into the value track, so the row is as high as its label and the status stands in the column of every other row's hint. A row with value text of its own, or a combobox outside a form grid, keeps the status under the input.
+  a switch or a checkbox keeps its own size. So the column ends on at most two edges. A date picker is a short control
+  too, in the cell or in a `.kp-formgrid__short`: its input box is the step, so it ends where a stepper's box ends, and
+  the calendar button stands after it [gapform-1019].
+- **A combobox's status is the row's value text.** In a row whose control is a `.kp-combobox` and that has no `.kp-formgrid__value` of its own, `attachComboboxes` moves the combobox's status line ("11 results") into the value track, so the row is as high as its label and the status stands in the column of every other row's hint. In a row with value text of its own the status stays a live region under the input but is read, not shown, so that row too is as high as its label [gapform-1019]. A combobox outside a form grid keeps the status under the input.
 - **Every row on one line.** Cells align on the row's first baseline: the label's first line, the text in a field, the number
   of a stepper, a switch's word, a value's words. A multi-line label or a field with help under it keeps its first line on
   that line. `data-kp-formgrid-align="center"` centres instead. A row whose label has a note under it (`<small>` or
@@ -1873,8 +1902,35 @@ What it does for you, without hand work:
 - **A JSON field's first line is its tool row.** In a row that holds a `.kp-jsonfield`, the label, the `__value` text and the
   `__actions` cell (its button centred on the tools) all stand on the line of Format, Minify, Wrap and Copy.
 - **A refresh in the grid.** A `.kp-refresh` placed in the grid becomes a subgrid row: the chooser in the control track,
-  its freshness line in the value track, Refresh now in the actions track. `data-kp-refresh-label="Auto-refresh"` adds the
-  row's label in the label track (outside a form grid it is a line above the bar).
+  its freshness line in the value track (its words on the start edge), Refresh now in the actions track, all on the
+  grid's column gap. `data-kp-refresh-label="Auto-refresh"` adds the row's label in the label track (outside a form grid
+  it is a line above the bar, and the bar folds to one column under 40rem; `data-kp-refresh-stack` sets the fold). In a
+  narrow column on a wide screen the freshness line keeps the width of its words and the chooser gives way (its segments scroll).
+- **The attention band and problem alerts in the grid.** A `.kp-attention[data-kp-subgrid]` placed in the grid takes its
+  tracks: the icon in the label track, the words from the control edge, the fix in the actions column (see "The
+  attention band").
+- **A field fills its track.** A `.kp-field` has no width cap of its own (`--kp-field-max-width` sets one where a page
+  wants a measure), so a field in a value track or a page's grid column ends on the column's edge.
+- **Cards that share rows: `data-kp-formgrid-stage`** [gapform-1019]. A form grid is a size container (it folds on its own
+  width), and a size container cannot be a subgrid, so two cards side by side could not put "Source" beside "Source".
+  Put the cards in an element with `data-kp-formgrid-stage` (the stage) and give each `data-kp-formgrid-rows="subgrid"`: the stage holds the container
+  (by the same name, so every rule of the grid folds on the stage's width), lays the cards side by side, each at least
+  `--kp-formgrid-stage-min` (24rem) wide and one under the other when they do not fit, and every card takes its rows from
+  the stage, so row N of every card has one height. Its blocks (`.kp-kv`, `.kp-formrows`, `.kp-formgrid__group`, `form`)
+  give their rows to the card itself. `attachFormgridStages(root)` (`js/forms.js`, run by `auto.js`) writes
+  `--kp-formgrid-rows`, the row count of the longest card, on each stage and keeps it when a row comes or goes; a page
+  that does not load it sets the count itself.
+
+  ```html
+  <div data-kp-formgrid-stage>
+      <article class="kp-card kp-formgrid" data-kp-formgrid-rows="subgrid" data-kp-formgrid-lines="lines">
+          <h3 class="kp-card__title" data-kp-formgrid-span="all">alertmanager</h3>
+          <dl class="kp-kv"><div class="kp-kv__row"><dt>Source</dt><dd>kyu topic alerts.raw</dd></div></dl>
+      </article>
+      <article class="kp-card kp-formgrid" data-kp-formgrid-rows="subgrid" data-kp-formgrid-lines="lines">…</article>
+  </div>
+  ```
+
 - **A cell that needs more room says so**: `data-kp-formgrid-span="control-value"`, `"wide"` (control to actions) or
   `"all"`.
 - **The phone.** Under 36rem of the grid's own width the rows stay on the grid's tracks (Kenny, 2026-10-19 11:22: "Grid
@@ -1892,9 +1948,11 @@ Options, all attributes on `.kp-formgrid`, read by CSS alone, so changing one at
 | `data-kp-formgrid-align`  | `baseline`, `center`                       | `baseline` |
 | `data-kp-formgrid-stack`  | `auto` (the phone layout under 36rem), `always` (one plain column), `never` | `auto` |
 | `data-kp-formgrid-lines`  | `none`, `lines` (a rule under every row)   | `none`     |
+| `data-kp-formgrid-rows`   | `own`, `subgrid` (rows from a `data-kp-formgrid-stage` parent) | `own` |
 
 Knobs: `--kp-formgrid-gap` (between rows, the md step), `--kp-formgrid-column-gap` (the lg step), `--kp-formgrid-label-min`,
-`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`. A row takes
+`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`; on a stage
+`--kp-formgrid-stage-min` (24rem), `--kp-formgrid-stage-gap` (the lg step) and `--kp-formgrid-rows`. A row takes
 `data-kp-changed` and `data-kp-state="error"` like a form row.
 
 `.kp-formrows` on its own got the same two rules (first baseline, one width per kind of control), so a page that has not

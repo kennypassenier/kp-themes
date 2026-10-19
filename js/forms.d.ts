@@ -113,3 +113,19 @@ export declare function attachForms(root?: ParentNode, { validateOn, revalidateO
 export declare function attachSwitches(root?: ParentNode, { strings }?: {
     strings?: Partial<import('./strings.js').Strings>;
 }): () => void;
+/**
+ * Form grids that share rows [gapform-1019; HTTPSwitchboard 31]. In a `[data-kp-formgrid-stage]`, a `.kp-formgrid` with
+ * `data-kp-formgrid-rows="subgrid"` takes its rows from the stage, so "Source" in one card stands beside "Source" in
+ * the next with one height. A subgrid has to say how many rows it spans, and a count kept by hand drifts the day a row
+ * is added: this writes `--kp-formgrid-rows` on each stage, the row count of its longest card, and writes it again when
+ * a card gains or loses a row or one is hidden.
+ *
+ *   <div data-kp-formgrid-stage>
+ *     <section class="kp-card kp-formgrid" data-kp-formgrid-rows="subgrid">…</section>
+ *     <section class="kp-card kp-formgrid" data-kp-formgrid-rows="subgrid">…</section>
+ *   </div>
+ *
+ * @param {ParentNode} [root]
+ * @returns {() => void} detach: stops watching and removes the counts it wrote
+ */
+export declare function attachFormgridStages(root?: ParentNode): () => void;

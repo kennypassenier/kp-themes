@@ -209,11 +209,6 @@ dialog.aa-inplace {
 
 /* ── 3 · FIXED: the tracks ─────────────────────────────────────────────────────────────────────────────────────────────────────── */
 
-/* The facts and the editor: the form grid does all of it; the value text keeps the block's first baseline. */
-.aa-stage .kp-formgrid {
-    --kp-field-max-width: none;
-}
-
 /* 2 · A control cell that spans control to actions (as the field does) lays its own two cells on the tracks it spans: Try it on the
    control track, its note on the value track. */
 .kp-formgrid .kp-formgrid__control.aa-tracks {
@@ -241,11 +236,6 @@ dialog.aa-inplace {
    head's edges. */
 .aa-live {
     --kp-formgrid-control: var(--kp-formgrid-short, 14rem);
-}
-
-.aa-live .kp-refresh__line {
-    justify-items: start;
-    text-align: start;
 }
 
 .aa-live > .aa-live__title {
@@ -334,7 +324,7 @@ dialog.aa-inplace {
     }
 }
 
-/* 6 · The month head: four tracks, the buttons on the days' first and last edge, the title between them on one centre line. */
+/* 6 · The month head: the nav on the days' tracks is the package's data-kp-calendar-nav="spread" (gapform-1019); the page sizes the month. */
 .aa-month {
     container: aa-month / inline-size;
     max-inline-size: 44rem;
@@ -343,47 +333,6 @@ dialog.aa-inplace {
 
 .aa-stage[data-aa-width='phone'] .aa-month {
     max-inline-size: 100%;
-}
-
-.aa-month--fixed .kp-calendar__nav {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    justify-content: stretch;
-}
-
-/* 21.5rem is formal's own --kp-calendar-nav-fit: below it the package folds the title onto a row of its own. */
-@container aa-month (min-width: 21.5rem) {
-    .aa-month--fixed .kp-calendar__nav {
-        grid-template-columns: max-content minmax(0, 1fr) max-content max-content;
-    }
-}
-
-/* Wide enough for a day to hold a button: the nav stands on the days' own seven tracks (the same gap), Prev over the first day,
-   Next and Today over the last two, the title centred over the middle three, so every button edge is a day's edge. */
-@container aa-month (min-width: 40rem) {
-    .aa-month--fixed .kp-calendar__nav {
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        column-gap: var(--kp-calendar-gap, 6px);
-    }
-
-    .aa-month--fixed .kp-calendar__nav > [data-kp-calendar-prev] {
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    .aa-month--fixed .kp-calendar__nav > .kp-calendar__title {
-        grid-column: 3 / span 3;
-        grid-row: 1;
-    }
-
-    .aa-month--fixed .kp-calendar__nav > [data-kp-calendar-next] {
-        grid-column: 6;
-        grid-row: 1;
-    }
-
-    .aa-month--fixed .kp-calendar__nav > [data-kp-calendar-today] {
-        grid-column: 7;
-        grid-row: 1;
-    }
 }
 
 /* 7 · The page header: the title on the actions' centre line, the actions two equal tracks (side by side at every width). */
@@ -449,47 +398,8 @@ dialog.aa-inplace {
     }
 }
 
-/* 8 · The attention band: icon | text | actions, the same three tracks in every plate. The band is no container
-   (data-kp-subgrid), so each plate may be a subgrid of the form grid around it; under 36rem the package's own fold takes over. */
-.aa-attention-grid > .kp-attention[data-kp-subgrid] {
-    grid-column: label-start / actions-end;
-}
-
-@container kp-formgrid (width > 36rem) {
-    .aa-attention-grid > .kp-attention[data-kp-subgrid] {
-        grid-template-columns: subgrid;
-        row-gap: var(--kp-space-sm, 0.5rem);
-    }
-
-    .aa-attention-grid > .kp-attention[data-kp-subgrid] > .kp-attention__item {
-        grid-column: 1 / -1;
-        grid-template-columns: subgrid;
-    }
-
-    .aa-attention-grid .kp-attention__icon {
-        grid-column: label;
-    }
-
-    .aa-attention-grid .kp-attention__text {
-        grid-column: control-start / value-end;
-    }
-
-    .aa-attention-grid .kp-attention__actions {
-        grid-column: actions;
-    }
-}
-
-/* The fix buttons of every plate are one width (the widest word) whatever the width: in the actions track, or full width under the text. */
-.aa-attention-grid .kp-attention__actions {
-    display: grid;
-    justify-content: stretch;
-}
-
-.aa-attention-grid .kp-attention__actions > .kp-button {
-    inline-size: 100%;
-    box-sizing: border-box;
-    white-space: nowrap;
-}
+/* 8 · The attention band: icon | text | actions, the same three tracks in every plate, and the fold, are the package's
+   (data-kp-subgrid in a .kp-formgrid, gapform-1019). */
 
 /* 11 · Phone cards: every line is a subgrid of its card's two tracks, label | value; every value starts on the value track. */
 @container kp-table (max-width: 40rem) {

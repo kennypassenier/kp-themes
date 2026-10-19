@@ -375,7 +375,5 @@
 .hb-sec .kp-stackbar { --kp-stackbar-legend-min: 24rem; }
 .hb-sec .kp-stackbar__item { grid-template-columns: auto minmax(0, 1fr) 6.5rem; }
 .hb-reads3 .kp-formgrid__control, .hb-month__foot .kp-formgrid__control { font-size: var(--kp-text-sm, 0.8125rem); }
-/* The refresh control is a subgrid of the panel: it takes the panel's column gap so its chooser starts on the control edge. */
-.hb-panel > .kp-refresh { column-gap: inherit; }
 /* In the card layout the size figure keeps a margin to the card's edge. */
 @container kp-table (max-width: 40rem) { .hb-table .kp-bar-cell { margin-inline-end: var(--kp-space-sm, 0.5rem); } }

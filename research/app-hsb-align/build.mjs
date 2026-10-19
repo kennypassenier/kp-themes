@@ -290,7 +290,7 @@ sections.push(
             'The head: the name on the start edge, the small meter and the badge on the end edge, one line; at 390 px the name has a line and the meter and badge share the second, on their own tracks.',
         ],
         look: 'the horizontal rules between the rows, running from the first card into the second without a step.',
-        body: `<div class="hsa-stage" id="hsa-stage"></div>`,
+        body: `<div class="hsa-stage" data-kp-formgrid-stage id="hsa-stage"></div>`,
     }),
 );
 
