@@ -53,7 +53,7 @@ export const BUSY_CARD = '.kp-datatable__busy-card';
 const px = (v) => `${Math.round(v)}px`;
 
 /** The ancestors of `host` that clip it sideways (overflow-x other than visible), nearest first. @param {HTMLElement} host */
-function scrollersAround(host) {
+export function scrollersAround(host) {
     /** @type {HTMLElement[]} */
     const found = [];
     for (let a = host.parentElement; a && a !== host.ownerDocument.documentElement; a = a.parentElement) {
@@ -67,7 +67,7 @@ function scrollersAround(host) {
  * The span of `host`'s width (left to right, in viewport pixels) that no ancestor's sideways scrolling hides.
  * @param {HTMLElement} host @param {number} left @param {number} right
  */
-function seenAcross(host, left, right) {
+export function seenAcross(host, left, right) {
     let seenLeft = left;
     let seenRight = right;
     for (const a of scrollersAround(host)) {
@@ -113,9 +113,9 @@ export function openBusyCard(host, { words, area, className = '', arrive = true 
         const rects = area().map((b) => ('getBoundingClientRect' in b ? b.getBoundingClientRect() : b));
         if (!rects.length) return;
         let top = Math.max(viewTop, Math.min(...rects.map((r) => r.top)));
-        const left = Math.max(seen.left, Math.min(...rects.map((r) => r.left)));
+        let left = Math.max(seen.left, Math.min(...rects.map((r) => r.left)));
         let bottom = Math.max(top, Math.min(viewBottom, Math.max(...rects.map((r) => r.bottom))));
-        const right = Math.max(left, Math.min(seen.right, Math.max(...rects.map((r) => r.right))));
+        let right = Math.max(left, Math.min(seen.right, Math.max(...rects.map((r) => r.right))));
         const originTop = viewTop - host.scrollTop;
         const originLeft = viewLeft - host.scrollLeft;
         const write = () => {
@@ -132,6 +132,23 @@ export function openBusyCard(host, { words, area, className = '', arrive = true 
             const grow = (need - (bottom - top)) / 2;
             top = Math.max(viewTop, top - grow);
             bottom = Math.min(viewBottom, bottom + grow);
+            write();
+        }
+        // The same sideways: an area narrower than the panel (the cells of a heat grid on a phone, beside its label column, in
+        // the part a scroller shows) lends the card the width the panel needs, over what stands beside it, within what is seen,
+        // so the panel stands centred in its card and is never cut [laststates-1019].
+        // (the panel keeps a gutter of 0.5rem a side in a narrow container, and its grid track is the panel and that gutter.)
+        // It also covers at least half of what is seen, so it is a card and not a strip beside the labels.
+        const wide = Math.max(panel.offsetWidth + 17, (seen.right - seen.left) / 2 + 1);
+        if (wide > right - left) {
+            const grow = (wide - (right - left)) / 2;
+            left = Math.max(seen.left, left - grow);
+            right = Math.min(seen.right, right + grow);
+            // Where one side met the edge of what is seen, the other side takes the rest.
+            if (right - left < wide) {
+                if (left === seen.left) right = Math.min(seen.right, left + wide);
+                else left = Math.max(seen.left, right - wide);
+            }
             write();
         }
     };

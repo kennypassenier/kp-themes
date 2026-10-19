@@ -127,6 +127,7 @@
 // both.
 
 import { getStrings } from './strings.js';
+import { scrollersAround, seenAcross } from './busy-card.js';
 import { watchOptions } from './live-options.js';
 import { collator, formatDate, parseNumber, resolveLocale } from './locale.js';
 import { attachTableRegions } from './tables.js';
@@ -1190,8 +1191,12 @@ export function attachDataTables(
                 }
                 layer.style.setProperty('--kp-busy-overlay-top', `${from}px`);
                 layer.style.setProperty('--kp-busy-overlay-bottom', `${to}px`);
-                layer.style.setProperty('--kp-busy-overlay-left', `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
-                layer.style.setProperty('--kp-busy-overlay-right', `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
+                // A table frame wider than the box that scrolls it (a table in a phone's page scroller) is covered only where it is seen, so the
+                // panel is centred on what the reader sees and not on a middle off screen [laststates-1019].
+                const innerLeft = hostBox.left + host.clientLeft;
+                const seen = seenAcross(host, innerLeft, innerLeft + host.clientWidth);
+                layer.style.setProperty('--kp-busy-overlay-left', `${Math.max(0, Math.round(Math.max(tableBox.left, seen.left) - innerLeft))}px`);
+                layer.style.setProperty('--kp-busy-overlay-right', `${Math.max(0, Math.round(innerLeft + host.clientWidth - Math.min(tableBox.right, seen.right)))}px`);
             };
             layer.append(panel);
             host.append(layer);
@@ -1201,7 +1206,13 @@ export function attachDataTables(
                 watcher.observe(host);
                 watcher.observe(table);
                 if (table.tHead !== null) watcher.observe(table.tHead);
-                overlayUnwatch = () => watcher.disconnect();
+                // Scrolled sideways inside a scrolling ancestor, the part that is seen moves: the card follows it.
+                const scrollers = scrollersAround(host);
+                for (const scroller of scrollers) scroller.addEventListener('scroll', place, { passive: true });
+                overlayUnwatch = () => {
+                    watcher.disconnect();
+                    for (const scroller of scrollers) scroller.removeEventListener('scroll', place);
+                };
             }
             overlayLayer = layer;
         };

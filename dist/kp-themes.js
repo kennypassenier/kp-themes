@@ -15219,7 +15219,9 @@ var init_state_plate = __esm({
 var busy_card_exports = {};
 __export(busy_card_exports, {
   BUSY_CARD: () => BUSY_CARD,
-  openBusyCard: () => openBusyCard
+  openBusyCard: () => openBusyCard,
+  scrollersAround: () => scrollersAround,
+  seenAcross: () => seenAcross
 });
 function scrollersAround(host) {
   const found = [];
@@ -15264,9 +15266,9 @@ function openBusyCard(host, { words, area, className = "", arrive: arrive2 = tru
     const rects = area().map((b) => "getBoundingClientRect" in b ? b.getBoundingClientRect() : b);
     if (!rects.length) return;
     let top = Math.max(viewTop, Math.min(...rects.map((r) => r.top)));
-    const left = Math.max(seen.left, Math.min(...rects.map((r) => r.left)));
+    let left = Math.max(seen.left, Math.min(...rects.map((r) => r.left)));
     let bottom = Math.max(top, Math.min(viewBottom, Math.max(...rects.map((r) => r.bottom))));
-    const right = Math.max(left, Math.min(seen.right, Math.max(...rects.map((r) => r.right))));
+    let right = Math.max(left, Math.min(seen.right, Math.max(...rects.map((r) => r.right))));
     const originTop = viewTop - host.scrollTop;
     const originLeft = viewLeft - host.scrollLeft;
     const write3 = () => {
@@ -15281,6 +15283,17 @@ function openBusyCard(host, { words, area, className = "", arrive: arrive2 = tru
       const grow = (need - (bottom - top)) / 2;
       top = Math.max(viewTop, top - grow);
       bottom = Math.min(viewBottom, bottom + grow);
+      write3();
+    }
+    const wide = Math.max(panel.offsetWidth + 17, (seen.right - seen.left) / 2 + 1);
+    if (wide > right - left) {
+      const grow = (wide - (right - left)) / 2;
+      left = Math.max(seen.left, left - grow);
+      right = Math.min(seen.right, right + grow);
+      if (right - left < wide) {
+        if (left === seen.left) right = Math.min(seen.right, left + wide);
+        else left = Math.max(seen.left, right - wide);
+      }
       write3();
     }
   };
@@ -17511,8 +17524,10 @@ function attachDataTables(root = document, {
         }
         layer.style.setProperty("--kp-busy-overlay-top", `${from}px`);
         layer.style.setProperty("--kp-busy-overlay-bottom", `${to}px`);
-        layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
-        layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
+        const innerLeft = hostBox.left + host.clientLeft;
+        const seen = seenAcross(host, innerLeft, innerLeft + host.clientWidth);
+        layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(Math.max(tableBox.left, seen.left) - innerLeft))}px`);
+        layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(innerLeft + host.clientWidth - Math.min(tableBox.right, seen.right)))}px`);
       };
       layer.append(panel2);
       host.append(layer);
@@ -17522,7 +17537,12 @@ function attachDataTables(root = document, {
         watcher.observe(host);
         watcher.observe(table);
         if (table.tHead !== null) watcher.observe(table.tHead);
-        overlayUnwatch = () => watcher.disconnect();
+        const scrollers = scrollersAround(host);
+        for (const scroller of scrollers) scroller.addEventListener("scroll", place2, { passive: true });
+        overlayUnwatch = () => {
+          watcher.disconnect();
+          for (const scroller of scrollers) scroller.removeEventListener("scroll", place2);
+        };
       }
       overlayLayer = layer;
     };
@@ -20276,6 +20296,7 @@ var init_datatable = __esm({
   "js/datatable.js"() {
     "use strict";
     init_strings();
+    init_busy_card();
     init_live_options();
     init_locale();
     init_tables();
@@ -60211,7 +60232,9 @@ function stateOf8(root) {
       pendingTimer: 0,
       off: [],
       showAll: false,
-      said: ""
+      said: "",
+      barState: "",
+      hintHeight: 0
     };
     STATE8.set(root, st);
   }
@@ -60397,8 +60420,11 @@ function drawBar(root) {
   }
   if (st.pending === null) run.textContent = s2.consoleRun;
   else run.textContent = s2.consoleRunAnyway;
+  if (st.barState === "ready") st.hintHeight = hint2.offsetHeight;
   hint2.textContent = blocked && why ? why : attr13(root, "hint", "") || s2.consoleHint;
   hint2.toggleAttribute("data-kp-console-why", blocked && Boolean(why));
+  hint2.style.minBlockSize = state2 !== "ready" && st.hintHeight > 0 ? `${st.hintHeight}px` : "";
+  st.barState = state2;
   const wantsContext = attr13(root, "context", "none") === "select";
   contextWrap.hidden = !wantsContext;
   if (wantsContext) {
@@ -65812,7 +65838,9 @@ export {
   runsRelative,
   scriptSide,
   scrollWithin,
+  scrollersAround,
   searchLogViewer,
+  seenAcross,
   segmented_exports as segmentedExports,
   selectPane,
   selectTab,

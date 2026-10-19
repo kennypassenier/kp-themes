@@ -830,7 +830,10 @@ export function measureDriven([i, state, name, readyH, maxHold, busySel, ownSel,
     const vw = document.documentElement.clientWidth;
     const vh = window.innerHeight;
     if (readyH > 0 && state !== 'loading') {
-        const need = Math.min(readyH, maxHold) - 8;
+        // A host (or an ancestor) that caps the hold with its own `--kp-footprint-max` (a demo of the cap) is held at that, not at 48rem [laststates-1019].
+        const own = /^\s*(\d+(?:\.\d+)?)(px|rem)\s*$/.exec(getComputedStyle(host).getPropertyValue('--kp-footprint-max'));
+        const cap = own ? Number(own[1]) * (own[2] === 'rem' ? parseFloat(getComputedStyle(document.documentElement).fontSize) : 1) : maxHold;
+        const need = Math.min(readyH, cap) - 8;
         if (H.height < need)
             res.push(
                 `${at} ${state === 'error' ? 'failed' : state} is ${H.height.toFixed(0)}px high, its loaded footprint is ${need.toFixed(0)}px (js/footprint.js holds it)`,
