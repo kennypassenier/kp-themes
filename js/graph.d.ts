@@ -133,7 +133,6 @@ export type GraphModel = {
     svg: SVGSVGElement;
     note: HTMLElement;
     plate: HTMLElement;
-    busy: import('./busy-card.js').BusyCard | null;
     drawn: boolean;
     hint: HTMLElement;
     decorate?: (part: Element, info: GraphDecorateInfo) => void;
@@ -151,7 +150,7 @@ export type GraphModel = {
 export declare function setGraphData(el: Element, data: GraphData): void;
 /**
  * `loading`, `empty` or `error`, with the sentence to show in the picture at
- * its final height (loading says `graphLoading` when given none). Loading is the busy card over the whole picture; empty
+ * its final height (loading says `graphLoading` when given none). Loading is the chart's own loading picture over the whole picture; empty
  * and error are the package's state plate over it (`words` is its heading, `text` its sentence, `art` a picture over the
  * heading), an error with a Retry that fires `kp-graph-retry` [state-plates-1019].
  * @param {Element} el
