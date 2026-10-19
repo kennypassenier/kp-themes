@@ -1,6 +1,26 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/align-grid-1019/demo.html": {
+            "facts": {
+                "id": "align-grid-1019",
+                "themes": "formal",
+                "ask": null,
+                "askText": "You rejected seven settings sections for misalignment: a second column that was not uniform, rows off their labels, and “Send test” off the line of “Format” and “Minify”. The package now has one layout for all of these, .kp-formgrid: four columns, label, control, value and actions, that every row shares, so things line up by construction rather than by care. 6 sections, formal only; the content is made up. Every section names its grid under The grid. The project threads move their own pages onto it once you approve it, and a new measurement holds every demo to it.",
+                "sections": [
+                    { "item": "settings", "themes": "formal", "topic": "settings", "mode": null },
+                    { "item": "form", "themes": "formal", "topic": "form", "mode": null },
+                    { "item": "facts", "themes": "formal", "topic": "facts", "mode": null },
+                    { "item": "request", "themes": "formal", "topic": "request", "mode": null },
+                    { "item": "tools", "themes": "formal", "topic": "tools", "mode": null },
+                    { "item": "phone", "themes": "formal", "topic": "phone", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"aligngrid-7ef59f03-3ba5-4693-9472-818f60de9fdb\", \"received\": [] }\n        "
+            },
+            "fingerprint": "cff66b25a66c1cdf",
+            "update": null
+        },
         "research/state-plates-1019/demo.html": {
             "facts": {
                 "id": "state-plates-1019",

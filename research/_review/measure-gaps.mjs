@@ -6,9 +6,14 @@
 // It is a measuring script, not a test: it runs before a round is put on the Agenda, by the helper that built it and by
 // Claude before the push, and prints one line per text closer than 4 px. Exit code 1 when anything is found.
 //
+// Since align-grid-1019 it also runs measure-align.mjs's measurement on every section (Kenny, 2026-10-19 06:43: "Gebruik
+// het grid en align deftig verticaal!"): columns of sibling rows on one edge, every cell of a row on its label's line,
+// buttons side by side on one line, a button group on the tracks of the rows above. Its lines start with "align".
+//
 // Run (a static server on the repository root first):
 //   node research/_review/measure-gaps.mjs <port> <research/topic/demo.html> [themes=formal,dark] [widths=1280,390]
 import { createRequire } from 'node:module';
+import { ALIGN_TOLERANCE, measureAlign } from './measure-align.mjs';
 
 const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
 const { firefox } = require('playwright-core');
@@ -147,6 +152,8 @@ for (const width of widthArg.split(',').map(Number))
         );
         /** @type {string[]} */
         let out = [];
+        /** @type {string[]} */
+        let align = [];
         for (const id of ids) {
             await page.evaluate(
                 (i) => document.querySelector(`[data-review-item="${i}"]`)?.scrollIntoView({ block: 'start', behavior: 'instant' }),
@@ -154,10 +161,16 @@ for (const width of widthArg.split(',').map(Number))
             );
             await page.waitForTimeout(250);
             out = out.concat(await page.evaluate(measure, /** @type {[number, string]} */ ([MIN, id])));
+            align = align.concat(await page.evaluate(measureAlign, /** @type {[number, string]} */ ([ALIGN_TOLERANCE, id])));
         }
-        found += out.length;
-        console.log(`${theme} ${width}: ${out.length ? `${out.length} text(s) closer than ${MIN}px` : 'clear'}`);
+        found += out.length + align.length;
+        const said = [
+            out.length ? `${out.length} text(s) closer than ${MIN}px` : '',
+            align.length ? `${align.length} alignment fault(s)` : '',
+        ].filter(Boolean);
+        console.log(`${theme} ${width}: ${said.length ? said.join(', ') : 'clear'}`);
         for (const line of out) console.log(`  ${line}`);
+        for (const line of align) console.log(`  align ${line}`);
         await page.close();
     }
 await browser.close();

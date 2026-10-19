@@ -63,6 +63,7 @@ export const HELPERS = {
     'theme-group': 'a group in the theme menu; the options carry the identity',
     'col-low': 'a layout modifier for a low column; no surface of its own',
     'progress-group': 'three columns for a set of bars; the bars carry the identity, the group only says where they begin [fix-64]',
+    formgrid: 'the layout grid of forms, settings and key-value panels; the fields, buttons and lists in it carry the identity, the grid only says where they stand [align-grid-1019]',
 };
 
 /**

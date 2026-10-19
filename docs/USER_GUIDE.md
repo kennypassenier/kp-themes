@@ -1768,6 +1768,86 @@ helpTourButton.addEventListener('click', () => {
 - `decorate(part, info)` is handed the card's three buttons
   (`tour-next`, `tour-back`, `tour-skip`) each time a tour builds them;
   `strings` overrides the dictionary's `tour…` words for this tour.
+## Forms, settings, facts and buttons: the form grid [align-grid-1019]
+
+**This is THE way to lay out a form, a settings list, a key-value panel and the buttons that act on them.** Kenny,
+2026-10-19, after seven settings sections were rejected for a second column that "ziet er totaal niet uniform uit" and a
+"Send test" that stood off the line of "Format" and "Minify": "Gebruik het grid en align deftig verticaal!". Do not lay
+these out with flex rows, `justify-content: space-between` or a label and a control side by side in a `div`: the columns
+then line up by accident, and by accident they do not.
+
+`.kp-formgrid` is one grid of four named column tracks that every row inside it shares as a subgrid:
+
+    label | control | value | actions
+
+| Track     | Width                                                                                                     | Holds                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `label`   | the longest label (at most `--kp-formgrid-label-max`, 40 %; at least `--kp-formgrid-label-min`)            | `.kp-formgrid__label`, a `dt`, `.kp-formrow__label`                         |
+| `control` | `--kp-formgrid-control` (3fr; a length caps it)                                                                   | `.kp-formgrid__control`, `.kp-formrow__control`; a `dd` spans control+value |
+| `value`   | `--kp-formgrid-value` (2fr)                                                                                                | `.kp-formgrid__value`, `.kp-formrow__aside`: a default, a source, a hint    |
+| `actions` | its widest button group                                                                                   | `.kp-formgrid__actions`, buttons at its end                                 |
+
+```html
+<div class="kp-formgrid" data-kp-formgrid-lines="lines">
+    <div class="kp-formgrid__row">
+        <label class="kp-formgrid__label" for="hour">Nightly hour</label>
+        <div class="kp-formgrid__control"><input class="kp-field__input" type="time" id="hour" value="02:00" /></div>
+        <p class="kp-formgrid__value">default off</p>
+        <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Reset</button></div>
+    </div>
+    <dl class="kp-kv">
+        <div class="kp-kv__row"><dt>Last run</dt><dd>19/10/2026 02:00</dd></div>
+    </dl>
+    <div class="kp-formgrid__row kp-formgrid__row--buttons">
+        <div class="kp-formgrid__control">
+            <div class="kp-formgrid__buttons">
+                <button class="kp-button" type="button">Format</button>
+                <button class="kp-button" type="button">Minify</button>
+            </div>
+        </div>
+        <div class="kp-formgrid__actions"><button class="kp-button kp-button--primary" type="button">Send test</button></div>
+    </div>
+</div>
+```
+
+What it does for you, without hand work:
+
+- **Columns run through every row and every block.** A `.kp-formrows`, a `.kp-kv`, a `fieldset`, a `form` or a
+  `.kp-formgrid__group` placed inside the grid becomes a subgrid of it: a key-value panel under a form starts its values on
+  the edge where the fields start. A `legend` or `.kp-formgrid__heading` in a group spans the whole width.
+- **One edge per kind of control.** Every control starts on the control track's edge. A field, select, combobox, textarea,
+  secret, code block or command fills the track; a short control (stepper, time, number, date, `.kp-field__input--short`,
+  `.kp-formgrid__short`) takes one fixed step, `--kp-formgrid-short` (14rem), and a stepper is never squeezed under its unit;
+  a switch or a checkbox keeps its own size. So the column ends on at most two edges.
+- **Every row on one line.** Cells align on the row's first baseline: the label's first line, the text in a field, the number
+  of a stepper, a switch's word, a value's words. A multi-line label or a field with help under it keeps its first line on
+  that line. `data-kp-formgrid-align="center"` centres instead.
+- **Buttons on the tracks.** `.kp-formgrid__row--buttons` is a row of buttons, centred on one line: its
+  `.kp-formgrid__control` puts a `.kp-formgrid__buttons` group on the fields' start edge, and its `.kp-formgrid__actions`
+  puts the row's own action at the end of the actions column, so "Send test" stands on the line of "Format" and "Minify"
+  and in the column of every other row action. Give buttons that stand on one line the same size.
+- **A cell that needs more room says so**: `data-kp-formgrid-span="control-value"`, `"wide"` (control to actions) or
+  `"all"`.
+- **The phone.** Under 36rem of the grid's own width every row reads top to bottom in one column: label, control, value,
+  actions (the buttons then start at the left edge). The fields keep their widths per kind.
+
+Options, all attributes on `.kp-formgrid`, read by CSS alone, so changing one at run time re-lays the grid at once:
+
+| Attribute                 | Values                                     | Default    |
+| ------------------------- | ------------------------------------------ | ---------- |
+| `data-kp-formgrid-label`  | `fit` (the longest label), `wide` (14rem+) | `fit`      |
+| `data-kp-formgrid-align`  | `baseline`, `center`                       | `baseline` |
+| `data-kp-formgrid-stack`  | `auto` (under 36rem), `always`, `never`    | `auto`     |
+| `data-kp-formgrid-lines`  | `none`, `lines` (a rule under every row)   | `none`     |
+
+Knobs: `--kp-formgrid-gap` (between rows, the md step), `--kp-formgrid-column-gap` (the lg step), `--kp-formgrid-label-min`,
+`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`. A row takes
+`data-kp-changed` and `data-kp-state="error"` like a form row.
+
+`.kp-formrows` on its own got the same two rules (first baseline, one width per kind of control), so a page that has not
+moved to the form grid yet already lines up inside one list. The check that holds every review demo to this is
+`research/_review/measure-align.mjs`, run by `measure-gaps.mjs`.
+
 ## Rows, cards and choices [kpadopt4-rows]
 
 What Kenny's apps still drew themselves around their lists (the homelab
@@ -4280,6 +4360,9 @@ the warning tone, past `bad` the destructive one. Loading lays the data table's 
 
 The label column is as wide as the longest label; `--stack` and `--columns` for the grid, `--top`, `--wide`,
 `data-kp-changed`, `data-kp-state="error"` and `data-kp-locked` for a row. Under 36rem a form row reads top to bottom.
+Cells stand on the row's first baseline and a control takes the width of its kind (a field the track, a short control one
+step). To line a form up with a key-value panel and its buttons, put them in one `.kp-formgrid` (see "Forms, settings,
+facts and buttons: the form grid").
 
 **The code block.** `<figure class="kp-code" data-kp-code data-kp-code-title="Payload" data-kp-code-language="JSON"><pre><code>…</code></pre></figure>`
 or `setCode(el, { text, title, language, lines, maxLines, truncated, state })` (`js/code.js`): Pretty and Raw for JSON, Wrap,

@@ -10032,7 +10032,7 @@ failed.addEventListener('kp-bullets-retry', () => draw('ready'));
         id: 'formrows',
         title: 'Form rows',
         group: 'Forms',
-        classes: ['kp-formrows', 'kp-formrow'],
+        classes: ['kp-formrows', 'kp-formrow', 'kp-formgrid'],
         exports: [],
         intro: 'A settings form as rows: the label, the package’s own control with its help or error under it, and an aside for where the value comes from or an Edit button. The label column is as wide as the longest label; under 36rem each row reads top to bottom.',
         whenToUse: 'A settings page or a long form of independent values.',

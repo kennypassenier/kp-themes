@@ -134,6 +134,12 @@ export const REQUIRED = [
         why: 'The form measures its own width and reads each row top to bottom when narrow; the query reaches only the rows’ parts [kpadopt4-data].',
     },
     {
+        container: 'kp-formgrid',
+        class: 'kp-formgrid',
+        self: true,
+        why: 'The form grid measures its own width and reads every row top to bottom when narrow; the queries reach only its rows, groups, refresh bar and bands [align-grid-1019].',
+    },
+    {
         container: 'kp-ops',
         class: 'kp-ops',
         self: true,

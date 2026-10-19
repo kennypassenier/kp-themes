@@ -502,6 +502,7 @@
         "kp-code": ["@component:data"],
         "kp-code-block": [],
         "kp-formrows": ["@component:data"],
+        "kp-formgrid": ["@component:data"],
         "kp-formrow": ["@component:data"],
         "kp-wheel": ["@component:data"],
         "kp-focus-steps": ["@component:feedback"],

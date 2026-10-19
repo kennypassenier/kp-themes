@@ -1,0 +1,32 @@
+/* research/align-grid-1019: the frame of the page. Everything with a kp- class is the package; the ag- rules only place the
+   frames. */
+
+.ag-card {
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding: var(--kp-space-lg, 1rem) var(--kp-space-xl, 1.5rem);
+}
+
+/* A frame as wide as a phone: the grid inside reads its own width and stacks. */
+.ag-phone {
+    inline-size: min(100%, 22.5rem);
+    margin-inline: auto;
+}
+
+.ag-body {
+    font-size: var(--kp-text-sm, 0.8125rem);
+    resize: vertical;
+}
+
+.ag-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1rem);
+}
+
+.ag-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+}
