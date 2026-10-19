@@ -1,0 +1,24 @@
+/* research/field-problems-1019: the frame of the page. Everything with a kp- class is the package; the fp- rules only lay out. */
+
+.fp-stack {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.fp-two {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+}
+
+@media (max-width: 40rem) {
+    .fp-two {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.fp-card {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-sm, 0.5rem);
+}

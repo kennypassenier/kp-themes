@@ -1,0 +1,30 @@
+/* research/heat-deplist-1019: the frame of the page. Everything with a kp- class is the package; the rf- rules only lay out. */
+
+.rf-frame {
+    box-sizing: border-box;
+    inline-size: min(100%, 26rem);
+    margin-inline: auto;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.rf-frame__label {
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    text-align: center;
+}
+
+.rf-col {
+    inline-size: min(var(--rf-w, 270px), 100%);
+    margin-inline: auto;
+}
+
+/* An open dialog or palette shown in place: it takes its box in the flow, not the window. */
+.rf-static[open] {
+    position: static;
+
+.rf-heat {
+    max-inline-size: 100%;
+}

@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (project threads): four more fix rounds bundled in ONE page (research/round-4-1019, built by build.mjs from research/heat-deplist-1019, trace-diff-1019, kpi-entity-1019 and field-problems-1019, which stay as its sources and are off the Agenda). Formal only; each section says what was wrong and what is different now.
+            {
+                href: 'research/round-4-1019/demo.html',
+                label: 'Fixes from the project threads, round 4',
+                about: 'Fixes from the project threads, each in the package: the heat grid row and column names and the dependency list status column; the path trace verdict column and a long token in a diff line; a key figure name and note, and the entity card actions, meter tones and empty grid; and a form field filling its place and the problems fix column. 11 sections (11 pairs), in formal only.',
+            },
             // Kenny, 2026-10-19 (project threads): four more fix/option rounds bundled in ONE page (research/round-3-1019, built by build.mjs from research/r6r8-1019, audhd-opts-1019, hover-wheel-1019 and formgrid-notes-1019, which stay as its sources and are off the Agenda). Formal only; each section says what was wrong and what is different now.
             {
                 href: 'research/round-3-1019/demo.html',

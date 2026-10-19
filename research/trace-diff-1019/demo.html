@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="trace-diff-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Two faults of the lists: the trace's verdict column and the diff's long line</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Two faults of the lists</h1>
+                <p class="cat-intro">
+                    HTTPSwitchboard found two places where an approved component did not line up at a phone&rsquo;s width: the verdict words of a
+                    trace, and a long word in a diff line. 2 pairs in all, both in formal. Each section says under
+                    <b>What changed since you approved it</b> what was wrong and what is different now.
+                </p>
+            </header>
+
+            <section
+                class="kc-sec"
+                id="trace-column"
+                data-review-item="trace-column"
+                data-review-components="trace steplist"
+                data-review-title="Path trace: the hops in a column"
+                data-review-themes="formal"
+                aria-labelledby="h-trace-column"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> In a trace whose hops stand in a column (a phone, or a narrow box) the verdict word
+                        of each hop (<b>Allowed</b>, <b>Refused</b>, <b>Not Reached</b>) took only as much room as its own word, so the words started
+                        and ended on a different edge from hop to hop and the lines of words beside them ended on different edges too. Now the trace
+                        has one column for the verdict word, as wide as the longest word of any hop, and every hop uses it: the words start on one
+                        edge, the hops&rsquo; own words end on one edge. The marks, the words, the chips, the dimmed hop after a refusal, and the row
+                        of hops side by side on a wide box are as you approved them.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-trace-column">Path trace: the hops in a column</h2>
+                    <p>One message followed from its sender to its destination, at a phone&rsquo;s width, where the hops stand under each other.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Under each other, the verdict words <b>Allowed</b>, <b>Refused</b> and <b>Not Reached</b> all start on one edge and the
+                            hops&rsquo; own words all end on one edge.
+                        </li>
+                        <li>In the second frame (words only) the same: one column for the verdict word.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the verdict words of every hop start on one vertical line, and so do the ends of the hops&rsquo; own words.
+                    </p>
+                </div>
+                <div class="td-frame">
+                    <p class="td-frame__label">The trace, mark and word</p>
+                    <div class="kp-trace" data-kp-trace data-kp-trace-layout="column" data-td-trace></div>
+                </div>
+                <div class="td-frame">
+                    <p class="td-frame__label">The trace, the word only</p>
+                    <div class="kp-trace" data-kp-trace data-kp-trace-layout="column" data-kp-trace-verdict="word" data-td-trace></div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="diff-line"
+                data-review-item="diff-line"
+                data-review-components="diff"
+                data-review-title="Diff: a line with a long token"
+                data-review-themes="formal"
+                aria-labelledby="h-diff-line"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> A line of a diff holding one long word (an address or a file name with no space in
+                        it) made its text column as wide as that word, so the line ran past the other lines and past the plate&rsquo;s edge at a
+                        phone&rsquo;s width. Now the text column may be narrower than its longest word, and the word breaks inside the column, so
+                        every line ends on the plate&rsquo;s inner edge. The line numbers, the signs, the colours and the diff view with its words
+                        marked are as you approved them.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-diff-line">Diff: a line with a long token</h2>
+                    <p>Before and after of a message, one line holding an address that has no place to break.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The long address breaks onto a second line inside the text column; every line ends on the plate&rsquo;s inner edge.</li>
+                        <li>The line numbers stand in one column and the signs in the next, on every line, including the broken one.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the right edge of every line is the plate&rsquo;s inner edge, none runs past.</p>
+                </div>
+                <div class="td-frame">
+                    <p class="td-frame__label">A diff in a phone-width plate</p>
+                    <pre class="kp-diff td-diff" tabindex="0" aria-label="Changes: 2 lines removed, 3 lines added" data-td-diff></pre>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "tracediff-1a112af5-d0ed-4a45-a3da-173e51ea1116", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

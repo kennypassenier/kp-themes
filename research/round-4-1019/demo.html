@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="round-4-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Fixes from the project threads, round 4</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="../heat-deplist-1019/page.css" />
+        <link rel="stylesheet" href="../trace-diff-1019/page.css" />
+        <link rel="stylesheet" href="../kpi-entity-1019/page.css" />
+        <link rel="stylesheet" href="../field-problems-1019/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Fixes from the project threads, round 4</h1>
+                <p class="cat-intro">
+                    Fixes from the project threads, each in the package: the heat grid's row and column names and the dependency list's status column;
+                    the path trace's verdict column and a long token in a diff line; a key figure's name and note, and the entity card's actions,
+                    meter tones and empty grid; and a form field filling its place and the problems' fix column. 11 pairs, all in formal. Every
+                    section says under <b>What changed since you approved it</b> what was wrong and what is different now.
+                </p>
+            </header>
+
+            <div class="r4-heat">
+                <section
+                    class="kc-sec"
+                    id="heat-label"
+                    data-review-item="heat-label"
+                    data-review-components="heat"
+                    data-review-title="Heat grid: row names stay whole words"
+                    data-review-themes="formal"
+                    aria-labelledby="h-heat-label"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> On a phone a row name was broken inside the word (&ldquo;PAPERLE&rdquo; over
+                            &ldquo;SS&rdquo;, &ldquo;VAULTW&rdquo; over &ldquo;ARDEN&rdquo;), because the name column was a fixed share of the grid,
+                            narrower than the longest name. Now the name column is as wide as the longest <em>word</em> of any name (never more than
+                            it was, unless a word needs it) and the cells give way; a name of several words wraps at its spaces. The cells, the
+                            legend, the axis and pressing a name to pick a row are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-heat-label">Heat grid: row names stay whole words</h2>
+                        <p>Backups per stack per night, rows named after the stack; the grid is shown at the width of a phone and at a wide width.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In the narrow frame every row name is whole: <b>Paperless</b>, <b>Vaultwarden</b> and <b>Almanac</b> each on one line,
+                                <b>Photos and family videos</b> on three lines at its spaces.
+                            </li>
+                            <li>Every row&rsquo;s cells start on one edge, the same distance from the names, in both frames.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: no row name is cut in the middle of a word, and the cells of every row start on one vertical line.
+                        </p>
+                    </div>
+                    <div class="rf-frame">
+                        <p class="rf-frame__label">Phone width (about 340 px)</p>
+                        <div class="rf-col" style="--rf-w: 340px">
+                            <div class="kp-heat rf-heat" data-rf-heat="names"></div>
+                        </div>
+                    </div>
+                    <div class="rf-frame">
+                        <p class="rf-frame__label">Wide</p>
+                        <div class="rf-col" style="--rf-w: 640px">
+                            <div class="kp-heat rf-heat" data-rf-heat="names"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="heat-axis"
+                    data-review-item="heat-axis"
+                    data-review-components="heat"
+                    data-review-title="Heat grid: the column names"
+                    data-review-themes="formal"
+                    aria-labelledby="h-heat-axis"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> Two faults. First, <code>every</code> (how many columns share one name) was
+                            ignored as soon as a column was marked <code>minor</code>: the mark decided alone, so a page could not both mark the
+                            weekend and thin out the names. Now the columns that are not marked are counted every <code>every</code>th, the last of
+                            them always named; a marked <code>minor</code> column is never named and does not count. Second, a name that was not shown
+                            was still in the grid, only drawn in no colour, so a measure of the page still found it standing under its neighbour. Now
+                            it is not written at all: the column keeps its header for a screen reader (the name is its label) and there is no text to
+                            find. The grid, the cells and the picked column are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-heat-axis">Heat grid: the column names</h2>
+                        <p>
+                            Fourteen nights with the weekend nights marked as minor columns, first with the default spacing of names and then with a
+                            name on every second night.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The first axis names the first night, every third night after it and the last; the two weekend columns carry no name.
+                            </li>
+                            <li>
+                                The second axis (every second night) names every second night; the weekend columns are still blank, and nothing is
+                                written in a blank column.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the names stand over their own columns with air between them; a blank column is empty, not faint.
+                        </p>
+                    </div>
+                    <div class="rf-frame">
+                        <p class="rf-frame__label">Every third (default)</p>
+                        <div class="rf-col" style="--rf-w: 560px">
+                            <div class="kp-heat rf-heat" data-rf-heat="axis-3"></div>
+                        </div>
+                    </div>
+                    <div class="rf-frame">
+                        <p class="rf-frame__label">Every second</p>
+                        <div class="rf-col" style="--rf-w: 560px">
+                            <div class="kp-heat rf-heat" data-rf-heat="axis-2"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="deplist-state"
+                    data-review-item="deplist-state"
+                    data-review-components="deplist"
+                    data-review-title="Dependency list: one status column"
+                    data-review-themes="formal"
+                    aria-labelledby="h-deplist-state"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The state badges (Running, Stopped, Unknown) each took their own word&rsquo;s
+                            width and started on the column&rsquo;s start edge, so they ended on three different edges. Now the status is one column:
+                            every badge fills the width of the widest word, its word centred, so all of them start and end on the same two lines. On a
+                            phone, where each state stands under its row, they share one width as well. The numbers, the names, the arrows and the
+                            copy button are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-deplist-state">Dependency list: one status column</h2>
+                        <p>Which stacks reach which apps, with the state of each app that is needed, at a wide width and at the width of a phone.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>In the wide list the badges form one column, all the same width and aligned on both edges.</li>
+                            <li>In the narrow list the badges are the same width too, under the names, aligned on their start edge.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: every state badge starts and ends on the same two vertical lines.</p>
+                    </div>
+                    <div class="rf-frame">
+                        <p class="rf-frame__label">Wide</p>
+                        <div class="rf-col" style="--rf-w: 640px">
+                            <div class="kp-deplist" data-kp-deplist data-kp-dep-states data-rf-deplist></div>
+                        </div>
+                    </div>
+                    <div class="rf-frame">
+                        <p class="rf-frame__label">Phone width (about 300 px)</p>
+                        <div class="rf-col" style="--rf-w: 300px">
+                            <div class="kp-deplist" data-kp-deplist data-kp-dep-states data-rf-deplist></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r4-trace">
+                <section
+                    class="kc-sec"
+                    id="trace-column"
+                    data-review-item="trace-column"
+                    data-review-components="trace steplist"
+                    data-review-title="Path trace: the hops in a column"
+                    data-review-themes="formal"
+                    aria-labelledby="h-trace-column"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> In a trace whose hops stand in a column (a phone, or a narrow box) the verdict
+                            word of each hop (<b>Allowed</b>, <b>Refused</b>, <b>Not Reached</b>) took only as much room as its own word, so the words
+                            started and ended on a different edge from hop to hop and the lines of words beside them ended on different edges too. Now
+                            the trace has one column for the verdict word, as wide as the longest word of any hop, and every hop uses it: the words
+                            start on one edge, the hops&rsquo; own words end on one edge. The marks, the words, the chips, the dimmed hop after a
+                            refusal, and the row of hops side by side on a wide box are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-trace-column">Path trace: the hops in a column</h2>
+                        <p>
+                            One message followed from its sender to its destination, at a phone&rsquo;s width, where the hops stand under each other.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Under each other, the verdict words <b>Allowed</b>, <b>Refused</b> and <b>Not Reached</b> all start on one edge and
+                                the hops&rsquo; own words all end on one edge.
+                            </li>
+                            <li>In the second frame (words only) the same: one column for the verdict word.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the verdict words of every hop start on one vertical line, and so do the ends of the hops&rsquo; own words.
+                        </p>
+                    </div>
+                    <div class="td-frame">
+                        <p class="td-frame__label">The trace, mark and word</p>
+                        <div class="kp-trace" data-kp-trace data-kp-trace-layout="column" data-td-trace></div>
+                    </div>
+                    <div class="td-frame">
+                        <p class="td-frame__label">The trace, the word only</p>
+                        <div class="kp-trace" data-kp-trace data-kp-trace-layout="column" data-kp-trace-verdict="word" data-td-trace></div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="diff-line"
+                    data-review-item="diff-line"
+                    data-review-components="diff"
+                    data-review-title="Diff: a line with a long token"
+                    data-review-themes="formal"
+                    aria-labelledby="h-diff-line"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A line of a diff holding one long word (an address or a file name with no space
+                            in it) made its text column as wide as that word, so the line ran past the other lines and past the plate&rsquo;s edge at
+                            a phone&rsquo;s width. Now the text column may be narrower than its longest word, and the word breaks inside the column,
+                            so every line ends on the plate&rsquo;s inner edge. The line numbers, the signs, the colours and the diff view with its
+                            words marked are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-diff-line">Diff: a line with a long token</h2>
+                        <p>Before and after of a message, one line holding an address that has no place to break.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The long address breaks onto a second line inside the text column; every line ends on the plate&rsquo;s inner edge.
+                            </li>
+                            <li>The line numbers stand in one column and the signs in the next, on every line, including the broken one.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the right edge of every line is the plate&rsquo;s inner edge, none runs past.</p>
+                    </div>
+                    <div class="td-frame">
+                        <p class="td-frame__label">A diff in a phone-width plate</p>
+                        <pre class="kp-diff td-diff" tabindex="0" aria-label="Changes: 2 lines removed, 3 lines added" data-td-diff></pre>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r4-kpi">
+                <section
+                    class="kc-sec"
+                    id="kpi-label-hint"
+                    data-review-item="kpi-label-hint"
+                    data-review-components="kpi"
+                    data-review-title="Key figures: a tile name beside its hint"
+                    data-review-themes="formal"
+                    data-review-topic="kpi"
+                    data-review-topic-title="Key figure tile"
+                    aria-labelledby="h-kpi-label-hint"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> In a narrow tile the hint (<b>Show in the bar</b>) took all the room it asked
+                            for and left the name 30 px: <b>Delivered since start</b> broke inside its words, letter by letter (<b
+                                >DEL / IVE / RED / SIN / CE</b
+                            >), seven lines tall. Now the name keeps the width of its longest word. The hint gives way instead: its own words wrap in
+                            the room that is left (<b>Show / in the bar</b>), and neither is ever broken inside a word.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-kpi-label-hint">Key figures: a tile name beside its hint</h2>
+                        <p>
+                            A strip of key figures whose middle two tiles can be pressed to filter the journal. A pressable tile says in a small hint,
+                            beside its name, what pressing does.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In the phone-width frame, <b>Delivered since start</b> and <b>Failed since start</b> read as whole words on two or
+                                three lines, with the hint right-aligned beside them.
+                            </li>
+                            <li>In the wide frame the names sit on one or two lines and the hint stays on the first line, at the end.</li>
+                            <li>No word in any tile is cut anywhere inside the word.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: every tile name is made of whole words; the hint never pushes a letter of the name onto its own line.
+                        </p>
+                    </div>
+                    <div class="ki-frame" style="--ki-w: 390px">
+                        <p class="ki-frame__label">A phone, 390 px (two tiles a row)</p>
+                        <div class="ki-col">
+                            <div class="kp-kpis" role="group" aria-label="Journal figures, phone">
+                                <div class="kp-kpi">
+                                    <span class="kp-kpi__label">Waiting to be delivered</span><span class="kp-kpi__value">0<small>events</small></span
+                                    ><span class="kp-kpi__trend">Nothing is waiting</span>
+                                </div>
+                                <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false">
+                                    <span class="kp-kpi__label">Delivered since start</span
+                                    ><span class="kp-kpi__hint" aria-hidden="true"
+                                        ><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this &times;</span></span
+                                    ><span class="kp-kpi__value">3<small>events</small></span
+                                    ><span class="kp-kpi__trend">3 accepted in all</span></button
+                                ><button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false">
+                                    <span class="kp-kpi__label">Failed since start</span
+                                    ><span class="kp-kpi__hint" aria-hidden="true"
+                                        ><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this &times;</span></span
+                                    ><span class="kp-kpi__value">0<small>events</small></span
+                                    ><span class="kp-kpi__trend">None gave up</span>
+                                </button>
+                                <div class="kp-kpi kp-kpi--trend">
+                                    <span class="kp-kpi__label">Deliveries per hour <span class="kp-kpi__label-note">sample data</span></span
+                                    ><a class="kp-kpi__link" href="#charts" title="Open Deliveries per hour on Charts"
+                                        ><span class="kp-kpi__link-word">Charts</span> &#8599;</a
+                                    ><span class="kp-kpi__value">1<small>per hour</small></span
+                                    ><span class="kp-kpi__trend">Last 24 hours, sample data</span>
+                                    <figure
+                                        class="kp-kpi__chart"
+                                        data-kp-chart="spark"
+                                        data-kp-spark-head="none"
+                                        data-kp-spark-axis="relative"
+                                        aria-label="Deliveries per hour, last 24 hours, sample data"
+                                    >
+                                        <script type="application/json" data-kp-chart-data>
+                                            {
+                                                "unit": "events",
+                                                "digits": 0,
+                                                "series": [
+                                                    {
+                                                        "label": "Deliveries per hour",
+                                                        "start": 1792360800000,
+                                                        "step": 3600000,
+                                                        "values": [0, 0, 1, 0, 0, 0, 0, 1, 2, 1, 0, 1, 0, 0, 1, 1, 0, 2, 1, 0, 0, 1, 0, 1, 1]
+                                                    }
+                                                ]
+                                            }
+                                        </script>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ki-frame" style="--ki-w: 960px">
+                        <p class="ki-frame__label">A desk, 960 px (four tiles in a row)</p>
+                        <div class="ki-col">
+                            <div class="kp-kpis" role="group" aria-label="Journal figures, desk">
+                                <div class="kp-kpi">
+                                    <span class="kp-kpi__label">Waiting to be delivered</span><span class="kp-kpi__value">0<small>events</small></span
+                                    ><span class="kp-kpi__trend">Nothing is waiting</span>
+                                </div>
+                                <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false">
+                                    <span class="kp-kpi__label">Delivered since start</span
+                                    ><span class="kp-kpi__hint" aria-hidden="true"
+                                        ><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this &times;</span></span
+                                    ><span class="kp-kpi__value">3<small>events</small></span
+                                    ><span class="kp-kpi__trend">3 accepted in all</span></button
+                                ><button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false">
+                                    <span class="kp-kpi__label">Failed since start</span
+                                    ><span class="kp-kpi__hint" aria-hidden="true"
+                                        ><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this &times;</span></span
+                                    ><span class="kp-kpi__value">0<small>events</small></span
+                                    ><span class="kp-kpi__trend">None gave up</span>
+                                </button>
+                                <div class="kp-kpi kp-kpi--trend">
+                                    <span class="kp-kpi__label">Deliveries per hour <span class="kp-kpi__label-note">sample data</span></span
+                                    ><a class="kp-kpi__link" href="#charts" title="Open Deliveries per hour on Charts"
+                                        ><span class="kp-kpi__link-word">Charts</span> &#8599;</a
+                                    ><span class="kp-kpi__value">1<small>per hour</small></span
+                                    ><span class="kp-kpi__trend">Last 24 hours, sample data</span>
+                                    <figure
+                                        class="kp-kpi__chart"
+                                        data-kp-chart="spark"
+                                        data-kp-spark-head="none"
+                                        data-kp-spark-axis="relative"
+                                        aria-label="Deliveries per hour, last 24 hours, sample data"
+                                    >
+                                        <script type="application/json" data-kp-chart-data>
+                                            {
+                                                "unit": "events",
+                                                "digits": 0,
+                                                "series": [
+                                                    {
+                                                        "label": "Deliveries per hour",
+                                                        "start": 1792360800000,
+                                                        "step": 3600000,
+                                                        "values": [0, 0, 1, 0, 0, 0, 0, 1, 2, 1, 0, 1, 0, 0, 1, 1, 0, 2, 1, 0, 0, 1, 0, 1, 1]
+                                                    }
+                                                ]
+                                            }
+                                        </script>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="kpi-label-note"
+                    data-review-item="kpi-label-note"
+                    data-review-components="kpi"
+                    data-review-title="Key figures: the note after a name"
+                    data-review-themes="formal"
+                    data-review-topic="kpi"
+                    aria-labelledby="h-kpi-label-note"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> When the note did not fit beside the name it moved to the next line as one
+                            piece, but its separating dot went with it: the line began with <b>&middot; SAMPLE DATA</b>, a dot with nothing before it.
+                            Now the dot only stands between the name and the note on one line; a note that starts a line has no dot.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-kpi-label-note">Key figures: the note after a name</h2>
+                        <p>Key figures with a 24-hour trend, each with a small note after its name (<b>avg 15 min</b>, <b>sample data</b>).</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>In the narrow frame the note stands on its own line under the name, with no dot before it.</li>
+                            <li>In the wide frame the note follows the name on its line, parted by a dot.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: no line of a tile name begins with a dot; a dot between name and note has air on both sides.</p>
+                    </div>
+                    <div class="ki-controls" data-review-controls data-review-controls-for="ki-note-frames">
+                        <div role="group" aria-label="Tile kind">
+                            <b>Tile kind</b
+                            ><button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-ki-kind="trend">Trend tile</button
+                            ><button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-ki-kind="toggle">Toggle tile</button>
+                        </div>
+                    </div>
+                    <div id="ki-note-frames">
+                        <div data-ki-kind-panel="trend">
+                            <div class="ki-frame" style="--ki-w: 190px">
+                                <p class="ki-frame__label">A phone tile, 190 px</p>
+                                <div class="ki-col">
+                                    <div class="kp-kpis" role="group" aria-label="Trends, narrow">
+                                        <div class="kp-kpi kp-kpi--trend">
+                                            <span class="kp-kpi__label">Deliveries per hour <span class="kp-kpi__label-note">sample data</span></span
+                                            ><a class="kp-kpi__link" href="#charts" title="Open Deliveries per hour on Charts"
+                                                ><span class="kp-kpi__link-word">Charts</span> &#8599;</a
+                                            ><span class="kp-kpi__value">1<small>per hour</small></span
+                                            ><span class="kp-kpi__trend">Last 24 hours, sample data</span>
+                                            <figure
+                                                class="kp-kpi__chart"
+                                                data-kp-chart="spark"
+                                                data-kp-spark-head="none"
+                                                data-kp-spark-axis="relative"
+                                                aria-label="Deliveries per hour, last 24 hours, sample data"
+                                            >
+                                                <script type="application/json" data-kp-chart-data>
+                                                    {
+                                                        "unit": "events",
+                                                        "digits": 0,
+                                                        "series": [
+                                                            {
+                                                                "label": "Deliveries per hour",
+                                                                "start": 1792360800000,
+                                                                "step": 3600000,
+                                                                "values": [0, 0, 1, 0, 0, 0, 0, 1, 2, 1, 0, 1, 0, 0, 1, 1, 0, 2, 1, 0, 0, 1, 0, 1, 1]
+                                                            }
+                                                        ]
+                                                    }
+                                                </script>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ki-frame" style="--ki-w: 420px">
+                                <p class="ki-frame__label">A wide tile, 420 px</p>
+                                <div class="ki-col">
+                                    <div class="kp-kpis" role="group" aria-label="Trends, wide">
+                                        <div class="kp-kpi kp-kpi--trend">
+                                            <span class="kp-kpi__label">Pressure <span class="kp-kpi__label-note">avg 15 min</span></span
+                                            ><a class="kp-kpi__link" href="#charts" title="Open Pressure on Charts"
+                                                ><span class="kp-kpi__link-word">Charts</span> &#8599;</a
+                                            ><span class="kp-kpi__value">3.3<small>per hour</small></span
+                                            ><span class="kp-kpi__trend">Last 24 hours, sample data</span>
+                                            <figure
+                                                class="kp-kpi__chart"
+                                                data-kp-chart="spark"
+                                                data-kp-spark-head="none"
+                                                data-kp-spark-axis="relative"
+                                                aria-label="Pressure, last 24 hours, sample data"
+                                            >
+                                                <script type="application/json" data-kp-chart-data>
+                                                    {
+                                                        "unit": "events",
+                                                        "digits": 0,
+                                                        "series": [
+                                                            {
+                                                                "label": "Pressure",
+                                                                "start": 1792360800000,
+                                                                "step": 3600000,
+                                                                "values": [0, 0, 1, 0, 0, 0, 0, 1, 2, 1, 0, 1, 0, 0, 1, 1, 0, 2, 1, 0, 0, 1, 0, 1, 1]
+                                                            }
+                                                        ]
+                                                    }
+                                                </script>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-ki-kind-panel="toggle" hidden>
+                            <div class="ki-frame" style="--ki-w: 190px">
+                                <p class="ki-frame__label">A phone tile, 190 px</p>
+                                <div class="ki-col">
+                                    <div class="kp-kpis" role="group" aria-label="Filters, narrow">
+                                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="warning">
+                                            <span class="kp-kpi__label">Open incidents <span class="kp-kpi__label-note">sample data</span></span>
+                                            <span class="kp-kpi__hint" aria-hidden="true"
+                                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering &times;</span></span
+                                            >
+                                            <span class="kp-kpi__value">3</span>
+                                            <span class="kp-kpi__trend">2 new today</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ki-frame" style="--ki-w: 420px">
+                                <p class="ki-frame__label">A wide tile, 420 px</p>
+                                <div class="ki-col">
+                                    <div class="kp-kpis" role="group" aria-label="Filters, wide">
+                                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="destructive">
+                                            <span class="kp-kpi__label">Failed deliveries <span class="kp-kpi__label-note">avg 15 min</span></span>
+                                            <span class="kp-kpi__hint" aria-hidden="true"
+                                                ><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering &times;</span></span
+                                            >
+                                            <span class="kp-kpi__value">1</span>
+                                            <span class="kp-kpi__trend">1 new today</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="entity-actions"
+                    data-review-item="entity-actions"
+                    data-review-components="entity-grid"
+                    data-review-title="Cards: the same action, the same width"
+                    data-review-themes="formal"
+                    data-review-topic="entity"
+                    data-review-topic-title="Entity card"
+                    aria-labelledby="h-entity-actions"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The three action columns were sized by their words (<b
+                                >minmax(min-content, 1fr)</b
+                            >), so a card with a long action had other column widths than the card next to it: the same <b>Remove</b> was a different
+                            width on every card. Now the columns are three equal tracks on every card, a long label wraps between words inside its
+                            button, and a button whose longest word cannot fit moves into <b>More</b> on every card of the grid at once.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-entity-actions">Cards: the same action, the same width</h2>
+                        <p>
+                            Profile cards with three actions each. The words differ from card to card (<b>Recheck this profile</b>,
+                            <b>Try a translation</b>, <b>Open the log</b>), the cards are one size.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The buttons of every card start and end on the same edges as the buttons in the same position on the card above or
+                                beside it.
+                            </li>
+                            <li>A long label (<b>Recheck this profile</b>) wraps onto two lines inside its button; no word is broken.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the same action has the same width and the same left edge on every card; nothing runs past a card.
+                        </p>
+                    </div>
+                    <div class="ki-wide">
+                        <div
+                            class="kp-entity-grid"
+                            data-kp-entity-grid
+                            data-kp-entity-min="22rem"
+                            data-kp-entity-meters="1"
+                            data-ki-grid="actions"
+                        ></div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="entity-options"
+                    data-review-item="entity-options"
+                    data-review-components="entity-grid"
+                    data-review-title="Cards: a good or quiet meter, and an empty grid with its own action"
+                    data-review-themes="formal"
+                    data-review-topic="entity"
+                    aria-labelledby="h-entity-options"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A card&rsquo;s bar could only turn amber or red (and it did so by itself above
+                            75 % and 90 %), so a share where high is good, such as free space, was drawn like a warning. A bar now takes
+                            <b>success</b> (green) or <b>neutral</b> (quiet grey) as its tone, which stops the automatic amber and red. The empty
+                            plate always carried a fixed &ldquo;New&rdquo; action; it can now have <b>no action</b> or your own words and your own
+                            function.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-entity-options">Cards: a good or quiet meter, and an empty grid with its own action</h2>
+                        <p>
+                            A card whose bars say whether a high reading is good (free space), quiet (a queue that is fine at any height) or worth a
+                            warning; and the plate shown when a grid has no cards, with no action, or with the action you word.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                On the first card, <b>Free disk</b> at 82 % is green and <b>Queue</b> at 91 % is grey, while <b>CPU</b> at 91 % with
+                                no tone is red as before.
+                            </li>
+                            <li>
+                                The first empty plate has a title and a line and no button; the second has a button with its own words (<b
+                                    >Reload profiles</b
+                                >) that writes a line under the plate when pressed.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: each bar&rsquo;s colour matches its meaning; the plate without a button keeps the same size and place as the one
+                            with it.
+                        </p>
+                    </div>
+                    <div class="ki-wide">
+                        <div
+                            class="kp-entity-grid"
+                            data-kp-entity-grid
+                            data-kp-entity-min="22rem"
+                            data-kp-entity-meters="3"
+                            data-ki-grid="tones"
+                        ></div>
+                    </div>
+                    <div class="ki-pair">
+                        <div class="ki-pair__cell">
+                            <p class="ki-frame__label">No action</p>
+                            <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-empty-action="none" data-ki-grid="empty-none"></div>
+                        </div>
+                        <div class="ki-pair__cell">
+                            <p class="ki-frame__label">Own words and function</p>
+                            <div class="kp-entity-grid" data-kp-entity-grid data-ki-grid="empty-custom"></div>
+                            <p class="ki-readout" id="ki-readout" role="status" aria-live="polite">Press the button: nothing has been pressed yet.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r4-field">
+                <section
+                    class="kc-sec"
+                    id="field-fills"
+                    data-review-item="field-fills"
+                    data-review-components="field"
+                    data-review-title="Form field: it fills its card and its column"
+                    data-review-themes="formal"
+                    aria-labelledby="h-field-fills"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A form field stopped at 28 rem (448 px) however wide its place was, so inside a
+                            card or a grid column the box ended 42 to 47 px before the edge that its label, its help and the blocks around it ran to:
+                            a loose end edge. Now a field that stands in a card, a stack, a dialog or a grid column fills the place it is in;
+                            <code>--kp-field-max-width</code> caps it again where a page wants a measure.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-field-fills">Form field: it fills its card and its column</h2>
+                        <p>
+                            Fields that stand in a card, in a stack of blocks and in the two columns of a grid. Each card is a plate; the label and
+                            the help always ran to its edge.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In the wide card the box ends on the same vertical line as the paragraph above it and the help text below; in the two
+                                cards side by side each box ends at its card&rsquo;s inner edge.
+                            </li>
+                            <li>
+                                The stacked fields in the first card end on one line; narrow the window and they keep ending at the card&rsquo;s inner
+                                edge.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: every box ends exactly where the blocks around it end, in every card and column; nothing is left hanging short.
+                        </p>
+                    </div>
+                    <div class="fp-controls" data-review-controls data-review-controls-for="fp-fields">
+                        <div role="group" aria-label="Field kind">
+                            <b>Field kind</b
+                            ><button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-fp-kind="text">Text fields</button
+                            ><button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-fp-kind="check">Check and error</button>
+                        </div>
+                    </div>
+                    <div id="fp-fields">
+                        <div data-fp-kind-panel="check" hidden>
+                            <div class="fp-stack">
+                                <section class="kp-card fp-card">
+                                    <div class="kp-card__header"><h3 class="kp-card__title">Alerts</h3></div>
+                                    <div class="kp-field kp-field--check">
+                                        <input class="kp-field__check" id="fp-weekly" type="checkbox" checked />
+                                        <label class="kp-field__label" for="fp-weekly">Send me the weekly incident summary</label>
+                                    </div>
+                                    <div class="kp-field kp-field--invalid">
+                                        <label class="kp-field__label" for="fp-bad">Escalation email</label
+                                        ><input
+                                            class="kp-field__input"
+                                            id="fp-bad"
+                                            type="email"
+                                            value="night-shift@"
+                                            aria-invalid="true"
+                                            aria-describedby="fp-bad-error"
+                                        />
+                                        <span class="kp-field__error" id="fp-bad-error">Enter a full address, such as night-shift@example.org.</span>
+                                    </div>
+                                    <div class="kp-field kp-field--check kp-field--invalid">
+                                        <input
+                                            class="kp-field__check"
+                                            id="fp-ack"
+                                            type="checkbox"
+                                            aria-invalid="true"
+                                            aria-describedby="fp-ack-error"
+                                        />
+                                        <label class="kp-field__label" for="fp-ack">I have read the lock-out procedure</label>
+                                        <span class="kp-field__error" id="fp-ack-error">Tick this before you reopen the line.</span>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <div data-fp-kind-panel="text">
+                            <div class="fp-stack">
+                                <section class="kp-card fp-card">
+                                    <div class="kp-card__header"><h3 class="kp-card__title">Server</h3></div>
+                                    <p class="kp-card__body">Where HTTPSwitchboard listens for requests.</p>
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="fp-host">Host name</label
+                                        ><input class="kp-field__input" id="fp-host" type="text" value="switchboard.kp-soft.dev" />
+                                        <p class="kp-field__help">The name clients use to reach this profile.</p>
+                                    </div>
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="fp-path">Base path</label
+                                        ><input class="kp-field__input" id="fp-path" type="text" value="/v1" />
+                                        <p class="kp-field__help">Everything below this path goes to the profile.</p>
+                                    </div>
+                                </section>
+                                <div class="fp-two">
+                                    <section class="kp-card fp-card">
+                                        <div class="kp-card__header"><h3 class="kp-card__title">Sample</h3></div>
+                                        <div class="kp-field">
+                                            <label class="kp-field__label" for="fp-sample">Sample request</label
+                                            ><input class="kp-field__input" id="fp-sample" type="text" value="GET /health" />
+                                            <p class="kp-field__help">Sent when you press Test.</p>
+                                        </div>
+                                    </section>
+                                    <section class="kp-card fp-card">
+                                        <div class="kp-card__header"><h3 class="kp-card__title">Reply</h3></div>
+                                        <div class="kp-field">
+                                            <label class="kp-field__label" for="fp-reply">Expected reply</label
+                                            ><input class="kp-field__input" id="fp-reply" type="text" value="200 OK" />
+                                            <p class="kp-field__help">The profile passes when the reply matches.</p>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="problems-edges"
+                    data-review-item="problems-edges"
+                    data-review-components="problems"
+                    data-review-title="Problems: every fix on one edge"
+                    data-review-themes="formal"
+                    aria-labelledby="h-problems-edges"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The fixes of the problems in a list began on different edges when the list
+                            stood in a form grid or a page grid (<code>data-kp-subgrid</code>): that mode switched off the list&rsquo;s own width
+                            check, so the shared columns never applied and each fix took the width of its own words (up to 56 px apart). Now the list
+                            shares its columns in every setting: the text ends on one line and every fix starts on one line.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-problems-edges">Problems: every fix on one edge</h2>
+                        <p>
+                            Four problems at once, each with a fix of different words. Shown in a card, at the page&rsquo;s width and inside a form
+                            grid.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In every list the fixes (<b>Run the backup now</b>, <b>Open Secrets</b>, <b>Restart Alloy</b>, <b>Share</b>) start on
+                                one vertical line and the text of each problem ends on one vertical line.
+                            </li>
+                            <li>At phone width the fix sits under its text, as before.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: one start edge for all four fixes in each list, and one end edge for the text.</p>
+                    </div>
+                    <div class="fp-stack">
+                        <div class="kp-problems" data-kp-problems data-fp-problems></div>
+                        <div class="kp-formgrid fp-grid">
+                            <div class="kp-problems" data-kp-subgrid data-kp-problems data-fp-problems></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "round-4-1019-d130a4dd-81f9-44be-ae0d-50c09fa8e806", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../heat-deplist-1019/demo.js"></script>
+        <script type="module" src="../trace-diff-1019/demo.js"></script>
+        <script type="module" src="../kpi-entity-1019/demo.js"></script>
+        <script type="module" src="../field-problems-1019/demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

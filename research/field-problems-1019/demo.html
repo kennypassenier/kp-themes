@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="field-problems-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Two grid faults: form field width and problem fixes</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Two grid faults</h1>
+                <p class="cat-intro">
+                    The project threads found two places where an approved component left a loose edge: a form field that stopped short of its card,
+                    and the fixes of a problem list that began on different lines. 2 pairs, shown in formal. Each section says under
+                    <b>What changed since you approved it</b> what was wrong and what is different now.
+                </p>
+            </header>
+
+            <section
+                class="kc-sec"
+                id="field-fills"
+                data-review-item="field-fills"
+                data-review-components="field"
+                data-review-title="Form field: it fills its card and its column"
+                data-review-themes="formal"
+                aria-labelledby="h-field-fills"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> A form field stopped at 28 rem (448 px) however wide its place was, so inside a
+                        card or a grid column the box ended 42 to 47 px before the edge that its label, its help and the blocks around it ran to: a
+                        loose end edge. Now a field that stands in a card, a stack, a dialog or a grid column fills the place it is in;
+                        <code>--kp-field-max-width</code> caps it again where a page wants a measure.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-field-fills">Form field: it fills its card and its column</h2>
+                    <p>
+                        Fields that stand in a card, in a stack of blocks and in the two columns of a grid. Each card is a plate; the label and the
+                        help always ran to its edge.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            In the wide card the box ends on the same vertical line as the paragraph above it and the help text below; in the two
+                            cards side by side each box ends at its card&rsquo;s inner edge.
+                        </li>
+                        <li>
+                            The stacked fields in the first card end on one line; narrow the window and they keep ending at the card&rsquo;s inner
+                            edge.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: every box ends exactly where the blocks around it end, in every card and column; nothing is left hanging short.
+                    </p>
+                </div>
+                <div class="fp-controls" data-review-controls data-review-controls-for="fp-fields">
+                    <div role="group" aria-label="Field kind">
+                        <b>Field kind</b
+                        ><button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-fp-kind="text">Text fields</button
+                        ><button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-fp-kind="check">Check and error</button>
+                    </div>
+                </div>
+                <div id="fp-fields">
+                    <div data-fp-kind-panel="check" hidden>
+                        <div class="fp-stack">
+                            <section class="kp-card fp-card">
+                                <div class="kp-card__header"><h3 class="kp-card__title">Alerts</h3></div>
+                                <div class="kp-field kp-field--check">
+                                    <input class="kp-field__check" id="fp-weekly" type="checkbox" checked />
+                                    <label class="kp-field__label" for="fp-weekly">Send me the weekly incident summary</label>
+                                </div>
+                                <div class="kp-field kp-field--invalid">
+                                    <label class="kp-field__label" for="fp-bad">Escalation email</label
+                                    ><input
+                                        class="kp-field__input"
+                                        id="fp-bad"
+                                        type="email"
+                                        value="night-shift@"
+                                        aria-invalid="true"
+                                        aria-describedby="fp-bad-error"
+                                    />
+                                    <span class="kp-field__error" id="fp-bad-error">Enter a full address, such as night-shift@example.org.</span>
+                                </div>
+                                <div class="kp-field kp-field--check kp-field--invalid">
+                                    <input class="kp-field__check" id="fp-ack" type="checkbox" aria-invalid="true" aria-describedby="fp-ack-error" />
+                                    <label class="kp-field__label" for="fp-ack">I have read the lock-out procedure</label>
+                                    <span class="kp-field__error" id="fp-ack-error">Tick this before you reopen the line.</span>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div data-fp-kind-panel="text">
+                        <div class="fp-stack">
+                            <section class="kp-card fp-card">
+                                <div class="kp-card__header"><h3 class="kp-card__title">Server</h3></div>
+                                <p class="kp-card__body">Where HTTPSwitchboard listens for requests.</p>
+                                <div class="kp-field">
+                                    <label class="kp-field__label" for="fp-host">Host name</label
+                                    ><input class="kp-field__input" id="fp-host" type="text" value="switchboard.kp-soft.dev" />
+                                    <p class="kp-field__help">The name clients use to reach this profile.</p>
+                                </div>
+                                <div class="kp-field">
+                                    <label class="kp-field__label" for="fp-path">Base path</label
+                                    ><input class="kp-field__input" id="fp-path" type="text" value="/v1" />
+                                    <p class="kp-field__help">Everything below this path goes to the profile.</p>
+                                </div>
+                            </section>
+                            <div class="fp-two">
+                                <section class="kp-card fp-card">
+                                    <div class="kp-card__header"><h3 class="kp-card__title">Sample</h3></div>
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="fp-sample">Sample request</label
+                                        ><input class="kp-field__input" id="fp-sample" type="text" value="GET /health" />
+                                        <p class="kp-field__help">Sent when you press Test.</p>
+                                    </div>
+                                </section>
+                                <section class="kp-card fp-card">
+                                    <div class="kp-card__header"><h3 class="kp-card__title">Reply</h3></div>
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="fp-reply">Expected reply</label
+                                        ><input class="kp-field__input" id="fp-reply" type="text" value="200 OK" />
+                                        <p class="kp-field__help">The profile passes when the reply matches.</p>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="problems-edges"
+                data-review-item="problems-edges"
+                data-review-components="problems"
+                data-review-title="Problems: every fix on one edge"
+                data-review-themes="formal"
+                aria-labelledby="h-problems-edges"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The fixes of the problems in a list began on different edges when the list stood in
+                        a form grid or a page grid (<code>data-kp-subgrid</code>): that mode switched off the list&rsquo;s own width check, so the
+                        shared columns never applied and each fix took the width of its own words (up to 56 px apart). Now the list shares its columns
+                        in every setting: the text ends on one line and every fix starts on one line.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-problems-edges">Problems: every fix on one edge</h2>
+                    <p>
+                        Four problems at once, each with a fix of different words. Shown in a card, at the page&rsquo;s width and inside a form grid.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            In every list the fixes (<b>Run the backup now</b>, <b>Open Secrets</b>, <b>Restart Alloy</b>, <b>Share</b>) start on one
+                            vertical line and the text of each problem ends on one vertical line.
+                        </li>
+                        <li>At phone width the fix sits under its text, as before.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: one start edge for all four fixes in each list, and one end edge for the text.</p>
+                </div>
+                <div class="fp-stack">
+                    <div class="kp-problems" data-kp-problems data-fp-problems></div>
+                    <div class="kp-formgrid fp-grid">
+                        <div class="kp-problems" data-kp-subgrid data-kp-problems data-fp-problems></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "fieldproblems-16355dff-08b2-4302-95c3-2c532ff00d18", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

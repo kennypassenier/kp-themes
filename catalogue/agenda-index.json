@@ -1,6 +1,31 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/round-4-1019/demo.html": {
+            "facts": {
+                "id": "round-4-1019",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Fixes from the project threads, each in the package: the heat grid's row and column names and the dependency list's status column; the path trace's verdict column and a long token in a diff line; a key figure's name and note, and the entity card's actions, meter tones and empty grid; and a form field filling its place and the problems' fix column. 11 pairs, all in formal. Every section says under What changed since you approved it what was wrong and what is different now.",
+                "sections": [
+                    { "item": "heat-label", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "heat-axis", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "deplist-state", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "trace-column", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "diff-line", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "kpi-label-hint", "themes": "formal", "topic": "kpi", "mode": null },
+                    { "item": "kpi-label-note", "themes": "formal", "topic": "kpi", "mode": null },
+                    { "item": "entity-actions", "themes": "formal", "topic": "entity", "mode": null },
+                    { "item": "entity-options", "themes": "formal", "topic": "entity", "mode": null },
+                    { "item": "field-fills", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "problems-edges", "themes": "formal", "topic": null, "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"round-4-1019-d130a4dd-81f9-44be-ae0d-50c09fa8e806\", \"received\": [] }\n        "
+            },
+            "fingerprint": "a28c46f312aee0fd",
+            "update": null
+        },
         "research/round-3-1019/demo.html": {
             "facts": {
                 "id": "round-3-1019",

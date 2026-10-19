@@ -1,0 +1,64 @@
+/* research/kpi-entity-1019: the frame of the page. Everything with a kp- class is the package; the ki- rules only lay out. */
+
+.ki-frame {
+    box-sizing: border-box;
+    inline-size: min(100%, calc(var(--ki-w, 390px) + 2rem + 2px));
+    margin-inline: auto;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.ki-frame + .ki-frame {
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.ki-frame__label {
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    text-align: center;
+}
+
+.ki-col {
+    inline-size: min(var(--ki-w, 390px), 100%);
+    margin-inline: auto;
+}
+
+/* The frames of one section share the widest frame's column, so each is centred on the same axis. */
+.ki-wide {
+    inline-size: min(100%, 52rem);
+    margin-inline: auto;
+}
+
+/* Two plates side by side on one grid, two equal tracks; one track on a phone. */
+.ki-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    inline-size: min(100%, 52rem);
+    margin: var(--kp-space-md, 1rem) auto 0;
+}
+
+.ki-pair__cell {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.ki-pair__cell > .ki-frame__label {
+    text-align: start;
+}
+
+.ki-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+@media (max-width: 40rem) {
+    .ki-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

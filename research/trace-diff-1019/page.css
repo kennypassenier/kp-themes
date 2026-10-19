@@ -1,0 +1,26 @@
+/* research/trace-diff-1019: the frame of the page. Everything with a kp- class is the package; the td- rules only lay out. */
+
+.td-frame {
+    box-sizing: border-box;
+    inline-size: min(100%, 26rem);
+    margin-inline: auto;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.td-frame + .td-frame {
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.td-frame__label {
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    text-align: center;
+}
+
+.td-diff {
+    max-block-size: 24rem;
+    overflow: auto;
+}
