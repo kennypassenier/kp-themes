@@ -1,0 +1,14 @@
+/* research/r3r5-1019: the frame of the page. Everything with a kp- class is the package; the rr- rules only lay out. */
+
+.rr-stack {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    inline-size: min(100%, 60rem);
+    margin-inline: auto;
+}
+
+.rr-cap {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}

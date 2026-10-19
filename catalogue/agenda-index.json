@@ -1,6 +1,39 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/round-2-1019/demo.html": {
+            "facts": {
+                "id": "round-2-1019",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Faults that the project threads found in components you approved earlier, each fixed in the package. Six components on a shared line (activity feed, lead list, problems, share bar, shortcuts, week), the calendar and the pipeline when empty or failed, the run timeline and the uses map, and the data table with its removed and held rows, date pills and action column. 19 sections, 19 pairs, all in formal. Every section says under What changed since you approved it what was wrong and what is different now.",
+                "sections": [
+                    { "item": "feed-line", "themes": "formal", "topic": "feed-line", "mode": null },
+                    { "item": "action-lead", "themes": "formal", "topic": "action-lead", "mode": null },
+                    { "item": "problems-cols", "themes": "formal", "topic": "problems-cols", "mode": null },
+                    { "item": "stackbar-legend", "themes": "formal", "topic": "stackbar-legend", "mode": null },
+                    { "item": "shortcuts-ends", "themes": "formal", "topic": "shortcuts-ends", "mode": null },
+                    { "item": "week-label", "themes": "formal", "topic": "week-label", "mode": null },
+                    { "item": "calendar-states", "themes": null, "topic": "calendar", "mode": null },
+                    { "item": "pipeline-states", "themes": null, "topic": "calendar", "mode": null },
+                    { "item": "gantt-names", "themes": "formal", "topic": "gantt", "mode": null },
+                    { "item": "gantt-zone", "themes": "formal", "topic": "gantt", "mode": null },
+                    { "item": "gantt-frame", "themes": "formal", "topic": "gantt", "mode": null },
+                    { "item": "gantt-rules", "themes": "formal", "topic": "gantt", "mode": null },
+                    { "item": "uses-labels", "themes": "formal", "topic": "uses-map", "mode": null },
+                    { "item": "uses-line", "themes": "formal", "topic": "uses-map", "mode": null },
+                    { "item": "table-removed-rows", "themes": "formal", "topic": "datatable", "mode": null },
+                    { "item": "table-held-row", "themes": "formal", "topic": "datatable", "mode": null },
+                    { "item": "table-date-pills", "themes": "formal", "topic": "datatable", "mode": null },
+                    { "item": "table-expand-single", "themes": "formal", "topic": "datatable", "mode": null },
+                    { "item": "reason-columns", "themes": "formal", "topic": "actions", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"round-2-1019-382869d9-92cf-437d-81cf-5098f9924499\", \"received\": [] }\n        "
+            },
+            "fingerprint": "1041e1f23334308d",
+            "update": null
+        },
         "research/focus-tracks-1019/demo.html": {
             "facts": {
                 "id": "focus-tracks-1019",

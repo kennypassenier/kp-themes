@@ -1,0 +1,47 @@
+/* research/align-pkg-1019: the frame of the page. Everything with a kp- class is the package; the af- rules only lay out. */
+
+.af-frame {
+    box-sizing: border-box;
+    inline-size: min(100%, 26rem);
+    margin-inline: auto;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.af-frame__label {
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    text-align: center;
+}
+
+.af-col {
+    inline-size: min(var(--af-w, 360px), 100%);
+    margin-inline: auto;
+}
+
+.af-stack {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    inline-size: min(100%, 52rem);
+    margin-inline: auto;
+}
+
+.af-card {
+    padding: var(--kp-space-md, 1rem);
+}
+
+/* An open dialog shown in place: it takes its box in the flow, not the window. */
+.af-static[open] {
+    position: static;
+    inset: auto;
+    margin: 0;
+    inline-size: auto;
+    max-inline-size: 100%;
+    max-block-size: none;
+}
+
+.af-list {
+    padding-block: var(--kp-space-xs, 0.25rem);
+}

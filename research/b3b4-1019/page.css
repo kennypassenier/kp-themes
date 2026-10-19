@@ -1,0 +1,41 @@
+/* research/b3b4-1019: the frame of the page. Everything with a kp- class is the package; the bb- rules only lay out. */
+
+.bb-stack {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    inline-size: min(100%, 52rem);
+    margin-inline: auto;
+}
+
+/* A line of buttons and the sentence they drive, on one grid: two button tracks, then the words. */
+.bb-row {
+    display: grid;
+    grid-template-columns: repeat(2, max-content) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.bb-line {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.bb-check {
+    inline-size: max-content;
+}
+
+.bb-detail {
+    margin: 0;
+    padding-block: var(--kp-space-xs, 0.25rem);
+}
+
+@media (max-width: 30rem) {
+    .bb-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bb-row > .bb-line {
+        grid-column: 1 / -1;
+    }
+}

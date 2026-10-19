@@ -302,7 +302,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-19 [gap-int-1019]: the five component rounds merged into one branch (log viewer 2, diff view 5, tab count, activity feed, entity tiles) and main's 955; recounted with extractKnobs() after the last merge: 978.
     // Re-pinned 2026-10-19 [align-grid-1019]: the second batch (state plates, graph loading pictures, live options), the form
     // grid and the focus tracks landed on main; recounted with extractKnobs(): 1003.
-    assert.equal(result.expected, 1003, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-19 [round-2-1019]: the four package-fix branches merged (shared line of the package components, calendar and
+    // pipeline states, run timeline and uses map, data table); recounted with extractKnobs() after the last merge: 1010.
+    assert.equal(result.expected, 1010, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -367,7 +369,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And the log viewer's two and the diff view's five of 2026-10-19, every one read through var(): 947 + 2 + 5.
     // Recounted 2026-10-19 [gap-int-1019] after merging the five rounds into main's 947, every one read through var(): 970.
     // Recounted 2026-10-19 [align-grid-1019] with the same rounds, every one read through var(): 994.
-    assert.equal(result.readCount, 994);
+    // Recounted 2026-10-19 [round-2-1019] after the four package-fix merges, every one read through var(): 1001.
+    assert.equal(result.readCount, 1001);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

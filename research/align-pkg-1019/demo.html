@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="align-pkg-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Six components on a shared line: feed, list, problems, share bar, shortcuts, week</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Six components on a shared line</h1>
+                <p class="cat-intro">
+                    The new alignment check measures whether the parts of a composition stand on one grid: cells of one role start and end on one
+                    edge, and the first line of every cell is on the label&rsquo;s line. It found six approved components off by 2 to 56 px. 6 pairs,
+                    all in formal (none of the faults depends on the theme). Each section says under <b>What changed since you approved it</b> what
+                    was off and what is different now.
+                </p>
+            </header>
+
+            <section
+                class="kc-sec"
+                id="feed-line"
+                data-review-item="feed-line"
+                data-review-components="feed"
+                data-review-title="Activity feed: the chip and the time on the title’s line"
+                data-review-themes="formal"
+                data-review-topic="feed-line"
+                data-review-topic-title="Activity feed: the chip and the time on the title’s line"
+                aria-labelledby="h-feed-line"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The chip of whoever started a row, and the time at the end of it, stood 2 px higher
+                        than the title they belong to: each was centred in its own, smaller line, while the title is set in the larger body size. They
+                        now share the title&rsquo;s baseline, the way a caption stands beside its heading, and the mark-only chip stands in a cell one
+                        title line high. The marks, the rail, the day headings, the states and the sizes are as you approved them.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-feed-line">Activity feed: the chip and the time on the title’s line</h2>
+                    <p>
+                        A day of a homelab&rsquo;s activity: a mark, the title, who started it and when. Below it the same rows with the actor as a
+                        mark only.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            In every row the actor&rsquo;s name and the time sit on the same line as the title: the bottoms of the letters meet on one
+                            line.
+                        </li>
+                        <li>
+                            The chips stand in one column and the times in one column; the second feed shows only the round or square mark, centred on
+                            the title&rsquo;s line.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the name, the time and the title read on one line in every row; nothing hangs above it.</p>
+                </div>
+                <div class="af-stack">
+                    <div class="kp-card af-card">
+                        <div
+                            class="kp-feed"
+                            data-kp-feed
+                            data-kp-feed-unit="operation,operations"
+                            aria-label="Activity of the homelab"
+                            data-af-feed="chip"
+                        ></div>
+                    </div>
+                    <div class="kp-card af-card">
+                        <div
+                            class="kp-feed"
+                            data-kp-feed
+                            data-kp-feed-actor="mark"
+                            data-kp-feed-unit="operation,operations"
+                            aria-label="Activity of the homelab, actors as marks"
+                            data-af-feed="mark"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="action-lead"
+                data-review-item="action-lead"
+                data-review-components="action-list"
+                data-review-title="List with a lead: the buttons on the first line"
+                data-review-themes="formal"
+                data-review-topic="action-lead"
+                data-review-topic-title="List with a lead: the buttons on the first line"
+                aria-labelledby="h-action-lead"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The row&rsquo;s button was centred on the whole row, so beside a title with a
+                        sentence under it the button hung 21 px below the badge it belongs to. Now the badge, the title&rsquo;s first line and the
+                        buttons stand on one first line, as high as a button, and the sentence runs on below. A row of one line is as tall as before.
+                        The badges, the meta line, the rows&rsquo; rules and the narrow layout (buttons centred under the text) are as you approved
+                        them.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-action-lead">List with a lead: the buttons on the first line</h2>
+                    <p>A list whose rows start with a badge, have a title with a sentence under it, and a button at the end.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            In each row the badge, the bold title and the button are on one line; the grey sentence and the meta line are under the
+                            title.
+                        </li>
+                        <li>The buttons stand in one column, one width; at phone width they sit centred under the text as before.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the badge and the button share one centre line in every row, and the title starts on it.</p>
+                </div>
+                <div class="af-stack">
+                    <ul class="kp-action-list kp-action-list--lead af-list" aria-label="Foods without cooking" data-af-lead="one"></ul>
+                    <ul class="kp-action-list kp-action-list--lead af-list" aria-label="Messages" data-af-lead="two"></ul>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="problems-cols"
+                data-review-item="problems-cols"
+                data-review-components="problems"
+                data-review-title="Problems: alerts in one list share their columns"
+                data-review-themes="formal"
+                data-review-topic="problems-cols"
+                data-review-topic-title="Problems: alerts in one list share their columns"
+                aria-labelledby="h-problems-cols"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Each alert was its own row, so the width of its button decided where its text
+                        ended: the text of one alert ended 56 px before the text of the next, and the fixes began on different edges. Now the alerts
+                        of one list share their columns: icon, text, fix and close have one edge each, from the first alert to the last. A list
+                        without a fix, the folded list and the narrow layout (the fix under the text) are as you approved them.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-problems-cols">Problems: alerts in one list share their columns</h2>
+                    <p>Four problems at once, worst first, each with its fix; one can be dismissed.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The four alerts&rsquo; text ends on one vertical line and their fixes all start on one vertical line, whatever the button
+                            says.
+                        </li>
+                        <li>The close button of the dismissible alert stands in its own column at the end; the others leave that place empty.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: one vertical edge for the end of the text and one for the start of the fixes, over all four alerts.
+                    </p>
+                </div>
+                <div class="af-stack"><div class="kp-problems" data-kp-problems data-af-problems></div></div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="stackbar-legend"
+                data-review-item="stackbar-legend"
+                data-review-components="stackbar"
+                data-review-title="Share bar: the legend is a table"
+                data-review-themes="formal"
+                data-review-topic="stackbar-legend"
+                data-review-topic-title="Share bar: the legend is a table"
+                aria-labelledby="h-stackbar-legend"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Each legend row sized its value to its own words, so the names ended and the values
+                        began on a different edge in every row (up to 36 px apart on a phone), and a name longer than its cell was cut with an
+                        ellipsis. Now the legend has one value column, as wide as the longest value, so the names all end and the values all start on
+                        one line, and a name is never cut: it wraps, with the swatch and the value on its first line. The bar, its colours, the hover
+                        card and the loading, empty and failed states are as you approved them.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-stackbar-legend">Share bar: the legend is a table</h2>
+                    <p>A bar split into parts with its legend, at the page&rsquo;s width and in a phone-wide frame with long names.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            In the phone-wide legend the values all end on one edge and begin on one edge, and the names end on one edge before them.
+                        </li>
+                        <li>
+                            The long names (&ldquo;Photos and family videos archive&rdquo;, &ldquo;Promised, not written yet&rdquo;) wrap onto a
+                            second line whole; the swatch and the value stay on the first line.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the values form one column, right-aligned, and no name ends in an ellipsis.</p>
+                </div>
+                <div class="af-stack"><figure class="kp-stackbar kp-stackbar--lg" data-af-stack="wide"></figure></div>
+                <div class="af-frame">
+                    <p class="af-frame__label">A phone, 360 px</p>
+                    <div class="af-col" style="--af-w: 360px">
+                        <figure class="kp-stackbar" data-af-stack="narrow"></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="shortcuts-ends"
+                data-review-item="shortcuts-ends"
+                data-review-components="shortcuts"
+                data-review-title="Shortcut sheet: the descriptions end on one edge"
+                data-review-themes="formal"
+                data-review-topic="shortcuts-ends"
+                data-review-topic-title="Shortcut sheet: the descriptions end on one edge"
+                aria-labelledby="h-shortcuts-ends"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The description of a key was as wide as its words, so the cells ended on a
+                        different line in every row (3 to 107 px apart in a sheet). Now the description fills the rest of the row: it starts after the
+                        key column and ends on the sheet&rsquo;s own edge in every row. The words, the keys, the groups, the dimmed row for a key that
+                        is off and the sheet itself are as you approved them.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-shortcuts-ends">Shortcut sheet: the descriptions end on one edge</h2>
+                    <p>The sheet of keys of a page: each key in the first column, what it does beside it, and a key that is off with its reason.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The keys stand in one column and every description starts on one line next to them.</li>
+                        <li>The dimmed row (<b>r</b>) keeps its reason under its words; nothing else moves.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: one left edge for all descriptions, and each row&rsquo;s cell reaches the sheet&rsquo;s inner edge.
+                    </p>
+                </div>
+                <div class="af-stack">
+                    <dialog class="kp-shortcuts af-static" aria-label="Keyboard shortcuts" open>
+                        <h3 class="kp-dialog__title">Keyboard shortcuts</h3>
+                        <section>
+                            <h3 class="kp-shortcuts__group-label">Anywhere</h3>
+                            <dl class="kp-shortcuts__list">
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">?</kbd></dt>
+                                    <dd>Show all keys</dd>
+                                </div>
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">/</kbd></dt>
+                                    <dd>Search</dd>
+                                </div>
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">g s</kbd></dt>
+                                    <dd>Go to Stacks</dd>
+                                </div>
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">g b</kbd></dt>
+                                    <dd>Go to Backups</dd>
+                                </div>
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">Ctrl K</kbd></dt>
+                                    <dd>Open the command palette and run any command by name</dd>
+                                </div>
+                            </dl>
+                        </section>
+                        <section>
+                            <h3 class="kp-shortcuts__group-label">On this page</h3>
+                            <dl class="kp-shortcuts__list">
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">1</kbd></dt>
+                                    <dd>Overview</dd>
+                                </div>
+                                <div class="kp-shortcuts__row">
+                                    <dt><kbd class="kp-palette__keys">2</kbd></dt>
+                                    <dd>Apps</dd>
+                                </div>
+                                <div class="kp-shortcuts__row kp-shortcuts__row--off">
+                                    <dt><kbd class="kp-palette__keys">r</kbd></dt>
+                                    <dd>Reveal the chosen key<span class="kp-shortcuts__reason">Needs a key to be chosen first.</span></dd>
+                                </div>
+                            </dl>
+                        </section>
+                    </dialog>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="week-label"
+                data-review-item="week-label"
+                data-review-components="week"
+                data-review-title="Week agenda on a phone: the labels end on one edge"
+                data-review-themes="formal"
+                data-review-topic="week-label"
+                data-review-topic-title="Week agenda on a phone: the labels end on one edge"
+                aria-labelledby="h-week-label"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> In the day rows a pill&rsquo;s label was as wide as its words, so the label cells
+                        ended on a different line in every pill (15 px apart). Now the label fills the pill after the time and ends on the
+                        pill&rsquo;s own edge in every pill. The pills, their colours, the times, the &ldquo;+N&rdquo; and the empty, loading and
+                        failed states are as you approved them.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-week-label">Week agenda on a phone: the labels end on one edge</h2>
+                    <p>The next seven days as rows, in a phone-wide frame: each day with its runs as pills, a time and a label.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Every pill shows its time and its label; the times start on one line and the labels start on one line.</li>
+                        <li>Nothing is cut or moves; the wide layout (a grid of seven columns) is unchanged.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the pills of every day are the same width, with the time and the label on one line.</p>
+                </div>
+                <div class="af-frame">
+                    <p class="af-frame__label">A phone, 360 px</p>
+                    <div class="af-col" style="--af-w: 360px">
+                        <section
+                            class="kp-week"
+                            data-kp-week
+                            data-kp-time-zone="Europe/Brussels"
+                            aria-label="The next seven days"
+                            data-af-week
+                        ></section>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "alignpkg-71325c38-cbe1-42f8-b33f-102557f80047", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

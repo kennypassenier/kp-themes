@@ -1,0 +1,89 @@
+/* research/r1r2-1019: the frame of the page. Everything with a kp- class is the package; the sp- rules only lay out. */
+
+/* A section is a composition on a 12-column grid: the component (the thing under review) takes the larger span, 8 of 12, on the
+   right with its state buttons directly above it; the words about it (head, what to expect, what to look at) form one block of
+   4 columns on the left, the head lined up with the buttons. Under 56rem it stacks: head, buttons, component, then the notes. */
+.sp-sec {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-areas:
+        'changed changed changed changed changed changed changed changed changed changed changed changed'
+        'head head head head controls controls controls controls controls controls controls controls'
+        'expected expected expected expected stage stage stage stage stage stage stage stage'
+        'look look look look stage stage stage stage stage stage stage stage'
+        '. . . . stage stage stage stage stage stage stage stage';
+    grid-template-rows: auto auto auto auto 1fr;
+    column-gap: var(--kp-space-lg, 1.5rem);
+    row-gap: 0; /* the spacing is margin on the blocks, so a block the review dialog moves away leaves no empty band */
+    align-items: start;
+}
+
+.sp-sec > .k56-changed {
+    grid-area: changed;
+}
+
+.sp-sec > .sp-sec__head {
+    grid-area: head;
+}
+
+.sp-sec > [data-review-controls] {
+    grid-area: controls;
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sp-sec > .sp-expected {
+    grid-area: expected;
+}
+
+.sp-sec > [data-review-look] {
+    grid-area: look;
+}
+
+.sp-sec > .sp-stage {
+    grid-area: stage;
+}
+
+.sp-sec > * {
+    min-inline-size: 0;
+}
+
+.sp-sec > :not(.sp-stage) {
+    margin-block-end: var(--kp-space-md, 1rem);
+}
+
+@media (max-width: 56rem) {
+    .sp-sec {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: 'changed' 'head' 'controls' 'stage' 'expected' 'look';
+        grid-template-rows: none;
+    }
+}
+
+.sp-stage {
+    min-inline-size: 0;
+}
+
+.sp-list {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sp-uptimes {
+    position: relative;
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+}
+
+.sp-art {
+    display: block;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+}

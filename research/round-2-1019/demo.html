@@ -1,0 +1,2067 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="round-2-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Fixes from the project threads, round 2</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="../align-pkg-1019/page.css" />
+        <link rel="stylesheet" href="../r1r2-1019/page.css" />
+        <link rel="stylesheet" href="../r3r5-1019/page.css" />
+        <link rel="stylesheet" href="../b3b4-1019/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Fixes from the project threads, round 2</h1>
+                <p class="cat-intro">
+                    Faults that the project threads found in components you approved earlier, each fixed in the package. Six components on a shared
+                    line (activity feed, lead list, problems, share bar, shortcuts, week), the calendar and the pipeline when empty or failed, the run
+                    timeline and the uses map, and the data table with its removed and held rows, date pills and action column. 19 sections, 19 pairs,
+                    all in formal. Every section says under <b>What changed since you approved it</b> what was wrong and what is different now.
+                </p>
+            </header>
+
+            <div class="r2-align">
+                <section
+                    class="kc-sec"
+                    id="feed-line"
+                    data-review-item="feed-line"
+                    data-review-components="feed"
+                    data-review-title="Activity feed: the chip and the time on the title’s line"
+                    data-review-themes="formal"
+                    data-review-topic="feed-line"
+                    data-review-topic-title="Activity feed: the chip and the time on the title’s line"
+                    aria-labelledby="h-feed-line"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The chip of whoever started a row, and the time at the end of it, stood 2 px
+                            higher than the title they belong to: each was centred in its own, smaller line, while the title is set in the larger body
+                            size. They now share the title&rsquo;s baseline, the way a caption stands beside its heading, and the mark-only chip
+                            stands in a cell one title line high. The marks, the rail, the day headings, the states and the sizes are as you approved
+                            them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-feed-line">Activity feed: the chip and the time on the title’s line</h2>
+                        <p>
+                            A day of a homelab&rsquo;s activity: a mark, the title, who started it and when. Below it the same rows with the actor as
+                            a mark only.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In every row the actor&rsquo;s name and the time sit on the same line as the title: the bottoms of the letters meet on
+                                one line.
+                            </li>
+                            <li>
+                                The chips stand in one column and the times in one column; the second feed shows only the round or square mark,
+                                centred on the title&rsquo;s line.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the name, the time and the title read on one line in every row; nothing hangs above it.</p>
+                    </div>
+                    <div class="af-stack">
+                        <div class="kp-card af-card">
+                            <div
+                                class="kp-feed"
+                                data-kp-feed
+                                data-kp-feed-unit="operation,operations"
+                                aria-label="Activity of the homelab"
+                                data-af-feed="chip"
+                            ></div>
+                        </div>
+                        <div class="kp-card af-card">
+                            <div
+                                class="kp-feed"
+                                data-kp-feed
+                                data-kp-feed-actor="mark"
+                                data-kp-feed-unit="operation,operations"
+                                aria-label="Activity of the homelab, actors as marks"
+                                data-af-feed="mark"
+                            ></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="action-lead"
+                    data-review-item="action-lead"
+                    data-review-components="action-list"
+                    data-review-title="List with a lead: the buttons on the first line"
+                    data-review-themes="formal"
+                    data-review-topic="action-lead"
+                    data-review-topic-title="List with a lead: the buttons on the first line"
+                    aria-labelledby="h-action-lead"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The row&rsquo;s button was centred on the whole row, so beside a title with a
+                            sentence under it the button hung 21 px below the badge it belongs to. Now the badge, the title&rsquo;s first line and the
+                            buttons stand on one first line, as high as a button, and the sentence runs on below. A row of one line is as tall as
+                            before. The badges, the meta line, the rows&rsquo; rules and the narrow layout (buttons centred under the text) are as you
+                            approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-action-lead">List with a lead: the buttons on the first line</h2>
+                        <p>A list whose rows start with a badge, have a title with a sentence under it, and a button at the end.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In each row the badge, the bold title and the button are on one line; the grey sentence and the meta line are under
+                                the title.
+                            </li>
+                            <li>The buttons stand in one column, one width; at phone width they sit centred under the text as before.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the badge and the button share one centre line in every row, and the title starts on it.</p>
+                    </div>
+                    <div class="af-stack">
+                        <ul class="kp-action-list kp-action-list--lead af-list" aria-label="Foods without cooking" data-af-lead="one"></ul>
+                        <ul class="kp-action-list kp-action-list--lead af-list" aria-label="Messages" data-af-lead="two"></ul>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="problems-cols"
+                    data-review-item="problems-cols"
+                    data-review-components="problems"
+                    data-review-title="Problems: alerts in one list share their columns"
+                    data-review-themes="formal"
+                    data-review-topic="problems-cols"
+                    data-review-topic-title="Problems: alerts in one list share their columns"
+                    aria-labelledby="h-problems-cols"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> Each alert was its own row, so the width of its button decided where its text
+                            ended: the text of one alert ended 56 px before the text of the next, and the fixes began on different edges. Now the
+                            alerts of one list share their columns: icon, text, fix and close have one edge each, from the first alert to the last. A
+                            list without a fix, the folded list and the narrow layout (the fix under the text) are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-problems-cols">Problems: alerts in one list share their columns</h2>
+                        <p>Four problems at once, worst first, each with its fix; one can be dismissed.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The four alerts&rsquo; text ends on one vertical line and their fixes all start on one vertical line, whatever the
+                                button says.
+                            </li>
+                            <li>The close button of the dismissible alert stands in its own column at the end; the others leave that place empty.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: one vertical edge for the end of the text and one for the start of the fixes, over all four alerts.
+                        </p>
+                    </div>
+                    <div class="af-stack"><div class="kp-problems" data-kp-problems data-af-problems></div></div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="stackbar-legend"
+                    data-review-item="stackbar-legend"
+                    data-review-components="stackbar"
+                    data-review-title="Share bar: the legend is a table"
+                    data-review-themes="formal"
+                    data-review-topic="stackbar-legend"
+                    data-review-topic-title="Share bar: the legend is a table"
+                    aria-labelledby="h-stackbar-legend"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> Each legend row sized its value to its own words, so the names ended and the
+                            values began on a different edge in every row (up to 36 px apart on a phone), and a name longer than its cell was cut with
+                            an ellipsis. Now the legend has one value column, as wide as the longest value, so the names all end and the values all
+                            start on one line, and a name is never cut: it wraps, with the swatch and the value on its first line. The bar, its
+                            colours, the hover card and the loading, empty and failed states are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-stackbar-legend">Share bar: the legend is a table</h2>
+                        <p>A bar split into parts with its legend, at the page&rsquo;s width and in a phone-wide frame with long names.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In the phone-wide legend the values all end on one edge and begin on one edge, and the names end on one edge before
+                                them.
+                            </li>
+                            <li>
+                                The long names (&ldquo;Photos and family videos archive&rdquo;, &ldquo;Promised, not written yet&rdquo;) wrap onto a
+                                second line whole; the swatch and the value stay on the first line.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the values form one column, right-aligned, and no name ends in an ellipsis.</p>
+                    </div>
+                    <div class="af-stack"><figure class="kp-stackbar kp-stackbar--lg" data-af-stack="wide"></figure></div>
+                    <div class="af-frame">
+                        <p class="af-frame__label">A phone, 360 px</p>
+                        <div class="af-col" style="--af-w: 360px">
+                            <figure class="kp-stackbar" data-af-stack="narrow"></figure>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="shortcuts-ends"
+                    data-review-item="shortcuts-ends"
+                    data-review-components="shortcuts"
+                    data-review-title="Shortcut sheet: the descriptions end on one edge"
+                    data-review-themes="formal"
+                    data-review-topic="shortcuts-ends"
+                    data-review-topic-title="Shortcut sheet: the descriptions end on one edge"
+                    aria-labelledby="h-shortcuts-ends"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The description of a key was as wide as its words, so the cells ended on a
+                            different line in every row (3 to 107 px apart in a sheet). Now the description fills the rest of the row: it starts after
+                            the key column and ends on the sheet&rsquo;s own edge in every row. The words, the keys, the groups, the dimmed row for a
+                            key that is off and the sheet itself are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-shortcuts-ends">Shortcut sheet: the descriptions end on one edge</h2>
+                        <p>
+                            The sheet of keys of a page: each key in the first column, what it does beside it, and a key that is off with its reason.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>The keys stand in one column and every description starts on one line next to them.</li>
+                            <li>The dimmed row (<b>r</b>) keeps its reason under its words; nothing else moves.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: one left edge for all descriptions, and each row&rsquo;s cell reaches the sheet&rsquo;s inner edge.
+                        </p>
+                    </div>
+                    <div class="af-stack">
+                        <dialog class="kp-shortcuts af-static" aria-label="Keyboard shortcuts" open>
+                            <h3 class="kp-dialog__title">Keyboard shortcuts</h3>
+                            <section>
+                                <h3 class="kp-shortcuts__group-label">Anywhere</h3>
+                                <dl class="kp-shortcuts__list">
+                                    <div class="kp-shortcuts__row">
+                                        <dt><kbd class="kp-palette__keys">?</kbd></dt>
+                                        <dd>Show all keys</dd>
+                                    </div>
+                                    <div class="kp-shortcuts__row">
+                                        <dt><kbd class="kp-palette__keys">/</kbd></dt>
+                                        <dd>Search</dd>
+                                    </div>
+                                    <div class="kp-shortcuts__row">
+                                        <dt><kbd class="kp-palette__keys">g s</kbd></dt>
+                                        <dd>Go to Stacks</dd>
+                                    </div>
+                                    <div class="kp-shortcuts__row">
+                                        <dt><kbd class="kp-palette__keys">g b</kbd></dt>
+                                        <dd>Go to Backups</dd>
+                                    </div>
+                                    <div class="kp-shortcuts__row">
+                                        <dt><kbd class="kp-palette__keys">Ctrl K</kbd></dt>
+                                        <dd>Open the command palette and run any command by name</dd>
+                                    </div>
+                                </dl>
+                            </section>
+                            <section>
+                                <h3 class="kp-shortcuts__group-label">On this page</h3>
+                                <dl class="kp-shortcuts__list">
+                                    <div class="kp-shortcuts__row">
+                                        <dt><kbd class="kp-palette__keys">1</kbd></dt>
+                                        <dd>Overview</dd>
+                                    </div>
+                                    <div class="kp-shortcuts__row">
+                                        <dt><kbd class="kp-palette__keys">2</kbd></dt>
+                                        <dd>Apps</dd>
+                                    </div>
+                                    <div class="kp-shortcuts__row kp-shortcuts__row--off">
+                                        <dt><kbd class="kp-palette__keys">r</kbd></dt>
+                                        <dd>Reveal the chosen key<span class="kp-shortcuts__reason">Needs a key to be chosen first.</span></dd>
+                                    </div>
+                                </dl>
+                            </section>
+                        </dialog>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="week-label"
+                    data-review-item="week-label"
+                    data-review-components="week"
+                    data-review-title="Week agenda on a phone: the labels end on one edge"
+                    data-review-themes="formal"
+                    data-review-topic="week-label"
+                    data-review-topic-title="Week agenda on a phone: the labels end on one edge"
+                    aria-labelledby="h-week-label"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> In the day rows a pill&rsquo;s label was as wide as its words, so the label
+                            cells ended on a different line in every pill (15 px apart). Now the label fills the pill after the time and ends on the
+                            pill&rsquo;s own edge in every pill. The pills, their colours, the times, the &ldquo;+N&rdquo; and the empty, loading and
+                            failed states are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-week-label">Week agenda on a phone: the labels end on one edge</h2>
+                        <p>The next seven days as rows, in a phone-wide frame: each day with its runs as pills, a time and a label.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>Every pill shows its time and its label; the times start on one line and the labels start on one line.</li>
+                            <li>Nothing is cut or moves; the wide layout (a grid of seven columns) is unchanged.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the pills of every day are the same width, with the time and the label on one line.</p>
+                    </div>
+                    <div class="af-frame">
+                        <p class="af-frame__label">A phone, 360 px</p>
+                        <div class="af-col" style="--af-w: 360px">
+                            <section
+                                class="kp-week"
+                                data-kp-week
+                                data-kp-time-zone="Europe/Brussels"
+                                aria-label="The next seven days"
+                                data-af-week
+                            ></section>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r2-states">
+                <section
+                    class="sp-sec"
+                    id="calendar-states"
+                    data-review-item="calendar-states"
+                    data-review-topic="calendar"
+                    data-review-topic-title="Month calendar and pipeline"
+                    data-review-components="calendar"
+                    data-review-title="Month calendar: empty and failed month"
+                    aria-labelledby="h-calendar-states"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> In its normal colours (ok, warn, bad) a calendar with nothing to show or that
+                            could not be read was one small grey line under the month, with the days still drawn as grey plates and no Retry. Only the
+                            calm calendar had a plate. Now every calendar puts the package&rsquo;s state plate over its six weeks: the words at
+                            heading size and centred, and for a failed month a normal-size Retry (<code>kp-calendar-retry</code>); the weeks stay
+                            under it, dimmed, and nothing under a failed plate can be pressed. The plate sits on the same left and right edges as the
+                            month title and the legend, from the weekday row to the last week. The calm calendar&rsquo;s words, the loading pulse and
+                            a loaded month are as you approved them.
+                        </p>
+                    </div>
+                    <div class="sp-sec__head">
+                        <h2 id="h-calendar-states">Month calendar: empty and failed month</h2>
+                        <p>
+                            A month of backup nights, a plate in the colour of each day. Press a state: the month waits, has nothing to show, or could
+                            not be read; a failed month has a Retry.
+                        </p>
+                    </div>
+                    <div class="sp-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Empty</b>: one plate over the whole grid of weeks, the page&rsquo;s sentence at heading size and centred; the month
+                                title, Prev, Next and Today stay above it.
+                            </li>
+                            <li>
+                                <b>Failed</b>: the same plate in red with a <b>Retry</b> of normal size; pressed, the days pulse for a moment and the
+                                month returns.
+                            </li>
+                            <li>The legend stays under the grid and the page does not jump between <b>Ready</b>, <b>Empty</b> and <b>Failed</b>.</li>
+                            <li>
+                                <b>Ready</b> and <b>Loading</b> as you approved them. <b>Loading look</b> only matters while loading: the days pulse,
+                                or each day carries a spinner (<code>kp-calendar--busy-days</code>), or one spinner stands over the month
+                                (<code>kp-calendar--busy-whole</code>). <b>Calm</b> keeps its own words.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the plate fills the grid of weeks, its words centred, Retry a normal button; no second line of the same words
+                            under the month.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="calendar-states-component">
+                        <div role="group" aria-label="State">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="ready" aria-pressed="true">
+                                Ready
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="loading" aria-pressed="false">
+                                Loading
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="empty" aria-pressed="false">
+                                Empty
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="error" aria-pressed="false">
+                                Failed
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Loading look">
+                            <b>Loading look:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="busy" data-sp-value="pulse" aria-pressed="true">
+                                Pulse
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="busy" data-sp-value="days" aria-pressed="false">
+                                Spinner per day
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="busy" data-sp-value="whole" aria-pressed="false">
+                                One spinner
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Colours">
+                            <b>Colours:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="tones" data-sp-value="standard" aria-pressed="true">
+                                Standard
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="tones" data-sp-value="calm" aria-pressed="false">
+                                Calm
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sp-stage" id="calendar-states-component" data-sp-view="calendar-states">
+                        <section
+                            class="kp-calendar"
+                            data-kp-calendar
+                            data-kp-calendar-month="2026-10"
+                            data-kp-time-zone="Europe/Brussels"
+                            aria-label="Nightly backups"
+                        ></section>
+                    </div>
+                </section>
+
+                <section
+                    class="sp-sec"
+                    id="pipeline-states"
+                    data-review-item="pipeline-states"
+                    data-review-topic="calendar"
+                    data-review-components="pipeline"
+                    data-review-title="Pipeline: failed board, a failing lane and lane names"
+                    aria-labelledby="h-pipeline-states"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A failed or empty board was a thin strip above lanes that went on showing a
+                            count of 0, so a board that could not be read looked like a board with nothing on it; a lane could not be marked as
+                            failing; and a long stage name ended in an ellipsis. Now an empty or failed board is the package&rsquo;s state plate over
+                            the whole board at the height the board had: the heading centred, the reason under it, a normal-size Try again. A lane
+                            marked <code>danger</code> has the red status plate and says &ldquo;Needs attention&rdquo; in words. Stage names wrap on
+                            to a second line, and all name plates, share lines and first cards of the lanes start on the same lines. The loading card
+                            and a loaded board are as you approved them.
+                        </p>
+                    </div>
+                    <div class="sp-sec__head">
+                        <h2 id="h-pipeline-states">Pipeline: failed board, a failing lane and lane names</h2>
+                        <p>
+                            Where each application stands, a lane for each stage. Press a state; a failed board has Try again, one lane can be marked
+                            as failing, and long stage names are shown in full.
+                        </p>
+                    </div>
+                    <div class="sp-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Failed</b>: one red plate over the whole board with &ldquo;Could not read the board.&rdquo;, the reason under it
+                                and <b>Try again</b>; no lane and no count of 0 behind it.
+                            </li>
+                            <li><b>Empty</b>: the same plate, neutral, with the sentence; the board keeps the height it had.</li>
+                            <li>
+                                <b>Failing lane</b>: the third lane&rsquo;s name plate is red with the words <b>Needs attention</b>; the other lanes
+                                are unchanged.
+                            </li>
+                            <li>
+                                The long stage name <b>Awaiting the reference letter</b> wraps on two lines, every name plate is as high as the
+                                highest, and the counts, shares and first cards line up across the lanes.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the plate covers the lanes and the closed row; names are whole words; plates, shares and first cards sit on one
+                            line across the lanes (also at 390 px).
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="pipeline-states-component">
+                        <div role="group" aria-label="State">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="ready" aria-pressed="true">
+                                Ready
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="danger" aria-pressed="false">
+                                Failing lane
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="loading" aria-pressed="false">
+                                Loading
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="empty" aria-pressed="false">
+                                Empty
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="error" aria-pressed="false">
+                                Failed
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sp-stage" id="pipeline-states-component" data-sp-view="pipeline-states">
+                        <section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-limit="3" aria-label="Applications by stage"></section>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r2-timeline">
+                <section
+                    class="kc-sec"
+                    id="gantt-names"
+                    data-review-item="gantt-names"
+                    data-review-components="gantt"
+                    data-review-title="Run timeline: the names of the lanes"
+                    data-review-themes="formal"
+                    data-review-topic="gantt"
+                    data-review-topic-title="Run timeline"
+                    aria-labelledby="h-gantt-names"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A lane&rsquo;s name and its second line ended in an ellipsis (&ldquo;Photos and
+                            family vi&hellip;&rdquo;), even when the page made the name column wider. That breaks the rule that a label is never cut.
+                            Now the name column is as wide as the longest name (no narrower than before, at most 40 % of the timeline and 14 rem), and
+                            a name that is still longer wraps onto more lines; the lane grows to hold it. The first line of a name stands on the
+                            middle of the lane&rsquo;s first row, level with the bars and marks of that row, whatever the lane&rsquo;s height. Bars,
+                            marks, the axis and the toolbar are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-gantt-names">Run timeline: the names of the lanes</h2>
+                        <p>
+                            Four jobs on a timeline of the last six hours. Their names are long, and two of them carry a second line and one is a
+                            link.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>Every lane name and every second line is whole; none ends in <b>&hellip;</b>.</li>
+                            <li>
+                                The first line of each name is level with the middle of its first bar. At 390 px a long name wraps onto two or three
+                                lines and the lane gets taller.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: no name or second line ends in an ellipsis, and each name starts level with its first bar.</p>
+                    </div>
+                    <div class="rr-stack">
+                        <section
+                            class="kp-gantt"
+                            id="rr-names"
+                            data-kp-gantt
+                            data-kp-gantt-range="6h"
+                            aria-label="Jobs of the last 6 hours"
+                        ></section>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="gantt-zone"
+                    data-review-item="gantt-zone"
+                    data-review-components="gantt"
+                    data-review-title="Run timeline: a stretch under a crowded mark"
+                    data-review-themes="formal"
+                    data-review-topic="gantt"
+                    data-review-topic-title="Run timeline"
+                    aria-labelledby="h-gantt-zone"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A lane&rsquo;s own stretch (a thin band, such as a lease or a wait) ran through
+                            the middle of the lane, so it passed behind the mark and under the count plate (&ldquo;+3&rdquo;) of a crowded mark, which
+                            looked like the plate lying on the band. Now the stretch stands on the foot of the lane&rsquo;s first row, under the marks
+                            and their plates, clear of both; where a bar and a stretch share a lane, the stretch is a line under the bar. The
+                            stretch&rsquo;s length, colour and the legend are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-gantt-zone">Run timeline: a stretch under a crowded mark</h2>
+                        <p>
+                            Two lanes of moments (attempts that were refused). The first lane has four moments within a few minutes, so they become
+                            one mark with a count; a stretch (the lease) lies under them. The second lane has a stretch under a bar.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>The band is a thin line under the row; the triangle and the <b>+3</b> plate stand above it and never touch it.</li>
+                            <li>The same at 390 px, where the four moments are one mark with a count.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the stretch is a line at the foot of the row, with clear space between it and the mark and its count.
+                        </p>
+                    </div>
+                    <div class="rr-stack">
+                        <section
+                            class="kp-gantt"
+                            id="rr-zone"
+                            data-kp-gantt
+                            data-kp-gantt-range="6h"
+                            aria-label="Refused attempts"
+                            data-kp-gantt-points
+                        ></section>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="gantt-frame"
+                    data-review-item="gantt-frame"
+                    data-review-components="gantt"
+                    data-review-title="Run timeline: twelve lanes in the frame"
+                    data-review-themes="formal"
+                    data-review-topic="gantt"
+                    data-review-topic-title="Run timeline"
+                    aria-labelledby="h-gantt-frame"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The frame showed as much as fitted in its height, so the last visible lane was
+                            cut through its middle at the frame&rsquo;s edge, and the rules and bands behind the lanes ran on to that edge, past the
+                            lane. The height was also fixed once, so it went stale when lane names wrapped differently at another width. Now the frame
+                            shows whole lanes: the last lane that fits completely ends the frame, a scroll comes to rest on a lane&rsquo;s top, and
+                            the height is measured again when the width changes. A timeline whose lanes all fit is unchanged.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-gantt-frame">Run timeline: twelve lanes in the frame</h2>
+                        <p>
+                            Twelve stacks, each with a name and a second line, in the timeline&rsquo;s frame, which shows about 22 rem of lanes and
+                            scrolls past that.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>The frame ends under a whole lane; the rules end there too. Nothing is cut through its middle.</li>
+                            <li>Scroll inside the frame: it stops on a lane&rsquo;s top. The legend under the frame is clear of the rules.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the last lane at the bottom of the frame is whole, and the vertical rules stop at the frame.</p>
+                    </div>
+                    <div class="rr-stack">
+                        <section class="kp-gantt" id="rr-frame" data-kp-gantt data-kp-gantt-range="6h" aria-label="Twelve stacks"></section>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="gantt-rules"
+                    data-review-item="gantt-rules"
+                    data-review-components="gantt"
+                    data-review-title="Run timeline: the minute rules and a bar&rsquo;s words"
+                    data-review-themes="formal"
+                    data-review-topic="gantt"
+                    data-review-topic-title="Run timeline"
+                    aria-labelledby="h-gantt-rules"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A queued bar is hollow, and its hollow had no ground of its own, so the
+                            quarter-hour rules behind it showed through: a line ran across the dashed bar, and through its words wherever a rule fell
+                            on them. Now a queued bar stands on the card&rsquo;s ground: still hollow, dashed and not filled, but nothing shows
+                            through it. Finished, failed and running bars already covered the rules. A page no longer has to time its bars to keep
+                            clear of a rule.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-gantt-rules">Run timeline: the minute rules and a bar&rsquo;s words</h2>
+                        <p>A one-hour timeline with a queued job, a finished job and a failed job, lying across the quarter-hour rules.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>The dashed queued bar shows no rule through it, although a quarter-hour rule lies under the bar and its words.</li>
+                            <li>The finished and failed bars are as before; the line for now stays over everything.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: no rule is drawn through any bar&rsquo;s words.</p>
+                    </div>
+                    <div class="rr-stack">
+                        <section class="kp-gantt" id="rr-rules" data-kp-gantt data-kp-gantt-range="1h" aria-label="Jobs of the last hour"></section>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="uses-labels"
+                    data-review-item="uses-labels"
+                    data-review-components="matrix"
+                    data-review-title="Uses map: the names of the rows"
+                    data-review-themes="formal"
+                    data-review-topic="uses-map"
+                    data-review-topic-title="Uses map"
+                    aria-labelledby="h-uses-labels"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A row name was cut with an ellipsis (&ldquo;VAULTWARD&hellip;&rdquo;) because
+                            the label column had one fixed width. Now the column is as wide as its longest name (no narrower than before, at most 12
+                            rem, 8 rem in a narrow box) and a longer name wraps onto more lines; the row grows to hold it. A column is never narrower
+                            than the longest word of its header, so a header is not broken inside a word. The cells, the marks, the pressed state and
+                            the keys are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-uses-labels">Uses map: the names of the rows</h2>
+                        <p>Which stack uses which service, as the grid view of the uses map. Some stack names are long.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Every row name is whole: <b>Photos and family videos archive</b> and <b>Nightly database snapshots</b> stand on more
+                                than one line, short names on one.
+                            </li>
+                            <li>
+                                The headers over the columns are whole too. At 390 px the grid scrolls sideways inside its own box and the names stay
+                                whole.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: no row or column name ends in an ellipsis, and the rows and cells line up.</p>
+                    </div>
+                    <div class="rr-stack"><div class="kp-matrix" id="rr-grid" data-kp-matrix></div></div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="uses-line"
+                    data-review-item="uses-line"
+                    data-review-components="matrix"
+                    data-review-title="Uses map: a line with a tone and a label"
+                    data-review-themes="formal"
+                    data-review-topic="uses-map"
+                    data-review-topic-title="Uses map"
+                    aria-labelledby="h-uses-line"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> New: a line can carry a tone and a label. The page gives them where it says
+                            that a line exists (<code>cell()</code> returns <code>{ tone, label }</code>, the same object the grid view reads). The
+                            tone colours the line and gives it its own pattern, so colour is never alone: solid green for ok, dashed for a warning,
+                            dotted and heavier for bad, thin grey for muted. The label stands on the line in a small plate in the gap between the
+                            columns, never over a card, with the tone&rsquo;s mark (&check; ! &times; &ndash;) before it; a label wraps instead of
+                            being cut. Where a line has no free place for its plate, the plate shows while the line is lit. The node&rsquo;s spoken
+                            words and the phone list say it as well (&ldquo;Vaultwarden (writes here)&rdquo;). A map whose lines carry neither looks
+                            exactly as you approved it.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-uses-line">Uses map: a line with a tone and a label</h2>
+                        <p>
+                            The lines view of the same relation. Each line says how a stack uses a service: it writes there, it only reads, or it is
+                            blocked. Point at or press a name to light its lines.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>In the first map every line has a plate between the columns, none over a card or over another plate.</li>
+                            <li>
+                                In the second, busier map some lines have no plate; point at a name and the plates of its lines appear. At 390 px the
+                                map becomes a list and each user chip carries its words.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the colour is backed by a pattern and a mark, and no plate touches a card.</p>
+                    </div>
+                    <div class="rr-stack">
+                        <p class="rr-cap">A few lines, each with its words</p>
+                        <div class="kp-matrix" id="rr-lines-few" data-kp-matrix data-kp-view="lines"></div>
+                        <p class="rr-cap">Many lines: a plate that has no room shows while its line is lit</p>
+                        <div class="kp-matrix" id="rr-lines-many" data-kp-matrix data-kp-view="lines"></div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r2-table">
+                <section
+                    class="kc-sec"
+                    id="table-removed-rows"
+                    data-review-item="table-removed-rows"
+                    data-review-components="datatable"
+                    data-review-title="Table: a removed row leaves the count"
+                    data-review-themes="formal"
+                    data-review-topic="datatable"
+                    data-review-topic-title="Data table"
+                    aria-labelledby="h-table-removed-rows"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> When a page took a row out of the table, the table went on counting it: after
+                            14 shown rows became 13 the line still said <b>of 27</b>, and the pager kept the pages the row had filled, until the page
+                            called <code>refresh()</code>. Now the table notices rows that come and go in its body by itself: the count, the
+                            &ldquo;filtered from&rdquo; total and the pages follow at once, and the reader stays on the page they were on instead of
+                            being sent back to page 1. Sorting, searching, the pager and the look are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-table-removed-rows">Table: a removed row leaves the count</h2>
+                        <p>
+                            Twenty-seven backup jobs, ten to a page. The page removes a job with its own code (it takes the row out of the table) and
+                            does nothing else.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Press <b>Remove</b> on a job: the row goes and the line under the table counts one fewer, both in
+                                <b>Showing 1&ndash;10 of 26</b> and after a search (<b>of 3 (filtered from 26)</b>).
+                            </li>
+                            <li>
+                                Go to page 2 and remove a job there: you stay on page 2. Remove jobs until the last page is empty: the pager moves
+                                back one page.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the line under the table and the pager always agree with the rows on screen.</p>
+                    </div>
+                    <div class="bb-stack">
+                        <div class="kp-datatable" data-kp-datatable id="bb-removed" data-kp-page-size="10" data-kp-page-sizes="none">
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-datatable__search"
+                                    data-kp-datatable-search
+                                    type="search"
+                                    aria-label="Search the jobs"
+                                    placeholder="Search the jobs"
+                                />
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Backup jobs; remove one with its button
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text" data-kp-column-locked>Job</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Schedule</th>
+                                            <th scope="col" data-kp-sort="date" data-kp-filter="date">Last run</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Result</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="media">
+                                            <td>Media</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-01</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="media">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="photos">
+                                            <td>Photos</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-02</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="photos">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="docs">
+                                            <td>Docs</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-03</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="docs">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="mail">
+                                            <td>Mail</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-04</td>
+                                            <td>Failed</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="mail">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="vault">
+                                            <td>Vault</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-05</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="vault">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="git">
+                                            <td>Git</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-06</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="git">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="wiki">
+                                            <td>Wiki</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-07</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="wiki">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="home">
+                                            <td>Home</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-08</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="home">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="music">
+                                            <td>Music</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-09</td>
+                                            <td>Failed</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="music">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="books">
+                                            <td>Books</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-10</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="books">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="news">
+                                            <td>News</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-11</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="news">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="feeds">
+                                            <td>Feeds</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-12</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="feeds">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="notes">
+                                            <td>Notes</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-13</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="notes">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="tasks">
+                                            <td>Tasks</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-14</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="tasks">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="maps">
+                                            <td>Maps</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-15</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="maps">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="radio">
+                                            <td>Radio</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-16</td>
+                                            <td>Failed</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="radio">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="print">
+                                            <td>Print</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-17</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="print">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="cloud">
+                                            <td>Cloud</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-18</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="cloud">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="sync">
+                                            <td>Sync</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-19</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="sync">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="lab">
+                                            <td>Lab</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-20</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="lab">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="scans">
+                                            <td>Scans</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-21</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="scans">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="tax">
+                                            <td>Tax</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-22</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="tax">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="proxy">
+                                            <td>Proxy</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-23</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="proxy">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="dns">
+                                            <td>Dns</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-24</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="dns">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="dev">
+                                            <td>Dev</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-25</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="dev">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="arch">
+                                            <td>Arch</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-26</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="arch">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="pi">
+                                            <td>Pi</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-27</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-remove="pi">
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="kp-empty" data-kp-datatable-empty hidden>No job matches.</div>
+                            <div class="kp-datatable__bar">
+                                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="table-held-row"
+                    data-review-item="table-held-row"
+                    data-review-components="datatable"
+                    data-review-title="Table: a deleted row waits for Undo"
+                    data-review-themes="formal"
+                    data-review-topic="datatable"
+                    aria-labelledby="h-table-held-row"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A page that wants an Undo window had to take the row out of the table and put
+                            it back, because every redraw and every <code>refresh()</code> set <code>hidden</code> on every row again and could not
+                            keep one hidden. Now a row marked <code>data-kp-row-hidden</code> is held out of the table: it is not counted, not paged,
+                            not searched and never shown by the table, whatever the table redraws; taking the attribute off gives it back, in its
+                            place. The rows the page does not hold behave as you approved.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-table-held-row">Table: a deleted row waits for Undo</h2>
+                        <p>
+                            Delete hides the job and offers Undo for a few seconds before it is gone for good. The row is held, not taken out of the
+                            page.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Press <b>Delete</b>: the job disappears, the count drops by one, and a line offers <b>Undo</b>. Search and sort while
+                                it waits: the job stays hidden.
+                            </li>
+                            <li>
+                                Press <b>Undo</b>: the job is back in its place and the count is as before. Let the time run out and the job is gone.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: a held job is nowhere: not in the rows, not in the count, not in a search.</p>
+                    </div>
+                    <div class="bb-stack">
+                        <div class="kp-datatable" data-kp-datatable id="bb-held" data-kp-page-size="8" data-kp-page-sizes="none">
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-datatable__search"
+                                    data-kp-datatable-search
+                                    type="search"
+                                    aria-label="Search the jobs"
+                                    placeholder="Search the jobs"
+                                />
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Backup jobs; delete one and undo it
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text" data-kp-column-locked>Job</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Schedule</th>
+                                            <th scope="col" data-kp-sort="date" data-kp-filter="date">Last run</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Result</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="media">
+                                            <td>Media</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-01</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="media">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="photos">
+                                            <td>Photos</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-02</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="photos">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="docs">
+                                            <td>Docs</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-03</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="docs">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="mail">
+                                            <td>Mail</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-04</td>
+                                            <td>Failed</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="mail">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="vault">
+                                            <td>Vault</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-05</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="vault">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="git">
+                                            <td>Git</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-06</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="git">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="wiki">
+                                            <td>Wiki</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-07</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="wiki">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="home">
+                                            <td>Home</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-08</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="home">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="music">
+                                            <td>Music</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-09</td>
+                                            <td>Failed</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="music">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="books">
+                                            <td>Books</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-10</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="books">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="news">
+                                            <td>News</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-11</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="news">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="feeds">
+                                            <td>Feeds</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-12</td>
+                                            <td>Ok</td>
+                                            <td>
+                                                <div class="kp-row-actions">
+                                                    <button type="button" class="kp-button kp-button--sm kp-button--danger" data-bb-hold="feeds">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="kp-empty" data-kp-datatable-empty hidden>No job matches.</div>
+                            <div class="kp-datatable__bar">
+                                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                            </div>
+                        </div>
+                        <p class="bb-line" id="bb-held-line" role="status" aria-live="polite">Nothing deleted yet.</p>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="table-date-pills"
+                    data-review-item="table-date-pills"
+                    data-review-components="datatable"
+                    data-review-title="Table: dates in a filter pill, and the page number"
+                    data-review-themes="formal"
+                    data-review-topic="datatable"
+                    aria-labelledby="h-table-date-pills"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The pill of a date filter printed the stored form of its bounds (<b
+                                >Last run: 2026-10-05 to 2026-10-12</b
+                            >), and the refusal of a backwards range did the same, while the field it came from showed the date the way the page
+                            writes it. Now a pill and a refusal write a date in the locale of the table, the way the date field does
+                            (<b>05/10/2026</b>). The handle&rsquo;s <code>page()</code> counts from 0, the pager prints from 1; that is now written
+                            down, and <code>view().pageNumber</code> gives the number the pager prints. Nothing else about the filters changed.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-table-date-pills">Table: dates in a filter pill, and the page number</h2>
+                        <p>A date filter on the Last run column, set to 5 to 12 October, and two buttons that go to a page by number.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The pill reads <b>Last run: 05/10/2026 to 12/10/2026</b>, not the ISO form; pressing its words opens the editor with
+                                the same dates.
+                            </li>
+                            <li>
+                                The two buttons go to page 1 and page 2 (<code>page(0)</code> and <code>page(1)</code>); the line says both numbers:
+                                the handle&rsquo;s and the pager&rsquo;s.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the pill writes the dates the way the date fields of the editor do.</p>
+                    </div>
+                    <div class="bb-stack">
+                        <div
+                            class="kp-datatable"
+                            data-kp-datatable
+                            id="bb-dates"
+                            data-kp-filter-mode="add"
+                            data-kp-page-size="5"
+                            data-kp-page-sizes="none"
+                            data-kp-locale="en-GB"
+                        >
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-datatable__search"
+                                    data-kp-datatable-search
+                                    type="search"
+                                    aria-label="Search the jobs"
+                                    placeholder="Search the jobs"
+                                />
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Backup jobs with a date filter
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text" data-kp-column-locked>Job</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Schedule</th>
+                                            <th scope="col" data-kp-sort="date" data-kp-filter="date">Last run</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Result</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="media">
+                                            <td>Media</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-01</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="photos">
+                                            <td>Photos</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-02</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="docs">
+                                            <td>Docs</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-03</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="mail">
+                                            <td>Mail</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-04</td>
+                                            <td>Failed</td>
+                                        </tr>
+                                        <tr data-kp-row-key="vault">
+                                            <td>Vault</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-05</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="git">
+                                            <td>Git</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-06</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="wiki">
+                                            <td>Wiki</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-07</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="home">
+                                            <td>Home</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-08</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="music">
+                                            <td>Music</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-09</td>
+                                            <td>Failed</td>
+                                        </tr>
+                                        <tr data-kp-row-key="books">
+                                            <td>Books</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-10</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="news">
+                                            <td>News</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-11</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="feeds">
+                                            <td>Feeds</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-12</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="notes">
+                                            <td>Notes</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-13</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="tasks">
+                                            <td>Tasks</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-14</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="maps">
+                                            <td>Maps</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-15</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="radio">
+                                            <td>Radio</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-16</td>
+                                            <td>Failed</td>
+                                        </tr>
+                                        <tr data-kp-row-key="print">
+                                            <td>Print</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-17</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="cloud">
+                                            <td>Cloud</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-18</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="sync">
+                                            <td>Sync</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-19</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-key="lab">
+                                            <td>Lab</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-20</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="kp-empty" data-kp-datatable-empty hidden>No job matches.</div>
+                            <div class="kp-datatable__bar">
+                                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                            </div>
+                        </div>
+                        <div class="bb-row">
+                            <button type="button" class="kp-button kp-button--sm" data-bb-page="0">page(0)</button
+                            ><button type="button" class="kp-button kp-button--sm" data-bb-page="1">page(1)</button>
+                            <p class="bb-line" id="bb-page-line" role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="table-expand-single"
+                    data-review-item="table-expand-single"
+                    data-review-components="datatable"
+                    data-review-title="Table: one row open at a time, switchable"
+                    data-review-themes="formal"
+                    data-review-topic="datatable"
+                    aria-labelledby="h-table-expand-single"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The rule <code>data-kp-expand-single</code> was read once, when the table was
+                            attached, so changing the attribute later did nothing. Now the table follows it: switching it on closes all but the last
+                            row that was open, switching it off lets several stay open. It is also written down that the toggle button is a column of
+                            its own, the first, so the column numbers the handle takes and gives count it (the first data column of an expandable
+                            table is 1). The rows, their details and the keys are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-table-expand-single">Table: one row open at a time, switchable</h2>
+                        <p>An expandable table of jobs; a checkbox turns the rule on and off while the table is on screen.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Open two jobs with the rule off: both stay open. Tick <b>One row at a time</b>: only the last one you opened stays
+                                open; opening another closes it.
+                            </li>
+                            <li>Untick it: opening a job no longer closes the others.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the toggle column and the details line up with the headers, open or closed.</p>
+                    </div>
+                    <div class="bb-stack">
+                        <label class="kp-field__option bb-check"
+                            ><input type="checkbox" class="kp-field__check" data-bb-single /> <span>One row at a time</span></label
+                        >
+                        <div class="kp-datatable" data-kp-datatable id="bb-expand" data-kp-expandable data-kp-page-size="8" data-kp-page-sizes="none">
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-datatable__search"
+                                    data-kp-datatable-search
+                                    type="search"
+                                    aria-label="Search the jobs"
+                                    placeholder="Search the jobs"
+                                />
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Backup jobs; open a row for its details
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text" data-kp-column-locked>Job</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Schedule</th>
+                                            <th scope="col" data-kp-sort="date" data-kp-filter="date">Last run</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Result</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="media">
+                                            <td>Media</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-01</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-detail>
+                                            <td colspan="4">
+                                                <p class="bb-detail">Media runs nightly; the last run was on 2026-10-01 and its result was ok.</p>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="photos">
+                                            <td>Photos</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-02</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-detail>
+                                            <td colspan="4">
+                                                <p class="bb-detail">Photos runs nightly; the last run was on 2026-10-02 and its result was ok.</p>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="docs">
+                                            <td>Docs</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-03</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-detail>
+                                            <td colspan="4">
+                                                <p class="bb-detail">Docs runs weekly; the last run was on 2026-10-03 and its result was ok.</p>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="mail">
+                                            <td>Mail</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-04</td>
+                                            <td>Failed</td>
+                                        </tr>
+                                        <tr data-kp-row-detail>
+                                            <td colspan="4">
+                                                <p class="bb-detail">Mail runs nightly; the last run was on 2026-10-04 and its result was failed.</p>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="vault">
+                                            <td>Vault</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-05</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-detail>
+                                            <td colspan="4">
+                                                <p class="bb-detail">Vault runs hourly; the last run was on 2026-10-05 and its result was ok.</p>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="git">
+                                            <td>Git</td>
+                                            <td>Nightly</td>
+                                            <td>2026-10-06</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-detail>
+                                            <td colspan="4">
+                                                <p class="bb-detail">Git runs nightly; the last run was on 2026-10-06 and its result was ok.</p>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="wiki">
+                                            <td>Wiki</td>
+                                            <td>Weekly</td>
+                                            <td>2026-10-07</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-detail>
+                                            <td colspan="4">
+                                                <p class="bb-detail">Wiki runs weekly; the last run was on 2026-10-07 and its result was ok.</p>
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="home">
+                                            <td>Home</td>
+                                            <td>Hourly</td>
+                                            <td>2026-10-08</td>
+                                            <td>Ok</td>
+                                        </tr>
+                                        <tr data-kp-row-detail>
+                                            <td colspan="4">
+                                                <p class="bb-detail">Home runs hourly; the last run was on 2026-10-08 and its result was ok.</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="kp-empty" data-kp-datatable-empty hidden>No job matches.</div>
+                            <div class="kp-datatable__bar">
+                                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="reason-columns"
+                    data-review-item="reason-columns"
+                    data-review-components="disabled-reason actions"
+                    data-review-title="Buttons that say why they are off, in a column of actions"
+                    data-review-themes="formal"
+                    data-review-topic="actions"
+                    data-review-topic-title="Row actions"
+                    aria-labelledby="h-reason-columns"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A disabled button that carries its reason is wrapped in a span so that its
+                            tooltip can show. The span lost the button&rsquo;s column role (<code>data-kp-action</code>), so on a row with an off
+                            Delete the column was a different one from the Delete of its neighbours and the Delete column split in two, with the off
+                            buttons at another width and edge. Now the wrapper wears the role and the button fills it: an off Delete has the same
+                            column, the same width and the same edge as an enabled one, and turning a button off or on moves nothing. The reasons, the
+                            tooltips and the buttons are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-reason-columns">Buttons that say why they are off, in a column of actions</h2>
+                        <p>
+                            The same Edit and Delete buttons on every row of a table and of a list; Delete is off on some rows and says why when you
+                            hover or focus it.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In the table and in the list, every <b>Delete</b> starts at one edge and has one width, off or on;
+                                <b>Edit</b> likewise.
+                            </li>
+                            <li>
+                                Hover or focus an off Delete: its reason shows. Press <b>Turn off Family&rsquo;s Delete</b>: that button goes off and
+                                shows its reason, and no column moves; press it again and it comes back.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: one Edit column and one Delete column, every button in a column on one edge and one width.</p>
+                    </div>
+                    <div class="bb-stack">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table" id="bb-reason-table">
+                                <caption class="kp-sr-only">
+                                    Calendars with edit and delete buttons
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Calendar</th>
+                                        <th scope="col">Events</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Family</td>
+                                        <td>214</td>
+                                        <td>
+                                            <div class="kp-row-actions">
+                                                <button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button
+                                                ><button
+                                                    type="button"
+                                                    class="kp-button kp-button--sm kp-button--danger"
+                                                    data-kp-action="delete"
+                                                    data-kp-disabled-reason="A sync is running on this calendar; wait for it to finish"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Work, shared with the whole team</td>
+                                        <td>1021</td>
+                                        <td>
+                                            <div class="kp-row-actions">
+                                                <button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button
+                                                ><button
+                                                    type="button"
+                                                    class="kp-button kp-button--sm kp-button--danger"
+                                                    disabled
+                                                    data-kp-action="delete"
+                                                    data-kp-disabled-reason="This is the default calendar; make another one the default first"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Birthdays</td>
+                                        <td>38</td>
+                                        <td>
+                                            <div class="kp-row-actions">
+                                                <button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button
+                                                ><button type="button" class="kp-button kp-button--sm kp-button--danger" data-kp-action="delete">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Holidays</td>
+                                        <td>96</td>
+                                        <td>
+                                            <div class="kp-row-actions">
+                                                <button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button
+                                                ><button
+                                                    type="button"
+                                                    class="kp-button kp-button--sm kp-button--danger"
+                                                    disabled
+                                                    data-kp-action="delete"
+                                                    data-kp-disabled-reason="A subscribed calendar can only be unsubscribed"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="kp-action-list" id="bb-reason-list" aria-label="Calendars as a list">
+                            <li>
+                                <div>Family</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button
+                                    ><button
+                                        type="button"
+                                        class="kp-button kp-button--sm kp-button--danger"
+                                        data-kp-action="delete"
+                                        data-kp-disabled-reason="A sync is running on this calendar; wait for it to finish"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <div>Work, shared with the whole team</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button
+                                    ><button
+                                        type="button"
+                                        class="kp-button kp-button--sm kp-button--danger"
+                                        disabled
+                                        data-kp-action="delete"
+                                        data-kp-disabled-reason="This is the default calendar; make another one the default first"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <div>Birthdays</div>
+                                <div class="kp-row-actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button
+                                    ><button type="button" class="kp-button kp-button--sm kp-button--danger" data-kp-action="delete">Delete</button>
+                                </div>
+                            </li>
+                        </ul>
+                        <p><button type="button" class="kp-button" data-bb-flip>Turn off Family&rsquo;s Delete</button></p>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "round-2-1019-382869d9-92cf-437d-81cf-5098f9924499", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../align-pkg-1019/demo.js"></script>
+        <script type="module" src="../r1r2-1019/demo.js"></script>
+        <script type="module" src="../r3r5-1019/demo.js"></script>
+        <script type="module" src="../b3b4-1019/demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
