@@ -76,6 +76,80 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "2",
+            "page": "round-3-1019-be6803b3-833c-4da0-8625-887388e1f087",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 17:20: 16 of 16 judged, 16 approved. Approved in full: formal.",
+            "approved": [
+                {
+                    "item": "copyable-kv",
+                    "theme": "formal"
+                },
+                {
+                    "item": "checklist-failed",
+                    "theme": "formal"
+                },
+                {
+                    "item": "timers-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "action-size",
+                    "theme": "formal"
+                },
+                {
+                    "item": "freshness-tone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sentence-computed",
+                    "theme": "formal"
+                },
+                {
+                    "item": "hovercard-touch",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel-kiosk",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel-resting",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel-answer",
+                    "theme": "formal"
+                },
+                {
+                    "item": "form-gap",
+                    "theme": "formal"
+                },
+                {
+                    "item": "json-action",
+                    "theme": "formal"
+                },
+                {
+                    "item": "refresh-label",
+                    "theme": "formal"
+                },
+                {
+                    "item": "check-segmented",
+                    "theme": "formal"
+                },
+                {
+                    "item": "check-buttons",
+                    "theme": "formal"
+                },
+                {
+                    "item": "snooze-width",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
         }
     ]
 }

@@ -29631,7 +29631,8 @@ function drawLoading3(el16, spec, memory) {
   }
   memory.card = openBusyCard(el16, {
     words: spec.loadingWords ?? getStrings().bulletsLoading,
-    area: () => [list],
+    // The list as it stands now: a second loading call draws a new list under the same card.
+    area: () => [el16.querySelector(":scope > .kp-bullets__list") ?? list],
     className: "kp-bullets__busy",
     arrive: memory.drawn
   });

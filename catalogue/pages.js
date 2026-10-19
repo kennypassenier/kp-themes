@@ -93,12 +93,6 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
-            // Kenny, 2026-10-19 (project threads): four more fix/option rounds bundled in ONE page (research/round-3-1019, built by build.mjs from research/r6r8-1019, audhd-opts-1019, hover-wheel-1019 and formgrid-notes-1019, which stay as its sources and are off the Agenda). Formal only; each section says what was wrong and what is different now.
-            {
-                href: 'research/round-3-1019/demo.html',
-                label: 'Fixes from the project threads, round 3',
-                about: 'Fixes and options from the project threads, each in the package: the remind-me picker width, the Copy button in a key-value cell, the checklist and timer list when loading, empty or failed; three options (action tile size, calm freshness in days, a computed field in a sentence form); the hover card on touch and the wheel (answer, kiosk, resting); and the form grid (a form block gap, a JSON field action, the refresh bar label, two review-kit measures). 16 sections (16 pairs), in formal only.',
-            },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): the stacks side of the dashboard on 11.0.0, formal only, sample data in the dashboard's own shapes: the Stacks fleet (cards, table, batch actions, nightly backups), the Apps launcher, Presets, Retired stacks, the stack page with Apply and Update, and the Map's side panel, Matrix, Capacity, Disk growth and Stale images.
             {
                 href: 'research/app-homelab-stacks/demo.html',
@@ -248,6 +242,13 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-19 17:20: Kenny approved every pair (research/round-3-1019/decided.json).
+            // Kenny, 2026-10-19 (project threads): four more fix/option rounds bundled in ONE page (research/round-3-1019, built by build.mjs from research/r6r8-1019, audhd-opts-1019, hover-wheel-1019 and formgrid-notes-1019, which stay as its sources and are off the Agenda). Formal only; each section says what was wrong and what is different now.
+            {
+                href: 'research/round-3-1019/demo.html',
+                label: 'Fixes from the project threads, round 3',
+                about: 'Fixes and options from the project threads, each in the package: the remind-me picker width, the Copy button in a key-value cell, the checklist and timer list when loading, empty or failed; three options (action tile size, calm freshness in days, a computed field in a sentence form); the hover card on touch and the wheel (answer, kiosk, resting); and the form grid (a form block gap, a JSON field action, the refresh bar label, two review-kit measures). 16 sections (16 pairs), in formal only.',
+            },
             // Decided 2026-10-19 17:20: 22 of 25 approved; the three not approved are rebuilt in the homelab dashboard itself (research/app-homelab-backups/decided.json).
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): one bundled review of 25 sections for the operations half of the dashboard (topics T8, T3, T11 and T7 of docs/kp-themes-11-adoption.md in the homelab repository): Backups, Calendar and Restore; Firewall path-trace; Host and the System landing; Console and host log. Formal only, sample data. Hand-written page: research/app-homelab-backups.
             {

@@ -41,18 +41,99 @@ const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 export const BUSY = '.kp-datatable__busy-card, .kp-datatable__busy-overlay';
 /** The approved own loading pictures (gates/check-busy-card.mjs OWN). */
 export const OWN_BUSY = '.kp-calendar__busy, .kp-chart__state, .kp-chart__loading';
+/**
+ * The loading looks the package draws, by name, each as the selector that finds it in the page. A look is the theme's own
+ * picture (css/<theme>-register.css); a component never draws one of its own [loadingkind-1019].
+ */
+export const LOOKS = {
+    'busy card': BUSY,
+    'chart picture': ".kp-chart__state[data-kp-state='loading']",
+    'calendar picture': ".kp-calendar__busy, .kp-calendar__day[data-kp-tone='loading']",
+    'row spinner': ".kp-statusrow[data-state='loading'] > .kp-statusrow__mark .kp-spinner",
+};
+
+/**
+ * The KIND of element a component is, and the look that kind loads with (docs/USER_GUIDE.md, "Which loading look belongs
+ * to which kind"). A component is measured against the look of its kind, so a new component picks its kind and cannot pick
+ * a wrong look: Kenny, 2026-10-19 17:23, after the network graph was rejected three times for its loading picture.
+ * @type {Record<string, { look: keyof typeof LOOKS, what: string }>}
+ */
+export const KINDS = {
+    table: { look: 'busy card', what: 'rows and columns' },
+    grid: { look: 'busy card', what: 'cells on two axes' },
+    strip: { look: 'busy card', what: 'a strip of cells' },
+    timeline: { look: 'busy card', what: 'lanes, days or a board over time' },
+    list: { look: 'busy card', what: 'rows, items or tiles in a list' },
+    text: { look: 'busy card', what: 'a block of text or code' },
+    pane: { look: 'busy card', what: 'a list with a detail pane' },
+    card: { look: 'busy card', what: 'a card with a stage' },
+    plot: { look: 'chart picture', what: 'a drawn plot: lines, bars, nodes' },
+    calendar: { look: 'calendar picture', what: 'a month of days' },
+    row: { look: 'row spinner', what: 'one row with a mark' },
+};
+
 /** The package plate for empty and failed. */
 export const PLATE = '.kp-stateplate';
 
 /**
+ * In the page: which of the package's loading looks stand in (or over) a host. Self-contained, handed to page.evaluate.
+ * @param {[number, Record<string, string>]} args the host's data-states-i, LOOKS
+ * @returns {string[] | null} null: the host is collapsed (a mode that hides it), so it shows no look to judge
+ */
+export function looksFound([i, looks]) {
+    const host = document.querySelector(`[data-states-i="${i}"]`);
+    if (!host) return null;
+    const H = host.getBoundingClientRect();
+    if (H.height < 12 || H.width < 12) return null;
+    const vis = (/** @type {Element} */ e) => {
+        const r = e.getBoundingClientRect();
+        const cs = getComputedStyle(e);
+        return r.width > 1 && r.height > 1 && cs.visibility !== 'hidden' && cs.display !== 'none' && parseFloat(cs.opacity) > 0.05;
+    };
+    // A look stands in the host, or (a group's shared card, a dialog stage) over it, covering half of it.
+    return Object.entries(looks)
+        .filter(([, sel]) =>
+            [...(host.matches(sel) ? [host] : []), ...host.querySelectorAll(sel), ...document.querySelectorAll(sel)].some((e) => {
+                // The look of a popover that is closed (the notices' inbox) stands in it, out of sight until it opens.
+                if (host.contains(e) && e.closest('[popover]:not(:popover-open)')) return true;
+                if (!vis(e)) return false;
+                if (host.contains(e) || e === host) return true;
+                const r = e.getBoundingClientRect();
+                const w = Math.min(r.right, H.right) - Math.max(r.left, H.left);
+                const v = Math.min(r.bottom, H.bottom) - Math.max(r.top, H.top);
+                return w > 0 && v > 0 && w * v >= H.width * H.height * 0.5;
+            }),
+        )
+        .map(([name]) => name);
+}
+
+/**
+ * The line when a component in loading shows another look than the one of its kind, else ''. Every look the package draws
+ * is the right one for some kind, so what counts is the match: the look of the kind must be there, and a plot or a calendar
+ * (a kind with a picture of its own) must not show the busy card over it as well.
+ * @param {string} at "section: component"
+ * @param {string} name the component
+ * @param {string} kind its kind (KINDS)
+ * @param {string[]} found the looks found (looksFound)
+ */
+export function lookLine(at, name, kind, found) {
+    const want = KINDS[kind].look;
+    const shown = found.length ? found.join(' + ') : 'no loading look';
+    const ownPicture = want !== 'busy card' && want !== 'row spinner';
+    if (found.includes(want) && !(ownPicture && found.length > 1)) return '';
+    return `${at} loading shows the ${shown}, but a ${name} is a ${kind} (${KINDS[kind].what}) and a ${kind} loads with the ${want}`;
+}
+
+/**
  * The data components that ship standard states, how a page wires them and how the package drives them. `drive` runs in
  * the page with the module's namespace; it is self-contained (handed over as source). `states` are the ones it has.
- * @typedef {{ name: string, host: string, module: string, wire: string, states: string[], drive: (m: any, el: HTMLElement, state: string) => unknown }} StateComponent
+ * @typedef {{ name: string, kind: keyof typeof KINDS, host: string, module: string, wire: string, states: string[], drive: (m: any, el: HTMLElement, state: string) => unknown }} StateComponent
  * @type {StateComponent[]}
  */
 export const STATE_COMPONENTS = [
     {
         name: 'datatable',
+        kind: 'table',
         host: '[data-kp-datatable]',
         module: 'datatable.js',
         wire: "dataTable(el).busy({ overlay: true }) (or data-kp-busy-overlay) + .state('loading'); no rows → the table's own empty plate; .fail(message)",
@@ -74,6 +155,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'graph',
+        kind: 'plot',
         host: '[data-kp-graph]',
         module: 'graph.js',
         wire: "setGraphState(el, 'loading' | 'empty' | 'error', title, { text })",
@@ -82,6 +164,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'heat grid',
+        kind: 'grid',
         host: '[data-kp-heat]',
         module: 'heat.js',
         wire: "setHeat(el, { state: 'loading' | 'empty' | 'error', message, skeleton })",
@@ -90,12 +173,14 @@ export const STATE_COMPONENTS = [
             m.setHeat(el, {
                 columns: [],
                 rows: [],
+                skeleton: { rows: 3, columns: 7 },
                 state,
                 message: state === 'empty' ? 'Nothing yet' : 'Could not read it',
             }),
     },
     {
         name: 'matrix',
+        kind: 'grid',
         host: '[data-kp-matrix]',
         module: 'heat.js',
         wire: "setMatrix(el, { state: 'loading' | 'empty' | 'error', message })",
@@ -104,6 +189,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'run timeline',
+        kind: 'timeline',
         host: '[data-kp-gantt]',
         module: 'gantt.js',
         wire: "setGanttState(el, 'loading' | 'empty' | 'error', title, { text })",
@@ -112,6 +198,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'week',
+        kind: 'timeline',
         host: '[data-kp-week]',
         module: 'week.js',
         wire: "setWeekState(el, 'loading' | 'empty' | 'error', title, { text })",
@@ -120,6 +207,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'uptime strip',
+        kind: 'strip',
         host: '[data-kp-uptime]',
         module: 'uptime.js',
         wire: "setUptime(el, { label, state: 'loading' | 'empty' | 'error', count, error })",
@@ -135,6 +223,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'calendar',
+        kind: 'calendar',
         host: '[data-kp-calendar]',
         module: 'calendar.js',
         wire: "setCalendarState(el, 'loading' | 'empty' | 'error', words)",
@@ -144,6 +233,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'pipeline',
+        kind: 'timeline',
         host: '[data-kp-pipeline]',
         module: 'pipeline.js',
         wire: "setPipelineState(el, 'loading' | 'empty' | 'error', words)",
@@ -153,6 +243,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'activity feed',
+        kind: 'list',
         host: '[data-kp-feed]',
         module: 'feed.js',
         wire: "setFeed(el, { state: 'loading' | 'empty' | 'error', rows })",
@@ -161,6 +252,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'notices',
+        kind: 'list',
         host: '[data-kp-notices]',
         module: 'notices.js',
         wire: "setNotices(el, { state: 'loading' | 'empty' | 'error', items })",
@@ -169,6 +261,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'log viewer',
+        kind: 'text',
         host: '[data-kp-logviewer]',
         module: 'logviewer.js',
         wire: "setLogViewer(el, { state: 'loading' | 'error', message })",
@@ -177,6 +270,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'diff view',
+        kind: 'text',
         host: '[data-kp-diffview]',
         module: 'diff.js',
         wire: "setDiff(el, { state: 'loading' | 'empty' | 'error', message })",
@@ -185,6 +279,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'checklist',
+        kind: 'list',
         host: '[data-kp-checklist]',
         module: 'checklist.js',
         wire: "setChecklistState(list, 'loading' | 'error' | 'ready', message); empty: setChecklistItems(list, [])",
@@ -193,6 +288,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'timers',
+        kind: 'list',
         host: '[data-kp-timers]',
         module: 'timer.js',
         wire: "setTimersState(list, 'loading' | 'error', message)",
@@ -201,6 +297,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'entity grid',
+        kind: 'list',
         host: '[data-kp-entity-grid]',
         module: 'entity-card.js',
         wire: "setEntityGridState(grid, 'loading' | 'empty' | 'error', { message, title })",
@@ -209,6 +306,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'bullets',
+        kind: 'list',
         host: '[data-kp-bullets]',
         module: 'bullets.js',
         wire: "setBullets(el, { rows, state: 'loading' | 'empty' | 'error', message })",
@@ -217,6 +315,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'code view',
+        kind: 'text',
         host: '[data-kp-code]',
         module: 'code.js',
         wire: "setCode(el, { state: 'loading' | 'empty' | 'error', message })",
@@ -225,6 +324,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'gallery',
+        kind: 'list',
         host: '[data-kp-gallery]',
         module: 'gallery.js',
         wire: "setGallery(el, { state: 'loading' | 'empty' | 'error', items })",
@@ -233,6 +333,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'runs',
+        kind: 'list',
         host: '[data-kp-runs]',
         module: 'runs.js',
         wire: "setRunsState(el, 'loading' | 'error', { title, text }); empty: setRuns(el, [], { reason })",
@@ -241,6 +342,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'dependency list',
+        kind: 'list',
         host: '[data-kp-deplist]',
         module: 'deplist.js',
         wire: "the handle's setState('loading' | 'empty' | 'error', { message }) (attachDeplists)",
@@ -253,6 +355,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'request inspector',
+        kind: 'list',
         host: '[data-kp-requests]',
         module: 'request-inspector.js',
         wire: "setRequestsState(el, 'loading' | 'empty' | 'error', { message })",
@@ -265,6 +368,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'master-detail',
+        kind: 'pane',
         host: '[data-kp-master-detail]',
         module: 'master-detail.js',
         wire: "setPaneState(root, 'loading' | 'empty' | 'error', { message })",
@@ -273,6 +377,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'chart',
+        kind: 'plot',
         host: '[data-kp-chart]:not([data-kp-chart="spark"])',
         module: 'chart.js',
         wire: 'loading: data-kp-chart-loading on the chart; error: setChartData(el, { error, series }); empty: setChartData with no points',
@@ -290,7 +395,9 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'console',
-        host: '[data-kp-console]',
+        kind: 'text',
+        // A command bar (data-kp-console-mode="bar") has no output area: loading only switches its input off, so it has no look.
+        host: '[data-kp-console]:not([data-kp-console-mode="bar"])',
         module: 'console.js',
         wire: "setConsole(root, { state: 'loading' | 'error', message })",
         states: ['loading', 'error'],
@@ -298,6 +405,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'availability grid',
+        kind: 'grid',
         host: '[data-kp-availability]',
         module: 'availability.js',
         wire: "setAvailability(root, { state: 'loading' | 'empty' | 'error', message })",
@@ -305,7 +413,19 @@ export const STATE_COMPONENTS = [
         drive: (m, el, state) => m.setAvailability(el, { state, message: 'Could not read it', people: [], columns: [] }),
     },
     {
+        name: 'status list',
+        kind: 'row',
+        host: '.kp-statuslist',
+        module: 'statusrow.js',
+        wire: "setStatus(list, key, { state: 'loading' | 'failed' | 'empty' }) on a row; the whole list in a card: setCardState",
+        states: ['loading'],
+        drive: (m, el) => {
+            if (!m.setStatus(el, 0, { state: 'loading' })) throw new Error('the list has no first row');
+        },
+    },
+    {
         name: 'card',
+        kind: 'card',
         host: '.kp-card[data-kp-state]',
         module: 'card-state.js',
         wire: "setCardState(card, 'loading' | 'empty' | 'error' | 'ready', { words, title, text }) on a .kp-card with a .kp-card__stage",
@@ -701,6 +821,8 @@ export function measureDriven([i, state, name, readyH, maxHold, busySel, ownSel,
                 `${at} ${state === 'error' ? 'failed' : state} is ${H.height.toFixed(0)}px high, its loaded footprint is ${need.toFixed(0)}px (js/footprint.js holds it)`,
             );
     }
+    // A row's loading is its mark's spinner (looksFound judges it); there is no card to measure.
+    if (state === 'loading' && name === 'status list') return res;
     if (state === 'loading') {
         const card = find(busySel);
         if (!card) {
@@ -830,7 +952,9 @@ export function isDataRead(r) {
 }
 
 /** The components as the page needs them (no functions). */
-const PLAIN = STATE_COMPONENTS.map(({ name, host, wire }) => ({ name, host, wire }));
+const PLAIN_ALL = STATE_COMPONENTS.map(({ name, host, wire }) => ({ name, host, wire }));
+/** The wiring half reads whole components; a row's own mark (the status list) is judged only where it is driven. */
+const PLAIN = STATE_COMPONENTS.filter((c) => c.kind !== 'row').map(({ name, host, wire }) => ({ name, host, wire }));
 
 /**
  * Wait until a page has settled: js/auto.js done (when the page uses it) and a moment for what arrives.
@@ -965,7 +1089,7 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
             });
         }
         const maxHold = await d.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize) * 48);
-        const instances = await d.evaluate(listInstances, PLAIN);
+        const instances = await d.evaluate(listInstances, PLAIN_ALL);
         for (const inst of instances) {
             const comp = STATE_COMPONENTS[inst.ci];
             try {
@@ -979,21 +1103,20 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                 }, inst.i);
                 if (readyH < 0) continue;
                 for (const state of comp.states) {
-                    const err = await d.evaluate(
-                        async ([i, src, mod, s]) => {
-                            try {
-                                const m = await import(mod);
-                                const host = /** @type {HTMLElement | null} */ (document.querySelector(`[data-states-i="${i}"]`));
-                                if (!host) return 'gone';
-                                // eslint-disable-next-line no-eval
-                                await (0, eval)(`(${src})`)(m, host, s);
-                                return '';
-                            } catch (e) {
-                                return e instanceof Error ? e.message : String(e);
-                            }
-                        },
-                        /** @type {[number, string, string, string]} */ ([inst.i, comp.drive.toString(), `${prefix}js/${comp.module}`, state]),
-                    );
+                    // The drive is handed over as an evaluated expression, never eval()'d inside the page: a strict
+                    // Content-Security-Policy (script-src 'self', no 'unsafe-eval') forbids eval but not what the driver evaluates
+                    // itself, so the driven half runs on a real app too [csp-1019].
+                    const err = await d.evaluate(`(async () => {
+                        try {
+                            const m = await import(${JSON.stringify(`${prefix}js/${comp.module}`)});
+                            const host = document.querySelector('[data-states-i="${inst.i}"]');
+                            if (!host) return 'gone';
+                            await (${comp.drive.toString()})(m, host, ${JSON.stringify(state)});
+                            return '';
+                        } catch (e) {
+                            return e instanceof Error ? e.message : String(e);
+                        }
+                    })()`);
                     if (err === 'gone') break;
                     if (err) {
                         out.push(`${inst.section}: ${comp.name} could not be driven into ${state} through the package (${err})`);
@@ -1011,6 +1134,11 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                         })].filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? Infinity));
                         await Promise.race([Promise.allSettled(finite.map((a) => a.finished)), new Promise((r) => setTimeout(r, 6000))]);
                     }, inst.i);
+                    if (state === 'loading') {
+                        const found = await d.evaluate(looksFound, /** @type {[number, Record<string, string>]} */ ([inst.i, LOOKS]));
+                        const line = found === null ? '' : lookLine(`${inst.section}: ${comp.name}`, comp.name, comp.kind, found);
+                        if (line) out.push(`${line} (driven)`);
+                    }
                     const lines = await d.evaluate(
                         measureDriven,
                         /** @type {[number, string, string, number, number, string, string, string]} */ ([
