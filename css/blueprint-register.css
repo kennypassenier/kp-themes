@@ -5482,20 +5482,6 @@
         font-family: var(--theme-font-mono);
         font-style: oblique 15deg;
     }
-    [data-theme='blueprint'] .kp-pipeline__state {
-        border-color: var(--border-strong);
-        border-radius: 0;
-    }
-    [data-theme='blueprint'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        border-inline-start: 0;
-        padding-inline-start: 0;
-    }
-    [data-theme='blueprint'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words::before {
-        content: '\25B2\00a0';
-        color: var(--destructive);
-        font-size: 0.8em;
-    }
-    [data-theme='blueprint'] .kp-pipeline__retry,
     [data-theme='blueprint'] .kp-pipeline__more {
         font-family: var(--theme-font-mono);
     }

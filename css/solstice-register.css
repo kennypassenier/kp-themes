@@ -4069,21 +4069,6 @@
         font-weight: 400;
         text-transform: none;
     }
-    [data-theme='solstice'] .kp-pipeline__state {
-        border-color: var(--border-strong);
-        background:
-            linear-gradient(var(--kp-so-foot, var(--primary)), var(--kp-so-foot, var(--primary))) 0 100% / 100% 1px no-repeat,
-            linear-gradient(to top, hsl(from var(--kp-so-sky, var(--accent)) h s l / 0.2), transparent 70%),
-            var(--card);
-    }
-    [data-theme='solstice'] .kp-pipeline__state[data-kp-state='error'] {
-        --kp-so-sky: var(--destructive);
-        --kp-so-foot: var(--destructive);
-    }
-    [data-theme='solstice'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        border-inline-start: 0;
-        padding-inline-start: 0;
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] .kp-pipeline__card {
             transition:

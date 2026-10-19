@@ -4621,10 +4621,6 @@
         font-variant-numeric: tabular-nums lining-nums;
     }
 
-    [data-theme='formal'] .kp-pipeline__state {
-        border: 3px double var(--border-strong);
-        border-radius: var(--radius);
-    }
 }
 /* ── end flows and records: pipeline ── */
 

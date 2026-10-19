@@ -7034,9 +7034,6 @@
     [data-theme='cyberpunk'] .kp-pipeline__mark {
         border-radius: 0;
     }
-    [data-theme='cyberpunk'] .kp-pipeline__state {
-        clip-path: var(--kp-cp-clip-ctl);
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
             animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;

@@ -519,7 +519,8 @@ document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</spa
                             <tr><td><code>data-kp-pad</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-paused</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-paused-range</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-plate</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-plate</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-plate-key</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-quiet</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-quiet-words</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>read, written, selector</td></tr>
@@ -552,7 +553,7 @@ document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</spa
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-calendar-pick</code></td><td>Fired on the calendar, bubbling, when a day is picked: `detail` `{ date: 'YYYY-MM-DD', source: 'pointer' | 'keyboard' }`.</td></tr>
                             <tr><td><code>kp-calendar-month</code></td><td>Fired on the calendar, bubbling, when a person moves it to another month: `detail` `{ year, month }` (month 1-12).</td></tr>
-                            <tr><td><code>kp-calendar-retry</code></td><td>Fired on a calm calendar, bubbling, when Retry is pressed on its failed plate.</td></tr>
+                            <tr><td><code>kp-calendar-retry</code></td><td>Fired on a calendar, bubbling, when Retry is pressed on its failed plate (every tone) [r1r2-1019].</td></tr>
                             <tr><td><code>kp-date-change</code></td><td>Fired when a date is chosen, typed or set. A contract value [TH26]: `{ iso, date, source }`.</td></tr>
                             <tr><td><code>kp-date-open</code></td><td>Fired when the panel opens or closes: `{ open }`.</td></tr>
                             <tr><td><code>kp-date-month</code></td><td>Fired when the visible month changes: `{ year, month }` (month 0-11).</td></tr>

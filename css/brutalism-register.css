@@ -5719,23 +5719,6 @@
         font-family: var(--theme-font-display);
         font-weight: 400;
     }
-    [data-theme='brutalism'] .kp-pipeline__state {
-        border: var(--kp-line) solid var(--border-strong);
-        border-radius: 0;
-        background: var(--card);
-        box-shadow: var(--kp-shadow);
-        font-weight: 700;
-    }
-    [data-theme='brutalism'] .kp-pipeline__state[data-kp-state='error'] {
-        padding-block-end: calc(var(--kp-space-sm, 0.5rem) + 0.5rem);
-        background:
-            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
-            var(--card);
-    }
-    [data-theme='brutalism'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        border-inline-start: 0;
-        padding-inline-start: 0;
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] .kp-pipeline__card {
             transition:

@@ -942,6 +942,7 @@ var init_strings = __esm({
       pipelineEmpty: "Nothing on the board yet.",
       pipelineFailed: (reason) => reason ? `Could not read the board: ${reason}` : "Could not read the board.",
       pipelineRetry: "Try again",
+      pipelineDanger: "Needs attention",
       pipelineNone: "none",
       pipelineMore: (more) => `+${more} more`,
       pipelineLess: "Show fewer",
@@ -36268,11 +36269,11 @@ function paintCalendar(c) {
     if (monthChanged) c.decorate?.(cell.button, { kind: "day", host: c.el, key: keyOf4(c.el), index: i, value: iso });
   });
   if (leaving.length > 0) leaveBusyLayers(leaving);
-  syncCalmPlate(c);
+  syncStatePlate(c);
 }
-function syncCalmPlate(c) {
+function syncStatePlate(c) {
   const calm = isCalmTones(c.el);
-  const kind = calm && c.state === "empty" ? "empty" : calm && c.state === "error" ? "error" : null;
+  const kind = c.state === "empty" ? "empty" : c.state === "error" ? "error" : null;
   const old = c.el.querySelector(":scope > .kp-calendar__plate");
   c.grid.toggleAttribute("data-kp-dim", kind !== null);
   c.grid.toggleAttribute("inert", kind === "error");
@@ -36280,17 +36281,25 @@ function syncCalmPlate(c) {
     old?.remove();
     return;
   }
-  if (old?.getAttribute("data-kp-plate") === kind) return;
-  old?.remove();
   const s2 = getStrings();
-  const inner = statePlate(c.el.ownerDocument, {
+  const words = c.stateLine.textContent ?? "";
+  const key = `${kind}|${calm ? "calm" : words}`;
+  if (old?.getAttribute("data-kp-plate-key") === key) return;
+  old?.remove();
+  const retry = () => c.el.dispatchEvent(new CustomEvent(CALENDAR_RETRY_EVENT, { bubbles: true }));
+  const inner = calm ? statePlate(c.el.ownerDocument, {
     kind,
     title: kind === "empty" ? s2.calmEmptyTitle : s2.calmFailedTitle,
     text: kind === "empty" ? s2.calmEmptyText : s2.calmFailedText,
-    ...kind === "error" ? { actionLabel: s2.calmRetry, onAction: () => c.el.dispatchEvent(new CustomEvent(CALENDAR_RETRY_EVENT, { bubbles: true })) } : {}
+    ...kind === "error" ? { actionLabel: s2.calmRetry, onAction: retry } : {}
+  }) : hostStatePlate(c.el, {
+    kind,
+    title: words || (kind === "error" ? s2.heatFailed : s2.heatEmpty),
+    retryEvent: CALENDAR_RETRY_EVENT
   });
   const plate = make9(c.el.ownerDocument, "div", "kp-calendar__plate");
   plate.setAttribute("data-kp-plate", kind);
+  plate.setAttribute("data-kp-plate-key", key);
   plate.append(inner);
   c.grid.after(plate);
 }
@@ -40262,16 +40271,13 @@ function build6(c) {
   c.board.setAttribute("role", "list");
   c.closed = make14(doc, "div", "kp-pipeline__closed");
   c.closed.setAttribute("role", "list");
-  c.stateBox = make14(doc, "div", "kp-pipeline__state");
-  c.stateWords = make14(doc, "p", "kp-pipeline__words");
-  c.retry = make14(doc, "button", "kp-button kp-button--sm kp-pipeline__retry", c.strings.pipelineRetry);
-  c.retry.type = "button";
-  c.stateBox.append(c.stateWords, c.retry);
+  c.plate = make14(doc, "div", "kp-pipeline__plate");
+  c.plate.hidden = true;
   c.live = make14(doc, "p", "kp-sr-only kp-pipeline__live");
   c.live.setAttribute("role", "status");
   const frame3 = make14(doc, "div", "kp-pipeline__frame");
-  frame3.append(c.stateBox, c.board);
-  c.el.replaceChildren(frame3, c.closed, c.live);
+  frame3.append(c.board);
+  c.el.replaceChildren(frame3, c.closed, c.plate, c.live);
 }
 function cardNode(c, card, lane) {
   const doc = c.el.ownerDocument;
@@ -40322,6 +40328,7 @@ function laneNode(c, lane, cards2, total) {
   node.setAttribute("role", "listitem");
   node.dataset.kpLane = lane.key;
   if (lane.tone) node.dataset.kpTone = String(lane.tone);
+  if (lane.danger) node.dataset.kpStatus = "danger";
   const head = make14(doc, "header", "kp-pipeline__head");
   const name = make14(doc, "h3", "kp-pipeline__name", lane.label);
   const id = `${c.el.id || "kp-pipeline"}-${lane.key}`;
@@ -40330,7 +40337,8 @@ function laneNode(c, lane, cards2, total) {
   const count2 = make14(doc, "span", "kp-pipeline__count");
   if (loading) count2.append(make14(doc, "span", "kp-skeleton kp-pipeline__ghost-count"));
   else count2.textContent = String(cards2.length);
-  head.append(name, count2);
+  if (lane.danger) head.append(name, make14(doc, "span", "kp-pipeline__flag", s2.pipelineDanger), count2);
+  else head.append(name, count2);
   node.append(head);
   if (c.el.dataset.kpPipelineShare !== "false" && !lane.closed) {
     const share = make14(doc, "p", "kp-pipeline__share");
@@ -40387,14 +40395,28 @@ function paint9(c) {
   c.board.replaceChildren(...open4.map((l) => laneNode(c, l, byLane.get(l.key) ?? [], total)));
   c.closed.replaceChildren(...closed.map((l) => laneNode(c, l, byLane.get(l.key) ?? [], total)));
   c.closed.hidden = closed.length === 0;
-  c.el.dataset.kpState = c.state;
-  c.board.toggleAttribute("aria-busy", c.state === "loading");
   const empty = c.state === "empty" || c.state === "ready" && c.cards.length === 0;
-  const words = c.state === "error" ? s2.pipelineFailed(c.words) : empty ? c.words || s2.pipelineEmpty : "";
-  c.stateBox.hidden = words === "" || c.leaving !== null;
-  c.stateBox.dataset.kpState = c.state === "error" ? "error" : "empty";
-  c.stateWords.textContent = words;
-  c.retry.hidden = c.state !== "error";
+  const shown4 = c.state === "error" ? "error" : empty && c.leaving === null ? "empty" : null;
+  c.el.dataset.kpState = c.state === "ready" && empty ? "empty" : c.state;
+  c.board.toggleAttribute("aria-busy", c.state === "loading");
+  const key = shown4 === null ? "" : `${shown4}|${c.words}`;
+  if (c.plateKey !== key) {
+    c.plateKey = key;
+    c.plate.replaceChildren();
+    if (shown4 !== null)
+      c.plate.append(
+        hostStatePlate(c.el, {
+          kind: shown4,
+          title: shown4 === "error" ? s2.pipelineFailed("") : c.words || s2.pipelineEmpty,
+          ...shown4 === "error" && c.words ? { text: c.words } : {},
+          retryEvent: PIPELINE_RETRY_EVENT,
+          retryLabel: s2.pipelineRetry
+        })
+      );
+  }
+  c.plate.hidden = shown4 === null;
+  c.board.parentElement?.toggleAttribute("inert", shown4 !== null);
+  c.closed.toggleAttribute("inert", shown4 !== null);
   drawBusy3(c);
   syncTabStops3(c);
 }
@@ -40470,13 +40492,8 @@ function attachPipelines(root = document, options = {}) {
       active: null,
       board: el16,
       closed: el16,
-      stateBox: el16,
-      stateWords: el16,
-      retry: (
-        /** @type {HTMLButtonElement} */
-        /** @type {unknown} */
-        el16
-      ),
+      plate: el16,
+      plateKey: "",
       live: el16,
       nodes: /* @__PURE__ */ new Map(),
       busy: null,
@@ -40490,10 +40507,6 @@ function attachPipelines(root = document, options = {}) {
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (!target) return;
-      if (target.closest(".kp-pipeline__retry")) {
-        el16.dispatchEvent(new CustomEvent(PIPELINE_RETRY_EVENT, { bubbles: true }));
-        return;
-      }
       const more = (
         /** @type {HTMLElement | null} */
         target.closest("[data-kp-pipeline-more]")
@@ -40591,6 +40604,7 @@ var init_pipeline = __esm({
     "use strict";
     init_strings();
     init_busy_card();
+    init_state_plate();
     PIPELINE = "[data-kp-pipeline]";
     PIPELINE_OPEN_EVENT = "kp-pipeline-open";
     PIPELINE_RETRY_EVENT = "kp-pipeline-retry";
@@ -48566,6 +48580,7 @@ var init_footprint = __esm({
       "[data-kp-gallery]",
       "[data-kp-availability]",
       "[data-kp-requests]",
+      "[data-kp-pipeline]",
       "[data-kp-diffview]",
       ".kp-ops"
     ].join(", ");
@@ -61842,10 +61857,10 @@ var NEEDS = [
   { name: "timefield", when: "[data-kp-time]", load: () => Promise.resolve().then(() => (init_timefield(), timefield_exports)), attach: (m, root) => [m.attachTimes(root)] },
   {
     // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the heat grid, the entity
-    // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the diff view and the operations page. The selector is
+    // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the pipeline, the diff view and the operations page. The selector is
     // `FOOTPRINT_HOSTS` of js/footprint.js.
     name: "footprint",
-    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-diffview], .kp-ops",
+    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], .kp-ops",
     load: () => Promise.resolve().then(() => (init_footprint(), footprint_exports)),
     attach: (m, root) => [m.attachFootprints(root)]
   },
