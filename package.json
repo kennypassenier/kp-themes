@@ -284,6 +284,10 @@
             "types": "./js/lede.d.ts",
             "default": "./js/lede.js"
         },
+        "./js/live-options": {
+            "types": "./js/live-options.d.ts",
+            "default": "./js/live-options.js"
+        },
         "./js/footprint": {
             "types": "./js/footprint.d.ts",
             "default": "./js/footprint.js"

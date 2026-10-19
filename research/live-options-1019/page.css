@@ -1,0 +1,55 @@
+/* research/live-options-1019: the frame of the page. Everything with a kp- class is the package; the lo- rules only lay out. */
+
+.lo-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The log the pill rides on: a box of its own height that scrolls, positioned by the pill's host. */
+.lo-logbox {
+    max-inline-size: 48rem;
+}
+
+.lo-log {
+    box-sizing: border-box;
+    block-size: 14rem;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    overflow: auto;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.lo-log > li {
+    padding-block: 0.125rem;
+    overflow-wrap: anywhere;
+}
+
+/* A palette shown in place: the dialog is positioned inside this box, so the box needs a height of its own. */
+.lo-stage {
+    position: relative;
+    min-inline-size: 0;
+}
+
+.lo-stage--palette {
+    contain: layout;
+    min-block-size: 15rem;
+}
+
+.lo-stage--palette > .kp-palette {
+    --kp-palette-list-max-height: none;
+    position: relative;
+    inset: auto;
+    margin: 0 auto;
+}
+
+#lo-qr,
+#lo-secret,
+#lo-seg {
+    max-inline-size: 48rem;
+}

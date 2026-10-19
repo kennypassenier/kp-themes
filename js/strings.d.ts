@@ -1688,6 +1688,10 @@ export type Strings = {
      */
     refreshFailed: (next: string) => string;
     /**
+     * The note after a failed refresh while paused, when nothing retries by itself, "Last refresh failed." [live-options-1019]
+     */
+    refreshFailedPaused: string;
+    /**
      * The button that retries a failed refresh at once [kpadopt5-auto-refresh]
      */
     refreshRetryNow: string;
@@ -6327,6 +6331,7 @@ export type Strings = {
  * @property {string} refreshNow  The button that refreshes at once [kpadopt5-auto-refresh]
  * @property {string} refreshUpdating  The freshness line's words while the app reads [kpadopt5-auto-refresh]
  * @property {(next: string) => string} refreshFailed  The note after a failed refresh, "Last refresh failed, retrying in 30 s" [kpadopt5-auto-refresh]
+ * @property {string} refreshFailedPaused  The note after a failed refresh while paused, when nothing retries by itself, "Last refresh failed." [live-options-1019]
  * @property {string} refreshRetryNow  The button that retries a failed refresh at once [kpadopt5-auto-refresh]
  * @property {string} refreshCustomLabel  The label of the field for any number of seconds [kpadopt5-auto-refresh]
  * @property {string} refreshApply  The button that sets that number [kpadopt5-auto-refresh]

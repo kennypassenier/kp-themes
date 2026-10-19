@@ -15,7 +15,8 @@
 //   data-kp-refresh-mode     event (default: the app fetches) | page (reload the page) | region (fetch the same URL
 //                            and swap only `data-kp-refresh-region`, keeping focus and scroll)
 //   data-kp-refresh-region   selector of the element to swap in `region` mode
-//   data-kp-look             segmented (default, Kenny 2026-10-17: "Segments") | menu
+//   data-kp-look             segmented (default, Kenny 2026-10-17: "Segments") | menu; switchable at runtime, like the
+//                            choices, the freshness options and a new data-kp-refresh (js/live-options.js)
 //   data-kp-remember         name: the choice per page per device (js/remember.js, component `refresh`)
 //   data-kp-stale-after      seconds; the freshness line turns stale after it (default 3 x the interval)
 //   data-kp-refresh-hover    "pause": no refresh while the pointer is over a `.kp-table-wrap` being read
@@ -37,6 +38,7 @@ import { attachMenuButtons, setMenu } from './menu-button.js';
 import { attachSegmented, setSegmentedItems, setSegmentedValues } from './segmented.js';
 import { humanDuration, setAgo } from './freshness.js';
 import { memoryFor } from './remember.js';
+import { watchOptions } from './live-options.js';
 import { getStrings } from './strings.js';
 
 /** An automatic refresh control. */
@@ -148,24 +150,34 @@ function wire(el, clock) {
     let segHost = null;
     /** @type {HTMLButtonElement | null} */
     let menuButton = null;
-    if (look() === 'menu') {
-        menuHost = make('div', 'kp-menu-button kp-refresh__menu');
-        menuHost.setAttribute('data-kp-menu-button', '');
-        menuButton = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-refresh__button'));
-        menuButton.type = 'button';
-        menuButton.setAttribute('aria-label', s().refreshLabel);
-        const menu = make('div', 'kp-menu kp-menu--rich');
-        menu.setAttribute('role', 'menu');
-        menu.setAttribute('aria-label', s().refreshLabel);
-        menuHost.append(menuButton, menu);
-        chooser.append(menuHost);
-    } else {
-        segHost = make('div', 'kp-segmented kp-refresh__segments');
-        segHost.setAttribute('data-kp-segmented', 'single');
-        segHost.setAttribute('role', 'radiogroup');
-        segHost.setAttribute('aria-label', s().refreshLabel);
-        chooser.append(segHost);
-    }
+    /** The look the chooser is drawn in now; `data-kp-look` changes it at runtime [live-options-1019]. @type {'menu' | 'segmented' | null} */
+    let drawnLook = null;
+    /** Build the chooser parts of the look the attribute names (segments or a menu) and put them in the bar. */
+    const buildChooser = () => {
+        drawnLook = look();
+        menuHost = null;
+        segHost = null;
+        menuButton = null;
+        if (drawnLook === 'menu') {
+            menuHost = make('div', 'kp-menu-button kp-refresh__menu');
+            menuHost.setAttribute('data-kp-menu-button', '');
+            menuButton = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-refresh__button'));
+            menuButton.type = 'button';
+            menuButton.setAttribute('aria-label', s().refreshLabel);
+            const menu = make('div', 'kp-menu kp-menu--rich');
+            menu.setAttribute('role', 'menu');
+            menu.setAttribute('aria-label', s().refreshLabel);
+            menuHost.append(menuButton, menu);
+            chooser.replaceChildren(menuHost);
+        } else {
+            segHost = make('div', 'kp-segmented kp-refresh__segments');
+            segHost.setAttribute('data-kp-segmented', 'single');
+            segHost.setAttribute('role', 'radiogroup');
+            segHost.setAttribute('aria-label', s().refreshLabel);
+            chooser.replaceChildren(segHost);
+        }
+    };
+    buildChooser();
     const custom = make('form', 'kp-refresh__custom');
     custom.hidden = true;
     custom.setAttribute('novalidate', '');
@@ -210,8 +222,12 @@ function wire(el, clock) {
     const bar = make('div', 'kp-refresh__bar');
     bar.append(chooser, line, now);
     el.replaceChildren(bar, count, custom, failure);
-    if (menuHost) attachMenuButtons(el);
-    if (segHost) attachSegmented(el);
+    /** The detach of the menu or segmented wiring of the look drawn now. @type {(() => void) | null} */
+    let unwireChooser = null;
+    const wireChooser = () => {
+        unwireChooser = menuHost ? attachMenuButtons(el) : segHost ? attachSegmented(el) : null;
+    };
+    wireChooser();
 
     // --- State. ---
     let busy = false;
@@ -286,7 +302,7 @@ function wire(el, clock) {
         }
         lastDelay = ms;
         dueAt = clock() + ms;
-        timer = view.setTimeout(fire, ms);
+        timer = view.setTimeout(() => fire(), ms);
         runBar();
     };
     const finish = (/** @type {boolean} */ ok) => {
@@ -303,8 +319,8 @@ function wire(el, clock) {
             paintAgo();
         } else {
             failures += 1;
-            const next = humanDuration(Math.round(delayNow() / 1000), s());
-            note.textContent = s().refreshFailed(next);
+            // Paused, nothing retries by itself: the note says only that it failed, and Retry now stays [live-options-1019].
+            note.textContent = interval <= 0 ? s().refreshFailedPaused : s().refreshFailed(humanDuration(Math.round(delayNow() / 1000), s()));
             failure.hidden = false;
             retry.hidden = false;
             // The ago line turns stale by its own clock; make sure it is checked now.
@@ -312,15 +328,20 @@ function wire(el, clock) {
         }
         schedule();
     };
-    function fire() {
-        if (interval <= 0 || busy) return;
-        const why = blocked();
+    /**
+     * Refresh. The timer calls it with no argument and only runs while an interval is set; "Refresh now", the R key and
+     * "Retry now" call it as `manual` and always work, paused or not, and never wait for a dialog or a field: the person asked.
+     * @param {boolean} [manual]
+     */
+    function fire(manual = false) {
+        if (busy || (interval <= 0 && !manual)) return;
+        const why = manual ? '' : blocked();
         if (why === 'hidden') {
             missedWhileHidden = true;
             return;
         }
         if (why) {
-            timer = view.setTimeout(fire, 1000);
+            timer = view.setTimeout(() => fire(), 1000);
             return;
         }
         const r = reason;
@@ -389,7 +410,7 @@ function wire(el, clock) {
         if (busy) return;
         reason = why;
         view.clearTimeout(timer);
-        fire();
+        fire(true);
     };
 
     // --- Events. ---
@@ -442,11 +463,12 @@ function wire(el, clock) {
     const onKey = (event) => {
         if (event.key !== 'r' && event.key !== 'R') return;
         if (event.ctrlKey || event.metaKey || event.altKey) return;
+        if (el.getAttribute('data-kp-refresh-key') === 'off') return;
         const t = event.target;
         if (t instanceof HTMLElement && t.matches('input, textarea, select, [contenteditable]')) return;
         refreshNow('now');
     };
-    if (el.getAttribute('data-kp-refresh-key') !== 'off') doc.addEventListener('keydown', onKey);
+    doc.addEventListener('keydown', onKey);
     const onVisible = () => {
         if (doc.visibilityState === 'hidden') {
             view.clearTimeout(timer);
@@ -463,6 +485,29 @@ function wire(el, clock) {
     };
     doc.addEventListener('visibilitychange', onVisible);
 
+    // The options are read again when their attribute changes [live-options-1019]: the look redraws the chooser (segments or a
+    // menu), the choices and the freshness line follow their attributes, and a new `data-kp-refresh` sets the interval.
+    const stopWatching = watchOptions(
+        el,
+        ['data-kp-look', 'data-kp-refresh', 'data-kp-refresh-choices', 'data-kp-stale-after', 'data-kp-announce'],
+        (names) => {
+            if (names.includes('data-kp-look') && look() !== drawnLook) {
+                const hadFocus = chooser.contains(doc.activeElement);
+                unwireChooser?.();
+                buildChooser();
+                wireChooser();
+                paintChoice();
+                if (hadFocus) chooser.querySelector('button')?.focus();
+            }
+            if (names.includes('data-kp-refresh-choices')) paintChoice();
+            if (names.includes('data-kp-stale-after') || names.includes('data-kp-announce')) paintAgo();
+            if (names.includes('data-kp-refresh')) {
+                const next = Number(el.getAttribute('data-kp-refresh'));
+                if (Number.isFinite(next) && next >= 0 && Math.round(next) !== interval) setInterval(next, 'script');
+            }
+        },
+    );
+
     /** @type {RefreshHandle} */
     const handle = { element: el, interval: () => interval, setInterval, now: refreshNow, done: finish };
     handles.set(el, handle);
@@ -471,6 +516,8 @@ function wire(el, clock) {
     schedule();
     void lastDelay;
     return () => {
+        stopWatching();
+        unwireChooser?.();
         view.clearTimeout(timer);
         el.removeEventListener('kp-menu-select', picked);
         el.removeEventListener('kp-segmented-change', picked);
