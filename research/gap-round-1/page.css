@@ -1,0 +1,23 @@
+/* research/gap-round-1: the frame of the bundled page. Everything with a kp- class is the package; these gr1- rules lay out the
+   intro. Each source demo keeps its own rules in research/<source>/page.css, linked after this file. */
+
+.gr1-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.gr1-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gr1-intro :is(h1, p) {
+    margin: 0;
+}
+
+.gr1-intro p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}

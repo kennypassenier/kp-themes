@@ -24,6 +24,8 @@
 //   - `data-kp-stale-after="<seconds>"`: older than that, the element gets
 //     `data-kp-stale`, which the stylesheet draws as a warning plate with a
 //     shadow, so turning stale moves nothing.
+//   - `data-kp-ago-bare`: no verb at all, "12 s ago" instead of "updated 12 s ago", for a line that stands in a column of its
+//     own (the activity feed's time, js/feed.js) [gap-activity-feed-1019].
 //   - Its width: the line reserves (`min-inline-size`) the widest text its
 //     current unit can reach ("updated 59 min 59 s ago" under an hour), so
 //     a unit change does not push its neighbours; `data-kp-ago-width="14ch"`
@@ -164,10 +166,10 @@ const defaultContext = () => ({ timeZone: FRESHNESS_TIME_ZONE, now: () => Date.n
  * @param {string} verb @param {number | null} at @param {number} now @param {Strings} strings
  */
 function widest(verb, at, now, strings) {
-    if (at == null) return strings.agoNever(verb);
+    if (at == null) return strings.agoNever(verb || strings.agoVerb);
     const age = Math.max(0, (now - at) / 1000);
     const top = age < 3600 ? 3599 : age < 86400 ? 86399 : 99 * 86400 + 23 * 3600;
-    return strings.agoText(verb, humanDuration(top, strings));
+    return strings.agoText(verb, humanDuration(top, strings)).trim();
 }
 
 /**
@@ -215,8 +217,9 @@ function paint(el, ctx) {
     const strings = resolveStrings(ctx.overrides);
     const now = ctx.now();
     const at = momentOf(el);
-    const verb = el.getAttribute('data-kp-ago-verb') || strings.agoVerb;
-    const text = agoText(verb, at, now, strings);
+    // A bare line has no verb ("12 s ago"); with no moment yet it falls back to the dictionary's, so "not updated yet" stays a sentence.
+    const verb = el.hasAttribute('data-kp-ago-bare') ? '' : el.getAttribute('data-kp-ago-verb') || strings.agoVerb;
+    const text = agoText(verb || (at == null ? strings.agoVerb : ''), at, now, strings).trim();
     let state = states.get(el);
     if (!state) {
         state = { at: undefined, sample: '', stale: null };

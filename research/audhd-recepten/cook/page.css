@@ -1,0 +1,166 @@
+/* research/audhd-recepten/cook: the frame of the page. Everything with a kp- class is the package; the ar- rules only lay out. */
+
+.ar-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.ar-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ar-intro :is(h1, p) {
+    margin: 0;
+}
+
+.ar-intro p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.ar-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.ar-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+/* ---- 1 · Begin and the mise en place ------------------------------------------------------------------- */
+.ar-mise {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 56rem;
+    margin-inline: auto;
+}
+
+.ar-recipe__actions {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ar-recipe__hint {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.ar-mise__open {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ar-mise__go {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ar-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 40rem) {
+    .ar-recipe__actions,
+    .ar-mise__go {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ---- 2 · Cook mode ------------------------------------------------------------------------------------------ */
+.ar-screen {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(16rem, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+}
+
+.ar-screen__main,
+.ar-screen__side {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.ar-screen__main {
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+.ar-screen .kp-focus-steps {
+    min-block-size: 30rem;
+}
+
+.ar-screen .kp-timers,
+.ar-stack .kp-timers,
+.ar-phone .kp-timers {
+    /* The list holds its height; the empty plate takes what the (empty) list of cards leaves. */
+    min-block-size: 16rem;
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+.ar-part {
+    margin: 0;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.ar-part-note {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 56rem) {
+    .ar-screen {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ---- 3 · Running timers -------------------------------------------------------------------------------------- */
+.ar-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    max-inline-size: 64rem;
+    margin-inline: auto;
+}
+
+/* ---- 3b · The discs ------------------------------------------------------------------------------------------- */
+.ar-discs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 20rem));
+    justify-content: center;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+@media (max-width: 40rem) {
+    .ar-discs {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ---- 4 · The phone ------------------------------------------------------------------------------------------- */
+.ar-phone {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    inline-size: 390px;
+    max-inline-size: 100%;
+    margin-inline: auto;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.ar-phone .kp-focus-steps {
+    min-block-size: 32rem;
+}
+

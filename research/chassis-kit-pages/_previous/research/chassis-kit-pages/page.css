@@ -1,0 +1,249 @@
+/* research/chassis-kit-pages: the frame of the chassis-rs kit pages demo.
+   Every kp- class is the package's. These ck- rules lay out what only this page adds: the section frame, the shell's container
+   rules (what the kit's chassis.css will carry), the login's two columns and the passkey card's rows. Tokens only. */
+
+.ck-intro,
+.ck-sec {
+    min-inline-size: 0;
+}
+
+.ck-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ck-sec__head,
+.ck-expected {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ck-sec__head :is(h2, p),
+.ck-expected :is(p, ul) {
+    margin: 0;
+}
+
+/* The stage is the container the shell's phone rules answer to; its width is the page's width. */
+.ck-stage {
+    container: ck / inline-size;
+    min-inline-size: 0;
+    display: block;
+}
+
+.ck-stage[data-ck-width='phone'],
+.ck-stage[data-ck-view='shell-phone'] {
+    inline-size: min(390px, 100%);
+    margin-inline: auto;
+}
+
+.ck-stage[data-ck-width='narrow'] {
+    inline-size: min(44rem, 100%);
+    margin-inline: auto;
+}
+
+/* The app: the shell around one page. */
+.ck-app {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    min-block-size: 24rem;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: clip;
+}
+
+.ck-main {
+    padding-block: var(--kp-space-lg, 1.5rem);
+    padding-inline: var(--kp-space-md, 1rem);
+    inline-size: 100%;
+    max-inline-size: none;
+    box-sizing: border-box;
+}
+
+/* The phone's shell: the tab bar carries the pages, so the bar keeps only the brand, Search and the theme. */
+.ck-tabbar {
+    position: static;
+}
+
+@container ck (min-width: 40rem) {
+    .ck-app .ck-tabbar.kp-tabbar--always {
+        display: none;
+    }
+}
+
+@container ck (max-width: 39.99rem) {
+    .ck-app .kp-nav__links,
+    .ck-app .ck-logout,
+    .ck-app .ck-search-word {
+        display: none;
+    }
+}
+
+/* The header's freshness line and refresh control stand under the description, on one row. */
+.ck-fresh {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+.ck-actions {
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+.ck-mock {
+    margin-block: var(--kp-space-sm, 0.5rem) 0;
+}
+
+/* Dialogs shown in place: the frame is the page, so an open dialog stands in the flow instead of floating over it. */
+.ck-stage > dialog[open],
+.ck-stage dialog.kp-palette[open],
+.ck-stage dialog.kp-shortcuts[open] {
+    position: static;
+    inset: auto;
+    transform: none;
+    margin-inline: auto;
+}
+
+.ck-stage > dialog.kp-dialog[open] {
+    inline-size: min(48rem, 100%);
+    max-inline-size: 100%;
+}
+
+.ck-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: start;
+}
+
+@container ck (max-width: 40rem) {
+    .ck-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.ck-pair > dialog {
+    inline-size: 100%;
+    max-inline-size: 100%;
+}
+
+.ck-app dialog.kp-drawer[open] {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+}
+
+/* Login: the intro on the left, the card on the right; one column on a phone. */
+.ck-login {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+    gap: var(--kp-space-xl, 2rem);
+    align-items: start;
+    max-inline-size: 64rem;
+    margin-inline: auto;
+}
+
+@container ck (max-width: 44rem) {
+    .ck-login {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.ck-login__state {
+    margin: var(--kp-space-md, 1rem) 0 0;
+}
+
+.ck-login__passkey {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ck-login__passkey .kp-button {
+    inline-size: 100%;
+}
+
+.ck-or {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin-block: var(--kp-space-md, 1rem);
+    color: var(--muted-foreground);
+}
+
+.ck-or::before,
+.ck-or::after {
+    content: '';
+    border-block-start: 1px solid var(--border);
+}
+
+.ck-token {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+.ck-remember {
+    margin-block: var(--kp-space-md, 1rem);
+}
+
+/* The service's address and similar mono values. */
+.mono {
+    font-family: var(--theme-font-mono, ui-monospace, monospace);
+}
+
+.text-end {
+    text-align: end;
+}
+
+.state-cell {
+    --kp-badge-wrap: normal;
+}
+
+.ck-error__facts {
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+/* A column of buttons keeps its buttons whole: the cell is as wide as its button and no wider. */
+.ck-fit {
+    inline-size: 1%;
+    white-space: nowrap;
+}
+
+/* The count stands beside its icon, not on its corner: text never lies over a drawing (measure-gaps). */
+.ck-tabbar .kp-tabbar__badge {
+    inset-inline-start: calc(50% + var(--kp-tabbar-icon, 1.5rem) / 2 + var(--kp-space-xs, 0.25rem));
+}
+
+/* A dialog section's text keeps a margin from its edge. */
+.ck-manage .kp-dialog__section {
+    padding-inline: var(--kp-space-sm, 0.5rem);
+}
+
+.ck-login__state {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+}
+
+.ck-pair > dialog,
+.ck-stage dialog.kp-palette[open] {
+    margin-block: 0;
+}
+
+/* A chord such as "g c" stays on one line. */
+.ck-stage .kp-palette__keys {
+    white-space: nowrap;
+}
+
+@container kp-table (max-width: 40rem) {
+    .kp-datatable[data-kp-cards] .ck-fit {
+        inline-size: auto;
+    }
+}

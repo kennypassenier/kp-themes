@@ -246,13 +246,13 @@ const sections = [
         topic: 'secret',
         topicTitle: 'Secret field',
         title: 'Secret field: how long, how to reveal, how long the mask',
-        intro: 'A token shown as dots. Reveal shows it for a few seconds and then hides it again; Copy copies it without showing it.',
+        intro: 'A token shown as dots; Reveal shows it for a while.',
         changed:
             'How long a revealed secret stays (<code>data-kp-secret-ttl</code>), whether it shows by a press or only while the button is held (<code>data-kp-secret-reveal-on</code>) and how long the mask of dots is (<code>data-kp-secret-mask</code>) were read once when the field appeared; changing them afterwards did nothing. Now they apply at once: a new time restarts the count of a shown value, a change of gesture hides a shown value first (so a held reveal never stays open), and a new mask is drawn at once while the value is hidden. The value is still never in the page while hidden.',
         expect: [
             'The field opens as 16 dots with <b>Reveal</b> and <b>Copy</b>. Press <b>Reveal</b>: the token shows and the line under it counts down from 30 s.',
-            'While it shows, press <b>10 s</b>: the count starts again from 10. Press <b>Until hidden</b>: no count, the token stays until <b>Hide</b> is pressed.',
-            'Press <b>Hold</b>: the button says <b>Hold to reveal</b> and the token shows only while the button is held. Press <b>8 dots</b> or <b>16 dots</b>: the mask changes length at once.',
+            'While it shows, press <b>10 s</b>: the count restarts from 10. <b>Until hidden</b>: no count, the token stays until <b>Hide</b>.',
+            '<b>Hold</b>: the token shows only while the button is held. <b>8 dots</b> or <b>16 dots</b>: the mask changes length at once.',
         ],
         look: 'the mask, the token and the buttons keep their place when the options change, and the countdown line keeps its height.',
         components: 'secret',

@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Activity feed — kp-themes</title>
+        <meta name="description" content="Who did what, and when, day by day. Each row has its outcome (a mark with a shape and a word), what happened, a muted detail line, the chip of whoever started it and the time, which is a ticking “12 min ago” for the first 24 hours and dd/mm/yyyy HH:mm after that. Rows sit under a heading per day (“Today”, “Yesterday”, then the weekday and the date) with that day’s exact count and “N failed”, and “Load earlier” stands at the foot." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/update.html">Information that updates in place</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calm.html">Calm mode</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Layout</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/ops-page.html">Operations page</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/segmented.html">Segmented control and filter chips</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/range.html">Range picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/weekdays.html">Weekday picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/snooze.html">Snooze picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dated-options.html">Dated option picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sentence.html">Sentence form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/slider.html">Slider</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toggle.html">Toggle button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/unsaved.html">Unsaved changes bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/rating.html">Star rating</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/usual-picker.html">Picker with the usual on top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/autosize.html">Growing text box</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/secret.html">Secret field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/heat.html">Heat grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/matrix.html">Matrix</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/deplist.html">Dependency list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/entity-card.html">Entity card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/claim.html">Who brings it</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/availability.html">Who can come</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/stackbar.html">Share bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/bullets.html">Bullet rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kv.html">Key-value grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/code.html">Code block</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/request-inspector.html">Request inspector</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/passkeys.html">Ways to sign in</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/selection.html">Selection bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/uses-map.html">Uses map</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/type-confirm.html">Typed confirmation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timer-disc.html">Visual timer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/countdown.html">Countdown</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/version-delta.html">Version jump chip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/ack-gate.html">Acknowledge gate</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/path-trace.html">Path of a connection</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/status-row.html">Status rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timer.html">Kitchen timers</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/connection.html">Connection banner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/transfer.html">Transfer progress</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/focus-steps.html">One step at a time</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/command.html">Command block</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/compare.html">Compare slider</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quote.html">Quote card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/qr.html">QR code</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/keys.html">Key line and key cap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/lede.html">Lede</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/thread.html">Conversation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/viewer.html">Viewer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/document-preview.html">Document preview</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/gallery.html">Gallery</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/print.html">Printing a list</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/master-detail.html">Master and detail panes</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/anchors.html">Link anchors</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Activity feed</h1>
+                    <p class="kp-prose">Who did what, and when, day by day. Each row has its outcome (a mark with a shape and a word), what happened, a muted detail line, the chip of whoever started it and the time, which is a ticking “12 min ago” for the first 24 hours and dd/mm/yyyy HH:mm after that. Rows sit under a heading per day (“Today”, “Yesterday”, then the weekday and the date) with that day’s exact count and “N failed”, and “Load earlier” stands at the foot.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">A history of operations, an audit trail, a stack’s recent runs: anything where the person asks what happened and who did it. For a list of checks that are each ok or failed use status rows; for a fixed set of releases use the timeline; for a conversation use the thread.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A day of activity</figcaption>
+                        <p class="kp-text-muted">The markup is the empty box; the page hands over the rows with `setFeed`. A row is `{ key, title, at }` and, when it has them, a `state` (`ok`, `failed`, `warn`, `running`, `info`), an `actor`, a `detail`, a `href` and `more` (lines that open under the row). The key is the row’s identity: a refresh keeps the rows that are open and the focus by it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-feed" id="doc-feed" data-kp-feed data-kp-feed-unit="operation,operations" aria-label="Activity"></div>
+                            <script type="module">
+import { attachFeeds, setFeed } from '../../js/feed.js';
+
+const feed = document.getElementById('doc-feed');
+attachFeeds(feed.parentElement);
+const MIN = 60 * 1000;
+const HOUR = 60 * MIN;
+const ago = (ms) => Date.now() - ms;
+setFeed(feed, {
+    state: 'ready',
+    updatedAt: ago(8 * 1000),
+    rows: [
+        { key: 'op-3', state: 'running', title: 'Update sonarr', actor: { name: 'Claude', kind: 'agent' }, detail: 'Pulling lscr.io/linuxserver/sonarr:4.0.15', at: ago(40 * 1000) },
+        { key: 'op-2', state: 'failed', title: 'Update jellyfin', actor: { name: 'Claude', kind: 'agent' }, detail: 'Pull failed: registry timeout after 30 s', at: ago(38 * MIN),
+          more: ['$ docker compose pull', 'Error response from daemon: context deadline exceeded'] },
+        { key: 'op-1', state: 'ok', title: 'Backup vaultwarden', actor: { name: 'nightly round', kind: 'schedule' }, detail: '412 MB to nas:/backups, 14 s', at: ago(30 * HOUR) },
+    ],
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-feed&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-feed&quot;</span> <span class="kp-code__keyword">data-kp-feed</span> <span class="kp-code__keyword">data-kp-feed-unit</span><span class="kp-code__string">=&quot;operation,operations&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Activity&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachFeeds, setFeed } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/feed'</span>;
+
+<span class="kp-code__keyword">const</span> feed = document.getElementById(<span class="kp-code__string">'doc-feed'</span>);
+attachFeeds(feed.parentElement);
+<span class="kp-code__keyword">const</span> MIN = <span class="kp-code__string">60</span> * <span class="kp-code__string">1000</span>;
+<span class="kp-code__keyword">const</span> HOUR = <span class="kp-code__string">60</span> * MIN;
+<span class="kp-code__keyword">const</span> ago = (ms) =&gt; Date.now() - ms;
+setFeed(feed, {
+    state: <span class="kp-code__string">'ready'</span>,
+    updatedAt: ago(<span class="kp-code__string">8</span> * <span class="kp-code__string">1000</span>),
+    rows: [
+        { key: <span class="kp-code__string">'op-3'</span>, state: <span class="kp-code__string">'running'</span>, title: <span class="kp-code__string">'Update sonarr'</span>, actor: { name: <span class="kp-code__string">'Claude'</span>, kind: <span class="kp-code__string">'agent'</span> }, detail: <span class="kp-code__string">'Pulling lscr.io/linuxserver/sonarr:4.0.15'</span>, at: ago(<span class="kp-code__string">40</span> * <span class="kp-code__string">1000</span>) },
+        { key: <span class="kp-code__string">'op-2'</span>, state: <span class="kp-code__string">'failed'</span>, title: <span class="kp-code__string">'Update jellyfin'</span>, actor: { name: <span class="kp-code__string">'Claude'</span>, kind: <span class="kp-code__string">'agent'</span> }, detail: <span class="kp-code__string">'Pull failed: registry timeout after 30 s'</span>, at: ago(<span class="kp-code__string">38</span> * MIN),
+          more: [<span class="kp-code__string">'$ docker compose pull'</span>, <span class="kp-code__string">'Error response from daemon: context deadline exceeded'</span>] },
+        { key: <span class="kp-code__string">'op-1'</span>, state: <span class="kp-code__string">'ok'</span>, title: <span class="kp-code__string">'Backup vaultwarden'</span>, actor: { name: <span class="kp-code__string">'nightly round'</span>, kind: <span class="kp-code__string">'schedule'</span> }, detail: <span class="kp-code__string">'412 MB to nas:/backups, 14 s'</span>, at: ago(<span class="kp-code__string">30</span> * HOUR) },
+    ],
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The states, and Load earlier</figcaption>
+                        <p class="kp-text-muted">Loading shows a skeleton of rows under the theme’s busy card, empty and failed fill the same height with the state plate (Failed has Retry, which fires `kp-feed-retry`), and a refresh that failed while the rows are still good is `stale`: the rows stay and the head line says why. `earlier` is the foot: `more`, `loading`, `error` or `end`; press Load earlier and the page answers with the rows. The loaded height is held while a state shows (the cap is 14 rem here to show it).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-feed-states">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State">
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="stale">Not refreshed</button>
+    </div>
+    <div class="kp-feed" data-kp-feed data-kp-feed-time="clock" data-kp-feed-actor="mark" id="doc-feed-states-host" style="--kp-footprint-max: 14rem"></div>
+</div>
+                            <script type="module">
+import { attachFeeds, setFeed } from '../../js/feed.js';
+
+const root = document.getElementById('doc-feed-states');
+const host = document.getElementById('doc-feed-states-host');
+attachFeeds(root);
+const MIN = 60 * 1000;
+const HOUR = 60 * MIN;
+const ago = (ms) => Date.now() - ms;
+const rows = [
+    { key: 'a', state: 'ok', title: 'Restart traefik', actor: { name: 'Kenny', kind: 'person' }, detail: 'Back up in 4 s', at: ago(6 * MIN) },
+    { key: 'b', state: 'warn', title: 'Renew certificate', actor: { name: 'auto-heal', kind: 'system' }, detail: 'Renewed, OCSP staple missing', at: ago(3 * HOUR) },
+    { key: 'c', state: 'ok', title: 'Backup immich', actor: { name: 'nightly round', kind: 'schedule' }, detail: '3.2 GB, 2 min 41 s', at: ago(26 * HOUR) },
+];
+const draw = (state) => {
+    if (state === 'ready') setFeed(host, { state: 'ready', rows, total: 30, earlier: 'more', stale: null });
+    else if (state === 'stale') setFeed(host, { state: 'ready', rows, total: 30, stale: { reason: 'the host did not answer within 20 s', since: ago(14 * MIN) } });
+    else setFeed(host, { state, rows: state === 'empty' ? [] : rows, error: 'The activity could not be read.', stale: null });
+};
+for (const button of root.querySelectorAll('[data-doc-state]')) button.addEventListener('click', () => draw(button.dataset.docState));
+host.addEventListener('kp-feed-retry', () => draw('ready'));
+host.addEventListener('kp-feed-earlier', () => setFeed(host, { earlier: 'end' }));
+draw('ready');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-feed-states&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;stale&quot;</span>&gt;Not refreshed&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-feed&quot;</span> <span class="kp-code__keyword">data-kp-feed</span> <span class="kp-code__keyword">data-kp-feed-time</span><span class="kp-code__string">=&quot;clock&quot;</span> <span class="kp-code__keyword">data-kp-feed-actor</span><span class="kp-code__string">=&quot;mark&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-feed-states-host&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-footprint-max: 14rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachFeeds, setFeed } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/feed'</span>;
+
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-feed-states'</span>);
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-feed-states-host'</span>);
+attachFeeds(root);
+<span class="kp-code__keyword">const</span> MIN = <span class="kp-code__string">60</span> * <span class="kp-code__string">1000</span>;
+<span class="kp-code__keyword">const</span> HOUR = <span class="kp-code__string">60</span> * MIN;
+<span class="kp-code__keyword">const</span> ago = (ms) =&gt; Date.now() - ms;
+<span class="kp-code__keyword">const</span> rows = [
+    { key: <span class="kp-code__string">'a'</span>, state: <span class="kp-code__string">'ok'</span>, title: <span class="kp-code__string">'Restart traefik'</span>, actor: { name: <span class="kp-code__string">'Kenny'</span>, kind: <span class="kp-code__string">'person'</span> }, detail: <span class="kp-code__string">'Back up in 4 s'</span>, at: ago(<span class="kp-code__string">6</span> * MIN) },
+    { key: <span class="kp-code__string">'b'</span>, state: <span class="kp-code__string">'warn'</span>, title: <span class="kp-code__string">'Renew certificate'</span>, actor: { name: <span class="kp-code__string">'auto-heal'</span>, kind: <span class="kp-code__string">'system'</span> }, detail: <span class="kp-code__string">'Renewed, OCSP staple missing'</span>, at: ago(<span class="kp-code__string">3</span> * HOUR) },
+    { key: <span class="kp-code__string">'c'</span>, state: <span class="kp-code__string">'ok'</span>, title: <span class="kp-code__string">'Backup immich'</span>, actor: { name: <span class="kp-code__string">'nightly round'</span>, kind: <span class="kp-code__string">'schedule'</span> }, detail: <span class="kp-code__string">'3.2 GB, 2 min 41 s'</span>, at: ago(<span class="kp-code__string">26</span> * HOUR) },
+];
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; {
+    <span class="kp-code__keyword">if</span> (state === <span class="kp-code__string">'ready'</span>) setFeed(host, { state: <span class="kp-code__string">'ready'</span>, rows, total: <span class="kp-code__string">30</span>, earlier: <span class="kp-code__string">'more'</span>, stale: <span class="kp-code__keyword">null</span> });
+    <span class="kp-code__keyword">else</span> <span class="kp-code__keyword">if</span> (state === <span class="kp-code__string">'stale'</span>) setFeed(host, { state: <span class="kp-code__string">'ready'</span>, rows, total: <span class="kp-code__string">30</span>, stale: { reason: <span class="kp-code__string">'the host did not answer within 20 s'</span>, since: ago(<span class="kp-code__string">14</span> * MIN) } });
+    <span class="kp-code__keyword">else</span> setFeed(host, { state, rows: state === <span class="kp-code__string">'empty'</span> ? [] : rows, error: <span class="kp-code__string">'The activity could not be read.'</span>, stale: <span class="kp-code__keyword">null</span> });
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> root.querySelectorAll(<span class="kp-code__string">'[data-doc-state]'</span>)) button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.dataset.docState));
+host.addEventListener(<span class="kp-code__string">'kp-feed-retry'</span>, () =&gt; draw(<span class="kp-code__string">'ready'</span>));
+host.addEventListener(<span class="kp-code__string">'kp-feed-earlier'</span>, () =&gt; setFeed(host, { earlier: <span class="kp-code__string">'end'</span> }));
+draw(<span class="kp-code__string">'ready'</span>);</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-earlier</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-feed-actor</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-actor-mode</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-earlier</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-feed-expand</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-group</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-head</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-level</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-max</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-no-rail</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-rail</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-retry</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-feed-scroll</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-summary</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-time</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-feed-unit</code></td><td>written</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-feed-retry</code></td><td>Fired on the host, bubbling, when Retry is pressed on the failed plate or &quot;Read it again&quot; on a stale feed.</td></tr>
+                            <tr><td><code>kp-feed-earlier</code></td><td>Fired on the host, bubbling, when &quot;Load earlier&quot; (or its Try again) is pressed. The page answers with `earlier: 'loading'` and then the rows.</td></tr>
+                            <tr><td><code>kp-feed-open</code></td><td>Fired on the host, bubbling, when a row opens or closes: `{ key, open }`.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-feed-actor-max</code></td><td><code>12rem</code></td></tr>
+                            <tr><td><code>--kp-feed-foot-min</code></td><td><code>5.5rem</code></td></tr>
+                            <tr><td><code>--kp-feed-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
+                            <tr><td><code>--kp-feed-ground</code></td><td><code>var(--card)</code></td></tr>
+                            <tr><td><code>--kp-feed-head-min</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-feed-mark-size</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-feed-max</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-feed-min</code></td><td><code>20rem</code></td></tr>
+                            <tr><td><code>--kp-feed-pad</code></td><td><code>0.625rem</code></td></tr>
+                            <tr><td><code>--kp-feed-row-pad</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
+                            <tr><td><code>--kp-glyph-done</code></td><td><code>var(--kp-glyph-check, '✓')</code></td></tr>
+                            <tr><td><code>--kp-glyph-failed</code></td><td><code>'✕'</code></td></tr>
+                            <tr><td><code>--kp-glyph-info</code></td><td><code>'i'</code></td></tr>
+                            <tr><td><code>--kp-glyph-open</code></td><td><code>'▾'</code></td></tr>
+                            <tr><td><code>--kp-glyph-warn</code></td><td><code>'!'</code></td></tr>
+                            <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
+                            <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-statusrow-mark</code></td><td><code>1.25rem</code></td></tr>
+                            <tr><td><code>--kp-statusrow-mark-radius</code></td><td><code>var(--kp-steplist-mark-radius, var(--kp-radius-pill, 999px))</code></td></tr>
+                            <tr><td><code>--kp-steplist-mark-radius</code></td><td><code>var(--kp-radius-pill, 999px)</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — a row’s state is a shape and a word as well as a colour (the word is read after the title), the actor is read as “by Claude”, the time keeps its full moment in `title` and `aria-description`, the day headings are headings, and new rows are announced politely at most every ten seconds.</li>
+                        <li>Yours — write the title in the user’s words and give the feed a name (`aria-label`); give every row a stable `key` so a refresh keeps the focus and the rows that are open.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachFeeds(root, { now, timeZone })` wires every `[data-kp-feed]` and returns a detach; `feedOf(el)` answers the handle (`set`, `setOpen`, `openKeys`, `render`); `setFeed(el, { state, rows, total, earlier, updatedAt, stale, error, emptyText })` hands over the data. `FEED` is the selector.</td></tr>
+                            <tr><td><code>events</code></td><td>`kp-feed-retry` (Retry on the failed plate and Read it again on a stale feed), `kp-feed-earlier` (Load earlier and its Try again) and `kp-feed-open` `{ key, open }`, bubbling from the host. The page decides what a retry or an earlier page is and answers with `setFeed`.</td></tr>
+                            <tr><td><code>data-kp-feed</code></td><td>Marks the host. The script draws the head (the exact count and the freshness line), the list, the state plate and the foot inside it.</td></tr>
+                            <tr><td><code>data-kp-feed-group</code></td><td>`day` (default): a heading per day with that day’s count; `none`: one list.</td></tr>
+                            <tr><td><code>data-kp-feed-summary</code></td><td>`on` (default) or `off`: the count and “N failed” (or “all ok”) on each day heading.</td></tr>
+                            <tr><td><code>data-kp-feed-unit</code></td><td>`operation,operations`: the app’s word for a row, singular and plural; “event,events” by default.</td></tr>
+                            <tr><td><code>data-kp-feed-time</code></td><td>`auto` (default: “12 min ago” for 24 hours, then dd/mm/yyyy HH:mm), `relative` (always the ago line), `clock` (the ago line, then HH:mm under its day heading) or `moment` (always dd/mm/yyyy HH:mm). Pointing at a time gives the full moment.</td></tr>
+                            <tr><td><code>data-kp-feed-actor</code></td><td>`chip` (default: the mark and the name), `mark` (the mark alone; the name is its title and its screen-reader text) or `off`.</td></tr>
+                            <tr><td><code>data-kp-feed-expand</code></td><td>`many` (default), `one` (opening a row closes the others) or `off` (rows with lines are not openable).</td></tr>
+                            <tr><td><code>data-kp-feed-rail</code></td><td>`on` (default): the timeline’s rule joins the marks of a day; `off`.</td></tr>
+                            <tr><td><code>data-kp-feed-head</code></td><td>`on` (default) or `off`: the count and the freshness line above the list.</td></tr>
+                            <tr><td><code>data-kp-feed-max</code></td><td>A CSS length, `26rem`: the list scrolls inside that height and the day headings stay at its top.</td></tr>
+                            <tr><td><code>data-kp-feed-level</code></td><td>The heading level of a day heading; 3.</td></tr>
+                            <tr><td><code>states</code></td><td>`ready`, `loading` (rows in skeletons under the busy card), `empty` (“Nothing happened yet” and `emptyText`), `error` (the failed plate with Retry) and, on a ready feed, `stale` (the rows kept, “Not refreshed: …. Rows from 14:02.” and Read it again). The foot is `earlier`: `more`, `loading`, `error` or `end`.</td></tr>
+                            <tr><td><code>written by the script</code></td><td>`data-kp-state` on the host (read by js/footprint.js, which holds the loaded height), `data-kp-feed-actor-mode`, `data-kp-feed-scroll` and `data-kp-feed-no-rail` (what the stylesheet reads) and the buttons’ markers `data-kp-feed-retry` and `data-kp-feed-earlier`.</td></tr>
+                            <tr><td><code>data-kp-earlier</code></td><td>Written on the foot: `more`, `loading`, `error`, `end` or `none`. The foot keeps its room in the first four, so nothing moves when it changes.</td></tr>
+                            <tr><td><code>.kp-feed__head / __count / __fresh / __stale</code></td><td>The head: the exact count (“18 of 30 operations”), the ticking freshness line, and the stale notice with its button.</td></tr>
+                            <tr><td><code>.kp-feed__list / __group / __day / __rows / __row</code></td><td>The one grid of every day; a group holds its heading (`__day`, with `__day-word`, `__day-date`, `__day-rule` and `__day-summary`) and its rows. A row has `data-state` and `data-kp-key`.</td></tr>
+                            <tr><td><code>.kp-feed__mark / __title / __detail / __toggle / __link / __more</code></td><td>A row’s parts: the state mark, the title (a button that opens its lines, or a link), the muted detail and the lines that open.</td></tr>
+                            <tr><td><code>.kp-feed__actor / __when / __foot / __earlier</code></td><td>The chip column, the time column and the foot with Load earlier.</td></tr>
+                    </tbody></table></div>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

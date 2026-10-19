@@ -5,6 +5,7 @@ import { attachAll } from '../../js/auto.js';
 import { setProblems } from '../../js/problems.js';
 import { setUptime } from '../../js/uptime.js';
 import { setRequests, setRequestsState } from '../../js/request-inspector.js';
+import { setIdmark } from '../../js/idmark.js';
 import { setPasskeys } from '../../js/passkeys.js';
 import { setTabbarBadge } from '../../js/tabbar.js';
 import { setConnection } from '../../js/connection.js';
@@ -327,6 +328,22 @@ document.addEventListener('click', (event) => {
         }
         return undefined;
     });
+});
+
+/** The client card of the issue dialog follows what is typed: name, topic, the mark, and the empty words when a field is empty. */
+document.addEventListener('input', (event) => {
+    const input = event.target instanceof HTMLInputElement ? event.target : null;
+    const key = input?.getAttribute('data-ck-live-in');
+    if (!input || !key) return;
+    const dialog = input.closest('dialog');
+    const card = dialog?.querySelector('[data-ck-live-card]');
+    if (!card) return;
+    const target = /** @type {HTMLElement | null} */ (card.querySelector(`[data-ck-live-${key}]`));
+    if (target) target.textContent = input.value.trim() || (target.getAttribute('data-ck-empty') ?? '');
+    const name = /** @type {HTMLInputElement | null} */ (dialog?.querySelector('[data-ck-live-in="name"]'));
+    const mark = /** @type {HTMLElement | null} */ (card.querySelector('[data-ck-live-mark]'));
+    if (mark) setIdmark(mark, name?.value.trim() || 'new client');
+    card.classList.toggle('ck-prev--empty', !name?.value.trim());
 });
 
 document.addEventListener('submit', (event) => {

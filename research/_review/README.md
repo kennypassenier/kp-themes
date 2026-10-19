@@ -275,6 +275,14 @@ see them again. When a round, an update or a republished demo opens a question a
 dialog says only that the question is open again and, with an `update.json`, the session's answer; the comment is not
 repeated. The first round, before anything is approved, shows the whole page.
 
+## Bundling the demos of one project
+
+Kenny, 2026-10-19 02:38: demos that come from the same project are bundled into one review page of at most 25 items (sections x
+themes), which makes the process smoother. The page is generated from the source demos (see research/gap-round-1/build.mjs, modelled on
+research/kpadopt56/build-parts.mjs: each source's sections in a wrapper with its page class, one script and one stylesheet per source).
+A source demo that stays only as the source says `"bundledInto": "<topic>"` in its VERDICTS.json; gates/check-catalogue.mjs then does not
+ask for its own Agenda entry.
+
 ## A re-review shows only the open pairs, and the verdicts are recorded
 
 Kenny, 2026-10-13 and again 2026-10-16: a re-review round shows ONLY the pairs (section × theme) he has not approved yet.

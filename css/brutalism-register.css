@@ -5470,7 +5470,8 @@
         font-weight: 500;
     }
     [data-theme='brutalism'] .kp-dialog__section--danger {
-        padding-inline: 0;
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
         padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.5rem);
         border-inline-start: 0;
         background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat;

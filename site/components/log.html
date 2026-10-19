@@ -146,6 +146,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/claim.html">Who brings it</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/availability.html">Who can come</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
@@ -394,7 +395,22 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-current</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-current</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-log-</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-log-filename</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-log-focus-key</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-log-follow</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-log-following</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-hint</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-level</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-max</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-nosource</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-plate</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-search</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-search-only</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-time</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-log-tools</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-log-wrap</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-severity</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-source</code></td><td>selector, read, written</td></tr>
                     </tbody></table></div>

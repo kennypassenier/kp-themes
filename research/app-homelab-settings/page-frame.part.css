@@ -1,0 +1,207 @@
+
+/* ── 19 · connection ── */
+.hl-conn {
+    position: relative;
+    min-block-size: 24rem;
+    overflow: hidden;
+    /* A fixed banner stands at the foot of this frame, not of the window. */
+    transform: translateZ(0);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.hl-conn__page {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    min-block-size: 24rem;
+    position: relative;
+}
+
+.hl-conn__body {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    padding: var(--kp-space-md, 1rem);
+}
+
+.hl-conn__body > h3 {
+    margin: 0;
+}
+
+.hl-conn__rows {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hl-conn__rows > li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) 6rem;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+    padding-block: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+/* ── 20 · bar and tabs ── */
+.hl-navs {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.hl-navs__label {
+    margin-block-end: var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.hl-navs__frame,
+.hl-navs__phoneframe {
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    overflow: hidden;
+}
+
+.hl-navs__frame {
+    min-block-size: 4rem;
+}
+
+[data-width='wide'] .hl-navs__frame {
+    inline-size: 100%;
+}
+
+[data-width='medium'] .hl-navs__frame {
+    inline-size: min(100%, 34rem);
+}
+
+[data-width='narrow'] .hl-navs__frame {
+    inline-size: min(100%, 24rem);
+}
+
+.hl-navs__phoneframe {
+    inline-size: min(100%, 24rem);
+}
+
+/* ── 21 · rail ── */
+.hl-shell {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    min-block-size: 30rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    overflow: hidden;
+    background: var(--background);
+}
+
+.hl-rail__page {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.hl-rail__tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--kp-space-md, 1rem);
+}
+
+/* ── 22 · keys ── */
+.hl-keys-main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+}
+
+.hl-keypage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.hl-keypage__body {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+}
+
+.hl-keypage__body h3 {
+    margin: 0;
+}
+
+.hl-keytabs {
+    display: flex;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hl-sheet {
+    position: relative;
+    inset: auto;
+    margin: 0;
+    max-inline-size: 100%;
+}
+
+@media (max-width: 56rem) {
+    .hl-keypage {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ── 23 · problems ── */
+.hl-prob {
+    min-block-size: 24rem;
+    align-content: start;
+}
+
+/* ── 24 · page states ── */
+.hl-page-states {
+    gap: var(--kp-space-md, 1rem);
+}
+
+.hl-st-head > h3,
+.hl-st-head > p {
+    margin: 0;
+}
+
+.hl-st-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+.hl-st-grid .kp-card {
+    --kp-card-stage-min: 14rem;
+}
+
+.hl-st-list {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hl-st-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+    padding-block: var(--kp-space-xs, 0.25rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.hl-sheet {
+    max-block-size: 30rem;
+    overflow: auto;
+}
+
+.hl-keys-main {
+    grid-template-columns: minmax(0, 1fr);
+}

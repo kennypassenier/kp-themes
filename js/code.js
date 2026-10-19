@@ -121,7 +121,8 @@ export function prettyJson(text) {
 function jsonLine(doc, line) {
     /** @type {Node[]} */
     const out = [];
-    const pattern = /("(?:[^"\\]|\\.)*")(\s*:)?|([{}[\],:])/g;
+    // A run of punctuation (`},` `],` `}]`) is ONE element: two spans side by side sat 0 px from each other.
+    const pattern = /("(?:[^"\\]|\\.)*")(\s*:)?|([{}[\],:]+)/g;
     let last = 0;
     for (const match of line.matchAll(pattern)) {
         const at = match.index ?? 0;
@@ -338,7 +339,6 @@ function drawLoading(el, memory) {
     body.style.setProperty('--kp-code-min-lines', String(lines));
     body.style.minBlockSize = was > 0 ? `${was}px` : '';
     body.replaceChildren(make(doc, '', 'code'));
-    body.removeAttribute('tabindex');
     if (memory.card) {
         memory.card.place();
         return;
@@ -410,10 +410,11 @@ function drawBody(el, memory) {
     memory.lines = lines.length;
     const body = make(doc, 'kp-code__body', 'pre');
     body.id ||= `kp-code-${(serial += 1)}`;
-    body.setAttribute('tabindex', '0');
-    body.setAttribute('role', 'region');
-    body.setAttribute('aria-label', spec.title ?? spec.language ?? strings.codeLabel);
+    // The `code` is what scrolls sideways, inside the body's padding, so a long line is cut 0.75rem from the plate's edge, never at it.
     const code = make(doc, '', 'code');
+    code.setAttribute('tabindex', '0');
+    code.setAttribute('role', 'region');
+    code.setAttribute('aria-label', spec.title ?? spec.language ?? strings.codeLabel);
     for (const line of lines) {
         const row = make(doc, 'kp-code__line');
         const words = make(doc, 'kp-code__text');

@@ -5926,6 +5926,21 @@
         border-block-start: 1px solid var(--border);
     }
 
+    /* A section is ruled off along its top, and its words keep air from the ends of that rule: the section's box is
+     * wider than the text column by `--kp-dialog-section-inset` (0.5rem) on each side and pads it back, so the words stay
+     * in line with the title above while the rule runs on past them (text never touches the edge of its plate). The body
+     * takes the same room as its own padding, so its scrolling edge does not cut the rule. The danger section has its
+     * own edge and padding below and is not pulled out. */
+    .kp-dialog__body {
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+    }
+
+    .kp-dialog__section:not(.kp-dialog__section--danger) {
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+    }
+
     .kp-dialog__section:first-child {
         padding-block-start: 0;
         border-block-start: 0;
@@ -6414,6 +6429,40 @@
         color: var(--foreground);
         border-bottom-color: var(--primary);
         font-weight: 600;
+    }
+
+    /* The count on a tab [gap-tab-count; js/tabbar.js, setTabCount]: the exact number on a badge of the package's own plates
+ * (neutral, info, success, warning, destructive), after the label. The room of the digits is held (never fewer than two,
+ * more for a longer number) and a loading count is a skeleton of that same width, so a number that arrives, grows a digit or
+ * changes tone moves no tab beside it. A fixed weight: the selected tab turns bold, and its count must not widen with it. */
+    .kp-tab__count {
+        box-sizing: border-box;
+        justify-content: center;
+        min-inline-size: calc(var(--kp-tab-count-digits, 2) * 1ch + 1rem);
+        margin-inline-start: var(--kp-tab-count-gap, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-tab-count-size, var(--kp-text-xs, 0.75rem));
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .kp-tab__count[data-kp-state='loading'] {
+        padding-inline: 0;
+        background: transparent;
+    }
+
+    .kp-tab__bone {
+        display: block;
+        inline-size: calc(var(--kp-tab-count-digits, 2) * 1ch + 1rem);
+        block-size: 1em;
+        border-radius: var(--kp-radius-pill, 999px);
+    }
+
+    .kp-tab__count[data-kp-state='error'] {
+        cursor: help;
     }
 
     .kp-tabs__panel {
@@ -7391,6 +7440,9 @@
     .kp-palette__keys {
         margin-inline-start: auto;
         font-size: var(--kp-text-xs, 0.75rem);
+        /* A chord (Ctrl K, Ctrl Shift P) is one unit: it keeps its width and its line, and the label gives way. */
+        flex: none;
+        white-space: nowrap;
     }
 
     .kp-palette__status {
@@ -11041,6 +11093,421 @@
         color: var(--foreground);
     }
 
+    /* --- A diff of several files [gap-diff-view; homelab's editui.js diffBlocks] -------------------------------------
+ *
+ * js/diff.js writes the lines `.kp-diff` already dresses and adds what a diff of several files needs: a header per file
+ * (a chevron, a status word on a badge, the path, exact +N and -M counts with five blocks for their share, Copy path),
+ * the unchanged lines folded into one row that is a button, and the changed words marked inside a changed line. The
+ * header's columns are as wide as the longest of the page (--kp-diffview-added-ch and -removed-ch are written by the
+ * script) so the headers of several files line up. Every state (reading, nothing changed, failed) stands in the box the
+ * diff had (js/footprint.js). Knobs [KT6]: --kp-diffview-min (least height of a state, 18rem), --kp-diffview-status
+ * (the status column, 5.5rem), --kp-diffview-gap (between files). */
+    .kp-diffview {
+        --kp-diffview-min: 18rem;
+        --kp-diffview-status: 5.5rem;
+        --kp-diffview-gap: var(--kp-space-sm, 0.5rem);
+        container: kp-diffview / inline-size;
+        position: relative;
+        display: grid;
+        gap: var(--kp-diffview-gap);
+        min-inline-size: 0;
+    }
+
+    .kp-diffview:not([data-kp-state='ready']) {
+        min-block-size: var(--kp-diffview-min);
+    }
+
+    .kp-diffview__stage {
+        position: relative;
+        display: grid;
+        min-block-size: 0;
+    }
+
+    .kp-diffview__stage > .kp-stateplate {
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-diffview__bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: var(--kp-button-height, 2.25rem);
+    }
+
+    .kp-diffview__summary {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin: 0;
+    }
+
+    .kp-diffview__tools {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-diffview__list {
+        display: grid;
+        gap: var(--kp-diffview-gap);
+        min-inline-size: 0;
+    }
+
+    .kp-diffview__file {
+        min-inline-size: 0;
+        overflow: clip;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card, var(--background));
+    }
+
+    .kp-diffview__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding-inline-end: var(--kp-space-sm, 0.5rem);
+        background: var(--muted);
+    }
+
+    .kp-diffview__title {
+        min-inline-size: 0;
+        margin: 0;
+        font: inherit;
+    }
+
+    .kp-diffview__toggle {
+        display: grid;
+        grid-template-columns: 1rem var(--kp-diffview-status) minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: 2.75rem;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--foreground);
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-diffview__toggle:hover {
+        background: hsl(from var(--foreground) h s l / 0.06);
+    }
+
+    .kp-diffview__toggle:focus-visible,
+    .kp-diff__row-button:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--primary));
+        outline-offset: -2px;
+    }
+
+    /* The chevron is drawn, not typed: a corner turned a quarter, a half further when the file is open. */
+    .kp-diffview__chevron {
+        justify-self: center;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-inline-end: 2px solid currentColor;
+        border-block-end: 2px solid currentColor;
+        transform: rotate(-45deg);
+    }
+
+    .kp-diffview__file[data-kp-diff-file-open='true'] .kp-diffview__chevron {
+        transform: translateY(-0.125rem) rotate(45deg);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-diffview__chevron {
+            transition: transform var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    .kp-diffview__status {
+        justify-content: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+    }
+
+    .kp-diffview__path {
+        min-inline-size: 0;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-diffview__dir,
+    .kp-diffview__arrow {
+        color: var(--muted-foreground);
+    }
+
+    .kp-diffview__arrow {
+        padding-inline: 0.5ch;
+    }
+
+    .kp-diffview__name {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    /* A long token wraps in the text column instead of running out of the plate (the column may shrink below its content). */
+    .kp-diffview .kp-diff__line {
+        grid-template-columns: 3rem 1ch minmax(0, 1fr);
+    }
+
+    .kp-diffview .kp-diff__text {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* Exact counts on their own quiet plates, a column as wide as the longest of the page. The sign is the carrier;
+     * the tint is the second one [DI4]. */
+    .kp-diffview__counts {
+        display: inline-flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-diffview__added,
+    .kp-diffview__removed {
+        box-sizing: border-box;
+        padding-inline: 0.375rem;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-diffview__added {
+        min-inline-size: calc(var(--kp-diffview-added-ch, 2) * 1ch + 0.75rem);
+        background: hsl(from var(--success) h s l / 0.14);
+    }
+
+    .kp-diffview__removed {
+        min-inline-size: calc(var(--kp-diffview-removed-ch, 2) * 1ch + 0.75rem);
+        background: hsl(from var(--destructive) h s l / 0.12);
+    }
+
+    .kp-diffview__summary > .kp-diffview__added,
+    .kp-diffview__summary > .kp-diffview__removed {
+        min-inline-size: 0;
+    }
+
+    .kp-diffview__proportion {
+        display: inline-flex;
+        gap: 2px;
+    }
+
+    .kp-diffview__block {
+        display: block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        background: var(--border);
+    }
+
+    .kp-diffview__block[data-kind='added'] {
+        background: var(--success);
+    }
+
+    .kp-diffview__block[data-kind='removed'] {
+        background: var(--destructive);
+    }
+
+    .kp-diffview__body {
+        border-block-start: 1px solid var(--border);
+        min-inline-size: 0;
+    }
+
+    .kp-diffview__body:focus {
+        outline: none;
+    }
+
+    /* The diff inside a file has no frame of its own: the file's frame is the frame. */
+    .kp-diffview .kp-diffview__body .kp-diff {
+        border: 0;
+        border-radius: 0;
+    }
+
+    .kp-diffview .kp-diff__number,
+    .kp-diffview .kp-diff__sign {
+        user-select: none;
+    }
+
+    .kp-diffview__note {
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-diffview__plate {
+        min-block-size: 8rem;
+        border-radius: 0;
+    }
+
+    /* The changed words: weight and a line are the carriers, the deeper tint the second. Added words are underlined,
+     * removed words struck through, so the two sides differ without colour. */
+    .kp-diff__word {
+        padding: 0;
+        border-radius: 2px;
+        background: hsl(from var(--success) h s l / 0.34);
+        color: inherit;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-diff__line[data-kind='removed'] .kp-diff__word {
+        background: hsl(from var(--destructive) h s l / 0.3);
+        text-decoration-line: line-through;
+        text-decoration-thickness: 2px;
+    }
+
+    /* The folded run and the "show the rest" row: a button across the diff's own three columns, so its words stand where
+     * the code stands and a pointer finds it anywhere along the row. */
+    .kp-diff__row-button {
+        display: grid;
+        grid-template-columns: 3rem 1ch minmax(0, 1fr);
+        align-items: center;
+        gap: 0.5rem;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: 2rem;
+        margin: 0;
+        padding: 0.125rem 0.5rem;
+        border: 0;
+        border-block: 1px dashed var(--border);
+        border-radius: 0;
+        background: hsl(from var(--muted) h s l / 0.6);
+        color: var(--muted-foreground);
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-diff__row-button:hover {
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-diff__row-button + .kp-diff__row-button,
+    .kp-diff__line + .kp-diff__row-button[aria-expanded='true'] {
+        border-block-start-width: 0;
+    }
+
+    /* Three dots for a fold that is closed, one rule for a fold that is open. */
+    .kp-diff__row-glyph {
+        justify-self: end;
+        inline-size: 1.25rem;
+        block-size: 0.5rem;
+        background: radial-gradient(circle, currentColor 1.5px, transparent 2px) 0 50% / 0.4rem 0.5rem repeat-x;
+    }
+
+    .kp-diff__row-button[aria-expanded='true'] > .kp-diff__row-glyph {
+        background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat;
+    }
+
+    .kp-diff__row-label {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* Reading: the file headers at their final size, the first with its lines, the busy card over them. */
+    .kp-diffview__wait {
+        display: grid;
+        gap: var(--kp-diffview-gap);
+        align-content: start;
+        min-inline-size: 0;
+    }
+
+    .kp-diffview__head--wait {
+        grid-template-columns: var(--kp-diffview-status) minmax(0, 1fr) 5rem;
+        min-block-size: 2.75rem;
+        padding-inline: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-diffview__wait-badge,
+    .kp-diffview__wait-counts {
+        block-size: 1.25rem;
+    }
+
+    .kp-diffview__wait-path {
+        block-size: 1rem;
+        max-inline-size: 60%;
+    }
+
+    .kp-diffview__body--wait {
+        display: grid;
+        gap: 0.5rem;
+        padding: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-diffview__wait-line {
+        block-size: 1rem;
+    }
+
+    .kp-diffview__wait-line:nth-child(3n + 2) {
+        max-inline-size: 80%;
+    }
+
+    .kp-diffview__wait-line:nth-child(3n) {
+        max-inline-size: 55%;
+    }
+
+    @container kp-diffview (max-width: 40rem) {
+        /* The path takes a line of its own under the status and the counts; the blocks go (the numbers say it). */
+        .kp-diffview__toggle {
+            grid-template-columns: 1rem var(--kp-diffview-status) minmax(0, 1fr);
+            grid-template-areas:
+                'chevron status counts'
+                'path path path';
+            row-gap: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-diffview__chevron {
+            grid-area: chevron;
+        }
+
+        .kp-diffview__status {
+            grid-area: status;
+        }
+
+        .kp-diffview__counts {
+            grid-area: counts;
+            justify-self: end;
+        }
+
+        .kp-diffview__path {
+            grid-area: path;
+        }
+
+        .kp-diffview__proportion {
+            display: none;
+        }
+
+        .kp-diffview__copy {
+            min-block-size: 2.75rem;
+        }
+
+        .kp-diffview__bar {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-diffview__tools .kp-button {
+            min-block-size: 2.75rem;
+        }
+    }
+
+    @media (pointer: coarse) {
+        .kp-diff__row-button {
+            min-block-size: 2.75rem;
+        }
+    }
+
     /* Visually hidden, still announced. Used where a change is obvious on
  * screen and silent otherwise — a button whose own label changed, for
  * instance, which a screen reader does not report on its own. */
@@ -12696,11 +13163,12 @@
         outline-offset: 1px;
     }
 
+    /* A label is never cut with an ellipsis: a long name wraps onto a second line (the row grows to hold it) and only
+     * a word longer than the label column breaks, at the column's edge. */
     .kp-heat__label-text {
         min-inline-size: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: break-word;
+        white-space: normal;
     }
 
     .kp-heat__label-text--muted {
@@ -12979,14 +13447,14 @@
         gap: var(--kp-space-xs, 0.25rem);
     }
 
-    .kp-heat__legend > li[data-kp-end] {
+    .kp-heat__legend > li:is([data-kp-end], .kp-heat__legend-end) {
         display: flex;
         flex: 1 1 auto;
         justify-content: flex-end;
         min-inline-size: 0;
     }
 
-    .kp-heat__legend > li[data-kp-end] > .kp-keys {
+    .kp-heat__legend > li:is([data-kp-end], .kp-heat__legend-end) > .kp-keys {
         flex: 0 1 auto;
         min-inline-size: 0;
         justify-content: flex-end;
@@ -13550,14 +14018,15 @@
         display: none;
     }
 
-    /* The count. Over the icon's end corner, out of the flow, so a count that
- * appears, grows or goes moves nothing. Empty, it is a dot. */
+    /* The count. Beside the icon at its end corner, never over it (text never touches
+ * an icon, DEMO_RULES ch. 2), out of the flow, so a count that appears, grows or
+ * goes moves nothing. Empty, it is a dot. */
     .kp-tabbar__badge {
         --kp-badge-size: var(--kp-text-xs, 0.75rem);
         --kp-badge-padding-block: 0;
         position: absolute;
         inset-block-start: 0.125rem;
-        inset-inline-start: calc(50% + var(--kp-tabbar-icon, 1.5rem) / 2 - 0.5rem);
+        inset-inline-start: calc(50% + var(--kp-tabbar-icon, 1.5rem) / 2 + 0.25rem);
         justify-content: center;
         min-inline-size: 1.25rem;
         box-sizing: border-box;
@@ -19388,7 +19857,9 @@
         display: none;
     }
 
-    .kp-flash[data-kp-width='grow']:is([data-kp-flash-state='success'], [data-kp-flash-state='refused']) .kp-flash__stack > :is(.kp-flash__face--rest, .kp-flash__face--busy) {
+    .kp-flash[data-kp-width='grow']:is([data-kp-flash-state='success'], [data-kp-flash-state='refused'])
+        .kp-flash__stack
+        > :is(.kp-flash__face--rest, .kp-flash__face--busy) {
         display: none;
     }
 
@@ -22722,10 +23193,15 @@
         overscroll-behavior-inline: contain;
     }
 
+    /* The code scrolls sideways, not the body: the body is the plate and keeps its padding on both sides, so a long
+     * line runs out of sight 0.75rem short of the plate's edge instead of touching it (text never touches an edge). */
     .kp-code__body > :is(code) {
         display: block;
-        min-inline-size: max-content;
+        min-inline-size: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
         font: inherit;
+        overscroll-behavior-inline: contain;
     }
 
     .kp-code[data-kp-code-wrap] .kp-code__body {
@@ -22734,7 +23210,7 @@
     }
 
     .kp-code[data-kp-code-wrap] .kp-code__body > :is(code) {
-        min-inline-size: 0;
+        overflow: visible;
     }
 
     /* Folded: the box stops at the line count and a fade says there is more. */
@@ -22937,8 +23413,8 @@
     /* js/newpill.js: a pill on the end of a live list that says how many rows came
      * out of sight, and jumps back. It sits in the list's parent (`data-kp-newpill-host`),
      * so it never scrolls with the rows, ruled in along its start edge at the
-     * theme's rule time and taken out the way it came. The count keeps the room
-     * of the next digit. Knobs: --kp-newpill-digits (written by the module). */
+     * theme's rule time and taken out the way it came. The count is as wide as its
+     * words. */
     [data-kp-newpill-host] {
         position: relative;
     }
@@ -22978,10 +23454,10 @@
         animation-direction: reverse;
     }
 
+    /* The count is as wide as its words: a reserved second digit left an empty space of a letter or two before a
+     * one-digit count, so the words sat off-centre in the pill. A digit more grows the pill, round its centre. */
     .kp-newpill__count {
-        min-inline-size: calc(var(--kp-newpill-digits, 2) * 1ch + 10ch);
         font-variant-numeric: tabular-nums;
-        text-align: end;
     }
 
     .kp-newpill__back {
@@ -27819,7 +28295,14 @@
  * Under 30rem of the grid's own width the inline actions fold into "More". Selected is `is-ticked`, the cursor `is-cursor`.
  * Knobs [KT6]: --kp-entity-min (the least card width, 22rem), --kp-entity-row (the row's height, 1.5rem), --kp-entity-gap,
  * --kp-entity-actions-gap (the air between the last meter and the actions, --kp-space-md). The buttons come only from the data:
- * no action, no row. */
+ * no action, no row.
+ * The trend row [gap-entity-tiles-1019] is one more row of the meters block (label, a 24-hour line, the current value, on the
+ * meters' own columns); `--kp-entity-meters` counts it, so the card's rows need no new template. The line is the KPI tile's
+ * sparkline (js/kpi.js drawSparkline) with its own parts, `.kp-entity__spark-line` and `-area`; knob --kp-entity-spark (the line's colour, --chart-1).
+ * The tile [gap-entity-tiles-1019] (`.kp-card--entity[data-kp-entity-tile]`, js/entity-card.js `data-kp-entity-kind="tile"`) is the
+ * same card with four rows (identity, state, description, lines) and no actions: the name's link covers the whole card, the star
+ * and the Retry stand above it, the description takes what room is left and the lines sit at the foot of every tile alike.
+ * Knobs: --kp-entity-tile-body (the least height of the description, 2.75rem), --kp-entity-min (16rem on a tile grid). */
     .kp-entity-grid {
         position: relative;
         display: grid;
@@ -27999,6 +28482,8 @@
 
     .kp-entity__actions > :is(.kp-button, .kp-menu-button, .kp-reason),
     .kp-entity__tick,
+    .kp-entity__star,
+    .kp-entity__description > .kp-entity__retry,
     .kp-entity__more-flags {
         position: relative;
         z-index: 1;
@@ -28025,6 +28510,141 @@
 
     .kp-card--ghost {
         pointer-events: none;
+    }
+
+    /* --- The trend row: a line over the meters' columns --- */
+    .kp-entity__trend-line {
+        display: flex;
+        align-items: center;
+        min-inline-size: 0;
+    }
+
+    .kp-entity__trend-line > .kp-entity__none {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-entity__spark {
+        display: block;
+        inline-size: 100%;
+        block-size: calc(var(--kp-entity-row, 1.5rem) - 0.25rem);
+        overflow: visible;
+        color: var(--kp-entity-spark, var(--chart-1));
+    }
+
+    .kp-entity__spark-line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-entity__spark-area {
+        fill: currentColor;
+        opacity: 0.12;
+    }
+
+    /* --- The favourite star: a small square toggle at the end of the identity row, above the card's link --- */
+    .kp-card--entity .kp-button.kp-entity__star[data-kp-toggle] {
+        flex: none;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        min-block-size: 0;
+        padding: 0 !important;
+        color: var(--muted-foreground);
+    }
+
+    .kp-card--entity .kp-button.kp-entity__star[data-kp-toggle][aria-pressed='true'] {
+        color: var(--kp-toggle-on-ink, var(--background)) !important;
+    }
+
+    .kp-entity__star-glyph {
+        inline-size: 1.0625rem;
+        block-size: 1.0625rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.75;
+        stroke-linejoin: round;
+    }
+
+    .kp-entity__star[aria-pressed='true'] .kp-entity__star-glyph {
+        fill: currentColor;
+    }
+
+    /* --- The tile: four rows, one link over all of them --- */
+    .kp-entity-grid[data-kp-entity-kind='tile'] {
+        --kp-entity-min: 16rem;
+    }
+
+    .kp-card--entity[data-kp-entity-tile][data-kp-entity-tile] {
+        grid-template-rows: minmax(1.75rem, auto) auto minmax(var(--kp-entity-tile-body, 2.75rem), 1fr);
+        grid-auto-rows: auto;
+        align-content: stretch;
+    }
+
+    .kp-card--entity[data-kp-entity-tile]:has(a.kp-entity__name):hover {
+        border-color: var(--ring);
+    }
+
+    .kp-card--entity[data-kp-entity-tile]:has(a.kp-entity__name:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-card--entity[data-kp-entity-tile] a.kp-entity__name:focus-visible {
+        outline: none;
+    }
+
+    .kp-entity__external {
+        flex: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__tile-state {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-card--entity > .kp-entity__description,
+    .kp-card--entity > .kp-entity__lines {
+        align-items: flex-start;
+    }
+
+    .kp-entity__description {
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__description > .kp-entity__retry {
+        flex: none;
+    }
+
+    .kp-entity__description:has(> .kp-entity__retry) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .kp-entity__tile-failed {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-card--entity > .kp-entity__lines {
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: 1lh;
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-card--entity > .kp-entity__lines[hidden] {
+        display: none !important;
+    }
+
+    .kp-entity__line {
+        overflow-wrap: anywhere;
     }
 }
 
@@ -28131,4 +28751,880 @@
         position: absolute;
         inset: 0;
     }
+}
+
+@layer kp.components {
+    /* --- A live log viewer [gap-log-viewer] ------------------------------
+ *
+ * The existing `.kp-log` (the four-column grid, the severity word, the source's own hue) inside a frame with a bar over it and
+ * a foot under it. The log keeps one height (`--kp-logviewer-height`, never below `--kp-logviewer-min`), so loading, empty,
+ * failed, filtered and full all stand in one box and the bar and the foot do not move. The states are laid over the whole
+ * stage. Knobs: --kp-logviewer-height, --kp-logviewer-min.
+ *
+ * Columns [fix-64]: the grid is the log's own; when the time column or the source column is off it leaves the grid
+ * (`display: none` on a cell would shift the cells after it), so the track list is restated for the four combinations.
+ * No wrap keeps each message on one line and scrolls the log sideways; the time cell is sticky then, so the clock stays
+ * beside the line it belongs to. */
+    .kp-logviewer {
+        --kp-logviewer-min: 16rem;
+        container: kp-logviewer / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        inline-size: 100%;
+        min-inline-size: 0;
+        overflow: clip;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-logviewer__bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-logviewer__bar[hidden],
+    .kp-logviewer__search[hidden],
+    .kp-logviewer__tools[hidden] {
+        display: none;
+    }
+
+    .kp-logviewer__search {
+        display: grid;
+        grid-template-columns: minmax(8rem, 1fr) auto auto auto auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__find {
+        min-inline-size: 0;
+    }
+
+    .kp-logviewer__matches {
+        min-inline-size: 7.5em;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    .kp-logviewer__tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__tools > [hidden],
+    .kp-logviewer__search > [hidden] {
+        display: none;
+    }
+
+    /* The follow button holds the room of its longer word, so Pause and Resume do not move the tools after it. */
+    .kp-logviewer__follow {
+        min-inline-size: 6.5em;
+    }
+
+    .kp-logviewer__level-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-logviewer__level-label {
+        padding-inline-start: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-logviewer__level {
+        inline-size: auto;
+    }
+
+    .kp-logviewer__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-logviewer__log {
+        position: relative;
+        box-sizing: border-box;
+        min-block-size: var(--kp-logviewer-min);
+        block-size: var(--kp-logviewer-height, 26rem);
+        align-content: start;
+        gap: 0;
+        padding: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+        border: 0;
+        border-radius: 0;
+        scroll-padding-block: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-logviewer__log:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: -2px;
+    }
+
+    .kp-logviewer__log .kp-log__line[hidden] {
+        display: none;
+    }
+
+    .kp-logviewer__log .kp-log__line > * {
+        padding-block: 0.0625rem;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__log .kp-log__line > :first-child {
+        padding-inline-start: var(--kp-space-md, 0.75rem);
+    }
+
+    /* The columns. */
+    .kp-logviewer[data-kp-log-time='off'] .kp-log__time,
+    .kp-logviewer[data-kp-log-nosource] .kp-log__source {
+        display: none;
+    }
+
+    .kp-logviewer[data-kp-log-time='off'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto auto minmax(0, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-time='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    /* The level is the colour: a plate on the word (the log's own, now on the word inside the level cell) and the same tone,
+     * faint, behind the whole line, so a warning or an error is found by the eye while scrolling; the word stays the carrier
+     * [DI4]. The cell keeps the row's tint, so the line is one band with no stripe where the level column is. */
+    .kp-logviewer__log .kp-log__line[data-kp-severity='warning'] > * {
+        background: hsl(from var(--warning) h s l / 0.12);
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='error'] > *,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] > * {
+        background: hsl(from var(--destructive) h s l / 0.14);
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity] > .kp-log__level {
+        border-radius: 0;
+        color: var(--kp-log-level-ink, var(--muted-foreground));
+        font-weight: inherit;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='info'] > .kp-log__level,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='notice'] > .kp-log__level {
+        color: var(--foreground);
+    }
+
+    .kp-log__word {
+        padding-inline: 0.4em;
+        border-radius: calc(var(--radius, 0.5rem) / 2);
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='warning'] .kp-log__word {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='error'] .kp-log__word,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] .kp-log__word {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] .kp-log__message {
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line:hover > * {
+        background: var(--muted);
+    }
+
+    /* No wrap: one line per message, the log scrolls sideways, the clock stays. */
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-logviewer__log {
+        grid-template-columns: auto auto auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-time='off'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-time='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__message {
+        overflow-wrap: normal;
+        white-space: pre;
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__time {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        background: var(--card);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__line:hover > .kp-log__time {
+        background: var(--muted);
+    }
+
+    /* The divider for the lines that came while the tab was away takes the whole row. */
+    .kp-logviewer__log > .kp-newpill__since {
+        grid-column: 1 / -1;
+    }
+
+    /* The find: a match is a mark with a weight as well as a ground, the current one is the filled plate with a rule round it. */
+    .kp-log__match {
+        padding-inline: 0.125em;
+        border-radius: calc(var(--radius, 0.5rem) / 4);
+        background: hsl(from var(--primary) h s l / 0.3);
+        color: inherit;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-log__match[data-kp-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+        text-decoration: none;
+    }
+
+    /* The foot: the count on the left, what the cap pushed out beside it. */
+    .kp-logviewer__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: 2.25rem;
+        box-sizing: border-box;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-logviewer__foot [hidden] {
+        display: none;
+    }
+
+    /* The states fill the whole stage; the lines already read stay in the buffer and are out of sight until the log answers. */
+    .kp-logviewer__plate {
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        z-index: 3;
+    }
+
+    .kp-logviewer[data-kp-log-plate='loading'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='error'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='empty'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='nomatch'] .kp-logviewer__log {
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+    .kp-logviewer[data-kp-log-plate='loading'] .kp-newpill,
+    .kp-logviewer[data-kp-log-plate='error'] .kp-newpill {
+        display: none;
+    }
+
+    .kp-logviewer__step {
+        min-inline-size: 2.5rem;
+    }
+
+    /* A narrow viewer: the search box takes its own row, then the count with the two arrows; the tools stand in two columns, so
+     * the buttons share one width and the rows line up. */
+    @container kp-logviewer (max-width: 40rem) {
+        .kp-logviewer__find {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__search {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+        }
+
+        .kp-logviewer__matches {
+            text-align: start;
+        }
+
+        .kp-logviewer__search > [data-kp-logviewer-only] {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__tools {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .kp-logviewer__tools > *,
+        .kp-logviewer__tools .kp-button {
+            inline-size: 100%;
+        }
+
+        .kp-logviewer__time {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__level-wrap {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            margin-inline-start: 0;
+        }
+    }
+}
+
+/* The find's mark and the stage's plate keep their place in the last layer: a register gives `.kp-alert` and `.kp-empty` a
+ * position of its own (pastel's printed pass) and beats the absolute placement in kp.components, which would put the plate
+ * back in the flow under the lines [gap-log-viewer]. */
+@layer kp.layout {
+    .kp-logviewer__stage > .kp-logviewer__plate {
+        position: absolute;
+        inset: 0;
+    }
+    /* gap-activity-feed:feed:start */
+    /* --- The activity feed [gap-activity-feed-1019] ------------------------------
+     * js/feed.js. Who did what, and when, day by day: a row is a state mark (the status
+     * row's shapes and glyph tokens, so a theme's step and status marks are one family),
+     * a title with its muted detail line, the identity chip of whoever started it and the
+     * time, which is the ticking `kp-ago` for the first 24 hours (js/freshness.js). The
+     * timeline's rule joins the marks of a day; a day heading (the thread's divider, with
+     * the day's count) separates the days. The list is ONE grid: the mark, the text, the
+     * actor and the time are columns every row of every day gives its parts to (subgrids),
+     * so the chips and the times stand under each other whichever row is longer, and the
+     * column is as wide as its longest chip and no wider [fix-64]. Loading, empty and
+     * failed fill the body's footprint (the busy card, the state plate), and the foot
+     * keeps the room of "Load earlier" in all four of its states, so nothing moves when
+     * one changes.
+     * Knobs [KT6]: --kp-feed-min (the body's least height, 20rem), --kp-feed-max (set by
+     * data-kp-feed-max: the list scrolls and the day headings stay), --kp-feed-pad (a
+     * row's air above and below, 0.625rem), --kp-feed-gap (between the columns),
+     * --kp-feed-actor-max (the chip column's ceiling, 12rem), --kp-feed-ground (what the
+     * sticky day headings are drawn on, the card), --kp-feed-foot-min, --kp-feed-head-min,
+     * and the status-row marks' --kp-statusrow-mark, --kp-statusrow-mark-radius and
+     * --kp-glyph-done, --kp-glyph-failed, --kp-glyph-warn. */
+    .kp-feed {
+        container: kp-feed / inline-size;
+        --kp-feed-mark-size: var(--kp-statusrow-mark, 1.25rem);
+        --kp-feed-row-pad: var(--kp-feed-pad, 0.625rem);
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-feed__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-feed-head-min, 2.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-feed__head[hidden],
+    .kp-feed__stale[hidden],
+    .kp-feed__fresh[hidden],
+    .kp-feed__state[hidden],
+    .kp-feed__skeleton[hidden],
+    .kp-feed__list[hidden] {
+        display: none;
+    }
+
+    .kp-feed__count {
+        color: var(--foreground);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-feed__fresh {
+        margin-inline-start: auto;
+    }
+
+    /* A refresh that failed while the rows are still good: the warning pair on its own plate, the reason in plain words, and the one button. */
+    .kp-feed__stale {
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-feed__stale-text {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* --- The body: the list, the skeleton and the state plate share one cell --- */
+    .kp-feed__body {
+        position: relative;
+        display: grid;
+        flex: 1 1 auto;
+        min-block-size: var(--kp-feed-min, 20rem);
+    }
+
+    .kp-feed__body > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    /* A list that scrolls keeps the wash of a failed row and the scrollbar clear of the text: the box has air of its own. */
+    .kp-feed[data-kp-feed-scroll] > .kp-feed__body {
+        max-block-size: var(--kp-feed-max);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        overflow: auto;
+        scrollbar-gutter: stable;
+    }
+
+    .kp-feed__state {
+        display: grid;
+    }
+
+    /* One grid for every day: mark, text, actor, time. The group, its rows and each row are subgrids of it. */
+    .kp-feed__list,
+    .kp-feed__rows {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-feed__list {
+        display: grid;
+        grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr) max-content max-content;
+        column-gap: var(--kp-feed-gap, var(--kp-space-md, 0.75rem));
+        align-content: start;
+    }
+
+    .kp-feed[data-kp-feed-actor-mode='off'] .kp-feed__list {
+        grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr) max-content;
+    }
+
+    .kp-feed__group,
+    .kp-feed__rows,
+    .kp-feed__row {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        min-inline-size: 0;
+    }
+
+    .kp-feed__group:not(:first-child) > .kp-feed__day {
+        margin-block-start: var(--kp-space-md, 0.75rem);
+    }
+
+    /* A day heading: the thread's divider, with the word first and the day's count at the end. */
+    .kp-feed__day {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        grid-column: 1 / -1;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        padding-block: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-feed__day-word {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-feed__day-date,
+    .kp-feed__day-summary {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-feed__day-rule {
+        flex: 1 1 var(--kp-space-lg, 1.5rem);
+        border-block-start: 1px solid var(--border-strong, var(--border));
+    }
+
+    .kp-feed[data-kp-feed-scroll] .kp-feed__day {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        margin-inline: calc(var(--kp-space-sm, 0.5rem) * -1);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        background: var(--kp-feed-ground, var(--card));
+    }
+
+    /* --- A row --- */
+    .kp-feed__row {
+        position: relative;
+        isolation: isolate;
+        align-items: start;
+        padding-block: var(--kp-feed-row-pad);
+    }
+
+    /* The mark sits on the title's first line: the cell is one line high and centres it. */
+    .kp-feed__mark-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        block-size: 1lh;
+    }
+
+    .kp-feed__mark {
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-feed-mark-size);
+        block-size: var(--kp-feed-mark-size);
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-statusrow-mark-radius, var(--kp-steplist-mark-radius, var(--kp-radius-pill, 999px)));
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-feed__mark > .kp-spinner {
+        --kp-spinner-size: var(--kp-feed-mark-size);
+    }
+
+    .kp-feed__row[data-state] .kp-feed__mark {
+        border-style: solid;
+    }
+
+    .kp-feed__row[data-state='ok'] .kp-feed__mark {
+        border-color: var(--success-foreground);
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-feed__row[data-state='ok'] .kp-feed__mark::after {
+        content: var(--kp-glyph-done, var(--kp-glyph-check, '✓'));
+    }
+
+    .kp-feed__row[data-state='failed'] .kp-feed__mark {
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-feed__row[data-state='failed'] .kp-feed__mark::after {
+        content: var(--kp-glyph-failed, '✕');
+    }
+
+    .kp-feed__row[data-state='warn'] .kp-feed__mark {
+        border-color: var(--warning-foreground);
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-feed__row[data-state='warn'] .kp-feed__mark::after {
+        content: var(--kp-glyph-warn, '!');
+    }
+
+    .kp-feed__row[data-state='info'] .kp-feed__mark {
+        border-color: var(--info-foreground);
+        background: var(--info);
+        color: var(--info-foreground);
+    }
+
+    .kp-feed__row[data-state='info'] .kp-feed__mark::after {
+        content: var(--kp-glyph-info, 'i');
+    }
+
+    .kp-feed__row[data-state='running'] .kp-feed__mark {
+        border-color: transparent;
+    }
+
+    /* A row that failed or needs attention is found at a glance: a faint wash of its own colour behind the whole row (the words keep the page's ink). */
+    .kp-feed__row:is([data-state='failed'], [data-state='warn'])::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-block: 0;
+        inset-inline: calc(var(--kp-space-sm, 0.5rem) * -1);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: color-mix(in oklab, var(--destructive) 8%, transparent);
+        pointer-events: none;
+    }
+
+    .kp-feed__row[data-state='warn']::after {
+        background: color-mix(in oklab, var(--warning) 40%, transparent);
+    }
+
+    /* The timeline's rule: from under this mark to above the next one, only inside a day. */
+    .kp-feed__row:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-inline-start: calc(var(--kp-feed-mark-size) / 2 - 0.5px);
+        inset-block-start: calc(var(--kp-feed-row-pad) + (1lh + var(--kp-feed-mark-size)) / 2 + 3px);
+        inset-block-end: calc((var(--kp-feed-row-pad) + (1lh - var(--kp-feed-mark-size)) / 2 - 3px) * -1);
+        inline-size: 1px;
+        background: var(--border-strong, var(--border));
+    }
+
+    .kp-feed[data-kp-feed-no-rail] .kp-feed__row::before {
+        content: none;
+    }
+
+    .kp-feed__text {
+        display: grid;
+        gap: 0.125rem;
+        min-inline-size: 0;
+    }
+
+    .kp-feed__title {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__detail {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__toggle,
+    .kp-feed__link {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-inline-size: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        font-weight: inherit;
+        text-align: start;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .kp-feed__toggle:hover > .kp-feed__title-text,
+    .kp-feed__link:hover > .kp-feed__title-text {
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-feed__toggle:focus-visible,
+    .kp-feed__link:focus-visible,
+    .kp-feed__open:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-feed__chevron {
+        display: inline-grid;
+        flex: none;
+        place-items: center;
+        inline-size: 1em;
+        color: var(--muted-foreground);
+    }
+
+    .kp-feed__chevron::before {
+        content: var(--kp-glyph-open, '›');
+        display: inline-block;
+    }
+
+    .kp-feed__toggle[aria-expanded='true'] > .kp-feed__chevron::before {
+        rotate: 90deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-feed__chevron::before {
+            transition: rotate var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* The lines that open under a row: a log excerpt in the mono face, on the muted plate. */
+    .kp-feed__more {
+        display: grid;
+        gap: 0.125rem;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.5;
+    }
+
+    .kp-feed__more[hidden] {
+        display: none;
+    }
+
+    .kp-feed__line {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__open {
+        justify-self: start;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        font-family: var(--font-sans, inherit);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The meta cell gives its two parts to the list's columns on a wide feed. */
+    .kp-feed__meta {
+        display: contents;
+    }
+
+    .kp-feed__actor,
+    .kp-feed__when {
+        display: flex;
+        align-items: center;
+        min-block-size: 1lh;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-feed__actor {
+        min-inline-size: 0;
+        max-inline-size: var(--kp-feed-actor-max, 12rem);
+    }
+
+    .kp-feed__actor-name {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__when {
+        justify-content: flex-end;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        text-align: end;
+    }
+
+    /* --- Loading: the final geometry in skeletons, the busy card laid over it by the script --- */
+    .kp-feed__skeleton {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-feed__skel-group {
+        display: grid;
+        gap: var(--kp-feed-row-pad);
+    }
+
+    .kp-feed__skel-day {
+        inline-size: 9rem;
+        block-size: 1rem;
+    }
+
+    .kp-feed__skel-row {
+        display: grid;
+        grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr) minmax(0, 7rem) minmax(0, 5rem);
+        align-items: center;
+        column-gap: var(--kp-feed-gap, var(--kp-space-md, 0.75rem));
+        padding-block: calc(var(--kp-feed-row-pad) / 2);
+    }
+
+    .kp-feed__skel-mark {
+        --kp-skeleton-circle: var(--kp-feed-mark-size);
+    }
+
+    .kp-feed__skel-text,
+    .kp-feed__skel-chip,
+    .kp-feed__skel-when {
+        block-size: 1rem;
+        margin: 0 !important;
+    }
+
+    .kp-feed__skel-text {
+        inline-size: 70%;
+    }
+
+    /* --- The foot: "Load earlier", the same room in all four states --- */
+    .kp-feed__foot {
+        display: grid;
+        justify-items: center;
+        align-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding-block: var(--kp-space-sm, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-feed__foot:not([data-kp-earlier='none']) {
+        min-block-size: var(--kp-feed-foot-min, 5.5rem);
+    }
+
+    .kp-feed__foot:empty {
+        display: none;
+    }
+
+    .kp-feed__foot-note {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__foot-note--error {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-feed__earlier {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 11rem;
+    }
+
+    .kp-feed__earlier > .kp-spinner {
+        --kp-spinner-size: 1.125rem;
+    }
+
+    /* A feed narrower than this puts the actor and the time on a line of their own under the text. */
+    @container kp-feed (max-width: 34rem) {
+        .kp-feed__list,
+        .kp-feed[data-kp-feed-actor-mode='off'] .kp-feed__list {
+            grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr);
+        }
+
+        .kp-feed__meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            grid-column: 2;
+            gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+            justify-content: space-between;
+        }
+
+        .kp-feed__actor {
+            max-inline-size: 100%;
+        }
+
+        .kp-feed__skel-row {
+            grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr) minmax(0, 4rem);
+        }
+
+        .kp-feed__skel-chip {
+            display: none;
+        }
+    }
+
+    /* gap-activity-feed:feed:end */
 }

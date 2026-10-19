@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="gap-log-viewer" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The live log viewer</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main glv-page">
+            <header>
+                <h1>The live log viewer</h1>
+                <p class="cat-intro">
+                    The admin dashboard of the homelab draws its host log by hand: the buffer, the search, the pause and the copy button. This page
+                    shows the package&rsquo;s version of it, built on the log you already have and on the &ldquo;N new lines&rdquo; pill. The lines
+                    are mock (a seeded homelab with jellyfin, sonarr and traefik); nothing is read from a host. 4 sections, 4 pairs, in formal.
+                </p>
+            </header>
+            <section
+                id="ring-section"
+                data-review-item="ring"
+                data-review-topic="logviewer"
+                data-review-topic-title="The live log viewer"
+                data-review-components="logviewer"
+                data-review-title="Lines keep arriving and the log keeps only the newest"
+                aria-labelledby="h-ring"
+            >
+                <div class="glv-intro">
+                    <h2 id="h-ring">Lines keep arriving and the log keeps only the newest</h2>
+                    <p>
+                        A host log that grows while you read it. The viewer keeps a fixed number of lines (here a small number, so you can see it),
+                        drops the oldest first and says how many it dropped. Following the newest line, Pause and the &ldquo;N new lines&rdquo; pill
+                        are the package&rsquo;s own.
+                    </p>
+                </div>
+                <div class="glv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            It opens with 46 lines and a cap of 60. <b>Add 10 lines</b> adds them at the foot and the view follows; the second press
+                            crosses the cap and the foot says <b>N earlier lines dropped, the newest 60 are kept</b>, with the exact number.
+                        </li>
+                        <li>
+                            Scroll up a little, then <b>Play once</b>: the view stays where you are and a pill says <b>N new lines</b> with the exact
+                            count; pressing it (or End) goes back to the newest line and follows again. <b>Pause</b> in the bar holds the view and
+                            becomes <b>Resume</b>.
+                        </li>
+                        <li>
+                            <b>Lines kept</b> 30, 60 or 200 changes the cap at once: at 30 the oldest lines leave the log and the dropped count grows,
+                            at 200 nothing is dropped.
+                        </li>
+                        <li>
+                            The level is a word first (WARNING, ERROR) and a tint second; each stack keeps its own hue; <b>Copy</b> says Copied
+                            without changing its width, <b>Download</b> saves a text file.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The viewer is the log of a homelab host: stacks such as jellyfin, sonarr and traefik write into one list. The panel is an
+                        opaque paper plate in a strong hairline with a 3 px navy rule on its start edge; things are ruled in from that edge in a
+                        straight line, nothing fades. Check that the text keeps clear of every edge, that the level colours still read as words first,
+                        and that nothing moves when a state changes.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="glv-ring">
+                    <div role="group" aria-label="Lines">
+                        <b>Lines:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-action="add">Add 10 lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-action="play">Play once</button>
+                    </div>
+                    <div role="group" aria-label="Lines kept" data-glv-group="cap">
+                        <b>Lines kept:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="cap" data-glv-value="30" aria-pressed="false">
+                            30
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="cap" data-glv-value="60" aria-pressed="true">60</button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="cap" data-glv-value="200" aria-pressed="false">
+                            200
+                        </button>
+                    </div>
+                </div>
+                <div id="glv-ring">
+                    <div
+                        class="kp-logviewer"
+                        data-kp-logviewer
+                        data-kp-log-max="60"
+                        data-kp-log-filename="host-log"
+                        aria-label="Host log, newest 60 lines"
+                    ></div>
+                </div>
+            </section>
+            <section
+                id="find-section"
+                data-review-item="find"
+                data-review-topic="logviewer"
+                data-review-components="logviewer"
+                data-review-title="Find a word in the log and walk the matches"
+                aria-labelledby="h-find"
+            >
+                <div class="glv-intro">
+                    <h2 id="h-find">Find a word in the log and walk the matches</h2>
+                    <p>
+                        Type in the search box, or press one of the words below it. Every match is marked, the count says how many there are, and
+                        Enter and Shift+Enter (or the two buttons) go from one to the next.
+                    </p>
+                </div>
+                <div class="glv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            It opens on <b>timeout</b>: the matches are marked in bold with an underline, the count says <b>N matches</b>, and the
+                            first press of <b>Next match</b> makes the first one the filled plate and reads <b>1 of N</b>, scrolling it into view.
+                        </li>
+                        <li><b>Nothing</b> clears the find; <b>zzz</b> finds nothing and says <b>No matches</b> with both buttons off.</li>
+                        <li>
+                            <b>Only matching lines</b> hides every line without a match; the foot says <b>N of 170 lines shown</b>. Off shows all
+                            again and the marks stay.
+                        </li>
+                        <li><b>/</b> jumps to the search from anywhere in the viewer; Esc in the box clears it.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The marks are the one place the page uses the primary colour for text; the current match is the filled plate with a rule round
+                        it. The panel is an opaque paper plate in a strong hairline with a 3 px navy rule on its start edge; things are ruled in from
+                        that edge in a straight line, nothing fades. Check that the text keeps clear of every edge, that the level colours still read
+                        as words first, and that nothing moves when a state changes.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="glv-find">
+                    <div role="group" aria-label="Find" data-glv-group="text">
+                        <b>Find:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="text" data-glv-value="" aria-pressed="false">
+                            Nothing
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="text" data-glv-value="timeout" aria-pressed="true">
+                            timeout
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="text" data-glv-value="jellyfin" aria-pressed="false">
+                            jellyfin
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="text" data-glv-value="zzz" aria-pressed="false">
+                            zzz
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Only matching lines" data-glv-group="only">
+                        <b>Only matching lines:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="only" data-glv-value="off" aria-pressed="true">
+                            Off
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="only" data-glv-value="on" aria-pressed="false">
+                            On
+                        </button>
+                    </div>
+                </div>
+                <div id="glv-find">
+                    <div
+                        class="kp-logviewer"
+                        data-kp-logviewer
+                        data-kp-log-max="400"
+                        data-kp-log-filename="host-log"
+                        aria-label="Host log with a search"
+                    ></div>
+                </div>
+            </section>
+            <section
+                id="look-section"
+                data-review-item="look"
+                data-review-topic="logviewer"
+                data-review-components="logviewer"
+                data-review-title="Wrap, the time column and the level"
+                aria-labelledby="h-look"
+            >
+                <div class="glv-intro">
+                    <h2 id="h-look">Wrap, the time column and the level</h2>
+                    <p>
+                        Three settings of how the lines look. Wrap decides whether a long line breaks or scrolls sideways, the time column can show
+                        the time, the date and time, or nothing, and the level hides the quiet lines.
+                    </p>
+                </div>
+                <div class="glv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Wrap On</b>: the two long lines (a stack trace and a database message) break and every line starts at the same column.
+                        </li>
+                        <li>
+                            <b>Wrap Off</b>: every line is one row and the log scrolls sideways; the time stays at the start edge while you scroll.
+                        </li>
+                        <li><b>Time column</b> Time, Date and time or Off: the columns after it close up with no gap left behind.</li>
+                        <li>
+                            <b>Level</b> Warning and above or Error and above hides the lines below it and the foot says <b>N of 28 lines shown</b>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Warnings carry a yellow plate on the word and errors a red one, with the same tone faint behind the whole line. The panel is
+                        an opaque paper plate in a strong hairline with a 3 px navy rule on its start edge; things are ruled in from that edge in a
+                        straight line, nothing fades. Check that the text keeps clear of every edge, that the level colours still read as words first,
+                        and that nothing moves when a state changes.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="glv-look">
+                    <div role="group" aria-label="Wrap" data-glv-group="wrap">
+                        <b>Wrap:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="wrap" data-glv-value="on" aria-pressed="true">
+                            On
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="wrap" data-glv-value="off" aria-pressed="false">
+                            Off
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Time column" data-glv-group="time">
+                        <b>Time column:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="time" data-glv-value="time" aria-pressed="true">
+                            Time
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="time" data-glv-value="datetime" aria-pressed="false">
+                            Date and time
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="time" data-glv-value="off" aria-pressed="false">
+                            Off
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Level" data-glv-group="level">
+                        <b>Level:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="level" data-glv-value="debug" aria-pressed="true">
+                            All
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="level" data-glv-value="warning" aria-pressed="false">
+                            Warning and above
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="level" data-glv-value="error" aria-pressed="false">
+                            Error and above
+                        </button>
+                    </div>
+                </div>
+                <div id="glv-look">
+                    <div
+                        class="kp-logviewer"
+                        data-kp-logviewer
+                        data-kp-log-max="200"
+                        data-kp-log-filename="host-log"
+                        aria-label="Host log with long lines"
+                    ></div>
+                </div>
+            </section>
+            <section
+                id="states-section"
+                data-review-item="states"
+                data-review-topic="logviewer"
+                data-review-components="logviewer"
+                data-review-title="Reading, no lines yet, could not read, nothing matches"
+                aria-labelledby="h-states"
+            >
+                <div class="glv-intro">
+                    <h2 id="h-states">Reading, no lines yet, could not read, nothing matches</h2>
+                    <p>The states of the viewer. Each one fills the whole log area, so the bar above it and the foot under it stay where they are.</p>
+                </div>
+                <div class="glv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Reading</b>: the theme&rsquo;s busy card is centred over the whole log area and moves; the bar stays.</li>
+                        <li>
+                            <b>No lines yet</b>: an empty plate at heading size, centred, saying new lines show up as they arrive.
+                            <b>Could not read</b>: a red plate with a normal-size <b>Retry</b>; Retry reads again for a moment and shows the lines.
+                        </li>
+                        <li>
+                            <b>Filter hides all</b>: a plate saying no line matches, with <b>Clear search and level</b> that brings the lines back.
+                        </li>
+                        <li>The height of the log area is the same in all five states, and so is everything around it.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Compare the height of the log area in every state against the lines; the plates are the theme&rsquo;s own empty and alert
+                        plates. The panel is an opaque paper plate in a strong hairline with a 3 px navy rule on its start edge; things are ruled in
+                        from that edge in a straight line, nothing fades. Check that the text keeps clear of every edge, that the level colours still
+                        read as words first, and that nothing moves when a state changes.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="glv-states">
+                    <div role="group" aria-label="State" data-glv-group="state">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="state" data-glv-value="lines" aria-pressed="true">
+                            Lines
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="state" data-glv-value="loading" aria-pressed="false">
+                            Reading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="state" data-glv-value="empty" aria-pressed="false">
+                            No lines yet
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="state" data-glv-value="error" aria-pressed="false">
+                            Could not read
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-glv-group="state" data-glv-value="filtered" aria-pressed="false">
+                            Filter hides all
+                        </button>
+                    </div>
+                </div>
+                <div id="glv-states">
+                    <div
+                        class="kp-logviewer"
+                        data-kp-logviewer
+                        data-kp-log-max="200"
+                        data-kp-log-filename="host-log"
+                        aria-label="Host log in its states"
+                    ></div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "gap-log-viewer-efbfabb8-a2c1-47e3-b3e1-235e42b0ddbf" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
