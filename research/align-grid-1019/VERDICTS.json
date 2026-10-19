@@ -1,4 +1,43 @@
 {
     "demo": "align-grid-1019",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "aligngrid-7ef59f03-3ba5-4693-9472-818f60de9fdb",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 11:22: 6 of 6 judged, 3 approved, 3 not approved. Approved: formal; the rest is being fixed.",
+            "approved": [
+                {
+                    "item": "form",
+                    "theme": "formal"
+                },
+                {
+                    "item": "request",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tools",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "settings",
+                    "theme": "formal",
+                    "note": "de eerste input en de items daarachter op de eerste rij zijn niet verticaal aligned met de eerste kilom"
+                },
+                {
+                    "item": "facts",
+                    "theme": "formal",
+                    "note": "[spacing] lellijke opmaak, alles staat zo ver van mekaar?"
+                },
+                {
+                    "item": "phone",
+                    "theme": "formal",
+                    "note": "Grid gebruiken, niet alles links alignen, maak het mooi!"
+                }
+            ],
+            "choices": []
+        }
+    ]
 }

@@ -1,4 +1,55 @@
 {
     "demo": "live-options-1019",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "live-options-e555dcab-eba4-4df6-9a04-52f46476da29",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 11:22: 10 of 10 judged, 10 approved. Approved in full: formal.",
+            "approved": [
+                {
+                    "item": "refresh-look",
+                    "theme": "formal"
+                },
+                {
+                    "item": "refresh-paused",
+                    "theme": "formal"
+                },
+                {
+                    "item": "newpill-placement",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sort-multi",
+                    "theme": "formal"
+                },
+                {
+                    "item": "filter-mode",
+                    "theme": "formal"
+                },
+                {
+                    "item": "lede-options",
+                    "theme": "formal"
+                },
+                {
+                    "item": "secret-options",
+                    "theme": "formal"
+                },
+                {
+                    "item": "palette-match",
+                    "theme": "formal"
+                },
+                {
+                    "item": "qr-retry",
+                    "theme": "formal"
+                },
+                {
+                    "item": "segmented-mode",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }

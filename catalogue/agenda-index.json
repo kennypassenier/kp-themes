@@ -1,112 +1,17 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
-        "research/round-4-1019/demo.html": {
-            "facts": {
-                "id": "round-4-1019",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Fixes from the project threads, each in the package: the heat grid's row and column names and the dependency list's status column; the path trace's verdict column and a long token in a diff line; a key figure's name and note, and the entity card's actions, meter tones and empty grid; and a form field filling its place and the problems' fix column. 11 pairs, all in formal. Every section says under What changed since you approved it what was wrong and what is different now.",
-                "sections": [
-                    { "item": "heat-label", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "heat-axis", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "deplist-state", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "trace-column", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "diff-line", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "kpi-label-hint", "themes": "formal", "topic": "kpi", "mode": null },
-                    { "item": "kpi-label-note", "themes": "formal", "topic": "kpi", "mode": null },
-                    { "item": "entity-actions", "themes": "formal", "topic": "entity", "mode": null },
-                    { "item": "entity-options", "themes": "formal", "topic": "entity", "mode": null },
-                    { "item": "field-fills", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "problems-edges", "themes": "formal", "topic": null, "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"round-4-1019-d130a4dd-81f9-44be-ae0d-50c09fa8e806\", \"received\": [] }\n        "
-            },
-            "fingerprint": "a28c46f312aee0fd",
-            "update": null
-        },
         "research/round-3-1019/demo.html": {
             "facts": {
                 "id": "round-3-1019",
                 "themes": "formal",
                 "ask": null,
                 "askText": "Fixes and options from the project threads, each in the package. The remind-me picker's width, the Copy button in a key-value cell, the checklist and timer list when loading, empty or failed; three options (action tile size, a calm freshness line counted in days, a computed field in a sentence form); the hover card on touch and the wheel's answer, kiosk and resting states; and the form grid (a form block's gap, a JSON field's action, the refresh bar's label, two review-kit measures). 16 pairs, all in formal. Every section says under What changed since you approved it what was wrong and what is different now.",
-                "sections": [
-                    { "item": "snooze-width", "themes": null, "topic": "snooze-width", "mode": null },
-                    { "item": "copyable-kv", "themes": null, "topic": "copyable-kv", "mode": null },
-                    { "item": "checklist-failed", "themes": null, "topic": "checklist-failed", "mode": null },
-                    { "item": "timers-states", "themes": null, "topic": "timers-states", "mode": null },
-                    { "item": "action-size", "themes": "formal", "topic": "action-size", "mode": null },
-                    { "item": "freshness-tone", "themes": "formal", "topic": "freshness-tone", "mode": null },
-                    { "item": "sentence-computed", "themes": "formal", "topic": "sentence-computed", "mode": null },
-                    { "item": "hovercard-touch", "themes": "formal", "topic": "hovercard", "mode": null },
-                    { "item": "wheel-kiosk", "themes": "formal", "topic": "wheel", "mode": null },
-                    { "item": "wheel-resting", "themes": "formal", "topic": "wheel", "mode": null },
-                    { "item": "wheel-answer", "themes": "formal", "topic": "wheel", "mode": null },
-                    { "item": "form-gap", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "json-action", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "refresh-label", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "check-segmented", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "check-buttons", "themes": "formal", "topic": null, "mode": null }
-                ],
+                "sections": [{ "item": "snooze-width", "themes": null, "topic": "snooze-width", "mode": null }],
                 "extra": null,
-                "round": "\n            { \"round\": \"round-3-1019-fa8ee9a3-f87d-4160-9200-87315ae33a90\", \"received\": [] }\n        "
+                "round": "\n            { \"round\": \"round-3-1019-be6803b3-833c-4da0-8625-887388e1f087\", \"received\": [\"round-3-1019-fa8ee9a3-f87d-4160-9200-87315ae33a90\"] }\n        "
             },
-            "fingerprint": "deb11628d9b93a6e",
-            "update": null
-        },
-        "research/round-2-1019/demo.html": {
-            "facts": {
-                "id": "round-2-1019",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Faults that the project threads found in components you approved earlier, each fixed in the package. Six components on a shared line (activity feed, lead list, problems, share bar, shortcuts, week), the calendar and the pipeline when empty or failed, the run timeline and the uses map, and the data table with its removed and held rows, date pills and action column. 19 sections, 19 pairs, all in formal. Every section says under What changed since you approved it what was wrong and what is different now.",
-                "sections": [
-                    { "item": "feed-line", "themes": "formal", "topic": "feed-line", "mode": null },
-                    { "item": "action-lead", "themes": "formal", "topic": "action-lead", "mode": null },
-                    { "item": "problems-cols", "themes": "formal", "topic": "problems-cols", "mode": null },
-                    { "item": "stackbar-legend", "themes": "formal", "topic": "stackbar-legend", "mode": null },
-                    { "item": "shortcuts-ends", "themes": "formal", "topic": "shortcuts-ends", "mode": null },
-                    { "item": "week-label", "themes": "formal", "topic": "week-label", "mode": null },
-                    { "item": "calendar-states", "themes": null, "topic": "calendar", "mode": null },
-                    { "item": "pipeline-states", "themes": null, "topic": "calendar", "mode": null },
-                    { "item": "gantt-names", "themes": "formal", "topic": "gantt", "mode": null },
-                    { "item": "gantt-zone", "themes": "formal", "topic": "gantt", "mode": null },
-                    { "item": "gantt-frame", "themes": "formal", "topic": "gantt", "mode": null },
-                    { "item": "gantt-rules", "themes": "formal", "topic": "gantt", "mode": null },
-                    { "item": "uses-labels", "themes": "formal", "topic": "uses-map", "mode": null },
-                    { "item": "uses-line", "themes": "formal", "topic": "uses-map", "mode": null },
-                    { "item": "table-removed-rows", "themes": "formal", "topic": "datatable", "mode": null },
-                    { "item": "table-held-row", "themes": "formal", "topic": "datatable", "mode": null },
-                    { "item": "table-date-pills", "themes": "formal", "topic": "datatable", "mode": null },
-                    { "item": "table-expand-single", "themes": "formal", "topic": "datatable", "mode": null },
-                    { "item": "reason-columns", "themes": "formal", "topic": "actions", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"round-2-1019-382869d9-92cf-437d-81cf-5098f9924499\", \"received\": [] }\n        "
-            },
-            "fingerprint": "1041e1f23334308d",
-            "update": null
-        },
-        "research/focus-tracks-1019/demo.html": {
-            "facts": {
-                "id": "focus-tracks-1019",
-                "themes": "formal",
-                "ask": null,
-                "askText": "You asked to cook the pasta while the sauce is made. A step can now belong to a track; the step of the track you are on stays large and every track stands in a lane with its place and its clock. 6 sections, 6 pairs (formal only: the lanes use the theme’s own buttons, bar and plates). Every option here only asks for its default. The recipe and the clock are mock data: the timers run about 20 times fast so a minute lasts 3 seconds.",
-                "sections": [
-                    { "item": "tracks", "themes": "formal", "topic": "tracks", "mode": null },
-                    { "item": "waiting", "themes": "formal", "topic": "waiting", "mode": null },
-                    { "item": "attention", "themes": "formal", "topic": "attention", "mode": null },
-                    { "item": "finished", "themes": "formal", "topic": "finished", "mode": null },
-                    { "item": "phone", "themes": "formal", "topic": "phone", "mode": null },
-                    { "item": "states", "themes": "formal", "topic": "states", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"focustracks-0f11141f-6ff4-41fd-98ab-48a790af283f\", \"received\": [] }\n        "
-            },
-            "fingerprint": "36ad9403c898ec1f",
+            "fingerprint": "3bbb6e8c556228af",
             "update": null
         },
         "research/app-homelab-stacks/demo.html": {
@@ -154,16 +59,13 @@
                 "askText": "You rejected seven settings sections for misalignment: a second column that was not uniform, rows off their labels, and “Send test” off the line of “Format” and “Minify”. The package now has one layout for all of these, .kp-formgrid: four columns, label, control, value and actions, that every row shares, so things line up by construction rather than by care. 6 sections, formal only; the content is made up. Every section names its grid under The grid. The project threads move their own pages onto it once you approve it, and a new measurement holds every demo to it.",
                 "sections": [
                     { "item": "settings", "themes": "formal", "topic": "settings", "mode": null },
-                    { "item": "form", "themes": "formal", "topic": "form", "mode": null },
                     { "item": "facts", "themes": "formal", "topic": "facts", "mode": null },
-                    { "item": "request", "themes": "formal", "topic": "request", "mode": null },
-                    { "item": "tools", "themes": "formal", "topic": "tools", "mode": null },
                     { "item": "phone", "themes": "formal", "topic": "phone", "mode": null }
                 ],
                 "extra": null,
-                "round": "\n            { \"round\": \"aligngrid-7ef59f03-3ba5-4693-9472-818f60de9fdb\", \"received\": [] }\n        "
+                "round": "\n            { \"round\": \"aligngrid-0e13cf1b-0cf3-409d-b7f8-9cf941e134c0\", \"received\": [\"aligngrid-7ef59f03-3ba5-4693-9472-818f60de9fdb\"] }\n        "
             },
-            "fingerprint": "cff66b25a66c1cdf",
+            "fingerprint": "554689a91fc22161",
             "update": null
         },
         "research/app-hsb-align/demo.html": {
@@ -237,44 +139,11 @@
                 "themes": "formal",
                 "ask": null,
                 "askText": "Your rule is that a failed, empty or loading component fills the whole size it has with its data, centred, with a normal-size Retry, and the loading card sits over the whole component. The gaps the projects found were components that did not follow it: the network graph, the data table, the heat grid and matrix, the run timeline, the week agenda, a group of uptime strips and the card’s notes. They all use the package’s one state plate and loading card now. 8 sections, formal only (every fix is the theme’s own plate and loading card, so the other themes follow). Each section says under What changed since you approved it what was wrong and what is different now. Press a state under the section’s title to see it.",
-                "sections": [
-                    { "item": "graph-states", "themes": null, "topic": "graph", "mode": null },
-                    { "item": "table-states", "themes": null, "topic": "table", "mode": null },
-                    { "item": "heat-states", "themes": null, "topic": "heat", "mode": null },
-                    { "item": "matrix-states", "themes": null, "topic": "heat", "mode": null },
-                    { "item": "gantt-states", "themes": null, "topic": "time", "mode": null },
-                    { "item": "week-states", "themes": null, "topic": "time", "mode": null },
-                    { "item": "uptime-group", "themes": null, "topic": "time", "mode": null },
-                    { "item": "card-states", "themes": null, "topic": "card", "mode": null }
-                ],
+                "sections": [{ "item": "graph-states", "themes": null, "topic": "graph", "mode": null }],
                 "extra": null,
-                "round": "\n            { \"round\": \"state-plates-0f2626d7-9b76-45d9-abc0-088f54516acd\", \"received\": [] }\n        "
+                "round": "\n            { \"round\": \"state-plates-3c06b96c-833d-419f-84e3-03a5d636617a\", \"received\": [\"state-plates-0f2626d7-9b76-45d9-abc0-088f54516acd\"] }\n        "
             },
-            "fingerprint": "41fa5d204014b8f6",
-            "update": null
-        },
-        "research/live-options-1019/demo.html": {
-            "facts": {
-                "id": "live-options-1019",
-                "themes": "formal",
-                "ask": null,
-                "askText": "A choice a page could make with an attribute (segments or a menu, where a pill stands, how a table sorts, how a palette matches) was read once, when the component appeared, so changing the attribute later did nothing. Your rule (17/10) is that such a variant is an option with a default that switches at runtime. These ten components now do, and the refresh control also stops ignoring Refresh now, the R key and Retry now while it is paused. 10 pairs in all, formal only. In each section the buttons above the component set the very attribute a page would set; the component follows at once, and the line under it shows the effect. Each section says under What changed since you approved it what was wrong and what is different now.",
-                "sections": [
-                    { "item": "refresh-look", "themes": null, "topic": "refresh", "mode": null },
-                    { "item": "refresh-paused", "themes": null, "topic": "refresh", "mode": null },
-                    { "item": "newpill-placement", "themes": null, "topic": "newpill", "mode": null },
-                    { "item": "sort-multi", "themes": null, "topic": "datatable", "mode": null },
-                    { "item": "filter-mode", "themes": null, "topic": "datatable", "mode": null },
-                    { "item": "lede-options", "themes": null, "topic": "lede", "mode": null },
-                    { "item": "secret-options", "themes": null, "topic": "secret", "mode": null },
-                    { "item": "palette-match", "themes": null, "topic": "palette", "mode": null },
-                    { "item": "qr-retry", "themes": null, "topic": "qr", "mode": null },
-                    { "item": "segmented-mode", "themes": null, "topic": "segmented", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"live-options-e555dcab-eba4-4df6-9a04-52f46476da29\", \"received\": [] }\n        "
-            },
-            "fingerprint": "7eed59f7eee5fe15",
+            "fingerprint": "d6bb143e3ad07d6f",
             "update": null
         },
         "research/app-homelab-settings/demo.html": {
@@ -628,6 +497,10 @@
     "decided": {
         "research/audhd-recepten/grid-fix/demo.html": "2026-10-19 09:22, Kenny: every pair approved (research/audhd-recepten/grid-fix/VERDICTS.json)",
         "research/chassis-kit-pages/demo.html": "",
+        "research/focus-tracks-1019/demo.html": "2026-10-19 11:22, Kenny: every pair approved (research/focus-tracks-1019/VERDICTS.json)",
+        "research/live-options-1019/demo.html": "2026-10-19 11:22, Kenny: every pair approved (research/live-options-1019/VERDICTS.json)",
+        "research/round-2-1019/demo.html": "2026-10-19 11:22, Kenny: every pair approved (research/round-2-1019/VERDICTS.json)",
+        "research/round-4-1019/demo.html": "2026-10-19 11:22, Kenny: not reviewed. Not reviewed: fixes to approved components ship without a demo (Kenny, 2026-10-19 11:22)",
         "research/audhd-recepten/cook/demo.html": "2026-10-19 06:43, Kenny: 5 of 5 approved, defaults kept (research/audhd-recepten/cook/VERDICTS.json)",
         "research/audhd-recepten/wheel/demo.html": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed for every theme: \"All slices equal\" (research/audhd-recepten/wheel/VERDICTS.json)",
         "research/audhd-recepten/timing/demo.html": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed: the start disc is \"A 60-minute dial\" (research/audhd-recepten/timing/VERDICTS.json)",

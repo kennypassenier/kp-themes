@@ -1,5 +1,7 @@
 # research/round-2-1019: fixes from the project threads, round 2
 
+**Decided (2026-10-19 11:22):** Kenny approved every pair. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `round-2-1019-382869d9-92cf-437d-81cf-5098f9924499` (2026-10-19): 19 sections, 19 pairs, formal only (none of the faults depends on the theme).
 
 Four package-fix demos in ONE review page (Kenny, 2026-10-19 02:38: "als ze van hetzelfde project komen kan je ze bundelen tot 25 items

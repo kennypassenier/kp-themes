@@ -1,5 +1,7 @@
 # research/round-4-1019: fixes from the project threads, round 4
 
+**Decided (2026-10-19 11:22):** Not reviewed: fixes to approved components ship without a demo (Kenny, 2026-10-19 11:22). The page is not offered.
+
 Round id is in `demo.html` (2026-10-19): 11 sections, 11 pairs, formal only; `kpi-label-note` and `field-fills` carry a control group (tile kind, field kind) so the variants gate sees the toggle tile and the check and error fields (none of the changes depends on the theme).
 
 Four demos in ONE review page (at most 25 items, as in rounds 2 and 3). **Generated** by `node research/round-4-1019/build.mjs`; edit the source demos, never this page. The four source folders stay as the sources and are no longer on the Agenda (`"bundledInto": "round-4-1019"` in their `VERDICTS.json`); the page reads their `demo.html` for the sections and loads their `demo.js` and `page.css` as they are.

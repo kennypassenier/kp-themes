@@ -1,4 +1,91 @@
 {
     "demo": "round-2-1019",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "round-2-1019-382869d9-92cf-437d-81cf-5098f9924499",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 11:22: 19 of 19 judged, 19 approved. Approved in full: formal.",
+            "approved": [
+                {
+                    "item": "feed-line",
+                    "theme": "formal"
+                },
+                {
+                    "item": "action-lead",
+                    "theme": "formal"
+                },
+                {
+                    "item": "problems-cols",
+                    "theme": "formal"
+                },
+                {
+                    "item": "stackbar-legend",
+                    "theme": "formal"
+                },
+                {
+                    "item": "shortcuts-ends",
+                    "theme": "formal"
+                },
+                {
+                    "item": "week-label",
+                    "theme": "formal"
+                },
+                {
+                    "item": "calendar-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "pipeline-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt-names",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt-zone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt-frame",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt-rules",
+                    "theme": "formal"
+                },
+                {
+                    "item": "uses-labels",
+                    "theme": "formal"
+                },
+                {
+                    "item": "uses-line",
+                    "theme": "formal"
+                },
+                {
+                    "item": "table-removed-rows",
+                    "theme": "formal"
+                },
+                {
+                    "item": "table-held-row",
+                    "theme": "formal"
+                },
+                {
+                    "item": "table-date-pills",
+                    "theme": "formal"
+                },
+                {
+                    "item": "table-expand-single",
+                    "theme": "formal"
+                },
+                {
+                    "item": "reason-columns",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }

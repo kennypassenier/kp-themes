@@ -1,4 +1,81 @@
 {
     "demo": "round-3-1019",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "round-3-1019-fa8ee9a3-f87d-4160-9200-87315ae33a90",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 11:22: 16 of 16 judged, 15 approved, 1 not approved. Approved: formal; the rest is being fixed.",
+            "approved": [
+                {
+                    "item": "copyable-kv",
+                    "theme": "formal"
+                },
+                {
+                    "item": "checklist-failed",
+                    "theme": "formal"
+                },
+                {
+                    "item": "timers-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "action-size",
+                    "theme": "formal"
+                },
+                {
+                    "item": "freshness-tone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sentence-computed",
+                    "theme": "formal"
+                },
+                {
+                    "item": "hovercard-touch",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel-kiosk",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel-resting",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel-answer",
+                    "theme": "formal"
+                },
+                {
+                    "item": "form-gap",
+                    "theme": "formal"
+                },
+                {
+                    "item": "json-action",
+                    "theme": "formal"
+                },
+                {
+                    "item": "refresh-label",
+                    "theme": "formal"
+                },
+                {
+                    "item": "check-segmented",
+                    "theme": "formal"
+                },
+                {
+                    "item": "check-buttons",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "snooze-width",
+                    "theme": "formal",
+                    "note": "Gebruik het grid en align deftig verticaal! De helft van de knoppen overlaps en vele dingen zijn verticaal veel te hoog en horizontaal veel te kort! gebruik de hele ruimte van het element!"
+                }
+            ],
+            "choices": []
+        }
+    ]
 }

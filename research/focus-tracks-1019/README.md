@@ -1,5 +1,7 @@
 # research/focus-tracks-1019: cook mode with parallel tracks
 
+**Decided (2026-10-19 11:22):** Kenny approved every pair. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `focustracks-<uuid>` (see `demo.html`, 2026-10-19): 6 sections, 6 pairs (formal only; the lanes use the theme's own buttons, bar and
 plates). Kenny, AuDHD recipes: "ondersteuning om verschillende stappen gelijktijdig te doen, bv de pasta koken terwijl we met de saus bezig
 zijn" (gaps 7, 26, 31, 33 of audhd-recepten). It changes an approved component (research/audhd-recepten/cook), so it comes back through the

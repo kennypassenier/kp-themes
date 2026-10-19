@@ -1,5 +1,7 @@
 # research/live-options-1019: options that were read once now follow their attribute
 
+**Decided (2026-10-19 11:22):** Kenny approved every pair. Recorded in `VERDICTS.json`; the page is not offered again.
+
 **Waiting for a verdict (2026-10-19).** Round `live-options-e555dcab-eba4-4df6-9a04-52f46476da29`: 10 sections, 10 pairs (formal only; nothing
 here looks different per theme). They change components Kenny had approved, so they come back through the review dialog with a "What changed
 since you approved it" text (DEMO_RULES ch. 2, 7 and 9). The fixes are in the package (js/, one new module), published with the next release
