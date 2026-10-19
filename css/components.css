@@ -1365,6 +1365,20 @@
         grid-column: 1;
     }
 
+    /* [kpi-label-hint-1019] The label's track is never narrower than its
+ * longest word: the hint's `auto` track took what it asked for and left
+ * the label 29.5 px in a 148 px tile, so "Delivered" broke into "DEL / IVE
+ * / RED" (almanac 23). Short of room the hint's own words wrap in its
+ * track, and the hint's track is never narrower than its longest word
+ * either, so no word of either is ever cut. */
+    .kp-kpi--toggle:has(> .kp-kpi__hint) {
+        grid-template-columns: minmax(min-content, 1fr) minmax(min-content, auto);
+    }
+
+    .kp-kpi--toggle > .kp-kpi__hint {
+        text-align: end;
+    }
+
     .kp-kpi > .kp-kpi__hint {
         grid-row: 1;
         grid-column: 2;
@@ -1500,6 +1514,17 @@
                 opacity: 0;
             }
         }
+    }
+
+    /* [entity-meter-tone-1019] A good share (free space, uptime) and a share
+ * that is neither: `success` and `neutral`, so a card need not wear the
+ * warning scale when a high reading is fine. */
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='success'] {
+        --kp-meter-fill-colour: var(--success-foreground);
+    }
+
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='neutral'] {
+        --kp-meter-fill-colour: var(--muted-foreground);
     }
 
     :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
@@ -1675,6 +1700,36 @@
         overflow-wrap: break-word;
         text-overflow: clip;
         white-space: normal;
+    }
+
+    /* [kpi-label-note-1019] The note's dot only stands between the name and
+ * the note on one line, never at the start of a line (kyu 14: "· SAMPLE
+ * DATA" under the name). The label is a wrapping flex row: the name and the
+ * note are two items, the note moves to the next line as one unit, and the
+ * dot hangs in the gap before it, outside the label's start edge, where
+ * a clip of that edge alone hides it when the note starts a line. */
+    .kp-kpi--trend > .kp-kpi__label:has(> .kp-kpi__label-note) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 0.75em;
+        /* Only the start edge clips: a note longer than the label's box (it
+         * keeps clear of the corner link) still runs on past the end edge. */
+        clip-path: inset(-0.5em -100vmax -0.5em 0);
+    }
+
+    .kp-kpi--trend > .kp-kpi__label:has(> .kp-kpi__label-note):dir(rtl) {
+        clip-path: inset(-0.5em 0 -0.5em -100vmax);
+    }
+
+    .kp-kpi--trend > .kp-kpi__label > .kp-kpi__label-note {
+        position: relative;
+    }
+
+    .kp-kpi--trend > .kp-kpi__label > .kp-kpi__label-note::before {
+        content: '·';
+        position: absolute;
+        inset-inline-end: calc(100% + 0.25em);
     }
 
     /* Every state as tall as filled: the value line keeps its height under
@@ -29653,9 +29708,16 @@
         white-space: nowrap;
     }
 
+    /* [entity-actions-equal-1019] The columns are equal (`minmax(0, 1fr)`),
+ * so the same action is one width on every card; `min-content` let a track
+ * grow with its words ("Recheck this profile" against "Try a translation")
+ * and the columns of one card differ from the next's (http-switchboard 33).
+ * A button whose longest word does not fit its column goes into "More" for
+ * the whole grid (fitActions in js/entity-card.js), as one that ran past the
+ * card's edge did. */
     .kp-entity__actions {
         display: grid !important;
-        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(min-content, 1fr));
+        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
         gap: var(--kp-space-sm, 0.5rem);
         align-items: center;
         padding-block-start: var(--kp-entity-actions-gap, var(--kp-space-md, 0.75rem));
@@ -29677,6 +29739,17 @@
 
     .kp-entity__actions .kp-button {
         overflow-wrap: normal;
+    }
+
+    /* A long label wraps onto a second line in its button, so every button of
+ * the row takes the row's height, and the buttons of the row stay level
+ * [entity-actions-equal-1019]. */
+    .kp-entity__actions > :is(.kp-button, .kp-menu-button) {
+        align-self: stretch;
+    }
+
+    .kp-entity__actions > .kp-menu-button {
+        display: grid;
     }
 
     .kp-entity__actions > .kp-entity__retry {

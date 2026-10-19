@@ -2687,7 +2687,7 @@ and `setEntity(card, data)` draws one. Every row is kept whether it holds anythi
 button, and a flag that does not fit the width goes there too), `-inline` (3 action buttons in fixed columns, the rest in "More"; under 30rem all fold into "More", and a button that does not fit the card's width folds into it too, for every card of the grid; the grid notes it in `data-kp-entity-fit`, written), `-link` (the name's link template, stretched over the card), `-mark`, `-min` (22rem) on the grid or a card,
 `data-kp-selectable` (a tick; the card is a row of a selection) and `data-kp-density="compact"` (no figures row); every attribute draws the cards again. Events `kp-entity-action`, `kp-entity-flag`, `kp-entity-tick`, `kp-entity-retry`, `kp-entity-new`,
 `kp-entity-grid-retry`. A card with `status: 'loading' | 'empty' | 'error'` shows bones, "not measured" or a failed state with Retry at the same height; `setEntityGridState(grid, 'loading' | 'empty' | 'error')` shows skeleton cards under the busy card,
-the empty plate "No stacks yet" with its action, or the failed plate with Retry. The words are `entity…`.
+the empty plate "No stacks yet" with its action, or the failed plate with Retry. The action columns are equal on every card (a long label wraps inside its button). A meter's `tone` takes `success`, `neutral`, `warning` or `destructive` (none: amber from 75 %, red from 90 %). The empty plate takes `{ action: 'none', actionLabel, onAction }` (also `setEntityGrid(grid, [], options)`, and `data-kp-entity-empty-action="none"` on the grid); `onAction` runs in place of `kp-entity-new`. The words are `entity…`.
 
 <!-- kpadopt4-ideas: next component -->
 
