@@ -1,0 +1,1831 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-homelab-backups" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Homelab dashboard: operations · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hb-page">
+            <header class="hb-intro">
+                <h1>Homelab dashboard: operations — backups, restore, firewall, host and console</h1>
+                <p class="cat-intro">
+                    The operations half of the homelab admin dashboard on kp-themes 11.0.0, in 25 sections that each ask one decision: Backups with the
+                    coverage grid, the grouped repositories, the Month view, one night in detail and Restore (5); the Firewall with totals that
+                    filter, a hop-by-hop path trace, the rules table, lines against grid, live against files and a guard before editing (6); the
+                    Host and System with the disk and thin pool, the checks with their remedy, one refresh control, the containers, the landing
+                    tiles, versions and the line to the host (7); and the Console with its history, safety, session tools, pane or bar, the host
+                    log and the keys (7).
+                </p>
+                <p>
+                    Mock on this page: all the data. The stacks and containers (traefik CT 104, jellyfin CT 106, kyu CT 109, almanac CT 112, metrics
+                    CT 113, inbox CT 118, admin CT 120, host pve), sizes, times, rules and log lines are made up in the shapes the dashboard reads
+                    (<code>/data/backups/&lt;stack&gt;</code>, <code>/data/firewall</code>, the doctor report, <code>shellTargets()</code>), and the
+                    page works the answers out from them. The clock stands at Monday 19/10/2026 14:05; the nightly round starts at 03:00. Nothing
+                    restores, applies or runs anything. Needs the host to change before it is real: a bounded history read for the 7, 30 and 90 night
+                    ranges (backend item C8), a job that reports bytes for the restore progress (C5), ping history for 24 hours and 90 days (C2) and a
+                    job cancel (C11); each is shown here with sample data. The Firewall page's topology figure and the Map's network drawing keep their
+                    own look and are not on this page. Judge in the review dialog; nothing moves until you press a button.
+                </p>
+            </header>
+
+            <!-- ================================================================ 1. the coverage grid -->
+            <section
+                class="hb-sec"
+                id="grid"
+                data-review-item="grid"
+                data-review-topic="grid"
+                data-review-topic-title="Coverage grid: stacks by nights"
+                data-review-components="heat hovercard keys freshness"
+                data-review-title="The coverage grid: every stack against every night"
+                data-review-choices='[{ "id": "backups-weekend", "label": "How the weekend nights read in the grid", "once": true, "default": "quiet", "options": [
+                    { "value": "quiet", "label": "Quiet", "hint": "Recommended. Saturday and Sunday carry no day number, so the weeks show as gaps in the axis and a missed Sunday does not read as a missed Monday." },
+                    { "value": "plain", "label": "Plain", "hint": "Every named night shows its number, weekends included. Simpler, but the weeks no longer show in the axis." }] }]'
+                aria-labelledby="h-grid"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-grid">The coverage grid: every stack against every night</h2>
+                    <p>
+                        Shows, for each stack, whether a backup landed on each of the last 30 nights, so a missed night stands out at a glance and one
+                        press pins it.
+                    </p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Thirteen stack rows (a small colour square before each name) and a <b>Whole fleet</b> row on top whose cells fill from the
+                            bottom by the share of stacks backed up. Thirty night columns, the last one <b>19/10</b>. <b>syncthing</b> is named in a
+                            soft ink and its cells say <b>keeps no data by design</b>. <b>grafana</b> and <b>admin</b> start later: the nights before
+                            are <b>before any history</b>, not missed.
+                        </li>
+                        <li>
+                            Missed nights are red and come with a reason on hover: <b>loki</b> on 14/10 (disk full), <b>inbox</b> on 17/10 and 18/10,
+                            <b>almanac</b> on 12/10, <b>vaultwarden</b> on 29/09. The fleet row for those nights is amber (some stacks missed).
+                        </li>
+                        <li>
+                            Press a cell: its night is pinned (the line under the grid names it and who missed it); press again or <b>Esc</b> to
+                            unpin. Press a stack name: only that stack stays lit and the line says so (<b>the page filters, the grid reports</b>).
+                            Arrow keys move, <b>Page Up</b> and <b>Page Down</b> page, and so do the <b>Earlier</b> and <b>Later</b> buttons;
+                            <b>Today</b> goes back.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the whole grid; <b>Empty</b> and <b>Failed</b> fill the same height with a plate
+                            and a normal-size action (<b>Reload</b>). The legend and the paging buttons are the page's own (the package gets its
+                            legend helper later); they keep their place in every state.
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): whether weekend nights read quiet. Both are real options, the buttons flip them,
+                            and nothing is required.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        White grid on a hairline, navy for the pin, green and red cells with an amber fleet row where stacks differ. Look at: the red
+                        cells being distinguishable without colour (the hover card names them), the names of the stacks never touching the cells, the
+                        night numbers keeping a gap, and that the grid keeps its height with the legend and the buttons below it in every state.
+                    </p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="grid-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-grid-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-grid-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-grid-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-grid-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Weekend nights">
+                        <b>Weekend nights</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-weekend="quiet">Quiet</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-weekend="plain">Plain</button>
+                    </div>
+                </div>
+                <div class="hb-frame" id="grid-component">
+                    <div class="hb-bar3">
+                        <div class="a hb-pill-row">
+                            <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-hb-earlier>‹ Earlier</button>
+                            <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-hb-later>Later ›</button>
+                            <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-hb-today>Today</button>
+                        </div>
+                        <div class="b"><span class="hb-bar__range" data-hb-range></span></div>
+                        <div class="c"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-grid-ago></time></div>
+                    </div>
+                    <div class="hb-heat" id="hb-grid-heat">
+                        <div class="kp-heat" data-kp-heat data-kp-heat-toggle data-hb-heat="grid"></div>
+                    </div>
+                    <ul class="kp-heat__legend" aria-label="Legend">
+                        <li><span class="kp-heat__swatch" data-kp-tone="ok"></span> backed up</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="warn"></span> some stacks missed</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="bad"></span> missed</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="before"></span> before any history</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="none"></span> keeps no data</li>
+                        <li data-kp-end><span class="kp-keys" data-hb-keys="grid"></span></li>
+                    </ul>
+                    <div class="hb-grid">
+                        <p class="hb-readout hb-c6" role="status" data-hb-grid-pin>No night pinned. Press a cell to pin its night.</p>
+                        <p class="hb-readout hb-c6" role="status" data-hb-grid-rows>All stacks shown. Press a stack name to show only that one.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ 2. repositories -->
+            <section
+                class="hb-sec"
+                id="repos"
+                data-review-item="repos"
+                data-review-topic="repos"
+                data-review-topic-title="Repositories: grouped table"
+                data-review-components="datatable stackbar facets selection-bar uptime barcell"
+                data-review-title="The repositories: one grouped, expandable table"
+                data-review-choices='[{ "id": "backups-groups", "label": "Whether the stack groups start folded", "once": true, "default": "open", "options": [
+                    { "value": "open", "label": "Open", "hint": "Recommended. Every stack shows its repositories at once, so a failed drill or an old snapshot is visible without a click." },
+                    { "value": "folded", "label": "Folded", "hint": "Only the 12 stack headings (with their counts) show; press one to open it. Shorter, but nothing is visible until you open it." }] }]'
+                aria-labelledby="h-repos"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-repos">The repositories: one grouped, expandable table</h2>
+                    <p>
+                        Lists every backup repository under its stack, shows which stack takes the space on the backup disk, and lets you open one to
+                        see its snapshots and restore from them.
+                    </p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Above the table a bar splits <b>16 repositories, 165.7 GB of 500 GB</b> by stack; press a part (or its legend row) and the
+                            table and the stack list on the left show only that stack. Press it again to show all. The list under the bar is the same
+                            filter with a swatch and pattern per stack, the number of repositories, and an <b>only</b> button.
+                        </li>
+                        <li>
+                            Under each stack heading (mark, name, count, <b>Restore…</b> for the whole stack) its repositories stand in columns:
+                            <b>Last 7 nights</b> (one cell per night with its share and incidents above, hover a night for the time or why it is
+                            missing), <b>Snapshots</b>, <b>Size</b> (a bar relative to the biggest, sorted by the real number, so 9 GB sorts before
+                            10.2 GB), <b>Restore drill</b> (failed, never drilled, passed) and <b>Restore…</b>, which stands in the same column on
+                            every row.
+                        </li>
+                        <li>
+                            Press a row's arrow: its snapshots open under it (id, taken, age, size, <b>Restore…</b> and <b>Show a file…</b> per
+                            snapshot, in two fixed columns). The search, the filters (<b>Stack</b>, <b>Restore drill</b>) and the sort, with
+                            <b>Shift</b> for a second sort key, are remembered. Sort <b>Restore drill</b>: failed first, then never drilled, then
+                            passed.
+                        </li>
+                        <li>
+                            Tick rows: a bar says <b>3 repositories selected</b> with their names and <b>Verify restore</b> and <b>Back up now</b>.
+                            Pressing one shows the work (spinner and words), then the result; with <b>Some refused</b> it ends
+                            <b>2 done, 1 refused</b>
+                            with the reason on the refused row.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the table, <b>Empty</b> and <b>Failed</b> fill the same height with a plate and
+                            <b>Try again</b>; the bar and the list follow. On a 390 px phone the rows become cards and each heading stays above its
+                            own cards.
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): whether the stack groups start open or folded. Both are real; the buttons flip
+                            them.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Heading rows read as headings (a light ground, the stack mark, a count badge), the bar parts match the swatches in the list,
+                        and the buttons of every row share one column. Look at: the 7-night cells keeping a gap to their neighbours, the size bar not
+                        touching the number, the badges never breaking a word, and the table keeping its height in every state.
+                    </p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="repos-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-repos-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-repos-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-repos-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-repos-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Groups">
+                        <b>Groups</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-groups="open">Open</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-groups="folded">Folded</button>
+                    </div>
+                    <div role="group" aria-label="Next action on the selection">
+                        <b>Next action</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-outcome="done">All done</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-outcome="refused">Some refused</button>
+                    </div>
+                </div>
+                <div class="hb-frame hb-repos" id="repos-component">
+                    <div class="hb-repos__main">
+                        <figure class="kp-stackbar" data-hb-stackbar></figure>
+                        <div class="hb-repos__facets">
+                            <h3 class="kp-facets__title" id="hb-h-stack">Stack</h3>
+                            <div
+                                class="kp-facets kp-facets--row"
+                                data-kp-facets
+                                data-kp-facets-all="All stacks"
+                                role="group"
+                                aria-labelledby="hb-h-stack"
+                                data-hb-facets
+                            >
+                                <ul class="kp-facets__list"></ul>
+                                <p class="kp-facets__empty" hidden>No stacks yet.</p>
+                            </div>
+                        </div>
+                        <div data-hb-bar-slot></div>
+                        <div class="hb-table" data-hb-table></div>
+                        <pre class="hb-log" aria-live="polite" data-hb-repos-log>
+Press a button in a row, a heading or the selection bar; what it would do shows here.</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ 3. month view -->
+            <section
+                class="hb-sec"
+                id="month"
+                data-review-item="month"
+                data-review-topic="month"
+                data-review-topic-title="Month view"
+                data-review-components="segmented range calendar heat"
+                data-review-title="The Month view: the Calendar merged into Backups"
+                data-review-choices='[{ "id": "backups-opens-on", "label": "What Backups opens on", "once": true, "default": "nights", "options": [
+                    { "value": "nights", "label": "Nights", "hint": "Recommended. The last 30 nights, the view you use every day; the Month is one press away." },
+                    { "value": "month", "label": "Month", "hint": "The calendar of this month with the stack grid beside it. Better for looking back past 30 nights, worse for the daily glance." }] },
+                    { "id": "backups-cal-busy", "label": "How the calendar shows loading", "once": true, "default": "kp-calendar--busy-whole", "options": [
+                    { "value": "kp-calendar--busy-whole", "label": "One spinner for the calendar", "hint": "Recommended. One larger spinner on a card in the middle while the whole month loads; the grid keeps its height." },
+                    { "value": "kp-calendar--busy-days", "label": "A spinner in each day", "hint": "A spinner on the count line of every day that loads. Busier, but each day says it is waiting." }] }]'
+                aria-labelledby="h-month"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-month">The Month view: the Calendar merged into Backups</h2>
+                    <p>
+                        Replaces the separate Calendar page with a switch on Backups: the last nights as a grid, or one month as a calendar with the
+                        same grid beside it.
+                    </p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A switch <b>Nights | Month</b> and, in Nights, a range <b>7 days | 30 days | 90 days</b>. Nights shows that many columns
+                            of the grid from the first section (13 rows); 90 days names every seventh night. Month shows October 2026 as a calendar
+                            (each day says <b>12/12</b>, stacks backed up of stacks that keep data; days after 19/10 are <b>not run yet</b>) and,
+                            beside it, the grid of the same month: 13 rows by 31 columns.
+                        </li>
+                        <li>
+                            Press a day or a grid cell: the other follows, and the line under them names the night, the stacks that missed it and why.
+                            <b>‹ Prev</b> and <b>Next ›</b> change month in both at once: September 2026 shows <b>vaultwarden</b> missed on 29/09 and
+                            no history for <b>grafana</b> and <b>admin</b> before their first night.
+                        </li>
+                        <li>
+                            A missed night offers <b>Back up inbox now</b> (the same repair as the night detail section); it shows the work and then
+                            the result in the line. The calendar's heading is a level-2 heading, so the page keeps one h1.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the calendar and the grid, <b>Empty</b> and <b>Failed</b> fill the same height with
+                            a plate and <b>Reload</b>. The frame keeps its height when the switch changes view.
+                        </li>
+                        <li><b>The choices</b> (in the dialog): which view Backups opens on, and how the calendar shows loading (one spinner for the whole month, preset, or a spinner in each day). Both are real options; the switch and <b>Loading</b> show them.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The switch's plate slides under the chosen word; the calendar's days and the grid use the same green, amber, red and grey as
+                        the first section. Look at: the day count never touching the day number, the month title keeping a gap to Prev and Next, the
+                        grid and the calendar sharing one top edge, and the same height in Nights and Month.
+                    </p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="month-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-month-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-month-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-month-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-month-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hb-frame hb-month" id="month-component">
+                    <div class="hb-bar3">
+                        <div class="a"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Backups view" data-hb-view>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="nights">Nights</button>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="month">Month</button>
+                        </div></div>
+                        <div class="b"><div
+                            class="kp-range"
+                            data-kp-range="30d"
+                            data-kp-range-presets="7d 30d 90d"
+                            aria-label="Nights to show"
+                            data-hb-range-picker
+                        ></div></div>
+                        <div class="c"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-month-ago></time></div>
+                    </div>
+                    <section class="kp-card hb-card" data-kp-state="ready" aria-label="Backups per night">
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <div class="hb-month__body">
+                                    <div class="hb-month__nights" data-hb-nights hidden>
+                                        <div class="kp-heat" data-kp-heat data-kp-heat-toggle data-hb-heat="nights"></div>
+                                    </div>
+                                    <div class="hb-month__month" data-hb-month>
+                                        <section
+                                            class="kp-calendar kp-calendar--busy-whole"
+                                            data-kp-calendar
+                                            data-kp-calendar-month="2026-10"
+                                            data-kp-heading-level="2"
+                                            data-kp-time-zone="Europe/Brussels"
+                                            data-kp-key="backups"
+                                            lang="en-GB"
+                                            aria-label="Backups per night"
+                                            data-hb-calendar
+                                        ></section>
+                                        <div class="kp-heat" data-kp-heat data-hb-heat="month"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="hb-bar3 hb-month__foot">
+                        <p class="hb-readout a" style="grid-column: 1 / span 8" role="status" data-hb-month-pin>No night picked. Press a day or a cell.</p>
+                        <div class="c"><button type="button" class="kp-button kp-button--sm" data-hb-month-repair hidden>Back up now</button></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ 4. a night in detail -->
+            <section
+                class="hb-sec"
+                id="night"
+                data-review-item="night"
+                data-review-topic="night"
+                data-review-topic-title="One night in detail"
+                data-review-components="statusrow week"
+                data-review-title="One night in detail: who backed up, and when it drifted"
+                aria-labelledby="h-night"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-night">One night in detail: who backed up, and when it drifted</h2>
+                    <p>
+                        Lists every stack for the night you pick, with a repair next to each miss, and draws one stack's week so a backup that creeps
+                        later each night is visible.
+                    </p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Under the week, a line <b>11 of 12 backed up on 18/10/2026</b> (exact counts; <b>syncthing</b> keeps no data and is not
+                            counted) over 13 rows: stack, the snapshot times (<b>03:24, 03:26</b>) or the reason, a state word and mark. A missed
+                            stack (<b>inbox</b>, disk quota exceeded) says <b>Back up inbox now</b> under its reason and has a <b>Retry</b> button in
+                            a fixed place at the end of its row (the button is the package's own and cannot be renamed).
+                        </li>
+                        <li>
+                            Press <b>Retry</b>: the row shows <b>Backing up…</b> and then <b>backed up</b> with the new time, and the count goes to
+                            <b>12 of 12</b>. With <b>Repair fails</b> it ends failed, with the reason and the same button to try again, and the count
+                            stays. Pick another night in the list above the rows (the last 14 nights); a night with two misses says <b>10 of 12</b>.
+                        </li>
+                        <li>
+                            On top the week of the stack you pick (default <b>kyu</b>): a pale pill at <b>03:00</b> each night for the planned time
+                            and a pill for each real snapshot; the real pill drifts later every night, <b>03:23</b> to <b>03:38</b> in the week shown.
+                            A missed night shows a <b>skipped</b> pill with its reason. Press a pill: its details show on the card. A phone shows the
+                            next items as a list instead.
+                        </li>
+                        <li>
+                            <b>Reading</b> shows the rows loading one by one with <b>12 of 13 read</b>; <b>Loading</b> lays the busy card over both
+                            parts; <b>Empty</b> and <b>Failed</b> fill the same height with a plate and <b>Reload</b>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Rows are hairline-separated with the state mark first and the word second (never colour alone); the repair buttons stand in
+                        one column. Look at: the detail line never touching the button, the week's pills keeping a gap to their column edge, and both
+                        parts keeping their height in every state.
+                    </p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="night-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-night-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-night-data="reading">Reading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-night-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-night-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-night-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Repair">
+                        <b>Repair</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-repair="works">Works</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-repair="fails">Fails</button>
+                    </div>
+                </div>
+                <div class="hb-frame hb-night" id="night-component">
+                    <section class="kp-card hb-card hb-night__card" data-kp-state="ready" aria-label="One night">
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hb-night__cols">
+                                <div class="hb-night__week">
+                                    <div class="hb-bar">
+                                        <label class="kp-field__label" for="hb-week-stack">Week of</label>
+                                        <select class="kp-field__input" id="hb-week-stack" data-hb-week-stack></select>
+                                    </div>
+                                    <div
+                                        class="kp-week"
+                                        data-kp-week
+                                        data-kp-week-upcoming="8"
+                                        aria-label="Snapshots of one stack in a week"
+                                        data-hb-week
+                                    ></div>
+                                </div>
+                                <div class="hb-night__list">
+                                    <div class="hb-bar">
+                                        <label class="kp-field__label" for="hb-night-pick">Night</label>
+                                        <select class="kp-field__input" id="hb-night-pick" data-hb-night-pick></select>
+                                    </div>
+                                    <p class="hb-summary" role="status" data-hb-night-summary>…</p>
+                                    <ul class="kp-statuslist kp-statuslist--rows" aria-label="Stacks on this night" data-hb-statuslist></ul>
+                                    <pre class="hb-log" aria-live="polite" data-hb-night-log>
+Press a pill or a repair button; what it would do shows here.</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- ================================================================ 5. restore -->
+            <section
+                class="hb-sec"
+                id="restore"
+                data-review-item="restore"
+                data-review-topic="restore"
+                data-review-topic-title="Restore wizard"
+                data-review-components="wizard dated-options steplist deplist code type-confirm ack-gate"
+                data-review-title="Restore: four steps, a night to pick, the name to type"
+                data-review-choices='[{ "id": "backups-app-picker", "label": "How the app is picked in step 1", "once": true, "default": "tiles", "options": [
+                    { "value": "tiles", "label": "Tiles", "hint": "Recommended. One tile per app of the stack with what it holds; best for the 1 to 6 apps a stack really has." },
+                    { "value": "list", "label": "List", "hint": "A drop-down list of the apps. Shorter, and the one to use if a stack ever has dozens of apps." }] }]'
+                aria-labelledby="h-restore"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-restore">Restore: four steps, a night to pick, the name to type</h2>
+                    <p>
+                        Walks you through bringing one app back from a chosen night, shows what will stop and what will be overwritten, and only
+                        starts after you typed the stack's name.
+                    </p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four labelled steps you can click back to: <b>What</b> (the stack in a list, <b>paperless</b> to start, and its apps as
+                            tiles: <b>paperless</b> and <b>postgres</b>), <b>Which night</b>, <b>Check</b>, <b>Restore</b>. Next stays off until step
+                            1 has an app and step 2 a night; the reason shows on hover or focus.
+                        </li>
+                        <li>
+                            <b>Which night</b>: radio rows, the newest first and already chosen (<b>Today 03:04</b>, then <b>Yesterday 03:04</b>, then
+                            dates) with age and size; a missed night stays in the list, dimmed, with its reason (<b>no snapshot (missed)</b>). Thirty
+                            nights search by typing. <b>Loading</b>, <b>Empty</b> (with <b>Take a snapshot now</b>) and <b>Failed</b> (with
+                            <b>Try again</b>) fill the same height.
+                        </li>
+                        <li>
+                            <b>Check</b>: <b>Restore point: Mon 19/10/2026 03:04</b>; the order things stop (<b
+                                >restoring postgres stops paperless first</b
+                            >); a preview of the file that would come back (a 30 s read shows the words <b>Reading from the snapshot…</b>); the
+                            warning that today's data is copied aside and kept 7 days, with its box; and the name field.
+                            <b>Restore paperless</b> stays off until the box is ticked and <b>paperless</b> is typed exactly; <b>Paperless</b> shows
+                            <b>Does not match yet</b>.
+                        </li>
+                        <li>
+                            <b>Restore</b>: the five steps run one after another (stop paperless, copy today's data aside, restore, start, check) with
+                            their times; with <b>Fails at step 3</b> the run stops there, says why and offers <b>Try again</b> and <b>Back</b>. The
+                            address keeps <code>?stack=&amp;app=&amp;snapshot=</code> at every step (shown under the wizard).
+                        </li>
+                        <li><b>The choice</b> (tick in the dialog): tiles or a list for the app. Both are real; the buttons flip them.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Navy for the current step and the primary button, a hairline plate for the steps, destructive red only on the final button.
+                        Look at: the step labels never touching the dividers, the night rows keeping one column for age and size, the warning's box
+                        and its sentence having a gap, and Back and Next staying at the foot of the wizard.
+                    </p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="restore-component">
+                    <div role="group" aria-label="Nights">
+                        <b>Nights</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-nights-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-nights-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-nights-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-nights-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Run">
+                        <b>Run</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-run="works">Succeeds</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-run="fails">Fails at step 3</button>
+                    </div>
+                    <div role="group" aria-label="Go to step">
+                        <b>Go to step</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-goto="0">What</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-goto="1">Which night</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-goto="2">Check</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-goto="3">Restore</button>
+                    </div>
+                </div>
+                <div class="hb-frame hb-restore" id="restore-component">
+                    <div class="kp-wizard" data-kp-wizard data-kp-navigable data-hb-wizard>
+                        <ol class="kp-wizard__steps">
+                            <li data-kp-step-label>What</li>
+                            <li data-kp-step-label>Which night</li>
+                            <li data-kp-step-label>Check</li>
+                            <li data-kp-step-label>Restore</li>
+                        </ol>
+                        <section data-kp-step aria-label="What to restore">
+                            <div class="hb-step">
+                                <div class="kp-field">
+                                    <label class="kp-field__label" for="hb-rs-stack">Stack</label>
+                                    <select class="kp-field__input" id="hb-rs-stack" data-hb-rs-stack></select>
+                                </div>
+                                <fieldset class="kp-fieldset" data-kp-layout="tiles" data-hb-rs-tiles>
+                                    <legend class="kp-field__label">App to bring back</legend>
+                                </fieldset>
+                                <div class="kp-field" data-hb-rs-listwrap hidden>
+                                    <label class="kp-field__label" for="hb-rs-app">App to bring back</label>
+                                    <select class="kp-field__input" id="hb-rs-app" data-hb-rs-app></select>
+                                </div>
+                                <ul class="hb-facts" data-hb-rs-facts aria-label="What this restores"></ul>
+                            </div>
+                        </section>
+                        <section data-kp-step hidden aria-label="Which night">
+                            <div class="hb-step">
+                                <div
+                                    class="kp-dated"
+                                    data-kp-dated
+                                    aria-label="Night to restore from"
+                                    data-kp-now="2026-10-19T14:05:00+02:00"
+                                    data-hb-dated
+                                ></div>
+                            </div>
+                        </section>
+                        <section data-kp-step hidden aria-label="Check">
+                            <div class="hb-step hb-step--check">
+                                <p class="hb-point" data-hb-rs-point>Restore point: …</p>
+                                <div class="kp-deplist" data-kp-deplist data-kp-dep-heading="{n} stop and start in this order" data-hb-deplist></div>
+                                <figure class="kp-code" data-kp-code data-hb-code></figure>
+                                <div
+                                    class="kp-alert kp-alert--warning"
+                                    data-kp-ack
+                                    data-kp-ack-key="aside"
+                                    data-kp-ack-label="I understand today's data is copied aside and kept for 7 days"
+                                    data-hb-ack
+                                >
+                                    <div class="kp-alert__body">
+                                        <strong>Today's data is replaced.</strong> A copy of it is set aside first and stays for 7 days, so this step
+                                        can be undone by restoring that copy.
+                                    </div>
+                                </div>
+                                <div data-hb-typeconfirm></div>
+                                <div class="hb-step__go">
+                                    <button type="button" class="kp-button kp-button--destructive" id="hb-rs-go" data-hb-rs-go disabled>
+                                        Restore
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                        <section data-kp-step hidden aria-label="Restoring">
+                            <div class="hb-step">
+                                <p class="hb-point" data-hb-rs-run-title>Restoring…</p>
+                                <ol class="kp-steplist" aria-label="Restore progress" data-hb-steplist></ol>
+                                <div class="hb-step__go" data-hb-rs-run-actions hidden>
+                                    <button type="button" class="kp-button kp-button--primary" data-hb-rs-retry>Try again</button>
+                                    <button type="button" class="kp-button" data-hb-rs-back>Back to Check</button>
+                                </div>
+                            </div>
+                        </section>
+                        <div class="kp-wizard__actions">
+                            <button type="button" class="kp-button" data-kp-wizard-back>Back</button>
+                            <button type="button" class="kp-button kp-button--primary" data-kp-wizard-next data-hb-next>Next</button>
+                        </div>
+                    </div>
+                    <pre class="hb-log" aria-live="polite" data-hb-restore-log>The address of the page after each step shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ fw-totals -->
+            <section
+                class="hb-sec"
+                id="fw-totals"
+                data-review-item="fw-totals"
+                data-review-topic="fw-totals"
+                data-review-topic-title="Firewall totals that filter the stacks and light the matrix"
+                data-review-components="datatable matrix idmark"
+                data-review-title="Firewall totals that filter the stacks and light the matrix"
+                data-review-choices='[{"id":"fw-reach-tone","label":"How a pair that can connect is coloured","once":true,"default":"calm","options":[{"value":"calm","label":"Calm","hint":"Recommended. A pair with named ports is green; only a target with no firewall (every port open) and a path stopped at its source are red, so red means something to do."},{"value":"caution","label":"Caution","hint":"Every pair that can connect is amber. Stricter and noisier: a healthy fleet shows a field of amber and the open targets stand out less."}]}]'
+                aria-labelledby="h-fw-totals"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-fw-totals">Firewall totals that filter the stacks and light the matrix</h2>
+                    <p>Counts how well the fleet is protected on four tiles; pressing a tile shows only the stacks it counts and lights what they can reach.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Four tiles with exact numbers: <b>In force 8 of 11</b> (a meter), <b>No firewall 1</b>, <b>Live differs from files 2</b>, <b>Open paths 20</b>. The last three are filters: press one and the table shows only its stacks (<b>syncthing</b>; <b>immich</b> and <b>metrics</b>; <b>immich</b> and <b>syncthing</b>, the two targets that let everything in), and the matrix lights their rows and columns and dims the rest. Press two tiles to add; press again or <b>Esc</b> to reset. The line at the top right of each part says what is showing.</li>
+                        <li>The table: stack with CT number and its colour mark, a state word (never colour alone), inbound and outbound policy, rule count, how many stacks it reaches and is reached by. Sort by any column; <b>Shift</b> adds a second key; sort and search are remembered.</li>
+                        <li>The matrix: ports inside the cells, <b>all</b> on a target without a firewall, a red ring where the target would let the source in but the source drops it on the way out (<b>almanac</b> to <b>kyu</b>). Press a header to light a row and column; arrow keys pin a cell and the reading names it in words.</li>
+                        <li><b>Loading</b> lays the busy card over the table and the matrix; <b>Empty</b> and <b>Failed</b> fill their height with a plate and a normal-size <b>Try again</b>. On 390 px the table becomes cards and the matrix scrolls inside its own box.</li>
+                        <li><b>The choice</b> (default in the dialog): whether a pair that can connect is green or amber. Both are options on the matrix; the buttons flip them. The Firewall page's topology figure and the Map's network drawing keep their own look and are not on this page.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Tiles of one height, a quiet table, a matrix whose cells carry ports and whose headers stay in place. Look at: the tile counts matching the table rows when filtered, the red ring being visible without colour, the headings and readings sharing a baseline, and each part keeping its height in every state.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="fw-totals-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-fw-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-fw-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-fw-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-fw-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Pair colour">
+                        <b>Pair colour</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-fw-tone="calm">Calm</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-fw-tone="caution">Caution</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="fw-totals-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Totals</h3><p>Press a tile to show only the stacks it counts.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-fw-shown></p>
+                        <div data-hb-fw-kpis></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>The stacks</h3><p>Every stack with its firewall state, its default policies and what it reaches.</p></div>
+                        
+                        <div class="hb-fw-table" data-hb-fw-table></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Who can reach whom</h3><p>From a row to a column: the ports a connection may use.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-fw-pick></p>
+                        <div class="hb-fw-matrix"><div class="kp-matrix" data-kp-matrix data-kp-matrix-select="follow" data-hb-fw-matrix></div></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ fw-trace -->
+            <section
+                class="hb-sec"
+                id="fw-trace"
+                data-review-item="fw-trace"
+                data-review-topic="fw-trace"
+                data-review-topic-title="Can this stack reach that one? A hop-by-hop trace"
+                data-review-components="path-trace combobox matrix"
+                data-review-title="Can this stack reach that one? A hop-by-hop trace"
+                data-review-choices='[{"id":"fw-trace-stop","label":"What the trace shows after the first refusal","once":true,"default":"first-refusal","options":[{"value":"first-refusal","label":"Stop at the first refusal","hint":"Recommended. Hops after the refusal read \"Not reached\": the packet never gets there, so the trace says where to look."},{"value":"all","label":"Every hop on its own","hint":"Each hop shows its own verdict, for a what-if: useful when you want to see the target would accept it."}]}]'
+                aria-labelledby="h-fw-trace"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-fw-trace">Can this stack reach that one? A hop-by-hop trace</h2>
+                    <p>Answers one question: pick a source, a target and a port, and see where the connection goes through or stops, with the rule that decides.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Three fields in one row: <b>From</b> and <b>To</b> (type to filter the 11 stacks) and <b>Port</b> (any port the rules allow, or one). Start: <b>admin</b> to <b>kyu</b>, any port: out of admin, in at kyu, reached, with <b>kyu in #3</b> as the deciding rule.</li>
+                        <li>Pick <b>almanac</b> to <b>kyu</b>: kyu would let it in, but <b>almanac</b> drops it on the way out, so the trace says <b>Blocked at almanac out policy DROP</b> and the next hops read <b>Not reached</b>. <b>Copy</b> puts the trace on the clipboard as text; <b>Swap</b> (or <b>S</b>) turns the pair round. Pressing a cell of the matrix fills both fields. From equal to To shows <b>Pick a source and a target</b>.</li>
+                        <li>Press the rule chip: the reading under the trace says which rule row the Rules table would open (the table is the next section).</li>
+                        <li><b>Loading</b> shows the trace running (busy card over placeholder hops), <b>Empty</b> and <b>Failed</b> keep its height with <b>Try again</b>.</li>
+                        <li><b>The choice</b>: whether hops after a refusal are dimmed (default) or all shown. The trace takes it as an attribute and redraws.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Hops with a check or a cross and a word each, the refusal chip as a button, the fields on one grid with the trace. Look at: Copy and Swap in a fixed place, the unreached hops being legible, and the trace keeping its height in every state.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="fw-trace-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-tr-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-tr-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-tr-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-tr-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="After a refusal">
+                        <b>After a refusal</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-tr-stop="first-refusal">Stop</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-tr-stop="all">Every hop</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="fw-trace-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>The question</h3><p>Where does a connection from one stack to another go through, and where does it stop?</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-tr-read></p>
+                        <div class="hb-bar3">
+                        <div class="a"><div class="kp-combobox" data-kp-combobox >
+                            <label class="kp-field__label" for="hb-tr-from">From</label>
+                            <input class="kp-combobox__input" id="hb-tr-from" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="hb-tr-from-list" />
+                            <ul class="kp-combobox__list" id="hb-tr-from-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="traefik">traefik</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="jellyfin">jellyfin</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vaultwarden">vaultwarden</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="syncthing">syncthing</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="kyu">kyu</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="immich">immich</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="paperless">paperless</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="almanac">almanac</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="metrics">metrics</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="inbox">inbox</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="admin">admin</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div></div>
+                        <div class="b"><div class="kp-combobox" data-kp-combobox >
+                            <label class="kp-field__label" for="hb-tr-to">To</label>
+                            <input class="kp-combobox__input" id="hb-tr-to" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="hb-tr-to-list" />
+                            <ul class="kp-combobox__list" id="hb-tr-to-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="traefik">traefik</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="jellyfin">jellyfin</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vaultwarden">vaultwarden</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="syncthing">syncthing</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="kyu">kyu</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="immich">immich</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="paperless">paperless</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="almanac">almanac</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="metrics">metrics</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="inbox">inbox</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="admin">admin</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div></div>
+                        <div class="c"><label class="kp-field__label" for="hb-tr-port">Port</label><select class="kp-field__input" id="hb-tr-port" data-hb-tr-port></select></div>
+                    </div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>The path</h3><p>Out of the source, in at the target, hop by hop.</p></div>
+                        
+                        <div class="kp-trace" data-kp-trace data-kp-trace-copy data-kp-trace-swap data-kp-trace-stop="first-refusal" data-hb-trace></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Or press a pair</h3><p>A cell of the matrix fills the question above.</p></div>
+                        
+                        <div class="hb-fw-matrix"><div class="kp-matrix" data-kp-matrix data-kp-matrix-select="follow" data-hb-tr-matrix></div></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ fw-rules -->
+            <section
+                class="hb-sec"
+                id="fw-rules"
+                data-review-item="fw-rules"
+                data-review-topic="fw-rules"
+                data-review-topic-title="The rules: one table, grouped inbound and outbound"
+                data-review-components="datatable toggle"
+                data-review-title="The rules: one table, grouped inbound and outbound"
+                data-review-choices='[{"id":"fw-rules-groups","label":"Whether the groups start folded","once":true,"default":"open","options":[{"value":"open","label":"Open","hint":"Recommended. Both groups show their rules, so a DROP rule is seen at once."},{"value":"folded","label":"Folded","hint":"Only the two headings with their counts; shorter, nothing visible until opened."}]}]'
+                aria-labelledby="h-fw-rules"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-fw-rules">The rules: one table, grouped inbound and outbound</h2>
+                    <p>Lists every firewall rule in two groups, lets you filter by what it does, hide the long explanation, and open a rule to see which pairs it decides.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Two group headings, <b>Inbound</b> and <b>Outbound</b>, each with an exact count and a fold button; columns <b>#</b>, <b>Stack</b>, <b>Action</b> (ACCEPT or DROP as a word), <b>Peer</b>, <b>Ports</b>, <b>Why</b>, <b>In force</b>. The column menu hides <b>Why</b> (the way the page now hides it on small screens).</li>
+                        <li>Two toggle chips <b>ACCEPT</b> and <b>DROP</b> with exact counts filter the rules; none pressed shows all. Search, a <b>Stack</b> filter and multi-sort (plain click adds a key) are remembered.</li>
+                        <li>Press a row's arrow: it opens under the row (one at a time) with the pairs that rule decides, in words. <b>immich</b> rules say <b>not in force</b>: the stack is declared but its firewall is not enforced.</li>
+                        <li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> fill the same height. Reordering rules by dragging is not in the package for tables; it stays on the stack hub's order list (gap, see the report).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A calm table with two clear group bands, chips with counts that do not jump, the Action word readable at a glance. Look at: the count badges in the headings, the Action column in one place on every row, and the detail row aligning under its own rule.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="fw-rules-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-ru-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ru-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ru-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ru-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Groups">
+                        <b>Groups</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-ru-groups="open">Open</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ru-groups="folded">Folded</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="fw-rules-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Filter by action</h3><p>Show only the rules that accept or only those that drop.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-ru-read></p>
+                        <div class="kp-toggles" role="group" aria-label="Action" data-kp-toggle-group="action" data-kp-toggle-clear data-hb-ru-toggles></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Rules of the fleet</h3><p>Inbound rules guard a stack, outbound rules let it out.</p></div>
+                        
+                        <div class="hb-fw-table" data-hb-ru-table></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ fw-lines -->
+            <section
+                class="hb-sec"
+                id="fw-lines"
+                data-review-item="fw-lines"
+                data-review-topic="fw-lines"
+                data-review-topic-title="Matrix or lines: which stack depends on which"
+                data-review-components="matrix uses-map segmented"
+                data-review-title="Matrix or lines: which stack depends on which"
+                data-review-choices='[{"id":"fw-view","label":"Which view the Firewall opens in","once":true,"default":"grid","options":[{"value":"grid","label":"Grid","hint":"Recommended. Every pair with its ports; the check that nothing is open that should not be. Lines are one press away and the choice is remembered."},{"value":"lines","label":"Lines","hint":"Two columns joined by lines. Reads as a map, but pairs with a long port list and open targets are less exact."}]}]'
+                aria-labelledby="h-fw-lines"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-fw-lines">Matrix or lines: which stack depends on which</h2>
+                    <p>Shows the same reachability two ways: the full grid to check every pair, or lines between two columns to follow what one stack reaches and what reaches it.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A switch <b>Grid | Lines</b>. Lines: sources left, the stacks they reach right, one line per use. <b>immich</b> and <b>syncthing</b> are drawn red and say <b>no firewall: every stack reaches it</b>; their 20 open paths are not drawn as lines (they would hide the real ones).</li>
+                        <li>Hover or focus a card and its lines light while the rest dims; press to pin; <b>Esc</b> lets go. The reading says what the pinned stack reaches and what reaches it, with counts (<b>kyu</b> reaches 2 stacks, is reached by 4). Under 640 px the lines give way to a list.</li>
+                        <li>The view is remembered on this device. <b>Loading</b> lays the busy card over the map, <b>Empty</b> and <b>Failed</b> fill its height.</li>
+                        <li><b>The choice</b>: which view opens first; the switch changes it live.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Lines that curve between two aligned columns, a pinned card with its lines lit and the others dimmed. Look at: line ends touching the cards, text never against a card edge, the same height in Grid and Lines.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="fw-lines-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-li-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-li-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-li-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-li-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Line shape">
+                        <b>Line shape</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-li-shape="curve">Curve</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-li-shape="elbow">Elbow</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-li-shape="straight">Straight</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="fw-lines-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Reachability</h3><p>Pick the view; pin a stack to follow it.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-li-read></p>
+                        <div class="hb-bar3"><div class="a"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View" data-hb-li-view>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="grid">Grid</button>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="lines">Lines</button>
+                        </div></div></div>
+                    <div class="hb-fw-matrix"><div class="kp-matrix" data-kp-matrix data-kp-remember="hb-fw-view" data-hb-li-matrix></div></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ fw-live -->
+            <section
+                class="hb-sec"
+                id="fw-live"
+                data-review-item="fw-live"
+                data-review-topic="fw-live"
+                data-review-topic-title="Live against the stack files: what differs"
+                data-review-components="matrix attention segmented freshness"
+                data-review-title="Live against the stack files: what differs"
+                data-review-choices='[{"id":"fw-live-mode","label":"What the comparison opens on","once":true,"default":"differences","options":[{"value":"differences","label":"Differences","hint":"Recommended. Only the pairs where live and files disagree are marked; everything else is quiet, so the problem is the picture."},{"value":"live","label":"Live","hint":"What pve enforces now, every pair."},{"value":"files","label":"Files","hint":"What the stack files declare, every pair."}]}]'
+                aria-labelledby="h-fw-live"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-fw-live">Live against the stack files: what differs</h2>
+                    <p>Shows what the host really enforces beside what the stack files declare, and marks every pair where the two disagree.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Two problems at the top, worst first, each with its fix: <b>immich</b> is declared but its firewall is not in force (every stack reaches it on every port), <b>metrics</b> has a rule in no file (<b>admin</b> may open 9090, added by hand on 12/10/2026). <b>Compare…</b> lights the stack in the matrix.</li>
+                        <li>A switch <b>Differences | Live | Files</b>. Differences: 11 amber pairs, each saying "live: all, files: 2283" in words on hover; the rest muted. Live and Files show every pair the way the first section does.</li>
+                        <li>The reading under the title counts exactly (<b>11 pairs differ</b>) and the freshness line says when pve answered. This needs nothing new from the server: the host already says what it enforces.</li>
+                        <li><b>Loading</b>, <b>Empty</b> (<b>Nothing differs</b>, all clear) and <b>Failed</b> fill the same height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Amber only where something differs, a plain segmented switch, alerts with their fix beside the words. Look at: the alerts keeping a gap to the matrix, the reading and the heading on one baseline, and no text against an edge.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="fw-live-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-lv-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-lv-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-lv-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-lv-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="fw-live-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Needs a look</h3><p>Stacks whose live firewall is not what the file says.</p></div>
+                        
+                        <div data-hb-lv-attn></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Live against files</h3><p>Choose what the grid shows.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-lv-read></p>
+                        <div class="hb-bar3"><div class="a"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Compare" data-hb-lv-mode>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="differences">Differences</button>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="live">Live</button>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="files">Files</button>
+                        </div></div><div class="b"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-lv-ago></time></div></div>
+                    <div class="hb-fw-matrix"><div class="kp-matrix" data-kp-matrix data-hb-lv-matrix></div></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ fw-guard -->
+            <section
+                class="hb-sec"
+                id="fw-guard"
+                data-review-item="fw-guard"
+                data-review-topic="fw-guard"
+                data-review-topic-title="Before editing a stack whose management is open"
+                data-review-components="toggle ack-gate hovercard"
+                data-review-title="Before editing a stack whose management is open"
+                aria-labelledby="h-fw-guard"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-fw-guard">Before editing a stack whose management is open</h2>
+                    <p>Stops you for one tick before you edit the rules of a stack that has its management interface open to the whole LAN, and shows each stack's policy on hover.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A row of 11 stack chips (one is chosen at a time, arrow keys walk them). Rest the pointer on one: a card gives its CT, address, state, policies, rule count and whether live matches files.</li>
+                        <li>Choose <b>traefik</b>: <b>Edit rules…</b> is on at once. Choose <b>jellyfin</b> or <b>syncthing</b> (management open): a warning says which interface is open and why a change reaches the whole LAN; <b>Edit rules…</b> is off and says why on hover until the box is ticked. Another stack resets the tick.</li>
+                        <li><b>Edit rules…</b> is a button here (the package's gate guards buttons, the dashboard's is a link; see the report). Pressing it reports what would open.</li>
+                        <li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> keep the panel's height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Chips in one grid row, a warning plate with its tick, a button that explains itself while it is off. Look at: the tick label wrapping instead of being cut, and the hover card readable on its opaque plate.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="fw-guard-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-gd-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-gd-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-gd-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-gd-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="fw-guard-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Choose a stack</h3><p>Hover for its policies.</p></div>
+                        
+                        <div class="kp-toggles hb-pill-row" role="group" aria-label="Stack" data-kp-toggle-group="stack" data-kp-toggle-mode="single" data-hb-gd-chips></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Edit its rules</h3><p>Changes are applied by the next apply of the stack.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-gd-read></p>
+                        <div class="kp-alert kp-alert--warning" data-kp-ack data-kp-ack-for="#hb-gd-go" data-kp-ack-key="mgmt" data-kp-ack-label="I understand that a change here reaches the whole LAN" data-hb-gd-gate><div class="kp-alert__body" data-hb-gd-warning></div></div>
+                    <div><button type="button" class="kp-button kp-button--primary" id="hb-gd-go" data-hb-gd-go>Edit rules…</button></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ ho-disk -->
+            <section
+                class="hb-sec"
+                id="ho-disk"
+                data-review-item="ho-disk"
+                data-review-topic="ho-disk"
+                data-review-topic-title="Disk and thin pool: one picture of what is written and what is promised"
+                data-review-components="stackbar"
+                data-review-title="Disk and thin pool: one picture of what is written and what is promised"
+                data-review-choices='[{"id":"ho-promise","label":"How the promise to the guests is drawn on the thin pool","once":true,"default":"part","options":[{"value":"part","label":"An amber part","hint":"Recommended. What the guests were promised but have not written yet is one more part in amber, so the bar runs past the pool&#39;s end and the legend says \"Over by 202 GB\": the over-promise is the picture."},{"value":"written","label":"Written only","hint":"The bar shows only what is written, with a tick at 90 % full; the promise stays in the reading above it. Calmer, but the over-promise is a number, not a picture."}]}]'
+                aria-labelledby="h-ho-disk"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-ho-disk">Disk and thin pool: one picture of what is written and what is promised</h2>
+                    <p>Shows what fills the root disk and, for the thin pool, what each guest has written against what all guests were promised, so over-promising is visible before the pool fills.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Root volume</b>: five parts (system, templates and images, logs, restic cache, host Docker layers) with their exact GB, the free rest as the track, and a tick at <b>80 % warning level</b>. Press a part or its legend row: the reading names it.</li>
+                        <li><b>Thin pool</b>: 930 GB split by guest (immich 241 GB, jellyfin 188 GB, the two VMs 32 and 38 GB, and so on, small ones merged into <b>Other</b>). An amber part, <b>Promised, not written yet</b> (456 GB), runs the bar past the pool's end: it carries a ▸ and the legend reads <b>Over by 202 GB</b>. Three numbers became one picture.</li>
+                        <li><b>Loading</b> is the bar's own waiting picture; <b>Empty</b> and <b>Failed</b> keep both bars' height, with a normal-size <b>Try again</b> on the failed ones.</li>
+                        <li><b>The choice</b>: the promise as an amber part or left out of the bar. Both are real; the buttons flip them. (A tick past the pool's end is not drawn by the package: see the report.)</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Two bars in one grid, each with a heading, a one-line reading and a legend whose rows align. Look at: the amber part being readable without colour (it is hatched and named), the legend values staying in one column, and both panels keeping their height in every state.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="ho-disk-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-di-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-di-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-di-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-di-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Promise">
+                        <b>Promise</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-di-promise="part">Amber part</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-di-promise="written">Written only</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="ho-disk-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel hb-c5">
+                        <div class="hb-panel__head"><h3>Root volume</h3><p>What fills the host's own disk.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-di-root-read></p>
+                        <figure class="kp-stackbar kp-stackbar--lg" data-hb-di-root></figure>
+                    </div>
+                    <div class="hb-panel hb-c7">
+                        <div class="hb-panel__head"><h3>Thin pool for the guests</h3><p>Written by each guest, against what all guests were promised.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-di-pool-read></p>
+                        <figure class="kp-stackbar kp-stackbar--lg" data-hb-di-pool></figure>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ ho-checks -->
+            <section
+                class="hb-sec"
+                id="ho-checks"
+                data-review-item="ho-checks"
+                data-review-topic="ho-checks"
+                data-review-topic-title="The host checks, each with what to do about it"
+                data-review-components="statusrow"
+                data-review-title="The host checks, each with what to do about it"
+                aria-labelledby="h-ho-checks"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-ho-checks">The host checks, each with what to do about it</h2>
+                    <p>Reads the host's health one check at a time and, for every check that is not fine, says in words how to fix it.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A line <b>5 of 8 checks pass, 2 with a reservation, 1 failed</b> (exact counts) and eight rows: a mark, the check, the detail, and under the amber and red ones the remedy the host already computed (<b>Shrink or move the 400 GB disk of jellyfin…</b>). The remedy is new: today the dashboard never shows it.</li>
+                        <li><b>Read again</b> (or the Reading state): a bar runs indeterminate with the elapsed seconds while the rows turn to <b>reading</b> and settle one by one (the real read takes about 30 s; this page plays it in 8 s). A failed row has <b>Retry</b> for that one check.</li>
+                        <li><b>Loading</b> shows every row as waiting; <b>Empty</b> and <b>Failed</b> fill the height with a plate and <b>Try again</b>.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Rows on a two-column grid with the mark and word first, remedies in a calmer ink under their detail. Look at: Retry in a fixed place, the remedy never touching the row edge, the count line matching the rows.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="ho-checks-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-ck-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ck-data="reading">Reading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ck-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ck-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ck-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="ho-checks-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Doctor</h3><p>Every check of pve, worst first.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-ck-read></p>
+                        <div class="hb-bar3"><div class="a" data-hb-ck-progress-wrap><div class="kp-progressbar" role="progressbar" aria-label="Reading the host checks" data-hb-ck-progress></div></div><div class="b"><span class="hb-readout" data-hb-ck-elapsed></span></div><div class="c"><button type="button" class="kp-button" data-hb-ck-again>Read again</button></div></div>
+                    <section class="kp-card hb-card" data-kp-state="ready" aria-label="Host checks"><div class="kp-card__stage"><div class="kp-card__data"><div class="hb-ho-list" data-hb-ck-host></div></div></div></section>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ ho-refresh -->
+            <section
+                class="hb-sec"
+                id="ho-refresh"
+                data-review-item="ho-refresh"
+                data-review-topic="ho-refresh"
+                data-review-topic-title="One refresh control instead of three timers"
+                data-review-components="refresh dialog"
+                data-review-title="One refresh control instead of three timers"
+                data-review-choices='[{"id":"ho-refresh-look","label":"How the interval is chosen","once":true,"default":"segmented","options":[{"value":"segmented","label":"Segments","hint":"Recommended. 15 s, 30 s, 1 min, 5 min and Paused are one press each, always visible: the interval is part of reading live data."},{"value":"menu","label":"Menu","hint":"A single \"Every 30 s\" button that opens the choices. Smaller in a crowded header, one press more."}]}]'
+                aria-labelledby="h-ho-refresh"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-ho-refresh">One refresh control instead of three timers</h2>
+                    <p>Keeps the host figures, the guests and the checks current from one place: a visible interval, the age of the data, and a pause while you work in a dialog.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>One control with <b>Every 30 s</b>, <b>updated 12 s ago</b>, a thin rule running down to the next refresh and <b>Refresh now</b> (key <b>R</b>). Each refresh updates the four figures (CPU, Memory, Root disk, Temperature, each with a 24-hour spark) and the reading under it lists what was read: <b>host figures, guests, checks</b>. Today three separate timers do this.</li>
+                        <li><b>Open the settings dialog</b>: while it is open the refresh waits and says so; closing it refreshes. <b>Fail the next reads</b> (a control above): every refresh fails, the data stays, the control says <b>retrying in 30 s</b> and offers <b>Retry now</b>, backing off 30, 60, 120 s.</li>
+                        <li><b>The choice</b>: the interval as segments or as a menu; the remembered interval survives a reload.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The control reads as one line with its freshness and rule; the figures are of one height. Look at: nothing jumping when "updated 12 s ago" becomes "updating…", the segments keeping a gap, the dialog on an opaque plate.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="ho-refresh-component">
+                    <div role="group" aria-label="Reads">
+                        <b>Reads</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-rf-reads="works">Work</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-rf-reads="fail">Fail</button>
+                    </div>
+                    <div role="group" aria-label="Look">
+                        <b>Look</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-rf-look="segmented">Segments</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-rf-look="menu">Menu</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="ho-refresh-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Live figures</h3><p>Refreshed by the control below the figures.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-rf-read></p>
+                        <div data-hb-rf-kpis></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Refresh</h3><p>How often the host is read, and when it was last read.</p></div>
+                        
+                        <div class="hb-bar3"><div class="a" style="grid-column: 1 / span 8"><div class="kp-refresh" data-kp-refresh="30" data-kp-look="segmented" data-kp-refresh-choices="0,15,30,60,300" data-kp-remember="hb-ho-refresh" data-kp-stale-after="90" data-hb-rf-control></div></div><div class="c"><button type="button" class="kp-button" data-hb-rf-dialog>Open the settings dialog</button></div></div>
+                    <dialog class="kp-dialog" data-hb-rf-dlg aria-labelledby="hb-rf-dlg-title"><h2 class="kp-dialog__title" id="hb-rf-dlg-title">Host settings</h2><p>The refresh waits while this dialog is open, so nothing moves under your hands.</p><div class="kp-dialog__actions"><button type="button" class="kp-button kp-button--primary" data-hb-rf-close>Close</button></div></dialog>
+                    <ul class="hb-reads" data-hb-rf-log aria-label="What each refresh read"></ul>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ ho-containers -->
+            <section
+                class="hb-sec"
+                id="ho-containers"
+                data-review-item="ho-containers"
+                data-review-topic="ho-containers"
+                data-review-topic-title="The containers: table, cards or pressure"
+                data-review-components="datatable entity-card bullets segmented barcell"
+                data-review-title="The containers: table, cards or pressure"
+                data-review-choices='[{"id":"ho-containers-view","label":"Which view the Host opens the containers in","once":true,"default":"table","options":[{"value":"table","label":"Table","hint":"Recommended. Sortable and filterable; the view for finding one guest. Open a row for its details and its actions."},{"value":"cards","label":"Cards","hint":"One card per guest with its state, figures and two meters; better for a glance at a handful of guests."},{"value":"pressure","label":"Pressure","hint":"Only the memory share against a threshold, worst first; for the question \"who is about to run out\"."}]}]'
+                aria-labelledby="h-ho-containers"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-ho-containers">The containers: table, cards or pressure</h2>
+                    <p>Lists every guest of the host as a sortable table, as cards with meters, or as a pressure list that puts the guest closest to its memory limit first.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A switch <b>Table | Cards | Pressure</b>. <b>Table</b>: 14 guests with CT number and name, stack, state, <b>CPU</b> and <b>Memory</b> as bars with their figures (<b>3.0 of 4.0 GiB</b>), lock and kind; sort by any column (a plain click adds a key), filter by kind or state, search. Open a row: its numbers, the lock, <b>Open stack</b> and <b>Open its log</b> in fixed places.</li>
+                        <li><b>Cards</b>: the same guests as cards of one height with state word, figures, two meters and actions (those that do not fit go into <b>More</b>). <b>Pressure</b>: running guests by memory share, amber from 75 % (<b>metrics</b> 81 %, <b>immich</b> 78 %), the threshold as a tick on every bar.</li>
+                        <li><b>Loading</b> (busy card over the view), <b>Empty</b> and <b>Failed</b> fill the same height in every view with <b>Try again</b>.</li>
+                        <li><b>The choice</b>: which view opens first; the switch changes it live and is remembered.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A dense, calm table; cards in a grid of one height; pressure rows with a tick. Look at: the bar cells never touching their figures, the action buttons in one column, the three views keeping the same footprint.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="ho-containers-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-cn-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-cn-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-cn-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-cn-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="View">
+                        <b>View</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-cn-view="table">Table</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-cn-view="cards">Cards</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-cn-view="pressure">Pressure</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="ho-containers-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Guests on pve</h3><p>Containers, virtual machines and the template.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-cn-read></p>
+                        <div class="hb-bar3"><div class="a"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View" data-hb-cn-seg>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="table">Table</button>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="cards">Cards</button>
+                            <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="pressure">Pressure</button>
+                        </div></div></div>
+                    <div class="hb-ho-view" data-hb-cn-host></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ ho-landing -->
+            <section
+                class="hb-sec"
+                id="ho-landing"
+                data-review-item="ho-landing"
+                data-review-topic="ho-landing"
+                data-review-topic-title="The System landing: a tile per area, each with a live line"
+                data-review-components="tiles lede statusrow attention freshness"
+                data-review-title="The System landing: a tile per area, each with a live line"
+                data-review-choices='[{"id":"ho-lede","label":"The sentence under each tile&#39;s title","once":true,"default":"plain","options":[{"value":"plain","label":"Always shown","hint":"Recommended. One sentence per tile that says what the area is for; five tiles, so it costs little and nobody has to guess."},{"value":"fold","label":"Folded behind More","hint":"Only the title and the live line; the sentence opens on More. Shorter tiles, but the first-time reader has to ask."}]}]'
+                aria-labelledby="h-ho-landing"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-ho-landing">The System landing: a tile per area, each with a live line</h2>
+                    <p>Opens System as a grid of tiles that each say what the area is for and what it looks like right now, with problems of the host mirrored on top.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>An attention line on top (<b>Thin pool promised 122 %</b>, <b>Unattended upgrades failed</b>, each with <b>Open Host</b>); with nothing wrong the band takes no room.</li>
+                        <li>Six tiles of one height: <b>Host</b>, <b>Backups</b>, <b>Firewall</b>, <b>Metrics</b>, <b>Map</b>, <b>Tools</b>. Each has a title, a lede, a live line (<b>Host reachable 4 ms</b>, <b>Firewall: 1 without, 2 differ</b>, <b>Backups: 11 of 12 last night</b>) and a footer with <b>read 12 s ago</b> and <b>Open</b>, the footers in one line.</li>
+                        <li>A line failing shows <b>Scrape targets: did not answer</b> with its own <b>Retry</b>; <b>Loading</b> shows every live line waiting. <b>Empty</b> is the all-clear: no attention band.</li>
+                        <li><b>The choice</b>: lede always shown or folded.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Tiles as a grid of one height, footers on one line, the live line with its mark and word. Look at: the lede wrapping and never cut, the attention items keeping a gap to the tiles, all text clear of the tile edges.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="ho-landing-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-ld-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ld-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ld-data="failed">One line fails</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ld-data="clear">All clear</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="ho-landing-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Needs a look</h3><p>Problems of the host, mirrored here.</p></div>
+                        
+                        <div data-hb-ld-attn></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Areas</h3><p>Open an area, or read how it is doing.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-ld-read></p>
+                        <section class="kp-card hb-card" data-kp-state="ready" aria-label="Areas"><div class="kp-card__stage"><div class="kp-card__data"><div data-hb-ld-tiles></div></div></div></section>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ ho-version -->
+            <section
+                class="hb-sec"
+                id="ho-version"
+                data-review-item="ho-version"
+                data-review-topic="ho-version"
+                data-review-topic-title="Versions: what moved, how big, and whether look and script agree"
+                data-review-components="version-delta diagnostics"
+                data-review-title="Versions: what moved, how big, and whether look and script agree"
+                data-review-choices='[{"id":"ho-version-show","label":"What a version chip shows","once":true,"default":"both","options":[{"value":"both","label":"Both versions and the level","hint":"Recommended. \"3.74.2 → 3.75.0 minor\": nothing to look up, the old one struck and lighter, the risk in a word as well as a tone."},{"value":"level","label":"The level alone","hint":"Just \"minor\" or \"major\": shortest, for a tight table; the versions move to the hover."}]}]'
+                aria-labelledby="h-ho-version"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-ho-version">Versions: what moved, how big, and whether look and script agree</h2>
+                    <p>Shows every moving version as one chip that says how risky the jump is in words, counts them for a heading, and checks that the stylesheet and the script come from the same release.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A summary line from the list (<b>3 major, 1 minor</b>, exact) and five rows: <b>Host daemon 3.74.2 → 3.75.0</b>, <b>Dashboard 3.75.0</b> (same: no chip noise), <b>kp-themes 10.1.1 → 11.0.0</b> (major, with a ! so it is never colour alone), <b>Proxmox VE 8.4.1 → 9.0.3</b> (major), <b>immich 1.118.2 → 1.119.0</b> (loud, because for immich the second number counts). Only a risky jump is loud.</li>
+                        <li>Shift + click on a chip copies <b>3.74.2 → 3.75.0</b>. A chip can be <b>loading</b>, <b>could not check</b> or <b>not tracked</b> (the Data buttons).</li>
+                        <li>The <b>Look and script</b> card compares the stylesheet and the script of this dashboard and says which half is behind; the buttons set the five answers it can give.</li>
+                        <li><b>The choice</b>: chips with both versions or the level alone.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Chips on one grid column so the versions line up, the struck old version quieter than the new one. Look at: chip text never against the chip edge, the diagnostics table reading as one sentence and a table.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="ho-version-component">
+                    <div role="group" aria-label="Chips">
+                        <b>Chips</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-vs-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-vs-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-vs-data="error">Could not check</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-vs-data="empty">Not tracked</button>
+                    </div>
+                    <div role="group" aria-label="Show">
+                        <b>Show</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-vs-show="both">Both</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-vs-show="level">Level</button>
+                    </div>
+                    <div role="group" aria-label="Look and script">
+                        <b>Look and script</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-vs-diag="match">Match</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-vs-diag="stylesheet-behind">Look behind</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-vs-diag="script-behind">Script behind</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-vs-diag="themes-differ">Themes differ</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-vs-diag="no-version">No version</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="ho-version-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel hb-c7">
+                        <div class="hb-panel__head"><h3>What is moving</h3><p>The versions of the host, the dashboard and what they run.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-vs-read></p>
+                        <section class="kp-card hb-card" data-kp-state="ready" aria-label="Versions"><div class="kp-card__stage"><div class="kp-card__data"><div class="hb-versions" data-hb-vs-list data-kp-version-big-minor="immich"></div></div></div></section>
+                    </div>
+                    <div class="hb-panel hb-c5">
+                        <div class="hb-panel__head"><h3>Look and script</h3><p>The stylesheet and the script of this page should come from one release.</p></div>
+                        
+                        <div class="hb-diag" data-hb-vs-diag-host></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ ho-link -->
+            <section
+                class="hb-sec"
+                id="ho-link"
+                data-review-item="ho-link"
+                data-review-topic="ho-link"
+                data-review-topic-title="The line to the host: the last twelve pings"
+                data-review-components="uptime chart connection"
+                data-review-title="The line to the host: the last twelve pings"
+                data-review-choices='[{"id":"ho-link-form","label":"How the recent pings are drawn","once":true,"default":"strip","options":[{"value":"strip","label":"A strip of cells","hint":"Recommended. One cell per ping with its time on hover and a count of what answered (\"11 of 12\"); a lost ping is a hole, which a line would hide."},{"value":"spark","label":"A sparkline","hint":"The answer times as a line: shows the slow ping at 38 ms, but a lost ping is only a gap in the line."}]}]'
+                aria-labelledby="h-ho-link"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-ho-link">The line to the host: the last twelve pings</h2>
+                    <p>Shows how steady the connection from the dashboard to pve has been over the last six minutes, one cell per ping, with the slow and the lost ones visible.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A strip of 12 cells, the last one labelled <b>Now</b> and the first <b>12 pings ago</b>; one cell is amber (a slow answer, 38 ms) and one is red (no answer). The summary above says <b>11 of 12 answered</b> and the hover of a cell gives its time and milliseconds. Needs nothing new from the server.</li>
+                        <li>A longer window (24 hours, 90 days with an exact percentage) needs a ping history from the host (backend item C2) and is not shown; the strip is ready for it.</li>
+                        <li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> keep the strip's height. <b>Ping now</b> adds a ping at the end and moves the window.</li>
+                        <li><b>The choice</b>: strip or sparkline.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A thin strip with a clear gap between cells and a readable summary. Look at: the cell states distinguishable without colour (hatching), the labels at both ends clear of the cells.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="ho-link-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-lk-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-lk-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-lk-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-lk-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Form">
+                        <b>Form</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-lk-form="strip">Strip</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-lk-form="spark">Sparkline</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="ho-link-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Pings to pve</h3><p>The dashboard asks the host every 30 seconds.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-lk-read></p>
+                        <section class="kp-card hb-card" data-kp-state="ready" aria-label="Pings"><div class="kp-card__stage"><div class="kp-card__data"><div class="hb-link" data-hb-lk-host></div></div></div></section>
+                    <div><button type="button" class="kp-button" data-hb-lk-ping>Ping now</button></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ sh-console -->
+            <section
+                class="hb-sec"
+                id="sh-console"
+                data-review-item="sh-console"
+                data-review-topic="sh-console"
+                data-review-topic-title="The host console: history, command blocks and exit codes"
+                data-review-components="console keys"
+                data-review-title="The host console: history, command blocks and exit codes"
+                data-review-choices='[{"id":"sh-order","label":"The order of the command blocks","once":true,"default":"newest-last","options":[{"value":"newest-last","label":"Newest at the bottom","hint":"Recommended. Reads like a terminal: the prompt sits under the last block and the screen follows the output."},{"value":"newest-first","label":"Newest on top","hint":"The latest block is always at the top next to the prompt; nothing to scroll to, but older output reads upside down."}]}]'
+                aria-labelledby="h-sh-console"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-sh-console">The host console: history, command blocks and exit codes</h2>
+                    <p>Runs a command on the host or in one container and shows each command as a block that says whether it still runs, worked or failed.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A <b>Run in</b> select (pve and the 11 containers), the prompt <b>#</b> and a hint line under it. Three commands already ran: <b>uptime</b> (exit 0), <b>df -h /</b> (exit 0) and <b>ls /missing</b> (<b>exit 2</b>, in the failed look).</li>
+                        <li>Type <b>restic snapshots</b>: the block shows <b>running</b> with an elapsed timer while lines arrive, then <b>exit 0</b>. Output longer than 12 lines folds with a count and stays copyable. <b>Up</b> recalls earlier lines (the last 50 are kept while this tab is open), <b>Tab</b> completes, <b>:</b> jumps to the prompt. An unknown command ends <b>exit 127</b>.</li>
+                        <li><b>Connecting</b> lays the busy card over the output at its final size; <b>Unreachable</b> says so with <b>Try again</b>; <b>Off</b> stops the prompt and says <b>Remote exec is off (exec_enabled = false, changed over ssh only)</b>.</li>
+                        <li><b>The choice</b>: newest block at the bottom or on top. The console takes it as an attribute and redraws.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A prompt and blocks in the theme's own plate, exit codes as words and shapes, a hint line whose room is kept. Look at: block text clear of the plate edge, the timer and exit code in one fixed place on every block, and the console keeping its height in every state.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="sh-console-component">
+                    <div role="group" aria-label="Console">
+                        <b>Console</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sc-data="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sc-data="loading">Connecting</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sc-data="error">Unreachable</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sc-data="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="Order">
+                        <b>Order</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sc-order="newest-last">Bottom</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sc-order="newest-first">Top</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="sh-console-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Console</h3><p>Commands run as root on the target you choose; every one is kept in the history of this tab.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-sc-read></p>
+                        <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-hint="Try: restic snapshots, pct list, hostname, foo. Tab completes, Up recalls, : jumps here." aria-label="Host console"></div></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Keys</h3><p>What the keyboard does here.</p></div>
+                        
+                        <div class="kp-keys" data-hb-sc-keys></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ sh-safety -->
+            <section
+                class="hb-sec"
+                id="sh-safety"
+                data-review-item="sh-safety"
+                data-review-topic="sh-safety"
+                data-review-topic-title="Destructive commands need a second press"
+                data-review-components="console"
+                data-review-title="Destructive commands need a second press"
+                data-review-choices='[{"id":"sh-confirm-words","label":"Which commands need a second press","once":true,"default":"core","options":[{"value":"core","label":"The destructive ones","hint":"Recommended. rm, reboot, shutdown, mkfs, dd and kill -9: what cannot be taken back. Everything else runs on one Enter."},{"value":"wide","label":"Also stopping things","hint":"Adds systemctl stop, pct stop and docker rm. Safer on a bad day, but every stop of a container costs one more press."}]}]'
+                aria-labelledby="h-sh-safety"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-sh-safety">Destructive commands need a second press</h2>
+                    <p>Stops a command like rm or reboot until you press Enter again, and when the host refuses one says what is wrong and what to do instead.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The words that need a second press are listed as chips beside the console (<b>rm</b>, <b>reboot</b>, <b>shutdown</b>, <b>mkfs</b>, <b>dd</b>, <b>kill -9</b>). Today a root shell runs <b>rm -rf</b> on the first Enter.</li>
+                        <li>Type <b>rm -rf /srv/tmp</b> and press Enter: nothing runs; the line stays and the hint says <b>Press Enter again to run it</b>. Enter again runs it (exit 0); any other key cancels. Type <b>hostname</b>: it runs at once.</li>
+                        <li>Type <b>reboot</b>, press Enter twice: the host answers with a block in the <b>refused</b> look: <b>Rebooting pve from the dashboard is not allowed.</b> and <b>What now</b>: <b>Do it over ssh…</b>. The line you typed stays in the prompt. With <b>The host allows it</b> the second press runs it.</li>
+                        <li><b>The choice</b>: the core list or the wider one; the chips and the console follow.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Chips and console on one grid, the refused block in the alert plate with its two parts. Look at: the pending-press hint being readable, chips clear of each other, text clear of every edge.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="sh-safety-component">
+                    <div role="group" aria-label="Host answer to reboot">
+                        <b>Host answer to reboot</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sf-answer="refuse">Refuses</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sf-answer="allow">Allows</button>
+                    </div>
+                    <div role="group" aria-label="Words">
+                        <b>Words</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sf-words="core">Destructive</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sf-words="wide">Also stopping</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="sh-safety-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Needs a second press</h3><p>A line that starts with one of these waits for a second Enter.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-sf-read></p>
+                        <div class="hb-pill-row" data-hb-sf-chips></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Console</h3><p>Try rm, reboot or hostname.</p></div>
+                        
+                        <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-hint="Try: rm -rf /srv/tmp (second press), reboot (refused by the host), hostname (runs at once)." aria-label="Host console"></div></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ sh-session -->
+            <section
+                class="hb-sec"
+                id="sh-session"
+                data-review-item="sh-session"
+                data-review-topic="sh-session"
+                data-review-topic-title="Clear with undo, run again, download the session"
+                data-review-components="console undo-toast newpill"
+                data-review-title="Clear with undo, run again, download the session"
+                aria-labelledby="h-sh-session"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-sh-session">Clear with undo, run again, download the session</h2>
+                    <p>Gives the console the small tools of a working session: wipe the screen and take it back, repeat a command with one press, keep the output as a file, and know how much new output arrived while you looked elsewhere.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A row of three buttons above the console: <b>Clear</b>, <b>Run again</b> and <b>Download the session</b>, each with a sentence saying what it does. <b>Clear</b> empties the screen and offers <b>Undo</b> for a few seconds; the history for Up stays. <b>Undo</b> brings every block back.</li>
+                        <li><b>Run again</b> repeats the last command in the same target (<b>uptime</b> to begin with) as a new block. <b>Download the session</b> writes every block (command, target, exit code, output) as a text file named with the date, and the reading says how many blocks and characters.</li>
+                        <li>Press <b>Stream the host journal</b> and scroll the console up while it runs: the pill reads <b>7 new lines</b> (exact), one press jumps to the end and follows again; <b>Space</b> pauses following.</li>
+                        <li><b>Loading</b>, <b>Unreachable</b> and <b>Off</b> as in the first section.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Three actions in one grid row with their words under them, the toast on an opaque plate, the pill clear of the output. Look at: the button labels never breaking mid-word at 390 px and the undo toast keeping a gap to the console.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="sh-session-component">
+                    <div role="group" aria-label="Console">
+                        <b>Console</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-ss-data="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ss-data="loading">Connecting</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-ss-data="error">Unreachable</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="sh-session-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Session</h3><p>Tools for the commands you ran in this tab.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-ss-read></p>
+                        <div class="hb-grid hb-actions3">
+                        <div class="hb-c4 hb-act"><button type="button" class="kp-button" data-hb-ss-clear>Clear</button><p>Empties the screen; Undo brings it back.</p></div>
+                        <div class="hb-c4 hb-act"><button type="button" class="kp-button" data-hb-ss-again>Run again</button><p>Repeats the last command in the same place.</p></div>
+                        <div class="hb-c4 hb-act"><button type="button" class="kp-button" data-hb-ss-save>Download the session</button><p>Every block as one text file.</p></div>
+                    </div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Console</h3><p>The host journal streams for 10 seconds when you ask.</p></div>
+                        
+                        <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-follow="stick" data-kp-console-hint="Try: uptime, then Stream the host journal." aria-label="Host console"></div></div><div class="hb-bar3"><div class="a"><button type="button" class="kp-button kp-button--secondary" data-hb-ss-stream>Stream the host journal</button></div></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ sh-mode -->
+            <section
+                class="hb-sec"
+                id="sh-mode"
+                data-review-item="sh-mode"
+                data-review-topic="sh-mode"
+                data-review-topic-title="Console in its own pane, or a bar inside the host log"
+                data-review-components="console code segmented"
+                data-review-title="Console in its own pane, or a bar inside the host log"
+                data-review-choices='[{"id":"sh-console-mode","label":"Where the console output lives","once":true,"default":"full","options":[{"value":"full","label":"Its own pane","hint":"Recommended. The package draws the blocks, folds long output, copies and remembers; the log stays a log. Commands are not interleaved with log lines."},{"value":"bar","label":"A bar in the log","hint":"Only the prompt; each command appears as a code block between the log lines in time order, as the approved page does today. Needs the page to draw the blocks (see the report)."}]}]'
+                aria-labelledby="h-sh-mode"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-sh-mode">Console in its own pane, or a bar inside the host log</h2>
+                    <p>Decides where a command's output lives: in a console pane under the log, or as blocks in the log itself with just a prompt bar to type in.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The host log on top (last lines with their time as dd/mm/yyyy HH:mm:ss, source and level) and the prompt under it. <b>Its own pane</b>: type <b>hostname</b> or <b>pct list</b> and the block appears in the console pane under the log; the log is untouched.</li>
+                        <li><b>A bar in the log</b>: the same prompt without a pane; the command and its result are inserted as a code block, with a state chip (<b>running</b>, <b>exit 0</b>, <b>exit 2</b>), between the log lines at the time they ran, where the log scrolls to them.</li>
+                        <li>The switch changes the console's attribute at runtime; the blocks already run stay where they are drawn. <b>Loading</b>, <b>Empty</b> (no lines yet) and <b>Failed</b> keep the log's height.</li>
+                        <li><b>The choice</b>: pane or bar; the pane is the default (the package does the work).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">One log above one prompt, the same height in both modes, code blocks with a chip at their start. Look at: the chip text clear of its edge, the log keeping its height, the prompt staying where it is.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="sh-mode-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sm-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sm-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sm-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sm-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Console">
+                        <b>Console</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sm-mode="full">Own pane</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sm-mode="bar">Bar in log</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="sh-mode-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Host log</h3><p>The newest lines of the host.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-sm-read></p>
+                        <section class="kp-card hb-card" data-kp-state="ready" aria-label="Host log"><div class="kp-card__stage"><div class="kp-card__data"><ol class="hb-logrows" data-kp-follow="tail" data-kp-pill-unit="line,lines" data-hb-sm-log></ol></div></div></section>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Command</h3><p>Type a command to run on pve.</p></div>
+                        
+                        <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-hint="Try: hostname, pct list, ls /missing." aria-label="Command prompt"></div></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ sh-log -->
+            <section
+                class="hb-sec"
+                id="sh-log"
+                data-review-item="sh-log"
+                data-review-topic="sh-log"
+                data-review-topic-title="The host log: filter by level, follow the tail, count what you missed"
+                data-review-components="newpill toggle"
+                data-review-title="The host log: filter by level, follow the tail, count what you missed"
+                data-review-choices='[{"id":"sh-log-follow","label":"Whether the log follows new lines","once":true,"default":"follow","options":[{"value":"follow","label":"Follow while at the end","hint":"Recommended. At the end it sticks to the newest line; scrolled away it stays put and counts. Space pauses."},{"value":"manual","label":"Never follow","hint":"The log never moves by itself; the pill only counts and a press jumps. Calmer to read, but the live tail needs a press."}]}]'
+                aria-labelledby="h-sh-log"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-sh-log">The host log: filter by level, follow the tail, count what you missed</h2>
+                    <p>Shows the host log as it grows: it follows the newest line while you are at the end, and when you scroll back a pill counts what arrived out of sight.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Three chips with exact counts filter by level: <b>All 2000</b>, <b>Error 34</b>, <b>Warning 25</b>, <b>Info 1941</b> (the errors sit at 03:11 to 03:17 and 13:00 to 13:40). Each line: time as <b>19/10/2026 03:12:03</b>, source with its own colour mark and a word, level as a word, text. The older lines are in the 2,000-line window.</li>
+                        <li><b>Stream 12 new lines</b> adds a line every half second once. At the end the log follows. Scroll up first: the pill reads <b>4 new lines</b>, then <b>7</b>, and one press (or <b>End</b>) jumps back and follows again.</li>
+                        <li>The line text is a stand-in: the package's own log viewer (level colouring, time gutter, open one line) is being built; this section judges the filter, the follow and the pill.</li>
+                        <li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> keep the log's height with <b>Try again</b>.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Lines on one four-column grid so time, source, level and text align; the pill on an opaque plate. Look at: columns staying aligned as lines arrive, the pill clear of the lines, the chips' counts not jumping.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="sh-log-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sl-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sl-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sl-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sl-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Follow">
+                        <b>Follow</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sl-follow="follow">Follow</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sl-follow="manual">Never</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="sh-log-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Filter</h3><p>Show only the levels you press.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-sl-read></p>
+                        <div class="hb-bar3"><div class="a" style="grid-column: 1 / span 8"><div class="kp-toggles" role="group" aria-label="Level" data-kp-toggle-group="level" data-kp-toggle-clear data-hb-sl-levels></div></div><div class="c"><button type="button" class="kp-button kp-button--secondary" data-hb-sl-stream>Stream 12 new lines</button></div></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Lines</h3><p>Newest at the bottom.</p></div>
+                        
+                        <section class="kp-card hb-card" data-kp-state="ready" aria-label="Host log"><div class="kp-card__stage"><div class="kp-card__data"><ol class="hb-logrows hb-logrows--tall" data-kp-follow="tail" data-kp-pill-unit="line,lines" data-hb-sl-log></ol></div></div></section>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ sh-density -->
+            <section
+                class="hb-sec"
+                id="sh-density"
+                data-review-item="sh-density"
+                data-review-topic="sh-density"
+                data-review-topic-title="Where in the log did it happen: a density strip and a source-by-time grid"
+                data-review-components="uptime heat toggle"
+                data-review-title="Where in the log did it happen: a density strip and a source-by-time grid"
+                data-review-choices='[{"id":"sh-density-form","label":"Which picture opens first","once":true,"default":"strip","options":[{"value":"strip","label":"The strip","hint":"Recommended. One thin strip, tone by the worst level in each five minutes; a press jumps the log to that time. Quiet and always one line high."},{"value":"grid","label":"Sources by time","hint":"A grid of eight sources against five-minute columns: shows which source is noisy, but needs a tall frame."}]}]'
+                aria-labelledby="h-sh-density"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-sh-density">Where in the log did it happen: a density strip and a source-by-time grid</h2>
+                    <p>Draws the whole 2,000-line window as a strip of five-minute cells and as a grid of sources against time, so "what happened at 03:12" is one press away.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The strip: 133 cells from <b>19/10/2026 03:00</b> to <b>14:05</b>, amber where the worst line was a warning, red for an error, hatched blank where nothing was logged. The red cells at <b>03:10</b> to <b>03:15</b> (inbox disk quota during the nightly round) and <b>13:00</b> to <b>13:40</b> (traefik 502) stand out. Hover a cell for its time and the number of lines; press one: the reading says <b>Jumped to 03:10, line 217</b> and the lines of that time are listed below.</li>
+                        <li>The grid: eight sources by the same columns, cells toned by level; a press on a column filters the lines to those five minutes, a press on a source name toggles that source. A legend explains the tones.</li>
+                        <li><b>The choice</b>: strip or grid first; the switch changes it live.</li>
+                        <li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> keep the height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A thin strip with clear gaps, a grid whose names never touch the cells, a short list of the chosen minutes under both. Look at: cell states distinguishable without colour, the time labels at both ends clear of the cells.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="sh-density-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sd-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sd-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sd-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sd-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Picture">
+                        <b>Picture</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sd-form="strip">Strip</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sd-form="grid">Grid</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="sh-density-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>The 2,000-line window</h3><p>Press a cell to look at those five minutes.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-sd-read></p>
+                        <div class="hb-density" data-hb-sd-host></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Lines of that time</h3><p>The lines of the cell you pressed.</p></div>
+                        
+                        <section class="kp-card hb-card" data-kp-state="ready" aria-label="Lines of the chosen time"><div class="kp-card__stage"><div class="kp-card__data"><ol class="hb-logrows" data-hb-sd-lines></ol></div></div></section>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ sh-keys -->
+            <section
+                class="hb-sec"
+                id="sh-keys"
+                data-review-item="sh-keys"
+                data-review-topic="sh-keys"
+                data-review-topic-title="Keys that work on a Belgian keyboard"
+                data-review-components="shortcuts keys dialog"
+                data-review-title="Keys that work on a Belgian keyboard"
+                data-review-choices='[{"id":"sh-guard","label":"What happens to a key that needs AltGr","once":true,"default":"warn","options":[{"value":"warn","label":"Warn and keep it","hint":"Recommended. The key still works and the page tells the developer which key and what to use instead; a keyboard that has it keeps its shortcut."},{"value":"refuse","label":"Refuse the key","hint":"The key is not registered at all, so no shortcut can exist that a Belgian keyboard cannot press. Stricter; a developer must pick another key."}]}]'
+                aria-labelledby="h-sh-keys"
+            >
+                <div class="hb-sec__head">
+                    <h2 id="h-sh-keys">Keys that work on a Belgian keyboard</h2>
+                    <p>Registers the shell's shortcuts and warns, or refuses, any key that needs AltGr on an AZERTY keyboard, so a shortcut can never be one a person cannot type.</p>
+                </div>
+                <div class="hb-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The shell's keys as a line of caps (<b>:</b> prompt, <b>g l</b> log, <b>g c</b> console, <b>?</b> all keys). Press <b>g</b> then <b>l</b>: the reading says <b>Went to the log</b>; press <b>:</b>: it says the prompt would take focus. <b>Show every shortcut</b> opens the sheet, filled from what is registered.</li>
+                        <li><b>Try the old key</b> registers <b>Ctrl `</b> (what the shell used, which needs AltGr on Belgian AZERTY) and <b>[</b>: with <b>Warn</b> the reading shows the package's sentence naming the key and what to use; with <b>Refuse</b> it says the key was refused and is not in the sheet.</li>
+                        <li><b>The choice</b>: warn or refuse as the page's default.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A line of key caps, a table of keys with their words in fixed columns, the sheet on an opaque plate. Look at: caps never touching their words, the warning sentence wrapping instead of being cut.</p>
+                </div>
+                <div class="hb-controls" data-review-controls data-review-controls-for="sh-keys-component">
+                    <div role="group" aria-label="Guard">
+                        <b>Guard</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hb-sk-guard="warn">Warn</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hb-sk-guard="refuse">Refuse</button>
+                    </div>
+                </div>
+                <div class="hb-frame " id="sh-keys-component">
+                    <div class="hb-grid">
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Keys</h3><p>The shortcuts of the Shell page.</p></div>
+                        <p class="hb-panel__read" role="status" data-hb-sk-read></p>
+                        <div class="kp-keys" data-hb-sk-caps></div>
+                    </div>
+                    <div class="hb-panel ">
+                        <div class="hb-panel__head"><h3>Check a key</h3><p>Register a key the old shell used and see what the guard says.</p></div>
+                        
+                        <div class="hb-pill-row"><button type="button" class="kp-button" data-hb-sk-old>Try the old key</button><button type="button" class="kp-button kp-button--secondary" data-hb-sk-sheet>Show every shortcut</button></div>
+                    <p class="hb-log" data-hb-sk-log role="status" aria-live="polite">Press Try the old key.</p>
+                    <dialog class="kp-shortcuts" data-kp-shortcuts data-kp-shortcuts-live data-hb-sk-dlg aria-label="Keyboard shortcuts"><h2 class="kp-dialog__title">Keyboard shortcuts</h2></dialog>
+                    </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-homelab-backups-3b6f0e0a-6f4c-4a3e-9d0c-51a8b7c2e1f4" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="fw.js"></script>
+        <script type="module" src="host.js"></script>
+        <script type="module" src="shell.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

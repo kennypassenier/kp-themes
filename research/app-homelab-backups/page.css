@@ -1,0 +1,422 @@
+/* research/app-homelab-backups: the page's own frame. Everything with a kp- class is the package; these hb- rules only
+   lay the sections out and draw the readouts. */
+
+.hb-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hb-intro,
+.hb-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hb-intro :is(h1, p),
+.hb-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hb-intro p,
+.hb-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hb-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hb-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hb-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hb-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+/* One box of buttons that drive the component below it; groups share one row. */
+.hb-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.hb-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.hb-controls > [role='group'] > b {
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+}
+
+.hb-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.hb-frame > [hidden] {
+    display: none;
+}
+
+/* A row of the component's own buttons: paging, the switch, the range, the freshness line at the end. */
+.hb-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-block-size: 2.25rem;
+}
+
+.hb-bar__range {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+    padding-inline: var(--kp-space-sm, 0.5rem);
+}
+
+.hb-bar__grow {
+    flex: 1 1 auto;
+}
+
+.hb-readout,
+.hb-summary,
+.hb-point {
+    margin: 0;
+    min-block-size: 1.5lh;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hb-summary,
+.hb-point {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.hb-log {
+    box-sizing: border-box;
+    min-block-size: calc(2lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* 1. the grid: the heat keeps one height whatever its state, so the legend and the readouts never move */
+.hb-heat {
+    min-block-size: 29rem;
+}
+
+/* 2. the repositories: the stack list on the left, the bar and the table on the right */
+.hb-repos__facets h3 {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hb-repos__main {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.hb-table {
+    min-block-size: 46rem;
+    min-inline-size: 0;
+}
+
+.hb-table .kp-datatable {
+    min-block-size: 46rem;
+}
+
+.hb-table .hb-group {
+    display: inline-flex;
+    vertical-align: middle;
+    inline-size: calc(100% - 2.25rem);
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hb-table .hb-group__name {
+    font-weight: 600;
+}
+
+.hb-table .hb-group__ct {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hb-table .hb-group__grow {
+    flex: 1 1 auto;
+}
+
+.hb-table .kp-uptime {
+    min-inline-size: 11rem;
+}
+
+.hb-snaps {
+    inline-size: 100%;
+}
+
+.hb-snaps td,
+.hb-snaps th {
+    padding-inline: var(--kp-space-sm, 0.5rem);
+}
+
+/* 3. the month: the calendar beside the grid of the same month, both under one top edge */
+.hb-month__body {
+    min-block-size: 30rem;
+    min-inline-size: 0;
+}
+
+.hb-month__month {
+    display: grid;
+    grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.hb-month__nights,
+.hb-month__month > * {
+    min-inline-size: 0;
+}
+
+.hb-month__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    min-block-size: 2.25rem;
+}
+
+.hb-month__foot > p {
+    flex: 1 1 18rem;
+}
+
+/* 4. one night: the stack list and the week side by side, inside one card that carries the state */
+.hb-night__cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.hb-night__list .kp-statuslist {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    column-gap: var(--kp-space-lg, 1.5rem);
+}
+
+.hb-facts {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+    color: var(--muted-foreground);
+}
+
+.hb-night__list,
+.hb-night__week {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.hb-night__list {
+    min-block-size: 0;
+}
+
+.hb-night__list .kp-field__input,
+.hb-night__week .kp-field__input {
+    inline-size: auto;
+    min-inline-size: 12rem;
+}
+
+/* 5. restore: every step keeps one height, so the wizard does not jump */
+.hb-restore {
+    min-inline-size: 0;
+}
+
+.hb-step {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-block-size: 22rem;
+    align-content: start;
+}
+
+.hb-step__go {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hb-step__go[hidden] {
+    display: none;
+}
+
+@media (max-width: 62rem) {
+    .hb-night__cols,
+    .hb-month__month {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hb-night__list,
+    .hb-night__week {
+        min-block-size: 0;
+    }
+}
+
+/* On a phone the cards run the page's length; a short scrolling box would show barely one. */
+@media (max-width: 40rem) {
+    .hb-table .kp-datatable[data-kp-max-height] .kp-table-wrap {
+        max-block-size: none;
+    }
+}
+
+.hb-table .kp-bar-cell {
+    margin-inline-end: var(--kp-space-sm, 0.5rem);
+}
+
+/* ── the page's grid composition (Kenny, 2026-10-19 05:11): every frame is a 12-column grid, every part a panel that
+      states what it is and what it shows, placed by span and never pushed left and right ─────────────────────────── */
+.hb-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    min-inline-size: 0;
+}
+
+.hb-grid > * {
+    grid-column: 1 / -1;
+    min-inline-size: 0;
+}
+
+.hb-grid > .hb-c3 { grid-column: span 3; }
+.hb-grid > .hb-c4 { grid-column: span 4; }
+.hb-grid > .hb-c5 { grid-column: span 5; }
+.hb-grid > .hb-c6 { grid-column: span 6; }
+.hb-grid > .hb-c7 { grid-column: span 7; }
+.hb-grid > .hb-c8 { grid-column: span 8; }
+
+@media (max-width: 62rem) {
+    .hb-grid > .hb-c3,
+    .hb-grid > .hb-c4,
+    .hb-grid > .hb-c5,
+    .hb-grid > .hb-c6,
+    .hb-grid > .hb-c7,
+    .hb-grid > .hb-c8 {
+        grid-column: 1 / -1;
+    }
+}
+
+/* A panel: a heading and one sentence in the first eight columns, the live reading of the part in the last four, the part
+   itself under both on the full width. Heading and reading share one baseline row. */
+.hb-panel {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.hb-panel > * { grid-column: 1 / -1; min-inline-size: 0; }
+.hb-panel__head { grid-column: 1 / span 8; display: grid; gap: var(--kp-space-xs, 0.25rem); }
+.hb-panel__head :is(h3, p) { margin: 0; }
+.hb-panel__head p { color: var(--muted-foreground); font-size: var(--kp-text-sm, 0.8125rem); }
+.hb-panel__read { grid-column: 9 / -1; align-self: end; margin: 0; color: var(--foreground); font-size: var(--kp-text-sm, 0.8125rem); min-block-size: 3lh; }
+@media (max-width: 62rem) {
+    .hb-panel__head, .hb-panel__read { grid-column: 1 / -1; min-block-size: 0; }
+}
+
+.hb-fw-table, .hb-fw-matrix, .hb-ho-table { min-inline-size: 0; }
+.hb-fw-table { min-block-size: 24rem; }
+.hb-fw-table .kp-datatable { min-block-size: 24rem; }
+.hb-fw-matrix { min-block-size: 30rem; overflow-x: auto; }
+.hb-bar3 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: center;
+}
+.hb-bar3 > * { min-inline-size: 0; }
+.hb-bar3 > .a { grid-column: 1 / span 4; }
+.hb-bar3 > .b { grid-column: 5 / span 4; }
+.hb-bar3 > .c { grid-column: 9 / -1; }
+@media (max-width: 62rem) { .hb-bar3 > * { grid-column: 1 / -1 !important; } }
+.hb-pill-row { display: flex; flex-wrap: wrap; gap: var(--kp-space-xs, 0.25rem); }
+.hb-fw-matrix .kp-matrix {
+    --kp-matrix-cell-min: 2.75rem;
+    --kp-matrix-head: 5.5rem;
+}
+
+/* Host and System */
+.hb-ho-view { min-block-size: 24rem; min-inline-size: 0; }
+.hb-ho-view td[data-label="Memory"] .kp-bar-cell { --kp-bar-cell-value: 13ch; --kp-bar-cell-bar: 4rem; }
+.hb-ho-view td[data-label="CPU"] .kp-bar-cell { --kp-bar-cell-value: 6ch; }
+.hb-hostlist, .hb-ho-list { min-block-size: 18rem; }
+.hb-tile-foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--kp-space-sm, 0.5rem); }
+.hb-vlist { display: grid; margin: 0; padding: 0; list-style: none; }
+.hb-vlist > li { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 6fr); gap: var(--kp-space-md, 1rem); align-items: center; padding-block: var(--kp-space-sm, 0.5rem); border-block-end: 1px solid var(--border); }
+.hb-vlist__note { color: var(--muted-foreground); font-size: var(--kp-text-sm, 0.8125rem); }
+@media (max-width: 40rem) { .hb-vlist > li { grid-template-columns: minmax(0, 1fr); gap: var(--kp-space-xs, 0.25rem); } }
+.hb-reads { display: grid; gap: var(--kp-space-xs, 0.25rem); margin: 0; padding: 0; list-style: none; min-block-size: 7.5rem; align-content: start; font-size: var(--kp-text-sm, 0.8125rem); }
+.hb-link, .hb-spark { min-block-size: 8rem; }
+.hb-diag { min-block-size: 14rem; }
+.hb-detail { padding: var(--kp-space-sm, 0.5rem); }
+.hb-detail p { margin: 0; }
+
+/* Console and host log */
+.hb-console { min-block-size: 18rem; min-inline-size: 0; }
+.hb-actions3 { align-items: stretch; }
+.hb-act { display: grid; gap: var(--kp-space-xs, 0.25rem); align-content: start; }
+.hb-act p { margin: 0; color: var(--muted-foreground); font-size: var(--kp-text-sm, 0.8125rem); }
+.hb-logrows { display: grid; margin: 0; padding: 0; list-style: none; max-block-size: 16rem; overflow: auto; font-size: var(--kp-text-sm, 0.8125rem); }
+.hb-logrows--tall { max-block-size: 24rem; }
+.hb-logrow { display: grid; grid-template-columns: 10.5rem 9rem 5.5rem minmax(0, 1fr); gap: var(--kp-space-md, 1rem); align-items: baseline; padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem); border-block-end: 1px solid var(--border); }
+.hb-logrow[data-level='error'] { background: color-mix(in srgb, var(--destructive) 8%, transparent); }
+.hb-logrow__text { overflow-wrap: anywhere; }
+.hb-src { display: inline-flex; align-items: center; gap: var(--kp-space-xs, 0.25rem); }
+.hb-src__mark { inline-size: 0.6rem; block-size: 0.6rem; border-radius: 2px; background: var(--kp-source-colour, var(--muted-foreground)); flex: none; }
+.hb-logblock { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: var(--kp-space-md, 1rem); align-items: start; padding: var(--kp-space-sm, 0.5rem); }
+.hb-density { min-block-size: 9rem; min-inline-size: 0; overflow-x: auto; }
+@media (max-width: 40rem) { .hb-logrow { grid-template-columns: minmax(0, 1fr); gap: var(--kp-space-xs, 0.25rem); } .hb-logblock { grid-template-columns: minmax(0, 1fr); } }
+.hb-ct { margin-inline-start: var(--kp-space-sm, 0.5rem); color: var(--muted-foreground); font-size: var(--kp-text-sm, 0.8125rem); }
+.hb-tile-foot > time { padding-inline: var(--kp-space-xs, 0.25rem); }
+@media (max-width: 40rem) {
+    .hb-ho-view td[data-label="Memory"] .kp-bar-cell { --kp-bar-cell-value: auto; grid-template-columns: minmax(3rem, 1fr) auto; }
+}
