@@ -1,0 +1,1420 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-homelab-stacks" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Homelab dashboard: stacks, apps, changes and the Map · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main sk-page">
+            <header class="sk-intro">
+                <h1>Homelab dashboard: stacks, apps, changes and the Map on kp-themes 11.0.0</h1>
+                <p class="cat-intro">
+                    The dashboard of the host <b>pve</b> has a Stacks page (the fleet, the Apps launcher, Presets, Retired), a page per stack with the Apply and
+                    Update flows, and a Map. This page rebuilds their parts from the package&rsquo;s own components, in formal. Each of the 23 sections asks one thing to
+                    look at; where a choice exists, its options are real and switchable and you only say which one opens first. Nothing is required.
+                </p>
+                <p>
+                    Mock on this page: every stack, app, size and date is sample data in the dashboard&rsquo;s own shapes (jellyfin, immich, paperless, vaultwarden,
+                    traefik, prometheus, grafana, loki, kyu, almanac, syncthing, inbox, metrics, admin; the time is fixed at 19/10/2026 09:41). Backend work still
+                    needed is said in the section: per-app watch history, a server read of release notes. Left out because the package is still building them:
+                    the CPU line on a card, the link tile with a star, and a count on a tab. The Map&rsquo;s network drawing is not part of this page. Nothing moves
+                    until you press a button.
+                </p>
+            </header>
+
+            <!-- ================================================================ fleet-cards -->
+            <section
+                class="sk-sec"
+                id="fleet-cards"
+                data-review-item="fleet-cards" data-review-topic="fleet" data-review-topic-title="The Stacks page: cards, table and batch actions"
+                data-review-components="entity-card"
+                data-review-title="The fleet as cards that keep one height"
+                data-review-choices='[{"id":"fleet-default-view","label":"Which view the Stacks page opens with","once":true,"default":"table","options":[{"value":"table","label":"Table","hint":"Recommended. With seventeen stacks and more coming, a table with groups (needs attention first) finds the stack that is wrong in one glance, sorts by anything and opens a row to show its apps and backups without leaving the page."},{"value":"cards","label":"Cards","hint":"One card per stack with a memory meter and its buttons; friendlier to scan when you have few stacks and want a button under your thumb. The cards stay one option on the page."}]}]'
+                aria-labelledby="h-fleet-cards"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-fleet-cards">The fleet as cards that keep one height</h2>
+                    <p>Shows every stack as one card with its state in words, its figures, its flags, its memory and its buttons; a card is the same height whatever it holds.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Seventeen cards</b> in a grid of equal columns (<code>.kp-entity-grid</code>). Each shows the stack name with its container number, the state in words (running, needs attention, parked), the figures <b>Apps up</b>, <b>Restarts</b> and <b>CPU</b>, flags (<b>update available</b>, <b>restart loop</b>, <b>parked</b>) and a <b>RAM</b> meter with its 80 % mark. Every card is the same height, with or without flags.</li>
+                        <li>The buttons are <b>Deploy</b> and <b>Back up now</b>; on a parked stack <b>Deploy</b> is off and says why (&ldquo;Parked since 02/09/2026: unpark it first&rdquo;). Press one and the line under the cards says what would be sent.</li>
+                        <li><b>Show</b> narrows the grid (all 17, the 2 that need attention, the 3 parked) without the cards changing size. <b>Data</b>: Loading lays the busy card over skeleton cards, Empty and Failed fill the same footprint with a plate and a normal-size button.</li>
+                        <li>The 24-hour CPU line on each card waits for the package (the card has no sparkline slot yet), so CPU is a figure today. This section is on sample data; it only reads the fleet.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">White cards with a hairline, a navy primary and a coloured mark beside each state word (never colour alone). Look at the gap between each figure and its label, that the flags never touch the card edge, that the RAM meter shows its 80 % tick, and that a card with no flag is exactly as high as one with three.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-cards-component">
+                    <div role="group" aria-label="Show">
+                        <b>Show</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cards-show="all">All 17</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-show="attention">Needs attention (2)</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-show="parked">Parked (3)</button>
+                    </div>
+                    <div role="group" aria-label="Page opens with" data-review-latent>
+                        <b>Page opens with</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-fleet-open="table">Table</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-fleet-open="cards">Cards</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cards-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="fleet-cards-component">
+                    <p class="sk-pane__line" id="sk-cards-note" role="status">The Stacks page opens with the table; this cards view is one press away.</p>
+                    <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-min="19rem" data-kp-entity-meters="1" id="sk-cards"></div>
+                    <pre class="sk-log" id="sk-cards-log" aria-live="polite">Press a card button; what the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ fleet-table -->
+            <section
+                class="sk-sec"
+                id="fleet-table"
+                data-review-item="fleet-table" data-review-topic="fleet"
+                data-review-components="datatable barcell"
+                data-review-title="The fleet as a table that opens a row"
+                aria-labelledby="h-fleet-table"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-fleet-table">The fleet as a table that opens a row</h2>
+                    <p>Lists the stacks in groups by state, sortable on any column, and opens a stack in place to show its apps, its last three backups and its CPU, so you need not leave the page to know what is wrong.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Groups</b>: <b>Needs attention (2)</b> first, <b>Running (12)</b>, and <b>Parked (3)</b> folded; each heading shows its exact count and folds its rows. <b>Group by</b> switches to the preset or to no groups; sorting orders the rows within a group.</li>
+                        <li>Columns: stack with its container number, state, apps up (<code>3/5</code>), restarts, RAM and CPU as bars (amber from 75 %, red from 90 %), last backup as <code>dd/mm/yyyy HH:mm</code>. <b>Columns</b> in the bar hides or shows any column except Stack; <b>Preset</b> starts hidden.</li>
+                        <li>The arrow at the start of a row opens its detail (one row open at a time): its apps with their image and state, the last three backups with sizes, and the CPU of the last 24 hours as a figure. Press the stack name to go to its hub (the page says where it would go).</li>
+                        <li><b>+ Add filter</b> adds a filter one at a time (State, RAM, Preset); the search box searches all columns. Sort and column choice are remembered on this device. <b>Data</b>: Loading and Failed use the table&rsquo;s own states at the table&rsquo;s height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Look at the group headings (a band with the exact count), that the bar cells line up in one column with the number beside the bar, that the opened row shows its three parts on a grid with nothing against the edge, and that the folded group does not move the rows above it.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-table-component">
+                    <div role="group" aria-label="Group by">
+                        <b>Group by</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-table-group="state">State</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-group="preset">Preset</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-group="none">No groups</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-table-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="fleet-table-component">
+                    <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-expand-single data-kp-column-menu data-kp-filter-mode="add" data-kp-page-size="30" data-kp-page-sizes="none" data-kp-remember="sk-fleet-table" id="sk-table">
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search" data-kp-datatable-search type="search" aria-label="Search the stacks" placeholder="Search the stacks" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">The stacks on the host pve; open a row for its apps, backups and CPU</caption>
+                                <thead>
+                                    <tr>
+                                    <th scope="col" data-kp-sort="text" data-kp-filter="choice" data-kp-column-locked>Stack</th>
+                                    <th scope="col" data-kp-sort="text" data-kp-filter="choice">State</th>
+                                    <th scope="col" data-kp-sort="number" class="kp-text-end">Apps up</th>
+                                    <th scope="col" data-kp-sort="number" class="kp-text-end">Restarts</th>
+                                    <th scope="col" data-kp-sort="number" data-kp-filter="range">RAM</th>
+                                    <th scope="col" data-kp-sort="number">CPU</th>
+                                    <th scope="col" data-kp-sort="number">Last backup</th>
+                                    <th scope="col" data-kp-sort="text" data-kp-filter="choice" data-kp-column-hidden>Preset</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sk-table-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No stack matches these filters.</div>
+                        <div class="kp-datatable__bar"><p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p></div>
+                    </div>
+                    <pre class="sk-log" id="sk-table-log" aria-live="polite">Open a row or press a stack name; what the page would do shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ fleet-batch -->
+            <section
+                class="sk-sec"
+                id="fleet-batch"
+                data-review-item="fleet-batch" data-review-topic="fleet"
+                data-review-components="selection-bar datatable undo-toast"
+                data-review-title="Tick several stacks and act on them together"
+                data-review-choices='[{"id":"fleet-deploy-safety","label":"How a batch Deploy asks for safety","once":true,"default":"undo","options":[{"value":"undo","label":"Do it, with ten seconds to undo","hint":"Recommended. The rows show &amp;ldquo;deploying&amp;rdquo; at once, a toast counts down ten seconds with Undo, and the deploy is sent when the clock ends. It is fast and takes one press back. A deploy can be undone before it starts."},{"value":"confirm","label":"Ask first","hint":"A dialog lists the stacks and asks again before anything starts. One more press every time, safer for a hand that slips. Stop and anything that cannot be undone always asks, whichever is the default."}]}]'
+                aria-labelledby="h-fleet-batch"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-fleet-batch">Tick several stacks and act on them together</h2>
+                    <p>Ticking rows brings up a bar that says how many and which stacks are chosen and offers Deploy, Back up now and Stop for all of them; an action that does not fit the choice is off and says why.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Tick <b>loki</b> and <b>immich</b>: the bar slides in over the space it keeps (nothing below jumps) and reads <b>2 selected</b> with both names, <b>Deploy</b>, <b>Back up now</b>, <b>Stop</b> and a button that unticks all (<kbd>Esc</kbd> does the same). The header box ticks every stack on the page; the buttons <b>Select</b> do the same from here.</li>
+                        <li>Tick <b>wiki</b> (parked) as well: <b>Deploy</b> turns off and says <b>2 of 3 can be deployed</b>. Tick <b>traefik</b>: <b>Stop</b> turns off and says <b>traefik carries every other stack: stop it on its own page</b>.</li>
+                        <li><b>Deploy</b> follows the default above: either the rows say deploying and a ten-second toast offers Undo (press it: the rows go back and nothing is sent), or a dialog asks first. <b>Stop</b> always asks. <b>Server: One is refused</b> makes <b>loki</b> refuse (&ldquo;the host has no memory left for it&rdquo;): the bar says <b>1 done, 1 refused: why</b> and marks the refused row.</li>
+                        <li>This is the list the Stacks page and the Retired page share; exact counts, no &ldquo;+N&rdquo; guessing.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The bar is a quiet band with the count in bold and the names wrapping (never cut with an ellipsis); the off buttons are visibly off and the reason sits beside them in words. Look at the bar&rsquo;s height, which stays the same with one name and with six, and at the toast&rsquo;s ring clock.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-batch-component">
+                    <div role="group" aria-label="Select">
+                        <b>Select</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-batch-pick="attention">The 2 that need attention</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-batch-pick="mixed">Three, one parked</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-batch-pick="all">All 17 shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-batch-pick="none">None</button>
+                    </div>
+                    <div data-review-latent role="group" aria-label="Server">
+                        <b>Server</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-batch-server="accepts">Accepts all</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-batch-server="refuses">One is refused</button>
+                    </div>
+                    <div role="group" aria-label="Deploy asks" data-review-latent>
+                        <b>Deploy asks</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-batch-safety="undo">With undo</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-batch-safety="confirm">Asks first</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="fleet-batch-component">
+                        <div class="kp-selection sk-bar" data-kp-selection data-kp-selection-for="sk-batch" data-kp-placement="sticky-top" data-kp-undo-ms="10000" id="sk-batch-bar" aria-label="Selected stacks">
+                            <div class="kp-selection__actions">
+                                <button type="button" class="kp-button kp-button--primary" data-kp-selection-action="deploy">Deploy</button>
+                                <button type="button" class="kp-button" data-kp-selection-action="backup">Back up now</button>
+                                <button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="stop">Stop</button>
+                            </div>
+                        </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-page-size="30" data-kp-page-sizes="none" id="sk-batch">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">The running and parked stacks; tick the ones to act on</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select every stack on this page" /></th>
+                                        <th scope="col" data-kp-sort="text">Stack</th>
+                                        <th scope="col" data-kp-sort="text">State</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Apps up</th>
+                                        <th scope="col" data-kp-sort="number">Last backup</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sk-batch-rows"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="sk-toastbed" id="sk-batch-bed" aria-label="Toasts of this section"></div>
+                    <pre class="sk-log" id="sk-batch-log" aria-live="polite">Tick a row; what the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ fleet-hungry -->
+            <section
+                class="sk-sec"
+                id="fleet-hungry"
+                data-review-item="fleet-hungry" data-review-topic="fleet-glance" data-review-topic-title="The fleet at a glance: hungriest stacks and backups"
+                data-review-components="bullets stackbar"
+                data-review-title="Which stacks use the most, and who fills the root disk"
+                data-review-choices='[{"id":"fleet-hungry-measure","label":"What the ranking measures first","once":true,"default":"ram","options":[{"value":"ram","label":"Memory","hint":"Recommended. Memory is the first thing that ends a stack (the host kills a container that passes its limit), and loki is already at 91 %."},{"value":"cpu","label":"CPU","hint":"Share of the stack&#39;s cores in use right now. Spiky, so it changes the order on every refresh."},{"value":"disk","label":"Disk","hint":"Share of the stack&#39;s volume that is full. Slow to change, the right view when planning clean-ups."}]}]'
+                aria-labelledby="h-fleet-hungry"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-fleet-hungry">Which stacks use the most, and who fills the root disk</h2>
+                    <p>Ranks the stacks by what they use of their allowance, worst first, and splits the root disk into the stacks that fill it; pressing a part of the bar narrows the ranking to that stack.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Hungriest stacks</b> (<code>.kp-bullets</code>): one row per running stack with its mark, the figure (<code>91 %</code>) and a bar that turns amber from 75 % and red from 90 %. Worst first. <b>Measure</b> switches the row order and the figures between memory, CPU and disk; the choice above is the one it opens with.</li>
+                        <li><b>Who fills the root disk</b> (<code>.kp-stackbar</code>): the 240 GB of the host root split into loki (38 GB, warning), prometheus, immich and the rest, with the free space and a tick at the 85 % alert level. Hover a part for its size and share.</li>
+                        <li>Press <b>loki</b> in the bar or its legend: the ranking narrows to loki and a line above it says <b>Only loki</b> with a button to show all again. <b>Data</b>: Loading, Empty and Failed fill both parts at their height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Bars with a track you can read at a glance: the amber and red fills carry the number beside them as well, the tick at 85 % is labelled, and the legend of the share bar wraps without cutting a name. Look at the gap between each figure and the bar.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-hungry-component">
+                    <div role="group" aria-label="Measure">
+                        <b>Measure</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-hungry-measure="ram">Memory</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-measure="cpu">CPU</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-measure="disk">Disk</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-hungry-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="fleet-hungry-component">
+                    <div class="sk-hungry">
+                        <div class="sk-pane sk-hungry__disk">
+                            <h3 class="sk-pane__title">Who fills the root disk</h3>
+                            <figure class="kp-stackbar kp-stackbar--lg" data-kp-stackbar id="sk-disk-split"></figure>
+                        </div>
+                        <div class="sk-pane sk-hungry__rank">
+                            <h3 class="sk-pane__title">Hungriest stacks</h3>
+                            <p class="sk-pane__line" id="sk-hungry-line" role="status"></p>
+                            <div class="kp-bullets" data-kp-bullets id="sk-hungry"></div>
+                        </div>
+                    </div>
+                    <pre class="sk-log" id="sk-hungry-log" aria-live="polite">Press a part of the bar; what it narrows shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ fleet-nights -->
+            <section
+                class="sk-sec"
+                id="fleet-nights"
+                data-review-item="fleet-nights" data-review-topic="fleet-glance"
+                data-review-components="heat"
+                data-review-title="Every stack, every night: which backup was missed"
+                data-review-choices='[{"id":"fleet-nights-window","label":"How many nights the grid opens with","once":true,"default":"14","options":[{"value":"14","label":"14 nights","hint":"Recommended. Two weeks fit the page width without scrolling and show a stack that has failed twice, which is the pattern worth acting on."},{"value":"30","label":"30 nights","hint":"A whole month, as a denser grid; slower to read on a phone, better for judging retention."}]}]'
+                aria-labelledby="h-fleet-nights"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-fleet-nights">Every stack, every night: which backup was missed</h2>
+                    <p>Draws the stacks against the last nights as a grid of coloured cells, with one summary row of how many stacks missed each night, so a stack that fails often shows as a stripe.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Grid</b> (<code>.kp-heat</code>): 17 rows, one per stack, with the nights as columns (oldest left), a summary row on top showing the share of stacks that missed each night, and a legend (backed up, missed, paused). Parked stacks show &ldquo;paused&rdquo; cells, not failures.</li>
+                        <li>Press a night&rsquo;s cell: the list under the grid shows that stack&rsquo;s backup of that night with its size. Press a stack name: the list shows its last three backups. Both say what the Stacks table would filter to.</li>
+                        <li><b>Nights</b> switches 14 and 30 columns (the choice above is the default); the columns keep a minimum width and the grid scrolls inside its own box on a phone, never the page. <b>Data</b>: Loading draws the grid&rsquo;s own skeleton, Failed and Empty fill the same footprint.</li>
+                        <li>The data (a backup per stack per night) is already read by the Stacks page today.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Cells are small squares with a clear gap; a missed night is red with a mark as well as colour, a paused one is hatched, the summary row has exact bars. Look that row labels never touch the first cell and that the legend swatches line up.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-nights-component">
+                    <div role="group" aria-label="Nights">
+                        <b>Nights</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-nights-window="14">14 nights</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-nights-window="30">30 nights</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-nights-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-nights-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-nights-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-nights-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="fleet-nights-component">
+                    <div class="kp-heat sk-heat" data-kp-heat data-kp-heat-toggle data-kp-heat-latest="end" id="sk-nights"></div>
+                    <ul class="kp-heat__legend sk-legend" aria-label="Legend"><li><span class="kp-heat__swatch" data-kp-tone="ok"></span> backed up</li><li><span class="kp-heat__swatch" data-kp-tone="bad"></span> missed</li><li><span class="kp-heat__swatch" data-kp-tone="paused"></span> paused (parked)</li></ul>
+                    <p class="sk-narrow-note">On a phone the grid shows the last 7 nights so each day keeps its own column, named by its day of the month; widen the screen for the whole window.</p>
+                    <div class="sk-readout" id="sk-nights-list" aria-live="polite"></div>
+                    <pre class="sk-log" id="sk-nights-log" aria-live="polite">Press a cell or a stack name; what the Stacks table would filter to shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ apps-launcher -->
+            <section
+                class="sk-sec"
+                id="apps-launcher"
+                data-review-item="apps-launcher" data-review-topic="apps" data-review-topic-title="The Apps launcher"
+                data-review-components="action-tile facets hovercard menu-button"
+                data-review-title="Open an app, and see at once if it answers"
+                aria-labelledby="h-apps-launcher"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-apps-launcher">Open an app, and see at once if it answers</h2>
+                    <p>Lists every app as a tile grouped by its stack, with one word for whether it answers; resting on a tile says why an app is amber or red, and a stack&rsquo;s menu opens all of its apps.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Tiles</b> in a grid per stack: the app&rsquo;s mark and name, the stack, and the state in one word (<b>answers</b>, <b>failing</b>, <b>down</b>, <b>deploying</b>, <b>not watched</b>). The word reserves the width of the longest word, so a state change moves nothing. Pressing a tile opens the app (the page says where).</li>
+                        <li>Rest on or focus <b>immich-machine-learning</b>: a card says <b>failing since 19/10/2026 07:12, probe /ping returned 502</b>. <b>loki</b> says why it is down; <b>homelab-admin</b> says it is rolling out 3.75.0.</li>
+                        <li><b>Show</b> (with exact counts) keeps only the apps in a state: <b>Only failing or down (2)</b> leaves two tiles and their stack headings; a stack with nothing left disappears. A stack&rsquo;s <b>Open all</b> menu opens every app of that stack that answers.</li>
+                        <li>The dot legend of today is gone: the word is the legend. A tile with a star and a whole-card link waits for the package&rsquo;s link tile, so these tiles are the package&rsquo;s action tiles for now. Sample data: the dashboard reads the watch state once a minute.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Tiles of one height in equal columns; the state word has a mark beside it, in plain ink, never a colour on its own. Look at the facet counts (exact numbers) and that a stack heading never sits on top of its first tile.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="apps-launcher-component">
+                    <div role="group" aria-label="Show">
+                        <b>Show</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-apps-show="all">All 35</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-show="trouble">Failing or down (2)</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-show="unwatched">Not watched (7)</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-apps-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="apps-launcher-component">
+                    <div class="sk-launcher" id="sk-launcher"></div>
+                    <pre class="sk-log" id="sk-apps-log" aria-live="polite">Press a tile or a stack menu; what the page would open shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ apps-uptime -->
+            <section
+                class="sk-sec"
+                id="apps-uptime"
+                data-review-item="apps-uptime" data-review-topic="apps"
+                data-review-components="uptime"
+                data-review-title="Has this app been flaky? Its last 90 days in one strip"
+                aria-labelledby="h-apps-uptime"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-apps-uptime">Has this app been flaky? Its last 90 days in one strip</h2>
+                    <p>Draws each app as a strip of days (or hours) coloured by whether it answered, with the share up beside it, so a short outage or a pattern shows without opening a chart.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Strips</b> (<code>.kp-uptime</code>) for the apps of three stacks: 90 cells for the days, oldest left, each up, degraded, down or not measured. Beside each name the share up, cut rather than rounded (<code>99.4 %</code>, never a false 100). Press a cell: a quick-info card names the day, what happened and for how long.</li>
+                        <li><b>Window</b> switches the strips between the last 90 days and the last 48 hours; the strips keep their height and number of rows.</li>
+                        <li><b>Needs the dashboard&rsquo;s backend first:</b> today it only knows the current minute of each app. The history here is sample data and shows what the page can offer when the host keeps it. Until then this section is not built.</li>
+                        <li><b>Data</b>: Loading draws the strips as grey cells at the final width; Empty (&ldquo;the host has not kept any history yet&rdquo;) and Failed fill the same height with a normal Retry.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Cells of equal width with a hair of gap, the down cell red with a different shape from the degraded amber one, the not-measured cells quiet. Look at the axis words under each strip (&ldquo;90 days ago&rdquo;, &ldquo;Today&rdquo;) and that the share does not touch the app name.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="apps-uptime-component">
+                    <div role="group" aria-label="Window">
+                        <b>Window</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-uptime-window="days">90 days</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-uptime-window="hours">48 hours</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-uptime-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-uptime-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-uptime-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-uptime-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="apps-uptime-component">
+                    <div class="sk-strips" id="sk-strips"></div>
+                    <pre class="sk-log" id="sk-uptime-log" aria-live="polite">Press a cell of a strip; what it fires is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ presets-gallery -->
+            <section
+                class="sk-sec"
+                id="presets-gallery"
+                data-review-item="presets-gallery" data-review-topic="presets" data-review-topic-title="Presets: find one, compare, cost"
+                data-review-components="entity-card toolbar intent"
+                data-review-title="Find the preset you mean, even in your own words"
+                data-review-choices='[{"id":"presets-search","label":"How the Presets search matches","once":true,"default":"intent","options":[{"value":"intent","label":"By meaning","hint":"Recommended. Every word you type must start a word of the preset&amp;rsquo;s name, description or its synonyms, in any order: &amp;ldquo;gpu media&amp;rdquo;, &amp;ldquo;movies&amp;rdquo; and &amp;ldquo;transcode&amp;rdquo; all find media. A small typo still matches."},{"value":"text","label":"Letters in the name","hint":"Only the name, as typed: &amp;ldquo;med&amp;rdquo; finds media, &amp;ldquo;gpu media&amp;rdquo; finds nothing. Predictable, and the same as today."}]}]'
+                aria-labelledby="h-presets-gallery"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-presets-gallery">Find the preset you mean, even in your own words</h2>
+                    <p>Shows the presets as cards with their memory, cores and disk, flags for GPU and VPN and buttons to use or edit; the search understands what you mean, so &ldquo;gpu media&rdquo; finds the media preset.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Six cards</b>: light (the default, marked <b>default preset</b>), database, media, ml, vpn-egress and build. Each shows RAM, cores and disk as figures, flags <b>GPU</b> and <b>VPN</b> where they apply, and the buttons <b>Use</b> and <b>Edit</b>. All cards are the same height.</li>
+                        <li>Type <b>gpu media</b> in the search: only <b>media</b> stays (and says what matched). <b>Filter</b> chips <b>GPU</b> and <b>VPN</b> narrow the grid and appear in the bar as removable tags (the &times; removes one, <b>Clear all</b> removes every tag).</li>
+                        <li>The count under the bar is exact (&ldquo;1 of 6 presets&rdquo;); when nothing matches, an empty plate fills the grid&rsquo;s height with a <b>Clear the search</b> button. <b>Data</b>: Loading, Empty and Failed fill the same footprint.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Cards on a hairline, flags as small plates with room around their words, the two buttons in the same place on every card. Look at the removable tags in the bar (the word never touching the &times;) and the empty plate when nothing matches.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="presets-gallery-component">
+                    <div data-review-latent role="group" aria-label="Search matches">
+                        <b>Search matches</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-presets-mode="intent">By meaning</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-presets-mode="text">Letters in the name</button>
+                    </div>
+                    <div role="group" aria-label="Try">
+                        <b>Try</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-presets-try="gpu media">Type &ldquo;gpu media&rdquo;</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-presets-try="movies">Type &ldquo;movies&rdquo;</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-presets-try="">Clear</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-presets-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-presets-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-presets-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-presets-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="presets-gallery-component">
+                    <div class="kp-toolbar" data-kp-toolbar role="group" aria-label="Presets" id="sk-presets-bar">
+                        <div class="kp-toolbar__search"><input type="search" class="kp-field__input kp-toolbar__input" placeholder="Search presets" aria-label="Search presets" id="sk-presets-search" /></div>
+                        <div class="kp-toolbar__filters">
+                            <div class="kp-toolbar__group" role="group" aria-labelledby="sk-presets-flags"><b class="kp-toolbar__label" id="sk-presets-flags">Needs</b>
+                                <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Needs" id="sk-presets-needs"><button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="gpu" aria-pressed="false"><span class="kp-segmented__label">GPU</span></button><button type="button" class="kp-segmented__item" data-value="vpn" aria-pressed="false"><span class="kp-segmented__label">VPN</span></button></div>
+                            </div>
+                        </div>
+                        <div class="kp-toolbar__state" id="sk-presets-count" aria-live="polite"></div>
+                        <div class="kp-toolbar__active" hidden></div>
+                    </div>
+                    <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-min="18rem" data-kp-entity-meters="0" id="sk-presets"></div>
+                    <pre class="sk-log" id="sk-presets-log" aria-live="polite">Press Use or Edit on a card; what the page would do shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ presets-compare -->
+            <section
+                class="sk-sec"
+                id="presets-compare"
+                data-review-item="presets-compare" data-review-topic="presets"
+                data-review-components="selection-bar datatable stackbar"
+                data-review-title="Compare presets, and see what one would cost the host"
+                aria-labelledby="h-presets-compare"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-presets-compare">Compare presets, and see what one would cost the host</h2>
+                    <p>Ticking two or three presets puts them side by side with only the rows that differ marked, and a bar shows what the chosen preset would do to the memory of the host.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Tick <b>light</b>, <b>media</b> and <b>ml</b>. The bar reads <b>3 selected</b> with <b>Compare</b>; pressing it fills the table under it with one column per preset and one row per setting (RAM, cores, disk, swap, GPU, VPN, nesting, backup). Rows where the presets differ are marked with a bar at the start; equal rows stay quiet. <b>Compare</b> is off with fewer than two or more than three, and says why.</li>
+                        <li>Under the table, <b>What would this cost?</b>: a share bar of the host&rsquo;s 64 GB of memory: what the stacks may use today (47 GB) and the chosen preset on top; with <b>media</b> it passes the 80 % tick and turns amber, with <b>ml</b> it says <b>12 GB would leave 5 GB free</b>. Pick the preset to cost in <b>Cost of</b>.</li>
+                        <li>The memory is the sum of the stacks&rsquo; allowances from the capacity read the Stacks page already makes.</li>
+                        <li><b>Data</b>: Loading and Failed fill the table&rsquo;s height; with nothing compared the table holds its footprint with a hint (&ldquo;Tick two or three presets to compare them&rdquo;).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The differing rows carry a bar and a bold value, the equal rows are plain; the three preset names head three equal columns. Look at the share bar&rsquo;s tick and legend and that the amber part is labelled with its number.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="presets-compare-component">
+                    <div role="group" aria-label="Tick">
+                        <b>Tick</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-compare-pick="three">light, media, ml</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-compare-pick="two">database, build</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-compare-pick="none">None</button>
+                    </div>
+                    <div role="group" aria-label="Cost of">
+                        <b>Cost of</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-compare-cost="media">media</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-cost="ml">ml</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-cost="light">light</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-compare-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="presets-compare-component">
+                        <div class="kp-selection sk-bar" data-kp-selection data-kp-selection-for="sk-pick" data-kp-placement="sticky-top" id="sk-compare-bar" aria-label="Presets to compare">
+                            <div class="kp-selection__actions"><button type="button" class="kp-button kp-button--primary" data-kp-selection-action="compare">Compare</button></div>
+                        </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-page-size="10" data-kp-page-sizes="none" id="sk-pick">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">The presets; tick two or three to compare</caption>
+                                <thead><tr><th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select every preset" /></th><th scope="col" data-kp-sort="text">Preset</th><th scope="col">What it is for</th><th scope="col" data-kp-sort="number" class="kp-text-end">RAM</th><th scope="col" data-kp-sort="number" class="kp-text-end">Cores</th></tr></thead>
+                                <tbody id="sk-pick-rows"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="sk-compare" id="sk-compare"></div>
+                    <figure class="kp-stackbar" data-kp-stackbar id="sk-cost"></figure>
+                    <pre class="sk-log" id="sk-compare-log" aria-live="polite">Tick presets and press Compare; what the page shows is described here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ retired-table -->
+            <section
+                class="sk-sec"
+                id="retired-table"
+                data-review-item="retired-table" data-review-topic="retired" data-review-topic-title="Retired stacks and wiping their data"
+                data-review-components="datatable barcell stackbar facets"
+                data-review-title="What retired stacks still keep, and how much you could free"
+                aria-labelledby="h-retired-table"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-retired-table">What retired stacks still keep, and how much you could free</h2>
+                    <p>Lists the retired stacks with the size of what is left of each (backups and app data), a header that adds it up, and a filter for the ones older than 90 days.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Header</b>: a key figure <b>Reclaimable 48.0 GB</b> and a share bar <b>retired data keeps 48.0 GB: 31.0 GB in backups, 17.0 GB in app data</b>. Both move with the filter: with <b>Older than 90 days</b> they say 3 stacks and 36.0 GB.</li>
+                        <li>Table: stack, retired on (<code>dd/mm/yyyy HH:mm</code>), age in days, size as a bar (relative to the biggest), snapshots, newest snapshot. <b>Size</b> sorts by the real number (12.4 GB before 8.7 GB, never as text). <b>Columns</b> hides <b>Retired by</b> and <b>Vault</b> by default; they come back with one tick.</li>
+                        <li><b>Age</b> (All, Older than 90 days) narrows the rows and the counts at once. <b>Data</b>: Loading, Empty (&ldquo;Nothing is retired&rdquo;) and Failed fill the table&rsquo;s height with a normal button.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The key figure and the share bar sit on one grid with the table&rsquo;s width; the size bars line up in one column, each with its number to the right. Look at the age column (whole numbers, no abbreviations) and that the hidden columns do not leave a gap.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="retired-table-component">
+                    <div role="group" aria-label="Age">
+                        <b>Age</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-retired-age="all">All 6</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-retired-age="old">Older than 90 days (3)</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-retired-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-retired-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-retired-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-retired-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="retired-table-component">
+                    <div class="sk-head">
+                        <div class="kp-kpis sk-kpis" role="group" aria-label="Retired data"><div class="kp-kpi" id="sk-retired-kpi"><span class="kp-kpi__label">Reclaimable</span><span class="kp-kpi__value" id="sk-retired-total">48.0<small>GB</small></span><span class="kp-kpi__trend" id="sk-retired-sub">6 stacks</span></div></div>
+                        <figure class="kp-stackbar" data-kp-stackbar id="sk-retired-split"></figure>
+                    </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-column-menu data-kp-page-size="20" data-kp-page-sizes="none" data-kp-remember="sk-retired" id="sk-retired">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">Retired stacks and what they keep</caption>
+                                <thead><tr>
+                                    <th scope="col" data-kp-sort="text" data-kp-column-locked>Stack</th>
+                                    <th scope="col" data-kp-sort="number">Retired on</th>
+                                    <th scope="col" data-kp-sort="number" class="kp-text-end">Age</th>
+                                    <th scope="col" data-kp-sort="number">Size</th>
+                                    <th scope="col" data-kp-sort="number" class="kp-text-end">Snapshots</th>
+                                    <th scope="col" data-kp-sort="number">Newest snapshot</th>
+                                    <th scope="col" data-kp-sort="text" data-kp-column-hidden>Retired by</th>
+                                    <th scope="col" data-kp-sort="text" data-kp-column-hidden>Vault</th>
+                                </tr></thead>
+                                <tbody id="sk-retired-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>Nothing is retired.</div>
+                    </div>
+                    <pre class="sk-log" id="sk-retired-log" aria-live="polite">Change the age or the data state; the counts above follow.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ retired-wipe -->
+            <section
+                class="sk-sec"
+                id="retired-wipe"
+                data-review-item="retired-wipe" data-review-topic="retired"
+                data-review-components="selection-bar type-confirm datatable"
+                data-review-title="Wipe retired data for good, with the name typed and the server checked"
+                aria-labelledby="h-retired-wipe"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-retired-wipe">Wipe retired data for good, with the name typed and the server checked</h2>
+                    <p>Wiping deletes a retired stack&rsquo;s backups and app data and cannot be undone, so it needs the exact name typed, the server may still refuse it, and a row that cannot be wiped cannot be ticked.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Rows that cannot be wiped right now (<b>sonarr-v3</b>: its backup repository is locked by a running restic job) have a disabled box; resting on it says why. Tick <b>nextcloud-old</b> and <b>plex</b>: the bar reads <b>2 selected</b> with <b>Wipe</b> (destructive), and the count of the data they keep (<b>21.1 GB</b> in the readout).</li>
+                        <li>Press <b>Wipe</b>: a dialog lists what is lost (the two repositories and app data, with sizes) and asks to <b>type the exact name</b>. With one stack, you type its name; with several, you type <b>wipe 2 stacks</b>. <b>Confirm</b> stays off until the text matches exactly (capitals count), and Enter in the field confirms a match. Try a wrong name: nothing happens.</li>
+                        <li>After Confirm the bar says <b>Wiping 2…</b>, then the rows leave the list at once and the totals above fall. <b>Server: Refuses one</b> makes the host refuse <b>plex</b> (&ldquo;a restore from it is still running&rdquo;): that row stays, marked with the reason, and the bar says <b>1 done, 1 refused</b>. There is no undo, by design.</li>
+                        <li><b>Data</b> states keep the table&rsquo;s footprint. The wipe itself is a backend action that exists today; the refusal here is a sample.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The destructive button is the only red thing in the bar; the typed-name dialog shows the list of what is lost above the field and a line that says whether the name matches. Look at the disabled boxes (dimmed, with a reason on hover and focus) and at the dialog&rsquo;s plate in the open state.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="retired-wipe-component">
+                    <div role="group" aria-label="Select">
+                        <b>Select</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-wipe-pick="two">nextcloud-old and plex</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-wipe-pick="all">Every row that can be wiped</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-wipe-pick="none">None</button>
+                    </div>
+                    <div data-review-latent role="group" aria-label="Server">
+                        <b>Server</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-wipe-server="accepts">Accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-wipe-server="refuses">Refuses plex</button>
+                    </div>
+                    <div role="group" aria-label="Rows">
+                        <b>Rows</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-wipe-reset="reset">Put the rows back</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="retired-wipe-component">
+                    <div class="sk-wipe-head"><span class="sk-wipe-total" id="sk-wipe-total" aria-live="polite"></span></div>
+                        <div class="kp-selection sk-bar" data-kp-selection data-kp-selection-for="sk-wipe" data-kp-placement="sticky-top" id="sk-wipe-bar" aria-label="Selected retired stacks">
+                            <div class="kp-selection__actions"><button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="wipe">Wipe</button></div>
+                        </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-page-size="20" data-kp-page-sizes="none" id="sk-wipe">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">Retired stacks; tick the ones whose data to wipe</caption>
+                                <thead><tr><th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select every retired stack" /></th><th scope="col" data-kp-sort="text">Stack</th><th scope="col" data-kp-sort="number" class="kp-text-end">Age</th><th scope="col" data-kp-sort="number">Size</th><th scope="col">Can it be wiped now?</th></tr></thead>
+                                <tbody id="sk-wipe-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>Nothing is retired: there is nothing left to wipe.</div>
+                    </div>
+                    <pre class="sk-log" id="sk-wipe-log" aria-live="polite">Tick a row and press Wipe; what the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ hub-overview -->
+            <section
+                class="sk-sec"
+                id="hub-overview"
+                data-review-item="hub-overview" data-review-topic="hub" data-review-topic-title="The stack page: Overview, Apps and Backups"
+                data-review-components="tabs statusrow problems deplist chart"
+                data-review-title="Why a stack is red, what fixes it, and what changed with the last deploy"
+                aria-labelledby="h-hub-overview"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-hub-overview">Why a stack is red, what fixes it, and what changed with the last deploy</h2>
+                    <p>The stack page opens on an Overview that lists every health check with the reason it fails and the command that fixes it, the key figures and what the stack depends on; a second tab charts its resources with the deploys marked on them.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Tabs</b> <b>Overview</b> and <b>Resources</b> (the other tabs of the page, Apps and Backups, are the next two sections). A count on a tab waits for the package and is left out; the counts sit in the headings of each panel instead.</li>
+                        <li><b>Overview</b> for <b>immich</b>: <b>5 of 7 checks pass</b>, then one row per check (<code>.kp-statuslist</code>): containers running, probes answering, backed up last night, disk below 80 %, memory below its limit, image current, firewall loaded. A failing row says since when and, written out, what to do (&ldquo;Restart the worker; the model cache is corrupt&rdquo;); the problems list under it adds the command with a <b>Copy</b> button (<code>homelab deploy immich</code>). Retry on a row re-reads only that check.</li>
+                        <li>To the right: key figures with a meter (<b>Disk 64 %</b> with its 80 % alert tick), <b>Restarts in 24 h</b> with its small trend, <b>Apps up 4 of 5</b>; and <b>Depends on / Used by</b> as a numbered start order (<code>.kp-deplist</code>) that folds after 8 rows with the exact count.</li>
+                        <li><b>Resources</b>: CPU, memory and disk of the stack over 24 hours with a mark at every deploy (&ldquo;deployed 3.75.0 by Kenny&rdquo;), so &ldquo;did the last deploy make it slower&rdquo; is answered by looking. <b>Stack</b> switches between jellyfin (no failing check), immich (one failing) and loki (two failing). <b>Data</b> keeps the panel&rsquo;s height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Tabs with an underline for the open one; a status row has a mark and a state word, the failing row is the only one with a written remedy; the key figures keep one height. Look at the gap between each row&rsquo;s detail and its right edge, at the command&rsquo;s Copy button and that the chart&rsquo;s deploy marks have labels.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="hub-overview-component">
+                    <div role="group" aria-label="Stack">
+                        <b>Stack</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-stack="jellyfin">jellyfin: no failing check</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-hub-stack="immich">immich: one failing</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-stack="loki">loki: two failing</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-hub-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="hub-overview-component">
+                    <div class="kp-tabs sk-hub" id="sk-hub">
+                        <div class="kp-tabs__list" role="tablist" aria-label="Stack page">
+                            <button type="button" class="kp-tab" role="tab" id="sk-hub-tab-0" aria-controls="sk-hub-panel-0" aria-selected="true">Overview</button>
+                            <button type="button" class="kp-tab" role="tab" id="sk-hub-tab-1" aria-controls="sk-hub-panel-1" aria-selected="false">Resources</button>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="sk-hub-panel-0" aria-labelledby="sk-hub-tab-0">
+                            <div class="sk-two sk-two--wide">
+                                <div class="sk-pane">
+                                    <h3 class="sk-pane__title"><span id="sk-hub-title">Checks</span></h3>
+                                    <p class="sk-pane__line" id="sk-hub-count" role="status"></p>
+                                    <div id="sk-hub-checks"></div>
+                                </div>
+                                <div class="sk-pane">
+                                    <div class="kp-kpis sk-kpis" role="group" aria-label="Key figures" id="sk-hub-kpis"></div>
+                                    <div class="kp-problems" data-kp-problems data-kp-problems-mode="fold" id="sk-hub-problems"></div>
+                                    <h3 class="sk-pane__title">Depends on and used by</h3>
+                                    <div class="kp-deplist" data-kp-deplist id="sk-hub-deps"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="sk-hub-panel-1" aria-labelledby="sk-hub-tab-1" hidden>
+                            <figure class="kp-chart sk-chart" data-kp-chart id="sk-hub-chart" data-kp-chart-loading aria-label="Resources of the stack, last 24 hours"><figcaption class="kp-chart__title">Resources, last 24 hours</figcaption></figure>
+                        </div>
+                    </div>
+                    <pre class="sk-log" id="sk-hub-log" aria-live="polite">Press a Retry or Copy; what the page would do shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ hub-apps -->
+            <section
+                class="sk-sec"
+                id="hub-apps"
+                data-review-item="hub-apps" data-review-topic="hub"
+                data-review-components="datatable code"
+                data-review-title="Open an app to see its image, ports and last log lines"
+                data-review-choices='[{"id":"hub-apps-density","label":"How tight the Apps list is","once":true,"default":"comfortable","options":[{"value":"comfortable","label":"Comfortable","hint":"Recommended. Rows with room above and below, easy to hit on a phone and to read down; five to ten apps fit without scrolling."},{"value":"compact","label":"Compact","hint":"Tighter rows so a stack with twenty apps still fits one screen; a little harder to press with a thumb."}]}]'
+                aria-labelledby="h-hub-apps"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-hub-apps">Open an app to see its image, ports and last log lines</h2>
+                    <p>Lists the apps of a stack and opens one in place to show the exact image it runs, its ports, its restarts, the result of its health check and its last log lines.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A table of the apps in <b>immich</b>: app with its mark, state word (<b>up</b>, <b>failing</b>, <b>not watched</b>), image tag, restarts in 24 h and the health result in one phrase. <b>Columns</b> and the <b>Density</b> selector change what shows and how tight the rows are; both are remembered.</li>
+                        <li>Open <b>immich-machine-learning</b>: the detail shows image and digest, ports, restarts (3 in 24 h), the health result (<b>unhealthy: GET /ping 502 in 3,001 ms</b>) and its last three log lines in a code block with <b>Copy</b>. One row is open at a time. <b>Expand all</b> is not offered on purpose.</li>
+                        <li><b>Stack</b> switches the list between immich (5 apps), jellyfin (4) and metrics (5). <b>Data</b>: Loading, Empty and Failed at the table&rsquo;s height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Rows with a mark and a clear state word; the open row&rsquo;s detail is a grid of labelled facts, mono for the digest and ports, with room around every text. Look at the code block&rsquo;s Copy and that the opened row does not widen the table.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="hub-apps-component">
+                    <div role="group" aria-label="Stack">
+                        <b>Stack</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-apps-stack="immich">immich</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-stack="jellyfin">jellyfin</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-stack="metrics">metrics</button>
+                    </div>
+                    <div role="group" aria-label="Density" data-review-latent>
+                        <b>Density</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-appstab-density="comfortable">Comfortable</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-appstab-density="compact">Compact</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-appstab-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-appstab-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-appstab-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-appstab-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="hub-apps-component">
+                    <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-expand-single data-kp-column-menu data-kp-page-size="20" data-kp-page-sizes="none" data-kp-remember="sk-apps-tab" id="sk-appstab">
+                        <div class="kp-datatable__bar"><select class="kp-field__input kp-datatable__select" data-kp-datatable-density aria-label="Row density"></select></div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">The apps of the stack; open one for its image, ports and last log lines</caption>
+                                <thead><tr>
+                                    <th scope="col" data-kp-sort="text" data-kp-column-locked>App</th>
+                                    <th scope="col" data-kp-sort="text" data-kp-filter="choice">State</th>
+                                    <th scope="col" data-kp-sort="text">Image</th>
+                                    <th scope="col" data-kp-sort="number" class="kp-text-end">Restarts in 24 h</th>
+                                    <th scope="col" data-kp-sort="text" data-kp-column-hidden>Health</th>
+                                </tr></thead>
+                                <tbody id="sk-appstab-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>This stack has no apps.</div>
+                    </div>
+                    <pre class="sk-log" id="sk-appstab-log" aria-live="polite">Open a row; the app it shows is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ hub-backups -->
+            <section
+                class="sk-sec"
+                id="hub-backups"
+                data-review-item="hub-backups" data-review-topic="hub"
+                data-review-components="uptime heat"
+                data-review-title="Which nights were backed up, and restore from a missed one"
+                data-review-choices='[{"id":"hub-backups-view","label":"How the Backups tab opens","once":true,"default":"strips","options":[{"value":"strips","label":"A strip per app, 14 nights","hint":"Recommended. One line per app you can read from left to right; the exact share of nights backed up sits beside it, and a missed night is a red cell you can press."},{"value":"heat","label":"A grid of 30 nights","hint":"Apps against 30 nights, which shows a night when many apps failed together as a column; denser, needs a wider screen, scrolls inside its own box on a phone."}]}]'
+                aria-labelledby="h-hub-backups"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-hub-backups">Which nights were backed up, and restore from a missed one</h2>
+                    <p>Shows the Backups tab as a strip of the last nights per app (or a grid of 30 nights), where a night before the oldest kept backup reads as no data rather than as a failure, and pressing a missed night opens Restore on it.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Strips</b> (default): one strip of 14 nights for each app of the stack, oldest left. A cell is backed up (green), missed (red), or <b>before the oldest kept</b> (grey: there is nothing to restore and nothing went wrong). Beside each strip, <b>13 of 14 nights</b> exactly.</li>
+                        <li>Press a red night: a card says <b>Missed on 10/10/2026 03:00: the backup target was full</b> and offers <b>Restore from the night before</b>; the line under the component says that Restore would open on 09/10/2026 03:00. A grey cell says why it is grey.</li>
+                        <li><b>View</b> switches to the grid of 30 nights (apps against nights, same colours), where pressing a missed cell does the same. <b>Stack</b> switches the stack (immich has one missed night, loki two). <b>Data</b> keeps the height.</li>
+                        <li>Needs nothing new from the backend: both strips read the nightly records the Backups tab shows today.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Cells of the same size in a clean row, the missed one red with a different shape from the grey one, the grid&rsquo;s row labels never touching the first cell. Look at the card on a pressed cell and the legend under the grid.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="hub-backups-component">
+                    <div role="group" aria-label="View">
+                        <b>View</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-backups-view="strips">Strips</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-view="heat">30-night grid</button>
+                    </div>
+                    <div role="group" aria-label="Stack">
+                        <b>Stack</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-backups-stack="immich">immich</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-stack="loki">loki</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-stack="jellyfin">jellyfin</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-backups-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="hub-backups-component">
+                    <div class="sk-strips" id="sk-backups-strips"></div>
+                    <div class="kp-heat sk-heat" data-kp-heat data-kp-heat-latest="end" id="sk-backups-heat" hidden></div>
+                    <pre class="sk-log" id="sk-backups-log" aria-live="polite">Press a night; what Restore would open on shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ apply-plan -->
+            <section
+                class="sk-sec"
+                id="apply-plan"
+                data-review-item="apply-plan" data-review-topic="apply" data-review-topic-title="Apply: plan and run"
+                data-review-components="datatable kp-diff selection-bar sentence"
+                data-review-title="Read what Apply would change, file by file, before you choose"
+                data-review-choices='[{"id":"apply-destroy","label":"What happens to a stack that would be destroyed","once":true,"default":"alone","options":[{"value":"alone","label":"Unticked, applied on its own","hint":"Recommended. A stack removed from the repository starts unticked; ticking it turns the normal Apply off and says why, and it is applied on its own with the name typed. A destroy never hides in a batch."},{"value":"ticked","label":"Ticked with the others","hint":"Every change starts ticked and the destroy is only marked in red; one press applies everything, with the typed name asked at the end. Fewer presses, but the destroy rides along."}]}]'
+                aria-labelledby="h-apply-plan"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-apply-plan">Read what Apply would change, file by file, before you choose</h2>
+                    <p>Lists every stack whose files changed, opens each to show the exact lines that change with a count of lines added and removed per file, and lets you choose which stacks to apply; a destroy can never ride along with a deploy.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Seven rows: <b>jellyfin</b>, <b>immich</b>, <b>loki</b> (deploy), <b>wiki2</b> and <b>paperless</b> (new), <b>homepage</b> (destroy, in red) and <b>traefik</b> (skip: nothing changed, its box is off). Each shows what changed in a sentence, the number of files and <b>+N &minus;M</b> in the same column.</li>
+                        <li>Open <b>loki</b>: two files, each with its own header (<code>loki/compose.yml</code> <b>+1 &minus;1</b>) and its hunks (<code>.kp-diff__hunk</code>, the range in quiet ink and the place in bold). The sign column carries the change without colour. Open <b>homepage</b>: all seven lines removed.</li>
+                        <li>Five rows start ticked. Under the table: <b>Will deploy 5 stacks (2 new), destroy 0.</b> as a sentence with the choice <b>back up first</b> or <b>skip backups</b> as a menu inside it; the bar says <b>5 selected</b> with the names. Tick <b>homepage</b>: <b>Apply</b> turns off and says <b>A destroy never rides along with a deploy: untick it, or apply it on its own</b>; <b>Apply the destroy alone</b> appears.</li>
+                        <li><b>Select</b> sets the box states for you. <b>Data</b>: Loading (the plan is being worked out) and Failed fill the table&rsquo;s height; Empty says &ldquo;Nothing to apply: the repository and the host agree&rdquo;.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The diff is monospace with a number column, a sign column and the line; added lines have a green wash, removed a red wash, and the hunk header is a quiet band with a rule. Look at the file header line with its +N and &minus;M, and that nothing sits against the edge of the diff.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="apply-plan-component">
+                    <div role="group" aria-label="Select">
+                        <b>Select</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-plan-pick="safe">The 5 safe ones</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-plan-pick="mixed">Add the destroy</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-plan-pick="none">None</button>
+                    </div>
+                    <div role="group" aria-label="A destroy" data-review-latent>
+                        <b>A destroy</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-plan-destroy="alone">Applied alone</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-plan-destroy="ticked">Rides along</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-plan-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-plan-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-plan-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-plan-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="apply-plan-component">
+                        <div class="kp-selection sk-bar" data-kp-selection data-kp-selection-for="sk-plan" data-kp-placement="sticky-top" id="sk-plan-bar" aria-label="Stacks to apply">
+                            <div class="kp-selection__actions">
+                                <button type="button" class="kp-button kp-button--primary" data-kp-selection-action="apply">Apply</button>
+                                <button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="destroy" hidden>Apply the destroy alone</button>
+                            </div>
+                        </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-expand-single data-kp-page-size="20" data-kp-page-sizes="none" id="sk-plan">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">What Apply would change; open a row to read the lines</caption>
+                                <thead><tr>
+                                    <th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select every stack that can be applied" /></th>
+                                    <th scope="col" data-kp-sort="text">Stack</th>
+                                    <th scope="col" data-kp-sort="text">Action</th>
+                                    <th scope="col">What changed</th>
+                                    <th scope="col" data-kp-sort="number" class="kp-text-end">Files</th>
+                                    <th scope="col" data-kp-sort="number" class="kp-text-end">Lines</th>
+                                </tr></thead>
+                                <tbody id="sk-plan-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>Nothing to apply: the repository and the host agree.</div>
+                    </div>
+                    <form class="kp-sentence sk-sentence" data-kp-sentence id="sk-plan-sentence" onsubmit="return false">
+                        <p class="kp-sentence__text" id="sk-plan-words"></p>
+                    </form>
+                    <pre class="sk-log" id="sk-plan-log" aria-live="polite">Tick stacks and press Apply; what the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ apply-run -->
+            <section
+                class="sk-sec"
+                id="apply-run"
+                data-review-item="apply-run" data-review-topic="apply"
+                data-review-components="statusrow stackbar steplist type-confirm"
+                data-review-title="Apply, step by step, and what to do when one stack fails"
+                aria-labelledby="h-apply-run"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-apply-run">Apply, step by step, and what to do when one stack fails</h2>
+                    <p>Shows how long the batch will take before it starts, then runs it stack by stack with each step visible; if one stack fails its health check the others are not undone and the failure says what happened and offers to retry only that stack.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Before the run: <b>This batch takes about 6 min 20 s</b> as a share bar split by stack (loki 2 min 10 s is the longest), from the typical time of each stack. <b>Apply 5 stacks</b> starts it; <b>Destroy homepage…</b> opens a dialog that lists what is lost (the container, its volume of 0.4 GB) and asks for the exact name <b>homepage</b> to be typed before <b>Destroy</b> turns on.</li>
+                        <li><b>Play once</b> runs it (about 12 seconds for the demo): each stack is a row that goes queued, <b>Pulling the image</b>, <b>Restarting</b>, <b>Checking it answers</b>, done, and the overall step list above names the stack running now. Rows keep their height, the time of each finished step is exact (<code>38 s</code>).</li>
+                        <li><b>Outcome: loki fails its check</b> stops that row at <b>failed</b>: &ldquo;Out of memory 8 s after the restart&rdquo;, with the written fix and a <b>Retry loki only</b> button; the rest stay done, and the summary says <b>4 applied, 1 failed</b>. Nothing else is undone.</li>
+                        <li>Sample data; the timings follow the real durations of each stack&rsquo;s last apply.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Rows of a status list with a mark, the stack name, a step word and the elapsed time on a grid; the failed row is the only red one and the remedy is plain ink under it. Look at the share bar&rsquo;s legend and at the typed-name dialog&rsquo;s plate.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="apply-run-component">
+                    <div role="group" aria-label="Run">
+                        <b>Run</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-run="play">Play once</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-run="reset">Reset</button>
+                    </div>
+                    <div data-review-latent role="group" aria-label="Outcome">
+                        <b>Outcome</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-run-outcome="ok">All stacks apply</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-run-outcome="fail">loki fails its check</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="apply-run-component">
+                    <div class="sk-two sk-two--wide">
+                        <div class="sk-pane"><h3 class="sk-pane__title">Stack by stack</h3><div id="sk-run-list"></div></div>
+                        <div class="sk-pane">
+                            <h3 class="sk-pane__title">This batch</h3>
+                            <figure class="kp-stackbar" data-kp-stackbar id="sk-run-time"></figure>
+                            <p class="sk-pane__line" id="sk-run-now" role="status">Ready: nothing has started.</p>
+                            <div class="sk-runbtns"><button type="button" class="kp-button kp-button--primary" id="sk-run-go">Apply 5 stacks</button>
+                            <button type="button" class="kp-button kp-button--destructive" id="sk-run-destroy" data-kp-destructive data-kp-confirm="Destroy the stack homepage?" data-kp-confirm-type="homepage" data-kp-confirm-label="Destroy homepage" data-kp-confirm-loses="sk-run-lost">Destroy homepage…</button></div>
+                        </div>
+                    </div>
+                    <template id="sk-run-lost"><ul class="kp-type-confirm__list"><li>1 container: homepage (ghcr.io/gethomepage/homepage:v0.9.10)</li><li>/srv/homepage/config (0.4 GB)</li><li>its entry in the gateway: homepage.lan</li></ul></template>
+                                        <pre class="sk-log" id="sk-run-log" aria-live="polite">Press Play once or Apply 5 stacks; each step is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ update-notes -->
+            <section
+                class="sk-sec"
+                id="update-notes"
+                data-review-item="update-notes" data-review-topic="update" data-review-topic-title="Update: read, choose, watch"
+                data-review-components="version-delta ack-gate selection-bar"
+                data-review-title="Read the release notes before a major update"
+                data-review-choices='[{"id":"update-major-guard","label":"How several major updates in one go are handled","once":true,"default":"alone","options":[{"value":"alone","label":"One major at a time","hint":"Recommended. A major update (jellyfin 10 to 12) can change settings or move data, so it is updated on its own, with its own notes read; ticking a major with anything else turns Update off and says which one to take alone."},{"value":"together","label":"Allowed together, each read","hint":"Several majors may ride in one batch, but each one shows its own box and Update stays off until every one has been opened and ticked. Faster on an evening of updates, more to read at once."}]}]'
+                aria-labelledby="h-update-notes"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-update-notes">Read the release notes before a major update</h2>
+                    <p>Lists the apps with an update waiting, shows how big each jump is, links to the release notes, and holds the Update button of a major version off until you have opened the notes and ticked that you read them.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A heading counts the jumps exactly: <b>3 major, 3 minor, 3 patch, 1 changed</b> (the moving tag). Each row shows the app, its stack, a chip with the jump (<b>10.11.11 &rarr; 12.1</b> with the size word <b>major</b>) and its age; pressing the chip opens the release page of the newer version (this page says which address it would open and does not leave).</li>
+                        <li>Tick <b>jellyfin</b>: a warning plate appears under the list with <b>I read the release notes of 12.1</b>, a link to the notes, and <b>Update 1</b> is off with the reason beside it. The box cannot be ticked until the link was opened (or 4 seconds passed): the plate says <b>Open the notes first</b>. Open the link, tick the box: <b>Update 1</b> turns on.</li>
+                        <li>Tick <b>jellyfin</b> and <b>grafana</b> (two majors): by default <b>Update</b> turns off and says <b>A major update needs its own read: update one major on its own</b>. Tick <b>syncthing</b>: its tag is <code>latest</code>, a moving tag, and the row says it <b>runs what the tag points at now</b>. Patch and minor updates need no box.</li>
+                        <li><b>Select</b> picks sets for you. Needs a server-side read of the release notes to show them here; until then they open at GitHub. <b>Data</b> keeps the list&rsquo;s height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The chip shows the two versions with an arrow and a size word in a tone that grows with the jump; the plate is the amber warning plate with a plain checkbox and the link on its own line. Look at the disabled Update and its reason, and at the chip being a link only when it has an address.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="update-notes-component">
+                    <div role="group" aria-label="Select">
+                        <b>Select</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-notes-pick="major">jellyfin (major)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-notes-pick="two">jellyfin and grafana</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-notes-pick="safe">The 7 that are not major</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-notes-pick="none">None</button>
+                    </div>
+                    <div role="group" aria-label="Several majors" data-review-latent>
+                        <b>Several majors</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-notes-guard="alone">One at a time</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-notes-guard="together">Allowed together</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-notes-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-notes-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-notes-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-notes-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="update-notes-component">
+                    <p class="sk-pane__line" id="sk-notes-summary" role="status"></p>
+                        <div class="kp-selection sk-bar" data-kp-selection data-kp-selection-for="sk-notes" data-kp-placement="sticky-top" id="sk-notes-bar" aria-label="Apps to update">
+                            <div class="kp-selection__actions"><button type="button" class="kp-button kp-button--primary" id="sk-notes-go" data-kp-selection-action="update">Update</button></div>
+                        </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-page-size="20" data-kp-page-sizes="none" id="sk-notes">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">Updates waiting</caption>
+                                <thead><tr><th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select every update" /></th><th scope="col" data-kp-sort="text">App</th><th scope="col" data-kp-sort="number">Jump</th><th scope="col" data-kp-sort="number" class="kp-text-end">Waiting</th><th scope="col">Note</th></tr></thead>
+                                <tbody id="sk-notes-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>Everything is up to date.</div>
+                    </div>
+                    <div class="sk-gates" id="sk-notes-gates"></div>
+                    <pre class="sk-log" id="sk-notes-log" aria-live="polite">Tick an app; the gate and the reason show here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ update-run -->
+            <section
+                class="sk-sec"
+                id="update-run"
+                data-review-item="update-run" data-review-topic="update"
+                data-review-components="pipeline steplist code"
+                data-review-title="Watch every app move through its update"
+                data-review-choices='[{"id":"update-run-layout","label":"How the run is drawn","once":true,"default":"board","options":[{"value":"board","label":"A board with a lane per step","hint":"Recommended. Five apps and six steps fit side by side; you see at a glance which apps are in the same step and which one is behind. Long on a phone, where the lanes stack."},{"value":"steps","label":"A step list per app","hint":"One list per app with a mark per step and its time; reads top to bottom, precise about each time, better on a phone and for a single app."}]}]'
+                aria-labelledby="h-update-run"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-update-run">Watch every app move through its update</h2>
+                    <p>Shows a batch of five updates as a board where each app is a card that moves from reading the notes (with their impact), to the backup, the update and the check, so you see which app is where and which one stopped.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Board</b> (<code>.kp-pipeline</code>): lanes <b>Notes</b>, <b>Back up</b>, <b>Update</b>, <b>Verify</b>, <b>Done</b>; five cards (immich-server, immich-ml, paperless-ngx, traefik, loki) start in <b>Notes</b>. <b>Play once</b> moves them on one by one (about 6 seconds) and the cards keep their place and size while they travel.</li>
+                        <li><b>Outcome: loki fails verify</b>: that card stops in <b>Verify</b> with <b>failed: health check returned 502 after 2 min</b> and the log under the board shows the lines that explain it. The other cards finish; the summary line says <b>4 updated, 1 stopped in Verify</b>.</li>
+                        <li><b>Layout</b> switches to a step list per app with the same moments and times. The log (monospace, the last 14 lines, <b>Copy</b>) follows the run and shows the newest line at the foot.</li>
+                        <li>Needs the update job to report per-app progress; sample data follows the real steps.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Cards of one height in lanes of equal width with a coloured top edge per lane; the moving card lands exactly in its slot. Look at the failed card (a mark and words, not only colour), the lane headings with their exact counts and the log&rsquo;s Copy button.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="update-run-component">
+                    <div role="group" aria-label="Run">
+                        <b>Run</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-upd-run="play">Play once</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-upd-run="reset">Reset</button>
+                    </div>
+                    <div role="group" aria-label="Layout" data-review-latent>
+                        <b>Layout</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-upd-layout="board">Board</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-upd-layout="steps">Step lists</button>
+                    </div>
+                    <div role="group" aria-label="Outcome">
+                        <b>Outcome</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-upd-outcome="ok">All healthy</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-upd-outcome="fail">loki fails verify</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="update-run-component">
+                    <section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-share="false" id="sk-board" aria-label="Updates in progress"></section>
+                    <div class="sk-stepset" id="sk-steps" hidden></div>
+                    <p class="sk-pane__line" id="sk-upd-summary" role="status">Nothing has started.</p>
+                    <figure class="kp-code sk-code" data-kp-code id="sk-upd-log"><pre class="kp-code__body"><code></code></pre></figure>
+                </div>
+            </section>
+
+            <!-- ================================================================ map-panel -->
+            <section
+                class="sk-sec"
+                id="map-panel"
+                data-review-item="map-panel" data-review-topic="map-side" data-review-topic-title="The Map: side panel and matrix"
+                data-review-components="deplist hovercard"
+                data-review-title="Pick a stack on the map and read what it needs and who needs it"
+                data-review-choices='[{"id":"map-deplist-order","label":"How the lists in the panel are ordered","once":true,"default":"numbers","options":[{"value":"numbers","label":"In start order, numbered","hint":"Recommended. 1 is what must be running first (traefik, then the databases, then the apps); a restart plan can be read straight down the list."},{"value":"kind","label":"Grouped by kind of connection","hint":"Declared, open, named and gateway routes each in their own group; better for judging the firewall, worse for planning a restart."}]}]'
+                aria-labelledby="h-map-panel"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-map-panel">Pick a stack on the map and read what it needs and who needs it</h2>
+                    <p>A side panel beside the map shows the picked stack with its state, what it depends on in the order things must start, who depends on it, and what would stop with it. The drawing of the map itself is not part of this review and is not redrawn here.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Left, a stand-in for the map</b>: the 14 stacks as a grid of selectable tiles (the real map keeps its drawing exactly as it is today and tells the panel which node is picked). Rest on a tile for its hover card: image, CPU, traffic share. Press one to pick it.</li>
+                        <li><b>Right, the panel</b> for the picked stack (<b>prometheus</b> at first): its mark, container number and state word; <b>Uses</b> as a numbered start order with the state of each (running, stopped); <b>Used by</b> the same way; long lists fold after 8 rows with the exact number and a <b>Copy</b> button that copies them as text.</li>
+                        <li><b>Mode: If this stack stopped</b> turns the panel into the blast radius: a sentence says <b>Stopping traefik cuts the routes to 10 stacks</b> and the affected tiles on the left take a ring. <b>Data</b>: Loading, Empty and Failed fill the panel&rsquo;s height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The tiles are one size in an even grid with the picked one outlined; the panel is a card with the stack at its head and the two lists in the same two columns of numbers, names and states. Look at the hover card&rsquo;s plate and that a long name wraps.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="map-panel-component">
+                    <div role="group" aria-label="Mode">
+                        <b>Mode</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-panel-mode="normal">Normal</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-mode="blast">If this stack stopped</button>
+                    </div>
+                    <div role="group" aria-label="Lists" data-review-latent>
+                        <b>Lists</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-panel-order="numbers">Start order</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-order="kind">By kind</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-panel-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="map-panel-component">
+                    <div class="sk-map">
+                        <div class="sk-map__nodes" id="sk-nodes" role="group" aria-label="Stacks on the map (stand-in for the drawing)"></div>
+                        <aside class="sk-panel" id="sk-panel" aria-label="The picked stack"></aside>
+                    </div>
+                    <pre class="sk-log" id="sk-panel-log" aria-live="polite">Pick a tile; what the panel reads shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ map-matrix -->
+            <section
+                class="sk-sec"
+                id="map-matrix"
+                data-review-item="map-matrix" data-review-topic="map-side"
+                data-review-components="uses-map matrix"
+                data-review-title="A third view: who reaches whom, stack by stack"
+                data-review-choices='[{"id":"map-matrix-view","label":"Which form the matrix opens in","once":true,"default":"grid","options":[{"value":"grid","label":"Grid","hint":"Recommended. Rows are the stacks that reach out, columns the stacks reached; a cell says declared, open, named or route. You read one row for what a stack uses and one column for who uses it."},{"value":"lines","label":"Lines","hint":"Two columns joined by lines; pinning a node lights its links and dims the rest. Easier for one stack, harder for the whole fleet."}]}]'
+                aria-labelledby="h-map-matrix"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-map-matrix">A third view: who reaches whom, stack by stack</h2>
+                    <p>Lays the stacks out as a grid of who connects to whom, with the kind of connection in each cell, so the question &ldquo;who can reach postgres&rdquo; is answered by reading a column; a lines view draws the same answer as links between two columns.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Grid</b> (<code>.kp-matrix</code>): 14 rows by 14 columns, the diagonal marked as itself; a cell shows the kind (<b>declared</b>, <b>planned</b>, <b>open</b>, <b>named</b>, <b>route</b>) in words as well as tone. Press a header: its row or column lights and the counts beside it say <b>uses 3 stacks</b> / <b>used by 10</b>.</li>
+                        <li><b>View</b> flips to <b>Lines</b> (the same relation as links between two columns, a dashed link for an address named in a file). The choice you made last is remembered on this device.</li>
+                        <li><b>Show</b> narrows to <b>Not enforced</b> (open and named only), the connections the firewall does not cover. <b>Data</b>: Loading, Empty and Failed fill the matrix&rsquo;s footprint.</li>
+                        <li>Reads the topology the Map already has; the graph drawing is untouched.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Cells are even squares with the kind written in them; the headers do not touch the first cell, and a lit row and column read as a cross. Look at the legend of the five kinds and at the lines view on 390 px, where the page says it falls back to the grid.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="map-matrix-component">
+                    <div role="group" aria-label="View">
+                        <b>View</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-matrix-view="grid">Grid</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-view="lines">Lines</button>
+                    </div>
+                    <div role="group" aria-label="Show">
+                        <b>Show</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-matrix-show="all">Every connection</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-show="open">Not enforced</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-matrix-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="map-matrix-component">
+                    <div class="kp-matrix sk-matrix" data-kp-matrix data-kp-matrix-owned data-kp-matrix-select="follow" data-kp-remember="sk-map-matrix" id="sk-matrix"></div>
+                    <ul class="kp-heat__legend sk-legend" id="sk-matrix-legend" aria-label="Kinds of connection"></ul>
+                    <pre class="sk-log" id="sk-matrix-log" aria-live="polite">Press a header or a cell; what it fires is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ map-capacity -->
+            <section
+                class="sk-sec"
+                id="map-capacity"
+                data-review-item="map-capacity" data-review-topic="map-capacity" data-review-topic-title="Capacity and disk growth"
+                data-review-components="bullets barcell datatable"
+                data-review-title="How full is each stack: one ranked list or a sortable table"
+                data-review-choices='[{"id":"map-capacity-layout","label":"How Capacity opens","once":true,"default":"table","options":[{"value":"table","label":"Table with three bar columns","hint":"Recommended. Memory, CPU and disk side by side per stack, sortable by any column, so there is no switch between measures and the stack that is full in two ways stands out."},{"value":"bullets","label":"Ranked bars for one measure","hint":"One list, worst first, for the measure you pick; the quickest read of &amp;ldquo;who is the worst&amp;rdquo; and the best on a phone, but it hides the other two measures until you switch."}]}]'
+                aria-labelledby="h-map-capacity"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-map-capacity">How full is each stack: one ranked list or a sortable table</h2>
+                    <p>Shows memory, CPU and disk of every running stack against its allowance, either as a ranked list of bars or as a table with a bar column for each measure that sorts on any of them.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Table</b> (default): 14 running stacks; <b>Memory</b>, <b>CPU</b> and <b>Disk</b> as bar cells with the figure beside them (<code>9.8 of 12 GB</code>, <code>66 %</code>, <code>82 %</code>); amber from 75 %, red from 90 %. Click a header to sort; Shift + click adds a second key. Sort by Memory: loki (91 %) and immich (82 %) lead.</li>
+                        <li><b>Layout: Ranked bars</b> shows <code>.kp-bullets</code> for the measure picked in <b>Measure</b> (memory, CPU or disk), worst first, each row with its mark and figure; pressing a row says what the stack page would open.</li>
+                        <li>The numbers add up to the host&rsquo;s committed memory shown elsewhere (<b>47 GB of 64 GB</b>). <b>Data</b>: Loading, Empty and Failed keep the height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Bar cells line up in three columns with the numbers right of the bars; tones step amber then red with the number as the carrier as well. Look at the numbers&rsquo; alignment across rows and the gap between figure and bar.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="map-capacity-component">
+                    <div role="group" aria-label="Layout">
+                        <b>Layout</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cap-layout="table">Table</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-layout="bullets">Ranked bars</button>
+                    </div>
+                    <div role="group" aria-label="Measure">
+                        <b>Measure</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cap-measure="ram">Memory</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-measure="cpu">CPU</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-measure="disk">Disk</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cap-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="map-capacity-component">
+                    <div class="kp-datatable" data-kp-datatable data-kp-page-size="20" data-kp-page-sizes="none" data-kp-sort-multi data-kp-remember="sk-capacity" id="sk-cap-table">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">What each running stack uses of its allowance</caption>
+                                <thead><tr><th scope="col" data-kp-sort="text">Stack</th><th scope="col" data-kp-sort="number">Memory</th><th scope="col" data-kp-sort="number">CPU</th><th scope="col" data-kp-sort="number">Disk</th></tr></thead>
+                                <tbody id="sk-cap-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No stack is running.</div>
+                    </div>
+                    <div class="kp-bullets" data-kp-bullets id="sk-cap-bullets" hidden></div>
+                    <pre class="sk-log" id="sk-cap-log" aria-live="polite">Press a ranked row; what the page would open shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ map-disk -->
+            <section
+                class="sk-sec"
+                id="map-disk"
+                data-review-item="map-disk" data-review-topic="map-capacity"
+                data-review-components="chart stackbar"
+                data-review-title="When will a disk be full, and who is filling it"
+                aria-labelledby="h-map-disk"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-map-disk">When will a disk be full, and who is filling it</h2>
+                    <p>Charts the last 30 days of a filesystem, continues the line to 100 % at the same pace and says on which day it fills; above it a bar shows which stacks hold the space.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Chart</b>: the used share of <b>/ (host root)</b> for 30 days (74 % to 87 %), a dashed alert line at 85 %, and a second line, <b>Projected</b>, from today to 100 %, ending with a mark <b>Full in 14 days (02/11/2026)</b>. Hover or pin a day for its exact value.</li>
+                        <li><b>Above</b>: <b>Who fills the root disk</b> as a share bar (loki 38 GB, prometheus 31 GB, docker images 62 GB&hellip;) with the alert tick; the largest part that is a stack takes the warning tone.</li>
+                        <li><b>Filesystem</b> switches between the root (full in 14 days), <b>/rpool/data</b> (full in 69 days) and <b>/mnt/backup</b> (full in 208 days); the share bar is for the root only and says so on the other two. <b>Data</b>: Loading, Empty and Failed fill the chart&rsquo;s height.</li>
+                        <li>The chart has no dashed forecast style yet, so the projected line is a second line of its own colour; a forecast style is a gap for the package.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A calm line chart with the alert level dashed and labelled, the projected line clearly a different colour, and the mark text fully inside the plot. Look at the date axis (dd/mm), the legend and that the share bar&rsquo;s legend wraps.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="map-disk-component">
+                    <div role="group" aria-label="Filesystem">
+                        <b>Filesystem</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-disk-fs="root">/ (host root)</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-fs="data">/rpool/data</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-fs="backup">/mnt/backup</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-disk-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="map-disk-component">
+                    <figure class="kp-stackbar" data-kp-stackbar id="sk-disk-who"></figure>
+                    <p class="sk-pane__line" id="sk-disk-line" role="status"></p>
+                    <figure class="kp-chart sk-chart" data-kp-chart id="sk-disk-chart" data-kp-chart-loading aria-label="Disk used, last 30 days and projection"><figcaption class="kp-chart__title">Disk used, with the projection</figcaption></figure>
+                    <pre class="sk-log" id="sk-disk-log" aria-live="polite">Pin a day on the chart; the reading is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ map-stale -->
+            <section
+                class="sk-sec"
+                id="map-stale"
+                data-review-item="map-stale" data-review-topic="map-stale" data-review-topic-title="Stale images"
+                data-review-components="datatable selection-bar deplist version-delta"
+                data-review-title="Stale images: choose what to update, and see who uses each"
+                aria-labelledby="h-map-stale"
+            >
+                <div class="sk-sec__head">
+                    <h2 id="h-map-stale">Stale images: choose what to update, and see who uses each</h2>
+                    <p>Lists every image that is behind its upstream, sorted so the riskiest jump comes first, opens a row to show which apps depend on it, and sends the chosen ones to the Update page; a major update must be taken on its own.</p>
+                </div>
+                <div class="sk-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Table</b>: app and stack, image, a version chip with its size word (<b>major</b>, <b>minor</b>, <b>patch</b>), and days waiting. Sorting by <b>Jump</b> puts the majors first (jellyfin, grafana, prometheus). The two comma columns of today (&ldquo;used by&rdquo;) are gone: open a row for a numbered list of what uses the image.</li>
+                        <li>Tick <b>immich-server</b>, <b>immich-machine-learning</b> and <b>paperless-ngx</b>: the bar reads <b>3 selected</b> with <b>Update 3</b>; pressing it says it would open <code>/update?all=1&amp;only=immich-server,immich-ml,paperless</code>. Add <b>jellyfin</b>: <b>Update</b> turns off and says <b>A major update needs its own read: update jellyfin on its own</b>.</li>
+                        <li><b>Server: One is refused</b> makes the update page refuse <b>immich-ml</b> (&ldquo;its stack is being applied right now&rdquo;): the bar says <b>2 done, 1 refused</b> and marks the row. <b>Data</b>: Loading, Empty (&ldquo;Everything is current&rdquo;) and Failed fill the table&rsquo;s height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The bar is the same band as on the Stacks page; chips are the version component with its arrow; the opened row lists dependants on a grid of number, name and state. Look at the sort arrow on Jump and at the disabled Update with its reason.</p>
+                </div>
+                <div class="sk-controls" data-review-controls data-review-controls-for="map-stale-component">
+                    <div role="group" aria-label="Select">
+                        <b>Select</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-stale-pick="immich">The 3 safe ones</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-stale-pick="major">Add jellyfin</button>
+                        <button type="button" class="kp-button kp-button--sm" data-sk-stale-pick="none">None</button>
+                    </div>
+                    <div data-review-latent role="group" aria-label="Server">
+                        <b>Server</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-stale-server="accepts">Accepts all</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-stale-server="refuses">One is refused</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-stale-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-stale-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-stale-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-stale-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="sk-frame" id="map-stale-component">
+                        <div class="kp-selection sk-bar" data-kp-selection data-kp-selection-for="sk-stale" data-kp-placement="sticky-top" id="sk-stale-bar" aria-label="Images to update">
+                            <div class="kp-selection__actions"><button type="button" class="kp-button kp-button--primary" data-kp-selection-action="update">Update</button></div>
+                        </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-expand-single data-kp-page-size="20" data-kp-page-sizes="none" id="sk-stale">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">Images behind their upstream</caption>
+                                <thead><tr><th scope="col"><input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select every stale image" /></th><th scope="col" data-kp-sort="text">App</th><th scope="col" data-kp-sort="text">Image</th><th scope="col" data-kp-sort="number">Jump</th><th scope="col" data-kp-sort="number" class="kp-text-end">Waiting</th></tr></thead>
+                                <tbody id="sk-stale-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>Everything is current.</div>
+                    </div>
+                    <pre class="sk-log" id="sk-stale-log" aria-live="polite">Tick images and press Update; where the page would go shows here.</pre>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-homelab-stacks-5b1d0c7e-3a42-4f6e-9d58-2c7e1f0a9b64" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

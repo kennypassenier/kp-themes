@@ -1,5 +1,7 @@
 # kyu-11-overview: who reads what, as a hub and ring (round 2)
 
+**Decided (2026-10-19 06:43):** Kenny approved every pair (round 1: six sections; round 2: the graph with formal's own loading). Recorded in `VERDICTS.json`; the part is not offered again.
+
 Review demo (formal only, mock data in kyu's shape). Round 1 (2026-10-19) approved the command palette, the keys with the
 `?` sheet and the hint line, the first-visit tour, both anchor sections and the line diagram; those are gone from the page.
 Kenny did not approve the graph: "dit is toch niet de standaard laadanimatie die Formeel heeft voor een netwerkdiagram?".

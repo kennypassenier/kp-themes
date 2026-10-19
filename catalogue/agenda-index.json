@@ -1,45 +1,6 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
-        "research/app-homelab-backups/demo.html": {
-            "facts": {
-                "id": "app-homelab-backups",
-                "themes": "formal",
-                "ask": null,
-                "askText": "The operations half of the homelab admin dashboard on kp-themes 11.0.0, in 25 sections that each ask one decision: Backups with the coverage grid, the grouped repositories, the Month view, one night in detail and Restore (5); the Firewall with totals that filter, a hop-by-hop path trace, the rules table, lines against grid, live against files and a guard before editing (6); the Host and System with the disk and thin pool, the checks with their remedy, one refresh control, the containers, the landing tiles, versions and the line to the host (7); and the Console with its history, safety, session tools, pane or bar, the host log and the keys (7).",
-                "sections": [
-                    { "item": "grid", "themes": null, "topic": "grid", "mode": null },
-                    { "item": "repos", "themes": null, "topic": "repos", "mode": null },
-                    { "item": "month", "themes": null, "topic": "month", "mode": null },
-                    { "item": "night", "themes": null, "topic": "night", "mode": null },
-                    { "item": "restore", "themes": null, "topic": "restore", "mode": null },
-                    { "item": "fw-totals", "themes": null, "topic": "fw-totals", "mode": null },
-                    { "item": "fw-trace", "themes": null, "topic": "fw-trace", "mode": null },
-                    { "item": "fw-rules", "themes": null, "topic": "fw-rules", "mode": null },
-                    { "item": "fw-lines", "themes": null, "topic": "fw-lines", "mode": null },
-                    { "item": "fw-live", "themes": null, "topic": "fw-live", "mode": null },
-                    { "item": "fw-guard", "themes": null, "topic": "fw-guard", "mode": null },
-                    { "item": "ho-disk", "themes": null, "topic": "ho-disk", "mode": null },
-                    { "item": "ho-checks", "themes": null, "topic": "ho-checks", "mode": null },
-                    { "item": "ho-refresh", "themes": null, "topic": "ho-refresh", "mode": null },
-                    { "item": "ho-containers", "themes": null, "topic": "ho-containers", "mode": null },
-                    { "item": "ho-landing", "themes": null, "topic": "ho-landing", "mode": null },
-                    { "item": "ho-version", "themes": null, "topic": "ho-version", "mode": null },
-                    { "item": "ho-link", "themes": null, "topic": "ho-link", "mode": null },
-                    { "item": "sh-console", "themes": null, "topic": "sh-console", "mode": null },
-                    { "item": "sh-safety", "themes": null, "topic": "sh-safety", "mode": null },
-                    { "item": "sh-session", "themes": null, "topic": "sh-session", "mode": null },
-                    { "item": "sh-mode", "themes": null, "topic": "sh-mode", "mode": null },
-                    { "item": "sh-log", "themes": null, "topic": "sh-log", "mode": null },
-                    { "item": "sh-density", "themes": null, "topic": "sh-density", "mode": null },
-                    { "item": "sh-keys", "themes": null, "topic": "sh-keys", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"app-homelab-backups-3b6f0e0a-6f4c-4a3e-9d0c-51a8b7c2e1f4\" }\n        "
-            },
-            "fingerprint": "6b02609401139954",
-            "update": null
-        },
         "research/state-plates-1019/demo.html": {
             "facts": {
                 "id": "state-plates-1019",
@@ -579,22 +540,10 @@
             },
             "fingerprint": "8e3e74d54d097575",
             "update": null
-        },
-        "research/kyu-11-overview/demo.html": {
-            "facts": {
-                "id": "kyu-11-overview",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Round 2. The palette, the keys, the tour and the anchors are approved and are gone from this page; what is left is the hub-and-ring picture of who reads what, with formal’s own loading. Everything here is mock data in kyu’s own shape (topics notify.kenny, ha.events, almanac.sync, jobtracker.mail, newsflash.items); nothing talks to a real kyu.",
-                "sections": [{ "item": "graph", "themes": null, "topic": "who-reads-what", "mode": null }],
-                "extra": null,
-                "round": "\n            { \"round\": \"kyu-11-overview-r2-c46c898b-3e68-47ae-a14f-12191c639ddf\", \"received\": [\"kyu-11-overview-8e6b5c1e-7b53-4d77-9c52-0b0d3f6a2f14\"] }\n        "
-            },
-            "fingerprint": "fcfed587587aecb3",
-            "update": null
         }
     },
     "decided": {
+        "research/kyu-11-overview/demo.html": "2026-10-19 06:43, Kenny: every pair approved over two rounds (research/kyu-11-overview/VERDICTS.json)",
         "research/kyu-11-topics/demo.html": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-topics/VERDICTS.json)",
         "research/kyu-11-topic-subs/demo.html": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-topic-subs/VERDICTS.json)",
         "research/kyu-11-topic-messages/demo.html": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-topic-messages/VERDICTS.json)",
