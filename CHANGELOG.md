@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- A narrow page header with two buttons gives the primary the rest of the row and the secondary its own width (390: "Register this device" 270px on one line, More 80px), instead of two equal columns that wrapped the primary to 50px; narrower than 20rem the buttons stack full width (chassis-rs).
 - A loading week in its upcoming-list layout lays the busy card over the whole held agenda: the list fills the host while it loads (almanac /history at 390: 84px card over a 249px area).
 - A card's empty or failed plate fills the card's whole stage in every theme: `.kp-card__state` stretches instead of centring a 90px plate in a stage as tall as the loaded data (kyu 47, Kitchen in dark).
 - **Fixed: a loading week in its upcoming-list layout shows the busy card with its panel centred** [weekbusy-1019; almanac]. Below 40rem an empty or short list (a first load, one item) was only 37 px high, so the card, laid over the list, was cut to that and its 100 px panel overflowed. A loading list now holds at least 7.5rem (`max(--kp-week-hold, 7.5rem)`); the held footprint still wins when it is taller.

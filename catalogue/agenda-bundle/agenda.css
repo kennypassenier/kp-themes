@@ -3650,6 +3650,23 @@
             align-items: stretch;
         }
 
+        /* Two buttons: the primary takes the rest of the row and the
+ * secondary its own width, so a long primary stays on one line and a
+ * short secondary (More) does not float in a half-width track
+ * (chassis-rs, 2026-10-19: 167 + 167 px wrapped "Register this device"). */
+        @container kp-page-header (min-width: 20rem) {
+            .kp-page-header__actions:has(> :nth-child(2 of .kp-button)):not(:has(> :nth-child(3 of .kp-button))) {
+                grid-template-columns: minmax(0, 1fr) auto;
+            }
+        }
+
+        /* Narrower than two buttons can stand beside each other: one full-width column. */
+        @container kp-page-header (max-width: 19.99rem) {
+            .kp-page-header__actions {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
         .kp-page-header__actions > .kp-button {
             justify-content: center;
             white-space: normal;
