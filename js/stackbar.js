@@ -293,7 +293,12 @@ export function setStackbar(el, spec) {
         const segs = /** @type {HTMLElement[]} */ ([...bar.querySelectorAll('.kp-stackbar__seg')]);
         const stop = segs.find((seg) => seg.dataset.kpStackbarKey === focusedKey) ?? segs[0];
         stop?.setAttribute('tabindex', '0');
-        if (legend) nodes.push(legend);
+        if (legend) {
+            // The widest value, in characters, so the legend keeps one value column (css `--kp-stackbar-value-n`).
+            const widest = Math.max(0, ...[...legend.querySelectorAll('.kp-stackbar__value')].map((v) => (v.textContent ?? '').length));
+            legend.style.setProperty('--kp-stackbar-value-n', String(widest));
+            nodes.push(legend);
+        }
     }
 
     el.replaceChildren(...nodes);

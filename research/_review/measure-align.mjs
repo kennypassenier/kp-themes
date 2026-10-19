@@ -249,7 +249,18 @@ export function measureAlign([tol, only]) {
                         label: `row ${row + 1} ${name(/** @type {Element} */ (ctl))}`,
                     })),
                 );
-                if (cs.d > tol)
+                // A stack of buttons centred on one axis is aligned on that axis: Kenny, 2026-10-05, "the phone view can center
+                // the buttons, left alignment doesn't look nice" (the action list under 30rem). Narrowed to buttons that all
+                // share one centre (align-pkg-1019); fields and any left-aligned column still answer to the start edge.
+                const centredStack =
+                    ctls.every(({ ctl }) => /** @type {Element} */ (ctl).matches('button, .kp-button')) &&
+                    spread(
+                        ctls.map(({ row, ctl }) => {
+                            const r = /** @type {Element} */ (ctl).getBoundingClientRect();
+                            return { v: (r.left + r.right) / 2, label: `row ${row + 1}` };
+                        }),
+                    ).d <= tol;
+                if (cs.d > tol && !centredStack)
                     res.push(
                         `${id}: ${gname}: the ${role} controls start ${px(cs.d)} px apart: x ${px(cs.lo.v)} (${cs.lo.label}) and x ${px(cs.hi.v)} (${cs.hi.label})`,
                     );
