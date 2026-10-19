@@ -1174,6 +1174,9 @@
  * @property {string} focusLoading  The words under its spinner while the steps load [kpadopt4]
  * @property {string} focusFailed  Steps that could not be read, when the page gives no message [kpadopt4]
  * @property {string} wheelSpin  The button in the middle of a wheel that picks (js/wheel.js) [kpadopt4]
+ * @property {string} wheelIdleKiosk  The same line on a kiosk wheel, which has no button [hover-wheel-1019]
+ * @property {string} wheelSpinKiosk  The name of a kiosk wheel for a screen reader: it is the one control [hover-wheel-1019]
+ * @property {string} wheelResting  Added to a resting choice's tooltip [hover-wheel-1019]
  * @property {string} wheelSpinAgain  The same button once the wheel has chosen [kpadopt4]
  * @property {string} wheelIdle  The line under a wheel that has not spun yet [kpadopt4]
  * @property {string} wheelChose  The line over the outcome, "The wheel chose" [kpadopt4]
@@ -3013,6 +3016,9 @@ export const DEFAULT_STRINGS = Object.freeze({
     // A wheel that picks (js/wheel.js) [kpadopt4].
     wheelSpin: 'Spin',
     wheelSpinAgain: 'Again',
+    wheelIdleKiosk: 'Tap the wheel to let it choose.',
+    wheelSpinKiosk: 'Spin the wheel',
+    wheelResting: 'Resting',
     wheelIdle: 'Press Spin to let the wheel choose.',
     wheelChose: 'The wheel chose',
     wheelSpinning: 'Turning…',

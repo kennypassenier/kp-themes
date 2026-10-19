@@ -4172,6 +4172,18 @@ export type Strings = {
      */
     wheelSpin: string;
     /**
+     * The same line on a kiosk wheel, which has no button [hover-wheel-1019]
+     */
+    wheelIdleKiosk: string;
+    /**
+     * The name of a kiosk wheel for a screen reader: it is the one control [hover-wheel-1019]
+     */
+    wheelSpinKiosk: string;
+    /**
+     * Added to a resting choice's tooltip [hover-wheel-1019]
+     */
+    wheelResting: string;
+    /**
      * The same button once the wheel has chosen [kpadopt4]
      */
     wheelSpinAgain: string;
@@ -7206,6 +7218,9 @@ export type Strings = {
  * @property {string} focusLoading  The words under its spinner while the steps load [kpadopt4]
  * @property {string} focusFailed  Steps that could not be read, when the page gives no message [kpadopt4]
  * @property {string} wheelSpin  The button in the middle of a wheel that picks (js/wheel.js) [kpadopt4]
+ * @property {string} wheelIdleKiosk  The same line on a kiosk wheel, which has no button [hover-wheel-1019]
+ * @property {string} wheelSpinKiosk  The name of a kiosk wheel for a screen reader: it is the one control [hover-wheel-1019]
+ * @property {string} wheelResting  Added to a resting choice's tooltip [hover-wheel-1019]
  * @property {string} wheelSpinAgain  The same button once the wheel has chosen [kpadopt4]
  * @property {string} wheelIdle  The line under a wheel that has not spun yet [kpadopt4]
  * @property {string} wheelChose  The line over the outcome, "The wheel chose" [kpadopt4]

@@ -387,6 +387,7 @@ table.addEventListener(<span class="kp-code__string">'kp-hovercard'</span>, (eve
                             <tr><td><code>data-kp-open-delay</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-tooltip-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-tooltip-owner</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-touch</code></td><td>read</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -444,8 +445,8 @@ table.addEventListener(<span class="kp-code__string">'kp-hovercard'</span>, (eve
                             <tr><td><code>hover and focus</code></td><td>Both open it in the React channel, with a delay before and after, so a pointer crossing the control does not flash it.</td></tr>
                             <tr><td><code>interactive</code></td><td>A tooltip can be made to take the pointer, for one that contains a link; by default it does not, so it cannot get in the way.</td></tr>
                             <tr><td><code>Escape</code></td><td>Closes it, like every other layer in the package.</td></tr>
-                            <tr><td><code>data-kp-hovercard</code></td><td>The hover card: one tooltip for a whole page, filled when it opens (`attachHoverCards`), for anchors a page rebuilds or whose words are only known when the pointer arrives. The attribute holds the words, or a `fill(anchor, card)` callback supplies them; it is hoverable, dismissible and ignores touch.</td></tr>
-                            <tr><td><code>attachHoverCards options</code></td><td>`{ selector, fill, openDelayMs, closeDelayMs, closeOnEscape, cardClass }` (300 ms and 100 ms, Escape on). Per anchor: `data-kp-open-delay`, `data-kp-close-delay` and `data-kp-close-on-escape=&quot;false&quot;`. The attribute’s own text wins over `fill`.</td></tr>
+                            <tr><td><code>data-kp-hovercard</code></td><td>The hover card: one tooltip for a whole page, filled when it opens (`attachHoverCards`), for anchors a page rebuilds or whose words are only known when the pointer arrives. The attribute holds the words, or a `fill(anchor, card)` callback supplies them; it is hoverable, dismissible, and a tap opens it on a touch screen (a tap outside closes it, a tap inside keeps it).</td></tr>
+                            <tr><td><code>attachHoverCards options</code></td><td>`{ selector, fill, openDelayMs, closeDelayMs, closeOnEscape, touch, cardClass }` (300 ms and 100 ms, Escape on, touch on). `touch: false` turns taps off for the root. Per anchor: `data-kp-open-delay`, `data-kp-close-delay`, `data-kp-close-on-escape=&quot;false&quot;` and `data-kp-touch` (`off` leaves the anchor to touch alone; `tap` makes a link or button anchor open the card on the first tap and act on the second; a plain anchor opens on a tap by default). The attribute’s own text wins over `fill`.</td></tr>
                             <tr><td><code>hover card handle</code></td><td>`attachHoverCards` returns the detach function with `{ card, open(anchor), hide(), refresh(), anchor() }` on it: `refresh()` fills the open card again when its data changed under the pointer. The card is `.kp-popover.kp-tooltip[data-kp-hovercard-card]` in the body, in the top layer, and its widest is a knob.</td></tr>
                             <tr><td><code>pastel</code></td><td>In pastel a tooltip hangs in its holder, whose ::after draws its pass by anchor positioning; it lands small on the pass and leaves as that backwards.</td></tr>
                     </tbody></table></div>

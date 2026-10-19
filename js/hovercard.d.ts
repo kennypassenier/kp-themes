@@ -27,6 +27,10 @@ export type HoverCardOptions = {
      */
     closeOnEscape?: boolean;
     /**
+     * A tap opens and closes the card. Default true; per anchor `data-kp-touch="off" | "tap"`.
+     */
+    touch?: boolean;
+    /**
      * A class added to the card, for a page's own measure (it lives in <body>).
      */
     cardClass?: string;
