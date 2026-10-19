@@ -1162,6 +1162,7 @@ if (has('restore-component')) {
     const stackSel = /** @type {HTMLSelectElement} */ ($('[data-hb-rs-stack]', root));
     const tiles = $('[data-hb-rs-tiles]', root);
     const listWrap = $('[data-hb-rs-listwrap]', root);
+    const tilesRow = $('[data-hb-rs-tilesrow]', root);
     const appSel = /** @type {HTMLSelectElement} */ ($('[data-hb-rs-app]', root));
     const dated = $('[data-hb-dated]', root);
     const next = /** @type {HTMLButtonElement} */ ($('[data-hb-next]', root));
@@ -1211,6 +1212,7 @@ if (has('restore-component')) {
         const s = /** @type {typeof STACKS[number]} */ (STACK.get(stack));
         if (!s.apps.some((a) => a[0] === app)) app = /** @type {string} */ (s.apps[0]?.[0]);
         tiles.hidden = layout !== 'tiles';
+        tilesRow.hidden = layout !== 'tiles';
         listWrap.hidden = layout !== 'list';
         tiles.querySelectorAll('.kp-field__option').forEach((n) => n.remove());
         for (const [name, gb, drill] of s.apps) {

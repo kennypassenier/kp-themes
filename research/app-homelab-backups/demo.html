@@ -126,15 +126,16 @@
                     </div>
                 </div>
                 <div class="hb-frame" id="grid-component">
-                    <div class="hb-bar3">
-                        <div class="a hb-pill-row">
+                    <div class="kp-formgrid hb-toolbar"><div class="kp-formgrid__row kp-formgrid__row--buttons">
+<span class="kp-formgrid__label">Nights</span>
+<div class="kp-formgrid__control"><div class="kp-formgrid__buttons">
                             <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-hb-earlier>‹ Earlier</button>
                             <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-hb-later>Later ›</button>
                             <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-hb-today>Today</button>
-                        </div>
-                        <div class="b"><span class="hb-bar__range" data-hb-range></span></div>
-                        <div class="c"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-grid-ago></time></div>
-                    </div>
+                        </div></div>
+<div class="kp-formgrid__value"><span class="hb-bar__range" data-hb-range></span></div>
+<div class="kp-formgrid__actions"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-grid-ago></time></div>
+</div></div>
                     <div class="hb-heat" id="hb-grid-heat">
                         <div class="kp-heat" data-kp-heat data-kp-heat-toggle data-hb-heat="grid"></div>
                     </div>
@@ -146,10 +147,10 @@
                         <li><span class="kp-heat__swatch" data-kp-tone="none"></span> keeps no data</li>
                         <li data-kp-end><span class="kp-keys" data-hb-keys="grid"></span></li>
                     </ul>
-                    <div class="hb-grid">
-                        <p class="hb-readout hb-c6" role="status" data-hb-grid-pin>No night pinned. Press a cell to pin its night.</p>
-                        <p class="hb-readout hb-c6" role="status" data-hb-grid-rows>All stacks shown. Press a stack name to show only that one.</p>
-                    </div>
+                    <div class="kp-formgrid hb-reads3">
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">Pinned</span><p class="kp-formgrid__control" role="status" data-hb-grid-pin>No night pinned. Press a cell to pin its night.</p></div>
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">Shown</span><p class="kp-formgrid__control" role="status" data-hb-grid-rows>All stacks shown. Press a stack name to show only that one.</p></div>
+</div>
                 </div>
             </section>
 
@@ -241,9 +242,9 @@
                 <div class="hb-frame hb-repos" id="repos-component">
                     <div class="hb-repos__main">
                         <figure class="kp-stackbar" data-hb-stackbar></figure>
-                        <div class="hb-repos__facets">
-                            <h3 class="kp-facets__title" id="hb-h-stack">Stack</h3>
-                            <div
+                        <div class="kp-formgrid hb-repos__facets">
+<div class="kp-formgrid__row"><h3 class="kp-formgrid__label kp-facets__title" id="hb-h-stack">Stack</h3>
+<div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div
                                 class="kp-facets kp-facets--row"
                                 data-kp-facets
                                 data-kp-facets-all="All stacks"
@@ -253,8 +254,8 @@
                             >
                                 <ul class="kp-facets__list"></ul>
                                 <p class="kp-facets__empty" hidden>No stacks yet.</p>
-                            </div>
-                        </div>
+                            </div></div></div>
+</div>
                         <div data-hb-bar-slot></div>
                         <div class="hb-table" data-hb-table></div>
                         <pre class="hb-log" aria-live="polite" data-hb-repos-log>
@@ -329,20 +330,24 @@ Press a button in a row, a heading or the selection bar; what it would do shows 
                     </div>
                 </div>
                 <div class="hb-frame hb-month" id="month-component">
-                    <div class="hb-bar3">
-                        <div class="a"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Backups view" data-hb-view>
+                    <div class="kp-formgrid hb-toolbar"><div class="kp-formgrid__row">
+<span class="kp-formgrid__label" aria-hidden="true">View</span>
+<div class="kp-formgrid__control"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Backups view" data-hb-view>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="nights">Nights</button>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="month">Month</button>
                         </div></div>
-                        <div class="b"><div
+<div class="kp-formgrid__value"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-month-ago></time></div>
+</div>
+<div class="kp-formgrid__row" data-hb-range-picker>
+<span class="kp-formgrid__label" aria-hidden="true">Nights shown</span>
+<div class="kp-formgrid__control"><div
                             class="kp-range"
                             data-kp-range="30d"
                             data-kp-range-presets="7d 30d 90d"
                             aria-label="Nights to show"
-                            data-hb-range-picker
+                            
                         ></div></div>
-                        <div class="c"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-month-ago></time></div>
-                    </div>
+</div></div>
                     <section class="kp-card hb-card" data-kp-state="ready" aria-label="Backups per night">
                         <div class="kp-card__stage">
                             <div class="kp-card__data">
@@ -368,10 +373,11 @@ Press a button in a row, a heading or the selection bar; what it would do shows 
                             </div>
                         </div>
                     </section>
-                    <div class="hb-bar3 hb-month__foot">
-                        <p class="hb-readout a" style="grid-column: 1 / span 8" role="status" data-hb-month-pin>No night picked. Press a day or a cell.</p>
-                        <div class="c"><button type="button" class="kp-button kp-button--sm" data-hb-month-repair hidden>Back up now</button></div>
-                    </div>
+                    <div class="kp-formgrid hb-month__foot"><div class="kp-formgrid__row">
+<span class="kp-formgrid__label">Picked night</span>
+<div class="kp-formgrid__control"><span role="status" data-hb-month-pin>No night picked. Press a day or a cell.</span></div>
+<div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--sm" data-hb-month-repair hidden>Back up now</button></div>
+</div></div>
                 </div>
             </section>
 
@@ -445,32 +451,19 @@ Press a button in a row, a heading or the selection bar; what it would do shows 
                     <section class="kp-card hb-card hb-night__card" data-kp-state="ready" aria-label="One night">
                         <div class="kp-card__stage">
                             <div class="kp-card__data hb-night__cols">
-                                <div class="hb-night__week">
-                                    <div class="hb-bar">
-                                        <label class="kp-field__label" for="hb-week-stack">Week of</label>
-                                        <select class="kp-field__input" id="hb-week-stack" data-hb-week-stack></select>
-                                    </div>
-                                    <div
-                                        class="kp-week"
-                                        data-kp-week
-                                        data-kp-week-upcoming="8"
-                                        aria-label="Snapshots of one stack in a week"
-                                        data-hb-week
-                                    ></div>
-                                </div>
-                                <div class="hb-night__list">
-                                    <div class="hb-bar">
-                                        <label class="kp-field__label" for="hb-night-pick">Night</label>
-                                        <select class="kp-field__input" id="hb-night-pick" data-hb-night-pick></select>
-                                    </div>
-                                    <p class="hb-summary" role="status" data-hb-night-summary>…</p>
-                                    <ul class="kp-statuslist kp-statuslist--rows" aria-label="Stacks on this night" data-hb-statuslist></ul>
-                                    <pre class="hb-log" aria-live="polite" data-hb-night-log>
+<div class="kp-formgrid hb-night__pick">
+<div class="kp-formgrid__row"><label class="kp-formgrid__label" for="hb-week-stack">Week of</label><div class="kp-formgrid__control"><select class="kp-field__input" id="hb-week-stack" data-hb-week-stack></select></div><p class="kp-formgrid__value">Which stack the week shows.</p></div>
+<div class="kp-formgrid__row"><label class="kp-formgrid__label" for="hb-night-pick">Night</label><div class="kp-formgrid__control"><select class="kp-field__input" id="hb-night-pick" data-hb-night-pick></select></div><p class="kp-formgrid__value hb-summary" role="status" data-hb-night-summary>…</p></div>
+</div>
+<div class="hb-night__body">
+<div class="hb-night__week"><div class="kp-week" data-kp-week data-kp-week-upcoming="8" aria-label="Snapshots of one stack in a week" data-hb-week></div></div>
+<div class="hb-night__list"><ul class="kp-statuslist kp-statuslist--rows" aria-label="Stacks on this night" data-hb-statuslist></ul></div>
+</div>
+<pre class="hb-log" aria-live="polite" data-hb-night-log>
 Press a pill or a repair button; what it would do shows here.</pre>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+</div>
+</div>
+</section>
                 </div>
             </section>
 
@@ -562,38 +555,30 @@ Press a pill or a repair button; what it would do shows here.</pre>
                             <li data-kp-step-label>Restore</li>
                         </ol>
                         <section data-kp-step aria-label="What to restore">
-                            <div class="hb-step">
-                                <div class="kp-field">
-                                    <label class="kp-field__label" for="hb-rs-stack">Stack</label>
-                                    <select class="kp-field__input" id="hb-rs-stack" data-hb-rs-stack></select>
-                                </div>
-                                <fieldset class="kp-fieldset" data-kp-layout="tiles" data-hb-rs-tiles>
-                                    <legend class="kp-field__label">App to bring back</legend>
-                                </fieldset>
-                                <div class="kp-field" data-hb-rs-listwrap hidden>
-                                    <label class="kp-field__label" for="hb-rs-app">App to bring back</label>
-                                    <select class="kp-field__input" id="hb-rs-app" data-hb-rs-app></select>
-                                </div>
-                                <ul class="hb-facts" data-hb-rs-facts aria-label="What this restores"></ul>
-                            </div>
+                            <div class="hb-step kp-formgrid">
+<div class="kp-formgrid__row"><label class="kp-formgrid__label" for="hb-rs-stack">Stack</label><div class="kp-formgrid__control"><select class="kp-field__input" id="hb-rs-stack" data-hb-rs-stack></select></div><p class="kp-formgrid__value">The stack the app lives in.</p></div>
+<div class="kp-formgrid__row" data-hb-rs-tilesrow><span class="kp-formgrid__label" id="hb-rs-tiles-label">App to bring back</span><div class="kp-formgrid__control"><fieldset class="kp-fieldset" data-kp-layout="tiles" data-hb-rs-tiles aria-labelledby="hb-rs-tiles-label"></fieldset></div></div>
+<div class="kp-formgrid__row" data-hb-rs-listwrap hidden><label class="kp-formgrid__label" for="hb-rs-app">App to bring back</label><div class="kp-formgrid__control"><select class="kp-field__input" id="hb-rs-app" data-hb-rs-app></select></div></div>
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">What it restores</span><div class="kp-formgrid__control"><ul class="hb-facts" data-hb-rs-facts aria-label="What this restores"></ul></div></div>
+</div>
                         </section>
                         <section data-kp-step hidden aria-label="Which night">
-                            <div class="hb-step">
-                                <div
+                            <div class="hb-step kp-formgrid">
+<div class="kp-formgrid__row"><span class="kp-formgrid__label" id="hb-rs-night-label">Night to restore from</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div
                                     class="kp-dated"
                                     data-kp-dated
                                     aria-label="Night to restore from"
                                     data-kp-now="2026-10-19T14:05:00+02:00"
                                     data-hb-dated
-                                ></div>
-                            </div>
+                                ></div></div></div>
+</div>
                         </section>
                         <section data-kp-step hidden aria-label="Check">
-                            <div class="hb-step hb-step--check">
-                                <p class="hb-point" data-hb-rs-point>Restore point: …</p>
-                                <div class="kp-deplist" data-kp-deplist data-kp-dep-heading="{n} stop and start in this order" data-hb-deplist></div>
-                                <figure class="kp-code" data-kp-code data-hb-code></figure>
-                                <div
+                            <div class="hb-step hb-step--check kp-formgrid">
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">Restore point</span><p class="kp-formgrid__control hb-point" data-kp-formgrid-span="wide" data-hb-rs-point>Restore point: …</p></div>
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">Stops and starts</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-deplist" data-kp-deplist data-kp-dep-heading="{n} stop and start in this order" data-hb-deplist></div></div></div>
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">Command</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide"><figure class="kp-code" data-kp-code data-hb-code></figure></div></div>
+<div data-kp-formgrid-span="all"><div
                                     class="kp-alert kp-alert--warning"
                                     data-kp-ack
                                     data-kp-ack-key="aside"
@@ -604,24 +589,20 @@ Press a pill or a repair button; what it would do shows here.</pre>
                                         <strong>Today's data is replaced.</strong> A copy of it is set aside first and stays for 7 days, so this step
                                         can be undone by restoring that copy.
                                     </div>
-                                </div>
-                                <div data-hb-typeconfirm></div>
-                                <div class="hb-step__go">
-                                    <button type="button" class="kp-button kp-button--destructive" id="hb-rs-go" data-hb-rs-go disabled>
+                                </div></div>
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">Confirm</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide" data-hb-typeconfirm></div></div>
+<div class="kp-formgrid__row kp-formgrid__row--buttons"><div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--destructive" id="hb-rs-go" data-hb-rs-go disabled>
                                         Restore
-                                    </button>
-                                </div>
-                            </div>
+                                    </button></div></div>
+</div>
                         </section>
                         <section data-kp-step hidden aria-label="Restoring">
-                            <div class="hb-step">
-                                <p class="hb-point" data-hb-rs-run-title>Restoring…</p>
-                                <ol class="kp-steplist" aria-label="Restore progress" data-hb-steplist></ol>
-                                <div class="hb-step__go" data-hb-rs-run-actions hidden>
-                                    <button type="button" class="kp-button kp-button--primary" data-hb-rs-retry>Try again</button>
-                                    <button type="button" class="kp-button" data-hb-rs-back>Back to Check</button>
-                                </div>
-                            </div>
+                            <div class="hb-step kp-formgrid">
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">Restoring</span><p class="kp-formgrid__control hb-point" data-kp-formgrid-span="wide" data-hb-rs-run-title>Restoring…</p></div>
+<div class="kp-formgrid__row"><span class="kp-formgrid__label">Progress</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide"><ol class="kp-steplist" aria-label="Restore progress" data-hb-steplist></ol></div></div>
+<div class="kp-formgrid__row kp-formgrid__row--buttons" data-hb-rs-run-actions hidden><div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button kp-button--primary" data-hb-rs-retry>Try again</button>
+                                    <button type="button" class="kp-button" data-hb-rs-back>Back to Check</button></div></div></div>
+</div>
                         </section>
                         <div class="kp-wizard__actions">
                             <button type="button" class="kp-button" data-kp-wizard-back>Back</button>
@@ -677,19 +658,28 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="fw-totals-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Totals</h3><p>Press a tile to show only the stacks it counts.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-fw-shown></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Totals</h3>
+                            <p class="kp-formgrid__control">Press a tile to show only the stacks it counts.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-fw-shown></p>
+                        </div>
                         <div data-hb-fw-kpis></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>The stacks</h3><p>Every stack with its firewall state, its default policies and what it reaches.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">The stacks</h3>
+                            <p class="kp-formgrid__control">Every stack with its firewall state, its default policies and what it reaches.</p>
+                        </div>
                         
                         <div class="hb-fw-table" data-hb-fw-table></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Who can reach whom</h3><p>From a row to a column: the ports a connection may use.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-fw-pick></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Who can reach whom</h3>
+                            <p class="kp-formgrid__control">From a row to a column: the ports a connection may use.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-fw-pick></p>
+                        </div>
                         <div class="hb-fw-matrix"><div class="kp-matrix" data-kp-matrix data-kp-matrix-select="follow" data-hb-fw-matrix></div></div>
                     </div>
                     </div>
@@ -741,12 +731,13 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="fw-trace-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>The question</h3><p>Where does a connection from one stack to another go through, and where does it stop?</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-tr-read></p>
-                        <div class="hb-bar3">
-                        <div class="a"><div class="kp-combobox" data-kp-combobox >
-                            <label class="kp-field__label" for="hb-tr-from">From</label>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">The question</h3>
+                            <p class="kp-formgrid__control">Where does a connection from one stack to another go through, and where does it stop?</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-tr-read></p>
+                        </div>
+                        <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="hb-tr-from">From</label><div class="kp-formgrid__control"><div class="kp-combobox" data-kp-combobox >
                             <input class="kp-combobox__input" id="hb-tr-from" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="hb-tr-from-list" />
                             <ul class="kp-combobox__list" id="hb-tr-from-list" role="listbox" hidden>
                                 <li class="kp-combobox__option" role="option" data-kp-option data-value="traefik">traefik</li>
@@ -762,9 +753,8 @@ Press a pill or a repair button; what it would do shows here.</pre>
                                 <li class="kp-combobox__option" role="option" data-kp-option data-value="admin">admin</li>
                             </ul>
                             <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
-                        </div></div>
-                        <div class="b"><div class="kp-combobox" data-kp-combobox >
-                            <label class="kp-field__label" for="hb-tr-to">To</label>
+                        </div></div></div>
+<div class="kp-formgrid__row"><label class="kp-formgrid__label" for="hb-tr-to">To</label><div class="kp-formgrid__control"><div class="kp-combobox" data-kp-combobox >
                             <input class="kp-combobox__input" id="hb-tr-to" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="hb-tr-to-list" />
                             <ul class="kp-combobox__list" id="hb-tr-to-list" role="listbox" hidden>
                                 <li class="kp-combobox__option" role="option" data-kp-option data-value="traefik">traefik</li>
@@ -780,17 +770,22 @@ Press a pill or a repair button; what it would do shows here.</pre>
                                 <li class="kp-combobox__option" role="option" data-kp-option data-value="admin">admin</li>
                             </ul>
                             <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
-                        </div></div>
-                        <div class="c"><label class="kp-field__label" for="hb-tr-port">Port</label><select class="kp-field__input" id="hb-tr-port" data-hb-tr-port></select></div>
+                        </div></div></div>
+<div class="kp-formgrid__row"><label class="kp-formgrid__label" for="hb-tr-port">Port</label><div class="kp-formgrid__control"><select class="kp-field__input" id="hb-tr-port" data-hb-tr-port></select></div></div>
                     </div>
-                    </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>The path</h3><p>Out of the source, in at the target, hop by hop.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">The path</h3>
+                            <p class="kp-formgrid__control">Out of the source, in at the target, hop by hop.</p>
+                        </div>
                         
                         <div class="kp-trace" data-kp-trace data-kp-trace-copy data-kp-trace-swap data-kp-trace-stop="first-refusal" data-hb-trace></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Or press a pair</h3><p>A cell of the matrix fills the question above.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Or press a pair</h3>
+                            <p class="kp-formgrid__control">A cell of the matrix fills the question above.</p>
+                        </div>
                         
                         <div class="hb-fw-matrix"><div class="kp-matrix" data-kp-matrix data-kp-matrix-select="follow" data-hb-tr-matrix></div></div>
                     </div>
@@ -842,13 +837,22 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="fw-rules-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Filter by action</h3><p>Show only the rules that accept or only those that drop.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-ru-read></p>
-                        <div class="kp-toggles" role="group" aria-label="Action" data-kp-toggle-group="action" data-kp-toggle-clear data-hb-ru-toggles></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Filter by action</h3>
+                            <p class="kp-formgrid__control" data-kp-formgrid-span="wide">Show only the rules that accept or only those that drop.</p>
+                        </div>
+                        <div class="kp-formgrid__row">
+<span class="kp-formgrid__label" aria-hidden="true">Action</span>
+<div class="kp-formgrid__control"><div class="kp-toggles" role="group" aria-label="Action" data-kp-toggle-group="action" data-kp-toggle-clear data-hb-ru-toggles></div></div>
+<div class="kp-formgrid__value"><span class="hb-panel__read" role="status" data-hb-ru-read></span></div>
+</div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Rules of the fleet</h3><p>Inbound rules guard a stack, outbound rules let it out.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Rules of the fleet</h3>
+                            <p class="kp-formgrid__control">Inbound rules guard a stack, outbound rules let it out.</p>
+                        </div>
                         
                         <div class="hb-fw-table" data-hb-ru-table></div>
                     </div>
@@ -901,13 +905,19 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="fw-lines-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Reachability</h3><p>Pick the view; pin a stack to follow it.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-li-read></p>
-                        <div class="hb-bar3"><div class="a"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View" data-hb-li-view>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Reachability</h3>
+                            <p class="kp-formgrid__control" data-kp-formgrid-span="wide">Pick the view; pin a stack to follow it.</p>
+                        </div>
+                        <div class="kp-formgrid__row">
+<span class="kp-formgrid__label" aria-hidden="true">View</span>
+<div class="kp-formgrid__control"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View" data-hb-li-view>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="grid">Grid</button>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="lines">Lines</button>
-                        </div></div></div>
+                        </div></div>
+<div class="kp-formgrid__value"><span class="hb-panel__read" role="status" data-hb-li-read></span></div>
+</div>
                     <div class="hb-fw-matrix"><div class="kp-matrix" data-kp-matrix data-kp-remember="hb-fw-view" data-hb-li-matrix></div></div>
                     </div>
                     </div>
@@ -953,19 +963,29 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="fw-live-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Needs a look</h3><p>Stacks whose live firewall is not what the file says.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Needs a look</h3>
+                            <p class="kp-formgrid__control">Stacks whose live firewall is not what the file says.</p>
+                        </div>
                         
                         <div data-hb-lv-attn></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Live against files</h3><p>Choose what the grid shows.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-lv-read></p>
-                        <div class="hb-bar3"><div class="a"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Compare" data-hb-lv-mode>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Live against files</h3>
+                            <p class="kp-formgrid__control">Choose what the grid shows.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-lv-read></p>
+                        </div>
+                        <div class="kp-formgrid__row">
+<span class="kp-formgrid__label" aria-hidden="true">Compare</span>
+<div class="kp-formgrid__control"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Compare" data-hb-lv-mode>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="differences">Differences</button>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="live">Live</button>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="files">Files</button>
-                        </div></div><div class="b"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-lv-ago></time></div></div>
+                        </div></div>
+<div class="kp-formgrid__value"><time class="kp-ago" data-kp-ago data-kp-ago-verb="read" data-hb-lv-ago></time></div>
+</div>
                     <div class="hb-fw-matrix"><div class="kp-matrix" data-kp-matrix data-hb-lv-matrix></div></div>
                     </div>
                     </div>
@@ -1010,16 +1030,25 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="fw-guard-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Choose a stack</h3><p>Hover for its policies.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Choose a stack</h3>
+                            <p class="kp-formgrid__control">Hover for its policies.</p>
+                        </div>
                         
-                        <div class="kp-toggles hb-pill-row" role="group" aria-label="Stack" data-kp-toggle-group="stack" data-kp-toggle-mode="single" data-hb-gd-chips></div>
+                        <div class="kp-formgrid__row">
+<span class="kp-formgrid__label" aria-hidden="true">Stack</span>
+<div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-toggles hb-pill-row" role="group" aria-label="Stack" data-kp-toggle-group="stack" data-kp-toggle-mode="single" data-hb-gd-chips></div></div>
+</div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Edit its rules</h3><p>Changes are applied by the next apply of the stack.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-gd-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Edit its rules</h3>
+                            <p class="kp-formgrid__control">Changes are applied by the next apply of the stack.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-gd-read></p>
+                        </div>
                         <div class="kp-alert kp-alert--warning" data-kp-ack data-kp-ack-for="#hb-gd-go" data-kp-ack-key="mgmt" data-kp-ack-label="I understand that a change here reaches the whole LAN" data-hb-gd-gate><div class="kp-alert__body" data-hb-gd-warning></div></div>
-                    <div><button type="button" class="kp-button kp-button--primary" id="hb-gd-go" data-hb-gd-go>Edit rules…</button></div>
+                    <div class="kp-formgrid__row kp-formgrid__row--buttons"><div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button kp-button--primary" id="hb-gd-go" data-hb-gd-go>Edit rules…</button></div></div></div>
                     </div>
                     </div>
                 </div>
@@ -1069,14 +1098,20 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="ho-disk-component">
                     <div class="hb-grid">
-                    <div class="hb-panel hb-c5">
-                        <div class="hb-panel__head"><h3>Root volume</h3><p>What fills the host's own disk.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-di-root-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Root volume</h3>
+                            <p class="kp-formgrid__control">What fills the host's own disk.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-di-root-read></p>
+                        </div>
                         <figure class="kp-stackbar kp-stackbar--lg" data-hb-di-root></figure>
                     </div>
-                    <div class="hb-panel hb-c7">
-                        <div class="hb-panel__head"><h3>Thin pool for the guests</h3><p>Written by each guest, against what all guests were promised.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-di-pool-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Thin pool for the guests</h3>
+                            <p class="kp-formgrid__control">Written by each guest, against what all guests were promised.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-di-pool-read></p>
+                        </div>
                         <figure class="kp-stackbar kp-stackbar--lg" data-hb-di-pool></figure>
                     </div>
                     </div>
@@ -1121,10 +1156,13 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="ho-checks-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Doctor</h3><p>Every check of pve, worst first.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-ck-read></p>
-                        <div class="hb-bar3"><div class="a" data-hb-ck-progress-wrap><div class="kp-progressbar" role="progressbar" aria-label="Reading the host checks" data-hb-ck-progress></div></div><div class="b"><span class="hb-readout" data-hb-ck-elapsed></span></div><div class="c"><button type="button" class="kp-button" data-hb-ck-again>Read again</button></div></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Doctor</h3>
+                            <p class="kp-formgrid__control">Every check of pve, worst first.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-ck-read></p>
+                        </div>
+                        <div class="kp-formgrid__row kp-formgrid__row--buttons"><span class="kp-formgrid__label" aria-hidden="true">Reading</span><div class="kp-formgrid__control" data-hb-ck-progress-wrap><div class="kp-progressbar" role="progressbar" aria-label="Reading the host checks" data-hb-ck-progress></div></div><div class="kp-formgrid__value"><span data-hb-ck-elapsed></span></div><div class="kp-formgrid__actions"><button type="button" class="kp-button" data-hb-ck-again>Read again</button></div></div>
                     <section class="kp-card hb-card" data-kp-state="ready" aria-label="Host checks"><div class="kp-card__stage"><div class="kp-card__data"><div class="hb-ho-list" data-hb-ck-host></div></div></div></section>
                     </div>
                     </div>
@@ -1172,17 +1210,24 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="ho-refresh-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Live figures</h3><p>Refreshed by the control below the figures.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-rf-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Live figures</h3>
+                            <p class="kp-formgrid__control">Refreshed by the control below the figures.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-rf-read></p>
+                        </div>
                         <div data-hb-rf-kpis></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Refresh</h3><p>How often the host is read, and when it was last read.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Refresh</h3>
+                            <p class="kp-formgrid__control">How often the host is read, and when it was last read.</p>
+                        </div>
                         
-                        <div class="hb-bar3"><div class="a" style="grid-column: 1 / span 8"><div class="kp-refresh" data-kp-refresh="30" data-kp-look="segmented" data-kp-refresh-choices="0,15,30,60,300" data-kp-remember="hb-ho-refresh" data-kp-stale-after="90" data-hb-rf-control></div></div><div class="c"><button type="button" class="kp-button" data-hb-rf-dialog>Open the settings dialog</button></div></div>
+                        <div class="kp-refresh" data-kp-refresh="30" data-kp-look="segmented" data-kp-refresh-choices="0,15,30,60,300" data-kp-remember="hb-ho-refresh" data-kp-stale-after="90" data-hb-rf-control></div>
+<div class="kp-formgrid__row kp-formgrid__row--buttons"><span class="kp-formgrid__label">Settings</span><div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button" data-hb-rf-dialog>Open the settings dialog</button></div></div></div>
                     <dialog class="kp-dialog" data-hb-rf-dlg aria-labelledby="hb-rf-dlg-title"><h2 class="kp-dialog__title" id="hb-rf-dlg-title">Host settings</h2><p>The refresh waits while this dialog is open, so nothing moves under your hands.</p><div class="kp-dialog__actions"><button type="button" class="kp-button kp-button--primary" data-hb-rf-close>Close</button></div></dialog>
-                    <ul class="hb-reads" data-hb-rf-log aria-label="What each refresh read"></ul>
+                    <div class="kp-formgrid__row"><span class="kp-formgrid__label">Each read</span><div class="kp-formgrid__control"><ul class="hb-reads" data-hb-rf-log aria-label="What each refresh read"></ul></div></div>
                     </div>
                     </div>
                 </div>
@@ -1233,14 +1278,20 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="ho-containers-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Guests on pve</h3><p>Containers, virtual machines and the template.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-cn-read></p>
-                        <div class="hb-bar3"><div class="a"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View" data-hb-cn-seg>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Guests on pve</h3>
+                            <p class="kp-formgrid__control" data-kp-formgrid-span="wide">Containers, virtual machines and the template.</p>
+                        </div>
+                        <div class="kp-formgrid__row">
+<span class="kp-formgrid__label" aria-hidden="true">View</span>
+<div class="kp-formgrid__control"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View" data-hb-cn-seg>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="table">Table</button>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="cards">Cards</button>
                             <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="pressure">Pressure</button>
-                        </div></div></div>
+                        </div></div>
+<div class="kp-formgrid__value"><span class="hb-panel__read" role="status" data-hb-cn-read></span></div>
+</div>
                     <div class="hb-ho-view" data-hb-cn-host></div>
                     </div>
                     </div>
@@ -1286,14 +1337,20 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="ho-landing-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Needs a look</h3><p>Problems of the host, mirrored here.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Needs a look</h3>
+                            <p class="kp-formgrid__control">Problems of the host, mirrored here.</p>
+                        </div>
                         
                         <div data-hb-ld-attn></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Areas</h3><p>Open an area, or read how it is doing.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-ld-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Areas</h3>
+                            <p class="kp-formgrid__control">Open an area, or read how it is doing.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-ld-read></p>
+                        </div>
                         <section class="kp-card hb-card" data-kp-state="ready" aria-label="Areas"><div class="kp-card__stage"><div class="kp-card__data"><div data-hb-ld-tiles></div></div></div></section>
                     </div>
                     </div>
@@ -1352,13 +1409,19 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="ho-version-component">
                     <div class="hb-grid">
-                    <div class="hb-panel hb-c7">
-                        <div class="hb-panel__head"><h3>What is moving</h3><p>The versions of the host, the dashboard and what they run.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-vs-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">What is moving</h3>
+                            <p class="kp-formgrid__control">The versions of the host, the dashboard and what they run.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-vs-read></p>
+                        </div>
                         <section class="kp-card hb-card" data-kp-state="ready" aria-label="Versions"><div class="kp-card__stage"><div class="kp-card__data"><div class="hb-versions" data-hb-vs-list data-kp-version-big-minor="immich"></div></div></div></section>
                     </div>
-                    <div class="hb-panel hb-c5">
-                        <div class="hb-panel__head"><h3>Look and script</h3><p>The stylesheet and the script of this page should come from one release.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Look and script</h3>
+                            <p class="kp-formgrid__control">The stylesheet and the script of this page should come from one release.</p>
+                        </div>
                         
                         <div class="hb-diag" data-hb-vs-diag-host></div>
                     </div>
@@ -1410,9 +1473,12 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="ho-link-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Pings to pve</h3><p>The dashboard asks the host every 30 seconds.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-lk-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Pings to pve</h3>
+                            <p class="kp-formgrid__control">The dashboard asks the host every 30 seconds.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-lk-read></p>
+                        </div>
                         <section class="kp-card hb-card" data-kp-state="ready" aria-label="Pings"><div class="kp-card__stage"><div class="kp-card__data"><div class="hb-link" data-hb-lk-host></div></div></div></section>
                     <div><button type="button" class="kp-button" data-hb-lk-ping>Ping now</button></div>
                     </div>
@@ -1464,15 +1530,21 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="sh-console-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Console</h3><p>Commands run as root on the target you choose; every one is kept in the history of this tab.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-sc-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Console</h3>
+                            <p class="kp-formgrid__control">Commands run as root on the target you choose; every one is kept in the history of this tab.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-sc-read></p>
+                        </div>
                         <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-hint="Try: restic snapshots, pct list, hostname, foo. Tab completes, Up recalls, : jumps here." aria-label="Host console"></div></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Keys</h3><p>What the keyboard does here.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Keys</h3>
+                            <p class="kp-formgrid__control">What the keyboard does here.</p>
+                        </div>
                         
-                        <div class="kp-keys" data-hb-sc-keys></div>
+                        <div class="kp-formgrid__row"><span class="kp-formgrid__label">Shortcuts</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-keys" data-hb-sc-keys></div></div></div>
                     </div>
                     </div>
                 </div>
@@ -1520,13 +1592,22 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="sh-safety-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Needs a second press</h3><p>A line that starts with one of these waits for a second Enter.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-sf-read></p>
-                        <div class="hb-pill-row" data-hb-sf-chips></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Needs a second press</h3>
+                            <p class="kp-formgrid__control">A line that starts with one of these waits for a second Enter.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-sf-read></p>
+                        </div>
+                        <div class="kp-formgrid__row">
+<span class="kp-formgrid__label" aria-hidden="true">Commands</span>
+<div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="hb-pill-row" data-hb-sf-chips></div></div>
+</div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Console</h3><p>Try rm, reboot or hostname.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Console</h3>
+                            <p class="kp-formgrid__control">Try rm, reboot or hostname.</p>
+                        </div>
                         
                         <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-hint="Try: rm -rf /srv/tmp (second press), reboot (refused by the host), hostname (runs at once)." aria-label="Host console"></div></div>
                     </div>
@@ -1571,19 +1652,35 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="sh-session-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Session</h3><p>Tools for the commands you ran in this tab.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-ss-read></p>
-                        <div class="hb-grid hb-actions3">
-                        <div class="hb-c4 hb-act"><button type="button" class="kp-button" data-hb-ss-clear>Clear</button><p>Empties the screen; Undo brings it back.</p></div>
-                        <div class="hb-c4 hb-act"><button type="button" class="kp-button" data-hb-ss-again>Run again</button><p>Repeats the last command in the same place.</p></div>
-                        <div class="hb-c4 hb-act"><button type="button" class="kp-button" data-hb-ss-save>Download the session</button><p>Every block as one text file.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Session</h3>
+                            <p class="kp-formgrid__control">Tools for the commands you ran in this tab.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-ss-read></p>
+                        </div>
+                        <div class="kp-formgrid__row kp-formgrid__row--buttons">
+<span class="kp-formgrid__label">Screen</span>
+<div class="kp-formgrid__control" data-kp-formgrid-span="control-value">Empties the screen; Undo brings it back.</div>
+<div class="kp-formgrid__actions"><button type="button" class="kp-button" data-hb-ss-clear>Clear</button></div>
+</div>
+<div class="kp-formgrid__row kp-formgrid__row--buttons">
+<span class="kp-formgrid__label" >Last command</span>
+<div class="kp-formgrid__control" data-kp-formgrid-span="control-value">Repeats the last command in the same place.</div>
+<div class="kp-formgrid__actions"><button type="button" class="kp-button" data-hb-ss-again>Run again</button></div>
+</div>
+<div class="kp-formgrid__row kp-formgrid__row--buttons">
+<span class="kp-formgrid__label" >Whole session</span>
+<div class="kp-formgrid__control" data-kp-formgrid-span="control-value">Every block as one text file.</div>
+<div class="kp-formgrid__actions"><button type="button" class="kp-button" data-hb-ss-save>Download the session</button></div>
+</div>
                     </div>
-                    </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Console</h3><p>The host journal streams for 10 seconds when you ask.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Console</h3>
+                            <p class="kp-formgrid__control">The host journal streams for 10 seconds when you ask.</p>
+                        </div>
                         
-                        <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-follow="stick" data-kp-console-hint="Try: uptime, then Stream the host journal." aria-label="Host console"></div></div><div class="hb-bar3"><div class="a"><button type="button" class="kp-button kp-button--secondary" data-hb-ss-stream>Stream the host journal</button></div></div>
+                        <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-follow="stick" data-kp-console-hint="Try: uptime, then Stream the host journal." aria-label="Host console"></div></div><div class="kp-formgrid__row kp-formgrid__row--buttons"><div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button kp-button--secondary" data-hb-ss-stream>Stream the host journal</button></div></div></div>
                     </div>
                     </div>
                 </div>
@@ -1633,13 +1730,19 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="sh-mode-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Host log</h3><p>The newest lines of the host.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-sm-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Host log</h3>
+                            <p class="kp-formgrid__control">The newest lines of the host.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-sm-read></p>
+                        </div>
                         <section class="kp-card hb-card" data-kp-state="ready" aria-label="Host log"><div class="kp-card__stage"><div class="kp-card__data"><ol class="hb-logrows" data-kp-follow="tail" data-kp-pill-unit="line,lines" data-hb-sm-log></ol></div></div></section>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Command</h3><p>Type a command to run on pve.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Command</h3>
+                            <p class="kp-formgrid__control">Type a command to run on pve.</p>
+                        </div>
                         
                         <div class="hb-console"><div class="kp-console" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-tab="complete" data-kp-console-status="exit-code" data-kp-console-max-lines="12" data-kp-console-hint="Try: hostname, pct list, ls /missing." aria-label="Command prompt"></div></div>
                     </div>
@@ -1691,13 +1794,19 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="sh-log-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Filter</h3><p>Show only the levels you press.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-sl-read></p>
-                        <div class="hb-bar3"><div class="a" style="grid-column: 1 / span 8"><div class="kp-toggles" role="group" aria-label="Level" data-kp-toggle-group="level" data-kp-toggle-clear data-hb-sl-levels></div></div><div class="c"><button type="button" class="kp-button kp-button--secondary" data-hb-sl-stream>Stream 12 new lines</button></div></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Filter</h3>
+                            <p class="kp-formgrid__control">Show only the levels you press.</p>
+<p class="kp-formgrid__value hb-panel__read" role="status" data-hb-sl-read></p>
+                        </div>
+                        <div class="kp-formgrid__row kp-formgrid__row--buttons"><span class="kp-formgrid__label" aria-hidden="true">Levels</span><div class="kp-formgrid__control" data-kp-formgrid-span="control-value"><div class="kp-toggles" role="group" aria-label="Level" data-kp-toggle-group="level" data-kp-toggle-clear data-hb-sl-levels></div></div><div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--secondary" data-hb-sl-stream>Stream 12 new lines</button></div></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Lines</h3><p>Newest at the bottom.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Lines</h3>
+                            <p class="kp-formgrid__control">Newest at the bottom.</p>
+                        </div>
                         
                         <section class="kp-card hb-card" data-kp-state="ready" aria-label="Host log"><div class="kp-card__stage"><div class="kp-card__data"><ol class="hb-logrows hb-logrows--tall" data-kp-follow="tail" data-kp-pill-unit="line,lines" data-hb-sl-log></ol></div></div></section>
                     </div>
@@ -1749,13 +1858,19 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="sh-density-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>The 2,000-line window</h3><p>Press a cell to look at those five minutes.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-sd-read></p>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">The 2,000-line window</h3>
+                            <p class="kp-formgrid__control">Press a cell to look at those five minutes.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-sd-read></p>
+                        </div>
                         <div class="hb-density" data-hb-sd-host></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Lines of that time</h3><p>The lines of the cell you pressed.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Lines of that time</h3>
+                            <p class="kp-formgrid__control">The lines of the cell you pressed.</p>
+                        </div>
                         
                         <section class="kp-card hb-card" data-kp-state="ready" aria-label="Lines of the chosen time"><div class="kp-card__stage"><div class="kp-card__data"><ol class="hb-logrows" data-hb-sd-lines></ol></div></div></section>
                     </div>
@@ -1799,15 +1914,21 @@ Press a pill or a repair button; what it would do shows here.</pre>
                 </div>
                 <div class="hb-frame " id="sh-keys-component">
                     <div class="hb-grid">
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Keys</h3><p>The shortcuts of the Shell page.</p></div>
-                        <p class="hb-panel__read" role="status" data-hb-sk-read></p>
-                        <div class="kp-keys" data-hb-sk-caps></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Keys</h3>
+                            <p class="kp-formgrid__control">The shortcuts of the Shell page.</p>
+                            <p class="kp-formgrid__value hb-panel__read" role="status" data-hb-sk-read></p>
+                        </div>
+                        <div class="kp-formgrid__row"><span class="kp-formgrid__label">Shortcuts</span><div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-keys" data-hb-sk-caps></div></div></div>
                     </div>
-                    <div class="hb-panel ">
-                        <div class="hb-panel__head"><h3>Check a key</h3><p>Register a key the old shell used and see what the guard says.</p></div>
+                    <div class="hb-panel kp-formgrid" data-kp-formgrid-label="fit">
+                        <div class="kp-formgrid__row hb-panel__head">
+                            <h3 class="kp-formgrid__label">Check a key</h3>
+                            <p class="kp-formgrid__control">Register a key the old shell used and see what the guard says.</p>
+                        </div>
                         
-                        <div class="hb-pill-row"><button type="button" class="kp-button" data-hb-sk-old>Try the old key</button><button type="button" class="kp-button kp-button--secondary" data-hb-sk-sheet>Show every shortcut</button></div>
+                        <div class="kp-formgrid__row kp-formgrid__row--buttons"><div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button" data-hb-sk-old>Try the old key</button><button type="button" class="kp-button kp-button--secondary" data-hb-sk-sheet>Show every shortcut</button></div></div></div>
                     <p class="hb-log" data-hb-sk-log role="status" aria-live="polite">Press Try the old key.</p>
                     <dialog class="kp-shortcuts" data-kp-shortcuts data-kp-shortcuts-live data-hb-sk-dlg aria-label="Keyboard shortcuts"><h2 class="kp-dialog__title">Keyboard shortcuts</h2></dialog>
                     </div>

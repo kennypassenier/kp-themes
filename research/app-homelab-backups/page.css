@@ -88,23 +88,10 @@
 }
 
 /* A row of the component's own buttons: paging, the switch, the range, the freshness line at the end. */
-.hb-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--kp-space-sm, 0.5rem);
-    min-block-size: 2.25rem;
-}
-
 .hb-bar__range {
     color: var(--muted-foreground);
     font-size: var(--kp-text-sm, 0.8125rem);
     font-variant-numeric: tabular-nums;
-    padding-inline: var(--kp-space-sm, 0.5rem);
-}
-
-.hb-bar__grow {
-    flex: 1 1 auto;
 }
 
 .hb-readout,
@@ -165,7 +152,7 @@
 .hb-table .hb-group {
     display: inline-flex;
     vertical-align: middle;
-    inline-size: calc(100% - 2.25rem);
+    inline-size: calc(100% - 1.875rem);
     flex-wrap: wrap;
     align-items: center;
     gap: var(--kp-space-sm, 0.5rem);
@@ -185,7 +172,7 @@
 }
 
 .hb-table .kp-uptime {
-    min-inline-size: 11rem;
+    min-inline-size: 10rem;
 }
 
 .hb-snaps {
@@ -215,17 +202,6 @@
     min-inline-size: 0;
 }
 
-.hb-month__foot {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
-    min-block-size: 2.25rem;
-}
-
-.hb-month__foot > p {
-    flex: 1 1 18rem;
-}
 
 /* 4. one night: the stack list and the week side by side, inside one card that carries the state */
 .hb-night__cols {
@@ -272,20 +248,7 @@
 }
 
 .hb-step {
-    display: grid;
-    gap: var(--kp-space-md, 1rem);
     min-block-size: 22rem;
-    align-content: start;
-}
-
-.hb-step__go {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--kp-space-sm, 0.5rem);
-}
-
-.hb-step__go[hidden] {
-    display: none;
 }
 
 @media (max-width: 62rem) {
@@ -307,16 +270,13 @@
     }
 }
 
-.hb-table .kp-bar-cell {
-    margin-inline-end: var(--kp-space-sm, 0.5rem);
-}
 
 /* ── the page's grid composition (Kenny, 2026-10-19 05:11): every frame is a 12-column grid, every part a panel that
       states what it is and what it shows, placed by span and never pushed left and right ─────────────────────────── */
 .hb-grid {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    gap: var(--kp-space-lg, 1.5rem);
     align-items: start;
     min-inline-size: 0;
 }
@@ -344,40 +304,19 @@
     }
 }
 
-/* A panel: a heading and one sentence in the first eight columns, the live reading of the part in the last four, the part
-   itself under both on the full width. Heading and reading share one baseline row. */
-.hb-panel {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
-    align-content: start;
-    min-inline-size: 0;
-}
-
-.hb-panel > * { grid-column: 1 / -1; min-inline-size: 0; }
-.hb-panel__head { grid-column: 1 / span 8; display: grid; gap: var(--kp-space-xs, 0.25rem); }
-.hb-panel__head :is(h3, p) { margin: 0; }
-.hb-panel__head p { color: var(--muted-foreground); font-size: var(--kp-text-sm, 0.8125rem); }
-.hb-panel__read { grid-column: 9 / -1; align-self: end; margin: 0; color: var(--foreground); font-size: var(--kp-text-sm, 0.8125rem); min-block-size: 3lh; }
-@media (max-width: 62rem) {
-    .hb-panel__head, .hb-panel__read { grid-column: 1 / -1; min-block-size: 0; }
-}
+/* A panel is a form grid: its first row carries the title (label track), the one sentence that says what the part does
+   (control track) and the live reading of the part (value track); the part itself spans every track under that row. The
+   same four tracks serve the facts, fields and buttons the part holds, so every edge in the panel is a track edge. */
+.hb-panel { align-content: start; --kp-formgrid-label-min: 12rem; }
+.hb-panel > :not(.kp-formgrid__row, .kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form) { grid-column: 1 / -1; min-inline-size: 0; }
+.hb-panel > .hb-panel__head h3 { margin: 0; font-size: var(--kp-text-base, 1rem); }
+.hb-panel > .hb-panel__head > p { margin: 0; color: var(--muted-foreground); font-size: var(--kp-text-sm, 0.8125rem); }
+.hb-panel > .hb-panel__head > .hb-panel__read { color: var(--foreground); font-size: var(--kp-text-sm, 0.8125rem); }
 
 .hb-fw-table, .hb-fw-matrix, .hb-ho-table { min-inline-size: 0; }
 .hb-fw-table { min-block-size: 24rem; }
 .hb-fw-table .kp-datatable { min-block-size: 24rem; }
 .hb-fw-matrix { min-block-size: 30rem; overflow-x: auto; }
-.hb-bar3 {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
-    align-items: center;
-}
-.hb-bar3 > * { min-inline-size: 0; }
-.hb-bar3 > .a { grid-column: 1 / span 4; }
-.hb-bar3 > .b { grid-column: 5 / span 4; }
-.hb-bar3 > .c { grid-column: 9 / -1; }
-@media (max-width: 62rem) { .hb-bar3 > * { grid-column: 1 / -1 !important; } }
 .hb-pill-row { display: flex; flex-wrap: wrap; gap: var(--kp-space-xs, 0.25rem); }
 .hb-fw-matrix .kp-matrix {
     --kp-matrix-cell-min: 2.75rem;
@@ -390,10 +329,9 @@
 .hb-ho-view td[data-label="CPU"] .kp-bar-cell { --kp-bar-cell-value: 6ch; }
 .hb-hostlist, .hb-ho-list { min-block-size: 18rem; }
 .hb-tile-foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--kp-space-sm, 0.5rem); }
-.hb-vlist { display: grid; margin: 0; padding: 0; list-style: none; }
-.hb-vlist > li { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 6fr); gap: var(--kp-space-md, 1rem); align-items: center; padding-block: var(--kp-space-sm, 0.5rem); border-block-end: 1px solid var(--border); }
+/* The versions list is a form grid of its own: guest name | version change | note, one set of tracks for every row. */
+.hb-vlist { margin: 0; padding: 0; list-style: none; }
 .hb-vlist__note { color: var(--muted-foreground); font-size: var(--kp-text-sm, 0.8125rem); }
-@media (max-width: 40rem) { .hb-vlist > li { grid-template-columns: minmax(0, 1fr); gap: var(--kp-space-xs, 0.25rem); } }
 .hb-reads { display: grid; gap: var(--kp-space-xs, 0.25rem); margin: 0; padding: 0; list-style: none; min-block-size: 7.5rem; align-content: start; font-size: var(--kp-text-sm, 0.8125rem); }
 .hb-link, .hb-spark { min-block-size: 8rem; }
 .hb-diag { min-block-size: 14rem; }
@@ -402,9 +340,6 @@
 
 /* Console and host log */
 .hb-console { min-block-size: 18rem; min-inline-size: 0; }
-.hb-actions3 { align-items: stretch; }
-.hb-act { display: grid; gap: var(--kp-space-xs, 0.25rem); align-content: start; }
-.hb-act p { margin: 0; color: var(--muted-foreground); font-size: var(--kp-text-sm, 0.8125rem); }
 .hb-logrows { display: grid; margin: 0; padding: 0; list-style: none; max-block-size: 16rem; overflow: auto; font-size: var(--kp-text-sm, 0.8125rem); }
 .hb-logrows--tall { max-block-size: 24rem; }
 .hb-logrow { display: grid; grid-template-columns: 10.5rem 9rem 5.5rem minmax(0, 1fr); gap: var(--kp-space-md, 1rem); align-items: baseline; padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem); border-block-end: 1px solid var(--border); }
@@ -420,3 +355,27 @@
 @media (max-width: 40rem) {
     .hb-ho-view td[data-label="Memory"] .kp-bar-cell { --kp-bar-cell-value: auto; grid-template-columns: minmax(3rem, 1fr) auto; }
 }
+
+/* Forms, facts and buttons of the page stand on .kp-formgrid; these are only the frame around it. */
+.hb-sec .kp-formgrid__row[hidden],
+.hb-sec .kp-formgrid > [hidden] { display: none; }
+.hb-toolbar, .hb-reads3, .hb-night__pick, .hb-month__foot { margin-block: var(--kp-space-sm, 0.5rem); }
+.hb-night__cols { display: grid; gap: var(--kp-space-lg, 1.5rem); }
+.hb-night__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--kp-space-lg, 1.5rem); }
+.hb-night__body .kp-statuslist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--kp-space-lg, 1.5rem); }
+@media (max-width: 62rem) { .hb-night__body .kp-statuslist { grid-template-columns: minmax(0, 1fr); } }
+.hb-summary { color: var(--foreground); font-weight: 600; font-size: var(--kp-text-sm, 0.8125rem); }
+.hb-step.kp-formgrid { align-content: start; }
+.hb-step .hb-facts { margin: 0; }
+.hb-month__month > .kp-heat { margin-block-start: 3px; }
+.hb-night__pick { padding-inline-end: var(--kp-space-md, 0.75rem); }
+/* The refresh chooser lists five choices in a row: its panel gives the control track room for all of them. */
+#ho-refresh-component .hb-panel { --kp-formgrid-control: 28rem; }
+/* A legend wide enough never cuts a label with an ellipsis; its value column is one width, so the figures end on one edge. */
+.hb-sec .kp-stackbar { --kp-stackbar-legend-min: 24rem; }
+.hb-sec .kp-stackbar__item { grid-template-columns: auto minmax(0, 1fr) 6.5rem; }
+.hb-reads3 .kp-formgrid__control, .hb-month__foot .kp-formgrid__control { font-size: var(--kp-text-sm, 0.8125rem); }
+/* The refresh control is a subgrid of the panel: it takes the panel's column gap so its chooser starts on the control edge. */
+.hb-panel > .kp-refresh { column-gap: inherit; }
+/* In the card layout the size figure keeps a margin to the card's edge. */
+@container kp-table (max-width: 40rem) { .hb-table .kp-bar-cell { margin-inline-end: var(--kp-space-sm, 0.5rem); } }

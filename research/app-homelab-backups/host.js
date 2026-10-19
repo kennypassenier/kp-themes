@@ -368,9 +368,9 @@ if (has('ho-containers-component')) {
         const g = H.GUESTS.find((x) => String(x.vmid) === String(d.key));
         if (!g) return;
         const box = document.createElement('div');
-        box.className = 'hb-detail hb-grid';
-        box.innerHTML = `<p class="hb-c8">${g.name} is ${g.status}${g.lock !== '—' ? `, locked by ${g.lock}` : ''}. ${g.ramUsed === null ? 'It is not running, so it has no CPU or memory figures.' : `It uses ${H.gib(g.ramUsed)} of its ${H.gib(g.ramMax)} and ${g.cpuPct} % of the CPU.`} Its disk holds ${H.gb(g.diskWritten)} of ${H.gb(g.diskSize)}.</p>
-            <div class="hb-c4 hb-pill-row"><button type="button" class="kp-button kp-button--sm" ${g.stack ? '' : 'disabled data-kp-disabled-reason="This guest is not a stack"'}>Open stack</button><button type="button" class="kp-button kp-button--sm">Open its log</button></div>`;
+        box.className = 'hb-detail kp-formgrid';
+        box.innerHTML = `<div class="kp-formgrid__row kp-formgrid__row--buttons"><span class="kp-formgrid__label">${g.name}</span><p class="kp-formgrid__control" data-kp-formgrid-span="control-value">${g.name} is ${g.status}${g.lock !== '—' ? `, locked by ${g.lock}` : ''}. ${g.ramUsed === null ? 'It is not running, so it has no CPU or memory figures.' : `It uses ${H.gib(g.ramUsed)} of its ${H.gib(g.ramMax)} and ${g.cpuPct} % of the CPU.`} Its disk holds ${H.gb(g.diskWritten)} of ${H.gb(g.diskSize)}.</p>
+            <div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--sm" ${g.stack ? '' : 'disabled data-kp-disabled-reason="This guest is not a stack"'}>Open stack</button><button type="button" class="kp-button kp-button--sm">Open its log</button></div></div>`;
         d.cell.append(box);
     });
     host.addEventListener('kp-datatable-retry', () => void set('ready'));
@@ -486,10 +486,10 @@ if (has('ho-version-component')) {
     let show = 'both';
     let state = 'ready';
 
-    const html = () => `<ul class="hb-vlist" role="list">${H.VERSIONS.map(
-        (v) => `<li><span class="hb-vlist__name">${v.label}</span>
-        <span class="kp-badge kp-badge--version" data-hb-chip="${v.key}" data-kp-version-from="${v.from}" data-kp-version-to="${v.to}" ${v.app ? `data-kp-version-app="${v.app}"` : ''} data-kp-version-show="${show}" ${v.key === 'themes' ? 'data-kp-version-href="https://github.com/kennypassenier/kp-themes/releases/tag/v{to}"' : ''}></span>
-        <span class="hb-vlist__note">${v.note}</span></li>`,
+    const html = () => `<ul class="kp-formgrid hb-vlist" role="list" data-kp-formgrid-lines="lines">${H.VERSIONS.map(
+        (v) => `<li class="kp-formgrid__row"><span class="kp-formgrid__label hb-vlist__name">${v.label}</span>
+        <span class="kp-formgrid__control"><span class="kp-badge kp-badge--version" data-hb-chip="${v.key}" data-kp-version-from="${v.from}" data-kp-version-to="${v.to}" ${v.app ? `data-kp-version-app="${v.app}"` : ''} data-kp-version-show="${show}" ${v.key === 'themes' ? 'data-kp-version-href="https://github.com/kennypassenier/kp-themes/releases/tag/v{to}"' : ''}></span>
+        </span><span class="kp-formgrid__value hb-vlist__note">${v.note}</span></li>`,
     ).join('')}</ul>`;
     const paint = async () => {
         await mount(list, html());

@@ -137,6 +137,45 @@
             "fingerprint": "dc9623031b041613",
             "update": null
         },
+        "research/app-homelab-backups/demo.html": {
+            "facts": {
+                "id": "app-homelab-backups",
+                "themes": "formal",
+                "ask": null,
+                "askText": "The operations half of the homelab admin dashboard on kp-themes 11.0.0, in 25 sections that each ask one decision: Backups with the coverage grid, the grouped repositories, the Month view, one night in detail and Restore (5); the Firewall with totals that filter, a hop-by-hop path trace, the rules table, lines against grid, live against files and a guard before editing (6); the Host and System with the disk and thin pool, the checks with their remedy, one refresh control, the containers, the landing tiles, versions and the line to the host (7); and the Console with its history, safety, session tools, pane or bar, the host log and the keys (7).",
+                "sections": [
+                    { "item": "grid", "themes": null, "topic": "grid", "mode": null },
+                    { "item": "repos", "themes": null, "topic": "repos", "mode": null },
+                    { "item": "month", "themes": null, "topic": "month", "mode": null },
+                    { "item": "night", "themes": null, "topic": "night", "mode": null },
+                    { "item": "restore", "themes": null, "topic": "restore", "mode": null },
+                    { "item": "fw-totals", "themes": null, "topic": "fw-totals", "mode": null },
+                    { "item": "fw-trace", "themes": null, "topic": "fw-trace", "mode": null },
+                    { "item": "fw-rules", "themes": null, "topic": "fw-rules", "mode": null },
+                    { "item": "fw-lines", "themes": null, "topic": "fw-lines", "mode": null },
+                    { "item": "fw-live", "themes": null, "topic": "fw-live", "mode": null },
+                    { "item": "fw-guard", "themes": null, "topic": "fw-guard", "mode": null },
+                    { "item": "ho-disk", "themes": null, "topic": "ho-disk", "mode": null },
+                    { "item": "ho-checks", "themes": null, "topic": "ho-checks", "mode": null },
+                    { "item": "ho-refresh", "themes": null, "topic": "ho-refresh", "mode": null },
+                    { "item": "ho-containers", "themes": null, "topic": "ho-containers", "mode": null },
+                    { "item": "ho-landing", "themes": null, "topic": "ho-landing", "mode": null },
+                    { "item": "ho-version", "themes": null, "topic": "ho-version", "mode": null },
+                    { "item": "ho-link", "themes": null, "topic": "ho-link", "mode": null },
+                    { "item": "sh-console", "themes": null, "topic": "sh-console", "mode": null },
+                    { "item": "sh-safety", "themes": null, "topic": "sh-safety", "mode": null },
+                    { "item": "sh-session", "themes": null, "topic": "sh-session", "mode": null },
+                    { "item": "sh-mode", "themes": null, "topic": "sh-mode", "mode": null },
+                    { "item": "sh-log", "themes": null, "topic": "sh-log", "mode": null },
+                    { "item": "sh-density", "themes": null, "topic": "sh-density", "mode": null },
+                    { "item": "sh-keys", "themes": null, "topic": "sh-keys", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"app-homelab-backups-3b6f0e0a-6f4c-4a3e-9d0c-51a8b7c2e1f4\" }\n        "
+            },
+            "fingerprint": "e4bf7ac417d77013",
+            "update": null
+        },
         "research/state-plates-1019/demo.html": {
             "facts": {
                 "id": "state-plates-1019",

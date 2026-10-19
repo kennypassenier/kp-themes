@@ -317,8 +317,7 @@ if (has('fw-rules-component')) {
             <td data-label="In force">${r.enabled ? 'yes' : 'no'}</td></tr>`;
     };
     const head = (/** @type {'in' | 'out'} */ dir) => {
-        const n = D.RULES.filter((r) => r.dir === dir).length;
-        return `<tr data-kp-row-group="${dir}"><th scope="rowgroup" colspan="8"><b>${dir === 'in' ? 'Inbound' : 'Outbound'}</b> <span class="kp-badge" data-kp-group-count></span> <span class="kp-text-muted">${dir === 'in' ? 'what may reach the stack' : 'what the stack may open'} (${count(n)})</span></th></tr>`;
+        return `<tr data-kp-row-group="${dir}"><th scope="rowgroup" colspan="8"><b>${dir === 'in' ? 'Inbound' : 'Outbound'}</b> <span class="kp-badge" data-kp-group-count></span> <span class="kp-text-muted">${dir === 'in' ? 'what may reach the stack' : 'what the stack may open'}</span></th></tr>`;
     };
     const html = (empty = false) =>
         tableShell({
