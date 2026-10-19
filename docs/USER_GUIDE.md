@@ -1968,6 +1968,55 @@ attention" (`statusWarn`). `buildStatusList(rows)` and
 card's header: `data-kp-status-retry="false"` leaves out the Retry per
 row. Knob: `--kp-statusrow-fix-gap`.
 
+### Every data component uses its standard states
+
+Every data component ships its loading, empty and failed states; an app wires them and never draws its own (Kenny,
+2026-10-19: "we hebben zoveel tijd en moeite in die componenten gestoken en dan kan je ze nog niet eens met hun standaard
+functionaliteit implementeren?"). Loading is the busy card centred over the data area (`js/busy-card.js`, the table's own
+spinner and words); empty and failed are the package plate (`.kp-stateplate`, `js/state-plate.js`), centred, the title at
+heading size, a normal-size Retry that fires `kp-<component>-retry` on the host. So:
+
+- set the state from the moment the read starts (`loading`), not after it; a blank component, a "Loading…", "No data" or
+  "Could not load" line, a spinner of your own, a row spanning the columns or a bare `.kp-empty` is never the state;
+- an empty result is the component's empty state, a failure its failed state, and the page listens to the retry event;
+- a form with a submit is `<form data-kp-form>` with `data-kp-submit` (busy while it sends, `form(el).done()`) and
+  `data-kp-form-summary` (what failed: `form(el).errors({ name: message })`).
+
+| Component | Host | Loading | Empty | Failed (Retry event) |
+| --- | --- | --- | --- | --- |
+| data table | `[data-kp-datatable]` | `dataTable(el).busy({ overlay: true })` (or `data-kp-busy-overlay`) and `.state('loading')` | no rows, with the authored slot `<div class="kp-empty" data-kp-datatable-empty hidden>` | `.fail(reason)` (`kp-datatable-retry`) |
+| network graph | `[data-kp-graph]` | `setGraphState(el, 'loading')` | `setGraphState(el, 'empty', title, { text })` | `setGraphState(el, 'error', title, { text })` (`kp-graph-retry`) |
+| heat grid / matrix | `[data-kp-heat]` / `[data-kp-matrix]` | `setHeat(el, { state: 'loading', skeleton })` / `setMatrix(el, { state: 'loading' })` | `{ state: 'empty', message, text }` | `{ state: 'error', message, text }` (`kp-heat-retry` / `kp-matrix-retry`) |
+| run timeline | `[data-kp-gantt]` | `setGanttState(el, 'loading')` | `setGanttState(el, 'empty', title, { text })` | `setGanttState(el, 'error', title, { text })` (`kp-gantt-retry`) |
+| week | `[data-kp-week]` | `setWeekState(el, 'loading')` | `setWeekState(el, 'empty', title, { text })` | `setWeekState(el, 'error', title, { text })` (`kp-week-retry`) |
+| uptime strip | `[data-kp-uptime]` | `setUptime(el, { label, state: 'loading', count })` | `{ state: 'empty' }` | `{ state: 'error', error }` |
+| calendar | `[data-kp-calendar]` | `setCalendarState(el, 'loading')` | `setCalendarState(el, 'empty', words)` | `setCalendarState(el, 'error', words)` (`kp-calendar-retry`) |
+| pipeline | `[data-kp-pipeline]` | `setPipelineState(el, 'loading')` | `setPipelineState(el, 'empty', words)` | `setPipelineState(el, 'error', words)` (`kp-pipeline-retry`) |
+| activity feed | `[data-kp-feed]` | `setFeed(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', error }` (`kp-feed-retry`) |
+| notices | `[data-kp-notices]` | `setNotices(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', error }` (`kp-notices-retry`) |
+| log viewer | `[data-kp-logviewer]` | `data-kp-state="loading"` (or `setLogViewer(el, { state: 'loading' })`) | no lines | `data-kp-state="error"` (`kp-logviewer-retry`) |
+| diff view | `[data-kp-diffview]` | `setDiff(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', message }` (`kp-diff-retry`) |
+| checklist | `[data-kp-checklist]` | `setChecklistState(list, 'loading')` | `setChecklistItems(list, [])` | `setChecklistState(list, 'error', message)` (`kp-checklist-retry`) |
+| timers | `[data-kp-timers]` | `setTimersState(list, 'loading')` | no timers | `setTimersState(list, 'error', message)` (`kp-timers-retry`) |
+| card with data | `.kp-card[data-kp-state]` with `.kp-card__stage` | `setCardState(card, 'loading', { words })` (or write `data-kp-state`) | `setCardState(card, 'empty', { title, text })` | `setCardState(card, 'error', { title, text })` (`kp-card-retry`) |
+| today card | a `.kp-card` | `setTodayState(card, 'loading')` | `setTodayState(card, 'empty')` | `setTodayState(card, 'error')` (`kp-card-retry`) |
+| status list | `.kp-statuslist` | per row: `setStatus(list, key, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'failed' }` (`kp-status-retry`) |
+| entity grid | `[data-kp-entity-grid]` | `setEntityGridState(grid, 'loading', { count })` | `setEntityGrid(grid, [], { title })` or `setEntityGridState(grid, 'empty', { title })` | `setEntityGridState(grid, 'error', { message })` (`kp-entity-grid-retry`) |
+| chart | `[data-kp-chart]` | `data-kp-chart-loading` on the chart | `setChartData(el, { series })` with no points | `setChartData(el, { series, error })` (`kp-chart-retry`) |
+| bullets | `[data-kp-bullets]` | `setBullets(el, { state: 'loading' })` | `{ state: 'empty', emptyTitle }` | `{ state: 'error', message }` (`kp-bullets-retry`) |
+| runs | `[data-kp-runs]` | `setRunsState(el, 'loading')` | `setRuns(el, [], { reason })` | `setRunsState(el, 'error', { title, text })` (`kp-runs-retry`) |
+| master-detail | `[data-kp-master-detail]` | `setPaneState(root, 'loading')` | `setPaneState(root, 'empty', { title })` | `setPaneState(root, 'error', { title, text })` (`kp-pane-retry`) |
+| dependency list | `[data-kp-deplist]` | `deplist(el).setState('loading')` | `.setState('empty')` | `.setState('error', { message })` (`kp-deplist-retry`) |
+| code view | `[data-kp-code]` | `setCode(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', message }` |
+| gallery | `[data-kp-gallery]` | `setGallery(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', message }` (`kp-gallery-retry`) |
+| console | `[data-kp-console]` | `setConsole(root, { state: 'loading' })` | no blocks | `{ state: 'error', message }` (`kp-console-retry`) |
+| request inspector | `[data-kp-requests]` | `setRequestsState(el, 'loading')` | `setRequests(el, [])` | `setRequestsState(el, 'error', { message })` (`kp-requests-retry`) |
+| availability grid | `[data-kp-availability]` | `setAvailability(root, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error' }` (`kp-availability-retry`) |
+
+The check is `research/_review/measure-states.mjs`; run it on your own page served locally before you hand it over:
+`node research/_review/measure-states.mjs <port> <page> formal 1280,390` (from a kp-themes checkout, the page on
+`127.0.0.1:<port>`). It prints `clear` or one line per fault, naming the component, the section and the call to use.
+
 ### A card in four data states
 
 A card that shows data read from somewhere is loading, empty, failed or

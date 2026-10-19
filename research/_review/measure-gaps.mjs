@@ -10,10 +10,16 @@
 // het grid en align deftig verticaal!"): columns of sibling rows on one edge, every cell of a row on its label's line,
 // buttons side by side on one line, a button group on the tracks of the rows above. Its lines start with "align".
 //
+// Since states-check-1019 it also runs measure-states.mjs on the page (Kenny, 2026-10-19 11:25: the project threads built
+// tables without the busy card and lists, graphs, cards and forms without the standard loading, empty and failed plates):
+// every kp data component is in a state the package drew, no hand-made "Loading…" / "No data" / spinner stands in for one,
+// and each one driven into loading, empty and failed through the package covers its footprint. Its lines start with "states".
+//
 // Run (a static server on the repository root first):
 //   node research/_review/measure-gaps.mjs <port> <research/topic/demo.html> [themes=formal,dark] [widths=1280,390]
 import { createRequire } from 'node:module';
 import { ALIGN_TOLERANCE, measureAlign } from './measure-align.mjs';
+import { measureStatesAt } from './measure-states.mjs';
 
 const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
 const { firefox } = require('playwright-core');
@@ -185,15 +191,18 @@ for (const width of widthArg.split(',').map(Number))
             out = out.concat(await page.evaluate(measure, /** @type {[number, string]} */ ([MIN, id])));
             align = align.concat(await page.evaluate(measureAlign, /** @type {[number, string]} */ ([ALIGN_TOLERANCE, id])));
         }
-        found += out.length + align.length;
+        await page.close();
+        const states = await measureStatesAt(browser, `http://127.0.0.1:${port}/${path}?theme=${theme}`, { width });
+        found += out.length + align.length + states.length;
         const said = [
             out.length ? `${out.length} text(s) closer than ${MIN}px` : '',
             align.length ? `${align.length} alignment fault(s)` : '',
+            states.length ? `${states.length} state fault(s)` : '',
         ].filter(Boolean);
         console.log(`${theme} ${width}: ${said.length ? said.join(', ') : 'clear'}`);
         for (const line of out) console.log(`  ${line}`);
         for (const line of align) console.log(`  align ${line}`);
-        await page.close();
+        for (const line of states) console.log(`  states ${line}`);
     }
 await browser.close();
 process.exit(found ? 1 : 0);

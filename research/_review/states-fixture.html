@@ -1,0 +1,103 @@
+<!doctype html>
+<!-- research/_review/measure-states.mjs's own check: the first section draws its states by hand (a "Loading…" row in a table,
+     a "No data" line in a card, a spinner of its own), the second uses the package's. The script must flag the first and
+     clear the second:  node research/_review/measure-states.mjs <port> research/_review/states-fixture.html formal 1280 -->
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>States fixture</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <style>
+            body {
+                padding: 1rem;
+            }
+            .page-spinner {
+                inline-size: 1.5rem;
+                block-size: 1.5rem;
+                border: 3px solid currentColor;
+                border-inline-end-color: transparent;
+                border-radius: 50%;
+                animation: page-spin 0.8s linear infinite;
+            }
+            @keyframes page-spin {
+                to {
+                    rotate: 1turn;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <section data-review-item="hand-made">
+            <h2>Hand-made states</h2>
+            <div class="kp-datatable" data-kp-datatable>
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Stack</th>
+                                <th scope="col">State</th>
+                                <th scope="col">Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">Loading…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="kp-card">
+                <div class="kp-card__header"><h3 class="kp-card__title">Backups</h3></div>
+                <p class="kp-muted">No data</p>
+                <div class="page-spinner" aria-hidden="true"></div>
+            </div>
+        </section>
+        <section data-review-item="package">
+            <h2>The package's states</h2>
+            <div class="kp-datatable" data-kp-datatable data-kp-busy-overlay>
+                <div class="kp-table-wrap">
+                    <table class="kp-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Stack</th>
+                                <th scope="col">State</th>
+                                <th scope="col">Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>media</td>
+                                <td>running</td>
+                                <td>2026-10-19</td>
+                            </tr>
+                            <tr>
+                                <td>platform</td>
+                                <td>running</td>
+                                <td>2026-10-18</td>
+                            </tr>
+                            <tr>
+                                <td>monitoring</td>
+                                <td>stopped</td>
+                                <td>2026-10-17</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="kp-empty" data-kp-datatable-empty hidden><p class="kp-empty__title">No stacks yet</p></div>
+            </div>
+            <section class="kp-card" data-kp-state="ready">
+                <div class="kp-card__header"><h3 class="kp-card__title">Backups</h3></div>
+                <div class="kp-card__stage">
+                    <div class="kp-card__data"><p>media: last night 03:00, platform: last night 03:12.</p></div>
+                </div>
+            </section>
+        </section>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

@@ -448,6 +448,30 @@ python3 -m http.server 8743 --bind 127.0.0.1   # from the repository root
 node research/_review/measure-plate.mjs [theme …] [--port 8743]
 ```
 
+## Every data component uses its standard states
+
+Kenny, 2026-10-19 11:25, after the project threads built tables without the busy card and graphs, lists, cards and forms
+without the standard loading, empty and failed plates: "ik vind het ridicuul dat ik dat eigenlijk moest zeggen, we hebben zoveel
+tijd en moeite in die componenten gestoken en dan kan je ze nog niet eens met hun standaard functionaliteit implementeren?".
+`measure-states.mjs` measures it on any page, a review demo or a project's own app page served locally, and
+`measure-gaps.mjs` runs it on every page it measures (lines starting with `states`):
+
+```sh
+node research/_review/measure-states.mjs <port> <page> [themes=formal,dark] [widths=1280,390] [--no-drive]
+```
+
+It flags (1) wiring: a component in loading without the busy card, empty or failed without the package plate, a component
+left blank with no state, a table without its empty slot, and every hand-made substitute (a "Loading…" / "No data" /
+"Could not load" text, a row spanning the columns with such words, a spinner of the page's own or a bare `.kp-spinner` in a
+data area, a `.kp-empty` that is not the plate, a form with a submit that is not `data-kp-form` + `data-kp-submit` +
+`data-kp-form-summary`); the page's own Loading / Empty / Failed buttons are pressed and read again, and a page that reads
+over the network is loaded once with its reads held back and once with them failing; and (2) the states themselves: every
+instance driven into loading, empty and failed through the package's own call, the busy card covering the data area with its
+panel centred, the plate keeping the loaded footprint, filling the width, its words centred, its title at heading size, a
+normal-size Retry when failed. `states-fixture.html` is its canary: a hand-made "Loading…" table, a "No data" card and a page
+spinner, beside the same components wired the package's way. The wiring per component is in docs/USER_GUIDE.md, "Every data
+component uses its standard states".
+
 ## Measuring the motion of a character demo
 
 `measure-motion.mjs` measures what the motion scenes of a character demo
