@@ -1,6 +1,26 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/focus-tracks-1019/demo.html": {
+            "facts": {
+                "id": "focus-tracks-1019",
+                "themes": "formal",
+                "ask": null,
+                "askText": "You asked to cook the pasta while the sauce is made. A step can now belong to a track; the step of the track you are on stays large and every track stands in a lane with its place and its clock. 6 sections, 6 pairs (formal only: the lanes use the theme’s own buttons, bar and plates). Every option here only asks for its default. The recipe and the clock are mock data: the timers run about 20 times fast so a minute lasts 3 seconds.",
+                "sections": [
+                    { "item": "tracks", "themes": "formal", "topic": "tracks", "mode": null },
+                    { "item": "waiting", "themes": "formal", "topic": "waiting", "mode": null },
+                    { "item": "attention", "themes": "formal", "topic": "attention", "mode": null },
+                    { "item": "finished", "themes": "formal", "topic": "finished", "mode": null },
+                    { "item": "phone", "themes": "formal", "topic": "phone", "mode": null },
+                    { "item": "states", "themes": "formal", "topic": "states", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"focustracks-0f11141f-6ff4-41fd-98ab-48a790af283f\", \"received\": [] }\n        "
+            },
+            "fingerprint": "f9f5ae210f6623af",
+            "update": null
+        },
         "research/align-grid-1019/demo.html": {
             "facts": {
                 "id": "align-grid-1019",

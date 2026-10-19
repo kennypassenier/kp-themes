@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="focus-tracks-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Cook mode with tracks: pasta and sauce at the same time</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Cook mode with tracks</h1>
+                <p class="cat-intro">
+                    You asked to cook the pasta while the sauce is made. A step can now belong to a track; the step of the track you are on stays
+                    large and every track stands in a lane with its place and its clock. 6 sections, 6 pairs (formal only: the lanes use the
+                    theme&rsquo;s own buttons, bar and plates). Every option here only asks for its default. The recipe and the clock are mock data:
+                    the timers run about 20 times fast so a minute lasts 3 seconds.
+                </p>
+            </header>
+
+            <section
+                class="kc-sec"
+                id="tracks"
+                data-review-item="tracks"
+                data-review-components="focus-steps timer"
+                data-review-title="Cook mode with tracks: pasta and sauce side by side"
+                data-review-topic="tracks"
+                data-review-topic-title="Cook mode with tracks: pasta and sauce side by side"
+                data-review-themes="formal"
+                data-review-choices='[{"id":"lanes","label":"Where the lanes stand","default":"auto","options":[{"value":"auto","label":"Beside the step when there is room"},{"value":"side","label":"Always beside the step"},{"value":"top","label":"Always above the step"}]},{"id":"detail","label":"What a lane says","default":"full","options":[{"value":"full","label":"Words, clock and place"},{"value":"compact","label":"Words and clock"}]}]'
+                aria-labelledby="h-tracks"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Cook mode had one line of steps, so cooking the pasta while the sauce was made
+                        meant remembering which timer belonged to which step. Now a step can belong to a track (Pasta, Sauce). The lanes show every
+                        track at once, one tap switches, and Back and Next move only the track you are on.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-tracks">Cook mode with tracks: pasta and sauce side by side</h2>
+                    <p>
+                        The spaghetti recipe in three tracks. The step of the track you are on is large; every track stands in a lane beside it with
+                        its place, what it is doing and its clock.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Beside the step stand three lanes, <b>Pasta</b>, <b>Sauce</b> and <b>Together</b>. The lane you are on has a coloured
+                            edge; each lane says <b>Step 1 of 3</b> and what it is doing.
+                        </li>
+                        <li>
+                            Press <b>Start a timer</b> on <b>Boil the water</b>, then <b>Next</b>: the Pasta lane keeps the clock running and says it
+                            is waiting. Tap <b>Sauce</b> (or press <b>T</b>): the sauce steps appear, large, where the Sauce track stood.
+                        </li>
+                        <li>Back and Next move only the track you are on. <b>Together</b> stays locked until Pasta and Sauce are finished.</li>
+                        <li>
+                            The clocks of the lanes stand in one column and do not jump while they count; the bar under each lane is that
+                            track&rsquo;s own place.
+                        </li>
+                        <li>The three buttons under <b>Lanes</b> and <b>Detail</b> are options of the component: they change the lanes at once.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the active lane has a primary edge, the three lanes share one height, their clocks line up in one column, and nothing
+                        is cut or touches an edge.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="tracks-component">
+                    <div role="group" aria-label="Lanes">
+                        <b>Lanes:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="lanes" data-value="auto" aria-pressed="true">Auto</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="lanes" data-value="side" aria-pressed="false">Beside</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="lanes" data-value="top" aria-pressed="false">Above</button>
+                    </div>
+                    <div role="group" aria-label="Detail">
+                        <b>Detail:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="detail" data-value="full" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="detail" data-value="compact" aria-pressed="false">
+                            Compact
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Timers">
+                        <b>Timers:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="fast" aria-pressed="true">Fast</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="real" aria-pressed="false">
+                            Real time
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Start again">
+                        <b>Recipe:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="restart" data-value="tracks">Start again</button>
+                    </div>
+                </div>
+
+                <div class="ft-stage" id="tracks-component">
+                    <div class="ft-stage__steps">
+                        <div
+                            class="kp-focus-steps"
+                            data-kp-focus-steps
+                            data-kp-focus-steps-timers="tracks-timers"
+                            data-kp-state="loading"
+                            id="tracks-steps"
+                            aria-label="Spaghetti with tomato sauce and meatballs"
+                            data-kp-focus-steps-empty="This recipe has no steps yet."
+                        ></div>
+                    </div>
+                    <div class="ft-stage__timers">
+                        <h3 class="ft-part">Timers running</h3>
+                        <p class="ft-note">
+                            Every timer you start stays here, whatever track you are on.
+                            <span data-ft-speed-line>Demo clock: fast, 1 minute lasts 3 seconds.</span>
+                        </p>
+                        <div
+                            class="kp-timers"
+                            data-kp-timers
+                            id="tracks-timers"
+                            aria-label="Kitchen timers"
+                            data-kp-timers-empty="No timer running. Start one from a step."
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="waiting"
+                data-review-item="waiting"
+                data-review-components="focus-steps"
+                data-review-title="A step that waits for another"
+                data-review-topic="waiting"
+                data-review-topic-title="A step that waits for another"
+                data-review-themes="formal"
+                data-review-choices='[{"id":"follow","label":"When a track waits or is finished","default":"suggest","options":[{"value":"suggest","label":"Offer the track that can go on"},{"value":"auto","label":"Go to it by itself"}]}]'
+                aria-labelledby="h-waiting"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> A step could not depend on another: nothing stopped you from adding the pasta
+                        before the water had boiled, and nothing said what to do meanwhile. Now a step can wait for another step or a whole track, and
+                        the wait is shown instead of the step&rsquo;s buttons.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-waiting">A step that waits for another</h2>
+                    <p>
+                        Adding the spaghetti must wait until the water boils. The step says what it waits for and how long, and offers the track that
+                        can go on.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Put the water on</b>: the timer starts and Next moves on to <b>Cook the spaghetti</b>, which waits. It shows
+                            <b>Waiting for Boil the water</b> with the time left counting down, and Next is off.
+                        </li>
+                        <li>
+                            <b>Go to Sauce</b> takes you to the sauce at once; the Pasta lane says <b>Waiting for Boil the water</b> and keeps the
+                            clock.
+                        </li>
+                        <li>When the water&rsquo;s time is up the step opens by itself (the sentence changes to the step and Next works).</li>
+                        <li>
+                            The option <b>When a track waits</b> decides whether the page offers the other track (Suggest, the default) or goes there
+                            by itself (Switch).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the waiting step keeps its sentence readable, the plate names what it waits for with the clock in figures that do not
+                        jump, and the button to the other track is as large as the other buttons.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="waiting-component">
+                    <div role="group" aria-label="Scenario">
+                        <b>Scenario:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="water-on" data-value="waiting">Put the water on</button>
+                    </div>
+                    <div role="group" aria-label="When a track waits">
+                        <b>When a track waits:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="follow" data-value="suggest" aria-pressed="true">
+                            Offer
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="follow" data-value="auto" aria-pressed="false">Switch</button>
+                    </div>
+                    <div role="group" aria-label="Timers">
+                        <b>Timers:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="fast" aria-pressed="true">Fast</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="real" aria-pressed="false">
+                            Real time
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Start again">
+                        <b>Recipe:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="restart" data-value="waiting">Start again</button>
+                    </div>
+                </div>
+
+                <div class="ft-stage" id="waiting-component">
+                    <div class="ft-stage__steps">
+                        <div
+                            class="kp-focus-steps"
+                            data-kp-focus-steps
+                            data-kp-focus-steps-timers="waiting-timers"
+                            data-kp-state="loading"
+                            id="waiting-steps"
+                            aria-label="Spaghetti with tomato sauce and meatballs"
+                            data-kp-focus-steps-empty="This recipe has no steps yet."
+                        ></div>
+                    </div>
+                    <div class="ft-stage__timers">
+                        <h3 class="ft-part">Timers running</h3>
+                        <p class="ft-note">
+                            Every timer you start stays here, whatever track you are on.
+                            <span data-ft-speed-line>Demo clock: fast, 1 minute lasts 3 seconds.</span>
+                        </p>
+                        <div
+                            class="kp-timers"
+                            data-kp-timers
+                            id="waiting-timers"
+                            aria-label="Kitchen timers"
+                            data-kp-timers-empty="No timer running. Start one from a step."
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="attention"
+                data-review-item="attention"
+                data-review-components="focus-steps attention"
+                data-review-title="A timer ends on a track you are not on"
+                data-review-topic="attention"
+                data-review-topic-title="A timer ends on a track you are not on"
+                data-review-themes="formal"
+                data-review-choices='[{"id":"band","label":"The band above the step","default":"on","options":[{"value":"on","label":"Show it"},{"value":"off","label":"Leave it out"}]}]'
+                aria-labelledby="h-attention"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> A timer that ended only turned its own card into a done plate in the timer list; if
+                        you looked at the step, you did not see it. Now the track whose timer ended asks for you on the attention band above the step,
+                        and its lane turns to a warning plate.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-attention">A timer ends on a track you are not on</h2>
+                    <p>
+                        The sauce simmers while you cook the pasta. When its timer ends, the band above the step names the track and gives the button
+                        that goes there.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Press <b>Simmer the sauce, go to Pasta</b>: the sauce timer starts (about 8 seconds) and the Pasta track opens.</li>
+                        <li>
+                            When it ends, the band above the step says <b>Simmer is done (Sauce)</b> with <b>Next: Warm the meatballs</b> and a
+                            <b>Go to Sauce</b> button; the Sauce lane turns to a warning plate that says <b>Time is up</b>.
+                        </li>
+                        <li>
+                            <b>Go to Sauce</b> clears the band and the plate and shows the sauce step. The timer card in the list keeps ringing until
+                            you stop it there.
+                        </li>
+                        <li>The option <b>The band</b> turns the band off; the lane still says <b>Time is up</b>.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the band is the package&rsquo;s own attention band, worst first, with its fix button in one fixed place, and the
+                        ringing lane is a warning plate with its words, not only a colour.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="attention-component">
+                    <div role="group" aria-label="Scenario">
+                        <b>Scenario:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="simmer-on" data-value="attention">
+                            Simmer the sauce, go to Pasta
+                        </button>
+                    </div>
+                    <div role="group" aria-label="The band">
+                        <b>The band:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="band" data-value="on" aria-pressed="true">On</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="band" data-value="off" aria-pressed="false">Off</button>
+                    </div>
+                    <div role="group" aria-label="Start again">
+                        <b>Recipe:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="restart" data-value="attention">Start again</button>
+                    </div>
+                </div>
+
+                <div class="ft-stage" id="attention-component">
+                    <div class="ft-stage__steps">
+                        <div
+                            class="kp-focus-steps"
+                            data-kp-focus-steps
+                            data-kp-focus-steps-timers="attention-timers"
+                            data-kp-state="loading"
+                            id="attention-steps"
+                            aria-label="Spaghetti with tomato sauce and meatballs"
+                            data-kp-focus-steps-empty="This recipe has no steps yet."
+                            data-ft-factor="75"
+                        ></div>
+                    </div>
+                    <div class="ft-stage__timers">
+                        <h3 class="ft-part">Timers running</h3>
+                        <p class="ft-note">
+                            Every timer you start stays here, whatever track you are on.
+                            <span data-ft-speed-line>Demo clock: fast, 1 minute lasts 3 seconds.</span>
+                        </p>
+                        <div
+                            class="kp-timers"
+                            data-kp-timers
+                            id="attention-timers"
+                            aria-label="Kitchen timers"
+                            data-kp-timers-empty="No timer running. Start one from a step."
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="finished"
+                data-review-item="finished"
+                data-review-components="focus-steps"
+                data-review-title="A track with no step left"
+                data-review-topic="finished"
+                data-review-topic-title="A track with no step left"
+                data-review-themes="formal"
+                aria-labelledby="h-finished"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> There was one end, the last step. With tracks, one track finishes while the others
+                        go on, so a finished track needs a place to say so and a way on.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-finished">A track with no step left</h2>
+                    <p>The pasta track is finished. The step area says so and offers the track that can use you, instead of a dead end.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The Pasta track is already through its three steps: a plate in the size of the step says <b>Pasta is done</b>,
+                            <b>Sauce is ready for you.</b> and has the button <b>Go to Sauce</b>.
+                        </li>
+                        <li><b>Back</b> gives the last step of Pasta again, to do it again; <b>Done</b> is off while the track has nothing left.</li>
+                        <li>The Pasta lane says <b>Done</b> with a tick and a full bar; <b>Together</b> still waits for Sauce.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the plate fills the step area, centred, at heading size, with a normal-size button, and the Done lane keeps the height
+                        of the others.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="finished-component">
+                    <div role="group" aria-label="Start again">
+                        <b>Recipe:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="restart" data-value="finished">Start again</button>
+                    </div>
+                </div>
+
+                <div class="ft-stage" id="finished-component">
+                    <div class="ft-stage__steps">
+                        <div
+                            class="kp-focus-steps"
+                            data-kp-focus-steps
+                            data-kp-focus-steps-timers="finished-timers"
+                            data-kp-state="loading"
+                            id="finished-steps"
+                            aria-label="Spaghetti with tomato sauce and meatballs"
+                            data-kp-focus-steps-empty="This recipe has no steps yet."
+                        ></div>
+                    </div>
+                    <div class="ft-stage__timers">
+                        <h3 class="ft-part">Timers running</h3>
+                        <p class="ft-note">
+                            Every timer you start stays here, whatever track you are on.
+                            <span data-ft-speed-line>Demo clock: fast, 1 minute lasts 3 seconds.</span>
+                        </p>
+                        <div
+                            class="kp-timers"
+                            data-kp-timers
+                            id="finished-timers"
+                            aria-label="Kitchen timers"
+                            data-kp-timers-empty="No timer running. Start one from a step."
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="phone"
+                data-review-item="phone"
+                data-review-components="focus-steps timer"
+                data-review-title="On a phone: the lanes above the step"
+                data-review-topic="phone"
+                data-review-topic-title="On a phone: the lanes above the step"
+                data-review-themes="formal"
+                aria-labelledby="h-phone"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Cook mode on a phone had no room for a second line of work. The lanes now stand as
+                        short rows above the step, each with its words and clock, and a tap switches.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-phone">On a phone: the lanes above the step</h2>
+                    <p>The same recipe on a 390 px screen. The lanes become short rows between the head and the step; the step keeps the room.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Three short lanes one under the other: name, words, clock and bar, each tall enough for a finger.</li>
+                        <li>Tap <b>Sauce</b>: the step changes, the lane you are on has the coloured edge, Back and Next stay at the foot.</li>
+                        <li>Nothing is cut with an ellipsis or breaks per letter; long words wrap.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the lanes share one height and one grid of columns, the step is large under them, and the buttons at the foot keep
+                        their place.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="phone-component">
+                    <div role="group" aria-label="Detail">
+                        <b>Detail:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="detail" data-value="full" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="detail" data-value="compact" aria-pressed="false">
+                            Compact
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Timers">
+                        <b>Timers:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="fast" aria-pressed="true">Fast</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="real" aria-pressed="false">
+                            Real time
+                        </button>
+                    </div>
+                </div>
+                <div class="ft-phone" id="phone-component">
+                    <div
+                        class="kp-focus-steps"
+                        data-kp-focus-steps
+                        data-kp-focus-steps-timers="phone-timers"
+                        data-kp-state="loading"
+                        id="phone-steps"
+                        aria-label="Spaghetti with tomato sauce and meatballs"
+                    ></div>
+                    <p class="ft-note" data-ft-speed-line>Demo clock: fast, 1 minute lasts 3 seconds.</p>
+                    <div
+                        class="kp-timers"
+                        data-kp-timers
+                        id="phone-timers"
+                        aria-label="Kitchen timers"
+                        data-kp-timers-empty="No timer running. Start one from a step."
+                    ></div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="states"
+                data-review-item="states"
+                data-review-components="focus-steps"
+                data-review-title="Loading, no steps and failed"
+                data-review-topic="states"
+                data-review-topic-title="Loading, no steps and failed"
+                data-review-themes="formal"
+                aria-labelledby="h-states"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Cook mode drew its empty and failed states as a small line; the check-in beside it
+                        already used a full plate. Now both use the same plate, centred at heading size with a normal button, and loading shows the
+                        busy card over the whole step area.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-states">Loading, no steps and failed</h2>
+                    <p>
+                        The recipe loading, with no steps, and not loadable. Each state fills the whole size of the component, with a normal-size
+                        Retry.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Loading</b>: the busy card stands centred over the step area; the lanes are not drawn while there is nothing to
+                            show.
+                        </li>
+                        <li>
+                            <b>No steps</b> and <b>Failed</b> fill the step area with a plate at heading size; <b>Retry</b> on the failed plate loads
+                            the recipe again.
+                        </li>
+                        <li>The component keeps its height in every state: nothing around it moves.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the plate is as tall as the loaded step area, its words are centred, and the Retry button is the size of the Next
+                        button.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="states-component">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="state" data-value="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="state" data-value="loading" aria-pressed="false">
+                            Loading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="state" data-value="empty" aria-pressed="false">
+                            No steps
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="state" data-value="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+
+                <div class="ft-stage" id="states-component">
+                    <div class="ft-stage__steps">
+                        <div
+                            class="kp-focus-steps"
+                            data-kp-focus-steps
+                            data-kp-focus-steps-timers="states-timers"
+                            data-kp-state="loading"
+                            id="states-steps"
+                            aria-label="Spaghetti with tomato sauce and meatballs"
+                            data-kp-focus-steps-empty="This recipe has no steps yet."
+                        ></div>
+                    </div>
+                    <div class="ft-stage__timers">
+                        <h3 class="ft-part">Timers running</h3>
+                        <p class="ft-note">
+                            Every timer you start stays here, whatever track you are on.
+                            <span data-ft-speed-line>Demo clock: fast, 1 minute lasts 3 seconds.</span>
+                        </p>
+                        <div
+                            class="kp-timers"
+                            data-kp-timers
+                            id="states-timers"
+                            aria-label="Kitchen timers"
+                            data-kp-timers-empty="No timer running. Start one from a step."
+                        ></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "focustracks-0f11141f-6ff4-41fd-98ab-48a790af283f", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

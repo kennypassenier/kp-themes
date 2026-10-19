@@ -1,0 +1,55 @@
+/* research/focus-tracks-1019: the frame of the page. Everything with a kp- class is the package; the ft- rules only lay out. */
+
+/* The stage: the cook-mode component over its timer list. Grid: one column; the component is the larger block, the timers a row under it. */
+.ft-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 72rem;
+    margin-inline: auto;
+}
+
+.ft-stage__steps .kp-focus-steps {
+    min-block-size: 34rem;
+}
+
+.ft-stage__timers {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ft-stage__timers .kp-timers {
+    min-block-size: 10rem;
+}
+
+.ft-part {
+    margin: 0;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.ft-note {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+/* The phone: 390 px wide, as a screen. */
+.ft-phone {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    inline-size: 390px;
+    max-inline-size: 100%;
+    margin-inline: auto;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.ft-phone .kp-focus-steps {
+    min-block-size: 40rem;
+}
+
+.ft-phone .kp-timers {
+    min-block-size: 8rem;
+}
