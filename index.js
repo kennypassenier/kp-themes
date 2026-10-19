@@ -323,6 +323,7 @@ export {
     attachSentences,
     sentence,
     sentenceSummary,
+    setSentenceComputed,
     setSentenceFieldState,
     setSentenceInvalid,
     setSentenceWhy,
@@ -464,7 +465,7 @@ export { BAR_CELL, SORT_VALUE_ATTRIBUTE, attachBarCells, setBarCell } from './js
 /** @typedef {import('./js/barcell.js').BarCell} BarCell */
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
 // Action tiles, status rows and the facet list [kpadopt2-tiles].
-export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
+export { ACTION_BUSY_EVENT, ACTION_SIZES, ACTION_TILE, attachActionTiles, setActionBusy, setActionSize } from './js/action-tiles.js';
 export {
     CALM_STATUS_STATES,
     STATUS_EVENT,
