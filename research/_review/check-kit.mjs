@@ -374,7 +374,14 @@ async function checkHoverCards(where) {
             await frame.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
             await page.mouse.move(2, 2);
             await page.waitForTimeout(400);
-            if (how === 'focus') await element.evaluate((el) => /** @type {HTMLElement} */ (el).focus());
+            if (how === 'focus') {
+                // The first focus() into a lane's frame can be dropped (activeElement stays on the body while the frame takes the
+                // window focus), on whichever lane is first and on every page: ask once more before judging the card [r3r5-1019].
+                await element.evaluate((el) => /** @type {HTMLElement} */ (el).focus());
+                await page.waitForTimeout(150);
+                if (!(await element.evaluate((el) => el === el.ownerDocument.activeElement)))
+                    await element.evaluate((el) => /** @type {HTMLElement} */ (el).focus());
+            }
             else await element.hover({ timeout: 4000 }).catch(() => {});
             // The room a demo gives the card is followed by the frame, then the card is placed again.
             await page.waitForTimeout(1100);

@@ -81,6 +81,9 @@ function measure([min, only]) {
                 if (!visible(r)) continue;
                 const cs = getComputedStyle(el);
                 if (cs.visibility === 'hidden') continue;
+                // A gantt's time rule is a gridline drawn under every bar and under the legend of a scrolled frame; a bar stands on an
+                // opaque ground over it, so a text above it is not crossed by it (this measure sees boxes, not stacking) [r3r5-1019].
+                if (el.classList.contains('kp-gantt__rule')) continue;
                 const marky =
                     !el.textContent?.trim() && (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' || cs.borderLeftWidth !== '0px' || el.tagName === 'svg');
                 if (marky) boxes.push({ el, r, text: '' });
