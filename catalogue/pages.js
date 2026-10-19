@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (gap-log-viewer): the homelab dashboard found the live log viewer missing; built on the existing log and the "N new lines" pill, no virtual list (TH42). Formal only; the other eleven themes come after the verdict.
+            {
+                href: 'research/gap-log-viewer/demo.html',
+                label: 'The live log viewer: a capped buffer, find, wrap, time column, level, copy and its states',
+                about: 'A host log that keeps arriving: the viewer keeps the newest lines and says how many it dropped, finds a word with a count and next and previous, wraps or scrolls sideways, shows the time, the date or no time, colours the level, copies and downloads, and has its own reading, empty, no-match and failed states. 4 sections (4 pairs), in formal only.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
