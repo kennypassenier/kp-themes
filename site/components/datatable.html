@@ -461,9 +461,9 @@
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A table the page sorts itself, and a column that cannot be sorted now</figcaption>
-                        <p class="kp-text-muted">`data-kp-sort-external` makes the page the one that sorts: a header press draws the arrow, `aria-sort`, the key numbers, the sort summary and Reset, remembers the sort and fires `kp-datatable-sort`, but the rows keep the order the page renders. The page reorders its rows (here in the browser, in a real page from the server) and calls `refresh()`. A header with `aria-disabled=&quot;true&quot;` is a column that cannot be sorted now: pressing it does nothing and the sort stays as it is. Sort the table by Snapshots; Notes cannot be sorted.</p>
+                        <p class="kp-text-muted">`data-kp-sort-external` makes the page the one that sorts: a header press draws the arrow, `aria-sort`, the key numbers, the sort summary and Reset, remembers the sort and fires `kp-datatable-sort`, but the rows keep the order the page renders. The page reorders its rows (here in the browser, in a real page from the server) and calls `refresh()`. A header with `aria-disabled=&quot;true&quot;` is a column that cannot be sorted now: pressing it does nothing and the sort stays as it is. Sort the table by Snapshots; Notes cannot be sorted. A table the page reads from a server holds its frame plus `data-kp-footprint-rows` rows (default: the page size) when its very first read fails or is empty, so the plate is as high as the rows would be.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-datatable" data-kp-datatable data-kp-sort-external data-kp-page-sizes="none" data-doc-external>
+<div class="kp-datatable" data-kp-datatable data-kp-sort-external data-kp-page-sizes="none" data-kp-footprint-rows="4" data-doc-external>
     <div class="kp-table-wrap">
         <table class="kp-table">
             <caption class="kp-sr-only">Backup repositories, sorted by the page</caption>
@@ -504,7 +504,7 @@ wrap.addEventListener('kp-datatable-sort', (event) => {
 });
                             </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-sort-external</span> <span class="kp-code__keyword">data-kp-page-sizes</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-doc-external</span>&gt;
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-sort-external</span> <span class="kp-code__keyword">data-kp-page-sizes</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-kp-footprint-rows</span><span class="kp-code__string">=&quot;4&quot;</span> <span class="kp-code__keyword">data-doc-external</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
             &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Backup repositories, sorted by the page&lt;/<span class="kp-code__keyword">caption</span>&gt;
@@ -7354,6 +7354,7 @@ data-cat-server
                             <tr><td><code>data-kp-fixed-columns</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-fixed-end</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-folded</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-footprint-rows</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-locale</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-max</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-max-height</code></td><td>read</td></tr>

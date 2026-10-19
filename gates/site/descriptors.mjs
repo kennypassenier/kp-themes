@@ -959,6 +959,7 @@ export const DESCRIPTORS = [
         classes: ['kp-datatable'],
         exports: ['DataTable'],
         aliases: [
+            'footprint',
             'sort',
             'select',
             'page',
@@ -1102,9 +1103,9 @@ export const DESCRIPTORS = [
             },
             {
                 title: 'A table the page sorts itself, and a column that cannot be sorted now',
-                why: '`data-kp-sort-external` makes the page the one that sorts: a header press draws the arrow, `aria-sort`, the key numbers, the sort summary and Reset, remembers the sort and fires `kp-datatable-sort`, but the rows keep the order the page renders. The page reorders its rows (here in the browser, in a real page from the server) and calls `refresh()`. A header with `aria-disabled="true"` is a column that cannot be sorted now: pressing it does nothing and the sort stays as it is. Sort the table by Snapshots; Notes cannot be sorted.',
+                why: '`data-kp-sort-external` makes the page the one that sorts: a header press draws the arrow, `aria-sort`, the key numbers, the sort summary and Reset, remembers the sort and fires `kp-datatable-sort`, but the rows keep the order the page renders. The page reorders its rows (here in the browser, in a real page from the server) and calls `refresh()`. A header with `aria-disabled="true"` is a column that cannot be sorted now: pressing it does nothing and the sort stays as it is. Sort the table by Snapshots; Notes cannot be sorted. A table the page reads from a server holds its frame plus `data-kp-footprint-rows` rows (default: the page size) when its very first read fails or is empty, so the plate is as high as the rows would be.',
                 markup: `
-<div class="kp-datatable" data-kp-datatable data-kp-sort-external data-kp-page-sizes="none" data-doc-external>
+<div class="kp-datatable" data-kp-datatable data-kp-sort-external data-kp-page-sizes="none" data-kp-footprint-rows="4" data-doc-external>
 <div class="kp-table-wrap">
 <table class="kp-table">
 <caption class="kp-sr-only">Backup repositories, sorted by the page</caption>

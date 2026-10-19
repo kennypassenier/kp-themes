@@ -926,21 +926,22 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                 for (const l of lines) out.push(`${l} (data ${mode === 'held' ? 'held back' : 'failing'})`);
                 // Held back, every data component must be loading; failing, every one must be failed.
                 const want = mode === 'held' ? 'loading' : 'error';
-                const quiet = await p.evaluate(([sid, comps, w, busySel, plateSel]) => {
+                const quiet = await p.evaluate(([sid, comps, w, busySel, plateSel, ownSel]) => {
                     const section = document.querySelector(`[data-states-section="${CSS.escape(sid)}"]`);
                     const res = [];
                     for (const c of comps)
                         for (const host of section?.querySelectorAll(c.host) ?? []) {
                             const r = host.getBoundingClientRect();
                             if (r.width < 1 || r.height < 1) continue;
-                            const has = host.querySelector(w === 'loading' ? busySel : plateSel);
+                            // A calendar's own busy card (.kp-calendar--busy-whole) and a chart's own state are the approved pictures, as in the wiring half.
+                            const has = host.querySelector(w === 'loading' ? `${busySel}, ${ownSel}` : plateSel);
                             if (!has)
                                 res.push(
                                     `${sid}: ${c.name} shows no ${w === 'loading' ? 'busy card while its data is held back' : 'failed plate while its data fails'}; wire it: ${c.wire}`,
                                 );
                         }
                     return res;
-                }, /** @type {[string, any, string, string, string]} */ ([id, PLAIN, want, BUSY, PLATE]));
+                }, /** @type {[string, any, string, string, string, string]} */ ([id, PLAIN, want, BUSY, PLATE, OWN_BUSY]));
                 out.push(...quiet);
             }
             await p.close();

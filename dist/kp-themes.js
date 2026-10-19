@@ -29795,14 +29795,41 @@ function holdFootprint(host) {
   let ownPriority = "";
   let ownComputed = "";
   const state2 = () => host.getAttribute("data-kp-state-covered") ?? (host.getAttribute("data-kp-state") === "failed" ? "error" : host.getAttribute("data-kp-state") ?? "ready");
-  const height = () => getComputedStyle(host).boxSizing === "border-box" ? border : content;
+  let guess = 0;
+  const rowsHint = () => {
+    const given2 = Number.parseInt(host.getAttribute("data-kp-footprint-rows") ?? "", 10);
+    if (given2 > 0) return given2;
+    if (!host.matches("[data-kp-datatable]")) return 0;
+    const size2 = Number.parseInt(host.getAttribute("data-kp-page-size") ?? "", 10);
+    return size2 > 0 ? size2 : 10;
+  };
+  const estimate = () => {
+    const rows = rowsHint();
+    if (!rows) return 0;
+    const view = host.ownerDocument.defaultView;
+    const rem = parseFloat(view?.getComputedStyle(host.ownerDocument.documentElement).fontSize ?? "16") || 16;
+    const raw = getComputedStyle(host).getPropertyValue("--kp-footprint-row").trim();
+    const unit2 = /^(\d+(?:\.\d+)?)(px|rem)?$/.exec(raw);
+    const row = unit2 ? Number(unit2[1]) * (unit2[2] === "px" ? 1 : rem) : 2.75 * rem;
+    const inPlace = [...host.querySelectorAll("tbody, .kp-stateplate, [data-kp-datatable-empty]")].reduce(
+      (sum, e) => sum + (e.parentElement?.closest(".kp-stateplate, [data-kp-datatable-empty]") ? 0 : e.getBoundingClientRect().height),
+      0
+    );
+    return Math.max(0, host.getBoundingClientRect().height - inPlace) + rows * row;
+  };
+  const height = () => {
+    const loaded = getComputedStyle(host).boxSizing === "border-box" ? border : content;
+    return loaded || guess;
+  };
   const release = () => {
+    guess = 0;
     if (!holding) return;
     holding = false;
     if (ownInline) host.style.setProperty("min-block-size", ownInline, ownPriority);
     else host.style.removeProperty("min-block-size");
   };
   const hold = () => {
+    if (!holding && !border && !guess) guess = estimate();
     const wanted = height();
     if (!wanted) return release();
     if (!holding) {

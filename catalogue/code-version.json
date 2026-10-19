@@ -44,7 +44,7 @@
         "js/flash.js": { "digest": "044b7e057d3bd243", "when": "[data-kp-flash-button], [data-kp-post]" },
         "js/focus-steps.js": { "digest": "a824862be86e3508", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
-            "digest": "541e395e04101390",
+            "digest": "8e15fd55f78e1a53",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"
         },
         "js/forms.js": { "digest": "45cb51c750569117", "when": "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]" },
@@ -11271,6 +11271,7 @@
                 "data-kp-dashed",
                 "data-kp-datatable",
                 "data-kp-datatable-actions",
+                "data-kp-datatable-empty",
                 "data-kp-date-panel",
                 "data-kp-day",
                 "data-kp-day-start",
@@ -11373,6 +11374,7 @@
                 "data-kp-follow-threshold",
                 "data-kp-follow-toggle",
                 "data-kp-following",
+                "data-kp-footprint-rows",
                 "data-kp-formgrid-stack",
                 "data-kp-from",
                 "data-kp-gallery",
@@ -11490,6 +11492,7 @@
                 "data-kp-over",
                 "data-kp-overflow",
                 "data-kp-pad",
+                "data-kp-page-size",
                 "data-kp-passkey",
                 "data-kp-passkeys",
                 "data-kp-passkeys-act",

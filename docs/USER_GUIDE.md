@@ -2151,7 +2151,10 @@ jump twice [t56-statefix-1018; Kenny, 2026-10-16: "de hele grootte van de compon
 the checklist, the notices, the gallery, the availability grid, the request inspector and the operations page (`.kp-ops`) write `data-kp-state` on their host, and
 `js/footprint.js` follows that one attribute (loaded by `js/auto.js`; `attachFootprints(root)` for a subtree you render yourself, `holdFootprint(host)` for one host):
 while the host is ready it remembers its height, and while it is `loading`, `empty` or `error` it holds that height as `min-block-size`.
-The first load has nothing remembered and is left alone. The hold is capped by `--kp-footprint-max` (default `48rem`; set it on the host or on any
+A first load that fails or comes back empty has nothing remembered: a data table is then held at what its page of rows would make it (its own frame
+plus `data-kp-page-size`, default 10, rows of `--kp-footprint-row`, default `2.75rem`), and any other host that says
+`data-kp-footprint-rows="N"` is held at its frame plus N such rows; a loaded height, once there is one, wins. A table that shows cards when narrow
+sets `--kp-footprint-row` for that width. The hold is capped by `--kp-footprint-max` (default `48rem`; set it on the host or on any
 ancestor), because a plate in the middle of 1600 px is out of sight; a `min-block-size` you set yourself is kept (the host is held at the larger
 of the two); a content-box host is held at its content height. A checklist with no items writes `data-kp-state="empty"` itself, and a
 checklist set to `error` shows the failed plate alone (its rows stay in memory for the next ready).
