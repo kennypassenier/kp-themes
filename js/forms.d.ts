@@ -129,3 +129,15 @@ export declare function attachSwitches(root?: ParentNode, { strings }?: {
  * @returns {() => void} detach: stops watching and removes the counts it wrote
  */
 export declare function attachFormgridStages(root?: ParentNode): () => void;
+/**
+ * Groups side by side [formgrid-columns-1019]. A `.kp-formgrid` whose children are all `.kp-formgrid__group` (facts and
+ * settings, say) stands them in a row when the panel holds all of them: this puts `data-kp-formgrid-wide` on it while each
+ * group, laid on tracks of its own, fits beside the others with `--kp-formgrid-group-gap` between. Without the attribute
+ * the groups stand under each other on the grid's shared tracks (one label edge for all). `data-kp-formgrid-columns="never"`,
+ * a row-sharing card (`data-kp-formgrid-rows="subgrid"`) and a stacked grid (`data-kp-formgrid-stack="always"`) are left alone.
+ * Measured on the grid's own width, so a panel in a dialog or a column answers the same as a page.
+ *
+ * @param {ParentNode} [root]
+ * @returns {() => void} detach: stops watching and removes the attribute it wrote
+ */
+export declare function attachFormgridColumns(root?: ParentNode): () => void;

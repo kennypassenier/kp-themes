@@ -103,7 +103,7 @@ export const NEEDS = [
         name: 'forms',
         when: '[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]',
         load: () => import('./forms.js'),
-        attach: (m, root) => [m.attachForms(root), m.attachSwitches(root), m.attachFormgridStages(root)],
+        attach: (m, root) => [m.attachForms(root), m.attachSwitches(root), m.attachFormgridStages(root), m.attachFormgridColumns(root)],
     },
     {
         name: 'patterns',

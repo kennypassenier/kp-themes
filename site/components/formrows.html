@@ -301,9 +301,12 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-formgrid-rows</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-formgrid-stack</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-formgrid-columns</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-formgrid-rows</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-formgrid-span</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-formgrid-stack</code></td><td>prose, read</td></tr>
                             <tr><td><code>data-kp-formgrid-stage</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-formgrid-wide</code></td><td>read, written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -325,9 +328,9 @@
                             <tr><td><code>--kp-button-height-sm</code></td><td><code>max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem)))</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-formgrid-column-gap</code></td><td><code>var(--kp-space-lg, 1rem)</code></td></tr>
-                            <tr><td><code>--kp-formgrid-column-max</code></td><td><code>48rem</code></td></tr>
-                            <tr><td><code>--kp-formgrid-column-min</code></td><td><code>36rem</code></td></tr>
                             <tr><td><code>--kp-formgrid-control</code></td><td><code>3fr</code></td></tr>
+                            <tr><td><code>--kp-formgrid-control-max</code></td><td><code>28rem</code></td></tr>
+                            <tr><td><code>--kp-formgrid-field</code></td><td><code>18rem</code></td></tr>
                             <tr><td><code>--kp-formgrid-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-formgrid-group-gap</code></td><td><code>var(--kp-space-2xl, 2rem)</code></td></tr>
                             <tr><td><code>--kp-formgrid-label-max</code></td><td><code>40%</code></td></tr>
@@ -339,7 +342,9 @@
                             <tr><td><code>--kp-formgrid-stage-gap</code></td><td><code>var(--kp-space-lg, 1rem)</code></td></tr>
                             <tr><td><code>--kp-formgrid-stage-min</code></td><td><code>24rem</code></td></tr>
                             <tr><td><code>--kp-formgrid-tracks</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-formgrid-tracks-bare</code></td><td><code>var(--kp-formgrid-tracks)</code></td></tr>
                             <tr><td><code>--kp-formgrid-value</code></td><td><code>2fr</code></td></tr>
+                            <tr><td><code>--kp-formgrid-value-max</code></td><td><code>20rem</code></td></tr>
                             <tr><td><code>--kp-formrow-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-formrow-input-max</code></td><td><code>28rem</code></td></tr>
                             <tr><td><code>--kp-formrow-label-max</code></td><td><code>34%</code></td></tr>

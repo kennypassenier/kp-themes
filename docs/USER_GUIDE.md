@@ -1931,15 +1931,19 @@ What it does for you, without hand work:
 - **The attention band and problem alerts in the grid.** A `.kp-attention[data-kp-subgrid]` placed in the grid takes its
   tracks: the icon in the label track, the words from the control edge, the fix in the actions column (see "The
   attention band").
-- **The grid does not stretch across a wide panel** [formgrid-columns-1019]. A form grid is at most `--kp-formgrid-max` (60rem) wide, so a hint
-  stays beside its control and an action beside its row instead of being flung to the panel's far edge (Kenny, 2026-10-19 17:20: hints at
-  x 1120 and an action at x 1945 on a 2000 px panel, "Zo veel verspilling van plek"). The room that is left is for columns, or stays empty on purpose.
-- **Groups side by side.** A grid whose children are all `.kp-formgrid__group` (facts and settings, say) lays them as columns of one
-  composition when the panel is wide: each group is a grid of its own with the same four tracks (its rows are still subgrids of it), at least
-  `--kp-formgrid-column-min` (36rem) and at most `--kp-formgrid-column-max` (48rem) wide, `--kp-formgrid-group-gap` (2rem) apart; when
-  they do not fit they stand under each other. Put each group's buttons in the group (a `.kp-formgrid__row--buttons` with the buttons in
-  its control cell), so they stand beside what they act on. `data-kp-formgrid-columns="never"` keeps the groups under each other on the
-  grid's shared tracks.
+- **The grid does not stretch across a wide panel** [formgrid-compact-1019]. A grid with nothing that needs the width (no code block,
+  JSON field, text area, refresh bar or spanning cell) is compact: its tracks are as wide as what they hold (the label, the widest
+  control up to `--kp-formgrid-control-max` 28rem, the hint up to `--kp-formgrid-value-max` 20rem, the widest action) and what is left over is
+  one empty filler track at the end. A hint therefore follows its control at the column gap and an action follows its row, instead of
+  being flung to the panel's far edge (Kenny, 2026-10-19 17:20: hints at x 1120 and an action at x 1945 on a 2000 px panel). A
+  field is `--kp-formgrid-field` (18rem, at most 38 % of the grid) wide. A grid with a wide block keeps the stretching tracks, held at
+  `--kp-formgrid-max` (60rem).
+- **Groups side by side.** A grid whose children are all `.kp-formgrid__group` (facts and settings, say) stands them in a row when the panel
+  holds all of them, each group as wide as its own tracks, `--kp-formgrid-group-gap` (2rem) apart, all starting at the top:
+  `attachFormgridColumns` (`js/forms.js`, run by `auto.js`) measures what the groups need and writes `data-kp-formgrid-wide` on the grid
+  while they fit. Otherwise they stand under each other on the grid's shared tracks, so every label, value and button starts on one edge.
+  Put each group's buttons in the group (a `.kp-formgrid__row--buttons` with the buttons in its control cell), so they stand beside what
+  they act on. `data-kp-formgrid-columns="never"` keeps the groups under each other.
 - **A field fills its track.** A `.kp-field` has no width cap of its own (`--kp-field-max-width` sets one where a page
   wants a measure), so a field in a value track or a page's grid column ends on the column's edge.
 - **Cards that share rows: `data-kp-formgrid-stage`** [gapform-1019]. A form grid is a size container (it folds on its own
@@ -1985,7 +1989,7 @@ Options, all attributes on `.kp-formgrid`, read by CSS alone, so changing one at
 | `data-kp-formgrid-columns` | `auto` (groups side by side when wide), `never` | `auto` |
 
 Knobs: `--kp-formgrid-gap` (between rows, the md step), `--kp-formgrid-column-gap` (the lg step), `--kp-formgrid-label-min`,
-`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`, `--kp-formgrid-max` (60rem), `--kp-formgrid-column-min` (36rem), `--kp-formgrid-column-max` (48rem), `--kp-formgrid-group-gap` (2rem); on a stage
+`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`, `--kp-formgrid-max` (60rem, grids with a wide block), `--kp-formgrid-control-max` (28rem), `--kp-formgrid-value-max` (20rem), `--kp-formgrid-field` (18rem), `--kp-formgrid-group-gap` (2rem); on a stage
 `--kp-formgrid-stage-min` (24rem), `--kp-formgrid-stage-gap` (the lg step) and `--kp-formgrid-rows`. A row takes
 `data-kp-changed` and `data-kp-state="error"` like a form row.
 

@@ -20328,6 +20328,7 @@ __export(forms_exports, {
   FIELD_EVENT: () => FIELD_EVENT,
   INVALID_EVENT: () => INVALID_EVENT,
   VALID_EVENT: () => VALID_EVENT,
+  attachFormgridColumns: () => attachFormgridColumns,
   attachFormgridStages: () => attachFormgridStages,
   attachForms: () => attachForms,
   attachSwitches: () => attachSwitches,
@@ -20644,7 +20645,44 @@ function attachFormgridStages(root = document) {
     for (const fn of undo) fn();
   };
 }
-var FORM, SUMMARY, FIELD_ERROR, SUBMIT, VALID_EVENT, INVALID_EVENT, FIELD_EVENT, DONE_EVENT, fallback, counter3, handles8, SWITCH, SWITCH_STATE, FORMGRID_BLOCK;
+function attachFormgridColumns(root = document) {
+  const undo = [];
+  for (const grid2 of root.querySelectorAll(".kp-formgrid")) {
+    if (!(grid2 instanceof HTMLElement)) continue;
+    const kids = () => [...grid2.children].filter((c) => !c.matches("template, script, style") && !(c instanceof HTMLElement && c.hidden));
+    const eligible = () => {
+      const groups = kids();
+      return groups.length > 1 && groups.every((c) => c.matches(".kp-formgrid__group")) && grid2.getAttribute("data-kp-formgrid-columns") !== "never" && grid2.getAttribute("data-kp-formgrid-rows") !== "subgrid" && grid2.getAttribute("data-kp-formgrid-stack") !== "always" && // A grid with a wide block (a code block, a JSON field, a text area, a refresh bar, a spanning cell) keeps its stretching tracks.
+      !grid2.querySelector(WIDE_BLOCKS);
+    };
+    const decide = () => {
+      const was = grid2.hasAttribute("data-kp-formgrid-wide");
+      if (!eligible()) {
+        grid2.removeAttribute("data-kp-formgrid-wide");
+        return;
+      }
+      grid2.setAttribute("data-kp-formgrid-wide", "");
+      const groups = kids();
+      const gap = Number.parseFloat(getComputedStyle(grid2).columnGap) || 0;
+      const need = groups.reduce((sum, g) => sum + g.getBoundingClientRect().width, 0) + gap * (groups.length - 1);
+      const have = grid2.getBoundingClientRect().width;
+      if (need > have + 0.5) grid2.removeAttribute("data-kp-formgrid-wide");
+      else if (!was) grid2.setAttribute("data-kp-formgrid-wide", "");
+    };
+    const watch2 = new ResizeObserver(decide);
+    decide();
+    watch2.observe(grid2);
+    for (const group of grid2.children) watch2.observe(group);
+    undo.push(() => {
+      watch2.disconnect();
+      grid2.removeAttribute("data-kp-formgrid-wide");
+    });
+  }
+  return () => {
+    for (const fn of undo) fn();
+  };
+}
+var FORM, SUMMARY, FIELD_ERROR, SUBMIT, VALID_EVENT, INVALID_EVENT, FIELD_EVENT, DONE_EVENT, fallback, counter3, handles8, SWITCH, SWITCH_STATE, FORMGRID_BLOCK, WIDE_BLOCKS;
 var init_forms = __esm({
   "js/forms.js"() {
     "use strict";
@@ -20663,6 +20701,7 @@ var init_forms = __esm({
     SWITCH = ".kp-switch";
     SWITCH_STATE = ".kp-switch__state";
     FORMGRID_BLOCK = ".kp-formgrid__group, .kp-formrows, .kp-kv, form";
+    WIDE_BLOCKS = "[data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill";
   }
 });
 
@@ -63025,7 +63064,7 @@ var NEEDS = [
     name: "forms",
     when: "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]",
     load: () => Promise.resolve().then(() => (init_forms(), forms_exports)),
-    attach: (m, root) => [m.attachForms(root), m.attachSwitches(root), m.attachFormgridStages(root)]
+    attach: (m, root) => [m.attachForms(root), m.attachSwitches(root), m.attachFormgridStages(root), m.attachFormgridColumns(root)]
   },
   {
     name: "patterns",
@@ -65085,6 +65124,7 @@ export {
   attachFlashButtons,
   attachFocusSteps,
   attachFootprints,
+  attachFormgridColumns,
   attachFormgridStages,
   attachForms,
   attachGalleries,

@@ -51,7 +51,7 @@
                 "extra": null,
                 "round": "\n            {\n                \"round\": \"aligngrid-fa793bb3-a33e-49a6-9287-c27683fdda54\",\n                \"received\": [\"aligngrid-7ef59f03-3ba5-4693-9472-818f60de9fdb\", \"aligngrid-0e13cf1b-0cf3-409d-b7f8-9cf941e134c0\"]\n            }\n        "
             },
-            "fingerprint": "d709b29a017127bf",
+            "fingerprint": "ab2e51c3d7ab32fd",
             "update": null
         },
         "research/app-hsb-align/demo.html": {

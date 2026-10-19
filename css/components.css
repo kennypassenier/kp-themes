@@ -24828,40 +24828,59 @@
         max-inline-size: var(--kp-formgrid-max, 60rem);
     }
 
-    /* Groups side by side [formgrid-columns-1019]. A grid whose children are all groups (`.kp-formgrid__group`: facts and
-       settings, say) lays them as columns of one composition when the panel is wide: each group is a grid of its own
-       with the four tracks of the form grid (its rows are still subgrids of it), at least --kp-formgrid-column-min
-       (36rem) wide and at most --kp-formgrid-column-max (48rem), so a hint stays beside its control and the groups
-       stand next to each other instead of one under the other with the panel empty beside them. When they do not fit
-       they stand one under the other, each on its own tracks. `data-kp-formgrid-columns="never"` keeps the groups
-       under each other on the grid's shared tracks. Not for a grid whose rows are shared with other cards
-       (data-kp-formgrid-rows="subgrid") or that is stacked (data-kp-formgrid-stack="always"). */
-    .kp-formgrid:has(> .kp-formgrid__group ~ .kp-formgrid__group):not(
-            :has(> :not(.kp-formgrid__group)),
-            [data-kp-formgrid-columns='never'],
-            [data-kp-formgrid-rows='subgrid'],
-            [data-kp-formgrid-stack='always']
-        ) {
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-formgrid-column-min, 36rem)), 1fr));
-        column-gap: var(--kp-formgrid-group-gap, var(--kp-space-2xl, 2rem));
-        justify-content: start;
-        align-items: start;
+    /* A grid with nothing that needs the width (no wide block: a code block, a JSON field, a text area, a refresh bar, a cell
+       that spans) is compact [formgrid-compact-1019]: its tracks are as wide as what they hold, so a hint follows its control at the
+       column gap and an action follows its row, and the room left over is one filler track at the end that nothing stands in
+       (Kenny, 2026-10-19 17:20: the hint at x 544 beside a time field that ends at x 410; "Zo veel verspilling van plek").
+       A grid with a wide block keeps the stretching tracks above, held at --kp-formgrid-max. The fold under 36rem spans
+       every row to the last line (-1), so the filler is part of the row there. */
+    .kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill)) {
+        --kp-formgrid-tracks:
+            [label-start] fit-content(var(--kp-formgrid-label-max, 40%))
+            [label-end control-start] fit-content(var(--kp-formgrid-control-max, 28rem))
+            [control-end value-start] fit-content(var(--kp-formgrid-value-max, 20rem))
+            [value-end actions-start] auto
+            [actions-end filler-start] minmax(0, 1fr)
+            [filler-end];
+        /* The same without the filler: a group that stands beside another is as wide as its tracks. */
+        --kp-formgrid-tracks-bare:
+            [label-start] fit-content(var(--kp-formgrid-label-max, 40%))
+            [label-end control-start] fit-content(var(--kp-formgrid-control-max, 28rem))
+            [control-end value-start] fit-content(var(--kp-formgrid-value-max, 20rem))
+            [value-end actions-start] auto
+            [actions-end filler-start filler-end];
         max-inline-size: none;
     }
 
-    .kp-formgrid:has(> .kp-formgrid__group ~ .kp-formgrid__group):not(
-            :has(> :not(.kp-formgrid__group)),
-            [data-kp-formgrid-columns='never'],
-            [data-kp-formgrid-rows='subgrid'],
-            [data-kp-formgrid-stack='always']
-        )
-        > .kp-formgrid__group {
+    /* A field has a width of its own in a compact grid (the track is as wide as its widest cell): --kp-formgrid-field, at most
+       38 % of the grid's width, so a narrow grid is not forced wider than itself. */
+    .kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill))
+        :is(.kp-formgrid__control, .kp-formrow__control)
+        > :is(.kp-field__input:not(.kp-field__input--short, [type='number'], [type='time'], [type='date']), select:not(.kp-field__input--short), .kp-secret, .kp-combobox, .kp-type-confirm) {
+        min-inline-size: min(var(--kp-formgrid-field, 18rem), 38cqi);
+    }
+
+    /* Groups side by side [formgrid-columns-1019]. A grid whose children are all groups (`.kp-formgrid__group`: facts and
+       settings, say) stands them side by side when the panel is wide enough for all of them: js/forms.js
+       (attachFormgridColumns) measures what each group needs on its own tracks and writes `data-kp-formgrid-wide` on the grid
+       while they fit. Each group is then a grid of its own with the grid's tracks, as wide as it needs, `--kp-formgrid-group-gap`
+       apart, all starting at the top. Without the attribute the groups stand under each other on the grid's shared tracks, so
+       every label, value and button starts on one edge. `data-kp-formgrid-columns="never"` keeps them under each other. */
+    .kp-formgrid[data-kp-formgrid-wide] {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content;
+        justify-content: start;
+        align-items: start;
+        column-gap: var(--kp-formgrid-group-gap, var(--kp-space-2xl, 2rem));
+        max-inline-size: none;
+    }
+
+    .kp-formgrid[data-kp-formgrid-wide] > .kp-formgrid__group {
         grid-column: auto;
-        grid-template-columns: var(--kp-formgrid-tracks);
+        grid-template-columns: var(--kp-formgrid-tracks-bare, var(--kp-formgrid-tracks));
         align-items: first baseline;
-        justify-self: start;
-        inline-size: 100%;
-        max-inline-size: var(--kp-formgrid-column-max, 48rem);
+        column-gap: var(--kp-formgrid-column-gap, var(--kp-space-lg, 1rem));
     }
 
     .kp-formgrid[data-kp-formgrid-label='wide'] {
@@ -25337,7 +25356,7 @@
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow)
             > :is(.kp-formgrid__label, .kp-formrow__label) {
-            grid-column: label-start / actions-end;
+            grid-column: label-start / -1;
             grid-row: auto;
             min-inline-size: 0;
         }
@@ -25345,7 +25364,7 @@
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow)
             > :is(.kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span]) {
-            grid-column: label-start / actions-end;
+            grid-column: label-start / -1;
             grid-row: auto;
         }
 
@@ -25359,14 +25378,26 @@
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow):not(:has(> .kp-formgrid__actions > *))
             > :is(.kp-formgrid__value, .kp-formrow__aside) {
-            grid-column: label-start / actions-end;
+            grid-column: label-start / -1;
         }
 
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow)
             > .kp-formgrid__actions {
-            grid-column: actions;
+            grid-column: -2 / -1;
             grid-row: auto;
+            justify-self: end;
+        }
+
+        .kp-formgrid__actions > .kp-button {
+            min-inline-size: 6rem;
+        }
+
+        /* Rows, groups and headings run to the last line, the filler of a compact grid included. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form),
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) :is(.kp-formgrid__group, fieldset) > :is(legend, .kp-formgrid__heading) {
+            grid-column: label-start / -1;
         }
 
         /* An empty cell takes no line of its own. */
@@ -25391,7 +25422,8 @@
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child)
             > :is(.kp-formgrid__control, .kp-formrow__control) {
-            grid-column: actions;
+            grid-column: -2 / -1;
+            justify-self: end;
             justify-items: end;
         }
 
@@ -25471,7 +25503,7 @@
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             .kp-formgrid__row--buttons:not(:has(> :is(.kp-formgrid__label, .kp-formrow__label):not(:empty)))
             > :is(.kp-formgrid__value, .kp-formrow__aside) {
-            grid-column: label-start / actions-end;
+            grid-column: label-start / -1;
             justify-content: center;
             text-align: center;
         }
@@ -25479,12 +25511,12 @@
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             .kp-formgrid__row--buttons:not(:has(> :is(.kp-formgrid__label, .kp-formrow__label):not(:empty)))
             > .kp-formgrid__actions {
-            grid-column: label-start / actions-end;
+            grid-column: label-start / -1;
         }
 
         /* A fact and its value on one line. */
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-kv__row > dd {
-            grid-column: control-start / actions-end;
+            grid-column: control-start / -1;
         }
 
         /* A JSON field's label stands on the label line, not on the field's tool row. */
