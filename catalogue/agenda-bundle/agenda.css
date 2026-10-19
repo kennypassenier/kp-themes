@@ -21981,6 +21981,11 @@
         min-block-size: calc(var(--kp-runs-count, 3) * var(--kp-runs-row) + 2px);
     }
 
+    /* Empty and failed hold the loaded height of the list (js/footprint.js): the stage takes what the heading leaves. */
+    .kp-runs:is([data-kp-state='empty'], [data-kp-state='error']) {
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
     .kp-runs__stage > * {
         grid-area: 1 / 1;
         min-inline-size: 0;
@@ -28377,6 +28382,17 @@
         color: var(--foreground);
     }
 
+    /* Empty and failed are the package plate in the body's place; the block is held at its loaded height (js/footprint.js) and the
+     * plate fills what the head leaves [states-check-1019]. */
+    .kp-code:is([data-kp-state='empty'], [data-kp-state='error']):not(.kp-code--cell) {
+        grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .kp-code__plate {
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+    }
+
     @container kp-code (max-width: 30rem) {
         .kp-code__head {
             grid-template-columns: minmax(0, 1fr);
@@ -34090,15 +34106,12 @@
     /* The run timeline and the week: the plate over the plot (below the axis) or the whole agenda. */
     .kp-gantt__plate {
         position: absolute;
-        inset: var(--kp-gantt-axis, 1.75rem) 0 0;
+        /* The whole frame, axis included: the plate fills the data area's footprint, not what is left under the axis [states-check-1019]. */
+        inset: 0;
         z-index: 5;
         display: grid;
         background: var(--card);
         color: var(--card-foreground, var(--foreground));
-    }
-
-    .kp-gantt--line .kp-gantt__plate {
-        inset: 0 0 var(--kp-gantt-axis, 1.75rem);
     }
 
     .kp-gantt__plate[hidden],
@@ -34116,6 +34129,19 @@
     }
 
     .kp-week__frame:has(> .kp-week__plate:not([hidden])) {
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
+    /* A timeline held at its loaded height (js/footprint.js) gives the plate that whole height: the frame grows into what the
+     * toolbar and the legend leave, and the plate fills the frame [states-check-1019]. */
+    .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error'], :has(> .kp-gantt__frame > .kp-gantt__plate:not([hidden]))) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error'], :has(> .kp-gantt__frame > .kp-gantt__plate:not([hidden]))) > .kp-gantt__frame {
+        flex: 1 1 auto;
+        /* The plate's words, text and Retry need the plate's floor; a short timeline's frame was clipped to its lanes. */
         min-block-size: var(--kp-stateplate-floor, 12rem);
     }
 
@@ -34143,6 +34169,8 @@
 
     .kp-datatable > :is([data-kp-datatable-empty], [data-kp-datatable-failed]).kp-stateplate {
         min-block-size: max(var(--kp-stateplate-floor, 12rem), min(var(--kp-datatable-held, 0px), var(--kp-footprint-max, 48rem)));
+        /* The host is held at its loaded height (js/footprint.js): the plate takes what the toolbar and the pager leave [states-check-1019]. */
+        flex: 1 1 auto;
     }
 
     /* The sentence a page wrote in the empty slot is body text; its title (`.kp-empty__title`) is the plate's heading. */
@@ -34150,7 +34178,7 @@
         font-size: var(--kp-text-md, 1rem);
     }
 
-    .kp-datatable > [data-kp-datatable-empty].kp-stateplate .kp-empty__title {
+    .kp-datatable > [data-kp-datatable-empty].kp-stateplate :is(.kp-empty__title, .kp-stateplate__title) {
         font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
         font-weight: 600;
     }

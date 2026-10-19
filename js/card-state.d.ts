@@ -23,7 +23,7 @@ export type CardStateOptions = {
     /**
      * a button or link under an empty note ("Add an appointment"); an error note always has Try again
      */
-    action?: Node | null;
+    action?: Node | readonly Node[] | null;
     /**
      * false leaves Try again out of an error note (a read the page cannot repeat)
      */

@@ -1984,7 +1984,7 @@ heading size, a normal-size Retry that fires `kp-<component>-retry` on the host.
 
 | Component | Host | Loading | Empty | Failed (Retry event) |
 | --- | --- | --- | --- | --- |
-| data table | `[data-kp-datatable]` | `dataTable(el).busy({ overlay: true })` (or `data-kp-busy-overlay`) and `.state('loading')` | no rows, with the authored slot `<div class="kp-empty" data-kp-datatable-empty hidden>` | `.fail(reason)` (`kp-datatable-retry`) |
+| data table | `[data-kp-datatable]` | `dataTable(el).busy({ overlay: true })` (or `data-kp-busy-overlay`) and `.state('loading')` | no rows: the package's own plate (a title at heading size, held at the loaded height), or your slot `<div class="kp-empty" data-kp-datatable-empty hidden>` (bare words become its body text, a missing title is the dictionary's) | `.fail(reason)` (`kp-datatable-retry`) |
 | network graph | `[data-kp-graph]` | `setGraphState(el, 'loading')` | `setGraphState(el, 'empty', title, { text })` | `setGraphState(el, 'error', title, { text })` (`kp-graph-retry`) |
 | heat grid / matrix | `[data-kp-heat]` / `[data-kp-matrix]` | `setHeat(el, { state: 'loading', skeleton })` / `setMatrix(el, { state: 'loading' })` | `{ state: 'empty', message, text }` | `{ state: 'error', message, text }` (`kp-heat-retry` / `kp-matrix-retry`) |
 | run timeline | `[data-kp-gantt]` | `setGanttState(el, 'loading')` | `setGanttState(el, 'empty', title, { text })` | `setGanttState(el, 'error', title, { text })` (`kp-gantt-retry`) |
@@ -1998,7 +1998,7 @@ heading size, a normal-size Retry that fires `kp-<component>-retry` on the host.
 | diff view | `[data-kp-diffview]` | `setDiff(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', message }` (`kp-diff-retry`) |
 | checklist | `[data-kp-checklist]` | `setChecklistState(list, 'loading')` | `setChecklistItems(list, [])` | `setChecklistState(list, 'error', message)` (`kp-checklist-retry`) |
 | timers | `[data-kp-timers]` | `setTimersState(list, 'loading')` | no timers | `setTimersState(list, 'error', message)` (`kp-timers-retry`) |
-| card with data | `.kp-card[data-kp-state]` with `.kp-card__stage` | `setCardState(card, 'loading', { words })` (or write `data-kp-state`) | `setCardState(card, 'empty', { title, text })` | `setCardState(card, 'error', { title, text })` (`kp-card-retry`) |
+| card with data | `.kp-card[data-kp-state]` with `.kp-card__stage` | `setCardState(card, 'loading', { words })` (or write `data-kp-state`) | `setCardState(card, 'empty', { title, text, action })` (`action` is one node, an array or a fragment: several lie on the plate's own action row) | `setCardState(card, 'error', { title, text })` (`kp-card-retry`) |
 | today card | a `.kp-card` | `setTodayState(card, 'loading')` | `setTodayState(card, 'empty')` | `setTodayState(card, 'error')` (`kp-card-retry`) |
 | status list | `.kp-statuslist` | per row: `setStatus(list, key, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'failed' }` (`kp-status-retry`) |
 | entity grid | `[data-kp-entity-grid]` | `setEntityGridState(grid, 'loading', { count })` | `setEntityGrid(grid, [], { title })` or `setEntityGridState(grid, 'empty', { title })` | `setEntityGridState(grid, 'error', { message })` (`kp-entity-grid-retry`) |
@@ -2007,7 +2007,7 @@ heading size, a normal-size Retry that fires `kp-<component>-retry` on the host.
 | runs | `[data-kp-runs]` | `setRunsState(el, 'loading')` | `setRuns(el, [], { reason })` | `setRunsState(el, 'error', { title, text })` (`kp-runs-retry`) |
 | master-detail | `[data-kp-master-detail]` | `setPaneState(root, 'loading')` | `setPaneState(root, 'empty', { title })` | `setPaneState(root, 'error', { title, text })` (`kp-pane-retry`) |
 | dependency list | `[data-kp-deplist]` | `deplist(el).setState('loading')` | `.setState('empty')` | `.setState('error', { message })` (`kp-deplist-retry`) |
-| code view | `[data-kp-code]` | `setCode(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', message }` |
+| code view | `[data-kp-code]` | `setCode(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', message }` (`kp-code-retry`) |
 | gallery | `[data-kp-gallery]` | `setGallery(el, { state: 'loading' })` | `{ state: 'empty' }` | `{ state: 'error', message }` (`kp-gallery-retry`) |
 | console | `[data-kp-console]` | `setConsole(root, { state: 'loading' })` | no blocks | `{ state: 'error', message }` (`kp-console-retry`) |
 | request inspector | `[data-kp-requests]` | `setRequestsState(el, 'loading')` | `setRequests(el, [])` | `setRequestsState(el, 'error', { message })` (`kp-requests-retry`) |

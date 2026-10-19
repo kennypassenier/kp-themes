@@ -17258,7 +17258,7 @@ function attachDataTables(root = document, {
       /** @type {HTMLElement | null} */
       wrap.querySelector(PAGER)
     );
-    const empty = (
+    let empty = (
       /** @type {HTMLElement | null} */
       wrap.querySelector(EMPTY2)
     );
@@ -17510,7 +17510,7 @@ function attachDataTables(root = document, {
         emptyLeaving = true;
         void leave(empty, { hide: true }).then(() => {
           emptyLeaving = false;
-          empty.hidden = emptyHidden;
+          if (empty !== null) empty.hidden = emptyHidden;
         });
         return;
       }
@@ -17949,10 +17949,50 @@ function attachDataTables(root = document, {
       authored.classList.add("kp-stateplate", "kp-stateplate--error");
       undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--error"));
     }
-    if (empty !== null && !empty.classList.contains("kp-stateplate")) {
+    if (empty === null) {
+      empty = add(make23("div", "kp-empty kp-stateplate kp-stateplate--empty"));
+      empty.dataset.kpDatatableEmpty = "";
+      empty.setAttribute("role", "status");
+      empty.hidden = true;
+      emptyHidden = true;
+      const none = make23("strong", "kp-empty__title");
+      none.textContent = s0.tableEmpty;
+      empty.append(none);
+      wrap.insertBefore(empty, tableBlock);
+    } else if (!empty.classList.contains("kp-stateplate")) {
       const authored = empty;
       authored.classList.add("kp-stateplate", "kp-stateplate--empty");
       undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--empty"));
+    }
+    if (empty !== null && empty.querySelector(".kp-empty__title, .kp-stateplate__title") === null) {
+      const authored = empty;
+      const heading = make23("strong", "kp-empty__title");
+      heading.textContent = s0.tableEmpty;
+      authored.prepend(heading);
+      undo.push(() => heading.remove());
+    }
+    if (empty !== null) {
+      for (const node of [...empty.childNodes]) {
+        if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? "").trim() === "") continue;
+        const words = make23("span", "kp-stateplate__text");
+        node.replaceWith(words);
+        words.append(node);
+        undo.push(() => words.replaceWith(node));
+      }
+    }
+    if (failedSlot !== null && failedSlot.querySelector(".kp-stateplate__title") === null) {
+      const authoredFailed = failedSlot;
+      const reason = authoredFailed.querySelector("[data-kp-datatable-failed-reason]");
+      if (reason !== null) {
+        reason.classList.add("kp-stateplate__title");
+        undo.push(() => reason.classList.remove("kp-stateplate__title"));
+      } else {
+        const heading = make23("strong", "kp-stateplate__title");
+        heading.dataset.kpDatatableFailedReason = "";
+        heading.textContent = s0.tableFailed;
+        authoredFailed.prepend(heading);
+        undo.push(() => heading.remove());
+      }
     }
     let heldHeight = 0;
     const coverBox = (
@@ -17968,12 +18008,15 @@ function attachDataTables(root = document, {
     undo.push(() => {
       coverSizes?.disconnect();
       coverBox.removeAttribute("data-kp-state-covered");
+      wrap.removeAttribute("data-kp-state-covered");
       for (const slot of [failedSlot, empty]) slot?.style.removeProperty("--kp-datatable-held");
     });
     const syncCover = () => {
       const failedNow = state2 === "failed" && failedSlot !== null;
       const emptyNow = !failedNow && empty !== null && !emptyHidden;
       coverBox.toggleAttribute("data-kp-state-covered", failedNow || emptyNow);
+      if (failedNow || emptyNow) wrap.setAttribute("data-kp-state-covered", failedNow ? "error" : "empty");
+      else wrap.removeAttribute("data-kp-state-covered");
       for (const slot of [failedSlot, empty]) {
         if (slot === null) continue;
         const mine = slot === failedSlot && failedNow || slot === empty && emptyNow;
@@ -18192,7 +18235,7 @@ function attachDataTables(root = document, {
       if (current2.length === sequence.length && current2.every((row, at) => row === sequence[at])) return;
       const active = document.activeElement;
       const held2 = active instanceof HTMLElement && body.contains(active) ? active : null;
-      for (const row of sequence) body.append(row);
+      for (const row of sequence) if (row.parentElement === body) body.append(row);
       if (held2 !== null && held2.isConnected && document.activeElement !== held2) held2.focus({ preventScroll: true });
     };
     const syncGroups = (s2) => {
@@ -18479,6 +18522,7 @@ function attachDataTables(root = document, {
       if (blockOrder.length > 0) placeGroups();
       else
         for (const row of shownRows) {
+          if (row.parentElement !== body) continue;
           body.append(row);
           const detail = details.get(row);
           if (detail !== void 0) body.append(detail);
@@ -26732,7 +26776,7 @@ function buildNote(note3, state2, options) {
     box.append(...lines);
     if (options.action) {
       const actions = el2(doc, "kp-card__state-actions");
-      actions.append(options.action);
+      actions.append(...Array.isArray(options.action) ? options.action : [options.action]);
       box.append(actions);
     }
     note3.setAttribute("role", "status");
@@ -29556,25 +29600,18 @@ function draw3(el16, spec, memory) {
     const was = el16.querySelector(":scope > :is(.kp-bullets__list, .kp-bullets__note)")?.getBoundingClientRect().height ?? 0;
     memory.height = Math.max(was, memory.height);
     const refocus = el16.querySelector(":scope > .kp-bullets__note")?.contains(doc.activeElement) ?? false;
-    const note3 = make5(doc, "kp-empty kp-bullets__note", "div");
+    const note3 = statePlate(doc, {
+      kind: failed ? "error" : "empty",
+      title: failed ? spec.message ?? strings.bulletsError : spec.emptyTitle ?? strings.bulletsEmpty,
+      ...failed ? { text: strings.stateFailedText } : spec.emptyText ? { text: spec.emptyText } : {},
+      ...failed && spec.retry !== false ? { actionLabel: strings.bulletsRetry, actionAttribute: "data-kp-bullets-retry" } : {}
+    });
+    note3.classList.add("kp-bullets__note");
     if (memory.height > 0) note3.style.minBlockSize = `${memory.height}px`;
     if (failed) note3.setAttribute("data-kp-tone", "error");
-    note3.setAttribute("role", failed ? "alert" : "status");
-    const title = make5(doc, "kp-empty__title kp-bullets__note-title", "p");
-    title.textContent = failed ? spec.message ?? strings.bulletsError : spec.emptyTitle ?? strings.bulletsEmpty;
-    note3.append(title);
-    if (!failed && spec.emptyText) {
-      const text = make5(doc, "kp-empty__body kp-bullets__note-text", "p");
-      text.textContent = spec.emptyText;
-      note3.append(text);
-    }
-    if (failed && spec.retry !== false) {
-      const retry = make5(doc, "kp-button kp-bullets__retry", "button");
-      retry.setAttribute("type", "button");
-      retry.setAttribute("data-kp-bullets-retry", "");
-      retry.textContent = strings.bulletsRetry;
-      note3.append(retry);
-    }
+    note3.querySelector(".kp-stateplate__title")?.classList.add("kp-bullets__note-title");
+    note3.querySelector(".kp-stateplate__text")?.classList.add("kp-bullets__note-text");
+    note3.querySelector(".kp-stateplate__action")?.classList.add("kp-bullets__retry");
     el16.replaceChildren(note3);
     if (refocus) {
       el16.tabIndex = -1;
@@ -29684,6 +29721,7 @@ var init_bullets = __esm({
     init_kpi();
     init_idmark();
     init_busy_card();
+    init_state_plate();
     BULLETS = "[data-kp-bullets]";
     BULLETS_PICK_EVENT = "kp-bullets-pick";
     BULLETS_RETRY_EVENT = "kp-bullets-retry";
@@ -29693,6 +29731,109 @@ var init_bullets = __esm({
       node.className = className;
       return node;
     };
+  }
+});
+
+// js/footprint.js
+var footprint_exports = {};
+__export(footprint_exports, {
+  FOOTPRINT_HOSTS: () => FOOTPRINT_HOSTS,
+  FOOTPRINT_MAX: () => FOOTPRINT_MAX,
+  attachFootprints: () => attachFootprints,
+  holdFootprint: () => holdFootprint
+});
+function holdFootprint(host) {
+  const existing = HELD.get(host);
+  if (existing) return existing;
+  let border = 0;
+  let content = 0;
+  let holding = false;
+  let ownInline = "";
+  let ownPriority = "";
+  let ownComputed = "";
+  const state2 = () => host.getAttribute("data-kp-state-covered") ?? (host.getAttribute("data-kp-state") === "failed" ? "error" : host.getAttribute("data-kp-state") ?? "ready");
+  const height = () => getComputedStyle(host).boxSizing === "border-box" ? border : content;
+  const release = () => {
+    if (!holding) return;
+    holding = false;
+    if (ownInline) host.style.setProperty("min-block-size", ownInline, ownPriority);
+    else host.style.removeProperty("min-block-size");
+  };
+  const hold = () => {
+    const wanted = height();
+    if (!wanted) return release();
+    if (!holding) {
+      ownInline = host.style.getPropertyValue("min-block-size");
+      ownPriority = host.style.getPropertyPriority("min-block-size");
+      ownComputed = ownInline ? "" : getComputedStyle(host).minBlockSize;
+      holding = true;
+    }
+    const own = ownInline || ownComputed;
+    const kept = own && own !== "auto" && own !== "normal" && parseFloat(own) !== 0 ? own : "";
+    const held2 = `min(${wanted}px, var(--kp-footprint-max, ${FOOTPRINT_MAX}))`;
+    host.style.setProperty("min-block-size", kept ? `max(${held2}, ${kept})` : held2);
+  };
+  const sync4 = () => HOLDING.has(state2()) ? hold() : release();
+  const sizes = new ResizeObserver((entries3) => {
+    if (!host.isConnected) return detach();
+    if (HOLDING.has(state2())) return;
+    const entry = entries3[entries3.length - 1];
+    const rect = host.getBoundingClientRect();
+    border = entry?.borderBoxSize?.[0]?.blockSize ?? rect.height;
+    content = entry?.contentBoxSize?.[0]?.blockSize ?? rect.height;
+  });
+  const states3 = new MutationObserver(sync4);
+  sizes.observe(host);
+  states3.observe(host, { attributes: true, attributeFilter: ["data-kp-state", "data-kp-state-covered"] });
+  function detach() {
+    sizes.disconnect();
+    states3.disconnect();
+    release();
+    HELD.delete(host);
+  }
+  HELD.set(host, detach);
+  return detach;
+}
+function attachFootprints(root = document) {
+  const hosts = (
+    /** @type {HTMLElement[]} */
+    [
+      ...root instanceof HTMLElement && root.matches(FOOTPRINT_HOSTS) ? [root] : [],
+      ...root.querySelectorAll(FOOTPRINT_HOSTS)
+    ]
+  );
+  const detaches = hosts.filter((host) => !HELD.has(host)).map(holdFootprint);
+  return () => {
+    for (const detach of detaches) detach();
+  };
+}
+var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, HELD;
+var init_footprint = __esm({
+  "js/footprint.js"() {
+    "use strict";
+    FOOTPRINT_HOSTS = [
+      "[data-kp-matrix]",
+      "[data-kp-heat]",
+      "[data-kp-uptime]",
+      "[data-kp-entity-grid]",
+      "[data-kp-checklist]",
+      "[data-kp-timers]",
+      "[data-kp-notices]",
+      "[data-kp-feed]",
+      "[data-kp-gallery]",
+      "[data-kp-availability]",
+      "[data-kp-requests]",
+      "[data-kp-pipeline]",
+      "[data-kp-diffview]",
+      "[data-kp-datatable]",
+      "[data-kp-runs]",
+      "[data-kp-gantt]",
+      "[data-kp-code]:not(.kp-code--cell)",
+      ".kp-ops"
+    ].join(", ");
+    FOOTPRINT_MAX = "48rem";
+    HOLDING = /* @__PURE__ */ new Set(["loading", "empty", "error"]);
+    HELD = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -29769,6 +29910,7 @@ function setCode(el16, given2) {
   el16.classList.add("kp-code");
   el16.classList.toggle("kp-code--cell", cell);
   el16.setAttribute("data-kp-code", "");
+  if (!cell && typeof ResizeObserver === "function") holdFootprint(el16);
   const state2 = spec.state ?? "ready";
   if (state2 === "loading") {
     memory.pending = null;
@@ -29973,6 +30115,19 @@ function drawBody(el16, memory) {
     const kind = state2 === "ready" ? "empty" : state2;
     el16.setAttribute("data-kp-state", kind);
     el16.removeAttribute("data-kp-code-folded");
+    if (!memory.cell && kind !== "binary") {
+      const message = spec.message;
+      const plate = hostStatePlate(el16, {
+        kind: kind === "error" ? "error" : "empty",
+        title: message ?? (kind === "error" ? strings.codeError : strings.codeEmpty),
+        ...kind === "error" ? { retryEvent: "kp-code-retry" } : {}
+      });
+      plate.classList.add("kp-code__plate");
+      plate.style.minBlockSize = was > 0 ? `max(${Math.round(was)}px, 0px)` : "var(--kp-stateplate-floor, 12rem)";
+      el16.append(plate);
+      memory.shown = "";
+      return;
+    }
     const note3 = make6(doc, memory.cell ? "kp-code__note kp-code__note--line" : "kp-code__note", "p");
     note3.setAttribute("role", "status");
     if (was > 0 && !memory.cell) note3.style.minBlockSize = `${was}px`;
@@ -30184,6 +30339,8 @@ var init_code = __esm({
     "use strict";
     init_strings();
     init_busy_card();
+    init_state_plate();
+    init_footprint();
     init_segmented();
     init_locale();
     CODE = "[data-kp-code]";
@@ -49093,105 +49250,6 @@ var init_path_trace = __esm({
   }
 });
 
-// js/footprint.js
-var footprint_exports = {};
-__export(footprint_exports, {
-  FOOTPRINT_HOSTS: () => FOOTPRINT_HOSTS,
-  FOOTPRINT_MAX: () => FOOTPRINT_MAX,
-  attachFootprints: () => attachFootprints,
-  holdFootprint: () => holdFootprint
-});
-function holdFootprint(host) {
-  const existing = HELD.get(host);
-  if (existing) return existing;
-  let border = 0;
-  let content = 0;
-  let holding = false;
-  let ownInline = "";
-  let ownPriority = "";
-  let ownComputed = "";
-  const state2 = () => host.getAttribute("data-kp-state") ?? "ready";
-  const height = () => getComputedStyle(host).boxSizing === "border-box" ? border : content;
-  const release = () => {
-    if (!holding) return;
-    holding = false;
-    if (ownInline) host.style.setProperty("min-block-size", ownInline, ownPriority);
-    else host.style.removeProperty("min-block-size");
-  };
-  const hold = () => {
-    const wanted = height();
-    if (!wanted) return release();
-    if (!holding) {
-      ownInline = host.style.getPropertyValue("min-block-size");
-      ownPriority = host.style.getPropertyPriority("min-block-size");
-      ownComputed = ownInline ? "" : getComputedStyle(host).minBlockSize;
-      holding = true;
-    }
-    const own = ownInline || ownComputed;
-    const kept = own && own !== "auto" && own !== "normal" && parseFloat(own) !== 0 ? own : "";
-    const held2 = `min(${wanted}px, var(--kp-footprint-max, ${FOOTPRINT_MAX}))`;
-    host.style.setProperty("min-block-size", kept ? `max(${held2}, ${kept})` : held2);
-  };
-  const sync4 = () => HOLDING.has(state2()) ? hold() : release();
-  const sizes = new ResizeObserver((entries3) => {
-    if (!host.isConnected) return detach();
-    if (HOLDING.has(state2())) return;
-    const entry = entries3[entries3.length - 1];
-    const rect = host.getBoundingClientRect();
-    border = entry?.borderBoxSize?.[0]?.blockSize ?? rect.height;
-    content = entry?.contentBoxSize?.[0]?.blockSize ?? rect.height;
-  });
-  const states3 = new MutationObserver(sync4);
-  sizes.observe(host);
-  states3.observe(host, { attributes: true, attributeFilter: ["data-kp-state"] });
-  function detach() {
-    sizes.disconnect();
-    states3.disconnect();
-    release();
-    HELD.delete(host);
-  }
-  HELD.set(host, detach);
-  return detach;
-}
-function attachFootprints(root = document) {
-  const hosts = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(FOOTPRINT_HOSTS) ? [root] : [],
-      ...root.querySelectorAll(FOOTPRINT_HOSTS)
-    ]
-  );
-  const detaches = hosts.filter((host) => !HELD.has(host)).map(holdFootprint);
-  return () => {
-    for (const detach of detaches) detach();
-  };
-}
-var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, HELD;
-var init_footprint = __esm({
-  "js/footprint.js"() {
-    "use strict";
-    FOOTPRINT_HOSTS = [
-      "[data-kp-matrix]",
-      "[data-kp-heat]",
-      "[data-kp-uptime]",
-      "[data-kp-entity-grid]",
-      "[data-kp-checklist]",
-      "[data-kp-timers]",
-      "[data-kp-notices]",
-      "[data-kp-feed]",
-      "[data-kp-gallery]",
-      "[data-kp-availability]",
-      "[data-kp-requests]",
-      "[data-kp-pipeline]",
-      "[data-kp-diffview]",
-      ".kp-ops"
-    ].join(", ");
-    FOOTPRINT_MAX = "48rem";
-    HOLDING = /* @__PURE__ */ new Set(["loading", "empty", "error"]);
-    HELD = /* @__PURE__ */ new WeakMap();
-  }
-});
-
 // js/entity-card.js
 var entity_card_exports = {};
 __export(entity_card_exports, {
@@ -54132,38 +54190,19 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       note3.replaceChildren();
       note3.hidden = state2 !== "empty" && state2 !== "error";
       note3.removeAttribute("role");
-      if (state2 === "empty") {
-        const plate = doc.createElement("div");
-        plate.className = "kp-empty kp-runs__empty";
-        const t = doc.createElement("p");
-        t.className = "kp-empty__title kp-runs__empty-title";
-        t.textContent = given2.reason ?? s2.runsEmpty;
-        plate.append(t);
+      if (state2 === "empty" || state2 === "error") {
+        const failed = state2 === "error";
+        const plate = statePlate(doc, {
+          kind: failed ? "error" : "empty",
+          title: failed ? given2.title ?? s2.runsFailed : given2.reason ?? s2.runsEmpty,
+          ...failed ? { text: given2.text ?? s2.stateFailedText, actionLabel: s2.runsRetry, actionAttribute: "data-kp-runs-retry" } : {}
+        });
+        plate.classList.add(failed ? "kp-runs__failure" : "kp-runs__empty");
+        plate.querySelector(".kp-stateplate__title")?.classList.add(failed ? "kp-runs__failure-title" : "kp-runs__empty-title");
+        plate.querySelector(".kp-stateplate__text")?.classList.add("kp-runs__failure-text");
+        plate.querySelector(".kp-stateplate__action")?.classList.add("kp-runs__retry");
         note3.append(plate);
-        note3.setAttribute("role", "status");
-      } else if (state2 === "error") {
-        const alert = doc.createElement("div");
-        alert.className = "kp-alert kp-alert--destructive kp-runs__failure";
-        const body = doc.createElement("div");
-        body.className = "kp-alert__body";
-        const t = doc.createElement("strong");
-        t.className = "kp-runs__failure-title";
-        t.textContent = given2.title ?? s2.runsFailed;
-        body.append(t);
-        if (given2.text) {
-          const p = doc.createElement("span");
-          p.className = "kp-runs__failure-text";
-          p.textContent = given2.text;
-          body.append(p);
-        }
-        const retry = doc.createElement("button");
-        retry.type = "button";
-        retry.className = "kp-button kp-runs__retry";
-        retry.dataset.kpRunsRetry = "";
-        retry.textContent = s2.runsRetry;
-        alert.append(body, retry);
-        note3.append(alert);
-        note3.setAttribute("role", "alert");
+        note3.setAttribute("role", failed ? "alert" : "status");
       }
     };
     const sync4 = () => {
@@ -54238,6 +54277,7 @@ var init_runs = __esm({
     "use strict";
     init_strings();
     init_busy_card();
+    init_state_plate();
     init_weekdays();
     init_freshness();
     init_chart();
@@ -62675,10 +62715,10 @@ var NEEDS = [
   { name: "timefield", when: "[data-kp-time]", load: () => Promise.resolve().then(() => (init_timefield(), timefield_exports)), attach: (m, root) => [m.attachTimes(root)] },
   {
     // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the heat grid, the entity
-    // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the pipeline, the diff view and the operations page. The selector is
+    // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the pipeline, the diff view, the data table, the runs list, the run timeline, the code view and the operations page. The selector is
     // `FOOTPRINT_HOSTS` of js/footprint.js.
     name: "footprint",
-    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], .kp-ops",
+    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-code], .kp-ops",
     load: () => Promise.resolve().then(() => (init_footprint(), footprint_exports)),
     attach: (m, root) => [m.attachFootprints(root)]
   },

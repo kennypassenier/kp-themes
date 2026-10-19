@@ -401,12 +401,11 @@ export function inspectWiring([only, comps, busySel, ownSel, plateSel]) {
         }
         return true;
     };
-    const NO_PLATE_YET = ['code view', 'runs', 'bullets'];
     const hosts = /** @type {Set<Element>} */ (new Set());
     for (const c of comps) {
         for (const host of section.querySelectorAll(c.host)) {
             // An entity card's data-kp-state is its status, and a ghost card is the entity grid's own skeleton.
-            if (hosts.has(host) || !shown(host) || host.matches('[data-kp-entity], .kp-card--ghost')) continue;
+            if (hosts.has(host) || !shown(host) || host.matches('[data-kp-entity], .kp-card--ghost, .kp-code--cell')) continue;
             hosts.add(host);
             const h = /** @type {HTMLElement} */ (host);
             const state = stateOf(h);
@@ -432,7 +431,7 @@ export function inspectWiring([only, comps, busySel, ownSel, plateSel]) {
             if (state === 'loading' && !busy && !own)
                 res.push(`${only}: ${label} is loading without the busy card in its middle; wire it: ${c.wire}`);
             // A component whose package draws no plate yet (the driven half reports that as a package finding) is not the page's fault.
-            else if ((state === 'empty' || state === 'error') && !plate && !own && !NO_PLATE_YET.includes(c.name))
+            else if ((state === 'empty' || state === 'error') && !plate && !own)
                 res.push(
                     `${only}: ${label} is ${state === 'error' ? 'failed' : 'empty'} without the package plate (.kp-stateplate); wire it: ${c.wire}`,
                 );
@@ -625,7 +624,7 @@ export function listInstances(comps) {
         for (const host of document.querySelectorAll(c.host)) {
             if (
                 seen.has(host) ||
-                host.matches('[data-kp-entity], .kp-card--ghost') ||
+                host.matches('[data-kp-entity], .kp-card--ghost, .kp-code--cell') ||
                 host.closest('.cat-judge, [data-review-controls], template, dialog:not([open])')
             )
                 continue;
@@ -906,7 +905,7 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
         for (const mode of ['held', 'failing']) {
             const p = await browser.newPage({ viewport: { width, height: 900 } });
             await p.route('**/*', (route) => {
-                if (!isDataRead(route.request())) return route.continue();
+                if (!isDataRead(route.request())) return route.fallback();
                 if (mode === 'failing') return route.fulfill({ status: 503, body: 'unavailable' });
                 return undefined; // held: never answered
             });
