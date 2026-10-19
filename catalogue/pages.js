@@ -264,11 +264,6 @@ export const PAGES = [
                 about: 'How the status page tells a person that a profile needs them: the attention band and the problem alert (what, why, what now, with a Copy command), the "last delivery" freshness line, the kyu hub connection banner, and the profiles card loading, empty and failed. 5 sections (5 pairs, formal), with the defaults for you to confirm.',
             },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, kyu): kyu's dashboard with every component that fits used to the full, formal only, five parts; map in kyu docs/KP_THEMES_11_ADOPTION.md.
-            {
-                href: 'research/kyu-11-overview/demo.html',
-                label: 'kyu, part 1 of 5: across every page',
-                about: 'The command palette, keyboard shortcuts and their help sheet, a first-visit tour, links to a heading or a row, and two overviews of which app reads which topic. Formal only.',
-            },
         ],
     },
     {
@@ -279,6 +274,12 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-19 06:43: Kenny approved the kyu overview part over two rounds (research/kyu-11-overview/decided.json).
+            {
+                href: 'research/kyu-11-overview/demo.html',
+                label: 'kyu, part 1 of 5: across every page',
+                about: 'The command palette, keyboard shortcuts and their help sheet, a first-visit tour, links to a heading or a row, and two overviews of which app reads which topic. Formal only.',
+            },
             // Decided 2026-10-19 02:38: Kenny approved every pair of kyu parts 2 to 5 (research/kyu-11-*/decided.json).
             {
                 href: 'research/kyu-11-topics/demo.html',
