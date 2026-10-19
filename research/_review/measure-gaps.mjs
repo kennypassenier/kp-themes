@@ -135,9 +135,16 @@ function measure([min, only]) {
                 if (marky) boxes.push({ el, r, text: '' });
             }
         }
+        // A bar fixed to the viewport (a phone's tab bar) floats over the page as it scrolls; content under it at one scroll
+        // position is not an overlap, so a fixed part is only compared with parts in the same fixed layer (chassis-rs at 390).
+        const fixedOf = (/** @type {Element} */ el) => {
+            for (let a = /** @type {Element | null} */ (el); a; a = a.parentElement) if (getComputedStyle(a).position === 'fixed') return a;
+            return null;
+        };
         for (const t of texts) {
             for (const b of [...boxes, ...texts.filter((o) => o.el !== t.el).map((o) => ({ el: o.el, r: o.rect, text: o.t }))]) {
                 if (b.el.contains(t.el) || t.el.contains(b.el)) continue;
+                if (fixedOf(t.el) !== fixedOf(b.el)) continue;
                 if (b.r.width > t.rect.width * 3 && b.r.height > t.rect.height * 2) continue;
                 const v = Math.min(t.rect.bottom, b.r.bottom) - Math.max(t.rect.top, b.r.top);
                 if (v < Math.min(t.rect.height, b.r.height) * 0.5) continue;

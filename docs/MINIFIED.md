@@ -18,7 +18,7 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
 | `css/blueprint-register.css` | 259.7 kB | 139.5 kB | 46% |
 | `css/brutalism-register.css` | 253.6 kB | 144.3 kB | 43% |
-| `css/components.css` | 1130.9 kB | 555.3 kB | 51% |
+| `css/components.css` | 1130.9 kB | 555.4 kB | 51% |
 | `css/cyberpunk-register.css` | 320.8 kB | 185.3 kB | 42% |
 | `css/dark-register.css` | 229.7 kB | 114.5 kB | 50% |
 | `css/deco-register.css` | 258.1 kB | 149.6 kB | 42% |

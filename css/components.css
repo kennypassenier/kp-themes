@@ -371,7 +371,7 @@
  * short secondary (More) does not float in a half-width track
  * (chassis-rs, 2026-10-19: 167 + 167 px wrapped "Register this device"). */
         @container kp-page-header (min-width: 20rem) {
-            .kp-page-header__actions:has(> :nth-child(2 of .kp-button)):not(:has(> :nth-child(3 of .kp-button))) {
+            .kp-page-header__actions:has(> :nth-child(2 of .kp-button, .kp-menu-button)):not(:has(> :nth-child(3 of .kp-button, .kp-menu-button))) {
                 grid-template-columns: minmax(0, 1fr) auto;
             }
         }

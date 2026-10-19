@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- A narrow page header counts a `.kp-menu-button` as its second action: "Register this device" plus a More menu is primary-fills, More its own width (390: 270 + 80 px, 36 px high; was 167 + 167 px, both 50 px), as for two buttons (chassis-rs passkeys).
+- measure-gaps compares a part fixed to the viewport (a phone's tab bar) only with parts in the same fixed layer: content scrolled under the bar is not an overlap.
+
 ## 11.1.0 — 2026-10-19
 
 Released on Kenny's go (form release-111 "Na de uitlijn-demo", screenshots "Zonder"), after he approved the form grid demo in full (2026-10-19 18:55). A minor release: everything is added or fixed, nothing an app uses is removed. The gaps the app threads (homelab, almanac, kyu, http-switchboard, chassis-rs, Kitchen) reported against 11.0.0, the form grid and its measure, the standard states with their per-kind loading look and the measure-states check, and 44px touch targets. The screenshot check was skipped (KP_RELEASE_SKIP_APPROVALS=1). The network graph loads with the twelve loading animations Kenny approved on 2026-10-06 (his call, 19:01: "die laadanimaties moeten ook in deze release komen").
