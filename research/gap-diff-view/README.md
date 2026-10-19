@@ -26,3 +26,5 @@ section's own elements), `data.js` (mock edit-plan data: the jellyfin, sonarr an
 
 Measured with `node research/_review/check-kit.mjs 8913 research/gap-diff-view/demo.html` and
 `node research/_review/measure-gaps.mjs 8913 research/gap-diff-view/demo.html formal 1280,390` (Firefox, no tests).
+
+**Bundled** (Kenny, 2026-10-19 02:38): this demo is the source of the review page [research/gap-round-1](../gap-round-1/demo.html) and is no longer on the Agenda by itself (`"bundledInto"` in its VERDICTS.json).

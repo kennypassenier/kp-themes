@@ -26,3 +26,5 @@ Sections, one component each, controls at the component (at most 4 groups):
 Formal only, as a new component is (DEMO_RULES ch. 6); the other eleven themes follow once Kenny has approved it here. Nothing in the
 register files changed: the star and the tile use the package's own toggle, health dot, idmark and card. Hand-written page; the sample data
 (stacks, readings, log lines) is mock and says so on the page.
+
+**Bundled** (Kenny, 2026-10-19 02:38): this demo is the source of the review page [research/gap-round-1](../gap-round-1/demo.html) and is no longer on the Agenda by itself (`"bundledInto"` in its VERDICTS.json).

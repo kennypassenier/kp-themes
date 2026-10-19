@@ -14,3 +14,5 @@ eleven themes are asked afterwards). Evidence: the gap research of the homelab s
 
 The data is made up (stacks such as media, platform and home; jellyfin, sonarr, traefik; log lines of the kind Loki holds). Hand-written page;
 every component is the package's own. `data-kp-count` is not used for the tab count: the count-up effect (js/effects/count.js) owns that name.
+
+**Bundled** (Kenny, 2026-10-19 02:38): this demo is the source of the review page [research/gap-round-1](../gap-round-1/demo.html) and is no longer on the Agenda by itself (`"bundledInto"` in its VERDICTS.json).

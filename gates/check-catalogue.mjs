@@ -272,7 +272,13 @@ function main() {
     const research = new URL('research/', root);
     if (existsSync(research)) {
         for (const topic of readdirSync(research)) {
-            if (existsSync(new URL(`research/${topic}/demo.html`, root))) reviewPages.push(`research/${topic}/demo.html`);
+            if (!existsSync(new URL(`research/${topic}/demo.html`, root))) continue;
+            // A demo that is only the source of a bundled review page (Kenny, 2026-10-19: demos of one project are bundled into one
+            // page) says so in its VERDICTS.json (`"bundledInto": "<topic>"`) and is not offered on its own; the bundle must exist.
+            const verdicts = new URL(`research/${topic}/VERDICTS.json`, root);
+            const into = existsSync(verdicts) ? JSON.parse(readFileSync(verdicts, 'utf8')).bundledInto : undefined;
+            if (into && existsSync(new URL(`research/${into}/demo.html`, root))) continue;
+            reviewPages.push(`research/${topic}/demo.html`);
         }
     }
     /** @type {Record<string, string>} */

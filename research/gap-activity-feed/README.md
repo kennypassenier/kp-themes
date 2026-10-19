@@ -29,3 +29,5 @@ Hand-written page; every control is a toggle that changes the component (`aria-p
 mock: the times are relative to the moment the page opens, so "Today" and "Yesterday" are always true.
 
 Not touched: any other component, any register. `kp-feed` has no register rules yet: it is formal, judged first (gates/register-pending.json).
+
+**Bundled** (Kenny, 2026-10-19 02:38): this demo is the source of the review page [research/gap-round-1](../gap-round-1/demo.html) and is no longer on the Agenda by itself (`"bundledInto"` in its VERDICTS.json).

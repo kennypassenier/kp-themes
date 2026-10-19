@@ -93,11 +93,11 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
-            // Kenny, 2026-10-19 (gap-log-viewer): the homelab dashboard found the live log viewer missing; built on the existing log and the "N new lines" pill, no virtual list (TH42). Formal only; the other eleven themes come after the verdict.
+            // Kenny, 2026-10-19 02:38 ("als ze van hetzelfde project komen kan je ze bundelen tot 25 items groot"): the five component demos of the homelab admin dashboard's gap report, bundled into ONE review page (research/gap-round-1, built by build.mjs from research/gap-log-viewer, gap-diff-view, gap-activity-feed, gap-entity-tiles and gap-tab-count, which stay as its sources and are off the Agenda). Formal only; the other eleven themes come after the verdict.
             {
-                href: 'research/gap-log-viewer/demo.html',
-                label: 'The live log viewer: a capped buffer, find, wrap, time column, level, copy and its states',
-                about: 'A host log that keeps arriving: the viewer keeps the newest lines and says how many it dropped, finds a word with a count and next and previous, wraps or scrolls sideways, shows the time, the date or no time, colours the level, copies and downloads, and has its own reading, empty, no-match and failed states. 4 sections (4 pairs), in formal only.',
+                href: 'research/gap-round-1/demo.html',
+                label: 'New components for the homelab dashboard, round 1',
+                about: 'Five things the homelab admin dashboard drew by hand because the package had none, now built in the package: the live log viewer (capped buffer, find, wrap, time column, level, copy), a diff of several files (headers with counts, folded context, changed words), the activity feed (who did what and when, day by day), two entity card options (a 24-hour trend line and the app tile with a favourite star) and three small ones (a count on a tab, arrow keys over a board of tiles, the legend under a heat grid). 21 sections (21 pairs), in formal only.',
             },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): topic T1, Activity and Jobs. The run timeline (gantt), the stack-by-day failure grid (heat), History as a data table with day groups and openable rows, the Jobs timeline with queue waiting time, and the detail of one job; formal only until approved. Hand-written page: research/app-homelab-activity.
             {
@@ -190,30 +190,6 @@ export const PAGES = [
                 href: 'research/almanac-calendar-views/demo.html',
                 label: 'Almanac: deliveries per day and this week',
                 about: 'Two new views for Almanac: a month that shows how many events it delivered each day (pick a day to see them), and a week agenda of the events it put in the calendars, coloured per calendar. 2 sections, formal only, sample data.',
-            },
-            // Kenny, 2026-10-19 (gap-tab-count): three small things the admin dashboard found missing, built in the package and asked in formal first: a count on a tab, arrow keys over a board of tiles, the legend under a heat grid (and the calm legend the heat docs promised). 4 sections, hand-written page: research/gap-tab-count.
-            {
-                href: 'research/gap-tab-count/demo.html',
-                label: "Three gaps from the admin dashboard: a count on a tab, arrow keys over tiles, the heat grid's legend",
-                about: 'A tab can carry the exact number of what is behind it (tone, word, counting, could not count); a board of app tiles is one tab stop moved with the arrow keys; a heat grid writes its own legend, and a calm grid draws the three words it always promised. 4 sections (4 pairs, formal): each with its own controls.',
-            },
-            // Kenny, 2026-10-19 (gap-diff-view-1019; the homelab admin dashboard's gap 3): a diff of several files, found missing by the dashboard that draws it itself. A header per file with status and exact counts, unchanged lines folded into a row that opens in place, the changed words marked inside a line, and reading, empty and failed states; formal only until approved (research/gap-diff-view).
-            {
-                href: 'research/gap-diff-view/demo.html',
-                label: 'A diff of several files: headers with counts, folded context, changed words',
-                about: 'The admin dashboard draws the changes of an edit plan itself because the package only has the lines of one diff. 5 sections (5 pairs, formal): several files with a header each, unchanged lines that fold away, the changed words inside a line, reading, nothing changed and could not read, and a long file that draws its first part.',
-            },
-            // Gap list from the homelab admin dashboard, 2026-10-19 (gap-activity-feed-1019): the activity feed, the one row it still drew by hand (state mark, actor chip, detail, the ticking time, a heading per day, load earlier). New component kp-feed (js/feed.js), five sections in formal only; the other themes follow once it is approved.
-            {
-                href: 'research/gap-activity-feed/demo.html',
-                label: 'Activity feed: who did what, and when, day by day',
-                about: 'A new component for the lists the dashboard drew by hand: each row has its outcome, what happened, who started it and when, under a heading per day, with Load earlier at the foot. 5 sections (5 pairs, formal only): the states, what a row shows, lines under a row, load earlier, and a narrow scrolling column.',
-            },
-            // Kenny, 2026-10-19 (gap-entity-tiles-1019): the homelab admin dashboard found two things missing from the entity card, a 24-hour trend line on a stack card and the Apps page's tile (one link, a favourite star, a description, lines). Both are options of the entity card, demoed in formal first; hand-written page: research/gap-entity-tiles.
-            {
-                href: 'research/gap-entity-tiles/demo.html',
-                label: 'Entity card: a trend line on a stack card, and the app tile with a favourite star',
-                about: 'Two options of the entity card that the dashboard still draws by hand: a 24-hour line under the meters, and a tile that is one link with a star that never follows it, a state dot, a description and lines. 3 sections (3 pairs, formal): the trend line, the tile, and the tile in its states and on a phone.',
             },
             // Kenny, 2026-10-19: chassis-rs's shared kit pages rebuilt on kp-themes 11.0.0, bundled into one review (shared code and generator: research/chassis-kit-pages/build.mjs).
             {

@@ -1,4 +1,5 @@
 {
     "demo": "gap-activity-feed",
+    "bundledInto": "gap-round-1",
     "rounds": []
 }
