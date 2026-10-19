@@ -255,3 +255,8 @@ export type ConsoleRun = import('./js/console.js').ConsoleRun;
 /** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
 /** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
 /** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */
+export { LOGVIEWER, LOGVIEWER_EVENT, LOGVIEWER_MAX, LOGVIEWER_RETRY_EVENT, LOG_LEVELS, appendLogLines, attachLogViewers, clearLogViewer, logLevel, logViewerLines, logViewerText, searchLogViewer, setLogViewer, stepLogMatch, } from './js/logviewer.js';
+export type LogLine = import('./js/logviewer.js').LogLine;
+export type LogViewerSpec = import('./js/logviewer.js').LogViewerSpec;
+/** @typedef {import('./js/logviewer.js').LogLine} LogLine */
+/** @typedef {import('./js/logviewer.js').LogViewerSpec} LogViewerSpec */

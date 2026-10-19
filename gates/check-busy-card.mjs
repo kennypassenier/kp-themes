@@ -55,6 +55,7 @@ export const CARD = [
     'js/autosize.js',
     'js/qr.js',
     'js/console.js',
+    'js/logviewer.js',
     'js/usual-picker.js',
     'js/palette.js',
     'js/deplist.js',

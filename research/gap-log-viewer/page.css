@@ -1,0 +1,15 @@
+/* research/gap-log-viewer: the frame of the page. Everything with a kp- class is the package; the viewers are one height here so the four sections line up. */
+
+.glv-page {
+    max-inline-size: 64rem;
+    margin-inline: auto;
+}
+
+.glv-page .kp-logviewer {
+    --kp-logviewer-height: 20rem;
+}
+
+.glv-intro,
+.glv-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}

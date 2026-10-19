@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (gap-log-viewer): the homelab dashboard found the live log viewer missing; built on the existing log and the "N new lines" pill, no virtual list (TH42). Formal only; the other eleven themes come after the verdict.
+            {
+                href: 'research/gap-log-viewer/demo.html',
+                label: 'The live log viewer: a capped buffer, find, wrap, time column, level, copy and its states',
+                about: 'A host log that keeps arriving: the viewer keeps the newest lines and says how many it dropped, finds a word with a count and next and previous, wraps or scrolls sideways, shows the time, the date or no time, colours the level, copies and downloads, and has its own reading, empty, no-match and failed states. 4 sections (4 pairs), in formal only.',
+            },
             // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's wheel screen, formal only (new demo). research/audhd-recepten/.
             {
                 href: 'research/audhd-recepten/wheel/demo.html',

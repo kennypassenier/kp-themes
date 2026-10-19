@@ -338,6 +338,7 @@ export const NEEDS = [
         attach: (m, root) => [m.attachFootprints(root)],
     },
     { name: 'console', when: '[data-kp-console]', load: () => import('./console.js'), attach: (m, root) => [m.attachConsoles(root)] },
+    { name: 'logviewer', when: '[data-kp-logviewer]', load: () => import('./logviewer.js'), attach: (m, root) => [m.attachLogViewers(root)] },
     {
         // The reason of a disabled control [kpadopt5], last and late: a dozen
         // modules mark the controls they draw or own disabled with a reason as

@@ -1480,6 +1480,44 @@
  * @property {string} usualHadItWord  The word a screen reader hears after a chip that is had it [kpadopt6]
  * @property {(label: string) => string} usualUnanswered  What is said when an answer is taken back: "Headache: not answered" [kpadopt6]
  * @property {string} usualUnansweredWord  The word a screen reader hears after a chip with no answer [kpadopt6]
+ * @property {string} logviewerUnit  The pill's word for a log line, singular and plural (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLabel  The viewer's name for a screen reader when the page gives none (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLogLabel  The scrolling list's name for a screen reader (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearch  The search box's label (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchHint  The search box's placeholder (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchNone  The count when nothing matches (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchIdle  The count while the box is empty (js/logviewer.js) [gap-log-viewer]
+ * @property {(n: number) => string} logviewerMatches  The count when there are matches and none is current (js/logviewer.js) [gap-log-viewer]
+ * @property {(at: number, n: number) => string} logviewerMatchAt  The count with the current match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerPrevious  The button that goes to the match before (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNext  The button that goes to the next match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerOnly  The toggle that hides lines without a match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerWrap  The toggle that wraps long lines (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeLabel  The time column control's name (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeShort  Its first choice, the time of day (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeFull  Its second choice, date and time (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeOff  Its third choice, no time column (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLevel  The level select's label (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLevelAll  Its first entry, every level (js/logviewer.js) [gap-log-viewer]
+ * @property {(level: 'info' | 'warning' | 'error') => string} logviewerLevelFrom  Its other entries: 'info', 'warning' or 'error' and above (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerCopy  The copy button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerCopied  The copy button's result word (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNotCopied  The copy button's refusal word (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerDownload  The download button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNothing  Why copy and download are off when no line is shown (js/logviewer.js) [gap-log-viewer]
+ * @property {(shown: number, total: number) => string} logviewerCount  The foot's count of lines shown (js/logviewer.js) [gap-log-viewer]
+ * @property {(n: number, max: number) => string} logviewerDropped  The foot's note about lines pushed out by the cap (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLoading  The words under the busy card while the lines are read (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerEmptyTitle  The empty plate's heading (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerEmptyText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNoMatchTitle  The plate's heading when a search or level hides every line (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNoMatchText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerClear  Its button that takes the search and the level away (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerFailed  The failed plate's heading (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerFailedText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerRetry  Its button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerKeySearch  The shortcut sheet's line for the search key (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerKeyGroup  The sheet's heading (js/logviewer.js) [gap-log-viewer]
  */
 
 /**
@@ -3180,6 +3218,45 @@ export const DEFAULT_STRINGS = Object.freeze({
     usualHadItWord: 'had it',
     usualUnanswered: (label) => `${label}: not answered`,
     usualUnansweredWord: 'not answered',
+    // Log viewer (js/logviewer.js) [gap-log-viewer].
+    logviewerUnit: 'line,lines',
+    logviewerLabel: 'Log',
+    logviewerLogLabel: 'Log lines',
+    logviewerSearch: 'Find in the log',
+    logviewerSearchHint: 'Find in the log',
+    logviewerSearchNone: 'No matches',
+    logviewerSearchIdle: 'Type to find',
+    logviewerMatches: (n) => `${n} ${n === 1 ? 'match' : 'matches'}`,
+    logviewerMatchAt: (at, n) => `${at} of ${n}`,
+    logviewerPrevious: 'Previous match',
+    logviewerNext: 'Next match',
+    logviewerOnly: 'Only matching lines',
+    logviewerWrap: 'Wrap lines',
+    logviewerTimeLabel: 'Time column',
+    logviewerTimeShort: 'Time',
+    logviewerTimeFull: 'Date and time',
+    logviewerTimeOff: 'Off',
+    logviewerLevel: 'Level',
+    logviewerLevelAll: 'All levels',
+    logviewerLevelFrom: (level) => (level === 'info' ? 'Info and above' : level === 'warning' ? 'Warning and above' : 'Error and above'),
+    logviewerCopy: 'Copy',
+    logviewerCopied: 'Copied',
+    logviewerNotCopied: 'Not copied',
+    logviewerDownload: 'Download',
+    logviewerNothing: 'There are no lines shown to copy.',
+    logviewerCount: (shown, total) => (shown === total ? `${total} ${total === 1 ? 'line' : 'lines'}` : `${shown} of ${total} lines shown`),
+    logviewerDropped: (n, max) => `${n} earlier ${n === 1 ? 'line' : 'lines'} dropped, the newest ${max} are kept`,
+    logviewerLoading: 'Reading the log…',
+    logviewerEmptyTitle: 'No log lines yet',
+    logviewerEmptyText: 'New lines show up here as they arrive.',
+    logviewerNoMatchTitle: 'No line matches',
+    logviewerNoMatchText: 'The search or the level hides every line in the log.',
+    logviewerClear: 'Clear search and level',
+    logviewerFailed: 'Could not read the log',
+    logviewerFailedText: 'The lines already read are kept and show again when the log answers.',
+    logviewerRetry: 'Retry',
+    logviewerKeySearch: 'Go to the log search',
+    logviewerKeyGroup: 'Log viewer',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

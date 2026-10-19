@@ -31068,6 +31068,353 @@
     }
 }
 
+@layer kp.components {
+    /* --- A live log viewer [gap-log-viewer] ------------------------------
+ *
+ * The existing `.kp-log` (the four-column grid, the severity word, the source's own hue) inside a frame with a bar over it and
+ * a foot under it. The log keeps one height (`--kp-logviewer-height`, never below `--kp-logviewer-min`), so loading, empty,
+ * failed, filtered and full all stand in one box and the bar and the foot do not move. The states are laid over the whole
+ * stage. Knobs: --kp-logviewer-height, --kp-logviewer-min.
+ *
+ * Columns [fix-64]: the grid is the log's own; when the time column or the source column is off it leaves the grid
+ * (`display: none` on a cell would shift the cells after it), so the track list is restated for the four combinations.
+ * No wrap keeps each message on one line and scrolls the log sideways; the time cell is sticky then, so the clock stays
+ * beside the line it belongs to. */
+    .kp-logviewer {
+        --kp-logviewer-min: 16rem;
+        container: kp-logviewer / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        inline-size: 100%;
+        min-inline-size: 0;
+        overflow: clip;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-logviewer__bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-logviewer__bar[hidden],
+    .kp-logviewer__search[hidden],
+    .kp-logviewer__tools[hidden] {
+        display: none;
+    }
+
+    .kp-logviewer__search {
+        display: grid;
+        grid-template-columns: minmax(8rem, 1fr) auto auto auto auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__find {
+        min-inline-size: 0;
+    }
+
+    .kp-logviewer__matches {
+        min-inline-size: 7.5em;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    .kp-logviewer__tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__tools > [hidden],
+    .kp-logviewer__search > [hidden] {
+        display: none;
+    }
+
+    /* The follow button holds the room of its longer word, so Pause and Resume do not move the tools after it. */
+    .kp-logviewer__follow {
+        min-inline-size: 6.5em;
+    }
+
+    .kp-logviewer__level-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-logviewer__level-label {
+        padding-inline-start: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-logviewer__level {
+        inline-size: auto;
+    }
+
+    .kp-logviewer__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-logviewer__log {
+        position: relative;
+        box-sizing: border-box;
+        min-block-size: var(--kp-logviewer-min);
+        block-size: var(--kp-logviewer-height, 26rem);
+        align-content: start;
+        gap: 0;
+        padding: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+        border: 0;
+        border-radius: 0;
+        scroll-padding-block: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-logviewer__log:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: -2px;
+    }
+
+    .kp-logviewer__log .kp-log__line[hidden] {
+        display: none;
+    }
+
+    .kp-logviewer__log .kp-log__line > * {
+        padding-block: 0.0625rem;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-logviewer__log .kp-log__line > :first-child {
+        padding-inline-start: var(--kp-space-md, 0.75rem);
+    }
+
+    /* The columns. */
+    .kp-logviewer[data-kp-log-time='off'] .kp-log__time,
+    .kp-logviewer[data-kp-log-nosource] .kp-log__source {
+        display: none;
+    }
+
+    .kp-logviewer[data-kp-log-time='off'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto auto minmax(0, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-time='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    /* The level is the colour: a plate on the word (the log's own, now on the word inside the level cell) and the same tone,
+     * faint, behind the whole line, so a warning or an error is found by the eye while scrolling; the word stays the carrier
+     * [DI4]. The cell keeps the row's tint, so the line is one band with no stripe where the level column is. */
+    .kp-logviewer__log .kp-log__line[data-kp-severity='warning'] > * {
+        background: hsl(from var(--warning) h s l / 0.12);
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='error'] > *,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] > * {
+        background: hsl(from var(--destructive) h s l / 0.14);
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity] > .kp-log__level {
+        border-radius: 0;
+        color: var(--kp-log-level-ink, var(--muted-foreground));
+        font-weight: inherit;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='info'] > .kp-log__level,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='notice'] > .kp-log__level {
+        color: var(--foreground);
+    }
+
+    .kp-log__word {
+        padding-inline: 0.4em;
+        border-radius: calc(var(--radius, 0.5rem) / 2);
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='warning'] .kp-log__word {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='error'] .kp-log__word,
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] .kp-log__word {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line[data-kp-severity='critical'] .kp-log__message {
+        font-weight: 700;
+    }
+
+    .kp-logviewer__log .kp-log__line:hover > * {
+        background: var(--muted);
+    }
+
+    /* No wrap: one line per message, the log scrolls sideways, the clock stays. */
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-logviewer__log {
+        grid-template-columns: auto auto auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-time='off'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'][data-kp-log-time='off'][data-kp-log-nosource] .kp-logviewer__log {
+        grid-template-columns: auto minmax(max-content, 1fr);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__message {
+        overflow-wrap: normal;
+        white-space: pre;
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__time {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        background: var(--card);
+    }
+
+    .kp-logviewer[data-kp-log-wrap='off'] .kp-log__line:hover > .kp-log__time {
+        background: var(--muted);
+    }
+
+    /* The divider for the lines that came while the tab was away takes the whole row. */
+    .kp-logviewer__log > .kp-newpill__since {
+        grid-column: 1 / -1;
+    }
+
+    /* The find: a match is a mark with a weight as well as a ground, the current one is the filled plate with a rule round it. */
+    .kp-log__match {
+        padding-inline: 0.125em;
+        border-radius: calc(var(--radius, 0.5rem) / 4);
+        background: hsl(from var(--primary) h s l / 0.3);
+        color: inherit;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-log__match[data-kp-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+        text-decoration: none;
+    }
+
+    /* The foot: the count on the left, what the cap pushed out beside it. */
+    .kp-logviewer__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: 2.25rem;
+        box-sizing: border-box;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-logviewer__foot [hidden] {
+        display: none;
+    }
+
+    /* The states fill the whole stage; the lines already read stay in the buffer and are out of sight until the log answers. */
+    .kp-logviewer__plate {
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        z-index: 3;
+    }
+
+    .kp-logviewer[data-kp-log-plate='loading'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='error'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='empty'] .kp-logviewer__log,
+    .kp-logviewer[data-kp-log-plate='nomatch'] .kp-logviewer__log {
+        overflow: hidden;
+        visibility: hidden;
+    }
+
+    .kp-logviewer[data-kp-log-plate='loading'] .kp-newpill,
+    .kp-logviewer[data-kp-log-plate='error'] .kp-newpill {
+        display: none;
+    }
+
+    .kp-logviewer__step {
+        min-inline-size: 2.5rem;
+    }
+
+    /* A narrow viewer: the search box takes its own row, then the count with the two arrows; the tools stand in two columns, so
+     * the buttons share one width and the rows line up. */
+    @container kp-logviewer (max-width: 40rem) {
+        .kp-logviewer__find {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__search {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+        }
+
+        .kp-logviewer__matches {
+            text-align: start;
+        }
+
+        .kp-logviewer__search > [data-kp-logviewer-only] {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__tools {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .kp-logviewer__tools > *,
+        .kp-logviewer__tools .kp-button {
+            inline-size: 100%;
+        }
+
+        .kp-logviewer__time {
+            grid-column: 1 / -1;
+        }
+
+        .kp-logviewer__level-wrap {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            margin-inline-start: 0;
+        }
+    }
+}
+
+/* The find's mark and the stage's plate keep their place in the last layer: a register gives `.kp-alert` and `.kp-empty` a
+ * position of its own (pastel's printed pass) and beats the absolute placement in kp.components, which would put the plate
+ * back in the flow under the lines [gap-log-viewer]. */
+@layer kp.layout {
+    .kp-logviewer__stage > .kp-logviewer__plate {
+        position: absolute;
+        inset: 0;
+    }
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/cyberpunk-register.css
    The cyberpunk register, 5.0.0 [S39, S40, S41]: the signal-yellow

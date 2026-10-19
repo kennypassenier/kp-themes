@@ -921,3 +921,22 @@ export {
 /** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
 /** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
 /** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */
+// A live log viewer [gap-log-viewer].
+export {
+    LOGVIEWER,
+    LOGVIEWER_EVENT,
+    LOGVIEWER_MAX,
+    LOGVIEWER_RETRY_EVENT,
+    LOG_LEVELS,
+    appendLogLines,
+    attachLogViewers,
+    clearLogViewer,
+    logLevel,
+    logViewerLines,
+    logViewerText,
+    searchLogViewer,
+    setLogViewer,
+    stepLogMatch,
+} from './js/logviewer.js';
+/** @typedef {import('./js/logviewer.js').LogLine} LogLine */
+/** @typedef {import('./js/logviewer.js').LogViewerSpec} LogViewerSpec */
