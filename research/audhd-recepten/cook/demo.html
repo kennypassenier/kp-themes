@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="audhd-cook" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Cook mode for the AuDHD recipe app</title>
+        <link rel="stylesheet" href="../../../css/fonts.css" />
+        <link rel="stylesheet" href="../../../css/themes.css" />
+        <link rel="stylesheet" href="../../../css/components.css" />
+        <link rel="stylesheet" href="../../../css/layout.css" />
+        <link rel="stylesheet" href="../../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ar-page">
+            <header class="ar-intro">
+                <h1>Cook mode</h1>
+                <p class="cat-intro">
+                    The part of the recipe app that carries someone through a dish without asking them to hold the sequence in their head. It starts
+                    with one small step (gather the things), shows one cooking step at a time, keeps every timer running where it can be seen, and
+                    asks for attention only when something is done. The sample dish is Spaghetti with tomato sauce and meatballs, where the pasta and
+                    the sauce run at the same time. The timers here run fast (1 minute lasts 3 seconds) so you can watch them end; Real time is one
+                    button away. All data is mock.
+                </p>
+            </header>
+
+            <!-- ============================ 1 · Begin and the mise en place ============================ -->
+            <section
+                class="ar-sec"
+                id="mise"
+                data-review-item="mise"
+                data-review-topic="mise"
+                data-review-topic-title="Begin and the checklist"
+                data-review-components="checklist"
+                data-review-title="Begin: the mise en place checklist"
+                aria-labelledby="h-mise"
+                data-review-choices='[{"id":"sink","label":"Ticked items","default":"true","options":[{"value":"true","label":"Sink to the bottom"},{"value":"false","label":"Stay in place, struck through"}]}]'
+            >
+                <div class="ar-sec__head">
+                    <h2 id="h-mise">Begin: gather everything first</h2>
+                    <p>
+                        Pressing Begin does not start step 1; it opens a short checklist of what to take out, and ticked items sink so only what is left
+                        stays on top.
+                    </p>
+                </div>
+                <div class="ar-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Before Begin there is one card and one big button, nothing else to decide. Press <b>Begin</b>: the checklist loads (a short
+                            busy card), then opens under the card in three groups.
+                        </li>
+                        <li>
+                            Tick a row: it sinks to the bottom of its group, struck through, and the group counter and the bar count up. <b>Check
+                            all</b> comes with <b>Uncheck all</b>.
+                        </li>
+                        <li>
+                            <b>Start cooking</b> is off until everything is ticked and says how many are left; <b>Skip, start anyway</b> is always
+                            there, because a missing onion must never block dinner.
+                        </li>
+                        <li>
+                            Why it helps: the first action is tiny and has no wrong answer (task initiation), the tick gives instant feedback, and
+                            gathering first means nothing is missed halfway through a step (working memory).
+                        </li>
+                        <li>
+                            The state buttons show the list loading (busy card), empty and failed, each at the list&rsquo;s full height.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the Begin card is one plain card with a single primary button; the checklist rows have a clear tick target on the whole
+                        row, and a ticked row is greyed and struck through at the bottom of its group.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="mise-component">
+                    <div role="group" aria-label="List state">
+                        <b>List:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="mise-state" data-value="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="mise-state" data-value="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="mise-state" data-value="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="mise-state" data-value="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Ticked items (live option)">
+                        <b>Ticked:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="sink" data-value="true" aria-pressed="true">Sink</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="sink" data-value="false" aria-pressed="false">Stay</button>
+                    </div>
+                    <div role="group" aria-label="Start from">
+                        <b>Start:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="mise-start" data-value="card" aria-pressed="true">Before Begin</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="mise-start" data-value="open" aria-pressed="false">Open</button>
+                    </div>
+                </div>
+                <div class="ar-mise" id="mise-component">
+                    <article class="kp-card ar-recipe" aria-labelledby="ar-recipe-title">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="ar-recipe-title">Spaghetti with tomato sauce and meatballs</h3>
+                        </div>
+                        <div class="kp-card__body">
+                            <p>Serves 2 &middot; about 35 minutes &middot; the pasta and the sauce run at the same time.</p>
+                        </div>
+                        <div class="kp-card__actions ar-recipe__actions">
+                            <button type="button" class="kp-button kp-button--primary kp-button--lg" data-ar-begin>Begin</button>
+                            <p class="ar-recipe__hint">Takes 2 minutes: you only take things out first.</p>
+                        </div>
+                    </article>
+                    <div class="ar-mise__open" data-ar-mise-open hidden>
+                        <div
+                            class="kp-checklist"
+                            data-kp-checklist
+                            id="mise-list"
+                            aria-label="Mise en place: what to take out"
+                            data-kp-state="loading"
+                            data-kp-checklist-empty="Nothing to take out for this recipe."
+                            style="--kp-checklist-min-rows: 10"
+                        ></div>
+                        <div class="ar-mise__go">
+                            <button type="button" class="kp-button kp-button--primary kp-button--lg" data-ar-start aria-disabled="true">Start cooking</button>
+                            <button type="button" class="kp-button kp-button--lg" data-ar-skip>Skip, start anyway</button>
+                            <p class="ar-readout" role="status" data-ar-readout>Take things out and tick them.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================ 2 · Cook mode ============================ -->
+            <section
+                class="ar-sec"
+                id="cook"
+                data-review-item="cook"
+                data-review-topic="cook"
+                data-review-topic-title="Cook mode"
+                data-review-components="focus-steps"
+                data-review-title="Cook mode: one step at a time, timers kept in view"
+                aria-labelledby="h-cook"
+                data-review-choices='[{"id":"wake","label":"Screen while cooking","default":"true","options":[{"value":"true","label":"Keep the screen on"},{"value":"false","label":"Let it dim"}]}]'
+            >
+                <div class="ar-sec__head">
+                    <h2 id="h-cook">Cook mode: one step at a time</h2>
+                    <p>
+                        Nine steps on the counter, one at a time and large, with what the step needs and a timer button; started timers keep running in
+                        the list beside it while you go on to the next step.
+                    </p>
+                </div>
+                <div class="ar-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Step 1 shows <b>Step 1 of 9</b>, the progress bar, the screen line (<b>Screen stays on</b> where the browser can),
+                            <b>Read aloud</b>, the step, what it needs, a timer button and a note saying which track it belongs to (Pasta or Sauce).
+                        </li>
+                        <li>
+                            Press <b>Start a timer &middot; 10 min</b> on step 1: a Water timer appears in the list and keeps counting. Go on with Next:
+                            steps 3, 4 and 5 start Onion, Sauce and Pasta, so Water, Sauce and Pasta run side by side while you stir and taste.
+                        </li>
+                        <li>
+                            When a timer ends its card turns to the done plate with a chime, and the band above the step says which one and offers
+                            <b>Go to step N</b> for what comes next: nothing has to be remembered.
+                        </li>
+                        <li>
+                            Arrow keys, Space, Home and End move between steps; a swipe does the same on a touch screen. The buttons never move,
+                            whatever the step&rsquo;s length.
+                        </li>
+                        <li>
+                            Why it helps: one thing on screen at a time (no scanning a recipe), the running timers are always visible (time
+                            blindness), the screen stays on with messy hands, and the end of a timer asks for attention once, kindly.
+                        </li>
+                        <li>
+                            The parallel tracks are shown with what the package has today: the track is named in each step&rsquo;s note and the timers
+                            carry the track names. The real track option is under Component gaps in the README.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the step is large dark text on the white card, the two navigation buttons sit at the foot in fixed places, and the timer
+                        cards on the right show the time left in figures that do not jump as they count.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="cook-component">
+                    <div role="group" aria-label="Recipe state">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="cook-state" data-value="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="cook-state" data-value="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="cook-state" data-value="empty" aria-pressed="false">No steps</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="cook-state" data-value="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Screen while cooking (live option)">
+                        <b>Screen:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="wake" data-value="true" aria-pressed="true">Keep on</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="wake" data-value="false" aria-pressed="false">Dim</button>
+                    </div>
+                    <div role="group" aria-label="Timer speed of this demo">
+                        <b>Timers:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="fast" aria-pressed="true">Fast</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="real" aria-pressed="false">Real time</button>
+                    </div>
+                    <div role="group" aria-label="Jump to a step">
+                        <b>Jump to step:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="goto" data-value="0" aria-label="Step 1">1</button>
+                        <button type="button" class="kp-button kp-button--sm" data-act="goto" data-value="4" aria-label="Step 5, the pasta goes in">5</button>
+                        <button type="button" class="kp-button kp-button--sm" data-act="goto" data-value="7" aria-label="Step 8, drain">8</button>
+                    </div>
+                </div>
+                <div class="ar-screen" id="cook-component">
+                    <div class="ar-screen__main">
+                        <div class="kp-attention" id="cm-band" aria-label="Needs you now"></div>
+                        <div
+                            class="kp-focus-steps"
+                            data-kp-focus-steps
+                            data-kp-focus-steps-timers="cm-timers"
+                            data-kp-state="loading"
+                            data-kp-focus-steps-empty="This recipe has no steps yet."
+                            id="cm-steps"
+                            aria-label="Spaghetti with tomato sauce and meatballs"
+                        ></div>
+                    </div>
+                    <div class="ar-screen__side">
+                        <h3 class="ar-part">Timers running</h3>
+                        <p class="ar-part-note">Every timer you start stays here, whichever step you are on. <span data-ar-speed-line>Demo clock: fast, 1 minute lasts 3 seconds.</span></p>
+                        <div class="kp-timers" data-kp-timers id="cm-timers" aria-label="Kitchen timers" data-kp-timers-empty="No timer running. Start one from a step."></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================ 3 · Running timers and attention ============================ -->
+            <section
+                class="ar-sec"
+                id="timers"
+                data-review-item="timers"
+                data-review-topic="timers"
+                data-review-topic-title="Running timers"
+                data-review-components="timer attention"
+                data-review-title="Running timers: several at once, and what happens when one ends"
+                aria-labelledby="h-timers"
+                data-review-choices='[{"id":"sound","label":"Sound when a timer ends","default":"chime","options":[{"value":"chime","label":"Soft chime"},{"value":"bell","label":"Kitchen bell"},{"value":"buzzer","label":"Buzzer"},{"value":"off","label":"No sound"}]},{"id":"speak","label":"Say it out loud","default":"off","options":[{"value":"off","label":"Off"},{"value":"on","label":"Say the timer&rsquo;s name"}]},{"id":"ring","label":"Ring again after","default":"60","options":[{"value":"60","label":"1 minute"},{"value":"20","label":"20 seconds"},{"value":"0","label":"Never, ring once"}]}]'
+            >
+                <div class="ar-sec__head">
+                    <h2 id="h-timers">Running timers: Pasta and Sauce together</h2>
+                    <p>
+                        Named timers run side by side, each with its own bar, pause and +1 min; when one ends, a band above them names it and offers
+                        the one thing to do.
+                    </p>
+                </div>
+                <div class="ar-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Start both</b>: <b>Pasta</b> (9 min) and <b>Sauce</b> (10 min) appear as two cards with the time left, a state
+                            word, a bar, <b>Pause</b>, <b>+1 min</b> and <b>Remove</b>. Nothing in a card changes size as the clock runs.
+                        </li>
+                        <li>
+                            When one ends, its card becomes the done plate (&ldquo;Pasta is done&rdquo;) with one big <b>Stop</b>, the sound plays and
+                            the band above says <b>Pasta is done</b> with <b>Stop Pasta</b>. The Sauce keeps counting.
+                        </li>
+                        <li>
+                            <b>Try the end</b> starts a 5 second Pasta so you can hear the sound choices (chime, bell, buzzer, off), the voice and the
+                            repeat time without waiting.
+                        </li>
+                        <li>
+                            Why it helps: the sound and the voice give the time sense that is missing, the band is one place to look instead of
+                            hunting for a ringing card, and a timer pressed twice does not start a second one.
+                        </li>
+                        <li>
+                            <b>Clear all</b> removes every timer and shows the empty list at its full height; the list itself has no loading or failed
+                            state (see Component gaps).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: two white cards with figures of one width and a thin navy progress bar; the done plate is the only coloured card, and
+                        the attention band above is the one amber line.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="timers-component">
+                    <div role="group" aria-label="Start timers">
+                        <b>Start:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="start" data-value="Pasta:540">Pasta</button>
+                        <button type="button" class="kp-button kp-button--sm" data-act="start" data-value="Sauce:600">Sauce</button>
+                        <button type="button" class="kp-button kp-button--sm" data-act="start" data-value="both">Both</button>
+                        <button type="button" class="kp-button kp-button--sm" data-act="try-end">Try end</button>
+                        <button type="button" class="kp-button kp-button--sm" data-act="clear">Clear</button>
+                    </div>
+                    <div role="group" aria-label="Sound (live option)">
+                        <b>Sound:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="sound" data-value="chime" aria-pressed="true">Chime</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="sound" data-value="bell" aria-pressed="false">Bell</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="sound" data-value="buzzer" aria-pressed="false">Buzzer</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="sound" data-value="off" aria-pressed="false">Off</button>
+                    </div>
+                    <div role="group" aria-label="Voice (live option)">
+                        <b>Voice:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speak" data-value="off" aria-pressed="true">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="speak" data-value="on" aria-pressed="false">Name</button>
+                    </div>
+                </div>
+                <div class="ar-stack" id="timers-component">
+                    <div class="kp-attention" id="rt-band" aria-label="Needs you now"></div>
+                    <div class="kp-timers" data-kp-timers id="rt-timers" aria-label="Kitchen timers" data-kp-timers-empty="No timer running. Press Start both."></div>
+                </div>
+            </section>
+
+            <!-- ============================ 3b · The timer disc ============================ -->
+            <section
+                class="ar-sec"
+                id="discs"
+                data-review-item="discs"
+                data-review-topic="discs"
+                data-review-topic-title="The timer disc"
+                data-review-components="timer-disc"
+                data-review-title="Time at a glance: the shrinking disc"
+                aria-labelledby="h-discs"
+                data-review-choices='[{"id":"dial","label":"What the disc measures","default":"hour","options":[{"value":"hour","label":"A 60-minute dial"},{"value":"task","label":"The timer&rsquo;s own length"}]}]'
+            >
+                <div class="ar-sec__head">
+                    <h2 id="h-discs">Time at a glance: the shrinking disc</h2>
+                    <p>
+                        The same Pasta and Sauce as a coloured disc that grows smaller as time goes, so the time left is seen without reading a number;
+                        it follows the timers you start in the list.
+                    </p>
+                </div>
+                <div class="ar-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two discs, <b>Pasta &middot; 27 s</b> and <b>Sauce &middot; 30 s</b> in this fast demo (9 and 10 minutes in real time),
+                            each a sector of the dial, with <b>Start</b> and <b>Reset</b>. Press <b>Start both</b>: the edges turn back towards twelve o&rsquo;clock;
+                            nothing ticks on the face.
+                        </li>
+                        <li>
+                            Start a Pasta or Sauce timer in the two sections above and its disc starts with it, pauses with it and ends with it; at the
+                            end the face breathes three times and says <b>Time is up</b>.
+                        </li>
+                        <li>
+                            The default is <b>a 60-minute dial</b>, the classic Time Timer: a 9-minute pasta is a sector of 54&deg;, so two timers of different length can be compared at a glance (in this fast demo the dial is 3 minutes). <b>Own length</b> makes each disc start full whatever its length. <b>Disabled</b> shows the discs with their buttons off, for a recipe that has not loaded.
+                        </li>
+                        <li>
+                            Why it helps: &ldquo;how long is left&rdquo; becomes an amount you can see from across the kitchen, which is how time is
+                            felt when numbers do not register; and nothing on the face flickers.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the disc is a flat navy sector on a pale face with twelve small marks round the rim, the name and length centred under
+                        it, and Start in the primary colour next to a quiet Reset.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="discs-component">
+                    <div role="group" aria-label="Both discs">
+                        <b>Both discs:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-act="disc-start">Start both</button>
+                        <button type="button" class="kp-button kp-button--sm" data-act="disc-reset">Reset both</button>
+                    </div>
+                    <div role="group" aria-label="What the disc measures (live option)">
+                        <b>Disc:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="dial" data-value="task" aria-pressed="false">Own length</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="dial" data-value="hour" aria-pressed="true">60-minute dial</button>
+                    </div>
+                    <div role="group" aria-label="Disc state">
+                        <b>Disc state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="disc-state" data-value="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="disc-state" data-value="disabled" aria-pressed="false">Disabled</button>
+                    </div>
+                </div>
+                <div class="ar-discs" id="discs-component">
+                    <div class="kp-timer-disc" data-kp-timer-disc="27s" data-kp-timer-disc-scale="3" data-kp-timer-disc-name="Pasta" id="disc-pasta"></div>
+                    <div class="kp-timer-disc" data-kp-timer-disc="30s" data-kp-timer-disc-scale="3" data-kp-timer-disc-name="Sauce" id="disc-sauce"></div>
+                </div>
+            </section>
+
+            <!-- ============================ 4 · States and calm ============================ -->
+            <section
+                class="ar-sec"
+                id="calm"
+                data-review-item="calm"
+                data-review-topic="calm"
+                data-review-topic-title="Calm mode and states"
+                data-review-components="focus-steps calm"
+                data-review-title="On a phone: calm mode and the states"
+                aria-labelledby="h-calm"
+                data-review-choices='[{"id":"calm-scope","label":"What calm mode holds still","default":"effects","options":[{"value":"motion","label":"Transitions only"},{"value":"effects","label":"Transitions and effects"},{"value":"all","label":"Everything, loading too"}]},{"id":"calm-loading","label":"A loading part under calm","default":"slow","options":[{"value":"slow","label":"Breathes slowly"},{"value":"still","label":"Holds still"}]}]'
+            >
+                <div class="ar-sec__head">
+                    <h2 id="h-calm">On a phone: calm mode and the states</h2>
+                    <p>
+                        The same cook mode at phone width, with the switch that turns movement and effects off for a day with no energy, and the
+                        loading, no-steps and failed states of the recipe.
+                    </p>
+                </div>
+                <div class="ar-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The frame is 390 px wide. The <b>Calm mode</b> switch sits above the step; turn it on and the step change, the timers&rsquo;
+                            arrival and the effects stop moving (the timers still count and still ring).
+                        </li>
+                        <li>
+                            The three groups say how far calm goes: <b>Transitions only</b>, <b>Transitions and effects</b> (default) or
+                            <b>Everything</b>, and whether a loading part breathes slowly or holds still.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the step at its full height; <b>No steps</b> says so in the theme&rsquo;s empty
+                            plate; <b>Failed</b> says what happened in an alert in the step&rsquo;s place. The footprint never shrinks.
+                        </li>
+                        <li>
+                            Why it helps: on a low-energy or overloaded day movement itself is tiring, so calm is one switch, not a hunt through
+                            settings, and an empty day is quiet rather than failed.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: with calm on, nothing glides or glows: steps change at once and the loading card holds its shape; the switch itself
+                        shows on or off in plain words.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="calm-component">
+                    <div role="group" aria-label="Recipe state">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="phone-state" data-value="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="phone-state" data-value="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="phone-state" data-value="empty" aria-pressed="false">No steps</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="phone-state" data-value="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Calm mode">
+                        <b>Calm mode:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="calm" data-value="off" aria-pressed="true">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="calm" data-value="on" aria-pressed="false">On</button>
+                    </div>
+                    <div role="group" aria-label="What calm holds still (live option)">
+                        <b>Holds still:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="calm-scope" data-value="motion" aria-pressed="false">Motion</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="calm-scope" data-value="effects" aria-pressed="true">Effects</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="calm-scope" data-value="all" aria-pressed="false">All</button>
+                    </div>
+                    <div role="group" aria-label="Loading under calm (live option)">
+                        <b>Loading:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="calm-loading" data-value="slow" aria-pressed="true">Slow</button>
+                        <button type="button" class="kp-button kp-button--sm" data-opt="calm-loading" data-value="still" aria-pressed="false">Still</button>
+                    </div>
+                </div>
+                <div class="ar-phone" id="calm-component">
+                    <label class="kp-switch ar-phone__switch">
+                        <input class="kp-switch__input" type="checkbox" role="switch" data-kp-calm-switch />
+                        <span>Calm mode</span>
+                    </label>
+                    <p class="ar-readout" role="status" data-ar-calm-line>Calm is off. Holds still: transitions and effects. Loading: breathes slowly.</p>
+                    <div class="kp-attention" id="ph-band" aria-label="Needs you now"></div>
+                    <div
+                        class="kp-focus-steps"
+                        data-kp-focus-steps
+                        data-kp-focus-steps-timers="ph-timers"
+                        data-kp-state="loading"
+                        data-kp-focus-steps-empty="This recipe has no steps yet."
+                        id="ph-steps"
+                        aria-label="Spaghetti with tomato sauce and meatballs, phone"
+                    ></div>
+                    <div class="kp-timers" data-kp-timers id="ph-timers" aria-label="Kitchen timers" data-kp-timers-empty="No timer running."></div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "audhd-cook-584cb3c6-43ff-45a7-9734-7f7ebd521da4", "received": [] }
+        </script>
+        <script type="module" src="../../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../../_review/review.js"></script>
+        <script src="../../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../../catalogue/catalogue.js"></script>
+    </body>
+</html>

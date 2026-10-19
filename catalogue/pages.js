@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's cook mode, formal only (new demo). research/audhd-recepten/.
+            {
+                href: 'research/audhd-recepten/cook/demo.html',
+                label: 'Recipe app: cook mode with timers side by side',
+                about: 'The AuDHD recipe app cook mode: Begin opens a short checklist of what to take out, then one step at a time with the screen kept on, named timers for pasta and sauce running side by side, a band that says which step to go to when one ends, discs on a 60-minute dial, and calm mode on a phone. 5 sections, formal only.',
+            },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): the Metrics page (T10) rebuilt on the package, formal only: live charts that keep your place, kinds and hatched windows on events, typical level and runs, the time window with a custom start and end, a window per section, scope and key figures, traffic (status mix, heat, table) and drives.
             {
                 href: 'research/app-homelab-metrics/demo.html',
