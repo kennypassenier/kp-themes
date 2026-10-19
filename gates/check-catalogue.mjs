@@ -341,7 +341,9 @@ function main() {
     // And every one of them carries the shell, or the navigation is not there
     // to reach the next page from it (Kenny, 2026-09-13: "die sidenav moet op
     // elke pagina terugkomen, anders is er ook niks aan").
-    const shellless = reviewPages.filter((page) => !/src="[^"]*catalogue\.js"/.test(readFileSync(new URL(page, root), 'utf8'))).sort();
+    // The Agenda loads the shell without the blocks' demo scripts (catalogue-shell.js) and brings those when it lays
+    // blocks out.
+    const shellless = reviewPages.filter((page) => !/src="[^"]*catalogue(?:-shell)?\.js"/.test(readFileSync(new URL(page, root), 'utf8'))).sort();
     if (shellless.length) {
         console.error(
             `${shellless.length} review page(s) do not load catalogue/catalogue.js, so they have no navigation:\n  ` + shellless.join('\n  '),

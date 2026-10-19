@@ -18,7 +18,8 @@
 // Hooks: review.js calls mountProgress() once; agenda.js calls paintAgenda() at the end of render().
 import { PAGES } from '../../catalogue/pages.js';
 import { THEMES } from '../../js/theme-registry.js';
-import { fingerprintOf, progressOf, shapeOf, storedFor, storeKey } from './progress.js';
+import { factsOf, fingerprintOf, progressOf, shapeFromFacts, storedFor, storeKey } from './progress.js';
+import { indexedDemo } from '../../catalogue/agenda-index.js';
 
 const ROOT = new URL('../../', import.meta.url);
 /** The module's sheet, added once, and only where a hook runs (a lane frame imports this file and builds nothing). */
@@ -143,15 +144,15 @@ export function clock(seconds) {
  * The steps the dialog walks for a part, as review.js builds them (topicSteps / themeSteps), each as the sub-shape that
  * progressOf can count: a topic walks one theme per step, a round without topics one theme per step, the catalogue
  * blocks it carries come last. Null for a demo of aspect pages, whose steps are per option.
- * @param {Document} doc @param {import('./progress.js').DemoShape} shape
+ * @param {import('./progress.js').DemoFacts['sections']} sections  the page's sections (progress.js factsOf)
+ * @param {import('./progress.js').DemoShape} shape
  */
-function stepsOf(doc, shape) {
-    const sections = [...doc.querySelectorAll('[data-review-item]')];
-    if (sections.length && sections.every((s) => s.getAttribute('data-review-mode') === 'aspects')) return null;
+function stepsOf(sections, shape) {
+    if (sections.length && sections.every((s) => s.mode === 'aspects')) return null;
     const asked = (/** @type {string} */ item, /** @type {string} */ theme) =>
         !shape.itemThemes?.[item] || Boolean(shape.itemThemes[item]?.includes(theme));
     const sub = (/** @type {string[]} */ themes, /** @type {string[]} */ items) => ({ ...shape, themes, items, extras: [] });
-    const topicIds = new Set(sections.map((s) => s.getAttribute('data-review-topic')).filter(Boolean));
+    const topicIds = new Set(sections.map((s) => s.topic).filter(Boolean));
     const themesUsed = new Set(shape.items.flatMap((item) => shape.themes.filter((theme) => asked(item, theme))));
     const topicMode = themesUsed.size > 1 || topicIds.size > 1;
     /** @type {ReturnType<typeof sub>[]} */
@@ -160,8 +161,8 @@ function stepsOf(doc, shape) {
         /** @type {Map<string, string[]>} */
         const topics = new Map();
         for (const item of shape.items) {
-            const section = sections.find((s) => s.getAttribute('data-review-item') === item);
-            const id = section?.getAttribute('data-review-topic') || `item:${item}`;
+            const section = sections.find((s) => s.item === item);
+            const id = section?.topic || `item:${item}`;
             topics.set(id, [...(topics.get(id) ?? []), item]);
         }
         for (const members of topics.values())
@@ -192,24 +193,34 @@ const parts = new Map();
 
 /**
  * Read a part: its shape (the Agenda's own when it already holds it) and its steps. Null without the review kit.
+ * The facts come from the Agenda's index (catalogue/agenda-index.json) when it holds the demo, else from its page;
+ * `live` reads the page in any case (the demo the dialog is open on).
  * @param {string} href @param {string} label @param {import('./progress.js').DemoShape | null | undefined} [known]
+ * @param {{ live?: boolean }} [options]
  */
-export function loadPart(href, label, known) {
+export function loadPart(href, label, known, { live = false } = {}) {
     let promise = parts.get(href);
     if (!promise) {
         promise = (async () => {
             try {
+                const indexed = live ? null : await indexedDemo(href);
+                if (indexed) {
+                    const shape = shapeFromFacts(indexed.facts);
+                    if (!shape) return null;
+                    shape.fingerprint = indexed.fingerprint;
+                    return { href, label, shape, steps: stepsOf(indexed.facts.sections, shape) };
+                }
                 const url = new URL(href);
                 url.search = url.hash = '';
                 const response = await fetch(url, { cache: 'no-cache' });
                 if (!response.ok) return null;
                 const html = await response.text();
-                const doc = new DOMParser().parseFromString(html, 'text/html');
-                const shape = shapeOf(doc);
+                const facts = factsOf(new DOMParser().parseFromString(html, 'text/html'));
+                const shape = shapeFromFacts(facts);
                 if (!shape) return null;
                 // The version, so a verdict on earlier files of this round reads as open, as on the Agenda.
                 shape.fingerprint = await fingerprintOf(url, html);
-                return { href, label, shape, steps: stepsOf(doc, shape) };
+                return { href, label, shape, steps: stepsOf(facts.sections, shape) };
             } catch {
                 return null;
             }
@@ -336,7 +347,7 @@ export function mountProgress({ demo, dialog, steps, getIndex, stepOpen, show, s
     let thisPart = null;
 
     async function recount() {
-        if (!thisPart) thisPart = await loadPart(here.href, document.title);
+        if (!thisPart) thisPart = await loadPart(here.href, document.title, undefined, { live: true });
         if (!thisPart) return;
         counts.part = countsOf(thisPart);
         counts.all = await allOpen([{ href: here.href, label: document.title }]);

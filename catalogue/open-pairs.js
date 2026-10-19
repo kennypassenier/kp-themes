@@ -15,6 +15,7 @@ import { readPage } from './review.js';
 import { readBlocks } from './block-hash.js';
 import { ENGINE } from './engine.js';
 import { loadJudgements, registerReady, stateOf, verdictOf } from './judgements.js';
+import { indexedBlocks, pageUsesIndex } from './agenda-index.js';
 
 /** @type {Record<string, Record<string, unknown>>} */
 let reviewNotes = {};
@@ -56,9 +57,29 @@ export function gatherBlocks() {
     return gathered;
 }
 
+/** @type {Promise<{ id: string, hash: string, fixed: string | null, title?: string }[]> | null} */
+let listed = null;
+
+/**
+ * Every block's key, hash, own theme and title (isOpen reads the first three): from the Agenda's index where the page asks for it
+ * (agenda-index.js) and it was read in this browser's engine, so no component page is fetched; else gathered.
+ */
+export function blockList() {
+    listed ??= (async () => {
+        const indexed = pageUsesIndex() ? await indexedBlocks() : null;
+        if (indexed?.engine === ENGINE) {
+            await registerReady;
+            await notesReady;
+            return indexed.list.map(([id, hash, fixed, title]) => ({ id, hash, fixed, title }));
+        }
+        return (await gatherBlocks()).blocks;
+    })();
+    return listed;
+}
+
 /**
  * Whether a block is open in a theme, as judging.js decides it.
- * @param {GatheredBlock} block
+ * @param {Pick<GatheredBlock, 'id' | 'hash' | 'fixed'>} block
  * @param {string} theme
  */
 export function isOpen(block, theme, stored = loadJudgements()) {
@@ -70,7 +91,7 @@ export function isOpen(block, theme, stored = loadJudgements()) {
 
 /** How many blocks are open in each theme. @returns {Promise<Record<string, number>>} */
 export async function openCounts() {
-    const { blocks } = await gatherBlocks();
+    const blocks = await blockList();
     const stored = loadJudgements();
     /** @type {Record<string, number>} */
     const counts = {};

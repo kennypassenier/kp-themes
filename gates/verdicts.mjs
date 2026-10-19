@@ -781,6 +781,9 @@ async function pixels(args) {
         )}\n`,
     );
     console.log(`pixels took ${Math.round((Date.now() - started) / 60000)} min`);
+    // The Agenda's index carries the checks that reopen (gates/generate-agenda-index.mjs): written with them, or the
+    // commit gate refuses the new pixel checks as a stale index [agenda-fast-1019].
+    console.log(await (await import('./generate-agenda-index.mjs')).writeAgendaIndex());
     console.log(
         `${PIXELS}: ${tally.carried} carried, ${tally.reopened + tally.gone} reopened (${tally.gone} no longer a block), ${tally.unstable} unstable, compared against ${head.slice(0, 12)}.`,
     );

@@ -38,16 +38,53 @@ const parseJson = (text, fallback) => {
 const words = (node) => (node?.textContent ?? '').replace(/\s+/g, ' ').trim();
 
 /**
+ * What a demo's markup says about its review, read once (factsOf) and turned into its shape (shapeFromFacts). The
+ * facts are plain data: catalogue/agenda-index.json carries them for every demo on the Agenda, written by
+ * gates/generate-agenda-index.mjs, so the Agenda knows a demo without reading its page.
+ * @typedef {object} DemoFacts
+ * @property {string | null} id         `data-review` on <html>
+ * @property {string | null} themes     `data-review-themes` on <html>
+ * @property {string | null} ask        `data-review-ask` on <html>
+ * @property {string} askText           the words of the header's first paragraph (askOf)
+ * @property {{ item: string, themes: string | null, topic: string | null, mode: string | null }[]} sections
+ *   every `[data-review-item]`, in order, with its own `data-review-themes`, `-topic` and `-mode`
+ * @property {string | null} extra      the text of `script[data-review-extra]`
+ * @property {string | null} round      the text of `script[data-review-round]`
+ */
+
+/**
+ * The facts of a demo's markup.
+ * @param {Document} doc
+ * @returns {DemoFacts}
+ */
+export function factsOf(doc) {
+    const root = doc.documentElement;
+    return {
+        id: root.getAttribute('data-review'),
+        themes: root.getAttribute('data-review-themes'),
+        ask: root.getAttribute('data-review-ask'),
+        askText: words(doc.querySelector('main header p, header p, main p')),
+        sections: [...doc.querySelectorAll('[data-review-item]')].map((section) => ({
+            item: section.getAttribute('data-review-item') ?? '',
+            themes: section.getAttribute('data-review-themes'),
+            topic: section.getAttribute('data-review-topic'),
+            mode: section.getAttribute('data-review-mode'),
+        })),
+        extra: doc.querySelector('script[data-review-extra]')?.textContent ?? null,
+        round: doc.querySelector('script[data-review-round]')?.textContent ?? null,
+    };
+}
+
+/**
  * What a demo asks, in a line: the last two sentences of its header's first
  * paragraph, where every character-round demo states its question ("Here
  * every theme gets two … Pick one of the three per theme."). A demo can say
  * it itself with `data-review-ask` on <html>.
- * @param {Document} doc
+ * @param {DemoFacts} facts
  */
-function askOf(doc) {
-    const own = doc.documentElement.getAttribute('data-review-ask');
-    if (own) return own;
-    const text = words(doc.querySelector('main header p, header p, main p'));
+function askOf(facts) {
+    if (facts.ask) return facts.ask;
+    const text = facts.askText;
     const sentences = text.match(/[^.!?]+[.!?]+(?=\s|$)/g) ?? [text];
     return sentences.slice(-2).join('').trim();
 }
@@ -58,31 +95,37 @@ function askOf(doc) {
  * @param {Document} doc
  * @returns {DemoShape | null}
  */
-export function shapeOf(doc) {
-    const root = doc.documentElement;
-    const id = root.getAttribute('data-review');
-    const sections = [...doc.querySelectorAll('[data-review-item]')];
-    const items = sections.map((section) => section.getAttribute('data-review-item') ?? '');
+export const shapeOf = (doc) => shapeFromFacts(factsOf(doc));
+
+/**
+ * A demo's shape from the facts of its markup (factsOf), or null without the review kit.
+ * @param {DemoFacts} facts
+ * @returns {DemoShape | null}
+ */
+export function shapeFromFacts(facts) {
+    const id = facts.id;
+    const sections = facts.sections;
+    const items = sections.map((section) => section.item);
     // A section that names its own themes is asked in those only, as review.js builds its steps; counted in every
     // theme, a demo of what differs per theme never read as decided.
     /** @type {Record<string, string[] | null>} */
     const itemThemes = Object.fromEntries(
         sections.map((section) => {
-            const own = section.getAttribute('data-review-themes');
-            return [section.getAttribute('data-review-item') ?? '', own ? own.split(/[\s,]+/).filter(Boolean) : null];
+            const own = section.themes;
+            return [section.item, own ? own.split(/[\s,]+/).filter(Boolean) : null];
         }),
     );
     if (!id || !items.length) return null;
-    const listed = (root.getAttribute('data-review-themes') ?? '')
+    const listed = (facts.themes ?? '')
         .split(',')
         .map((s) => s.trim())
         // A theme dropped since the demo was made is never asked for.
         .filter((name) => THEMES.some((t) => t.name === name));
     /** @type {{ page: string, block: string, theme: string, engine?: string }[]} */
-    const extras = parseJson(doc.querySelector('script[data-review-extra]')?.textContent, []);
+    const extras = parseJson(facts.extra, []);
     return {
         id,
-        ask: askOf(doc),
+        ask: askOf(facts),
         themes: listed.length ? listed : THEMES.map((t) => t.name),
         items,
         itemThemes,
@@ -90,7 +133,7 @@ export function shapeOf(doc) {
             const slug = extra.page.replace(/^.*\//, '').replace(/\.html$/, '');
             return `catalogue|${slug}--${extra.block}|${extra.theme}|${extra.engine || 'firefox'}`;
         }),
-        round: parseJson(doc.querySelector('script[data-review-round]')?.textContent, null),
+        round: parseJson(facts.round, null),
     };
 }
 
@@ -148,11 +191,40 @@ export async function loadUpdate(url) {
  */
 
 /** A section's topic (`data-review-topic`, `-title`), left out of the fingerprint. */
-const TOPIC_ATTRIBUTES = /\s+data-review-topic(?:-title)?="[^"]*"/g;
+export const TOPIC_ATTRIBUTES = /\s+data-review-topic(?:-title)?="[^"]*"/g;
+
+/**
+ * The files a demo page links from its own folder, sorted: the scripts and sheets its fingerprint reads.
+ * @param {string[]} links  the `src` (or `href`) of every `script[src]` and `link[rel="stylesheet"][href]`
+ * @param {string | URL} page  the page's address, without query or hash
+ * @returns {string[]}
+ */
+export function ownFilesOf(links, page) {
+    const folder = new URL('.', page).href;
+    return links
+        .map((link) => new URL(link, page))
+        .filter((file) => file.href.startsWith(folder))
+        .map((file) => file.href)
+        .sort();
+}
+
+/**
+ * The fingerprint of a page's text and its own files' texts, in ownFilesOf's order.
+ * @param {string} text @param {string[]} files
+ * @returns {Promise<string>}
+ */
+export async function fingerprintFrom(text, files) {
+    // A section's topic only groups the review dialog's steps: setting it is no new version of the demo, and reopens
+    // nothing (Kenny, 2026-10-16, topic steps added to rounds already under way).
+    const shown = text.replace(TOPIC_ATTRIBUTES, '');
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode([shown, ...files].join('\u0000')));
+    return [...new Uint8Array(digest).slice(0, 8)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
 
 /**
  * The fingerprint of the demo at `url`: its page and the scripts and sheets
  * in its own folder, hashed. Null when it cannot be read or hashed.
+ * gates/generate-agenda-index.mjs computes the same from the files, for catalogue/agenda-index.json.
  * @param {string | URL} url
  * @param {string} [html] the page's text, when it is already fetched
  * @returns {Promise<string | null>}
@@ -161,20 +233,13 @@ export async function fingerprintOf(url, html) {
     try {
         const page = new URL(url);
         page.search = page.hash = '';
-        const folder = new URL('.', page).href;
         const text = html ?? (await (await fetch(page, { cache: 'no-cache' })).text());
         const doc = new DOMParser().parseFromString(text, 'text/html');
-        const own = [...doc.querySelectorAll('script[src], link[rel="stylesheet"][href]')]
-            .map((el) => new URL(el.getAttribute('src') || el.getAttribute('href') || '', page))
-            .filter((file) => file.href.startsWith(folder))
-            .map((file) => file.href)
-            .sort();
-        // A section's topic only groups the review dialog's steps: setting it is no new version of the demo, and reopens
-        // nothing (Kenny, 2026-10-16, topic steps added to rounds already under way).
-        const shown = text.replace(TOPIC_ATTRIBUTES, '');
-        const parts = [shown, ...(await Promise.all(own.map(async (file) => (await fetch(file, { cache: 'no-cache' })).text())))];
-        const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(parts.join('\u0000')));
-        return [...new Uint8Array(digest).slice(0, 8)].map((b) => b.toString(16).padStart(2, '0')).join('');
+        const links = [...doc.querySelectorAll('script[src], link[rel="stylesheet"][href]')].map(
+            (el) => el.getAttribute('src') || el.getAttribute('href') || '',
+        );
+        const own = ownFilesOf(links, page);
+        return await fingerprintFrom(text, await Promise.all(own.map(async (file) => (await fetch(file, { cache: 'no-cache' })).text())));
     } catch {
         return null;
     }
@@ -495,10 +560,25 @@ export const JOURNAL_FAILED_EVENT = 'kp-demo-journal-failed';
  */
 export function journal(demo, entry) {
     const list = journalOf(demo);
-    const full = { at: entry.at || new Date().toISOString(), demo, round: entry.round || '', pair: entry.pair, verdict: entry.verdict ?? null, note: entry.note || '', choice: entry.choice ?? null, ...(entry.label ? { label: entry.label } : {}), ...(entry.kind ? { kind: entry.kind } : {}), ...(entry.source ? { source: entry.source } : {}), ...(entry.unseen ? { unseen: entry.unseen } : {}) };
+    const full = {
+        at: entry.at || new Date().toISOString(),
+        demo,
+        round: entry.round || '',
+        pair: entry.pair,
+        verdict: entry.verdict ?? null,
+        note: entry.note || '',
+        choice: entry.choice ?? null,
+        ...(entry.label ? { label: entry.label } : {}),
+        ...(entry.kind ? { kind: entry.kind } : {}),
+        ...(entry.source ? { source: entry.source } : {}),
+        ...(entry.unseen ? { unseen: entry.unseen } : {}),
+    };
     const last = [...list].reverse().find((e) => e?.pair === full.pair && e?.round === full.round);
     const same = (/** @type {JournalEntry} */ e) =>
-        e.verdict === full.verdict && e.note === full.note && (e.kind || '') === (full.kind || '') && JSON.stringify(e.choice ?? null) === JSON.stringify(full.choice);
+        e.verdict === full.verdict &&
+        e.note === full.note &&
+        (e.kind || '') === (full.kind || '') &&
+        JSON.stringify(e.choice ?? null) === JSON.stringify(full.choice);
     if (last && same(last)) return true;
     try {
         localStorage.setItem(journalKey(demo), JSON.stringify([...list, full]));
@@ -577,7 +657,11 @@ export function rebuildAnswer(demo, round) {
             if (e.choice.removed) now.choices.set(key, `remove option ${e.choice.label || e.choice.value}`);
             else now.choices.delete(key);
         } else if (e.choice && e.choice.changed === false) now.choices.delete(e.choice.id);
-        else if (e.choice) now.choices.set(e.choice.id, e.choice.changed ? `default changed to ${e.choice.label || e.choice.value}` : e.choice.label || e.choice.value);
+        else if (e.choice)
+            now.choices.set(
+                e.choice.id,
+                e.choice.changed ? `default changed to ${e.choice.label || e.choice.value}` : e.choice.label || e.choice.value,
+            );
         pairs.set(e.pair, now);
     }
     const all = [...pairs.entries()];
@@ -610,9 +694,19 @@ export function rebuildAnswer(demo, round) {
     if (unseen.length) lines.push('', `Approved unseen (bulk, ${unseen.length} pairs):`, ...unseen.map(([, p]) => `- ${p.label}`));
     const open = all.filter(([key, p]) => !key.startsWith('once|') && !p.verdict && p.note);
     if (open.length) lines.push('', 'A note without a verdict yet:', ...open.map(([, p]) => `- ${p.label}: ${p.note}`));
-    const picked = all.filter(([key]) => !key.startsWith('once|')).flatMap(([, p]) => [...p.choices].map(([id, value]) => `- ${p.label}: ${id}${/^(default changed|remove option)/.test(value) ? ': ' : ' = '}${value}`));
+    const picked = all
+        .filter(([key]) => !key.startsWith('once|'))
+        .flatMap(([, p]) =>
+            [...p.choices].map(([id, value]) => `- ${p.label}: ${id}${/^(default changed|remove option)/.test(value) ? ': ' : ' = '}${value}`),
+        );
     if (picked.length) lines.push('', 'Picked per theme:', ...picked);
-    const once = all.filter(([key]) => key.startsWith('once|')).flatMap(([key, p]) => [...p.choices].map(([id, value]) => `- ${key.split('|')[1]}: ${id}${/^(default changed|remove option)/.test(value) ? ': ' : ' = '}${value}`));
+    const once = all
+        .filter(([key]) => key.startsWith('once|'))
+        .flatMap(([key, p]) =>
+            [...p.choices].map(
+                ([id, value]) => `- ${key.split('|')[1]}: ${id}${/^(default changed|remove option)/.test(value) ? ': ' : ' = '}${value}`,
+            ),
+        );
     if (once.length) lines.push('', 'Picked once, for every theme:', ...once);
     return lines.join('\n');
 }
@@ -643,7 +737,10 @@ function keepInJournal(/** @type {string} */ demo, /** @type {string} */ round, 
 
 function noteReceived(/** @type {string} */ demo, /** @type {string} */ round) {
     try {
-        localStorage.setItem(RECEIVED_KEY, JSON.stringify([...receivedLog(), { at: new Date().toISOString(), demo, round: round || '(no round id)' }]));
+        localStorage.setItem(
+            RECEIVED_KEY,
+            JSON.stringify([...receivedLog(), { at: new Date().toISOString(), demo, round: round || '(no round id)' }]),
+        );
     } catch {
         /* storage refused: the journal still holds the verdicts */
     }

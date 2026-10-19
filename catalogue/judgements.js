@@ -129,6 +129,16 @@ let pixelChecks = { checks: {} };
  */
 export const pixelChecksReady = (async () => {
     try {
+        // The Agenda carries the checks that can reopen a pair in its index (catalogue/agenda-index.json): a carried
+        // check reopens nothing, and the whole file is most of a megabyte of them.
+        if (typeof document !== 'undefined' && document.querySelector('meta[name="kp-agenda-index"][content="on"]')) {
+            const { indexedPixels } = await import('./agenda-index.js');
+            const data = await indexedPixels();
+            if (data) {
+                pixelChecks = data;
+                return pixelChecks;
+            }
+        }
         const response = await fetch(new URL('./pixel-checks.json', import.meta.url), { cache: 'no-cache' });
         if (response.ok) {
             const data = await response.json();
@@ -191,7 +201,8 @@ export function verdictOf(key, theme, engine = ENGINE, stored = loadJudgements()
     // A verdict repeating the register's still answers a pixel check the
     // register's could not: it is this browser's until recorded [scope-138].
     const same = kept && local && kept.verdict === local.verdict && kept.hash === local.hash && !answersPixels(key, theme, engine, local, kept);
-    if (kept && (!local || same || !newer(local, kept, HASH_VERSION))) return { verdict: kept.verdict, hash: kept.hash, source: 'register', recorded: true };
+    if (kept && (!local || same || !newer(local, kept, HASH_VERSION)))
+        return { verdict: kept.verdict, hash: kept.hash, source: 'register', recorded: true };
     if (local) return { verdict: local.verdict, hash: local.hash, source: 'browser', recorded: false };
     return null;
 }

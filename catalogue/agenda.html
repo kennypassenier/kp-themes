@@ -4,7 +4,28 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Agenda · kp-themes catalogue</title>
-        <link rel="stylesheet" href="./deps.css" />
+        <!-- Reads catalogue/agenda-index.json for the pixel checks and the catalogue blocks (catalogue/agenda-index.js). -->
+        <meta name="kp-agenda-index" content="on" />
+        <!-- deps.css without its twelve theme registers: the Agenda wears one theme at a time, so it links the shared
+             sheets and writes the register of formal (the theme it opens in) and of the stored theme; the theme menu
+             fetches any other on the switch (js/lazy-register.js, attached by catalogue-shell.js), and laying the
+             blocks out fetches them all (agenda.js). -->
+        <link rel="stylesheet" href="../css/fonts.css" />
+        <link rel="stylesheet" href="../css/themes.css" />
+        <link rel="stylesheet" href="../css/components.css" />
+        <link rel="stylesheet" href="../css/layout.css" />
+        <link rel="stylesheet" href="../css/utilities.css" />
+        <script>
+            (function () {
+                var names = ['formal'];
+                try {
+                    var stored = localStorage.getItem('theme');
+                    if (stored && stored !== 'formal' && /^[a-z][a-z0-9-]*$/.test(stored)) names.push(stored);
+                } catch (e) {}
+                for (var i = 0; i < names.length; i++) document.write('<link rel="stylesheet" href="../css/' + names[i] + '-register.css" />');
+            })();
+        </script>
+        <link rel="stylesheet" href="./catalogue.css" />
         <link rel="stylesheet" href="./agenda.css" />
     </head>
     <body>
@@ -90,9 +111,8 @@
 
         <script type="module" src="../js/auto.js"></script>
         <script src="./boot-check.js"></script>
-        <script type="module" src="./catalogue.js"></script>
+        <script type="module" src="./catalogue-shell.js"></script>
         <script type="module" src="./agenda.js"></script>
-        <script type="module" src="./intros.js"></script>
         <script type="module" src="./play.js"></script>
         <script type="module" src="./checklist.js"></script>
         <script type="module" src="./shortcuts.js"></script>
