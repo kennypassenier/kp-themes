@@ -1,0 +1,267 @@
+/* research/app-homelab-metrics: the page's own frame. Everything with a kp- class is the package; these hm- rules only
+   lay the sections out (grids that keep their place in every state) and draw the readouts. */
+
+.hm-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+}
+
+.hm-intro,
+.hm-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hm-intro :is(h1, p),
+.hm-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hm-intro p,
+.hm-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hm-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hm-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hm-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hm-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+/* Buttons that drive the component below them; groups share a row. */
+.hm-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.hm-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.hm-controls > [role='group'] > b {
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+}
+
+.hm-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.hm-frame > [hidden] {
+    display: none;
+}
+
+/* The bar over a component: the control on the start side, one line of words after it. */
+.hm-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    min-block-size: 3rem;
+}
+
+.hm-note {
+    min-block-size: 1.5em;
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hm-label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.hm-log {
+    box-sizing: border-box;
+    min-block-size: calc(2lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* Charts in a grid of equal columns; each chart keeps its height in every state. */
+.hm-charts {
+    display: grid;
+    grid-template-columns: repeat(var(--hm-cols, 1), minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.hm-charts--two {
+    --hm-cols: 2;
+}
+
+.hm-charts--three {
+    --hm-cols: 3;
+}
+
+.hm-charts > .kp-chart {
+    --kp-chart-height: 14rem;
+    min-inline-size: 0;
+    margin: 0;
+}
+
+.hm-chart-group {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+@media (max-width: 56rem) {
+    .hm-charts--two,
+    .hm-charts--three {
+        --hm-cols: 1;
+    }
+}
+
+/* Key figures in their strip keep one height whatever the scope. */
+.hm-tiles {
+    min-inline-size: 0;
+}
+
+.hm-section {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.hm-section__head {
+    display: grid;
+    gap: var(--kp-space-2xs, 0.125rem);
+}
+
+.hm-section__head :is(h3, p) {
+    margin: 0;
+}
+
+.hm-section__head p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The scope row: its label and the picker on one grid line, label column as wide as its text. */
+.hm-scope {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 28rem);
+    align-items: start;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    min-block-size: 3rem;
+}
+
+.hm-scope__label {
+    padding-block-start: var(--kp-space-sm, 0.5rem);
+    font-weight: 600;
+}
+
+.hm-scope [hidden] {
+    display: none;
+}
+
+.hm-scope__buttons {
+    grid-column: 2;
+    max-inline-size: 100%;
+}
+
+.hm-opt__meta {
+    margin-inline-start: var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+}
+
+/* The hostname views share one place; the heat grid and its legend, or the table. */
+.hm-hosts {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.hm-hosts[hidden],
+.hm-frame > .kp-datatable[hidden] {
+    display: none;
+}
+
+.hm-legend {
+    margin: 0;
+    padding: 0;
+}
+
+/* Hostnames are long: the heat grid's name column is wide enough for the longest. */
+#traffic-heat {
+    --kp-heat-label: 14rem;
+}
+
+/* A request list inside a row detail takes the room it needs, no more. */
+.hm-frame .kp-inspector {
+    min-block-size: 0;
+}
+
+/* A drive's detail: the strip over two small lines of one height. */
+.hm-drive-detail {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block: var(--kp-space-sm, 0.5rem);
+}
+
+.hm-nowrap {
+    white-space: nowrap;
+}
+
+/* An option of the machine picker: its name first (what a tag reads), its colour mark before it, its detail after. */
+.kp-combobox__option:has(> .hm-opt__name) {
+    display: flex;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hm-opt__mark {
+    order: -1;
+}
+
+/* Two charts stacked full width: each a little shorter so both stay in view together. */
+#live .hm-charts > .kp-chart {
+    --kp-chart-height: 10.5rem;
+}
