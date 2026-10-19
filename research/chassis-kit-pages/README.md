@@ -1,5 +1,7 @@
 # research/chassis-kit-pages: the chassis-rs kit pages on kp-themes 11.0.0
 
+**Decided (Kenny, 19/10/2026 11:22): every section approved in formal** over three rounds (round 3: 4 of 4). chassis-rs builds it as approved (branch kit-kp11); the form grid comes with the next kp-themes release.
+
 Shared code of five reviews (`research/chassis-kit-shell`, `-status`, `-clients`, `-login`, `-passkeys`), formal only, 12 pairs in total.
 `build.mjs` writes the five `demo.html` pages from one list of sections; `kit.js` and `kit-pages.js` are the pages as functions (data in,
 markup out) that chassis-rs templates will become; `demo.js` renders each stage, feeds the script-fed components and wires the controls

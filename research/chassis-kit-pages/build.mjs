@@ -308,6 +308,7 @@ const RECEIVED = [
     'chassis-kit-login-ad2c2843-1d5d-4dce-a21a-ebd268059fa4',
     'chassis-kit-passkeys-d279180e-25d8-48e8-8c9a-09ba1d76960f',
     'chassis-kit-pages-27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a',
+    'chassis-kit-pages-842e90d1-82d5-4536-80f8-6ba7b990f1ce',
 ];
 const PARTS = [
     { dir: 'chassis-kit-pages', name: 'kit-pages', round: '842e90d1-82d5-4536-80f8-6ba7b990f1ce', title: 'the phone bar, login and the two client dialogs on the form grid (round 3)', ids: OPEN, about: 'Round 3 of the kit pages: only what is still open. The manage dialog was not approved (Send test stood 25.6 px above Format and Minify); the alignment sweep then found the same kind of fault in three approved sections, so the issue dialog, the login page and the phone bar are back too. All four are rebuilt on the form grid (.kp-formgrid): their forms and button groups stand on its tracks and lines, their compositions are otherwise the ones already approved. Everything else was approved and has left the page.' },

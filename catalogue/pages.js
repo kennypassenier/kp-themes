@@ -240,12 +240,6 @@ export const PAGES = [
                 label: 'Almanac: alignment fixes on the approved pages',
                 about: 'Eleven spots on the five approved Almanac pages that were lined up by accident, each with Now and Fixed on one grid: the Copy buttons of the profile and event facts, the event editor, the head of Recent deliveries, the glance row, the month head, the Calendars header at 1280 and 390, the attention band, the typed delete and new-calendar fields, and the phone cards. 11 sections, formal only, sample data.',
             },
-            // Kenny, 2026-10-19: chassis-rs's shared kit pages rebuilt on kp-themes 11.0.0, bundled into one review (shared code and generator: research/chassis-kit-pages/build.mjs).
-            {
-                href: 'research/chassis-kit-pages/demo.html',
-                label: 'chassis-rs kit pages, round 3: client dialogs, login and the phone bar on the form grid',
-                about: 'Round 3 of the kit pages (round 2: the passkeys pages and every other section approved). The manage dialog was not approved (Send test stood 25.6 px above Format and Minify); the alignment sweep then found misalignments in the issue dialog (fields 46.8 px short of their cell), the login page (card 9.6 px off the intro) and the phone bar (Search 0 px wide). All four are rebuilt on the form grid (.kp-formgrid): the test is one grid row with Send test on the line of its tools, both client dialogs and the login card are grid rows, and the compositions are otherwise the approved ones. 4 sections (4 pairs, formal).',
-            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
@@ -296,6 +290,13 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-19 11:22: Kenny approved every pair over three rounds (research/chassis-kit-pages/VERDICTS.json).
+            // Kenny, 2026-10-19: chassis-rs's shared kit pages rebuilt on kp-themes 11.0.0, bundled into one review (shared code and generator: research/chassis-kit-pages/build.mjs).
+            {
+                href: 'research/chassis-kit-pages/demo.html',
+                label: 'chassis-rs kit pages: shell, status, clients, login and passkeys',
+                about: 'Round 3 of the kit pages (round 2: the passkeys pages and every other section approved). The manage dialog was not approved (Send test stood 25.6 px above Format and Minify); the alignment sweep then found misalignments in the issue dialog (fields 46.8 px short of their cell), the login page (card 9.6 px off the intro) and the phone bar (Search 0 px wide). All four are rebuilt on the form grid (.kp-formgrid): the test is one grid row with Send test on the line of its tools, both client dialogs and the login card are grid rows, and the compositions are otherwise the approved ones. 4 sections (4 pairs, formal).',
+            },
             // Decided 2026-10-19 06:43: Kenny approved every pair (research/audhd-recepten/cook/decided.json).
             // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's cook mode, formal only (new demo). research/audhd-recepten/.
             {
