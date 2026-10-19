@@ -145,6 +145,8 @@ export const NEEDS = [
     // Tiles of one height across a board, and the ticking freshness line
     // (port spec H and I.4).
     { name: 'tiles', when: '[data-kp-tiles-set]', load: () => import('./tiles.js'), attach: (m, root) => [m.attachTileSets(root)] },
+    // The arrow keys over a board of tiles, one place in the tab order [gap-tab-count].
+    { name: 'tile-keys', when: '[data-kp-tiles-keys]', load: () => import('./tiles.js'), attach: (m, root) => [m.attachTileKeys(root)] },
     { name: 'freshness', when: '[data-kp-ago]', load: () => import('./freshness.js'), attach: (m, root) => [m.attachAgo(root)] },
     { name: 'chart', when: '[data-kp-chart]', load: () => import('./chart.js'), attach: (m, root) => [m.attachCharts(root)] },
     // A bar that folds what does not fit behind a More menu, and the phone's
@@ -152,6 +154,13 @@ export const NEEDS = [
     // button's module, which it imports itself.
     { name: 'nav-fold', when: '[data-kp-nav-fold]', load: () => import('./nav-fold.js'), attach: (m, root) => [m.attachNavFolds(root)] },
     { name: 'tabbar', when: '.kp-tabbar', load: () => import('./tabbar.js'), attach: (m, root) => [m.attachTabbars(root)] },
+    // The count on a tab of the underline row, drawn from its attributes [gap-tab-count].
+    {
+        name: 'tab-count',
+        when: '.kp-tab[data-kp-tab-count], .kp-tab[data-kp-tab-count-state]',
+        load: () => import('./tabbar.js'),
+        attach: (m, root) => [m.attachTabCounts(root)],
+    },
     // The menu button with its rich menu [scope-143]: every other action, grouped.
     { name: 'menu-button', when: '[data-kp-menu-button]', load: () => import('./menu-button.js'), attach: (m, root) => [m.attachMenuButtons(root)] },
     // The segmented control, the list toolbar and the inline key line [kpadopt-controls].
@@ -256,6 +265,8 @@ export const NEEDS = [
     // The question card's region [kpadopt5-ops]; the cards are made with askQuestion().
     { name: 'question-card', when: '[data-kp-questions]', load: () => import('./question-card.js'), attach: (m, root) => [m.attachQuestions(root)] },
     // The notification centre [kpadopt5-ops].
+    // The activity feed [gap-activity-feed-1019]: rows with a state mark, an actor chip and the ticking time, grouped by day.
+    { name: 'feed', when: '[data-kp-feed]', load: () => import('./feed.js'), attach: (m, root) => [m.attachFeeds(root)] },
     { name: 'notices', when: '[data-kp-notices]', load: () => import('./notices.js'), attach: (m, root) => [m.attachNotices(root)] },
     // The time and sentence parts [kpadopt5-time]: the weekday picker, the next-runs list, the snooze picker, the dated option picker, the sentence form, the slider and the unsaved-changes bar.
     { name: 'rating', when: '[data-kp-rating]', load: () => import('./rating.js'), attach: (m, root) => [m.attachRatings(root)] },
@@ -329,15 +340,17 @@ export const NEEDS = [
     { name: 'qr', when: '[data-kp-qr]', load: () => import('./qr.js'), attach: (m, root) => [m.attachQr(root)] },
     { name: 'timefield', when: '[data-kp-time]', load: () => import('./timefield.js'), attach: (m, root) => [m.attachTimes(root)] },
     {
-        // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the entity
-        // grid, the checklist, the notices, the gallery, the availability grid, the request inspector and the operations page. The selector is
+        // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the heat grid, the entity
+        // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the diff view and the operations page. The selector is
         // `FOOTPRINT_HOSTS` of js/footprint.js.
         name: 'footprint',
-        when: '[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-gallery], [data-kp-availability], [data-kp-requests], .kp-ops',
+        when: '[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-diffview], .kp-ops',
         load: () => import('./footprint.js'),
         attach: (m, root) => [m.attachFootprints(root)],
     },
     { name: 'console', when: '[data-kp-console]', load: () => import('./console.js'), attach: (m, root) => [m.attachConsoles(root)] },
+    { name: 'logviewer', when: '[data-kp-logviewer]', load: () => import('./logviewer.js'), attach: (m, root) => [m.attachLogViewers(root)] },
+    { name: 'diff', when: '[data-kp-diffview]', load: () => import('./diff.js'), attach: (m, root) => [m.attachDiffs(root)] },
     {
         // The reason of a disabled control [kpadopt5], last and late: a dozen
         // modules mark the controls they draw or own disabled with a reason as

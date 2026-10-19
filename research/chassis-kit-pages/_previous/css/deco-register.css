@@ -5507,8 +5507,9 @@
         text-transform: uppercase;
     }
     [data-theme='deco'] .kp-dialog__section--danger {
-        padding-inline-start: 0;
         border-inline-start: 0;
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
     }
     [data-theme='deco'] .kp-dialog__section--danger .kp-dialog__heading {
         justify-self: start;
@@ -6384,5 +6385,58 @@
 @layer kp.signature {
     [data-theme='deco'] :is(.kp-snooze__end, .kp-weekdays__preset, .kp-entity__plus).kp-button--ghost {
         border-color: hsl(from var(--primary) h s l / 0.6);
+    }
+}
+
+/* ── graph loading · r4-dec-load-3 · The engraving is cut (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='deco'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='deco'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.55;
+    }
+
+    [data-theme='deco'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 3 7;
+        --kp-graph-edge-anim: kp-graph-engrave 2600ms ease-in infinite;
+        --kp-graph-edge-stagger: 210ms;
+    }
+
+    [data-theme='deco'] .kp-graph__ghost .kp-graph__node {
+        clip-path: inset(18%);
+        --kp-graph-node-anim: kp-graph-bevel 2600ms ease-in infinite;
+        --kp-graph-node-stagger: 210ms;
+    }
+
+    @keyframes kp-graph-engrave {
+        0%,
+        30% {
+            stroke-dasharray: 2 14;
+        }
+        50% {
+            stroke-dasharray: 3 7;
+        }
+        70%,
+        100% {
+            stroke-dasharray: 100;
+        }
+    }
+    @keyframes kp-graph-bevel {
+        0%,
+        68% {
+            clip-path: inset(18%);
+            filter: brightness(1);
+        }
+        72% {
+            clip-path: inset(4%);
+            filter: brightness(1.5);
+        }
+        80%,
+        100% {
+            clip-path: inset(18%);
+            filter: brightness(1);
+        }
     }
 }

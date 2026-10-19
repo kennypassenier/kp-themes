@@ -227,10 +227,18 @@ curl -sS -X POST \\
           <p class="kp-dialog__note">Safe to paste into a chat. The button copies it with the real token in.</p></section>
       </div>`
         : `<div class="kp-card ck-manage__rail ck-manage__rail--revoked"><section class="kp-dialog__section ck-manage__tool"><h3 class="kp-dialog__heading">Token</h3><div class="kp-alert kp-alert--info" role="status"><span class="kp-alert__what">This token no longer works</span><span class="kp-alert__why">It was revoked on ${esc(fmt(c.revoked_at))}; every call with it is refused.</span><span class="kp-alert__remedy"><span class="kp-alert__remedy-label">What now</span> Issue a new client if the program should call again.</span></div></section></div>`;
+    // The test card is one form-grid row (.kp-formgrid): the label, the JSON field with its tools, and Send test on the
+    // actions track. Send test is a small button, the size of Format and Minify, and stands on their line.
+    const send = active
+        ? flashButton('Send test', { kind: 'primary sm', words: 'Sent,Refused', attrs: `data-ck-send="${esc(c.id)}"` })
+        : `<button type="button" class="kp-button kp-button--primary kp-button--sm" disabled aria-describedby="${uid}-send-why">Send test</button>`;
     const test = `<section class="kp-card ck-manage__test" aria-labelledby="${uid}-h-test">
       <div class="ck-manage__test-head"><h3 class="kp-dialog__heading" id="${uid}-h-test">Test it</h3><p class="kp-dialog__note">One request with this token to the service’s own test route: the round trip before the real program is wired.</p></div>
-      <div class="kp-field ck-manage__test-body"><label class="kp-field__label" for="${uid}-body">Body of the test request</label><textarea class="kp-field__input kp-field__input--multiline" id="${uid}-body" data-kp-json="strict" rows="3"${active ? '' : ' disabled'}>{"hello":"from the dashboard"}</textarea></div>
-      <div class="ck-manage__test-send">${active ? flashButton('Send test', { kind: 'primary', words: 'Sent,Refused', attrs: `data-ck-send="${esc(c.id)}"` }) : '<button type="button" class="kp-button kp-button--primary" disabled aria-describedby="' + uid + '-send-why">Send test</button>'}<p class="kp-dialog__note" id="${uid}-send-why">${active ? 'The answer appears at the top of the requests.' : 'A revoked client cannot send a test.'}</p></div></section>`;
+      <div class="kp-formgrid ck-fg ck-manage__test-grid" data-kp-formgrid-stack="never"><div class="kp-formgrid__row">
+        <label class="kp-formgrid__label" for="${uid}-body">Body of the test request</label>
+        <div class="kp-formgrid__control" data-kp-formgrid-span="control-value"><textarea class="kp-field__input kp-field__input--multiline" id="${uid}-body" data-kp-json="strict" rows="3"${active ? '' : ' disabled'}>{"hello":"from the dashboard"}</textarea></div>
+        <div class="kp-formgrid__actions ck-manage__test-send">${send}<p class="kp-dialog__note" id="${uid}-send-why">${active ? 'The answer appears at the top of the requests.' : 'A revoked client cannot send a test.'}</p></div>
+      </div></div></section>`;
     const act = (/** @type {string} */ button, /** @type {string} */ note) => `<div class="ck-manage__act">${button}<p class="kp-dialog__note">${note}</p></div>`;
     const reissue = `<button type="button" class="kp-button" data-kp-destructive data-kp-confirm="Re-issue the token of ${esc(c.name)}?" data-kp-confirm-label="Re-issue" data-kp-confirm-loses="${uid}-lost-reissue"${active ? '' : ' disabled'}>Re-issue</button>`;
     const revoke = `<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Revoke the token of ${esc(c.name)}?" data-kp-confirm-label="Revoke"${active ? '' : ' disabled'}>Revoke</button>`;
@@ -243,7 +251,7 @@ curl -sS -X POST \\
     ${rail}
     ${test}
     <section class="ck-manage__requests" aria-labelledby="${uid}-h-req"><div class="ck-manage__requests-in"><h3 class="kp-dialog__heading" id="${uid}-h-req">Requests</h3>
-      <div class="kp-card kp-inspector" data-kp-requests data-kp-requests-open="failed" id="${uid}-requests" data-ck-requests="${requests}" data-kp-requests-max="5"></div>
+      <div class="kp-card kp-inspector" data-kp-requests data-kp-requests-open="failed" data-kp-requests-test="false" id="${uid}-requests" data-ck-requests="${requests}" data-kp-requests-max="5"></div>
       <p class="kp-dialog__note">Secrets are masked, bodies are cut at ${DATA.clientsInfo.capture_body_bytes} bytes, requests are kept ${DATA.clientsInfo.capture_ttl_minutes} minutes.</p></div></section>
     <section class="ck-manage__danger" aria-labelledby="${uid}-h-danger">
       <div class="ck-manage__danger-head kp-dialog__section--danger"><h3 class="kp-dialog__heading" id="${uid}-h-danger">Danger zone</h3><p class="kp-dialog__note">Revoking keeps the row and its history; deleting does not. Re-issuing keeps the name and the history.</p></div>
@@ -305,11 +313,13 @@ export function issueDialog(uid, { step = 'form', open = true } = {}) {
   <div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Done</button><button type="button" class="kp-button kp-button--primary">Open the client</button></div>
 </dialog>`;
     }
-    const field = `<div class="kp-field"><label class="kp-field__label" for="${uid}-topic">${esc(f.label)} <span class="kp-field__required">required</span></label>
-      <div class="kp-combobox kp-usual" data-kp-combobox data-kp-usual='${esc(usual)}' data-kp-add="inline" data-kp-usual-label="Used before" data-kp-all="open"><input class="kp-combobox__input kp-field__input" id="${uid}-topic" name="topic" type="text" role="combobox" aria-expanded="false" aria-controls="${uid}-topic-list" autocomplete="off" placeholder="${esc(f.placeholder)}" value="${esc(topic)}" data-ck-live-in="topic" />
+    // Both fields are rows of one form grid (.kp-formgrid): label, control, then the hint on the value track; the card is
+    // narrower than 36rem, so the grid reads the rows top to bottom itself, label, field, hint, on one start edge.
+    const field = `<div class="kp-field kp-formgrid__row"><label class="kp-formgrid__label" for="${uid}-topic"><span>${esc(f.label)} <span class="kp-field__required">required</span></span></label>
+      <div class="kp-formgrid__control"><div class="kp-combobox kp-usual" data-kp-combobox data-kp-usual='${esc(usual)}' data-kp-add="inline" data-kp-usual-label="Used before" data-kp-all="open"><input class="kp-combobox__input kp-field__input" id="${uid}-topic" name="topic" type="text" role="combobox" aria-expanded="false" aria-controls="${uid}-topic-list" autocomplete="off" placeholder="${esc(f.placeholder)}" value="${esc(topic)}" data-ck-live-in="topic" />
       <ul class="kp-combobox__list" id="${uid}-topic-list" role="listbox" hidden>${topics.map((t) => `<li class="kp-combobox__option" role="option" data-kp-option data-value="${esc(t)}">${esc(t)}</li>`).join('')}</ul>
-      <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p></div>
-      <p class="kp-field__help">What this client’s messages are about. Pick one used before, or type a new one.</p></div>`;
+      <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p></div></div>
+      <div class="kp-formgrid__value"><p class="kp-field__help">What this client’s messages are about. Pick one used before, or type a new one.</p></div></div>`;
     return `<dialog class="kp-dialog kp-dialog--wide ck-dlg ck-issue" id="${uid}-dialog" aria-labelledby="${uid}-title"${open ? ' open' : ''}>
   <form class="kp-form ck-frame" data-kp-form novalidate id="${uid}-form">
   <div class="ck-grid ck-issue__grid">
@@ -318,8 +328,9 @@ export function issueDialog(uid, { step = 'form', open = true } = {}) {
       ${head(`${uid}-t-main`, 'Who is calling', 'Give the program a name you will recognise in the logs, such as home-assistant.')}
       <div class="ck-card__main ck-issue__fields">
         <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
-        <div class="kp-field"><label class="kp-field__label" for="${uid}-name">Name <span class="kp-field__required">required</span></label><input class="kp-field__input" type="text" id="${uid}-name" name="name" required pattern="[A-Za-z0-9._\\-]{1,64}" value="${name}" placeholder="home-assistant" data-ck-live-in="name"${taken ? ' aria-invalid="true"' : ''} /><p class="kp-field__help">Letters, digits, dots, underscores and hyphens; 1 to 64 characters.</p><span class="kp-field__error" data-kp-field-error${taken ? '' : ' hidden'}>${taken ? 'A client named home-assistant already exists. Pick another name, or open that client.' : ''}</span></div>
-        ${field}</div>
+        <div class="kp-formgrid ck-fg ck-issue__form">
+        <div class="kp-field kp-formgrid__row"><label class="kp-formgrid__label" for="${uid}-name"><span>Name <span class="kp-field__required">required</span></span></label><div class="kp-formgrid__control"><input class="kp-field__input" type="text" id="${uid}-name" name="name" required pattern="[A-Za-z0-9._\\-]{1,64}" value="${name}" placeholder="home-assistant" data-ck-live-in="name"${taken ? ' aria-invalid="true"' : ''} /></div><div class="kp-formgrid__value"><p class="kp-field__help">Letters, digits, dots, underscores and hyphens; 1 to 64 characters.</p><span class="kp-field__error" data-kp-field-error${taken ? '' : ' hidden'}>${taken ? 'A client named home-assistant already exists. Pick another name, or open that client.' : ''}</span></div></div>
+        ${field}</div></div>
       <p class="kp-dialog__note ck-card__foot">The token is made by the service when you press Issue token, and shown once, here.</p></section>
     ${side}
   </div>
@@ -423,15 +434,16 @@ export function loginPage(uid, { state = 'ready', passkeys = true } = {}) {
   </section>
   <section class="kp-card ck-login__card" aria-labelledby="${uid}-c">
     <h2 class="kp-card__title" id="${uid}-c">Sign in</h2>
-    ${wrong ? `<div class="kp-alert kp-alert--destructive" role="alert"><span class="kp-alert__what">That token is not right</span><span class="kp-alert__why">It does not match the service’s login token.</span><span class="kp-alert__remedy"><span class="kp-alert__remedy-label">What now</span> Copy it again from the service’s environment file, without spaces around it.</span></div>` : ''}
-    ${passkeys ? `<div class="ck-login__passkey">${flashButton('Log in with a passkey', { kind: 'primary', words: 'Signed in,Refused' })}<p class="kp-field__help">Uses your password manager, your phone or a security key.</p></div><p class="ck-or" aria-hidden="true"><span>or with the token</span></p>` : ''}
-    <form method="post" action="/login" class="kp-form" id="${uid}-form">
-      <div class="kp-field"><label class="kp-field__label" for="${uid}-token">Login token</label>
-        <div class="ck-token"><input class="kp-field__input" type="password" id="${uid}-token" name="token" required autocomplete="current-password" placeholder="Paste the token" ${wrong ? 'aria-invalid="true" aria-describedby="' + uid + '-err" value="wrong-token-value"' : ''} /><button type="button" class="kp-button kp-button--ghost" data-ck-peek aria-pressed="false">Show</button></div>
-        <p class="kp-field__help" id="${uid}-caps" data-ck-caps hidden>Caps Lock is on.</p></div>
-      <label class="kp-switch ck-remember"><input class="kp-switch__input" type="checkbox" role="switch" name="remember" value="1" /><span class="kp-switch__state" aria-hidden="true"></span><span>Keep me signed in on this browser for 30 days</span></label>
-      <div class="kp-row ck-actions"><button type="submit" class="kp-button ${passkeys ? '' : 'kp-button--primary'}"${busy ? ' aria-busy="true" disabled' : ''}>${busy ? 'Logging in…' : 'Log in'}</button></div>
-    </form>
+    <form method="post" action="/login" id="${uid}-form"><div class="kp-formgrid ck-fg ck-fg--above ck-login__grid" data-kp-formgrid-stack="never">
+    ${wrong ? `<div class="kp-formgrid__row"><div class="kp-alert kp-alert--destructive" id="${uid}-err" role="alert" data-kp-formgrid-span="all"><span class="kp-alert__what">That token is not right</span><span class="kp-alert__why">It does not match the service’s login token.</span><span class="kp-alert__remedy"><span class="kp-alert__remedy-label">What now</span> Copy it again from the service’s environment file, without spaces around it.</span></div></div>` : ''}
+    ${passkeys ? `<div class="kp-formgrid__row"><div class="kp-formgrid__control" data-kp-formgrid-span="all">${flashButton('Log in with a passkey', { kind: 'primary', words: 'Signed in,Refused', attrs: 'data-ck-fill' })}<p class="kp-field__help">Uses your password manager, your phone or a security key.</p></div></div><div class="kp-formgrid__row"><p class="ck-or" aria-hidden="true" data-kp-formgrid-span="all"><span>or with the token</span></p></div>` : ''}
+      <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="${uid}-token">Login token</label>
+        <div class="kp-formgrid__control"><input class="kp-field__input" type="password" id="${uid}-token" name="token" required autocomplete="current-password" placeholder="Paste the token" ${wrong ? 'aria-invalid="true" aria-describedby="' + uid + '-err" value="wrong-token-value"' : ''} /></div>
+        <div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--ghost" data-ck-peek aria-pressed="false">Show</button></div>
+        <div class="kp-formgrid__value"><p class="kp-field__help" id="${uid}-caps" data-ck-caps hidden>Caps Lock is on.</p></div></div>
+      <div class="kp-formgrid__row"><label class="kp-switch" data-kp-formgrid-span="all"><input class="kp-switch__input" type="checkbox" role="switch" name="remember" value="1" /><span class="kp-switch__state" aria-hidden="true"></span><span>Keep me signed in on this browser for 30 days</span></label></div>
+      <div class="kp-formgrid__row kp-formgrid__row--buttons"><div class="kp-formgrid__control" data-kp-formgrid-span="all"><div class="kp-formgrid__buttons"><button type="submit" class="kp-button ${passkeys ? '' : 'kp-button--primary'}"${busy ? ' aria-busy="true" disabled' : ''}>${busy ? 'Logging in…' : 'Log in'}</button></div></div></div>
+    </div></form>
   </section>
 </div>`;
     return app(uid, 'login', body, { anonymous: true });

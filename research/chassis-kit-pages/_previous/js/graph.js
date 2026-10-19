@@ -20,12 +20,16 @@
 // element under the pointer is never rebuilt. Nothing runs on import; the
 // attach function returns a detach.
 
+import { openBusyCard } from './busy-card.js';
+import { hostStatePlate } from './state-plate.js';
 import { resolveStrings } from './strings.js';
 
 /** A hub-and-ring graph: `figure.kp-graph[data-kp-graph]`. */
 export const GRAPH = '[data-kp-graph]';
 /** Fired on the graph, bubbling, when its selection, hover or hidden kinds change: `detail` `{ selected, hover, hiddenKinds }`. */
 export const GRAPH_CHANGE_EVENT = 'kp-graph-change';
+/** Fired on the graph, bubbling, when the Retry of its failed state is pressed [state-plates-1019]. */
+export const GRAPH_RETRY_EVENT = 'kp-graph-retry';
 
 /**
  * @typedef {{ id: string, label: string, kind?: string, hue?: number, weight?: number | null,
@@ -226,10 +230,10 @@ const svgEl = (doc, tag, attrs = {}) => {
 
 /**
  * @typedef {GraphLabel & { text: SVGTextElement }} DrawnLabel
- * @typedef {{ el: HTMLElement, data: GraphData | null, state: 'loading' | 'ready' | 'empty' | 'error', words: string,
+ * @typedef {{ el: HTMLElement, data: GraphData | null, state: 'loading' | 'ready' | 'empty' | 'error', words: string, text: string, art: Node | string | null,
  *   selected: Set<string>, hidden: Set<string>, hover: string | null, focus: string | null, drawnWidth: number,
  *   bar: HTMLElement, showAll: HTMLButtonElement, legend: HTMLElement, box: HTMLElement, svg: SVGSVGElement,
- *   note: HTMLElement, hint: HTMLElement, decorate?: (part: Element, info: GraphDecorateInfo) => void,
+ *   note: HTMLElement, plate: HTMLElement, busy: import('./busy-card.js').BusyCard | null, drawn: boolean, hint: HTMLElement, decorate?: (part: Element, info: GraphDecorateInfo) => void,
  *   strings: import('./strings.js').Strings, labels: DrawnLabel[], size: [number, number] }} GraphModel
  */
 
@@ -286,7 +290,8 @@ function fitDrawnLabels(labels, W, H) {
 /**
  * The ghost of the coming network, drawn while loading [PACKAGE_FINDINGS, 2026-10-06]: the last network's nodes and
  * links, or a hub with a ring of six when nothing was drawn yet, in the package's own edge, node, ring and core
- * classes so the theme's settled shape draws it, quieted by the `kp-graph__ghost` rules. Every part carries `--i`
+ * classes so the theme's settled shape draws it, quieted by the `kp-graph__ghost` rules. Each link carries `pathLength` 100
+ * (a register's travelling dash is a percentage of the link). Every part carries `--i`
  * (its order from the hub round the ring) and the group `--n` (how many), for a register's staggered motion.
  * @param {Document} doc
  * @param {GraphData | null} last
@@ -324,6 +329,7 @@ function ghostOf(doc, last, W, H) {
             svgEl(doc, 'path', {
                 class: 'kp-graph__edge',
                 d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
+                pathLength: '100',
                 'data-kp-kind': e.kind,
                 'data-kp-style': kind?.style ?? 'solid',
                 style: `--i: ${Math.max(0, order.indexOf(e.from === hub ? e.to : e.from))}${kind?.colour ? `; --kp-graph-edge-colour: ${kind.colour}` : ''}`,
@@ -362,8 +368,30 @@ function drawGraph(g) {
     g.svg.replaceChildren();
     const data = g.data;
     g.el.dataset.kpState = g.state;
-    g.note.textContent = g.state === 'ready' ? '' : g.state === 'loading' ? g.words || g.strings.graphLoading : g.words;
-    g.note.hidden = g.state === 'ready';
+    // Loading is read out (the note) and drawn as the busy card centred over the whole picture, over the ghost network;
+    // empty and failed are the package's state plate filling the picture, with a Retry on a failure [state-plates-1019].
+    g.note.textContent = g.state === 'loading' ? g.words || g.strings.graphLoading : '';
+    g.note.hidden = g.state !== 'loading';
+    g.plate.replaceChildren();
+    g.plate.hidden = g.state !== 'empty' && g.state !== 'error';
+    if (!g.plate.hidden)
+        g.plate.append(
+            hostStatePlate(g.el, {
+                kind: g.state === 'error' ? 'error' : 'empty',
+                title: g.words || (g.state === 'error' ? g.strings.graphFailed : g.strings.graphEmpty),
+                ...(g.text ? { text: g.text } : {}),
+                art: g.art,
+                retryEvent: GRAPH_RETRY_EVENT,
+            }),
+        );
+    if (g.state === 'loading' && !g.busy) {
+        g.busy = openBusyCard(g.box, { words: g.words || g.strings.graphLoading, area: () => [g.box], className: 'kp-graph__busy', arrive: g.drawn });
+    } else if (g.state !== 'loading' && g.busy) {
+        const card = g.busy;
+        g.busy = null;
+        void card.close();
+    } else g.busy?.place();
+    g.drawn = true;
     if (g.state === 'loading') {
         g.svg.append(ghostOf(doc, g.data, W, H));
     }
@@ -496,16 +524,21 @@ export function setGraphData(el, data) {
 
 /**
  * `loading`, `empty` or `error`, with the sentence to show in the picture at
- * its final height (loading says `graphLoading` when given none).
+ * its final height (loading says `graphLoading` when given none). Loading is the busy card over the whole picture; empty
+ * and error are the package's state plate over it (`words` is its heading, `text` its sentence, `art` a picture over the
+ * heading), an error with a Retry that fires `kp-graph-retry` [state-plates-1019].
  * @param {Element} el
  * @param {'loading' | 'empty' | 'error'} state
  * @param {string} [words]
+ * @param {{ text?: string, art?: Node | string | null }} [plate]
  */
-export function setGraphState(el, state, words = '') {
+export function setGraphState(el, state, words = '', { text = '', art = null } = {}) {
     const g = graphs.get(el);
     if (!g) return;
     g.state = state;
     g.words = words;
+    g.text = text;
+    g.art = art;
     drawGraph(g);
 }
 
@@ -574,7 +607,9 @@ export function attachGraphs(root = document, { decorate, strings } = {}) {
         svg.setAttribute('aria-label', `${el.getAttribute('aria-label') ?? s.graphUnnamed}. ${s.graphHint}`);
         const note = make(doc, 'p', 'kp-graph__note');
         note.setAttribute('role', 'status');
-        box.append(svg, note);
+        const plate = make(doc, 'div', 'kp-graph__state');
+        plate.hidden = true;
+        box.append(svg, note, plate);
         const hint = make(doc, 'p', 'kp-graph__hint', s.graphHint);
         // The data child stays (a script draws nothing), so a second attach
         // after a detach reads it again.
@@ -596,6 +631,11 @@ export function attachGraphs(root = document, { decorate, strings } = {}) {
             box,
             svg,
             note,
+            plate,
+            busy: null,
+            drawn: false,
+            text: '',
+            art: null,
             hint,
             decorate,
             strings: s,
@@ -750,6 +790,8 @@ export function attachGraphs(root = document, { decorate, strings } = {}) {
             legend.removeEventListener('click', onKind);
             showAll.removeEventListener('click', onShowAll);
             doc.removeEventListener('keydown', onDocKey);
+            g.busy?.remove();
+            g.busy = null;
             graphs.delete(el);
         });
     }

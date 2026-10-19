@@ -151,7 +151,7 @@ const SECTIONS = [
         topic: 'clients',
         title: 'Issue a client: the form beside the client it will make, then the token and first call beside the client made',
         components: 'dialog, form, combobox, flash, secret, command, idmark, kv',
-        about: 'Round 2: a composition on the 12-column grid instead of one column. The form (columns 1 to 7) stands against a live card of the client it will make (8 to 12); after Issue, the token and the first command are one block in the same place and the card shows what was made.',
+        about: 'Round 3: the same composition, its form now on the form grid (.kp-formgrid): label, field and hint of both fields share one start edge and one width. A composition on the 12-column grid. The form (columns 1 to 7) stands against a live card of the client it will make (8 to 12); after Issue, the token and the first command are one block in the same place and the card shows what was made.',
         expect: [
             '<b>Form:</b> Name and Topic in the left card; the right card fills in as you type (mark, name, topic, state, what is made and where it appears). Topic opens <b>Used before</b> on top; <b>Name taken</b> shows the error under the field in words, and the card says <b>not issued</b>.',
             '<b>Issued:</b> the token and the first command share one block (one label, one width), the card on the right becomes the receipt. Heads, contents and foot notes of both cards sit on the same three rows, and the dialog keeps its size in all three steps.',
@@ -168,11 +168,11 @@ const SECTIONS = [
         topic: 'clients',
         title: 'Manage a client: the controls in a rail, the requests as the wide area',
         components: 'dialog, secret, command, json-field, flash, request-inspector, type-confirm, idmark',
-        about: 'Round 2: one grid of 12 columns. The client and its three figures across the top (5 | 7); the token and the command in a fixed rail (1 to 5); the test and the request inspector as the wide area (6 to 12); the danger zone as a band with its words under the rail and its three actions, each with its consequence, under the inspector.',
+        about: 'Round 3: the same composition; the test is now one row of the form grid (.kp-formgrid), so Send test stands on the line of Format and Minify (it was 25.6 px above them). One grid of 12 columns. The client and its three figures across the top (5 | 7); the token and the command in a fixed rail (1 to 5); the test and the request inspector as the wide area (6 to 12); the danger zone as a band with its words under the rail and its three actions, each with its consequence, under the inspector.',
         expect: [
-            '<b>Rail:</b> Token (Reveal shows it for 10 s, Copy never shows it) and Use it (the block never holds the token; the button copies it with the token). <b>Wide area:</b> Test it (the body is a JSON box that says what is wrong and where; the button sits beside it) above the Requests: method, path and status in words, <code>authorization</code> masked, Copy as curl.',
+            '<b>Rail:</b> Token (Reveal shows it for 10 s, Copy never shows it) and Use it (the block never holds the token; the button copies it with the token). <b>Wide area:</b> Test it (the body is a JSON box that says what is wrong and where; Send test is a small button on the line of its tools Format, Minify, Wrap and Copy) above the Requests: method, path and status in words, <code>authorization</code> masked, Copy as curl.',
             '<b>Danger zone:</b> Re-issue, Revoke and Delete are three equal cells, each with what it does; Delete asks for the exact name <b>home-assistant</b>. <b>Revoked</b> keeps every area: the rail says the token no longer works, Send test is off with its reason, Re-issue and Revoke are off with theirs.',
-            'Press the four request states: the inspector keeps its area. <b>Phone</b>: the three figures become one tall tile beside two, the test sits under the rail, the three actions stay three equal buttons.',
+            'Press the four request states: the inspector keeps its area, and a state (loading, empty, failed) sits centred in what the inspector shows. <b>Phone</b>: the three figures become one tall tile beside two, the test sits under the rail, the three actions stay three equal buttons.',
         ],
         look: 'The rail, the test and the inspector share their top and bottom edges; the danger words start under the rail and the three actions under the inspector, on the same columns as the areas above; the dialog is exactly as tall in every Client and Requests state.',
         controls: [
@@ -299,17 +299,18 @@ ${s.expect.map((e) => `                        <li>${e}</li>`).join('\n')}
 }
 
 /** One bundled review (Kenny, 2026-10-19: demos from one project are bundled, up to 25 items): every kit page in one demo. */
-const OPEN = ['clients-issue', 'clients-manage', 'login', 'passkeys-list', 'passkeys-qr'];
-/** The page rounds of round 1 (the five part pages Kenny judged, 2026-10-19 03:11): their answers are recorded in VERDICTS.json and must not come back. */
+const OPEN = ['shell-phone', 'login', 'clients-issue', 'clients-manage'];
+/** The page rounds already judged (round 1: the five part pages, 2026-10-19 03:11; round 2: this page, 06:43): their answers are recorded in VERDICTS.json and must not come back. */
 const RECEIVED = [
     'chassis-kit-shell-0a03b1be-8fc4-4ad2-a1f1-928e31093dd7',
     'chassis-kit-status-8f4d47e7-df65-436b-8b67-6254caf06077',
     'chassis-kit-clients-7904a752-e0d6-4bd7-91c1-e278ce9246bc',
     'chassis-kit-login-ad2c2843-1d5d-4dce-a21a-ebd268059fa4',
     'chassis-kit-passkeys-d279180e-25d8-48e8-8c9a-09ba1d76960f',
+    'chassis-kit-pages-27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a',
 ];
 const PARTS = [
-    { dir: 'chassis-kit-pages', name: 'kit-pages', round: '27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a', title: 'the two client dialogs, login and passkeys (round 2)', ids: OPEN, about: 'Round 2 of the kit pages: only what is still open. The issue and the manage dialog of the clients page are redrawn as grid compositions (round 1 was rejected for plain left/right alignment); the login page and the two passkeys pages were not judged in round 1 and come back unchanged. Everything else was approved and has left the page.' },
+    { dir: 'chassis-kit-pages', name: 'kit-pages', round: '842e90d1-82d5-4536-80f8-6ba7b990f1ce', title: 'the phone bar, login and the two client dialogs on the form grid (round 3)', ids: OPEN, about: 'Round 3 of the kit pages: only what is still open. The manage dialog was not approved (Send test stood 25.6 px above Format and Minify); the alignment sweep then found the same kind of fault in three approved sections, so the issue dialog, the login page and the phone bar are back too. All four are rebuilt on the form grid (.kp-formgrid): their forms and button groups stand on its tracks and lines, their compositions are otherwise the ones already approved. Everything else was approved and has left the page.' },
 ];
 
 for (const part of PARTS) {

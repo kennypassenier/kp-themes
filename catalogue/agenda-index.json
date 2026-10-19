@@ -465,18 +465,17 @@
                 "id": "chassis-kit-pages",
                 "themes": "formal",
                 "ask": null,
-                "askText": "Round 2 of the kit pages: only what is still open. The issue and the manage dialog of the clients page are redrawn as grid compositions (round 1 was rejected for plain left/right alignment); the login page and the two passkeys pages were not judged in round 1 and come back unchanged. Everything else was approved and has left the page. In formal. 5 sections, 5 pairs. The pages are rendered from data the running example service answered (clients, requests, status, health); rows it did not have are more rows of the same shape and say so on the page.",
+                "askText": "Round 3 of the kit pages: only what is still open. The manage dialog was not approved (Send test stood 25.6 px above Format and Minify); the alignment sweep then found the same kind of fault in three approved sections, so the issue dialog, the login page and the phone bar are back too. All four are rebuilt on the form grid (.kp-formgrid): their forms and button groups stand on its tracks and lines, their compositions are otherwise the ones already approved. Everything else was approved and has left the page. In formal. 4 sections, 4 pairs. The pages are rendered from data the running example service answered (clients, requests, status, health); rows it did not have are more rows of the same shape and say so on the page.",
                 "sections": [
+                    { "item": "shell-phone", "themes": null, "topic": "shell", "mode": null },
                     { "item": "login", "themes": null, "topic": "login", "mode": null },
                     { "item": "clients-issue", "themes": null, "topic": "clients", "mode": null },
-                    { "item": "clients-manage", "themes": null, "topic": "clients", "mode": null },
-                    { "item": "passkeys-list", "themes": null, "topic": "passkeys", "mode": null },
-                    { "item": "passkeys-qr", "themes": null, "topic": "passkeys", "mode": null }
+                    { "item": "clients-manage", "themes": null, "topic": "clients", "mode": null }
                 ],
                 "extra": null,
-                "round": "\n            { \"round\": \"chassis-kit-pages-27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a\", \"received\": [\"chassis-kit-shell-0a03b1be-8fc4-4ad2-a1f1-928e31093dd7\",\"chassis-kit-status-8f4d47e7-df65-436b-8b67-6254caf06077\",\"chassis-kit-clients-7904a752-e0d6-4bd7-91c1-e278ce9246bc\",\"chassis-kit-login-ad2c2843-1d5d-4dce-a21a-ebd268059fa4\",\"chassis-kit-passkeys-d279180e-25d8-48e8-8c9a-09ba1d76960f\"] }\n        "
+                "round": "\n            { \"round\": \"chassis-kit-pages-842e90d1-82d5-4536-80f8-6ba7b990f1ce\", \"received\": [\"chassis-kit-shell-0a03b1be-8fc4-4ad2-a1f1-928e31093dd7\",\"chassis-kit-status-8f4d47e7-df65-436b-8b67-6254caf06077\",\"chassis-kit-clients-7904a752-e0d6-4bd7-91c1-e278ce9246bc\",\"chassis-kit-login-ad2c2843-1d5d-4dce-a21a-ebd268059fa4\",\"chassis-kit-passkeys-d279180e-25d8-48e8-8c9a-09ba1d76960f\",\"chassis-kit-pages-27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a\"] }\n        "
             },
-            "fingerprint": "9f56ee32d2bf4853",
+            "fingerprint": "c8215b5c9e6cd84b",
             "update": null
         },
         "research/app-hsb-settings/demo.html": {

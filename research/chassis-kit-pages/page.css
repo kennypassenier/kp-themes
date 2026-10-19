@@ -78,6 +78,24 @@
     .ck-app .ck-search-word {
         display: none;
     }
+
+    /* Search is one square button like the theme menu beside it, the same size, on the bar's end edge: its icon has a size
+       (an svg without one measured 0 px, so the trigger collapsed and Search was not on the bar at all). */
+    .ck-app .kp-nav__search-trigger {
+        justify-content: center;
+        inline-size: var(--ck-bar-button, 2.25rem);
+        block-size: var(--ck-bar-button, 2.25rem);
+        min-inline-size: 0;
+        min-block-size: 0;
+        padding: 0;
+        gap: 0;
+    }
+
+    .ck-app .kp-nav__search-trigger > svg {
+        flex: none;
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+    }
 }
 
 /* The header's freshness line and refresh control stand under the description, on one row. */
@@ -142,7 +160,8 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
     gap: var(--kp-space-xl, 2rem);
-    align-items: start;
+    /* The intro's title and the card's title stand on one line. */
+    align-items: first baseline;
     max-inline-size: 64rem;
     margin-inline: auto;
 }
@@ -155,15 +174,6 @@
 
 .ck-login__state {
     margin: var(--kp-space-md, 1rem) 0 0;
-}
-
-.ck-login__passkey {
-    display: grid;
-    gap: var(--kp-space-xs, 0.25rem);
-}
-
-.ck-login__passkey .kp-button {
-    inline-size: 100%;
 }
 
 .ck-or {
@@ -181,15 +191,34 @@
     border-block-start: 1px solid var(--border);
 }
 
-.ck-token {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--kp-space-sm, 0.5rem);
-    align-items: center;
+/* The login card's form grid: each row is the label across, then the field and its action on the next line (label above the
+   field), every cell on the grid's named lines; it never stacks, so Show stays beside the token at any width. */
+.ck-fg--above .kp-formgrid__row > .kp-formgrid__label {
+    grid-column: label-start / actions-end;
 }
 
-.ck-remember {
-    margin-block: var(--kp-space-md, 1rem);
+.ck-fg--above .kp-formgrid__row > :is(.kp-formgrid__control, .kp-formgrid__value):not([data-kp-formgrid-span]) {
+    grid-column: label-start / value-end;
+}
+
+.ck-login__grid {
+    --kp-formgrid-value: 0fr;
+    --kp-formgrid-column-gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The one primary action of a card fills the card's width; its hint stands under it on the same edge. */
+.ck-login__grid .kp-formgrid__control > [data-ck-fill] {
+    justify-self: stretch;
+    inline-size: 100%;
+}
+
+/* Show and Hide are one width, so the token field does not move when it is pressed. */
+.ck-login__grid .kp-formgrid__actions > .kp-button {
+    min-inline-size: 4.5rem;
+}
+
+.ck-login__grid .kp-switch {
+    justify-self: start;
 }
 
 /* The service's address and similar mono values. */
@@ -413,7 +442,7 @@
 
 /* --- Manage: identity | facts, then the control rail | the request inspector, then the danger words | its three actions --- */
 .ck-manage__grid {
-    grid-template-rows: auto auto minmax(var(--ck-manage-requests, 15rem), 1fr) auto;
+    grid-template-rows: auto auto minmax(var(--ck-manage-requests, 16.5rem), 1fr) auto;
     grid-template-areas:
         'id id id id id facts facts facts facts facts facts facts'
         'rail rail rail rail rail test test test test test test test'
@@ -489,20 +518,18 @@
     --kp-secret-min: 8rem;
 }
 
-/* The test: the body in columns 1-5 of its seven, the send button and what it does in 6-7, on the same top edge. */
+/* The test: a head, then one form-grid row (.kp-formgrid): the label on the label track, the JSON field with its tools on the
+   control track (it spans the empty value track), Send test on the actions track. The label is set on the centre of the
+   field's tool row by the grid itself, and Send test is a small button like Format and Minify, so the three stand on one line. */
 .ck-manage__test {
     grid-area: test;
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    grid-template-areas:
-        'head head head head head head head'
-        'body body body body body send send';
     align-content: start;
-    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    gap: var(--kp-space-sm, 0.5rem);
 }
 
 .ck-manage__test-head {
-    grid-area: head;
+    grid-area: auto;
 }
 
 .ck-manage__test-head > * {
@@ -513,25 +540,43 @@
     margin-block-start: var(--kp-space-xs, 0.25rem);
 }
 
-.ck-manage__test-body {
-    grid-area: body;
-    min-inline-size: 0;
+/* The grids of this page: nothing caps a field below its track, the value track is empty unless a row uses it. */
+.ck-fg {
+    --kp-field-max-width: none;
+}
+
+/* A hint and an error under it stand one above the other on the value track. */
+.ck-fg .kp-formgrid__value {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ck-fg .kp-formgrid__value > * {
     margin: 0;
 }
 
+.ck-manage__test-grid {
+    --kp-formgrid-label-min: 6.8rem;
+    --kp-formgrid-label-max: 6.8rem;
+    --kp-formgrid-value: 0fr;
+    --kp-formgrid-column-gap: var(--kp-space-md, 1rem);
+}
+
+/* The actions track is as wide as the button and its note; the note wraps under the button without widening the track. */
 .ck-manage__test-send {
-    grid-area: send;
     display: grid;
     align-content: start;
+    justify-items: stretch;
     gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 7rem;
 }
 
 .ck-manage__test-send > * {
     margin: 0;
 }
 
-.ck-manage__test-send > .kp-button {
-    inline-size: 100%;
+.ck-manage__test-send > .kp-dialog__note {
+    contain: inline-size;
 }
 
 /* The requests are the wide area: as tall as the rail, scrolling inside, never making the row taller. */
@@ -557,6 +602,16 @@
 
 .ck-manage__requests-in > .kp-inspector {
     overflow: auto;
+}
+
+/* A state (loading, empty, failed) fills what the inspector shows and is centred in it, with its button in view; only the
+   rows of a ready list scroll. The stage's own minimum (the loaded list's 22 rem) would put the plate's button below the box. */
+.ck-manage__requests-in > .kp-inspector:is([data-kp-state='loading'], [data-kp-state='empty'], [data-kp-state='error']) {
+    overflow: hidden;
+}
+
+.ck-manage__requests-in > .kp-inspector:is([data-kp-state='loading'], [data-kp-state='empty'], [data-kp-state='error']) .kp-card__stage {
+    min-block-size: 0;
 }
 
 .ck-manage__danger {
@@ -636,7 +691,7 @@
     }
 
     /* The name's error has its room before it appears, so the dialog is as tall with and without it. */
-    .ck-issue__fields .kp-field:has(> .kp-field__error[hidden])::after {
+    .ck-issue__fields .kp-formgrid__row:has(.kp-field__error[hidden])::after {
         content: '';
         display: block;
         block-size: 3lh;
@@ -695,11 +750,29 @@
         grid-area: topic;
     }
 
-    .ck-manage__test {
-        grid-template-areas:
-            'head head head head head head head'
-            'body body body body body body body'
-            'send send send send send send send';
+    /* The test row reads top to bottom on a phone, as the form grid does under 36rem (data-kp-formgrid-stack="always"). */
+    .ck-manage__test-grid,
+    .ck-manage__test-grid > .kp-formgrid__row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ck-manage__test-grid > .kp-formgrid__row {
+        grid-column: 1 / -1;
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .ck-manage__test-grid > .kp-formgrid__row > * {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .ck-manage__test-send {
+        justify-content: flex-start;
+        justify-items: start;
+    }
+
+    .ck-manage__test-send > .kp-dialog__note {
+        contain: none;
     }
 }
 

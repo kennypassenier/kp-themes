@@ -5525,7 +5525,8 @@
     [data-theme='synthwave'] .kp-dialog__section--danger {
         border-inline-start: 0;
         border-image: none;
-        padding-inline-start: 0;
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
     }
     [data-theme='synthwave'] .kp-dialog__section--danger > .kp-dialog__heading {
         --kp-sw4-tone: var(--destructive);
@@ -6327,3 +6328,20 @@
     }
 }
 /* ── end t56-q2 schedule ── */
+
+/* ── graph loading · r3-b-sw-load-4 · The outrun pulse (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='synthwave'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='synthwave'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.62;
+    }
+
+    [data-theme='synthwave'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 18 82;
+        --kp-graph-edge-anim: kp-graph-spark 1400ms linear infinite;
+        --kp-graph-edge-stagger: -110ms;
+    }
+}

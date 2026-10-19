@@ -118,6 +118,7 @@
 // both.
 
 import { getStrings } from './strings.js';
+import { watchOptions } from './live-options.js';
 import { collator, parseNumber, resolveLocale } from './locale.js';
 import { attachTableRegions } from './tables.js';
 import { attachDatePickers, datePicker, DATE_EVENT } from './datepicker.js';
@@ -779,12 +780,24 @@ export function attachDataTables(
     /** @type {DataTableHandle[]} */
     const created = [];
 
-    for (const element of root.querySelectorAll(TABLE)) {
+    /** Does this table sort on several columns? `data-kp-sort-multi` wins over the `multiSort` option. @param {HTMLElement} wrap */
+    const sortsSeveral = (wrap) => (wrap.dataset.kpSortMulti === undefined ? multiSort !== false : wrap.dataset.kpSortMulti !== 'false');
+    /** The detach of each table this attach wired, so one table can be wired again when an option attribute changes. @type {Map<HTMLElement, () => void>} */
+    const unwires = new Map();
+
+    /**
+     * Wire one table. Called once per table, and again for the same table when `data-kp-sort-multi` or `data-kp-filter-mode`
+     * changes [live-options-1019]: the table is put back to its markup, wired with the new option, and given back the view it
+     * had (the same handle object, so a page holding it keeps working).
+     * @param {Element} element
+     * @param {boolean} [again]  wiring a table again after an option changed: its detach is already in `cleanups`
+     */
+    const wireTable = (element, again = false) => {
         const wrap = /** @type {HTMLElement} */ (element);
-        if (wrap.dataset.kpDatatableAttached !== undefined) continue;
+        if (wrap.dataset.kpDatatableAttached !== undefined) return;
         const table = /** @type {HTMLTableElement | null} */ (wrap.querySelector('table'));
         const body = table?.tBodies[0];
-        if (table === undefined || table === null || body === undefined) continue;
+        if (table === undefined || table === null || body === undefined) return;
         // The density, the columns and the sort this reader chose last time,
         // when the table asked to be remembered [Kenny, 2026-09-16]. The
         // painter writes them as the markup a server would have rendered —
@@ -833,7 +846,7 @@ export function attachDataTables(
         const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? '', 10) || debounceMs || (serverMode ? SERVER_DEBOUNCE_MS : 0);
         const cycle = wrap.dataset.kpSortCycle ?? sortCycle;
         const cycleName = cycle === 'three' ? 'three' : 'two';
-        const multi = wrap.dataset.kpSortMulti === undefined ? multiSort !== false : wrap.dataset.kpSortMulti !== 'false';
+        const multi = sortsSeveral(wrap);
         // `data-kp-sort-multi="click"` [kpadopt]: every plain press adds the
         // column as a key (ascending, descending, out); Shift flips to the
         // old plain press, "this column alone", the quick way back to one key.
@@ -1584,20 +1597,65 @@ export function attachDataTables(
         // loads its own rows and calls state('failed') or fail() showed only
         // "Showing 0 of 0" [fix-85]. The reason goes in the words.
         if (failedSlot === null) {
-            failedSlot = add(make('div', 'kp-alert kp-alert--destructive'));
+            // The package's failed plate: the reason at heading size and a normal Retry, filling the table's footprint
+            // while the rows are covered (syncCover) [state-plates-1019].
+            failedSlot = add(make('div', 'kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error'));
             failedSlot.dataset.kpDatatableFailed = '';
             failedSlot.setAttribute('role', 'alert');
             failedSlot.hidden = true;
-            const text = make('p');
+            const text = make('p', 'kp-stateplate__title');
             text.dataset.kpDatatableFailedReason = '';
             text.textContent = s0.tableFailed;
-            const retry = /** @type {HTMLButtonElement} */ (make('button', 'kp-button'));
+            const retry = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-stateplate__action'));
             retry.type = 'button';
             retry.dataset.kpDatatableRetry = '';
             retry.textContent = s0.tableRetry;
             failedSlot.append(text, retry);
             wrap.insertBefore(failedSlot, tableBlock);
+        } else if (!failedSlot.classList.contains('kp-stateplate')) {
+            // A slot the page wrote is the same plate [state-plates-1019].
+            const authored = failedSlot;
+            authored.classList.add('kp-stateplate', 'kp-stateplate--error');
+            undo.push(() => authored.classList.remove('kp-stateplate', 'kp-stateplate--error'));
         }
+        if (empty !== null && !empty.classList.contains('kp-stateplate')) {
+            const authored = empty;
+            authored.classList.add('kp-stateplate', 'kp-stateplate--empty');
+            undo.push(() => authored.classList.remove('kp-stateplate', 'kp-stateplate--empty'));
+        }
+
+        // ── The plate takes the table's place ───────────────────────────
+        // A failed table, and a table with nothing to show, is not a notice under a table that is still drawn: the rows are
+        // covered and the plate fills the height the table had with its rows (the last height it was measured at while it showed
+        // rows), centred, with its normal-size action. Covered, not removed: the rows and their state stay in the document.
+        // [state-plates-1019, Kenny 2026-10-16 "de hele grootte van de component gebruiken"]
+        let heldHeight = 0;
+        const coverBox = /** @type {HTMLElement} */ (tableBlock);
+        const coverSizes =
+            typeof ResizeObserver === 'function'
+                ? new ResizeObserver(() => {
+                      if (coverBox.hasAttribute('data-kp-state-covered')) return;
+                      const height = coverBox.getBoundingClientRect().height;
+                      if (height > 0 && state === 'ready' && all.length > 0) heldHeight = height;
+                  })
+                : null;
+        coverSizes?.observe(coverBox);
+        undo.push(() => {
+            coverSizes?.disconnect();
+            coverBox.removeAttribute('data-kp-state-covered');
+            for (const slot of [failedSlot, empty]) slot?.style.removeProperty('--kp-datatable-held');
+        });
+        const syncCover = () => {
+            const failedNow = state === 'failed' && failedSlot !== null;
+            const emptyNow = !failedNow && empty !== null && !emptyHidden;
+            coverBox.toggleAttribute('data-kp-state-covered', failedNow || emptyNow);
+            for (const slot of [failedSlot, empty]) {
+                if (slot === null) continue;
+                const mine = (slot === failedSlot && failedNow) || (slot === empty && emptyNow);
+                if (mine && heldHeight > 0) slot.style.setProperty('--kp-datatable-held', `${Math.round(heldHeight)}px`);
+                else slot.style.removeProperty('--kp-datatable-held');
+            }
+        };
 
         // ── The page-size choice ───────────────────────────────────────
         /** @type {HTMLLabelElement | null} */
@@ -1998,6 +2056,7 @@ export function attachDataTables(
             // anything to dim.
             if (loadingSlot !== null) loadingSlot.hidden = !(state === 'loading' && all.length === 0);
             if (failedSlot !== null) failedSlot.hidden = state !== 'failed';
+            syncCover();
             syncSkeleton();
         };
 
@@ -3685,7 +3744,41 @@ export function attachDataTables(
         handles.set(wrap, handle);
         created.push(handle);
 
-        cleanups.push(() => {
+        // The two options that shape the chrome are read again when their attribute changes: the filter bar and the sort
+        // summary are built from them, so the table is wired again with the view it had [live-options-1019].
+        undo.push(
+            watchOptions(wrap, ['data-kp-sort-multi', 'data-kp-filter-mode'], () => {
+                const old = handles.get(wrap);
+                if (old === undefined) return;
+                const was = old.view();
+                const selected = old.selected();
+                unwires.get(wrap)?.();
+                created.splice(created.indexOf(old), 1);
+                wireTable(wrap, true);
+                const fresh = handles.get(wrap);
+                if (fresh === undefined) return;
+                // The page keeps the handle it has: the new table's methods move onto it.
+                Object.assign(old, fresh);
+                handles.set(wrap, old);
+                created.splice(created.indexOf(fresh), 1, old);
+                if (was.query !== '') old.query(was.query);
+                if (was.scope !== null) old.scope(was.scope);
+                for (const [column, value] of Object.entries(was.filters)) old.filter(Number(column), /** @type {FilterValue} */ (value));
+                // Going to one sort key keeps the first.
+                if (was.sorts.length > 0) old.sortBy(sortsSeveral(wrap) ? was.sorts : was.sorts.slice(0, 1));
+                if (was.pageSize !== old.view().pageSize) old.pageSize(was.pageSize);
+                if (was.hidden.length > 0) old.hideColumns(was.hidden);
+                if (was.density !== old.view().density) old.density(was.density);
+                if (was.folded.length > 0) old.fold(was.folded);
+                if (was.expanded.length > 0) old.expand(was.expanded);
+                if (selected.length > 0) old.select(selected);
+                if (was.page > 0) old.page(was.page);
+                if (was.state !== 'ready') old.state(was.state);
+            }),
+        );
+
+        const unwire = () => {
+            unwires.delete(wrap);
             stopBusyClock();
             clearTimeout(pending);
             controller?.abort();
@@ -3788,8 +3881,11 @@ export function attachDataTables(
             delete wrap.dataset.kpState;
             handles.delete(wrap);
             delete wrap.dataset.kpDatatableAttached;
-        });
-    }
+        };
+        unwires.set(wrap, unwire);
+        if (!again) cleanups.push(() => unwires.get(wrap)?.());
+    };
+    for (const element of root.querySelectorAll(TABLE)) wireTable(element);
 
     const detach = () => {
         for (const c of cleanups) c();

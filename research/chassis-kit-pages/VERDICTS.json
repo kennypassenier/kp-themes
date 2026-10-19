@@ -80,7 +80,36 @@
             "comment": "Answered 404 (the part had been bundled): not judged.",
             "approved": [],
             "notApproved": []
+        },
+        {
+            "round": "2",
+            "page": "chassis-kit-pages-27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 06:43: 5 of 5 judged, 4 approved, 1 not approved. Plus: \"HOE VAAK MOET IK NOG ZEGGEN OM ALLES DEFTIG VERTICAAL TE ALIGNEN EN GRID TE GEBRUIKEN IPV LINKS ALIGNEN???\"",
+            "notApproved": [
+                {
+                    "item": "clients-manage",
+                    "theme": "formal",
+                    "note": "de Send test knop is niet verticaal aligned met de knoppen Format Minify etc"
+                }
+            ]
         }
     ],
-    "reopened": []
+    "reopened": [
+        {
+            "item": "clients-issue",
+            "theme": "formal",
+            "reason": "Rebuilt on .kp-formgrid after the alignment sweep found misalignments: the Name input and the Topic combobox ended 46.8 px short of their cell (x 766 against 812.8; the field's 28rem cap)."
+        },
+        {
+            "item": "login",
+            "theme": "formal",
+            "reason": "Rebuilt on .kp-formgrid after the alignment sweep found misalignments: the Sign in card started 9.6 px off the intro beside it (the first lines of \"Log in to inbox\" and \"Sign in\" were not on one line)."
+        },
+        {
+            "item": "shell-phone",
+            "theme": "formal",
+            "reason": "Rebuilt after the alignment sweep flagged the kit's phone bar at 390 px: the current measure finds no fault in the bar's rows, but the Search trigger measured 0 px wide (its icon had no size), so Search was not on the bar at all; it is now a square button the size of the theme menu, on the same line."
+        }
+    ]
 }

@@ -1,0 +1,83 @@
+{
+  "capture_body_bytes": 4096,
+  "capture_ttl_minutes": 60,
+  "clients": [
+    {
+      "actions": [],
+      "active": true,
+      "declared": [
+        "alerts"
+      ],
+      "extra": [
+        "3"
+      ],
+      "fields": {
+        "topic": "alerts"
+      },
+      "id": "3db34688-f2bd-4a84-859f-a532cd10a815",
+      "issued_at": "2026-10-18T23:39:17Z",
+      "last_used_at": "2026-10-18T23:39:23Z",
+      "name": "home-assistant",
+      "revoked_at": null,
+      "uses": 3
+    },
+    {
+      "actions": [],
+      "active": true,
+      "declared": [
+        "alerts"
+      ],
+      "extra": [
+        "0"
+      ],
+      "fields": {
+        "topic": "alerts"
+      },
+      "id": "22ad4211-d5c9-4faf-9aa4-4401920960b8",
+      "issued_at": "2026-10-18T23:39:17Z",
+      "last_used_at": null,
+      "name": "kyu-runner",
+      "revoked_at": null,
+      "uses": 0
+    },
+    {
+      "actions": [],
+      "active": false,
+      "declared": [
+        "alerts"
+      ],
+      "extra": [
+        "0"
+      ],
+      "fields": {
+        "topic": "alerts"
+      },
+      "id": "5bc55118-c851-4d9e-8060-2cf583fbd8eb",
+      "issued_at": "2026-10-18T23:39:17Z",
+      "last_used_at": null,
+      "name": "backup-cron",
+      "revoked_at": "2026-10-18T23:39:23Z",
+      "uses": 0
+    }
+  ],
+  "declared_columns": [
+    {
+      "title": "Topic"
+    }
+  ],
+  "extra_columns": [
+    {
+      "title": "Messages"
+    }
+  ],
+  "form_fields": [
+    {
+      "kind": "text",
+      "label": "Topic",
+      "name": "topic",
+      "placeholder": "alerts"
+    }
+  ],
+  "has_test_route": true,
+  "reveal_seconds": 10
+}

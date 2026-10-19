@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" data-theme="formal" data-review="chassis-kit-clients" data-review-themes="formal">
+<html lang="en" data-theme="formal" data-review="chassis-kit-pages" data-review-themes="formal">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>chassis-rs kit pages: The clients page</title>
+        <title>chassis-rs kit pages: the two client dialogs, login and passkeys (round 2)</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -32,71 +32,74 @@
 
         <main id="main" class="cat-main ck-page">
             <header class="ck-intro">
-                <h1>chassis-rs kit pages on kp-themes 11.0.0: The clients page</h1>
+                <h1>chassis-rs kit pages on kp-themes 11.0.0: the two client dialogs, login and passkeys (round 2)</h1>
                 <p class="cat-intro">
-                    The list of clients, issuing one, managing one, and the first client’s walk-through. In formal. 4 sections, 4 pairs. The pages are
+                    Round 2 of the kit pages: only what is still open. The issue and the manage dialog of the clients page are redrawn as grid compositions (round 1 was rejected for plain left/right alignment); the login page and the two passkeys pages were not judged in round 1 and come back unchanged. Everything else was approved and has left the page. In formal. 5 sections, 5 pairs. The pages are
                     rendered from data the running example service answered (clients, requests, status, health); rows it did not have are more rows of
                     the same shape and say so on the page.
                 </p>
             </header>
             <section
                 class="ck-sec"
-                id="clients-list"
-                data-review-item="clients-list"
-                data-review-topic="clients"
-                data-review-topic-title="Clients"
-                data-review-components="ops-page problems datatable idmark hovercard combobox"
-                data-review-title="Clients: the list, with what needs a look first" data-review-choices='[{&quot;id&quot;:&quot;list-look&quot;,&quot;label&quot;:&quot;List as&quot;,&quot;default&quot;:&quot;table&quot;,&quot;options&quot;:[{&quot;value&quot;:&quot;table&quot;,&quot;label&quot;:&quot;Table&quot;,&quot;hint&quot;:&quot;Columns that sort; cards only on a phone.&quot;},{&quot;value&quot;:&quot;cards&quot;,&quot;label&quot;:&quot;Cards&quot;,&quot;hint&quot;:&quot;One card per client at every width, with a sort control.&quot;}]}]'
-                aria-labelledby="h-clients-list"
+                id="login"
+                data-review-item="login"
+                data-review-topic="login"
+                data-review-topic-title="Login"
+                data-review-components="card switch health freshness"
+                data-review-title="Log in: a passkey first, the token as the way that always works"
+                aria-labelledby="h-login"
             >
                 <div class="ck-sec__head">
-                    <h2 id="h-clients-list">Clients: the list, with what needs a look first</h2>
-                    <p>The four figures are filters (a click toggles, “Show all” resets), idle clients are called out with their fix, and the table sorts, searches and remembers its sort. The first 3 rows are captured from the running example service; the other 8 have the same shape and sample values.</p>
+                    <h2 id="h-login">Log in: a passkey first, the token as the way that always works</h2>
+                    <p>The page says what the service is and that it is healthy before anyone is in; the passkey is the primary way, the pasted token the fallback, and “keep me signed in” is a switch.</p>
                 </div>
                 <div class="ck-expected">
                     <p><b>Expected:</b></p>
                     <ul>
-                        <li><b>Ready:</b> four figures (In use, Idle, Never used, Revoked) with exact counts; one alert says how many clients have not called in 30 days and names them, with <b>Show them</b>. Each row: identity mark, name (hover for its details), state, last used as <b>dd/mm/yyyy HH:mm</b> and how long ago, requests, topic, messages, <b>Manage</b> in its own column.</li>
-                        <li><b>Idle only</b> is the Idle figure pressed: the table shows just those rows and the figure stays pressed until you press it again. <b>Empty</b> is a plate with <b>Issue a client</b>; <b>Loading</b> and <b>Failed</b> fill the table’s footprint.</li>
-                        <li>The choice <b>List as</b> is <b>Table</b> by default; <b>Cards</b> is a real option and the table always becomes cards on a phone.</li>
+                        <li><b>No navigation links</b> before login, only the brand and the theme menu. The service’s health, version and age are on the page (the open <code>/healthz</code> already says them).</li>
+                        <li><b>Ready:</b> “Log in with a passkey” is the primary button, the token field below it with <b>Show</b>, a switch for 30 days and the secondary Log in. <b>Wrong token</b> says what is wrong, why and what to do, in the alert plate. <b>Busy</b> keeps the button’s width.</li>
+                        <li><b>Passkeys not offered:</b> the card is only the token form and its Log in becomes primary. <b>Phone:</b> one column, nothing scrolls sideways.</li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">The Manage buttons stand in one column, the dates in one column with the ago words under or beside them; the pressed figure has a primary border; on Phone every row is a card with its name and state first.</p>
+                    <p data-for="formal">Two columns at the wide width (intro left, card right), one column on the phone; the passkey button is the only primary button on the card; the wrong-token alert is a red plate with three parts and the field is marked invalid.</p>
                 </div>
-                <div data-review-controls data-review-controls-for="clients-list-component">
-                    <div role="group" aria-label="State"><b>State:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="ready" aria-pressed="true">Ready</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="idle" aria-pressed="false">Idle only</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="empty" aria-pressed="false">Empty</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="loading" aria-pressed="false">Loading</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="error" aria-pressed="false">Failed</button></div>
+                <div data-review-controls data-review-controls-for="login-component">
+                    <div role="group" aria-label="State"><b>State:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="ready" aria-pressed="true">Ready</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="wrong" aria-pressed="false">Wrong token</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="busy" aria-pressed="false">Busy</button></div>
+                    <div role="group" aria-label="Passkeys"><b>Passkeys:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="passkeys" data-ck-value="on" aria-pressed="true">Offered</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="passkeys" data-ck-value="off" aria-pressed="false">Not offered</button></div>
                     <div role="group" aria-label="Width"><b>Width:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">Full</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">Phone</button></div>
                 </div>
-                <div id="clients-list-component" class="ck-stage" data-ck-view="clients-list" data-ck-state="ready" data-ck-width="full"></div>
+                <div id="login-component" class="ck-stage" data-ck-view="login" data-ck-state="ready" data-ck-passkeys="on" data-ck-width="full"></div>
             </section>
             <section
                 class="ck-sec"
                 id="clients-issue"
                 data-review-item="clients-issue"
                 data-review-topic="clients"
-                data-review-components="dialog form combobox flash secret command"
-                data-review-title="Issue a client: a form that ends with the token in your hand"
+                data-review-components="dialog form combobox flash secret command idmark kv"
+                data-review-title="Issue a client: the form beside the client it will make, then the token and first call beside the client made"
                 aria-labelledby="h-clients-issue"
             >
                 <div class="ck-sec__head">
-                    <h2 id="h-clients-issue">Issue a client: a form that ends with the token in your hand</h2>
-                    <p>The name is checked as you leave the field, the topic offers the ones already used, and the new token appears in the same dialog with a ready command, instead of a reload and a hunt through the table.</p>
+                    <h2 id="h-clients-issue">Issue a client: the form beside the client it will make, then the token and first call beside the client made</h2>
+                    <p>Round 2: a composition on the 12-column grid instead of one column. The form (columns 1 to 7) stands against a live card of the client it will make (8 to 12); after Issue, the token and the first command are one block in the same place and the card shows what was made.</p>
                 </div>
                 <div class="ck-expected">
                     <p><b>Expected:</b></p>
                     <ul>
-                        <li><b>Form:</b> Name and Topic with a help line each; Topic opens a list with <b>Used before</b> on top and lets you type a new one. <b>Name taken</b> shows the error under the field in words and keeps what you typed.</li>
-                        <li><b>Issued:</b> the token is in a secret field that stays shown until you hide it, with Copy; a first command is under it, and Done closes. Issue token is one button with a spinner and then “Issued”, never changing width.</li>
+                        <li><b>Form:</b> Name and Topic in the left card; the right card fills in as you type (mark, name, topic, state, what is made and where it appears). Topic opens <b>Used before</b> on top; <b>Name taken</b> shows the error under the field in words, and the card says <b>not issued</b>.</li>
+                        <li><b>Issued:</b> the token and the first command share one block (one label, one width), the card on the right becomes the receipt. Heads, contents and foot notes of both cards sit on the same three rows, and the dialog keeps its size in all three steps.</li>
+                        <li><b>Phone</b> (the Width control): the client card becomes a strip of mark, name, topic and state above the form; the buttons share the width equally.</li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">The dialog is one column with its sections in a fixed order; the Topic list opens at its field with the opaque menu plate; the error is a line under the field in the destructive colour with words.</p>
+                    <p data-for="formal">The two cards share their top, their bottom and their three inner rows; the dialog is exactly as tall in Form, Name taken and Issued; at Phone the strip comes first and nothing scrolls sideways.</p>
                 </div>
                 <div data-review-controls data-review-controls-for="clients-issue-component">
                     <div role="group" aria-label="Step"><b>Step:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="form" aria-pressed="true">Form</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="taken" aria-pressed="false">Name taken</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="issued" aria-pressed="false">Issued</button></div>
+                    <div role="group" aria-label="Width"><b>Width:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">Full</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">Phone</button></div>
                 </div>
-                <div id="clients-issue-component" class="ck-stage" data-ck-view="clients-issue" data-ck-step="form"></div>
+                <div id="clients-issue-component" class="ck-stage" data-ck-view="clients-issue" data-ck-step="form" data-ck-width="full"></div>
             </section>
             <section
                 class="ck-sec"
@@ -104,61 +107,92 @@
                 data-review-item="clients-manage"
                 data-review-topic="clients"
                 data-review-components="dialog secret command json-field flash request-inspector type-confirm idmark"
-                data-review-title="Manage a client: token, command, test and what it sent"
+                data-review-title="Manage a client: the controls in a rail, the requests as the wide area"
                 aria-labelledby="h-clients-manage"
             >
                 <div class="ck-sec__head">
-                    <h2 id="h-clients-manage">Manage a client: token, command, test and what it sent</h2>
-                    <p>Everything about one client in one dialog, in the order you use it: reveal or copy the token, copy a command, send a test with a body of your choosing, read what it sent, and the dangerous things last behind a typed name.</p>
+                    <h2 id="h-clients-manage">Manage a client: the controls in a rail, the requests as the wide area</h2>
+                    <p>Round 2: one grid of 12 columns. The client and its three figures across the top (5 | 7); the token and the command in a fixed rail (1 to 5); the test and the request inspector as the wide area (6 to 12); the danger zone as a band with its words under the rail and its three actions, each with its consequence, under the inspector.</p>
                 </div>
                 <div class="ck-expected">
                     <p><b>Expected:</b></p>
                     <ul>
-                        <li><b>Token:</b> the field is masked; Reveal shows it for 10 s with a countdown and Copy never shows it. <b>Use it:</b> the command block never holds the token (safe to paste in a chat); the button copies the same command with the token in it.</li>
-                        <li><b>Test it:</b> the body is a JSON box that says what is wrong and where; Send test shows a spinner, then “Sent”. <b>Requests</b> are the inspector: method, path and status in words, headers with <code>authorization</code> masked, the body, and Copy as curl. Press the four request states.</li>
-                        <li><b>Danger zone:</b> Delete asks for the exact name <b>home-assistant</b> before Confirm turns on; Revoke and Re-issue ask once and say what happens. <b>Revoked</b> shows only the history and Delete.</li>
+                        <li><b>Rail:</b> Token (Reveal shows it for 10 s, Copy never shows it) and Use it (the block never holds the token; the button copies it with the token). <b>Wide area:</b> Test it (the body is a JSON box that says what is wrong and where; the button sits beside it) above the Requests: method, path and status in words, <code>authorization</code> masked, Copy as curl.</li>
+                        <li><b>Danger zone:</b> Re-issue, Revoke and Delete are three equal cells, each with what it does; Delete asks for the exact name <b>home-assistant</b>. <b>Revoked</b> keeps every area: the rail says the token no longer works, Send test is off with its reason, Re-issue and Revoke are off with theirs.</li>
+                        <li>Press the four request states: the inspector keeps its area. <b>Phone</b>: the three figures become one tall tile beside two, the test sits under the rail, the three actions stay three equal buttons.</li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">The dialog is wide with one heading per section and a note under each; the secret line keeps its height while it counts down; the inspector’s states keep one height; the danger section is last and marked.</p>
+                    <p data-for="formal">The rail, the test and the inspector share their top and bottom edges; the danger words start under the rail and the three actions under the inspector, on the same columns as the areas above; the dialog is exactly as tall in every Client and Requests state.</p>
                 </div>
                 <div data-review-controls data-review-controls-for="clients-manage-component">
                     <div role="group" aria-label="Client"><b>Client:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="client" data-ck-value="active" aria-pressed="true">Active</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="client" data-ck-value="revoked" aria-pressed="false">Revoked</button></div>
                     <div role="group" aria-label="Requests"><b>Requests:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="requests" data-ck-value="ready" aria-pressed="true">Ready</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="requests" data-ck-value="loading" aria-pressed="false">Loading</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="requests" data-ck-value="empty" aria-pressed="false">Empty</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="requests" data-ck-value="error" aria-pressed="false">Failed</button></div>
+                    <div role="group" aria-label="Width"><b>Width:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">Full</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">Phone</button></div>
                 </div>
-                <div id="clients-manage-component" class="ck-stage" data-ck-view="clients-manage" data-ck-client="active" data-ck-requests="ready"></div>
+                <div id="clients-manage-component" class="ck-stage" data-ck-view="clients-manage" data-ck-client="active" data-ck-requests="ready" data-ck-width="full"></div>
             </section>
             <section
                 class="ck-sec"
-                id="clients-first"
-                data-review-item="clients-first"
-                data-review-topic="clients"
-                data-review-components="steplist empty-state card freshness"
-                data-review-title="The first client: the page walks you through it and notices the first call"
-                aria-labelledby="h-clients-first"
+                id="passkeys-list"
+                data-review-item="passkeys-list"
+                data-review-topic="passkeys"
+                data-review-topic-title="Passkeys"
+                data-review-components="passkeys card dialog type-confirm disabled-reason"
+                data-review-title="Ways to sign in: this device marked, rename in place, remove behind a question" data-review-choices='[{&quot;id&quot;:&quot;remove-confirm&quot;,&quot;label&quot;:&quot;Removing a passkey&quot;,&quot;default&quot;:&quot;dialog&quot;,&quot;options&quot;:[{&quot;value&quot;:&quot;dialog&quot;,&quot;label&quot;:&quot;A question&quot;,&quot;hint&quot;:&quot;A confirmation names the passkey and says the login token still works.&quot;},{&quot;value&quot;:&quot;type-name&quot;,&quot;label&quot;:&quot;Type its name&quot;,&quot;hint&quot;:&quot;The exact name of the passkey must be typed before Remove turns on.&quot;}]}]'
+                aria-labelledby="h-passkeys-list"
             >
                 <div class="ck-sec__head">
-                    <h2 id="h-clients-first">The first client: the page walks you through it and notices the first call</h2>
-                    <p>A new service has no clients, which is the moment people need most help. Three steps, the last one finishes by itself when the first request arrives.</p>
+                    <h2 id="h-passkeys-list">Ways to sign in: this device marked, rename in place, remove behind a question</h2>
+                    <p>One list of the passkeys that open the dashboard: a “This device” badge on the one in use, a passkey unused for 90 days flagged, Rename and Remove in two fixed columns. The login token always works as the fallback. The rows are sample values: a passkey needs HTTPS and a real authenticator.</p>
                 </div>
                 <div class="ck-expected">
                     <p><b>Expected:</b></p>
                     <ul>
-                        <li>Press <b>1</b> to <b>4</b>: each step shows its state (done, running with the theme’s spinner, waiting) with a note that says what happens, and the right card changes from “No clients yet” to “Connected”.</li>
-                        <li>Nothing moves between steps: notes are all present from the start, so a note arriving later shifts nothing.</li>
+                        <li><b>Several:</b> “Work laptop, Firefox” has the <b>This device</b> badge and comes first; <b>Rename</b> turns the name into a field in place (Enter saves, Esc cancels); “Old tablet” is flagged as unused for 90 days; <b>Remove</b> asks first and says what happens.</li>
+                        <li><b>One</b> passkey is removable too: the login token still works, and the page says so under the list. <b>Not HTTPS</b> shows one alert with what, why and the fix, and the primary button is off with its reason on hover. <b>Empty</b> is a plate with the register button.</li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">The step list has one fixed row height per step with its mark in one column; the running step has a spinner; step 4 ends with a primary button to the list.</p>
+                    <p data-for="formal">Rename and Remove line up in two columns from row to row; the badge and the flagged state use words as well as colour; the confirmation names the passkey.</p>
                 </div>
-                <div data-review-controls data-review-controls-for="clients-first-component">
-                    <div role="group" aria-label="Step"><b>Step:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="1" aria-pressed="true">1 Issue</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="2" aria-pressed="false">2 Give the token</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="3" aria-pressed="false">3 Waiting</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="4" aria-pressed="false">4 Connected</button></div>
+                <div data-review-controls data-review-controls-for="passkeys-list-component">
+                    <div role="group" aria-label="State"><b>State:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="list" aria-pressed="true">Several</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="one" aria-pressed="false">One</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="empty" aria-pressed="false">Empty</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="http" aria-pressed="false">Not HTTPS</button></div>
+                    <div role="group" aria-label="Width"><b>Width:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">Full</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">Phone</button></div>
                 </div>
-                <div id="clients-first-component" class="ck-stage" data-ck-view="clients-first" data-ck-step="1"></div>
+                <div id="passkeys-list-component" class="ck-stage" data-ck-view="passkeys-list" data-ck-state="list" data-ck-width="full"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="passkeys-qr"
+                data-review-item="passkeys-qr"
+                data-review-topic="passkeys"
+                data-review-components="qr steplist card"
+                data-review-title="Register on another device: a code to scan"
+                aria-labelledby="h-passkeys-qr"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-passkeys-qr">Register on another device: a code to scan</h2>
+                    <p>A passkey belongs to the device that makes it. The page draws a code of its own address, so a phone can open it, log in once and register itself.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The code stands on a light plate in every theme (it is read by a camera), with the address under it and a Copy button; <b>Loading</b> shows the code being made, <b>Expired</b> withdraws it with a reason.</li>
+                        <li>The three steps on the right say what happens on the phone, so nobody wonders what to do after scanning.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The code and the steps are two cards of one height; the code never shrinks below a size a camera can read; the address wraps instead of scrolling.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="passkeys-qr-component">
+                    <div role="group" aria-label="Code"><b>Code:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="code" data-ck-value="ready" aria-pressed="true">Ready</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="code" data-ck-value="loading" aria-pressed="false">Loading</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="code" data-ck-value="expired" aria-pressed="false">Expired</button></div>
+                </div>
+                <div id="passkeys-qr-component" class="ck-stage" data-ck-view="passkeys-qr" data-ck-code="ready"></div>
             </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "chassis-kit-clients-7904a752-e0d6-4bd7-91c1-e278ce9246bc" }
+            { "round": "chassis-kit-pages-27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a", "received": ["chassis-kit-shell-0a03b1be-8fc4-4ad2-a1f1-928e31093dd7","chassis-kit-status-8f4d47e7-df65-436b-8b67-6254caf06077","chassis-kit-clients-7904a752-e0d6-4bd7-91c1-e278ce9246bc","chassis-kit-login-ad2c2843-1d5d-4dce-a21a-ebd268059fa4","chassis-kit-passkeys-d279180e-25d8-48e8-8c9a-09ba1d76960f"] }
         </script>
         <script type="module" src="../chassis-kit-pages/demo.js"></script>
         </body>

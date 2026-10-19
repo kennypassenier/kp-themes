@@ -264,7 +264,7 @@ document.addEventListener('click', (event) => {
     }
     const peek = t.closest('[data-ck-peek]');
     if (peek) {
-        const input = /** @type {HTMLInputElement | null} */ (peek.closest('.ck-token')?.querySelector('input'));
+        const input = /** @type {HTMLInputElement | null} */ (peek.closest('.kp-formgrid__row')?.querySelector('input'));
         if (input) {
             const show = input.type === 'password';
             input.type = show ? 'text' : 'password';

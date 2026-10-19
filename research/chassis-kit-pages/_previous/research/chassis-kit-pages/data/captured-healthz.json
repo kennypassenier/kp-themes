@@ -1,0 +1,10 @@
+{
+  "status": "ok",
+  "version": "0.1.0",
+  "subsystems": {
+    "store": {
+      "detail": "writable",
+      "ok": true
+    }
+  }
+}

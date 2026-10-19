@@ -141,7 +141,7 @@ export function navBar(uid, { active = '', anonymous = false, paletteId = '' } =
     const search =
         anonymous || !paletteId
             ? ''
-            : `<div class="kp-nav__search"><button type="button" class="kp-nav__search-trigger" data-kp-palette-open="${paletteId}">${svg('search')}<span class="ck-search-word">Search</span> <kbd class="kp-palette__keys" data-kp-palette-keys></kbd></button></div>`;
+            : `<div class="kp-nav__search"><button type="button" class="kp-nav__search-trigger" aria-label="Search" data-kp-palette-open="${paletteId}">${svg('search')}<span class="ck-search-word">Search</span> <kbd class="kp-palette__keys" data-kp-palette-keys></kbd></button></div>`;
     const logout = anonymous ? '' : `<button type="button" class="kp-button ck-logout">Log out</button>`;
     return `<div class="kp-nav-wrap"><nav class="kp-nav" ${anonymous ? '' : 'data-kp-nav-fold'} aria-label="Main"><a class="kp-nav__brand" href="#top">inbox</a>${links}${search}${themeMenu(uid)}${logout}</nav></div>`;
 }
@@ -244,5 +244,5 @@ export function header(uid, { title, about, fresh = false, actions = '', more = 
 
 /** A flash button: spinner while it works, a short word after, a refusal as one line under it, one width throughout. */
 export function flashButton(label, { words = '', kind = '', attrs = '' } = {}) {
-    return `<button type="button" class="kp-button${kind ? ` kp-button--${kind}` : ''}" data-kp-flash-button${words ? ` data-kp-flash-words="${esc(words)}"` : ''} ${attrs}>${esc(label)}</button>`;
+    return `<button type="button" class="kp-button${kind ? kind.split(' ').map((k) => ` kp-button--${k}`).join('') : ''}" data-kp-flash-button${words ? ` data-kp-flash-words="${esc(words)}"` : ''} ${attrs}>${esc(label)}</button>`;
 }

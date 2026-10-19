@@ -1,6 +1,6 @@
 // The footprint: a data component keeps the height it had while a state shows in its place [t56-statefix-1018, S9].
 //
-// A data component (the matrix, the entity grid, the checklist, the notices, the gallery, the availability grid, the operations page and the request
+// A data component (the matrix, the heat grid, the entity grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the operations page, the diff view and the request
 // inspector) writes its state as `data-kp-state` on its host: `loading`, `empty`, `error`, or `ready`. Loaded, it is as high as its
 // rows; loading, empty or failed it used to shrink to the height of a skeleton or one plate, and the page under it jumped twice. Kenny's
 // rule (2026-10-16 "de hele grootte van de component gebruiken"): a state fills the component's loaded footprint.
@@ -25,12 +25,15 @@
 /** Every host that writes `data-kp-state` and fills its footprint with it. */
 export const FOOTPRINT_HOSTS = [
     '[data-kp-matrix]',
+    '[data-kp-heat]',
     '[data-kp-entity-grid]',
     '[data-kp-checklist]',
     '[data-kp-notices]',
+    '[data-kp-feed]',
     '[data-kp-gallery]',
     '[data-kp-availability]',
     '[data-kp-requests]',
+    '[data-kp-diffview]',
     '.kp-ops',
 ].join(', ');
 

@@ -6113,3 +6113,41 @@
         text-shadow: 0 0 4px hsl(from var(--sidebar-primary) h s l / 0.7);
     }
 }
+
+/* ── graph loading · r3-no-load-2 · Blips surface round the scope (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.7;
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost .kp-graph__edge {
+        filter: drop-shadow(0 0 1.5px var(--success));
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost .kp-graph__node--hub {
+        --kp-graph-node-anim: kp-graph-breathe 2400ms ease-in-out infinite;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+            animation: kp-graph-blink 1000ms steps(1) infinite;
+            animation-delay: calc(var(--i) * 130ms);
+        }
+    }
+
+    @keyframes kp-graph-breathe {
+        50% {
+            transform: scale(1.06);
+        }
+    }
+
+    @keyframes kp-graph-blink {
+        50% {
+            visibility: hidden;
+        }
+    }
+}
