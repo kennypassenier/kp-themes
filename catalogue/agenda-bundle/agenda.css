@@ -23632,6 +23632,20 @@
         cursor: not-allowed;
     }
 
+    /* --- A disabled control in a column of buttons [b3b4-1019; kyu gap 16] ---
+ * In a row's button box (`.kp-row-actions`, js/actions.js) the wrapper is the grid item that holds the column, so it
+ * fills the column and the control fills the wrapper: the same width and the same edge as the plain buttons of the
+ * rows above and below. The wrapper wears the control's `data-kp-action` (js/reason.js), so the role is the same. */
+    .kp-row-actions > .kp-reason {
+        display: flex;
+        min-inline-size: 0;
+    }
+
+    .kp-row-actions > .kp-reason > :is(.kp-button, button) {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+
     /* --- The flash button [kpadopt5] ---
  * A button that shows busy, then its result for a moment, without its width moving (js/flash.js). The faces share one
  * grid cell (rest, busy) plus an unseen copy of every word the button may say, so the widest holds the width; the

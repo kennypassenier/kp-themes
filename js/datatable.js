@@ -79,6 +79,9 @@
 //                            ="click": a plain click adds it, Shift + click sorts on it alone
 //   data-kp-column-menu      a menu of columns, the key column locked
 //   data-kp-expandable       a button opens a detail row the consumer supplies
+//                            The toggle is a column of its own, the first: every column number the handle takes or
+//                            gives (sort, scope, filter, hideColumns, view().sorts) counts it, so the first data
+//                            column of an expandable table is 1, not 0 [b3b4-1019].
 //   data-kp-fixed-columns    the key column stays while the box scrolls sideways
 //   data-kp-server           the rows come from the consumer's `load`, stale answers dropped
 //   th data-kp-edit          a value is edited in its cell; the app hears it and may refuse it
@@ -103,7 +106,7 @@
 // And three for the homelab hand-off [J2, scope-143], each off until the
 // markup asks for it:
 //
-//   data-kp-expand-single      opening one row closes the row that was open
+//   data-kp-expand-single      opening one row closes the row that was open (read again when the attribute changes)
 //   tr data-kp-row-group="g"   a heading row that folds the rows marked
 //                              data-kp-group-of="g"; a sort orders the rows
 //                              within their group, the groups keep their place
@@ -119,7 +122,7 @@
 
 import { getStrings } from './strings.js';
 import { watchOptions } from './live-options.js';
-import { collator, parseNumber, resolveLocale } from './locale.js';
+import { collator, formatDate, parseNumber, resolveLocale } from './locale.js';
 import { attachTableRegions } from './tables.js';
 import { attachDatePickers, datePicker, DATE_EVENT } from './datepicker.js';
 import { attachSelect, drawsSelect } from './combobox.js';
@@ -163,6 +166,12 @@ const ROW_CONTROLS =
     'a[href], button, input, select, textarea, label, summary, details, [contenteditable=""], [contenteditable="true"], [role="button"], [role="link"], [role="checkbox"], [role="switch"], [role="menuitem"], [tabindex]:not([tabindex="-1"])';
 /** A detail row, directly after the row it belongs to. */
 export const DETAIL = '[data-kp-row-detail]';
+/**
+ * A row the page holds out of the table for a while (an Undo window): `<tr data-kp-row-hidden>`. The table does not count
+ * it, page it, search it or show it, and never un-hides it; the page takes the attribute off to give it back
+ * [b3b4-1019; kyu gap 28].
+ */
+export const HELD_ROW = '[data-kp-row-hidden]';
 const EDIT_CELL = '[data-kp-edit-cell]';
 const EDIT_VALUE = '[data-kp-edit-value]';
 const EDITOR_WRAP = '[data-kp-datatable-editor-wrap]';
@@ -179,7 +188,7 @@ const CHECK_CLASS = 'kp-field__check';
 /** @typedef {'comfortable' | 'compact'} Density */
 /** @typedef {'text' | 'number' | 'select' | 'date'} EditKind */
 /**
- * @typedef {{ shown: number, total: number, page: number, pages: number, pageSize: number, query: string, scope: number | null,
+ * @typedef {{ shown: number, total: number, page: number, pageNumber: number, pages: number, pageSize: number, query: string, scope: number | null,
  *   filters: Record<number, FilterValue>, sort: Sort, sorts: SortKey[], hidden: number[], expanded: string[], density: Density, state: State,
  *   keys: string[], pageKeys: string[], folded: string[] }} View
  */
@@ -333,6 +342,22 @@ export function filterActive(kind, value) {
 }
 
 /**
+ * A filter bound as the reader writes it [b3b4-1019; homelab gap 33]. A date bound is held as ISO (`2026-10-03`) so the
+ * filter compares it exactly, but a pill, an error and a screen reader say it the way the page's locale writes a date
+ * (the field it came from shows the same). A number bound, or text that is not an ISO day, is returned as it is.
+ *
+ * @param {FilterKind} kind
+ * @param {string} bound
+ * @param {string | undefined} [locale]  none: the page's own
+ */
+export function boundText(kind, bound, locale) {
+    const day = kind === 'date' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(bound) : null;
+    if (day === null) return bound;
+    const date = new Date(Number(day[1]), Number(day[2]) - 1, Number(day[3]));
+    return date.getMonth() === Number(day[2]) - 1 ? formatDate(date, locale) : bound;
+}
+
+/**
  * The one pill a filter shows in the add-filter mode [Kenny, 2026-09-14]:
  * the column and every value the filter holds, or null when it holds
  * nothing. Both channels call this, so their pills read the same.
@@ -341,13 +366,14 @@ export function filterActive(kind, value) {
  * @param {string} column the column's name
  * @param {FilterValue | undefined} value
  * @param {import('./strings.js').Strings} s
+ * @param {string} [locale]  how a date bound is written; the page's own when absent
  * @returns {string | null}
  */
-export function filterPillLabel(kind, column, value, s) {
+export function filterPillLabel(kind, column, value, s, locale) {
     if (!filterActive(kind, value)) return null;
     if (kind === 'choice') return s.tableFilterChoicePill(column, /** @type {string[]} */ (value));
     const { from = '', to = '' } = /** @type {{ from?: string, to?: string }} */ (value);
-    return s.tableFilterSpanPill(column, from, to, kind);
+    return s.tableFilterSpanPill(column, boundText(kind, from, locale), boundText(kind, to, locale), kind);
 }
 
 /**
@@ -360,9 +386,10 @@ export function filterPillLabel(kind, column, value, s) {
  * @param {'range' | 'date'} kind
  * @param {Record<'from' | 'to', { text: string, iso?: string, label: string }>} bounds  `text` as the field shows it; `iso` a date picker's value
  * @param {import('./strings.js').Strings} s
+ * @param {string} [locale]  how a date bound is written in the refusal; the page's own when absent
  * @returns {{ value: { from: string, to: string } | null, error?: string, bound?: 'from' | 'to' }}
  */
-export function readFilterBounds(kind, bounds, s) {
+export function readFilterBounds(kind, bounds, s, locale) {
     const value = { from: '', to: '' };
     for (const bound of /** @type {const} */ (['from', 'to'])) {
         const { text, iso, label } = bounds[bound];
@@ -378,7 +405,7 @@ export function readFilterBounds(kind, bounds, s) {
     }
     const { from, to } = value;
     if (from !== '' && to !== '' && (kind === 'range' ? Number(from) > Number(to) : from > to))
-        return { value: null, error: s.tableFilterBackwards(from, to), bound: 'from' };
+        return { value: null, error: s.tableFilterBackwards(boundText(kind, from, locale), boundText(kind, to, locale)), bound: 'from' };
     return { value: from === '' && to === '' ? null : value };
 }
 
@@ -419,16 +446,26 @@ export function matchesFilter(kind, value, text, locale) {
  * @param {string} column the column's name
  * @param {FilterValue | undefined} value
  * @param {import('./strings.js').Strings} s
+ * @param {string} [locale]  how a date bound is written; the page's own when absent
  * @returns {{ label: string, without: FilterValue | undefined }[]}
  */
-export function filterPills(kind, column, value, s) {
+export function filterPills(kind, column, value, s, locale) {
     if (!filterActive(kind, value)) return [];
     if (kind === 'choice') {
         const list = /** @type {string[]} */ (value);
         return list.map((item) => ({ label: s.tableFilterValue(column, item), without: list.filter((other) => other !== item) }));
     }
     const { from = '', to = '' } = /** @type {{ from?: string, to?: string }} */ (value);
-    return [{ label: s.tableFilterRange(column, from || s.tableFilterOpenEnd, to || s.tableFilterOpenEnd), without: undefined }];
+    return [
+        {
+            label: s.tableFilterRange(
+                column,
+                from === '' ? s.tableFilterOpenEnd : boundText(kind, from, locale),
+                to === '' ? s.tableFilterOpenEnd : boundText(kind, to, locale),
+            ),
+            without: undefined,
+        },
+    ];
 }
 
 /**
@@ -668,7 +705,7 @@ const defaultFilter = (row, query) => (row.textContent ?? '').toLowerCase().incl
  * @property {() => View} view
  * @property {(sort: Sort) => void} sort  sort on one column, or null for none
  * @property {(keys: readonly SortKey[]) => void} sortBy  sort on several columns, the first key first
- * @property {(page: number) => void} page
+ * @property {(page: number) => void} page  show a page, counted from 0 as `view().page` is (the pager prints it from 1: `view().pageNumber`); past the last page it stops at the last [b3b4-1019]
  * @property {(size: number) => void} pageSize
  * @property {(query: string) => void} query
  * @property {(column: number | null) => void} scope  limit the search to one column, or null for all
@@ -688,7 +725,7 @@ const defaultFilter = (row, query) => (row.textContent ?? '').toLowerCase().incl
  * @property {(which?: 'view' | 'page') => HTMLTableRowElement[]} rows  the rows the table shows, in order: every page of the view, or this page
  * @property {() => string[]} selected
  * @property {(keys: readonly string[]) => void} select
- * @property {() => void} refresh re-read the rows after the consumer added or removed some, and the filter panel's choice lists with them
+ * @property {(options?: { keepPage?: boolean }) => void} refresh re-read the rows after the consumer added or removed some, and the filter panel's choice lists with them; the page goes back to the first unless `keepPage`. The table also notices rows added to or removed from its body by itself (a client-side table), so a removed row leaves the count and the pager at once and the reader stays on the page; a row marked `data-kp-row-hidden` is held out of the table and stays hidden until the attribute goes [b3b4-1019]
  */
 
 /** @type {WeakMap<Element, DataTableHandle>} */
@@ -889,6 +926,7 @@ export function attachDataTables(
                         if (!detailsWereHidden.has(row)) detailsWereHidden.set(row, row.hidden === true);
                     }
                 } else if (row.matches(GROUP_ROW)) owner = null;
+                else if (row.matches(HELD_ROW)) owner = null;
                 else if (!row.matches(SKELETON_ROW)) owner = row;
             }
         };
@@ -998,7 +1036,13 @@ export function attachDataTables(
         const keyOf = (row) => row.dataset.kpRowKey ?? row.id ?? '';
 
         /** Every row as it was rendered. Sorting reorders this array, never the DOM's idea of it. */
-        const isRow = (/** @type {HTMLTableRowElement} */ row) => !row.matches(DETAIL) && !row.matches(SKELETON_ROW) && !row.matches(GROUP_ROW);
+        const isRow = (/** @type {HTMLTableRowElement} */ row) =>
+            !row.matches(DETAIL) && !row.matches(SKELETON_ROW) && !row.matches(GROUP_ROW) && !row.matches(HELD_ROW);
+        /** A held row stays hidden whatever the table does; the page lifts it with the attribute [b3b4-1019]. */
+        const holdRows = () => {
+            for (const row of body.querySelectorAll(`:scope > ${HELD_ROW}`)) /** @type {HTMLElement} */ (row).hidden = true;
+        };
+        holdRows();
         let all = /** @type {HTMLTableRowElement[]} */ ([...body.rows].filter(isRow));
         /** The order the server rendered, so detach can put it back. */
         const rendered = [...all];
@@ -1982,6 +2026,7 @@ export function attachDataTables(
             shown: serverMode ? total || 0 : shownRows.length,
             total: serverMode ? total || 0 : all.length,
             page,
+            pageNumber: page + 1,
             pages: Math.max(1, Math.ceil((serverMode ? total || 0 : shownRows.length) / size)),
             pageSize: size,
             query,
@@ -2314,7 +2359,7 @@ export function attachDataTables(
             let count = 0;
             for (const at of filterColumns) {
                 const kind = /** @type {FilterKind} */ (filterKinds[at]);
-                for (const pill of filterPills(kind, labelOf(at), filters.get(at), s)) {
+                for (const pill of filterPills(kind, labelOf(at), filters.get(at), s, locale)) {
                     count += 1;
                     const item = make('li', 'kp-tag');
                     const remove = /** @type {HTMLButtonElement} */ (make('button', 'kp-tag__remove'));
@@ -2348,7 +2393,7 @@ export function attachDataTables(
             for (const [at, value] of filters) {
                 const kind = filterKinds[at];
                 if (!kind) continue;
-                const label = filterPillLabel(kind, labelOf(at), value, s);
+                const label = filterPillLabel(kind, labelOf(at), value, s, locale);
                 if (label === null) continue;
                 count += 1;
                 const item = make('li', 'kp-tag');
@@ -2530,7 +2575,7 @@ export function attachDataTables(
                         label: bound === 'from' ? s.tableFilterFrom(labelOf(at)) : s.tableFilterTo(labelOf(at)),
                     };
                 };
-                const result = readFilterBounds(kind, { from: read('from'), to: read('to') }, s);
+                const result = readFilterBounds(kind, { from: read('from'), to: read('to') }, s, locale);
                 for (const input of form.querySelectorAll('[data-kp-filter-bound]')) input.removeAttribute('aria-invalid');
                 if (result.error !== undefined) {
                     const error = /** @type {HTMLElement} */ (form.querySelector('[data-kp-filter-error]'));
@@ -3697,7 +3742,7 @@ export function attachDataTables(
             rows: (which = 'view') => (which === 'page' ? [...pageRows] : [...shownRows]),
             selected: () => (serverMode ? [...serverSelection] : selectedRows().map(keyOf)),
             select,
-            refresh: () => {
+            refresh: (options) => {
                 // The control that held the focus keeps it [R-LIVE, J2]: the
                 // same element when it stayed, else the same toggle of the row
                 // (or group) with the same key, when the consumer replaced it,
@@ -3711,7 +3756,11 @@ export function attachDataTables(
                 const heldGroup = memo?.group ?? null;
                 const heldToggle = memo?.selector ?? null;
                 collectDetails();
+                holdRows();
                 all = [...body.rows].filter(isRow);
+                // A row the page took out is no longer one of the table's: detach must not put it back.
+                for (let at = rendered.length - 1; at >= 0; at -= 1)
+                    if (!all.includes(rendered[at]) && !rendered[at].isConnected) rendered.splice(at, 1);
                 for (const row of all) {
                     if (!rendered.includes(row)) rendered.push(row);
                     prepareRow(row);
@@ -3726,7 +3775,7 @@ export function attachDataTables(
                 collectGroups();
                 syncColumns();
                 refreshChoices();
-                applyFilter({ keepPage: false });
+                applyFilter({ keepPage: options?.keepPage === true });
                 if (held !== null && document.activeElement !== held) {
                     /** @type {HTMLElement | null} */
                     let back = held.isConnected ? held : null;
@@ -3744,10 +3793,38 @@ export function attachDataTables(
         handles.set(wrap, handle);
         created.push(handle);
 
-        // The two options that shape the chrome are read again when their attribute changes: the filter bar and the sort
-        // summary are built from them, so the table is wired again with the view it had [live-options-1019].
+        // Rows the page added, removed or held are the table's rows at once, without a call to refresh(): the count, the pager
+        // and the pages follow the body [b3b4-1019; homelab gap 34, kyu gap 28]. The table's own sort and page moves put the
+        // same rows back in another order, which changes nothing here.
+        if (!serverMode) {
+            let queued = false;
+            const resync = () => {
+                queued = false;
+                holdRows();
+                const now = [...body.rows].filter(isRow);
+                if (now.length === all.length && now.every((row, at) => all.includes(row))) return;
+                handles.get(wrap)?.refresh({ keepPage: true });
+            };
+            const onBody = () => {
+                if (queued) return;
+                queued = true;
+                queueMicrotask(resync);
+            };
+            const rowsWatch = new MutationObserver(onBody);
+            rowsWatch.observe(body, { childList: true });
+            const holdWatch = new MutationObserver(onBody);
+            holdWatch.observe(body, { attributes: true, attributeFilter: ['data-kp-row-hidden'], subtree: true });
+            undo.push(() => {
+                rowsWatch.disconnect();
+                holdWatch.disconnect();
+            });
+        }
+
+        // The options that shape the chrome are read again when their attribute changes: the filter bar and the sort
+        // summary are built from them, and the one-row-open rule is read when the table is wired. The table is wired
+        // again with the view it had [live-options-1019].
         undo.push(
-            watchOptions(wrap, ['data-kp-sort-multi', 'data-kp-filter-mode'], () => {
+            watchOptions(wrap, ['data-kp-sort-multi', 'data-kp-filter-mode', 'data-kp-expand-single'], () => {
                 const old = handles.get(wrap);
                 if (old === undefined) return;
                 const was = old.view();

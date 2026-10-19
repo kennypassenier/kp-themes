@@ -4371,7 +4371,14 @@ function attachDisabledReasons(root = document) {
       parent
     );
     const before = control.getAttribute("aria-describedby");
+    const mirrorRole = () => {
+      const role = control.getAttribute("data-kp-action");
+      if (role === null) anchor.removeAttribute("data-kp-action");
+      else anchor.setAttribute("data-kp-action", role);
+    };
+    mirrorRole();
     const sync4 = () => {
+      mirrorRole();
       const text = control.getAttribute("data-kp-disabled-reason") ?? "";
       const shown4 = text !== "" && isOff(control);
       tip.textContent = shown4 ? text : "";
@@ -4384,7 +4391,7 @@ function attachDisabledReasons(root = document) {
     };
     sync4();
     const observer = new MutationObserver(sync4);
-    observer.observe(control, { attributes: true, attributeFilter: ["disabled", "aria-disabled", "data-kp-disabled-reason"] });
+    observer.observe(control, { attributes: true, attributeFilter: ["disabled", "aria-disabled", "data-kp-disabled-reason", "data-kp-action"] });
     cleanups.push(() => {
       observer.disconnect();
       detachTip();
@@ -16710,6 +16717,7 @@ __export(datatable_exports, {
   GRID_PAGE_ROWS: () => GRID_PAGE_ROWS,
   GROUP_EVENT: () => GROUP_EVENT,
   GROUP_ROW: () => GROUP_ROW,
+  HELD_ROW: () => HELD_ROW,
   PAGE_SIZE: () => PAGE_SIZE,
   PAGE_SIZES: () => PAGE_SIZES,
   REQUEST_EVENT: () => REQUEST_EVENT,
@@ -16720,6 +16728,7 @@ __export(datatable_exports, {
   VIEW_EVENT: () => VIEW_EVENT,
   attachDataTables: () => attachDataTables,
   attachGrid: () => attachGrid,
+  boundText: () => boundText,
   compare: () => compare,
   compareByOrder: () => compareByOrder,
   dataTable: () => dataTable,
@@ -16776,7 +16785,13 @@ function filterActive(kind, value) {
   );
   return (range.from ?? "") !== "" || (range.to ?? "") !== "";
 }
-function filterPillLabel(kind, column, value, s2) {
+function boundText(kind, bound, locale) {
+  const day = kind === "date" ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(bound) : null;
+  if (day === null) return bound;
+  const date = new Date(Number(day[1]), Number(day[2]) - 1, Number(day[3]));
+  return date.getMonth() === Number(day[2]) - 1 ? formatDate(date, locale) : bound;
+}
+function filterPillLabel(kind, column, value, s2, locale) {
   if (!filterActive(kind, value)) return null;
   if (kind === "choice") return s2.tableFilterChoicePill(
     column,
@@ -16787,9 +16802,9 @@ function filterPillLabel(kind, column, value, s2) {
     /** @type {{ from?: string, to?: string }} */
     value
   );
-  return s2.tableFilterSpanPill(column, from, to, kind);
+  return s2.tableFilterSpanPill(column, boundText(kind, from, locale), boundText(kind, to, locale), kind);
 }
-function readFilterBounds(kind, bounds, s2) {
+function readFilterBounds(kind, bounds, s2, locale) {
   const value = { from: "", to: "" };
   for (
     const bound of
@@ -16809,7 +16824,7 @@ function readFilterBounds(kind, bounds, s2) {
   }
   const { from, to } = value;
   if (from !== "" && to !== "" && (kind === "range" ? Number(from) > Number(to) : from > to))
-    return { value: null, error: s2.tableFilterBackwards(from, to), bound: "from" };
+    return { value: null, error: s2.tableFilterBackwards(boundText(kind, from, locale), boundText(kind, to, locale)), bound: "from" };
   return { value: from === "" && to === "" ? null : value };
 }
 function matchesFilter(kind, value, text, locale) {
@@ -16835,7 +16850,7 @@ function matchesFilter(kind, value, text, locale) {
   if (to !== "" && at > Date.parse(to) + (/^\d{4}-\d{2}-\d{2}$/.test(to) ? 86399999 : 0)) return false;
   return true;
 }
-function filterPills(kind, column, value, s2) {
+function filterPills(kind, column, value, s2, locale) {
   if (!filterActive(kind, value)) return [];
   if (kind === "choice") {
     const list = (
@@ -16848,7 +16863,16 @@ function filterPills(kind, column, value, s2) {
     /** @type {{ from?: string, to?: string }} */
     value
   );
-  return [{ label: s2.tableFilterRange(column, from || s2.tableFilterOpenEnd, to || s2.tableFilterOpenEnd), without: void 0 }];
+  return [
+    {
+      label: s2.tableFilterRange(
+        column,
+        from === "" ? s2.tableFilterOpenEnd : boundText(kind, from, locale),
+        to === "" ? s2.tableFilterOpenEnd : boundText(kind, to, locale)
+      ),
+      without: void 0
+    }
+  ];
 }
 function syncFixedColumns(table, count2) {
   const head = table.tHead?.rows[0];
@@ -17155,6 +17179,7 @@ function attachDataTables(root = document, {
             if (!detailsWereHidden.has(row)) detailsWereHidden.set(row, row.hidden === true);
           }
         } else if (row.matches(GROUP_ROW)) owner = null;
+        else if (row.matches(HELD_ROW)) owner = null;
         else if (!row.matches(SKELETON_ROW)) owner = row;
       }
     };
@@ -17239,7 +17264,11 @@ function attachDataTables(root = document, {
     const cellValue = (row, at) => row.cells[at]?.getAttribute("data-kp-sort-value") ?? cellText(row, at);
     const choiceText = (row, at) => row.cells[at]?.getAttribute("data-kp-filter-value")?.trim() ?? cellText(row, at);
     const keyOf8 = (row) => row.dataset.kpRowKey ?? row.id ?? "";
-    const isRow2 = (row) => !row.matches(DETAIL) && !row.matches(SKELETON_ROW) && !row.matches(GROUP_ROW);
+    const isRow2 = (row) => !row.matches(DETAIL) && !row.matches(SKELETON_ROW) && !row.matches(GROUP_ROW) && !row.matches(HELD_ROW);
+    const holdRows2 = () => {
+      for (const row of body.querySelectorAll(`:scope > ${HELD_ROW}`)) row.hidden = true;
+    };
+    holdRows2();
     let all = (
       /** @type {HTMLTableRowElement[]} */
       [...body.rows].filter(isRow2)
@@ -18109,6 +18138,7 @@ function attachDataTables(root = document, {
       shown: serverMode ? total || 0 : shownRows.length,
       total: serverMode ? total || 0 : all.length,
       page,
+      pageNumber: page + 1,
       pages: Math.max(1, Math.ceil((serverMode ? total || 0 : shownRows.length) / size2)),
       pageSize: size2,
       query,
@@ -18406,7 +18436,7 @@ function attachDataTables(root = document, {
           /** @type {FilterKind} */
           filterKinds[at]
         );
-        for (const pill of filterPills(kind, labelOf5(at), filters.get(at), s2)) {
+        for (const pill of filterPills(kind, labelOf5(at), filters.get(at), s2, locale)) {
           count2 += 1;
           const item = make23("li", "kp-tag");
           const remove2 = (
@@ -18441,7 +18471,7 @@ function attachDataTables(root = document, {
       for (const [at, value] of filters) {
         const kind = filterKinds[at];
         if (!kind) continue;
-        const label = filterPillLabel(kind, labelOf5(at), value, s2);
+        const label = filterPillLabel(kind, labelOf5(at), value, s2, locale);
         if (label === null) continue;
         count2 += 1;
         const item = make23("li", "kp-tag");
@@ -18661,7 +18691,7 @@ function attachDataTables(root = document, {
             label: bound === "from" ? s2.tableFilterFrom(labelOf5(at)) : s2.tableFilterTo(labelOf5(at))
           };
         };
-        const result = readFilterBounds(kind, { from: read("from"), to: read("to") }, s2);
+        const result = readFilterBounds(kind, { from: read("from"), to: read("to") }, s2, locale);
         for (const input of form2.querySelectorAll("[data-kp-filter-bound]")) input.removeAttribute("aria-invalid");
         if (result.error !== void 0) {
           const error = (
@@ -19810,7 +19840,7 @@ function attachDataTables(root = document, {
       rows: (which = "view") => which === "page" ? [...pageRows] : [...shownRows],
       selected: () => serverMode ? [...serverSelection] : selectedRows().map(keyOf8),
       select,
-      refresh: () => {
+      refresh: (options) => {
         const active = document.activeElement;
         const inBody = active instanceof HTMLElement && body.contains(active) ? active : null;
         const lost = inBody === null && focusMemo !== null && !focusMemo.element.isConnected && (active === null || active === document.body);
@@ -19820,7 +19850,10 @@ function attachDataTables(root = document, {
         const heldGroup = memo?.group ?? null;
         const heldToggle = memo?.selector ?? null;
         collectDetails();
+        holdRows2();
         all = [...body.rows].filter(isRow2);
+        for (let at = rendered.length - 1; at >= 0; at -= 1)
+          if (!all.includes(rendered[at]) && !rendered[at].isConnected) rendered.splice(at, 1);
         for (const row of all) {
           if (!rendered.includes(row)) rendered.push(row);
           prepareRow(row);
@@ -19834,7 +19867,7 @@ function attachDataTables(root = document, {
         collectGroups();
         syncColumns();
         refreshChoices();
-        applyFilter({ keepPage: false });
+        applyFilter({ keepPage: options?.keepPage === true });
         if (held2 !== null && document.activeElement !== held2) {
           let back = held2.isConnected ? held2 : null;
           if (back === null && heldToggle !== null) {
@@ -19848,8 +19881,31 @@ function attachDataTables(root = document, {
     };
     handles7.set(wrap, handle);
     created.push(handle);
+    if (!serverMode) {
+      let queued2 = false;
+      const resync = () => {
+        queued2 = false;
+        holdRows2();
+        const now = [...body.rows].filter(isRow2);
+        if (now.length === all.length && now.every((row, at) => all.includes(row))) return;
+        handles7.get(wrap)?.refresh({ keepPage: true });
+      };
+      const onBody = () => {
+        if (queued2) return;
+        queued2 = true;
+        queueMicrotask(resync);
+      };
+      const rowsWatch = new MutationObserver(onBody);
+      rowsWatch.observe(body, { childList: true });
+      const holdWatch = new MutationObserver(onBody);
+      holdWatch.observe(body, { attributes: true, attributeFilter: ["data-kp-row-hidden"], subtree: true });
+      undo.push(() => {
+        rowsWatch.disconnect();
+        holdWatch.disconnect();
+      });
+    }
     undo.push(
-      watchOptions(wrap, ["data-kp-sort-multi", "data-kp-filter-mode"], () => {
+      watchOptions(wrap, ["data-kp-sort-multi", "data-kp-filter-mode", "data-kp-expand-single"], () => {
         const old = handles7.get(wrap);
         if (old === void 0) return;
         const was = old.view();
@@ -19989,7 +20045,7 @@ function attachDataTables(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, ROW_TOGGLE, GROUP_ROW, GROUP_TOGGLE, GROUP_COUNT, ROW_CONTROLS, DETAIL, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList2, shown, defaultFilter, handles7, instances;
+var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, ROW_TOGGLE, GROUP_ROW, GROUP_TOGGLE, GROUP_COUNT, ROW_CONTROLS, DETAIL, HELD_ROW, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList2, shown, defaultFilter, handles7, instances;
 var init_datatable = __esm({
   "js/datatable.js"() {
     "use strict";
@@ -20033,6 +20089,7 @@ var init_datatable = __esm({
     GROUP_COUNT = "[data-kp-group-count]";
     ROW_CONTROLS = 'a[href], button, input, select, textarea, label, summary, details, [contenteditable=""], [contenteditable="true"], [role="button"], [role="link"], [role="checkbox"], [role="switch"], [role="menuitem"], [tabindex]:not([tabindex="-1"])';
     DETAIL = "[data-kp-row-detail]";
+    HELD_ROW = "[data-kp-row-hidden]";
     EDIT_CELL = "[data-kp-edit-cell]";
     EDIT_VALUE = "[data-kp-edit-value]";
     EDITOR_WRAP = "[data-kp-datatable-editor-wrap]";
@@ -63295,6 +63352,7 @@ export {
   HEAT_PICK_EVENT,
   HEAT_RETRY_EVENT,
   HEAT_ROW_EVENT,
+  HELD_ROW,
   HIGHLIGHT_EVENT,
   HOLD_DELAY,
   HOLD_FAST,
@@ -63878,6 +63936,7 @@ export {
   availabilityRange,
   axisStep,
   barcell_exports as barcellExports,
+  boundText,
   buildAlarm,
   buildProgressbar,
   buildStatusList,
