@@ -300,7 +300,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // the shortcuts view (--kp-shortcuts-view-height, -top), the toggle hint (--kp-toggle-hint-gap, -line) and --kp-usual-check-gap: 944 + 11.
     // Re-pinned 2026-10-19 [gap-log-viewer + gap-diff-view-1019]: the log viewer's two knobs (--kp-logviewer-height, -min) and the diff view's five (--kp-diffview-min, -status, -gap, -added-ch, -removed-ch), all read through var(): 955 + 2 + 5.
     // Re-pinned 2026-10-19 [gap-int-1019]: the five component rounds merged into one branch (log viewer 2, diff view 5, tab count, activity feed, entity tiles) and main's 955; recounted with extractKnobs() after the last merge: 978.
-    assert.equal(result.expected, 978, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-19 [align-grid-1019]: the second batch (state plates, graph loading pictures, live options), the form
+    // grid and the focus tracks landed on main; recounted with extractKnobs(): 1003.
+    assert.equal(result.expected, 1003, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -364,15 +366,19 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And the 11 of 2026-10-18 [release-11-1018] (see the pin above), every one read through var(): 936 + 11.
     // And the log viewer's two and the diff view's five of 2026-10-19, every one read through var(): 947 + 2 + 5.
     // Recounted 2026-10-19 [gap-int-1019] after merging the five rounds into main's 947, every one read through var(): 970.
-    assert.equal(result.readCount, 970);
+    // Recounted 2026-10-19 [align-grid-1019] with the same rounds, every one read through var(): 994.
+    assert.equal(result.readCount, 994);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
     // The four that no rule and no script reads yet stay listed: --kp-busy-opacity, --kp-inspector-min, --kp-week-mode and
     // --kp-wheel-ease; --kp-steps is declared on the progress stripe (css/components.css) and not read through var() there.
+    // --kp-formgrid-stack names the form grid's 36rem stacking width in its documentation; a container query cannot read a
+    // custom property, so the width is written in the query itself (2026-10-19 [align-grid-1019]).
     assert.deepEqual(result.unread, [
         '--kp-busy-opacity',
         '--kp-chart-height',
+        '--kp-formgrid-stack',
         '--kp-inspector-min',
         '--kp-sidenav-lead',
         '--kp-sidenav-room',

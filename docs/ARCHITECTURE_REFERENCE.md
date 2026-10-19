@@ -67,6 +67,10 @@ js/busy-card.js      the busy table's loading   │
                      card over any data area    │
 js/footprint.js      a data component keeps its │
                      loaded height in each state│
+js/feed.js           the activity feed, day by  │
+                     day, who did what and when │
+js/live-options.js   an option read again when  │
+                     its attribute changes      │
 js/motion.js         closing, and easing a size │
 js/update.js         a value updated in place,  │
                      the theme's way            │

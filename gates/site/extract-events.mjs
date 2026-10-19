@@ -46,7 +46,8 @@ function docAbove(source, index) {
  * How often a module dispatches an event constant: directly through
  * `new CustomEvent(CONSTANT …)` (also as one branch of the type expression,
  * `cond ? A_EVENT : B_EVENT`), or through a local `emit(…, CONSTANT …)` helper
- * that builds and dispatches the event itself.
+ * that builds and dispatches the event itself, or handed to the shared state
+ * plate as `retryEvent: CONSTANT` (js/state-plate.js dispatches it on Retry).
  *
  * @param {string} code the module with comments stripped
  * @param {string} constant
@@ -54,7 +55,8 @@ function docAbove(source, index) {
 function countDispatches(code, constant) {
     const direct = new RegExp(`new CustomEvent\\(\\s*[^,;]*\\b${constant}\\b`, 'g');
     const helper = new RegExp(`\\bemit\\w*\\(\\s*[^;()]*\\b${constant}\\b`, 'g');
-    return [...code.matchAll(direct)].length + [...code.matchAll(helper)].length;
+    const plate = new RegExp(`\\bretryEvent\\s*:\\s*${constant}\\b`, 'g');
+    return [...code.matchAll(direct)].length + [...code.matchAll(helper)].length + [...code.matchAll(plate)].length;
 }
 
 /**
