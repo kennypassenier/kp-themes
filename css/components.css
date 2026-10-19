@@ -356,14 +356,22 @@
             grid-template-columns: minmax(0, 1fr);
         }
 
-        /* The buttons from the left, wrapping; the primary on a line of
- * its own, full width and first, the rest beside each other under it. */
+        /* The buttons as one row of equal columns, the primary first; when
+ * they cannot fit beside each other they wrap as equal columns, never as
+ * a ragged stack (qr-header-1019). */
         .kp-page-header__actions {
-            justify-content: flex-start;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+            justify-content: stretch;
+            align-items: stretch;
+        }
+
+        .kp-page-header__actions > .kp-button {
+            justify-content: center;
+            white-space: normal;
         }
 
         .kp-page-header__actions > .kp-button--primary {
-            flex: 1 1 100%;
             order: -1;
         }
     }
@@ -28624,10 +28632,6 @@
     @container kp-qr (max-width: 23rem) {
         .kp-qr {
             --kp-qr-size: min(100%, 16rem);
-        }
-
-        .kp-qr__plate {
-            justify-self: center;
         }
 
         .kp-qr__copy {

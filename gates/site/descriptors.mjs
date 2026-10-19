@@ -9549,7 +9549,7 @@ failed.addEventListener('kp-card-retry', () => setCardState(failed, 'ready'));
             { name: '.kp-page-header__inner', what: 'Two columns: the text block, and the actions against the far edge, level with the title.' },
             { name: '.kp-page-header__title, __description', what: 'The page’s heading, and one sentence under it at a readable measure in the muted ink.' },
             { name: '.kp-page-header__actions', what: 'The buttons, the primary among them, the overflow last; a popover in it hangs under its button towards the start.' },
-            { name: 'on a phone', what: 'Under 40rem the title takes the width and the buttons fold under the description: the primary on a line of its own at the full width, the others beside each other under it, from the left.' },
+            { name: 'on a phone', what: 'Under 40rem the title takes the width and the buttons fold under the description: the buttons form one row of equal columns, the primary first, wrapping as equal columns when they cannot fit.' },
         ],
         accessibility: [
             'Built in — the order on a phone is visual only; in the markup and the tab order the buttons keep yours.',
