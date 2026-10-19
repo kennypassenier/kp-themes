@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 11.1.1 — 2026-10-19
+
+Released on Kenny's go (2026-10-19 21:02: "los alle problemen nu op en release dan een patch"): the package faults the app threads found on v11.1.0 — the chassis-rs page header with a menu button, and the homelab dashboard's component gaps (gantt runs and marks, heat and run-timeline busy cards, chart legend, kpi labels, trace, secret rows, menu button, master-detail plates on a phone, page-header baselines, busy cards in a scroller or on an empty table, console footprint). Screenshot check skipped as for 11.1.0.
+
 - **Fixed: page-header actions level with the title beside a lead, and a button in the title line** [hlfour-1019; homelab 28 pages]. With a `.kp-page-header__lead` (the mark) the left cell's first baseline was the mark's bottom edge, so the actions hung 10.5 px under the title; beside a lead they are now a box as tall as the lead (`--kp-idmark-size`, 2.75rem) with the buttons centred, the title's own centre. A button in `.kp-page-header__line` shares the title's baseline (it stood 5.5 px off the actions). New `.kp-page-header__back` (a way back or the trail) goes before `.kp-page-header__inner`, so it does not become the cell's first baseline. measure-align on title+badge, tabs, description, back link, lead and button variants: aligned in 12 themes.
 - **Fixed: a loading datatable narrower than its frame, or with no rows, still shows its busy card** [hlfour-1019; homelab Settings, Secrets]. The layer was as wide as the table box, so a shrink-wrapped bare table (54 px) left it 0 px wide; it now spans what is seen, and a table with no rows stands the card in the held footprint down to the status line instead of on the strip under the header.
 - **Fixed: a console's failed and loading states keep the loaded footprint** [laststates-1019; measure-states]. The hint under the prompt wraps to two lines on a phone where the failed reason is one, so the failed console was 7 to 27 px lower than the loaded one at 390 (629 against 644 px). `js/console.js` remembers the hint's height while the console is ready and holds it in every other state.
