@@ -23090,7 +23090,26 @@ function lengthPx(el16, text, fallback2) {
   return n;
 }
 function labelsFit(strip) {
-  return [...strip.querySelectorAll(TILE_LABEL)].every((label) => label.scrollWidth <= label.clientWidth + 0.5);
+  return [...strip.querySelectorAll(TILE_LABEL)].every((label) => {
+    const tile = (
+      /** @type {HTMLElement} */
+      label.parentElement
+    );
+    const style = getComputedStyle(tile);
+    const box = tile.getBoundingClientRect();
+    const rtl = style.direction === "rtl";
+    const edge = rtl ? box.left + tile.clientLeft + (Number.parseFloat(style.paddingLeft) || 0) : box.right - tile.clientLeft - (Number.parseFloat(style.paddingRight) || 0);
+    const ends = (el16) => {
+      const r = el16.getBoundingClientRect();
+      const extent = Math.max(el16.scrollWidth, r.width);
+      return rtl ? r.right - extent : r.left + extent;
+    };
+    const reaches2 = (
+      /** @type {HTMLElement[]} */
+      [label, ...tile.querySelectorAll(":scope > .kp-kpi__hint")].map((el16) => ends(el16))
+    );
+    return reaches2.every((at) => rtl ? at >= edge - 0.5 : at <= edge + 0.5);
+  });
 }
 function fitKpiStrip(strip, width) {
   const view = strip.ownerDocument.defaultView;
@@ -38333,16 +38352,22 @@ function setHeat(el16, spec) {
   if (picked == null) el16.removeAttribute("data-kp-heat-picked");
   else el16.setAttribute("data-kp-heat-picked", picked);
   if (state2 === "empty" || state2 === "error") {
+    const title = spec.message ?? (state2 === "error" ? s2.heatFailed : s2.heatEmpty);
+    const kept = PLATES.get(el16);
+    if (kept && kept.note.isConnected && el16.firstElementChild === kept.note && el16.childElementCount === 1) {
+      if (kept.state === state2 && kept.title === title && kept.text === spec.text && kept.art === spec.art) return;
+    }
     const note3 = make11(doc, "div", "kp-heat__state", { "data-kp-state": state2 });
     note3.append(
       hostStatePlate(el16, {
         kind: state2,
-        title: spec.message ?? (state2 === "error" ? s2.heatFailed : s2.heatEmpty),
+        title,
         ...spec.text ? { text: spec.text } : {},
         art: spec.art,
         retryEvent: HEAT_RETRY_EVENT
       })
     );
+    PLATES.set(el16, { note: note3, state: state2, title, text: spec.text, art: spec.art });
     markDrawn(el16);
     el16.replaceChildren(note3);
     return;
@@ -38452,7 +38477,7 @@ function setHeat(el16, spec) {
     el16,
     loading,
     s2.heatLoading,
-    () => [...el16.querySelectorAll(":scope > .kp-heat__row:not(.kp-heat__axis) > .kp-heat__cells")],
+    () => heatArea(el16),
     "kp-heat__busy"
   );
   const stop = focusAt ?? STOPS.get(el16);
@@ -38464,6 +38489,22 @@ function setHeat(el16, spec) {
     );
     again2?.focus({ preventScroll: true });
   }
+}
+function heatArea(el16) {
+  const cells = [...el16.querySelectorAll(":scope > .kp-heat__row:not(.kp-heat__axis) > .kp-heat__cells")].map((c) => c.getBoundingClientRect());
+  if (!cells.length) return [];
+  const box = el16.getBoundingClientRect();
+  const style = getComputedStyle(el16);
+  const floor = box.bottom - el16.clientTop - (Number.parseFloat(style.paddingBottom) || 0);
+  const top = Math.min(...cells.map((r) => r.top));
+  return [
+    {
+      top,
+      left: Math.min(...cells.map((r) => r.left)),
+      bottom: Math.max(floor, ...cells.map((r) => r.bottom)),
+      right: Math.max(...cells.map((r) => r.right))
+    }
+  ];
 }
 function setHeatPick(el16, key) {
   if (key == null) el16.removeAttribute("data-kp-heat-picked");
@@ -39070,7 +39111,7 @@ function attachMatrices(root = document) {
   }
   return () => undo.forEach((fn) => fn());
 }
-var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES2, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, HEAT_CELL, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
+var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES2, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, PLATES, HEAT_CELL, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
 var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
@@ -39104,6 +39145,7 @@ var init_heat = __esm({
     CARDS = /* @__PURE__ */ new WeakMap();
     WAITING = /* @__PURE__ */ new WeakMap();
     DRAWN3 = /* @__PURE__ */ new WeakSet();
+    PLATES = /* @__PURE__ */ new WeakMap();
     HEAT_CELL = ".kp-heat__cell[data-c]:not(.kp-skeleton)";
     legendCount = 0;
     WIRED6 = /* @__PURE__ */ new WeakMap();
@@ -40429,14 +40471,19 @@ function paint8(c) {
       laneById.set(point2.lane, { id: point2.lane, label: point2.lane });
       byLane.set(point2.lane, []);
     }
-  const pad2 = c.span * 6e-3;
+  const room = c.plot.clientWidth;
+  const perPx = room > 0 ? c.span / room : 0;
+  const sample = c.bars.values().next().value;
+  const minBar = sample && Number.parseFloat(getComputedStyle(sample).minWidth) || 8;
+  const pad2 = Math.max(c.span * 6e-3, RUN_GAP_PX * perPx);
+  const reach2 = minBar * perPx;
   const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
   const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
   const lanes = [];
   for (const [id, lane] of laneById) {
     const bars = (byLane.get(id) ?? []).sort((a, b) => a.s - b.s);
     const packed = packRows(
-      bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e })),
+      bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach2) })),
       before,
       pad2
     );
@@ -41403,6 +41450,7 @@ function attachGantts(root = document, options = {}) {
         if (width === last) return;
         last = width;
         c.tickKey = "";
+        if (c.runs.length) paint8(c);
         if (c.held !== null) {
           c.held = null;
           holdHeight(c);
@@ -41539,7 +41587,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint8(c);
 }
-var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX, NOW_GAP_PX;
+var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX, RUN_GAP_PX, NOW_GAP_PX;
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
@@ -41575,6 +41623,7 @@ var init_gantt = __esm({
     MEASURERS = /* @__PURE__ */ new WeakMap();
     OUTSIDE_GAP_PX = 6;
     MARK_GAP_PX = 2;
+    RUN_GAP_PX = 3;
     NOW_GAP_PX = 4;
   }
 });
@@ -44660,6 +44709,54 @@ function wire9(rootEl, historyOption) {
     busy.remove();
     busy = layBusy(false);
   };
+  const lineUp = () => {
+    const plate = (
+      /** @type {HTMLElement | null} */
+      stateEl.firstElementChild
+    );
+    const first = (
+      /** @type {HTMLElement | null} */
+      plate?.firstElementChild ?? null
+    );
+    if (!plate || !first) return;
+    plate.style.removeProperty("padding-block-start");
+    plate.style.removeProperty("margin-block-start");
+    if (state2 !== "empty" || stateEl.hidden || narrow || rootEl.hasAttribute("data-kp-state-wide")) return;
+    const item = (
+      /** @type {HTMLElement | null} */
+      rootEl.querySelector('[data-kp-pane="list"] [data-kp-pane-key]')
+    );
+    if (!item || item.getBoundingClientRect().width === 0) return;
+    const ghost = (
+      /** @type {HTMLElement} */
+      plate.cloneNode(true)
+    );
+    ghost.setAttribute("aria-hidden", "true");
+    ghost.removeAttribute("role");
+    ghost.style.cssText = "grid-area:1/1;visibility:hidden;pointer-events:none;padding-block-start:0;margin-block-start:0";
+    stateEl.append(ghost);
+    const centre = (el16) => {
+      let top = 0;
+      for (let node = (
+        /** @type {HTMLElement | null} */
+        el16
+      ); node && node !== rootEl; node = /** @type {HTMLElement | null} */
+      node.offsetParent) top += node.offsetTop;
+      const range = doc.createRange();
+      range.selectNodeContents(el16);
+      const line = range.getClientRects()[0];
+      const inset = Number.parseFloat(getComputedStyle(el16).paddingTop) || 0;
+      return top + inset + (line ? line.height : el16.offsetHeight) / 2;
+    };
+    const air = centre(item) - centre(
+      /** @type {HTMLElement} */
+      ghost.firstElementChild
+    );
+    ghost.remove();
+    const gap = 4;
+    plate.style.setProperty("padding-block-start", `${Math.max(gap, air).toFixed(1)}px`);
+    if (air < gap) plate.style.setProperty("margin-block-start", `${(air - gap).toFixed(1)}px`);
+  };
   const setState2 = (next2, options = {}) => {
     state2 = next2;
     rootEl.setAttribute("data-kp-state", next2);
@@ -44703,6 +44800,7 @@ function wire9(rootEl, historyOption) {
       void card.close();
     }
     drawn2 = true;
+    lineUp();
   };
   const select = (key, how = {}) => {
     const item = itemOf2(key);
@@ -44820,6 +44918,7 @@ function wire9(rootEl, historyOption) {
     asideNarrow = width < px4(asideFoldAt);
     if (was && !narrow) shown4 = "list";
     sync4();
+    lineUp();
   };
   rootEl.addEventListener("click", onClick);
   rootEl.addEventListener("keydown", onKey3);

@@ -650,7 +650,15 @@ function paint(c) {
             byLane.set(point.lane, []);
         }
     // Lanes: build in the given order, then any a run named on its own.
-    const pad = c.span * 0.006;
+    // Two runs of a row keep a gap in PIXELS, not in time: a run is never drawn narrower than `--kp-gantt-bar-min`, so a short run
+    // reaches past its end by the rest of that width, and on a phone one second is a fraction of a pixel [hlcomp-1019 gantt-gap].
+    // Packing counts that reach and the gap in the seconds one pixel stands for; positions stay laid by time.
+    const room = c.plot.clientWidth;
+    const perPx = room > 0 ? c.span / room : 0;
+    const sample = c.bars.values().next().value;
+    const minBar = (sample && Number.parseFloat(getComputedStyle(sample).minWidth)) || 8;
+    const pad = Math.max(c.span * 0.006, RUN_GAP_PX * perPx);
+    const reach = minBar * perPx;
     const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
     const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
     /** @type {GanttLaneModel[]} */
@@ -658,7 +666,7 @@ function paint(c) {
     for (const [id, lane] of laneById) {
         const bars = (byLane.get(id) ?? []).sort((a, b) => a.s - b.s);
         const packed = packRows(
-            bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e })),
+            bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach) })),
             before,
             pad,
         );
@@ -1178,6 +1186,8 @@ function labelWidth(c, bar) {
 const OUTSIDE_GAP_PX = 6;
 /** The air, in px, between a mark's button and the bar it stands beside, or the label beside a mark. */
 const MARK_GAP_PX = 2;
+/** The least gap, in px, between two runs of one row of a lane. */
+const RUN_GAP_PX = 3;
 /** The air, in px, kept between the line for now and the words of a label inside a bar. */
 const NOW_GAP_PX = 4;
 
@@ -1766,6 +1776,8 @@ export function attachGantts(root = document, options = {}) {
                 if (width === last) return;
                 last = width;
                 c.tickKey = '';
+                // Rows are packed with a gap in pixels: another width packs them again.
+                if (c.runs.length) paint(c);
                 // Lane names wrap differently at another width: the viewport is measured again for whole lanes.
                 if (c.held !== null) {
                     c.held = null;

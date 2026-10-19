@@ -5903,6 +5903,43 @@
         margin-block-start: 0.625rem;
     }
 
+    /* hlcomp-1019:chart-legend:start
+     * The legend is one grid [homelab 78; as the share bar's, b2097cf2]: swatch, name and value are tracks of the legend and every
+     * source is a subgrid of them, so the names all end and the values all start (and end) on one edge, whatever the words and
+     * the digits are. `--kp-chart-legend-columns` (1; 2 in a chart wider than 40rem) is how many source groups stand side by
+     * side; the name track is as wide as the longest name up to 24ch, the value track as the widest value. */
+    .kp-chart__legend {
+        --kp-chart-legend-columns: 1;
+        display: grid;
+        grid-template-columns: repeat(var(--kp-chart-legend-columns), auto minmax(0, max-content) max-content);
+        justify-content: start;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) 6px;
+    }
+
+    @container kp-chart (min-width: 40rem) {
+        .kp-chart__legend {
+            --kp-chart-legend-columns: 2;
+        }
+    }
+
+    .kp-chart__legend > .kp-chart__source {
+        display: grid;
+        grid-column: span 3;
+        grid-template-columns: subgrid;
+        align-items: center;
+    }
+
+    .kp-chart__legend > .kp-chart__source-stub {
+        grid-column: span 3;
+    }
+
+    .kp-chart__legend > .kp-chart__show-all {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+    /* hlcomp-1019:chart-legend:end */
+
     .kp-chart__legend[hidden],
     .kp-chart__hint[hidden] {
         display: none;
@@ -14156,6 +14193,7 @@
         );
         inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
         inline-size: max(var(--kp-gantt-bar-min, 0.5rem), calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%));
+        min-inline-size: var(--kp-gantt-bar-min, 0.5rem);
         block-size: var(--kp-gantt-bar, 1.125rem);
         margin: 0;
         padding: 0;
@@ -18509,8 +18547,20 @@
             position: relative;
         }
 
+        /* The menu button fills its column of the actions grid like the buttons beside it [hlcomp-1019; homelab 84]: the wrapper
+           stretches and its button with it. The wrapper is `static` here, so its open menu is placed against the actions row
+           below (the whole row's width, inside the screen), and a stretched wrapper no longer moves the menu from its button. */
         .kp-page-header__actions > .kp-menu-button {
             position: static;
+            display: flex;
+            inline-size: auto;
+            max-inline-size: none;
+        }
+
+        .kp-page-header__actions > .kp-menu-button > :is(.kp-button, button):not(.kp-menu, [role='menu']) {
+            flex: 1 1 auto;
+            justify-content: center;
+            white-space: normal;
         }
 
         .kp-page-header__actions > .kp-menu-button > .kp-menu {
@@ -24964,6 +25014,19 @@
         visibility: hidden;
     }
 
+    /* hlcomp-1019:pane-empty:start
+     * An empty detail beside a list with items ("Pick a schedule") is the plate from the pane's top, not centred in what is left under
+     * the (hidden) heading: its first line is the list's first line [homelab 80]. The plate keeps its own look (the theme's frame
+     * and padding) and the pane's whole footprint; its words stand at its start. */
+    .kp-split--panes[data-kp-state='empty']:not([data-kp-state-wide], [data-kp-narrow-on]) .kp-pane__state {
+        grid-area: 1 / 1 / -1 / -1;
+    }
+
+    .kp-split--panes[data-kp-state='empty']:not([data-kp-state-wide], [data-kp-narrow-on]) .kp-pane__state > .kp-stateplate {
+        place-content: start center;
+    }
+    /* hlcomp-1019:pane-empty:end */
+
     .kp-split--panes[data-kp-state='empty']:not([data-kp-narrow-on]) .kp-pane__head > [data-kp-pane-heading] {
         visibility: hidden;
     }
@@ -28494,6 +28557,17 @@
     .kp-formgrid
         :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > [data-kp-theme-picker]),
     .kp-formrow:has(> .kp-formrow__control > [data-kp-theme-picker]) {
+        align-items: first baseline;
+    }
+
+    /* A secret's box holds its status line (the countdown, why it is off or failed) under the value and its buttons, so the row's
+       box was 66 px for a 36 px control and, centred on a label with a note, hung 19 px under the label's first line. The status
+       keeps its place in the box (it grows with its words, and showing, hiding or failing moves nothing); the row holds its cells
+       on the first baseline, so the label and the value box share a line whatever stands under them [hlcomp-1019 secret-row;
+       homelab 79; as the theme picker's row above]. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-secret),
+    .kp-formrow:has(> .kp-formrow__control > .kp-secret) {
         align-items: first baseline;
     }
 
@@ -34339,12 +34413,22 @@
         text-transform: capitalize;
     }
 
+    /* The body's own track is `minmax(0, 1fr)`: an `auto` one grew to the widest of a note and its rule badge and ran under the
+     * verdict beside it, so the words wrap inside the body and the badge with them [hlcomp-1019 trace-body; homelab 79]. */
     .kp-steplist--trace .kp-steplist__body {
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-xs, 0.25rem);
         justify-items: start;
     }
 
+    .kp-steplist--trace .kp-steplist__body > * {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
     .kp-trace__rule {
+        white-space: normal;
+        text-align: start;
         border: 1px solid var(--border-strong);
         font: inherit;
         font-size: var(--kp-text-sm, 0.8125rem);
