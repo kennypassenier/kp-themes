@@ -14222,12 +14222,15 @@
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
+    /* The text track is minmax(0, 1fr), not 1fr: a long token wraps in the text column (overflow-wrap) instead of widening the
+ * line past the plate, so every line ends on the plate's inner edge [trace-diff-1019; HTTPSwitchboard 27]. */
     .kp-diff__line {
         display: grid;
-        grid-template-columns: 3rem 1ch 1fr;
+        grid-template-columns: 3rem 1ch minmax(0, 1fr);
         gap: 0.5rem;
         padding-inline: 0.5rem;
         white-space: pre-wrap;
+        overflow-wrap: anywhere;
     }
 
     /* The sign in its own column is the carrier that survives when the colour
@@ -32544,6 +32547,23 @@
         display: none;
     }
 
+    /* One shared state-word column for the hops stood in a column: the list owns the tracks (mark, words, state word as wide as the
+     * longest word of any hop; the outer two tracks take the hop's own padding) and each hop is a subgrid of them, so every hop's words start and end on one edge
+     * [trace-diff-1019; HTTPSwitchboard 26]. The row layout (hops side by side) sets its own columns below. */
+    :where(.kp-trace:not([data-kp-trace-layout='row'])) .kp-steplist--trace {
+        grid-template-columns: max-content minmax(0, 1fr) max-content;
+        column-gap: var(--kp-space-md, 0.75rem);
+    }
+
+    :where(.kp-trace[data-kp-trace-verdict='word']:not([data-kp-trace-layout='row'])) .kp-steplist--trace {
+        grid-template-columns: minmax(0, 1fr) max-content;
+    }
+
+    :where(.kp-trace:not([data-kp-trace-layout='row'])) .kp-steplist--trace > .kp-steplist__item {
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+    }
+
     .kp-steplist--trace .kp-steplist__time {
         min-inline-size: 0;
         font-size: var(--kp-text-sm, 0.8125rem);
@@ -32567,11 +32587,6 @@
     .kp-trace__rule:focus-visible {
         outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
         outline-offset: 2px;
-    }
-
-    /* Without the mark the words are the verdict: the item's columns are the words and the verdict word. */
-    .kp-trace[data-kp-trace-verdict='word'] .kp-steplist--trace > .kp-steplist__item {
-        grid-template-columns: minmax(0, 1fr) auto;
     }
 
     .kp-trace[data-kp-density='compact'] .kp-steplist--trace .kp-steplist__note {
@@ -32624,6 +32639,7 @@
         .kp-trace:not([data-kp-trace-layout]) .kp-steplist--trace,
         .kp-trace[data-kp-trace-layout='auto'] .kp-steplist--trace {
             display: grid;
+            grid-template-columns: none;
             grid-auto-flow: column;
             grid-auto-columns: minmax(var(--kp-trace-min, 9rem), 1fr);
             gap: var(--kp-trace-gap, 1.5rem);
@@ -32631,6 +32647,7 @@
 
         :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto']) .kp-steplist--trace > .kp-steplist__item {
             position: relative;
+            grid-column: auto;
             grid-template-columns: auto minmax(0, 1fr);
             grid-template-areas: 'mark time' 'body body';
             grid-template-rows: 2rem auto;
