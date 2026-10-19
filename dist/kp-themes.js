@@ -36656,6 +36656,7 @@ function rememberView(el16, view) {
 function usesRelation(spec) {
   const uses = /* @__PURE__ */ new Map();
   const usedBy = /* @__PURE__ */ new Map();
+  const lines = /* @__PURE__ */ new Map();
   for (const row of spec.rows ?? []) uses.set(row.key, []);
   for (const column of spec.columns ?? []) usedBy.set(column.key, []);
   for (const row of spec.rows ?? []) {
@@ -36666,15 +36667,36 @@ function usesRelation(spec) {
       hit.tone === "self") continue;
       uses.get(row.key)?.push(column.key);
       usedBy.get(column.key)?.push(row.key);
+      const line = (
+        /** @type {any} */
+        hit
+      );
+      lines.set(`${row.key}>${column.key}`, {
+        ...TONES.includes(line.tone) ? { tone: line.tone } : {},
+        ...typeof line.label === "string" && line.label.trim() ? { label: line.label.trim() } : {}
+      });
     }
   }
-  return { uses, usedBy };
+  return { uses, usedBy, lines };
 }
 function usesPath(shape, x1, y1, x2, y2) {
   const mid = (x1 + x2) / 2;
   if (shape === "straight") return `M${x1} ${y1} L${x2} ${y2}`;
   if (shape === "elbow") return `M${x1} ${y1} H${mid} V${y2} H${x2}`;
   return `M${x1} ${y1} C${mid} ${y1} ${mid} ${y2} ${x2} ${y2}`;
+}
+function tagOf(doc, cls, line) {
+  const tag = make10(doc, "span", cls);
+  if (line.tone) {
+    tag.setAttribute("data-kp-tone", line.tone);
+    const mark = make10(doc, "span", "kp-uses__tag-mark");
+    mark.setAttribute("aria-hidden", "true");
+    mark.textContent = TONE_GLYPH[line.tone];
+    tag.append(mark);
+  }
+  tag.append(make10(doc, "span", "kp-uses__tag-text"));
+  tag.lastElementChild.textContent = line.label ?? "";
+  return tag;
 }
 function drawUsesMap(el16, spec, ctx) {
   const doc = el16.ownerDocument;
@@ -36730,10 +36752,13 @@ function drawUsesMap(el16, spec, ctx) {
   let users = [...spec.columns ?? []];
   if (loading && sources.length === 0) sources = Array.from({ length: spec.skeleton ?? 4 }, (_, i) => ({ key: `s${i}`, label: "" }));
   if (loading && users.length === 0) users = Array.from({ length: spec.skeleton ?? 4 }, (_, i) => ({ key: `u${i}`, label: "" }));
-  const { uses, usedBy } = loading ? { uses: /* @__PURE__ */ new Map(), usedBy: /* @__PURE__ */ new Map() } : usesRelation({ rows: sources, columns: users, cell: spec.cell });
+  const { uses, usedBy, lines: lineInfo } = loading ? { uses: /* @__PURE__ */ new Map(), usedBy: /* @__PURE__ */ new Map(), lines: /* @__PURE__ */ new Map() } : usesRelation({ rows: sources, columns: users, cell: spec.cell });
   if (hideEmpty) sources = sources.filter((s2) => (uses.get(s2.key)?.length ?? 0) > 0);
   const byKey = new Map([...sources, ...users].map((n) => [n.key, n]));
-  const names = (keys) => keys.map((k) => byKey.get(k)?.label ?? k).join(", ");
+  const names = (keys, self, kind) => keys.map((k) => {
+    const label = lineInfo.get(kind === "source" ? `${self}>${k}` : `${k}>${self}`)?.label;
+    return `${byKey.get(k)?.label ?? k}${label ? ` (${label})` : ""}`;
+  }).join(", ");
   const root = make10(doc, "div", "kp-uses");
   root.setAttribute("role", "group");
   root.setAttribute("aria-label", spec.label ?? el16.getAttribute("aria-label") ?? strings.usesLabel);
@@ -36768,7 +36793,7 @@ function drawUsesMap(el16, spec, ctx) {
     card.type = "button";
     card.tabIndex = -1;
     card.setAttribute("aria-pressed", String(memory?.pin === node.key));
-    const what = related.length === 0 ? kind === "source" ? strings.usesNodeUnused(node.label) : strings.usesNodeNothing(node.label) : kind === "source" ? strings.usesNodeSource(node.label, related.length, names(related)) : strings.usesNodeUser(node.label, names(related));
+    const what = related.length === 0 ? kind === "source" ? strings.usesNodeUnused(node.label) : strings.usesNodeNothing(node.label) : kind === "source" ? strings.usesNodeSource(node.label, related.length, names(related, node.key, "source")) : strings.usesNodeUser(node.label, names(related, node.key, "user"));
     card.setAttribute("aria-label", what);
     if (node.glyph) {
       const glyph3 = make10(doc, "span", "kp-docglyph");
@@ -36840,6 +36865,8 @@ function drawUsesMap(el16, spec, ctx) {
         for (const key of related) {
           const user = byKey.get(key);
           const chip = make10(doc, "li", "kp-uses__chip");
+          const line = lineInfo.get(`${source.key}>${key}`);
+          if (line?.tone) chip.setAttribute("data-kp-tone", line.tone);
           if (user?.href) {
             const a = (
               /** @type {HTMLAnchorElement} */
@@ -36848,7 +36875,8 @@ function drawUsesMap(el16, spec, ctx) {
             a.href = user.href;
             a.textContent = user.label;
             chip.append(a);
-          } else chip.textContent = user?.label ?? key;
+          } else chip.append(user?.label ?? key);
+          if (line?.label) chip.append(tagOf(doc, "kp-uses__chip-tag", line));
           chips.append(chip);
         }
         item.append(chips);
@@ -36859,7 +36887,7 @@ function drawUsesMap(el16, spec, ctx) {
   ctx.replaceKeepingCard(el16, [root, list]);
   ctx.syncCard(el16, loading, strings.usesLoading, () => [el16], "kp-uses__busy");
   ctx.markDrawn(el16);
-  if (!loading) memory.off = wire7(el16, root, svg2, list, { sources, users, uses, usedBy, shape, lightMode, collapseBelow, byKey, memory, spec });
+  if (!loading) memory.off = wire7(el16, root, svg2, list, { sources, users, uses, usedBy, lineInfo, shape, lightMode, collapseBelow, byKey, memory, spec });
 }
 function wire7(el16, root, svg2, list, c) {
   const doc = el16.ownerDocument;
@@ -36870,6 +36898,7 @@ function wire7(el16, root, svg2, list, c) {
   const svgNs = "http://www.w3.org/2000/svg";
   const memory = c.memory;
   const lines = /* @__PURE__ */ new Map();
+  const tags = /* @__PURE__ */ new Map();
   const nodeEl = (key) => (
     /** @type {HTMLElement | null} */
     root.querySelector(`.kp-uses__node[data-key="${CSS.escape(key)}"]`)
@@ -36904,6 +36933,44 @@ function wire7(el16, root, svg2, list, c) {
         path.setAttribute("d", usesPath(c.shape, x1, a.top + a.height / 2 - box.top, x2, b.top + b.height / 2 - box.top));
       }
     }
+    placeTags(box);
+  };
+  const placeTags = (box) => {
+    if (tags.size === 0) return;
+    const colA = root.querySelector(".kp-uses__col--sources")?.getBoundingClientRect();
+    const colB = root.querySelector(".kp-uses__col--users")?.getBoundingClientRect();
+    if (!colA || !colB) return;
+    const gap = Math.abs(colA.left < colB.left ? colB.left - colA.right : colA.left - colB.right);
+    root.style.setProperty("--kp-uses-tag-max", `${Math.max(0, gap * 0.72 - 8).toFixed(1)}px`);
+    const held2 = [];
+    const edge = 3;
+    for (const [pair, tag] of tags) {
+      const path = lines.get(pair)?.[0];
+      const length = path?.getTotalLength?.() ?? 0;
+      if (!path || !(length > 0)) {
+        tag.setAttribute("data-kp-uses-unplaced", "");
+        continue;
+      }
+      const w = tag.offsetWidth;
+      const h2 = tag.offsetHeight;
+      let found = false;
+      for (const along of [0.5, 0.44, 0.56, 0.38, 0.62]) {
+        const at = path.getPointAtLength(length * along);
+        const rect = { l: at.x - w / 2 - edge, r: at.x + w / 2 + edge, t: at.y - h2 / 2 - edge, b: at.y + h2 / 2 + edge };
+        if (held2.some((o) => rect.l < o.r && rect.r > o.l && rect.t < o.b && rect.b > o.t)) continue;
+        tag.style.setProperty("left", `${at.x.toFixed(1)}px`);
+        tag.style.setProperty("top", `${at.y.toFixed(1)}px`);
+        held2.push(rect);
+        found = true;
+        break;
+      }
+      if (!found) {
+        const at = path.getPointAtLength(length / 2);
+        tag.style.setProperty("left", `${at.x.toFixed(1)}px`);
+        tag.style.setProperty("top", `${at.y.toFixed(1)}px`);
+      }
+      tag.toggleAttribute("data-kp-uses-unplaced", !found);
+    }
   };
   for (const [source, keys] of c.uses) {
     for (const key of keys) {
@@ -36915,8 +36982,18 @@ function wire7(el16, root, svg2, list, c) {
       path.setAttribute("data-source", source);
       path.setAttribute("data-user", key);
       if (c.byKey.get(source)?.dashed) path.setAttribute("data-kp-dashed", "");
+      const info = c.lineInfo.get(`${source}>${key}`);
+      if (info?.tone) path.setAttribute("data-kp-tone", info.tone);
       svg2.append(path);
       lines.set(`${source}>${key}`, [path]);
+      if (info?.label) {
+        const tag = tagOf(doc, "kp-uses__tag", info);
+        tag.setAttribute("aria-hidden", "true");
+        tag.setAttribute("data-source", source);
+        tag.setAttribute("data-user", key);
+        root.append(tag);
+        tags.set(`${source}>${key}`, tag);
+      }
     }
   }
   const light = (key) => {
@@ -36933,6 +37010,10 @@ function wire7(el16, root, svg2, list, c) {
     }
     for (const node of root.querySelectorAll(".kp-uses__node")) {
       node.toggleAttribute("data-kp-hot", key !== null && hot.has(node.getAttribute("data-key")));
+    }
+    for (const [pair, tag] of tags) {
+      const [s2, u] = pair.split(">");
+      tag.toggleAttribute("data-kp-hot", key !== null && (s2 === key || u === key));
     }
   };
   const lightWhat = () => {
@@ -37069,6 +37150,7 @@ function wire7(el16, root, svg2, list, c) {
   const raf = view.requestAnimationFrame(() => place2());
   return () => {
     watcher?.disconnect();
+    for (const tag of tags.values()) tag.remove();
     view.cancelAnimationFrame(raf);
     root.removeEventListener("pointerover", onOver);
     root.removeEventListener("pointerout", onOut);
@@ -37095,7 +37177,7 @@ function leaveUsesMap(el16) {
   el16.removeAttribute("data-kp-collapsed");
   el16.removeAttribute("data-kp-lit");
 }
-var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, MEMORY8, make10, attr2, rememberKey;
+var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, TONES, TONE_GLYPH, MEMORY8, make10, attr2, rememberKey;
 var init_uses_map = __esm({
   "js/uses-map.js"() {
     "use strict";
@@ -37105,6 +37187,8 @@ var init_uses_map = __esm({
     USES_PIN_EVENT = "kp-uses-pin";
     USES_RETRY_EVENT = "kp-uses-retry";
     USES_COLLAPSE_BELOW = 640;
+    TONES = ["ok", "warn", "bad", "muted"];
+    TONE_GLYPH = Object.freeze({ ok: "\u2713", warn: "!", bad: "\xD7", muted: "\u2013" });
     MEMORY8 = /* @__PURE__ */ new WeakMap();
     make10 = (doc, tag, cls) => {
       const node = doc.createElement(tag);
@@ -37992,7 +38076,7 @@ function attachMatrices(root = document) {
   }
   return () => undo.forEach((fn) => fn());
 }
-var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, HEAT_CELL, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
+var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES2, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, HEAT_CELL, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
 var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
@@ -38012,8 +38096,8 @@ var init_heat = __esm({
     HEAT_RETRY_EVENT = "kp-heat-retry";
     MATRIX_RETRY_EVENT = "kp-matrix-retry";
     MATRIX_LIGHT_EVENT = "kp-matrix-light";
-    TONES = ["ok", "warn", "bad", "muted", "future", "before", "none", "level", "loading", "self", "logged", "quiet", "paused"];
-    toneOf2 = (tone) => TONES.includes(tone ?? "") ? (
+    TONES2 = ["ok", "warn", "bad", "muted", "future", "before", "none", "level", "loading", "self", "logged", "quiet", "paused"];
+    toneOf2 = (tone) => TONES2.includes(tone ?? "") ? (
       /** @type {GridTone} */
       tone
     ) : "muted";
@@ -39447,12 +39531,29 @@ function paint8(c) {
   syncTabStops2(c);
 }
 function holdHeight(c) {
-  if (c.state !== "ready" || c.lanes.length === 0) return;
+  if (c.state !== "ready" || c.lanes.length === 0) {
+    c.body.style.removeProperty("--kp-g-view");
+    return;
+  }
   if (c.held === null) {
     c.scroll.style.removeProperty("block-size");
-    c.held = c.scroll.getBoundingClientRect().height;
+    c.held = viewHeight(c);
   }
-  if (c.held > 0) c.scroll.style.setProperty("block-size", `${c.held}px`);
+  if (c.held > 0) {
+    c.scroll.style.setProperty("block-size", `${c.held}px`);
+    c.body.style.setProperty("--kp-g-view", `${Math.max(0, c.held - c.axis.offsetHeight)}px`);
+  }
+}
+function viewHeight(c) {
+  const natural = c.scroll.getBoundingClientRect().height;
+  if (c.scroll.scrollHeight <= c.scroll.clientHeight + 1) return natural;
+  let fit2 = 0;
+  for (const lane of c.lanes) {
+    const bottom = lane.label.offsetTop + lane.label.offsetHeight;
+    if (bottom > natural + 0.5) break;
+    fit2 = bottom;
+  }
+  return fit2 > c.axis.offsetHeight ? fit2 : natural;
 }
 function drawBusy2(c) {
   const want = c.state === "loading";
@@ -40089,6 +40190,10 @@ function attachGantts(root = document, options = {}) {
         if (width === last) return;
         last = width;
         c.tickKey = "";
+        if (c.held !== null) {
+          c.held = null;
+          holdHeight(c);
+        }
         tick4(c);
       });
       c.observer.observe(c.plot);

@@ -747,12 +747,36 @@ function paint(c) {
  * releases it. @param {GanttModel} c
  */
 function holdHeight(c) {
-    if (c.state !== 'ready' || c.lanes.length === 0) return;
+    if (c.state !== 'ready' || c.lanes.length === 0) {
+        c.body.style.removeProperty('--kp-g-view');
+        return;
+    }
     if (c.held === null) {
         c.scroll.style.removeProperty('block-size');
-        c.held = c.scroll.getBoundingClientRect().height;
+        c.held = viewHeight(c);
     }
-    if (c.held > 0) c.scroll.style.setProperty('block-size', `${c.held}px`);
+    if (c.held > 0) {
+        c.scroll.style.setProperty('block-size', `${c.held}px`);
+        // The layers over the lanes are as tall as the viewport under the axis, no taller [r3r5-1019 gantt-frame].
+        c.body.style.setProperty('--kp-g-view', `${Math.max(0, c.held - c.axis.offsetHeight)}px`);
+    }
+}
+
+/**
+ * The height the viewport holds: all the lanes when they fit under the frame's cap, else the whole lanes that do, so a lane is never
+ * cut at the frame's edge and the rules and bands end where the last visible lane ends [r3r5-1019 gantt-frame].
+ * @param {GanttModel} c
+ */
+function viewHeight(c) {
+    const natural = c.scroll.getBoundingClientRect().height;
+    if (c.scroll.scrollHeight <= c.scroll.clientHeight + 1) return natural;
+    let fit = 0;
+    for (const lane of c.lanes) {
+        const bottom = lane.label.offsetTop + lane.label.offsetHeight;
+        if (bottom > natural + 0.5) break;
+        fit = bottom;
+    }
+    return fit > c.axis.offsetHeight ? fit : natural;
 }
 
 /**
@@ -1457,6 +1481,11 @@ export function attachGantts(root = document, options = {}) {
                 if (width === last) return;
                 last = width;
                 c.tickKey = '';
+                // Lane names wrap differently at another width: the viewport is measured again for whole lanes.
+                if (c.held !== null) {
+                    c.held = null;
+                    holdHeight(c);
+                }
                 tick(c);
             });
             c.observer.observe(c.plot);

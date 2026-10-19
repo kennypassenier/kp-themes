@@ -13062,8 +13062,12 @@
         color: var(--card-foreground, var(--foreground));
     }
 
+    /* The viewport holds whole lanes (js/gantt.js sets its height to the last lane that fits under --kp-gantt-height) and a
+     * scroll comes to rest on a lane's top, so a lane is never cut at the frame's edge [r3r5-1019 gantt-frame]. */
     .kp-gantt__scroll {
         max-block-size: var(--kp-gantt-height, 22rem);
+        scroll-padding-block-start: var(--kp-gantt-axis, 1.75rem);
+        scroll-snap-type: y proximity;
         overflow-x: hidden;
         overflow-y: auto;
         touch-action: pan-y;
@@ -13074,7 +13078,9 @@
         --kp-gantt-pad: 0.25rem;
         position: relative;
         display: grid;
-        grid-template-columns: var(--kp-gantt-label, 9rem) minmax(0, 1fr);
+        /* The lanes' name column is as wide as its longest name (never under --kp-gantt-label, never over
+         * --kp-gantt-label-max, then the names wrap) [r3r5-1019 gantt-names]. */
+        grid-template-columns: fit-content(var(--kp-gantt-label-max, min(40%, 14rem))) minmax(0, 1fr);
         isolation: isolate;
     }
 
@@ -13092,6 +13098,7 @@
 
     .kp-gantt__corner {
         grid-column: 1;
+        min-inline-size: var(--kp-gantt-label, 9rem);
     }
 
     .kp-gantt__axis {
@@ -13178,10 +13185,16 @@
         outline-offset: -2px;
     }
 
+    /* The layers that run down every lane (the rules, the line for now, the selection) are no taller than what the frame shows:
+     * they stand under the axis as the viewport scrolls (`--kp-g-view`, set by js/gantt.js) instead of running on, unseen, past
+     * the frame and the legend under it [r3r5-1019 gantt-frame]. */
     .kp-gantt__lines {
         grid-column: 2;
         grid-row: 2 / span var(--kp-g-lanes, 1);
-        position: relative;
+        position: sticky;
+        inset-block-start: var(--kp-gantt-axis, 1.75rem);
+        align-self: start;
+        block-size: min(100%, var(--kp-g-view, 100%));
         overflow: hidden;
         pointer-events: none;
     }
@@ -13194,22 +13207,26 @@
         border-inline-start: 1px solid var(--border);
     }
 
+    /* A lane's name is never cut with an ellipsis: it wraps and its row grows to hold it. Its first line stands on the
+     * middle of the lane's first row, where the bars and marks of that row stand [r3r5-1019 gantt-names]. */
     .kp-gantt__lane {
         grid-column: 1;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         min-inline-size: 0;
         box-sizing: border-box;
-        padding: 0 var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-gantt-pad) var(--kp-space-sm, 0.5rem) calc(var(--kp-gantt-pad) - 1px);
         border-block-end: 1px solid var(--border);
         font-size: var(--kp-text-sm, 0.8125rem);
+        scroll-snap-align: start;
     }
 
-    .kp-gantt__lane > span {
+    .kp-gantt__lane:not(.kp-gantt__ghost) > :is(span, a) {
+        display: grid;
+        align-content: center;
         min-inline-size: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        min-block-size: var(--kp-gantt-row, 1.75rem);
+        overflow-wrap: break-word;
     }
 
     .kp-gantt__track {
@@ -13217,14 +13234,17 @@
         position: relative;
         overflow: hidden;
         box-sizing: border-box;
-        block-size: calc(var(--kp-g-rows, 1) * var(--kp-gantt-row, 1.75rem) + 2 * var(--kp-gantt-pad));
+        min-block-size: calc(var(--kp-g-rows, 1) * var(--kp-gantt-row, 1.75rem) + 2 * var(--kp-gantt-pad));
         border-block-end: 1px solid var(--border);
     }
 
     .kp-gantt__plot {
         grid-column: 2;
         grid-row: 2 / span var(--kp-g-lanes, 1);
-        position: relative;
+        position: sticky;
+        inset-block-start: var(--kp-gantt-axis, 1.75rem);
+        align-self: start;
+        block-size: min(100%, var(--kp-g-view, 100%));
         overflow: hidden;
         pointer-events: none;
     }
@@ -13354,7 +13374,8 @@
     .kp-gantt__swatch[data-kp-state='queued'] {
         --kp-gantt-fill: var(--muted-foreground);
         --kp-gantt-ink: var(--foreground);
-        background: transparent;
+        /* Hollow, but on the card's own ground: the rules and bands under it do not cross its words [r3r5-1019 gantt-rules]. */
+        background: var(--card);
         border-style: dashed;
     }
 
@@ -13539,7 +13560,7 @@
  * small mark in its lane, in the colour and shape of its kind (the shape is the second carrier [DI4]); a planned one is
  * hollow; marks too close to tell apart are one mark with a count on a small plate beside it. A stretch is a thin band in
  * its lane, or a band behind every lane. The mark's button is larger than the mark, so it is easy to hit. Knobs [KT6]:
- * `--kp-gantt-mark-size` (0.75rem), `--kp-gantt-hit` (1.375rem, the button), `--kp-gantt-zone` (0.375rem, a lane's band),
+ * `--kp-gantt-mark-size` (0.75rem), `--kp-gantt-hit` (1.375rem, the button), `--kp-gantt-zone` (0.25rem, a lane's band),
  * `--kp-gantt-row-sub` (2.5rem, a lane's row when lanes carry a second line). */
     .kp-gantt__point {
         --kp-gantt-mark: var(--primary);
@@ -13686,10 +13707,12 @@
         pointer-events: none;
     }
 
+    /* A lane's own stretch stands on the foot of the lane's first row, under the marks and their count plates, not through
+     * their middle where it ran behind a "+2" [r3r5-1019 gantt-zone]. */
     .kp-gantt__zone[data-kp-lane-zone] {
         inset-block: auto;
-        inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-zone, 0.375rem)) / 2);
-        block-size: var(--kp-gantt-zone, 0.375rem);
+        inset-block-start: calc(var(--kp-gantt-pad) + var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-zone, 0.25rem));
+        block-size: var(--kp-gantt-zone, 0.25rem);
         border: 0;
         border-radius: var(--kp-radius-pill, 999px);
         background: hsl(from var(--kp-gantt-mark) h s l / 0.55);
@@ -13738,9 +13761,7 @@
     :is(.kp-gantt__name, .kp-gantt__sub) {
         display: block;
         min-inline-size: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: break-word;
     }
 
     .kp-gantt__sub {
@@ -13766,6 +13787,10 @@
         visibility: hidden;
         padding: 0;
         overflow: hidden;
+    }
+
+    .kp-gantt--line .kp-gantt__corner {
+        min-inline-size: 0;
     }
 
     .kp-gantt--line :is(.kp-gantt__corner, .kp-gantt__axis) {
@@ -16608,7 +16633,8 @@
  * it does not touch); one cell can be pinned (`aria-pressed`); a rule
  * being read marks the cells it touches (`data-kp-mark`).
  * Knobs: --kp-matrix-cols (set by the script), --kp-matrix-head (6.5rem, 4.6rem
- * in a box under 36rem), --kp-matrix-cell-min (3.5rem), --kp-matrix-cell-height
+ * in a box under 36rem: the row-label column's least width) and --kp-matrix-head-max (12rem, 8rem under 36rem: its
+ * most; between the two it is as wide as its longest label), --kp-matrix-cell-min (3.5rem), --kp-matrix-cell-height
  * (44px), --kp-matrix-gap (4px), --kp-matrix-mark-gap and --kp-matrix-head-pad (--kp-space-sm: a header's
  * name from its mark and from its edges), --kp-matrix-ground (the card colour: what the
  * sticky headers are painted with), --kp-matrix-dim (0.4). */
@@ -16619,14 +16645,16 @@
         max-inline-size: 100%;
         overflow: auto;
         overscroll-behavior-x: contain;
-        scroll-padding-inline-start: var(--kp-matrix-head, 6.5rem);
+        scroll-padding-inline-start: var(--kp-matrix-head-max, 12rem);
         scroll-padding-block-start: 2.5rem;
         font-size: var(--kp-text-xs, 0.75rem);
     }
 
     .kp-matrix__grid {
         display: grid;
-        grid-template-columns: var(--kp-matrix-head, 6.5rem) repeat(var(--kp-matrix-cols, 5), minmax(var(--kp-matrix-cell-min, 3.5rem), 1fr));
+        /* The row-label column is as wide as its longest label (never under --kp-matrix-head, never over --kp-matrix-head-max,
+         * then the labels wrap), and a column is never narrower than its header's longest word [r3r5-1019 uses-labels]. */
+        grid-template-columns: fit-content(var(--kp-matrix-head-max, 12rem)) repeat(var(--kp-matrix-cols, 5), minmax(min-content, 1fr));
         gap: var(--kp-matrix-gap, 4px);
         inline-size: max-content;
         min-inline-size: 100%;
@@ -16640,6 +16668,7 @@
     @container kp-matrix (max-width: 36rem) {
         .kp-matrix__grid {
             --kp-matrix-head: 4.6rem;
+            --kp-matrix-head-max: 8rem;
             --kp-matrix-gap: 3px;
             --kp-matrix-head-pad: var(--kp-space-xs, 0.25rem);
         }
@@ -16649,6 +16678,7 @@
         position: sticky;
         inset: 0 auto auto 0;
         z-index: 3;
+        min-inline-size: var(--kp-matrix-head, 6.5rem);
         display: flex;
         align-items: flex-end;
         padding: 4px var(--kp-matrix-head-pad, var(--kp-space-sm, 0.5rem));
@@ -16702,11 +16732,12 @@
         box-shadow: var(--kp-matrix-gap, 4px) 0 0 var(--kp-matrix-ground);
     }
 
+    /* A header's name is never cut with an ellipsis: it wraps onto more lines and the row (or the header row) grows to hold
+     * it; only a word longer than its column breaks, at the column's edge [r3r5-1019 uses-labels]. */
     .kp-matrix__name {
         min-inline-size: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: break-word;
+        white-space: normal;
     }
 
     .kp-matrix__mark {
@@ -16742,7 +16773,7 @@
         box-sizing: border-box;
         display: grid;
         place-items: center;
-        min-inline-size: 0;
+        min-inline-size: var(--kp-matrix-cell-min, 3.5rem);
         min-block-size: var(--kp-matrix-cell-height, 44px);
         margin: 0;
         padding: 2px;
@@ -29802,8 +29833,96 @@
 
     .kp-matrix--lines[data-kp-lit] .kp-uses__line[data-kp-hot] {
         opacity: 1;
-        stroke: var(--primary);
         stroke-width: calc(var(--kp-uses-line, 1.5) * 1.5);
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__line[data-kp-hot]:not([data-kp-tone]) {
+        stroke: var(--primary);
+    }
+
+    /* A line with a tone [r3r5-1019 line-tone] (`cell()` returns `{ tone, label }`): the colour is never alone, each tone has
+     * its own pattern as well (ok solid, warn dashed, bad dotted and heavier, muted thin) and the label's plate carries the
+     * tone's mark. A lit line keeps its tone's colour. */
+    .kp-uses__line[data-kp-tone='ok'] {
+        stroke: var(--success-foreground);
+    }
+
+    .kp-uses__line[data-kp-tone='warn'] {
+        stroke: var(--warning-foreground);
+        stroke-dasharray: 8 4;
+    }
+
+    .kp-uses__line[data-kp-tone='bad'] {
+        stroke: var(--destructive);
+        stroke-width: calc(var(--kp-uses-line, 1.5) * 1.5);
+        stroke-dasharray: 1 5;
+        stroke-linecap: round;
+    }
+
+    .kp-uses__line[data-kp-tone='muted'] {
+        stroke: var(--muted-foreground);
+        stroke-width: calc(var(--kp-uses-line, 1.5) * 0.7);
+    }
+
+    /* The words on a line: a plate in the gap between the columns, as wide as the gap allows (`--kp-uses-tag-max`, set by
+     * js/uses-map.js) with its words wrapping, so it never covers a card. One that found no free place on its line shows
+     * while its line is lit. */
+    .kp-uses__tag {
+        --kp-uses-tag-tone: var(--border-strong);
+        position: absolute;
+        z-index: 1;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-inline-size: var(--kp-uses-tag-max, 6rem);
+        translate: -50% -50%;
+        padding: 0.125rem 0.375rem;
+        border: 1px solid var(--kp-uses-tag-tone);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.25;
+        overflow-wrap: break-word;
+        pointer-events: none;
+    }
+
+    :is(.kp-uses__tag, .kp-uses__chip)[data-kp-tone='ok'] {
+        --kp-uses-tag-tone: var(--success-foreground);
+    }
+
+    :is(.kp-uses__tag, .kp-uses__chip)[data-kp-tone='warn'] {
+        --kp-uses-tag-tone: var(--warning-foreground);
+    }
+
+    :is(.kp-uses__tag, .kp-uses__chip)[data-kp-tone='bad'] {
+        --kp-uses-tag-tone: var(--destructive);
+    }
+
+    :is(.kp-uses__tag, .kp-uses__chip)[data-kp-tone='muted'] {
+        --kp-uses-tag-tone: var(--muted-foreground);
+    }
+
+    .kp-uses__tag-mark {
+        flex: none;
+        font-weight: 700;
+    }
+
+    .kp-uses__tag-text {
+        min-inline-size: 0;
+    }
+
+    .kp-uses__tag[data-kp-uses-unplaced]:not([data-kp-hot]) {
+        visibility: hidden;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__tag:not([data-kp-hot]) {
+        opacity: 0.2;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__tag[data-kp-hot] {
+        z-index: 2;
     }
 
     .kp-uses__node {
@@ -29969,6 +30088,19 @@
         border: 1px solid var(--border-strong);
         border-radius: 999px;
         overflow-wrap: anywhere;
+    }
+
+    .kp-uses__chip[data-kp-tone] {
+        border-color: var(--kp-uses-tag-tone);
+    }
+
+    .kp-uses__chip-tag {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
     }
 
     .kp-uses__chip-link {
@@ -100699,8 +100831,7 @@
     }
 
     [data-theme='formal'] .kp-gantt__zone[data-kp-lane-zone] {
-        block-size: 2px;
-        inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - 2px) / 2);
+        --kp-gantt-zone: 2px;
         border: 0;
         border-radius: 0;
         background: var(--kp-gantt-mark);
