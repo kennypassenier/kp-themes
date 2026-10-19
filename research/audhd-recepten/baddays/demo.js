@@ -500,6 +500,10 @@ function stateButtons(id, show) {
             return out;
         };
         /** @param {string} value */
+        apply['cal-busy'] = (value) => {
+            cal.classList.toggle('kp-calendar--busy-days', value === 'days');
+            cal.classList.toggle('kp-calendar--busy-whole', value !== 'days');
+        };
         apply['cal-fill'] = (value) => {
             if (value === 'success') cal.setAttribute('data-kp-logged-fill', 'success');
             else cal.removeAttribute('data-kp-logged-fill');

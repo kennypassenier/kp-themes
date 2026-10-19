@@ -388,7 +388,10 @@
                         {"value":"success","label":"The success plate","hint":"A green plate for the days something went in."}]},
                     {"id":"cal-pause","label":"A time away","default":"none","options":[
                         {"value":"none","label":"No pause marked (recommended)","hint":"Every quiet day is just quiet."},
-                        {"value":"holiday","label":"Mark the holiday","hint":"A week away is hatched, so it is not read as a gap."}]}]'
+                        {"value":"holiday","label":"Mark the holiday","hint":"A week away is hatched, so it is not read as a gap."}]},
+                    {"id":"cal-busy","label":"How the month loads","default":"whole","options":[
+                        {"value":"whole","label":"One busy card over the month (recommended)","hint":"The same loading card as every other data area."},
+                        {"value":"days","label":"A spinner in each day","hint":"Each day loads on its own; busier to look at."}]}]'
                 aria-labelledby="h-freezer-month"
             >
                 <div class="bd-sec__head">
@@ -403,6 +406,7 @@
                     <ul>
                         <li>The days something went in are filled with the number of portions; other past days are lighter, with no border, no number and no word like &ldquo;missed&rdquo;.</li>
                         <li><b>Mark the holiday</b> hatches one week; press a quiet day and it behaves like any day.</li>
+                        <li><b>Spinner per day</b> puts the theme's spinner in each day while the month loads.</li>
                         <li><b>Loading</b>, <b>Nothing frozen this month</b> and <b>Could not read</b> keep the six rows of the month.</li>
                     </ul>
                 </div>
@@ -428,6 +432,11 @@
                         <b>Time away:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="cal-pause" data-value="none">Not marked (default)</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="cal-pause" data-value="holiday">Holiday week</button>
+                    </div>
+                    <div role="group" aria-label="How the month loads" class="bd-actions">
+                        <b>Loading:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="cal-busy" data-value="whole">Busy card (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="cal-busy" data-value="days">Spinner per day (kp-calendar--busy-days)</button>
                     </div>
                 </div>
                 <div class="bd-calwrap">
