@@ -4285,9 +4285,11 @@
         outline: none;
     }
 
+    /* The state fills the stage, so an empty or failed plate takes the stage's whole held height in every theme (centre
+     * kept a 90-138 px plate in a stage as tall as the loaded data where a register has no wrapper of its own; kyu 47). */
     .kp-card__state {
         display: grid;
-        align-content: center;
+        align-content: stretch;
     }
 
     .kp-card__state[hidden] {
@@ -13569,6 +13571,20 @@
          * the list is empty or held short (a first load, one item): the held footprint wins when it is taller. */
         .kp-week[data-kp-state='loading'] .kp-week__upcoming {
             min-block-size: max(var(--kp-week-hold, 0px), 7.5rem);
+        }
+
+        /* While it loads, the list fills the whole held agenda (js/footprint.js holds the host at its loaded height), so
+         * the busy card laid over the list covers the data area rather than a short strip at its top [almanac, 2c3a5c6e]. */
+        .kp-week[data-kp-state='loading']:has(> .kp-week__frame > .kp-week__upcoming) {
+            grid-template-rows: auto minmax(0, 1fr) auto;
+        }
+
+        .kp-week[data-kp-state='loading']:not(:has(> .kp-week__nav)):has(> .kp-week__frame > .kp-week__upcoming) {
+            grid-template-rows: minmax(0, 1fr) auto;
+        }
+
+        .kp-week[data-kp-state='loading'] > .kp-week__frame:has(> .kp-week__upcoming) {
+            display: grid;
         }
 
         .kp-week__next {
