@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="audhd-timing" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Recipe app: counting back from dinner</title>
+        <link rel="stylesheet" href="../../../css/fonts.css" />
+        <link rel="stylesheet" href="../../../css/themes.css" />
+        <link rel="stylesheet" href="../../../css/components.css" />
+        <link rel="stylesheet" href="../../../css/layout.css" />
+        <link rel="stylesheet" href="../../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main tm-page">
+            <header class="tm-intro">
+                <h1>Recipe app: counting back from dinner</h1>
+                <p class="cat-intro">
+                    Time blindness means &ldquo;I have plenty of time&rdquo; is true until it suddenly is not. The app answers it backwards: you say when
+                    you eat, it works out when each part of the meal has to start, shows it as lanes you can see at a glance, shrinks the wait to the
+                    start as a disc instead of ticking numbers, and nudges you once, kindly. The sample dish is spaghetti with meatballs; the step times
+                    are mock data and nothing is saved. The page runs on a demo clock that starts at 17:22 on 18/10/2026.
+                </p>
+            </header>
+
+            <!-- 1 · the sentence ------------------------------------------------------------------------------------------------------------ -->
+            <section
+                class="tm-sec"
+                id="tm-sentence-sec"
+                data-review-item="timing-sentence"
+                data-review-topic="timing-sentence"
+                data-review-topic-title="Sentence: we eat at"
+                data-review-components="sentence timefield"
+                data-review-title="We eat at: the sentence that counts back"
+                data-review-motion="none"
+                data-review-choices='[
+  { "id": "look", "label": "How are the fields drawn?", "default": "underline", "options": [
+    { "value": "underline", "label": "Underlined, like words with a line under them (recommended)", "hint": "Reads as a sentence first, a form second." },
+    { "value": "boxed", "label": "Boxed, like small inputs", "hint": "More obviously editable, less like a sentence." } ] },
+  { "id": "size", "label": "How big is the sentence?", "default": "lg", "options": [
+    { "value": "lg", "label": "Large (recommended)", "hint": "The one thing on the page is the sentence; easy to hit on a phone." },
+    { "value": "md", "label": "Normal text size", "hint": "Fits more beside other content." } ] },
+  { "id": "step", "label": "Minutes between the times in the list", "default": "5", "options": [
+    { "value": "5", "label": "Every 5 minutes (recommended)", "hint": "18:25, 18:30, 18:35: the way people say a mealtime." },
+    { "value": "15", "label": "Every 15 minutes", "hint": "Fewer entries, quicker to pick; typing still allows any minute." } ] },
+  { "id": "spare", "label": "What does the spare time start at?", "default": "0", "options": [
+    { "value": "0", "label": "No time (recommended)", "hint": "17:40 for a 18:30 dinner, exactly the sum of the steps." },
+    { "value": "10", "label": "10 minutes", "hint": "Food is ready ten minutes early: room for a slow start or setting the table." } ] }
+]'
+                aria-labelledby="h-tm-sentence"
+            >
+                <div class="tm-sec__head">
+                    <h2 id="h-tm-sentence">We eat at: the sentence that counts back</h2>
+                    <p>
+                        A sentence you fill in. Say when dinner is and it counts back through the recipe&rsquo;s step times to the moment you start;
+                        change the start instead and dinner moves.
+                    </p>
+                </div>
+                <div class="tm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The sentence reads <b>We eat at 18:30, so I start at 17:40.</b> Both times are fields in the words. Change
+                            <b>We eat at</b> (type, use the arrow keys, or pick from the list) and <b>I start at</b> follows at once; change
+                            <b>I start at</b> and <b>We eat at</b> follows. <b>Pace</b> and <b>to spare</b> move the start too: a slow pace stretches the
+                            steps you do with your hands, spare time makes the food ready earlier.
+                        </li>
+                        <li>
+                            Under the sentence one line says in words when each part starts. <b>The clock says 17:44</b> puts the start in the past: a
+                            calm blue note offers a new dinner time (18:34) instead of an error, and pressing it moves dinner.
+                        </li>
+                        <li>
+                            <b>Loading</b> shows a skeleton in the start field only, at its final width, while you can still type the dinner time.
+                            <b>No step times</b> and <b>Failed</b> are plates that fill the card, with a normal-size button.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the sentence is the biggest thing in the card, the underlined times sit inside the words with air round them, and the
+                        late note is blue and calm, never red. In the plates the title and sentence are centred and the button is normal size.
+                    </p>
+                </div>
+                <div class="tm-controls" data-review-controls data-review-controls-for="tm-sentence-card">
+                    <div role="group" aria-label="The recipe">
+                        <b>The recipe:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-s-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-s-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-s-state="empty" aria-pressed="false">No step times</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-s-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="The clock">
+                        <b>The clock says:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-s-now="17:22" aria-pressed="true">17:22</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-s-now="17:44" aria-pressed="false">17:44 (start has passed)</button>
+                    </div>
+                </div>
+                <section class="kp-card tm-card tm-card--sentence" id="tm-sentence-card" data-kp-state="ready" aria-labelledby="tm-sentence-title" data-kp-loading-words="Reading the step times">
+                    <div class="kp-card__header"><h3 class="kp-card__title" id="tm-sentence-title">Spaghetti with meatballs</h3></div>
+                    <p class="kp-card__body">Three things cook at once: the pasta, the sauce and the oven.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data tm-data">
+                            <form class="kp-sentence" data-kp-sentence id="tm-sentence" data-kp-look="underline" data-kp-sentence-size="lg" onsubmit="return false">
+                                <p class="kp-sentence__text">
+                                    We eat at
+                                    <span class="kp-sentence__field"
+                                        ><span
+                                            class="kp-time"
+                                            id="tm-eat"
+                                            data-kp-time
+                                            data-kp-time-look="inline"
+                                            data-kp-label="We eat at"
+                                            data-kp-name="eat"
+                                            data-kp-value="18:30"
+                                            data-kp-time-step="5"
+                                            data-kp-time-min="16:00"
+                                            data-kp-time-max="22:00"
+                                            data-kp-time-presets="Early=18:00,Usual=18:30,Late=19:30"
+                                        ></span></span
+                                    >, so I start at
+                                    <span class="kp-sentence__field"
+                                        ><span
+                                            class="kp-time"
+                                            id="tm-start"
+                                            data-kp-time
+                                            data-kp-time-look="inline"
+                                            data-kp-label="I start at"
+                                            data-kp-name="start"
+                                            data-kp-value="17:40"
+                                            data-kp-time-step="5"
+                                        ></span></span
+                                    >. I cook at a
+                                    <span class="kp-sentence__field"
+                                        ><select name="pace" aria-label="Cooking pace" id="tm-pace">
+                                            <option value="1">normal</option>
+                                            <option value="1.25">slow</option>
+                                            <option value="1.5">very slow</option>
+                                        </select></span
+                                    >
+                                    pace and want
+                                    <span class="kp-sentence__field"
+                                        ><select name="spare" aria-label="Time to spare" id="tm-spare">
+                                            <option value="0">no time</option>
+                                            <option value="5">5 minutes</option>
+                                            <option value="10">10 minutes</option>
+                                            <option value="15">15 minutes</option>
+                                        </select></span
+                                    >
+                                    to spare.
+                                </p>
+                            </form>
+                            <p class="tm-readout" id="tm-sentence-readout" role="status"></p>
+                            <div class="kp-alert kp-alert--info tm-late" id="tm-late" hidden>
+                                <div class="kp-alert__body">
+                                    <strong id="tm-late-title"></strong>
+                                    <span id="tm-late-text"></span>
+                                </div>
+                                <button type="button" class="kp-button kp-button--sm" id="tm-late-go"></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 2 · the plan as lanes ---------------------------------------------------------------------------------------------------- -->
+            <section
+                class="tm-sec"
+                id="tm-plan-sec"
+                data-review-item="timing-plan"
+                data-review-topic="timing-plan"
+                data-review-topic-title="Plan lanes"
+                data-review-components="gantt"
+                data-review-title="Tonight&#39;s plan: one lane per track"
+                data-review-motion="none"
+                data-review-choices='[
+  { "id": "marks", "label": "Mark where each track starts?", "default": "on", "options": [
+    { "value": "on", "label": "Yes, a diamond at each start (recommended)", "hint": "The moment you act, not only a bar that begins." },
+    { "value": "off", "label": "No, the bars alone", "hint": "Quieter; the start is where the bar begins." } ] },
+  { "id": "colour", "label": "What colours the bars?", "default": "track", "options": [
+    { "value": "track", "label": "The track: pasta, sauce, oven (recommended)", "hint": "A track is one colour from start to end, the lane names are in the legend." },
+    { "value": "state", "label": "One colour for every step", "hint": "Calmest; the lane already says which track." } ] },
+  { "id": "band", "label": "Show the eating moment as a band?", "default": "on", "options": [
+    { "value": "on", "label": "Yes, a band at dinner (recommended)", "hint": "Everything has to end where the band begins." },
+    { "value": "off", "label": "No band", "hint": "Cleaner; dinner is only in the sentence." } ] }
+]'
+                aria-labelledby="h-tm-plan"
+            >
+                <div class="tm-sec__head">
+                    <h2 id="h-tm-plan">Tonight&rsquo;s plan: one lane per track</h2>
+                    <p>
+                        Every part of the meal on its own lane, counted back from dinner, so you see when each one starts (the pasta water goes on at
+                        18:05) and what runs at the same time.
+                    </p>
+                </div>
+                <div class="tm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three lanes, <b>Pasta</b>, <b>Sauce</b> and <b>Oven</b>, each with the moment it starts under its name (<b>Start at 18:05</b>
+                            for the pasta) and a diamond where it starts. Each bar is one step; all three lanes end where the blue band of dinner begins.
+                            The line for now stands at 17:22.
+                        </li>
+                        <li>
+                            Press a bar or a diamond: its card says the step, the times and whether you can walk away from it, and the line under the
+                            plan repeats it. <b>We eat at</b> moves every lane; <b>Slow day</b> stretches only the steps you do with your hands.
+                            <b>Run</b> moves the clock a minute a second and the line for now crosses the plan; <b>Hold</b> stops it.
+                        </li>
+                        <li>
+                            <b>Loading</b> puts the card&rsquo;s busy spinner over the lanes while the names and axis stay; <b>No step times</b> and
+                            <b>Failed</b> are plates that fill the card, with a normal-size button.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: three clearly separate lanes in three calm colours, lane names with their start under them, nothing cut or touching
+                        the edge, and the busy and plate states take the same height as the plan.
+                    </p>
+                </div>
+                <div class="tm-controls" data-review-controls data-review-controls-for="tm-plan-card">
+                    <div role="group" aria-label="The recipe">
+                        <b>The recipe:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-state="empty" aria-pressed="false">No step times</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="We eat at">
+                        <b>We eat at:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-eat="18:30" aria-pressed="true">18:30</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-eat="19:00" aria-pressed="false">19:00</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-eat="19:30" aria-pressed="false">19:30</button>
+                    </div>
+                    <div role="group" aria-label="Pace">
+                        <b>Pace:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-pace="1" aria-pressed="true">Normal</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-pace="1.5" aria-pressed="false">Slow day</button>
+                    </div>
+                    <div role="group" aria-label="Clock">
+                        <b>Clock:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-clock="0" aria-pressed="true">Hold</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-p-clock="60" aria-pressed="false">Run</button>
+                    </div>
+                </div>
+                <section class="kp-card tm-card tm-card--plan" id="tm-plan-card" data-kp-state="ready" aria-labelledby="tm-plan-title" data-kp-loading-words="Counting back from the step times">
+                    <div class="kp-card__header"><h3 class="kp-card__title" id="tm-plan-title">Tonight&rsquo;s plan</h3></div>
+                    <p class="kp-card__body" id="tm-plan-body"></p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data tm-data">
+                            <div id="tm-gantt-slot"></div>
+                            <p class="tm-readout" id="tm-plan-readout" role="status">Press a bar or a diamond to read it.</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 3 · the disc ------------------------------------------------------------------------------------------------------------------ -->
+            <section
+                class="tm-sec"
+                id="tm-timer-sec"
+                data-review-item="timing-disc"
+                data-review-topic="timing-disc"
+                data-review-topic-title="Disc timer"
+                data-review-components="timer-disc countdown"
+                data-review-title="Time until you start: a disc, not ticking numbers"
+                data-review-motion="none"
+                data-review-choices='[
+  { "id": "numbers", "label": "Show the minutes as digits too?", "default": "off", "options": [
+    { "value": "off", "label": "No, only the disc (recommended)", "hint": "Nothing ticks, nothing flickers; the time left is the size of the disc." },
+    { "value": "on", "label": "Yes, digits beside the disc", "hint": "For the days you want the exact number; it runs with the disc." } ] },
+  { "id": "face", "label": "What is a full disc?", "default": "fit", "options": [
+    { "value": "fit", "label": "The whole wait (recommended)", "hint": "Full when you set it, empty at the start moment, whatever the length." },
+    { "value": "dial60", "label": "A 60-minute dial", "hint": "The classic Time Timer: 18 minutes is a small slice, so two hours is easy to compare." } ] }
+]'
+                aria-labelledby="h-tm-disc"
+            >
+                <div class="tm-sec__head">
+                    <h2 id="h-tm-disc">Time until you start: a disc, not ticking numbers</h2>
+                    <p>
+                        The wait until the start moment as a coloured disc that shrinks to nothing, so the time left is seen at a glance and no numbers
+                        change; the digits are one switch away.
+                    </p>
+                </div>
+                <div class="tm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A disc named <b>Start cooking · 18 min</b>, full, with <b>Start</b> and <b>Reset</b>. Press <b>Start</b>: the disc turns back
+                            towards twelve o&rsquo;clock and shrinks to nothing at 17:40, while the line under it says what the demo clock reads. No digits
+                            change anywhere. At the end it says <b>Start cooking: time is up</b>, and a note says what to do first.
+                        </li>
+                        <li>
+                            <b>Running</b>, <b>Last minute</b> and <b>Time is up</b> jump to those moments. <b>Real time</b> runs the clock at normal speed,
+                            <b>A minute a second</b> makes 18 minutes pass in 18 seconds. <b>We eat at</b> sets how long the disc is (19:30 is a 78 minute
+                            wait, so its digits show hours).
+                        </li>
+                        <li>
+                            <b>Loading</b> puts the busy spinner over the disc; <b>No step times</b> and <b>Failed</b> are plates that fill the card,
+                            with a normal-size button.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the disc is round, centred and large, its edge moves smoothly and the buttons under it keep their width as the words
+                        change. With digits on, they sit beside it without moving the disc.
+                    </p>
+                </div>
+                <div class="tm-controls" data-review-controls data-review-controls-for="tm-timer-card">
+                    <div role="group" aria-label="The timer">
+                        <b>The timer:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-timer="waiting" aria-pressed="true">Waiting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-timer="running" aria-pressed="false">Running</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-timer="last" aria-pressed="false">Last minute</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-timer="up" aria-pressed="false">Time is up</button>
+                    </div>
+                    <div role="group" aria-label="The recipe">
+                        <b>The recipe:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-state="empty" aria-pressed="false">No step times</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="We eat at">
+                        <b>We eat at:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-eat="18:30" aria-pressed="true">18:30</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-eat="19:00" aria-pressed="false">19:00</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-eat="19:30" aria-pressed="false">19:30</button>
+                    </div>
+                    <div role="group" aria-label="Clock">
+                        <b>Clock:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-speed="60" aria-pressed="true">A minute a second</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-t-speed="1" aria-pressed="false">Real time</button>
+                    </div>
+                </div>
+                <section class="kp-card tm-card tm-card--timer" id="tm-timer-card" data-kp-state="ready" aria-labelledby="tm-timer-title" data-kp-loading-words="Working out the start">
+                    <div class="kp-card__header"><h3 class="kp-card__title" id="tm-timer-title">Until you start</h3></div>
+                    <p class="kp-card__body" id="tm-timer-body"></p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data tm-data">
+                            <div class="tm-timer" id="tm-timer-grid">
+                                <div class="tm-timer__disc" id="tm-disc-slot"></div>
+                                <div class="tm-timer__digits" id="tm-digits-slot" hidden></div>
+                            </div>
+                            <p class="tm-readout" id="tm-timer-readout" role="status"></p>
+                            <div class="kp-alert kp-alert--info" id="tm-timer-up" hidden>
+                                <div class="kp-alert__body"><strong>It is 17:40.</strong> <span id="tm-timer-up-text"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 4 · the nudge ------------------------------------------------------------------------------------------------------------------ -->
+            <section
+                class="tm-sec"
+                id="tm-nudge-sec"
+                data-review-item="timing-nudge"
+                data-review-topic="timing-nudge"
+                data-review-topic-title="Nudge"
+                data-review-components="attention snooze"
+                data-review-title="A gentle nudge before the start"
+                data-review-choices='[
+  { "id": "lead", "label": "How early does the first nudge come?", "default": "10", "options": [
+    { "value": "10", "label": "10 minutes before the start (recommended)", "hint": "Enough to finish a sentence and fetch the board, short enough to still be about now." },
+    { "value": "30", "label": "30 minutes before as well", "hint": "An early quiet heads-up for people who need a long run-up." },
+    { "value": "0", "label": "Only at the start", "hint": "Fewest messages, but no run-up at all." } ] },
+  { "id": "look", "label": "How does Not yet look?", "default": "chips", "options": [
+    { "value": "chips", "label": "A row of choices (recommended)", "hint": "Every answer is on screen, each with the exact moment it means." },
+    { "value": "menu", "label": "One button with a menu", "hint": "Takes a line less; the choices are one press away." } ] }
+]'
+                aria-labelledby="h-tm-nudge"
+            >
+                <div class="tm-sec__head">
+                    <h2 id="h-tm-nudge">A gentle nudge before the start</h2>
+                    <p>
+                        Shortly before the start the page says so once, in plain words, and offers Not yet. Past the start it offers a new dinner time,
+                        never a reproach.
+                    </p>
+                </div>
+                <div class="tm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>30 minutes before</b> is a quiet blue heads-up with nothing to press (only with the early nudge option).
+                            <b>10 minutes before</b> says <b>Start in 10 minutes</b>, names the first step and has <b>I am starting</b>.
+                            <b>At the start</b> turns to the warning tone and says what comes first. <b>Past the start</b> has it too, says nothing is lost and
+                            offers <b>Eat at 18:34</b>; it never uses the red failure style.
+                        </li>
+                        <li>
+                            Under it, <b>Not yet</b> offers 5 minutes, 10 minutes or your own time, each with the exact moment. Pick one and the band
+                            becomes a quiet line, with <b>Snoozed until 17:35</b> and <b>End snooze</b>.
+                        </li>
+                        <li>
+                            <b>Loading</b> puts the busy spinner over the card; <b>No step times</b> and <b>Failed</b> are plates that fill it, with a
+                            normal-size button.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the band is calm and readable, blue for information and warning-toned for the start, the button sits at the right edge of the
+                        band, and the snooze row lines up under it.
+                    </p>
+                </div>
+                <div class="tm-controls" data-review-controls data-review-controls-for="tm-nudge-card">
+                    <div role="group" aria-label="The moment">
+                        <b>The moment:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-n-moment="30" aria-pressed="false">30 minutes before</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-n-moment="10" aria-pressed="true">10 minutes before</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-n-moment="0" aria-pressed="false">At the start</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-n-moment="late" aria-pressed="false">Past the start</button>
+                    </div>
+                    <div role="group" aria-label="The recipe">
+                        <b>The recipe:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-n-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-n-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-n-state="empty" aria-pressed="false">No step times</button>
+                        <button type="button" class="kp-button kp-button--sm" data-tm-n-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <section class="kp-card tm-card tm-card--nudge" id="tm-nudge-card" data-kp-state="ready" aria-labelledby="tm-nudge-title" data-kp-loading-words="Looking up the start">
+                    <div class="kp-card__header"><h3 class="kp-card__title" id="tm-nudge-title">Spaghetti with meatballs, dinner at 18:30</h3></div>
+                    <p class="kp-card__body" id="tm-nudge-body"></p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data tm-data">
+                            <div class="kp-attention" id="tm-band" aria-label="What needs you now"></div>
+                            <p class="tm-readout" id="tm-nudge-quiet" role="status"></p>
+                            <div class="tm-nudge-snooze">
+                                <p class="tm-label" id="tm-snooze-label">Not yet? Remind me in:</p>
+                                <div id="tm-snooze-slot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "audhd-timing-0a1f5c52-7d2e-4b8c-9e43-6b1d0f2a8c71", "received": [] }
+        </script>
+        <script type="module" src="../../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../../_review/review.js"></script>
+        <script src="../../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../../catalogue/catalogue.js"></script>
+    </body>
+</html>

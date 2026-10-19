@@ -93,6 +93,18 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's wheel screen, formal only (new demo). research/audhd-recepten/.
+            {
+                href: 'research/audhd-recepten/wheel/demo.html',
+                label: 'Recipe app: what do we eat? (the wheel)',
+                about: 'The AuDHD recipe app wheel: dishes not cooked for long get a bigger slice, yes or spin again or not this week, three-way filter chips for meal, time and ingredients, and a No energy today switch that keeps only safe dishes, freezer portions and zero-prep food. 4 sections, formal only.',
+            },
+            // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's backward timing, formal only (new demo). research/audhd-recepten/.
+            {
+                href: 'research/audhd-recepten/timing/demo.html',
+                label: 'Recipe app: counting back from dinner time',
+                about: 'The AuDHD recipe app against time blindness: the sentence We eat at 18:30 so I start at 17:40, the plan as lanes for pasta, sauce and oven, a disc that shrinks to the start moment, and gentle nudges before the start. 4 sections, formal only.',
+            },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): the Inbox triage and the Notification rules pages rebuilt on 11.0.0 components, formal only, with sample data in the dashboard's own shapes.
             {
                 href: 'research/app-homelab-inbox/demo.html',

@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="audhd-wheel" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>What do we eat? The wheel, the filters and the No energy switch · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../../css/fonts.css" />
+        <link rel="stylesheet" href="../../../css/themes.css" />
+        <link rel="stylesheet" href="../../../css/components.css" />
+        <link rel="stylesheet" href="../../../css/layout.css" />
+        <link rel="stylesheet" href="../../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main wl-page">
+            <header class="wl-intro">
+                <h1>What do we eat?</h1>
+                <p class="cat-intro">
+                    The screen for the moment you freeze on &ldquo;what do we eat tonight&rdquo;. The wheel chooses and you only say yes or spin
+                    again; filters keep the wheel to what fits; a <b>No energy today</b> switch cuts it down to dishes that ask almost nothing of
+                    you. The dishes are sample data (Belgian home cooking), the clock stands at Sunday 18/10/2026 17:10 and dinner is at 18:30.
+                    Judge it in the review dialog, in formal.
+                </p>
+            </header>
+
+            <!-- 1 · the wheel -->
+            <section
+                class="wl-sec"
+                id="wheel"
+                data-review-item="wheel"
+                data-review-topic="wheel"
+                data-review-topic-title="What do we eat?"
+                data-review-components="wheel card-state art"
+                data-review-title="The wheel and its answer"
+                data-review-motion="none"
+                data-review-choices='[
+                    { "id": "odds", "label": "How the slices are sized", "once": true, "default": "recency", "options": [
+                        { "value": "recency", "label": "Long not eaten: bigger", "hint": "Default. A dish you have not cooked for a long time gets a bigger slice and so a better chance; yesterday&#39;s dish a small one. It stops the same three dishes coming round every week." },
+                        { "value": "freezer", "label": "Use up the freezer first", "hint": "The same, and a dish with portions in the freezer counts three times as much, so the freezer empties before the food in it turns old." },
+                        { "value": "equal", "label": "All slices equal", "hint": "Every dish the same size. Plainest; nothing is steered." }] },
+                    { "id": "spin", "label": "How long a spin lasts", "once": true, "default": "calm", "options": [
+                        { "value": "calm", "label": "Calm: 3.6 s, 3 to 6 turns", "hint": "Default. Long enough to feel chosen by luck, short enough not to be a wait." },
+                        { "value": "quick", "label": "Quick: 1.5 s, 1 to 2 turns", "hint": "For a day with little patience; the wheel is only a short turn." },
+                        { "value": "slow", "label": "Slow: 6 s, 6 to 9 turns", "hint": "A little ceremony, for when choosing should feel like an event." }] },
+                    { "id": "repeat", "label": "Spin again may land on the same dish", "once": true, "default": "never", "options": [
+                        { "value": "never", "label": "Never twice in a row", "hint": "Default. Spin again always gives another dish while there is one." },
+                        { "value": "allow", "label": "May repeat", "hint": "Pure chance: the same dish can come up again." }] },
+                    { "id": "skip", "label": "The button that sets a dish aside", "once": true, "default": "week", "options": [
+                        { "value": "week", "label": "Not this one, not again this week", "hint": "Default. The dish rests until the same day next week and can be brought back with one press." },
+                        { "value": "tonight", "label": "Not this one, not tonight", "hint": "The dish leaves the wheel for tonight only." },
+                        { "value": "off", "label": "No such button", "hint": "Only Yes and Spin again: the fewest choices on screen." }] }]'
+                aria-labelledby="h-wheel"
+            >
+                <div class="wl-sec__head">
+                    <h2 id="h-wheel">The wheel and its answer</h2>
+                    <p>
+                        Press Spin and the wheel picks tonight&rsquo;s dinner; dishes you have not cooked for a long time get a bigger slice, and all
+                        you do is say yes or spin again.
+                    </p>
+                </div>
+                <div class="wl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Thirteen real dishes on one round wheel. <b>Witloof in ham and cheese</b> (40 days), <b>waterzooi</b> (31) and
+                            <b>stoofvlees</b> (24) have the largest slices; <b>Croque monsieur</b> (2 days) and <b>yoghurt</b> (1 day) the smallest.
+                        </li>
+                        <li>
+                            <b>Spin</b> (the wheel&rsquo;s hub, or Space on it, or <b>Spin again</b> beside the wheel): the wheel turns and slows to a
+                            stop on one dish. At the right the card then names it, says when it was last cooked and why its slice was that size.
+                            Nothing on the page moves while it turns.
+                        </li>
+                        <li>
+                            <b>Yes, cook this</b> is dimmed, with a reason, until the wheel has chosen. Pressed, it fixes tonight&rsquo;s dinner and
+                            counts back from 18:30 to when to start (and says so plainly when that moment is already past).
+                        </li>
+                        <li>
+                            <b>Not this one, not again this week</b> takes the dish off the wheel (the slices glide to their new size) and lists it
+                            under <b>Resting</b> with a <b>Bring back</b> button.
+                        </li>
+                        <li>
+                            The state buttons above the card: <b>Loading</b> lays the busy card over the whole card, <b>No dish fits</b> shows a
+                            large centred note with <b>Loosen a filter</b>, <b>Failed</b> a large centred alert with <b>Try again</b>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the wheel is the one large shape, its slices soft washes of the chart colours with navy ink, the hub a navy disc;
+                        the answer at its right is a plain ruled column. Look at the room round every word on the card and at the three buttons
+                        standing in one column with their one-line descriptions beside them.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="wl-card-a">
+                    <div role="group" aria-label="Try it" class="wl-controls">
+                        <b>Try it:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-wl-try="spin" title="Spin the wheel as if the hub was pressed">Spin the wheel</button>
+                        <button type="button" class="kp-button kp-button--sm" data-wl-try="reset" title="Clear the answer and bring every resting dish back">Start over</button>
+                    </div>
+                    <div role="group" aria-label="State of the card" class="wl-controls" data-wl-states="wl-card-a">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-wl-state="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="empty">No dish fits</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="error">Failed</button>
+                    </div>
+                </div>
+                <section class="kp-card wl-card" id="wl-card-a" data-kp-state="ready" aria-labelledby="wl-card-a-t" data-kp-loading-words="Reading your dishes">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="wl-card-a-t">Tonight&rsquo;s dinner</h3>
+                        <div class="kp-card__actions"><span class="kp-badge" data-wl-fitcount>13 dishes</span></div>
+                    </div>
+                    <p class="kp-card__body">Dinner is at 18:30. Spin once; if the answer does not feel right, spin again or set that dish aside.</p>
+                    <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                </section>
+            </section>
+
+            <!-- 2 · the filters -->
+            <section
+                class="wl-sec"
+                id="filters"
+                data-review-item="filters"
+                data-review-topic="filters"
+                data-review-topic-title="Filters for the wheel"
+                data-review-components="segmented toggle card-state art"
+                data-review-title="Filters: want, not, or either way"
+                data-review-motion="none"
+                data-review-choices='[
+                    { "id": "time-ask", "label": "How the time is asked", "once": true, "default": "tri", "options": [
+                        { "value": "tri", "label": "Want / not / either way per band", "hint": "Default. Three bands (up to 20 min, 21 to 45, over 45); each can be wanted, left out or ignored, like the meals and the ingredients." },
+                        { "value": "limit", "label": "One limit: up to 20, 45 or 90 min", "hint": "One toggle button group, one on at most: a single ceiling for the time a dish may take. Quicker to read on a tired day." }] },
+                    { "id": "loosen", "label": "What Loosen a filter lets go of", "once": true, "default": "smart", "options": [
+                        { "value": "smart", "label": "The one that frees the most dishes", "hint": "Default. The button measures every chip you set and lets go of the one that brings the most dishes back, and says which." },
+                        { "value": "last", "label": "The one you pressed last", "hint": "Undo in the order you set them: the newest chip goes first." }] }]'
+                aria-labelledby="h-filters"
+            >
+                <div class="wl-sec__head">
+                    <h2 id="h-filters">Filters: want, not, or either way</h2>
+                    <p>
+                        Each chip is pressed once to require something, twice to leave it out and a third time to let it go, so &ldquo;dinner, quick,
+                        without cheese&rdquo; is three presses and the wheel only holds what fits.
+                    </p>
+                </div>
+                <div class="wl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three rows with their names in one column: <b>Meal</b>, <b>Time</b> and <b>Ingredients</b>. Each chip shows the exact
+                            number of dishes behind it. Press a chip: it is filled with a tick (required); press again: struck through with a cross
+                            (left out); a third time: neutral. The line under each row says what is chosen in words.
+                        </li>
+                        <li>
+                            Required meals and times mean <b>any of them</b>, required ingredients mean <b>all of them</b>; anything left out
+                            removes the dish. The card below lists the dishes that fit and the badge says &ldquo;N of 13&rdquo; (the real number).
+                        </li>
+                        <li>
+                            <b>Clear all filters</b> lets every chip go. A set that leaves nothing (try <b>Nothing fits</b>) fills the card with a
+                            large centred note and <b>Loosen a filter</b>, which lets go of the chip that frees the most dishes and says which.
+                        </li>
+                        <li>
+                            <b>Loading</b> puts the busy card over the list and a placeholder where the chip counts are; <b>Failed</b> a large alert
+                            with <b>Try again</b>. The chips themselves stay usable in every state.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: a pressed chip turns its face round (navy, light words) with a tick; a left-out chip keeps its face but strikes its
+                        word through in the destructive ink. Look at the three label columns lining up and at the chips never changing width when
+                        they change state.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="wl-filters">
+                    <div role="group" aria-label="Try a set of filters" class="wl-controls">
+                        <b>Try a set:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-wl-preset="quick" title="Dinner, up to 20 minutes, no cheese">Quick dinner</button>
+                        <button type="button" class="kp-button kp-button--sm" data-wl-preset="nothing" title="Breakfast and a long dish: no dish is both">Nothing fits</button>
+                    </div>
+                    <div role="group" aria-label="State of the list" class="wl-controls" data-wl-states="wl-fits">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-wl-state="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="error">Failed</button>
+                    </div>
+                </div>
+                <div class="wl-filters" id="wl-filters">
+                    <p class="wl-filters__name" id="wl-f-meal-l">Meal</p>
+                    <div class="wl-filters__row">
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="tri" data-kp-segmented-summary aria-labelledby="wl-f-meal-l" id="wl-f-meal">
+                            <button type="button" class="kp-segmented__item" data-value="breakfast"><span class="kp-segmented__label">Breakfast</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="lunch"><span class="kp-segmented__label">Lunch</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="dinner"><span class="kp-segmented__label">Dinner</span></button>
+                        </div>
+                    </div>
+                    <p class="wl-filters__name" id="wl-f-time-l">Time</p>
+                    <div class="wl-filters__row">
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="tri" data-kp-segmented-summary aria-labelledby="wl-f-time-l" id="wl-f-time">
+                            <button type="button" class="kp-segmented__item" data-value="quick"><span class="kp-segmented__label">Up to 20 min</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="mid"><span class="kp-segmented__label">21 to 45 min</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="long"><span class="kp-segmented__label">Over 45 min</span></button>
+                        </div>
+                        <div class="kp-toggles" role="group" aria-labelledby="wl-f-time-l" id="wl-f-limit" data-kp-toggle-group="limit" data-kp-toggle-mode="single-or-none" hidden>
+                            <button type="button" class="kp-button" data-kp-toggle data-kp-look="chip" aria-pressed="false" data-kp-toggle-value="20">Up to 20 min</button>
+                            <button type="button" class="kp-button" data-kp-toggle data-kp-look="chip" aria-pressed="false" data-kp-toggle-value="45">Up to 45 min</button>
+                            <button type="button" class="kp-button" data-kp-toggle data-kp-look="chip" aria-pressed="false" data-kp-toggle-value="90">Up to 90 min</button>
+                        </div>
+                    </div>
+                    <p class="wl-filters__name" id="wl-f-ing-l">Ingredients</p>
+                    <div class="wl-filters__row">
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="tri" data-kp-segmented-summary aria-labelledby="wl-f-ing-l" id="wl-f-ing">
+                            <button type="button" class="kp-segmented__item" data-value="chicken"><span class="kp-segmented__label">Chicken</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="beef"><span class="kp-segmented__label">Beef</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="egg"><span class="kp-segmented__label">Egg</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="cheese"><span class="kp-segmented__label">Cheese</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="tomato"><span class="kp-segmented__label">Tomato</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="potato"><span class="kp-segmented__label">Potato</span></button>
+                        </div>
+                    </div>
+                    <div class="wl-filters__foot">
+                        <button type="button" class="kp-button kp-button--sm" id="wl-f-clear">Clear all filters</button>
+                        <p class="wl-live" role="status" id="wl-f-live">Nothing is filtered: every dish is on the list.</p>
+                    </div>
+                </div>
+                <section class="kp-card wl-card wl-card--list" id="wl-fits" data-kp-state="ready" aria-labelledby="wl-fits-t" data-kp-loading-words="Reading your dishes">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="wl-fits-t">Dishes that fit</h3>
+                        <div class="kp-card__actions"><span class="kp-badge" id="wl-fits-count">13 of 13</span></div>
+                    </div>
+                    <p class="kp-card__body">These are the dishes on the wheel right now, with how long ago each was cooked.</p>
+                    <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                </section>
+            </section>
+
+            <!-- 3 · No energy today -->
+            <section
+                class="wl-sec"
+                id="no-energy"
+                data-review-item="no-energy"
+                data-review-topic="no-energy"
+                data-review-topic-title="No energy today"
+                data-review-components="toggle wheel card-state"
+                data-review-title="No energy today: only what is possible"
+                data-review-motion="none"
+                data-review-choices='[
+                    { "id": "easy-mode", "label": "What the switch does to the wheel", "once": true, "default": "limit", "options": [
+                        { "value": "limit", "label": "Only easy dishes on the wheel", "hint": "Default. Everything that needs real cooking leaves the wheel, so any answer is one you can manage today." },
+                        { "value": "weight", "label": "All dishes, easy ones four times as big", "hint": "A softer day: nothing is taken away, but the easy dishes are four times as likely." }] },
+                    { "id": "easy-calm", "label": "Calm look while it is on", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "Calm mode comes on with it", "hint": "Default. The page turns movement and effects down while No energy is on (the wheel then turns only a short way); it is not remembered." },
+                        { "value": "off", "label": "The page stays as it is", "hint": "Only the dishes change; the page keeps all its motion." }] }]'
+                aria-labelledby="h-easy"
+            >
+                <div class="wl-sec__head">
+                    <h2 id="h-easy">No energy today: only what is possible</h2>
+                    <p>
+                        One switch for the days with nothing in the tank: the wheel only holds safe favourites, portions from the freezer and food
+                        that needs no preparing at all.
+                    </p>
+                </div>
+                <div class="wl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Off: the wheel holds all 13 dishes. Press the <b>No energy today</b> switch: the slices that ask real effort shrink away
+                            and eight dishes are left (the badge says &ldquo;8 dishes&rdquo;); the wheel keeps its size and place.
+                        </li>
+                        <li>
+                            <b>What counts as easy</b> are three toggle chips with their exact counts (Safe favourites 6, Freezer portions 3, No prep
+                            4). Turn one off and the dishes only it allowed leave the wheel; turn all three off and the card says nothing is left and
+                            offers <b>Loosen a filter</b>. While the switch is off the chips are dimmed with a reason.
+                        </li>
+                        <li>
+                            Spin, and the answer card says in its facts why the dish is easy (&ldquo;Safe&rdquo;, &ldquo;Freezer, 4 portions&rdquo;,
+                            &ldquo;No prep&rdquo;); the start time counts back from dinner as before.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the switch is the package&rsquo;s own, its track navy when on. Look at the wheel shrinking to fewer, larger slices
+                        without moving, and at the sentence beside the switch saying what it does.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="wl-easy">
+                    <div role="group" aria-label="State of the card" class="wl-controls" data-wl-states="wl-card-c">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-wl-state="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="error">Failed</button>
+                    </div>
+                </div>
+                <div class="wl-easy" id="wl-easy">
+                    <div class="wl-easy__side">
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" id="wl-easy-switch" />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>No energy today</span>
+                        </label>
+                        <p class="wl-easy__says">
+                            On: the wheel only holds dishes you can manage today. Nothing is deleted; switch it off and everything is back.
+                        </p>
+                        <p class="wl-filters__name" id="wl-easy-kinds-l">What counts as easy</p>
+                        <div class="kp-toggles" role="group" aria-labelledby="wl-easy-kinds-l" id="wl-easy-kinds" data-kp-toggle-group="easy" data-kp-toggle-mode="multi">
+                            <button type="button" class="kp-button" data-kp-toggle data-kp-look="chip" data-kp-pressed-mark="check" aria-pressed="true" data-kp-toggle-value="safe">Safe favourites</button>
+                            <button type="button" class="kp-button" data-kp-toggle data-kp-look="chip" data-kp-pressed-mark="check" aria-pressed="true" data-kp-toggle-value="freezer">Freezer portions</button>
+                            <button type="button" class="kp-button" data-kp-toggle data-kp-look="chip" data-kp-pressed-mark="check" aria-pressed="true" data-kp-toggle-value="noprep">No prep</button>
+                        </div>
+                        <p class="wl-live" role="status" id="wl-easy-live">No energy today is off: the wheel holds every dish.</p>
+                    </div>
+                    <section class="kp-card wl-card" id="wl-card-c" data-kp-state="ready" aria-labelledby="wl-card-c-t" data-kp-loading-words="Reading your dishes">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="wl-card-c-t">Tonight&rsquo;s dinner</h3>
+                            <div class="kp-card__actions"><span class="kp-badge" data-wl-fitcount>13 dishes</span></div>
+                        </div>
+                        <p class="kp-card__body">Same wheel, limited by the switch at the left.</p>
+                        <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- 4 · states -->
+            <section
+                class="wl-sec"
+                id="states"
+                data-review-item="states"
+                data-review-topic="states"
+                data-review-topic-title="When the wheel cannot spin"
+                data-review-components="card-state art wheel"
+                data-review-title="Loading, nothing fits and failed"
+                data-review-motion="none"
+                data-review-choices='[
+                    { "id": "art", "label": "The drawing on an empty or failed card", "once": true, "default": "with", "options": [
+                        { "value": "with", "label": "With the theme&#39;s drawing", "hint": "Default. Formal draws its ledger: a page with an entry struck through. It says at a glance what kind of emptiness this is." },
+                        { "value": "without", "label": "Words only", "hint": "No drawing: the note is the title, one sentence and the action." }] }]'
+                aria-labelledby="h-states"
+            >
+                <div class="wl-sec__head">
+                    <h2 id="h-states">Loading, nothing fits and failed</h2>
+                    <p>
+                        What the card shows while the dishes load, when the filters leave nothing and when the dishes could not be read; it keeps its
+                        size in every state so the page does not jump.
+                    </p>
+                </div>
+                <div class="wl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>: the theme&rsquo;s busy card centred over the whole card (the wheel under it dimmed), animated from the first
+                            frame. The card is as tall as when it is ready.
+                        </li>
+                        <li>
+                            <b>No dish fits</b>: a large centred note (heading size) filling the card, with the drawing, one sentence about what blocks
+                            and a normal-size <b>Loosen a filter</b>. Press it: the card says which filter it let go of and the wheel is back.
+                        </li>
+                        <li>
+                            <b>Failed</b>: a large centred alert, &ldquo;The dishes could not be read&rdquo;, and <b>Try again</b>; pressing it shows
+                            the busy card for a moment and then the wheel.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the empty note is formal&rsquo;s dashed plate with the ledger drawing, the failure its destructive alert; the words
+                        sit in the middle of the card with air on every side, never in a corner. Compare the three heights with the ready card.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="wl-card-d">
+                    <div role="group" aria-label="State of the card" class="wl-controls" data-wl-states="wl-card-d">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-wl-state="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="empty">No dish fits</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="error">Failed</button>
+                    </div>
+                </div>
+                <section class="kp-card wl-card" id="wl-card-d" data-kp-state="ready" aria-labelledby="wl-card-d-t" data-kp-loading-words="Reading your dishes">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="wl-card-d-t">Tonight&rsquo;s dinner</h3>
+                        <div class="kp-card__actions"><span class="kp-badge" data-wl-fitcount>13 dishes</span></div>
+                    </div>
+                    <p class="kp-card__body">Dinner is at 18:30. Use the state buttons above to see how the card behaves when something is wrong.</p>
+                    <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                </section>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "audhd-wheel-3f6d1c52-8a4e-4b7d-9c1a-52e0b7a9d6c1", "received": [] }
+        </script>
+        <script type="module" src="../../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../_review/review.js"></script>
+        <script src="../../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../../catalogue/catalogue.js"></script>
+    </body>
+</html>

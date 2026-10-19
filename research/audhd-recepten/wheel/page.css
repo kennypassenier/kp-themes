@@ -1,0 +1,384 @@
+/* research/audhd-recepten/wheel: the page's own frame. Everything with a kp- class is the package; these wl- rules only lay
+   the sections out in grids, frame the answer card and draw the one-line texts. */
+
+.wl-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.wl-intro,
+.wl-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.wl-intro :is(h1, p),
+.wl-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.wl-intro p,
+.wl-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.wl-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.wl-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.wl-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.wl-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+/* A group of the review's own buttons (state, try it): a label and its buttons in one row. */
+.wl-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* One status line under a component: it keeps its height whether or not it says anything, so nothing jumps. */
+.wl-live {
+    margin: 0;
+    min-block-size: 1.5em;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* ---- the card: its stage keeps one height in every state ------------------------------------------------------------- */
+.wl-card {
+    --kp-card-stage-min: 27rem;
+    --kp-wheel-size: min(24rem, 100%);
+    min-inline-size: 0;
+}
+
+.wl-card--list {
+    --kp-card-stage-min: 21rem;
+}
+
+/* ---- the wheel and its answer ------------------------------------------------------------------------------------------ */
+.wl-screen {
+    display: grid;
+    grid-template-columns: minmax(16rem, 26rem) minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    align-items: center;
+    justify-content: center;
+    min-block-size: 27rem;
+}
+
+.wl-wheelcol {
+    display: grid;
+    justify-items: center;
+    min-inline-size: 0;
+}
+
+.wl-result {
+    display: grid;
+    align-content: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+    border-inline-start: 1px solid var(--border);
+}
+
+.wl-result > p {
+    margin: 0;
+}
+
+.wl-result__kicker {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* The dish's name keeps room for two lines whatever it says, so the card below it never moves. */
+.wl-result__name {
+    min-block-size: 2.6em;
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 1.875rem);
+    font-weight: 600;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    color: var(--foreground);
+}
+
+.wl-result__facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-block-size: 3.25rem;
+}
+
+.wl-result__why,
+.wl-result__timing {
+    min-block-size: 2.75em;
+}
+
+.wl-result__timing {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* Each action is a button in one column with its one line to the right, in the same place in every state. */
+.wl-actions {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    align-items: center;
+    margin-block-start: var(--kp-space-xs, 0.25rem);
+}
+
+.wl-action {
+    display: contents;
+}
+
+.wl-action[hidden] {
+    display: none;
+}
+
+.wl-action > p {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.wl-action > :is(.kp-button, .kp-reason) {
+    justify-self: stretch;
+}
+
+.wl-action .kp-reason {
+    display: grid;
+}
+
+.wl-action .kp-reason > .kp-button {
+    inline-size: 100%;
+}
+
+.wl-resting {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-block-size: 4.5rem;
+    align-content: start;
+}
+
+.wl-resting__label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.wl-resting__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+/* ---- the filters ---------------------------------------------------------------------------------------------------------- */
+.wl-filters {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.wl-filters__name {
+    margin: 0;
+    padding-block-start: var(--kp-space-xs, 0.25rem);
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.wl-filters__row {
+    display: grid;
+    min-inline-size: 0;
+}
+
+.wl-filters__row[hidden],
+.wl-filters__row > [hidden] {
+    display: none;
+}
+
+.wl-filters__foot {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    align-items: center;
+}
+
+/* ---- the dishes that fit: two columns of equal rows, one row high enough for a name and its line ------------------------- */
+.wl-fits {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(3.5rem, auto);
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-lg, 1.5rem);
+    align-content: start;
+    min-block-size: 21rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.wl-fit {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.wl-fit__text {
+    display: grid;
+    min-inline-size: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.wl-fit__text > b {
+    color: var(--foreground);
+    font-size: var(--kp-text-md, 1rem);
+    overflow-wrap: anywhere;
+}
+
+.wl-fit__tags {
+    display: flex;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 7.5rem;
+    justify-content: flex-end;
+}
+
+/* ---- no energy today ---------------------------------------------------------------------------------------------------- */
+.wl-easy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+/* The switch and its sentence at the left, what counts as easy at the right, above the card. */
+.wl-easy__side {
+    display: grid;
+    grid-template-columns: minmax(14rem, 1fr) minmax(14rem, 1.4fr);
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-xl, 2rem);
+    align-items: start;
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.wl-easy__side > .kp-switch {
+    grid-column: 1;
+}
+
+.wl-easy__side > .wl-easy__says {
+    grid-column: 1;
+}
+
+.wl-easy__side > .wl-filters__name,
+.wl-easy__side > .kp-toggles,
+.wl-easy__side > .wl-live {
+    grid-column: 2;
+}
+
+.wl-easy__side > .wl-filters__name {
+    grid-row: 1;
+    padding-block-start: 0;
+}
+
+.wl-easy__side > .kp-toggles {
+    grid-row: 2;
+}
+
+.wl-easy__side > .wl-live {
+    grid-row: 3;
+}
+
+.wl-easy__says {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The empty note fills the whole stage, like the failure does. */
+.wl-card .kp-card__state:has(> .kp-stateplate) {
+    align-content: stretch;
+}
+
+/* The package's drawing can be left out: the option "Words only". */
+.wl-card[data-wl-art='off'] .kp-art {
+    display: none;
+}
+
+@media (max-width: 52rem) {
+    .wl-screen,
+    .wl-easy__side {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wl-easy__side > * {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+    }
+
+    .wl-result {
+        padding-inline-start: 0;
+        padding-block-start: var(--kp-space-md, 1rem);
+        border-inline-start: 0;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .wl-actions {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wl-fits {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wl-filters,
+    .wl-filters__foot {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .wl-card {
+        --kp-card-stage-min: 40rem;
+    }
+
+    .wl-card--list {
+        --kp-card-stage-min: 30rem;
+    }
+}
