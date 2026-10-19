@@ -13777,7 +13777,8 @@
     .kp-pipeline__board {
         display: grid;
         grid-template-columns: repeat(var(--kp-pipeline-lanes, 4), minmax(0, 1fr));
-        gap: var(--kp-pipeline-gap, 0.75rem);
+        column-gap: var(--kp-pipeline-gap, 0.75rem);
+        row-gap: 0;
         align-items: stretch;
         min-block-size: var(--kp-pipeline-min, 12rem);
     }
@@ -13817,10 +13818,10 @@
     }
 
     .kp-pipeline__head {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
-        justify-content: space-between;
-        gap: var(--kp-space-sm, 0.5rem);
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border: 1px solid var(--kp-pipeline-tone);
@@ -13830,18 +13831,19 @@
     }
 
     .kp-pipeline__name {
+        grid-row: 1;
+        grid-column: 1;
         min-inline-size: 0;
         margin: 0;
-        overflow: hidden;
         font-size: var(--kp-text-sm, 0.8125rem);
         font-weight: 600;
         line-height: 1.4;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: break-word;
     }
 
     .kp-pipeline__count {
-        flex: none;
+        grid-row: 1;
+        grid-column: 2;
         min-inline-size: 1.5rem;
         font-size: 1.125rem;
         font-variant-numeric: tabular-nums;
@@ -14006,46 +14008,99 @@
         grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-pipeline-card-min, 12rem)), 1fr));
     }
 
-    .kp-pipeline__state {
-        box-sizing: border-box;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
-        margin-block-end: var(--kp-pipeline-gap, 0.75rem);
-        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
-        border: 1px solid var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
+    /* [r1r2-1019] The lanes of a board share their rows: every name plate is as high as the highest (names wrap, never an ellipsis),
+ * the share lines and the first cards start on one line across the lanes. A board without a share line has two rows. */
+    .kp-pipeline__board {
+        grid-template-rows: auto auto 1fr;
+    }
+
+    .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board {
+        grid-template-rows: auto 1fr;
+    }
+
+    .kp-pipeline__board > .kp-pipeline__lane {
+        grid-row: span 3;
+        grid-template-rows: subgrid;
+    }
+
+    .kp-pipeline__board > .kp-pipeline__lane > .kp-pipeline__cards {
+        grid-row: 3;
+    }
+
+    .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board > .kp-pipeline__lane {
+        grid-row: span 2;
+    }
+
+    .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board > .kp-pipeline__lane > .kp-pipeline__cards {
+        grid-row: 2;
+    }
+
+    /* [r1r2-1019] A failing stage: the lane takes the destructive colour in the theme's own way (its tone), and its name plate carries a
+ * flag, the destructive status plate with the words, so the colour is never the only carrier. The flag stands under the name,
+ * across the plate, so a narrow lane keeps its name in whole words. */
+    .kp-pipeline__lane[data-kp-status='danger'] {
+        --kp-pipeline-tone: var(--destructive);
+    }
+
+    .kp-pipeline__flag {
+        grid-row: 2;
+        grid-column: 1 / -1;
+        justify-self: start;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    /* [r1r2-1019] An empty or failed board is the package's state plate over the whole board, closed lane included, at the height the
+ * board had (js/footprint.js holds it on the host). The lanes stay in the document, covered and inert, none of their counts drawn. */
+    .kp-pipeline:has(> .kp-pipeline__plate:not([hidden])) {
+        position: relative;
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
+    .kp-pipeline__plate {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: grid;
         background: var(--card);
         color: var(--card-foreground, var(--foreground));
-        text-align: center;
     }
 
-    .kp-pipeline__state[hidden] {
+    .kp-pipeline__plate[hidden] {
         display: none;
     }
 
-    .kp-pipeline__words {
-        margin: 0;
-        font-size: var(--kp-text-sm, 0.8125rem);
-        overflow-wrap: anywhere;
+    .kp-pipeline__plate > .kp-stateplate {
+        block-size: 100%;
     }
 
-    .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding-inline-start: var(--kp-space-sm, 0.5rem);
-        border-inline-start: 3px solid var(--destructive);
-        text-align: start;
-    }
-
-    .kp-pipeline__retry[hidden] {
-        display: none;
+    .kp-pipeline:has(> .kp-pipeline__plate:not([hidden])) > :is(.kp-pipeline__frame, .kp-pipeline__closed) {
+        visibility: hidden;
     }
 
     @container kp-pipeline (max-width: 40rem) {
-        .kp-pipeline__board {
+        .kp-pipeline__board,
+        .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board {
             grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: none;
+            row-gap: var(--kp-pipeline-gap, 0.75rem);
             min-block-size: 0;
+        }
+
+        .kp-pipeline__board > .kp-pipeline__lane,
+        .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board > .kp-pipeline__lane {
+            grid-row: auto;
+            grid-template-rows: auto auto 1fr;
+        }
+
+        .kp-pipeline__board > .kp-pipeline__lane > .kp-pipeline__cards,
+        .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board > .kp-pipeline__lane > .kp-pipeline__cards {
+            grid-row: auto;
         }
 
         .kp-pipeline__cards {
@@ -28285,7 +28340,8 @@
         z-index: 1;
         display: grid;
         min-block-size: 0;
-        margin: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem);
+        /* [r1r2-1019] On the nav's and the legend's edges, from the weekday row to the last week's foot: the grid's own border-spacing is the air. */
+        margin: var(--kp-calendar-gap, 6px) 0;
     }
 
     .kp-calendar__plate > .kp-stateplate {
@@ -28309,6 +28365,12 @@
     /* A calm calendar that could not be read says so on its plate; the red dot of the state line would be a second, smaller alarm. */
     .kp-calendar[data-kp-tones='calm'] .kp-calendar__state::before {
         display: none;
+    }
+
+    /* [r1r2-1019] Every tone's empty or failed month says so on the plate over its grid (js/calendar.js). The state line keeps its row
+ * and its words for a screen reader, so the page does not jump, but is not drawn a second time under the title. */
+    .kp-calendar__state:is([data-kp-state='empty'], [data-kp-state='error']) {
+        opacity: 0;
     }
 
     .kp-calendar__caption {
@@ -40617,9 +40679,6 @@
     }
     [data-theme='cyberpunk'] .kp-pipeline__mark {
         border-radius: 0;
-    }
-    [data-theme='cyberpunk'] .kp-pipeline__state {
-        clip-path: var(--kp-cp-clip-ctl);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
@@ -53448,23 +53507,6 @@
         font-family: var(--theme-font-display);
         font-weight: 400;
     }
-    [data-theme='brutalism'] .kp-pipeline__state {
-        border: var(--kp-line) solid var(--border-strong);
-        border-radius: 0;
-        background: var(--card);
-        box-shadow: var(--kp-shadow);
-        font-weight: 700;
-    }
-    [data-theme='brutalism'] .kp-pipeline__state[data-kp-state='error'] {
-        padding-block-end: calc(var(--kp-space-sm, 0.5rem) + 0.5rem);
-        background:
-            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
-            var(--card);
-    }
-    [data-theme='brutalism'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        border-inline-start: 0;
-        padding-inline-start: 0;
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] .kp-pipeline__card {
             transition:
@@ -58678,27 +58720,6 @@
         border-radius: 0;
         font-family: var(--theme-font-mono);
         box-shadow: var(--kp-tool-edge);
-    }
-    [data-theme='titanium'] .kp-pipeline__state {
-        --kp-sig-ti-c: 0.6rem;
-        border-radius: 0;
-        box-shadow: var(--kp-tool-edge);
-        clip-path: polygon(
-            calc(var(--kp-sig-ti-c) + 8px) -8px,
-            calc(100% + 8px) -8px,
-            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
-            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
-            -8px calc(100% + 8px),
-            -8px calc(var(--kp-sig-ti-c) + 8px)
-        );
-    }
-    [data-theme='titanium'] .kp-pipeline__state[data-kp-state='error'] {
-        box-shadow: inset 0 3px 0 var(--destructive);
-    }
-    [data-theme='titanium'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding-inline-start: 0;
-        border-inline-start: 0;
-        text-align: center;
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='titanium'] .kp-pipeline__card {
@@ -64889,18 +64910,6 @@
         border-radius: calc(var(--kp-sig-pa-r-ctl) * 0.6);
         box-shadow: 0 2px 0 hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s calc(l * 0.6));
     }
-    [data-theme='pastel'] .kp-pipeline__state {
-        border: 2px dashed var(--border-strong);
-        border-radius: var(--kp-sig-pa-r-plate);
-    }
-    [data-theme='pastel'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding: 0 0.55rem;
-        border-inline-start: 0;
-        border-radius: var(--kp-sig-pa-r-ctl);
-        background: var(--destructive);
-        color: var(--destructive-foreground);
-        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='pastel'] :is(.kp-pipeline__card, .kp-pipeline__mark) {
             transition:
@@ -71014,16 +71023,6 @@
         font-style: italic;
         text-transform: none;
     }
-    [data-theme='forest'] .kp-pipeline__state {
-        border-radius: var(--kp-sig-fo-plate);
-    }
-    [data-theme='forest'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding: 0 0.5rem;
-        border-inline-start: 0;
-        background: var(--destructive);
-        color: var(--destructive-foreground);
-        font-style: italic;
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='forest'] .kp-pipeline__card {
             transition:
@@ -73864,7 +73863,6 @@
             .kp-command,
             .kp-compare,
             .kp-pipeline__lane,
-            .kp-pipeline__state,
             .kp-type-confirm__loses,
             .kp-stackbar__note,
             .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
@@ -73947,7 +73945,6 @@
             .kp-command,
             .kp-compare,
             .kp-pipeline__lane,
-            .kp-pipeline__state,
             .kp-type-confirm__loses,
             .kp-stackbar__note,
             .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option
@@ -74011,7 +74008,6 @@
             .kp-command,
             .kp-compare,
             .kp-pipeline__lane,
-            .kp-pipeline__state,
             .kp-type-confirm__loses,
             .kp-stackbar__note,
             .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
@@ -74154,7 +74150,6 @@
             .kp-command,
             .kp-compare,
             .kp-pipeline__lane,
-            .kp-pipeline__state,
             .kp-type-confirm__loses,
             .kp-stackbar__note,
             .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
@@ -77368,16 +77363,6 @@
         font-family: var(--theme-font-body);
         letter-spacing: 0.04em;
         clip-path: polygon(3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px), 0 3px);
-    }
-    [data-theme='deco'] .kp-pipeline__state {
-        text-align: center;
-    }
-    [data-theme='deco'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        border-inline-start: 0;
-        padding-inline-start: 0;
-        color: hsl(from var(--destructive) h s calc(l + 4));
-        text-decoration: underline 1px var(--primary);
-        text-underline-offset: 0.35em;
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='deco'] .kp-pipeline__card {
@@ -83544,20 +83529,6 @@
         font-family: var(--theme-font-mono);
         font-style: oblique 15deg;
     }
-    [data-theme='blueprint'] .kp-pipeline__state {
-        border-color: var(--border-strong);
-        border-radius: 0;
-    }
-    [data-theme='blueprint'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        border-inline-start: 0;
-        padding-inline-start: 0;
-    }
-    [data-theme='blueprint'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words::before {
-        content: '\25B2\00a0';
-        color: var(--destructive);
-        font-size: 0.8em;
-    }
-    [data-theme='blueprint'] .kp-pipeline__retry,
     [data-theme='blueprint'] .kp-pipeline__more {
         font-family: var(--theme-font-mono);
     }
@@ -89275,18 +89246,6 @@
         font-size: 0.6875rem;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-    }
-    [data-theme='nostromo'] .kp-pipeline__state {
-        border-radius: var(--kp-sig-no-key);
-        box-shadow: var(--kp-sig-no-well);
-    }
-    [data-theme='nostromo'] .kp-pipeline__state[data-kp-state='error'] {
-        border: 3px solid var(--destructive);
-    }
-    [data-theme='nostromo'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding-inline-start: 0;
-        border-inline-start: 0;
-        text-align: center;
     }
 
     /* ── Journey: the LED bargraph between the steps ── */
@@ -95493,9 +95452,6 @@
     [data-theme='dark'] .kp-pipeline__mark {
         border-radius: 0;
     }
-    [data-theme='dark'] .kp-pipeline__state {
-        clip-path: var(--kp-dk4-cut);
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
             animation: kp-sig-dark-lay 660ms linear backwards;
@@ -100791,10 +100747,6 @@
         font-variant-numeric: tabular-nums lining-nums;
     }
 
-    [data-theme='formal'] .kp-pipeline__state {
-        border: 3px double var(--border-strong);
-        border-radius: var(--radius);
-    }
 }
 /* ── end flows and records: pipeline ── */
 
@@ -105093,21 +105045,6 @@
         font-size: 0.8125rem;
         font-weight: 400;
         text-transform: none;
-    }
-    [data-theme='solstice'] .kp-pipeline__state {
-        border-color: var(--border-strong);
-        background:
-            linear-gradient(var(--kp-so-foot, var(--primary)), var(--kp-so-foot, var(--primary))) 0 100% / 100% 1px no-repeat,
-            linear-gradient(to top, hsl(from var(--kp-so-sky, var(--accent)) h s l / 0.2), transparent 70%),
-            var(--card);
-    }
-    [data-theme='solstice'] .kp-pipeline__state[data-kp-state='error'] {
-        --kp-so-sky: var(--destructive);
-        --kp-so-foot: var(--destructive);
-    }
-    [data-theme='solstice'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        border-inline-start: 0;
-        padding-inline-start: 0;
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] .kp-pipeline__card {

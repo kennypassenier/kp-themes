@@ -5324,16 +5324,6 @@
         font-style: italic;
         text-transform: none;
     }
-    [data-theme='forest'] .kp-pipeline__state {
-        border-radius: var(--kp-sig-fo-plate);
-    }
-    [data-theme='forest'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding: 0 0.5rem;
-        border-inline-start: 0;
-        background: var(--destructive);
-        color: var(--destructive-foreground);
-        font-style: italic;
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='forest'] .kp-pipeline__card {
             transition:

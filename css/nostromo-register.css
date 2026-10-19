@@ -4904,18 +4904,6 @@
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
-    [data-theme='nostromo'] .kp-pipeline__state {
-        border-radius: var(--kp-sig-no-key);
-        box-shadow: var(--kp-sig-no-well);
-    }
-    [data-theme='nostromo'] .kp-pipeline__state[data-kp-state='error'] {
-        border: 3px solid var(--destructive);
-    }
-    [data-theme='nostromo'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding-inline-start: 0;
-        border-inline-start: 0;
-        text-align: center;
-    }
 
     /* ── Journey: the LED bargraph between the steps ── */
     [data-theme='nostromo'] .kp-steplist--journey {

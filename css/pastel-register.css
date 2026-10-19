@@ -5176,18 +5176,6 @@
         border-radius: calc(var(--kp-sig-pa-r-ctl) * 0.6);
         box-shadow: 0 2px 0 hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s calc(l * 0.6));
     }
-    [data-theme='pastel'] .kp-pipeline__state {
-        border: 2px dashed var(--border-strong);
-        border-radius: var(--kp-sig-pa-r-plate);
-    }
-    [data-theme='pastel'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding: 0 0.55rem;
-        border-inline-start: 0;
-        border-radius: var(--kp-sig-pa-r-ctl);
-        background: var(--destructive);
-        color: var(--destructive-foreground);
-        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='pastel'] :is(.kp-pipeline__card, .kp-pipeline__mark) {
             transition:

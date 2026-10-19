@@ -4967,9 +4967,6 @@
     [data-theme='dark'] .kp-pipeline__mark {
         border-radius: 0;
     }
-    [data-theme='dark'] .kp-pipeline__state {
-        clip-path: var(--kp-dk4-cut);
-    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
             animation: kp-sig-dark-lay 660ms linear backwards;

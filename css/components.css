@@ -10842,7 +10842,8 @@
     .kp-pipeline__board {
         display: grid;
         grid-template-columns: repeat(var(--kp-pipeline-lanes, 4), minmax(0, 1fr));
-        gap: var(--kp-pipeline-gap, 0.75rem);
+        column-gap: var(--kp-pipeline-gap, 0.75rem);
+        row-gap: 0;
         align-items: stretch;
         min-block-size: var(--kp-pipeline-min, 12rem);
     }
@@ -10882,10 +10883,10 @@
     }
 
     .kp-pipeline__head {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
-        justify-content: space-between;
-        gap: var(--kp-space-sm, 0.5rem);
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border: 1px solid var(--kp-pipeline-tone);
@@ -10895,18 +10896,19 @@
     }
 
     .kp-pipeline__name {
+        grid-row: 1;
+        grid-column: 1;
         min-inline-size: 0;
         margin: 0;
-        overflow: hidden;
         font-size: var(--kp-text-sm, 0.8125rem);
         font-weight: 600;
         line-height: 1.4;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: break-word;
     }
 
     .kp-pipeline__count {
-        flex: none;
+        grid-row: 1;
+        grid-column: 2;
         min-inline-size: 1.5rem;
         font-size: 1.125rem;
         font-variant-numeric: tabular-nums;
@@ -11071,46 +11073,99 @@
         grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-pipeline-card-min, 12rem)), 1fr));
     }
 
-    .kp-pipeline__state {
-        box-sizing: border-box;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
-        margin-block-end: var(--kp-pipeline-gap, 0.75rem);
-        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
-        border: 1px solid var(--border-strong);
-        border-radius: var(--radius, 0.5rem);
+    /* [r1r2-1019] The lanes of a board share their rows: every name plate is as high as the highest (names wrap, never an ellipsis),
+ * the share lines and the first cards start on one line across the lanes. A board without a share line has two rows. */
+    .kp-pipeline__board {
+        grid-template-rows: auto auto 1fr;
+    }
+
+    .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board {
+        grid-template-rows: auto 1fr;
+    }
+
+    .kp-pipeline__board > .kp-pipeline__lane {
+        grid-row: span 3;
+        grid-template-rows: subgrid;
+    }
+
+    .kp-pipeline__board > .kp-pipeline__lane > .kp-pipeline__cards {
+        grid-row: 3;
+    }
+
+    .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board > .kp-pipeline__lane {
+        grid-row: span 2;
+    }
+
+    .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board > .kp-pipeline__lane > .kp-pipeline__cards {
+        grid-row: 2;
+    }
+
+    /* [r1r2-1019] A failing stage: the lane takes the destructive colour in the theme's own way (its tone), and its name plate carries a
+ * flag, the destructive status plate with the words, so the colour is never the only carrier. The flag stands under the name,
+ * across the plate, so a narrow lane keeps its name in whole words. */
+    .kp-pipeline__lane[data-kp-status='danger'] {
+        --kp-pipeline-tone: var(--destructive);
+    }
+
+    .kp-pipeline__flag {
+        grid-row: 2;
+        grid-column: 1 / -1;
+        justify-self: start;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        line-height: 1.5;
+    }
+
+    /* [r1r2-1019] An empty or failed board is the package's state plate over the whole board, closed lane included, at the height the
+ * board had (js/footprint.js holds it on the host). The lanes stay in the document, covered and inert, none of their counts drawn. */
+    .kp-pipeline:has(> .kp-pipeline__plate:not([hidden])) {
+        position: relative;
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
+    .kp-pipeline__plate {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: grid;
         background: var(--card);
         color: var(--card-foreground, var(--foreground));
-        text-align: center;
     }
 
-    .kp-pipeline__state[hidden] {
+    .kp-pipeline__plate[hidden] {
         display: none;
     }
 
-    .kp-pipeline__words {
-        margin: 0;
-        font-size: var(--kp-text-sm, 0.8125rem);
-        overflow-wrap: anywhere;
+    .kp-pipeline__plate > .kp-stateplate {
+        block-size: 100%;
     }
 
-    .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
-        padding-inline-start: var(--kp-space-sm, 0.5rem);
-        border-inline-start: 3px solid var(--destructive);
-        text-align: start;
-    }
-
-    .kp-pipeline__retry[hidden] {
-        display: none;
+    .kp-pipeline:has(> .kp-pipeline__plate:not([hidden])) > :is(.kp-pipeline__frame, .kp-pipeline__closed) {
+        visibility: hidden;
     }
 
     @container kp-pipeline (max-width: 40rem) {
-        .kp-pipeline__board {
+        .kp-pipeline__board,
+        .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board {
             grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: none;
+            row-gap: var(--kp-pipeline-gap, 0.75rem);
             min-block-size: 0;
+        }
+
+        .kp-pipeline__board > .kp-pipeline__lane,
+        .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board > .kp-pipeline__lane {
+            grid-row: auto;
+            grid-template-rows: auto auto 1fr;
+        }
+
+        .kp-pipeline__board > .kp-pipeline__lane > .kp-pipeline__cards,
+        .kp-pipeline[data-kp-pipeline-share='false'] .kp-pipeline__board > .kp-pipeline__lane > .kp-pipeline__cards {
+            grid-row: auto;
         }
 
         .kp-pipeline__cards {
@@ -25350,7 +25405,8 @@
         z-index: 1;
         display: grid;
         min-block-size: 0;
-        margin: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem);
+        /* [r1r2-1019] On the nav's and the legend's edges, from the weekday row to the last week's foot: the grid's own border-spacing is the air. */
+        margin: var(--kp-calendar-gap, 6px) 0;
     }
 
     .kp-calendar__plate > .kp-stateplate {
@@ -25374,6 +25430,12 @@
     /* A calm calendar that could not be read says so on its plate; the red dot of the state line would be a second, smaller alarm. */
     .kp-calendar[data-kp-tones='calm'] .kp-calendar__state::before {
         display: none;
+    }
+
+    /* [r1r2-1019] Every tone's empty or failed month says so on the plate over its grid (js/calendar.js). The state line keeps its row
+ * and its words for a screen reader, so the page does not jump, but is not drawn a second time under the title. */
+    .kp-calendar__state:is([data-kp-state='empty'], [data-kp-state='error']) {
+        opacity: 0;
     }
 
     .kp-calendar__caption {

@@ -2712,6 +2712,10 @@ export type Strings = {
      */
     pipelineRetry: string;
     /**
+     * The word on a failing lane's name plate (`danger: true`), so the colour is never the only carrier [r1r2-1019]
+     */
+    pipelineDanger: string;
+    /**
      * The word in a lane with no cards
      */
     pipelineNone: string;
@@ -6810,6 +6814,7 @@ export type Strings = {
  * @property {string} pipelineEmpty  The sentence over a pipeline with no cards, when the page gives none
  * @property {(reason: string) => string} pipelineFailed  The sentence over a pipeline that could not be read
  * @property {string} pipelineRetry  Its Try again button
+ * @property {string} pipelineDanger  The word on a failing lane's name plate (`danger: true`), so the colour is never the only carrier [r1r2-1019]
  * @property {string} pipelineNone  The word in a lane with no cards
  * @property {(more: number) => string} pipelineMore  The button under a lane's first cards, "+4 more"
  * @property {string} pipelineLess  The same button while the lane shows every card
