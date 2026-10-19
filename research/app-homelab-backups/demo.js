@@ -759,7 +759,15 @@ if (has('repos-component')) {
         folded = v === 'folded' ? BY_SIZE.map((s) => s.key) : [];
         table().fold(folded);
     });
-    stateButtons('data-hb-outcome', (v) => (outcome = v));
+    // Choosing an outcome also runs it: tick three rows when fewer than two are ticked, then press "Back up now".
+    stateButtons('data-hb-outcome', (v) => {
+        outcome = v;
+        const rows = [...host.querySelectorAll('[data-kp-select-row]')].filter((c) => c.getClientRects().length > 0);
+        const input = /** @type {HTMLInputElement[]} */ (rows);
+        if (input.filter((c) => c.checked).length < 2) for (const c of input.slice(0, 3)) if (!c.checked) c.click();
+        const go = /** @type {HTMLButtonElement | null} */ (document.querySelector('#repos-component [data-kp-selection-action="backup"]'));
+        go?.click();
+    });
     onChoice('backups-groups', (v) => {
         folded = v === 'folded' ? BY_SIZE.map((s) => s.key) : [];
         setGroups(v);
