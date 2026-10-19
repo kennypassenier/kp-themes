@@ -28,6 +28,10 @@
 //     whose folded rows are no rows to `kids()`) is in another column and is not compared with the band's edges [measure-tools-1019].
 //     A cell's own buttons (table, grid, console, status list), a combobox's input (not its status line) and a radio tile's
 //     tile (not its inner radio) are the edges a reader sees; measure-gaps.mjs skips marks scrolled out of a scrolling log.
+//     A `.kp-action-list` row names its buttons' roles (`data-kp-action`): a button is compared with the same role's button of
+//     the other rows, not with its row's first button, since a row without the first role leaves column 1 empty and its one
+//     button stands in column 2 by design (one role, one column) [hltools-1019, homelab 75].
+//     Nothing inside a closed `<details>` (its summary aside) is on screen and nothing in it is measured [hltools-1019, homelab 83].
 //  E/F. Fields fill their track; columns side by side start on one line.
 //  G. No two buttons overlap; a `.kp-snooze` lies on one grid (trigger, End snooze and status on shared tracks, every part
 //     the whole width of its element, no part taller than its content) [snooze-width, 2026-10-19 11:22].
@@ -94,8 +98,14 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
     // The review machinery and the demo's prose are not the composition.
     const CHROME =
         '.cat-judge, [data-review-controls], [data-review-look], .rv-block-tools, [class*="expected"], [class*="__head"] > p, .kp-sr-only, [hidden], [aria-hidden="true"], dialog:not([open]), template';
+    // Content of a closed <details> (a "How to change this" fold) is not on screen; its <summary> is [hltools-1019, homelab 83].
+    const inClosedFold = (/** @type {Element} */ el) => {
+        for (let a = /** @type {Element | null} */ (el), via = null; a && a !== section.parentElement; via = a, a = a.parentElement)
+            if (a.tagName === 'DETAILS' && !(/** @type {HTMLDetailsElement} */ (a).open) && !(via && via.tagName === 'SUMMARY')) return true;
+        return false;
+    };
     const inChrome = (/** @type {Element} */ el) => {
-        if (el.closest(CHROME)) return true;
+        if (el.closest(CHROME) || inClosedFold(el)) return true;
         // The contents of an open dialog, sheet, drawer or popover inside this scope belong to that scope.
         const nested = el.closest(SCOPE);
         return !!nested && nested !== section && section.contains(nested);
@@ -331,8 +341,9 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
                     roles.set(`${role} (no action)`, without);
                 }
             }
-        for (const [role, list] of roles) {
+        for (const [role0, list] of roles) {
             if (list.length < 2) continue;
+            const role = role0;
             const starts = spread(list.map(({ row, cell }) => ({ v: cell.getBoundingClientRect().left, label: `row ${row + 1}` })));
             if (starts.d > tol)
                 res.push(
@@ -343,16 +354,28 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
                 res.push(
                     `${id}: ${gname}: ${role} ends at x ${px(ends.lo.v)} in ${ends.lo.label} and x ${px(ends.hi.v)} in ${ends.hi.label} (${px(ends.d)} px apart)`,
                 );
-            // The first control of each cell of this role.
-            const ctls = list
-                .map(({ row, cell }) => ({
-                    row,
-                    ctl:
-                        tileOf(
-                            cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c) && onScreen(c)),
-                        ) || null,
-                }))
-                .filter((x) => x.ctl && x.ctl !== list.find((l) => l.row === x.row)?.cell);
+            // The first control of each cell of this role. A cell whose buttons name their role (`data-kp-action`, a
+            // `.kp-action-list` row) holds one column per role: every named button is compared with the same role's button of
+            // the other rows, never with the row's first button, so a row missing the first role (its one button stands in
+            // column 2 by design) is not "controls apart" [hltools-1019, homelab 75].
+            /** @type {{row: number, ctl: Element | null, key: string}[]} */
+            const ctlsAll = [];
+            for (const { row, cell } of list) {
+                const named = [...cell.querySelectorAll('[data-kp-action]')].filter((c) => shown(c) && !inChrome(c) && onScreen(c));
+                if (named.length) {
+                    for (const c of named) ctlsAll.push({ row, ctl: c, key: c.getAttribute('data-kp-action') || '' });
+                    continue;
+                }
+                const ctl = tileOf(
+                    cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c) && onScreen(c)),
+                );
+                if (ctl && ctl !== cell) ctlsAll.push({ row, ctl, key: '' });
+            }
+            /** @type {Map<string, typeof ctlsAll>} */
+            const byKey = new Map();
+            for (const x of ctlsAll) byKey.set(x.key, [...(byKey.get(x.key) ?? []), x]);
+            for (const [key, ctls] of byKey) {
+            const role = key ? `${role0} "${key}"` : role0;
             if (ctls.length >= 2) {
                 const cs = spread(
                     ctls.map(({ row, ctl }) => ({
@@ -385,6 +408,7 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
                     res.push(
                         `${id}: ${gname}: the ${role} controls end on ${endsAt.length} different edges (x ${endsAt.map(px).join(', ')}); a field fills its track and a short control takes one fixed step`,
                     );
+            }
             }
         }
         // B: every cell's first line on the label's first line.

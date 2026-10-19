@@ -15,6 +15,10 @@
 // every kp data component is in a state the package drew, no hand-made "Loading…" / "No data" / spinner stands in for one,
 // and each one driven into loading, empty and failed through the package covers its footprint. Its lines start with "states".
 //
+// Text and marks inside a closed <details> are not on screen, and text clipped by a scrolling box (a log that follows its tail,
+// also one the page wraps around the component) is skipped, on either axis [hltools-1019, homelab 81 and 83]. Its states pass holds
+// the page's live streams during the driven half (measure-states.mjs; --live-streams opts out).
+//
 // Run (a static server on the repository root first):
 //   node research/_review/measure-gaps.mjs <port> <research/topic/demo.html> [themes=formal,dark] [widths=1280,390]
 // An app behind a login, or one serving its own copy of kp-themes (cli-context.mjs; the options also work on
@@ -45,6 +49,13 @@ const MIN = 4;
 function measure([min, only]) {
     const res = [];
     const visible = (/** @type {DOMRect} */ r) => r.width > 0.5 && r.height > 0.5;
+    // Content of a closed <details> (a "How to change this" fold) is not on screen, whatever the box tree still holds of it;
+    // its <summary> is [hltools-1019, homelab 83].
+    const inClosedFold = (/** @type {Element} */ el) => {
+        for (let a = /** @type {Element | null} */ (el), via = null; a; via = a, a = a.parentElement)
+            if (a.tagName === 'DETAILS' && !(/** @type {HTMLDetailsElement} */ (a).open) && !(via && via.tagName === 'SUMMARY')) return true;
+        return false;
+    };
     for (const section of document.querySelectorAll('[data-review-item]')) {
         if (section.getAttribute('data-review-item') !== only) continue;
         const id = section.getAttribute('data-review-item');
@@ -59,13 +70,15 @@ function measure([min, only]) {
             for (let n; (n = walk.nextNode());) {
                 if (!n.textContent?.trim()) continue;
                 const el = /** @type {HTMLElement} */ (n.parentElement);
-                if (getComputedStyle(el).visibility === 'hidden' || el.closest('[hidden], .kp-sr-only, [aria-hidden="true"]')) continue;
+                if (getComputedStyle(el).visibility === 'hidden' || el.closest('[hidden], .kp-sr-only, [aria-hidden="true"]') || inClosedFold(el)) continue;
                 const range = document.createRange();
                 range.selectNodeContents(n);
                 // A text cut off by an ancestor that clips (an ellipsis) is measured up to the clip.
                 let clip = null;
-                for (let a = el; a && a !== s.parentElement; a = a.parentElement) {
-                    if (getComputedStyle(a).overflowX === 'visible') continue;
+                // The chain runs up to the section, not only to the component: a scrolling box the page wraps around the component
+                // (a log that follows its tail) clips the text too, on either axis [hltools-1019, homelab 81, 83].
+                for (let a = el; a && a !== section.parentElement; a = a.parentElement) {
+                    if (getComputedStyle(a).overflowX === 'visible' && getComputedStyle(a).overflowY === 'visible') continue;
                     const ar = a.getBoundingClientRect();
                     clip = clip
                         ? {
@@ -105,10 +118,10 @@ function measure([min, only]) {
                 const r = el.getBoundingClientRect();
                 if (!visible(r)) continue;
                 const cs = getComputedStyle(el);
-                if (cs.visibility === 'hidden') continue;
+                if (cs.visibility === 'hidden' || inClosedFold(el)) continue;
                 // A mark scrolled out of a scrolling list (a log that follows its tail) is not on screen.
                 let away = false;
-                for (let a = el.parentElement; a && a !== s.parentElement && !away; a = a.parentElement) {
+                for (let a = el.parentElement; a && a !== section.parentElement && !away; a = a.parentElement) {
                     if (getComputedStyle(a).overflowY === 'visible') continue;
                     const ar = a.getBoundingClientRect();
                     away = r.bottom <= ar.top + 0.5 || r.top >= ar.bottom - 0.5;
@@ -200,7 +213,7 @@ for (const width of widthArg.split(',').map(Number))
             align = align.concat(await measureAlignOpened(page, id));
         }
         await page.close();
-        const states = await measureStatesAt(browser, where.urlFor(theme), { width });
+        const states = await measureStatesAt(browser, where.urlFor(theme), { width, liveStreams: opts.liveStreams });
         found += out.length + align.length + states.length;
         const said = [
             out.length ? `${out.length} text(s) closer than ${MIN}px` : '',

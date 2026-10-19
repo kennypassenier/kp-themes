@@ -19,16 +19,27 @@
 //     c. A page that reads its data over the network (fetch/XHR) is loaded twice more: once with every request held
 //        back (each data component must show its busy card, not a blank or a hand-made text), once with every request
 //        failing (each must show the failed plate).
+//     d. Live streams (hltools-1019, homelab 81, 82). A page fed by an EventSource or a WebSocket reads nothing over fetch,
+//        so (c) alone leaves it unmeasured: the same two loads run for it, with every EventSource / WebSocket held (it
+//        stays connecting and delivers nothing: each stream-fed component must show its busy card) and failing (it opens
+//        with an error and closes: each must show the failed plate). A page with fetch reads and a stream gets both held
+//        or both failing in the one load.
 //  2. STATES: every instance is driven into loading, empty and failed through the package's own call (the table in the
 //     list below), and the drawn state is measured: the busy card is there, covers the component's data area and its
 //     panel is centred on it; a plate is there, keeps the loaded footprint (js/footprint.js), covers the width and most
 //     of the height, its words are centred, its title is larger than the body text, and failed has a Retry of a normal
 //     button's size.
 //
+// Live streams during the driven half (hltools-1019, homelab 81): the drive puts a component into loading, empty or failed and
+// waits up to 6 s; a page that repaints the component from its stream in that window replaces the state, so the same call read
+// differently run to run. Once the page has loaded and settled, the stream is therefore held: its messages are no longer
+// delivered to the page's listeners (EventSource and WebSocket `message` events and named SSE events are dropped; open, error
+// and close still pass). `--live-streams` opts out and leaves the streams running during the drive.
+//
 // Each line names the component, the section and what is missing. Exit code 1 when anything is found.
 //
 // Run (a static server on the repository root first, or the project's own server):
-//   node research/_review/measure-states.mjs <port> <page path> [themes=formal,dark] [widths=1280,390] [--no-drive]
+//   node research/_review/measure-states.mjs <port> <page path> [themes=formal,dark] [widths=1280,390] [--no-drive] [--live-streams]
 // An app behind a login or serving its own kp-themes copy: --url <page url> (instead of <port> <page>), --cookie, --login-form,
 // --storage-state, --assets-from <prefix>=<dir>, --ignore-https-errors; see cli-context.mjs and README.md.
 // A project's page: node research/_review/measure-states.mjs 8080 index.html formal 1280   (any page on 127.0.0.1:<port>)
@@ -961,6 +972,111 @@ const PLAIN_ALL = STATE_COMPONENTS.map(({ name, host, wire }) => ({ name, host, 
 const PLAIN = STATE_COMPONENTS.filter((c) => c.kind !== 'row').map(({ name, host, wire }) => ({ name, host, wire }));
 
 /**
+ * Runs in the page before any of its scripts (addInitScript). Self-contained.
+ *  mode 'live'   the page's own streams run; they are counted (window.__kpStreams) and, once window.__kpHold is set, the
+ *                `message` and named events they deliver are dropped (open, error and close still pass);
+ *  mode 'held'   every EventSource / WebSocket is a stand-in that stays connecting and delivers nothing;
+ *  mode 'failing' every one is a stand-in that reports an error and closes.
+ * @param {'live' | 'held' | 'failing'} mode
+ */
+export function streamKit(mode) {
+    const w = /** @type {any} */ (window);
+    w.__kpStreams = 0;
+    w.__kpHold = false;
+    if (mode === 'live') {
+        for (const [name, quiet] of /** @type {[string, string[]][]} */ ([
+            ['EventSource', ['open', 'error']],
+            ['WebSocket', ['open', 'error', 'close']],
+        ])) {
+            const Native = w[name];
+            if (!Native) continue;
+            const proto = Native.prototype;
+            /** @type {WeakMap<object, any>} */
+            const wrapped = new WeakMap();
+            const gate = (/** @type {any} */ fn) => {
+                if (!fn || (typeof fn !== 'function' && typeof fn.handleEvent !== 'function')) return fn;
+                if (!wrapped.has(fn))
+                    wrapped.set(
+                        fn,
+                        typeof fn === 'function'
+                            ? /** @this {any} */ function (/** @type {Event} */ ev) {
+                                  if (!w.__kpHold) return fn.call(this, ev);
+                                  return undefined;
+                              }
+                            : { handleEvent: (/** @type {Event} */ ev) => (w.__kpHold ? undefined : fn.handleEvent(ev)) },
+                    );
+                return wrapped.get(fn);
+            };
+            const add = proto.addEventListener;
+            const remove = proto.removeEventListener;
+            proto.addEventListener = function (/** @type {string} */ type, /** @type {any} */ fn, /** @type {any} */ o) {
+                return add.call(this, type, quiet.includes(type) ? fn : gate(fn), o);
+            };
+            proto.removeEventListener = function (/** @type {string} */ type, /** @type {any} */ fn, /** @type {any} */ o) {
+                return remove.call(this, type, quiet.includes(type) ? fn : (wrapped.get(fn) ?? fn), o);
+            };
+            const d = Object.getOwnPropertyDescriptor(proto, 'onmessage');
+            if (d?.set && d.get)
+                Object.defineProperty(proto, 'onmessage', {
+                    configurable: true,
+                    enumerable: d.enumerable,
+                    get: d.get,
+                    set(fn) {
+                        d.set?.call(this, typeof fn === 'function' ? gate(fn) : fn);
+                    },
+                });
+            w[name] = class extends Native {
+                /** @param {any[]} a */
+                constructor(...a) {
+                    super(...a);
+                    w.__kpStreams++;
+                }
+            };
+        }
+        return;
+    }
+    const make = (/** @type {string} */ name) =>
+        class extends EventTarget {
+            /** @param {string} url */
+            constructor(url) {
+                super();
+                /** @type {any} */
+                const me = this;
+                me.url = String(url);
+                me.readyState = 0;
+                me.withCredentials = false;
+                me.bufferedAmount = 0;
+                me.protocol = '';
+                me.extensions = '';
+                me.binaryType = 'blob';
+                w.__kpStreams++;
+                if (mode === 'failing')
+                    setTimeout(() => {
+                        me.readyState = name === 'WebSocket' ? 3 : 2;
+                        for (const type of name === 'WebSocket' ? ['error', 'close'] : ['error']) {
+                            const ev = new Event(type);
+                            const on = me[`on${type}`];
+                            if (typeof on === 'function') on.call(me, ev);
+                            me.dispatchEvent(ev);
+                        }
+                    }, 60);
+            }
+            close() {
+                /** @type {any} */ (this).readyState = name === 'WebSocket' ? 3 : 2;
+            }
+            send() {
+                throw new DOMException('The connection is not open', 'InvalidStateError');
+            }
+        };
+    for (const name of ['EventSource', 'WebSocket']) {
+        const Fake = make(name);
+        Object.assign(Fake, { CONNECTING: 0, OPEN: 1, CLOSED: name === 'WebSocket' ? 3 : 2 });
+        if (name === 'WebSocket') Object.assign(Fake, { CLOSING: 2 });
+        w[name] = Fake;
+    }
+}
+
+/**
  * Wait until a page has settled: js/auto.js done (when the page uses it) and a moment for what arrives.
  * @param {import('playwright-core').Page} page
  */
@@ -973,14 +1089,16 @@ async function settle(page, ms = 1500) {
  * Measure one page in one theme and width: every half above. Lines are without the "states" prefix.
  * @param {import('playwright-core').Browser} browser
  * @param {string} url the full address (theme already in it)
- * @param {{ width: number, drive?: boolean, network?: boolean }} options
+ * @param {{ width: number, drive?: boolean, network?: boolean, liveStreams?: boolean }} options liveStreams: leave the page's
+ *   streams running during the driven half (they are held by default, hltools-1019)
  * @returns {Promise<string[]>}
  */
-export async function measureStatesAt(browser, url, { width, drive = true, network = true }) {
+export async function measureStatesAt(browser, url, { width, drive = true, network = true, liveStreams = false }) {
     /** @type {string[]} */
     const out = [];
     const open = async () => {
         const page = await browser.newPage({ viewport: { width, height: 900 } });
+        await page.addInitScript(streamKit, 'live');
         /** @type {string[]} */
         const reads = [];
         page.on('request', (r) => {
@@ -989,7 +1107,8 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
         const response = await page.goto(url);
         if (!response || !response.ok()) throw new Error(`${url} answered ${response ? response.status() : 'nothing'}`);
         await settle(page);
-        return { page, reads };
+        const streams = /** @type {number} */ (await page.evaluate(() => /** @type {any} */ (window).__kpStreams ?? 0));
+        return { page, reads, streams };
     };
     const sectionsOf = async (/** @type {import('playwright-core').Page} */ page) => page.evaluate(markSections);
     const wiring = async (/** @type {import('playwright-core').Page} */ page, /** @type {string[]} */ ids, /** @type {string} */ when) => {
@@ -1003,7 +1122,7 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
     };
 
     // 1a and 1b on one load.
-    const { page, reads } = await open();
+    const { page, reads, streams } = await open();
     const ids = await sectionsOf(page);
     await wiring(page, ids, '');
     const said = new Set();
@@ -1035,9 +1154,10 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
     await page.close();
 
     // 1c: a page that reads over the network, with its reads held back, then failing.
-    if (network && reads.length) {
+    if (network && (reads.length || streams)) {
         for (const mode of ['held', 'failing']) {
             const p = await browser.newPage({ viewport: { width, height: 900 } });
+            if (streams) await p.addInitScript(streamKit, mode);
             await p.route('**/*', (route) => {
                 if (!isDataRead(route.request())) return route.fallback();
                 if (mode === 'failing') return route.fulfill({ status: 503, body: 'unavailable' });
@@ -1062,7 +1182,11 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                             const r = host.getBoundingClientRect();
                             if (r.width < 1 || r.height < 1) continue;
                             // A calendar's own busy card (.kp-calendar--busy-whole) and a chart's own state are the approved pictures, as in the wiring half.
-                            const has = host.querySelector(w === 'loading' ? `${busySel}, ${ownSel}` : plateSel);
+                            // A plate parked in a hidden slot (the empty slot of a table) is not shown: only a visible one counts.
+                            const has = [...host.querySelectorAll(w === 'loading' ? `${busySel}, ${ownSel}` : plateSel)].some((e) => {
+                                const b = e.getBoundingClientRect();
+                                return b.width > 1 && b.height > 1 && getComputedStyle(e).visibility !== 'hidden';
+                            });
                             if (!has)
                                 res.push(
                                     `${sid}: ${c.name} shows no ${w === 'loading' ? 'busy card while its data is held back' : 'failed plate while its data fails'}; wire it: ${c.wire}`,
@@ -1078,7 +1202,10 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
 
     // 2: drive every instance through the package.
     if (drive) {
-        const { page: d } = await open();
+        const { page: d, streams: driveStreams } = await open();
+        // The drive waits up to 6 s for a state to settle: a page that repaints the component from its stream meanwhile replaces
+        // the driven state. The streams are held from here on [hltools-1019, homelab 81]; --live-streams opts out.
+        if (driveStreams && !liveStreams) await d.evaluate(() => (/** @type {any} */ (window).__kpHold = true));
         await d.evaluate(markSections);
         const base = await d.evaluate(packageBase);
         let prefix = base;
@@ -1182,7 +1309,7 @@ async function main() {
         for (const theme of themeArg.split(',')) {
             let lines;
             try {
-                lines = await measureStatesAt(browser, where.urlFor(theme), { width, drive });
+                lines = await measureStatesAt(browser, where.urlFor(theme), { width, drive, liveStreams: opts.liveStreams });
             } catch (e) {
                 console.error(`${where.label}: ${e instanceof Error ? e.message : e}; is the server up?`);
                 process.exit(2);

@@ -22,6 +22,8 @@
 //                             measures the app against this checkout. A path with no such file falls through to the app.
 //   --ignore-https-errors     Accept a self-signed certificate.
 //   --no-drive                (measure-states only) skip the driven half.
+//   --live-streams            (measure-states, measure-gaps) leave the page's EventSource / WebSocket streams running during the
+//                             driven half; by default they are held there so a repaint cannot replace the driven state.
 // No eval is used anywhere: only the page's own CSP-safe scripts run in the page.
 import { createRequire } from 'node:module';
 import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
@@ -52,13 +54,13 @@ const TYPES = {
 };
 
 const VALUE_OPTIONS = ['url', 'cookie', 'login-form', 'login-env', 'storage-state', 'assets-from', 'items'];
-const FLAG_OPTIONS = ['ignore-https-errors', 'no-drive'];
+const FLAG_OPTIONS = ['ignore-https-errors', 'no-drive', 'live-streams'];
 
 /**
  * Splits argv into positionals and the shared options.
  * @param {string[]} argv
  * @returns {{ positional: string[], opts: { url: string, cookies: string[], loginForm: string, loginEnv: string, storageState: string,
- *   assets: string[], items: string, ignoreHttpsErrors: boolean, noDrive: boolean } }}
+ *   assets: string[], items: string, ignoreHttpsErrors: boolean, noDrive: boolean, liveStreams: boolean } }}
  */
 export function parseArgs(argv) {
     /** @type {string[]} */
@@ -93,6 +95,7 @@ export function parseArgs(argv) {
             items: values.items?.[0] ?? '',
             ignoreHttpsErrors: flags.has('ignore-https-errors'),
             noDrive: flags.has('no-drive'),
+            liveStreams: flags.has('live-streams'),
         },
     };
 }
@@ -229,4 +232,4 @@ export async function launch(origin, opts) {
 
 /** The usage line tail all three CLIs share. */
 export const OPTIONS_USAGE =
-    '[--url <page url>] [--cookie n=v] [--login-form url,user,pass,submit] [--storage-state f] [--assets-from /prefix=<dir>] [--items <selector>] [--ignore-https-errors]';
+    '[--url <page url>] [--cookie n=v] [--login-form url,user,pass,submit] [--storage-state f] [--assets-from /prefix=<dir>] [--items <selector>] [--ignore-https-errors] [--live-streams]';

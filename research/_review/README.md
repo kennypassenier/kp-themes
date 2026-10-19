@@ -485,7 +485,7 @@ tijd en moeite in die componenten gestoken en dan kan je ze nog niet eens met hu
 `measure-gaps.mjs` runs it on every page it measures (lines starting with `states`):
 
 ```sh
-node research/_review/measure-states.mjs <port> <page> [themes=formal,dark] [widths=1280,390] [--no-drive]
+node research/_review/measure-states.mjs <port> <page> [themes=formal,dark] [widths=1280,390] [--no-drive] [--live-streams]
 ```
 
 It flags (1) wiring: a component in loading without the busy card, empty or failed without the package plate, a component
@@ -499,6 +499,28 @@ panel centred, the plate keeping the loaded footprint, filling the width, its wo
 normal-size Retry when failed. `states-fixture.html` is its canary: a hand-made "Loading…" table, a "No data" card and a page
 spinner, beside the same components wired the package's way. The wiring per component is in docs/USER_GUIDE.md, "Every data
 component uses its standard states".
+
+### Live streams, closed folds, scrolled logs and action roles (hltools-1019)
+
+Four gaps the homelab pages showed (kp-gaps/homelab.md 75, 81 to 83), closed in the scripts:
+
+- **Streams held during the drive (`measure-states`).** The drive puts a component into loading, empty or failed and waits up
+  to 6 s; a page that repaints the component from its EventSource / WebSocket meanwhile replaced the state, so the result changed
+  run to run. After the page has loaded and settled, the stream is held: its `message` and named events no longer reach the
+  page's listeners (`open`, `error` and `close` still pass). `--live-streams` opts out.
+- **Streams in the held-back / failing loads (`measure-states`).** A stream-fed page reads nothing over fetch, so the held-back
+  and failing loads never ran for it. A page that opens an EventSource or WebSocket is now loaded once with every stream held
+  (stands in as connecting, delivers nothing: the busy card must show) and once failing (error, then closed: the failed plate
+  must show), together with the fetch reads when it has both. Only a visible plate or busy card counts, so one parked in a hidden
+  slot (a table's empty slot) is not mistaken for the state.
+- **Closed `<details>` and scrolled-out text (`measure-gaps`, `measure-align`).** Anything inside a closed `<details>` (its
+  `<summary>` aside) is not on screen and is not measured. Text clipped by a scrolling ancestor is skipped on either axis, and
+  the ancestor chain now runs up to the section, so a scroll box the page wraps around a component (a tail-following log) clips
+  too.
+- **Action roles (`measure-align` D / A).** In a `.kp-action-list` row whose buttons name their role (`data-kp-action`) each
+  button is compared with the same role's button of the other rows, never with the row's first button: a row missing the first
+  role leaves column 1 empty and its one button stands in column 2 by design. A role that really drifts is still reported as
+  `the <cell> "<role>" controls start N px apart`. Buttons without a role keep the old reading (first control of the cell).
 
 ## Measuring the motion of a character demo
 
