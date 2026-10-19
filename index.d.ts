@@ -63,7 +63,7 @@ export { DOC_GLYPH, DOC_KINDS, PREVIEW, PREVIEW_TIMEOUT_MS, attachDocGlyphs, att
 export { GALLERY, GALLERY_ADD_EVENT, GALLERY_CHROME_MS, GALLERY_CLOSE_EVENT, GALLERY_OPEN_EVENT, GALLERY_RETRY_EVENT, GALLERY_STATES, attachGalleries, galleryItems, galleryLast, openGalleryFromHash, openGalleryItem, setGallery, setGalleryUploading, } from './js/gallery.js';
 export { USES_COLLAPSE_BELOW, USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, setUsesPin, usesPath, usesRelation } from './js/uses-map.js';
 export { USUAL, USUAL_ADD_EVENT, USUAL_FOLD_ABOVE, USUAL_NOT_TODAY_EVENT, USUAL_PICK_EVENT, USUAL_RETRY_EVENT, USUAL_STATES, attachUsualPickers, nearNames, normaliseName, setUsual, setUsualState, similarity, usualNotToday, usualPicker, } from './js/usual-picker.js';
-export { CALM_TONES, CALM_TONES_ATTRIBUTE, calmLegendEntries, calmTone, calmWord, inPausedRange, isCalmTones } from './js/calm-tones.js';
+export { CALM_TONES, CALM_TONES_ATTRIBUTE, calmLegendEntries, calmTone, calmWord, inPausedRange, isCalmTones, } from './js/calm-tones.js';
 export { QUOTE, QUOTE_FOLD_EVENT, QUOTE_HIDE_EVENT, QUOTE_LINES, QUOTE_LIST, QUOTE_LIST_MAX, QUOTE_RETRY_EVENT, QUOTE_STATES, attachQuotes, quote, quoteWhen, setQuote, setQuoteState, } from './js/quote.js';
 export { RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, attachRatings, rating, ratingCell, setRating, setRatingState, snapRating, } from './js/rating.js';
 export { SLIDER, SLIDER_CHANGE_EVENT, SLIDER_INPUT_EVENT, SLIDER_STATES, attachSliders, parseSliderText, setSliderState, setSliderValues, slider, sliderPercent, sliderValues, snapSlider, } from './js/slider.js';
@@ -91,7 +91,7 @@ export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, set
 export type ToolbarFilter = import('./js/toolbar.js').ToolbarFilter;
 /** @typedef {import('./js/toolbar.js').ToolbarFilter} ToolbarFilter */
 export { KEYS, attachKeys, setKeys } from './js/keys.js';
-export { HEAT, HEAT_PAGE_EVENT, HEAT_PICK_EVENT, HEAT_ROW_EVENT, MATRIX, MATRIX_LIGHT_EVENT, MATRIX_PICK_EVENT, attachHeats, attachMatrices, setHeat, setHeatLegend, setHeatPick, setHeatRows, setMatrix, setMatrixLit, setMatrixPick } from './js/heat.js';
+export { HEAT, HEAT_PAGE_EVENT, HEAT_PICK_EVENT, HEAT_ROW_EVENT, MATRIX, MATRIX_LIGHT_EVENT, MATRIX_PICK_EVENT, attachHeats, attachMatrices, setHeat, setHeatLegend, setHeatPick, setHeatRows, setMatrix, setMatrixLit, setMatrixPick, } from './js/heat.js';
 export type HeatSpec = import('./js/heat.js').HeatSpec;
 export type MatrixSpec = import('./js/heat.js').MatrixSpec;
 export type HeatLegendEntry = import('./js/heat.js').HeatLegendEntry;
@@ -254,23 +254,23 @@ export type TimePreset = import('./js/timefield.js').TimePreset;
 export { CONSOLE, CONSOLE_BLOCK_EVENT, CONSOLE_HISTORY, CONSOLE_MAX_BYTES, CONSOLE_RETRY_EVENT, CONSOLE_RUN_EVENT, CONSOLE_STATES, attachConsoles, clearConsole, consoleBlocks, runConsoleCommand, setConsole, setConsoleComplete, setConsoleContext, setConsoleRun, } from './js/console.js';
 export { LOGVIEWER, LOGVIEWER_EVENT, LOGVIEWER_MAX, LOGVIEWER_RETRY_EVENT, LOG_LEVELS, appendLogLines, attachLogViewers, clearLogViewer, logLevel, logViewerLines, logViewerText, searchLogViewer, setLogViewer, stepLogMatch } from './js/logviewer.js';
 export { DIFF, DIFF_CONTEXT, DIFF_COPY_EVENT, DIFF_EXPAND_EVENT, DIFF_FOLD_MIN, DIFF_MAX_LINES, DIFF_RETRY_EVENT, DIFF_STATUSES, DIFF_TOGGLE_EVENT, DIFF_WORD_LIMIT, DIFF_WORD_SHARE, attachDiffs, diffWords, foldContext, setDiff } from './js/diff.js';
-export type ConsoleBlock = import('./js/console.js').ConsoleBlock;
-export type ConsoleChange = import('./js/console.js').ConsoleChange;
-export type ConsoleJob = import('./js/console.js').ConsoleJob;
-export type ConsoleRun = import('./js/console.js').ConsoleRun;
-/** @typedef {import('./js/console.js').ConsoleBlock} ConsoleBlock */
-/** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
-/** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
-/** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */
 export type LogLine = import('./js/logviewer.js').LogLine;
 export type LogViewerSpec = import('./js/logviewer.js').LogViewerSpec;
-/** @typedef {import('./js/logviewer.js').LogLine} LogLine */
-/** @typedef {import('./js/logviewer.js').LogViewerSpec} LogViewerSpec */
 export type DiffFile = import('./js/diff.js').DiffFile;
 export type DiffHunk = import('./js/diff.js').DiffHunk;
 export type DiffLine = import('./js/diff.js').DiffLine;
 export type DiffSpec = import('./js/diff.js').DiffSpec;
+export type ConsoleBlock = import('./js/console.js').ConsoleBlock;
+export type ConsoleChange = import('./js/console.js').ConsoleChange;
+export type ConsoleJob = import('./js/console.js').ConsoleJob;
+export type ConsoleRun = import('./js/console.js').ConsoleRun;
+/** @typedef {import('./js/logviewer.js').LogLine} LogLine */
+/** @typedef {import('./js/logviewer.js').LogViewerSpec} LogViewerSpec */
 /** @typedef {import('./js/diff.js').DiffFile} DiffFile */
 /** @typedef {import('./js/diff.js').DiffHunk} DiffHunk */
 /** @typedef {import('./js/diff.js').DiffLine} DiffLine */
 /** @typedef {import('./js/diff.js').DiffSpec} DiffSpec */
+/** @typedef {import('./js/console.js').ConsoleBlock} ConsoleBlock */
+/** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
+/** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
+/** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */
