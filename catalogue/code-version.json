@@ -9634,7 +9634,7 @@
         "||||.kp-page-header__actions": "aefebf7731f64418",
         "||||.kp-page-header__description": "c4068c1460aa8a7c",
         "||||.kp-page-header__heading": "128c17346a14aa81",
-        "||||.kp-page-header__inner": "d7dcfb994f6e6a8e",
+        "||||.kp-page-header__inner": "2804b193f70766f1",
         "||||.kp-page-header__lead": "a2a0adadbaa7e91a",
         "||||.kp-page-header__line": "8ccd90b397c3b186",
         "||||.kp-page-header__meta": "5f1dcc4d0225eef1",
@@ -9667,6 +9667,7 @@
         "||||.kp-pane__head:not(:has(*))": "a2ecbebd076d3c4c",
         "||||.kp-pane__list": "762034811ea56c9d",
         "||||.kp-pane__state": "99b009b6de5e10a0",
+        "||||.kp-pane__state:not([hidden])": "f00166a2e24a3c61",
         "||||.kp-pane__state[hidden]": "1446ac3cc2c6e4b0",
         "||||.kp-passkeys": "a81e5ef5af9d84d8",
         "||||.kp-passkeys__action": "142db7b75088c724",
@@ -10192,6 +10193,7 @@
         "||||.kp-split--panes[data-kp-narrow-on][data-kp-narrow='stack']": "b9ba756bc0d2c5f0",
         "||||.kp-split--panes[data-kp-split]": "05f1b24639c2c2cf",
         "||||.kp-split--panes[data-kp-state-wide]:not([data-kp-narrow-on])": "a9e693d526054a18",
+        "||||.kp-split--panes[data-kp-state-wide][data-kp-narrow-on][data-kp-pane-shown='list']": "a7b05e2425df4efc",
         "||||.kp-split[data-kp-orientation='horizontal']": "d07382969a716f13",
         "||||.kp-split__pane": "2759144c48b37144",
         "||||.kp-split__separator": "008f9428fcb14b83",
@@ -10842,7 +10844,7 @@
         "||||[data-kp-pane-key][aria-selected='true']": "b2041adba5e8dab7",
         "||||[data-kp-pane='aside']": "a3e78f80fcd54386",
         "||||[data-kp-pane='aside'])": "e8fc5f38dfcc4293",
-        "||||[data-kp-pane='detail']": "f4bd6a626d7a8012",
+        "||||[data-kp-pane='detail']": "96ea3135956558be",
         "||||[data-kp-pane='list']": "760b7f74ce5870c9",
         "||||[data-kp-pane]": "b07ffaea0d15a8e3",
         "||||[data-kp-questions]": "351ea6ff73ae1761",
@@ -11178,7 +11180,7 @@
             ]
         },
         "data": {
-            "modules": "0c35574ed294f145",
+            "modules": "6760db1021f04c92",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",

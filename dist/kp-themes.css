@@ -3254,7 +3254,9 @@
     .kp-page-header__inner {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        align-items: start;
+        /* The title's first line and the actions' first line stand on one baseline. Top-aligned, a 36 px button beside a 39.6 px title
+         * line has its centre 1.8 px above the title's and no edge in common with its text [hltwo-1019]. */
+        align-items: first baseline;
         gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
     }
 
@@ -24684,6 +24686,29 @@
         z-index: 1;
         grid-template: minmax(0, 1fr) / minmax(0, 1fr);
         /* Over the whole master-detail grid, not the detail's second row. */
+        grid-area: 1 / 1 / -1 / -1;
+        background: var(--background);
+    }
+
+    /* Folded to the list, the detail is a closed sheet (display: none) and a state plate laid in it is 0 x 0: a failure, or an empty
+     * master-detail with no list, covers the whole master-detail from where the closed detail's state stands [hltwo-1019]. */
+    .kp-split--panes[data-kp-state-wide][data-kp-narrow-on][data-kp-pane-shown='list'] {
+        position: relative;
+    }
+
+    .kp-split--panes[data-kp-state-wide][data-kp-narrow-on][data-kp-pane-shown='list'] > [data-kp-pane='detail'] {
+        display: contents;
+    }
+
+    .kp-split--panes[data-kp-state-wide][data-kp-narrow-on][data-kp-pane-shown='list'] > [data-kp-pane='detail'] > :not(.kp-pane__state) {
+        display: none;
+    }
+
+    .kp-split--panes[data-kp-state-wide][data-kp-narrow-on][data-kp-pane-shown='list'] > [data-kp-pane='detail'] > .kp-pane__state:not([hidden]) {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
         grid-area: 1 / 1 / -1 / -1;
         background: var(--background);
     }

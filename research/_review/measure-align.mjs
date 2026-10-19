@@ -134,6 +134,24 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
         }
         return true;
     };
+    /**
+     * The box of an element cut to every clipping ancestor up to the section (overflow other than visible).
+     * @param {Element} el
+     */
+    const visiblePart = (el) => {
+        const r = el.getBoundingClientRect();
+        let { left, right, top, bottom } = r;
+        for (let a = el.parentElement; a && a !== section.parentElement; a = a.parentElement) {
+            const cs = getComputedStyle(a);
+            if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
+            const ar = a.getBoundingClientRect();
+            left = Math.max(left, ar.left);
+            right = Math.min(right, ar.right);
+            top = Math.max(top, ar.top);
+            bottom = Math.min(bottom, ar.bottom);
+        }
+        return { left, right, top, bottom: Math.max(top, bottom) };
+    };
     /** The children of an element as the layout sees them: display: contents opened up. @param {Element} el */
     const kids = (el) => {
         /** @type {Element[]} */
@@ -171,12 +189,23 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
             range.selectNodeContents(n);
             const rect = [...range.getClientRects()].find((r) => r.width > 0.5 && r.height > 0.5);
             if (!rect) continue;
-            // An empty inline-block's bottom edge is the baseline of the line it stands on.
+            // An empty inline-block's bottom edge is the baseline of the line it stands on. In a flex or grid container (a button)
+            // the probe would be an item of its own, centred in the box, so the words are wrapped for the reading: the wrapper is
+            // the item and the probe stands in its line [hltwo-1019].
             const probe = document.createElement('span');
             probe.style.cssText = 'display:inline-block;width:0;height:0;margin:0;padding:0;border:0;vertical-align:baseline';
-            p.insertBefore(probe, n);
+            const display = getComputedStyle(p).display;
+            const boxed = /flex|grid/.test(display);
+            const wrap = boxed ? document.createElement('span') : null;
+            if (wrap) {
+                p.insertBefore(wrap, n);
+                wrap.append(probe, n);
+            } else p.insertBefore(probe, n);
             const base = probe.getBoundingClientRect().bottom;
-            probe.remove();
+            if (wrap) {
+                p.insertBefore(n, wrap);
+                wrap.remove();
+            } else probe.remove();
             return { rect, base, el: p };
         }
         return null;
@@ -724,8 +753,10 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
             const a = btns[i];
             const b = btns[j];
             if (a.contains(b) || b.contains(a)) continue;
-            const ar = a.getBoundingClientRect();
-            const br = b.getBoundingClientRect();
+            // Only the part a clipping box lets through is on screen: a log line half scrolled out of the page's own scroller
+            // does not overlap the button above that scroller [hltwo-1019, homelab 83].
+            const ar = visiblePart(a);
+            const br = visiblePart(b);
             const ox = Math.min(ar.right, br.right) - Math.max(ar.left, br.left);
             const oy = Math.min(ar.bottom, br.bottom) - Math.max(ar.top, br.top);
             if (ox > tol && oy > tol) res.push(`${id}: ${name(a)} and ${name(b)} overlap by ${px(ox)} x ${px(oy)} px`);

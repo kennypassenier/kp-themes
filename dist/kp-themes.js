@@ -15221,6 +15221,24 @@ __export(busy_card_exports, {
   BUSY_CARD: () => BUSY_CARD,
   openBusyCard: () => openBusyCard
 });
+function scrollersAround(host) {
+  const found = [];
+  for (let a = host.parentElement; a && a !== host.ownerDocument.documentElement; a = a.parentElement) {
+    const x = getComputedStyle(a).overflowX;
+    if (x !== "visible" && a.clientWidth > 0) found.push(a);
+  }
+  return found;
+}
+function seenAcross(host, left, right) {
+  let seenLeft = left;
+  let seenRight = right;
+  for (const a of scrollersAround(host)) {
+    const box = a.getBoundingClientRect();
+    seenLeft = Math.max(seenLeft, box.left + a.clientLeft);
+    seenRight = Math.min(seenRight, box.left + a.clientLeft + a.clientWidth);
+  }
+  return { left: seenLeft, right: Math.max(seenLeft, seenRight) };
+}
 function openBusyCard(host, { words, area, className = "", arrive: arrive2 = true }) {
   const doc = host.ownerDocument;
   const layer = doc.createElement("div");
@@ -15242,12 +15260,13 @@ function openBusyCard(host, { words, area, className = "", arrive: arrive2 = tru
     const viewLeft = box.left + host.clientLeft;
     const viewBottom = viewTop + host.clientHeight;
     const viewRight = viewLeft + host.clientWidth;
+    const seen = seenAcross(host, viewLeft, viewRight);
     const rects = area().map((b) => "getBoundingClientRect" in b ? b.getBoundingClientRect() : b);
     if (!rects.length) return;
     let top = Math.max(viewTop, Math.min(...rects.map((r) => r.top)));
-    const left = Math.max(viewLeft, Math.min(...rects.map((r) => r.left)));
+    const left = Math.max(seen.left, Math.min(...rects.map((r) => r.left)));
     let bottom = Math.max(top, Math.min(viewBottom, Math.max(...rects.map((r) => r.bottom))));
-    const right = Math.max(left, Math.min(viewRight, Math.max(...rects.map((r) => r.right))));
+    const right = Math.max(left, Math.min(seen.right, Math.max(...rects.map((r) => r.right))));
     const originTop = viewTop - host.scrollTop;
     const originLeft = viewLeft - host.scrollLeft;
     const write3 = () => {
@@ -15270,9 +15289,12 @@ function openBusyCard(host, { words, area, className = "", arrive: arrive2 = tru
   const watcher = typeof ResizeObserver === "function" ? new ResizeObserver(() => place2()) : null;
   watcher?.observe(host);
   host.addEventListener("scroll", place2, { passive: true });
+  const scrollers = scrollersAround(host);
+  for (const scroller of scrollers) scroller.addEventListener("scroll", place2, { passive: true });
   const unwatch = () => {
     watcher?.disconnect();
     host.removeEventListener("scroll", place2);
+    for (const scroller of scrollers) scroller.removeEventListener("scroll", place2);
   };
   if (arrive2) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => layer.isConnected && m.arriveShown(layer));
   let closing2 = null;

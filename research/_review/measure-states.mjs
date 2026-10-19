@@ -846,7 +846,11 @@ export function measureDriven([i, state, name, readyH, maxHold, busySel, ownSel,
             return res;
         }
         const L = card.getBoundingClientRect();
-        if (L.width < innerW * 0.5) res.push(`${at} loading: the busy card is ${L.width.toFixed(0)}px wide over a ${innerW.toFixed(0)}px component`);
+        // A component wider than the box that scrolls it (a heat grid on a phone) is judged by the width a reader sees [hltwo-1019].
+        let seenW = innerW;
+        for (let a = host.parentElement; a && a !== document.documentElement; a = a.parentElement)
+            if (getComputedStyle(a).overflowX !== 'visible' && a.clientWidth > 0) seenW = Math.min(seenW, a.clientWidth);
+        if (L.width < seenW * 0.5) res.push(`${at} loading: the busy card is ${L.width.toFixed(0)}px wide over a ${seenW.toFixed(0)}px component`);
         if (L.height < Math.min(A.height * 0.4, 120))
             res.push(`${at} loading: the busy card is ${L.height.toFixed(0)}px high over a ${A.height.toFixed(0)}px data area`);
         const panel = card.querySelector('.kp-datatable__busy-panel');
