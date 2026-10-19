@@ -42,7 +42,7 @@ export type EntityData = {
         label: string;
         value: number | null;
         mark?: number;
-        tone?: 'warning' | 'destructive';
+        tone?: 'success' | 'neutral' | 'warning' | 'destructive';
         text?: string;
     }[];
     actions?: {
@@ -89,6 +89,28 @@ export type EntityData = {
      */
     error?: string;
 };
+export type EntityEmptyOptions = {
+    /**
+     * the plate's heading
+     */
+    title?: string;
+    /**
+     * the line under it
+     */
+    message?: string;
+    /**
+     * the action's words
+     */
+    actionLabel?: string;
+    /**
+     * `none`: the plate has no action
+     */
+    action?: 'none';
+    /**
+     * what the action does, in place of firing `kp-entity-new`
+     */
+    onAction?: (event: MouseEvent) => void;
+};
 /**
  * Draw one card from its data. Only what differs from the last draw is touched.
  * @param {HTMLElement} card
@@ -99,22 +121,22 @@ export declare function setEntity(card: HTMLElement, data: EntityData): void;
  * Draw a grid's cards from a list; a card whose key is already there changes in place, a gone key leaves, order follows the list.
  * @param {HTMLElement} grid
  * @param {readonly EntityData[]} list
+ * @param {EntityEmptyOptions} [empty] how the plate reads when the list is empty (see `setEntityGridState`)
  */
-export declare function setEntityGrid(grid: HTMLElement, list: readonly EntityData[]): void;
+export declare function setEntityGrid(grid: HTMLElement, list: readonly EntityData[], empty?: EntityEmptyOptions): void;
 /**
  * Put the whole grid in a state: `loading` (skeleton cards, as many as `options.count` or the cards it had, 6 at first, and the
  * busy card over them), `empty` ("No stacks yet" with its action) or `error` (the failed plate with Retry); a tile grid says "apps".
  * @param {HTMLElement} grid
  * @param {'loading' | 'empty' | 'error'} state
- * @param {{ count?: number, message?: string, title?: string, actionLabel?: string, words?: string }} [options] `words` is the busy card's line
+ * @param {{ count?: number, words?: string } & EntityEmptyOptions} [options] `words` is the busy card's line. The empty plate's action: `action: 'none'`
+ * (or `data-kp-entity-empty-action="none"` on the grid) leaves it out, `actionLabel` words it, and `onAction` runs instead of the
+ * `kp-entity-new` event
  */
 export declare function setEntityGridState(grid: HTMLElement, state: 'loading' | 'empty' | 'error', options?: {
     count?: number;
-    message?: string;
-    title?: string;
-    actionLabel?: string;
     words?: string;
-}): void;
+} & EntityEmptyOptions): void;
 /**
  * Give every grid its options (the least card width) and keep the cards in step with them: a changed attribute draws every card again.
  * @param {ParentNode} [root]

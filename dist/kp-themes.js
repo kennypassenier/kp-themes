@@ -49009,7 +49009,10 @@ function fitActions(host, inline) {
       const row = slotOf(card, "actions");
       if (!row || row.hidden || row.clientWidth === 0 || card.dataset.kpState === "error") return false;
       const edge = row.getBoundingClientRect().right + 0.5;
-      return [...row.children].some((child) => child.getBoundingClientRect().right > edge);
+      return [...row.children].some((child) => {
+        const button = child.matches("button") ? child : child.querySelector("button");
+        return child.getBoundingClientRect().right > edge || button !== null && button.scrollWidth > button.clientWidth;
+      });
     });
     if (!tooWide) return;
     host.dataset.kpEntityFit = String(inline - 1);
@@ -49446,7 +49449,7 @@ function setEntity(card, data) {
   });
   fitActions(host, inline);
 }
-function setEntityGrid(grid2, list) {
+function setEntityGrid(grid2, list, empty = {}) {
   grid2.setAttribute("data-kp-entity-grid", "");
   grid2.removeAttribute("data-kp-state");
   clearGridState(grid2);
@@ -49466,7 +49469,7 @@ function setEntityGrid(grid2, list) {
     else card.remove();
   }
   if (list.length === 0) {
-    setEntityGridState(grid2, "empty");
+    setEntityGridState(grid2, "empty", empty);
     return;
   }
   let at = 0;
@@ -49528,8 +49531,10 @@ function setEntityGridState(grid2, state2, options = {}) {
     kind: "empty",
     title: options.title ?? (tiles ? s2.entityTileGridEmpty : s2.entityGridEmpty),
     ...options.message ? { text: options.message } : {},
-    actionLabel: options.actionLabel ?? (tiles ? s2.entityTileNew : s2.entityNew),
-    onAction: () => grid2.dispatchEvent(new CustomEvent(ENTITY_NEW_EVENT, { bubbles: true }))
+    ...(options.action ?? grid2.getAttribute("data-kp-entity-empty-action")) === "none" ? {} : {
+      actionLabel: options.actionLabel ?? (tiles ? s2.entityTileNew : s2.entityNew),
+      onAction: options.onAction ?? (() => grid2.dispatchEvent(new CustomEvent(ENTITY_NEW_EVENT, { bubbles: true })))
+    }
   });
   grid2.append(plate);
 }

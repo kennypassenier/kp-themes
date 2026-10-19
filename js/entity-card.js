@@ -28,6 +28,8 @@
 //   data-kp-state              on a card: `loading`, `empty` ("not measured") or `error` (the state turns destructive and a
 //                              Retry takes the actions' place); on the grid: `loading` (skeleton cards and the busy card),
 //                              `empty` ("No stacks yet" and its action) or `error` (the failed plate with Retry)
+//   data-kp-entity-empty-action  `none`: the empty plate ("No stacks yet") has no action; `setEntityGridState(grid, 'empty', { actionLabel,
+//                              onAction })` words it and runs your function instead of firing `kp-entity-new`
 //   data-kp-entity-trend       the trend row (`trend: number[]`, a 24-hour line drawn with kpi.js's drawSparkline, the current value
 //                              beside it): `auto` (default: every card of the grid has the row as soon as one card has a `trend`),
 //                              `on` (always) or `off`. A card with fewer than two readings keeps the row and says "no line yet"
@@ -88,7 +90,7 @@ export const ENTITY_GRID_RETRY_EVENT = 'kp-entity-grid-retry';
  * @property {{ label: string, tone?: 'success' | 'warning' | 'destructive' | 'info' }} [state]
  * @property {{ value: string, label: string }[]} [figures]
  * @property {{ label: string, tone?: 'success' | 'warning' | 'destructive' | 'info' }[]} [flags]
- * @property {{ label: string, value: number | null, mark?: number, tone?: 'warning' | 'destructive', text?: string }[]} [meters]
+ * @property {{ label: string, value: number | null, mark?: number, tone?: 'success' | 'neutral' | 'warning' | 'destructive', text?: string }[]} [meters]
  * @property {{ id: string, label: string, danger?: boolean, disabled?: string }[]} [actions]
  * @property {number[]} [trend] the readings of the trend row, oldest first (a 24-hour CPU line); fewer than two say "no line yet"
  * @property {string} [trendLabel] the trend row's label ("CPU 24 h"); the package's word "Trend" when absent
@@ -100,6 +102,15 @@ export const ENTITY_GRID_RETRY_EVENT = 'kp-entity-grid-retry';
  * @property {boolean} [starred] the favourite star is on; a refill with it changes the star in place
  * @property {'ready' | 'loading' | 'empty' | 'error'} [status]
  * @property {string} [error] why a card in `error` failed
+ */
+
+/**
+ * @typedef {object} EntityEmptyOptions
+ * @property {string} [title] the plate's heading
+ * @property {string} [message] the line under it
+ * @property {string} [actionLabel] the action's words
+ * @property {'none'} [action] `none`: the plate has no action
+ * @property {(event: MouseEvent) => void} [onAction] what the action does, in place of firing `kp-entity-new`
  */
 
 /** What each card was last drawn from, so a refill changes only what changed; `star` is the star as it stands now. @type {WeakMap<Element, { data: EntityData, drawn: Record<string, string>, star: boolean }>} */
@@ -195,8 +206,8 @@ const ACTIONS_QUEUED = new WeakSet();
 
 /**
  * Move actions into "More" while a button of the grid does not fit its card, one button at a time, as soon as the cards are
- * laid out: every column is at least as wide as its button (`minmax(min-content, 1fr)`), so a row that is too narrow runs past the
- * card's edge, which is what is measured here. The count is the grid's, so the same action stands in the same column on every card.
+ * laid out: the columns are equal (`minmax(0, 1fr)`), so a button whose longest word is wider than its column spills it past its own
+ * box, which is what is measured here (and a row that runs past the card's edge). The count is the grid's, so the same action stands in the same column on every card.
  * @param {HTMLElement} host the grid, or the card when it stands alone
  * @param {number} inline how many actions stand as buttons now
  */
@@ -212,7 +223,12 @@ function fitActions(host, inline) {
             const row = slotOf(card, 'actions');
             if (!row || row.hidden || row.clientWidth === 0 || card.dataset.kpState === 'error') return false;
             const edge = row.getBoundingClientRect().right + 0.5;
-            return [...row.children].some((child) => child.getBoundingClientRect().right > edge);
+            // The columns are equal, so a button too wide for its column spills its longest word past its own box
+            // (or past the row's edge, for the last one).
+            return [...row.children].some((child) => {
+                const button = child.matches('button') ? child : child.querySelector('button');
+                return child.getBoundingClientRect().right > edge || (button !== null && button.scrollWidth > button.clientWidth);
+            });
         });
         if (!tooWide) return;
         host.dataset.kpEntityFit = String(inline - 1);
@@ -701,8 +717,9 @@ export function setEntity(card, data) {
  * Draw a grid's cards from a list; a card whose key is already there changes in place, a gone key leaves, order follows the list.
  * @param {HTMLElement} grid
  * @param {readonly EntityData[]} list
+ * @param {EntityEmptyOptions} [empty] how the plate reads when the list is empty (see `setEntityGridState`)
  */
-export function setEntityGrid(grid, list) {
+export function setEntityGrid(grid, list, empty = {}) {
     grid.setAttribute('data-kp-entity-grid', '');
     grid.removeAttribute('data-kp-state');
     clearGridState(grid);
@@ -720,7 +737,7 @@ export function setEntityGrid(grid, list) {
         else card.remove();
     }
     if (list.length === 0) {
-        setEntityGridState(grid, 'empty');
+        setEntityGridState(grid, 'empty', empty);
         return;
     }
     let at = 0;
@@ -754,7 +771,9 @@ function clearGridState(grid) {
  * busy card over them), `empty` ("No stacks yet" with its action) or `error` (the failed plate with Retry); a tile grid says "apps".
  * @param {HTMLElement} grid
  * @param {'loading' | 'empty' | 'error'} state
- * @param {{ count?: number, message?: string, title?: string, actionLabel?: string, words?: string }} [options] `words` is the busy card's line
+ * @param {{ count?: number, words?: string } & EntityEmptyOptions} [options] `words` is the busy card's line. The empty plate's action: `action: 'none'`
+ * (or `data-kp-entity-empty-action="none"` on the grid) leaves it out, `actionLabel` words it, and `onAction` runs instead of the
+ * `kp-entity-new` event
  */
 export function setEntityGridState(grid, state, options = {}) {
     const doc = grid.ownerDocument;
@@ -797,8 +816,12 @@ export function setEntityGridState(grid, state, options = {}) {
                   kind: 'empty',
                   title: options.title ?? (tiles ? s.entityTileGridEmpty : s.entityGridEmpty),
                   ...(options.message ? { text: options.message } : {}),
-                  actionLabel: options.actionLabel ?? (tiles ? s.entityTileNew : s.entityNew),
-                  onAction: () => grid.dispatchEvent(new CustomEvent(ENTITY_NEW_EVENT, { bubbles: true })),
+                  ...((options.action ?? grid.getAttribute('data-kp-entity-empty-action')) === 'none'
+                      ? {}
+                      : {
+                            actionLabel: options.actionLabel ?? (tiles ? s.entityTileNew : s.entityNew),
+                            onAction: options.onAction ?? (() => grid.dispatchEvent(new CustomEvent(ENTITY_NEW_EVENT, { bubbles: true }))),
+                        }),
               });
     grid.append(plate);
 }
