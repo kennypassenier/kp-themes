@@ -426,7 +426,13 @@ export async function isolate(frame, item, theme) {
     const doc = frame.contentDocument;
     if (!doc) return;
     const root = doc.documentElement;
-    const href = new URL(`../../css/${theme}-register.css`, doc.baseURI).href;
+    // The register sits next to the page's own stylesheets: a page's css folder is read from a stylesheet it already
+    // links (`…/css/<name>.css`), so a demo at any depth (research/<topic>/<screen>/, a _previous snapshot) finds it;
+    // `../../css/` from the page is the fallback for a page that links none.
+    const cssDir = [...doc.querySelectorAll('link[rel="stylesheet"]')]
+        .map((link) => /** @type {HTMLLinkElement} */ (link).href)
+        .find((url) => /\/css\/(?:themes|components|[a-z]+-register)\.css(?:[?#].*)?$/.test(url));
+    const href = new URL(`${theme}-register.css`, cssDir ?? new URL('../../css/', doc.baseURI).href).href;
     if (![...doc.querySelectorAll('link[rel="stylesheet"]')].some((link) => /** @type {HTMLLinkElement} */ (link).href === href)) {
         const link = doc.createElement('link');
         link.rel = 'stylesheet';
@@ -455,7 +461,9 @@ export async function isolate(frame, item, theme) {
     doc.head.append(style);
     for (let el = /** @type {Element} */ (section); el.parentElement && el !== doc.body; el = el.parentElement)
         for (const sibling of el.parentElement.children)
-            if (sibling !== el && !sibling.matches('script, style, link')) sibling.setAttribute('data-rv-off', '');
+            // The shared hover card (js/hovercard.js appends one to <body>) stays: set aside, every card in the lane opened
+            // but was never drawn (http-switchboard gap 19, 2026-10-19).
+            if (sibling !== el && !sibling.matches('script, style, link, [data-kp-hovercard-card]')) sibling.setAttribute('data-rv-off', '');
     // A guard against any other height that follows the frame's: a document that grows by the same step on every fit
     // five times in a row is the frame feeding itself, and the frame stops following it.
     let last = 0;
@@ -470,7 +478,12 @@ export async function isolate(frame, item, theme) {
     const ROOM = 448;
     let room = 0;
     const panels = () =>
-        [...section.querySelectorAll('[popover]:popover-open, dialog[open], [role="listbox"], [role="menu"]')].filter((el) => {
+        // The hover card lives on <body>, outside the section, and is a panel too: the frame grows for it instead of
+        // capping it (http-switchboard gap 20).
+        [
+            ...section.querySelectorAll('[popover]:popover-open, dialog[open], [role="listbox"], [role="menu"]'),
+            ...doc.querySelectorAll('[data-kp-hovercard-card]:not([hidden])'),
+        ].filter((el) => {
             const r = el.getBoundingClientRect();
             // A list that floats over what follows; one in the flow is part of the section's own height.
             return r.width > 0 && r.height > 0 && /^(fixed|absolute)$/.test(getComputedStyle(el).position);
@@ -537,7 +550,17 @@ export async function isolate(frame, item, theme) {
     };
     const fit = () => {
         const content = Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height);
-        const panelBottom = Math.max(0, ...panels().map((el) => el.getBoundingClientRect().bottom + 16));
+        // A card the register capped to the frame (placeBlockSide) is counted at its natural height, or the frame would
+        // never grow for it: the cap is what the frame's size was, the size it needs is what the card holds. The frame's
+        // growth is no box change the observers see, so a grown frame is fitted once more a frame later.
+        const panelBottom = Math.max(
+            0,
+            ...panels().map((el) => {
+                const r = el.getBoundingClientRect();
+                const natural = el.scrollHeight + (el.offsetHeight - el.clientHeight);
+                return r.top + Math.max(r.height, natural) + 16;
+            }),
+        );
         // The room waits for the panel; once the panel is shown, its own bottom (and the lane's fitted room) is what counts.
         const next = Math.ceil(Math.max(content + (ownPanelShown() ? 0 : room), panelBottom, modalRoom()));
         const grew = next - last;
@@ -546,6 +569,17 @@ export async function isolate(frame, item, theme) {
         if (echoes >= 4) return;
         last = next;
         frame.style.blockSize = `${next}px`;
+        if (grew !== 0 && doc.querySelector('[data-kp-hovercard-card]:not([hidden])')) requestAnimationFrame(fit);
+        // The frame has grown: a hover card that was squeezed into the old frame gets its natural size back when it fits now.
+        for (const card of doc.querySelectorAll('[data-kp-hovercard-card]:not([hidden])')) {
+            const el = /** @type {HTMLElement} */ (card);
+            if (!el.style.maxBlockSize) continue;
+            const natural = el.scrollHeight + (el.offsetHeight - el.clientHeight);
+            if (el.getBoundingClientRect().top + natural <= doc.documentElement.clientHeight) {
+                el.style.removeProperty('max-block-size');
+                el.style.removeProperty('overflow-y');
+            }
+        }
     };
     new ResizeObserver(fit).observe(doc.body);
     // The end of a panel's motion changes no box the observers see: fit again then.
@@ -566,6 +600,8 @@ export async function isolate(frame, item, theme) {
     const followModal = () => requestAnimationFrame(fit);
     new MutationObserver(followModal).observe(doc.body, { subtree: true, attributes: true, attributeFilter: ['open'] });
     new MutationObserver(followModal).observe(doc.body, { childList: true });
+    // The hover card is shown and placed by attributes (hidden, style) on a node of the body: the frame follows it too.
+    new MutationObserver(followModal).observe(doc.body, { subtree: true, attributes: true, attributeFilter: ['hidden'], attributeOldValue: false });
     doc.addEventListener('close', followModal, true);
     fit();
 }

@@ -339,7 +339,81 @@ async function checkStep() {
     await checkPickers(where).catch((error) => {
         if (!/context was destroyed|detached|navigat/i.test(String(error))) throw error;
     });
+    await checkHoverCards(where).catch((error) => {
+        if (!/context was destroyed|detached|navigat/i.test(String(error))) throw error;
+    });
     return step;
+}
+
+/**
+ * 7 · A hover card opens drawn, whole and under its anchor, in the lane (Kenny, 2026-10-19, app-hsb-hover-1019: the section
+ * "hover" was rejected [broken]: the card opened - `hidden` false, the name focused - and was never drawn, because the
+ * lane's isolation set the card's host (a child of <body>) aside with `data-rv-off`; and the frame, as tall as its
+ * content, had no room for a card hanging under the last row). In every lane, the first visible anchor
+ * `[data-kp-hovercard]` of the section is focused and then pointed at: the card must be displayed with a box, lie wholly
+ * inside the frame's window, stand under (or above) its anchor with its start edge within 24 px of the anchor's, and not
+ * be squeezed into a scrolling sliver.
+ * @param {string} where
+ */
+async function checkHoverCards(where) {
+    const lanes = await page.$$('dialog.rv-dialog .rv-lane');
+    for (const lane of lanes) {
+        const key = (await lane.getAttribute('data-rv-pair')) || '';
+        const frame = await (await lane.$('iframe'))?.contentFrame();
+        if (!frame || frame.isDetached()) continue;
+        const anchor = await frame.evaluateHandle(() => {
+            const section = [...document.querySelectorAll('[data-review-item]')].find((el) => el.getClientRects().length > 0);
+            const all = /** @type {HTMLElement[]} */ ([...(section?.querySelectorAll('[data-kp-hovercard]') ?? [])]);
+            return all.find((el) => el.getClientRects().length > 0 && !el.closest('[hidden], [data-review-controls]')) ?? null;
+        });
+        const element = anchor.asElement();
+        if (!element) continue;
+        // A pointer-only anchor (a plain span) is not asked to open on focus.
+        const focusable = await element.evaluate((el) => /** @type {HTMLElement} */ (el).tabIndex >= 0);
+        for (const how of focusable ? ['focus', 'pointer'] : ['pointer']) {
+            await frame.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
+            await page.mouse.move(2, 2);
+            await page.waitForTimeout(400);
+            if (how === 'focus') await element.evaluate((el) => /** @type {HTMLElement} */ (el).focus());
+            else await element.hover({ timeout: 4000 }).catch(() => {});
+            // The room a demo gives the card is followed by the frame, then the card is placed again.
+            await page.waitForTimeout(1100);
+            const seen = await element.evaluate((el) => {
+                const card = /** @type {HTMLElement | null} */ (document.querySelector('[data-kp-hovercard-card]'));
+                if (!card) return { missing: true };
+                const a = el.getBoundingClientRect();
+                const r = card.getBoundingClientRect();
+                return {
+                    hidden: card.hidden,
+                    display: getComputedStyle(card).display,
+                    off: card.closest('[data-rv-off]') !== null,
+                    w: Math.round(r.width),
+                    h: Math.round(r.height),
+                    top: Math.round(r.top),
+                    bottom: Math.round(r.bottom),
+                    left: Math.round(r.left),
+                    anchorTop: Math.round(a.top),
+                    anchorBottom: Math.round(a.bottom),
+                    anchorLeft: Math.round(a.left),
+                    view: document.documentElement.clientHeight,
+                    clipped: card.scrollHeight > card.clientHeight + 1,
+                };
+            });
+            if ('missing' in seen) continue;
+            const why = [];
+            if (seen.hidden) why.push('never opened');
+            else if (seen.display === 'none' || seen.w === 0 || seen.h === 0)
+                why.push(`opened (hidden=false) but not drawn (display ${seen.display}${seen.off ? ', set aside by the lane with data-rv-off' : ''}, ${seen.w}x${seen.h})`);
+            else {
+                if (seen.top < -1 || seen.bottom > seen.view + 1) why.push(`cut off by the frame (card ${seen.top}..${seen.bottom}, window ${seen.view})`);
+                if (seen.clipped) why.push('squeezed into a scrolling sliver');
+                const beside = seen.top >= seen.anchorBottom - 2 || seen.bottom <= seen.anchorTop + 2;
+                if (!beside || Math.abs(seen.left - seen.anchorLeft) > 24) why.push('not standing at its anchor');
+            }
+            if (why.length) fault(`${where}: ${key}: the hover card (${how} on the first anchor) ${why.join('; ')}`);
+        }
+        await frame.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
+    }
 }
 
 /**
