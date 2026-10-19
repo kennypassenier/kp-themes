@@ -98,7 +98,9 @@ export function measureAlign([tol, only]) {
     };
     /** Where a cell's first line stands: its first control, or its first text line. @param {Element} cell */
     const anchor = (cell) => {
-        const ctl = cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c));
+        let ctl = cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c));
+        // A combobox keeps its status line ("11 results") under the input: the field is the input, the line is its help.
+        if (ctl?.matches('.kp-combobox')) ctl = ctl.querySelector('.kp-combobox__input, [role="combobox"]') ?? ctl;
         const line = firstLine(cell);
         if (ctl) {
             const cr = ctl.getBoundingClientRect();
@@ -173,6 +175,9 @@ export function measureAlign([tol, only]) {
         return /baseline/.test(self) || (/^(auto|normal)$/.test(self) && /baseline/.test(parent));
     };
 
+    /** A radio or a checkbox drawn as a tile or an option is controlled by its tile: the tile is the edge a reader sees. @param {Element | undefined} c */
+    const tileOf = (c) => (c?.matches(MARK) ? c.closest('.kp-field__option, label.kp-tile') ?? c : c);
+
     // ---- A and B: row groups -------------------------------------------------------------------------------------
     const all = [section, ...section.querySelectorAll('*')].filter((el) => !inChrome(el) && shown(el));
     /** @type {{el: Element, rows: Element[]}[]} */
@@ -241,7 +246,7 @@ export function measureAlign([tol, only]) {
             const ctls = list
                 .map(({ row, cell }) => ({
                     row,
-                    ctl: (cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c))) || null,
+                    ctl: tileOf(cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c))) || null,
                 }))
                 .filter((x) => x.ctl && x.ctl !== list.find((l) => l.row === x.row)?.cell);
             if (ctls.length >= 2) {
@@ -328,7 +333,10 @@ export function measureAlign([tol, only]) {
             k.every((c) => c.matches('button, .kp-button, a.kp-button')) &&
             !el.matches('button, .kp-button') &&
             !seenRows.has(el) &&
-            !el.closest('.kp-code__head, .kp-command__head, .kp-secret, [role="toolbar"]')
+            // A cell's own buttons (a row's expander, its action, a strip of nights) belong to the table: a datatable that scrolls
+            // inside a max height has a box shorter than its rows, so rows scrolled out of it read as "under" the table.
+            !el.closest('table, [role="grid"], .kp-table-wrap') &&
+            !el.closest('.kp-code__head, .kp-command__head, .kp-secret, [role="toolbar"], .kp-console, .kp-statuslist')
         );
     });
     for (const bg of groupsOfButtons) {

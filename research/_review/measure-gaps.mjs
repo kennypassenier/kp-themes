@@ -81,6 +81,14 @@ function measure([min, only]) {
                 if (!visible(r)) continue;
                 const cs = getComputedStyle(el);
                 if (cs.visibility === 'hidden') continue;
+                // A mark scrolled out of a scrolling list (a log that follows its tail) is not on screen.
+                let away = false;
+                for (let a = el.parentElement; a && a !== s.parentElement && !away; a = a.parentElement) {
+                    if (getComputedStyle(a).overflowY === 'visible') continue;
+                    const ar = a.getBoundingClientRect();
+                    away = r.bottom <= ar.top + 0.5 || r.top >= ar.bottom - 0.5;
+                }
+                if (away) continue;
                 const marky =
                     !el.textContent?.trim() && (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' || cs.borderLeftWidth !== '0px' || el.tagName === 'svg');
                 if (marky) boxes.push({ el, r, text: '' });
