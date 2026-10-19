@@ -11471,6 +11471,11 @@
 
         .kp-datatable[data-kp-cards] .kp-table tr[data-kp-row-group] > :is(th, td) {
             display: block;
+            /* A block, where the table's block size is a height and not a floor: a heading that holds an action which wraps
+             * grows with it, and its toggle no longer lands on the action (the row stayed 40 px high round a 68 px heading,
+             * so Restore… and the toggle overlapped by 3.5 x 3 px at 390) [alignrest-1019]. */
+            block-size: auto;
+            min-block-size: var(--kp-row-height, calc(var(--kp-control-height, 2.25rem) + 0.25rem));
             border-radius: var(--radius, 0.5rem);
         }
     }
@@ -27344,6 +27349,20 @@
         overflow-wrap: break-word;
     }
 
+    /* A label with a second part (the key's name in a `code`, a note in a `small`) wraps into a block of two or three lines in
+       a narrow box. On the first baseline a one-line value stood on the first line and the block hung under it; centring
+       the cells put a value of three lines off its label. The value's cell fills the row's height and its lines start at
+       the top: the value is on the label's first line, and the cell covers the label block, so nothing hangs
+       [alignrest-1019; settings groups at 390]. */
+    .kp-kv__row:has(> dt > :is(code, small)) {
+        align-items: start;
+    }
+
+    .kp-kv__row:has(> dt > :is(code, small)) > dd {
+        align-self: stretch;
+        align-content: start;
+    }
+
     .kp-kv__row > :is(dd) {
         display: flex;
         flex-wrap: wrap;
@@ -27514,8 +27533,9 @@
 
     .kp-formrow__control > .kp-quantity {
         grid-template-columns: auto minmax(0, 1fr) auto;
-        /* Never squeezed under its words: a unit that would wrap ("mi n") grows the stepper instead. */
-        min-inline-size: max-content;
+        /* Never squeezed under its words: a unit that would wrap ("mi n") grows the stepper instead, up to the short step: a
+         * stepper that outgrew it ended on a third edge beside its neighbours [alignrest-1019]. */
+        min-inline-size: min(max-content, var(--kp-formgrid-short, 14rem));
     }
 
     /* A switch reads its baseline from its words, not from the bottom of its track, so "Off" stands on the label's
@@ -27605,6 +27625,13 @@
             grid-column: 1 / -1;
             grid-row: 2;
             margin-block-start: 0.25rem;
+        }
+
+        /* A row whose control is one action (Replay, Forget, Reset) takes the control track, under the label's line, the way
+           it stands on a wide form: the column of controls runs through every row on one edge, and the action does not sit
+           under its label on the start edge, a stack on one left edge [alignrest-1019; settings browser at 390]. */
+        .kp-formrow__control:has(> .kp-button:only-child) {
+            grid-column: 2 / -1;
         }
     }
 
@@ -27782,6 +27809,25 @@
         align-items: center;
     }
 
+    /* A row with a button on its line (the control is one button, or the row's action is) is centred on it: the button's text
+       is larger than the label's, so on the first baseline the label stood 1.5 px off the button's centre in every theme
+       [alignrest-1019]. A control of several lines keeps the first baseline (a text area, a code block, a tag field, the theme
+       picker): there the button joins the first line. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):is(
+            :has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-button:only-child),
+            :has(> .kp-formgrid__actions > .kp-button)
+        ):not(
+            :has(
+                > :is(.kp-formgrid__control, .kp-formrow__control)
+                    > :is(textarea, .kp-jsonfield, .kp-code, .kp-command, [data-kp-theme-picker], .kp-combobox[data-kp-tags])
+            )
+        ),
+    .kp-formrow:has(> .kp-formrow__control > .kp-button:only-child),
+    .kp-formgrid .kp-kv__row:has(> dd .kp-button) {
+        align-items: center;
+    }
+
     /* A label with a note under it is a block of two or three lines. On the first baseline the field, the value and
        the action stood on its first line only, so the block hung 31 px under them and the row read as offset from its
        own label (Kenny, 2026-10-19 11:22, settings: "de eerste input en de items daarachter op de eerste rij zijn niet
@@ -27789,6 +27835,15 @@
     .kp-formgrid :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__label, .kp-formrow__label) > :is(small, .kp-formgrid__note)),
     .kp-formrow:has(> .kp-formrow__label > small) {
         align-items: center;
+    }
+
+    /* A control that is taller than its label block (the theme picker: two lists of swatches) hung its label in the middle
+       of the row, 199 px under the control's first swatch. Such a row holds its cells on the first baseline: the label, the
+       first swatch's word and the group name beside it share one line [alignrest-1019; settings browser]. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > [data-kp-theme-picker]),
+    .kp-formrow:has(> .kp-formrow__control > [data-kp-theme-picker]) {
+        align-items: first baseline;
     }
 
     .kp-formgrid[data-kp-formgrid-lines='lines'] {
@@ -28028,15 +28083,22 @@
         inline-size: min(100%, var(--kp-formgrid-short, 14rem));
     }
 
-    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control) > .kp-quantity {
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-quantity {
         grid-template-columns: auto minmax(0, 1fr) auto;
-        min-inline-size: max-content;
+        /* Never squeezed under its unit, but never wider than the short step either: a stepper whose words needed 225.2 px
+           ended 1.2 px past the date picker's 224 px box, and short controls end on one edge [alignrest-1019]. */
+        min-inline-size: min(max-content, var(--kp-formgrid-short, 14rem));
     }
 
     /* A date picker is a short control too [gapform-1019; AuDHD 41]: its input box is the short step, so it ends on the
        edge where a stepper's, a time field's and a number's box end, and the calendar button stands after it. In a
        .kp-formgrid__short the box was the step minus the button, and ended 50 px short of the stepper above it; straight
        in the control cell it filled the whole track. The panel still hangs from the picker's start. */
+    /* A stepper in a short wrapper fills the step, so it ends where the other short controls end [alignrest-1019]. */
+    .kp-formgrid .kp-formgrid__short > .kp-quantity {
+        inline-size: 100%;
+    }
+
     .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control) > .kp-formgrid__short:has(> .kp-datepicker) {
         inline-size: auto;
         max-inline-size: 100%;
@@ -28271,6 +28333,9 @@
         padding: var(--kp-button-padding-block-sm, max(0px, min(var(--kp-space-xs, 0.25rem), (1.75rem - 1lh) / 2 - 3px)))
             var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem));
         font-size: var(--kp-button-text-sm, var(--kp-text-sm, 0.8125rem));
+        /* A button reads in the page's own face, not in the block's: a register that sets the code block in its mono face
+           drew the code block's Copy 5.7 px narrower than the command's Copy, and the two are one role [alignrest-1019]. */
+        font-family: var(--theme-font-body, inherit);
     }
 
     .kp-code__body {

@@ -42603,7 +42603,8 @@ function attachCommands(root = document) {
     copy3.setAttribute("aria-describedby", name.id);
     for (const [word, copied] of [
       [s2.copy, false],
-      [s2.copied, true]
+      [s2.copied, true],
+      [s2.copyBlocked, false]
     ]) {
       const ghost = doc.createElement("span");
       ghost.className = "kp-button kp-button--sm kp-copyable__button kp-command__copy kp-command__ghost";
