@@ -349,8 +349,8 @@ export function filterActive(kind, value) {
 
 /**
  * A filter bound as the reader writes it [b3b4-1019; homelab gap 33]. A date bound is held as ISO (`2026-10-03`) so the
- * filter compares it exactly, but a pill, an error and a screen reader say it the way the page's locale writes a date
- * (the field it came from shows the same). A number bound, or text that is not an ISO day, is returned as it is.
+ * filter compares it exactly, but a pill, an error and a screen reader say it the way the two date pickers beside it write
+ * it (their `data-kp-date-format`, `rule52` by default: dd/mm/yyyy whatever the locale; Kenny, 2026-10-19, "Zelfde notatie"). A number bound, or text that is not an ISO day, is returned as it is.
  *
  * @param {FilterKind} kind
  * @param {string} bound
@@ -360,7 +360,7 @@ export function boundText(kind, bound, locale) {
     const day = kind === 'date' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(bound) : null;
     if (day === null) return bound;
     const date = new Date(Number(day[1]), Number(day[2]) - 1, Number(day[3]));
-    return date.getMonth() === Number(day[2]) - 1 ? formatDate(date, locale) : bound;
+    return date.getMonth() === Number(day[2]) - 1 ? formatDate(date, locale, 'rule52') : bound;
 }
 
 /**

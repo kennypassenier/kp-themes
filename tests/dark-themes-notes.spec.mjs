@@ -320,17 +320,16 @@ test.describe(
             expect([...new Set(read.map((r) => r.block))].sort()).toEqual(['datatable-states', 'empty']);
             expect([...new Set(read.filter((r) => r.retry).map((r) => r.block))]).toEqual(['datatable-states']);
             for (const r of read) {
-                if (r.tube) {
-                    // The data table's failed slot is the package's failed plate since pkg-states-1019
-                    // ([data-kp-datatable-failed].kp-stateplate--error): synthwave draws it as the tube, a dark
-                    // card ground, and its buttons keep the theme's framed key with the frame in the failure's
-                    // coral (the plate colour of a solid red alert), not the near-white of a key on a solid plate.
+                if (r.tube && !r.retry) {
+                    // Any other part's tube plate keeps the theme's framed key, the frame in the failure's coral.
                     expect(
                         r.frame.map((c) => Math.round(c * 255)),
                         `${r.block} ${r.text}: the failure's coral frame on the tube plate`,
                     ).toEqual([254, 67, 80]);
                     continue;
                 }
+                // The Retry on a table's failed tube plate is the dark key too (Kenny, 2026-10-19, "Donkere toets"):
+                // the tube stays, only that button is the near-white frame.
                 // Every button on a solid red alert is the dark key, the plain Try again of #empty included.
                 expect(
                     r.frame.map((c) => Math.round(c * 255)),

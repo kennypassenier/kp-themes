@@ -16898,7 +16898,7 @@ function boundText(kind, bound, locale) {
   const day = kind === "date" ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(bound) : null;
   if (day === null) return bound;
   const date = new Date(Number(day[1]), Number(day[2]) - 1, Number(day[3]));
-  return date.getMonth() === Number(day[2]) - 1 ? formatDate(date, locale) : bound;
+  return date.getMonth() === Number(day[2]) - 1 ? formatDate(date, locale, "rule52") : bound;
 }
 function filterPillLabel(kind, column, value, s2, locale) {
   if (!filterActive(kind, value)) return null;

@@ -6250,6 +6250,20 @@
         --kp-frame: var(--kp-core);
         background: hsl(from var(--destructive) h s l / 0.18);
     }
+    /* The one exception (Kenny, 2026-10-19, "Donkere toets"): the Retry on a data table's failed plate is the dark key of every
+       button on a red alert, the near-white frame round the plate's ink. The tube itself stays. */
+    [data-theme='synthwave'] [data-kp-datatable-failed].kp-alert--destructive .kp-button[data-kp-datatable-retry]:not(.kp-icon-button) {
+        --kp-frame: var(--kp-core);
+        --kp-glow: transparent;
+        --kp-sw-cut-ink: var(--destructive-foreground);
+        background: var(--destructive-foreground);
+        color: var(--kp-core);
+        text-shadow: none;
+    }
+    [data-theme='synthwave'] [data-kp-datatable-failed].kp-alert--destructive .kp-button[data-kp-datatable-retry]:not(.kp-icon-button):hover {
+        --kp-frame: var(--kp-pink-text);
+        background: hsl(from var(--destructive-foreground) h s calc(l + 6));
+    }
 }
 @layer kp.signature {
     /* The chart's own dot sits beside the sentence; the stop tube above it says the same, so the dot leaves. */

@@ -241,11 +241,9 @@ for (const channel of CHANNELS) {
             await expect(editor(table), 'Escape in the calendar closes the calendar, not the editor').toBeVisible();
             await editor(table).getByRole('button', { name: S.tableFilterApply }).click();
             const datePill = table.locator(`[data-kp-filter-pill="${channel.opened}"]`);
-            // A date in a pill is written in the page's locale, not as ISO text (b3b4-1019, "dates in pills"):
-            // the locale's own numeric order, where the two pickers above were typed in dd/mm/yyyy (rule52).
-            const inLocale = (/** @type {string} */ iso) =>
-                page.evaluate(async (d) => (await import('/js/locale.js')).formatDate(new Date(`${d}T00:00:00`), 'en'), iso);
-            await expect(datePill).toHaveText(S.tableFilterSpanPill('Opened', await inLocale('2026-08-10'), await inLocale('2026-08-20'), 'date'));
+            // A date in a pill is written the way the two pickers above write it, dd/mm/yyyy (rule52), in en too
+            // (Kenny, 2026-10-19, "Zelfde notatie"; before: the page's locale, 08/10/2026 for 10 August).
+            await expect(datePill).toHaveText(S.tableFilterSpanPill('Opened', '10/08/2026', '20/08/2026', 'date'));
             await expect(table.locator('tbody tr:visible')).toHaveCount(OPENED_10_20);
             expect(await fixture(page, key, 'filters')).toEqual({ [channel.opened]: { from: '2026-08-10', to: '2026-08-20' } });
 
