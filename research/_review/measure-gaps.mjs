@@ -216,6 +216,19 @@ for (const width of widthArg.split(',').map(Number))
                 id,
             );
             await page.waitForTimeout(250);
+            // A busy machine draws an arrival or a repaint late: read the rects once every finite animation has finished (at most
+            // 3 s), so a transient frame is not reported as an overlap (homelab /charts under load, 2026-10-19).
+            await page.evaluate(() =>
+                Promise.race([
+                    Promise.all(
+                        document
+                            .getAnimations()
+                            .filter((a) => Number.isFinite(Number(a.effect?.getComputedTiming().endTime)))
+                            .map((a) => a.finished.catch(() => undefined)),
+                    ),
+                    new Promise((r) => setTimeout(r, 3000)),
+                ]),
+            );
             out = out.concat(await page.evaluate(measure, /** @type {[number, string]} */ ([MIN, id])));
             align = align.concat(await measureAlignOpened(page, id));
         }
