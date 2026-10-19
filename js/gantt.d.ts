@@ -232,13 +232,18 @@ export declare function axisStep(span: number, room: number, gap?: number): numb
  * @param {{ id: string, s: number, e: number | null }[]} runs in any order, seconds
  * @param {Map<string, number>} [before] the rows the runs had
  * @param {number} [pad] the seconds two runs keep between them
+ * @param {{ s: number, e: number }[]} [fixed] stretches of the first row that are taken (the marks of a lane's points, as
+ *   wide as they are drawn): a run keeps the same gap from them as from another run [hlthree-1019 gantt-points]
  * @returns {{ rows: Map<string, number>, count: number }}
  */
 export declare function packRows(runs: {
     id: string;
     s: number;
     e: number | null;
-}[], before?: Map<string, number>, pad?: number): {
+}[], before?: Map<string, number>, pad?: number, fixed?: {
+    s: number;
+    e: number;
+}[]): {
     rows: Map<string, number>;
     count: number;
 };

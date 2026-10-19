@@ -247,12 +247,14 @@ export function axisStep(span, room, gap = 72) {
  * @param {{ id: string, s: number, e: number | null }[]} runs in any order, seconds
  * @param {Map<string, number>} [before] the rows the runs had
  * @param {number} [pad] the seconds two runs keep between them
+ * @param {{ s: number, e: number }[]} [fixed] stretches of the first row that are taken (the marks of a lane's points, as
+ *   wide as they are drawn): a run keeps the same gap from them as from another run [hlthree-1019 gantt-points]
  * @returns {{ rows: Map<string, number>, count: number }}
  */
-export function packRows(runs, before = new Map(), pad = 0) {
+export function packRows(runs, before = new Map(), pad = 0, fixed = []) {
     const sorted = [...runs].sort((a, b) => a.s - b.s);
     /** @type {{ s: number, e: number }[][]} */
-    const rows = [];
+    const rows = fixed.length > 0 ? [fixed.map((f) => ({ s: f.s, e: f.e }))] : [];
     /** @type {Map<string, number>} */
     const given = new Map();
     const free = (/** @type {number} */ row, /** @type {{ s: number, e: number | null }} */ run) =>
@@ -659,6 +661,24 @@ function paint(c) {
     const minBar = (sample && Number.parseFloat(getComputedStyle(sample).minWidth)) || 8;
     const pad = Math.max(c.span * 0.006, RUN_GAP_PX * perPx);
     const reach = minBar * perPx;
+    // The marks of a lane's points stand on its first row, as wide as they are drawn: a run never lies on one, it takes the next
+    // row, so the mark and the run both stay at their moment [hlthree-1019 gantt-points].
+    const markPx = (() => {
+        const el = c.pointEls.values().next().value;
+        const w = el ? Number.parseFloat(getComputedStyle(el, '::before').width) : Number.NaN;
+        return Number.isFinite(w) && w > 0 ? w : 12;
+    })();
+    const markHalf = (markPx / 2 + MARK_GAP_PX) * perPx;
+    /** @type {Map<string, { s: number, e: number }[]>} */
+    const marksOf = new Map();
+    for (const point of c.points) {
+        const ms = toMs(point.at);
+        if (!Number.isFinite(ms) || perPx === 0) continue;
+        const at = rel(c, ms);
+        const list = marksOf.get(point.lane) ?? [];
+        list.push({ s: at - markHalf, e: at + markHalf });
+        marksOf.set(point.lane, list);
+    }
     const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
     const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
     /** @type {GanttLaneModel[]} */
@@ -669,6 +689,7 @@ function paint(c) {
             bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach) })),
             before,
             pad,
+            marksOf.get(id) ?? [],
         );
         let model = old.get(id);
         if (!model) {

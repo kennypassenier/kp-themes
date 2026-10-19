@@ -40154,9 +40154,9 @@ function axisStep(span3, room, gap = 72) {
   return GANTT_STEPS.find((step) => span3 / step <= most) ?? /** @type {number} */
   GANTT_STEPS[GANTT_STEPS.length - 1];
 }
-function packRows(runs2, before = /* @__PURE__ */ new Map(), pad2 = 0) {
+function packRows(runs2, before = /* @__PURE__ */ new Map(), pad2 = 0, fixed = []) {
   const sorted = [...runs2].sort((a, b) => a.s - b.s);
-  const rows = [];
+  const rows = fixed.length > 0 ? [fixed.map((f) => ({ s: f.s, e: f.e }))] : [];
   const given2 = /* @__PURE__ */ new Map();
   const free = (row, run) => (rows[row] ?? []).every((other) => run.s >= other.e + pad2 || (run.e ?? Infinity) + pad2 <= other.s);
   for (const run of sorted) {
@@ -40499,6 +40499,21 @@ function paint8(c) {
   const minBar = sample && Number.parseFloat(getComputedStyle(sample).minWidth) || 8;
   const pad2 = Math.max(c.span * 6e-3, RUN_GAP_PX * perPx);
   const reach2 = minBar * perPx;
+  const markPx = (() => {
+    const el16 = c.pointEls.values().next().value;
+    const w = el16 ? Number.parseFloat(getComputedStyle(el16, "::before").width) : Number.NaN;
+    return Number.isFinite(w) && w > 0 ? w : 12;
+  })();
+  const markHalf = (markPx / 2 + MARK_GAP_PX) * perPx;
+  const marksOf = /* @__PURE__ */ new Map();
+  for (const point2 of c.points) {
+    const ms = toMs2(point2.at);
+    if (!Number.isFinite(ms) || perPx === 0) continue;
+    const at = rel(c, ms);
+    const list = marksOf.get(point2.lane) ?? [];
+    list.push({ s: at - markHalf, e: at + markHalf });
+    marksOf.set(point2.lane, list);
+  }
   const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
   const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
   const lanes = [];
@@ -40507,7 +40522,8 @@ function paint8(c) {
     const packed = packRows(
       bars.map((b) => ({ id: b.run.id, s: b.s, e: b.e == null ? null : Math.max(b.e, b.s + reach2) })),
       before,
-      pad2
+      pad2,
+      marksOf.get(id) ?? []
     );
     let model = old.get(id);
     if (!model) {

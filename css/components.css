@@ -25262,10 +25262,10 @@
         ):not(
             :has(
                 > :is(.kp-formgrid__control, .kp-formrow__control)
-                    > :is(textarea, .kp-jsonfield, .kp-code, .kp-command, [data-kp-theme-picker], .kp-combobox[data-kp-tags])
+                    > :is(textarea, .kp-jsonfield, .kp-code, .kp-command, [data-kp-theme-picker], .kp-combobox[data-kp-tags], .kp-secret)
             )
         ),
-    .kp-formrow:has(> .kp-formrow__control > .kp-button:only-child),
+    .kp-formrow:has(> .kp-formrow__control > .kp-button:only-child):not(:has(> .kp-formrow__control > .kp-secret)),
     .kp-formgrid .kp-kv__row:has(> dd .kp-button) {
         align-items: center;
     }
@@ -25296,7 +25296,28 @@
     .kp-formgrid
         :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-secret),
     .kp-formrow:has(> .kp-formrow__control > .kp-secret) {
-        align-items: first baseline;
+        align-items: start;
+    }
+
+    /* [hlthree-1019 secret-baseline] The value box is a scroll container, and a scroll container has no baseline of its own that
+       browsers agree on (Firefox hung the label 35 px under the box in a narrow control, homelab measured it 4 px off in a wide one),
+       so the row no longer asks for one. Every cell of such a row starts at the row's top and is as tall as the value box
+       (`--kp-control-height`), its words centred in that height: the label's first line, the note, the action and the value
+       text then stand on one line whatever the box holds under them or the label's own length. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-secret)
+        > :is(.kp-formgrid__value, .kp-formrow__aside, .kp-formgrid__actions),
+    .kp-formrow:has(> .kp-formrow__control > .kp-secret) > :is(.kp-formrow__aside, .kp-formgrid__actions) {
+        display: flex;
+        align-items: center;
+        min-block-size: var(--kp-control-height, 2.25rem);
+    }
+
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-secret)
+        > :is(.kp-formgrid__label, .kp-formrow__label),
+    .kp-formrow:has(> .kp-formrow__control > .kp-secret) > .kp-formrow__label {
+        padding-block-start: calc((var(--kp-control-height, 2.25rem) - 1lh) / 2);
     }
 
     .kp-formgrid[data-kp-formgrid-lines='lines'] {
