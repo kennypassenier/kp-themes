@@ -9351,6 +9351,40 @@
         font-weight: 600;
     }
 
+    /* The count on a tab [gap-tab-count; js/tabbar.js, setTabCount]: the exact number on a badge of the package's own plates
+ * (neutral, info, success, warning, destructive), after the label. The room of the digits is held (never fewer than two,
+ * more for a longer number) and a loading count is a skeleton of that same width, so a number that arrives, grows a digit or
+ * changes tone moves no tab beside it. A fixed weight: the selected tab turns bold, and its count must not widen with it. */
+    .kp-tab__count {
+        box-sizing: border-box;
+        justify-content: center;
+        min-inline-size: calc(var(--kp-tab-count-digits, 2) * 1ch + 1rem);
+        margin-inline-start: var(--kp-tab-count-gap, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-tab-count-size, var(--kp-text-xs, 0.75rem));
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .kp-tab__count[data-kp-state='loading'] {
+        padding-inline: 0;
+        background: transparent;
+    }
+
+    .kp-tab__bone {
+        display: block;
+        inline-size: calc(var(--kp-tab-count-digits, 2) * 1ch + 1rem);
+        block-size: 1em;
+        border-radius: var(--kp-radius-pill, 999px);
+    }
+
+    .kp-tab__count[data-kp-state='error'] {
+        cursor: help;
+    }
+
     .kp-tabs__panel {
         padding-block: 0.75rem;
     }
@@ -15914,14 +15948,14 @@
         gap: var(--kp-space-xs, 0.25rem);
     }
 
-    .kp-heat__legend > li[data-kp-end] {
+    .kp-heat__legend > li:is([data-kp-end], .kp-heat__legend-end) {
         display: flex;
         flex: 1 1 auto;
         justify-content: flex-end;
         min-inline-size: 0;
     }
 
-    .kp-heat__legend > li[data-kp-end] > .kp-keys {
+    .kp-heat__legend > li:is([data-kp-end], .kp-heat__legend-end) > .kp-keys {
         flex: 0 1 auto;
         min-inline-size: 0;
         justify-content: flex-end;

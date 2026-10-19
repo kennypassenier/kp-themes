@@ -165,6 +165,12 @@ export const PAGES = [
                 label: 'Almanac: deliveries per day and this week',
                 about: 'Two new views for Almanac: a month that shows how many events it delivered each day (pick a day to see them), and a week agenda of the events it put in the calendars, coloured per calendar. 2 sections, formal only, sample data.',
             },
+            // Kenny, 2026-10-19 (gap-tab-count): three small things the admin dashboard found missing, built in the package and asked in formal first: a count on a tab, arrow keys over a board of tiles, the legend under a heat grid (and the calm legend the heat docs promised). 4 sections, hand-written page: research/gap-tab-count.
+            {
+                href: 'research/gap-tab-count/demo.html',
+                label: "Three gaps from the admin dashboard: a count on a tab, arrow keys over tiles, the heat grid's legend",
+                about: 'A tab can carry the exact number of what is behind it (tone, word, counting, could not count); a board of app tiles is one tab stop moved with the arrow keys; a heat grid writes its own legend, and a calm grid draws the three words it always promised. 4 sections (4 pairs, formal): each with its own controls.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
@@ -252,7 +258,7 @@ export const PAGES = [
             {
                 href: 'research/synth-alert-buttons/demo.html',
                 label: 'Synthwave: buttons on a red alert, dark keys everywhere or only on the named plates',
-                about: 'Your September ruling (only the data table\'s Try again takes the alert\'s ink, every other button keeps its pink frame) and the dark keys you approved on 18/10 disagree for the plain Try again and any plain red alert. 1 section (1 pair, synthwave): five red alerts one under the other, and an option to see each ruling.',
+                about: "Your September ruling (only the data table's Try again takes the alert's ink, every other button keeps its pink frame) and the dark keys you approved on 18/10 disagree for the plain Try again and any plain red alert. 1 section (1 pair, synthwave): five red alerts one under the other, and an option to see each ruling.",
             },
             // Decided 2026-10-18 22:36: Kenny approved every choose pair over three rounds (research/kpadopt56-choose/decided.json).
             {
