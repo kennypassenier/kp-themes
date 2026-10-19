@@ -1,0 +1,1301 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-homelab-settings" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Homelab dashboard: settings, passkeys, secrets and the app frame · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hl-page">
+            <header class="hl-intro">
+                <h1>Homelab dashboard: settings, passkeys, secrets and the app frame</h1>
+                <p class="cat-intro">
+                    Three parts of the homelab admin dashboard rebuilt on kp-themes 11.0.0, 24 sections in formal: the Settings page (staged changes
+                    with a Save bar, editors that fit each kind of key, links to one setting, a "This browser" card), the sign-in and secrets pages
+                    (passkeys, machine tokens, a QR to register a phone, reveal with an audit line, the secrets list and its change drawer, restart
+                    order, which file feeds which app) and the frame around every page (the connection banner, the folding bar, the slim rail,
+                    keys that work on a Belgian keyboard, problems, page states, effects).
+                </p>
+                <p>
+                    Mock on this page: all the data. The keys, groups and defaults are the host's real <b>host.toml</b> keys (backup_hour,
+                    restic_base, no_touch, logs_window), the stacks are the real fleet (jellyfin, immich, paperless, vaultwarden, traefik,
+                    prometheus, grafana, loki and kyu on CT 109, almanac on CT 112, syncthing on CT 108, inbox on CT 118, metrics on CT 113,
+                    admin on CT 120, on the host <b>pve</b>), and the secret values are made up. A few things need the host or the chassis kit to
+                    answer something it does not answer today (renaming a passkey, which passkey signed in, the date a passkey was last used,
+                    a Retry that tries one stack's read again); those sections say so and show a sample answer. Dates are dd/mm/yyyy HH:mm in
+                    the host's clock. Nothing moves until you press a button.
+                </p>
+            </header>
+
+            <!-- ================================================================ 1 · unsaved -->
+            <section
+                class="hl-sec"
+                id="unsaved"
+                data-review-item="unsaved"
+                data-review-topic="staged"
+                data-review-topic-title="Staging changes: the Save bar and leaving the page"
+                data-review-components="unsaved"
+                data-review-title="Staged changes: a Save bar that stays in view and reverts one key"
+                data-review-choices='[{ "id": "unsaved-placement", "label": "Where the Save bar stands", "once": true, "default": "both", "options": [
+                    { "value": "both", "label": "In the header, and at the foot once the header is out of view", "hint": "Recommended. The primary action never leaves the screen on a page of 60 keys; the header copy is the one you find first." },
+                    { "value": "header", "label": "In the header only", "hint": "Quieter, but on a long page Save scrolls away with the header." }] }]'
+                aria-labelledby="h-unsaved"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-unsaved">Staged changes: a Save bar that stays in view and reverts one key</h2>
+                    <p>
+                        Settings are staged, not written: the bar counts what you changed, lists it as "key, was, now", reverts one key or all of them,
+                        and says per key why the host refused one.
+                    </p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two keys are already changed (<b>Backups at once</b> and <b>Log level</b>). The bar in the header says <b>2 changes</b>, with
+                            <b>Discard</b> and <b>Save 2 changes</b>; both changed rows are marked. Press the <b>2 changes</b> chip: the list shows each
+                            key with what it was and what it is now, a <b>Revert</b> per key, and a link that takes you to the row. Scroll the box down
+                            until the header is gone: the same bar appears at the foot of the box.
+                        </li>
+                        <li>
+                            <b>Save</b> puts the spinner in the button and answers after a moment. <b>Host answers</b> decides the answer: it takes every
+                            key, or it refuses one key with a reason, which stays marked on that row while the other change goes through ("1 saved,
+                            1 refused"). <b>Discard</b> puts every value back and offers Undo for 6 s. Ctrl+S saves.
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): the bar in the header and at the foot once the header scrolls away (the default), or
+                            in the header only. Both are options of the bar; the buttons switch them by drawing the bar again, because the package reads
+                            where the bar stands when it attaches (see the note at the end of the page).
+                        </li>
+                        <li>
+                            Real keys of the host's host.toml. The yes/no key is edited with a switch, the numbers with a stepper that shows its unit,
+                            the nightly hour with a 24-hour time field; the bar sees them through a hidden text copy of each value (the bar cannot read
+                            a stepper or a time field itself, a package gap).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The bar is a quiet strip with a navy Save; a changed row has a hairline mark and "was" in its aside. Look at the gap between the
+                        chip and Discard, at the list's columns (key, was, now, Revert in one column each), and that Save at the foot is the same size as in
+                        the header.
+                    </p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="unsaved-component">
+                    <div role="group" aria-label="Where the bar stands">
+                        <b>Bar</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-unsaved-bar="both">Header and foot</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-unsaved-bar="header">Header only</button>
+                    </div>
+                    <div role="group" aria-label="How the host answers Save">
+                        <b>Host answers</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-unsaved-host="accepts">Takes every key</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-unsaved-host="refuses">Refuses one key</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="unsaved-component">
+                    <div class="hl-comp__main"><div class="hl-scrollframe"><div class="hl-scroll" id="hl-unsaved-scroll"></div></div></div>
+                    <aside class="hl-comp__side" aria-label="What the host and the page do">
+                        <h3 class="hl-comp__title">The host</h3>
+                        <p class="hl-line" id="hl-unsaved-host-line"></p>
+                        <h3 class="hl-comp__title">What the page sends</h3>
+                        <pre class="hl-log" id="hl-unsaved-log" aria-live="polite">Press Save; what the page sends to the host shows here.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 2 · leave -->
+            <section
+                class="hl-sec"
+                id="leave"
+                data-review-item="leave"
+                data-review-topic="staged"
+                data-review-components="unsaved"
+                data-review-title="Leaving a page with staged changes: ask, name the keys, and keep them"
+                aria-labelledby="h-leave"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-leave">Leaving a page with staged changes: ask, name the keys, and keep them</h2>
+                    <p>Following a link with staged keys asks first and names what would be lost; a reload keeps the staged keys for the session and says so.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The mini page has two links on its left (<b>Backups</b>, <b>Metrics</b>) and two staged keys. Press a link: a dialog asks <b>Leave without saving?</b> with <b>Stay</b> focused first. <b>Leave question</b> chooses the words: the package's ("2 changes are not saved yet") or the page's own, which names each key and what it would lose.</li>
+                        <li><b>Reload this part</b> draws the page again. With <b>Kept for the session</b> (the default) the staged keys come back and a toast says "2 changes kept from before you left"; with <b>Not kept</b> the page opens clean. A secret is never kept.</li>
+                        <li>Today a staged edit silently survives a navigation and is silently lost on a reload; neither is said. Following the link here goes nowhere (the log says where it would have gone).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The dialog is the package's confirmation plate: Stay is the focused, primary button, Leave the quiet one. Look at the list of keys in the page's own words (one key per line, aligned) and at the toast after a reload.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="leave-component">
+                    <div role="group" aria-label="Leave question">
+                        <b>Leave question</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-leave-ask="package">The package&#x27;s words</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-leave-ask="keys">Names the keys</button>
+                    </div>
+                    <div role="group" aria-label="Kept after a reload">
+                        <b>Kept after a reload</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-leave-keep="session">Kept for the session</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-leave-keep="off">Not kept</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="leave-component">
+                    <div class="hl-comp__main"><div class="hl-scrollframe"><div class="hl-miniapp" id="hl-leave-app"></div></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-leave-log" aria-live="polite">Press Backups or Metrics.</pre>
+                        <h3 class="hl-comp__title">Reload</h3>
+                        <button type="button" class="kp-button" id="hl-leave-reload">Reload this part</button>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 3 · editors -->
+            <section
+                class="hl-sec"
+                id="editors"
+                data-review-item="editors"
+                data-review-topic="editors"
+                data-review-topic-title="An editor for each kind of key: switch, stepper, time, tags, typed"
+                data-review-components="quantity time combobox"
+                data-review-title="An editor that fits the kind of key"
+                data-review-choices='[{"id": "editors-bool", "label": "Editor for a yes/no key", "once": true, "default": "switch", "options": [{"value": "switch", "label": "Switch", "hint": "Recommended. The state is the control; no list to open."}, {"value": "select", "label": "Select (on / off)", "hint": "What the page uses today."}]}]'
+                aria-labelledby="h-editors"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-editors">An editor that fits the kind of key</h2>
+                    <p>Each host.toml kind gets the control that cannot be filled in wrongly: a switch, a stepper with its unit, a 24-hour time field, tags for lists.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Remote exec</b> (yes or no) is a switch; <b>Backups at once</b> and <b>Log window</b> are steppers that show their unit and stay inside the host's limits (1 to 16, 1 to 168); <b>Nightly hour</b> is the 24-hour time field (type <code>0230</code>, press Up or Down, or open the list), and <b>No-touch list</b> and <b>Data mount roots</b> are tag inputs where typing a VM number and pressing Enter adds a tag.</li>
+                        <li><b>Yes or no</b> and <b>Lists</b> decide the default editor; the other is an option of the same row (a select, a plain text field), switched here at runtime. The right column shows the values the page would send, as text.</li>
+                        <li>The host keeps Remote exec, No-touch list and Data mount roots ssh-only today (a safety policy the token must not loosen); they are shown editable only so the editors can be judged.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal draws the switch as a navy track, the stepper as one box with minus and plus, tags as small pills. Look at the equal row height, at the unit never breaking, and at the tag input's list opening on the plate of the menu.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="editors-component">
+                    <div role="group" aria-label="Yes or no">
+                        <b>Yes or no</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-editors-bool="switch">Switch</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-editors-bool="select">Select</button>
+                    </div>
+                    <div role="group" aria-label="Lists">
+                        <b>Lists</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-editors-lists="tags">Tags</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-editors-lists="text">Text field</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="editors-component">
+                    <div class="hl-comp__main"><form class="kp-formrows kp-formrows--lines" id="hl-editors-form" action="#"></form></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">The values it would send</h3>
+                        <pre class="hl-log" id="hl-editors-log" aria-live="polite"></pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 4 · typed -->
+            <section
+                class="hl-sec"
+                id="typed"
+                data-review-item="typed"
+                data-review-topic="editors"
+                data-review-components="type-confirm"
+                data-review-title="Keys that can stop every backup: the key typed to confirm, and the host may still refuse"
+                aria-labelledby="h-typed"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-typed">Keys that can stop every backup: the key typed to confirm, and the host may still refuse</h2>
+                    <p>A key such as the backup target needs its name typed before the change is sent; a wrong name keeps the button off, and a refusal from the host shows on the row.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The row <b>Backup target</b> carries the badge "type the key to confirm". The panel under it is the confirmation as it stands open: what would be lost (every repository is written elsewhere; the next nightly round reads the new place) and a field. The button stays off until <code>restic_base</code> is typed exactly; <b>Name</b> can allow any case.</li>
+                        <li><b>Open as a dialog</b> shows the same confirmation in the package's dialog. After the right name the change is sent; <b>Host answers</b> decides: it accepts and the row shows the new value at once with a toast, or it refuses ("remote gdrive2 does not exist") and the row keeps the old value and says why.</li>
+                        <li>Replaces five home-made typed-name boxes (Apply, Retired, Restore, Settings, danger zone).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The field and its line "Type restic_base to confirm" keep one height while you type (no jump when it matches). The loss list is plain text in a quiet box; the refused row has the destructive plate under it, not a toast alone.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="typed-component">
+                    <div role="group" aria-label="Host answers">
+                        <b>Host answers</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-typed-host="accepts">Accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-typed-host="refuses">Refuses</button>
+                    </div>
+                    <div role="group" aria-label="Name must match">
+                        <b>Name must match</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-typed-case="exact">Exactly</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-typed-case="any">Any case</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="typed-component">
+                    <div class="hl-comp__main" id="hl-typed-main"></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What happened</h3>
+                        <pre class="hl-log" id="hl-typed-log" aria-live="polite">Type the key, then press the button.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 5 · ssh -->
+            <section
+                class="hl-sec"
+                id="ssh"
+                data-review-item="ssh"
+                data-review-topic="editors"
+                data-review-components="command code"
+                data-review-title="Keys you change over ssh: a read view and a command you can copy"
+                aria-labelledby="h-ssh"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-ssh">Keys you change over ssh: a read view and a command you can copy</h2>
+                    <p>A table key or an ssh-only key is shown read-only, with the exact line to run on pve and a how-to that opens under the row.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Snapshot retention</b> is a table: its read view is the TOML as the host holds it (title, language, line count, Copy). Under <b>How to change this</b> (a disclosure with <code>aria-expanded</code>) the command block names where it runs (<b>pve</b>), carries a terminal prompt that is never copied, and marks the line that needs <b>sudo</b>.</li>
+                        <li><b>Terminal</b> chooses the shell the line is written for (Garuda, WSL or PowerShell); <b>Read view</b> shows the table as TOML or as a list of tiers. Both are options; the line and the prompt change with the terminal.</li>
+                        <li>The "How to" row is home-made today (a package gap: no expander row with a reason); here it is a plain <code>details</code> with the package's disclosure look.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The command block is dark-on-light mono with a head (terminal name, sudo badge, Copy). Look at Copy keeping one width ("Copy" to "Copied"), at the prompt sitting in its own column, and at the long ssh line wrapping under its first character.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="ssh-component">
+                    <div role="group" aria-label="Terminal">
+                        <b>Terminal</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-ssh-term="garuda">Garuda</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-ssh-term="wsl">WSL</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-ssh-term="powershell">PowerShell</button>
+                    </div>
+                    <div role="group" aria-label="Read view">
+                        <b>Read view</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-ssh-view="toml">TOML</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-ssh-view="tiers">Tiers</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="ssh-component">
+                    <div class="hl-comp__main" id="hl-ssh-main"></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What you would do</h3>
+                        <ol class="hl-steps"><li>Open the command and copy it.</li><li>Run it on pve; it opens host.toml in your editor.</li><li>Save the file; the host reads it again by itself.</li></ol>
+                        <h3 class="hl-comp__title">Copied</h3>
+                        <pre class="hl-log" id="hl-ssh-log" aria-live="polite">Press Copy.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 6 · anchors -->
+            <section
+                class="hl-sec"
+                id="anchors"
+                data-review-item="anchors"
+                data-review-topic="navigate"
+                data-review-topic-title="Finding a setting: a link to one key and the groups that open for it"
+                data-review-components="anchors"
+                data-review-title="A link to one setting"
+                data-review-choices='[{"id": "anchors-show", "label": "When the # shows", "once": true, "default": "hover", "options": [{"value": "hover", "label": "On hover or focus (always on a phone)", "hint": "Recommended. A page of 60 keys stays calm."}, {"value": "always", "label": "Always", "hint": "Findable without a pointer, but 60 marks."}]}]'
+                aria-labelledby="h-anchors"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-anchors">A link to one setting</h2>
+                    <p>Every group heading and every key carries a small # that copies a link to exactly that place; opening such a link unfolds the group and marks the row.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Point at a key (or tab to it): a <b>#</b> shows beside it. Press it: the link is copied and the mark says <b>Copied</b>. <b>Copy as</b> chooses the full address (<code>…/settings#log_level</code>, the default) or only the <code>#id</code>; <b>Show the mark</b> chooses on hover (the default) or always. On a phone the mark is always there. With a key focused, <b>y</b> then <b>l</b> copies its link.</li>
+                        <li><b>Open settings#log_level</b> opens a link the way a pasted link would: the folded group <b>Logging</b> unfolds, the page scrolls to the key and the row is marked for two seconds. The list "On this page" on the right opens a group the same way and shows the exact number of keys in each.</li>
+                        <li>The scroll-following contents list is not in the package (a gap: nothing marks the group in view as you scroll); the list here marks the group you last chose.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The # is a quiet glyph after the heading, the mark on a landed row is a two-second outline in the focus colour. Look at the list on the right keeping its width while counts change, and at the key names not wrapping under the #.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="anchors-component">
+                    <div role="group" aria-label="Copy as">
+                        <b>Copy as</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-anchors-copy="url">Full address</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-anchors-copy="hash">#id only</button>
+                    </div>
+                    <div role="group" aria-label="Show the mark">
+                        <b>Show the mark</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-anchors-show="hover">On hover</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-anchors-show="always">Always</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="anchors-component">
+                    <div class="hl-comp__main" id="hl-anchors-main"></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">On this page</h3>
+                        <nav aria-label="Groups of keys"><ul class="hl-toc" id="hl-anchors-toc"></ul></nav>
+                        <h3 class="hl-comp__title">A pasted link</h3>
+                        <button type="button" class="kp-button" id="hl-anchors-open">Open settings#log_level</button>
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-anchors-log" aria-live="polite">Press a # or the button.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 7 · groups -->
+            <section
+                class="hl-sec"
+                id="groups"
+                data-review-item="groups"
+                data-review-topic="navigate"
+                data-review-components="accordion"
+                data-review-title="Folded groups survive a reload and a first visit shows what matters"
+                aria-labelledby="h-groups"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-groups">Folded groups survive a reload and a first visit shows what matters</h2>
+                    <p>Which groups are open is remembered on this device, per group; a first visit opens the two groups you use most.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Six groups of keys, each a disclosure with its exact key count. Open or close some, then press <b>Reload this part</b>: they come back as you left them (nothing flashes open and shuts). <b>Memory</b> turns that off for the demo; <b>First visit</b> decides what an untouched browser sees: the first two groups open (the default, as today) or everything closed.</li>
+                        <li><b>Forget what this browser remembers</b> clears the memory of these groups only. Today the open groups are lost on every reload.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Each group is a hairline row with the count on the right in its own column; open ones show their keys in the same grid. Look at the chevrons turning the same way and at counts staying aligned across all six rows.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="groups-component">
+                    <div role="group" aria-label="Memory">
+                        <b>Memory</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-groups-memory="on">Remembered</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-groups-memory="off">Not remembered</button>
+                    </div>
+                    <div role="group" aria-label="First visit">
+                        <b>First visit</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-groups-first="two">First two open</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-groups-first="none">All closed</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="groups-component">
+                    <div class="hl-comp__main" id="hl-groups-main"></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">This device remembers</h3>
+                        <pre class="hl-log" id="hl-groups-log" aria-live="polite"></pre>
+                        <h3 class="hl-comp__title">Actions</h3>
+                        <div class="hl-actions"><button type="button" class="kp-button" id="hl-groups-reload">Reload this part</button><button type="button" class="kp-button" id="hl-groups-forget">Forget what this browser remembers</button></div>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 8 · browser -->
+            <section
+                class="hl-sec"
+                id="browser"
+                data-review-item="browser"
+                data-review-topic="browser"
+                data-review-topic-title="The &quot;This browser&quot; card: what only this device decides"
+                data-review-components="calm theme-picker tour"
+                data-review-title="The &quot;This browser&quot; card: theme, calm mode, tour and what is remembered"
+                data-review-choices='[{"id": "browser-size", "label": "Size of the This browser card", "once": true, "default": "full", "options": [{"value": "full", "label": "Full card", "hint": "Recommended. Every choice has its sentence."}, {"value": "slim", "label": "Slim card", "hint": "One line; the sentences move into tooltips."}]}]'
+                aria-labelledby="h-browser"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-browser">The &quot;This browser&quot; card: theme, calm mode, tour and what is remembered</h2>
+                    <p>Choices that belong to this browser and not to the host live in one card: the theme, calm mode, the Live view default, the tour, and a way to forget it all.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Theme</b> is the package's picker with every theme drawn as its own swatch, light and dark apart; <b>Calm mode</b> is a switch that turns movement and effects off for this device (a system that asks for less motion wins and the switch says so); <b>Live view default</b> is a segmented choice; <b>Follow my system</b> picks light or dark with the system (the picker has no such pair yet: app code).</li>
+                        <li><b>Replay the tour</b> forgets that the tour ended and starts it again over this card (3 steps, Back, Skip, Next). <b>Forget what this browser remembers</b> lists what it clears before it does. In this demo the theme is not stored.</li>
+                        <li><b>Size</b>: the full card or a slim one (one line, theme as a menu); <b>Theme picker</b>: swatches in the card, or a menu button. Both are options of the same card.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The card is a form grid: the name and one sentence on the left, the control on the right, every control starting on one line. Look at the swatches wrapping to rows of equal width and at calm mode's switch and its word keeping one width.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="browser-component">
+                    <div role="group" aria-label="Size">
+                        <b>Size</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-browser-size="full">Full card</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-browser-size="slim">Slim card</button>
+                    </div>
+                    <div role="group" aria-label="Theme picker">
+                        <b>Theme picker</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-browser-picker="swatches">Swatches</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-browser-picker="menu">Menu button</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="browser-component">
+                    <div class="hl-comp__main" id="hl-browser-main"></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-browser-log" aria-live="polite">Change something in the card.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 9 · working -->
+            <section
+                class="hl-sec"
+                id="working"
+                data-review-item="working"
+                data-review-topic="browser"
+                data-review-components="refresh version-delta"
+                data-review-title="The working copy: fetch it again, read N s ago, and a version gap that says so"
+                aria-labelledby="h-working"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-working">The working copy: fetch it again, read N s ago, and a version gap that says so</h2>
+                    <p>Settings are read from the host, not from the dashboard: how old the read is, how to fetch it now, and when dashboard and host run different versions.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Every 30 s</b> (the default, adjustable: 15 s, 30 s, 60 s, 5 min, paused or any number) refreshes the read; the line says "updated N s ago" and, while reading, "updating" in the same width. R refreshes now. <b>Fetch</b> decides the answer: it works, or it fails and the data stays with "Last refresh failed, retrying in 30 s" and a Retry now.</li>
+                        <li><b>Versions</b>: when the dashboard (3.75.0) and the host (3.74.2) differ, a chip says so in words (a minor behind) with a link to the notes; when they match the chip says they are the same. The choice is remembered per device.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The refresh control is a segmented group with a thin rule running down to the next refresh. Look at the chip keeping one width in both versions and at the "updated" line never jumping while it counts.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="working-component">
+                    <div role="group" aria-label="Versions">
+                        <b>Versions</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-working-versions="differ">Differ</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-working-versions="same">Same</button>
+                    </div>
+                    <div role="group" aria-label="Fetch">
+                        <b>Fetch</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-working-fetch="works">Works</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-working-fetch="fails">Fails</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="working-component">
+                    <div class="hl-comp__main"><div class="hl-working" id="hl-working-main"></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-working-log" aria-live="polite">Waiting for the first refresh.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 10 · passkeys -->
+            <section
+                class="hl-sec"
+                id="passkeys"
+                data-review-item="passkeys"
+                data-review-topic="signin"
+                data-review-topic-title="Signing in: passkeys, machine tokens and registering a phone"
+                data-review-components="passkeys"
+                data-review-title="Passkeys: every way to sign in, when it was last used, and what is safe to remove"
+                data-review-choices='[{"id": "pk-last", "label": "Removing the last way in", "once": true, "default": "refuse", "options": [{"value": "refuse", "label": "Refuse, with the reason", "hint": "Recommended. A pasted token is the documented fallback, but the list never lets you lock yourself out by accident."}, {"value": "confirm", "label": "Allow behind the typed name", "hint": "Allowed, with a warning."}, {"value": "off", "label": "Treat like any other", "hint": "No protection."}]}, {"id": "pk-confirm", "label": "Confirming a removal", "once": true, "default": "dialog", "options": [{"value": "dialog", "label": "A dialog with Cancel and Remove", "hint": "Recommended for a list of four."}, {"value": "type-name", "label": "Type the passkey&#39;s name", "hint": "Always for the one in use."}]}]'
+                aria-labelledby="h-passkeys"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-passkeys">Passkeys: every way to sign in, when it was last used, and what is safe to remove</h2>
+                    <p>One list of the ways into the dashboard, with when each was added and last used, the one in use marked, old ones flagged, and no way to lock yourself out.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Four passkeys: <b>Garuda laptop</b> (this device), <b>Pixel phone</b>, <b>Old laptop</b> (last used 140 days ago, flagged as a candidate to remove after 90 days) and <b>YubiKey 5C</b> (never used). Each row has its added date (dd/mm/yyyy HH:mm), "last used 3 days ago" with the exact moment in its tooltip, <b>Rename</b> and <b>Remove</b> in two fixed columns.</li>
+                        <li><b>Ways in: Only one</b> leaves just the laptop. <b>Last way in</b> decides what Remove does then: <b>Refuse</b> (the default: Remove stays held with the reason beside it), <b>Confirm</b> (type the name and accept a warning) or <b>Off</b>. <b>Delete confirm</b>: a dialog, or the exact name typed. A refused removal shows "Not removed: why" on the row and the row stays.</li>
+                        <li><b>Data</b> shows loading (the rows' own geometry under the busy card), empty (a Register button), failed (Retry) and the warning when the page is not on https (passkeys need it). Rename, "This device" and "last used" need the chassis kit to answer them (ask-kp11be-4): the sample answers here.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Rows are one grid: icon, name with its dates, badge, Rename, Remove, each in its own column. Look at the flagged Old laptop (a quiet warning, not red), at the "This device" badge staying in one place, and at the states filling the height of the list.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="passkeys-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-pk-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pk-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pk-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pk-data="error">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pk-data="insecure">Not https</button>
+                    </div>
+                    <div role="group" aria-label="Ways in">
+                        <b>Ways in</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-pk-ways="four">Four</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pk-ways="one">Only one</button>
+                    </div>
+                    <div role="group" aria-label="Last way in">
+                        <b>Last way in</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-pk-last="refuse">Refuse</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pk-last="confirm">Confirm</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pk-last="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="Delete confirm">
+                        <b>Delete confirm</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-pk-confirm="dialog">Dialog</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pk-confirm="type-name">Type the name</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="passkeys-component">
+                    <div class="hl-comp__main"><div class="kp-passkeys" data-kp-passkeys id="hl-pk-list"></div><p class="hl-line" id="hl-pk-line"></p></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-pk-log" aria-live="polite">Press Rename or Remove on a row.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 11 · tokens -->
+            <section
+                class="hl-sec"
+                id="tokens"
+                data-review-item="tokens"
+                data-review-topic="signin"
+                data-review-components="passkeys secret"
+                data-review-title="Machine tokens: the same list, a refused legacy row and a token shown once"
+                aria-labelledby="h-tokens"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-tokens">Machine tokens: the same list, a refused legacy row and a token shown once</h2>
+                    <p>Tokens for machines (the client, kyu-runner, Grafana) use the same list; a token is shown once when it is made and never again.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Three tokens: <b>homelab CLI</b> (operate), <b>kyu-runner</b> (operate) and <b>grafana</b> (read), plus the <b>legacy token</b>, which the host keeps for scripts: its Remove is held with the reason "Cleared over ssh only" (a removal the page may not do). The scope of each token stands in the column on the right (the list has no free field for it yet: a package gap).</li>
+                        <li><b>Token</b> shows what pressing <b>Make a token</b> gives: the value in a secret field that stays shown until you hide it (no countdown), with Copy, and a line saying it will not be shown again. <b>Legacy</b> switches the legacy row off the list once it has been cleared over ssh.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The tokens' rows are the passkey rows with the key icon; the scope of each token stands in a small list beside the rows. Look at the secret field keeping its height while hidden and shown, and at Copy keeping one width.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="tokens-component">
+                    <div role="group" aria-label="Token">
+                        <b>Token</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-tk-made="none">Not made yet</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-tk-made="made">Just made</button>
+                    </div>
+                    <div role="group" aria-label="Legacy token">
+                        <b>Legacy token</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-tk-legacy="present">Present</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-tk-legacy="cleared">Cleared</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="tokens-component">
+                    <div class="hl-comp__main hl-tokens"><div class="hl-tokens__list"><div class="kp-passkeys" data-kp-passkeys id="hl-tk-list"></div></div><div class="hl-tokens__scopes" id="hl-tk-scopes" aria-label="Scope of each token"></div><div class="hl-tokens__made" id="hl-tk-made"></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-tk-log" aria-live="polite">Make a token, or press Remove on a row.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 12 · qr -->
+            <section
+                class="hl-sec"
+                id="qr"
+                data-review-item="qr"
+                data-review-topic="signin"
+                data-review-components="qr"
+                data-review-title="Register a passkey from your phone: a QR that expires"
+                aria-labelledby="h-qr"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-qr">Register a passkey from your phone: a QR that expires</h2>
+                    <p>The page draws a code that opens the registration page on your phone, on this device only, and withdraws it when it has expired.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The card holds the code, the link as text under it (it wraps at any character), <b>Copy</b> and the time it stays valid. <b>Code</b> shows it making (loading: the busy card over the code's size), ready, <b>Expired</b> (the code is withdrawn, not covered, with a button for a new one) and failed.</li>
+                        <li><b>Modules</b>: square (the default, every camera reads it) or round with the three corner patterns kept square. <b>Reveal</b>: shown, or behind "Show QR code" for a screen you share. All are options of the code.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The code stays on its white plate in every theme (dark modules on light are read by every camera) with its quiet zone. Look at the code keeping its size between loading, ready and expired, and at the link wrapping without a horizontal scroll at 390 px.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="qr-component">
+                    <div role="group" aria-label="Code">
+                        <b>Code</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-qr-state="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-qr-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-qr-state="expired">Expired</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-qr-state="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Modules">
+                        <b>Modules</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-qr-modules="square">Square</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-qr-modules="round">Round</button>
+                    </div>
+                    <div role="group" aria-label="Reveal">
+                        <b>Reveal</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-qr-reveal="shown">Shown</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-qr-reveal="click">Behind a button</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="qr-component">
+                    <div class="hl-comp__main"><section class="kp-card hl-qrcard"><header class="kp-card__header"><h3 class="kp-card__title">Register a passkey on your phone</h3><p class="kp-lede">Scan the code with the phone you want to sign in with. It opens the registration page; nothing is sent to a third party.</p></header><div class="kp-card__stage hl-qrcard__stage"><div class="kp-qr" data-kp-qr id="hl-qr" data-kp-qr-label="Registration link for this dashboard"></div></div></section></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-qr-log" aria-live="polite">Scan or copy.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 13 · reveal -->
+            <section
+                class="hl-sec"
+                id="reveal"
+                data-review-item="reveal"
+                data-review-topic="secrets"
+                data-review-topic-title="Secrets: reveal, the lists and the change drawer"
+                data-review-components="secret"
+                data-review-title="Revealing a secret: shown for a moment, copied without showing, and every read is written down"
+                data-review-choices='[{"id": "rv-hold", "label": "How a secret is revealed", "once": true, "default": "press", "options": [{"value": "press", "label": "Press to show, hides after 30 s", "hint": "Recommended. Works with a keyboard and a phone."}, {"value": "hold", "label": "Hold to show", "hint": "Never stays in the page, but needs a held press."}]}]'
+                aria-labelledby="h-reveal"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-reveal">Revealing a secret: shown for a moment, copied without showing, and every read is written down</h2>
+                    <p>A value is read from the host only while it is shown; every reveal and copy writes one audit line, and a secret never stays in the page longer than needed.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Five secrets of the fleet, each a masked field. <b>Reveal</b> reads it from the host (a short wait), shows it for 30 s with a draining rule under it and hides it again by itself; <b>Copy</b> copies without showing it. The line under each row is the audit sentence, written when the host answers ("Kenny revealed gateway/traefik/.env TRAEFIK_TOKEN on 19/10/2026 14:05"). <b>Hide all</b> hides every shown value at once.</li>
+                        <li><b>Reveal by</b>: a press (the default) or holding the button (the value shows only while held). <b>Reads</b>: the host answers, or its vault is sealed and the row says so. <b>Audit line</b>: shown under the row, or only in the log. One row is off, with why. Today's page draws all of this by hand (about 110 lines).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Each row is a grid: the secret's name (stack, file, key) on the left, the field in the middle, the audit sentence in its own line. Look at the countdown rule, at the hold-to-reveal button pressed in, and at the failure staying inside the row.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="reveal-component">
+                    <div role="group" aria-label="Reveal by">
+                        <b>Reveal by</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-rv-on="press">Press</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rv-on="hold">Hold</button>
+                    </div>
+                    <div role="group" aria-label="Reads">
+                        <b>Reads</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-rv-reads="work">Work</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rv-reads="fail">Vault sealed</button>
+                    </div>
+                    <div role="group" aria-label="Audit line">
+                        <b>Audit line</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-rv-audit="row">Under the row</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rv-audit="log">Only in the log</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="reveal-component">
+                    <div class="hl-comp__main"><div class="hl-secrets" id="hl-rv-list"></div><div class="hl-actions"><button type="button" class="kp-button" id="hl-rv-hideall">Hide all</button></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">The audit trail</h3>
+                        <pre class="hl-log" id="hl-rv-log" aria-live="polite">Nothing read yet.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 14 · master -->
+            <section
+                class="hl-sec"
+                id="master"
+                data-review-item="master"
+                data-review-topic="secrets"
+                data-review-components="master-detail idmark"
+                data-review-title="Secrets page: stacks, their keys and the change drawer on one grid"
+                aria-labelledby="h-master"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-master">Secrets page: stacks, their keys and the change drawer on one grid</h2>
+                    <p>The stack list, the keys of the chosen stack and the staged change stand side by side on a wide screen and fold to one pane on a phone.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Stacks</b> on the left (an identity mark, the name, the exact number of keys), <b>keys</b> in the middle (name, source file, whether the host could read it, with an idmark per file) and the <b>change drawer</b> on the right (what you staged and Write). Arrow keys move through the stacks without leaving the list; Enter opens the keys when the panes are folded.</li>
+                        <li><b>Data</b> puts the keys pane into loading (the busy card over that pane only, the list stays usable), empty, failed (with a Retry that reads again) or loaded. <b>Width</b>: full or a phone, where the panes fold to one and Back returns. <b>Drawer</b>: shown beside the keys or folded under them.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The three panes share one height; the list keeps its width when counts change. Look at the idmarks (a stack always gets the same mark and colour), at the selected row, and at Back at the top of the keys pane on the phone width.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="master-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-md-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-md-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-md-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-md-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-md-width="full">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-md-width="phone">Phone</button>
+                    </div>
+                    <div role="group" aria-label="Drawer">
+                        <b>Drawer</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-md-aside="shown">Beside</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-md-aside="hidden">Folded</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp hl-comp--full" id="master-component">
+                    <div class="hl-comp__main"><div class="hl-mdbox" id="hl-md-box"></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-md-log" aria-live="polite">Choose a stack.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 15 · write -->
+            <section
+                class="hl-sec"
+                id="write"
+                data-review-item="write"
+                data-review-topic="secrets"
+                data-review-components="steplist undo-toast"
+                data-review-title="Writing a key: paste, stage, write, and a 5 s Undo that survives leaving the page"
+                data-review-choices='[{"id": "wr-leave", "label": "What a pending write does when you leave", "once": true, "default": "commit", "options": [{"value": "commit", "label": "Write it now", "hint": "Recommended. The change you confirmed is never silently lost."}, {"value": "cancel", "label": "Cancel it", "hint": "Safer for a mistaken key, but the write is lost without a word."}, {"value": "carry", "label": "Carry it across an in-app navigation", "hint": "The toast follows you; a full page load still writes."}]}]'
+                aria-labelledby="h-write"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-write">Writing a key: paste, stage, write, and a 5 s Undo that survives leaving the page</h2>
+                    <p>A change is staged first, written when you press Write, and held back for 5 s with a visible clock; leaving the page in that time writes it instead of losing it.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The step list shows <b>Paste</b>, <b>Stage</b> and <b>Write</b> with the current one running. Press <b>Write 2 keys</b>: the toast says "2 keys written to gateway/traefik/.env", offers <b>Undo</b> (also Ctrl+Z) with a ring that runs out in 5 s, and nothing reaches the host until it has run out.</li>
+                        <li><b>Leaving</b> decides what a pending write does when you leave the page in those 5 s: <b>Write now</b> (the default: today the timer is dropped when the page unmounts, so a navigation inside 5 s may silently write nothing), <b>Cancel</b>, or <b>Carry</b> (keep the toast across an in-app navigation). Press <b>Leave this page now</b> to try it. <b>Host</b>: accepts, or refuses and the toast turns into the reason and the keys come back.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The toast sits inside the page (not over the browser chrome) with the ring on its left; the step list changes in place without being redrawn. Look at the ring running out, at the failed toast keeping the reason in its own line, and at the three steps staying one grid.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="write-component">
+                    <div role="group" aria-label="Leaving">
+                        <b>Leaving</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-wr-leave="commit">Write now</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-wr-leave="cancel">Cancel</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-wr-leave="carry">Carry</button>
+                    </div>
+                    <div role="group" aria-label="Host">
+                        <b>Host</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-wr-host="accepts">Accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-wr-host="refuses">Refuses</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="write-component">
+                    <div class="hl-comp__main hl-write" id="hl-wr-main"></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the host receives</h3>
+                        <pre class="hl-log" id="hl-wr-log" aria-live="polite">Nothing written yet.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 16 · restarts -->
+            <section
+                class="hl-sec"
+                id="restarts"
+                data-review-item="restarts"
+                data-review-topic="secrets"
+                data-review-components="deplist idmark"
+                data-review-title="What restarts, and in which order, when a key changes"
+                aria-labelledby="h-restarts"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-restarts">What restarts, and in which order, when a key changes</h2>
+                    <p>A changed .env restarts the containers that read it; the list says which, in the order they must go, so nothing is restarted blind.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Rows read "paperless restarts postgres first, then redis": numbered in the order they must go, each name with its identity mark, the state of the thing restarted (running, stopped, unknown), a link to its stack and the exact count in the heading. <b>Order</b>: numbers (default) or the order given; <b>Reads</b>: "paperless needs postgres" or "paperless restarts postgres".</li>
+                        <li><b>State</b> shows loading (the busy card over placeholder rows), empty ("Nothing restarts"), failed (Retry) and a cycle (paperless needs redis needs paperless): never looped, one destructive row at the top. Past 8 rows the first 8 show with "Show all 9" (the number is exact).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Every row is the same grid: number, name, arrow, name, state. Look at the numbers aligned in their column whatever the names' lengths, at the loading rows having the loaded rows' geometry, and at the cycle row naming each stack in it.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="restarts-component">
+                    <div role="group" aria-label="State">
+                        <b>State</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-rs-state="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rs-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rs-state="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rs-state="error">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rs-state="cycle">A cycle</button>
+                    </div>
+                    <div role="group" aria-label="Order">
+                        <b>Order</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-rs-order="numbers">Numbers</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rs-order="none">As given</button>
+                    </div>
+                    <div role="group" aria-label="Reads">
+                        <b>Reads</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-rs-dir="from-reaches-to">restarts</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rs-dir="from-needs-to">needs</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="restarts-component">
+                    <div class="hl-comp__main"><div class="kp-deplist" data-kp-deplist id="hl-rs-list"></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-rs-log" aria-live="polite">Press a name.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 17 · uses -->
+            <section
+                class="hl-sec"
+                id="uses"
+                data-review-item="uses"
+                data-review-topic="secrets"
+                data-review-components="matrix"
+                data-review-title="Which file feeds which app: lines from the .env files to the stacks that read them"
+                aria-labelledby="h-uses"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-uses">Which file feeds which app: lines from the .env files to the stacks that read them</h2>
+                    <p>The same relation a grid shows, drawn as two columns with lines, so one look answers "if I change this file, who notices?".</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Left, six <b>files</b> with the number of apps that read each (exact); right, the <b>apps</b>. Point at a file or an app (or move with the arrow keys): its lines light up and the rest dims; press to pin it. A file nothing reads says "Not used". On a phone each file lists its apps instead.</li>
+                        <li><b>Side</b> puts the files on the left or on the right, <b>Shape</b> draws curves (default), elbows or straight lines. <b>Data</b> shows loading (the busy card over the whole map), empty and failed (Retry).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Lines are hairlines in the chart colours, the pinned file is outlined. Look at the counts staying one column, at labels never touching the lines, and at the map keeping its height in every state.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="uses-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-us-state="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-us-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-us-state="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-us-state="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Side">
+                        <b>Side</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-us-side="sources-left">Files left</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-us-side="sources-right">Files right</button>
+                    </div>
+                    <div role="group" aria-label="Shape">
+                        <b>Shape</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-us-shape="curve">Curve</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-us-shape="elbow">Elbow</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-us-shape="straight">Straight</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="uses-component">
+                    <div class="hl-comp__main"><div class="kp-matrix hl-uses" data-kp-matrix data-kp-view="lines" data-kp-matrix-owned aria-label="Which .env file feeds which app" id="hl-us-map"></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-us-log" aria-live="polite">Point at a file.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 18 · reads -->
+            <section
+                class="hl-sec"
+                id="reads"
+                data-review-item="reads"
+                data-review-topic="secrets"
+                data-review-components="statusrow idmark"
+                data-review-title="Reading every stack: one state per stack, and a Retry for just the one that failed"
+                aria-labelledby="h-reads"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-reads">Reading every stack: one state per stack, and a Retry for just the one that failed</h2>
+                    <p>The page reads the secrets of eleven stacks one by one; each is its own row with what happened, and Retry tries only that stack again.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A list of eleven stacks, each with its identity mark, its name and a state: <b>read</b>, <b>reading</b>, <b>failed</b> with the reason in words ("the host did not answer in 20 s"), or <b>nothing to read</b>. The heading counts exactly ("9 of 11 stacks read, 1 failed, 1 reading"). <b>Retry</b> on a failed row tries that one again and the focus stays on the row.</li>
+                        <li><b>Reads</b> sets the starting picture: all read, some failed, or all reading. <b>Retry</b> decides whether the second try works or fails again with a new reason. The page says each change once, politely, never row by row.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Rows share one grid: mark, name and detail, then the state's action in its own column, so Retry lines up from row to row. Look at the spinner on a reading row (the theme's own) and at the failed rows being readable without colour alone.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="reads-component">
+                    <div role="group" aria-label="Reads">
+                        <b>Reads</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-rd-reads="some">Some failed</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rd-reads="all">All read</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rd-reads="busy">All reading</button>
+                    </div>
+                    <div role="group" aria-label="Retry">
+                        <b>Retry</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-rd-retry="works">Works</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-rd-retry="fails">Fails again</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="reads-component">
+                    <div class="hl-comp__main"><p class="hl-summary" id="hl-rd-sum"></p><ul class="kp-statuslist hl-reads" id="hl-rd-list" aria-label="Secrets read per stack"></ul></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-rd-log" aria-live="polite">Press Retry on a failed row.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 19 · connection -->
+            <section
+                class="hl-sec"
+                id="connection"
+                data-review-item="connection"
+                data-review-topic="frame-live"
+                data-review-topic-title="The frame around every page: connection, bar, rail and keys"
+                data-review-components="connection"
+                data-review-title="The connection banner: honest about the live stream, with the jobs that wait"
+                data-review-choices='[{"id": "cn-place", "label": "Where the connection banner stands", "once": true, "default": "bottom", "options": [{"value": "bottom", "label": "At the foot of the window", "hint": "Recommended. Always in view, never pushes the page."}, {"value": "top", "label": "In the flow under the bar", "hint": "Pushes the content down while the connection is gone."}]}]'
+                aria-labelledby="h-connection"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-connection">The connection banner: honest about the live stream, with the jobs that wait</h2>
+                    <p>When the dashboard loses the host it says so, says why, counts the jobs waiting to be sent and keeps trying; the 11 px "link" text it has today goes.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The mini page has a navigation bar and a body. <b>State</b> sets what the live stream reports: <b>Online</b> (the banner takes no room at all), <b>Offline</b> (the browser lost the network: what, why, what now and the time to the next try), <b>Reconnecting</b> (a try is under way, with its attempt number), <b>Back</b> ("Connected again" for 3 s, then it leaves) and <b>Refused</b> (online, but the host link is down: "host link down: connection refused", the destructive plate). <b>Retry now</b> tries at once and the page answers.</li>
+                        <li><b>Jobs waiting</b> adds the count of queued jobs ("3 jobs wait to be sent", exact). <b>Place</b>: at the foot of the page (the default, always in view) or in the flow under the bar, pushing the content down. On a phone it is one line plus Retry now.</li>
+                        <li>Fed by the live-stream states of the dashboard: <code>navigator.onLine</code> is offline; the stream's reconnect is reconnecting with its attempt; the first message after is back, then online; the stream's <code>link.up === false</code> is refused with the host's error as the why.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Warning plate for offline and reconnecting, success for back, destructive for refused; text never touches the plate's edge. Look at the banner at the foot staying inside the frame (not the window), at Retry now keeping its size in every state, and at no jump when it leaves.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="connection-component">
+                    <div role="group" aria-label="State">
+                        <b>State</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-cn-state="online">Online</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-cn-state="offline">Offline</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-cn-state="reconnecting">Reconnecting</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-cn-state="back">Back</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-cn-state="refused">Refused</button>
+                    </div>
+                    <div role="group" aria-label="Jobs waiting">
+                        <b>Jobs waiting</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-cn-jobs="0">None</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-cn-jobs="3">3 jobs</button>
+                    </div>
+                    <div role="group" aria-label="Place">
+                        <b>Place</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-cn-place="bottom">Foot</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-cn-place="top">Under the bar</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="connection-component">
+                    <div class="hl-comp__main"><div class="hl-conn" id="hl-cn-box"></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-cn-log" aria-live="polite">Press Retry now.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 20 · navfold -->
+            <section
+                class="hl-sec"
+                id="navfold"
+                data-review-item="navfold"
+                data-review-topic="frame-live"
+                data-review-components="nav-fold tabbar"
+                data-review-title="The bar and the phone tab bar: the Inbox always stays, counts stay exact"
+                aria-labelledby="h-navfold"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-navfold">The bar and the phone tab bar: the Inbox always stays, counts stay exact</h2>
+                    <p>The six areas fold from the end behind More when they do not fit, but the Inbox never folds; on a phone the four frequent areas are tabs with the exact count and a spinner while a job runs.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Width</b> narrows the bar: the links that do not fit leave from the end behind <b>More</b>, the bar stays one row tall, and <b>Inbox</b> stays in the bar however narrow it gets (it carries the count that needs you). A dot on More says a counter is folded behind it.</li>
+                        <li><b>Inbox count</b> shows 3, 134 or none: every digit is shown, never "99+". <b>Job</b> shows Activity waiting while a job runs: the theme's spinner takes the icon's place and nothing in the bar moves. The phone bar below is the same areas as tabs (Apps, Inbox, Stacks, Activity, More).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The bar is one row at every width; the badge is a small plate that grows with its digits. Look at More's dot, at the spinner having the icon's exact size, and at the tab labels never wrapping.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="navfold-component">
+                    <div role="group" aria-label="Width">
+                        <b>Width</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-nf-width="wide">Wide</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-nf-width="medium">Medium</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-nf-width="narrow">Narrow</button>
+                    </div>
+                    <div role="group" aria-label="Inbox count">
+                        <b>Inbox count</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-nf-count="3">3</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-nf-count="134">134</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-nf-count="0">None</button>
+                    </div>
+                    <div role="group" aria-label="Job">
+                        <b>Job</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-nf-job="idle">Idle</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-nf-job="running">Running</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="navfold-component">
+                    <div class="hl-comp__main hl-navs"><div class="hl-navs__bar" id="hl-nf-bar"></div><div class="hl-navs__phone" id="hl-nf-phone"></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-nf-log" aria-live="polite">Press an area.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 21 · sidenav -->
+            <section
+                class="hl-sec"
+                id="sidenav"
+                data-review-item="sidenav"
+                data-review-topic="frame-nav"
+                data-review-components="sidenav"
+                data-review-title="System&#x27;s sub-pages as a slim rail: icons, names on hover, folded groups remembered"
+                data-review-choices='[{"id": "sn-rail", "label": "The sub-page navigation on a wide screen", "once": true, "default": "collapsed", "options": [{"value": "collapsed", "label": "A slim rail of icons", "hint": "Recommended. Always there, takes 4 rem."}, {"value": "open", "label": "Open with names", "hint": "Easier at first, takes 14 rem."}]}]'
+                aria-labelledby="h-sidenav"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-sidenav">System&#x27;s sub-pages as a slim rail: icons, names on hover, folded groups remembered</h2>
+                    <p>The pages inside an area (System: Host, Metrics, Map, Firewall, Host settings, Console) stand in a slim rail at the side instead of a second bar; it opens to names when you want them.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The rail shows icons; point at one (or tab to it) and its name shows beside it. <b>Rail</b>: collapsed to icons (the default) or open; the « » button at its foot does it by hand and the choice is remembered on this device. <b>Opens on</b>: a press only, or when the pointer rests on it for 150 ms (it peeks open over the page and closes again). A group (Sign-in and notices) opens as a panel beside the rail.</li>
+                        <li><b>Groups</b>: free, or an accordion (one open at a time). The current page has <code>aria-current</code>; Notification rules carries an exact count. On a phone the rail gives way to the tab bar's More sheet. The rail needs the information-architecture demo (the six areas approved 03/10/2026).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The rail is a quiet column with hairlines between groups; the peek lies over the page and never moves it. Look at the icons being one size and centred in the collapsed rail, the tooltip on the rail's own plate, and « » staying in the same place when it opens.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="sidenav-component">
+                    <div role="group" aria-label="Rail">
+                        <b>Rail</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-sn-rail="collapsed">Icons only</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-sn-rail="open">Open</button>
+                    </div>
+                    <div role="group" aria-label="Opens on">
+                        <b>Opens on</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-sn-open="press">Press</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-sn-open="hover">Hover</button>
+                    </div>
+                    <div role="group" aria-label="Groups">
+                        <b>Groups</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-sn-groups="free">Free</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-sn-groups="accordion">Accordion</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="sidenav-component">
+                    <div class="hl-comp__main"><div class="hl-shell" id="hl-sn-shell"></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-sn-log" aria-live="polite">Point at an icon.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 22 · shortcuts -->
+            <section
+                class="hl-sec"
+                id="shortcuts"
+                data-review-item="shortcuts"
+                data-review-topic="frame-nav"
+                data-review-components="shortcuts keys"
+                data-review-title="Keys that work on a Belgian keyboard, dimmed when they do nothing here"
+                data-review-choices='[{"id": "kb-cap", "label": "Where the chord cap stands", "once": true, "default": "bottom-centre", "options": [{"value": "bottom-centre", "label": "At the foot, centred", "hint": "Recommended. As homelab has it today."}, {"value": "centre", "label": "In the middle of the screen", "hint": "Impossible to miss."}]}]'
+                aria-labelledby="h-shortcuts"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-shortcuts">Keys that work on a Belgian keyboard, dimmed when they do nothing here</h2>
+                    <p>One list handles the keys and fills the help sheet; keys that need AltGr on an AZERTY keyboard are warned about and replaced, and a key that does nothing on this page says so.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Press <b>g</b> then <b>s</b> (or the buttons): a small cap "g …" waits for the second key and the log says where the page would go; a chord that does nothing says "No shortcut on g x". The sheet beside is filled from the same list: <b>Anywhere</b> (g u Apps, g i Inbox, g s Stacks, g a Activity, g b Backups, g y System, g e Host settings, g x Console, / search) and the keys of this page.</li>
+                        <li><b>Page</b>: on Stacks, Alt 1, Alt 2 open a stack tab and r is dimmed with its reason ("Reveal: only on the Secrets page"); on Secrets r reveals and the tab keys dim. <b>Keys</b>: the Belgian-safe set (Alt 1 to 9, <code>:</code>, g chords) or the old set (<code>Ctrl `</code>, <code>[</code>, <code>]</code>), which the engine warns about because each needs AltGr on AZERTY. <b>Cap</b>: the chord's cap stands in the middle of the screen or at the foot (centre of its width).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The sheet lists each key as small caps; a dimmed row keeps its place and shows its reason. Look at the warning line naming the AltGr keys, at the cap standing in the frame (not over the dialog) and at the sheet never reordering when the page changes.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="shortcuts-component">
+                    <div role="group" aria-label="Page">
+                        <b>Page</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-kb-page="stacks">Stacks</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-kb-page="secrets">Secrets</button>
+                    </div>
+                    <div role="group" aria-label="Keys">
+                        <b>Keys</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-kb-keys="safe">Belgian-safe</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-kb-keys="old">Old (AltGr)</button>
+                    </div>
+                    <div role="group" aria-label="Cap">
+                        <b>Cap</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-kb-cap="bottom-centre">At the foot</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-kb-cap="centre">Centre</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp hl-comp--full" id="shortcuts-component">
+                    <div class="hl-comp__main hl-keys-main" id="hl-kb-main"></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-kb-log" aria-live="polite">Press g then s.</pre>
+                        <h3 class="hl-comp__title">Try a key</h3>
+                        <div class="hl-actions"><button type="button" class="kp-button" data-hl-press="g s">g s</button><button type="button" class="kp-button" data-hl-press="g x">g x</button><button type="button" class="kp-button" data-hl-press="g z">g z (unknown)</button><button type="button" class="kp-button" data-hl-press="r">r</button></div>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 23 · problems -->
+            <section
+                class="hl-sec"
+                id="problems"
+                data-review-item="problems"
+                data-review-topic="frame-state"
+                data-review-topic-title="Telling the person: problems, reasons, page states"
+                data-review-components="problems reason"
+                data-review-title="Problems and reasons: one alert per problem, and a button that says why it is off"
+                data-review-choices='[{"id": "pr-mode", "label": "How several problems are shown", "once": true, "default": "each", "options": [{"value": "each", "label": "One alert per problem", "hint": "Recommended. Each has its own fix; worst first."}, {"value": "list", "label": "One alert with a list", "hint": "Quieter, but one fix per row is lost."}, {"value": "fold", "label": "Fold from 5", "hint": "One open, the rest behind a button."}]}]'
+                aria-labelledby="h-problems"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-problems">Problems and reasons: one alert per problem, and a button that says why it is off</h2>
+                    <p>What needs a person stands at the top of a page as one alert per problem with its fix; a control that cannot be used says why in words.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Layout</b>: one alert per problem, worst first, each with its own fix (the default); one alert holding all of them as a list; or one alert per problem up to a threshold and, from 5, one with the worst open and "Show the other 4". <b>Problems</b>: two, six or none (none shows nothing and takes no room). Each alert has the three fixed parts: what, why, and what to do now; a remedy that is a command carries a Copy button.</li>
+                        <li>Under the band, <b>Deploy all changes</b> is off with a reason: hover or focus it and the package's tooltip says "Nothing is staged yet"; the same sentence is the button's description for a screen reader. <b>Button</b> turns it on.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Critical is the destructive plate, warning the warning plate; the fix button stands in its own column at the alert's end, in the same place in every alert. Look at the worst problem standing first, the count in "Show the other 4" being exact, and the tooltip on the button's own plate.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="problems-component">
+                    <div role="group" aria-label="Layout">
+                        <b>Layout</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-pr-mode="each">One per problem</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pr-mode="list">One alert</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pr-mode="fold">Folded</button>
+                    </div>
+                    <div role="group" aria-label="Problems">
+                        <b>Problems</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pr-count="2">Two</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-pr-count="6">Six</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pr-count="0">None</button>
+                    </div>
+                    <div role="group" aria-label="Button">
+                        <b>Button</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-pr-button="off">Off, with a reason</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-pr-button="on">On</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp" id="problems-component">
+                    <div class="hl-comp__main hl-prob"><div class="kp-problems" data-kp-problems id="hl-pr-band"></div><div class="hl-actions"><button type="button" class="kp-button kp-button--primary" id="hl-pr-deploy" disabled data-kp-disabled-reason="Nothing is staged yet: change a setting first">Deploy all changes</button></div></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-pr-log" aria-live="polite">Press a fix.</pre>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- ================================================================ 24 · states -->
+            <section
+                class="hl-sec"
+                id="states"
+                data-review-item="states"
+                data-review-topic="frame-state"
+                data-review-components="card lede empty-state"
+                data-review-title="Page states: loading, empty and failed fill the card, and every section has its sentence"
+                aria-labelledby="h-states"
+            >
+                <div class="hl-sec__head">
+                    <h2 id="h-states">Page states: loading, empty and failed fill the card, and every section has its sentence</h2>
+                    <p>Each card of a page keeps its place and its size while it loads, is empty or fails; the page header and every card say in one sentence what they are for.</p>
+                </div>
+                <div class="hl-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Three cards in one grid, one height: <b>Stacks</b>, <b>Last night's backups</b> and <b>Disk space</b>. <b>Page</b> sets them all: loaded (the data), <b>Loading</b> (the theme's busy card centred over the card, the data under it dimmed), <b>Empty</b> (the package's empty plate at heading size, centred) and <b>Failed</b> (what failed, why and a Try again that reads again).</li>
+                        <li><b>Lede</b> removes the sentence under Disk space's heading: the guard under the cards then names it ("1 section has no description: Disk space"), the check that every section says what it does. The page lede folds behind "More" when it is long.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The three cards share one footprint in all four states; the failed plate is the destructive alert filling the stage, not a small line at the top. Look at the Try again button having a normal size and at the heading and lede aligned across the three cards.</p>
+                </div>
+                <div class="hl-controls" data-review-controls data-review-controls-for="states-component">
+                    <div role="group" aria-label="Page">
+                        <b>Page</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-st-state="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-st-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-st-state="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-st-state="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Lede">
+                        <b>Lede</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hl-st-lede="all">Every section has one</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hl-st-lede="missing">One is missing</button>
+                    </div>
+                </div>
+                <div class="hl-frame hl-comp hl-comp--full" id="states-component">
+                    <div class="hl-comp__main hl-page-states" id="hl-st-main"></div>
+                    <aside class="hl-comp__side">
+                        <h3 class="hl-comp__title">What the page does</h3>
+                        <pre class="hl-log" id="hl-st-log" aria-live="polite">Pick a state.</pre>
+                        <h3 class="hl-comp__title">The guard</h3>
+                        <pre class="hl-log" id="hl-st-guard" aria-live="polite">Every section has a description.</pre>
+                    </aside>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-homelab-settings-7c1d4e9a-2b6f-4a85-9e13-5d0f8a3b6c42" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

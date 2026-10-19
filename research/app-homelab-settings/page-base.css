@@ -1,0 +1,197 @@
+/* research/app-homelab-settings: the page's own frame. Everything with a kp- class is the package; these hl- rules only
+   lay the sections out, draw the readouts and place the package's parts on one grid. */
+
+.hl-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hl-intro,
+.hl-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hl-intro :is(h1, p),
+.hl-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hl-intro p,
+.hl-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hl-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hl-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hl-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hl-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.hl-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.hl-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.hl-controls > [role='group'] > b {
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+}
+
+.hl-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.hl-line {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hl-log {
+    box-sizing: border-box;
+    min-block-size: calc(2lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.hl-key {
+    font-size: var(--kp-text-xs, 0.75rem);
+    color: var(--muted-foreground);
+}
+
+.hl-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* A page in a box that scrolls: the bar docks at the box's foot (data-kp-dock="container"). */
+.hl-scrollframe {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.hl-scroll {
+    box-sizing: border-box;
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-lg, 1.5rem);
+    block-size: 32rem;
+    padding: var(--kp-space-md, 1rem);
+    overflow: auto;
+}
+
+.hl-scroll--flat {
+    block-size: auto;
+    overflow: visible;
+}
+
+.hl-group {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hl-group > h3 {
+    margin: 0;
+}
+
+/* The composition every section uses: the component on the wide column, what it says to the host on the narrow one,
+   both starting on the same line; one column on a phone. */
+.hl-comp {
+    grid-template-columns: minmax(0, 2.2fr) minmax(15rem, 1fr);
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.hl-comp__main,
+.hl-comp__side {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.hl-comp__side {
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--muted);
+}
+
+.hl-comp__title {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.8125rem);
+    color: var(--muted-foreground);
+    text-transform: none;
+}
+
+.hl-comp__side .hl-log {
+    background: var(--card);
+}
+
+@media (max-width: 56rem) {
+    .hl-comp {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* A section whose component needs the whole width: the readout goes under it, as a strip. */
+.hl-comp--full {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.hl-comp--full .hl-comp__side {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+}

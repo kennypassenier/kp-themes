@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): settings, passkeys, secrets and the app frame on 11.0.0 components, formal only, sample data in the dashboard's own shapes: the Settings page (unsaved bar with per-key revert and leave guard, editors that fit each key, typed-key gate, ssh how-to, links to one key, remembered groups, the This browser card, auto-refresh), passkeys and machine tokens, a QR to register a phone, secret reveal with an audit line, the secrets master-detail, undo-toast write, restart order, uses-map, per-stack reads, and the frame (connection banner, folding bar and tab bar, slim rail, AZERTY-safe shortcuts, problems, page states).
+            {
+                href: 'research/app-homelab-settings/demo.html',
+                label: 'Homelab dashboard: settings, passkeys, secrets and the app frame',
+                about: 'How three parts of the homelab dashboard would work and look on kp-themes 11.0.0. 24 sections in formal with sample data: staged settings with a Save bar, revert per key and a leave guard, an editor for each kind of key, a typed-key gate, the ssh how-to, links to one setting, remembered groups and a This browser card; passkeys, machine tokens and a QR to register a phone; revealing secrets with an audit line, the secrets list and change drawer, write with undo, restart order, which file feeds which app, per-stack reads; and the frame around every page: connection banner, folding bar, slim rail, keys for a Belgian keyboard, problems and page states. You judge each section and set its default.',
+            },
             // Kenny, 2026-10-19 02:38 ("als ze van hetzelfde project komen kan je ze bundelen tot 25 items groot"): the five component demos of the homelab admin dashboard's gap report, bundled into ONE review page (research/gap-round-1, built by build.mjs from research/gap-log-viewer, gap-diff-view, gap-activity-feed, gap-entity-tiles and gap-tab-count, which stay as its sources and are off the Agenda). Formal only; the other eleven themes come after the verdict.
             {
                 href: 'research/gap-round-1/demo.html',
