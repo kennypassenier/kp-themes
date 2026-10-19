@@ -28962,7 +28962,11 @@ function setStackbar(el16, spec) {
     );
     const stop = segs.find((seg) => seg.dataset.kpStackbarKey === focusedKey) ?? segs[0];
     stop?.setAttribute("tabindex", "0");
-    if (legend) nodes.push(legend);
+    if (legend) {
+      const widest2 = Math.max(0, ...[...legend.querySelectorAll(".kp-stackbar__value")].map((v) => (v.textContent ?? "").length));
+      legend.style.setProperty("--kp-stackbar-value-n", String(widest2));
+      nodes.push(legend);
+    }
   }
   el16.replaceChildren(...nodes);
   if (refocus) {
