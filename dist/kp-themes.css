@@ -21794,7 +21794,7 @@
  * End snooze beside the button while one is. "Pick a date and time…" opens a panel on the popover plate with the package's
  * date picker and a time. A busy picker shows the theme's spinner in the button, whose words keep their room.
  * Knobs [KT6]: --kp-snooze-gap (--kp-space-sm), --kp-snooze-panel-width (22rem), --kp-snooze-time-width (5.5rem),
- * --kp-snooze-chip-min (12rem). */
+ * --kp-snooze-chip-min (12rem), --kp-snooze-trigger-min (8.5rem). */
     .kp-snooze {
         /* No size container [r6r8-1019; homelab gap 24]: `container-type: inline-size` makes the picker's own width 0 in any
          * grid cell, row or bar that sizes it from its content, so "Not snoozed" wrapped letter by letter and every page
@@ -21805,17 +21805,26 @@
         min-inline-size: 0;
     }
 
+    /* One grid of tracks [r6r8-1019, Kenny 2026-10-19 11:22 "Gebruik het grid en align deftig verticaal ... gebruik de hele
+     * ruimte van het element"]: the trigger and End snooze are equal tracks that together fill the picker's width, End snooze
+     * wraps to a track line of its own (full width) when two do not fit, and a trigger on its own takes the whole width.
+     * The status line spans every track. Nothing is a flex item that sizes itself from its words, so no button overlaps
+     * another and none is as narrow as its text. */
     .kp-snooze__bar {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-snooze-trigger-min, 8.5rem)), 1fr));
+        align-items: stretch;
         gap: var(--kp-snooze-gap, var(--kp-space-sm, 0.5rem));
         min-inline-size: 0;
     }
 
+    .kp-snooze__bar:has(> .kp-snooze__chips) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .kp-snooze__trigger {
         position: relative;
-        min-inline-size: var(--kp-snooze-trigger-min, 9.75rem);
+        min-inline-size: 0;
         white-space: nowrap;
     }
 
@@ -21944,21 +21953,23 @@
         gap: var(--kp-space-sm, 0.5rem);
     }
 
-    /* The trigger takes the room the picker is given (its cell, row or bar) and End snooze wraps under it when both do not
-     * fit; both are buttons of the picker's own bar, so they never squeeze each other [r6r8-1019]. */
+    /* The trigger and End snooze fill their tracks, as high as the row's tallest and no taller than a button [r6r8-1019]. */
     .kp-snooze__bar > .kp-menu-button {
-        display: flex;
-        flex: 1 1 var(--kp-snooze-trigger-min, 9.75rem);
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        inline-size: auto;
+        max-inline-size: none;
         min-inline-size: 0;
     }
 
     .kp-snooze__bar > .kp-menu-button > .kp-snooze__trigger {
-        flex: 1 1 auto;
         inline-size: 100%;
+        block-size: auto;
     }
 
-    .kp-snooze__end {
-        flex: 0 1 auto;
+    .kp-snooze__bar > .kp-snooze__end {
+        inline-size: 100%;
+        min-inline-size: 0;
     }
 
     /* --- Dated option picker: a choice where every option has a date and an age [kpadopt5-time] ---

@@ -67,8 +67,10 @@
 /* The stages: each is a small composition on a grid, so the component is judged where a page really puts it. */
 .rr-cells {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) auto auto;
-    column-gap: var(--kp-space-lg, 1.5rem);
+    /* Three tracks that fill the plate: the name, the picker (room for button + End snooze side by side) and the action,
+       whose buttons fill their track so Open and Delete are one size [r6r8-1019 snooze-width]. */
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr) minmax(5.5rem, 2fr);
+    column-gap: var(--kp-space-md, 1rem);
     row-gap: var(--kp-space-md, 1rem);
     align-items: start;
     padding: var(--kp-space-md, 1rem);
@@ -92,10 +94,17 @@
 }
 
 .rr-cells > .rr-cells__bar {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto minmax(max-content, 1fr);
     align-items: start;
     gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.rr-cells > .kp-button,
+.rr-cells__bar > .kp-button {
+    white-space: nowrap;
+    inline-size: 100%;
     min-inline-size: 0;
 }
 
@@ -108,10 +117,10 @@
 }
 
 .rr-cells__bar > b {
+    white-space: nowrap;
     display: flex;
     align-items: center;
     min-block-size: var(--kp-button-height, 2.25rem);
-    margin-inline-end: auto;
 }
 
 .rr-narrow {
@@ -149,7 +158,7 @@
    under them, still one column each. */
 @media (max-width: 40rem) {
     .rr-cells {
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: minmax(0, 1fr) 5.5rem;
     }
 
     .rr-cells > .rr-cells__head {

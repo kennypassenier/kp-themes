@@ -21,6 +21,9 @@
 //     opacity) is not compared, and neither are two buttons that merely overlap a little, in different columns or rows.
 //  D. Tracks. A group of buttons under a row group, inside its width, starts on one of that group's column edges or ends
 //     on one (tolerance 1 px). A segmented control's own box is its edge: its items sit inside its padding.
+//  E/F. Fields fill their track; columns side by side start on one line.
+//  G. No two buttons overlap; a `.kp-snooze` lies on one grid (trigger, End snooze and status on shared tracks, every part
+//     the whole width of its element, no part taller than its content) [snooze-width, 2026-10-19 11:22].
 //
 // Run (a static server on the repository root first):
 //   node research/_review/measure-align.mjs <port> <research/topic/demo.html> [themes=formal] [widths=1280,390] [ids]
@@ -535,6 +538,78 @@ export function measureAlign([tol, only]) {
                     `${id}: ${name(c).replace(/ ".*$/, '')}: the column ${name(b)} starts ${px(Math.min(dc, db, dTop))} px off the column ${name(a)} beside it (first lines: ${la.what} and ${lb.what})`,
                 );
         }
+    }
+    // ---- G: buttons never overlap, and a snooze picker lies on its grid -----------------------------------------------
+    // Kenny, 2026-10-19 11:22 (snooze-width): "De helft van de knoppen overlaps en vele dingen zijn verticaal veel te hoog
+    // en horizontaal veel te kort! gebruik de hele ruimte van het element!".
+    //  G1. No two buttons of the composition overlap by more than the tolerance in both directions.
+    //  G2. A `.kp-snooze`: its trigger, End snooze and status line are tracks of ONE grid: the status line and a button that
+    //      stands alone on its line fill the picker's width; two buttons on one line are equal in width and height and fill
+    //      the width together; and no part is taller than its own content (a button one line of text plus its padding, the
+    //      status line its own lines) and the picker has no empty band under its last part.
+    const btns = [...section.querySelectorAll('button, .kp-button, [role="button"]')].filter((b) => shown(b) && !inChrome(b) && onScreen(b));
+    for (let i = 0; i < btns.length; i++)
+        for (let j = i + 1; j < btns.length; j++) {
+            const a = btns[i];
+            const b = btns[j];
+            if (a.contains(b) || b.contains(a)) continue;
+            const ar = a.getBoundingClientRect();
+            const br = b.getBoundingClientRect();
+            const ox = Math.min(ar.right, br.right) - Math.max(ar.left, br.left);
+            const oy = Math.min(ar.bottom, br.bottom) - Math.max(ar.top, br.top);
+            if (ox > tol && oy > tol) res.push(`${id}: ${name(a)} and ${name(b)} overlap by ${px(ox)} x ${px(oy)} px`);
+        }
+    for (const snooze of section.querySelectorAll('.kp-snooze')) {
+        if (!shown(snooze) || inChrome(snooze)) continue;
+        const sr = snooze.getBoundingClientRect();
+        const parts = [
+            ...snooze.querySelectorAll('.kp-snooze__trigger, .kp-snooze__end, .kp-snooze__status, .kp-snooze__chips'),
+        ].filter(shown);
+        const where = `the snooze picker (${px(sr.width)} px wide)`;
+        const rowsOf = [];
+        for (const part of parts.filter((q) => !q.matches('.kp-snooze__status'))) {
+            const r = part.getBoundingClientRect();
+            let row = rowsOf.find((x) => Math.abs(x.top - r.top) <= tol);
+            if (!row) rowsOf.push((row = { top: r.top, items: [] }));
+            row.items.push({ part, r });
+        }
+        for (const row of rowsOf) {
+            const left = Math.min(...row.items.map((x) => x.r.left));
+            const right = Math.max(...row.items.map((x) => x.r.right));
+            if (Math.abs(left - sr.left) > tol || Math.abs(right - sr.right) > tol)
+                res.push(
+                    `${id}: ${where}: ${row.items.map((x) => name(x.part)).join(' + ')} cover x ${px(left - sr.left)} to ${px(right - sr.left)} of ${px(sr.width)} px: every part uses the whole width of its element`,
+                );
+            if (row.items.length > 1) {
+                const w = row.items[0].r.width;
+                const h = row.items[0].r.height;
+                for (const x of row.items)
+                    if (Math.abs(x.r.width - w) > tol || Math.abs(x.r.height - h) > tol)
+                        res.push(
+                            `${id}: ${where}: ${name(x.part)} is ${px(x.r.width)} x ${px(x.r.height)} px beside ${px(w)} x ${px(h)} px: buttons on one line share one track size`,
+                        );
+            }
+        }
+        for (const part of parts.filter((q) => q.matches('.kp-snooze__status'))) {
+            const r = part.getBoundingClientRect();
+            if (Math.abs(r.width - sr.width) > tol)
+                res.push(`${id}: ${where}: the status line is ${px(r.width)} px wide: it spans the picker's tracks`);
+            const cs = getComputedStyle(part);
+            const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.5;
+            const lines = Math.max(1, Math.round(r.height / lh));
+            if (r.height > lh * lines + tol) res.push(`${id}: ${where}: the status line is ${px(r.height)} px high for ${lines} line(s)`);
+        }
+        for (const part of parts.filter((q) => q.matches('.kp-snooze__trigger, .kp-snooze__end'))) {
+            const r = part.getBoundingClientRect();
+            const cs = getComputedStyle(part);
+            const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.5;
+            const content = part.scrollHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+            const need = Math.max(lh, content) + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+            if (r.height > need + 12) res.push(`${id}: ${name(part)} is ${px(r.height)} px high, its content needs ${px(need)} px: no taller than its content`);
+        }
+        const bottom = Math.max(...[...snooze.children].filter(shown).map((c) => c.getBoundingClientRect().bottom));
+        if (parts.length && sr.bottom - bottom > tol + 0.5)
+            res.push(`${id}: ${where}: ${px(sr.bottom - bottom)} px of empty band under its last part`);
     }
     return [...new Set(res)];
 }

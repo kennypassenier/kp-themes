@@ -43,6 +43,7 @@ const section = (s) => `
     id="${s.id}"
     data-review-item="${s.id}"
     data-review-topic="${s.id}"
+    data-review-topic-title="${s.title}"
     data-review-components="${s.components}"
     data-review-title="${s.title}"
     aria-labelledby="h-${s.id}"
@@ -99,13 +100,13 @@ const sections = [
         title: 'Remind me later: the picker in a cell, a bar and a form',
         intro: 'The button that puts a reminder off, with its line under it, in the places a page puts it: a table row, a selection bar, a form row and a narrow cell.',
         changed:
-            'The picker had no width of its own: wherever its cell, row or bar sized itself from what it held, the picker came out as wide as nothing, so &ldquo;Not snoozed&rdquo; broke letter by letter and each page had to give it a fixed width. Now the picker is as wide as its button and its line, and fills the room it is given: in a column of a grid it takes the column, in a bar it sits among the other buttons, and in a narrow cell End snooze goes under the button. The choices, the menu, the date panel and the snoozed line are as you approved them.',
+            'The picker had no width of its own, and the first fix still left it loose: buttons were sized by their words, so End snooze stood at 116 px under a button in a 208 px cell (the rest of the line empty), beside a differently wide button in a table row, and the status line stood apart from both. Now the picker is one grid: the button and End snooze are equal tracks that fill the whole width together, End snooze goes under the button at the full width when two do not fit, a lone button takes the whole width, and the status line spans every track. The table, its selection bar and the form row are laid out on tracks too (name, picker and action fill the plate; Open, Mark read and Delete fill their cells). No button overlaps another and nothing is taller than its content. The choices, the menu, the date panel and the snoozed line are as you approved them.',
         expect: [
-            '<b>Table row</b>: the picker is one button in its own column, &ldquo;Not snoozed&rdquo; under it on one line; the second row shows a snoozed reminder with <b>End snooze</b> beside the button.',
-            '<b>Selection bar</b>: the button stands among the bar&rsquo;s buttons on one line.',
-            '<b>Form row</b>: the button fills the control column, the line under it; <b>narrow cell</b>: button and End snooze on two lines, none cut.',
+            '<b>Table row</b>: the picker is a button over the whole width of its column with &ldquo;Not snoozed&rdquo; under it on one line; the second row shows a snoozed reminder with <b>Snooze again</b> and <b>End snooze</b> as two equal buttons side by side, the line under both.',
+            '<b>Selection bar</b>: Mark read, the picker and Delete each fill their own track.',
+            '<b>Form row</b>: the button fills the control column, the line under it; <b>narrow cell</b>: button and End snooze one under the other, each the full width, none cut.',
         ],
-        look: 'every &ldquo;Not snoozed&rdquo; is one line, and the buttons stand on a common line and edge.',
+        look: 'every &ldquo;Not snoozed&rdquo; is one line, buttons fill their tracks and stand on a common line and edge, none overlaps another.',
         components: 'snooze',
         stage: `<div class="rr-stage-stack">
     <div>
@@ -124,7 +125,7 @@ const sections = [
             <div class="kp-formgrid__row">
                 <span class="kp-formgrid__label">Remind me</span>
                 <div class="kp-formgrid__control">${snooze()}</div>
-                <p class="kp-formgrid__value">Nothing is snoozed.</p>
+                <p class="kp-formgrid__value">Reminders come back when the time is up.</p>
             </div>
         </div>
     </div>
