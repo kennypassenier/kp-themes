@@ -1,4 +1,99 @@
 {
     "demo": "gap-round-1",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "gap-round-1-a0038e7c-8f87-477a-846d-660f15c47ae8",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 06:43: 21 of 21 judged, 21 approved, 0 not approved. Approved in full: formal.",
+            "approved": [
+                {
+                    "item": "ring",
+                    "theme": "formal"
+                },
+                {
+                    "item": "find",
+                    "theme": "formal"
+                },
+                {
+                    "item": "look",
+                    "theme": "formal"
+                },
+                {
+                    "item": "log-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "diff-files",
+                    "theme": "formal"
+                },
+                {
+                    "item": "diff-context",
+                    "theme": "formal"
+                },
+                {
+                    "item": "diff-words",
+                    "theme": "formal"
+                },
+                {
+                    "item": "diff-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "diff-long",
+                    "theme": "formal"
+                },
+                {
+                    "item": "feed-days",
+                    "theme": "formal"
+                },
+                {
+                    "item": "feed-row-options",
+                    "theme": "formal"
+                },
+                {
+                    "item": "feed-rows-open",
+                    "theme": "formal"
+                },
+                {
+                    "item": "feed-earlier",
+                    "theme": "formal"
+                },
+                {
+                    "item": "feed-narrow",
+                    "theme": "formal"
+                },
+                {
+                    "item": "trend",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tile",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tile-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tab-count",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tile-keys",
+                    "theme": "formal"
+                },
+                {
+                    "item": "heat-legend",
+                    "theme": "formal"
+                },
+                {
+                    "item": "heat-calm",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }

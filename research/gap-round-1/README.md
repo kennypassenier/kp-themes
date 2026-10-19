@@ -1,5 +1,7 @@
 # research/gap-round-1: new components for the homelab dashboard, round 1
 
+**Decided (2026-10-19 06:43):** Kenny approved every pair. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `gap-round-1-a0038e7c-8f87-477a-846d-660f15c47ae8` (2026-10-19): 21 sections, 21 pairs, formal only (a new component is demoed in
 formal first; the other eleven themes come after the verdict).
 

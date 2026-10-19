@@ -102,10 +102,10 @@ const verdictsFile = new URL('VERDICTS.json', here);
 if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
 const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
 const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
-// A page round id never collides and is never reused: the page keeps its id while that round is not received.
+// A page keeps its own round id once decided, and lists it as received (the archived shape).
 const out = fileURLToPath(new URL('demo.html', here));
 const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
-const roundId = current && !received.includes(current) && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) ? current : `${ID}-${randomUUID()}`;
+const roundId = current && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) ? current : `${ID}-${randomUUID()}`;
 
 const title = 'New components for the homelab dashboard, round 1';
 const page = `<!doctype html>

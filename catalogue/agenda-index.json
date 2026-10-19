@@ -85,41 +85,6 @@
             "fingerprint": "7721d900f0c7d86a",
             "update": null
         },
-        "research/gap-round-1/demo.html": {
-            "facts": {
-                "id": "gap-round-1",
-                "themes": "formal",
-                "ask": null,
-                "askText": "The homelab admin dashboard drew five things by hand because the package had none of them. Each is now a part of the package, shown here in formal only: the live log viewer, a diff of several files, the activity feed, two options of the entity card (a trend line and the app tile with a favourite star), and three small things around tabs, tiles and the heat grid (a count on a tab, arrow keys over a board of tiles, the legend under a heat grid). 21 sections, 21 pairs. All data is mock (a seeded homelab with jellyfin, sonarr and traefik); nothing is read from a host.",
-                "sections": [
-                    { "item": "ring", "themes": null, "topic": "logviewer", "mode": null },
-                    { "item": "find", "themes": null, "topic": "logviewer", "mode": null },
-                    { "item": "look", "themes": null, "topic": "logviewer", "mode": null },
-                    { "item": "log-states", "themes": null, "topic": "logviewer", "mode": null },
-                    { "item": "diff-files", "themes": null, "topic": "diff", "mode": null },
-                    { "item": "diff-context", "themes": null, "topic": "diff", "mode": null },
-                    { "item": "diff-words", "themes": null, "topic": "diff", "mode": null },
-                    { "item": "diff-states", "themes": null, "topic": "diff", "mode": null },
-                    { "item": "diff-long", "themes": null, "topic": "diff", "mode": null },
-                    { "item": "feed-days", "themes": null, "topic": "activity-feed", "mode": null },
-                    { "item": "feed-row-options", "themes": null, "topic": "activity-feed", "mode": null },
-                    { "item": "feed-rows-open", "themes": null, "topic": "activity-feed", "mode": null },
-                    { "item": "feed-earlier", "themes": null, "topic": "activity-feed", "mode": null },
-                    { "item": "feed-narrow", "themes": null, "topic": "activity-feed", "mode": null },
-                    { "item": "trend", "themes": null, "topic": "entity-card", "mode": null },
-                    { "item": "tile", "themes": null, "topic": "entity-card", "mode": null },
-                    { "item": "tile-states", "themes": null, "topic": "entity-card", "mode": null },
-                    { "item": "tab-count", "themes": null, "topic": "gap", "mode": null },
-                    { "item": "tile-keys", "themes": null, "topic": "gap", "mode": null },
-                    { "item": "heat-legend", "themes": null, "topic": "gap", "mode": null },
-                    { "item": "heat-calm", "themes": null, "topic": "gap", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"gap-round-1-a0038e7c-8f87-477a-846d-660f15c47ae8\", \"received\": [] }\n        "
-            },
-            "fingerprint": "bde515640e0bf794",
-            "update": null
-        },
         "research/app-homelab-activity/demo.html": {
             "facts": {
                 "id": "app-homelab-activity",
@@ -176,29 +141,6 @@
                 "round": "\n            { \"round\": \"graphloading-e06b53ff-94b0-4282-9031-dbead458a6c7\", \"received\": [] }\n        "
             },
             "fingerprint": "ed3d00efd46d1fd1",
-            "update": null
-        },
-        "research/rule-fixes-1019/demo.html": {
-            "facts": {
-                "id": "rule-fixes-1019",
-                "themes": "formal,dark,cyberpunk",
-                "ask": null,
-                "askText": "The project threads found nine places where an approved component broke one of your standing rules: text touching an edge or an icon, text cut with an ellipsis, a word breaking letter by letter, a stray mark. 11 pairs in all; every fault is shown in formal, the wheel also in dark and cyberpunk (their names are set in a wider face). Each section says under What changed since you approved it what was wrong and what is different now.",
-                "sections": [
-                    { "item": "wheel-label", "themes": "formal,dark,cyberpunk", "topic": "wheel", "mode": null },
-                    { "item": "tabbar-badge", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "palette-keys", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "dialog-edge", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "code-long", "themes": "formal", "topic": "code", "mode": null },
-                    { "item": "code-punct", "themes": "formal", "topic": "code", "mode": null },
-                    { "item": "empty-card", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "newpill-gap", "themes": "formal", "topic": null, "mode": null },
-                    { "item": "heat-label", "themes": "formal", "topic": null, "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"rulefixes-7ce1977f-3072-49ab-bdb6-33bac6eb2139\", \"received\": [] }\n        "
-            },
-            "fingerprint": "d8b35c5cebb27d2b",
             "update": null
         },
         "research/app-homelab-metrics/demo.html": {
@@ -543,6 +485,8 @@
         }
     },
     "decided": {
+        "research/gap-round-1/demo.html": "2026-10-19 06:43, Kenny: every pair approved (research/gap-round-1/VERDICTS.json)",
+        "research/rule-fixes-1019/demo.html": "2026-10-19 06:43, Kenny: every pair approved (research/rule-fixes-1019/VERDICTS.json)",
         "research/kyu-11-overview/demo.html": "2026-10-19 06:43, Kenny: every pair approved over two rounds (research/kyu-11-overview/VERDICTS.json)",
         "research/kyu-11-topics/demo.html": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-topics/VERDICTS.json)",
         "research/kyu-11-topic-subs/demo.html": "2026-10-19 02:38, Kenny: every pair approved (research/kyu-11-topic-subs/VERDICTS.json)",

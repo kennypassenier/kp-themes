@@ -1,5 +1,7 @@
 # research/rule-fixes-1019: nine faults against the text rules
 
+**Decided (2026-10-19 06:43):** Kenny approved every pair. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `rulefixes-<uuid>` (see `demo.html`, 2026-10-19): 9 sections, 11 pairs (formal; the wheel also in dark and cyberpunk). Found by the
 project threads (chassis-rs 3, 4, 6; HTTPSwitchboard 14, 15, 16; kyu 4, 12; AuDHD recipes 17), confirmed in the code, fixed in the package.
 They change approved components, so they come back through the review dialog with a "What changed" text. See CHANGELOG.md "Unreleased".
