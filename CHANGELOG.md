@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+
+## 11.1.0 — 2026-10-19
+
+Released on Kenny's go (form release-111 "Na de uitlijn-demo", screenshots "Zonder"), after he approved the form grid demo in full (2026-10-19 18:55). A minor release: everything is added or fixed, nothing an app uses is removed. The gaps the app threads (homelab, almanac, kyu, http-switchboard, chassis-rs, Kitchen) reported against 11.0.0, the form grid and its measure, the standard states with their per-kind loading look and the measure-states check, and 44px touch targets. The screenshot check was skipped (KP_RELEASE_SKIP_APPROVALS=1); the network graph's per-theme loading picture follows in a patch.
 - A narrow page header with two buttons gives the primary the rest of the row and the secondary its own width (390: "Register this device" 270px on one line, More 80px), instead of two equal columns that wrapped the primary to 50px; narrower than 20rem the buttons stack full width (chassis-rs).
 - **Fixed: a gantt label is never crossed by the line for now** [ganttlabel-1019; Kitchen /timing]. A label inside a bar that the line for now crossed (Kitchen's "Cook the spaghetti" while the clock stood inside that step: `measure-gaps` "overlaps div") now steps to the side of the line with room for it (`--kp-g-label-inset`), else stands outside the bar, else is not drawn (the bar's name and card carry it). Outside labels of every row keep clear of the line as they already did of a mark.
 - A loading week in its upcoming-list layout lays the busy card over the whole held agenda: the list fills the host while it loads (almanac /history at 390: 84px card over a 249px area).
