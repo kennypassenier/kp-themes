@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="gap-diff-view" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>A diff of several files</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main gdv-page">
+            <header class="gdv-intro">
+                <h1>A diff of several files</h1>
+                <p class="cat-intro">
+                    The admin dashboard draws the changes of an edit plan itself because the package only had the lines of one diff. This is the diff
+                    for several files: a header per file with its status and exact counts, unchanged lines folded into one row that opens in place, the
+                    changed words marked inside a changed line, and reading, empty and failed states. Everything here is mock data in the shape of the
+                    dashboard&rsquo;s plan (the jellyfin, sonarr and traefik stacks); formal only, the other themes come after you approve it.
+                </p>
+            </header>
+            <section
+                id="diff-files"
+                data-review-item="diff-files"
+                data-review-topic="diff"
+                data-review-topic-title="A diff of several files"
+                data-review-components="diffview"
+                data-review-title="Several files in one diff"
+                aria-labelledby="h-diff-files"
+            >
+                <div class="gdv-sec__head">
+                    <h2 id="h-diff-files">Several files in one diff</h2>
+                    <p>The edit plan of the media stack as the dashboard shows it before it is applied: one block per file, each with what happened to the file, its path and how many lines changed.</p>
+                </div>
+                <div class="gdv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Every file has a header: a status word on a badge (Modified, Renamed, Added, Removed, Binary), the path with the folder quiet and the file name strong, and exact <b>+N</b> and <b>-M</b> counts. The counts and the five little blocks stand in the same column in every header.</li>
+                        <li>A renamed file shows <b>old path → new path</b>; a renamed file with no line changes says <b>No line changes in this file.</b> and a picture says <b>Binary file, not shown</b>.</li>
+                        <li>A header opens and closes its file (Enter or Space on the header); <b>Expand all</b> and <b>Collapse all</b> above do every file, and each is off, with its reason on hover, when it has nothing left to do.</li>
+                        <li><b>Open</b> decides which files start open; <b>Header blocks</b> and <b>Copy path</b> show or hide those parts of every header; each press changes the diff at once.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal is the ruled ledger: an opaque paper plate in a strong hairline, flat and ruled, nothing fades. Check that each file block reads as one ruled entry, that the counts line up from header to header, that every label is whole and clear of its plate&rsquo;s edge, and that at 390 px the path takes its own line under the status.</p>
+                </div>
+                <div class="gdv-controls" data-review-controls data-review-controls-for="diff-files-component">
+                    <div role="group" aria-label="Which files start open">
+                        <b>Open:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-open="all" aria-pressed="true">All files</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-open="first" aria-pressed="false">First file</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-open="none" aria-pressed="false">No files</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-open="changed" aria-pressed="false">Files with line changes</button>
+                    </div>
+                    <div role="group" aria-label="The share of added and removed lines in each header">
+                        <b>Header blocks:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-bar="on" aria-pressed="true">Shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-bar="off" aria-pressed="false">Hidden</button>
+                    </div>
+                    <div role="group" aria-label="The Copy path button in each header">
+                        <b>Copy path:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-copy="on" aria-pressed="true">Shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-copy="off" aria-pressed="false">Hidden</button>
+                    </div>
+                </div>
+                <div id="diff-files-component" class="kp-diffview" data-kp-diffview data-kp-diff-state="loading" data-kp-diff-label="Changes to the media stack"></div>
+            </section>
+            <section
+                id="diff-context"
+                data-review-item="diff-context"
+                data-review-topic="diff"
+                data-review-components="diffview"
+                data-review-title="Unchanged lines fold away"
+                aria-labelledby="h-diff-context"
+            >
+                <div class="gdv-sec__head">
+                    <h2 id="h-diff-context">Unchanged lines fold away</h2>
+                    <p>A long run of lines nobody touched becomes one row, &ldquo;42 unchanged lines&rdquo;, that opens where it stands, so the change is what you see.</p>
+                </div>
+                <div class="gdv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>In the static config three runs fold with the default of 3 kept lines: the start of the file, the stretch between the two changes and the end. Each fold row says its exact number and is a button; <b>Enter</b> or a click opens it in place, and the same row now says <b>Hide 42 unchanged lines</b>.</li>
+                        <li><b>Context lines</b>: with 1 more is hidden, with <b>All shown</b> nothing folds. A run that would hide fewer than 3 lines is never folded.</li>
+                        <li><b>A new file</b> has no unchanged lines, so nothing folds and every line is shown with a plus sign.</li>
+                        <li>Opening a fold keeps the focus on its row, and the line numbers stay true: the new file&rsquo;s number for kept and added lines, the old one for removed lines.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the fold row is a quiet dashed rule across the three columns of the diff, its words standing where the code stands. Check that the words are clear of the edge, that the three dots turn into a single rule when the fold is open, and that opening a fold moves nothing above it.</p>
+                </div>
+                <div class="gdv-controls" data-review-controls data-review-controls-for="diff-context-component">
+                    <div role="group" aria-label="Unchanged lines kept next to each change">
+                        <b>Context lines:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-context="3" aria-pressed="true">3 (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-context="1" aria-pressed="false">1</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-context="off" aria-pressed="false">All shown</button>
+                    </div>
+                    <div role="group" aria-label="Which change is shown">
+                        <b>Sample:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-sample="config" aria-pressed="true">Traefik static config</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-sample="newfile" aria-pressed="false">A new file</button>
+                    </div>
+                </div>
+                <div id="diff-context-component" class="kp-diffview" data-kp-diffview data-kp-diff-state="loading" data-kp-diff-label="Changes to the Traefik static config"></div>
+            </section>
+            <section
+                id="diff-words"
+                data-review-item="diff-words"
+                data-review-topic="diff"
+                data-review-components="diffview"
+                data-review-title="The changed words inside a line"
+                aria-labelledby="h-diff-words"
+            >
+                <div class="gdv-sec__head">
+                    <h2 id="h-diff-words">The changed words inside a line</h2>
+                    <p>When a line is replaced by a nearly identical one, only the words that differ are marked, so a version bump reads as the version and not as a whole line.</p>
+                </div>
+                <div class="gdv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Image tags</b>: in <code>jellyfin/jellyfin:10.11.11</code> becoming <code>jellyfin/jellyfin:12.1.0</code> only the version is marked. Added words are bold and underlined, removed words bold and struck through, so the two sides differ without colour.</li>
+                        <li><b>Settings</b> marks the port, the log level and the memory limit alone; <b>Log lines</b> marks the dates, the times and the version in a startup log, and a line that has no partner stays plain.</li>
+                        <li><b>A rewritten line</b> is not marked word by word: when more than 60% of a line changed, the whole line is the change and marking every word would say nothing.</li>
+                        <li><b>Words: Not marked</b> shows the same lines with whole-line tints only.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: a deeper tint and a heavier weight inside the line, nothing flashing. Check that the marked words stay inside their line without moving the text beside them, that the sign column and the numbers stay quiet, and that a marked word is readable on both the green and the red line.</p>
+                </div>
+                <div class="gdv-controls" data-review-controls data-review-controls-for="diff-words-component">
+                    <div role="group" aria-label="Mark the changed words">
+                        <b>Words:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-words="on" aria-pressed="true">Marked</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-words="off" aria-pressed="false">Not marked</button>
+                    </div>
+                    <div role="group" aria-label="Which change is shown">
+                        <b>Sample:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-sample="images" aria-pressed="true">Image tags</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-sample="settings" aria-pressed="false">Settings</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-sample="logs" aria-pressed="false">Log lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-sample="rewrite" aria-pressed="false">A rewritten line</button>
+                    </div>
+                </div>
+                <div id="diff-words-component" class="kp-diffview" data-kp-diffview data-kp-diff-state="loading" data-kp-diff-label="Changed words in the media stack"></div>
+            </section>
+            <section
+                id="diff-states"
+                data-review-item="diff-states"
+                data-review-topic="diff"
+                data-review-components="diffview"
+                data-review-title="Reading, nothing changed, could not read"
+                aria-labelledby="h-diff-states"
+            >
+                <div class="gdv-sec__head">
+                    <h2 id="h-diff-states">Reading, nothing changed, could not read</h2>
+                    <p>The three states a diff has besides the changes themselves, each in the box the diff had so nothing around it jumps.</p>
+                </div>
+                <div class="gdv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Reading</b> shows the file headers at their final size with the theme&rsquo;s busy card in the middle, and it keeps animating.</li>
+                        <li><b>Nothing changed</b> is the package&rsquo;s empty plate at heading size, centred, with the names that were compared; <b>Could not read</b> is its alert with the reason and a normal-size <b>Try again</b>.</li>
+                        <li>Each state has the height the changes had (measure it by pressing <b>Changes shown</b> and then a state): the surroundings do not move. <b>Try again</b> reads again and shows the changes.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the empty plate is dashed and muted, the failed plate is the red alert; both are centred in the whole box with air on every side. Check the box keeps the same height in all four states and that Try again is a normal button, not a strip.</p>
+                </div>
+                <div class="gdv-controls" data-review-controls data-review-controls-for="diff-states-component">
+                    <div role="group" aria-label="The state of the diff">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-state="ready" aria-pressed="true">Changes shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-state="loading" aria-pressed="false">Reading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-state="empty" aria-pressed="false">Nothing changed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-state="error" aria-pressed="false">Could not read</button>
+                    </div>
+                </div>
+                <div id="diff-states-component" class="kp-diffview" data-kp-diffview data-kp-diff-state="loading" data-kp-diff-label="Changes to the media stack, in four states"></div>
+            </section>
+            <section
+                id="diff-long"
+                data-review-item="diff-long"
+                data-review-topic="diff"
+                data-review-components="diffview"
+                data-review-title="A long file draws a first part"
+                aria-labelledby="h-diff-long"
+            >
+                <div class="gdv-sec__head">
+                    <h2 id="h-diff-long">A long file draws a first part</h2>
+                    <p>A file added whole, with 453 lines, draws its first lines and keeps the rest behind one button, so the page stays quick and nothing is lost.</p>
+                </div>
+                <div class="gdv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>With <b>40</b> lines first the file shows 40 lines and a row <b>Show the other 413 lines</b>; with <b>400</b> (the default) it shows 400 and <b>Show the other 53 lines</b>; with <b>All</b> there is no row.</li>
+                        <li>Pressing the row draws every line of that file at once and says so politely to a screen reader; the count in the header (+453) never changes.</li>
+                        <li>A file added whole has no unchanged lines, so no fold rows appear in it.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the &ldquo;show the rest&rdquo; row looks like the fold row, a quiet dashed rule across the diff&rsquo;s columns with its words where the code stands. Check that the exact number is on the row, that it is clear of the edge, and that the lines drawn do not shift when the row is pressed.</p>
+                </div>
+                <div class="gdv-controls" data-review-controls data-review-controls-for="diff-long-component">
+                    <div role="group" aria-label="How many lines of a file are drawn before the rest waits">
+                        <b>Lines drawn first:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-max="40" aria-pressed="false">40</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-max="400" aria-pressed="true">400 (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gdv-max="off" aria-pressed="false">All</button>
+                    </div>
+                </div>
+                <div id="diff-long-component" class="kp-diffview" data-kp-diffview data-kp-diff-state="loading" data-kp-diff-label="The new monitoring alert rules"></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "gap-diff-view-af8eaf83-ada3-43f7-8882-5c0c1b0438f7" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

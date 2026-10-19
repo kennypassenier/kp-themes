@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (gap-diff-view-1019; the homelab admin dashboard's gap 3): a diff of several files, found missing by the dashboard that draws it itself. A header per file with status and exact counts, unchanged lines folded into a row that opens in place, the changed words marked inside a line, and reading, empty and failed states; formal only until approved (research/gap-diff-view).
+            {
+                href: 'research/gap-diff-view/demo.html',
+                label: 'A diff of several files: headers with counts, folded context, changed words',
+                about: 'The admin dashboard draws the changes of an edit plan itself because the package only has the lines of one diff. 5 sections (5 pairs, formal): several files with a header each, unchanged lines that fold away, the changed words inside a line, reading, nothing changed and could not read, and a long file that draws its first part.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
