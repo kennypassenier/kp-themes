@@ -682,7 +682,13 @@ export function measureDriven([i, state, name, readyH, maxHold, busySel, ownSel,
             return w > 0 && h > 0 && w * h >= H.width * H.height * 0.5;
         });
     // The area a state covers: a card's stage (its header and foot stay), else the host.
-    const area = /** @type {HTMLElement} */ ((host.matches('.kp-card') && host.querySelector('.kp-card__stage')) || host);
+    // A master-detail's state stays in its detail pane while its list has items to pick from (js/master-detail.js: data-kp-state-wide
+    // covers the whole).
+    const area = /** @type {HTMLElement} */ (
+        (host.matches('.kp-card') && host.querySelector('.kp-card__stage')) ||
+        (host.matches('[data-kp-master-detail]') && !host.hasAttribute('data-kp-state-wide') && host.querySelector('.kp-pane__detail')) ||
+        host
+    );
     const A = area.getBoundingClientRect();
     const cs = getComputedStyle(area);
     const innerW = area.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
@@ -993,6 +999,17 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                         break;
                     }
                     await d.waitForTimeout(600);
+                    // The plate's own entrance (an art plate's runs longer than the settle window) is waited for, never shortened:
+                    // every finite animation in the host and over it must have finished before it is measured [states-two-1019].
+                    await d.evaluate(async (i) => {
+                        const host = document.querySelector(`[data-states-i="${i}"]`);
+                        if (!host) return;
+                        const finite = [...host.getAnimations({ subtree: true }), ...document.getAnimations().filter((a) => {
+                            const t = /** @type {Element | null} */ (/** @type {any} */ (a.effect)?.target ?? null);
+                            return t && !host.contains(t) && t.closest('.kp-datatable__busy-card, .kp-stateplate, [data-kp-state-covered]') && host.getBoundingClientRect().height > 0;
+                        })].filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? Infinity));
+                        await Promise.race([Promise.allSettled(finite.map((a) => a.finished)), new Promise((r) => setTimeout(r, 6000))]);
+                    }, inst.i);
                     const lines = await d.evaluate(
                         measureDriven,
                         /** @type {[number, string, string, number, number, string, string, string]} */ ([

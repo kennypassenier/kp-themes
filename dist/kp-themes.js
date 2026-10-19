@@ -17464,28 +17464,6 @@ function attachDataTables(root = document, {
       if (state2 !== "loading" || !busyOverlay) return;
       const layer = make23("div", "kp-datatable__busy-overlay");
       layer.setAttribute("aria-hidden", "true");
-      const place2 = () => {
-        const head = table.tHead;
-        const hostBox = host.getBoundingClientRect();
-        const body2 = (table.tBodies[0] ?? table).getBoundingClientRect();
-        const tableBox = (scrollBox ?? table).getBoundingClientRect();
-        const top = head === null ? body2.top : head.getBoundingClientRect().bottom;
-        layer.style.setProperty("--kp-busy-overlay-top", `${Math.max(0, Math.round(top - hostBox.top - host.clientTop))}px`);
-        layer.style.setProperty(
-          "--kp-busy-overlay-bottom",
-          `${Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop))}px`
-        );
-        layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
-        layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
-      };
-      place2();
-      if (typeof ResizeObserver === "function") {
-        const watcher = new ResizeObserver(() => place2());
-        watcher.observe(host);
-        watcher.observe(table);
-        if (table.tHead !== null) watcher.observe(table.tHead);
-        overlayUnwatch = () => watcher.disconnect();
-      }
       const panel2 = make23("div", "kp-datatable__busy-panel");
       const spinner = make23("span", "kp-spinner");
       const words = make23("span", "kp-datatable__busy-words");
@@ -17496,8 +17474,34 @@ function attachDataTables(root = document, {
         overlayClock.textContent = s2.tableBusyElapsed(busySeconds());
         panel2.append(overlayClock);
       }
+      const place2 = () => {
+        const head = table.tHead;
+        const hostBox = host.getBoundingClientRect();
+        const body2 = (table.tBodies[0] ?? table).getBoundingClientRect();
+        const tableBox = (scrollBox ?? table).getBoundingClientRect();
+        const top = head === null ? body2.top : head.getBoundingClientRect().bottom;
+        let from = Math.max(0, Math.round(top - hostBox.top - host.clientTop));
+        let to = Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop));
+        const need = Math.max(panel2.offsetHeight + 8, Math.min(host.clientHeight / 2, 128));
+        if (host.clientHeight - from - to < need) {
+          to = Math.max(0, host.clientHeight - from - need);
+          if (host.clientHeight - from - to < need) from = Math.max(0, host.clientHeight - to - need);
+        }
+        layer.style.setProperty("--kp-busy-overlay-top", `${from}px`);
+        layer.style.setProperty("--kp-busy-overlay-bottom", `${to}px`);
+        layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(tableBox.left - hostBox.left - host.clientLeft))}px`);
+        layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(hostBox.right - tableBox.right - host.clientLeft))}px`);
+      };
       layer.append(panel2);
       host.append(layer);
+      place2();
+      if (typeof ResizeObserver === "function") {
+        const watcher = new ResizeObserver(() => place2());
+        watcher.observe(host);
+        watcher.observe(table);
+        if (table.tHead !== null) watcher.observe(table.tHead);
+        overlayUnwatch = () => watcher.disconnect();
+      }
       overlayLayer = layer;
     };
     let total = Number.parseInt(wrap.dataset.kpTotal ?? "", 10);
@@ -24599,6 +24603,7 @@ function plotChart(host, group, locale, ctx) {
   });
   function drawState(kind, H) {
     geo = null;
+    host.setAttribute("data-kp-state", kind);
     if (keyMemo) annKey.setAttribute("data-kp-wait", "");
     else annKey.hidden = true;
     tip.hidden = true;
@@ -24652,6 +24657,7 @@ function plotChart(host, group, locale, ctx) {
       return;
     }
     shown4 = "";
+    host.setAttribute("data-kp-state", "ready");
     hint2.hidden = data.series.length <= 1;
     const { from, to } = win;
     const W = Math.max(240, plot.clientWidth);
@@ -29866,6 +29872,8 @@ var init_footprint = __esm({
       "[data-kp-runs]",
       "[data-kp-gantt]",
       "[data-kp-week]",
+      '[data-kp-chart]:not([data-kp-chart="spark"])',
+      "[data-kp-deplist]",
       "[data-kp-code]:not(.kp-code--cell)",
       ".kp-ops"
     ].join(", ");
@@ -30097,13 +30105,24 @@ function drawLoading4(el16, memory) {
   el16.setAttribute("aria-busy", "true");
   el16.setAttribute("data-kp-state", "loading");
   if (memory.cell) {
-    for (const node of [...el16.children]) if (node !== memory.head) node.remove();
+    for (const node of [...el16.children]) if (node !== memory.head && node !== memory.card?.layer) node.remove();
     el16.removeAttribute("data-kp-code-folded");
     const line = make6(doc, "kp-code__skeleton");
     const bar = make6(doc, "kp-skeleton");
     bar.setAttribute("aria-hidden", "true");
     line.append(bar);
     el16.append(line);
+    if (memory.card) {
+      memory.card.place();
+      return;
+    }
+    memory.card = openBusyCard(el16, {
+      words: memory.spec.loadingWords ?? getStrings().codeLoading,
+      area: () => [line],
+      className: "kp-code__busy",
+      arrive: memory.drawn
+    });
+    memory.drawn = true;
     return;
   }
   const was = el16.querySelector(":scope > :is(.kp-code__body, .kp-code__note)")?.getBoundingClientRect().height ?? 0;
@@ -44379,6 +44398,9 @@ function wire9(rootEl, historyOption) {
   const setState2 = (next2, options = {}) => {
     state2 = next2;
     rootEl.setAttribute("data-kp-state", next2);
+    const wide = next2 === "error" || next2 === "empty" && !rootEl.querySelector('[data-kp-pane="list"] [data-kp-pane-key]');
+    rootEl.toggleAttribute("data-kp-state-wide", wide);
+    for (const pane of rootEl.querySelectorAll(':scope > [data-kp-pane="list"], :scope > [data-kp-pane="aside"]')) pane.toggleAttribute("inert", wide);
     const loading = next2 === "loading";
     bodyEl.toggleAttribute("inert", loading || next2 === "empty" || next2 === "error");
     if (loading) bodyEl.setAttribute("aria-busy", "true");
@@ -63132,10 +63154,10 @@ var NEEDS = [
   { name: "timefield", when: "[data-kp-time]", load: () => Promise.resolve().then(() => (init_timefield(), timefield_exports)), attach: (m, root) => [m.attachTimes(root)] },
   {
     // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the heat grid, the entity
-    // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the pipeline, the diff view, the data table, the runs list, the run timeline, the week, the code view and the operations page. The selector is
+    // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the pipeline, the diff view, the data table, the runs list, the run timeline, the week, the chart, the dependency list, the code view and the operations page. The selector is
     // `FOOTPRINT_HOSTS` of js/footprint.js.
     name: "footprint",
-    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-week], [data-kp-code], .kp-ops",
+    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops",
     load: () => Promise.resolve().then(() => (init_footprint(), footprint_exports)),
     attach: (m, root) => [m.attachFootprints(root)]
   },

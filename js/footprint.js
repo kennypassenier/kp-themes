@@ -41,6 +41,8 @@ export const FOOTPRINT_HOSTS = [
     '[data-kp-runs]',
     '[data-kp-gantt]',
     '[data-kp-week]',
+    '[data-kp-chart]:not([data-kp-chart="spark"])',
+    '[data-kp-deplist]',
     '[data-kp-code]:not(.kp-code--cell)',
     '.kp-ops',
 ].join(', ');

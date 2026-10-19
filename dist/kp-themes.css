@@ -24186,6 +24186,12 @@
         text-wrap: balance;
     }
 
+    /* A paragraph a page puts in the plate (a failed slot's own label above the title) keeps no margin of its own: the words centre as one block
+     * [states-two-1019]. */
+    .kp-stateplate > :is(p, h1, h2, h3, h4, h5, h6) {
+        margin: 0;
+    }
+
     .kp-stateplate__title {
         font-weight: 600;
     }
@@ -24380,6 +24386,25 @@
 
     .kp-split--panes[data-kp-state='empty']:not([data-kp-narrow-on]) .kp-pane__head > [data-kp-pane-heading] {
         visibility: hidden;
+    }
+
+    /* A state a page sets covers the whole master-detail, the list included [states-two-1019]. */
+    .kp-split--panes[data-kp-state-wide]:not([data-kp-narrow-on]) {
+        position: relative;
+    }
+
+    .kp-split--panes[data-kp-state-wide]:not([data-kp-narrow-on]) .kp-pane__detail {
+        position: static;
+    }
+
+    .kp-split--panes[data-kp-state-wide]:not([data-kp-narrow-on]) .kp-pane__state {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+        /* Over the whole master-detail grid, not the detail's second row. */
+        grid-area: 1 / 1 / -1 / -1;
+        background: var(--background);
     }
 
     .kp-split--panes[data-kp-state='loading'] .kp-pane__body {
@@ -28477,6 +28502,15 @@
     .kp-code__skeleton {
         padding: var(--kp-space-sm, 0.5rem);
         background: var(--muted);
+    }
+
+    /* A cell that loads holds room for the busy card's panel [states-two-1019]. */
+    .kp-code--cell[data-kp-state='loading'] {
+        position: relative;
+    }
+
+    .kp-code--cell[data-kp-state='loading'] .kp-code__skeleton {
+        min-block-size: 6rem;
     }
 
     .kp-code__skeleton > .kp-skeleton {
