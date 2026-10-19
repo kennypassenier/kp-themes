@@ -73,6 +73,10 @@ export type StackbarSpec = {
      * the bar's accessible name (default: every part in order)
      */
     label?: string;
+    /**
+     * keys of the parts the page has pressed; given (even empty), the parts are toggle buttons with `aria-pressed`
+     */
+    picked?: string[];
 };
 /** A share as words: one decimal under ten per cent, whole above. @param {number} share @param {string | undefined} lang */
 export declare function shareText(share: number, lang: string | undefined): string;
