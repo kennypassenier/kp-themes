@@ -191,6 +191,7 @@ export {
     ENTITY_GRID_RETRY_EVENT,
     ENTITY_NEW_EVENT,
     ENTITY_RETRY_EVENT,
+    ENTITY_STAR_EVENT,
     ENTITY_TICK_EVENT,
     attachEntityCards,
     setEntity,

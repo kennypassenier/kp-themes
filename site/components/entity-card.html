@@ -389,15 +389,21 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>data-kp-entity-actions</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-entity-fit</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-entity-flags-max</code></td><td>written</td></tr>
-                            <tr><td><code>data-kp-entity-framed</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-entity-framed</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-entity-grid</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-entity-inline</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-entity-key</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-entity-kind</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-entity-link</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-entity-mark</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-entity-meters</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-entity-min</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-entity-narrow</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-entity-star</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-entity-star-key</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-entity-tile</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-entity-trend</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-entity-trended</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-flags-fit</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-selectable</code></td><td>written, read</td></tr>
                     </tbody></table></div>
@@ -416,6 +422,7 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>kp-entity-action</code></td><td>Fired on the card when an action is pressed: `{ key, id }`.</td></tr>
                             <tr><td><code>kp-entity-flag</code></td><td>Fired on the card when a flag is picked in the &quot;+N&quot; menu: `{ key, flag }`.</td></tr>
                             <tr><td><code>kp-entity-tick</code></td><td>Fired on the card when its tick changes: `{ key, ticked }`.</td></tr>
+                            <tr><td><code>kp-entity-star</code></td><td>Fired on the card when its star is pressed: `{ key, starred }`.</td></tr>
                             <tr><td><code>kp-entity-retry</code></td><td>Fired on the card when its Retry is pressed: `{ key }`.</td></tr>
                             <tr><td><code>kp-entity-new</code></td><td>Fired on the grid when its action is pressed.</td></tr>
                             <tr><td><code>kp-entity-grid-retry</code></td><td>Fired on the grid when its Retry is pressed.</td></tr>
@@ -431,6 +438,7 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>--kp-entity-meters-height</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-entity-min</code></td><td><code>22rem</code></td></tr>
                             <tr><td><code>--kp-entity-row</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-entity-spark</code></td><td><code>var(--chart-1)</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>

@@ -163,6 +163,16 @@ var init_strings = __esm({
       entityGridFailedText: "Try again in a moment.",
       entityGridEmpty: "No stacks yet",
       entityNew: "New stack",
+      entityStar: (name) => `Favourite ${name}`,
+      entityOpensNew: "opens in a new tab",
+      entityTrend: "Trend",
+      entityTrendNone: "no line yet",
+      entityTrendName: (label, text) => text ? `${label}, now ${text}` : label,
+      entityTileFailed: "reading failed",
+      entityTileLoading: "Reading the apps\u2026",
+      entityTileGridFailed: "The apps could not be read",
+      entityTileGridEmpty: "No apps yet",
+      entityTileNew: "New app",
       alertSuccess: "Success",
       alertWarning: "Warning",
       alertInfo: "Info",
@@ -23732,9 +23742,9 @@ function plotChart(host, group, locale, ctx) {
     decorateWith(decorate2, release, { kind: "release", host, key: key() });
   };
   const toneOf4 = (ev) => ev.tone ?? (ev.kind ? data.kinds?.[ev.kind]?.tone : void 0) ?? "info";
-  const kindOf3 = (ev) => ev.kind ?? toneOf4(ev);
+  const kindOf4 = (ev) => ev.kind ?? toneOf4(ev);
   const kindWord = (kind) => data.kinds?.[kind]?.label ?? (kind === "info" || kind === "warning" || kind === "critical" ? strings.kindTone(kind) : kind);
-  const shownEvents = () => (data.events ?? []).filter((ev) => !kindsOff.has(kindOf3(ev)));
+  const shownEvents = () => (data.events ?? []).filter((ev) => !kindsOff.has(kindOf4(ev)));
   const option = () => {
     const attr16 = (name) => host.getAttribute(`data-kp-chart-${name}`);
     const medianAttr = attr16("median");
@@ -23757,7 +23767,7 @@ function plotChart(host, group, locale, ctx) {
     const all = data.events ?? [];
     const kinds = /* @__PURE__ */ new Map();
     for (const ev of all) {
-      const k = kindOf3(ev);
+      const k = kindOf4(ev);
       const was = kinds.get(k);
       if (was) was.count += 1;
       else kinds.set(k, { tone: toneOf4(ev), count: 1 });
@@ -47368,6 +47378,101 @@ var init_path_trace = __esm({
   }
 });
 
+// js/footprint.js
+var footprint_exports = {};
+__export(footprint_exports, {
+  FOOTPRINT_HOSTS: () => FOOTPRINT_HOSTS,
+  FOOTPRINT_MAX: () => FOOTPRINT_MAX,
+  attachFootprints: () => attachFootprints,
+  holdFootprint: () => holdFootprint
+});
+function holdFootprint(host) {
+  const existing = HELD.get(host);
+  if (existing) return existing;
+  let border = 0;
+  let content = 0;
+  let holding = false;
+  let ownInline = "";
+  let ownPriority = "";
+  let ownComputed = "";
+  const state2 = () => host.getAttribute("data-kp-state") ?? "ready";
+  const height = () => getComputedStyle(host).boxSizing === "border-box" ? border : content;
+  const release = () => {
+    if (!holding) return;
+    holding = false;
+    if (ownInline) host.style.setProperty("min-block-size", ownInline, ownPriority);
+    else host.style.removeProperty("min-block-size");
+  };
+  const hold = () => {
+    const wanted = height();
+    if (!wanted) return release();
+    if (!holding) {
+      ownInline = host.style.getPropertyValue("min-block-size");
+      ownPriority = host.style.getPropertyPriority("min-block-size");
+      ownComputed = ownInline ? "" : getComputedStyle(host).minBlockSize;
+      holding = true;
+    }
+    const own = ownInline || ownComputed;
+    const kept = own && own !== "auto" && own !== "normal" && parseFloat(own) !== 0 ? own : "";
+    const held2 = `min(${wanted}px, var(--kp-footprint-max, ${FOOTPRINT_MAX}))`;
+    host.style.setProperty("min-block-size", kept ? `max(${held2}, ${kept})` : held2);
+  };
+  const sync4 = () => HOLDING.has(state2()) ? hold() : release();
+  const sizes = new ResizeObserver((entries3) => {
+    if (!host.isConnected) return detach();
+    if (HOLDING.has(state2())) return;
+    const entry = entries3[entries3.length - 1];
+    const rect = host.getBoundingClientRect();
+    border = entry?.borderBoxSize?.[0]?.blockSize ?? rect.height;
+    content = entry?.contentBoxSize?.[0]?.blockSize ?? rect.height;
+  });
+  const states3 = new MutationObserver(sync4);
+  sizes.observe(host);
+  states3.observe(host, { attributes: true, attributeFilter: ["data-kp-state"] });
+  function detach() {
+    sizes.disconnect();
+    states3.disconnect();
+    release();
+    HELD.delete(host);
+  }
+  HELD.set(host, detach);
+  return detach;
+}
+function attachFootprints(root = document) {
+  const hosts = (
+    /** @type {HTMLElement[]} */
+    [
+      ...root instanceof HTMLElement && root.matches(FOOTPRINT_HOSTS) ? [root] : [],
+      ...root.querySelectorAll(FOOTPRINT_HOSTS)
+    ]
+  );
+  const detaches = hosts.filter((host) => !HELD.has(host)).map(holdFootprint);
+  return () => {
+    for (const detach of detaches) detach();
+  };
+}
+var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, HELD;
+var init_footprint = __esm({
+  "js/footprint.js"() {
+    "use strict";
+    FOOTPRINT_HOSTS = [
+      "[data-kp-matrix]",
+      "[data-kp-entity-grid]",
+      "[data-kp-checklist]",
+      "[data-kp-notices]",
+      "[data-kp-feed]",
+      "[data-kp-gallery]",
+      "[data-kp-availability]",
+      "[data-kp-requests]",
+      "[data-kp-diffview]",
+      ".kp-ops"
+    ].join(", ");
+    FOOTPRINT_MAX = "48rem";
+    HOLDING = /* @__PURE__ */ new Set(["loading", "empty", "error"]);
+    HELD = /* @__PURE__ */ new WeakMap();
+  }
+});
+
 // js/entity-card.js
 var entity_card_exports = {};
 __export(entity_card_exports, {
@@ -47378,6 +47483,7 @@ __export(entity_card_exports, {
   ENTITY_GRID_RETRY_EVENT: () => ENTITY_GRID_RETRY_EVENT,
   ENTITY_NEW_EVENT: () => ENTITY_NEW_EVENT,
   ENTITY_RETRY_EVENT: () => ENTITY_RETRY_EVENT,
+  ENTITY_STAR_EVENT: () => ENTITY_STAR_EVENT,
   ENTITY_TICK_EVENT: () => ENTITY_TICK_EVENT,
   attachEntityCards: () => attachEntityCards,
   setEntity: () => setEntity,
@@ -47385,12 +47491,17 @@ __export(entity_card_exports, {
   setEntityGridState: () => setEntityGridState
 });
 function frame2(card) {
-  if (card.dataset.kpEntityFramed !== void 0) return;
-  card.dataset.kpEntityFramed = "";
+  const kind = kindOf(card);
+  if (card.dataset.kpEntityFramed === kind) return kind;
+  card.dataset.kpEntityFramed = kind;
   const doc = card.ownerDocument;
   card.classList.add("kp-card", "kp-card--entity");
   card.setAttribute("data-kp-entity", "");
-  card.replaceChildren(...SLOTS.map((slot) => made5(doc, "div", `kp-entity__${slot}`)));
+  card.toggleAttribute("data-kp-entity-tile", kind === "tile");
+  card.replaceChildren(...SLOTS[kind].map((slot) => made5(doc, "div", `kp-entity__${slot}`)));
+  const was = DRAWN5.get(card);
+  if (was) was.drawn = {};
+  return kind;
 }
 function columnsFor(host, inline) {
   const cards2 = host.matches(ENTITY_GRID) ? [...host.querySelectorAll(":scope > .kp-card--entity")] : [host];
@@ -47449,19 +47560,224 @@ function redraw(cards2, slots = ["actions"]) {
     setEntity(card, was.data);
   }
 }
+function tickAndMark(card, el16, data, selectable, markKind) {
+  const doc = card.ownerDocument;
+  const s2 = getStrings();
+  if (selectable) {
+    const box = (
+      /** @type {HTMLInputElement} */
+      made5(doc, "input", "kp-field__check kp-entity__tick")
+    );
+    box.type = "checkbox";
+    box.setAttribute("data-kp-select-row", "");
+    box.setAttribute("aria-label", s2.entitySelect(data.name));
+    box.addEventListener("change", () => {
+      card.classList.toggle("is-ticked", box.checked);
+      card.dispatchEvent(new CustomEvent(ENTITY_TICK_EVENT, { bubbles: true, detail: { key: data.key, ticked: box.checked } }));
+    });
+    el16.append(box);
+  }
+  if (markKind !== "none") {
+    const mark = made5(doc, "span", "kp-idmark kp-idmark--sm");
+    if (markKind === "idmark") setIdmark(mark, data.name);
+    else mark.textContent = "\u25C6";
+    el16.append(mark);
+  }
+}
+function listenForStarKey(card) {
+  if (KEYED.has(card)) return;
+  KEYED.add(card);
+  card.addEventListener("keydown", (event) => {
+    const wanted = (opt2(card, "data-kp-entity-star-key") ?? "s").toLowerCase();
+    if (wanted === "off" || event.key.toLowerCase() !== wanted || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    const target = (
+      /** @type {Element} */
+      event.target
+    );
+    if (target.closest("input, textarea, select, [contenteditable], .kp-menu")) return;
+    const button = (
+      /** @type {HTMLButtonElement | null} */
+      card.querySelector(":scope > .kp-entity__id .kp-entity__star")
+    );
+    if (!button) return;
+    event.preventDefault();
+    button.click();
+  });
+}
+function appendStar(card, el16, data, pressed, starKey) {
+  const doc = card.ownerDocument;
+  const ns = "http://www.w3.org/2000/svg";
+  const button = (
+    /** @type {HTMLButtonElement} */
+    made5(doc, "button", "kp-button kp-button--ghost kp-entity__star")
+  );
+  button.type = "button";
+  button.setAttribute("data-kp-toggle", "");
+  button.setAttribute("data-kp-look", "icon");
+  button.setAttribute("aria-pressed", String(pressed));
+  if (starKey !== "off") button.setAttribute("aria-keyshortcuts", starKey);
+  const glyph3 = doc.createElementNS(ns, "svg");
+  glyph3.setAttribute("class", "kp-entity__star-glyph");
+  glyph3.setAttribute("viewBox", "0 0 24 24");
+  glyph3.setAttribute("aria-hidden", "true");
+  const outline = doc.createElementNS(ns, "path");
+  outline.setAttribute("d", "M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z");
+  glyph3.append(outline);
+  const name = made5(doc, "span", "kp-sr-only");
+  name.textContent = getStrings().entityStar(data.name);
+  button.append(glyph3, name);
+  el16.append(button);
+  attachToggles(button);
+  button.addEventListener("kp-toggle-changed", (event) => {
+    const detail = (
+      /** @type {CustomEvent} */
+      event.detail
+    );
+    if (detail.source !== "press") return;
+    const was = DRAWN5.get(card);
+    if (was) was.star = detail.pressed;
+    card.dispatchEvent(
+      new CustomEvent(ENTITY_STAR_EVENT, { bubbles: true, detail: { key: card.getAttribute("data-kp-entity-key"), starred: detail.pressed } })
+    );
+  });
+  listenForStarKey(card);
+}
+function syncStar(card, star) {
+  const button = card.querySelector(":scope > .kp-entity__id .kp-entity__star");
+  if (button && button.getAttribute("aria-pressed") !== String(star)) button.setAttribute("aria-pressed", String(star));
+}
+function trendRow(doc, s2, data, status) {
+  const row = made5(doc, "div", "kp-entity__meter kp-entity__trend");
+  const label = made5(doc, "span", "kp-entity__meter-label");
+  label.textContent = data.trendLabel ?? s2.entityTrend;
+  const line = made5(doc, "div", "kp-entity__trend-line");
+  const value = made5(doc, "span", "kp-entity__meter-value");
+  const points = (data.trend ?? []).filter((n) => Number.isFinite(n));
+  if (status !== "empty" && points.length >= 2) {
+    const last = (
+      /** @type {number} */
+      points[points.length - 1]
+    );
+    value.textContent = data.trendText ?? last.toLocaleString(void 0, { maximumFractionDigits: 2 });
+    const svg2 = (
+      /** @type {SVGSVGElement} */
+      doc.createElementNS("http://www.w3.org/2000/svg", "svg")
+    );
+    svg2.setAttribute("class", "kp-entity__spark");
+    svg2.setAttribute("role", "img");
+    svg2.setAttribute("aria-label", s2.entityTrendName(data.trendLabel ?? s2.entityTrend, value.textContent));
+    drawSparkline(svg2, points, { parts: "kp-entity__spark" });
+    line.append(svg2);
+  } else {
+    const none = made5(doc, "span", "kp-entity__none");
+    none.textContent = status === "empty" ? s2.entityNotMeasured : s2.entityTrendNone;
+    line.append(none);
+  }
+  row.append(label, line, value);
+  return row;
+}
+function drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable, markKind, starOn, starKey, star }) {
+  holdFootprint(card);
+  const href = data.href ?? (link ? link.replace("{key}", encodeURIComponent(key)) : null);
+  const external = data.external === true && href !== null;
+  slot("id", { n: data.name, href, external, selectable, markKind, status, starOn, starKey }, (el16) => {
+    tickAndMark(card, el16, data, selectable, markKind);
+    const name = href ? made5(doc, "a", "kp-entity__name") : made5(doc, "span", "kp-entity__name");
+    name.textContent = data.name;
+    if (name instanceof HTMLAnchorElement && href) {
+      name.href = href;
+      if (external) {
+        name.target = "_blank";
+        name.rel = "noopener noreferrer";
+        const said = made5(doc, "span", "kp-sr-only");
+        said.textContent = ` (${s2.entityOpensNew})`;
+        name.append(said);
+      }
+    }
+    el16.append(name);
+    if (external) {
+      const glyph3 = made5(doc, "span", "kp-entity__external");
+      glyph3.setAttribute("aria-hidden", "true");
+      glyph3.textContent = "\u2197";
+      el16.append(glyph3);
+    }
+    if (starOn) appendStar(card, el16, data, star, starKey);
+  });
+  syncStar(card, star);
+  slot("state", { st: data.state, status }, (el16) => {
+    const word = status === "error" ? s2.entityFailed : data.state?.label ?? "";
+    if (!word) return;
+    const tone = status === "error" ? "destructive" : data.state?.tone;
+    const state2 = made5(doc, "span", "kp-health kp-entity__tile-state");
+    if (tone === "success") state2.setAttribute("data-state", "ok");
+    else if (tone === "warning") state2.setAttribute("data-state", "warn");
+    else if (tone === "destructive") state2.setAttribute("data-state", "down");
+    const dot = made5(doc, "span", "kp-health__dot");
+    dot.setAttribute("aria-hidden", "true");
+    state2.append(dot, word);
+    el16.append(state2);
+  });
+  slot("description", { d: data.description, status, e: data.error }, (el16) => {
+    if (status === "error") {
+      const says = made5(doc, "span", "kp-entity__tile-failed");
+      says.textContent = s2.entityTileFailed;
+      const retry = (
+        /** @type {HTMLButtonElement} */
+        made5(doc, "button", "kp-button kp-button--sm kp-entity__retry")
+      );
+      retry.type = "button";
+      retry.textContent = s2.entityRetry;
+      if (data.error) retry.title = data.error;
+      retry.addEventListener("click", () => card.dispatchEvent(new CustomEvent(ENTITY_RETRY_EVENT, { bubbles: true, detail: { key } })));
+      el16.append(says, retry);
+      return;
+    }
+    if (!data.description) return;
+    const text = made5(doc, "span", "kp-entity__text");
+    text.textContent = data.description;
+    el16.append(text);
+  });
+  slotOf(card, "lines").hidden = status === "error";
+  slot("lines", { l: data.lines, status }, (el16) => {
+    if (status === "empty") {
+      const none = made5(doc, "span", "kp-entity__none");
+      none.textContent = s2.entityNotMeasured;
+      el16.append(none);
+      return;
+    }
+    for (const text of data.lines ?? []) {
+      const line = made5(doc, "span", "kp-entity__line");
+      line.textContent = text;
+      el16.append(line);
+    }
+  });
+}
 function setEntity(card, data) {
-  frame2(card);
+  const kind = frame2(card);
   const doc = card.ownerDocument;
   const s2 = getStrings();
   const before = DRAWN5.get(card);
   const drawn2 = before?.drawn ?? {};
-  DRAWN5.set(card, { data, drawn: drawn2 });
+  const star = before && before.data === data ? before.star : data.starred ?? before?.star ?? false;
+  DRAWN5.set(card, { data, drawn: drawn2, star });
   card.setAttribute("data-kp-row-key", data.key);
   card.setAttribute("data-kp-entity-key", data.key);
   const status = data.status ?? "ready";
   card.setAttribute("data-kp-state", status);
   const meterRows = Math.max(0, Math.min(3, Number(opt2(card, "data-kp-entity-meters") ?? 2) || 0));
-  card.style.setProperty("--kp-entity-meters", String(meterRows));
+  const around = card.closest(ENTITY_GRID);
+  if (around && Array.isArray(data.trend) && !around.hasAttribute("data-kp-entity-trended")) {
+    around.setAttribute("data-kp-entity-trended", "");
+    redraw(
+      /** @type {HTMLElement[]} */
+      [...around.querySelectorAll(":scope > .kp-card--entity")].filter((other) => other !== card),
+      ["meters"]
+    );
+  }
+  const trendMode = opt2(card, "data-kp-entity-trend") ?? "auto";
+  const trended = Array.isArray(data.trend) || (card.closest(ENTITY_GRID)?.hasAttribute("data-kp-entity-trended") ?? false);
+  const trendOn = kind === "stack" && (trendMode === "on" || trendMode !== "off" && trended);
+  card.style.setProperty("--kp-entity-meters", String(meterRows + (trendOn ? 1 : 0)));
   const key = data.key;
   const slot = (slot_, signature2, build9) => {
     const text = sig(signature2);
@@ -47474,8 +47790,8 @@ function setEntity(card, data) {
   const loading = status === "loading";
   if (loading) {
     card.removeAttribute("data-kp-entity-actions");
-    slotOf(card, "actions").hidden = false;
-    for (const name of SLOTS) {
+    slotOf(card, kind === "stack" ? "actions" : "lines").hidden = false;
+    for (const name of SLOTS[kind]) {
       slot(name, "loading", (el16) => {
         const bone = made5(doc, "span", "kp-skeleton kp-entity__bone");
         bone.setAttribute("aria-hidden", "true");
@@ -47489,27 +47805,14 @@ function setEntity(card, data) {
   const link = opt2(card, "data-kp-entity-link");
   const selectable = opt2(card, "data-kp-selectable") !== null;
   const markKind = opt2(card, "data-kp-entity-mark") ?? "idmark";
-  slot("id", { n: data.name, v: data.vmid, st: data.state, link, selectable, markKind, status }, (el16) => {
-    if (selectable) {
-      const box = (
-        /** @type {HTMLInputElement} */
-        made5(doc, "input", "kp-field__check kp-entity__tick")
-      );
-      box.type = "checkbox";
-      box.setAttribute("data-kp-select-row", "");
-      box.setAttribute("aria-label", s2.entitySelect(data.name));
-      box.addEventListener("change", () => {
-        card.classList.toggle("is-ticked", box.checked);
-        card.dispatchEvent(new CustomEvent(ENTITY_TICK_EVENT, { bubbles: true, detail: { key, ticked: box.checked } }));
-      });
-      el16.append(box);
-    }
-    if (markKind !== "none") {
-      const mark = made5(doc, "span", "kp-idmark kp-idmark--sm");
-      if (markKind === "idmark") setIdmark(mark, data.name);
-      else mark.textContent = "\u25C6";
-      el16.append(mark);
-    }
+  const starOn = (opt2(card, "data-kp-entity-star") ?? (kind === "tile" ? "on" : "off")) !== "off";
+  const starKey = (opt2(card, "data-kp-entity-star-key") ?? "s").toLowerCase();
+  if (kind === "tile") {
+    drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable, markKind, starOn, starKey, star });
+    return;
+  }
+  slot("id", { n: data.name, v: data.vmid, st: data.state, link, selectable, markKind, status, starOn, starKey }, (el16) => {
+    tickAndMark(card, el16, data, selectable, markKind);
     const name = link ? made5(doc, "a", "kp-entity__name") : made5(doc, "span", "kp-entity__name");
     if (name instanceof HTMLAnchorElement && link) name.href = link.replace("{key}", encodeURIComponent(key));
     name.textContent = data.name;
@@ -47524,7 +47827,9 @@ function setEntity(card, data) {
     );
     st.textContent = status === "error" ? s2.entityFailed : data.state?.label ?? "";
     el16.append(st);
+    if (starOn) appendStar(card, el16, data, star, starKey);
   });
+  syncStar(card, star);
   slot("figures", { f: data.figures, status }, (el16) => {
     if (status === "empty") {
       const none = made5(doc, "span", "kp-entity__none");
@@ -47579,7 +47884,7 @@ function setEntity(card, data) {
     }
   });
   fitFlags(card, flagsMax);
-  slot("meters", { m: data.meters, meterRows, status }, (el16) => {
+  slot("meters", { m: data.meters, meterRows, status, tr: trendOn ? [data.trend ?? null, data.trendLabel, data.trendText] : null }, (el16) => {
     for (let i = 0; i < meterRows; i++) {
       const m = data.meters?.[i];
       const row = made5(doc, "div", "kp-entity__meter");
@@ -47598,6 +47903,7 @@ function setEntity(card, data) {
       row.append(label, bar, value);
       el16.append(row);
     }
+    if (trendOn) el16.append(trendRow(doc, s2, data, status));
   });
   const narrow = card.closest(ENTITY_GRID)?.hasAttribute("data-kp-entity-narrow") ?? false;
   const inlineAsked = narrow ? 0 : Math.max(0, Number(opt2(card, "data-kp-entity-inline") ?? 3));
@@ -47681,6 +47987,10 @@ function setEntityGrid(grid2, list) {
   grid2.removeAttribute("data-kp-state");
   clearGridState(grid2);
   const doc = grid2.ownerDocument;
+  grid2.toggleAttribute(
+    "data-kp-entity-trended",
+    list.some((d) => Array.isArray(d.trend))
+  );
   const have = /* @__PURE__ */ new Map();
   for (
     const card of
@@ -47718,6 +48028,7 @@ function setEntityGridState(grid2, state2, options = {}) {
   const doc = grid2.ownerDocument;
   const s2 = getStrings();
   const had = grid2.querySelectorAll(":scope > .kp-card--entity").length;
+  const tiles = grid2.getAttribute("data-kp-entity-kind") === "tile";
   clearGridState(grid2);
   grid2.setAttribute("data-kp-state", state2);
   for (const card of grid2.querySelectorAll(":scope > .kp-card--entity")) card.remove();
@@ -47728,24 +48039,32 @@ function setEntityGridState(grid2, state2, options = {}) {
         /** @type {HTMLElement} */
         made5(doc, "article", "kp-card--ghost")
       );
+      grid2.append(ghost);
       setEntity(ghost, { key: `loading-${i}`, name: "", status: "loading" });
       ghost.classList.add("kp-card--ghost");
-      grid2.append(ghost);
     }
-    BUSY2.set(grid2, openBusyCard(grid2, { words: s2.entityLoading, area: () => [grid2], className: "kp-entity__busy", arrive: true }));
+    BUSY2.set(
+      grid2,
+      openBusyCard(grid2, {
+        words: options.words ?? (tiles ? s2.entityTileLoading : s2.entityLoading),
+        area: () => [grid2],
+        className: "kp-entity__busy",
+        arrive: true
+      })
+    );
     return;
   }
   const plate = state2 === "error" ? statePlate(doc, {
     kind: "error",
-    title: options.title ?? s2.entityGridFailed,
+    title: options.title ?? (tiles ? s2.entityTileGridFailed : s2.entityGridFailed),
     text: options.message ?? s2.entityGridFailedText,
     actionLabel: s2.entityRetry,
     onAction: () => grid2.dispatchEvent(new CustomEvent(ENTITY_GRID_RETRY_EVENT, { bubbles: true }))
   }) : statePlate(doc, {
     kind: "empty",
-    title: options.title ?? s2.entityGridEmpty,
+    title: options.title ?? (tiles ? s2.entityTileGridEmpty : s2.entityGridEmpty),
     ...options.message ? { text: options.message } : {},
-    actionLabel: options.actionLabel ?? s2.entityNew,
+    actionLabel: options.actionLabel ?? (tiles ? s2.entityTileNew : s2.entityNew),
     onAction: () => grid2.dispatchEvent(new CustomEvent(ENTITY_NEW_EVENT, { bubbles: true }))
   });
   grid2.append(plate);
@@ -47810,7 +48129,11 @@ function attachEntityCards(root = document) {
         "data-kp-selectable",
         "data-kp-entity-mark",
         "data-kp-entity-min",
-        "data-kp-entity-narrow"
+        "data-kp-entity-narrow",
+        "data-kp-entity-kind",
+        "data-kp-entity-trend",
+        "data-kp-entity-star",
+        "data-kp-entity-star-key"
       ]
     });
     undo.push(() => watch2.disconnect());
@@ -47818,21 +48141,24 @@ function attachEntityCards(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN5, opt2, made5, sig, SLOTS, slotOf, ACTIONS_QUEUED, BUSY2;
+var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN5, opt2, made5, sig, SLOTS, kindOf, slotOf, ACTIONS_QUEUED, KEYED, BUSY2;
 var init_entity_card = __esm({
   "js/entity-card.js"() {
     "use strict";
     init_idmark();
     init_kpi();
+    init_toggle();
     init_menu_button();
     init_strings();
     init_busy_card();
     init_state_plate();
+    init_footprint();
     ENTITY_GRID = "[data-kp-entity-grid]";
     ENTITY_CARD = "[data-kp-entity]";
     ENTITY_ACTION_EVENT = "kp-entity-action";
     ENTITY_FLAG_EVENT = "kp-entity-flag";
     ENTITY_TICK_EVENT = "kp-entity-tick";
+    ENTITY_STAR_EVENT = "kp-entity-star";
     ENTITY_RETRY_EVENT = "kp-entity-retry";
     ENTITY_NEW_EVENT = "kp-entity-new";
     ENTITY_GRID_RETRY_EVENT = "kp-entity-grid-retry";
@@ -47844,12 +48170,17 @@ var init_entity_card = __esm({
       return el16;
     };
     sig = (value) => JSON.stringify(value);
-    SLOTS = ["id", "figures", "flags", "meters", "actions"];
+    SLOTS = {
+      stack: ["id", "figures", "flags", "meters", "actions"],
+      tile: ["id", "state", "description", "lines"]
+    };
+    kindOf = (card) => opt2(card, "data-kp-entity-kind") === "tile" ? "tile" : "stack";
     slotOf = (card, slot) => (
       /** @type {HTMLElement} */
       card.querySelector(`:scope > .kp-entity__${slot}`)
     );
     ACTIONS_QUEUED = /* @__PURE__ */ new WeakSet();
+    KEYED = /* @__PURE__ */ new WeakSet();
     BUSY2 = /* @__PURE__ */ new WeakMap();
   }
 });
@@ -53243,7 +53574,7 @@ __export(loading_pieces_exports, {
   PIECE_CARRIERS: () => PIECE_CARRIERS,
   attachLoadingPieces: () => attachLoadingPieces
 });
-function kindOf(el16) {
+function kindOf2(el16) {
   for (
     const [kind, selector] of
     /** @type {[keyof typeof PIECE_CARRIERS, string][]} */
@@ -53285,7 +53616,7 @@ function caterpillar(el16, kind) {
     const cx = W / 2;
     let html2 = `<i class="kp-pieces__leg" style="left: ${px3(cx - q * 0.9)}; top: ${px3(foot)}"></i><i class="kp-pieces__leg kp-pieces__leg--b" style="left: ${px3(cx + q * 0.9)}; top: ${px3(foot)}"></i>`;
     const next2 = el16.closest('td, [role="gridcell"]')?.nextElementSibling?.querySelector(".kp-calendar__day");
-    const last = !next2 || kindOf(next2) !== "day";
+    const last = !next2 || kindOf2(next2) !== "day";
     if (last) html2 += `<i class="kp-pieces__head kp-pieces__head--day" style="left: ${px3(at(W + q * 0.7, q * 4.4))}; top: ${px3(H / 2)}"></i>`;
     return { html: html2, q };
   }
@@ -53308,7 +53639,7 @@ function undress(el16) {
   }
 }
 function dress(el16) {
-  const kind = kindOf(el16);
+  const kind = kindOf2(el16);
   const name = kind ? piecesOf(el16) : "";
   const draw8 = DRAW[name];
   if (!kind || !draw8 || el16.getClientRects().length === 0) {
@@ -57222,101 +57553,6 @@ var init_timefield = __esm({
   }
 });
 
-// js/footprint.js
-var footprint_exports = {};
-__export(footprint_exports, {
-  FOOTPRINT_HOSTS: () => FOOTPRINT_HOSTS,
-  FOOTPRINT_MAX: () => FOOTPRINT_MAX,
-  attachFootprints: () => attachFootprints,
-  holdFootprint: () => holdFootprint
-});
-function holdFootprint(host) {
-  const existing = HELD.get(host);
-  if (existing) return existing;
-  let border = 0;
-  let content = 0;
-  let holding = false;
-  let ownInline = "";
-  let ownPriority = "";
-  let ownComputed = "";
-  const state2 = () => host.getAttribute("data-kp-state") ?? "ready";
-  const height = () => getComputedStyle(host).boxSizing === "border-box" ? border : content;
-  const release = () => {
-    if (!holding) return;
-    holding = false;
-    if (ownInline) host.style.setProperty("min-block-size", ownInline, ownPriority);
-    else host.style.removeProperty("min-block-size");
-  };
-  const hold = () => {
-    const wanted = height();
-    if (!wanted) return release();
-    if (!holding) {
-      ownInline = host.style.getPropertyValue("min-block-size");
-      ownPriority = host.style.getPropertyPriority("min-block-size");
-      ownComputed = ownInline ? "" : getComputedStyle(host).minBlockSize;
-      holding = true;
-    }
-    const own = ownInline || ownComputed;
-    const kept = own && own !== "auto" && own !== "normal" && parseFloat(own) !== 0 ? own : "";
-    const held2 = `min(${wanted}px, var(--kp-footprint-max, ${FOOTPRINT_MAX}))`;
-    host.style.setProperty("min-block-size", kept ? `max(${held2}, ${kept})` : held2);
-  };
-  const sync4 = () => HOLDING.has(state2()) ? hold() : release();
-  const sizes = new ResizeObserver((entries3) => {
-    if (!host.isConnected) return detach();
-    if (HOLDING.has(state2())) return;
-    const entry = entries3[entries3.length - 1];
-    const rect = host.getBoundingClientRect();
-    border = entry?.borderBoxSize?.[0]?.blockSize ?? rect.height;
-    content = entry?.contentBoxSize?.[0]?.blockSize ?? rect.height;
-  });
-  const states3 = new MutationObserver(sync4);
-  sizes.observe(host);
-  states3.observe(host, { attributes: true, attributeFilter: ["data-kp-state"] });
-  function detach() {
-    sizes.disconnect();
-    states3.disconnect();
-    release();
-    HELD.delete(host);
-  }
-  HELD.set(host, detach);
-  return detach;
-}
-function attachFootprints(root = document) {
-  const hosts = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(FOOTPRINT_HOSTS) ? [root] : [],
-      ...root.querySelectorAll(FOOTPRINT_HOSTS)
-    ]
-  );
-  const detaches = hosts.filter((host) => !HELD.has(host)).map(holdFootprint);
-  return () => {
-    for (const detach of detaches) detach();
-  };
-}
-var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, HELD;
-var init_footprint = __esm({
-  "js/footprint.js"() {
-    "use strict";
-    FOOTPRINT_HOSTS = [
-      "[data-kp-matrix]",
-      "[data-kp-entity-grid]",
-      "[data-kp-checklist]",
-      "[data-kp-notices]",
-      "[data-kp-feed]",
-      "[data-kp-gallery]",
-      "[data-kp-availability]",
-      "[data-kp-requests]",
-      "[data-kp-diffview]",
-      ".kp-ops"
-    ].join(", ");
-    FOOTPRINT_MAX = "48rem";
-    HOLDING = /* @__PURE__ */ new Set(["loading", "empty", "error"]);
-    HELD = /* @__PURE__ */ new WeakMap();
-  }
-});
-
 // js/console.js
 var console_exports = {};
 __export(console_exports, {
@@ -59201,7 +59437,7 @@ function normalize(files) {
     const hunks = (file.hunks ?? []).map((hunk) => ({
       ...headOf(hunk),
       lines: hunk.lines.map((line) => {
-        const kind = kindOf2(line.kind);
+        const kind = kindOf3(line.kind);
         const no = line.no ?? (kind === "removed" ? line.oldNo ?? null : line.newNo ?? line.oldNo ?? null);
         return { kind, text: String(line.text ?? ""), no };
       })
@@ -59750,7 +59986,7 @@ function attachDiffs(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var DIFF, DIFF_TOGGLE_EVENT, DIFF_EXPAND_EVENT, DIFF_COPY_EVENT, DIFF_RETRY_EVENT, DIFF_CONTEXT, DIFF_FOLD_MIN, DIFF_MAX_LINES, DIFF_WORD_LIMIT, DIFF_WORD_SHARE, DIFF_STATUSES, STATE10, serial16, el15, attr15, TOKENS, tokensOf, kindOf2;
+var DIFF, DIFF_TOGGLE_EVENT, DIFF_EXPAND_EVENT, DIFF_COPY_EVENT, DIFF_RETRY_EVENT, DIFF_CONTEXT, DIFF_FOLD_MIN, DIFF_MAX_LINES, DIFF_WORD_LIMIT, DIFF_WORD_SHARE, DIFF_STATUSES, STATE10, serial16, el15, attr15, TOKENS, tokensOf, kindOf3;
 var init_diff = __esm({
   "js/diff.js"() {
     "use strict";
@@ -59780,7 +60016,7 @@ var init_diff = __esm({
     attr15 = (root, name, fallback2) => root.getAttribute(`data-kp-diff-${name}`) ?? fallback2;
     TOKENS = /[A-Za-z0-9_]+(?:[.-][A-Za-z0-9_]+)*|\s+|[^\sA-Za-z0-9_]/g;
     tokensOf = (text) => text.match(TOKENS) ?? [];
-    kindOf2 = (kind) => kind === "added" || kind === "removed" ? kind : "same";
+    kindOf3 = (kind) => kind === "added" || kind === "removed" ? kind : "same";
   }
 });
 
@@ -61727,6 +61963,7 @@ export {
   ENTITY_GRID_RETRY_EVENT,
   ENTITY_NEW_EVENT,
   ENTITY_RETRY_EVENT,
+  ENTITY_STAR_EVENT,
   ENTITY_TICK_EVENT,
   EXEMPT,
   EXPAND_EVENT,

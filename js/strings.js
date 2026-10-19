@@ -134,6 +134,16 @@
  * @property {string} entityGridFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
  * @property {string} entityGridEmpty  The empty plate's title for a grid with no cards [kpadopt6-ops]
  * @property {string} entityNew  The empty plate's action [kpadopt6-ops]
+ * @property {(name: string) => string} entityStar  The favourite button's name, "Favourite jellyfin" [gap-entity-tiles-1019]
+ * @property {string} entityOpensNew  What a screen reader adds to a link that opens a new tab [gap-entity-tiles-1019]
+ * @property {string} entityTrend  The trend row's label when the data gives none [gap-entity-tiles-1019]
+ * @property {string} entityTrendNone  What the trend row says where there are fewer than two readings [gap-entity-tiles-1019]
+ * @property {(label: string, text: string) => string} entityTrendName  The trend line's text alternative, "CPU, last 24 h, now 34%" [gap-entity-tiles-1019]
+ * @property {string} entityTileFailed  What a tile says where its app could not be read [gap-entity-tiles-1019]
+ * @property {string} entityTileLoading  The busy card's words while a board of tiles is read [gap-entity-tiles-1019]
+ * @property {string} entityTileGridFailed  The failed plate's title for a board of tiles [gap-entity-tiles-1019]
+ * @property {string} entityTileGridEmpty  The empty plate's title for a board with no tile [gap-entity-tiles-1019]
+ * @property {string} entityTileNew  The empty board's action [gap-entity-tiles-1019]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo
@@ -1706,6 +1716,16 @@ export const DEFAULT_STRINGS = Object.freeze({
     entityGridFailedText: 'Try again in a moment.',
     entityGridEmpty: 'No stacks yet',
     entityNew: 'New stack',
+    entityStar: (name) => `Favourite ${name}`,
+    entityOpensNew: 'opens in a new tab',
+    entityTrend: 'Trend',
+    entityTrendNone: 'no line yet',
+    entityTrendName: (label, text) => (text ? `${label}, now ${text}` : label),
+    entityTileFailed: 'reading failed',
+    entityTileLoading: 'Reading the apps…',
+    entityTileGridFailed: 'The apps could not be read',
+    entityTileGridEmpty: 'No apps yet',
+    entityTileNew: 'New app',
     alertSuccess: 'Success',
     alertWarning: 'Warning',
     alertInfo: 'Info',
