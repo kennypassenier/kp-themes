@@ -1,0 +1,439 @@
+/* research/app-homelab-schedules: the page's own frame. Everything with a kp- class is the package; these hs- rules only
+   lay the sections out, draw the readouts and place the package's parts on one grid. */
+
+.hs-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hs-intro,
+.hs-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hs-intro :is(h1, p),
+.hs-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hs-intro p,
+.hs-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hs-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hs-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hs-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hs-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.hs-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.hs-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.hs-controls > [role='group'] > b {
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+}
+
+.hs-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.hs-label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.hs-summary {
+    margin: 0;
+    font-weight: 600;
+}
+
+.hs-log {
+    box-sizing: border-box;
+    min-block-size: calc(2lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* ── week: the frame narrows to a phone on the Width button; the grid turns into the list by itself ── */
+.hs-weekbox {
+    min-block-size: 22rem;
+    min-inline-size: 0;
+}
+
+.hs-weekbox[data-phone] {
+    max-inline-size: 26rem;
+}
+
+/* ── next run: the countdown and the preview on one grid, the card keeps one height ── */
+.hs-hero .kp-card__stage {
+    min-block-size: 17rem;
+}
+
+.hs-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.hs-hero__main,
+.hs-hero__then {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+/* The countdown here is a display of the time to the next run, not a timer a person sets: its own buttons are off. */
+.hs-hero .kp-countdown__controls {
+    display: none;
+}
+
+.hs-hero__what {
+    display: grid;
+    gap: var(--kp-space-3xs, 0.125rem);
+    margin: 0;
+}
+
+.hs-hero__what > span {
+    color: var(--muted-foreground);
+}
+
+.hs-hero__note {
+    min-block-size: 2lh;
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hs-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+@media (max-width: 40rem) {
+    .hs-hero__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ── the form: an open drawer sample, the real drawer, and the surface ── */
+.hs-frame--form {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.hs-formhost {
+    min-inline-size: 0;
+}
+
+.hs-drawerpanel {
+    inline-size: 100%;
+    max-inline-size: 44rem;
+    margin-inline: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: var(--shadow-md, 0 4px 14px rgb(0 0 0 / 0.12));
+    overflow: hidden;
+}
+
+dialog.kp-drawer .hs-drawerbody,
+.hs-drawerpanel .hs-drawerbody {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+}
+
+.hs-unsavedslot {
+    grid-column: 1 / -1;
+    min-block-size: 3rem;
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+.hs-form {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.hs-noterow {
+    margin: 0;
+}
+
+.hs-clash {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+.hs-clash[hidden] {
+    display: none;
+}
+
+.hs-preview {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-block-size: 11rem;
+    align-content: start;
+}
+
+.hs-drawerfoot {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hs-formbar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: start;
+}
+
+@media (max-width: 40rem) {
+    .hs-formbar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .hs-clash {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Surface: the list is always there; the drawer sample lies over the frame's end edge, the pane sits beside the list. */
+.hs-surface {
+    position: relative;
+    min-block-size: 36rem;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.hs-surface .kp-split {
+    block-size: 100%;
+    min-block-size: 36rem;
+}
+
+.hs-surface[data-surface='drawer'] [data-kp-pane='detail'] {
+    display: none;
+}
+
+.hs-surface[data-surface='drawer'] .kp-split {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.hs-sidedrawer {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: min(34rem, 100%);
+    overflow: auto;
+    background: var(--popover);
+    color: var(--popover-foreground);
+    border-inline-start: 1px solid var(--border);
+    box-shadow: var(--shadow-md, 0 4px 14px rgb(0 0 0 / 0.14));
+}
+
+.hs-sidedrawer[hidden] {
+    display: none;
+}
+
+.hs-pane__what {
+    display: grid;
+    gap: var(--kp-space-3xs, 0.125rem);
+    padding-inline-start: var(--kp-space-xs, 0.25rem);
+}
+
+.hs-pane__what small {
+    color: var(--muted-foreground);
+}
+
+/* ── table ── */
+.hs-tablebox {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.hs-strip {
+    min-inline-size: 12rem;
+}
+
+.hs-empty .hs-templates {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--kp-space-sm, 0.5rem);
+    text-align: start;
+}
+
+.hs-toastbed {
+    min-block-size: 5rem;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    display: grid;
+    align-content: center;
+}
+
+.hs-toastbed__empty {
+    margin: 0;
+    text-align: center;
+    color: var(--muted-foreground);
+}
+
+/* ── pause ── */
+.hs-pausecard {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+}
+
+.hs-pausecard__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, max-content);
+    gap: var(--kp-space-md, 1rem);
+    align-items: start;
+}
+
+.hs-pausecard__title {
+    display: grid;
+    gap: var(--kp-space-3xs, 0.125rem);
+    margin: 0;
+}
+
+.hs-pausecard__title > span {
+    color: var(--muted-foreground);
+}
+
+.hs-pausecard__runs {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-block-size: 15rem;
+    align-content: start;
+}
+
+@media (max-width: 40rem) {
+    .hs-pausecard__head {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ── busy hours ── */
+.hs-heat {
+    min-block-size: 18rem;
+}
+
+.hs-clashes {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-block-size: 8rem;
+    align-content: start;
+}
+
+/* One grid for the clashes: the moment, the two schedules, the button in its own column. */
+.hs-clashes > li {
+    display: grid;
+    grid-template-columns: minmax(11rem, max-content) minmax(0, 1fr) minmax(0, 24rem);
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: center;
+    padding-block: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.hs-clashes__when {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.hs-clashes > li > .kp-button {
+    justify-self: start;
+    white-space: normal;
+}
+
+@media (max-width: 48rem) {
+    .hs-clashes > li {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ── coverage ── */
+.hs-matrix {
+    min-block-size: 20rem;
+}
+
+/* ── job dialog ── */
+.hs-jobkv {
+    min-inline-size: min(24rem, 80vw);
+}
+
+#hs-snooze-host {
+    min-inline-size: 15rem;
+}
+
+.hs-pausenote {
+    min-block-size: 1.5lh;
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+#pause-component[data-state='fails'] .hs-pausenote {
+    color: var(--destructive);
+}

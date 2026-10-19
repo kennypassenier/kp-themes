@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-homelab-schedules" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Homelab dashboard: the Schedules page · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hs-page">
+            <header class="hs-intro">
+                <h1>Homelab dashboard: the Schedules page</h1>
+                <p class="cat-intro">
+                    The Schedules page of the homelab admin dashboard decides what runs by itself: backups, updates, a weekly patch round, a restore
+                    test. This page shows how it would look with kp-themes 11.0.0, one part per section: the week, the next run with its countdown,
+                    the form that makes a schedule, the table, pausing, the busy minutes, the coverage and the history.
+                </p>
+                <p>
+                    Mock on this page: all the sample data (fourteen schedules on a fleet of stacks such as immich, vaultwarden, paperless and
+                    jellyfin, the host <b>pve</b>, its nightly round at 02:00, the job numbers). Times are the host's clock (Europe/Brussels). Two
+                    things need the host to answer something it does not answer today and are shown with sample answers: a refusal that names
+                    its reason when a schedule is saved, and the run history (what ran, was skipped or was missed). Nothing moves until you press a
+                    button.
+                </p>
+            </header>
+
+            <!-- ================================================================ the week -->
+            <section
+                class="hs-sec"
+                id="week"
+                data-review-item="week"
+                data-review-topic="week"
+                data-review-topic-title="The week grid"
+                data-review-components="week"
+                data-review-title="The next 7 days: every run on one calendar"
+                data-review-choices='[{ "id": "week-off-default", "label": "Schedules that are turned off, in the week", "once": true, "default": "dimmed", "options": [
+                    { "value": "dimmed", "label": "Shown dimmed", "hint": "Recommended. A turned-off schedule stays on the calendar as a muted pill, so you see what you would get by turning it on and why a slot is empty." },
+                    { "value": "hidden", "label": "Hidden", "hint": "Only what will really run is drawn. Quieter, but a turned-off schedule is out of sight until you open the table." }] }]'
+                aria-labelledby="h-week"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-week">The next 7 days: every run on one calendar</h2>
+                    <p>Shows every run of the coming week as a pill at its time of day, with the host's own nightly round dashed for reference, and the very next run ringed.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Seven day columns starting today, a now-line in today's column, a pill per run at its time (<b>12:00 Back up · immich</b>)
+                            in the colour of its action (legend under the grid: Back up, Update, Patch, Deploy, Restore test). The dashed pill at
+                            02:00 on every day is the host's <b>nightly round</b>. The ringed pill is the next run. A dimmed pill is a schedule that is
+                            turned off; a struck one is a run that was skipped or paused.
+                        </li>
+                        <li>
+                            Press a pill (or Enter on it): a card with the full line opens, and the line under the calendar says what the page would
+                            do (scroll to its row in the table). Previous week, Today and Next week move the range.
+                        </li>
+                        <li>
+                            <b>Width: Phone</b> narrows the frame to 26 rem: below 40 rem the grid turns into a list of the next 8 runs, with no
+                            separate code. <b>Data</b>: Loading lays the busy card over the empty days; Empty and Failed fill the same height with their words (the
+                            week has no Retry button of its own: a package gap).
+                        </li>
+                        <li><b>The choice</b> (tick in the dialog): whether turned-off schedules are shown dimmed or hidden. Both are real options; the buttons flip them.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        White day columns with a hairline, navy for the ringed next run and the now-line, series colours from the chart palette. Look at
+                        the gap between a pill's time and its label, at pills one above the other in the same hour (they stack, never overlap), and
+                        that the grid keeps its height in every state. At 390 px the list shows the day named on its first row.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="week-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-week-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-week-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-week-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-week-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Turned-off schedules">
+                        <b>Turned off</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-week-off="dimmed">Dimmed</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-week-off="hidden">Hidden</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-week-width="full">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-week-width="phone">Phone</button>
+                    </div>
+                </div>
+                <div class="hs-frame hs-frame--week" id="week-component">
+                    <div class="hs-weekbox" id="hs-weekbox">
+                        <section
+                            class="kp-week"
+                            data-kp-week
+                            data-kp-week-nav
+                            data-kp-week-upcoming="8"
+                            data-kp-week-upcoming-label="The next runs"
+                            data-kp-week-upcoming-empty="No run in the next 7 days."
+                            data-kp-time-zone="Europe/Brussels"
+                            aria-label="Runs in the next 7 days"
+                            id="hs-week"
+                        ></section>
+                    </div>
+                    <pre class="hs-log" id="hs-week-log" aria-live="polite">Press a pill; what the page would do shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ the next run -->
+            <section
+                class="hs-sec"
+                id="next"
+                data-review-item="next"
+                data-review-topic="next"
+                data-review-topic-title="Next run, countdown and preview"
+                data-review-components="countdown runs card-state"
+                data-review-title="The next run, counting down"
+                aria-labelledby="h-next"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-next">The next run, counting down</h2>
+                    <p>Tells what starts next and how long that is, with the exact date beside the countdown and the three runs after it, flagging a run that starts in the same minute as another.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A card with the countdown in digits (<b>02:13:41</b>, hours past 24 stay hours), under it the exact moment in
+                            <b>Tue 20/10/2026 03:30</b> form, the schedule in words, and the buttons <b>Run now</b> and <b>Skip this run</b>. The
+                            digits stand in cells of one width, so no time moves the layout. Right of it, <b>Then</b> lists the next three runs of
+                            that schedule with how far away each is; a run in the same minute as another schedule carries a flag and the reason.
+                        </li>
+                        <li>
+                            The clock opens <b>Stopped</b>; <b>Running</b> starts it. In <b>In 8 seconds</b> it counts to zero, breathes and the card
+                            says it started as a job, then it moves on to the next schedule. <b>None</b>: every schedule is off, and the card says so.
+                        </li>
+                        <li><b>Skip this run</b> moves the card on to the run after it; <b>Run now</b> says which job it would start.</li>
+                        <li><b>Data</b>: Loading lays the busy card over the card and Failed fills it with a Retry, both at the card's own height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Large navy digits on a white card, one hairline, the flag in a warning tone with its words (never colour alone). Look at the
+                        gap between the digits and the date, and that the card keeps its height in each state.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="next-component">
+                    <div role="group" aria-label="Next run">
+                        <b>Next run</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-next-case="planned">As planned</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-next-case="soon">In 8 seconds</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-next-case="none">None</button>
+                    </div>
+                    <div role="group" aria-label="Clock">
+                        <b>Clock</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-next-clock="stopped">Stopped</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-next-clock="running">Running</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-next-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-next-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-next-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hs-frame" id="next-component">
+                    <section class="kp-card hs-hero" data-kp-state="ready" id="hs-hero" aria-label="The next run">
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hs-hero__grid">
+                                <div class="hs-hero__main">
+                                    <div class="kp-countdown" data-kp-countdown="1:00:00" data-kp-countdown-name="Next run in" id="hs-countdown"></div>
+                                    <p class="hs-hero__what"><b id="hs-hero-title">Back up · vaultwarden</b><span id="hs-hero-when">Tue 20/10/2026 03:30 · every day at 03:30</span></p>
+                                    <p class="hs-hero__note" id="hs-hero-note" role="status"></p>
+                                    <div class="hs-hero__actions">
+                                        <button type="button" class="kp-button kp-button--primary" id="hs-run-now">Run now</button>
+                                        <button type="button" class="kp-button" id="hs-skip">Skip this run</button>
+                                    </div>
+                                </div>
+                                <div class="hs-hero__then">
+                                    <div class="kp-runs" data-kp-runs data-kp-time-zone="Europe/Brussels" id="hs-then"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- ================================================================ the form -->
+            <section
+                class="hs-sec"
+                id="form"
+                data-review-item="form"
+                data-review-topic="form"
+                data-review-topic-title="The schedule form"
+                data-review-components="sentence weekdays time runs unsaved"
+                data-review-title="New and edit schedule: a sentence, a time and a preview"
+                aria-labelledby="h-form"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-form">New and edit schedule: a sentence, a time and a preview</h2>
+                    <p>Makes or changes a schedule by completing one sentence, shows the next five runs while you type, warns when another schedule starts in the same minute, and keeps what you changed safe until you save.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The panel is the drawer as it stands open: <b>Run [Back up] on [vaultwarden] [every week] on [Mon Tue Wed Thu Fri Sat Sun]
+                            at [03:30].</b> Weekdays show only for <i>every week</i>, a date for <i>once</i>. The time is typed or stepped in 24 hours
+                            (<b>0330</b>, <b>3.30</b> and <b>3h30</b> all give 03:30; a pasted <b>3:30 PM</b> becomes 15:30 and says so).
+                        </li>
+                        <li>
+                            <b>Next runs</b> under it redraws as you change the sentence. With <b>Edit: collides</b> the run in the same minute as
+                            <b>Back up · paperless</b> carries a flag, an alert above says which schedule and offers <b>Move 15 minutes later</b>.
+                        </li>
+                        <li>
+                            Change any part: the bar in the drawer's head counts <b>1 change</b>, <b>2 changes</b> (press the chip for the list with a
+                            Revert each), offers <b>Discard</b> (with Undo for six seconds) and <b>Save 2 changes</b>. <b>Close</b> with changes asks
+                            before it throws them away; nothing is lost by a click outside. <b>Open as a real drawer</b> opens the same form from the
+                            side.
+                        </li>
+                        <li>
+                            <b>Host refuses</b> answers Save with a reason on the row that caused it; <b>Stacks loading</b> turns the stack field into
+                            its own skeleton at its final width.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Words at 1.125 rem with navy underlined fields between them, the weekday chips on their own line, the destructive rule only on
+                        the refused row. Look at the gap between each field's text and its underline, that the preview keeps five rows in every
+                        state, and that the head does not change size when the change chip appears.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="form-component">
+                    <div role="group" aria-label="Schedule">
+                        <b>Schedule</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-form-case="new">New</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-form-case="edit">Edit: vaultwarden</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-form-case="collide">Edit: collides</button>
+                    </div>
+                    <div role="group" aria-label="The host answers Save with">
+                        <b>Host answers</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-form-answer="ok">Saved</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-form-answer="refused">Host refuses</button>
+                    </div>
+                    <div role="group" aria-label="Stack list">
+                        <b>Stacks</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-form-stacks="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-form-stacks="loading">Loading</button>
+                    </div>
+                </div>
+                <div class="hs-frame hs-frame--form" id="form-component">
+                    <div class="hs-formhost" id="hs-form-inline"></div>
+                    <div class="hs-formbar">
+                        <button type="button" class="kp-button" id="hs-form-open-drawer">Open as a real drawer</button>
+                        <pre class="hs-log" id="hs-form-log" aria-live="polite">Change a field; what the form fires shows here.</pre>
+                    </div>
+                </div>
+                <dialog class="kp-drawer kp-dialog" id="hs-drawer" aria-labelledby="hs-drawer-title"></dialog>
+            </section>
+
+            <!-- ================================================================ the surface -->
+            <section
+                class="hs-sec"
+                id="surface"
+                data-review-item="surface"
+                data-review-topic="form"
+                data-review-components="master-detail drawer"
+                data-review-title="Where the form opens: a drawer or beside the list"
+                data-review-choices='[{ "id": "edit-surface", "label": "Where editing a schedule opens", "once": true, "default": "drawer", "options": [
+                    { "value": "drawer", "label": "A drawer from the side", "hint": "Recommended. The list stays whole and in place behind a panel; it is one pattern for every page of the dashboard and it works the same on a phone." },
+                    { "value": "beside", "label": "Beside the list", "hint": "On a wide screen the list stands left and the form right, so you change one schedule while reading the others; on a phone it folds to the list, then the form." }] }]'
+                aria-labelledby="h-surface"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-surface">Where the form opens: a drawer or beside the list</h2>
+                    <p>Opens the schedule you pick from the list in the same form as above, either in a drawer over the page or in a pane next to the list.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A list of the schedules, one row each with its action, stack and cadence. <b>Drawer</b> (the default): pressing a row
+                            opens the form in a panel at the right edge of the frame, the list stays where it is. <b>Beside the list</b>: pressing a
+                            row fills the pane right of it, the row stays marked, arrows move through the list. With nothing picked the pane says
+                            so in a plate the size of the pane.
+                        </li>
+                        <li>
+                            <b>Data</b>: Loading lays the busy card over the pane, Failed puts a plate with a normal-size Retry in it; the list stays
+                            usable. Changes in the form count on the same bar as above; picking another row with changes asks first.
+                        </li>
+                        <li><b>The choice</b> (tick in the dialog): which of the two is the default. Both are real, the buttons flip them, and nothing is required.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A hairline between list and form, the picked row marked by a navy rule at its start edge, the drawer panel on the theme's
+                        opaque plate with its own soft shadow. Look at the row text (no text touching the rule) and that the frame keeps one height
+                        whichever way it opens.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="surface-component">
+                    <div role="group" aria-label="Opens in">
+                        <b>Opens in</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-surface="drawer">Drawer</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-surface="beside">Beside the list</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-surface-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-surface-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-surface-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hs-frame hs-frame--surface" id="surface-component">
+                    <div class="hs-surface" data-hs-surface-frame data-surface="drawer">
+                        <div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="22rem 1fr" data-kp-pane-history="off" id="hs-panes">
+                            <section class="kp-split__pane" data-kp-pane="list" aria-label="Schedules">
+                                <ul class="kp-pane__list" role="listbox" aria-label="Schedules" id="hs-pane-list"></ul>
+                            </section>
+                            <section class="kp-split__pane" data-kp-pane="detail" aria-label="Schedule">
+                                <h3 data-kp-pane-heading tabindex="-1"></h3>
+                                <div class="kp-pane__body" id="hs-pane-body"></div>
+                            </section>
+                        </div>
+                        <aside class="kp-drawer hs-sidedrawer" id="hs-sidedrawer" aria-label="Edit schedule" hidden></aside>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ the table -->
+            <section
+                class="hs-sec"
+                id="table"
+                data-review-item="table"
+                data-review-topic="table"
+                data-review-topic-title="All schedules: the table"
+                data-review-components="datatable uptime selection undo-toast action-tile"
+                data-review-title="All schedules: search, sort, bulk turn off, delete with undo"
+                aria-labelledby="h-table"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-table">All schedules: search, sort, bulk turn off, delete with undo</h2>
+                    <p>Lists every schedule with its next run and the last fourteen slots (ran, skipped, missed), lets you turn several off at once, and gives a deleted schedule back for six seconds.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A data table: <b>On</b> switch, <b>What</b> (action and stack, filtered by action), <b>When</b>, <b>Next run</b> (dd/mm/yyyy HH:mm, sorted by
+                            the moment), <b>Last 14</b> (a strip of 14 cells: filled = ran, ruled = skipped, striped = missed, empty = not yet a slot;
+                            press a cell for its job), and the buttons <b>Edit…</b>, <b>Run now</b>, <b>Delete</b> in three fixed columns.
+                            Search, per-column sort (Shift adds a key), filters (What, On) and the choice remembered across visits.
+                        </li>
+                        <li>
+                            Tick two or more rows: the bar over the table says <b>2 selected</b> with the names and <b>Turn off</b> and
+                            <b>Turn on</b>; with <b>Host refuses one</b> it ends <b>1 done, 1 refused</b> with the reason on the row.
+                            <b>Delete</b> removes the row at once and a toast offers <b>Undo</b> with a ring that runs out in six seconds (it stays
+                            inside this section's toast bed); Undo puts the row back where it was.
+                        </li>
+                        <li>
+                            <b>Fleet: 140 schedules</b> shows the real count past 99 in the status line and the pager, never <b>99+</b>.
+                            <b>Data</b>: Loading is the busy card over the rows, Empty shows <b>No schedules yet</b> with four starting points as
+                            tiles (each opens the form filled in), Failed has a Retry. All fill the table's footprint.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A white table with hairlines, a navy sort mark, the switch in navy when on and the word On/Off beside it. Look at the strip (the
+                        14 cells share one width in every row), that the three buttons stand under one another, that no text touches a cell edge, and the
+                        390 px card layout.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="table-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-table-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-table-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-table-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-table-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Fleet">
+                        <b>Fleet</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-table-fleet="14">14 schedules</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-table-fleet="140">140 schedules</button>
+                    </div>
+                    <div role="group" aria-label="The host answers a bulk change with">
+                        <b>Bulk change</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-table-bulk="ok">Done</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-table-bulk="refuse">Host refuses one</button>
+                    </div>
+                </div>
+                <div class="hs-frame" id="table-component">
+                    <div class="hs-tablebox">
+                        <div id="hs-table-slot"></div>
+                    </div>
+                    <div class="hs-toastbed" id="hs-toastbed" aria-label="Toasts of this section"><p class="hs-toastbed__empty">A toast with Undo shows here after Delete.</p></div>
+                    <pre class="hs-log" id="hs-table-log" aria-live="polite">Press a button on a row; what the page would do shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ pause until -->
+            <section
+                class="hs-sec"
+                id="pause"
+                data-review-item="pause"
+                data-review-topic="pause"
+                data-review-topic-title="Pause until a date"
+                data-review-components="snooze runs"
+                data-review-title="Pause a schedule until a date"
+                data-review-choices='[{ "id": "pause-look", "label": "How the pause choices are offered", "once": true, "default": "menu", "options": [
+                    { "value": "menu", "label": "One button that opens a menu", "hint": "Recommended. Takes one button of room in a table row or a card; the choices (tomorrow, Monday, next week, pick a date) appear under it." },
+                    { "value": "chips", "label": "The choices as a row of chips", "hint": "Everything in sight at once, one press each; it needs a whole line, so it suits the schedule card more than a table row." }] }]'
+                aria-labelledby="h-pause"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-pause">Pause a schedule until a date</h2>
+                    <p>Stops a schedule for a while without losing it (a holiday, a migration), shows the exact day it resumes, and lists the runs that will be skipped meanwhile.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A card for <b>Back up · immich</b> with the pause picker. Choices are written with their exact moment (<b>Tomorrow 09:00</b>,
+                            <b>Monday 09:00</b>, <b>Next week</b>, <b>Pick a date…</b> with a date and a time, 24 hours, up to 30 days). Choosing one
+                            saves for a moment (the button shows <b>Pausing…</b>), then the line reads <b>Paused until Mon 26/10/2026 09:00</b> and the
+                            list under it shows the runs that fall inside the pause as <b>skipped</b>.
+                        </li>
+                        <li><b>Resume now</b> ends the pause; the list shows the schedule running again. The week above would draw those runs struck.</li>
+                        <li><b>Saving fails</b> answers the next pick with an error under the picker and leaves the schedule running.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A white card, the picker as an ordinary button with a down mark, the opened menu on the theme's opaque plate. Look at the
+                        words of each choice (the moment under the word, a gap between them), and that the card does not change size when the pause
+                        starts or ends.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="pause-component">
+                    <div role="group" aria-label="Look">
+                        <b>Look</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-pause-look="menu">Menu</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-pause-look="chips">Chips</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-pause-state="running">Running</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-pause-state="paused">Paused</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-pause-state="fails">Saving fails</button>
+                    </div>
+                </div>
+                <div class="hs-frame" id="pause-component">
+                    <section class="kp-card hs-pausecard" aria-label="Back up, immich">
+                        <div class="hs-pausecard__head">
+                            <div>
+                                <p class="hs-label">Schedule</p>
+                                <p class="hs-pausecard__title"><b>Back up · immich</b><span>Every day at 12:00 · photos land during the day</span></p>
+                            </div>
+                            <div id="hs-snooze-host"></div>
+                        </div>
+                        <p class="hs-pausenote" id="hs-pause-note" role="status"></p>
+                        <div class="hs-pausecard__runs">
+                            <div class="kp-runs" data-kp-runs data-kp-runs-more="3" data-kp-time-zone="Europe/Brussels" id="hs-pause-runs"></div>
+                        </div>
+                    </section>
+                    <pre class="hs-log" id="hs-pause-log" aria-live="polite">Pick a choice; what the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ busy minutes -->
+            <section
+                class="hs-sec"
+                id="collisions"
+                data-review-item="collisions"
+                data-review-topic="heat"
+                data-review-topic-title="Busy minutes and coverage"
+                data-review-components="heat"
+                data-review-title="The busy hours: where two schedules start together"
+                aria-labelledby="h-collisions"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-collisions">The busy hours: where two schedules start together</h2>
+                    <p>Maps the week by weekday and hour and marks the hours in which two schedules (or a schedule and the host's nightly round) start in the same minute, so you move one before they fight over the disk.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A grid of 7 weekdays (Monday first) by 24 hours. A cell is empty (nothing starts), filled by the number of starts, and a
+                            warning with its words when two start in the same hour; a cell with a <b>same-minute clash</b> is toned as a problem and
+                            says so in its card. The summary row counts the starts per hour. Hover or focus a cell: <b>Mon 03:00-03:59: Back up ·
+                            vaultwarden 03:30, Back up · paperless 03:30</b>.
+                        </li>
+                        <li>
+                            Under the grid, the list of clashes (<b>4</b> lines): which two, when, and a button <b>Move … 15 minutes later</b> that changes
+                            the sample and redraws the grid; <b>Moved apart</b> shows the result. The button's words name the schedule it moves.
+                        </li>
+                        <li><b>Data</b>: Loading lays the busy card over the grid, Empty (<b>No schedules</b>) and Failed fill the same height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Quiet white cells, a soft navy for the count, an amber rule and the word for the same-hour cells and a red one for the
+                        same-minute clash, so the mark never rests on colour alone. Look at the gap between a cell's number and its edge, the hour
+                        labels in 24-hour form, and that the grid keeps its height in each state.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="collisions-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-col-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-col-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-col-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-col-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Clashes">
+                        <b>Clashes</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-col-fix="no">As scheduled</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-col-fix="yes">Moved apart</button>
+                    </div>
+                </div>
+                <div class="hs-frame" id="collisions-component">
+                    <div class="kp-heat hs-heat" data-kp-heat id="hs-collision-heat" aria-label="Schedule starts by weekday and hour"></div>
+                    <ul class="hs-clashes" id="hs-clashes" aria-label="Clashes"></ul>
+                </div>
+            </section>
+
+            <!-- ================================================================ coverage -->
+            <section
+                class="hs-sec"
+                id="coverage"
+                data-review-item="coverage"
+                data-review-topic="heat"
+                data-review-components="matrix"
+                data-review-title="Coverage: which stack has no backup schedule"
+                aria-labelledby="h-coverage"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-coverage">Coverage: which stack has no backup schedule</h2>
+                    <p>Crosses every stack with every action and shows at a glance where a schedule exists and where none does, so a stack that is never backed up cannot hide in a list.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Stacks down the side (immich, paperless, vaultwarden, jellyfin, traefik, prometheus, grafana, loki, syncthing, kyu,
+                            almanac, inbox, metrics, admin), actions across (Back up, Update, Restore test). A scheduled cell says <b>Daily 03:30</b>
+                            or <b>Weekend 09:00</b>; a cell with nothing is empty, except in the <b>Back up</b> column where it is toned and reads
+                            <b>No backup schedule</b>. The summary line counts them: <b>7 stacks have no backup schedule</b>.
+                        </li>
+                        <li>
+                            Press an empty <b>Back up</b> cell: the page would open the form for that stack and action (the line under the grid
+                            says so). <b>Only gaps</b> hides every stack that has all it needs.
+                        </li>
+                        <li><b>Data</b>: Loading, Empty and Failed fill the grid's footprint with the busy card or a plate and a normal-size button.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Plain white cells, the missing-backup cells in a warning tone with their words, row and column heads in the label colour.
+                        Look at the words inside the cells (a gap to the edge, no clipping) and the 390 px layout.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="coverage-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-cov-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-cov-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-cov-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-cov-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Show">
+                        <b>Show</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-cov-show="all">Every stack</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-cov-show="gaps">Only gaps</button>
+                    </div>
+                </div>
+                <div class="hs-frame" id="coverage-component">
+                    <p class="hs-summary" id="hs-cov-summary" role="status"></p>
+                    <div class="kp-matrix hs-matrix" data-kp-matrix data-kp-view="grid" aria-label="Which stack has which schedule" id="hs-coverage"></div>
+                    <pre class="hs-log" id="hs-cov-log" aria-live="polite">Press an empty cell; what the page would do shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ history -->
+            <section
+                class="hs-sec"
+                id="history"
+                data-review-item="history"
+                data-review-topic="history"
+                data-review-topic-title="History of runs"
+                data-review-components="gantt dialog"
+                data-review-title="History: what ran, when and for how long"
+                aria-labelledby="h-history"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-history">History: what ran, when and for how long</h2>
+                    <p>Draws every run of the last days as a bar in the lane of the schedule that started it, so a failed or overlong run stands out, and opens the job behind a bar.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            One lane per schedule (this sample shows the seven with the busiest week) in the window (the 24 hours or 7 days chosen in the head of the timeline), a bar per run
+                            from its start to its end: green when it worked, red with the word when it failed, a moving bar while one is running and
+                            a hollow one for the next planned run. A run that was skipped or missed is a small mark in its lane, with its reason in its card
+                            (<b>Skipped: busy</b>, <b>Missed: the host was down</b>). Drag across the plot to pick a range; the day names on the axis select a day.
+                        </li>
+                        <li>
+                            Rest on a bar for its card; press it and a dialog opens with the job's numbers (<b>Job 4412</b>, action, stack,
+                            start and end in dd/mm/yyyy HH:mm, state, how long) and a link to Activity. <b>Show the job</b> in the controls opens it without a bar.
+                        </li>
+                        <li><b>Data</b>: Loading lays the busy card over the lanes; Empty and Failed put their words over the plot at its own height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Thin hairlines for the axis, bars in the success and destructive tones with a word beside the colour, the now-line in navy. Look
+                        at the lane names (no clipping, a gap to the plot) and the bars of the same lane that must not overlap.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="history-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hs-hist-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-hist-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-hist-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-hist-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Job dialog">
+                        <b>Job</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hs-hist-job="open">Show the job</button>
+                    </div>
+                </div>
+                <div class="hs-frame" id="history-component">
+                    <section
+                        class="kp-gantt"
+                        data-kp-gantt
+                        data-kp-gantt-days
+                        data-kp-gantt-ranges="24h 7d"
+                        data-kp-gantt-range="7d"
+                        data-kp-gantt-ghosts="1 1 1 1 1 1 1"
+                        data-kp-time-zone="Europe/Brussels"
+                        aria-label="Runs of the last 7 days"
+                        id="hs-gantt"
+                    ></section>
+                    <pre class="hs-log" id="hs-hist-log" aria-live="polite">Open a bar; what the page would do shows here.</pre>
+                </div>
+                <dialog class="kp-dialog" id="hs-job" aria-labelledby="hs-job-title"></dialog>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-homelab-schedules-0b6d2c1e-5a43-4f1b-9f0c-3d6a8e7b2c91" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
