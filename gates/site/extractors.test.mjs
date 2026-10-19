@@ -305,7 +305,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-19 [round-2-1019]: the four package-fix branches merged (shared line of the package components, calendar and
     // pipeline states, run timeline and uses map, data table); recounted with extractKnobs() after the last merge: 1010.
     // Re-pinned 2026-10-19 [round-3-1019]: the four fix and option branches merged (remind-me, Copy, checklist and timer states, action size, calm freshness, computed sentence field, hover card, wheel, form grid); recounted with extractKnobs(): 1021.
-    assert.equal(result.expected, 1021, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-19 [round-4-1019]: heat-deplist merged; recounted: 1022.
+    assert.equal(result.expected, 1022, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -372,7 +373,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Recounted 2026-10-19 [align-grid-1019] with the same rounds, every one read through var(): 994.
     // Recounted 2026-10-19 [round-2-1019] after the four package-fix merges, every one read through var(): 1001.
     // Recounted 2026-10-19 [round-3-1019] after the four fix and option merges, every one read through var(): 1012.
-    assert.equal(result.readCount, 1012);
+    // Recounted 2026-10-19 [round-4-1019]: heat-deplist merged; recounted: 1013.
+    assert.equal(result.readCount, 1013);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

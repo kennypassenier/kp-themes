@@ -68,6 +68,9 @@ export type HeatRow = {
     cells: readonly HeatCell[];
 };
 export type HeatSpec = {
+    /**
+     * `minor: true` draws no name, `minor: false` always does
+     */
     columns?: readonly {
         key: string;
         label: string;
@@ -99,7 +102,7 @@ export type HeatSpec = {
         columns: number;
     };
     /**
-     * every how many columns the axis names one (default 3; the last always)
+     * every how many columns the axis names one (default 3; the last always); columns with `minor` set do not count
      */
     every?: number;
     /**

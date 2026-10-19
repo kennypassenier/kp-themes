@@ -138,7 +138,7 @@ const TONES = ['ok', 'warn', 'bad', 'muted', 'future', 'before', 'none', 'level'
 
 /**
  * @typedef {object} HeatSpec
- * @property {readonly { key: string, label: string, minor?: boolean }[]} [columns]
+ * @property {readonly { key: string, label: string, minor?: boolean }[]} [columns]  `minor: true` draws no name, `minor: false` always does
  * @property {HeatRow} [summary]
  * @property {readonly HeatRow[]} [rows]
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]  default ready
@@ -146,7 +146,7 @@ const TONES = ['ok', 'warn', 'bad', 'muted', 'future', 'before', 'none', 'level'
  * @property {string} [text]  the plate's sentence under the heading (an error says the package's own when none is given)
  * @property {Node | string | null} [art]  a picture over the heading of the empty and error plates
  * @property {{ rows: number, columns: number }} [skeleton]  the shape of the loading state when there is no data yet
- * @property {number} [every]    every how many columns the axis names one (default 3; the last always)
+ * @property {number} [every]    every how many columns the axis names one (default 3; the last always); columns with `minor` set do not count
  * @property {'start' | 'end'} [axis]  where the column axis stands (default start)
  * @property {boolean} [toggle]  row labels are buttons that toggle (else `data-kp-heat-toggle` on the grid)
  * @property {string | null} [picked]  the key of the picked column
@@ -409,17 +409,25 @@ export function setHeat(el, spec) {
     /** @param {string} key @param {string} text @param {boolean} minor */
     const column = (key, text, minor) => {
         const head = make(doc, 'span', 'kp-heat__col', { role: 'columnheader', 'data-col-key': key });
+        const isPicked = picked != null && key === picked;
         if (minor) head.setAttribute('data-kp-minor', '');
-        if (picked != null && key === picked) head.setAttribute('data-kp-picked', '');
-        head.textContent = text;
+        if (isPicked) head.setAttribute('data-kp-picked', '');
+        // A minor name is not drawn: its header keeps the name for a screen reader, with no text to find under a neighbour [heat-deplist-1019].
+        if (minor && !isPicked && text) head.setAttribute('aria-label', text);
+        else head.textContent = text;
         return head;
     };
     const axis = make(doc, 'div', 'kp-heat__row kp-heat__axis', { role: 'row' });
     axis.append(make(doc, 'span', 'kp-heat__label', { role: 'columnheader', 'aria-hidden': 'true' }));
     const heads = make(doc, 'div', 'kp-heat__cells', { role: 'none' });
-    columns.forEach((c, i) =>
-        heads.append(column(c.key, loading && !c.label ? '' : c.label, c.minor ?? !(i % every === 0 || i === columns.length - 1))),
-    );
+    // `every` counts the columns that are not marked: `minor: true` is never named and does not count, `minor: false` is always
+    // named, and the rest are named every `every`th, the last of them always (the name before it gives way when the two would
+    // stand side by side) [heat-deplist-1019].
+    const open = columns.map((c, i) => (c.minor === undefined ? i : -1)).filter((i) => i >= 0);
+    const named = new Set(open.filter((_, at) => at % every === 0 || at === open.length - 1));
+    const before = open[open.length - 2];
+    if (every > 1 && before !== undefined && before === open[open.length - 1] - 1) named.delete(before);
+    columns.forEach((c, i) => heads.append(column(c.key, loading && !c.label ? '' : c.label, c.minor ?? !named.has(i))));
     axis.append(heads);
 
     let r = -1;
