@@ -293,13 +293,9 @@ ${s.expect.map((e) => `                        <li>${e}</li>`).join('\n')}
             </section>`;
 }
 
-/** The five parts, each its own review (Kenny's coordinator, 2026-10-19): the shared kit stays here, every part gets its own page. */
+/** One bundled review (Kenny, 2026-10-19: demos from one project are bundled, up to 25 items): every kit page in one demo. */
 const PARTS = [
-    { dir: 'chassis-kit-shell', name: 'shell', round: '0a03b1be-8fc4-4ad2-a1f1-928e31093dd7', title: 'The shell and the error page', ids: ['shell-bar', 'shell-phone', 'error-page'], about: 'The bar, the search palette, the shortcuts, the phone’s tab bar and the error page: what stands around every page of the kit.' },
-    { dir: 'chassis-kit-status', name: 'status', round: '8f4d47e7-df65-436b-8b67-6254caf06077', title: 'The status page', ids: ['status-page', 'status-sections'], about: 'The status page as an operations page, and the sections a service adds to it.' },
-    { dir: 'chassis-kit-clients', name: 'clients', round: '7904a752-e0d6-4bd7-91c1-e278ce9246bc', title: 'The clients page', ids: ['clients-list', 'clients-issue', 'clients-manage', 'clients-first'], about: 'The list of clients, issuing one, managing one, and the first client’s walk-through.' },
-    { dir: 'chassis-kit-login', name: 'login', round: 'ad2c2843-1d5d-4dce-a21a-ebd268059fa4', title: 'The login page', ids: ['login'], about: 'The page in front of the dashboard: a passkey first, the token as the fallback.' },
-    { dir: 'chassis-kit-passkeys', name: 'passkeys', round: 'd279180e-25d8-48e8-8c9a-09ba1d76960f', title: 'The passkeys page', ids: ['passkeys-list', 'passkeys-qr'], about: 'The ways to sign in, and registering from another device.' },
+    { dir: 'chassis-kit-pages', name: 'kit-pages', round: 'ce3d6376-0a26-4d7b-a547-d3ab4a480025', title: 'every kit page', ids: SECTIONS.map((s) => s.id), about: 'The shell and the error page, the status page and the sections a service adds, the clients page, the login page and the passkeys page: everything the kit serves to every service.' },
 ];
 
 for (const part of PARTS) {
