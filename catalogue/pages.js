@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): the stacks side of the dashboard on 11.0.0, formal only, sample data in the dashboard's own shapes: the Stacks fleet (cards, table, batch actions, nightly backups), the Apps launcher, Presets, Retired stacks, the stack page with Apply and Update, and the Map's side panel, Matrix, Capacity, Disk growth and Stale images.
+            {
+                href: 'research/app-homelab-stacks/demo.html',
+                label: 'Homelab dashboard: stacks — fleet, apps, stack page, changes and the Map',
+                about: 'Everything about the stacks in the homelab dashboard, rebuilt on the package. 23 sections in formal with sample data: the fleet as cards and as a table with ticking many and acting together, which stack is hungry and which night a backup was missed, the Apps launcher with each app\'s last 90 days, finding and comparing presets, retired stacks and wiping their data with a typed name, the stack page (why it is red, apps, backups), reading what Apply would change and running it step by step with one failure, release notes and the update run, and the Map\'s side panel, matrix view, capacity, disk growth and stale images. The network graph is not redrawn. You judge the look and set the defaults where a section offers a choice; the item count on tabs is not there yet.',
+            },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): one bundled review of 25 sections for the operations half of the dashboard (topics T8, T3, T11 and T7 of docs/kp-themes-11-adoption.md in the homelab repository): Backups, Calendar and Restore; Firewall path-trace; Host and the System landing; Console and host log. Formal only, sample data. Hand-written page: research/app-homelab-backups.
             {
                 href: 'research/app-homelab-backups/demo.html',
