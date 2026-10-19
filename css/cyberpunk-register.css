@@ -6283,6 +6283,10 @@
         --kp-week-pill-radius: 0;
         --kp-week-now: var(--primary);
     }
+    /* A planned run [gaps-time-1019]: scanlines, the screen the plan is shown on. */
+    [data-theme='cyberpunk'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--kp-gantt-fill) 60%, transparent) 0 1px, transparent 1px 4px);
+    }
     [data-theme='cyberpunk'] .kp-gantt {
         --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: 0;

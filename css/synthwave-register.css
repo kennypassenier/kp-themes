@@ -4674,6 +4674,10 @@
         --kp-week-pill-radius: 2px;
         --kp-week-now: var(--primary);
     }
+    /* A planned run [gaps-time-1019]: sunset bands. */
+    [data-theme='synthwave'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--kp-gantt-fill) 55%, transparent) 0 2px, transparent 2px 5px);
+    }
     [data-theme='synthwave'] .kp-gantt {
         --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: 2px;

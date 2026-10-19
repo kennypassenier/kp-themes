@@ -3035,6 +3035,10 @@
         --kp-week-pill-radius: calc(var(--radius) * 0.8);
         --kp-week-now: var(--primary);
     }
+    /* A planned run [gaps-time-1019]: wide soft bands, like long light. */
+    [data-theme='solstice'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--kp-gantt-fill) 26%, transparent) 0 4px, transparent 4px 10px);
+    }
     [data-theme='solstice'] .kp-gantt {
         --kp-gantt-bar-radius: calc(var(--radius) * 0.8);
         --kp-gantt-now: var(--primary);

@@ -21,7 +21,7 @@ export type CardStateOptions = {
      */
     text?: string;
     /**
-     * a button or link under an empty note ("Add an appointment"); an error note always has Try again
+     * a button or link under an empty note ("Add an appointment"), or several (an array, or a fragment): they lie on the plate's own action row; an error note always has Try again
      */
     action?: Node | readonly Node[] | null;
     /**

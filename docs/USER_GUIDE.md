@@ -1072,6 +1072,28 @@ take the grid's whole footprint with the busy card (loading) or the state plate 
 'empty' | 'error', words?, { text?, art? })`, its Retry `kp-gantt-retry`; `setGanttRuns()` and `setGanttPoints()` bring a
 loading, empty or failed timeline back to ready.
 
+#### The run timeline: planned bars, a bare look and labels outside narrow bars [gaps-time-1019]
+
+A run's `state` may be `planned`: still to come, from `start` to `end`. It is an outline on the card's own ground with the
+theme's own hatching (formal fine diagonal rules, brutalism hard stripes, blueprint cross-hatch, cyberpunk scanlines, forest
+dots …), never a filled bar; with a `series` the outline and hatching take that chart colour. The legend names it
+("planned") only while a run is planned. A window that follows now (Live) ends just after now, so a plan is read in a fixed or
+fitted window (`data-kp-gantt-range="all"`, or `setGanttWindow`).
+
+Three options, read again when the attribute changes:
+
+| Attribute | Default | What it does |
+| --- | --- | --- |
+| `data-kp-gantt-toolbar="off"` | on | Leaves out the range buttons and Live, and the brush that selects a range (a timeline that is read, not searched); the window is `data-kp-gantt-range`'s or the page's `setGanttWindow`. A selection the page makes (day buttons, `setGanttSelection`) still shows its chip in the toolbar's place. The hint then says only "Click a bar to open it" (`ganttHintOpen`). |
+| `data-kp-gantt-legend="off"` | on | Leaves out the legend of the states; the page's own series, kinds and stretches stay, and a legend left with nothing is not drawn. |
+| `data-kp-gantt-hint="off"` | on | Leaves out the line under the timeline. |
+
+A label that does not fit its bar stands outside it: after the bar when its row has room before the next bar, else before it,
+else cut with an ellipsis on the roomier side, and left to the bar's name and card when even that is under 3 rem
+(`data-kp-label` on the bar: `after`, `before` or `none`; the label is a `.kp-gantt__outside` sibling in the lane, so a
+theme's clip cannot cut it). The rows are walked in time order, so two labels never meet, and a growing bar takes its label
+back in once it is wide enough.
+
 ### Key figures on allowed column counts
 
 A strip whose number of tiles changes can leave one tile alone on its last
@@ -2384,6 +2406,18 @@ Both fire `kp-countdown-change` (`{ state, remaining, total }`, on a start, a pa
 `timerStarted`, `timerResumed`, `timerLeft`, `timerDuration`, `timerDiscLeft`, `timerUnderMinute`, `timerDiscCaption`).
 The recipes app's named kitchen timers are their own component; they may run on `countdownClock()` too.
 
+**Options of both timers** (attributes, read again when they change; the disc spells them `data-kp-timer-disc-…`, the
+digits `data-kp-countdown-…`) [gaps-time-1019]:
+
+| Attribute | Default | What it does |
+| --- | --- | --- |
+| `…-until="14:30"` | off | Counts down to a moment instead of for a length. `14:30` (or `14:30:15`) is the next such time on the device's clock (today when it is still ahead, else tomorrow), a date and time (`2026-10-20T09:00`) or epoch ms is that moment. The timer starts at once, has no controls (a moment does not wait) and counts anew when a sleeping tab comes back. A moment that has passed reads "Time is up". The disc's line says "until 14:30" (`timerUntil`), "until 20/10/2026 09:00" on another day. |
+| `…-controls="none"` | all | Display only: Start, Pause, +1 min and Reset are not built, so they are not in the tab order either, and their row is not laid out. The page drives the clock with `timerDiscOf(el)` / `countdownOf(el)` (`start`, `pause`, `reset(seconds)`). |
+
+The disc's caption follows the clock, so `timerDiscOf(el).reset(900)` from the page changes "Focus · 25 min" to
+"Focus · 15 min", and the digits of a countdown take the hours format again when a `reset(seconds)` brings the timer back
+to an hour or more. `parseUntil(value, now)` and `untilLabel(ms, now)` are the rules.
+
 ### A range of time
 
 The window of a metrics page, as presets or a custom from–to:
@@ -2677,6 +2711,15 @@ A step with `answer` is a question; a step without stays a reading step, so one 
 (JSON, "Nothing to log" and "Not sure" first), `data-kp-back`, `data-kp-choice-layout` (`auto`, `stack`, `row`), `data-kp-choice-height` (`lg`, `md`), `data-kp-progress` (`count`, `off`), `data-kp-summary` (`on`),
 `data-kp-resume` (`auto`, `ask`, `off`) with `data-kp-remember="checkin"` and `data-kp-resume-until` (`midnight`, `hours:N`, `never`). The screen is not kept on and Read aloud is off in answer mode. `kp-focus-steps-before-answer` is cancelable.
 `setFocusStepsState(el, 'save-error')` keeps the answers and says "Could not save your answers" with Try again (`kp-focus-steps-save-retry`). Keys while the focus is in the view: ArrowUp and ArrowDown, Enter, `s` (same as yesterday), `u` (usual), `n` (Not today).
+
+**Resume, and the empty plate's action** [gaps-time-1019]. With `data-kp-remember="<name>"` the place is kept in cook mode as well as in
+answer mode and put back after a reload (`data-kp-resume` `auto`, `ask` or `off`, `data-kp-resume-until`): the active step,
+the place on every track, the active track and the steps passed, so a recipe with two tracks comes back as it was left, not on one step
+with everything else undone. `kp-focus-steps-resume` carries `{ index, answers, track, done }`. A stored place is only used for the
+same steps (a key made of their ids or titles); a changed recipe starts at the top. A running timer is not part of it, and the place
+is forgotten when the flow is done. `data-kp-focus-steps-empty-action="Add a recipe"` puts a normal-size button on the empty plate
+(read mode and answer mode) that fires `kp-focus-steps-empty-action` on the root, like Retry on the failed plate; it and
+`data-kp-focus-steps-empty` are read again when they change.
 The words are `focus…`. Knobs: `--kp-focus-answer-min`, `--kp-focus-answer-gap`.
 ### A picker with the usual on top
 

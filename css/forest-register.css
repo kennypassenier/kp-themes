@@ -4611,6 +4611,11 @@
         --kp-week-pill-radius: var(--kp-sig-fo-part);
         --kp-week-now: var(--accent-foreground);
     }
+    /* A planned run [gaps-time-1019]: seeds: a scatter of dots. */
+    [data-theme='forest'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--kp-gantt-fill) 65%, transparent) 0 1px, transparent 1.5px);
+        background-size: 7px 7px;
+    }
     [data-theme='forest'] .kp-gantt {
         --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: 0 0.45rem;

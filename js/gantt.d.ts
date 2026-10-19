@@ -12,7 +12,7 @@ export declare const GANTT_TICK_MS = 1000;
 export declare const GANTT_RETRY_EVENT = "kp-gantt-retry";
 /** The steps an axis chooses from, in seconds. */
 export declare const GANTT_STEPS: readonly number[];
-export type GanttRunState = 'queued' | 'running' | 'ok' | 'failed';
+export type GanttRunState = 'queued' | 'running' | 'ok' | 'failed' | 'planned';
 export type GanttRun = {
     /**
      * what the page calls the run; reported by `kp-gantt-open`
@@ -27,11 +27,11 @@ export type GanttRun = {
      */
     label: string;
     /**
-     * epoch ms or an ISO string; for a queued run, the moment it was queued
+     * epoch ms or an ISO string; for a queued run, the moment it was queued; for a planned run, when it is to begin
      */
     start: number | string;
     /**
-     * when it ended; ignored for a queued or running run
+     * when it ended, or for a planned run when it is to end; ignored for a queued or running run
      */
     end?: number | string | null;
     state: GanttRunState;
@@ -203,6 +203,11 @@ export type GanttModel = {
     } | null;
     dragMoved: boolean;
     tickKey: string;
+    labels: Map<HTMLElement, {
+        key: string;
+        width: number;
+    }>;
+    outside: Map<HTMLElement, HTMLElement>;
 };
 /**
  * The seconds a range word names: `90m`, `6h`, `24h`, `7d`. NaN when it names nothing.

@@ -4507,6 +4507,11 @@
         --kp-week-pill-radius: var(--kp-sig-pa-r-chip);
         --kp-week-now: var(--primary);
     }
+    /* A planned run [gaps-time-1019]: soft round dots, like a sticker sheet. */
+    [data-theme='pastel'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--kp-gantt-fill) 55%, transparent) 0 1.5px, transparent 2px);
+        background-size: 9px 9px;
+    }
     [data-theme='pastel'] .kp-gantt {
         --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: var(--kp-sig-pa-r-chip);

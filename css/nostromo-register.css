@@ -3981,6 +3981,10 @@
         --kp-week-pill-radius: var(--kp-sig-no-tape);
         --kp-week-now: var(--kp-sig-no-led);
     }
+    /* A planned run [gaps-time-1019]: tape ticks, vertical. */
+    [data-theme='nostromo'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(90deg, color-mix(in oklab, var(--kp-gantt-fill) 60%, transparent) 0 1px, transparent 1px 6px);
+    }
     [data-theme='nostromo'] .kp-gantt {
         --kp-gantt-bar-radius: var(--kp-sig-no-tape);
         --kp-gantt-now: var(--kp-sig-no-led);

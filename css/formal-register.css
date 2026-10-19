@@ -4173,6 +4173,10 @@
     [data-theme='formal'] .kp-week {
         --kp-week-pill-radius: 2px;
     }
+    /* A planned run [gaps-time-1019]: fine diagonal rules, a drawn plan. */
+    [data-theme='formal'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--kp-gantt-fill) 70%, transparent) 0 1px, transparent 1px 5px);
+    }
     [data-theme='formal'] .kp-gantt {
         --kp-gantt-bar-radius: 2px;
     }

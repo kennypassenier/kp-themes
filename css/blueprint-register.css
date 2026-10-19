@@ -4617,6 +4617,10 @@
         --kp-week-pill-radius: 0;
         --kp-week-now: var(--primary);
     }
+    /* A planned run [gaps-time-1019]: drafting cross-hatch. */
+    [data-theme='blueprint'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--kp-gantt-fill) 40%, transparent) 0 1px, transparent 1px 8px), repeating-linear-gradient(-45deg, color-mix(in oklab, var(--kp-gantt-fill) 40%, transparent) 0 1px, transparent 1px 8px);
+    }
     [data-theme='blueprint'] .kp-gantt {
         --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: 0;

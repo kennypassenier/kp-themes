@@ -4580,6 +4580,10 @@
         --kp-week-pill-radius: 0;
         --kp-week-now: var(--primary);
     }
+    /* A planned run [gaps-time-1019]: a lattice of diamonds. */
+    [data-theme='deco'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(45deg, color-mix(in oklab, var(--kp-gantt-fill) 50%, transparent) 0 1px, transparent 1px 9px), repeating-linear-gradient(-45deg, color-mix(in oklab, var(--kp-gantt-fill) 50%, transparent) 0 1px, transparent 1px 9px);
+    }
     [data-theme='deco'] .kp-gantt {
         --kp-gantt-bar-radius: 0;
         --kp-gantt-now: var(--primary);

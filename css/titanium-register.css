@@ -3737,6 +3737,10 @@
         --kp-week-pill-radius: 0;
         --kp-week-now: var(--chart-1);
     }
+    /* A planned run [gaps-time-1019]: brushed metal: fine vertical grain. */
+    [data-theme='titanium'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(90deg, color-mix(in oklab, var(--kp-gantt-fill) 35%, transparent) 0 1px, transparent 1px 3px);
+    }
     [data-theme='titanium'] .kp-gantt {
         --kp-gantt-bar-radius: 0;
         --kp-gantt-now: var(--chart-1);

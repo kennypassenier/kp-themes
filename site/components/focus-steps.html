@@ -495,6 +495,7 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>data-kp-focus-mode</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-focus-steps</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-focus-steps-empty</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-focus-steps-empty-action</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-focus-steps-error</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-focus-steps-kind</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-focus-steps-last</code></td><td>written</td></tr>
@@ -549,6 +550,7 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>kp-focus-steps-answer</code></td><td>Fired on the root when a question was answered: `{ index, id, value, source: 'tap' | 'same' | 'skip', same?, previous }`.</td></tr>
                             <tr><td><code>kp-focus-steps-resume</code></td><td>Fired on the root when answers were put back after a break: `{ index, answers }`.</td></tr>
                             <tr><td><code>kp-focus-steps-retry</code></td><td>Fired on the root when Retry is pressed on the plate of questions that could not be read.</td></tr>
+                            <tr><td><code>kp-focus-steps-empty-action</code></td><td>Fired on the root when the action of the empty plate (`data-kp-focus-steps-empty-action`) is pressed [gaps-time-1019].</td></tr>
                             <tr><td><code>kp-focus-steps-save-retry</code></td><td>Fired on the root when Try again is pressed on the plate of answers that could not be saved.</td></tr>
                             <tr><td><code>kp-focus-steps-track</code></td><td>Fired on the root when the active track changed: `{ track, key, from, index, step, reason }`.</td></tr>
                             <tr><td><code>kp-focus-steps-track-attention</code></td><td>Fired on the root when a track asks for the person: `{ track, key, reason: 'timer' | 'ready', index }`.</td></tr>

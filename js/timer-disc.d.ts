@@ -12,9 +12,11 @@ export declare const timerDiscOf: (el: Element) => import("./countdown.js").Coun
 /**
  * Wire every visual timer under `root`.
  * @param {ParentNode} [root]
- * @param {{ now?: () => number }} [options]
+ * @param {{ now?: () => number, wall?: () => number }} [options] `now` is the clock's (performance.now), `wall` the device's
+ *   date and time (Date.now), which an `until` option is counted against
  * @returns {() => void} detach
  */
-export declare function attachTimerDiscs(root?: ParentNode, { now }?: {
+export declare function attachTimerDiscs(root?: ParentNode, { now, wall }?: {
     now?: () => number;
+    wall?: () => number;
 }): () => void;

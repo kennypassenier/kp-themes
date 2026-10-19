@@ -4555,6 +4555,11 @@
         --kp-week-pill-radius: 0;
         --kp-week-now: var(--foreground);
     }
+    /* A planned run [gaps-time-1019]: hard wide stripes under a heavy outline. */
+    [data-theme='brutalism'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--kp-gantt-fill) 70%, transparent) 0 3px, transparent 3px 9px);
+        border-width: 2px;
+    }
     [data-theme='brutalism'] .kp-gantt {
         --kp-gantt-bar-radius: 0;
         --kp-gantt-row: 2rem;

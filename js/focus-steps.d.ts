@@ -10,6 +10,8 @@ export declare const FOCUS_STEPS_ANSWER_EVENT = "kp-focus-steps-answer";
 export declare const FOCUS_STEPS_RESUME_EVENT = "kp-focus-steps-resume";
 /** Fired on the root when Retry is pressed on the plate of questions that could not be read. */
 export declare const FOCUS_STEPS_RETRY_EVENT = "kp-focus-steps-retry";
+/** Fired on the root when the action of the empty plate (`data-kp-focus-steps-empty-action`) is pressed [gaps-time-1019]. */
+export declare const FOCUS_STEPS_EMPTY_ACTION_EVENT = "kp-focus-steps-empty-action";
 /** Fired on the root when Try again is pressed on the plate of answers that could not be saved. */
 export declare const FOCUS_STEPS_SAVE_RETRY_EVENT = "kp-focus-steps-save-retry";
 /** Fired on the root when the active track changed: `{ track, key, from, index, step, reason }`. */
@@ -136,17 +138,30 @@ export type FocusState = {
      * the interval that keeps the lanes' clocks, 0 when none
      */
     ticker: number;
-    pendingResume: {
-        index: number;
-        answers: FocusState['answers'];
-        startedAt: number;
-    } | null;
+    pendingResume: Progress | null;
     finished: {
         total: number;
         answers: FocusState['answers'];
         startedAt: number;
         finishedAt: number;
     } | null;
+};
+export type Progress = {
+    index: number;
+    answers: FocusState['answers'];
+    startedAt: number;
+    /**
+     * the key of the active track
+     */
+    track?: string;
+    /**
+     * the place on every track, by track key
+     */
+    positions?: Record<string, number>;
+    /**
+     * the steps passed
+     */
+    done?: number[];
 };
 export type Track = {
     /**

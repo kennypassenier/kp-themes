@@ -10772,16 +10772,111 @@
         --kp-gantt-series: var(--chart-5);
     }
 
+    /* A planned run [gaps-time-1019]: still to come, so it is an outline on the card's own ground with hatching in its colour, never
+     * a filled bar (that is what happened). Every theme draws its own hatching on it (its register); a series colours the outline and
+     * the hatching. The words stay in the page's ink. */
+    .kp-gantt__run[data-kp-state='planned'],
+    .kp-gantt__swatch[data-kp-state='planned'] {
+        --kp-gantt-fill: var(--primary);
+        --kp-gantt-ink: var(--foreground);
+        --kp-gantt-hatch: color-mix(in oklab, var(--kp-gantt-fill) 55%, transparent);
+        background-color: var(--card);
+        background-image: repeating-linear-gradient(135deg, var(--kp-gantt-hatch) 0 1px, transparent 1px 0.4375rem);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series] {
+        --kp-gantt-fill: var(--chart-1);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series='2'] {
+        --kp-gantt-fill: var(--chart-2);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series='3'] {
+        --kp-gantt-fill: var(--chart-3);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series='4'] {
+        --kp-gantt-fill: var(--chart-4);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series='5'] {
+        --kp-gantt-fill: var(--chart-5);
+    }
+
     .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label::before {
         content: var(--kp-glyph-failed, '✕');
         margin-inline-end: 0.25rem;
         font-weight: 700;
     }
 
+    /* A bar too narrow for any words keeps none inside it; js/gantt.js puts the label of a bar that has room around it outside [gaps-time-1019]. */
     @container kp-gantt-run (max-width: 2rem) {
-        .kp-gantt__label {
+        .kp-gantt__run:not([data-kp-label]) .kp-gantt__label {
             display: none;
         }
+    }
+
+    /* A label that does not fit its bar stands outside it [gaps-time-1019]: a sibling of the bar in its lane (js/gantt.js
+     * `data-kp-label` on the bar, `.kp-gantt__outside` beside it), so nothing a theme does to the bar (a clip, a notch) cuts it.
+     * It is placed by the bar's own custom properties, after the bar or (with no room there) before it, on the card's own ground
+     * so the rules under it do not cross the words. `none`: no room anywhere, the bar's name and card carry the words. */
+    .kp-gantt__run[data-kp-label='after'] > .kp-gantt__label,
+    .kp-gantt__run[data-kp-label='before'] > .kp-gantt__label,
+    .kp-gantt__run[data-kp-label='none'] > .kp-gantt__label {
+        display: none;
+    }
+
+    .kp-gantt__outside {
+        position: absolute;
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        box-sizing: border-box;
+        max-inline-size: var(--kp-g-label-room, none);
+        padding-inline: 0.25rem;
+        overflow: hidden;
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--card);
+        color: var(--foreground);
+        font-size: 0.6875rem;
+        line-height: var(--kp-gantt-bar, 1.125rem);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-gantt__outside[data-kp-state='failed'] {
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) +
+                (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar-failed, 1.5rem)) / 2
+        );
+        line-height: var(--kp-gantt-bar-failed, 1.5rem);
+    }
+
+    .kp-gantt__outside[data-kp-state='failed']::before {
+        content: var(--kp-glyph-failed, '✕');
+        margin-inline-end: 0.25rem;
+        font-weight: 700;
+    }
+
+    .kp-gantt__outside[data-kp-side='after'] {
+        inset-inline-start: calc(
+            (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% +
+                max(var(--kp-gantt-bar-min, 0.5rem), (var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%) + 0.25rem
+        );
+    }
+
+    .kp-gantt__outside[data-kp-side='before'] {
+        inset-inline-end: calc(100% - (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% + 0.25rem);
+        text-align: end;
+    }
+
+    /* A bar that is still open ends on the line for now: its label starts clear of the line. */
+    .kp-gantt__outside[data-kp-side='after'][data-kp-state='running'],
+    .kp-gantt__outside[data-kp-side='after'][data-kp-state='queued'] {
+        margin-inline-start: 0.25rem;
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -10893,6 +10988,23 @@
         --kp-gantt-fill: var(--destructive);
         block-size: 0.8125rem;
         box-shadow: inset -3px 0 0 var(--destructive-foreground);
+    }
+
+    .kp-gantt__legend[hidden],
+    .kp-gantt__hint[hidden],
+    .kp-gantt__ranges[hidden],
+    .kp-gantt__live[hidden] {
+        display: none;
+    }
+
+    /* Without its toolbar (`data-kp-gantt-toolbar="off"`) the row is not laid out; it comes back only for a selection the page
+     * makes, which is shown in the toolbar's place. */
+    .kp-gantt[data-kp-gantt-bare] > .kp-gantt__bar:not(:has(> .kp-gantt__selection:not([hidden]))) {
+        display: none;
+    }
+
+    .kp-gantt[data-kp-gantt-bare] > .kp-gantt__bar {
+        min-block-size: 2rem;
     }
 
     .kp-gantt__hint {
@@ -18444,6 +18556,16 @@
 
     .kp-timer-disc__caption {
         align-self: start;
+    }
+
+    /* Display only (`data-kp-timer-disc-controls="none"`, or counting down to a moment): the buttons are not built, so their row
+     * is not laid out either. */
+    .kp-timer-disc[data-kp-timer-disc-bare] {
+        grid-template-rows: auto 1fr auto;
+    }
+
+    .kp-countdown[data-kp-countdown-bare] {
+        grid-template-rows: 1fr auto auto;
     }
 
     .kp-countdown__name {
@@ -31088,6 +31210,27 @@
         flex: 1 1 auto;
         /* The plate's words, text and Retry need the plate's floor; a short timeline's frame was clipped to its lanes. */
         min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
+    /* Loading: the frame takes the held height too (no floor: the lanes it had are the height), so the busy card covers the whole data area [gaps-time-1019]. */
+    .kp-gantt[data-kp-state='loading'] {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-gantt[data-kp-state='loading'] > .kp-gantt__frame {
+        flex: 1 1 auto;
+    }
+
+    /* A week held at its loaded height (js/footprint.js) gives its plate that whole height: the frame grows into what the week's
+     * title bar leaves [gaps-time-1019]. */
+    .kp-week:is([data-kp-state='empty'], [data-kp-state='error'], :has(> .kp-week__frame > .kp-week__plate:not([hidden]))) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-week:is([data-kp-state='empty'], [data-kp-state='error'], :has(> .kp-week__frame > .kp-week__plate:not([hidden]))) > .kp-week__frame {
+        flex: 1 1 auto;
     }
 
     .kp-gantt__plate > .kp-stateplate,

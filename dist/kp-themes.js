@@ -933,6 +933,7 @@ var init_strings = __esm({
         return rest ? `${hours} h ${rest} min` : `${hours} h`;
       },
       ganttHint: "Click a bar to open it \xB7 drag across the time to select a range",
+      ganttHintOpen: "Click a bar to open it",
       ganttAll: "All",
       ganttAllTitle: "Show everything on the timeline",
       ganttPoint: (label, when) => `${label}, ${when}`,
@@ -1004,6 +1005,7 @@ var init_strings = __esm({
       timerDiscLeft: (left, total) => `${left} left of ${total}`,
       timerUnderMinute: "under a minute",
       timerDiscCaption: (name, duration2) => `${name} \xB7 ${duration2}`,
+      timerUntil: (when) => `until ${when}`,
       // The range picker [kpadopt4-ideas].
       rangePresets: "Ranges",
       rangePresetName: (key) => {
@@ -29863,6 +29865,7 @@ var init_footprint = __esm({
       "[data-kp-datatable]",
       "[data-kp-runs]",
       "[data-kp-gantt]",
+      "[data-kp-week]",
       "[data-kp-code]:not(.kp-code--cell)",
       ".kp-ops"
     ].join(", ");
@@ -33291,7 +33294,9 @@ __export(countdown_exports, {
   countdownOf: () => countdownOf,
   formatCountdown: () => formatCountdown,
   parseDuration: () => parseDuration,
-  timerButton: () => timerButton
+  parseUntil: () => parseUntil,
+  timerButton: () => timerButton,
+  untilLabel: () => untilLabel
 });
 function parseDuration(value) {
   if (typeof value === "number") return Math.max(0, Math.round(value));
@@ -33308,6 +33313,31 @@ function parseDuration(value) {
     total += Number(m[1]) * (m[2] === "h" ? 3600 : m[2] === "m" ? 60 : 1);
   }
   return matched ? Math.round(total) : 0;
+}
+function parseUntil(value, nowMs) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : null;
+  const text = String(value ?? "").trim();
+  if (text === "") return null;
+  const clock4 = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/.exec(text);
+  if (clock4) {
+    const [h2, m, sec] = [Number(clock4[1]), Number(clock4[2]), Number(clock4[3] ?? 0)];
+    if (h2 > 23 || m > 59 || sec > 59) return null;
+    const at = new Date(nowMs);
+    at.setHours(h2, m, sec, 0);
+    if (at.getTime() <= nowMs) at.setDate(at.getDate() + 1);
+    return at.getTime();
+  }
+  if (/^\d{10,}$/.test(text)) return Number(text);
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+function untilLabel(ms, nowMs) {
+  const at = new Date(ms);
+  const two9 = (n) => String(n).padStart(2, "0");
+  const clock4 = `${two9(at.getHours())}:${two9(at.getMinutes())}`;
+  const today = new Date(nowMs);
+  const sameDay = at.getFullYear() === today.getFullYear() && at.getMonth() === today.getMonth() && at.getDate() === today.getDate();
+  return sameDay ? clock4 : `${two9(at.getDate())}/${two9(at.getMonth() + 1)}/${at.getFullYear()} ${clock4}`;
 }
 function formatCountdown(ms, hours) {
   const total = Math.max(0, Math.ceil(ms / 1e3 - 1e-9));
@@ -33399,7 +33429,7 @@ function timerButton(doc, className, words, title) {
   if (title) button.title = title;
   return { button, label };
 }
-function attachCountdowns(root = document, { now } = {}) {
+function attachCountdowns(root = document, { now, wall } = {}) {
   const cleanups = [];
   const timers = (
     /** @type {HTMLElement[]} */
@@ -33412,15 +33442,26 @@ function attachCountdowns(root = document, { now } = {}) {
     if (CLOCKS.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
-    const seconds2 = parseDuration(el16.dataset.kpCountdown);
-    const step = parseDuration(el16.dataset.kpCountdownStep) || COUNTDOWN_STEP;
-    const name = el16.dataset.kpCountdownName ?? "";
-    const disabled2 = el16.hasAttribute("data-kp-countdown-disabled");
+    const wallNow = wall ?? (() => Date.now());
     el16.classList.add("kp-countdown");
+    let seconds2 = 0;
+    let step = COUNTDOWN_STEP;
+    let name = "";
+    let disabled2 = false;
+    let bare = false;
+    let until = null;
+    const read = () => {
+      const at = wallNow();
+      until = parseUntil(el16.dataset.kpCountdownUntil, at);
+      seconds2 = until !== null ? Math.max(0, Math.ceil((until - at) / 1e3)) : parseDuration(el16.dataset.kpCountdown);
+      step = parseDuration(el16.dataset.kpCountdownStep) || COUNTDOWN_STEP;
+      name = el16.dataset.kpCountdownName ?? "";
+      disabled2 = el16.hasAttribute("data-kp-countdown-disabled");
+      bare = until !== null || el16.dataset.kpCountdownControls === "none";
+    };
+    read();
     const title = doc.createElement("p");
     title.className = "kp-countdown__name";
-    title.textContent = name;
-    title.hidden = name === "";
     const time = doc.createElement("p");
     time.className = "kp-countdown__time";
     time.setAttribute("role", "timer");
@@ -33436,14 +33477,11 @@ function attachCountdowns(root = document, { now } = {}) {
     const said = doc.createElement("span");
     said.className = "kp-sr-only";
     said.setAttribute("role", "status");
-    const controls = doc.createElement("div");
-    controls.className = "kp-countdown__controls";
-    const go = timerButton(doc, "kp-button--primary kp-countdown__go", [s2.timerStart, s2.timerPause, s2.timerResume]);
-    const more = timerButton(doc, "kp-countdown__more", [s2.timerAddMinute(step)], s2.timerAddMinuteTitle(step));
-    const reset = timerButton(doc, "kp-button--ghost kp-countdown__reset", [s2.timerReset]);
-    controls.append(go.button, more.button, reset.button);
-    for (const b of [go.button, more.button, reset.button]) b.disabled = disabled2;
-    el16.replaceChildren(title, time, line, controls, said);
+    el16.replaceChildren(title, time, line, said);
+    let go = null;
+    let more = null;
+    let reset = null;
+    let controls = null;
     let hours = seconds2 >= 3600;
     let shown4 = "";
     let frame3 = 0;
@@ -33471,10 +33509,16 @@ function attachCountdowns(root = document, { now } = {}) {
     const show = () => {
       const state2 = clock4.state();
       el16.dataset.kpCountdownState = state2;
+      if (state2 === "idle") hours = clock4.total() >= 36e5;
       paint13(formatCountdown(clock4.remaining(), hours));
-      setStateWord(go.label, state2 === "running" ? s2.timerPause : state2 === "paused" ? s2.timerResume : s2.timerStart);
-      go.button.disabled = disabled2 || state2 === "ended";
-      reset.button.disabled = disabled2 || state2 === "idle" && clock4.total() === seconds2 * 1e3;
+      title.textContent = name;
+      title.hidden = name === "";
+      if (go) {
+        setStateWord(go.label, state2 === "running" ? s2.timerPause : state2 === "paused" ? s2.timerResume : s2.timerStart);
+        go.button.disabled = disabled2 || state2 === "ended";
+      }
+      if (more) more.button.disabled = disabled2;
+      if (reset) reset.button.disabled = disabled2 || state2 === "idle" && clock4.total() === seconds2 * 1e3;
       line.textContent = state2 === "paused" ? s2.timerPaused : state2 === "ended" ? s2.timerEnded : "";
     };
     const loop = () => {
@@ -33529,19 +33573,75 @@ function attachCountdowns(root = document, { now } = {}) {
       said.textContent = "";
       show();
     };
-    go.button.addEventListener("click", onGo);
-    more.button.addEventListener("click", onMore);
-    reset.button.addEventListener("click", onReset);
+    const mountControls = () => {
+      if (bare) {
+        controls?.remove();
+        controls = go = more = reset = null;
+        el16.toggleAttribute("data-kp-countdown-bare", true);
+        return;
+      }
+      el16.removeAttribute("data-kp-countdown-bare");
+      if (controls) return;
+      controls = doc.createElement("div");
+      controls.className = "kp-countdown__controls";
+      go = timerButton(doc, "kp-button--primary kp-countdown__go", [s2.timerStart, s2.timerPause, s2.timerResume]);
+      more = timerButton(doc, "kp-countdown__more", [s2.timerAddMinute(step)], s2.timerAddMinuteTitle(step));
+      reset = timerButton(doc, "kp-button--ghost kp-countdown__reset", [s2.timerReset]);
+      controls.append(go.button, more.button, reset.button);
+      go.button.addEventListener("click", onGo);
+      more.button.addEventListener("click", onMore);
+      reset.button.addEventListener("click", onReset);
+      el16.insertBefore(controls, said);
+    };
+    mountControls();
+    const startUntil = () => {
+      if (until !== null && seconds2 > 0) clock4.start();
+    };
     show();
     speak();
+    startUntil();
+    const onVisible = () => {
+      if (until === null || doc.visibilityState !== "visible") return;
+      read();
+      clock4.reset(seconds2);
+      hours = seconds2 >= 3600;
+      startUntil();
+    };
+    doc.addEventListener("visibilitychange", onVisible);
+    const stopWatching = watchOptions(
+      el16,
+      [
+        "data-kp-countdown",
+        "data-kp-countdown-until",
+        "data-kp-countdown-name",
+        "data-kp-countdown-step",
+        "data-kp-countdown-controls",
+        "data-kp-countdown-disabled"
+      ],
+      (names) => {
+        const before = step;
+        read();
+        if (step !== before && !bare && more) {
+          setStateWord(more.label, s2.timerAddMinute(step));
+          more.button.title = s2.timerAddMinuteTitle(step);
+        }
+        mountControls();
+        if (names.includes("data-kp-countdown") || names.includes("data-kp-countdown-until")) {
+          clock4.reset(seconds2);
+          hours = seconds2 >= 3600;
+          said.textContent = "";
+          startUntil();
+        } else show();
+      }
+    );
     cleanups.push(() => {
+      stopWatching();
+      doc.removeEventListener("visibilitychange", onVisible);
       cancelAnimationFrame(frame3);
       clock4.stop();
       CLOCKS.delete(el16);
-      go.button.removeEventListener("click", onGo);
-      more.button.removeEventListener("click", onMore);
-      reset.button.removeEventListener("click", onReset);
       el16.replaceChildren();
+      el16.removeAttribute("data-kp-countdown-bare");
       delete el16.dataset.kpCountdownState;
     });
   }
@@ -33555,6 +33655,7 @@ var init_countdown = __esm({
     "use strict";
     init_strings();
     init_components();
+    init_live_options();
     COUNTDOWN = "[data-kp-countdown]";
     COUNTDOWN_EVENT = "kp-countdown-change";
     COUNTDOWN_END_EVENT = "kp-countdown-end";
@@ -34215,6 +34316,7 @@ __export(focus_steps_exports, {
   FOCUS_STEPS_ANSWER_EVENT: () => FOCUS_STEPS_ANSWER_EVENT,
   FOCUS_STEPS_BEFORE_ANSWER_EVENT: () => FOCUS_STEPS_BEFORE_ANSWER_EVENT,
   FOCUS_STEPS_DONE_EVENT: () => FOCUS_STEPS_DONE_EVENT,
+  FOCUS_STEPS_EMPTY_ACTION_EVENT: () => FOCUS_STEPS_EMPTY_ACTION_EVENT,
   FOCUS_STEPS_EVENT: () => FOCUS_STEPS_EVENT,
   FOCUS_STEPS_RESUME_EVENT: () => FOCUS_STEPS_RESUME_EVENT,
   FOCUS_STEPS_RETRY_EVENT: () => FOCUS_STEPS_RETRY_EVENT,
@@ -34530,6 +34632,7 @@ function switchTrack(root, key, reason) {
   state2.alerts.delete(key);
   renderBand(root);
   paint5(root, true);
+  remember2(root);
   const strings = getStrings();
   say7(root, strings.focusTrackSwitched(to.name, strings.focusLaneStep(to.pos + 1, to.order.length), state2.steps[state2.index]?.text ?? ""));
   root.dispatchEvent(
@@ -34635,8 +34738,10 @@ function trackNext(root) {
     })
   );
   recompute(root);
-  if (state2.tracks.every((t) => t.order.every((i) => state2.done.has(i))))
+  if (state2.tracks.every((t) => t.order.every((i) => state2.done.has(i)))) {
+    memoryOf(root)?.forget("progress");
     root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail: { total: state2.steps.length, tracks: state2.tracks.map((t) => t.name) } }));
+  } else remember2(root);
 }
 function trackPrev(root) {
   const state2 = stateOf3(root);
@@ -34662,6 +34767,7 @@ function trackPrev(root) {
     })
   );
   recompute(root);
+  remember2(root);
   return true;
 }
 function trackGo(root, index) {
@@ -34691,6 +34797,7 @@ function trackGo(root, index) {
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_EVENT, { bubbles: true, detail: { index: to, from: was, total: state2.steps.length, step: state2.steps[to] ?? null, track: track.name } })
   );
+  remember2(root);
   recompute(root);
   return true;
 }
@@ -34719,6 +34826,26 @@ function startTracks(root, start) {
     state2.index = at.order[at.pos] ?? 0;
   }
 }
+function buildResumeAsk() {
+  const strings = getStrings();
+  const ask = el7("kp-focus-steps__resume");
+  const line = el7("kp-focus-steps__resume-text", "span");
+  line.textContent = strings.focusResumeAsk;
+  const go = (
+    /** @type {HTMLButtonElement} */
+    el7("kp-button kp-button--primary kp-focus-steps__resume-go", "button")
+  );
+  go.type = "button";
+  go.textContent = strings.focusResumeContinue;
+  const again2 = (
+    /** @type {HTMLButtonElement} */
+    el7("kp-button kp-focus-steps__resume-restart", "button")
+  );
+  again2.type = "button";
+  again2.textContent = strings.focusResumeRestart;
+  ask.append(line, go, again2);
+  return ask;
+}
 function answering(root) {
   return root.getAttribute("data-kp-focus-mode") === "answer" || stateOf3(root).steps.some((step) => step.answer);
 }
@@ -34741,11 +34868,22 @@ function answerReady(root, answer2) {
   const draft = state2.draft[answer2.id];
   return Array.isArray(draft) ? draft.length > 0 : typeof draft === "string" && draft.trim() !== "";
 }
+function stepsKey(root) {
+  return stateOf3(root).steps.map((step) => step.id ?? step.answer?.id ?? step.title ?? step.text.slice(0, 24)).join("|");
+}
 function remember2(root) {
   const memory = memoryOf(root);
-  if (!memory || !answering(root)) return;
+  if (!memory) return;
   const state2 = stateOf3(root);
-  memory.write("progress", { index: state2.index, answers: state2.answers, startedAt: state2.startedAt, at: Date.now() });
+  if (!state2.steps.length) return;
+  memory.write("progress", {
+    index: state2.index,
+    answers: state2.answers,
+    startedAt: state2.startedAt,
+    at: Date.now(),
+    key: stepsKey(root),
+    ...tracksOn(root) ? { track: state2.track, positions: Object.fromEntries(state2.tracks.map((t) => [t.key, t.pos])), done: [...state2.done] } : {}
+  });
 }
 function storedProgress(root) {
   const memory = memoryOf(root);
@@ -34757,15 +34895,21 @@ function storedProgress(root) {
     null
   );
   if (!stored || typeof stored.at !== "number" || typeof stored.index !== "number") return null;
+  if (typeof stored.key === "string" && stored.key !== stepsKey(root)) return null;
   const until = opt(root, "resume-until", "midnight") ?? "midnight";
   const now = Date.now();
   if (until === "midnight" && agoMoment(stored.at).slice(0, 10) !== agoMoment(now).slice(0, 10)) return null;
   if (until.startsWith("hours:") && now - stored.at > Number(until.slice(6)) * 36e5) return null;
-  const ids = new Set(
-    stateOf3(root).steps.map((step) => step.answer?.id).filter(Boolean)
-  );
+  const state2 = stateOf3(root);
+  const ids = new Set(state2.steps.map((step) => step.answer?.id).filter(Boolean));
   const answers = Object.fromEntries(Object.entries(stored.answers ?? {}).filter(([id]) => ids.has(id)));
-  return { index: Math.max(0, Math.min(lastIndex(root), stored.index)), answers, startedAt: Number(stored.startedAt) || stored.at };
+  const progress = { index: Math.max(0, Math.min(lastIndex(root), stored.index)), answers, startedAt: Number(stored.startedAt) || stored.at };
+  if (typeof stored.track === "string") progress.track = stored.track;
+  if (stored.positions && typeof stored.positions === "object") progress.positions = stored.positions;
+  if (Array.isArray(stored.done)) progress.done = stored.done.filter((i) => Number.isInteger(i) && /** @type {number} */
+  i >= 0 && /** @type {number} */
+  i < state2.steps.length);
+  return progress;
 }
 function applyProgress(root, stored) {
   const state2 = stateOf3(root);
@@ -34774,14 +34918,34 @@ function applyProgress(root, stored) {
   state2.startedAt = stored.startedAt;
   state2.index = stored.index;
   state2.pendingResume = null;
+  if (tracksOn(root)) {
+    for (const track of state2.tracks) {
+      const pos = stored.positions?.[track.key];
+      if (typeof pos === "number") track.pos = Math.max(0, Math.min(track.order.length - 1, pos));
+    }
+    state2.done = new Set(stored.done ?? []);
+    const active = state2.tracks.find((t) => t.key === stored.track) ?? trackOfStep(state2, stored.index) ?? state2.tracks[0];
+    if (active) {
+      state2.track = active.key;
+      if (typeof stored.positions?.[active.key] !== "number") active.pos = Math.max(0, active.order.indexOf(stored.index));
+      state2.index = active.order[active.pos] ?? stored.index;
+    }
+    renderBand(root);
+  }
   paint5(root, false);
-  say7(root, getStrings().focusResumed(stored.index + 1));
-  root.dispatchEvent(new CustomEvent(FOCUS_STEPS_RESUME_EVENT, { bubbles: true, detail: { index: stored.index, answers: { ...state2.answers } } }));
+  recompute(root);
+  say7(root, getStrings().focusResumed(state2.index + 1));
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_RESUME_EVENT, {
+      bubbles: true,
+      detail: { index: state2.index, answers: { ...state2.answers }, track: state2.track, done: [...state2.done] }
+    })
+  );
 }
 function startResume(root) {
-  if (!answering(root) || opt(root, "resume") === "off" || !root.hasAttribute("data-kp-remember")) return;
+  if (opt(root, "resume") === "off" || !root.hasAttribute("data-kp-remember")) return;
   const stored = storedProgress(root);
-  if (!stored || Object.keys(stored.answers).length === 0) return;
+  if (!stored || !hasMoved(stored)) return;
   if (opt(root, "resume") === "ask") {
     stateOf3(root).pendingResume = stored;
     paint5(root, false);
@@ -34834,8 +34998,8 @@ function goNext(root) {
   if (answering(root)) {
     state2.finished = { total: state2.steps.length, answers: { ...state2.answers }, startedAt: state2.startedAt || finishedAt, finishedAt };
     Object.assign(detail, state2.finished);
-    memoryOf(root)?.forget("progress");
   }
+  memoryOf(root)?.forget("progress");
   root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail }));
 }
 function pressAnswer(root, button) {
@@ -35121,32 +35285,14 @@ function paint5(root, arrive2) {
         statePlate(document, {
           kind: "empty",
           title: strings.focusAnswerEmptyTitle,
-          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusAnswerEmptyText
+          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusAnswerEmptyText,
+          ...emptyAction(root) ? { actionLabel: emptyAction(root), actionAttribute: "data-kp-focus-empty-action" } : {}
         })
       );
       holder.setAttribute("data-kp-focus-steps-kind", "empty");
     } else if (onSum) buildSummary(root, holder);
     else if (step) {
-      const pending5 = state2.pendingResume;
-      if (pending5) {
-        const ask = el7("kp-focus-steps__resume");
-        const line = el7("kp-focus-steps__resume-text", "span");
-        line.textContent = strings.focusResumeAsk;
-        const go = (
-          /** @type {HTMLButtonElement} */
-          el7("kp-button kp-button--primary kp-focus-steps__resume-go", "button")
-        );
-        go.type = "button";
-        go.textContent = strings.focusResumeContinue;
-        const again2 = (
-          /** @type {HTMLButtonElement} */
-          el7("kp-button kp-focus-steps__resume-restart", "button")
-        );
-        again2.type = "button";
-        again2.textContent = strings.focusResumeRestart;
-        ask.append(line, go, again2);
-        holder.append(ask);
-      }
+      if (state2.pendingResume) holder.append(buildResumeAsk());
       const text = el7("kp-focus-steps__text", "p");
       text.textContent = step.text;
       holder.append(text);
@@ -35174,7 +35320,8 @@ function paint5(root, arrive2) {
         statePlate(document, {
           kind: "empty",
           title: strings.focusReadEmptyTitle,
-          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusEmpty
+          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusEmpty,
+          ...emptyAction(root) ? { actionLabel: emptyAction(root), actionAttribute: "data-kp-focus-empty-action" } : {}
         })
       );
       holder.setAttribute("data-kp-focus-steps-kind", "empty");
@@ -35191,6 +35338,7 @@ function paint5(root, arrive2) {
     holder.append(plate);
     holder.setAttribute("data-kp-focus-steps-kind", "finished");
   } else {
+    if (state2.pendingResume) holder.append(buildResumeAsk());
     const text = el7("kp-focus-steps__text", "p");
     text.textContent = step.text;
     holder.append(text);
@@ -35463,6 +35611,7 @@ function attachFocusSteps(scope = document) {
         return;
       }
       if (button.hasAttribute("data-kp-focus-retry")) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_RETRY_EVENT, { bubbles: true }));
+      else if (button.hasAttribute("data-kp-focus-empty-action")) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_EMPTY_ACTION_EVENT, { bubbles: true }));
       else if (button.hasAttribute("data-kp-focus-save-retry")) {
         root.dispatchEvent(new CustomEvent(FOCUS_STEPS_SAVE_RETRY_EVENT, { bubbles: true }));
         if (state2.finished) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail: { ...state2.finished } }));
@@ -35648,7 +35797,9 @@ function attachFocusSteps(scope = document) {
     }, 1e3);
     const resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => tracksOn(root) && layoutLanes(root)) : null;
     resize?.observe(root);
+    const stopOptions = watchOptions(root, ["data-kp-focus-steps-empty", "data-kp-focus-steps-empty-action"], () => paint5(root, false));
     undo.push(() => {
+      stopOptions();
       stopWatch();
       unkey();
       unkeyTracks();
@@ -35671,7 +35822,7 @@ function attachFocusSteps(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED3, serial6, el7, stateOf3, part3, timerModule, tracksOn, stepKeyOf, timerIdOf, trackOfStep, activeTrack, isOpen, stepDone, refsOf, blockerNames, clockOfTimer, suggestion, opt, summaryOn, lastIndex, onSummary, memoryOf, getStepIndex, typing3;
+var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED3, serial6, el7, stateOf3, part3, timerModule, tracksOn, stepKeyOf, timerIdOf, trackOfStep, activeTrack, isOpen, stepDone, refsOf, blockerNames, clockOfTimer, suggestion, emptyAction, opt, summaryOn, lastIndex, onSummary, memoryOf, hasMoved, getStepIndex, typing3;
 var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
@@ -35693,6 +35844,7 @@ var init_focus_steps = __esm({
     FOCUS_STEPS_ANSWER_EVENT = "kp-focus-steps-answer";
     FOCUS_STEPS_RESUME_EVENT = "kp-focus-steps-resume";
     FOCUS_STEPS_RETRY_EVENT = "kp-focus-steps-retry";
+    FOCUS_STEPS_EMPTY_ACTION_EVENT = "kp-focus-steps-empty-action";
     FOCUS_STEPS_SAVE_RETRY_EVENT = "kp-focus-steps-save-retry";
     FOCUS_STEPS_TRACK_EVENT = "kp-focus-steps-track";
     FOCUS_STEPS_TRACK_ATTENTION_EVENT = "kp-focus-steps-track-attention";
@@ -35748,11 +35900,13 @@ var init_focus_steps = __esm({
     blockerNames = (state2, blocks) => joinNames(blocks.map((b) => b.whole ? b.track?.name ?? "" : stepLabel(state2, b.index)));
     clockOfTimer = (timer2) => formatCountdown(timer2.remaining * 1e3, timer2.seconds >= 3600);
     suggestion = (lanes) => lanes.find((l) => !l.active && l.status === "ringing") ?? lanes.find((l) => !l.active && l.status === "ready");
+    emptyAction = (root) => root.getAttribute("data-kp-focus-steps-empty-action")?.trim() || "";
     opt = (root, name, fallback2) => root.getAttribute(`data-kp-${name}`) ?? fallback2;
     summaryOn = (root) => answering(root) && opt(root, "summary") === "on";
     lastIndex = (root) => stateOf3(root).steps.length - 1 + (summaryOn(root) ? 1 : 0);
     onSummary = (root) => summaryOn(root) && stateOf3(root).index === stateOf3(root).steps.length;
     memoryOf = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
+    hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
     getStepIndex = (root) => stateOf3(root).index;
     typing3 = (target) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
   }
@@ -39900,7 +40054,7 @@ function build5(c) {
   for (
     const state2 of
     /** @type {const} */
-    ["ok", "failed", "running", "queued"]
+    ["ok", "failed", "running", "queued", "planned"]
   ) {
     const li = make13(doc, "li", "kp-gantt__legend-state");
     const swatch = make13(doc, "span", "kp-gantt__swatch");
@@ -40062,7 +40216,7 @@ function paint8(c) {
       byLane.set(run.lane, []);
     }
     const open4 = run.state === "running" || run.state === "queued";
-    const endRaw = open4 ? null : run.end == null ? startMs : toMs2(run.end);
+    const endRaw = open4 ? null : run.end == null || !Number.isFinite(toMs2(run.end)) ? startMs : toMs2(run.end);
     let bar = c.bars.get(run.id);
     if (!bar) {
       bar = make13(doc, "button", "kp-gantt__run");
@@ -40155,6 +40309,7 @@ function paint8(c) {
   paintPoints(c, lanes);
   paintZones(c, lanes);
   paintKinds(c);
+  paintChrome(c);
   c.el.dataset.kpState = c.state;
   c.body.toggleAttribute("aria-busy", c.state === "loading");
   drawBusy2(c);
@@ -40258,10 +40413,12 @@ function drawBusy2(c) {
       return [
         {
           // A dated line has its axis under the lane [kpadopt4].
-          top: c.line ? Math.min(...boxes.map((b) => b.top)) : Math.max(axis.bottom, Math.min(...boxes.map((b) => b.top))),
-          left: Math.min(...boxes.map((b) => b.left)),
-          right: Math.max(...boxes.map((b) => b.right)),
-          bottom: Math.min(c.line ? axis.top : scroll.bottom, Math.max(...boxes.map((b) => b.bottom)))
+          // The whole frame, axis and lane names included: the card covers the data area the timeline holds [gaps-time-1019].
+          top: c.line ? Math.min(...boxes.map((b) => b.top)) : frameBox.getBoundingClientRect().top,
+          left: c.line ? Math.min(...boxes.map((b) => b.left)) : frameBox.getBoundingClientRect().left,
+          right: c.line ? Math.max(...boxes.map((b) => b.right)) : frameBox.getBoundingClientRect().right,
+          // The whole data area: down to the frame's foot, which a held footprint has grown past the ghost lanes [gaps-time-1019].
+          bottom: c.line ? Math.min(axis.top, Math.max(...boxes.map((b) => b.bottom))) : Math.max(scroll.bottom, frameBox.getBoundingClientRect().bottom - 1)
         }
       ];
     },
@@ -40467,6 +40624,38 @@ function paintZones(c, lanes) {
     lane.track.setAttribute("aria-label", extra ? `${lane.lane.label}; ${extra.join("; ")}` : lane.lane.label);
   }
 }
+function syncLegend(c) {
+  const runless = c.runs.length === 0 && (c.points.length > 0 || c.kinds.length > 0);
+  const off = c.el.getAttribute("data-kp-gantt-legend") === "off";
+  const planned = c.runs.some((run) => run.state === "planned");
+  for (
+    const li of
+    /** @type {NodeListOf<HTMLElement>} */
+    c.legend.querySelectorAll(":scope > .kp-gantt__legend-state")
+  ) {
+    const isPlanned = li.firstElementChild?.getAttribute("data-kp-state") === "planned";
+    li.hidden = runless || off || isPlanned && !planned;
+  }
+  c.legend.hidden = [...c.legend.children].every((li) => (
+    /** @type {HTMLElement} */
+    li.hidden
+  ));
+}
+function paintChrome(c) {
+  const bare = c.el.getAttribute("data-kp-gantt-toolbar") === "off";
+  c.el.toggleAttribute("data-kp-gantt-bare", bare);
+  c.ranges.toggleAttribute("hidden", bare);
+  c.liveButton.toggleAttribute("hidden", bare);
+  syncLegend(c);
+  const hint2 = (
+    /** @type {HTMLElement | null} */
+    c.el.querySelector(":scope > .kp-gantt__hint")
+  );
+  if (hint2) {
+    hint2.hidden = c.el.getAttribute("data-kp-gantt-hint") === "off";
+    hint2.textContent = c.el.hasAttribute("data-kp-gantt-points") ? c.strings.ganttPointsHint : bare ? c.strings.ganttHintOpen : c.strings.ganttHint;
+  }
+}
 function paintKinds(c) {
   const doc = c.el.ownerDocument;
   for (const old of c.legend.querySelectorAll(":scope > .kp-gantt__legend-kind, :scope > .kp-gantt__legend-zone")) old.remove();
@@ -40491,8 +40680,109 @@ function paintKinds(c) {
     li.append(swatch, make13(doc, "span", "", zone.label));
     c.legend.append(li);
   }
-  const runless = c.runs.length === 0 && (c.points.length > 0 || c.kinds.length > 0);
-  for (const li of c.legend.querySelectorAll(":scope > .kp-gantt__legend-state")) li.hidden = runless;
+  syncLegend(c);
+}
+function labelWidth(c, bar) {
+  const label = (
+    /** @type {HTMLElement} */
+    bar.firstElementChild
+  );
+  const text = label.textContent ?? "";
+  const style = getComputedStyle(label);
+  const key = `${text}\0${style.font}`;
+  const known4 = c.labels.get(bar);
+  if (known4 && known4.key === key) return known4.width;
+  const doc = c.el.ownerDocument;
+  if (!MEASURERS.has(doc)) MEASURERS.set(doc, doc.createElement("canvas").getContext("2d"));
+  const ctx = MEASURERS.get(doc);
+  let width = Number.POSITIVE_INFINITY;
+  if (ctx) {
+    ctx.font = style.font;
+    const size2 = Number.parseFloat(style.fontSize) || 11;
+    const spacing = style.letterSpacing === "normal" ? 0 : Number.parseFloat(style.letterSpacing) || 0;
+    const shown4 = style.textTransform === "uppercase" ? text.toUpperCase() : style.textTransform === "lowercase" ? text.toLowerCase() : text;
+    width = ctx.measureText(shown4).width + spacing * [...shown4].length + 2 * 0.375 * 16 + (bar.dataset.kpState === "failed" ? size2 * 1.25 : 0);
+  }
+  c.labels.set(bar, { key, width });
+  return width;
+}
+function setOutside(c, lane, bar, side, room) {
+  let el16 = c.outside.get(bar);
+  if (!side) {
+    el16?.remove();
+    c.outside.delete(bar);
+    return;
+  }
+  if (!el16) {
+    el16 = make13(c.el.ownerDocument, "span", "kp-gantt__outside");
+    el16.setAttribute("aria-hidden", "true");
+    c.outside.set(bar, el16);
+  }
+  if (el16.parentElement !== lane.track) lane.track.append(el16);
+  const text = bar.firstElementChild?.textContent ?? "";
+  if (el16.textContent !== text) el16.textContent = text;
+  if (el16.dataset.kpSide !== side) el16.dataset.kpSide = side;
+  if (el16.dataset.kpState !== bar.dataset.kpState) el16.dataset.kpState = bar.dataset.kpState ?? "";
+  for (const name of ["--kp-g-s", "--kp-g-e", "--kp-g-row"]) {
+    const value = bar.style.getPropertyValue(name);
+    if (el16.style.getPropertyValue(name) !== value) el16.style.setProperty(name, value);
+  }
+  el16.style.setProperty("--kp-g-label-room", `${Math.floor(room)}px`);
+}
+function dropOutside(c) {
+  for (const [bar, el16] of c.outside)
+    if (!bar.isConnected || bar.hidden) {
+      el16.remove();
+      c.outside.delete(bar);
+    }
+  for (const bar of c.labels.keys()) if (!bar.isConnected) c.labels.delete(bar);
+}
+function placeLabels(c) {
+  const room = c.plot.clientWidth;
+  dropOutside(c);
+  if (!room || c.state === "loading") return;
+  for (const lane of c.lanes) {
+    const rows = /* @__PURE__ */ new Map();
+    for (const b of lane.bars) {
+      if (b.bar.hidden) continue;
+      const left = b.bar.offsetLeft;
+      const right = left + b.bar.offsetWidth;
+      const list = rows.get(b.row) ?? [];
+      list.push({ bar: b.bar, left, right });
+      rows.set(b.row, list);
+    }
+    for (const list of rows.values()) {
+      list.sort((a, b) => a.left - b.left);
+      let taken = 0;
+      list.forEach((item, i) => {
+        const { bar, left, right } = item;
+        const need = labelWidth(c, bar);
+        let place2 = "";
+        let roomPx = 0;
+        if (need > right - left - 2) {
+          const start = bar.dataset.kpState === "running" || bar.dataset.kpState === "queued" ? 8 : 4;
+          const next2 = list[i + 1]?.left ?? room;
+          const after = next2 - right - start - OUTSIDE_GAP_PX;
+          const before = left - taken - 4 - OUTSIDE_GAP_PX;
+          const wanted = need - 2 * 0.375 * 16 + 8;
+          if (after >= wanted) [place2, roomPx] = ["after", after];
+          else if (before >= wanted) [place2, roomPx] = ["before", before];
+          else if (right - left >= INSIDE_MIN_PX) place2 = "";
+          else {
+            const best = after >= before ? ["after", after] : ["before", before];
+            [place2, roomPx] = best[1] >= OUTSIDE_MIN_PX ? best : ["none", 0];
+          }
+          if (place2 === "after") taken = right + start + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
+          else taken = Math.max(taken, right);
+        } else taken = Math.max(taken, right);
+        if (bar.dataset.kpLabel !== place2) {
+          if (place2) bar.dataset.kpLabel = place2;
+          else delete bar.dataset.kpLabel;
+        }
+        setOutside(c, lane, bar, place2 === "after" || place2 === "before" ? place2 : "", roomPx);
+      });
+    }
+  }
 }
 function visible2(c) {
   const w = windowOf(c);
@@ -40508,6 +40798,7 @@ function visible2(c) {
     }
   }
   clusterPoints(c);
+  placeLabels(c);
 }
 function refresh(c, nowMs) {
   void nowMs;
@@ -40642,7 +40933,9 @@ function attachGantts(root = document, options = {}) {
       observer: null,
       drag: null,
       dragMoved: false,
-      tickKey: ""
+      tickKey: "",
+      labels: /* @__PURE__ */ new Map(),
+      outside: /* @__PURE__ */ new Map()
     };
     gantts.set(el16, c);
     build5(c);
@@ -40799,7 +41092,7 @@ function attachGantts(root = document, options = {}) {
       return (w.from + Math.min(Math.max(x, 0), width) / width * c.span + c.base) * 1e3;
     };
     const onDown = (event) => {
-      if (event.button !== 0 || c.state === "loading" || c.line) return;
+      if (event.button !== 0 || c.state === "loading" || c.line || c.el.getAttribute("data-kp-gantt-toolbar") === "off") return;
       const x = plotX(event);
       if (x < 0 || x > c.plot.clientWidth) return;
       c.drag = { a: x, b: x };
@@ -40841,6 +41134,17 @@ function attachGantts(root = document, options = {}) {
     c.scroll.addEventListener("pointerup", onUp);
     c.scroll.addEventListener("pointercancel", onCancel);
     c.timer = window.setInterval(() => tick4(c), GANTT_TICK_MS);
+    const fonts = el16.ownerDocument.fonts;
+    const refit = () => {
+      c.labels.clear();
+      tick4(c);
+    };
+    fonts?.addEventListener?.("loadingdone", refit);
+    void fonts?.ready?.then(refit);
+    const stopOptions = watchOptions(el16, ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint"], () => {
+      paintChrome(c);
+      tick4(c);
+    });
     if (typeof ResizeObserver !== "undefined") {
       let last = 0;
       c.observer = new ResizeObserver(() => {
@@ -40865,6 +41169,8 @@ function attachGantts(root = document, options = {}) {
       c.scroll.removeEventListener("pointerup", onUp);
       c.scroll.removeEventListener("pointercancel", onCancel);
       window.clearInterval(c.timer);
+      stopOptions();
+      fonts?.removeEventListener?.("loadingdone", refit);
       c.observer?.disconnect();
       gantts.delete(el16);
     });
@@ -40959,6 +41265,7 @@ function setGanttLegend(el16, entries3) {
     li.append(swatch, make13(doc, "span", "", label));
     c.legend.append(li);
   }
+  syncLegend(c);
 }
 function setGanttPoints(el16, points, lanes) {
   const c = gantts.get(el16);
@@ -40981,7 +41288,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint8(c);
 }
-var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel;
+var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, MEASURERS, OUTSIDE_GAP_PX, INSIDE_MIN_PX, OUTSIDE_MIN_PX;
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
@@ -40990,6 +41297,7 @@ var init_gantt = __esm({
     init_strings();
     init_busy_card();
     init_state_plate();
+    init_live_options();
     GANTT = "[data-kp-gantt]";
     GANTT_OPEN_EVENT = "kp-gantt-open";
     GANTT_SELECT_EVENT = "kp-gantt-select";
@@ -41011,8 +41319,12 @@ var init_gantt = __esm({
     };
     toMs2 = (when) => typeof when === "number" ? when : Date.parse(when);
     keyOf6 = (host) => host.getAttribute("data-kp-key") ?? void 0;
-    stateWord3 = (c, state2) => ({ queued: c.strings.ganttQueued, running: c.strings.ganttRunning, ok: c.strings.ganttOk, failed: c.strings.ganttFailed })[state2];
+    stateWord3 = (c, state2) => ({ queued: c.strings.ganttQueued, running: c.strings.ganttRunning, ok: c.strings.ganttOk, failed: c.strings.ganttFailed, planned: c.strings.ganttPlanned })[state2];
     rel = (c, ms) => ms / 1e3 - c.base;
+    MEASURERS = /* @__PURE__ */ new WeakMap();
+    OUTSIDE_GAP_PX = 6;
+    INSIDE_MIN_PX = 32;
+    OUTSIDE_MIN_PX = 48;
   }
 });
 
@@ -42204,7 +42516,7 @@ function discShare(remainingMs, scaleMs) {
   if (scaleMs <= 0) return 0;
   return Math.min(1, Math.max(0, remainingMs / scaleMs));
 }
-function attachTimerDiscs(root = document, { now } = {}) {
+function attachTimerDiscs(root = document, { now, wall } = {}) {
   register();
   const cleanups = [];
   const timers = (
@@ -42219,10 +42531,23 @@ function attachTimerDiscs(root = document, { now } = {}) {
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const view = doc.defaultView ?? window;
-    const seconds2 = parseDuration(el16.dataset.kpTimerDisc);
-    const scaleSeconds = parseDuration(el16.dataset.kpTimerDiscScale ? `${el16.dataset.kpTimerDiscScale}m` : "") || 0;
-    const name = el16.dataset.kpTimerDiscName ?? "";
-    const disabled2 = el16.hasAttribute("data-kp-timer-disc-disabled");
+    const wallNow = wall ?? (() => Date.now());
+    let seconds2 = 0;
+    let scaleSeconds = 0;
+    let name = "";
+    let disabled2 = false;
+    let bare = false;
+    let until = null;
+    const read = () => {
+      const at = wallNow();
+      until = parseUntil(el16.dataset.kpTimerDiscUntil, at);
+      seconds2 = until !== null ? Math.max(0, Math.ceil((until - at) / 1e3)) : parseDuration(el16.dataset.kpTimerDisc);
+      scaleSeconds = parseDuration(el16.dataset.kpTimerDiscScale ? `${el16.dataset.kpTimerDiscScale}m` : "") || 0;
+      name = el16.dataset.kpTimerDiscName ?? "";
+      disabled2 = el16.hasAttribute("data-kp-timer-disc-disabled");
+      bare = until !== null || el16.dataset.kpTimerDiscControls === "none";
+    };
+    read();
     const still = () => !motionAllowed(doc);
     el16.classList.add("kp-timer-disc");
     const face = doc.createElement("div");
@@ -42243,14 +42568,10 @@ function attachTimerDiscs(root = document, { now } = {}) {
     const said = doc.createElement("span");
     said.className = "kp-sr-only";
     said.setAttribute("role", "status");
-    const controls = doc.createElement("div");
-    controls.className = "kp-timer-disc__controls";
-    const go = timerButton(doc, "kp-button--primary kp-timer-disc__go", [s2.timerStart, s2.timerPause, s2.timerResume]);
-    const reset = timerButton(doc, "kp-button--ghost kp-timer-disc__reset", [s2.timerReset]);
-    controls.append(go.button, reset.button);
-    go.button.disabled = disabled2;
-    reset.button.disabled = disabled2;
-    el16.replaceChildren(face, caption, line, controls, said);
+    el16.replaceChildren(face, caption, line, said);
+    let go = null;
+    let reset = null;
+    let controls = null;
     let drawn2 = -1;
     let frame3 = 0;
     let filling = null;
@@ -42272,12 +42593,19 @@ function attachTimerDiscs(root = document, { now } = {}) {
       const left = ms <= 0 ? "" : minutes > 1 ? s2.timerDuration(minutes * 60) : s2.timerUnderMinute;
       face.setAttribute("aria-label", ms <= 0 ? s2.timerEnded : s2.timerDiscLeft(left, s2.timerDuration(Math.round(clock4.total() / 1e3))));
     };
+    const captionText = () => {
+      const length = until !== null ? s2.timerUntil(untilLabel(until, wallNow())) : s2.timerDuration(Math.round(clock4.total() / 1e3));
+      return name ? s2.timerDiscCaption(name, length) : length;
+    };
     const show = () => {
       const state2 = clock4.state();
       el16.dataset.kpTimerDiscState = state2;
-      setStateWord(go.label, state2 === "running" ? s2.timerPause : state2 === "paused" ? s2.timerResume : s2.timerStart);
-      go.button.disabled = disabled2 || state2 === "ended";
-      reset.button.disabled = disabled2 || state2 === "idle" && clock4.total() === seconds2 * 1e3;
+      if (go) {
+        setStateWord(go.label, state2 === "running" ? s2.timerPause : state2 === "paused" ? s2.timerResume : s2.timerStart);
+        go.button.disabled = disabled2 || state2 === "ended";
+      }
+      if (reset) reset.button.disabled = disabled2 || state2 === "idle" && clock4.total() === seconds2 * 1e3;
+      caption.textContent = captionText();
       line.textContent = state2 === "paused" ? s2.timerPaused : state2 === "ended" ? s2.timerEnded : "";
       name_();
     };
@@ -42313,7 +42641,6 @@ function attachTimerDiscs(root = document, { now } = {}) {
       }
     });
     CLOCKS2.set(el16, clock4);
-    caption.textContent = name ? s2.timerDiscCaption(name, s2.timerDuration(seconds2)) : s2.timerDuration(seconds2);
     const onGo = () => {
       const state2 = clock4.state();
       filling?.finish();
@@ -42347,18 +42674,72 @@ function attachTimerDiscs(root = document, { now } = {}) {
       }
       show();
     };
-    go.button.addEventListener("click", onGo);
-    reset.button.addEventListener("click", onReset);
+    const mountControls = () => {
+      if (bare) {
+        controls?.remove();
+        controls = go = reset = null;
+        el16.toggleAttribute("data-kp-timer-disc-bare", true);
+        return;
+      }
+      el16.removeAttribute("data-kp-timer-disc-bare");
+      if (controls) return;
+      controls = doc.createElement("div");
+      controls.className = "kp-timer-disc__controls";
+      go = timerButton(doc, "kp-button--primary kp-timer-disc__go", [s2.timerStart, s2.timerPause, s2.timerResume]);
+      reset = timerButton(doc, "kp-button--ghost kp-timer-disc__reset", [s2.timerReset]);
+      controls.append(go.button, reset.button);
+      go.button.addEventListener("click", onGo);
+      reset.button.addEventListener("click", onReset);
+      el16.insertBefore(controls, said);
+    };
+    mountControls();
+    const startUntil = () => {
+      if (until !== null && seconds2 > 0) clock4.start();
+    };
     draw8(true);
     show();
+    startUntil();
+    const onVisible = () => {
+      if (until === null || doc.visibilityState !== "visible") return;
+      read();
+      filling?.cancel();
+      clock4.reset(seconds2);
+      startUntil();
+    };
+    doc.addEventListener("visibilitychange", onVisible);
+    const stopWatching = watchOptions(
+      el16,
+      [
+        "data-kp-timer-disc",
+        "data-kp-timer-disc-until",
+        "data-kp-timer-disc-name",
+        "data-kp-timer-disc-scale",
+        "data-kp-timer-disc-controls",
+        "data-kp-timer-disc-disabled"
+      ],
+      (names) => {
+        read();
+        mountControls();
+        if (names.includes("data-kp-timer-disc") || names.includes("data-kp-timer-disc-until")) {
+          filling?.cancel();
+          said.textContent = "";
+          clock4.reset(seconds2);
+          startUntil();
+        } else {
+          draw8(true);
+          show();
+        }
+      }
+    );
     cleanups.push(() => {
+      stopWatching();
+      doc.removeEventListener("visibilitychange", onVisible);
       cancelAnimationFrame(frame3);
       filling?.cancel();
       clock4.stop();
       CLOCKS2.delete(el16);
-      go.button.removeEventListener("click", onGo);
-      reset.button.removeEventListener("click", onReset);
       el16.replaceChildren();
+      el16.removeAttribute("data-kp-timer-disc-bare");
       el16.style.removeProperty(TIMER_DISC_LEFT);
       delete el16.dataset.kpTimerDiscState;
     });
@@ -42375,6 +42756,7 @@ var init_timer_disc = __esm({
     init_calm();
     init_components();
     init_countdown();
+    init_live_options();
     TIMER_DISC = "[data-kp-timer-disc]";
     TIMER_DISC_LEFT = "--kp-timer-disc-left";
     registered = false;
@@ -62750,10 +63132,10 @@ var NEEDS = [
   { name: "timefield", when: "[data-kp-time]", load: () => Promise.resolve().then(() => (init_timefield(), timefield_exports)), attach: (m, root) => [m.attachTimes(root)] },
   {
     // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the heat grid, the entity
-    // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the pipeline, the diff view, the data table, the runs list, the run timeline, the code view and the operations page. The selector is
+    // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the pipeline, the diff view, the data table, the runs list, the run timeline, the week, the code view and the operations page. The selector is
     // `FOOTPRINT_HOSTS` of js/footprint.js.
     name: "footprint",
-    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-code], .kp-ops",
+    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-week], [data-kp-code], .kp-ops",
     load: () => Promise.resolve().then(() => (init_footprint(), footprint_exports)),
     attach: (m, root) => [m.attachFootprints(root)]
   },
@@ -64042,6 +64424,7 @@ export {
   FOCUS_STEPS_ANSWER_EVENT,
   FOCUS_STEPS_BEFORE_ANSWER_EVENT,
   FOCUS_STEPS_DONE_EVENT,
+  FOCUS_STEPS_EMPTY_ACTION_EVENT,
   FOCUS_STEPS_EVENT,
   FOCUS_STEPS_RESUME_EVENT,
   FOCUS_STEPS_RETRY_EVENT,
@@ -64967,6 +65350,7 @@ export {
   parseTick,
   parseTime,
   parseTimeOfDay,
+  parseUntil,
   passkeyOptions,
   passkeys_exports as passkeysExports,
   path_trace_exports as pathTraceExports,
@@ -65335,6 +65719,7 @@ export {
   unsaved,
   unsaved_exports as unsavedExports,
   unsavedSaved,
+  untilLabel,
   unusedDays,
   update,
   update_exports as updateExports,
