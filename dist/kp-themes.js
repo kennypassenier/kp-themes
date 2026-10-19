@@ -15420,7 +15420,7 @@ function createIntentFilter(dialog, list, status) {
     });
     ordered2.forEach((el16, i) => holes[i].replaceWith(el16));
   };
-  const clearMarks2 = (option) => {
+  const clearMarks3 = (option) => {
     const marks = option.querySelectorAll(".kp-palette__mark");
     if (marks.length === 0) return;
     for (const mark of marks) mark.replaceWith(doc.createTextNode(mark.textContent ?? ""));
@@ -15551,7 +15551,7 @@ function createIntentFilter(dialog, list, status) {
     const failed = state2 === "error";
     const valueOf3 = (option) => option.dataset.value ?? (option.textContent ?? "").trim();
     const items = options.map((option) => {
-      clearMarks2(option);
+      clearMarks3(option);
       if (dialog.dataset.kpHighlight !== "off" && !option.querySelector(":scope > .kp-palette__label")) wrapLabel(option);
       const { label, hint: hint2 } = textsOf(option);
       const value = valueOf3(option);
@@ -15616,7 +15616,7 @@ function createIntentFilter(dialog, list, status) {
       setHidden(option, !show);
       const unit2 = unitOf(option);
       if (unit2 !== option) setHidden(unit2, !show);
-      clearMarks2(option);
+      clearMarks3(option);
       if (show && want.length > 0 && dialog.dataset.kpHighlight !== "off") markWords(option, want, mode2);
     }
     for (const group of groups) setHidden(group, group.querySelector(`${OPTION_SELECTOR}:not([hidden])`) === null);
@@ -15683,7 +15683,7 @@ function createIntentFilter(dialog, list, status) {
         [...list.querySelectorAll(OPTION_SELECTOR)]
       );
       for (const option of options) {
-        clearMarks2(option);
+        clearMarks3(option);
         for (const label of option.querySelectorAll(":scope > .kp-palette__label[data-kp-generated]")) label.replaceWith(...label.childNodes);
         option.normalize();
       }
@@ -20555,9 +20555,15 @@ function attachForms(root = document, {
     const owner = button.closest("form");
     const busyText = button.dataset.kpBusy ?? getStrings().busy;
     const idleText = button.textContent ?? "";
+    let ownsFaces = false;
     const onValid = () => {
       button.disabled = true;
       button.setAttribute("aria-busy", "true");
+      ownsFaces = button.querySelector(":scope > .kp-flash__stack") !== null;
+      if (ownsFaces) {
+        button.setAttribute("data-kp-flash-state", "busy");
+        return;
+      }
       const label = button.ownerDocument.createElement("span");
       label.className = "kp-button__label";
       label.textContent = busyText;
@@ -20566,6 +20572,11 @@ function attachForms(root = document, {
     const onDone = () => {
       button.disabled = false;
       button.removeAttribute("aria-busy");
+      if (ownsFaces) {
+        ownsFaces = false;
+        if (button.getAttribute("data-kp-flash-state") === "busy") button.setAttribute("data-kp-flash-state", "rest");
+        return;
+      }
       button.textContent = idleText;
     };
     owner?.addEventListener(VALID_EVENT, onValid);
@@ -33342,7 +33353,10 @@ __export(countdown_exports, {
   parseDuration: () => parseDuration,
   parseUntil: () => parseUntil,
   timerButton: () => timerButton,
-  untilLabel: () => untilLabel
+  timerZone: () => timerZone,
+  untilLabel: () => untilLabel,
+  untilOffset: () => untilOffset,
+  untilZone: () => untilZone
 });
 function parseDuration(value) {
   if (typeof value === "number") return Math.max(0, Math.round(value));
@@ -33360,7 +33374,68 @@ function parseDuration(value) {
   }
   return matched ? Math.round(total) : 0;
 }
-function parseUntil(value, nowMs) {
+function zoneFormat(zone) {
+  if (!ZONE_FORMATS.has(zone)) {
+    try {
+      ZONE_FORMATS.set(
+        zone,
+        new Intl.DateTimeFormat("en-GB", {
+          timeZone: zone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hourCycle: "h23"
+        })
+      );
+    } catch {
+      ZONE_FORMATS.set(zone, null);
+    }
+  }
+  return ZONE_FORMATS.get(zone) ?? null;
+}
+function timerZone(el16, attribute) {
+  const name = el16.closest(`[${attribute}]`)?.getAttribute(attribute)?.trim() ?? "";
+  return name !== "" && zoneFormat(name) !== null ? name : null;
+}
+function wallParts(ms, zone) {
+  if (typeof zone === "string") {
+    const out = { year: 0, month: 0, day: 0, hour: 0, minute: 0, second: 0 };
+    for (const part7 of zoneFormat(zone)?.formatToParts(ms) ?? []) if (part7.type in out) out[
+      /** @type {keyof typeof out} */
+      part7.type
+    ] = Number(part7.value);
+    out.hour %= 24;
+    return out;
+  }
+  const at = typeof zone === "number" ? new Date(ms + zone * 6e4) : new Date(ms);
+  return typeof zone === "number" ? { year: at.getUTCFullYear(), month: at.getUTCMonth() + 1, day: at.getUTCDate(), hour: at.getUTCHours(), minute: at.getUTCMinutes(), second: at.getUTCSeconds() } : { year: at.getFullYear(), month: at.getMonth() + 1, day: at.getDate(), hour: at.getHours(), minute: at.getMinutes(), second: at.getSeconds() };
+}
+function zonedMoment(year, month, day, hour, minute, second, zone) {
+  if (zone === null) return new Date(year, month - 1, day, hour, minute, second, 0).getTime();
+  const wall = Date.UTC(year, month - 1, day, hour, minute, second);
+  if (typeof zone === "number") return wall - zone * 6e4;
+  const offsetAt2 = (t) => {
+    const w = wallParts(t, zone);
+    return Date.UTC(w.year, w.month - 1, w.day, w.hour, w.minute, w.second) - Math.floor(t / 1e3) * 1e3;
+  };
+  const first = wall - offsetAt2(wall);
+  return wall - offsetAt2(first);
+}
+function untilOffset(text) {
+  const t = text.trim();
+  if (/^\d{1,2}:\d{2}/.test(t) || !/^\d{4}-\d{2}-\d{2}[T ]/.test(t)) return null;
+  if (/[zZ]$/.test(t)) return 0;
+  const m = /([+-])(\d{2}):?(\d{2})$/.exec(t.slice(10));
+  return m ? (m[1] === "-" ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3])) : null;
+}
+function untilZone(value, timeZone = null) {
+  const offset = typeof value === "string" ? untilOffset(value) : null;
+  return offset ?? timeZone;
+}
+function parseUntil(value, nowMs, timeZone = null) {
   if (typeof value === "number") return Number.isFinite(value) ? value : null;
   const text = String(value ?? "").trim();
   if (text === "") return null;
@@ -33368,22 +33443,30 @@ function parseUntil(value, nowMs) {
   if (clock4) {
     const [h2, m, sec] = [Number(clock4[1]), Number(clock4[2]), Number(clock4[3] ?? 0)];
     if (h2 > 23 || m > 59 || sec > 59) return null;
-    const at = new Date(nowMs);
-    at.setHours(h2, m, sec, 0);
-    if (at.getTime() <= nowMs) at.setDate(at.getDate() + 1);
-    return at.getTime();
+    const now = wallParts(nowMs, timeZone);
+    let at = zonedMoment(now.year, now.month, now.day, h2, m, sec, timeZone);
+    if (at <= nowMs) {
+      const next2 = new Date(Date.UTC(now.year, now.month - 1, now.day + 1));
+      at = zonedMoment(next2.getUTCFullYear(), next2.getUTCMonth() + 1, next2.getUTCDate(), h2, m, sec, timeZone);
+    }
+    return at;
   }
   if (/^\d{10,}$/.test(text)) return Number(text);
+  const local = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.\d+)?$/.exec(text);
+  if (local && timeZone !== null) {
+    const [y, mo, d, h2, mi, sec] = local.slice(1).map((x) => Number(x ?? 0));
+    return zonedMoment(y, mo, d, h2, mi, sec, timeZone);
+  }
   const parsed = Date.parse(text);
   return Number.isFinite(parsed) ? parsed : null;
 }
-function untilLabel(ms, nowMs) {
-  const at = new Date(ms);
+function untilLabel(ms, nowMs, zone = null) {
+  const at = wallParts(ms, zone);
+  const today = wallParts(nowMs, zone);
   const two9 = (n) => String(n).padStart(2, "0");
-  const clock4 = `${two9(at.getHours())}:${two9(at.getMinutes())}`;
-  const today = new Date(nowMs);
-  const sameDay = at.getFullYear() === today.getFullYear() && at.getMonth() === today.getMonth() && at.getDate() === today.getDate();
-  return sameDay ? clock4 : `${two9(at.getDate())}/${two9(at.getMonth() + 1)}/${at.getFullYear()} ${clock4}`;
+  const clock4 = `${two9(at.hour)}:${two9(at.minute)}`;
+  const sameDay = at.year === today.year && at.month === today.month && at.day === today.day;
+  return sameDay ? clock4 : `${two9(at.day)}/${two9(at.month)}/${at.year} ${clock4}`;
 }
 function formatCountdown(ms, hours) {
   const total = Math.max(0, Math.ceil(ms / 1e3 - 1e-9));
@@ -33498,7 +33581,7 @@ function attachCountdowns(root = document, { now, wall } = {}) {
     let until = null;
     const read = () => {
       const at = wallNow();
-      until = parseUntil(el16.dataset.kpCountdownUntil, at);
+      until = parseUntil(el16.dataset.kpCountdownUntil, at, timerZone(el16, "data-kp-countdown-timezone"));
       seconds2 = until !== null ? Math.max(0, Math.ceil((until - at) / 1e3)) : parseDuration(el16.dataset.kpCountdown);
       step = parseDuration(el16.dataset.kpCountdownStep) || COUNTDOWN_STEP;
       name = el16.dataset.kpCountdownName ?? "";
@@ -33659,6 +33742,7 @@ function attachCountdowns(root = document, { now, wall } = {}) {
       [
         "data-kp-countdown",
         "data-kp-countdown-until",
+        "data-kp-countdown-timezone",
         "data-kp-countdown-name",
         "data-kp-countdown-step",
         "data-kp-countdown-controls",
@@ -33672,7 +33756,7 @@ function attachCountdowns(root = document, { now, wall } = {}) {
           more.button.title = s2.timerAddMinuteTitle(step);
         }
         mountControls();
-        if (names.includes("data-kp-countdown") || names.includes("data-kp-countdown-until")) {
+        if (names.includes("data-kp-countdown") || names.includes("data-kp-countdown-until") || names.includes("data-kp-countdown-timezone")) {
           clock4.reset(seconds2);
           hours = seconds2 >= 3600;
           said.textContent = "";
@@ -33695,17 +33779,18 @@ function attachCountdowns(root = document, { now, wall } = {}) {
     for (const c of cleanups) c();
   };
 }
-var COUNTDOWN, COUNTDOWN_EVENT, COUNTDOWN_END_EVENT, COUNTDOWN_STEP, CLOCKS, countdownOf;
+var COUNTDOWN, COUNTDOWN_EVENT, COUNTDOWN_END_EVENT, COUNTDOWN_STEP, ZONE_FORMATS, CLOCKS, countdownOf;
 var init_countdown = __esm({
   "js/countdown.js"() {
     "use strict";
     init_strings();
     init_components();
     init_live_options();
-    COUNTDOWN = "[data-kp-countdown]";
+    COUNTDOWN = "[data-kp-countdown], [data-kp-countdown-until]";
     COUNTDOWN_EVENT = "kp-countdown-change";
     COUNTDOWN_END_EVENT = "kp-countdown-end";
     COUNTDOWN_STEP = 60;
+    ZONE_FORMATS = /* @__PURE__ */ new Map();
     CLOCKS = /* @__PURE__ */ new WeakMap();
     countdownOf = (el16) => CLOCKS.get(
       /** @type {HTMLElement} */
@@ -40752,7 +40837,7 @@ function labelWidth(c, bar) {
   c.labels.set(bar, { key, width });
   return width;
 }
-function setOutside(c, lane, bar, side, room) {
+function setOutside(c, lane, bar, side, room, shift = 0) {
   let el16 = c.outside.get(bar);
   if (!side) {
     el16?.remove();
@@ -40774,6 +40859,7 @@ function setOutside(c, lane, bar, side, room) {
     if (el16.style.getPropertyValue(name) !== value) el16.style.setProperty(name, value);
   }
   el16.style.setProperty("--kp-g-label-room", `${Math.floor(room)}px`);
+  el16.style.setProperty("--kp-g-label-shift", `${Math.round(shift)}px`);
 }
 function dropOutside(c) {
   for (const [bar, el16] of c.outside)
@@ -40782,6 +40868,36 @@ function dropOutside(c) {
       c.outside.delete(bar);
     }
   for (const bar of c.labels.keys()) if (!bar.isConnected) c.labels.delete(bar);
+}
+function clearMarks2(lane, bars) {
+  const boxes = [];
+  for (const el16 of lane.points) {
+    if (el16.hidden || el16.hasAttribute("data-kp-clustered")) continue;
+    const width = el16.offsetWidth;
+    if (!width) continue;
+    const was = Number.parseFloat(el16.style.getPropertyValue("--kp-g-dodge")) || 0;
+    let left = el16.offsetLeft - was;
+    let right = left + width;
+    let dodge = 0;
+    const centre = (left + right) / 2;
+    for (const bar of bars) {
+      if (right <= bar.left || left >= bar.right) continue;
+      const half = width / 2;
+      if (Math.abs(centre - bar.left) <= half + 1) dodge = Math.min(dodge, bar.left - MARK_GAP_PX - right);
+      else if (Math.abs(centre - bar.right) <= half + 1) dodge = Math.max(dodge, bar.right + MARK_GAP_PX - left);
+    }
+    if (dodge !== 0) {
+      left += dodge;
+      right += dodge;
+    }
+    const value = dodge === 0 ? "" : `${dodge.toFixed(1)}px`;
+    if (el16.style.getPropertyValue("--kp-g-dodge") !== value) {
+      if (value) el16.style.setProperty("--kp-g-dodge", value);
+      else el16.style.removeProperty("--kp-g-dodge");
+    }
+    boxes.push({ left, right });
+  }
+  return boxes.sort((a, b) => a.left - b.left);
 }
 function placeLabels(c) {
   const room = c.plot.clientWidth;
@@ -40797,7 +40913,8 @@ function placeLabels(c) {
       list.push({ bar: b.bar, left, right });
       rows.set(b.row, list);
     }
-    for (const list of rows.values()) {
+    const marks = clearMarks2(lane, rows.get(0) ?? []);
+    for (const [row, list] of rows) {
       list.sort((a, b) => a.left - b.left);
       let taken = 0;
       list.forEach((item, i) => {
@@ -40805,27 +40922,49 @@ function placeLabels(c) {
         const need = labelWidth(c, bar);
         let place2 = "";
         let roomPx = 0;
+        let shift = 0;
         if (need > right - left - 2) {
           const start = bar.dataset.kpState === "running" || bar.dataset.kpState === "queued" ? 8 : 4;
-          const next2 = list[i + 1]?.left ?? room;
-          const after = next2 - right - start - OUTSIDE_GAP_PX;
-          const before = left - taken - 4 - OUTSIDE_GAP_PX;
           const wanted = need - 2 * 0.375 * 16 + 8;
-          if (after >= wanted) [place2, roomPx] = ["after", after];
-          else if (before >= wanted) [place2, roomPx] = ["before", before];
-          else if (right - left >= INSIDE_MIN_PX) place2 = "";
-          else {
-            const best = after >= before ? ["after", after] : ["before", before];
-            [place2, roomPx] = best[1] >= OUTSIDE_MIN_PX ? best : ["none", 0];
+          let next2 = list[i + 1]?.left ?? room;
+          let from = right + start;
+          let upTo = left - 4;
+          let floor = taken;
+          if (row === 0) {
+            for (const m of marks) {
+              if (m.right <= from - 1) continue;
+              if (m.left < from + wanted + OUTSIDE_GAP_PX) from = m.right + MARK_GAP_PX + 2;
+              else {
+                next2 = Math.min(next2, m.left);
+                break;
+              }
+            }
+            for (let k = marks.length - 1; k >= 0; k--) {
+              const m = (
+                /** @type {{ left: number, right: number }} */
+                marks[k]
+              );
+              if (m.left >= upTo + 1) continue;
+              if (m.right > upTo - wanted - OUTSIDE_GAP_PX) upTo = m.left - MARK_GAP_PX - 2;
+              else {
+                floor = Math.max(floor, m.right);
+                break;
+              }
+            }
           }
-          if (place2 === "after") taken = right + start + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
+          const after = next2 - from - OUTSIDE_GAP_PX;
+          const before = upTo - floor - OUTSIDE_GAP_PX;
+          if (after >= wanted) [place2, roomPx, shift] = ["after", after, from - (right + start)];
+          else if (before >= wanted) [place2, roomPx, shift] = ["before", before, left - 4 - upTo];
+          else place2 = "none";
+          if (place2 === "after") taken = from + Math.min(wanted, roomPx) + OUTSIDE_GAP_PX;
           else taken = Math.max(taken, right);
         } else taken = Math.max(taken, right);
         if (bar.dataset.kpLabel !== place2) {
           if (place2) bar.dataset.kpLabel = place2;
           else delete bar.dataset.kpLabel;
         }
-        setOutside(c, lane, bar, place2 === "after" || place2 === "before" ? place2 : "", roomPx);
+        setOutside(c, lane, bar, place2 === "after" || place2 === "before" ? place2 : "", roomPx, shift);
       });
     }
   }
@@ -41334,7 +41473,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint8(c);
 }
-var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, MEASURERS, OUTSIDE_GAP_PX, INSIDE_MIN_PX, OUTSIDE_MIN_PX;
+var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX;
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
@@ -41369,8 +41508,7 @@ var init_gantt = __esm({
     rel = (c, ms) => ms / 1e3 - c.base;
     MEASURERS = /* @__PURE__ */ new WeakMap();
     OUTSIDE_GAP_PX = 6;
-    INSIDE_MIN_PX = 32;
-    OUTSIDE_MIN_PX = 48;
+    MARK_GAP_PX = 2;
   }
 });
 
@@ -42586,7 +42724,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
     let until = null;
     const read = () => {
       const at = wallNow();
-      until = parseUntil(el16.dataset.kpTimerDiscUntil, at);
+      until = parseUntil(el16.dataset.kpTimerDiscUntil, at, timerZone(el16, "data-kp-timer-disc-timezone"));
       seconds2 = until !== null ? Math.max(0, Math.ceil((until - at) / 1e3)) : parseDuration(el16.dataset.kpTimerDisc);
       scaleSeconds = parseDuration(el16.dataset.kpTimerDiscScale ? `${el16.dataset.kpTimerDiscScale}m` : "") || 0;
       name = el16.dataset.kpTimerDiscName ?? "";
@@ -42640,7 +42778,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
       face.setAttribute("aria-label", ms <= 0 ? s2.timerEnded : s2.timerDiscLeft(left, s2.timerDuration(Math.round(clock4.total() / 1e3))));
     };
     const captionText = () => {
-      const length = until !== null ? s2.timerUntil(untilLabel(until, wallNow())) : s2.timerDuration(Math.round(clock4.total() / 1e3));
+      const length = until !== null ? s2.timerUntil(untilLabel(until, wallNow(), untilZone(el16.dataset.kpTimerDiscUntil, timerZone(el16, "data-kp-timer-disc-timezone")))) : s2.timerDuration(Math.round(clock4.total() / 1e3));
       return name ? s2.timerDiscCaption(name, length) : length;
     };
     const show = () => {
@@ -42758,6 +42896,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
       [
         "data-kp-timer-disc",
         "data-kp-timer-disc-until",
+        "data-kp-timer-disc-timezone",
         "data-kp-timer-disc-name",
         "data-kp-timer-disc-scale",
         "data-kp-timer-disc-controls",
@@ -42766,7 +42905,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
       (names) => {
         read();
         mountControls();
-        if (names.includes("data-kp-timer-disc") || names.includes("data-kp-timer-disc-until")) {
+        if (names.includes("data-kp-timer-disc") || names.includes("data-kp-timer-disc-until") || names.includes("data-kp-timer-disc-timezone")) {
           filling?.cancel();
           said.textContent = "";
           clock4.reset(seconds2);
@@ -42803,7 +42942,7 @@ var init_timer_disc = __esm({
     init_components();
     init_countdown();
     init_live_options();
-    TIMER_DISC = "[data-kp-timer-disc]";
+    TIMER_DISC = "[data-kp-timer-disc], [data-kp-timer-disc-until]";
     TIMER_DISC_LEFT = "--kp-timer-disc-left";
     registered = false;
     register = () => {
@@ -63067,8 +63206,8 @@ var NEEDS = [
   // The command block [kpadopt4-ideas]: one command with its terminal, its admin or sudo badge and a copy that confirms.
   { name: "command", when: "[data-kp-command]", load: () => Promise.resolve().then(() => (init_command(), command_exports)), attach: (m, root) => [m.attachCommands(root)] },
   // The two timers [kpadopt4-ideas]: a countdown in digits, and the time left as a shrinking disc.
-  { name: "countdown", when: "[data-kp-countdown]", load: () => Promise.resolve().then(() => (init_countdown(), countdown_exports)), attach: (m, root) => [m.attachCountdowns(root)] },
-  { name: "timer-disc", when: "[data-kp-timer-disc]", load: () => Promise.resolve().then(() => (init_timer_disc(), timer_disc_exports)), attach: (m, root) => [m.attachTimerDiscs(root)] },
+  { name: "countdown", when: "[data-kp-countdown], [data-kp-countdown-until]", load: () => Promise.resolve().then(() => (init_countdown(), countdown_exports)), attach: (m, root) => [m.attachCountdowns(root)] },
+  { name: "timer-disc", when: "[data-kp-timer-disc], [data-kp-timer-disc-until]", load: () => Promise.resolve().then(() => (init_timer_disc(), timer_disc_exports)), attach: (m, root) => [m.attachTimerDiscs(root)] },
   // The range picker [kpadopt4-ideas]: presets as the segmented control, and a custom from–to with the date picker.
   { name: "range", when: "[data-kp-range]", load: () => Promise.resolve().then(() => (init_range(), range_exports)), attach: (m, root) => [m.attachRanges(root)] },
   // The compare slider [kpadopt4-ideas]: two versions stacked with a divider between them.
@@ -65727,6 +65866,7 @@ export {
   timer_disc_exports as timerDiscExports,
   timerDiscOf,
   timer_exports as timerExports,
+  timerZone,
   toCurl,
   toDutch,
   toISO,
@@ -65769,6 +65909,8 @@ export {
   unsaved_exports as unsavedExports,
   unsavedSaved,
   untilLabel,
+  untilOffset,
+  untilZone,
   unusedDays,
   update,
   update_exports as updateExports,

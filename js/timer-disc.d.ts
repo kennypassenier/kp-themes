@@ -1,5 +1,5 @@
 /** A visual timer. */
-export declare const TIMER_DISC = "[data-kp-timer-disc]";
+export declare const TIMER_DISC = "[data-kp-timer-disc], [data-kp-timer-disc-until]";
 /** The custom property the disc is drawn by: 1 full, 0 gone. */
 export declare const TIMER_DISC_LEFT = "--kp-timer-disc-left";
 /**

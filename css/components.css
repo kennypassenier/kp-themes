@@ -10695,7 +10695,7 @@
         padding-inline: 0.375rem;
         overflow: hidden;
         line-height: calc(var(--kp-gantt-bar, 1.125rem) - 2px);
-        text-overflow: ellipsis;
+        text-overflow: clip;
         white-space: nowrap;
         pointer-events: none;
     }
@@ -10813,7 +10813,7 @@
         font-weight: 700;
     }
 
-    /* A bar too narrow for any words keeps none inside it; js/gantt.js puts the label of a bar that has room around it outside [gaps-time-1019]. */
+    /* A bar too narrow for any words keeps none inside it (a label is never cut with an ellipsis); js/gantt.js puts the label of a bar that has room around it outside [gaps-time-1019]. */
     @container kp-gantt-run (max-width: 2rem) {
         .kp-gantt__run:not([data-kp-label]) .kp-gantt__label {
             display: none;
@@ -10845,7 +10845,7 @@
         color: var(--foreground);
         font-size: 0.6875rem;
         line-height: var(--kp-gantt-bar, 1.125rem);
-        text-overflow: ellipsis;
+        text-overflow: clip;
         white-space: nowrap;
         pointer-events: none;
     }
@@ -10867,12 +10867,13 @@
     .kp-gantt__outside[data-kp-side='after'] {
         inset-inline-start: calc(
             (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% +
-                max(var(--kp-gantt-bar-min, 0.5rem), (var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%) + 0.25rem
+                max(var(--kp-gantt-bar-min, 0.5rem), (var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%) + 0.25rem +
+                var(--kp-g-label-shift, 0px)
         );
     }
 
     .kp-gantt__outside[data-kp-side='before'] {
-        inset-inline-end: calc(100% - (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% + 0.25rem);
+        inset-inline-end: calc(100% - (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% + 0.25rem + var(--kp-g-label-shift, 0px));
         text-align: end;
     }
 
@@ -11052,7 +11053,9 @@
         display: grid;
         place-items: center;
         inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-hit, 1.375rem)) / 2);
-        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% - var(--kp-gantt-hit, 1.375rem) / 2);
+        inset-inline-start: calc(
+            (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% - var(--kp-gantt-hit, 1.375rem) / 2 + var(--kp-g-dodge, 0px)
+        );
         inline-size: var(--kp-gantt-hit, 1.375rem);
         block-size: var(--kp-gantt-hit, 1.375rem);
         margin: 0;
