@@ -1830,7 +1830,10 @@ What it does for you, without hand work:
 
 - **Columns run through every row and every block.** A `.kp-formrows`, a `.kp-kv`, a `fieldset`, a `form` or a
   `.kp-formgrid__group` placed inside the grid becomes a subgrid of it: a key-value panel under a form starts its values on
-  the edge where the fields start. A `legend` or `.kp-formgrid__heading` in a group spans the whole width.
+  the edge where the fields start. A `legend` or `.kp-formgrid__heading` in a group spans the whole width and sits close on
+  its rows (`--kp-space-xs`); groups stand apart by the grid's row gap. Inside the grid a `.kp-formrows` or `.kp-kv` is no
+  size container (a size container cannot be a subgrid), and facts keep the key-value list's own gap, `--kp-kv-gap`
+  (0.375rem), so a facts panel reads as one compact list.
 - **One edge per kind of control.** Every control starts on the control track's edge. A field, select, combobox, textarea,
   secret, code block or command fills the track; a short control (stepper, time, number, date, `.kp-field__input--short`,
   `.kp-formgrid__short`) takes one fixed step, `--kp-formgrid-short` (14rem), and a stepper is never squeezed under its unit;
@@ -1838,7 +1841,9 @@ What it does for you, without hand work:
 - **A combobox's status is the row's value text.** In a row whose control is a `.kp-combobox` and that has no `.kp-formgrid__value` of its own, `attachComboboxes` moves the combobox's status line ("11 results") into the value track, so the row is as high as its label and the status stands in the column of every other row's hint. A row with value text of its own, or a combobox outside a form grid, keeps the status under the input.
 - **Every row on one line.** Cells align on the row's first baseline: the label's first line, the text in a field, the number
   of a stepper, a switch's word, a value's words. A multi-line label or a field with help under it keeps its first line on
-  that line. `data-kp-formgrid-align="center"` centres instead.
+  that line. `data-kp-formgrid-align="center"` centres instead. A row whose label has a note under it (`<small>` or
+  `.kp-formgrid__note` in the label) is centred on the label block by itself: on the first baseline the field and the
+  Reset stood on the block's first line and the block hung under them (Kenny, 2026-10-19 11:22).
 - **Buttons on the tracks.** `.kp-formgrid__row--buttons` is a row of buttons, centred on one line: its
   `.kp-formgrid__control` puts a `.kp-formgrid__buttons` group on the fields' start edge, and its `.kp-formgrid__actions`
   puts the row's own action at the end of the actions column, so "Send test" stands on the line of "Format" and "Minify"
@@ -1850,8 +1855,12 @@ What it does for you, without hand work:
   row's label in the label track (outside a form grid it is a line above the bar).
 - **A cell that needs more room says so**: `data-kp-formgrid-span="control-value"`, `"wide"` (control to actions) or
   `"all"`.
-- **The phone.** Under 36rem of the grid's own width every row reads top to bottom in one column: label, control, value,
-  actions (the buttons then start at the left edge). The fields keep their widths per kind.
+- **The phone.** Under 36rem of the grid's own width the rows stay on the grid's tracks (Kenny, 2026-10-19 11:22: "Grid
+  gebruiken, niet alles links alignen"): the label and the row's action share the first line, the action in the actions
+  track at the end (so every action ends on one edge and has one width), the control runs the full width under them and
+  the value stands under the control. A fact and its value share one line (key in the label track, value from the
+  control edge). A row of buttons without a label puts its buttons first and its action at the end of the next line.
+  The fields keep their widths per kind. `data-kp-formgrid-stack="always"` keeps the plain top-to-bottom column.
 
 Options, all attributes on `.kp-formgrid`, read by CSS alone, so changing one at run time re-lays the grid at once:
 
@@ -1859,7 +1868,7 @@ Options, all attributes on `.kp-formgrid`, read by CSS alone, so changing one at
 | ------------------------- | ------------------------------------------ | ---------- |
 | `data-kp-formgrid-label`  | `fit` (the longest label), `wide` (14rem+) | `fit`      |
 | `data-kp-formgrid-align`  | `baseline`, `center`                       | `baseline` |
-| `data-kp-formgrid-stack`  | `auto` (under 36rem), `always`, `never`    | `auto`     |
+| `data-kp-formgrid-stack`  | `auto` (the phone layout under 36rem), `always` (one plain column), `never` | `auto` |
 | `data-kp-formgrid-lines`  | `none`, `lines` (a rule under every row)   | `none`     |
 
 Knobs: `--kp-formgrid-gap` (between rows, the md step), `--kp-formgrid-column-gap` (the lg step), `--kp-formgrid-label-min`,
@@ -1868,7 +1877,8 @@ Knobs: `--kp-formgrid-gap` (between rows, the md step), `--kp-formgrid-column-ga
 
 `.kp-formrows` on its own got the same two rules (first baseline, one width per kind of control), so a page that has not
 moved to the form grid yet already lines up inside one list. The check that holds every review demo to this is
-`research/_review/measure-align.mjs`, run by `measure-gaps.mjs`.
+`research/_review/measure-align.mjs`, run by `measure-gaps.mjs`; it also flags a label block that hangs under its row
+(B2) and a form, settings or key-value row that stacks its action or a fact's value under its label on one left edge (H).
 
 ## Rows, cards and choices [kpadopt4-rows]
 

@@ -27630,9 +27630,12 @@
     become subgrids of it, so a key-value panel, a form and a row of
     buttons in one grid share their columns without hand work.
 
-    Under --kp-formgrid-stack (36rem) of the grid's own width, or always
-    with data-kp-formgrid-stack="always", every row reads top to bottom in
-    one column: label, control, value, actions; "never" keeps the columns.
+    A row whose label has a note under it is centred on the label block.
+    Under 36rem of the grid's own width the rows stay on the tracks, laid
+    out for a phone: label and action on one line, the control under them,
+    the value under that, a fact beside its value; with
+    data-kp-formgrid-stack="always" every row reads top to bottom in one
+    column; "never" keeps the columns.
     Options are attributes, read by CSS alone, so changing one re-lays the
     grid at once: data-kp-formgrid-label (fit | wide), data-kp-formgrid-align
     (baseline | center), data-kp-formgrid-stack (auto | always | never),
@@ -27676,14 +27679,40 @@
         margin: 0;
         padding: 0;
         border: 0;
+        /* A size container is layout-contained and a layout-contained grid cannot be a subgrid: a .kp-formrows in the
+           grid (a container of its own) fell back to one column and floated its rows in the middle of the panel
+           (facts, 2026-10-19 11:22). Inside the grid it is no container; the grid's own query lays it out. */
+        container-type: normal;
+    }
+
+    /* A group is its heading and its rows: the heading sits close on its rows, the groups stand apart by the grid's
+       row gap. Facts are a compact list: their rows keep the key-value list's own gap, --kp-kv-gap (0.375rem), not the
+       gap between fields (Kenny, 2026-10-19 11:22, facts: "lelijke opmaak, alles staat zo ver van mekaar"). */
+    .kp-formgrid > .kp-formgrid__group,
+    .kp-formgrid__group > .kp-formgrid__group {
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-formgrid__group > :is(.kp-formrows, fieldset, form) {
+        row-gap: var(--kp-formgrid-gap, var(--kp-space-md, 0.75rem));
+    }
+
+    .kp-formgrid .kp-kv {
+        row-gap: var(--kp-kv-gap, 0.375rem);
+    }
+
+    .kp-formgrid[data-kp-formgrid-lines='lines'] :is(.kp-kv, .kp-formrows) {
+        row-gap: 0;
     }
 
     .kp-formgrid :is(.kp-formgrid__group, fieldset) > :is(legend, .kp-formgrid__heading) {
         grid-column: label-start / actions-end;
         float: none;
-        margin: var(--kp-space-sm, 0.5rem) 0 0;
+        margin: 0;
         padding: 0;
+        font-size: var(--kp-text-base, 1rem);
         font-weight: 600;
+        line-height: 1.4;
     }
 
     .kp-formgrid__row,
@@ -27701,6 +27730,15 @@
 
     .kp-formgrid[data-kp-formgrid-align='center'],
     .kp-formgrid__row--buttons {
+        align-items: center;
+    }
+
+    /* A label with a note under it is a block of two or three lines. On the first baseline the field, the value and
+       the action stood on its first line only, so the block hung 31 px under them and the row read as offset from its
+       own label (Kenny, 2026-10-19 11:22, settings: "de eerste input en de items daarachter op de eerste rij zijn niet
+       verticaal aligned met de eerste kolom"). Such a row centres every cell on the label block instead. */
+    .kp-formgrid :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__label, .kp-formrow__label) > :is(small, .kp-formgrid__note)),
+    .kp-formrow:has(> .kp-formrow__label > small) {
         align-items: center;
     }
 
@@ -27971,34 +28009,87 @@
         background: var(--destructive);
     }
 
-    /* One column on a narrow grid: every row reads top to bottom, the
-       control at the full width, the buttons at their own width on the
-       start edge. */
+    /* On a narrow grid (under 36rem of its own width) the rows stay on the grid's tracks, recomposed for a phone
+       (Kenny, 2026-10-19 11:22, phone: "Grid gebruiken, niet alles links alignen, maak het mooi!"): a stack of
+       label, control, value and action, all on one left edge, is not a grid. So:
+
+           label ........................ | action      the label (to the actions track, in every row), its action
+           control (the full width)                     a field the width, a short control one step
+           value                                        the hint or default, under the control
+
+       The actions column keeps its own track through every row, so every Reset ends on one edge and has one width.
+       A fact and its value share a line: the key in the label track, the value from the control edge to the end. A
+       row of buttons without a label puts its buttons on the first line and its action at the end of the second. A label with a note stays centred on its action, as on a wide grid. data-kp-formgrid-stack="always" keeps the plain one-column reading order. */
     @container kp-formgrid (max-width: 36rem) {
-        .kp-formgrid:not([data-kp-formgrid-stack='never'])
-            :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form) {
-            grid-column: 1 / -1;
-            grid-template-columns: minmax(0, 1fr);
-            row-gap: var(--kp-space-xs, 0.25rem);
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > :is(.kp-formgrid__label, .kp-formrow__label) {
+            grid-column: label-start / value-end;
+            grid-row: 1;
+            min-inline-size: 0;
         }
 
-        .kp-formgrid:not([data-kp-formgrid-stack='never']) :is(.kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form) {
-            row-gap: var(--kp-formgrid-gap, var(--kp-space-md, 0.75rem));
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > .kp-formgrid__actions {
+            grid-column: actions;
+            grid-row: 1;
         }
 
-        .kp-formgrid:not([data-kp-formgrid-stack='never']) :is(.kp-formgrid__group, fieldset) > :is(legend, .kp-formgrid__heading),
-        .kp-formgrid:not([data-kp-formgrid-stack='never']) :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row) > *,
-        .kp-formgrid:not([data-kp-formgrid-stack='never']) :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row) > [data-kp-formgrid-span] {
-            grid-column: 1;
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__value, .kp-formrow__aside, [data-kp-formgrid-span]) {
+            grid-column: label-start / actions-end;
             grid-row: auto;
         }
 
-        .kp-formgrid:not([data-kp-formgrid-stack='never']) .kp-formgrid__actions {
-            justify-content: flex-start;
+        /* An empty cell takes no line of its own. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > :is(.kp-formgrid__label, .kp-formrow__label, .kp-formgrid__value, .kp-formrow__aside):empty {
+            display: none;
         }
 
-        .kp-formgrid:not([data-kp-formgrid-stack='never']) .kp-formgrid__actions > :only-child {
+        /* A row of buttons without a label: the buttons on the first line, the row's action at the end of the second
+           (across every track, so a wide action such as "Pause the schedule" does not widen the actions track and
+           squeeze every label), the note under them. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            .kp-formgrid__row--buttons:not(:has(> :is(.kp-formgrid__label, .kp-formrow__label):not(:empty)))
+            > .kp-formgrid__control {
+            grid-row: 1;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            .kp-formgrid__row--buttons:not(:has(> :is(.kp-formgrid__label, .kp-formrow__label):not(:empty)))
+            > .kp-formgrid__actions {
+            grid-column: label-start / actions-end;
+            grid-row: 2;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            .kp-formgrid__row--buttons:not(:has(> :is(.kp-formgrid__label, .kp-formrow__label):not(:empty)))
+            > .kp-formgrid__actions
+            > :only-child {
             flex: 0 0 auto;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            .kp-formgrid__row--buttons:not(:has(> :is(.kp-formgrid__label, .kp-formrow__label):not(:empty)))
+            > .kp-formgrid__actions:empty {
+            display: none;
+        }
+
+        /* A fact and its value on one line. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-kv__row > dd {
+            grid-column: control-start / actions-end;
+        }
+
+        /* A JSON field's label stands on the label line, not on the field's tool row. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+            > :is(.kp-formgrid__label, .kp-formrow__label, .kp-formgrid__actions) {
+            align-self: center;
+            padding-block-start: 0;
         }
     }
 
@@ -30052,11 +30143,16 @@
         margin: 0;
     }
 
-    /* Stacked (a narrow grid): the label and its mark share the row's first line, the rest follows. */
+    /* A narrow grid (the phone layout, align-grid-1019): the label spans the label track to the actions track on the
+       row's first line, so the mark stands at the end of that span; a fact's key keeps the label track. */
     @container kp-formgrid (max-width: 36rem) {
-        .kp-formgrid:not([data-kp-formgrid-stack='never']) [data-kp-anchored='row'] > .kp-anchor {
-            grid-column: 1;
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) [data-kp-anchored='row'] > .kp-anchor {
+            grid-column: label-start / value-end;
             grid-row: 1;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-kv__row[data-kp-anchored='row'] > .kp-anchor {
+            grid-column: label;
         }
 
         .kp-formgrid:not([data-kp-formgrid-stack='never']) [data-kp-anchored='row'] > :is(.kp-formgrid__label, .kp-formrow__label, dt) {

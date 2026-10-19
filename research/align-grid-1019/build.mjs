@@ -123,12 +123,13 @@ const sections = [
         intro: 'The settings of an offsite backup of the photo library: a field, a time, a stepper, a select, a switch and a number, each with its default and, where it has one, a Reset.',
         components: 'formgrid',
         changed:
-            'New in the package: <code>.kp-formgrid</code>. Before, a settings row was a label beside a control in its own flex row, so each row decided its own edges: in the rejected homelab settings the controls ended on four different edges (x 649, 686, 706 and 711), a stepper stood 4 px and a switch 6 px off its label. Here every row is a subgrid of one grid, so every control starts on one edge, ends on one of two (a field fills the track, a time, stepper or number takes one step of 14rem), and every cell stands on the label&rsquo;s first baseline. The three switches above the grid change its options live.',
+            'New in the package: <code>.kp-formgrid</code>. Before, a settings row was a label beside a control in its own flex row, so each row decided its own edges: in the rejected homelab settings the controls ended on four different edges (x 649, 686, 706 and 711), a stepper stood 4 px and a switch 6 px off its label. Here every row is a subgrid of one grid, so every control starts on one edge, ends on one of two (a field fills the track, a time, stepper or number takes one step of 14rem), and every cell stands on the label&rsquo;s first baseline. The three switches above the grid change its options live. <b>Fixed after your verdict of 19/10 11:22</b> (&ldquo;de eerste input en de items daarachter op de eerste rij zijn niet verticaal aligned met de eerste kolom&rdquo;): the first row&rsquo;s label has a note under it, so the label is a block of three lines, 58 px high, and the field, the value and Reset stood on its first line only, hanging 31 px above the block&rsquo;s bottom (centres 20 px apart). A row whose label has a note now centres every cell on the label block: the field, the value and Reset share the block&rsquo;s centre (0 px apart).',
         grid: 'four columns, <b>label</b> (as wide as &ldquo;Bandwidth cap (MB/s)&rdquo;) | <b>control</b> (3 parts of the width left) | <b>value</b> (2 parts) | <b>actions</b> (as wide as &ldquo;Reset target&rdquo;); seven rows, each a subgrid spanning all four; the Save row puts its two buttons in the control column and its note in the value column.',
         choices:
             '[{ "id": "settings-label", "label": "The label column", "once": true, "default": "fit", "options": [{ "value": "fit", "label": "As wide as the longest label", "hint": "The default of the grid: no room wasted." }, { "value": "wide", "label": "At least 14rem", "hint": "More air before the controls; the grid has it as data-kp-formgrid-label=\\"wide\\"." }] }]',
         expect: [
             'Every control starts on one vertical line; the field, the select end on one edge; the time, the stepper and the number end on a second, shorter edge; the switch keeps its own size.',
+            'The first row: the field, &ldquo;changed 12/10/2026 21:14&rdquo; and Reset target stand on the centre of the label block &ldquo;Upload target&rdquo; with its note, not on its top line.',
             '&ldquo;Snapshot time&rdquo; and 03:30, &ldquo;Parallel uploads&rdquo; and 4 files, &ldquo;Verify after upload&rdquo; and On, each value and each Reset stand on one line.',
             'The three Resets end on the right edge, one column; Save and Discard start where the fields start.',
             '<b>Label column</b>, <b>Line up</b> and <b>Rules</b> switch the grid&rsquo;s attributes (<code>data-kp-formgrid-label</code>, <code>-align</code>, <code>-lines</code>); the grid follows at once.',
@@ -212,11 +213,12 @@ const sections = [
         intro: 'A backup job&rsquo;s panel: what the last run did (a key-value list) and when it runs (two settings), with the job&rsquo;s buttons under them.',
         components: 'formgrid kv formrows',
         changed:
-            'New: a <code>.kp-kv</code> and a <code>.kp-formrows</code> placed inside one <code>.kp-formgrid</code> become subgrids of it, without a class on their rows. Before, each list sized its own label column, so the facts and the settings beside each other started on two edges. Now &ldquo;Last run&rdquo; and &ldquo;Keep daily snapshots&rdquo; share one label column, the facts start on the edge where the controls start, and the buttons under them start there too.',
+            'New: a <code>.kp-kv</code> and a <code>.kp-formrows</code> placed inside one <code>.kp-formgrid</code> become subgrids of it, without a class on their rows. Before, each list sized its own label column, so the facts and the settings beside each other started on two edges. Now &ldquo;Last run&rdquo; and &ldquo;Keep daily snapshots&rdquo; share one label column, the facts start on the edge where the controls start, and the buttons under them start there too. <b>Fixed after your verdict of 19/10 11:22</b> (&ldquo;lelijke opmaak, alles staat zo ver van mekaar&rdquo;): the schedule list was a size container of its own, and a size container cannot share the grid&rsquo;s columns, so its two rows fell back to one column and floated in the middle of the panel; the facts stood 32 px apart (the gap between fields) and each heading had 20 px above its rows. Now the schedule rows stand on the grid&rsquo;s tracks, the facts keep the key-value list&rsquo;s own gap (25.5 px from line to line instead of 32), and a heading sits 4 px above its rows.',
         grid: 'the same four columns; a heading row spanning all four, five fact rows (label | value across control and value), a second heading, a <code>.kp-formrows</code> of two rows (label | control | aside in the value column), a row of buttons (two in the control column, Pause in the actions column).',
         expect: [
             'The labels of both lists form one column; the facts (Succeeded, 19/10/2026 03:41, &hellip;) start on the same edge as the time field and the stepper.',
             'Each fact stands on its label&rsquo;s line; the badge &ldquo;Succeeded&rdquo; too.',
+            'The facts read as one compact list: no wide gaps between the rows, each heading close on its rows; &ldquo;Runs at&rdquo; and &ldquo;Keep daily snapshots&rdquo; in the label column, their controls on the control edge.',
             '&ldquo;Run now&rdquo; starts on the control edge; &ldquo;Pause the schedule&rdquo; stands on its line at the right end.',
         ],
         look: 'one label column through both lists; the values of the facts and the controls of the settings start on one line.',
@@ -336,16 +338,17 @@ const sections = [
     section({
         id: 'phone',
         title: 'The settings list at phone width',
-        intro: 'The same settings as the first section in a frame as wide as a phone (360 px): every row reads top to bottom.',
+        intro: 'The same settings as the first section in a frame as wide as a phone (360 px), composed on the grid&rsquo;s tracks.',
         components: 'formgrid',
         changed:
-            'New: the grid lays itself out by its own width, not the window&rsquo;s. Under 36rem every row is one column: the label, the control, the value under it and the Reset under that, all on one left edge. The controls keep their widths per kind: a field the whole width, a time, stepper or number one step.',
-        grid: 'one column of 360 px; each row a stack of label, control, value, action, all starting on the frame&rsquo;s left edge; the Save row: the two buttons, then the note.',
+            'The grid lays itself out by its own width, not the window&rsquo;s. <b>Fixed after your verdict of 19/10 11:22</b> (&ldquo;Grid gebruiken, niet alles links alignen, maak het mooi!&rdquo;): under 36rem every row was one column, label, control, value and Reset under each other, all on one left edge. Now the rows stay on the grid&rsquo;s tracks: the label and its Reset share the first line, Reset in the actions track at the end, so the three Resets form one column of one width; the control runs the full width under them (a time, stepper or number one step), and the value stands under the control. A fact and its value share one line, and a row of buttons puts its action at the end of its own line.',
+        grid: 'two tracks in 310 px: the label track (to the actions track) and the actions track (as wide as &ldquo;Reset target&rdquo;, 93 px) at the right; each row: label | Reset on its first line, the control across both tracks, the value under it; the Save row: the two buttons, then the note.',
         expect: [
-            'Every label, control, value and Reset starts on one left edge; nothing scrolls sideways.',
+            'Each Reset stands at the right end of its label&rsquo;s line; the three Resets end on one edge and have one width; nothing scrolls sideways.',
+            'Labels, controls and values start on one left edge; the label with a note has Reset on the centre of its block.',
             'The field and the select are the full width; the time, the stepper and the number end on one shorter edge.',
         ],
-        look: 'one left edge for everything; the short controls end together.',
+        look: 'two columns: the labels and controls on the left edge, the Resets in their own column at the right; the short controls end together.',
         body: `<div class="ag-phone"><div class="kp-card ag-card"><div class="kp-formgrid" id="ag-phone" data-kp-formgrid-lines="lines" aria-label="Offsite backup settings at phone width">${settingsRows('p')}
 </div></div></div>`,
     }),

@@ -19,6 +19,9 @@
 //     three quarters of the shorter one) share a top, a centre or a bottom (tolerance 1 px): "Send test" beside
 //     "Format" is held to this. A button that is not on screen (inside a hidden, clipped or scrolled-out box, or at no
 //     opacity) is not compared, and neither are two buttons that merely overlap a little, in different columns or rows.
+//  B2. A label block of several lines (a label with a note) does not hang under cells that stand on its first line only.
+//  H. Stacks. A form, settings or key-value row never puts its action or a fact's value under its label on the label's
+//     start edge (the phone layout Kenny rejected 2026-10-19 11:22: "niet alles links alignen").
 //  D. Tracks. A group of buttons under a row group, inside its width, starts on one of that group's column edges or ends
 //     on one (tolerance 1 px). A segmented control's own box is its edge: its items sit inside its padding.
 //  E/F. Fields fill their track; columns side by side start on one line.
@@ -199,7 +202,7 @@ export function measureAlign([tol, only]) {
     };
 
     /** A radio or a checkbox drawn as a tile or an option is controlled by its tile: the tile is the edge a reader sees. @param {Element | undefined} c */
-    const tileOf = (c) => (c?.matches(MARK) ? c.closest('.kp-field__option, label.kp-tile') ?? c : c);
+    const tileOf = (c) => (c?.matches(MARK) ? (c.closest('.kp-field__option, label.kp-tile') ?? c) : c);
 
     // ---- A and B: row groups -------------------------------------------------------------------------------------
     const all = [section, ...section.querySelectorAll('*')].filter((el) => !inChrome(el) && shown(el));
@@ -269,7 +272,10 @@ export function measureAlign([tol, only]) {
             const ctls = list
                 .map(({ row, cell }) => ({
                     row,
-                    ctl: tileOf(cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c) && onScreen(c))) || null,
+                    ctl:
+                        tileOf(
+                            cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c) && onScreen(c)),
+                        ) || null,
                 }))
                 .filter((x) => x.ctl && x.ctl !== list.find((l) => l.row === x.row)?.cell);
             if (ctls.length >= 2) {
@@ -318,6 +324,28 @@ export function measureAlign([tol, only]) {
             const label = cells[li];
             const la = anchor(label);
             const lr = label.getBoundingClientRect();
+            // B2: a label block of several lines (a label with a note under it) beside cells that stand on its first line
+            // only hangs under the row: the row reads as offset from its own label (Kenny, 2026-10-19 11:22, settings:
+            // "de eerste input en de items daarachter op de eerste rij zijn niet verticaal aligned met de eerste kolom").
+            const beside = cells
+                .slice(li + 1)
+                .filter(
+                    (c) => overlapY(lr, c.getBoundingClientRect()) > 1 && (c.textContent?.trim() || c.querySelector(CONTROL) || c.matches(CONTROL)),
+                );
+            const lline = firstLine(label);
+            // Form rows only (a label cell of a form, settings or key-value row): an alert's sentence that wraps beside
+            // its actions is a text, not a label block.
+            const formRow =
+                row.matches('.kp-formgrid__row, .kp-formrow, .kp-kv__row') && label.matches('.kp-formgrid__label, .kp-formrow__label, dt, label');
+            if (formRow && beside.length && lline && lr.height > lline.rect.height * 1.5) {
+                const ob = Math.max(...beside.map((c) => c.getBoundingClientRect().bottom));
+                const ot = Math.min(...beside.map((c) => c.getBoundingClientRect().top));
+                const dCentre = (lr.top + lr.bottom) / 2 - (ot + ob) / 2;
+                if (lr.bottom - ob > tol && Math.abs(dCentre) > tol)
+                    res.push(
+                        `${id}: ${gname} row ${ri + 1}: the label ${la.what} is a block ${px(lr.height)} px high and hangs ${px(lr.bottom - ob)} px under the cells beside it, which stand on its first line only (centres ${px(dCentre)} px apart): centre the row on the label block`,
+                    );
+            }
             for (const c of cells.slice(li + 1)) {
                 const cr = c.getBoundingClientRect();
                 if (overlapY(lr, cr) <= 1) continue;
@@ -336,6 +364,38 @@ export function measureAlign([tol, only]) {
                     );
             }
         });
+    }
+
+    // ---- H: no form row is a stack on one left edge ---------------------------------------------------------------------
+    // (Kenny, 2026-10-19 11:22, phone: "Grid gebruiken, niet alles links alignen, maak het mooi!": at 390 px every row of
+    // the settings read label, control, value and Reset under each other, all from one left edge.) In a form row, a
+    // settings row or a key-value row, the row's action (its actions cell, or a cell of buttons only) and a fact's value
+    // never stand under the row's label on the label's start edge: the action takes its own track (at the end of the
+    // label's line), the fact and its value share a line. `.kp-kv--stack` asks for label over value and is left out.
+    const ROWISH = '.kp-formgrid__row, .kp-formrow, .kp-kv__row';
+    for (const row of all.filter((el) => el.matches(ROWISH) && !el.closest('.kp-kv--stack'))) {
+        const cells = kids(row);
+        const li = cells.findIndex(
+            (c) => (c.textContent || '').trim() && !c.matches('[class*="mark"], [class*="icon"], [class*="idmark"], [class*="badge"]'),
+        );
+        if (li < 0) continue;
+        const label = cells[li];
+        const lr = label.getBoundingClientRect();
+        for (const c of cells.slice(li + 1)) {
+            if (!(c.textContent || '').trim()) continue;
+            const inner = kids(c);
+            const isAction =
+                c.matches('.kp-formgrid__actions, .kp-button') ||
+                (inner.length > 0 && inner.every((k) => k.matches('button, .kp-button, a.kp-button')));
+            const isValue = row.matches('.kp-kv__row') && c.matches('dd');
+            if (!isAction && !isValue) continue;
+            const first = (isAction && inner[0]) || c;
+            const fr = first.getBoundingClientRect();
+            if (fr.top >= lr.bottom - tol && Math.abs(fr.left - lr.left) <= tol)
+                res.push(
+                    `${id}: ${sig(row)} ${name(label)}: ${isAction ? 'the action' : 'the value'} ${name(first)} stands under its label on the same start edge (x ${px(fr.left)}), a stack on one left edge: ${isAction ? "give the action its own track, at the end of the label's line" : 'a fact and its value share one line'}`,
+                );
+        }
     }
 
     // ---- C: buttons side by side share a top, a centre or a bottom --------------------------------------------------
@@ -519,7 +579,13 @@ export function measureAlign([tol, only]) {
             if (plated(a) && plated(b) && Math.abs(ar.top - br.top) <= tol) continue;
             // A collapsed icon rail has no text line to share with the page beside it: its icons are its composition
             // (homelab gap 51, 2026-10-19).
-            if ([a, b].some((k) => k.matches('[data-kp-sidenav-slim-collapsed], [data-kp-sidenav-slim-collapsed] *') || k.querySelector('[data-kp-sidenav-slim-collapsed]')))
+            if (
+                [a, b].some(
+                    (k) =>
+                        k.matches('[data-kp-sidenav-slim-collapsed], [data-kp-sidenav-slim-collapsed] *') ||
+                        k.querySelector('[data-kp-sidenav-slim-collapsed]'),
+                )
+            )
                 continue;
             // A plate beside open text: the plate's top on the text's first line top is a composition too.
             const fa = firstLine(a);

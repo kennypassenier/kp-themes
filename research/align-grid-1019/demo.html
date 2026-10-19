@@ -63,6 +63,11 @@
                         (x 649, 686, 706 and 711), a stepper stood 4 px and a switch 6 px off its label. Here every row is a subgrid of one grid, so
                         every control starts on one edge, ends on one of two (a field fills the track, a time, stepper or number takes one step of
                         14rem), and every cell stands on the label&rsquo;s first baseline. The three switches above the grid change its options live.
+                        <b>Fixed after your verdict of 19/10 11:22</b> (&ldquo;de eerste input en de items daarachter op de eerste rij zijn niet
+                        verticaal aligned met de eerste kolom&rdquo;): the first row&rsquo;s label has a note under it, so the label is a block of
+                        three lines, 58 px high, and the field, the value and Reset stood on its first line only, hanging 31 px above the
+                        block&rsquo;s bottom (centres 20 px apart). A row whose label has a note now centres every cell on the label block: the field,
+                        the value and Reset share the block&rsquo;s centre (0 px apart).
                     </p>
                     <p>
                         <b>The grid:</b> four columns, <b>label</b> (as wide as &ldquo;Bandwidth cap (MB/s)&rdquo;) | <b>control</b> (3 parts of the
@@ -83,6 +88,10 @@
                         <li>
                             Every control starts on one vertical line; the field, the select end on one edge; the time, the stepper and the number end
                             on a second, shorter edge; the switch keeps its own size.
+                        </li>
+                        <li>
+                            The first row: the field, &ldquo;changed 12/10/2026 21:14&rdquo; and Reset target stand on the centre of the label block
+                            &ldquo;Upload target&rdquo; with its note, not on its top line.
                         </li>
                         <li>
                             &ldquo;Snapshot time&rdquo; and 03:30, &ldquo;Parallel uploads&rdquo; and 4 files, &ldquo;Verify after upload&rdquo; and
@@ -230,7 +239,11 @@
                         <code>.kp-formgrid</code> become subgrids of it, without a class on their rows. Before, each list sized its own label column,
                         so the facts and the settings beside each other started on two edges. Now &ldquo;Last run&rdquo; and &ldquo;Keep daily
                         snapshots&rdquo; share one label column, the facts start on the edge where the controls start, and the buttons under them
-                        start there too.
+                        start there too. <b>Fixed after your verdict of 19/10 11:22</b> (&ldquo;lelijke opmaak, alles staat zo ver van mekaar&rdquo;):
+                        the schedule list was a size container of its own, and a size container cannot share the grid&rsquo;s columns, so its two rows
+                        fell back to one column and floated in the middle of the panel; the facts stood 32 px apart (the gap between fields) and each
+                        heading had 20 px above its rows. Now the schedule rows stand on the grid&rsquo;s tracks, the facts keep the key-value
+                        list&rsquo;s own gap (25.5 px from line to line instead of 32), and a heading sits 4 px above its rows.
                     </p>
                     <p>
                         <b>The grid:</b> the same four columns; a heading row spanning all four, five fact rows (label | value across control and
@@ -253,6 +266,10 @@
                             time field and the stepper.
                         </li>
                         <li>Each fact stands on its label&rsquo;s line; the badge &ldquo;Succeeded&rdquo; too.</li>
+                        <li>
+                            The facts read as one compact list: no wide gaps between the rows, each heading close on its rows; &ldquo;Runs at&rdquo;
+                            and &ldquo;Keep daily snapshots&rdquo; in the label column, their controls on the control edge.
+                        </li>
                         <li>
                             &ldquo;Run now&rdquo; starts on the control edge; &ldquo;Pause the schedule&rdquo; stands on its line at the right end.
                         </li>
@@ -350,28 +367,40 @@
             >
                 <div class="k56-changed">
                     <p>
-                        <b>What changed:</b> New: the grid lays itself out by its own width, not the window&rsquo;s. Under 36rem every row is one
-                        column: the label, the control, the value under it and the Reset under that, all on one left edge. The controls keep their
-                        widths per kind: a field the whole width, a time, stepper or number one step.
+                        <b>What changed:</b> The grid lays itself out by its own width, not the window&rsquo;s.
+                        <b>Fixed after your verdict of 19/10 11:22</b> (&ldquo;Grid gebruiken, niet alles links alignen, maak het mooi!&rdquo;): under
+                        36rem every row was one column, label, control, value and Reset under each other, all on one left edge. Now the rows stay on
+                        the grid&rsquo;s tracks: the label and its Reset share the first line, Reset in the actions track at the end, so the three
+                        Resets form one column of one width; the control runs the full width under them (a time, stepper or number one step), and the
+                        value stands under the control. A fact and its value share one line, and a row of buttons puts its action at the end of its
+                        own line.
                     </p>
                     <p>
-                        <b>The grid:</b> one column of 360 px; each row a stack of label, control, value, action, all starting on the frame&rsquo;s
-                        left edge; the Save row: the two buttons, then the note.
+                        <b>The grid:</b> two tracks in 310 px: the label track (to the actions track) and the actions track (as wide as &ldquo;Reset
+                        target&rdquo;, 93 px) at the right; each row: label | Reset on its first line, the control across both tracks, the value under
+                        it; the Save row: the two buttons, then the note.
                     </p>
                 </div>
                 <div class="kc-sec__head">
                     <h2 id="h-phone">The settings list at phone width</h2>
-                    <p>The same settings as the first section in a frame as wide as a phone (360 px): every row reads top to bottom.</p>
+                    <p>The same settings as the first section in a frame as wide as a phone (360 px), composed on the grid&rsquo;s tracks.</p>
                 </div>
                 <div class="kc-expected">
                     <p><b>Expected:</b></p>
                     <ul>
-                        <li>Every label, control, value and Reset starts on one left edge; nothing scrolls sideways.</li>
+                        <li>
+                            Each Reset stands at the right end of its label&rsquo;s line; the three Resets end on one edge and have one width; nothing
+                            scrolls sideways.
+                        </li>
+                        <li>Labels, controls and values start on one left edge; the label with a note has Reset on the centre of its block.</li>
                         <li>The field and the select are the full width; the time, the stepper and the number end on one shorter edge.</li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">one left edge for everything; the short controls end together.</p>
+                    <p data-for="formal">
+                        two columns: the labels and controls on the left edge, the Resets in their own column at the right; the short controls end
+                        together.
+                    </p>
                 </div>
 
                 <div class="ag-phone">
