@@ -309,7 +309,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-19 [stackbar-refresh-1019]: the share bar's picked ring (--kp-stackbar-picked-ring) and the legend's value track (--kp-stackbar-value-w), both read through var(): 1022 + 2.
     // Re-pinned 2026-10-19 [datatable-r5-1019]: the data table's card label track, card gap and fixed end column (--kp-datatable-card-label, -card-gap, -fixed-end), all read through var(): 1024 + 3.
     // Re-pinned 2026-10-19 [anchors-picker-1019]: --kp-anchor-room and --kp-picker-label-gap: 1029.
-    assert.equal(result.expected, 1029, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-19 [graph-loading-1019]: the per-theme graph loading knobs (ghost, edge and node animations) left
+    // with the pictures Kenny rejected, the form grid fix added and removed some: 1020.
+    assert.equal(result.expected, 1020, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -380,18 +382,16 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Recounted 2026-10-19 [stackbar-refresh-1019]: the two new stackbar knobs, both read through var(): 1015.
     // Recounted 2026-10-19 [datatable-r5-1019]: the three new data table knobs, all read through var(): 1018.
     // Recounted 2026-10-19 [anchors-picker-1019], both read through var(): 1020.
-    assert.equal(result.readCount, 1020);
+    // Recounted 2026-10-19 [graph-loading-1019]: 1012.
+    assert.equal(result.readCount, 1012);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
     // The four that no rule and no script reads yet stay listed: --kp-busy-opacity, --kp-inspector-min, --kp-week-mode and
     // --kp-wheel-ease; --kp-steps is declared on the progress stripe (css/components.css) and not read through var() there.
-    // --kp-formgrid-stack names the form grid's 36rem stacking width in its documentation; a container query cannot read a
-    // custom property, so the width is written in the query itself (2026-10-19 [align-grid-1019]).
     assert.deepEqual(result.unread, [
         '--kp-busy-opacity',
         '--kp-chart-height',
-        '--kp-formgrid-stack',
         '--kp-inspector-min',
         '--kp-sidenav-lead',
         '--kp-sidenav-room',
