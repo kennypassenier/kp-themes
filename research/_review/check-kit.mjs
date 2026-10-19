@@ -927,6 +927,8 @@ for (const [width, height] of [
             const kept = [];
             for (const el of root.querySelectorAll('*')) {
                 if (/^(script|style|option|html|body|head|link|meta|title)$/i.test(el.tagName) || !shown(el)) continue;
+                // Inside a drawing every part is drawing: a graph's links group is strokes, not an empty box (kyu gap 25).
+                if (el.parentElement?.closest('svg')) continue;
                 const r = el.getBoundingClientRect();
                 const c = {
                     left: Math.max(r.left + dx, box.left),
