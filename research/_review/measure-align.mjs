@@ -27,6 +27,11 @@
 //  E/F. Fields fill their track; columns side by side start on one line.
 //  G. No two buttons overlap; a `.kp-snooze` lies on one grid (trigger, End snooze and status on shared tracks, every part
 //     the whole width of its element, no part taller than its content) [snooze-width, 2026-10-19 11:22].
+//  Scopes (align-dialogs-1019). Every open `dialog`, `[role="dialog"]`, `.kp-drawer`, `.kp-sheet` and open `[popover]` is a
+//     scope of its own: A to H run inside it as if it were a section, the outer section does not measure its contents, and
+//     a line reads "<section> › dialog <name>". A dialog open at load is measured as it stands; a closed one is opened by
+//     its `[data-kp-dialog]` or `[popovertarget]` button (measureAlignOpened) and closed again. A dialog a demo opens only
+//     from script (no opener attribute) is not reached.
 //
 // Run (a static server on the repository root first):
 //   node research/_review/measure-align.mjs <port> <research/topic/demo.html> [themes=formal] [widths=1280,390] [ids]
@@ -38,19 +43,56 @@ export const ALIGN_TOLERANCE = 1;
 
 /**
  * In the page: every alignment fault of one section. Self-contained, so it can be handed to page.evaluate.
- * @param {[number, string]} args tolerance, and the id of the one section to measure
+ * @param {[number, string, boolean?]} args tolerance, the id of the one section to measure, and whether to report only the
+ *   open dialogs, sheets, drawers and popovers inside it (the second pass after their openers were pressed)
  * @returns {string[]}
  */
-export function measureAlign([tol, only]) {
-    const section = document.querySelector(`[data-review-item="${CSS.escape(only)}"]`);
-    if (!section) return [];
-    const id = only;
+export function measureAlign([tol, only, dialogsOnly = false]) {
+    const root = document.querySelector(`[data-review-item="${CSS.escape(only)}"]`);
+    if (!root) return [];
+    // Every open dialog, sheet, drawer and popover inside the section is a scope of its own (chassis-rs, 2026-10-19: the
+    // approved clients-manage dialog had a head 14.3 px off its tiles and a danger band 4.6 px off its actions, and the
+    // section scope saw the dialog's parent, so neither showed): its checks run as if it were a section, and the outer
+    // section does not measure its contents. Reported as "<section> › dialog <name>".
+    const SCOPE = 'dialog, [role="dialog"], .kp-drawer, .kp-sheet, [popover]';
+    const isOpenScope = (/** @type {Element} */ el) => {
+        if (el.closest('[hidden], template, .cat-judge, [data-review-controls]')) return false;
+        if (el.matches('dialog') && !(/** @type {HTMLDialogElement} */ (el).open)) return false;
+        if (el.hasAttribute('popover') && !el.matches(':popover-open')) return false;
+        const r = el.getBoundingClientRect();
+        const cs = getComputedStyle(el);
+        return r.width > 0.5 && r.height > 0.5 && cs.visibility !== 'hidden' && cs.display !== 'none';
+    };
+    const scopeName = (/** @type {Element} */ el) => {
+        const by = (el.getAttribute('aria-labelledby') || '').split(' ').map((i) => document.getElementById(i)?.textContent || '').join(' ');
+        const t = (el.getAttribute('aria-label') || by || el.querySelector('h1, h2, h3, [class*="__title"]')?.textContent || el.id || String(el.classList[0] || el.tagName.toLowerCase()))
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 40);
+        const kind = el.hasAttribute('popover') ? 'popover' : el.matches('.kp-drawer') ? 'drawer' : el.matches('.kp-sheet') ? 'sheet' : 'dialog';
+        return `${kind} ${t}`;
+    };
+    /** @type {[Element, string][]} */
+    const scopes = dialogsOnly ? [] : [[root, only]];
+    for (const el of root.querySelectorAll(SCOPE)) if (isOpenScope(el)) scopes.push([el, `${only} › ${scopeName(el)}`]);
+    /** @type {string[]} */
+    const all0 = [];
+    for (const [el, label] of scopes) all0.push(...measureScope(el, label));
+    return [...new Set(all0)];
+
+    /** @param {Element} section @param {string} id */
+    function measureScope(section, id) {
     /** @type {string[]} */
     const res = [];
     // The review machinery and the demo's prose are not the composition.
     const CHROME =
         '.cat-judge, [data-review-controls], [data-review-look], .rv-block-tools, [class*="expected"], [class*="__head"] > p, .kp-sr-only, [hidden], [aria-hidden="true"], dialog:not([open]), template';
-    const inChrome = (/** @type {Element} */ el) => !!el.closest(CHROME);
+    const inChrome = (/** @type {Element} */ el) => {
+        if (el.closest(CHROME)) return true;
+        // The contents of an open dialog, sheet, drawer or popover inside this scope belong to that scope.
+        const nested = el.closest(SCOPE);
+        return !!nested && nested !== section && section.contains(nested);
+    };
     const shown = (/** @type {Element} */ el) => {
         const r = el.getBoundingClientRect();
         if (r.width < 0.5 || r.height < 0.5) return false;
@@ -678,6 +720,53 @@ export function measureAlign([tol, only]) {
             res.push(`${id}: ${where}: ${px(sr.bottom - bottom)} px of empty band under its last part`);
     }
     return [...new Set(res)];
+    }
+}
+
+/**
+ * Playwright side: the faults of one section, its open dialogs included, then the ones its opener buttons show
+ * (`[data-kp-dialog]`, `[popovertarget]`): each closed target is opened by its button, measured as a scope of its own,
+ * and closed again. A dialog a demo only opens from script is not reached: report that limit, do not guess.
+ * @param {import('playwright-core').Page} page @param {string} id @returns {Promise<string[]>}
+ */
+export async function measureAlignOpened(page, id) {
+    let out = await page.evaluate(measureAlign, /** @type {[number, string]} */ ([ALIGN_TOLERANCE, id]));
+    const sel = `[data-review-item="${id.replace(/"/g, '\\"')}"]`;
+    const count = await page.evaluate((q) => {
+        const root = document.querySelector(q);
+        if (!root) return 0;
+        const list = [...root.querySelectorAll('[data-kp-dialog], [popovertarget]')];
+        list.forEach((b, i) => b.setAttribute('data-align-opener', String(i)));
+        return list.length;
+    }, sel);
+    for (let i = 0; i < count; i++) {
+        const opener = page.locator(`${sel} [data-align-opener="${i}"]`);
+        const usable = await opener.evaluate((b) => {
+            const r = b.getBoundingClientRect();
+            const target = b.getAttribute('data-kp-dialog') ?? b.getAttribute('popovertarget');
+            const t = target ? document.getElementById(target) : null;
+            const open = t ? (t instanceof HTMLDialogElement ? t.open : t.matches(':popover-open')) : true;
+            return r.width > 0.5 && r.height > 0.5 && !(/** @type {HTMLButtonElement} */ (b).disabled) && !!t && !open && !b.closest('dialog[open]');
+        });
+        if (!usable) continue;
+        try {
+            await opener.scrollIntoViewIfNeeded({ timeout: 1000 });
+            await opener.click({ timeout: 1500 });
+        } catch {
+            continue;
+        }
+        await page.waitForTimeout(500);
+        out = out.concat(await page.evaluate(measureAlign, /** @type {[number, string, boolean]} */ ([ALIGN_TOLERANCE, id, true])));
+        // Close only the target this opener opened: the section's own dialogs, open at load, stay open for the next section.
+        await page.keyboard.press('Escape');
+        await opener.evaluate((b) => {
+            const t = document.getElementById(b.getAttribute('data-kp-dialog') ?? b.getAttribute('popovertarget') ?? '');
+            if (t instanceof HTMLDialogElement && t.open) t.close();
+            else if (t?.matches(':popover-open')) t.hidePopover();
+        });
+        await page.waitForTimeout(300);
+    }
+    return [...new Set(out)];
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
@@ -714,7 +803,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
                     id,
                 );
                 await page.waitForTimeout(150);
-                out = out.concat(await page.evaluate(measureAlign, /** @type {[number, string]} */ ([ALIGN_TOLERANCE, id])));
+                out = out.concat(await measureAlignOpened(page, id));
             }
             found += out.length;
             console.log(`${theme} ${width}: ${out.length ? `${out.length} alignment fault(s)` : 'aligned'}`);

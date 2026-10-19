@@ -18,8 +18,12 @@
 // Run (a static server on the repository root first):
 //   node research/_review/measure-gaps.mjs <port> <research/topic/demo.html> [themes=formal,dark] [widths=1280,390]
 import { createRequire } from 'node:module';
+<<<<<<< Updated upstream
 import { ALIGN_TOLERANCE, measureAlign } from './measure-align.mjs';
 import { measureStatesAt } from './measure-states.mjs';
+=======
+import { measureAlignOpened } from './measure-align.mjs';
+>>>>>>> Stashed changes
 
 const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
 const { firefox } = require('playwright-core');
@@ -189,7 +193,7 @@ for (const width of widthArg.split(',').map(Number))
             );
             await page.waitForTimeout(250);
             out = out.concat(await page.evaluate(measure, /** @type {[number, string]} */ ([MIN, id])));
-            align = align.concat(await page.evaluate(measureAlign, /** @type {[number, string]} */ ([ALIGN_TOLERANCE, id])));
+            align = align.concat(await measureAlignOpened(page, id));
         }
         await page.close();
         const states = await measureStatesAt(browser, `http://127.0.0.1:${port}/${path}?theme=${theme}`, { width });
