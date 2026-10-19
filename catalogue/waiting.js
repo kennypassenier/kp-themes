@@ -12,7 +12,8 @@ import { headingText, suffixIds } from './review.js';
 import { REVIEW_PAGE } from './review-state.js';
 import { mountJudging } from './judging.js';
 import { PAGES } from './pages.js';
-import { fingerprintOf, loadUpdate, progressOf, shapeOf, storedFor } from '../research/_review/progress.js';
+import { fingerprintOf, loadUpdate, progressOf, shapeFromFacts, shapeOf, storedFor } from '../research/_review/progress.js';
+import { indexedDecided, indexedDemo } from './agenda-index.js';
 
 const ROOT = new URL('../', import.meta.url);
 
@@ -65,11 +66,18 @@ export function inOrder(pages) {
 export const dependentsOf = (href, pages) => pages.filter((page) => page.after?.includes(href));
 
 /**
- * Read one demo's shape (progress.js shapeOf) with its version and its update. Null for a page without the review
- * kit; throws when the page cannot be read.
+ * Read one demo's shape (progress.js shapeOf) with its version and its update: from the Agenda's index when it holds
+ * the demo, else from the page. Null for a page without the review kit; throws when the page cannot be read.
  * @param {string} href
  */
 export async function readDemo(href) {
+    // The index holds what the page would say (catalogue/agenda-index.json): one file for every demo on the Agenda.
+    const known = await indexedDemo(href);
+    if (known) {
+        const shape = shapeFromFacts(known.facts);
+        if (shape) [shape.fingerprint, shape.update] = [known.fingerprint, known.update];
+        return shape;
+    }
     const url = new URL(href, ROOT);
     const fetchUrl = new URL(url);
     fetchUrl.searchParams.set('_', String(Date.now()));
@@ -86,6 +94,8 @@ export async function readDemo(href) {
 
 /** An archived demo's decision, from the decided.json beside it; '' without one. */
 export async function readDecided(href) {
+    const known = await indexedDecided(href);
+    if (known !== undefined) return known;
     try {
         const url = new URL('decided.json', new URL(href, ROOT));
         url.searchParams.set('_', String(Date.now()));

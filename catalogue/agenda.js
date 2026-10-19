@@ -18,7 +18,7 @@
 import { THEMES } from '../js/theme-registry.js';
 import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
 import { openBusyCard } from '../js/busy-card.js';
-import { gatherBlocks, isOpen } from './open-pairs.js';
+import { blockList, gatherBlocks, isOpen } from './open-pairs.js';
 import {
     ANSWER_EVENT,
     ANSWER_PAIR,
@@ -32,6 +32,7 @@ import {
 } from '../research/_review/progress.js';
 import { paintAgenda } from '../research/_review/rv-progress.js'; // [kit-strip-1018]
 import { updateFlow } from './flow-agenda.js'; // kit-flow hook
+import { NOTES_EVENT, rememberTitles, REVIEW_PAGE } from './review-state.js';
 import { composeBlocks, counted, demoStatus, dependentsOf, inOrder, labelOf, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
@@ -84,20 +85,23 @@ const demos = ordered.map((page) => ({ page, shape: undefined, failed: false }))
 const archive = archived.map((page) => ({ page, decided: undefined }));
 
 /**
- * The catalogue blocks: gathering until read, then the open pairs over every theme.
- * @type {{ gathered: Awaited<ReturnType<typeof gatherBlocks>> | null, composed: boolean, failed: boolean }}
+ * The catalogue blocks: the list (key, hash, own theme) the counts are read from, the index's until the blocks are
+ * laid out, then the live reading; and whether they are laid out below. They are laid out only when asked for (the
+ * fold opened, or Judge pressed): the component pages, every theme register and the modules the blocks bring are
+ * most of what the Agenda used to load (Kenny, 2026-10-19 05:19: "247 is nog altijd belachelijk veel?").
+ * @type {{ list: Awaited<ReturnType<typeof blockList>> | null, composed: boolean, composing: Promise<void> | null, failed: boolean }}
  */
-const blocks = { gathered: null, composed: false, failed: false };
+const blocks = { list: null, composed: false, composing: null, failed: false };
 
 /** The open block-and-theme pairs now, read from the verdicts as they stand. */
 function blockPairs() {
-    if (!blocks.gathered) return null;
+    if (!blocks.list) return null;
     const stored = loadJudgements();
     const themes = new Set();
     let pairs = 0;
     /** @type {Set<string>} */
     const open = new Set();
-    for (const block of blocks.gathered.blocks) {
+    for (const block of blocks.list) {
         for (const { name } of THEMES) {
             if (!isOpen(block, name, stored)) continue;
             pairs += 1;
@@ -216,21 +220,67 @@ function blocksView() {
             action: 'Look again',
             href: new URL('catalogue/index.html', ROOT).href,
         };
+    const laying = Boolean(blocks.composing) && !blocks.composed;
     return {
         ...base,
         count: `${now.pairs} to judge`,
-        spread: `${counted(now.open.size, 'block')} in ${counted(now.themes, 'theme')}${blocks.composed ? '' : ' · laying them out…'}`,
+        spread: `${counted(now.open.size, 'block')} in ${counted(now.themes, 'theme')}${laying ? ' · laying them out…' : ''}`,
         tone: ' kp-badge--warning',
         state: 'waiting',
         action: 'Judge',
-        press: blocks.composed ? openBlockDialog : null,
-        reason: blocks.composed ? '' : 'Laying out the blocks',
+        press: laying ? null : openBlockDialog,
+        reason: laying ? 'Laying out the blocks' : '',
     };
 }
 
-/** The block dialog over the open blocks laid out below; it walks theme by theme by itself (judging.js). */
+/** The block dialog over the open blocks laid out below, laid out first; it walks theme by theme by itself (judging.js). */
 function openBlockDialog() {
-    /** @type {HTMLButtonElement | null} */ (document.querySelector('[data-cat-dialog-open]'))?.click();
+    void composeOpenBlocks().then(() => {
+        if (document.querySelector('dialog.cat-review-dialog[open]')) return;
+        /** @type {HTMLButtonElement | null} */ (document.querySelector('[data-cat-dialog-open]'))?.click();
+    });
+}
+
+/**
+ * Every theme's register, as the other catalogue pages link them (deps.css): a block can wear a theme of its own
+ * (`data-cat-theme`), and the dialog walks the themes. The Agenda links only the theme it wears (agenda.html).
+ */
+async function allRegisters() {
+    const { ensureRegister } = await import('../js/lazy-register.js');
+    const pattern = `${new URL('css/', ROOT).pathname}{theme}-register.css`;
+    await Promise.all(THEMES.map(({ name }) => ensureRegister(name, { pattern }).catch(() => undefined)));
+}
+
+/**
+ * Lay out the blocks open now under the fold, once: every component page read live (open-pairs.js gatherBlocks), and
+ * from then on the counts follow that reading.
+ */
+function composeOpenBlocks() {
+    blocks.composing ??= (async () => {
+        renderSoon();
+        try {
+            // The scripts the blocks' demos run on, which every other catalogue page loads with its shell (catalogue.js).
+            // The intro blocks' frames (intros.js) likewise: the other catalogue pages carry it from the start.
+            const [gathered] = await Promise.all([
+                gatherBlocks(),
+                import('./demos.js'),
+                import('./motion-demo.js'),
+                import('./intros.js'),
+                allRegisters(),
+            ]);
+            blocks.list = gathered.blocks;
+            const now = blockPairs();
+            if (now?.pairs) {
+                ui.blocksPart.hidden = false;
+                await composeBlocks(ui.blocksHost, { pages: gathered.pages, chosen: now.open });
+            }
+            blocks.composed = true;
+        } catch {
+            blocks.failed = true;
+        }
+        render();
+    })();
+    return blocks.composing;
 }
 
 /* ------------------------------------------------------------------- rows */
@@ -680,24 +730,36 @@ const readArchive = () => {
 };
 ui.done.addEventListener('toggle', readArchive);
 readArchive();
-gatherBlocks()
-    .then(async (gathered) => {
-        blocks.gathered = gathered;
+blockList()
+    .then((list) => {
+        blocks.list = list;
         render();
         const now = blockPairs();
-        if (!now?.pairs) {
-            document.dispatchEvent(new CustomEvent('cat-composed'));
-            return;
+        if (now?.pairs) {
+            // The titles the prompt names the open blocks by, remembered as laying them out remembered them
+            // (judging.js) when that happened on every load.
+            rememberTitles(
+                REVIEW_PAGE,
+                Object.fromEntries(list.filter((block) => now.open.has(block.id) && block.title).map((block) => [block.id, block.title])),
+            );
+            // The prompt reads them on its next render (prompt.js).
+            document.dispatchEvent(new CustomEvent(NOTES_EVENT));
+            ui.blocksPart.hidden = false;
+            // A link to the fold (#agenda-blocks) opens it, and opening it lays the blocks out.
+            if (location.hash === `#${ui.blocksPart.id}`) ui.blocksPart.open = true;
+            if (ui.blocksPart.open) void composeOpenBlocks();
         }
-        ui.blocksPart.hidden = false;
-        await composeBlocks(ui.blocksHost, { pages: gathered.pages, chosen: now.open });
-        blocks.composed = true;
-        render();
+        // The page's own modules (the theme menu's counts, play, checklists) start on this; the blocks, once laid
+        // out, announce themselves again (waiting.js composeBlocks).
+        document.dispatchEvent(new CustomEvent('cat-composed'));
     })
     .catch(() => {
         blocks.failed = true;
         render();
     });
+ui.blocksPart.addEventListener('toggle', () => {
+    if (ui.blocksPart.open) void composeOpenBlocks();
+});
 
 // A verdict given here (the block dialog) or in a demo in another tab, or the way back through the history: read again.
 document.addEventListener(JUDGEMENT_EVENT, render);

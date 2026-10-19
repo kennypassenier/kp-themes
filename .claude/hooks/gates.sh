@@ -61,6 +61,9 @@ gate gen-themes node gates/generate-themes.mjs --check || exit 1
 # what a block is made of, as digests the hash reads [scope-114]
 gate code-version node gates/generate-code-version.mjs --check || exit 1
 
+# the Agenda's index says what its demos, decisions, pixel checks and blocks say [agenda-fast-1019]
+gate agenda-index node gates/generate-agenda-index.mjs --check || exit 1
+
 # Kenny, 2026-09-09: the checks that exist for people with disabilities —
 # the contrast floors, the flash threshold, the reduced-motion guards, the
 # texture ceiling and the invariant sweep — are no longer here. They are

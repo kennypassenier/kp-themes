@@ -152,6 +152,12 @@ without waiting for its archiving. While a session rebuilds a round, it marks
 the demo's entry in `catalogue/pages.js` with `rework: '<why>'`; "To judge"
 leaves it out until the flag is removed with the new round.
 
+The Agenda reads every demo on it from one generated file, `catalogue/agenda-index.json` (each demo's sections,
+fingerprint and `update.json`, the archived demos' decisions, the pixel checks that reopen and the catalogue blocks),
+instead of about 250 files. A change to a demo, its `update.json`, its `decided.json`, `catalogue/pages.js` or a
+component page is committed with the index regenerated: `node gates/generate-agenda-index.mjs` (Firefox starts only
+when the blocks moved). The commit gate refuses a stale index; a demo the index does not hold is read live.
+
 A demo republished without a new round id is caught as well: every verdict
 carries the round it was given in and a fingerprint of the demo's page and
 of the scripts and sheets in its own folder (`progress.js`, `fingerprintOf`).
