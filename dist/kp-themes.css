@@ -19840,7 +19840,7 @@
         justify-content: flex-start;
     }
 
-    .kp-focus-steps__lane[aria-pressed='true'] {
+    .kp-focus-steps__lane[aria-selected='true'] {
         border-color: var(--primary);
         box-shadow: inset 0 0 0 1.5px var(--primary);
     }

@@ -177,7 +177,7 @@ const SCENARIOS = {
     'water-on': () => {
         const { root } = stage('waiting');
         if (!root) return;
-        if (lane(root, 'Pasta')?.getAttribute('aria-pressed') !== 'true') toLane(root, 'Pasta');
+        if (lane(root, 'Pasta')?.getAttribute('aria-selected') !== 'true') toLane(root, 'Pasta');
         startHere(root);
         next(root);
     },

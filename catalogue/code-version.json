@@ -42,7 +42,7 @@
         "js/facets.js": { "digest": "0fc1aca18125f9e8", "when": "[data-kp-facets]" },
         "js/feed.js": { "digest": "236a1de643e8263a", "when": "[data-kp-feed]" },
         "js/flash.js": { "digest": "044b7e057d3bd243", "when": "[data-kp-flash-button], [data-kp-post]" },
-        "js/focus-steps.js": { "digest": "3085ffd06bf9391f", "when": "[data-kp-focus-steps]" },
+        "js/focus-steps.js": { "digest": "e60eaa5d4d2c5ae4", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
             "digest": "90134fc2ab3de2a0",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-diffview], .kp-ops"
@@ -8826,7 +8826,7 @@
         "||||.kp-focus-steps__lane-step": "2eafa0297b14be7c",
         "||||.kp-focus-steps__lane-time": "8386dcf19098223a",
         "||||.kp-focus-steps__lane.kp-button": "06feaef3beb40096",
-        "||||.kp-focus-steps__lane[aria-pressed='true']": "41fb931d81ea7b37",
+        "||||.kp-focus-steps__lane[aria-selected='true']": "088d61f3b3a44def",
         "||||.kp-focus-steps__lane[data-kp-lane-status='ringing'].kp-button": "1a76ed4690c73682",
         "||||.kp-focus-steps__lanes": "969caa053db506e0",
         "||||.kp-focus-steps__lanes-done": "2e6d15ee1bfdf708",

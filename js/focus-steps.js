@@ -97,7 +97,7 @@
 //   - A step timer has an id of its own (`timer.id`, else the step's `id`) and runs in the timer list (`data-kp-focus-steps-timers`),
 //     so the lanes read it by that id. When it ends, or a track that waited can go on, js/attention.js puts the track on the band
 //     above the step, with a button that goes there.
-//   - Keys: T goes to the next track, Shift T to the previous one; ArrowUp and ArrowDown walk the lanes while one has the focus.
+//   - Keys: T goes to the next track, Shift T to the previous one; the lanes are tabs (role tablist, aria-selected, one tab stop): ArrowUp, ArrowDown, Home and End move the focus between them while one has it.
 //
 //   Options (attribute, default):
 //     data-kp-tracks         auto | off            auto (off reads every step as one sequence)
@@ -492,7 +492,10 @@ function ensureLanes(root) {
     title.textContent = strings.focusTracksTitle;
     const done = el('kp-focus-steps__lanes-done', 'span');
     const list = el('kp-focus-steps__lane-list');
-    list.setAttribute('role', 'group');
+    // The lanes pick which track is shown, which is what tabs do: a tablist, the step area its tabpanel.
+    list.id = `kp-focus-steps-${serial}-tablist`;
+    list.setAttribute('role', 'tablist');
+    list.setAttribute('aria-orientation', 'vertical');
     list.setAttribute('aria-labelledby', title.id);
     const hint = el('kp-focus-steps__lanes-hint', 'p');
     hint.textContent = strings.focusTracksHint;
@@ -512,12 +515,15 @@ function dropLanes(root) {
     root.querySelector('.kp-focus-steps__band')?.remove();
     root.removeAttribute('data-kp-focus-tracked');
     root.removeAttribute('data-kp-lanes-at');
+    const panel = root.querySelector('.kp-focus-steps__body');
+    for (const name of ['role', 'aria-labelledby']) panel?.removeAttribute(name);
 }
 
 /** One lane: a button of the package, its words in four places and the theme's progress bar. @param {Lane} lane @param {number} at */
 function buildLane(lane, at) {
     const button = /** @type {HTMLButtonElement} */ (el('kp-button kp-focus-steps__lane', 'button'));
     button.type = 'button';
+    button.setAttribute('role', 'tab');
     button.setAttribute('data-kp-track-at', String(at));
     button.setAttribute('data-kp-track-key', lane.key);
     for (const name of ['name', 'time', 'step', 'state', 'count']) button.append(el(`kp-focus-steps__lane-${name}`, 'span'));
@@ -565,8 +571,21 @@ function paintLanes(root, lanes = laneSummaries(root)) {
         setText(button, '.kp-focus-steps__lane-state', words);
         setText(button, '.kp-focus-steps__lane-count', strings.focusLaneStep(lane.track.pos + 1, total));
         if (button.getAttribute('data-kp-lane-status') !== lane.status) button.setAttribute('data-kp-lane-status', lane.status);
-        const pressed = String(lane.active);
-        if (button.getAttribute('aria-pressed') !== pressed) button.setAttribute('aria-pressed', pressed);
+        // Tabs pattern: one tab stop (the selected lane), the arrows move between lanes, the step area is the tabpanel.
+        const selected = String(lane.active);
+        if (button.getAttribute('aria-selected') !== selected) button.setAttribute('aria-selected', selected);
+        const stop = lane.active ? '0' : '-1';
+        if (button.getAttribute('tabindex') !== stop) button.setAttribute('tabindex', stop);
+        if (!button.id) button.id = `${list.id}-${i}`;
+        if (lane.active) {
+            const panel = root.querySelector('.kp-focus-steps__body');
+            if (panel) {
+                if (!panel.id) panel.id = `${list.id}-panel`;
+                if (panel.getAttribute('role') !== 'tabpanel') panel.setAttribute('role', 'tabpanel');
+                if (panel.getAttribute('aria-labelledby') !== button.id) panel.setAttribute('aria-labelledby', button.id);
+                if (button.getAttribute('aria-controls') !== panel.id) button.setAttribute('aria-controls', panel.id);
+            }
+        } else button.removeAttribute('aria-controls');
         const share = String(lane.status === 'finished' ? 1 : (lane.track.pos + 1) / total);
         const bar = /** @type {HTMLElement} */ (button.querySelector('.kp-focus-steps__lane-bar'));
         if (bar.style.getPropertyValue('--kp-value') !== share) bar.style.setProperty('--kp-value', share);
@@ -1768,11 +1787,12 @@ export function attachFocusSteps(scope = document) {
                 }
                 return;
             }
-            // ArrowUp and ArrowDown walk the lanes of the tracks.
-            if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && onButton instanceof HTMLElement && onButton.classList.contains('kp-focus-steps__lane')) {
+            // The tabs pattern on the lanes: ArrowUp and ArrowDown (Home, End) move the focus between them.
+            if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key) && onButton instanceof HTMLElement && onButton.classList.contains('kp-focus-steps__lane')) {
                 const all = /** @type {HTMLElement[]} */ ([...root.querySelectorAll('.kp-focus-steps__lane')]);
                 const at = all.indexOf(onButton);
-                const to = all[Math.max(0, Math.min(all.length - 1, at + (event.key === 'ArrowDown' ? 1 : -1)))];
+                const step = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
+                const to = event.key === 'Home' ? all[0] : event.key === 'End' ? all[all.length - 1] : all[(at + step + all.length) % all.length];
                 if (at >= 0 && to) {
                     event.preventDefault();
                     to.focus();

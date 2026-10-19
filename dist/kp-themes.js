@@ -33732,7 +33732,9 @@ function ensureLanes(root) {
   title.textContent = strings.focusTracksTitle;
   const done = el7("kp-focus-steps__lanes-done", "span");
   const list = el7("kp-focus-steps__lane-list");
-  list.setAttribute("role", "group");
+  list.id = `kp-focus-steps-${serial6}-tablist`;
+  list.setAttribute("role", "tablist");
+  list.setAttribute("aria-orientation", "vertical");
   list.setAttribute("aria-labelledby", title.id);
   const hint2 = el7("kp-focus-steps__lanes-hint", "p");
   hint2.textContent = strings.focusTracksHint;
@@ -33750,6 +33752,8 @@ function dropLanes(root) {
   root.querySelector(".kp-focus-steps__band")?.remove();
   root.removeAttribute("data-kp-focus-tracked");
   root.removeAttribute("data-kp-lanes-at");
+  const panel = root.querySelector(".kp-focus-steps__body");
+  for (const name of ["role", "aria-labelledby"]) panel?.removeAttribute(name);
 }
 function buildLane(lane, at) {
   const button = (
@@ -33757,6 +33761,7 @@ function buildLane(lane, at) {
     el7("kp-button kp-focus-steps__lane", "button")
   );
   button.type = "button";
+  button.setAttribute("role", "tab");
   button.setAttribute("data-kp-track-at", String(at));
   button.setAttribute("data-kp-track-key", lane.key);
   for (const name of ["name", "time", "step", "state", "count"]) button.append(el7(`kp-focus-steps__lane-${name}`, "span"));
@@ -33792,8 +33797,20 @@ function paintLanes(root, lanes = laneSummaries(root)) {
     setText(button, ".kp-focus-steps__lane-state", words);
     setText(button, ".kp-focus-steps__lane-count", strings.focusLaneStep(lane.track.pos + 1, total));
     if (button.getAttribute("data-kp-lane-status") !== lane.status) button.setAttribute("data-kp-lane-status", lane.status);
-    const pressed = String(lane.active);
-    if (button.getAttribute("aria-pressed") !== pressed) button.setAttribute("aria-pressed", pressed);
+    const selected = String(lane.active);
+    if (button.getAttribute("aria-selected") !== selected) button.setAttribute("aria-selected", selected);
+    const stop = lane.active ? "0" : "-1";
+    if (button.getAttribute("tabindex") !== stop) button.setAttribute("tabindex", stop);
+    if (!button.id) button.id = `${list.id}-${i}`;
+    if (lane.active) {
+      const panel = root.querySelector(".kp-focus-steps__body");
+      if (panel) {
+        if (!panel.id) panel.id = `${list.id}-panel`;
+        if (panel.getAttribute("role") !== "tabpanel") panel.setAttribute("role", "tabpanel");
+        if (panel.getAttribute("aria-labelledby") !== button.id) panel.setAttribute("aria-labelledby", button.id);
+        if (button.getAttribute("aria-controls") !== panel.id) button.setAttribute("aria-controls", panel.id);
+      }
+    } else button.removeAttribute("aria-controls");
     const share = String(lane.status === "finished" ? 1 : (lane.track.pos + 1) / total);
     const bar = (
       /** @type {HTMLElement} */
@@ -34851,13 +34868,14 @@ function attachFocusSteps(scope = document) {
         }
         return;
       }
-      if ((event.key === "ArrowUp" || event.key === "ArrowDown") && onButton instanceof HTMLElement && onButton.classList.contains("kp-focus-steps__lane")) {
+      if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key) && onButton instanceof HTMLElement && onButton.classList.contains("kp-focus-steps__lane")) {
         const all = (
           /** @type {HTMLElement[]} */
           [...root.querySelectorAll(".kp-focus-steps__lane")]
         );
         const at = all.indexOf(onButton);
-        const to = all[Math.max(0, Math.min(all.length - 1, at + (event.key === "ArrowDown" ? 1 : -1)))];
+        const step = event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
+        const to = event.key === "Home" ? all[0] : event.key === "End" ? all[all.length - 1] : all[(at + step + all.length) % all.length];
         if (at >= 0 && to) {
           event.preventDefault();
           to.focus();
