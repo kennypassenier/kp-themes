@@ -6277,3 +6277,46 @@
         content: none;
     }
 }
+
+/* ── graph loading · shape 2 · The drafting sheet: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: var(--background);
+        --kp-graph-load-pat:
+            linear-gradient(color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklch, var(--foreground) 7%, transparent) 1px, transparent 1px);
+        --kp-graph-load-pat-size: 40px 40px;
+        --kp-graph-load-frame: 1px solid var(--foreground);
+        --kp-graph-load-shadow: inset 0 0 0 6px var(--background), inset 0 0 0 7px color-mix(in oklch, var(--foreground) 60%, transparent);
+        --kp-graph-load-radius: 0;
+        --kp-graph-load-font: var(--theme-font-mono);
+        --kp-graph-load-size: 11px;
+        --kp-graph-load-edge-mix: 45%;
+        --kp-graph-load-dash: 14 3 2 3;
+        --kp-graph-load-ring: var(--foreground);
+        --kp-graph-load-ring-w: 1.4;
+        --kp-graph-load-ring-dash: 10 3 2 3;
+        --kp-graph-load-core-op: 0.5;
+        --kp-graph-load-node-mix: 50%;
+    }
+}
+
+/* ── graph loading · r3-bp-load-3 · Current finds the circuit (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='blueprint'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 9 91;
+        --kp-graph-edge-anim: kp-graph-spark 2000ms linear infinite;
+        --kp-graph-edge-stagger: -110ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-graph__ghost .kp-graph__node .kp-graph__core {
+            animation: kp-graph-glow 2000ms ease-in-out infinite;
+            animation-delay: calc(var(--i) * 160ms);
+        }
+    }
+}

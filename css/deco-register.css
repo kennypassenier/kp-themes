@@ -6377,3 +6377,82 @@
         border-color: hsl(from var(--primary) h s l / 0.6);
     }
 }
+
+/* ── graph loading · shape 2 · The marquee: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='deco'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: color-mix(in oklch, var(--background) 85%, oklch(from var(--background) 0 0 h));
+        --kp-graph-load-font: var(--theme-font-display);
+        --kp-graph-load-case: uppercase;
+        --kp-graph-load-track: 0.08em;
+        --kp-graph-load-size: 11px;
+        --kp-graph-load-cap: round;
+        --kp-graph-load-edge-w: 3;
+        --kp-graph-load-edge-mix: 60%;
+        --kp-graph-load-dash: 0.1 6;
+        --kp-graph-load-dot: 0.1 9;
+        --kp-graph-load-long: 0.1 4;
+        --kp-graph-load-ring: var(--primary);
+        --kp-graph-load-ring-w: 3.5;
+        --kp-graph-load-ring-dash: 0.1 5;
+        --kp-graph-load-ring-cap: round;
+        --kp-graph-load-node-glow: drop-shadow(0 0 2px var(--primary));
+    }
+
+    [data-theme='deco'] .kp-graph[data-kp-state='loading'] [data-kp-style='solid'] {
+        stroke-dasharray: 0.1 5;
+    }
+}
+
+/* ── graph loading · r4-dec-load-3 · The engraving is cut (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='deco'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='deco'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.55;
+    }
+
+    [data-theme='deco'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 3 7;
+        --kp-graph-edge-anim: kp-graph-engrave 2600ms ease-in infinite;
+        --kp-graph-edge-stagger: 210ms;
+    }
+
+    [data-theme='deco'] .kp-graph__ghost .kp-graph__node {
+        clip-path: inset(18%);
+        --kp-graph-node-anim: kp-graph-bevel 2600ms ease-in infinite;
+        --kp-graph-node-stagger: 210ms;
+    }
+
+    @keyframes kp-graph-engrave {
+        0%,
+        30% {
+            stroke-dasharray: 2 14;
+        }
+        50% {
+            stroke-dasharray: 3 7;
+        }
+        70%,
+        100% {
+            stroke-dasharray: 100;
+        }
+    }
+    @keyframes kp-graph-bevel {
+        0%,
+        68% {
+            clip-path: inset(18%);
+            filter: brightness(1);
+        }
+        72% {
+            clip-path: inset(4%);
+            filter: brightness(1.5);
+        }
+        80%,
+        100% {
+            clip-path: inset(18%);
+            filter: brightness(1);
+        }
+    }
+}

@@ -59,6 +59,21 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "3",
+            "page": "state-plates-f734f576-11ff-4b25-8735-7b1a6c9eb8b4",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 18:55: 1 of 1 judged, 0 approved, 1 not approved. Fixed directly in the package, no further round: the twelve loading animations approved in research/character-graph on 2026-10-06 are ported exactly [graphapproved-1019].",
+            "approved": [],
+            "notApproved": [
+                {
+                    "item": "graph-states",
+                    "theme": "formal",
+                    "note": "dat is toch helemaal niet de juiste animatie? de animatie was specifiek voor een network graph en heb ik goedgekeurd voor elk thema in de 'wat maakt x x' demos denk ik, ik vraag niks nieuws, het zou al moeten bestaan, dat moet je gewoon gebruiken"
+                }
+            ],
+            "choices": []
         }
     ]
 }

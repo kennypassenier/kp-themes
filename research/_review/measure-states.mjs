@@ -42,7 +42,7 @@ const ROOT = fileURLToPath(new URL('../../', import.meta.url));
 /** The busy card, wherever a component lays it (js/busy-card.js, js/datatable.js's overlay). */
 export const BUSY = '.kp-datatable__busy-card, .kp-datatable__busy-overlay';
 /** The approved own loading pictures (gates/check-busy-card.mjs OWN). */
-export const OWN_BUSY = '.kp-calendar__busy, .kp-chart__state, .kp-chart__loading';
+export const OWN_BUSY = '.kp-calendar__busy, .kp-chart__state, .kp-chart__loading, .kp-graph__ghost';
 /**
  * The loading looks the package draws, by name, each as the selector that finds it in the page. A look is the theme's own
  * picture (css/<theme>-register.css); a component never draws one of its own [loadingkind-1019].
@@ -50,6 +50,7 @@ export const OWN_BUSY = '.kp-calendar__busy, .kp-chart__state, .kp-chart__loadin
 export const LOOKS = {
     'busy card': BUSY,
     'chart picture': ".kp-chart__state[data-kp-state='loading']",
+    'graph picture': ".kp-graph[data-kp-state='loading'] .kp-graph__ghost",
     'calendar picture': ".kp-calendar__busy, .kp-calendar__day[data-kp-tone='loading']",
     'row spinner': ".kp-statusrow[data-state='loading'] > .kp-statusrow__mark .kp-spinner",
 };
@@ -69,7 +70,8 @@ export const KINDS = {
     text: { look: 'busy card', what: 'a block of text or code' },
     pane: { look: 'busy card', what: 'a list with a detail pane' },
     card: { look: 'busy card', what: 'a card with a stage' },
-    plot: { look: 'chart picture', what: 'a drawn plot: lines, bars, nodes' },
+    plot: { look: 'chart picture', what: 'a drawn plot: lines, bars' },
+    network: { look: 'graph picture', what: 'a network of nodes and links' },
     calendar: { look: 'calendar picture', what: 'a month of days' },
     row: { look: 'row spinner', what: 'one row with a mark' },
 };
@@ -157,7 +159,7 @@ export const STATE_COMPONENTS = [
     },
     {
         name: 'graph',
-        kind: 'plot',
+        kind: 'network',
         host: '[data-kp-graph]',
         module: 'graph.js',
         wire: "setGraphState(el, 'loading' | 'empty' | 'error', title, { text })",

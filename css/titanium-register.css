@@ -5487,3 +5487,38 @@
         border-color: var(--border-strong);
     }
 }
+
+/* ── graph loading · shape 2 · The instrument dial: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: var(--background);
+        --kp-graph-load-font: var(--theme-font-mono);
+        --kp-graph-load-size: 11.5px;
+        --kp-graph-load-edge-w: 1;
+        --kp-graph-load-edge-on-w: 2;
+        --kp-graph-load-edge-mix: 45%;
+        --kp-graph-load-ring-w: 3.5;
+        --kp-graph-load-ring-fill: color-mix(in oklch, oklch(from var(--background) 0 0 h) 12%, var(--background));
+        --kp-graph-load-node-mix: 70%;
+        --kp-graph-load-core-op: 0.85;
+        --kp-graph-load-hub-dash: 1.5 1.5;
+        --kp-graph-load-hub-w: 6;
+    }
+
+    [data-theme='titanium'] .kp-graph[data-kp-state='loading'] .kp-graph__core {
+        r: 5px;
+    }
+}
+
+/* ── graph loading · r3-tn-load-3 · The signal runs the harness (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='titanium'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 8 92;
+        --kp-graph-edge-anim: kp-graph-signal 1500ms linear infinite;
+        --kp-graph-edge-stagger: 130ms;
+    }
+}

@@ -1,5 +1,7 @@
 # research/state-plates-1019: failed, empty and loading states on one plate
 
+**Decided (2026-10-19 18:55):** the seven other sections were approved in round 1 and the network graph's loading, rejected three times, is fixed directly in the package as the twelve loading animations Kenny approved on 2026-10-06 in research/character-graph (`css/<theme>-register.css`, `js/graph.js`); approved items are not demoed again. Recorded in `VERDICTS.json`; the page is not offered again.
+
 **Round** `state-plates-0f2626d7-9b76-45d9-abc0-088f54516acd` (2026-10-19): 8 sections, 8 pairs (formal only: every fix is the theme's existing
 state plate and busy card, so the other themes follow). They change components Kenny had approved, so they come back through the review dialog
 with a "What changed since you approved it" text per section (DEMO_RULES ch. 7 and 9). Fixes are in the package (`css/components.css`, `js/`),

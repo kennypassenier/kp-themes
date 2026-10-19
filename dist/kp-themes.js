@@ -55589,6 +55589,60 @@ function fitDrawnLabels(labels, W, H) {
     return l.text.getBBox();
   });
 }
+function ghostOf(doc, last, W, H) {
+  const data = last?.nodes.length ? last : {
+    nodes: ["hub", "a", "b", "c", "d", "e", "f"].map((id) => ({ id, label: id, description: "" })),
+    edges: ["a", "b", "c", "d", "e", "f"].map((to) => ({ from: "hub", to, kind: "link" })),
+    kinds: [],
+    hub: "hub"
+  };
+  const at = graphLayout(data, W, H);
+  const hub = hubOf(data);
+  const order2 = [...hub ? [hub] : [], ...ringOf(data, hub).map((n) => n.id)];
+  const bends = graphBends(data.edges);
+  const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
+  const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
+  const root = svgEl(doc, "g", { class: "kp-graph__ghost", "aria-hidden": "true", style: `--n: ${order2.length}` });
+  const edges2 = svgEl(doc, "g", { class: "kp-graph__edges" });
+  data.edges.forEach((e, i) => {
+    const a = at.get(e.from);
+    const b = at.get(e.to);
+    if (!a || !b) return;
+    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    const mx = (a.x + b.x) / 2 - (b.y - a.y) / len * bends[i];
+    const my = (a.y + b.y) / 2 + (b.x - a.x) / len * bends[i];
+    const kind = kinds.get(e.kind);
+    edges2.append(
+      svgEl(doc, "path", {
+        class: "kp-graph__edge",
+        d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
+        pathLength: "100",
+        "data-kp-kind": e.kind,
+        "data-kp-style": kind?.style ?? "solid",
+        style: `--i: ${Math.max(0, order2.indexOf(e.from === hub ? e.to : e.from))}${kind?.colour ? `; --kp-graph-edge-colour: ${kind.colour}` : ""}`
+      })
+    );
+  });
+  root.append(edges2);
+  order2.forEach((id, i) => {
+    const n = data.nodes.find((x) => x.id === id);
+    const p = at.get(id);
+    if (!n || !p) return;
+    const r = radiusOf(n);
+    const hue = n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360);
+    const node = svgEl(doc, "g", {
+      class: `kp-graph__node${n.external ? " kp-graph__node--external" : ""}${id === hub ? " kp-graph__node--hub" : ""}`,
+      style: `--i: ${i}${n.external ? "" : `; --kp-graph-hue: ${hue}`}`
+    });
+    node.append(svgEl(doc, "circle", { class: "kp-graph__ring", cx: p.x, cy: p.y, r }));
+    if (!n.external) node.append(svgEl(doc, "circle", { class: "kp-graph__core", cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
+    root.append(node);
+  });
+  return (
+    /** @type {SVGGElement} */
+    root
+  );
+}
 function drawGraph(g) {
   const doc = g.el.ownerDocument;
   const width = g.box.clientWidth;
@@ -55605,15 +55659,10 @@ function drawGraph(g) {
   const loading = g.state === "loading";
   g.note.textContent = loading ? g.words || g.strings.graphLoading : "";
   g.note.hidden = !loading;
-  g.box.setAttribute("aria-busy", String(loading));
   g.plate.replaceChildren();
-  g.plate.hidden = g.state === "ready";
-  if (loading) {
-    const picture = make21(doc, "div", "kp-chart__state kp-skeleton kp-skeleton--block");
-    picture.setAttribute("data-kp-state", "loading");
-    picture.append(make21(doc, "span", "kp-sr-only", g.words || g.strings.graphLoading));
-    g.plate.append(picture);
-  } else if (!g.plate.hidden)
+  g.plate.hidden = loading || g.state === "ready";
+  if (loading) g.svg.append(ghostOf(doc, g.data, W, H));
+  else if (!g.plate.hidden)
     g.plate.append(
       hostStatePlate(g.el, {
         kind: g.state === "error" ? "error" : "empty",

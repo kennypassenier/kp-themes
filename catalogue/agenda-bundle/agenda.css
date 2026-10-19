@@ -6303,6 +6303,171 @@
         display: none;
     }
 
+    /* The ghost of the coming network while loading, over the whole held picture [research/character-graph, ghost.css].
+ * It is drawn in the package's own edge, node, ring and core classes, so the register's settled shape draws it; the
+ * sentence stands at the foot of the picture so the hub stays clear. A register paints its decided loading picture
+ * through these knobs: --kp-graph-ghost (the ghost's opacity), --kp-graph-ghost-anim (the whole ghost's motion, the
+ * generic pulse unless a register sets none), and --kp-graph-edge-anim / --kp-graph-node-anim with a stagger per --i
+ * and a delay for the links and the nodes. Each link carries pathLength 100, so a travelling dash is a percentage. */
+    .kp-graph__ghost {
+        opacity: var(--kp-graph-ghost, 0.45);
+        pointer-events: none;
+    }
+
+    .kp-graph__ghost :is(.kp-graph__node, .kp-graph__edge) {
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__note {
+        inset: auto var(--kp-space-md, 1rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The loading picture is drawn in the shape each register decided for its network graph (research/character-graph,
+ * 2026-10-06): the paper (`--kp-graph-load-paper`, `-pat`, `-under`, `-over`, `-frame`, `-shadow`, `-radius`), the links
+ * (`-edge-w`, `-edge-mix`, `-cap`, `-dash`, `-edge-glow`), the nodes (`-ring*`, `-core*`, `-hub*`, `-ext*`, `-node-mix`,
+ * `-node-glow`) and the sentence (`-font`, `-case`, `-track`, `-label`). A register sets these on `.kp-graph[data-kp-state='loading']`;
+ * the settled network is not touched. */
+    .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: var(--background);
+        --kp-graph-load-label: var(--foreground);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__box {
+        isolation: isolate;
+        overflow: clip;
+        border: var(--kp-graph-load-frame, 1px solid var(--border));
+        border-radius: var(--kp-graph-load-radius, var(--radius, 0.5rem));
+        background-color: var(--kp-graph-load-paper);
+        background-image: var(--kp-graph-load-pat, none);
+        background-size: var(--kp-graph-load-pat-size, auto);
+        background-position: var(--kp-graph-load-pat-at, 0 0);
+        box-shadow: var(--kp-graph-load-shadow, none);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__box::before,
+    .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        pointer-events: none;
+        background: var(--kp-graph-load-under, none);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__box::after {
+        z-index: 1;
+        background: var(--kp-graph-load-over, none);
+        background-size: var(--kp-graph-load-over-size, auto);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__note {
+        color: var(--kp-graph-load-label);
+        font-family: var(--kp-graph-load-font, inherit);
+        text-transform: var(--kp-graph-load-case, none);
+        letter-spacing: var(--kp-graph-load-track, normal);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__edge {
+        stroke: color-mix(in oklch, var(--kp-graph-edge-colour, var(--chart-3)) var(--kp-graph-load-edge-mix, 75%), var(--kp-graph-load-label));
+        stroke-width: var(--kp-graph-load-edge-w, 1.6);
+        stroke-linecap: var(--kp-graph-load-cap, butt);
+        filter: var(--kp-graph-load-edge-glow, none);
+    }
+
+    .kp-graph[data-kp-state='loading'] [data-kp-style='dash'] {
+        stroke-dasharray: var(--kp-graph-load-dash, 6 3);
+    }
+
+    .kp-graph[data-kp-state='loading'] [data-kp-style='dot'] {
+        stroke-dasharray: var(--kp-graph-load-dot, 2 4);
+        stroke-linecap: round;
+    }
+
+    .kp-graph[data-kp-state='loading'] [data-kp-style='long-dash'] {
+        stroke-dasharray: var(--kp-graph-load-long, 12 4);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__node {
+        --kp-graph-node-colour: color-mix(
+            in oklch,
+            oklch(from var(--chart-1) l max(c, 0.12) var(--kp-graph-hue, 210)) var(--kp-graph-load-node-mix, 80%),
+            var(--kp-graph-load-label)
+        );
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__ring {
+        fill: var(--kp-graph-load-ring-fill, var(--kp-graph-load-paper));
+        stroke: var(--kp-graph-load-ring, var(--kp-graph-node-colour));
+        stroke-width: var(--kp-graph-load-ring-w, 2.5);
+        stroke-dasharray: var(--kp-graph-load-ring-dash, none);
+        stroke-linecap: var(--kp-graph-load-ring-cap, butt);
+        filter: var(--kp-graph-load-node-glow, none);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__core {
+        fill: var(--kp-graph-load-core, var(--kp-graph-node-colour));
+        opacity: var(--kp-graph-load-core-op, 1);
+        stroke: var(--kp-graph-load-core-edge, none);
+        stroke-width: var(--kp-graph-load-core-edge-w, 0);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__node--hub .kp-graph__ring {
+        fill: var(--kp-graph-load-hub-fill, var(--kp-graph-load-ring-fill, var(--kp-graph-load-paper)));
+        stroke: var(--kp-graph-load-hub, var(--kp-graph-load-ring, var(--kp-graph-node-colour)));
+        stroke-width: var(--kp-graph-load-hub-w, var(--kp-graph-load-ring-w, 2.5));
+        stroke-dasharray: var(--kp-graph-load-hub-dash, var(--kp-graph-load-ring-dash, none));
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__node--external .kp-graph__ring {
+        fill: var(--kp-graph-load-ext-fill, var(--kp-graph-load-paper));
+        stroke: var(--kp-graph-load-ext, color-mix(in oklch, var(--muted-foreground) 50%, var(--kp-graph-load-label)));
+        stroke-width: var(--kp-graph-load-ext-w, 2);
+        stroke-dasharray: var(--kp-graph-load-ext-dash, 3 3);
+    }
+
+    @keyframes kp-graph-spark {
+        to {
+            stroke-dashoffset: -100;
+        }
+    }
+
+    @keyframes kp-graph-signal {
+        from {
+            stroke-dashoffset: 100;
+        }
+        to {
+            stroke-dashoffset: -16;
+        }
+    }
+
+    @keyframes kp-graph-glow {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+        50% {
+            filter: brightness(1.6);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-graph__ghost {
+            animation: var(--kp-graph-ghost-anim, kp-pulse 1600ms ease-in-out infinite);
+        }
+
+        .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__edge {
+            animation: var(--kp-graph-edge-anim, none);
+            animation-delay: calc(var(--i, 0) * var(--kp-graph-edge-stagger, 0ms) + var(--kp-graph-edge-delay, 0ms));
+        }
+
+        .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__node {
+            animation: var(--kp-graph-node-anim, none);
+            animation-delay: calc(var(--i, 0) * var(--kp-graph-node-stagger, 0ms) + var(--kp-graph-node-delay, 0ms));
+        }
+    }
+
     .kp-graph[data-kp-state='error'] .kp-graph__note::before {
         content: '';
         display: inline-block;
@@ -34775,8 +34940,8 @@
         block-size: 100%;
     }
 
-    /* The network graph: the plate over the whole picture. Loading is the chart's own loading picture
-       (`.kp-chart__state` as a skeleton block, every register draws it for a chart's plot), the words are read out only. */
+    /* The network graph: an empty or failed network is the state plate over the whole picture. Loading is not a plate: it is the ghost
+       of the coming network drawn in the picture (`.kp-graph__ghost`, js/graph.js), moved by the register's decided loading picture. */
     .kp-graph__state {
         position: absolute;
         inset: 0;
@@ -34792,23 +34957,6 @@
 
     .kp-graph__state > .kp-stateplate {
         block-size: 100%;
-    }
-
-    .kp-graph__state > .kp-chart__state {
-        box-sizing: border-box;
-        block-size: 100%;
-        border-radius: inherit;
-    }
-
-    .kp-graph[data-kp-state='loading'] .kp-graph__note {
-        position: absolute;
-        inset: auto;
-        inline-size: 1px;
-        block-size: 1px;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
     }
 
     /* The run timeline and the week: the plate over the plot (below the axis) or the whole agenda. */

@@ -64,19 +64,6 @@
             "fingerprint": "5d72730db5c02021",
             "update": null
         },
-        "research/state-plates-1019/demo.html": {
-            "facts": {
-                "id": "state-plates-1019",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Your rule is that a failed, empty or loading component fills the whole size it has with its data, centred, with a normal-size Retry, and the loading card sits over the whole component. The gaps the projects found were components that did not follow it: the network graph, the data table, the heat grid and matrix, the run timeline, the week agenda, a group of uptime strips and the card’s notes. They all use the package’s one state plate and loading card now. 1 section, formal only (every fix is the theme’s own plate and loading card, so the other themes follow). Each section says under What changed since you approved it what was wrong and what is different now. Press a state under the section’s title to see it.",
-                "sections": [{ "item": "graph-states", "themes": null, "topic": "graph", "mode": null }],
-                "extra": null,
-                "round": "\n            {\n                \"round\": \"state-plates-746c7e49-82c0-4213-bf97-a1ce85917589\",\n                \"received\": [\"state-plates-0f2626d7-9b76-45d9-abc0-088f54516acd\", \"state-plates-3c06b96c-833d-419f-84e3-03a5d636617a\"]\n            }\n        "
-            },
-            "fingerprint": "8fd3cda625aaaae6",
-            "update": null
-        },
         "research/app-homelab-settings/demo.html": {
             "facts": {
                 "id": "app-homelab-settings",
@@ -407,6 +394,7 @@
     },
     "decided": {
         "research/align-grid-1019/demo.html": "2026-10-19 18:55, Kenny: every pair approved (research/align-grid-1019/VERDICTS.json)",
+        "research/state-plates-1019/demo.html": "2026-10-19 18:55, Kenny: the rounds are closed; the network graph's loading is fixed directly in the package as the twelve animations approved in research/character-graph (2026-10-06), no further round (research/state-plates-1019/VERDICTS.json)",
         "research/round-3-1019/demo.html": "2026-10-19 17:20, Kenny: every pair approved (research/round-3-1019/VERDICTS.json)",
         "research/app-homelab-backups/demo.html": "2026-10-19 17:20, Kenny: 22 of 25 approved; repos, fw-guard and ho-checks not approved and rebuilt in the homelab dashboard itself, not here (research/app-homelab-backups/VERDICTS.json)",
         "research/audhd-recepten/grid-fix/demo.html": "2026-10-19 09:22, Kenny: every pair approved (research/audhd-recepten/grid-fix/VERDICTS.json)",

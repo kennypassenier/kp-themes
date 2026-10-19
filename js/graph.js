@@ -286,6 +286,73 @@ function fitDrawnLabels(labels, W, H) {
     });
 }
 
+/**
+ * The ghost of the coming network, drawn while loading [PACKAGE_FINDINGS, 2026-10-06]: the last network's nodes and
+ * links, or a hub with a ring of six when nothing was drawn yet, in the package's own edge, node, ring and core
+ * classes so the theme's settled shape draws it, quieted by the `kp-graph__ghost` rules. Each link carries `pathLength` 100
+ * (a register's travelling dash is a percentage of the link). Every part carries `--i`
+ * (its order from the hub round the ring) and the group `--n` (how many), for a register's staggered motion.
+ * @param {Document} doc
+ * @param {GraphData | null} last
+ * @param {number} W
+ * @param {number} H
+ * @returns {SVGGElement}
+ */
+function ghostOf(doc, last, W, H) {
+    /** @type {GraphData} */
+    const data = last?.nodes.length
+        ? last
+        : {
+              nodes: ['hub', 'a', 'b', 'c', 'd', 'e', 'f'].map((id) => ({ id, label: id, description: '' })),
+              edges: ['a', 'b', 'c', 'd', 'e', 'f'].map((to) => ({ from: 'hub', to, kind: 'link' })),
+              kinds: [],
+              hub: 'hub',
+          };
+    const at = graphLayout(data, W, H);
+    const hub = hubOf(data);
+    const order = [...(hub ? [hub] : []), ...ringOf(data, hub).map((n) => n.id)];
+    const bends = graphBends(data.edges);
+    const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
+    const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
+    const root = svgEl(doc, 'g', { class: 'kp-graph__ghost', 'aria-hidden': 'true', style: `--n: ${order.length}` });
+    const edges = svgEl(doc, 'g', { class: 'kp-graph__edges' });
+    data.edges.forEach((e, i) => {
+        const a = at.get(e.from);
+        const b = at.get(e.to);
+        if (!a || !b) return;
+        const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        const mx = (a.x + b.x) / 2 - ((b.y - a.y) / len) * bends[i];
+        const my = (a.y + b.y) / 2 + ((b.x - a.x) / len) * bends[i];
+        const kind = kinds.get(e.kind);
+        edges.append(
+            svgEl(doc, 'path', {
+                class: 'kp-graph__edge',
+                d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
+                pathLength: '100',
+                'data-kp-kind': e.kind,
+                'data-kp-style': kind?.style ?? 'solid',
+                style: `--i: ${Math.max(0, order.indexOf(e.from === hub ? e.to : e.from))}${kind?.colour ? `; --kp-graph-edge-colour: ${kind.colour}` : ''}`,
+            }),
+        );
+    });
+    root.append(edges);
+    order.forEach((id, i) => {
+        const n = data.nodes.find((x) => x.id === id);
+        const p = at.get(id);
+        if (!n || !p) return;
+        const r = radiusOf(n);
+        const hue = n.hue ?? Math.round((sorted.indexOf(n) / Math.max(1, sorted.length)) * 360);
+        const node = svgEl(doc, 'g', {
+            class: `kp-graph__node${n.external ? ' kp-graph__node--external' : ''}${id === hub ? ' kp-graph__node--hub' : ''}`,
+            style: `--i: ${i}${n.external ? '' : `; --kp-graph-hue: ${hue}`}`,
+        });
+        node.append(svgEl(doc, 'circle', { class: 'kp-graph__ring', cx: p.x, cy: p.y, r }));
+        if (!n.external) node.append(svgEl(doc, 'circle', { class: 'kp-graph__core', cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
+        root.append(node);
+    });
+    return /** @type {SVGGElement} */ (root);
+}
+
 /** Draw the whole graph for the box's width. @param {GraphModel} g */
 function drawGraph(g) {
     const doc = g.el.ownerDocument;
@@ -300,22 +367,16 @@ function drawGraph(g) {
     g.svg.replaceChildren();
     const data = g.data;
     g.el.dataset.kpState = g.state;
-    // Loading is the chart's own loading picture over the whole picture: `.kp-chart__state` as a skeleton block with the
-    // sentence read out, so every register draws the theme's decided loading look exactly as it does for a chart's plot
-    // [graph-loading-1019; Kenny 2026-10-19 11:22 and 17:20: "Dit element heeft voor elk thema een animatie, gebruik die!"].
-    // Empty and failed are the package's state plate filling the picture, with a Retry on a failure [state-plates-1019].
+    // Loading is the ghost of the coming network in the picture, moved by the register's decided loading picture
+    // (research/character-graph, decided 2026-10-06 21:37); the sentence stands at the foot. Empty and failed are the
+    // package's state plate filling the picture, with a Retry on a failure [state-plates-1019].
     const loading = g.state === 'loading';
     g.note.textContent = loading ? g.words || g.strings.graphLoading : '';
     g.note.hidden = !loading;
-    g.box.setAttribute('aria-busy', String(loading));
     g.plate.replaceChildren();
-    g.plate.hidden = g.state === 'ready';
-    if (loading) {
-        const picture = make(doc, 'div', 'kp-chart__state kp-skeleton kp-skeleton--block');
-        picture.setAttribute('data-kp-state', 'loading');
-        picture.append(make(doc, 'span', 'kp-sr-only', g.words || g.strings.graphLoading));
-        g.plate.append(picture);
-    } else if (!g.plate.hidden)
+    g.plate.hidden = loading || g.state === 'ready';
+    if (loading) g.svg.append(ghostOf(doc, g.data, W, H));
+    else if (!g.plate.hidden)
         g.plate.append(
             hostStatePlate(g.el, {
                 kind: g.state === 'error' ? 'error' : 'empty',
@@ -455,7 +516,7 @@ export function setGraphData(el, data) {
 
 /**
  * `loading`, `empty` or `error`, with the sentence to show in the picture at
- * its final height (loading says `graphLoading` when given none). Loading is the chart's own loading picture over the whole picture; empty
+ * its final height (loading says `graphLoading` when given none). Loading is the ghost of the coming network, the register's own loading picture; empty
  * and error are the package's state plate over it (`words` is its heading, `text` its sentence, `art` a picture over the
  * heading), an error with a Retry that fires `kp-graph-retry` [state-plates-1019].
  * @param {Element} el

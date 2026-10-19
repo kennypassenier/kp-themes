@@ -6105,3 +6105,67 @@
         text-shadow: 0 0 4px hsl(from var(--sidebar-primary) h s l / 0.7);
     }
 }
+
+/* ── graph loading · shape 1 · The CRT radar: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: color-mix(in oklch, var(--foreground) 6%, oklch(from var(--background) 0 0 h));
+        --kp-graph-load-label: color-mix(in oklch, var(--success) 70%, oklch(from var(--background) 1 0 h));
+        --kp-graph-load-frame: 1px solid var(--border);
+        --kp-graph-load-shadow: 0 0 0 4px var(--card), inset 0 0 40px color-mix(in oklch, oklch(from var(--background) 0 0 h) 60%, transparent);
+        --kp-graph-load-radius: 12px;
+        --kp-graph-load-over: repeating-linear-gradient(
+            to bottom,
+            color-mix(in oklch, oklch(from var(--background) 0 0 h) 30%, transparent) 0 1px,
+            transparent 1px 3px
+        );
+        --kp-graph-load-font: var(--theme-font-mono);
+        --kp-graph-load-case: uppercase;
+        --kp-graph-load-size: 11px;
+        --kp-graph-load-edge-mix: 25%;
+        --kp-graph-load-edge-glow: drop-shadow(0 0 2px color-mix(in oklch, var(--success) 60%, transparent));
+        --kp-graph-load-ring: var(--kp-graph-load-label);
+        --kp-graph-load-ring-w: 1.5;
+        --kp-graph-load-ring-fill: var(--kp-graph-load-paper);
+        --kp-graph-load-node-mix: 40%;
+        --kp-graph-load-node-glow: drop-shadow(0 0 3px var(--kp-graph-load-label));
+    }
+}
+
+/* ── graph loading · r3-no-load-2 · Blips surface round the scope (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.7;
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost .kp-graph__edge {
+        filter: drop-shadow(0 0 1.5px var(--success));
+    }
+
+    [data-theme='nostromo'] .kp-graph__ghost .kp-graph__node--hub {
+        --kp-graph-node-anim: kp-graph-breathe 2400ms ease-in-out infinite;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
+            animation: kp-graph-blink 1000ms steps(1) infinite;
+            animation-delay: calc(var(--i) * 130ms);
+        }
+    }
+
+    @keyframes kp-graph-breathe {
+        50% {
+            transform: scale(1.06);
+        }
+    }
+
+    @keyframes kp-graph-blink {
+        50% {
+            visibility: hidden;
+        }
+    }
+}
