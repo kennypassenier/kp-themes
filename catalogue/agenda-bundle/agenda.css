@@ -28144,8 +28144,20 @@
         min-inline-size: min(var(--kp-formgrid-field, 18rem), 38cqi);
     }
 
+    /* A row of buttons in a compact grid stays on one line: a subgrid row measured at the control track's minimum width let the
+       buttons wrap, and the group kept the height of the wrapped line (58 px of empty card under "Run now") [formgrid-compact-1019]. */
+    @container kp-formgrid (min-width: 36rem) {
+        .kp-formgrid.kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill)) .kp-formgrid__buttons {
+            flex-wrap: nowrap;
+        }
+
+        .kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill)) .kp-formgrid__buttons > .kp-button {
+            white-space: nowrap;
+        }
+    }
+
     /* Groups side by side [formgrid-columns-1019]. A grid whose children are all groups (`.kp-formgrid__group`: facts and
-       settings, say) stands them side by side when the panel is wide enough for all of them: js/forms.js
+       settings, say) stands them side by side when the panel is wide enough for all of them, sharing the width as equal columns (each at least as wide as its own tracks, which start at the column's start and never stretch): js/forms.js
        (attachFormgridColumns) measures what each group needs on its own tracks and writes `data-kp-formgrid-wide` on the grid
        while they fit. Each group is then a grid of its own with the grid's tracks, as wide as it needs, `--kp-formgrid-group-gap`
        apart, all starting at the top. Without the attribute the groups stand under each other on the grid's shared tracks, so
@@ -28153,8 +28165,8 @@
     .kp-formgrid[data-kp-formgrid-wide] {
         grid-template-columns: none;
         grid-auto-flow: column;
-        grid-auto-columns: max-content;
-        justify-content: start;
+        grid-auto-columns: minmax(max-content, 1fr);
+        justify-content: stretch;
         align-items: start;
         column-gap: var(--kp-formgrid-group-gap, var(--kp-space-2xl, 2rem));
         max-inline-size: none;
@@ -28163,6 +28175,7 @@
     .kp-formgrid[data-kp-formgrid-wide] > .kp-formgrid__group {
         grid-column: auto;
         grid-template-columns: var(--kp-formgrid-tracks-bare, var(--kp-formgrid-tracks));
+        justify-content: start;
         align-items: first baseline;
         column-gap: var(--kp-formgrid-column-gap, var(--kp-space-lg, 1rem));
     }

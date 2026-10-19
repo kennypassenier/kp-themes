@@ -20662,10 +20662,12 @@ function attachFormgridColumns(root = document) {
         return;
       }
       grid2.setAttribute("data-kp-formgrid-wide", "");
+      grid2.style.gridAutoColumns = "max-content";
       const groups = kids();
       const gap = Number.parseFloat(getComputedStyle(grid2).columnGap) || 0;
       const need = groups.reduce((sum, g) => sum + g.getBoundingClientRect().width, 0) + gap * (groups.length - 1);
       const have = grid2.getBoundingClientRect().width;
+      grid2.style.gridAutoColumns = "";
       if (need > have + 0.5) grid2.removeAttribute("data-kp-formgrid-wide");
       else if (!was) grid2.setAttribute("data-kp-formgrid-wide", "");
     };

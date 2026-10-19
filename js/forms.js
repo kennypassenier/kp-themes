@@ -569,10 +569,13 @@ export function attachFormgridColumns(root = document) {
             }
             // Measured with the groups side by side, put back when they do not fit (one task, nothing is painted between).
             grid.setAttribute('data-kp-formgrid-wide', '');
+            // What each group needs is its own tracks' width, not the equal column it is given.
+            grid.style.gridAutoColumns = 'max-content';
             const groups = kids();
             const gap = Number.parseFloat(getComputedStyle(grid).columnGap) || 0;
             const need = groups.reduce((sum, g) => sum + g.getBoundingClientRect().width, 0) + gap * (groups.length - 1);
             const have = grid.getBoundingClientRect().width;
+            grid.style.gridAutoColumns = '';
             if (need > have + 0.5) grid.removeAttribute('data-kp-formgrid-wide');
             else if (!was) grid.setAttribute('data-kp-formgrid-wide', '');
         };
