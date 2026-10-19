@@ -311,7 +311,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-19 [anchors-picker-1019]: --kp-anchor-room and --kp-picker-label-gap: 1029.
     // Re-pinned 2026-10-19 [graph-loading-1019]: the per-theme graph loading knobs (ghost, edge and node animations) left
     // with the pictures Kenny rejected, the form grid fix added and removed some: 1020.
-    assert.equal(result.expected, 1020, 'AR21 counted the --kp-* properties in css/components.css');
+    // Recounted 2026-10-19 [gapmisc-1019]: --kp-touch-target added: 1021.
+    assert.equal(result.expected, 1021, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -383,7 +384,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Recounted 2026-10-19 [datatable-r5-1019]: the three new data table knobs, all read through var(): 1018.
     // Recounted 2026-10-19 [anchors-picker-1019], both read through var(): 1020.
     // Recounted 2026-10-19 [graph-loading-1019]: 1012.
-    assert.equal(result.readCount, 1012);
+    // Recounted 2026-10-19 [gapmisc-1019]: --kp-touch-target read through var(): 1013.
+    assert.equal(result.readCount, 1013);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

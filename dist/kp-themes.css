@@ -34726,6 +34726,26 @@
     /* gap-activity-feed:feed:end */
 }
 
+@layer kp.components {
+    /* --- Touch target: a button is at least 44 px square under a coarse pointer [gaps-misc-1019; AuDHD gap 42, HTTPSwitchboard 23] ---
+     * WCAG 2.5.5 / Apple HIG ask 44 px for a finger. The 36 px default, the 28 px small button and the 28 px tool-row buttons
+     * (code, JSON field, command copy) are right for a mouse and stay as they are under a fine pointer; only a coarse pointer
+     * (a phone, a tablet) lifts the box. The floor sits on the button itself (min-block-size / min-inline-size), so layout
+     * follows: tool rows come out one height, and a register's own paint is untouched. `html` in front outweighs the
+     * registers' `[data-theme] .kp-button--sm` without !important. Knob: --kp-touch-target (2.75rem). */
+    @media (pointer: coarse) {
+        html :is(.kp-button, .kp-icon-button, .kp-nav__toggle, .kp-sidenav__toggle):is(*, .kp-button--sm, .kp-button--lg) {
+            min-block-size: var(--kp-touch-target, 2.75rem);
+            min-inline-size: var(--kp-touch-target, 2.75rem);
+        }
+
+        html .kp-icon-button {
+            inline-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
+            block-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
+        }
+    }
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/cyberpunk-register.css
    The cyberpunk register, 5.0.0 [S39, S40, S41]: the signal-yellow

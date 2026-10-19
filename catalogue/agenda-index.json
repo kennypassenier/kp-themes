@@ -91,7 +91,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"app-hsb-align-d902e1f2-6fff-4797-8ccd-38668fd32d44\", \"received\": [] }\n        "
             },
-            "fingerprint": "dc9623031b041613",
+            "fingerprint": "3e7ec0f217ab8a84",
             "update": null
         },
         "research/app-homelab-backups/demo.html": {
@@ -360,7 +360,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"app-hsb-translate-3f6b2a1e-5c8d-4e0a-9b71-2d4f8a6c0e13\" }\n        "
             },
-            "fingerprint": "cfcb2a823531a3ff",
+            "fingerprint": "8fb35feb84ac845a",
             "update": null
         },
         "research/almanac-calendar-views/demo.html": {

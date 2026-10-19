@@ -173,13 +173,6 @@
     overflow: auto;
 }
 
-/* A diff line wraps inside the card: the text column is minmax(0, 1fr), not 1fr (whose minimum is the longest word), so a long
-   token never runs 97 px past the others at a phone's width and every line ends on the card's edge (kp-gaps http-switchboard). */
-.hs-diff .kp-diff__line {
-    grid-template-columns: 3rem 1ch minmax(0, 1fr);
-    overflow-wrap: anywhere;
-}
-
 .hs-diff-wrap {
     display: grid;
     gap: var(--kp-space-sm, 0.5rem);
