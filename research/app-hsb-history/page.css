@@ -236,13 +236,15 @@
     font-variant-numeric: tabular-nums;
 }
 
+/* A phone: three columns shared by every row, the outcome and the duration of a fixed width: the time runs over the first two
+   and ends on the same edge in every row, the name under it across the row, the outcome on the first column's edge. */
 @media (max-width: 40rem) {
     .hh-feed > li:not(.kp-newpill__since) {
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: 7rem minmax(0, 1fr) 6rem;
         grid-template-areas:
-            'time ms'
-            'name name'
-            'outcome outcome';
+            'time time ms'
+            'name name name'
+            'outcome . .';
         gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
     }
 
@@ -252,7 +254,8 @@
 
     .hh-feed .kp-badge {
         grid-area: outcome;
-        justify-self: start;
+        justify-content: center;
+        justify-self: stretch;
     }
 
     .hh-feed .hh-row__ms {
@@ -261,5 +264,15 @@
 
     .hh-feed .hh-row__name {
         grid-area: name;
+        overflow-wrap: break-word;
+    }
+}
+
+/* The refresh bar folds to one column on a phone: the chooser, the freshness line and Refresh now one under the other, so no
+   word runs under a button (outside the form grid the bar does not fold by itself; kp-gaps http-switchboard). */
+@media (max-width: 40rem) {
+    .hh-live .kp-refresh__bar {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
     }
 }

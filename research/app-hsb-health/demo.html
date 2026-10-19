@@ -115,17 +115,17 @@
                 </div>
                 <div id="attention-component" class="hs-stack">
                     <div class="hs-case">
-                        <p class="hs-label">Full width</p>
-                        <div class="kp-attention" id="hs-band" role="region" aria-label="Profiles that need attention"></div>
-                        <div class="kp-empty hs-clear" id="hs-clear" data-kp-art="done" data-kp-art-size="sm" hidden>
-                            <p class="kp-empty__title">All profiles are working</p>
-                            <p class="kp-empty__body">alertmanager and uptime-kuma delivered their last message.</p>
+                        <p class="hs-label">Phone width (390 px)</p>
+                        <div class="hs-frame hs-frame--phone">
+                            <div class="kp-attention" id="hs-band-phone" data-kp-subgrid role="region" aria-label="Profiles that need attention, phone width"></div>
                         </div>
                     </div>
                     <div class="hs-case">
-                        <p class="hs-label">Phone width (390 px)</p>
-                        <div class="hs-frame hs-frame--phone">
-                            <div class="kp-attention" id="hs-band-phone" role="region" aria-label="Profiles that need attention, phone width"></div>
+                        <p class="hs-label">Full width</p>
+                        <div class="kp-attention" id="hs-band" data-kp-subgrid role="region" aria-label="Profiles that need attention"></div>
+                        <div class="kp-empty hs-clear" id="hs-clear" data-kp-art="done" data-kp-art-size="sm" hidden>
+                            <p class="kp-empty__title">All profiles are working</p>
+                            <p class="kp-empty__body">alertmanager and uptime-kuma delivered their last message.</p>
                         </div>
                     </div>
                 </div>
@@ -219,13 +219,13 @@
                 </div>
                 <div id="problem-component" class="hs-stack">
                     <div class="hs-case">
-                        <div class="kp-problems" id="hs-problems" data-kp-problems data-kp-problems-mode="each"></div>
-                    </div>
-                    <div class="hs-case">
                         <p class="hs-label">Phone width (390 px)</p>
                         <div class="hs-frame hs-frame--phone">
-                            <div class="kp-problems" id="hs-problems-phone" data-kp-problems data-kp-problems-mode="each"></div>
+                            <div class="kp-problems" id="hs-problems-phone" data-kp-subgrid data-kp-problems data-kp-problems-mode="each"></div>
                         </div>
+                    </div>
+                    <div class="hs-case">
+                        <div class="kp-problems" id="hs-problems" data-kp-subgrid data-kp-problems data-kp-problems-mode="each"></div>
                     </div>
                 </div>
                 <p class="hs-readout" id="hs-prob-readout" aria-live="polite">Nothing pressed yet.</p>

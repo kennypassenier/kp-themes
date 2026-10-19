@@ -111,24 +111,35 @@
 .hs-try__input {
     grid-column: span 5;
     display: grid;
-    align-content: start;
+    /* The template block takes what is left of the column, so its bottom edge stands on the result card's. */
+    grid-template-rows: auto minmax(0, 1fr);
     gap: var(--kp-space-md, 1rem);
     min-inline-size: 0;
 }
 
-.hs-try__result {
-    grid-column: span 7;
-    min-inline-size: 0;
+/* Side by side: the card beside the column starts its title one border and one padding lower; the label stands on that line. */
+@media (min-width: 60.0625rem) {
+    .hs-try__input {
+        padding-block-start: var(--hs-try-label-drop, 0.87rem);
+    }
 }
 
-.hs-try__diff {
+.hs-try .hs-try__result {
+    grid-column: span 7;
+    min-inline-size: 0;
+    /* The grid row stretches the card; a percentage height resolved against the row let it run past the row into the card below. */
+    block-size: auto;
+}
+
+.hs-try .hs-try__diff {
     grid-column: 1 / -1;
     min-inline-size: 0;
+    block-size: auto;
 }
 
 @media (max-width: 60rem) {
-    .hs-try__input,
-    .hs-try__result {
+    .hs-try .hs-try__input,
+    .hs-try .hs-try__result {
         grid-column: 1 / -1;
     }
 
@@ -160,6 +171,13 @@
 .hs-diff {
     max-block-size: 24rem;
     overflow: auto;
+}
+
+/* A diff line wraps inside the card: the text column is minmax(0, 1fr), not 1fr (whose minimum is the longest word), so a long
+   token never runs 97 px past the others at a phone's width and every line ends on the card's edge (kp-gaps http-switchboard). */
+.hs-diff .kp-diff__line {
+    grid-template-columns: 3rem 1ch minmax(0, 1fr);
+    overflow-wrap: anywhere;
 }
 
 .hs-diff-wrap {

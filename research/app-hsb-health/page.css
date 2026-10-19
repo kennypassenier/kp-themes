@@ -25,6 +25,11 @@
     color: var(--muted-foreground);
 }
 
+.hs-sec,
+.hs-frame--phone {
+    container: hs-narrow / inline-size;
+}
+
 .hs-sec {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -109,18 +114,21 @@
 
 .hs-profiles {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr) minmax(12rem, auto);
+    column-gap: var(--kp-space-md, 1rem);
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
+/* Every row is a subgrid of the list: the names, the figures and the freshness stand on three columns shared by all rows
+   [align-sweep 1019: the figures ended 21 px apart row to row]. */
 .hs-profile {
     display: grid;
-    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr) minmax(12rem, auto);
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
     align-items: center;
-    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    row-gap: var(--kp-space-xs, 0.25rem);
     padding: var(--kp-space-sm, 0.5rem);
     border-block-start: 1px solid var(--border);
 }
@@ -162,15 +170,58 @@
     --kp-card-stage-min: 18rem;
 }
 
-/* On a phone the three columns stack. */
-.hs-frame--phone .hs-profile,
-.hs-profile--stack {
+/* On a phone the three columns stack: the list has one column, the rows follow. */
+.hs-frame--phone .hs-profiles,
+.hs-profiles:has(.hs-profile--stack) {
     grid-template-columns: minmax(0, 1fr);
 }
 
-@media (max-width: 40rem) {
-    .hs-profile {
+@container hs-narrow (max-width: 40rem) {
+    .hs-profiles {
         grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* The attention band and the problem alerts as subgrids [data-kp-subgrid, align-grid-1019]: icon | text | actions are three
+   columns shared by every item, so each button of a column starts on one edge, and the buttons of one column share one width.
+   Under 40rem the actions drop under the text, on the text's edge. */
+.kp-attention[data-kp-subgrid],
+.kp-problems[data-kp-subgrid] {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--kp-space-md, 1rem);
+    row-gap: var(--kp-space-sm, 0.5rem);
+}
+
+.kp-attention[data-kp-subgrid] > .kp-attention__item,
+.kp-problems[data-kp-subgrid] > .kp-problem {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+}
+
+.kp-problems[data-kp-subgrid] > .kp-problem {
+    align-items: start;
+}
+
+.kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
+    align-self: center;
+}
+
+.kp-attention[data-kp-subgrid] .kp-attention__actions > .kp-button,
+.kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions > .kp-button {
+    flex: 1 1 auto;
+}
+
+@container hs-narrow (max-width: 40rem) {
+    .kp-attention[data-kp-subgrid],
+    .kp-problems[data-kp-subgrid] {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .kp-attention[data-kp-subgrid] .kp-attention__actions,
+    .kp-problems[data-kp-subgrid] > .kp-problem > .kp-alert__actions {
+        grid-column: 2;
     }
 }
 

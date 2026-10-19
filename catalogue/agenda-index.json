@@ -453,7 +453,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"app-hsb-translate-3f6b2a1e-5c8d-4e0a-9b71-2d4f8a6c0e13\" }\n        "
             },
-            "fingerprint": "943567072478cda8",
+            "fingerprint": "cfcb2a823531a3ff",
             "update": null
         },
         "research/almanac-calendar-views/demo.html": {
@@ -545,7 +545,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"app-hsb-profiles-d16be435-4692-4214-8575-ed3ef0a53c26\" }\n        "
             },
-            "fingerprint": "4a2a60dc9e818549",
+            "fingerprint": "4d74854c55271efa",
             "update": null
         },
         "research/app-hsb-history/demo.html": {
@@ -562,7 +562,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"app-hsb-history-1019-6d3f0a52-7c1e-4b5a-9f0e-2a8c1d4b7e90\", \"received\": [] }\n        "
             },
-            "fingerprint": "cc1664eea518c71d",
+            "fingerprint": "c91003ab4e242ce0",
             "update": null
         },
         "research/app-hsb-health/demo.html": {
@@ -581,7 +581,7 @@
                 "extra": null,
                 "round": "\n            { \"round\": \"app-hsb-health-7c1e5a52-2d47-4b0e-9a54-1f6b63d09a31\" }\n        "
             },
-            "fingerprint": "8e3e74d54d097575",
+            "fingerprint": "7845d9086d8f32aa",
             "update": null
         }
     },
