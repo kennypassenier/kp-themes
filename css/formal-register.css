@@ -946,7 +946,10 @@
 
     /* ── The roots the rules above reach only by their parts ──────────── */
 
-    [data-theme='formal'] .kp-form {
+    /* Not a form that is a block of a form grid [formgrid-notes-1019; chassis-rs]: there the grid's gap passes down to the
+       form (it is a subgrid), and this rule, being more specific than the grid's, made the form's rows 1rem apart whatever
+       --kp-formgrid-gap said. */
+    [data-theme='formal'] .kp-form:not(:is(.kp-formgrid, .kp-formgrid__group) > .kp-form) {
         gap: var(--kp-space-lg);
     }
 

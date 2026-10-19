@@ -15,10 +15,12 @@
 //  B. Rows. In every row whose cells stand side by side, the first line of every cell (a control's box, or a text's
 //     first line) is centred on the label's first line, or shares its baseline (tolerance 1 px). A control taller than
 //     twice the control height is read by its first line band.
-//  C. Buttons. Two buttons of the composition that stand side by side at overlapping heights share a top, a centre or
-//     a bottom (tolerance 1 px): "Send test" beside "Format" is held to this.
+//  C. Buttons. Two buttons of the composition that stand side by side on one line (their boxes overlap by at least
+//     three quarters of the shorter one) share a top, a centre or a bottom (tolerance 1 px): "Send test" beside
+//     "Format" is held to this. A button that is not on screen (inside a hidden, clipped or scrolled-out box, or at no
+//     opacity) is not compared, and neither are two buttons that merely overlap a little, in different columns or rows.
 //  D. Tracks. A group of buttons under a row group, inside its width, starts on one of that group's column edges or ends
-//     on one (tolerance 1 px).
+//     on one (tolerance 1 px). A segmented control's own box is its edge: its items sit inside its padding.
 //
 // Run (a static server on the repository root first):
 //   node research/_review/measure-align.mjs <port> <research/topic/demo.html> [themes=formal] [widths=1280,390] [ids]
@@ -48,6 +50,24 @@ export function measureAlign([tol, only]) {
         if (r.width < 0.5 || r.height < 0.5) return false;
         const cs = getComputedStyle(el);
         return cs.visibility !== 'hidden' && cs.display !== 'none';
+    };
+    /**
+     * The element can be seen: no box above it hides it (no opacity, a clipping box it lies outside of, such as a log
+     * scrolled past it, a datatable's scroller, or a folded panel), so a button in it is no part of the composition
+     * [formgrid-notes-1019; homelab 57, 58].
+     * @param {Element} el
+     */
+    const onScreen = (el) => {
+        const r = el.getBoundingClientRect();
+        for (let a = /** @type {Element | null} */ (el); a && a !== section.parentElement; a = a.parentElement) {
+            const cs = getComputedStyle(a);
+            if (cs.opacity === '0' || cs.visibility === 'hidden' || cs.display === 'none' || cs.contentVisibility === 'hidden') return false;
+            if (a === el) continue;
+            if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
+            const ar = a.getBoundingClientRect();
+            if (r.bottom <= ar.top + 0.5 || r.top >= ar.bottom - 0.5 || r.right <= ar.left + 0.5 || r.left >= ar.right - 0.5) return false;
+        }
+        return true;
     };
     /** The children of an element as the layout sees them: display: contents opened up. @param {Element} el */
     const kids = (el) => {
@@ -79,7 +99,7 @@ export function measureAlign([tol, only]) {
         for (let n; (n = walk.nextNode());) {
             if (!n.textContent?.trim()) continue;
             const p = /** @type {HTMLElement} */ (n.parentElement);
-            if (inChrome(p) || !shown(p)) continue;
+            if (inChrome(p) || !shown(p) || !onScreen(p)) continue;
             // Visually hidden words (a slim rail's clipped label, an sr-only span written as clip-path) are no line.
             if (/inset\(50%\)/.test(getComputedStyle(p).clipPath)) continue;
             const range = document.createRange();
@@ -98,7 +118,7 @@ export function measureAlign([tol, only]) {
     };
     /** Where a cell's first line stands: its first control, or its first text line. @param {Element} cell */
     const anchor = (cell) => {
-        let ctl = cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c));
+        let ctl = cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c) && onScreen(c));
         // A combobox keeps its status line ("11 results") under the input: the field is the input, the line is its help.
         if (ctl?.matches('.kp-combobox')) ctl = ctl.querySelector('.kp-combobox__input, [role="combobox"]') ?? ctl;
         const line = firstLine(cell);
@@ -246,7 +266,7 @@ export function measureAlign([tol, only]) {
             const ctls = list
                 .map(({ row, cell }) => ({
                     row,
-                    ctl: tileOf(cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c))) || null,
+                    ctl: tileOf(cell.matches(CONTROL) ? cell : [...cell.querySelectorAll(CONTROL)].find((c) => shown(c) && !inChrome(c) && onScreen(c))) || null,
                 }))
                 .filter((x) => x.ctl && x.ctl !== list.find((l) => l.row === x.row)?.cell);
             if (ctls.length >= 2) {
@@ -309,12 +329,17 @@ export function measureAlign([tol, only]) {
     // component, measured with it.
     const PARTS =
         '.kp-time, .kp-combobox, .kp-tag-list, .kp-tag, .kp-quantity, .kp-segmented, .kp-calendar, .kp-heat, table, [role="grid"], [role="tablist"], .kp-tabbar, .kp-pagination';
-    const buttons = all.filter((el) => el.matches('.kp-button') && !el.parentElement?.closest('button, .kp-button') && !el.closest(PARTS));
+    const buttons = all.filter(
+        (el) => el.matches('.kp-button') && !el.parentElement?.closest('button, .kp-button') && !el.closest(PARTS) && onScreen(el),
+    );
     for (let i = 0; i < buttons.length; i++)
         for (let j = i + 1; j < buttons.length; j++) {
             const a = buttons[i].getBoundingClientRect();
             const b = buttons[j].getBoundingClientRect();
-            if (overlapY(a, b) <= 0.5) continue;
+            // Standing on one line: the boxes share at least three quarters of the shorter one. Two buttons of different
+            // columns (or of a column and the next row) that overlap by a few px by chance are not a pair
+            // [formgrid-notes-1019; chassis-rs]; "Send test" 9 px off "Format" (a quarter of 36 px) still is.
+            if (overlapY(a, b) < 0.75 * Math.min(a.height, b.height)) continue;
             if (!(a.right <= b.left + tol || b.right <= a.left + tol)) continue;
             const dt = Math.abs(a.top - b.top);
             const dm = Math.abs((a.top + a.bottom) / 2 - (b.top + b.bottom) / 2);
@@ -336,15 +361,19 @@ export function measureAlign([tol, only]) {
             // A cell's own buttons (a row's expander, its action, a strip of nights) belong to the table: a datatable that scrolls
             // inside a max height has a box shorter than its rows, so rows scrolled out of it read as "under" the table.
             !el.closest('table, [role="grid"], .kp-table-wrap') &&
-            !el.closest('.kp-code__head, .kp-command__head, .kp-secret, [role="toolbar"], .kp-console, .kp-statuslist')
+            !el.closest('.kp-code__head, .kp-command__head, .kp-secret, [role="toolbar"], .kp-console, .kp-statuslist') &&
+            kids(el).every(onScreen)
         );
     });
     for (const bg of groupsOfButtons) {
         // Inside a row of a row group: that row's own cells are measured by A.
         if ([...seenRows].some((r) => r.contains(bg))) continue;
         const br = bg.getBoundingClientRect();
-        const first = kids(bg)[0].getBoundingClientRect();
-        const last = kids(bg)[kids(bg).length - 1].getBoundingClientRect();
+        // A segmented control is one box: its own padding (4 px) is its edge, not its first and last item, which sit
+        // inside that padding [formgrid-notes-1019]. A segmented that is off the tracks is still caught, by its box.
+        const own = bg.matches('.kp-segmented');
+        const first = (own ? bg : kids(bg)[0]).getBoundingClientRect();
+        const last = (own ? bg : kids(bg)[kids(bg).length - 1]).getBoundingClientRect();
         // The nearest row group above, whose width holds the button group.
         let best = null;
         for (const gr of groups) {

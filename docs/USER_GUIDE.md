@@ -1826,6 +1826,11 @@ What it does for you, without hand work:
   `.kp-formgrid__control` puts a `.kp-formgrid__buttons` group on the fields' start edge, and its `.kp-formgrid__actions`
   puts the row's own action at the end of the actions column, so "Send test" stands on the line of "Format" and "Minify"
   and in the column of every other row action. Give buttons that stand on one line the same size.
+- **A JSON field's first line is its tool row.** In a row that holds a `.kp-jsonfield`, the label, the `__value` text and the
+  `__actions` cell (its button centred on the tools) all stand on the line of Format, Minify, Wrap and Copy.
+- **A refresh in the grid.** A `.kp-refresh` placed in the grid becomes a subgrid row: the chooser in the control track,
+  its freshness line in the value track, Refresh now in the actions track. `data-kp-refresh-label="Auto-refresh"` adds the
+  row's label in the label track (outside a form grid it is a line above the bar).
 - **A cell that needs more room says so**: `data-kp-formgrid-span="control-value"`, `"wide"` (control to actions) or
   `"all"`.
 - **The phone.** Under 36rem of the grid's own width every row reads top to bottom in one column: label, control, value,
