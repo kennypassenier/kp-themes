@@ -28,6 +28,10 @@ export type CardStateOptions = {
      * false leaves Try again out of an error note (a read the page cannot repeat)
      */
     retry?: boolean;
+    /**
+     * a picture over the note's title, empty or error: a node (an inline SVG, an icon) or a glyph; aria-hidden either way
+     */
+    art?: Node | string | null;
 };
 /**
  * Put a card in a state. The options are kept for the card, so a later

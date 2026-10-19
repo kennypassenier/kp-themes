@@ -590,6 +590,7 @@ setGanttPoints(
                             <tr><td><code>kp-gantt-open</code></td><td>Fired on the timeline, bubbling, when a bar was opened: `detail` `{ id, run, source: 'pointer' | 'keyboard' }`.</td></tr>
                             <tr><td><code>kp-gantt-select</code></td><td>Fired on the timeline, bubbling, when a range was selected or lifted: `detail` `{ from, to, source }` (epoch ms; null when lifted).</td></tr>
                             <tr><td><code>kp-gantt-window</code></td><td>Fired on the timeline, bubbling, when the window moved by a person: `detail` `{ from, to, span, live }` (epoch ms, span in s).</td></tr>
+                            <tr><td><code>kp-gantt-retry</code></td><td>Fired on the timeline, bubbling, when the Retry of its failed state is pressed [state-plates-1019].</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -634,6 +635,7 @@ setGanttPoints(
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-stateplate-floor</code></td><td><code>12rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                     </tbody></table></div>

@@ -84,6 +84,7 @@
 import { getStrings } from './strings.js';
 import { attachHoverCards } from './hovercard.js';
 import { openBusyCard } from './busy-card.js';
+import { hostStatePlate } from './state-plate.js';
 import { drawUsesMap, leaveUsesMap, rememberView, rememberedView } from './uses-map.js';
 import { calmLegendEntries, calmTone, calmWord, isCalmTones } from './calm-tones.js';
 import { setKeys } from './keys.js';
@@ -100,6 +101,10 @@ export const HEAT_ROW_EVENT = 'kp-heat-row';
 export const HEAT_PAGE_EVENT = 'kp-heat-page';
 /** Fired on a matrix when a cell is pinned. */
 export const MATRIX_PICK_EVENT = 'kp-matrix-pick';
+/** Fired on a heat grid, bubbling, when the Retry of its failed state is pressed [state-plates-1019]. */
+export const HEAT_RETRY_EVENT = 'kp-heat-retry';
+/** Fired on a matrix (either view), bubbling, when the Retry of its failed state is pressed [state-plates-1019]. */
+export const MATRIX_RETRY_EVENT = 'kp-matrix-retry';
 /** Fired on a matrix when the lit headers change. */
 export const MATRIX_LIGHT_EVENT = 'kp-matrix-light';
 
@@ -137,7 +142,9 @@ const TONES = ['ok', 'warn', 'bad', 'muted', 'future', 'before', 'none', 'level'
  * @property {HeatRow} [summary]
  * @property {readonly HeatRow[]} [rows]
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]  default ready
- * @property {string} [message]  the words of the empty and error states
+ * @property {string} [message]  the words of the empty and error states (the plate's heading)
+ * @property {string} [text]  the plate's sentence under the heading (an error says the package's own when none is given)
+ * @property {Node | string | null} [art]  a picture over the heading of the empty and error plates
  * @property {{ rows: number, columns: number }} [skeleton]  the shape of the loading state when there is no data yet
  * @property {number} [every]    every how many columns the axis names one (default 3; the last always)
  * @property {'start' | 'end'} [axis]  where the column axis stands (default start)
@@ -184,7 +191,9 @@ const TONES = ['ok', 'warn', 'bad', 'muted', 'future', 'before', 'none', 'level'
  * @property {readonly (import('./uses-map.js').UsesNode)[]} [columns]  the things that use them
  * @property {(row: string, column: string) => MatrixCell | null | undefined} [cell]  null: unknown; the same key on both axes with nothing given: itself
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
- * @property {string} [message]
+ * @property {string} [message]  the plate's heading in the empty and error states
+ * @property {string} [text]  the plate's sentence under the heading
+ * @property {Node | string | null} [art]  a picture over the heading of the empty and error plates
  * @property {number} [skeleton]  the size of the loading state when there are no names yet
  * @property {{ row: string, column: string } | null} [picked]
  * @property {readonly string[]} [lit]  the header keys that are lit
@@ -381,8 +390,17 @@ export function setHeat(el, spec) {
     else el.setAttribute('data-kp-heat-picked', picked);
 
     if (state === 'empty' || state === 'error') {
-        const note = make(doc, 'div', 'kp-heat__state', { role: state === 'error' ? 'alert' : 'status', 'data-kp-state': state });
-        note.textContent = spec.message ?? (state === 'error' ? s.heatFailed : s.heatEmpty);
+        // The package's state plate over the grid's whole footprint, with a Retry on a failure [state-plates-1019].
+        const note = make(doc, 'div', 'kp-heat__state', { 'data-kp-state': state });
+        note.append(
+            hostStatePlate(el, {
+                kind: state,
+                title: spec.message ?? (state === 'error' ? s.heatFailed : s.heatEmpty),
+                ...(spec.text ? { text: spec.text } : {}),
+                art: spec.art,
+                retryEvent: HEAT_RETRY_EVENT,
+            }),
+        );
         markDrawn(el);
         el.replaceChildren(note);
         return;
@@ -846,8 +864,16 @@ export function setMatrix(el, spec) {
     grid.style.setProperty('--kp-matrix-cols', String(Math.max(1, columns.length)));
 
     if (state === 'empty' || state === 'error') {
-        const note = make(doc, 'div', 'kp-matrix__state', { role: state === 'error' ? 'alert' : 'status' });
-        note.textContent = spec.message ?? (state === 'error' ? s.heatFailed : s.heatEmpty);
+        const note = make(doc, 'div', 'kp-matrix__state', { 'data-kp-state': state });
+        note.append(
+            hostStatePlate(el, {
+                kind: state,
+                title: spec.message ?? (state === 'error' ? s.heatFailed : s.heatEmpty),
+                ...(spec.text ? { text: spec.text } : {}),
+                art: spec.art,
+                retryEvent: MATRIX_RETRY_EVENT,
+            }),
+        );
         markDrawn(el);
         el.replaceChildren(note);
         return;

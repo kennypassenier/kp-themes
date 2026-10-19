@@ -335,7 +335,9 @@ export function drawUsesMap(el, spec, ctx) {
     }
 
     ctx.replaceKeepingCard(el, [root, list]);
-    ctx.syncCard(el, loading, strings.usesLoading, () => [root], 'kp-uses__busy');
+    // The busy card is centred over the map's whole footprint (the box with its least height), not over the skeleton rows,
+    // which are shorter than a loaded map [state-plates-1019].
+    ctx.syncCard(el, loading, strings.usesLoading, () => [el], 'kp-uses__busy');
     ctx.markDrawn(el);
     if (!loading) memory.off = wire(el, root, svg, list, { sources, users, uses, usedBy, shape, lightMode, collapseBelow, byKey, memory, spec });
 }

@@ -10462,6 +10462,12 @@
         min-block-size: max(5.25rem, calc(var(--kp-gantt-axis, 1.75rem) + var(--kp-gantt-words, 0px)));
     }
 
+    /* An empty or failed timeline is the state plate over its plot, which needs the plate's own room [state-plates-1019]. */
+    .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body,
+    .kp-gantt[data-kp-state='ready']:has(> .kp-gantt__frame > .kp-gantt__plate:not([hidden])) .kp-gantt__body {
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
     .kp-gantt__legend {
         display: flex;
         flex-wrap: wrap;
@@ -28814,6 +28820,161 @@
     .kp-rating[data-kp-state='error'] .kp-rating__failure:not([hidden]) {
         position: absolute;
         inset: 0;
+    }
+}
+
+/* One state plate for every area that can be empty or fail [state-plates-1019]: js/state-plate.js `hostStatePlate()` puts the
+ * package's plate into the component's own box (the heat grid and matrix, the run timeline, the week, the network graph, the data
+ * table), over the whole footprint the component has with its data, with a normal-size Retry on a failure. The rules live in the last
+ * layer because a register dresses `.kp-alert` and `.kp-empty` and beats kp.components. Knobs [KT6]: --kp-stateplate-floor (the least
+ * height of a plate with no loaded height to hold, 12rem), --kp-datatable-held (written by js/datatable.js). */
+@layer kp.layout {
+    .kp-stateplate__art {
+        display: block;
+        color: var(--muted-foreground);
+        font-size: 2.5rem;
+        line-height: 1;
+    }
+
+    .kp-stateplate--error .kp-stateplate__art {
+        color: inherit;
+    }
+
+    .kp-stateplate__art > svg {
+        display: block;
+        inline-size: 2.5rem;
+        block-size: 2.5rem;
+        margin-inline: auto;
+    }
+
+    /* The heat grid and the matrix: the plate is the whole box (js/footprint.js holds the loaded height on the host). */
+    .kp-heat:is([data-kp-state='empty'], [data-kp-state='error']),
+    .kp-matrix:is([data-kp-state='empty'], [data-kp-state='error']) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+        align-content: stretch;
+        align-items: stretch;
+    }
+
+    .kp-heat__state,
+    .kp-matrix__state {
+        display: grid;
+        grid-column: 1 / -1;
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+        color: inherit;
+        font-size: inherit;
+    }
+
+    .kp-heat__state > .kp-stateplate,
+    .kp-matrix__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* The network graph: the plate over the whole picture; loading is the busy card, the words are read out only. */
+    .kp-graph__state {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        border-radius: inherit;
+        background: var(--background);
+    }
+
+    .kp-graph__state[hidden] {
+        display: none;
+    }
+
+    .kp-graph__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__note {
+        position: absolute;
+        inset: auto;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    /* The run timeline and the week: the plate over the plot (below the axis) or the whole agenda. */
+    .kp-gantt__plate {
+        position: absolute;
+        inset: var(--kp-gantt-axis, 1.75rem) 0 0;
+        z-index: 5;
+        display: grid;
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-gantt--line .kp-gantt__plate {
+        inset: 0 0 var(--kp-gantt-axis, 1.75rem);
+    }
+
+    .kp-gantt__plate[hidden],
+    .kp-week__plate[hidden] {
+        display: none;
+    }
+
+    .kp-week__plate {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        background: var(--kp-week-state-ground, var(--card));
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-week__frame:has(> .kp-week__plate:not([hidden])) {
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
+    .kp-gantt__plate > .kp-stateplate,
+    .kp-week__plate > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* What the plate covers is not drawn behind it: the hour rules and the lanes of the timeline, the days of the week, the empty picture of the graph. */
+    .kp-gantt__frame:has(> .kp-gantt__plate:not([hidden])) :is(.kp-gantt__lines, .kp-gantt__plot, .kp-gantt__lane, .kp-gantt__track),
+    .kp-week__frame:has(> .kp-week__plate:not([hidden])) > :is(.kp-week__grid, .kp-week__upcoming),
+    .kp-graph:is([data-kp-state='empty'], [data-kp-state='error']) .kp-graph__svg {
+        visibility: hidden;
+    }
+
+    /* The data table: a failed table, or one with nothing to show, covers its rows and the plate fills the height the table had. */
+    /* A card's empty note has the failed note's air (24 px), not the plate's 32, so both fit the stage a short list leaves them. */
+    .kp-card__state > .kp-card__empty.kp-stateplate {
+        padding: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-datatable > [data-kp-state-covered] {
+        display: none;
+    }
+
+    .kp-datatable > :is([data-kp-datatable-empty], [data-kp-datatable-failed]).kp-stateplate {
+        min-block-size: max(var(--kp-stateplate-floor, 12rem), min(var(--kp-datatable-held, 0px), var(--kp-footprint-max, 48rem)));
+    }
+
+    /* The sentence a page wrote in the empty slot is body text; its title (`.kp-empty__title`) is the plate's heading. */
+    .kp-datatable > [data-kp-datatable-empty].kp-stateplate {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-datatable > [data-kp-datatable-empty].kp-stateplate .kp-empty__title {
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        font-weight: 600;
+    }
+
+    .kp-datatable > [data-kp-datatable-failed] > [data-kp-datatable-failed-reason] {
+        margin: 0;
+    }
+
+    /* A group of uptime strips that load together has ONE busy card over the group (js/uptime.js groupHost). */
+    [data-kp-uptime-group] {
+        position: relative;
     }
 }
 

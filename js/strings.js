@@ -1009,6 +1009,10 @@
  * @property {string} usesFailedText  Its sentence [kpadopt6-media]
  * @property {string} usesEmpty  The empty map's heading [kpadopt6-media]
  * @property {string} usesEmptyText  Its sentence [kpadopt6-media]
+ * @property {string} stateRetry  The Retry of every failed data area drawn with the state plate (heat, matrix, timeline, week, graph, table) [state-plates-1019]
+ * @property {string} stateFailedText  The sentence under a failed data area's heading when the page gives none [state-plates-1019]
+ * @property {string} graphEmpty  The empty network's heading when the page gives no words [state-plates-1019]
+ * @property {string} graphFailed  The failed network's heading when the page gives no words [state-plates-1019]
  * @property {string} usesRetry  The failed map's Retry [kpadopt6-media]
  * @property {string} usesLoading  The busy card's words while the map loads [kpadopt6-media]
  * @property {string} usesNotUsed  What a source nothing uses says [kpadopt6-media]
@@ -2765,6 +2769,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     usesEmpty: 'Nothing to show yet',
     usesEmptyText: 'When there is something that others use, it shows here with a line to each user.',
     usesRetry: 'Retry',
+    stateRetry: 'Retry',
+    stateFailedText: 'Nothing was changed. Try again in a moment.',
+    graphEmpty: 'No network to show yet.',
+    graphFailed: 'The network could not be read.',
     usesLoading: 'Reading…',
     usesNotUsed: 'Not used',
     usesCount: (n) => `Used by ${n}`,

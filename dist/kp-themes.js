@@ -1208,6 +1208,10 @@ var init_strings = __esm({
       usesEmpty: "Nothing to show yet",
       usesEmptyText: "When there is something that others use, it shows here with a line to each user.",
       usesRetry: "Retry",
+      stateRetry: "Retry",
+      stateFailedText: "Nothing was changed. Try again in a moment.",
+      graphEmpty: "No network to show yet.",
+      graphFailed: "The network could not be read.",
       usesLoading: "Reading\u2026",
       usesNotUsed: "Not used",
       usesCount: (n) => `Used by ${n}`,
@@ -14892,10 +14896,18 @@ var init_intent = __esm({
 });
 
 // js/state-plate.js
-function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttribute }) {
+function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttribute, art }) {
   const plate = doc.createElement("div");
   plate.className = kind === "error" ? "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error" : "kp-empty kp-stateplate kp-stateplate--empty";
   plate.setAttribute("role", kind === "error" ? "alert" : "status");
+  if (art) {
+    const picture = doc.createElement("span");
+    picture.className = "kp-stateplate__art";
+    picture.setAttribute("aria-hidden", "true");
+    if (typeof art === "string") picture.textContent = art;
+    else picture.append(art);
+    plate.append(picture);
+  }
   const head = doc.createElement("strong");
   head.className = "kp-stateplate__title";
   head.textContent = title;
@@ -14917,9 +14929,24 @@ function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttri
   }
   return plate;
 }
+function hostStatePlate(host, { kind, title, text, art, retryEvent, retryLabel }) {
+  const s2 = getStrings();
+  const failedText = text ?? (kind === "error" ? s2.stateFailedText : void 0);
+  return statePlate(host.ownerDocument, {
+    kind,
+    title,
+    ...failedText ? { text: failedText } : {},
+    ...art ? { art } : {},
+    ...kind === "error" && retryEvent ? {
+      actionLabel: retryLabel ?? s2.stateRetry,
+      onAction: () => host.dispatchEvent(new CustomEvent(retryEvent, { bubbles: true }))
+    } : {}
+  });
+}
 var init_state_plate = __esm({
   "js/state-plate.js"() {
     "use strict";
+    init_strings();
   }
 });
 
@@ -17568,23 +17595,59 @@ function attachDataTables(root = document, {
       putUnder(gridReadout);
     }
     if (failedSlot === null) {
-      failedSlot = add2(make24("div", "kp-alert kp-alert--destructive"));
+      failedSlot = add2(make24("div", "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error"));
       failedSlot.dataset.kpDatatableFailed = "";
       failedSlot.setAttribute("role", "alert");
       failedSlot.hidden = true;
-      const text = make24("p");
+      const text = make24("p", "kp-stateplate__title");
       text.dataset.kpDatatableFailedReason = "";
       text.textContent = s0.tableFailed;
       const retry = (
         /** @type {HTMLButtonElement} */
-        make24("button", "kp-button")
+        make24("button", "kp-button kp-stateplate__action")
       );
       retry.type = "button";
       retry.dataset.kpDatatableRetry = "";
       retry.textContent = s0.tableRetry;
       failedSlot.append(text, retry);
       wrap.insertBefore(failedSlot, tableBlock);
+    } else if (!failedSlot.classList.contains("kp-stateplate")) {
+      const authored = failedSlot;
+      authored.classList.add("kp-stateplate", "kp-stateplate--error");
+      undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--error"));
     }
+    if (empty !== null && !empty.classList.contains("kp-stateplate")) {
+      const authored = empty;
+      authored.classList.add("kp-stateplate", "kp-stateplate--empty");
+      undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--empty"));
+    }
+    let heldHeight = 0;
+    const coverBox = (
+      /** @type {HTMLElement} */
+      tableBlock
+    );
+    const coverSizes = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
+      if (coverBox.hasAttribute("data-kp-state-covered")) return;
+      const height = coverBox.getBoundingClientRect().height;
+      if (height > 0 && state2 === "ready" && all.length > 0) heldHeight = height;
+    }) : null;
+    coverSizes?.observe(coverBox);
+    undo.push(() => {
+      coverSizes?.disconnect();
+      coverBox.removeAttribute("data-kp-state-covered");
+      for (const slot of [failedSlot, empty]) slot?.style.removeProperty("--kp-datatable-held");
+    });
+    const syncCover = () => {
+      const failedNow = state2 === "failed" && failedSlot !== null;
+      const emptyNow = !failedNow && empty !== null && !emptyHidden;
+      coverBox.toggleAttribute("data-kp-state-covered", failedNow || emptyNow);
+      for (const slot of [failedSlot, empty]) {
+        if (slot === null) continue;
+        const mine = slot === failedSlot && failedNow || slot === empty && emptyNow;
+        if (mine && heldHeight > 0) slot.style.setProperty("--kp-datatable-held", `${Math.round(heldHeight)}px`);
+        else slot.style.removeProperty("--kp-datatable-held");
+      }
+    };
     let sizeLabel = null;
     let sizeSelect = null;
     if (pager !== null && sizes.length > 0) {
@@ -17943,6 +18006,7 @@ function attachDataTables(root = document, {
       wrap.dataset.kpState = state2;
       if (loadingSlot !== null) loadingSlot.hidden = !(state2 === "loading" && all.length === 0);
       if (failedSlot !== null) failedSlot.hidden = state2 !== "failed";
+      syncCover();
       syncSkeleton();
     };
     const syncCardSort = () => {
@@ -26045,16 +26109,23 @@ function buildNote(note3, state2, options) {
   if (!note3.hasAttribute("data-kp-card-built")) return;
   const doc = note3.ownerDocument;
   const s2 = getStrings();
-  const title = el2(doc, "kp-card__state-title", "strong");
+  const title = el2(doc, "kp-card__state-title kp-stateplate__title", "strong");
   title.textContent = options.title ?? (state2 === "error" ? s2.cardFailed : s2.cardEmpty);
   const lines = [title];
+  if (options.art) {
+    const art = el2(doc, "kp-card__state-art kp-stateplate__art", "span");
+    art.setAttribute("aria-hidden", "true");
+    if (typeof options.art === "string") art.textContent = options.art;
+    else art.append(options.art);
+    lines.unshift(art);
+  }
   if (options.text) {
-    const text = el2(doc, "kp-card__state-text", "span");
+    const text = el2(doc, "kp-card__state-text kp-stateplate__text", "span");
     text.textContent = options.text;
     lines.push(text);
   }
   if (state2 === "empty") {
-    const box = el2(doc, "kp-empty kp-card__empty");
+    const box = el2(doc, "kp-empty kp-card__empty kp-stateplate kp-stateplate--empty");
     box.append(...lines);
     if (options.action) {
       const actions = el2(doc, "kp-card__state-actions");
@@ -26065,12 +26136,12 @@ function buildNote(note3, state2, options) {
     note3.replaceChildren(box);
     return;
   }
-  const alert = el2(doc, "kp-alert kp-alert--destructive kp-card__failure");
+  const alert = el2(doc, "kp-alert kp-alert--destructive kp-card__failure kp-stateplate kp-stateplate--error");
   const body = el2(doc, "kp-alert__body");
   body.append(...lines);
   alert.append(body);
   if (options.retry !== false) {
-    const button = el2(doc, "kp-button kp-button--sm kp-card__retry", "button");
+    const button = el2(doc, "kp-button kp-card__retry kp-stateplate__action", "button");
     button.type = "button";
     button.setAttribute("data-kp-card-retry", "");
     button.textContent = s2.cardRetry;
@@ -35924,7 +35995,7 @@ function drawUsesMap(el16, spec, ctx) {
     }
   }
   ctx.replaceKeepingCard(el16, [root, list]);
-  ctx.syncCard(el16, loading, strings.usesLoading, () => [root], "kp-uses__busy");
+  ctx.syncCard(el16, loading, strings.usesLoading, () => [el16], "kp-uses__busy");
   ctx.markDrawn(el16);
   if (!loading) memory.off = wire7(el16, root, svg2, list, { sources, users, uses, usedBy, shape, lightMode, collapseBelow, byKey, memory, spec });
 }
@@ -36192,10 +36263,12 @@ __export(heat_exports, {
   HEAT: () => HEAT,
   HEAT_PAGE_EVENT: () => HEAT_PAGE_EVENT,
   HEAT_PICK_EVENT: () => HEAT_PICK_EVENT,
+  HEAT_RETRY_EVENT: () => HEAT_RETRY_EVENT,
   HEAT_ROW_EVENT: () => HEAT_ROW_EVENT,
   MATRIX: () => MATRIX,
   MATRIX_LIGHT_EVENT: () => MATRIX_LIGHT_EVENT,
   MATRIX_PICK_EVENT: () => MATRIX_PICK_EVENT,
+  MATRIX_RETRY_EVENT: () => MATRIX_RETRY_EVENT,
   attachHeats: () => attachHeats,
   attachMatrices: () => attachMatrices,
   setHeat: () => setHeat,
@@ -36330,8 +36403,16 @@ function setHeat(el16, spec) {
   if (picked == null) el16.removeAttribute("data-kp-heat-picked");
   else el16.setAttribute("data-kp-heat-picked", picked);
   if (state2 === "empty" || state2 === "error") {
-    const note3 = make11(doc, "div", "kp-heat__state", { role: state2 === "error" ? "alert" : "status", "data-kp-state": state2 });
-    note3.textContent = spec.message ?? (state2 === "error" ? s2.heatFailed : s2.heatEmpty);
+    const note3 = make11(doc, "div", "kp-heat__state", { "data-kp-state": state2 });
+    note3.append(
+      hostStatePlate(el16, {
+        kind: state2,
+        title: spec.message ?? (state2 === "error" ? s2.heatFailed : s2.heatEmpty),
+        ...spec.text ? { text: spec.text } : {},
+        art: spec.art,
+        retryEvent: HEAT_RETRY_EVENT
+      })
+    );
     markDrawn(el16);
     el16.replaceChildren(note3);
     return;
@@ -36734,8 +36815,16 @@ function setMatrix(el16, spec) {
   if (spec.label && !grid2.hasAttribute("aria-label")) grid2.setAttribute("aria-label", spec.label);
   grid2.style.setProperty("--kp-matrix-cols", String(Math.max(1, columns2.length)));
   if (state2 === "empty" || state2 === "error") {
-    const note3 = make11(doc, "div", "kp-matrix__state", { role: state2 === "error" ? "alert" : "status" });
-    note3.textContent = spec.message ?? (state2 === "error" ? s2.heatFailed : s2.heatEmpty);
+    const note3 = make11(doc, "div", "kp-matrix__state", { "data-kp-state": state2 });
+    note3.append(
+      hostStatePlate(el16, {
+        kind: state2,
+        title: spec.message ?? (state2 === "error" ? s2.heatFailed : s2.heatEmpty),
+        ...spec.text ? { text: spec.text } : {},
+        art: spec.art,
+        retryEvent: MATRIX_RETRY_EVENT
+      })
+    );
     markDrawn(el16);
     el16.replaceChildren(note3);
     return;
@@ -37041,13 +37130,14 @@ function attachMatrices(root = document) {
   }
   return () => undo.forEach((fn) => fn());
 }
-var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, MATRIX_LIGHT_EVENT, TONES, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, HEAT_CELL, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
+var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, HEAT_CELL, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
 var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
     init_strings();
     init_hovercard();
     init_busy_card();
+    init_state_plate();
     init_uses_map();
     init_calm_tones();
     init_keys();
@@ -37057,6 +37147,8 @@ var init_heat = __esm({
     HEAT_ROW_EVENT = "kp-heat-row";
     HEAT_PAGE_EVENT = "kp-heat-page";
     MATRIX_PICK_EVENT = "kp-matrix-pick";
+    HEAT_RETRY_EVENT = "kp-heat-retry";
+    MATRIX_RETRY_EVENT = "kp-matrix-retry";
     MATRIX_LIGHT_EVENT = "kp-matrix-light";
     TONES = ["ok", "warn", "bad", "muted", "future", "before", "none", "level", "loading", "self", "logged", "quiet", "paused"];
     toneOf2 = (tone) => TONES.includes(tone ?? "") ? (
@@ -37197,6 +37289,7 @@ __export(week_exports, {
   WEEK: () => WEEK,
   WEEK_OPEN_EVENT: () => WEEK_OPEN_EVENT,
   WEEK_RANGE_EVENT: () => WEEK_RANGE_EVENT,
+  WEEK_RETRY_EVENT: () => WEEK_RETRY_EVENT,
   WEEK_TICK_MS: () => WEEK_TICK_MS,
   attachWeeks: () => attachWeeks,
   pillCapacity: () => pillCapacity,
@@ -37312,7 +37405,9 @@ function build4(c) {
     c.upcoming.list = list;
     frame3.append(list);
   }
-  frame3.append(c.stateLine);
+  c.plate = make12(doc, "div", "kp-week__plate");
+  c.plate.hidden = true;
+  frame3.append(c.stateLine, c.plate);
   c.legend = make12(doc, "ul", "kp-week__legend");
   c.legend.hidden = true;
   parts2.push(frame3, c.legend);
@@ -37583,15 +37678,27 @@ function paint7(c) {
   }
   c.el.dataset.kpState = c.state;
   c.grid.toggleAttribute("aria-busy", c.state === "loading");
-  const words = c.state === "loading" ? s2.weekLoading : c.state === "empty" ? s2.weekEmpty : c.stateLine.dataset.kpWords || "";
-  const said = c.state === "ready" ? "" : words;
-  if ((c.stateLine.textContent ?? "") !== said) {
-    if (said) {
-      const plate = make12(doc, "span", "kp-week__state-words", said);
-      c.stateLine.replaceChildren(plate);
-    } else c.stateLine.replaceChildren();
-  }
+  const words = c.state === "loading" ? s2.weekLoading : c.state === "empty" ? c.stateLine.dataset.kpWords || s2.weekEmpty : c.stateLine.dataset.kpWords || s2.heatFailed;
+  const said = c.state === "loading" ? words : "";
+  if ((c.stateLine.textContent ?? "") !== said) c.stateLine.textContent = said;
   c.stateLine.dataset.kpState = c.state;
+  const plateKind = c.state === "empty" || c.state === "error" ? c.state : null;
+  const plateKey = plateKind ? `${plateKind}|${words}|${c.plateText}` : "";
+  if (c.plateKey !== plateKey) {
+    c.plateKey = plateKey;
+    c.plate.replaceChildren();
+    if (plateKind)
+      c.plate.append(
+        hostStatePlate(c.el, {
+          kind: plateKind,
+          title: words,
+          ...c.plateText ? { text: c.plateText } : {},
+          art: c.plateArt,
+          retryEvent: WEEK_RETRY_EVENT
+        })
+      );
+  }
+  c.plate.hidden = plateKind === null;
   const was = c.upcoming.on;
   c.upcoming.on = upcomingOn(c);
   if (was !== c.upcoming.on) c.held = null;
@@ -37796,6 +37903,10 @@ function attachWeeks(root = document, options = {}) {
       leaving: null,
       held: null,
       stateLine: el16,
+      plate: el16,
+      plateKey: "",
+      plateText: "",
+      plateArt: null,
       title: null,
       today: null,
       motion: { gone: false, stop: null, asked: false },
@@ -37931,12 +38042,14 @@ function setWeekEvents(el16, events) {
   else if (c.state === "ready" && !events.length) c.state = "empty";
   paint7(c);
 }
-function setWeekState(el16, state2, words = "") {
+function setWeekState(el16, state2, words = "", { text = "", art = null } = {}) {
   const c = weeks.get(el16);
   if (!c) return;
   if (state2 === "loading") watchArrivals(c);
   c.state = state2;
   c.stateLine.dataset.kpWords = words;
+  c.plateText = text;
+  c.plateArt = art;
   paint7(c);
 }
 function setWeekStart(el16, iso) {
@@ -37962,7 +38075,7 @@ function setWeekLegend(el16, entries3) {
   );
   c.legend.hidden = entries3.length === 0;
 }
-var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, weeks, GAP, AXIS_HOURS, two3, make12, toMs, keyOf5, dayName, dm, modeOf, upcomingOn, NOT_UPCOMING, menuModule;
+var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, WEEK_RETRY_EVENT, weeks, GAP, AXIS_HOURS, two3, make12, toMs, keyOf5, dayName, dm, modeOf, upcomingOn, NOT_UPCOMING, menuModule;
 var init_week = __esm({
   "js/week.js"() {
     "use strict";
@@ -37970,10 +38083,12 @@ var init_week = __esm({
     init_calendar();
     init_locale();
     init_strings();
+    init_state_plate();
     WEEK = "[data-kp-week]";
     WEEK_OPEN_EVENT = "kp-week-open";
     WEEK_RANGE_EVENT = "kp-week-range";
     WEEK_TICK_MS = 3e4;
+    WEEK_RETRY_EVENT = "kp-week-retry";
     weeks = /* @__PURE__ */ new WeakMap();
     GAP = 2;
     AXIS_HOURS = [0, 6, 12, 18, 24];
@@ -38004,6 +38119,7 @@ var gantt_exports = {};
 __export(gantt_exports, {
   GANTT: () => GANTT,
   GANTT_OPEN_EVENT: () => GANTT_OPEN_EVENT,
+  GANTT_RETRY_EVENT: () => GANTT_RETRY_EVENT,
   GANTT_SELECT_EVENT: () => GANTT_SELECT_EVENT,
   GANTT_STEPS: () => GANTT_STEPS,
   GANTT_TICK_MS: () => GANTT_TICK_MS,
@@ -38171,7 +38287,9 @@ function build5(c) {
   c.announcer.setAttribute("role", "status");
   const frame3 = make13(doc, "div", "kp-gantt__frame");
   c.selection.hidden = true;
-  frame3.append(c.scroll, c.stateLine);
+  c.plate = make13(doc, "div", "kp-gantt__plate");
+  c.plate.hidden = true;
+  frame3.append(c.scroll, c.stateLine, c.plate);
   const hint2 = make13(doc, "p", "kp-gantt__hint", c.el.hasAttribute("data-kp-gantt-points") ? s2.ganttPointsHint : s2.ganttHint);
   const legend = make13(doc, "ul", "kp-gantt__legend");
   c.legend = legend;
@@ -38437,28 +38555,34 @@ function paint8(c) {
   c.body.toggleAttribute("aria-busy", c.state === "loading");
   drawBusy2(c);
   const empty = c.state === "ready" && c.runs.length === 0 && c.points.length === 0 && lanes.length === 0;
-  const words = c.state === "loading" ? s2.ganttLoading : c.state === "empty" || empty ? s2.ganttEmpty : c.stateLine.dataset.kpWords || "";
+  const words = c.state === "loading" ? s2.ganttLoading : c.state === "empty" || empty ? c.stateLine.dataset.kpWords || s2.ganttEmpty : c.stateLine.dataset.kpWords || s2.heatFailed;
   c.nowLine.hidden = c.el.hasAttribute("data-kp-gantt-points") && (c.state === "error" || c.state === "empty" || empty);
-  c.stateLine.textContent = c.state === "ready" && !empty || c.leaving !== null ? "" : words;
+  const plateKind = c.leaving === null && (c.state === "error" || c.state === "empty" || c.state === "ready" && empty) ? c.state : null;
+  c.stateLine.textContent = c.state === "loading" && c.leaving === null ? words : "";
   c.stateLine.dataset.kpState = empty && c.state === "ready" ? "empty" : c.state;
+  const plateKey = plateKind ? `${plateKind}|${words}|${c.plateText}` : "";
+  if (c.plateKey !== plateKey) {
+    c.plateKey = plateKey;
+    c.plate.replaceChildren();
+    if (plateKind)
+      c.plate.append(
+        hostStatePlate(c.el, {
+          kind: plateKind === "error" ? "error" : "empty",
+          title: words,
+          ...c.plateText ? { text: c.plateText } : {},
+          art: c.plateArt,
+          retryEvent: GANTT_RETRY_EVENT
+        })
+      );
+  }
+  c.plate.hidden = plateKind === null;
+  c.plate.dataset.kpState = plateKind ?? "";
   paintGhosts(c);
   c.busy?.place();
-  roomForWords(c);
   holdHeight(c);
   visible2(c);
   refresh(c, nowMs);
   syncTabStops2(c);
-}
-function roomForWords(c) {
-  if (c.state === "loading" || !c.stateLine.textContent || c.body.querySelector(".kp-gantt__lane")) {
-    c.body.style.removeProperty("--kp-gantt-words");
-    return;
-  }
-  const range = c.el.ownerDocument.createRange();
-  range.selectNodeContents(c.stateLine);
-  const style = getComputedStyle(c.stateLine);
-  const need = range.getBoundingClientRect().height + parseFloat(style.paddingBlockStart) + parseFloat(style.paddingBlockEnd);
-  c.body.style.setProperty("--kp-gantt-words", `${Math.ceil(need)}px`);
 }
 function holdHeight(c) {
   if (c.state !== "ready" || c.lanes.length === 0) return;
@@ -38865,6 +38989,10 @@ function attachGantts(root = document, options = {}) {
       brushBox: el16,
       selectBox: el16,
       stateLine: el16,
+      plate: el16,
+      plateKey: "",
+      plateText: "",
+      plateArt: null,
       announcer: el16,
       ranges: el16,
       liveButton: (
@@ -39100,7 +39228,6 @@ function attachGantts(root = document, options = {}) {
         last = width;
         c.tickKey = "";
         tick4(c);
-        roomForWords(c);
       });
       c.observer.observe(c.plot);
     }
@@ -39154,11 +39281,13 @@ function setGanttRuns(el16, runs2, lanes) {
   paint8(c);
   tick4(c);
 }
-function setGanttState(el16, state2, words = "") {
+function setGanttState(el16, state2, words = "", { text = "", art = null } = {}) {
   const c = gantts.get(el16);
   if (!c) return;
   c.state = state2;
   c.stateLine.dataset.kpWords = words;
+  c.plateText = text;
+  c.plateArt = art;
   paint8(c);
 }
 function setGanttWindow(el16, window2) {
@@ -39227,7 +39356,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint8(c);
 }
-var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel;
+var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel;
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
@@ -39235,11 +39364,13 @@ var init_gantt = __esm({
     init_calendar();
     init_strings();
     init_busy_card();
+    init_state_plate();
     GANTT = "[data-kp-gantt]";
     GANTT_OPEN_EVENT = "kp-gantt-open";
     GANTT_SELECT_EVENT = "kp-gantt-select";
     GANTT_WINDOW_EVENT = "kp-gantt-window";
     GANTT_TICK_MS = 1e3;
+    GANTT_RETRY_EVENT = "kp-gantt-retry";
     GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 172800, 604800, 1209600, 2419200]);
     MONDAY = 345600;
     CLUSTER_PX = 14;
@@ -39661,6 +39792,52 @@ function uptimeFit(count2, width, min, gap) {
   const fits = Math.floor((width + gap) / (Math.max(1, min) + gap));
   return Math.max(1, Math.min(count2, fits));
 }
+function groupHost(el16) {
+  const marked = el16.closest("[data-kp-uptime-group]");
+  if (marked) return marked.getAttribute("data-kp-uptime-group") === "off" ? null : marked;
+  const parent = el16.parentElement;
+  if (!parent || parent.querySelectorAll(":scope > [data-kp-uptime]").length < 2) return null;
+  parent.setAttribute("data-kp-uptime-group", "auto");
+  return parent;
+}
+function joinGroupCard(el16, host, words, first) {
+  let group = GROUPS2.get(host);
+  if (group?.closing) {
+    group.card.remove();
+    GROUPS2.delete(host);
+    group = void 0;
+  }
+  if (!group) {
+    const loading = /* @__PURE__ */ new Set();
+    const card = openBusyCard(
+      /** @type {HTMLElement} */
+      host,
+      {
+        words,
+        area: () => [...loading].filter((strip) => strip.isConnected),
+        className: "kp-uptime__busy kp-uptime__busy--group",
+        arrive: !first
+      }
+    );
+    group = { card, loading, closing: false };
+    GROUPS2.set(host, group);
+  }
+  group.loading.add(el16);
+  GROUP_OF.set(el16, host);
+  group.card.place();
+  return group.card;
+}
+function leaveGroupCard(el16) {
+  const host = GROUP_OF.get(el16);
+  if (!host) return null;
+  GROUP_OF.delete(el16);
+  CARDS2.delete(el16);
+  const group = GROUPS2.get(host);
+  if (!group) return null;
+  group.loading.delete(el16);
+  if (group.loading.size > 0) group.card.place();
+  return { last: group.loading.size === 0, card: group.card, host };
+}
 function setUptime(el16, spec) {
   SPECS.set(el16, spec);
   const loading = spec.state === "loading";
@@ -39674,11 +39851,21 @@ function setUptime(el16, spec) {
       return;
     }
     const card = CARDS2.get(el16);
+    const left = card ? leaveGroupCard(el16) : null;
+    if (left && !left.last) {
+      draw6(el16, spec);
+      return;
+    }
     if (card) {
       CARDS2.delete(el16);
+      if (left) {
+        const group = GROUPS2.get(left.host);
+        if (group) group.closing = true;
+      }
       const entry = { card, spec };
       WAITING2.set(el16, entry);
       void card.close().then(() => {
+        if (left && GROUPS2.get(left.host)?.card === card) GROUPS2.delete(left.host);
         if (WAITING2.get(el16) !== entry) return;
         WAITING2.delete(el16);
         draw6(el16, entry.spec);
@@ -39816,11 +40003,15 @@ function draw6(el16, spec) {
   }
   const card = CARDS2.get(el16);
   if (loading) {
-    if (card) card.place();
+    const host = groupHost(el16);
+    if (card && !host) card.place();
+    else if (host) CARDS2.set(el16, joinGroupCard(el16, host, s2.uptimeLoading, first));
     else CARDS2.set(el16, openBusyCard(el16, { words: s2.uptimeLoading, area: () => [track], className: "kp-uptime__busy", arrive: !first }));
   } else if (card) {
     CARDS2.delete(el16);
-    card.remove();
+    const left = leaveGroupCard(el16);
+    if (!left || left.last) card.remove();
+    if (left?.last) GROUPS2.delete(left.host);
   }
 }
 function fit(el16) {
@@ -40117,7 +40308,10 @@ function attachUptimes(root = document) {
       doc2.removeEventListener("pointerdown", onOutside, true);
       INFO.get(el16)?.();
       INFO.delete(el16);
-      CARDS2.get(el16)?.remove();
+      const own = CARDS2.get(el16);
+      const left = leaveGroupCard(el16);
+      if (!left || left.last) own?.remove();
+      if (left?.last) GROUPS2.delete(left.host);
       CARDS2.delete(el16);
       delete el16.dataset.kpUptimeAttached;
     });
@@ -40128,7 +40322,7 @@ function attachUptimes(root = document) {
     for (const c of cleanups) c();
   };
 }
-var toneFor, wordFor, UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, UNPINNED, DRAWN4, INFO, infoMade, infoMode, countOf2, make15;
+var toneFor, wordFor, UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, infoMade, infoMode, countOf2, make15;
 var init_uptime = __esm({
   "js/uptime.js"() {
     "use strict";
@@ -40153,6 +40347,8 @@ var init_uptime = __esm({
     SPECS = /* @__PURE__ */ new WeakMap();
     CARDS2 = /* @__PURE__ */ new WeakMap();
     WAITING2 = /* @__PURE__ */ new WeakMap();
+    GROUPS2 = /* @__PURE__ */ new WeakMap();
+    GROUP_OF = /* @__PURE__ */ new WeakMap();
     UNPINNED = /* @__PURE__ */ new WeakSet();
     DRAWN4 = /* @__PURE__ */ new WeakSet();
     INFO = /* @__PURE__ */ new WeakMap();
@@ -47495,6 +47691,7 @@ var init_footprint = __esm({
     "use strict";
     FOOTPRINT_HOSTS = [
       "[data-kp-matrix]",
+      "[data-kp-heat]",
       "[data-kp-entity-grid]",
       "[data-kp-checklist]",
       "[data-kp-notices]",
@@ -53010,6 +53207,7 @@ var graph_exports = {};
 __export(graph_exports, {
   GRAPH: () => GRAPH,
   GRAPH_CHANGE_EVENT: () => GRAPH_CHANGE_EVENT,
+  GRAPH_RETRY_EVENT: () => GRAPH_RETRY_EVENT,
   attachGraphs: () => attachGraphs,
   fitGraphLabels: () => fitGraphLabels,
   graphBends: () => graphBends,
@@ -53210,8 +53408,28 @@ function drawGraph(g) {
   g.svg.replaceChildren();
   const data = g.data;
   g.el.dataset.kpState = g.state;
-  g.note.textContent = g.state === "ready" ? "" : g.state === "loading" ? g.words || g.strings.graphLoading : g.words;
-  g.note.hidden = g.state === "ready";
+  g.note.textContent = g.state === "loading" ? g.words || g.strings.graphLoading : "";
+  g.note.hidden = g.state !== "loading";
+  g.plate.replaceChildren();
+  g.plate.hidden = g.state !== "empty" && g.state !== "error";
+  if (!g.plate.hidden)
+    g.plate.append(
+      hostStatePlate(g.el, {
+        kind: g.state === "error" ? "error" : "empty",
+        title: g.words || (g.state === "error" ? g.strings.graphFailed : g.strings.graphEmpty),
+        ...g.text ? { text: g.text } : {},
+        art: g.art,
+        retryEvent: GRAPH_RETRY_EVENT
+      })
+    );
+  if (g.state === "loading" && !g.busy) {
+    g.busy = openBusyCard(g.box, { words: g.words || g.strings.graphLoading, area: () => [g.box], className: "kp-graph__busy", arrive: g.drawn });
+  } else if (g.state !== "loading" && g.busy) {
+    const card = g.busy;
+    g.busy = null;
+    void card.close();
+  } else g.busy?.place();
+  g.drawn = true;
   if (g.state === "loading") {
     g.svg.append(ghostOf(doc, g.data, W, H));
   }
@@ -53332,11 +53550,13 @@ function setGraphData(el16, data) {
   drawGraph(g);
   if (g.selected.size !== before) graphChanged(g);
 }
-function setGraphState(el16, state2, words = "") {
+function setGraphState(el16, state2, words = "", { text = "", art = null } = {}) {
   const g = graphs.get(el16);
   if (!g) return;
   g.state = state2;
   g.words = words;
+  g.text = text;
+  g.art = art;
   drawGraph(g);
 }
 function graphSelect(el16, ids) {
@@ -53394,7 +53614,9 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
     svg2.setAttribute("aria-label", `${el16.getAttribute("aria-label") ?? s2.graphUnnamed}. ${s2.graphHint}`);
     const note3 = make21(doc, "p", "kp-graph__note");
     note3.setAttribute("role", "status");
-    box.append(svg2, note3);
+    const plate = make21(doc, "div", "kp-graph__state");
+    plate.hidden = true;
+    box.append(svg2, note3, plate);
     const hint2 = make21(doc, "p", "kp-graph__hint", s2.graphHint);
     el16.replaceChildren(bar, box, hint2, ...script ? [script] : []);
     const g = {
@@ -53413,6 +53635,11 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
       box,
       svg: svg2,
       note: note3,
+      plate,
+      busy: null,
+      drawn: false,
+      text: "",
+      art: null,
       hint: hint2,
       decorate: decorate2,
       strings: s2,
@@ -53569,18 +53796,23 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
       legend.removeEventListener("click", onKind);
       showAll.removeEventListener("click", onShowAll);
       doc.removeEventListener("keydown", onDocKey);
+      g.busy?.remove();
+      g.busy = null;
       graphs.delete(el16);
     });
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var GRAPH, GRAPH_CHANGE_EVENT, keyOf7, ringOf, graphLabelText, radiusOf, isShown, make21, SVG_NS3, svgEl, graphs;
+var GRAPH, GRAPH_CHANGE_EVENT, GRAPH_RETRY_EVENT, keyOf7, ringOf, graphLabelText, radiusOf, isShown, make21, SVG_NS3, svgEl, graphs;
 var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
+    init_busy_card();
+    init_state_plate();
     init_strings();
     GRAPH = "[data-kp-graph]";
     GRAPH_CHANGE_EVENT = "kp-graph-change";
+    GRAPH_RETRY_EVENT = "kp-graph-retry";
     keyOf7 = (host) => host.getAttribute("data-kp-key") ?? void 0;
     ringOf = (data, hub) => data.nodes.filter((n) => n.id !== hub).sort((a, b) => Number(!!a.external) - Number(!!b.external) || a.label.localeCompare(b.label) || a.id.localeCompare(b.id));
     graphLabelText = (full, length) => length >= full.length ? full : `${full.slice(0, length).trimEnd()}\u2026`;
@@ -60742,11 +60974,11 @@ var NEEDS = [
   { name: "qr", when: "[data-kp-qr]", load: () => Promise.resolve().then(() => (init_qr(), qr_exports)), attach: (m, root) => [m.attachQr(root)] },
   { name: "timefield", when: "[data-kp-time]", load: () => Promise.resolve().then(() => (init_timefield(), timefield_exports)), attach: (m, root) => [m.attachTimes(root)] },
   {
-    // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the entity
+    // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the heat grid, the entity
     // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the diff view and the operations page. The selector is
     // `FOOTPRINT_HOSTS` of js/footprint.js.
     name: "footprint",
-    when: "[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-diffview], .kp-ops",
+    when: "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-diffview], .kp-ops",
     load: () => Promise.resolve().then(() => (init_footprint(), footprint_exports)),
     attach: (m, root) => [m.attachFootprints(root)]
   },
@@ -62052,6 +62284,7 @@ export {
   GALLERY_STATES,
   GANTT,
   GANTT_OPEN_EVENT,
+  GANTT_RETRY_EVENT,
   GANTT_SELECT_EVENT,
   GANTT_STEPS,
   GANTT_TICK_MS,
@@ -62060,6 +62293,7 @@ export {
   GLYPHS,
   GRAPH,
   GRAPH_CHANGE_EVENT,
+  GRAPH_RETRY_EVENT,
   GRID_PAGE_ROWS,
   GROUP_EVENT,
   GROUP_FOLDING_ATTRIBUTE,
@@ -62068,6 +62302,7 @@ export {
   HEAT,
   HEAT_PAGE_EVENT,
   HEAT_PICK_EVENT,
+  HEAT_RETRY_EVENT,
   HEAT_ROW_EVENT,
   HIGHLIGHT_EVENT,
   HOLD_DELAY,
@@ -62117,6 +62352,7 @@ export {
   MATRIX,
   MATRIX_LIGHT_EVENT,
   MATRIX_PICK_EVENT,
+  MATRIX_RETRY_EVENT,
   MEASURE_KNOB,
   MEMO_PREFIX,
   MENU_BUTTON,
@@ -62474,6 +62710,7 @@ export {
   WEEKDAY_PRESETS,
   WEEK_OPEN_EVENT,
   WEEK_RANGE_EVENT,
+  WEEK_RETRY_EVENT,
   WEEK_TICK_MS,
   WHEEL,
   WHEEL_RESULT_EVENT,
