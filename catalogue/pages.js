@@ -194,8 +194,8 @@ export const PAGES = [
             // Kenny, 2026-10-19: chassis-rs's shared kit pages rebuilt on kp-themes 11.0.0, bundled into one review (shared code and generator: research/chassis-kit-pages/build.mjs).
             {
                 href: 'research/chassis-kit-pages/demo.html',
-                label: 'chassis-rs kit pages: shell, status, clients, login and passkeys',
-                about: 'Every page the kit serves to every service, rebuilt from kp-themes 11 components: the bar with its search palette (Ctrl K), shortcuts and the phone\'s tab bar with exact counts; the error page; the status page as an operations page with the sections a service adds; the clients list, issuing and managing a client; the login page with the service\'s health; the passkeys page with this device, rename and a QR code for another device. 12 sections (12 pairs, formal).',
+                label: 'chassis-rs kit pages, round 2: client dialogs, login and passkeys',
+                about: 'Round 2 of the kit pages (round 1: shell, status, error, clients list and first client approved). Open: the issue dialog as a form beside a live card of the client it makes, and the manage dialog as a grid with a control rail, a wide request inspector and a danger band, both redrawn as compositions with their own phone arrangement; the login page and the two passkeys pages, not judged in round 1, unchanged. 5 sections (5 pairs, formal).',
             },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.

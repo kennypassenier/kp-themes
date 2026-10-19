@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="chassis-kit-clients" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>chassis-rs kit pages: The clients page</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../chassis-kit-pages/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ck-page">
+            <header class="ck-intro">
+                <h1>chassis-rs kit pages on kp-themes 11.0.0: The clients page</h1>
+                <p class="cat-intro">
+                    The list of clients, issuing one, managing one, and the first client’s walk-through. In formal. 4 sections, 4 pairs. The pages are
+                    rendered from data the running example service answered (clients, requests, status, health); rows it did not have are more rows of
+                    the same shape and say so on the page.
+                </p>
+            </header>
+            <section
+                class="ck-sec"
+                id="clients-list"
+                data-review-item="clients-list"
+                data-review-topic="clients"
+                data-review-topic-title="Clients"
+                data-review-components="ops-page problems datatable idmark hovercard combobox"
+                data-review-title="Clients: the list, with what needs a look first" data-review-choices='[{&quot;id&quot;:&quot;list-look&quot;,&quot;label&quot;:&quot;List as&quot;,&quot;default&quot;:&quot;table&quot;,&quot;options&quot;:[{&quot;value&quot;:&quot;table&quot;,&quot;label&quot;:&quot;Table&quot;,&quot;hint&quot;:&quot;Columns that sort; cards only on a phone.&quot;},{&quot;value&quot;:&quot;cards&quot;,&quot;label&quot;:&quot;Cards&quot;,&quot;hint&quot;:&quot;One card per client at every width, with a sort control.&quot;}]}]'
+                aria-labelledby="h-clients-list"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-clients-list">Clients: the list, with what needs a look first</h2>
+                    <p>The four figures are filters (a click toggles, “Show all” resets), idle clients are called out with their fix, and the table sorts, searches and remembers its sort. The first 3 rows are captured from the running example service; the other 8 have the same shape and sample values.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Ready:</b> four figures (In use, Idle, Never used, Revoked) with exact counts; one alert says how many clients have not called in 30 days and names them, with <b>Show them</b>. Each row: identity mark, name (hover for its details), state, last used as <b>dd/mm/yyyy HH:mm</b> and how long ago, requests, topic, messages, <b>Manage</b> in its own column.</li>
+                        <li><b>Idle only</b> is the Idle figure pressed: the table shows just those rows and the figure stays pressed until you press it again. <b>Empty</b> is a plate with <b>Issue a client</b>; <b>Loading</b> and <b>Failed</b> fill the table’s footprint.</li>
+                        <li>The choice <b>List as</b> is <b>Table</b> by default; <b>Cards</b> is a real option and the table always becomes cards on a phone.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The Manage buttons stand in one column, the dates in one column with the ago words under or beside them; the pressed figure has a primary border; on Phone every row is a card with its name and state first.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="clients-list-component">
+                    <div role="group" aria-label="State"><b>State:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="ready" aria-pressed="true">Ready</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="idle" aria-pressed="false">Idle only</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="empty" aria-pressed="false">Empty</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="loading" aria-pressed="false">Loading</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="error" aria-pressed="false">Failed</button></div>
+                    <div role="group" aria-label="Width"><b>Width:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">Full</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">Phone</button></div>
+                </div>
+                <div id="clients-list-component" class="ck-stage" data-ck-view="clients-list" data-ck-state="ready" data-ck-width="full"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="clients-issue"
+                data-review-item="clients-issue"
+                data-review-topic="clients"
+                data-review-components="dialog form combobox flash secret command"
+                data-review-title="Issue a client: a form that ends with the token in your hand"
+                aria-labelledby="h-clients-issue"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-clients-issue">Issue a client: a form that ends with the token in your hand</h2>
+                    <p>The name is checked as you leave the field, the topic offers the ones already used, and the new token appears in the same dialog with a ready command, instead of a reload and a hunt through the table.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Form:</b> Name and Topic with a help line each; Topic opens a list with <b>Used before</b> on top and lets you type a new one. <b>Name taken</b> shows the error under the field in words and keeps what you typed.</li>
+                        <li><b>Issued:</b> the token is in a secret field that stays shown until you hide it, with Copy; a first command is under it, and Done closes. Issue token is one button with a spinner and then “Issued”, never changing width.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The dialog is one column with its sections in a fixed order; the Topic list opens at its field with the opaque menu plate; the error is a line under the field in the destructive colour with words.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="clients-issue-component">
+                    <div role="group" aria-label="Step"><b>Step:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="form" aria-pressed="true">Form</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="taken" aria-pressed="false">Name taken</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="issued" aria-pressed="false">Issued</button></div>
+                </div>
+                <div id="clients-issue-component" class="ck-stage" data-ck-view="clients-issue" data-ck-step="form"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="clients-manage"
+                data-review-item="clients-manage"
+                data-review-topic="clients"
+                data-review-components="dialog secret command json-field flash request-inspector type-confirm idmark"
+                data-review-title="Manage a client: token, command, test and what it sent"
+                aria-labelledby="h-clients-manage"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-clients-manage">Manage a client: token, command, test and what it sent</h2>
+                    <p>Everything about one client in one dialog, in the order you use it: reveal or copy the token, copy a command, send a test with a body of your choosing, read what it sent, and the dangerous things last behind a typed name.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Token:</b> the field is masked; Reveal shows it for 10 s with a countdown and Copy never shows it. <b>Use it:</b> the command block never holds the token (safe to paste in a chat); the button copies the same command with the token in it.</li>
+                        <li><b>Test it:</b> the body is a JSON box that says what is wrong and where; Send test shows a spinner, then “Sent”. <b>Requests</b> are the inspector: method, path and status in words, headers with <code>authorization</code> masked, the body, and Copy as curl. Press the four request states.</li>
+                        <li><b>Danger zone:</b> Delete asks for the exact name <b>home-assistant</b> before Confirm turns on; Revoke and Re-issue ask once and say what happens. <b>Revoked</b> shows only the history and Delete.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The dialog is wide with one heading per section and a note under each; the secret line keeps its height while it counts down; the inspector’s states keep one height; the danger section is last and marked.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="clients-manage-component">
+                    <div role="group" aria-label="Client"><b>Client:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="client" data-ck-value="active" aria-pressed="true">Active</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="client" data-ck-value="revoked" aria-pressed="false">Revoked</button></div>
+                    <div role="group" aria-label="Requests"><b>Requests:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="requests" data-ck-value="ready" aria-pressed="true">Ready</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="requests" data-ck-value="loading" aria-pressed="false">Loading</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="requests" data-ck-value="empty" aria-pressed="false">Empty</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="requests" data-ck-value="error" aria-pressed="false">Failed</button></div>
+                </div>
+                <div id="clients-manage-component" class="ck-stage" data-ck-view="clients-manage" data-ck-client="active" data-ck-requests="ready"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="clients-first"
+                data-review-item="clients-first"
+                data-review-topic="clients"
+                data-review-components="steplist empty-state card freshness"
+                data-review-title="The first client: the page walks you through it and notices the first call"
+                aria-labelledby="h-clients-first"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-clients-first">The first client: the page walks you through it and notices the first call</h2>
+                    <p>A new service has no clients, which is the moment people need most help. Three steps, the last one finishes by itself when the first request arrives.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Press <b>1</b> to <b>4</b>: each step shows its state (done, running with the theme’s spinner, waiting) with a note that says what happens, and the right card changes from “No clients yet” to “Connected”.</li>
+                        <li>Nothing moves between steps: notes are all present from the start, so a note arriving later shifts nothing.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The step list has one fixed row height per step with its mark in one column; the running step has a spinner; step 4 ends with a primary button to the list.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="clients-first-component">
+                    <div role="group" aria-label="Step"><b>Step:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="1" aria-pressed="true">1 Issue</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="2" aria-pressed="false">2 Give the token</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="3" aria-pressed="false">3 Waiting</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="4" aria-pressed="false">4 Connected</button></div>
+                </div>
+                <div id="clients-first-component" class="ck-stage" data-ck-view="clients-first" data-ck-step="1"></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "chassis-kit-clients-7904a752-e0d6-4bd7-91c1-e278ce9246bc" }
+        </script>
+        <script type="module" src="../chassis-kit-pages/demo.js"></script>
+        </body>
+</html>
