@@ -28852,6 +28852,41 @@
             justify-self: end;
         }
 
+        /* A row with an action: label and control each a line across the width, then the hint and the action on one line,
+           the action on the row's end edge (where every action ends) and the hint taking the rest, so the action keeps its
+           own width and never runs back over the hint. A compact grid's last track is flexible and can be 0 px wide on a
+           phone, so the action is not placed in it (Kitchen, tm-pick at 390: "Open the recipe" over the hint; st-calm:
+           the value over "Use default"). */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *) {
+            display: flex;
+            flex-wrap: wrap;
+            grid-column: label-start / -1;
+            column-gap: inherit;
+            row-gap: var(--kp-space-xs, 0.25rem);
+            align-items: center;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)
+            > :is(.kp-formgrid__label, .kp-formrow__label, .kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span]) {
+            flex: 1 0 100%;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)
+            > :is(.kp-formgrid__value, .kp-formrow__aside) {
+            flex: 1 1 0;
+            min-inline-size: 0;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)
+            > .kp-formgrid__actions {
+            flex: 0 0 auto;
+            margin-inline-start: auto;
+        }
+
         .kp-formgrid__actions > .kp-button {
             min-inline-size: 6rem;
         }
@@ -28870,24 +28905,41 @@
             display: none;
         }
 
-        /* A switch: label and switch on one line, the switch on the edge where every action ends. */
+        /* A switch: label and switch on one line, the switch on the row's end edge, where every action ends. The row wraps
+           as text does: a switch whose own words do not fit beside the label goes to the next line (still on the end
+           edge) instead of squeezing them into a tall narrow column, and a label with a note stays centred on the switch
+           (Kitchen at 390: "Show digits beside the disc" 35 px off "Minutes as digits"; "No energy today" with its note
+           hanging 54.5 px under its switch; "Limit the wheel to what I can do" in four lines). */
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child) {
+            display: flex;
+            flex-wrap: wrap;
+            grid-column: label-start / -1;
+            column-gap: inherit;
+            row-gap: var(--kp-space-xs, 0.25rem);
             align-items: center;
         }
 
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child)
             > :is(.kp-formgrid__label, .kp-formrow__label) {
-            grid-column: label-start / value-end;
+            flex: 1 1 8rem;
+            align-self: center;
         }
 
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child)
             > :is(.kp-formgrid__control, .kp-formrow__control) {
-            grid-column: -2 / -1;
-            justify-self: end;
+            flex: 0 1 auto;
+            margin-inline-start: auto;
+            align-self: center;
             justify-items: end;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child)
+            > :is(.kp-formgrid__value, .kp-formrow__aside, .kp-formgrid__actions) {
+            flex: 1 0 100%;
         }
 
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])

@@ -51,14 +51,14 @@ const TYPES = {
     '.wasm': 'application/wasm',
 };
 
-const VALUE_OPTIONS = ['url', 'cookie', 'login-form', 'login-env', 'storage-state', 'assets-from'];
+const VALUE_OPTIONS = ['url', 'cookie', 'login-form', 'login-env', 'storage-state', 'assets-from', 'items'];
 const FLAG_OPTIONS = ['ignore-https-errors', 'no-drive'];
 
 /**
  * Splits argv into positionals and the shared options.
  * @param {string[]} argv
  * @returns {{ positional: string[], opts: { url: string, cookies: string[], loginForm: string, loginEnv: string, storageState: string,
- *   assets: string[], ignoreHttpsErrors: boolean, noDrive: boolean } }}
+ *   assets: string[], items: string, ignoreHttpsErrors: boolean, noDrive: boolean } }}
  */
 export function parseArgs(argv) {
     /** @type {string[]} */
@@ -90,6 +90,7 @@ export function parseArgs(argv) {
             loginEnv: values['login-env']?.[0] ?? 'KP_LOGIN_USER,KP_LOGIN_PASS',
             storageState: values['storage-state']?.[0] ?? '',
             assets: values['assets-from'] ?? [],
+            items: values.items?.[0] ?? '',
             ignoreHttpsErrors: flags.has('ignore-https-errors'),
             noDrive: flags.has('no-drive'),
         },
@@ -201,6 +202,18 @@ export async function launch(origin, opts) {
                     return route.fallback();
                 });
             const page = await context.newPage();
+            // An app has no review sections: --items '<selector>' marks every match as one (data-review-item = its id, else
+            // its place), as it is drawn, so the measures run on an app's own sections.
+            if (opts.items)
+                await page.addInitScript((sel) => {
+                    let n = 0;
+                    const mark = () => {
+                        for (const el of document.querySelectorAll(sel))
+                            if (!el.hasAttribute('data-review-item')) el.setAttribute('data-review-item', el.id || `item-${++n}`);
+                    };
+                    new MutationObserver(mark).observe(document, { childList: true, subtree: true });
+                    document.addEventListener('DOMContentLoaded', mark);
+                }, opts.items);
             const close = page.close.bind(page);
             page.close = async (o) => {
                 await close(o);
@@ -216,4 +229,4 @@ export async function launch(origin, opts) {
 
 /** The usage line tail all three CLIs share. */
 export const OPTIONS_USAGE =
-    '[--url <page url>] [--cookie n=v] [--login-form url,user,pass,submit] [--storage-state f] [--assets-from /prefix=<dir>] [--ignore-https-errors]';
+    '[--url <page url>] [--cookie n=v] [--login-form url,user,pass,submit] [--storage-state f] [--assets-from /prefix=<dir>] [--items <selector>] [--ignore-https-errors]';

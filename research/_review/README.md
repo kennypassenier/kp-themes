@@ -466,6 +466,8 @@ still works unchanged. The options:
   type (context.route; a path with no such file goes on to the app), e.g. `/static/kp=$HOME/Projects/kp-themes`.
 - `--ignore-https-errors`: accept a self-signed certificate.
 
+`--items '<selector>'` measures an app that has no `data-review-item` sections: every match (for example `main section[id]`) becomes one, named by its id.
+
 ```sh
 KP_LOGIN_USER=… KP_LOGIN_PASS=… node research/_review/measure-states.mjs --url https://host/app/page formal 1280 \
   --login-form /login,username,password,'button[type=submit]' --storage-state ~/.cache/app/state.json \
