@@ -21,6 +21,43 @@
             "fingerprint": "36ad9403c898ec1f",
             "update": null
         },
+        "research/app-homelab-stacks/demo.html": {
+            "facts": {
+                "id": "app-homelab-stacks",
+                "themes": "formal",
+                "ask": null,
+                "askText": "The dashboard of the host pve has a Stacks page (the fleet, the Apps launcher, Presets, Retired), a page per stack with the Apply and Update flows, and a Map. This page rebuilds their parts from the package’s own components, in formal. Each of the 23 sections asks one thing to look at; where a choice exists, its options are real and switchable and you only say which one opens first. Nothing is required.",
+                "sections": [
+                    { "item": "fleet-cards", "themes": null, "topic": "fleet", "mode": null },
+                    { "item": "fleet-table", "themes": null, "topic": "fleet", "mode": null },
+                    { "item": "fleet-batch", "themes": null, "topic": "fleet", "mode": null },
+                    { "item": "fleet-hungry", "themes": null, "topic": "fleet-glance", "mode": null },
+                    { "item": "fleet-nights", "themes": null, "topic": "fleet-glance", "mode": null },
+                    { "item": "apps-launcher", "themes": null, "topic": "apps", "mode": null },
+                    { "item": "apps-uptime", "themes": null, "topic": "apps", "mode": null },
+                    { "item": "presets-gallery", "themes": null, "topic": "presets", "mode": null },
+                    { "item": "presets-compare", "themes": null, "topic": "presets", "mode": null },
+                    { "item": "retired-table", "themes": null, "topic": "retired", "mode": null },
+                    { "item": "retired-wipe", "themes": null, "topic": "retired", "mode": null },
+                    { "item": "hub-overview", "themes": null, "topic": "hub", "mode": null },
+                    { "item": "hub-apps", "themes": null, "topic": "hub", "mode": null },
+                    { "item": "hub-backups", "themes": null, "topic": "hub", "mode": null },
+                    { "item": "apply-plan", "themes": null, "topic": "apply", "mode": null },
+                    { "item": "apply-run", "themes": null, "topic": "apply", "mode": null },
+                    { "item": "update-notes", "themes": null, "topic": "update", "mode": null },
+                    { "item": "update-run", "themes": null, "topic": "update", "mode": null },
+                    { "item": "map-panel", "themes": null, "topic": "map-side", "mode": null },
+                    { "item": "map-matrix", "themes": null, "topic": "map-side", "mode": null },
+                    { "item": "map-capacity", "themes": null, "topic": "map-capacity", "mode": null },
+                    { "item": "map-disk", "themes": null, "topic": "map-capacity", "mode": null },
+                    { "item": "map-stale", "themes": null, "topic": "map-stale", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"app-homelab-stacks-5b1d0c7e-3a42-4f6e-9d58-2c7e1f0a9b64\" }\n        "
+            },
+            "fingerprint": "075d51cce265f59a",
+            "update": null
+        },
         "research/align-grid-1019/demo.html": {
             "facts": {
                 "id": "align-grid-1019",

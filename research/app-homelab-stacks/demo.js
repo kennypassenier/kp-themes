@@ -80,6 +80,11 @@ function h(tag, attrs, ...kids) {
     return el;
 }
 const esc = (/** @type {string} */ s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+/** A hover card's facts on the form grid: a title, then label | value rows that share their edges. @param {string} title @param {[string, string, string?][]} rows */
+function facts(title, rows) {
+    const dl = h('dl', { class: 'kp-kv' }, ...rows.map(([k, v, cls]) => h('div', { class: 'kp-kv__row' }, h('dt', null, k), h('dd', cls ? { class: cls } : null, v))));
+    return h('div', { class: 'kp-formgrid sk-hovercard', 'data-kp-formgrid-stack': 'never' }, h('b', { class: 'kp-formgrid__heading' }, title), dl);
+}
 const wait = (/** @type {number} */ ms) => new Promise((r) => setTimeout(r, ms));
 const mark = (/** @type {string} */ name) => `<span class="kp-idmark kp-idmark--sm" data-kp-idmark="${esc(name)}" aria-hidden="true"></span>`;
 
@@ -171,7 +176,7 @@ if (byId('fleet-table-component')) {
         const { up, total } = appsOf(s);
         const last = lastOf(s);
         const apps = s.apps.map((a) => `<li><span class="kp-action-list__main"><strong class="kp-action-list__title">${esc(a.name)}</strong><span class="kp-action-list__text kp-mono">${esc(a.image)}</span></span> ${stateWord(a.state === 'up' ? 'up' : a.state === 'unwatched' ? 'not watched' : a.state === 'deploying' ? 'deploying' : 'failing', 'up\nfailing\nnot watched\ndeploying')}</li>`).join('');
-        const backups = S.backupsOf(s).map((b) => `<dt>${stamp(b.at)}</dt><dd>${gb(b.size)}</dd>`).join('') || '<dt>none</dt><dd>parked stacks are not backed up</dd>';
+        const backups = S.backupsOf(s).map((b) => `<div class="kp-kv__row"><dt>${stamp(b.at)}</dt><dd>${gb(b.size)}</dd></div>`).join('') || '<div class="kp-kv__row"><dt>none</dt><dd>parked stacks are not backed up</dd></div>';
         return `<tr data-kp-row-key="${s.name}"${g ? ` data-kp-group-of="${g}"` : ''}>
             <td data-label="Stack" data-kp-sort-value="${s.name}"><span class="sk-nowrap sk-pair"><a href="#hub" data-sk-hub="${s.name}">${mark(s.name)} <b>${s.name}</b></a><span class="kp-timestamp">CT ${s.ct}</span></span></td>
             <td data-label="State" data-kp-sort-value="${STATE_WORD(s)}" data-kp-filter-value="${STATE_WORD(s)}">${stateWord(STATE_WORD(s))}</td>
@@ -184,7 +189,7 @@ if (byId('fleet-table-component')) {
         </tr>
         <tr data-kp-row-detail><td colspan="${COLS}"><div class="sk-detail">
             <div><h4>Apps</h4><ul class="kp-action-list">${apps}</ul></div>
-            <div class="sk-detail__side"><h4>Last three backups</h4><dl class="sk-facts">${backups}</dl><h4>CPU</h4><p>${s.state === 'parked' ? 'Not running.' : `${Math.round(s.cpu * 1000) / 10} % of its cores now; the 24-hour line waits for the package.`}</p></div>
+            <div class="sk-detail__side"><h4>Last three backups</h4><div class="kp-formgrid" data-kp-formgrid-stack="never"><dl class="kp-kv">${backups}</dl></div><h4>CPU</h4><p>${s.state === 'parked' ? 'Not running.' : `${Math.round(s.cpu * 1000) / 10} % of its cores now; the 24-hour line waits for the package.`}</p></div>
         </div></td></tr>`;
     };
     const head = (/** @type {string} */ g, /** @type {string} */ label, folded = false) => `<tr data-kp-row-group="${g}"${folded ? ' data-kp-folded' : ''}><th scope="rowgroup" colspan="${COLS}">${esc(label)} <span class="kp-badge" data-kp-group-count></span></th></tr>`;
@@ -477,7 +482,7 @@ if (byId('apps-launcher-component')) {
             if (!a) return null;
             const w = wordOf(a, s);
             const line = w === 'failing' || w === 'down' ? `${w} since ${stamp(a.since ?? NOW)}, ${a.why}` : w === 'deploying' ? `${a.why} since ${timeOf(a.since ?? NOW)}` : w === 'not watched' ? 'No probe is configured for this app.' : `answers: ${a.health}`;
-            return h('div', { class: 'sk-hovercard' }, h('b', null, an), h('span', null, `stack ${sn}`), h('span', null, 'Now'), h('span', null, line), h('span', null, 'Image'), h('span', { class: 'kp-mono' }, a.image));
+            return facts(an, [['Stack', sn], ['Now', line], ['Image', a.image, 'kp-mono']]);
         },
     });
     stateButtons('data-sk-apps-show', (v) => {
@@ -888,7 +893,7 @@ if (byId('hub-apps-component')) {
                 const w = a.state === 'up' ? 'up' : a.state === 'unwatched' ? 'not watched' : a.state === 'deploying' ? 'deploying' : 'failing';
                 return `<tr data-kp-row-key="${a.name}"><td data-label="App" data-kp-sort-value="${a.name}">${mark(a.name)} <b>${a.name}</b></td><td data-label="State" data-kp-sort-value="${w}" data-kp-filter-value="${w}">${stateWord(w, 'up\nfailing\nnot watched\ndeploying')}</td>
                 <td data-label="Image" class="kp-mono" data-kp-sort-value="${a.image}">${esc(a.image.split('/').pop() ?? a.image)}</td><td class="kp-text-end" data-label="Restarts in 24 h" data-kp-sort-value="${a.restarts}">${a.restarts}</td><td data-label="Health">${esc(a.health)}</td></tr>
-                <tr data-kp-row-detail><td colspan="6"><div class="sk-detail"><dl class="sk-facts"><dt>Image</dt><dd class="kp-mono">${esc(a.image)}</dd><dt>Digest</dt><dd class="kp-mono">${esc(a.digest)}</dd><dt>Ports</dt><dd class="kp-mono">${esc(a.ports)}</dd><dt>Restarts</dt><dd>${a.restarts} in 24 h</dd><dt>Health</dt><dd>${esc(a.health)}</dd></dl>
+                <tr data-kp-row-detail><td colspan="6"><div class="sk-detail"><div class="kp-formgrid" data-kp-formgrid-stack="never"><dl class="kp-kv"><div class="kp-kv__row"><dt>Image</dt><dd class="kp-mono">${esc(a.image)}</dd></div><div class="kp-kv__row"><dt>Digest</dt><dd class="kp-mono">${esc(a.digest)}</dd></div><div class="kp-kv__row"><dt>Ports</dt><dd class="kp-mono">${esc(a.ports)}</dd></div><div class="kp-kv__row"><dt>Restarts</dt><dd>${a.restarts} in 24 h</dd></div><div class="kp-kv__row"><dt>Health</dt><dd>${esc(a.health)}</dd></div></dl></div>
                 <div class="sk-detail__side"><figure class="kp-code" data-kp-code data-sk-log="${a.name}"><pre class="kp-code__body"><code></code></pre></figure></div></div></td></tr>`;
             })
             .join('');
@@ -1300,7 +1305,7 @@ if (byId('map-panel-component')) {
         fill: (anchor) => {
             const n = anchor.dataset.skNode ?? '';
             const s = byName(n);
-            return h('div', { class: 'sk-hovercard' }, h('b', null, n), h('span', null, `CT ${s.ct}`), h('span', null, 'Image'), h('span', { class: 'kp-mono' }, s.apps[0].image), h('span', null, 'CPU'), h('span', null, `${Math.round(s.cpu * 1000) / 10} %`), h('span', null, 'Traffic'), h('span', null, `${Math.round((S.TRAFFIC[/** @type {keyof typeof S.TRAFFIC} */ (n)] ?? 0) * 100)} % of the busiest`));
+            return facts(n, [['Container', `CT ${s.ct}`], ['Image', s.apps[0].image, 'kp-mono'], ['CPU', `${Math.round(s.cpu * 1000) / 10} %`], ['Traffic', `${Math.round((S.TRAFFIC[/** @type {keyof typeof S.TRAFFIC} */ (n)] ?? 0) * 100)} % of the busiest`]]);
         },
     });
     stateButtons('data-sk-panel-mode', (v) => ((mode = v), draw()));
@@ -1319,7 +1324,7 @@ if (byId('map-matrix-component')) {
     const TONE = { declared: 'ok', planned: 'warn', open: 'bad', named: 'muted', route: 'level' };
     const nodesOf = S.MAP_STACKS.map((k) => ({ key: k, label: k, sub: `CT ${byName(k).ct}` }));
     const legend = byId('sk-matrix-legend');
-    if (legend) legend.innerHTML = Object.entries(S.EDGE_LABEL).map(([k, l]) => `<li><span class="kp-heat__swatch" data-kp-tone="${TONE[/** @type {keyof typeof TONE} */ (k)]}"></span> <b>${k}</b>: ${l}</li>`).join('');
+    if (legend) legend.innerHTML = Object.entries(S.EDGE_LABEL).map(([k, l]) => `<li><span class="kp-heat__swatch" data-kp-tone="${TONE[/** @type {keyof typeof TONE} */ (k)]}"></span><b>${k}</b><span>${l}</span></li>`).join('');
     const draw = () => {
         setMatrix(el, {
             corner: 'from (row) to (column)', label: 'Which stack reaches which', view: /** @type {'grid' | 'lines'} */ (view),

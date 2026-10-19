@@ -11,9 +11,6 @@
 .sk-expected p { margin: 0 0 var(--kp-space-xs, 0.25rem); }
 .sk-expected ul { display: grid; gap: var(--kp-space-xs, 0.25rem); margin: 0; padding-inline-start: 1.25rem; }
 
-.sk-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem); }
-.sk-controls > [role='group'] { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem); }
-.sk-controls > [role='group'] > b { margin-inline-end: var(--kp-space-xs, 0.25rem); }
 
 .sk-frame { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--kp-space-md, 1rem); align-content: start; min-inline-size: 0; }
 .sk-frame > [hidden] { display: none; }
@@ -38,6 +35,7 @@
 .sk-head { display: grid; grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr); gap: var(--kp-space-md, 1rem); align-items: stretch; }
 @media (max-width: 40rem) { .sk-head { grid-template-columns: minmax(0, 1fr); } }
 .sk-kpis { display: grid; }
+.sk-head > .kp-stackbar { align-self: stretch; margin: 0; padding: var(--kp-space-md, 1rem); border: 1px solid var(--border); border-radius: var(--radius, 0.5rem); background: var(--card); }
 .sk-wipe-head { min-block-size: 1.75em; }
 .sk-wipe-total { font-weight: 600; }
 
@@ -62,7 +60,8 @@
 .sk-compare [data-differs] td:not(:first-child) { font-weight: 600; }
 .sk-run { display: grid; grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr) 5rem; gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem); align-items: start; }
 .sk-runhead { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--kp-space-md, 1rem); align-items: center; }
-.sk-runbtns { display: flex; gap: var(--kp-space-sm, 0.5rem); }
+.sk-runbtns .kp-formgrid__buttons { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+@media (max-width: 40rem) { .sk-runbtns .kp-formgrid__buttons { grid-auto-flow: row; } }
 .sk-sentence { margin: 0; }
 .sk-stepset { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: var(--kp-space-md, 1rem); }
 .sk-gates { display: grid; gap: var(--kp-space-sm, 0.5rem); min-block-size: 5rem; }
@@ -71,9 +70,6 @@
 
 /* Open row detail: facts on a label | value grid, then the log. */
 .sk-detail { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--kp-space-md, 1rem); padding-block: var(--kp-space-sm, 0.5rem); }
-.sk-facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem); margin: 0; }
-.sk-facts dt { color: var(--muted-foreground); }
-.sk-facts dd { margin: 0; overflow-wrap: anywhere; }
 .sk-detail__side { display: grid; gap: var(--kp-space-sm, 0.5rem); align-content: start; min-inline-size: 0; }
 @media (max-width: 48rem) { .sk-detail { grid-template-columns: minmax(0, 1fr); } }
 .sk-nowrap { white-space: nowrap; }
@@ -85,14 +81,14 @@
 /* Map: nodes grid and the side panel on 3:2 columns; panel rows share one grid. */
 .sk-map { display: grid; grid-template-columns: minmax(0, 3fr) minmax(18rem, 2fr); gap: var(--kp-space-md, 1rem); align-items: stretch; }
 .sk-map__nodes { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); grid-auto-rows: minmax(3.25rem, 1fr); gap: var(--kp-space-sm, 0.5rem); }
-.sk-node { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--kp-space-sm, 0.5rem); min-block-size: 3.25rem; padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem); text-align: start; }
+.sk-node { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--kp-space-sm, 0.5rem); min-block-size: 3.25rem; padding: var(--kp-space-md, 1rem); padding-block-start: 1.7rem; text-align: start; }
 .sk-node[aria-pressed='true'] { outline: 2px solid var(--primary); outline-offset: 1px; }
 .sk-node[data-ring] { box-shadow: 0 0 0 2px var(--destructive); }
 .sk-panel { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--kp-space-md, 1rem); min-inline-size: 0; min-block-size: 24rem; }
-.sk-panel__head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem); align-items: center; }
+.sk-panel__head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem); align-items: start; }
 .sk-panel h3 { margin: 0; font-size: var(--kp-text-md, 1rem); }
 @media (max-width: 56rem) { .sk-map { grid-template-columns: minmax(0, 1fr); } }
-.sk-hovercard { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem); min-inline-size: 14rem; }
+.sk-hovercard { min-inline-size: 14rem; }
 .sk-matrix { min-block-size: 20rem; --kp-matrix-head: 8rem; --kp-matrix-cell-min: 4.4rem; }
 
 /* Hungriest: the ranking on the wider column, the share bar beside it, both starting on one line. */
@@ -100,54 +96,6 @@
 .sk-hungry__rank { order: 1; }
 .sk-hungry__disk { order: 2; }
 @media (max-width: 56rem) { .sk-hungry { grid-template-columns: minmax(0, 1fr); } }
-/* Launcher: one heading row per stack (name | menu) over a grid of equal tiles. */
-.sk-launcher { display: grid; min-block-size: 18rem; align-content: start; }
-.sk-group { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem); align-items: center; }
-.sk-group > .kp-actions { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: var(--kp-space-sm, 0.5rem); }
-.sk-group__name { margin: 0; font-size: var(--kp-text-md, 1rem); display: flex; align-items: center; gap: var(--kp-space-sm, 0.5rem); }
-.sk-tile { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: start; gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem); min-block-size: 5.5rem; }
-.sk-tile .kp-action__text { grid-column: 1 / -1; }
-.sk-facets-row { display: grid; grid-template-columns: minmax(0, 1fr); }
-
-/* Compare table and run lists. */
-.sk-compare { min-block-size: 11rem; }
-.sk-compare table { inline-size: 100%; }
-.sk-compare [data-differs] > :first-child { box-shadow: inset 3px 0 0 var(--primary); }
-.sk-compare [data-differs] td:not(:first-child) { font-weight: 600; }
-.sk-run { display: grid; grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr) 5rem; gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem); align-items: start; }
-.sk-runhead { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--kp-space-md, 1rem); align-items: center; }
-.sk-runbtns { display: flex; gap: var(--kp-space-sm, 0.5rem); }
-.sk-sentence { margin: 0; }
-.sk-stepset { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: var(--kp-space-md, 1rem); }
-.sk-gates { display: grid; gap: var(--kp-space-sm, 0.5rem); min-block-size: 5rem; }
-.sk-code { margin: 0; min-block-size: 9rem; max-block-size: 14lh; overflow: auto; }
-.sk-chart { --kp-chart-height: 16rem; margin: 0; min-inline-size: 0; }
-
-/* Open row detail: facts on a label | value grid, then the log. */
-.sk-detail { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--kp-space-md, 1rem); padding-block: var(--kp-space-sm, 0.5rem); }
-.sk-facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem); margin: 0; }
-.sk-facts dt { color: var(--muted-foreground); }
-.sk-facts dd { margin: 0; overflow-wrap: anywhere; }
-.sk-detail__side { display: grid; gap: var(--kp-space-sm, 0.5rem); align-content: start; min-inline-size: 0; }
-@media (max-width: 48rem) { .sk-detail { grid-template-columns: minmax(0, 1fr); } }
-.sk-nowrap { white-space: nowrap; }
-.sk-diff { display: grid; gap: var(--kp-space-sm, 0.5rem); padding-block: var(--kp-space-sm, 0.5rem); }
-.sk-diff__file { display: grid; grid-template-columns: minmax(0, 1fr) max-content max-content; gap: var(--kp-space-sm, 0.5rem); align-items: baseline; font-family: var(--font-mono, ui-monospace, monospace); font-size: var(--kp-text-sm, 0.8125rem); }
-.sk-add { color: var(--success); font-weight: 600; }
-.sk-del { color: var(--destructive); font-weight: 600; }
-
-/* Map: nodes grid and the side panel on 3:2 columns; panel rows share one grid. */
-.sk-map { display: grid; grid-template-columns: minmax(0, 3fr) minmax(18rem, 2fr); gap: var(--kp-space-md, 1rem); align-items: stretch; }
-.sk-map__nodes { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); grid-auto-rows: minmax(3.25rem, 1fr); gap: var(--kp-space-sm, 0.5rem); }
-.sk-node { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--kp-space-sm, 0.5rem); min-block-size: 3.25rem; padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem); text-align: start; }
-.sk-node[aria-pressed='true'] { outline: 2px solid var(--primary); outline-offset: 1px; }
-.sk-node[data-ring] { box-shadow: 0 0 0 2px var(--destructive); }
-.sk-panel { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--kp-space-md, 1rem); min-inline-size: 0; min-block-size: 24rem; }
-.sk-panel__head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem); align-items: center; }
-.sk-panel h3 { margin: 0; font-size: var(--kp-text-md, 1rem); }
-@media (max-width: 56rem) { .sk-map { grid-template-columns: minmax(0, 1fr); } }
-.sk-hovercard { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem); min-inline-size: 14rem; }
-.sk-matrix { min-block-size: 20rem; --kp-matrix-head: 8rem; --kp-matrix-cell-min: 4.4rem; }
 
 /* Hungriest: the share bar spans the top, the ranking below in two columns. */
 /* Launcher: the state filter on one row, the stacks in two columns. */
@@ -164,3 +112,17 @@
 
 /* The screen-reader words inside a cell are positioned out of sight; the scrolling wrap holds them so they never widen the page. */
 .sk-frame .kp-table-wrap { position: relative; }
+
+/* Narrow: a legend is one column whose entries share their tracks (swatch | label | value), so the words and the figures
+   of every row end on the same edges instead of wrapping row by row. */
+@media (max-width: 40rem) {
+    .sk-frame .kp-stackbar__legend { grid-template-columns: auto minmax(0, 1fr) auto; column-gap: var(--kp-space-sm, 0.5rem); }
+    .sk-frame .kp-stackbar__legend > .kp-stackbar__item { grid-column: 1 / -1; grid-template-columns: subgrid; }
+    .sk-frame .kp-heat__legend { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; }
+    .sk-frame .kp-heat__legend > li:is([data-kp-end], .kp-heat__legend-end) { justify-content: flex-start; }
+}
+
+/* The matrix key: swatch | kind | meaning on three shared tracks, so every row's words start on the same edges. */
+#sk-matrix-legend { display: grid; grid-template-columns: auto auto minmax(0, 1fr); column-gap: var(--kp-space-sm, 0.5rem); row-gap: var(--kp-space-xs, 0.25rem); align-items: baseline; justify-items: start; }
+#sk-matrix-legend > li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: baseline; }
+.sk-runbtns .kp-button { white-space: nowrap; }

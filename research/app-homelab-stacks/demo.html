@@ -73,24 +73,30 @@
                 <div data-review-look>
                     <p data-for="formal">White cards with a hairline, a navy primary and a coloured mark beside each state word (never colour alone). Look at the gap between each figure and its label, that the flags never touch the card edge, that the RAM meter shows its 80 % tick, and that a card with no flag is exactly as high as one with three.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-cards-component">
-                    <div role="group" aria-label="Show">
-                        <b>Show</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="fleet-cards-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Show">
+                        <b class="kp-formgrid__label">Show</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cards-show="all">All 17</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-show="attention">Needs attention (2)</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-show="parked">Parked (3)</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Page opens with" data-review-latent>
-                        <b>Page opens with</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Page opens with" data-review-latent>
+                        <b class="kp-formgrid__label">Page opens with</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-fleet-open="table">Table</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-fleet-open="cards">Cards</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cards-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cards-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="fleet-cards-component">
@@ -125,19 +131,23 @@
                 <div data-review-look>
                     <p data-for="formal">Look at the group headings (a band with the exact count), that the bar cells line up in one column with the number beside the bar, that the opened row shows its three parts on a grid with nothing against the edge, and that the folded group does not move the rows above it.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-table-component">
-                    <div role="group" aria-label="Group by">
-                        <b>Group by</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="fleet-table-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Group by">
+                        <b class="kp-formgrid__label">Group by</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-table-group="state">State</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-group="preset">Preset</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-group="none">No groups</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-table-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-table-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="fleet-table-component">
@@ -196,23 +206,29 @@
                 <div data-review-look>
                     <p data-for="formal">The bar is a quiet band with the count in bold and the names wrapping (never cut with an ellipsis); the off buttons are visibly off and the reason sits beside them in words. Look at the bar&rsquo;s height, which stays the same with one name and with six, and at the toast&rsquo;s ring clock.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-batch-component">
-                    <div role="group" aria-label="Select">
-                        <b>Select</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="fleet-batch-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Select">
+                        <b class="kp-formgrid__label">Select</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-batch-pick="attention">The 2 that need attention</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-batch-pick="mixed">Three, one parked</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-batch-pick="all">All 17 shown</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-batch-pick="none">None</button>
+                        </div></div>
                     </div>
-                    <div data-review-latent role="group" aria-label="Server">
-                        <b>Server</b>
+                    <div class="kp-formgrid__row" data-review-latent role="group" aria-label="Server">
+                        <b class="kp-formgrid__label">Server</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-batch-server="accepts">Accepts all</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-batch-server="refuses">One is refused</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Deploy asks" data-review-latent>
-                        <b>Deploy asks</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Deploy asks" data-review-latent>
+                        <b class="kp-formgrid__label">Deploy asks</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-batch-safety="undo">With undo</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-batch-safety="confirm">Asks first</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="fleet-batch-component">
@@ -270,19 +286,23 @@
                 <div data-review-look>
                     <p data-for="formal">Bars with a track you can read at a glance: the amber and red fills carry the number beside them as well, the tick at 85 % is labelled, and the legend of the share bar wraps without cutting a name. Look at the gap between each figure and the bar.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-hungry-component">
-                    <div role="group" aria-label="Measure">
-                        <b>Measure</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="fleet-hungry-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Measure">
+                        <b class="kp-formgrid__label">Measure</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-hungry-measure="ram">Memory</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-measure="cpu">CPU</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-measure="disk">Disk</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-hungry-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hungry-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="fleet-hungry-component">
@@ -327,18 +347,22 @@
                 <div data-review-look>
                     <p data-for="formal">Cells are small squares with a clear gap; a missed night is red with a mark as well as colour, a paused one is hatched, the summary row has exact bars. Look that row labels never touch the first cell and that the legend swatches line up.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="fleet-nights-component">
-                    <div role="group" aria-label="Nights">
-                        <b>Nights</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="fleet-nights-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Nights">
+                        <b class="kp-formgrid__label">Nights</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-nights-window="14">14 nights</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-nights-window="30">30 nights</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-nights-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-nights-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-nights-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-nights-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="fleet-nights-component">
@@ -375,19 +399,23 @@
                 <div data-review-look>
                     <p data-for="formal">Tiles of one height in equal columns; the state word has a mark beside it, in plain ink, never a colour on its own. Look at the facet counts (exact numbers) and that a stack heading never sits on top of its first tile.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="apps-launcher-component">
-                    <div role="group" aria-label="Show">
-                        <b>Show</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="apps-launcher-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Show">
+                        <b class="kp-formgrid__label">Show</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-apps-show="all">All 35</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-show="trouble">Failing or down (2)</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-show="unwatched">Not watched (7)</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-apps-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="apps-launcher-component">
@@ -421,18 +449,22 @@
                 <div data-review-look>
                     <p data-for="formal">Cells of equal width with a hair of gap, the down cell red with a different shape from the degraded amber one, the not-measured cells quiet. Look at the axis words under each strip (&ldquo;90 days ago&rdquo;, &ldquo;Today&rdquo;) and that the share does not touch the app name.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="apps-uptime-component">
-                    <div role="group" aria-label="Window">
-                        <b>Window</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="apps-uptime-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Window">
+                        <b class="kp-formgrid__label">Window</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-uptime-window="days">90 days</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-uptime-window="hours">48 hours</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-uptime-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-uptime-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-uptime-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-uptime-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="apps-uptime-component">
@@ -466,24 +498,30 @@
                 <div data-review-look>
                     <p data-for="formal">Cards on a hairline, flags as small plates with room around their words, the two buttons in the same place on every card. Look at the removable tags in the bar (the word never touching the &times;) and the empty plate when nothing matches.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="presets-gallery-component">
-                    <div data-review-latent role="group" aria-label="Search matches">
-                        <b>Search matches</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="presets-gallery-component">
+                    <div class="kp-formgrid__row" data-review-latent role="group" aria-label="Search matches">
+                        <b class="kp-formgrid__label">Search matches</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-presets-mode="intent">By meaning</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-presets-mode="text">Letters in the name</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Try">
-                        <b>Try</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Try">
+                        <b class="kp-formgrid__label">Try</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-presets-try="gpu media">Type &ldquo;gpu media&rdquo;</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-presets-try="movies">Type &ldquo;movies&rdquo;</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-presets-try="">Clear</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-presets-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-presets-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-presets-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-presets-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="presets-gallery-component">
@@ -527,25 +565,31 @@
                 <div data-review-look>
                     <p data-for="formal">The differing rows carry a bar and a bold value, the equal rows are plain; the three preset names head three equal columns. Look at the share bar&rsquo;s tick and legend and that the amber part is labelled with its number.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="presets-compare-component">
-                    <div role="group" aria-label="Tick">
-                        <b>Tick</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="presets-compare-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Tick">
+                        <b class="kp-formgrid__label">Tick</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-compare-pick="three">light, media, ml</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-compare-pick="two">database, build</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-compare-pick="none">None</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Cost of">
-                        <b>Cost of</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Cost of">
+                        <b class="kp-formgrid__label">Cost of</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-compare-cost="media">media</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-cost="ml">ml</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-cost="light">light</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-compare-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-compare-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="presets-compare-component">
@@ -591,18 +635,22 @@
                 <div data-review-look>
                     <p data-for="formal">The key figure and the share bar sit on one grid with the table&rsquo;s width; the size bars line up in one column, each with its number to the right. Look at the age column (whole numbers, no abbreviations) and that the hidden columns do not leave a gap.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="retired-table-component">
-                    <div role="group" aria-label="Age">
-                        <b>Age</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="retired-table-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Age">
+                        <b class="kp-formgrid__label">Age</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-retired-age="all">All 6</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-retired-age="old">Older than 90 days (3)</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-retired-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-retired-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-retired-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-retired-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="retired-table-component">
@@ -658,21 +706,27 @@
                 <div data-review-look>
                     <p data-for="formal">The destructive button is the only red thing in the bar; the typed-name dialog shows the list of what is lost above the field and a line that says whether the name matches. Look at the disabled boxes (dimmed, with a reason on hover and focus) and at the dialog&rsquo;s plate in the open state.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="retired-wipe-component">
-                    <div role="group" aria-label="Select">
-                        <b>Select</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="retired-wipe-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Select">
+                        <b class="kp-formgrid__label">Select</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-wipe-pick="two">nextcloud-old and plex</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-wipe-pick="all">Every row that can be wiped</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-wipe-pick="none">None</button>
+                        </div></div>
                     </div>
-                    <div data-review-latent role="group" aria-label="Server">
-                        <b>Server</b>
+                    <div class="kp-formgrid__row" data-review-latent role="group" aria-label="Server">
+                        <b class="kp-formgrid__label">Server</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-wipe-server="accepts">Accepts</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-wipe-server="refuses">Refuses plex</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Rows">
-                        <b>Rows</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Rows">
+                        <b class="kp-formgrid__label">Rows</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-wipe-reset="reset">Put the rows back</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="retired-wipe-component">
@@ -719,19 +773,23 @@
                 <div data-review-look>
                     <p data-for="formal">Tabs with an underline for the open one; a status row has a mark and a state word, the failing row is the only one with a written remedy; the key figures keep one height. Look at the gap between each row&rsquo;s detail and its right edge, at the command&rsquo;s Copy button and that the chart&rsquo;s deploy marks have labels.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="hub-overview-component">
-                    <div role="group" aria-label="Stack">
-                        <b>Stack</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="hub-overview-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Stack">
+                        <b class="kp-formgrid__label">Stack</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-stack="jellyfin">jellyfin: no failing check</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-hub-stack="immich">immich: one failing</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-stack="loki">loki: two failing</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-hub-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-hub-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="hub-overview-component">
@@ -788,24 +846,30 @@
                 <div data-review-look>
                     <p data-for="formal">Rows with a mark and a clear state word; the open row&rsquo;s detail is a grid of labelled facts, mono for the digest and ports, with room around every text. Look at the code block&rsquo;s Copy and that the opened row does not widen the table.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="hub-apps-component">
-                    <div role="group" aria-label="Stack">
-                        <b>Stack</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="hub-apps-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Stack">
+                        <b class="kp-formgrid__label">Stack</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-apps-stack="immich">immich</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-stack="jellyfin">jellyfin</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-apps-stack="metrics">metrics</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Density" data-review-latent>
-                        <b>Density</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Density" data-review-latent>
+                        <b class="kp-formgrid__label">Density</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-appstab-density="comfortable">Comfortable</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-appstab-density="compact">Compact</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-appstab-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-appstab-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-appstab-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-appstab-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="hub-apps-component">
@@ -856,24 +920,30 @@
                 <div data-review-look>
                     <p data-for="formal">Cells of the same size in a clean row, the missed one red with a different shape from the grey one, the grid&rsquo;s row labels never touching the first cell. Look at the card on a pressed cell and the legend under the grid.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="hub-backups-component">
-                    <div role="group" aria-label="View">
-                        <b>View</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="hub-backups-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="View">
+                        <b class="kp-formgrid__label">View</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-backups-view="strips">Strips</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-view="heat">30-night grid</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Stack">
-                        <b>Stack</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Stack">
+                        <b class="kp-formgrid__label">Stack</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-backups-stack="immich">immich</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-stack="loki">loki</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-stack="jellyfin">jellyfin</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-backups-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-backups-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="hub-backups-component">
@@ -909,24 +979,30 @@
                 <div data-review-look>
                     <p data-for="formal">The diff is monospace with a number column, a sign column and the line; added lines have a green wash, removed a red wash, and the hunk header is a quiet band with a rule. Look at the file header line with its +N and &minus;M, and that nothing sits against the edge of the diff.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="apply-plan-component">
-                    <div role="group" aria-label="Select">
-                        <b>Select</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="apply-plan-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Select">
+                        <b class="kp-formgrid__label">Select</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-plan-pick="safe">The 5 safe ones</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-plan-pick="mixed">Add the destroy</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-plan-pick="none">None</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="A destroy" data-review-latent>
-                        <b>A destroy</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="A destroy" data-review-latent>
+                        <b class="kp-formgrid__label">A destroy</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-plan-destroy="alone">Applied alone</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-plan-destroy="ticked">Rides along</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-plan-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-plan-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-plan-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-plan-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="apply-plan-component">
@@ -985,16 +1061,20 @@
                 <div data-review-look>
                     <p data-for="formal">Rows of a status list with a mark, the stack name, a step word and the elapsed time on a grid; the failed row is the only red one and the remedy is plain ink under it. Look at the share bar&rsquo;s legend and at the typed-name dialog&rsquo;s plate.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="apply-run-component">
-                    <div role="group" aria-label="Run">
-                        <b>Run</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="apply-run-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Run">
+                        <b class="kp-formgrid__label">Run</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-run="play">Play once</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-run="reset">Reset</button>
+                        </div></div>
                     </div>
-                    <div data-review-latent role="group" aria-label="Outcome">
-                        <b>Outcome</b>
+                    <div class="kp-formgrid__row" data-review-latent role="group" aria-label="Outcome">
+                        <b class="kp-formgrid__label">Outcome</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-run-outcome="ok">All stacks apply</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-run-outcome="fail">loki fails its check</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="apply-run-component">
@@ -1004,8 +1084,8 @@
                             <h3 class="sk-pane__title">This batch</h3>
                             <figure class="kp-stackbar" data-kp-stackbar id="sk-run-time"></figure>
                             <p class="sk-pane__line" id="sk-run-now" role="status">Ready: nothing has started.</p>
-                            <div class="sk-runbtns"><button type="button" class="kp-button kp-button--primary" id="sk-run-go">Apply 5 stacks</button>
-                            <button type="button" class="kp-button kp-button--destructive" id="sk-run-destroy" data-kp-destructive data-kp-confirm="Destroy the stack homepage?" data-kp-confirm-type="homepage" data-kp-confirm-label="Destroy homepage" data-kp-confirm-loses="sk-run-lost">Destroy homepage…</button></div>
+                            <div class="kp-formgrid sk-runbtns" data-kp-formgrid-stack="never"><div class="kp-formgrid__row kp-formgrid__row--buttons"><div class="kp-formgrid__control" data-kp-formgrid-span="all"><div class="kp-formgrid__buttons"><button type="button" class="kp-button kp-button--primary" id="sk-run-go">Apply 5 stacks</button>
+                            <button type="button" class="kp-button kp-button--destructive" id="sk-run-destroy" data-kp-destructive data-kp-confirm="Destroy the stack homepage?" data-kp-confirm-type="homepage" data-kp-confirm-label="Destroy homepage" data-kp-confirm-loses="sk-run-lost">Destroy homepage…</button></div></div></div></div>
                         </div>
                     </div>
                     <template id="sk-run-lost"><ul class="kp-type-confirm__list"><li>1 container: homepage (ghcr.io/gethomepage/homepage:v0.9.10)</li><li>/srv/homepage/config (0.4 GB)</li><li>its entry in the gateway: homepage.lan</li></ul></template>
@@ -1039,25 +1119,31 @@
                 <div data-review-look>
                     <p data-for="formal">The chip shows the two versions with an arrow and a size word in a tone that grows with the jump; the plate is the amber warning plate with a plain checkbox and the link on its own line. Look at the disabled Update and its reason, and at the chip being a link only when it has an address.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="update-notes-component">
-                    <div role="group" aria-label="Select">
-                        <b>Select</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="update-notes-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Select">
+                        <b class="kp-formgrid__label">Select</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-notes-pick="major">jellyfin (major)</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-notes-pick="two">jellyfin and grafana</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-notes-pick="safe">The 7 that are not major</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-notes-pick="none">None</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Several majors" data-review-latent>
-                        <b>Several majors</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Several majors" data-review-latent>
+                        <b class="kp-formgrid__label">Several majors</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-notes-guard="alone">One at a time</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-notes-guard="together">Allowed together</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-notes-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-notes-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-notes-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-notes-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="update-notes-component">
@@ -1106,21 +1192,27 @@
                 <div data-review-look>
                     <p data-for="formal">Cards of one height in lanes of equal width with a coloured top edge per lane; the moving card lands exactly in its slot. Look at the failed card (a mark and words, not only colour), the lane headings with their exact counts and the log&rsquo;s Copy button.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="update-run-component">
-                    <div role="group" aria-label="Run">
-                        <b>Run</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="update-run-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Run">
+                        <b class="kp-formgrid__label">Run</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-upd-run="play">Play once</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-upd-run="reset">Reset</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Layout" data-review-latent>
-                        <b>Layout</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Layout" data-review-latent>
+                        <b class="kp-formgrid__label">Layout</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-upd-layout="board">Board</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-upd-layout="steps">Step lists</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Outcome">
-                        <b>Outcome</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Outcome">
+                        <b class="kp-formgrid__label">Outcome</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-upd-outcome="ok">All healthy</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-upd-outcome="fail">loki fails verify</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="update-run-component">
@@ -1156,23 +1248,29 @@
                 <div data-review-look>
                     <p data-for="formal">The tiles are one size in an even grid with the picked one outlined; the panel is a card with the stack at its head and the two lists in the same two columns of numbers, names and states. Look at the hover card&rsquo;s plate and that a long name wraps.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="map-panel-component">
-                    <div role="group" aria-label="Mode">
-                        <b>Mode</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="map-panel-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Mode">
+                        <b class="kp-formgrid__label">Mode</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-panel-mode="normal">Normal</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-mode="blast">If this stack stopped</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Lists" data-review-latent>
-                        <b>Lists</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Lists" data-review-latent>
+                        <b class="kp-formgrid__label">Lists</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-panel-order="numbers">Start order</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-order="kind">By kind</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-panel-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-panel-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="map-panel-component">
@@ -1210,23 +1308,29 @@
                 <div data-review-look>
                     <p data-for="formal">Cells are even squares with the kind written in them; the headers do not touch the first cell, and a lit row and column read as a cross. Look at the legend of the five kinds and at the lines view on 390 px, where the page says it falls back to the grid.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="map-matrix-component">
-                    <div role="group" aria-label="View">
-                        <b>View</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="map-matrix-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="View">
+                        <b class="kp-formgrid__label">View</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-matrix-view="grid">Grid</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-view="lines">Lines</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Show">
-                        <b>Show</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Show">
+                        <b class="kp-formgrid__label">Show</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-matrix-show="all">Every connection</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-show="open">Not enforced</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-matrix-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-matrix-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="map-matrix-component">
@@ -1261,24 +1365,30 @@
                 <div data-review-look>
                     <p data-for="formal">Bar cells line up in three columns with the numbers right of the bars; tones step amber then red with the number as the carrier as well. Look at the numbers&rsquo; alignment across rows and the gap between figure and bar.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="map-capacity-component">
-                    <div role="group" aria-label="Layout">
-                        <b>Layout</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="map-capacity-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Layout">
+                        <b class="kp-formgrid__label">Layout</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cap-layout="table">Table</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-layout="bullets">Ranked bars</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Measure">
-                        <b>Measure</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Measure">
+                        <b class="kp-formgrid__label">Measure</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cap-measure="ram">Memory</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-measure="cpu">CPU</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-measure="disk">Disk</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-cap-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-cap-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="map-capacity-component">
@@ -1322,19 +1432,23 @@
                 <div data-review-look>
                     <p data-for="formal">A calm line chart with the alert level dashed and labelled, the projected line clearly a different colour, and the mark text fully inside the plot. Look at the date axis (dd/mm), the legend and that the share bar&rsquo;s legend wraps.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="map-disk-component">
-                    <div role="group" aria-label="Filesystem">
-                        <b>Filesystem</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="map-disk-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Filesystem">
+                        <b class="kp-formgrid__label">Filesystem</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-disk-fs="root">/ (host root)</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-fs="data">/rpool/data</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-fs="backup">/mnt/backup</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-disk-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-disk-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="map-disk-component">
@@ -1369,24 +1483,30 @@
                 <div data-review-look>
                     <p data-for="formal">The bar is the same band as on the Stacks page; chips are the version component with its arrow; the opened row lists dependants on a grid of number, name and state. Look at the sort arrow on Jump and at the disabled Update with its reason.</p>
                 </div>
-                <div class="sk-controls" data-review-controls data-review-controls-for="map-stale-component">
-                    <div role="group" aria-label="Select">
-                        <b>Select</b>
+                <div class="kp-formgrid" data-kp-formgrid-label="fit" data-kp-formgrid-align="center" data-review-controls data-review-controls-for="map-stale-component">
+                    <div class="kp-formgrid__row" role="group" aria-label="Select">
+                        <b class="kp-formgrid__label">Select</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" data-sk-stale-pick="immich">The 3 safe ones</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-stale-pick="major">Add jellyfin</button>
                         <button type="button" class="kp-button kp-button--sm" data-sk-stale-pick="none">None</button>
+                        </div></div>
                     </div>
-                    <div data-review-latent role="group" aria-label="Server">
-                        <b>Server</b>
+                    <div class="kp-formgrid__row" data-review-latent role="group" aria-label="Server">
+                        <b class="kp-formgrid__label">Server</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-stale-server="accepts">Accepts all</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-stale-server="refuses">One is refused</button>
+                        </div></div>
                     </div>
-                    <div role="group" aria-label="Data">
-                        <b>Data</b>
+                    <div class="kp-formgrid__row" role="group" aria-label="Data">
+                        <b class="kp-formgrid__label">Data</b>
+                        <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-formgrid__buttons">
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-sk-stale-data="ready">Loaded</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-stale-data="loading">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-stale-data="empty">Empty</button>
                         <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-sk-stale-data="error">Failed</button>
+                        </div></div>
                     </div>
                 </div>
                 <div class="sk-frame" id="map-stale-component">
