@@ -910,6 +910,16 @@ for (const [width, height] of [
             for (let n = walk.nextNode(); n; n = walk.nextNode()) if (n.nodeValue?.trim() && n.parentElement && shown(n.parentElement)) return true;
             return false;
         };
+        /** Whether an element paints something of its own: a fill, a gradient or image, or a border. */
+        const drawn = (/** @type {Element} */ el) => {
+            const cs = /** @type {Window} */ (el.ownerDocument.defaultView).getComputedStyle(el);
+            return (
+                (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent') ||
+                cs.backgroundImage !== 'none' ||
+                parseFloat(cs.borderTopWidth) > 0 ||
+                parseFloat(cs.borderLeftWidth) > 0
+            );
+        };
         /** @type {string[]} */
         const empty = [];
         const scan = (/** @type {ParentNode} */ root, /** @type {number} */ dx, /** @type {number} */ dy, /** @type {string} */ where) => {
@@ -917,6 +927,8 @@ for (const [width, height] of [
             const kept = [];
             for (const el of root.querySelectorAll('*')) {
                 if (/^(script|style|option|html|body|head|link|meta|title)$/i.test(el.tagName) || !shown(el)) continue;
+                // Inside a drawing every part is drawing: a graph's links group is strokes, not an empty box (kyu gap 25).
+                if (el.parentElement?.closest('svg')) continue;
                 const r = el.getBoundingClientRect();
                 const c = {
                     left: Math.max(r.left + dx, box.left),
@@ -926,6 +938,14 @@ for (const [width, height] of [
                 };
                 if (c.right - c.left < L.emptyMin || c.bottom - c.top < L.emptyMin) continue;
                 if (el.matches(CONTENT) || hasText(el) || [...el.querySelectorAll(CONTENT)].some(shown) || kept.some((k) => k.contains(el))) continue;
+                // A drawn layer is not empty: a gantt's hour rules are a gradient on the layer itself, its bars are painted
+                // boxes inside it, both without text (homelab gap 27, 2026-10-19). A plain filled or bordered box with nothing
+                // drawn inside it still counts as empty.
+                if (
+                    /** @type {Window} */ (el.ownerDocument.defaultView).getComputedStyle(el).backgroundImage !== 'none' ||
+                    [...el.querySelectorAll('*')].some((d) => shown(d) && drawn(d))
+                )
+                    continue;
                 kept.push(el);
                 empty.push(
                     `${where}${el.tagName.toLowerCase()}.${[...el.classList].slice(0, 2).join('.')} ${Math.round(c.right - c.left)}x${Math.round(c.bottom - c.top)}`,

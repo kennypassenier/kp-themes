@@ -1,0 +1,18 @@
+{
+    "demo": "kyu-11-overview",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "kyu-11-overview-8e6b5c1e-7b53-4d77-9c52-0b0d3f6a2f14",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 02:38: 7 of 7 judged, 6 approved, 1 not approved. Defaults kept.",
+            "notApproved": [
+                {
+                    "item": "graph",
+                    "theme": "formal",
+                    "note": "dit is toch niet de standaard laadanimatie die Formeel heeft voor een netwerkdiagram?"
+                }
+            ]
+        }
+    ]
+}

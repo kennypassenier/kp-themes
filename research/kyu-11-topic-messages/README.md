@@ -1,5 +1,7 @@
 # research/kyu-11-topic-messages: kyu on kp-themes 11.0.0, the bottom half of the Topic page
 
+**Decided (2026-10-19 02:38):** Kenny approved every pair. Default changed for every theme: replay, where a refusal is explained, to In a toast. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Part of the review demo that shows how kyu's dashboard pages look on kp-themes 11.0.0 (map: `kyu/docs/KP_THEMES_11_ADOPTION.md`). This part is
 the lower half of `/t/{topic}/dashboard`: the dead letters of a topic (what died, why, the remedy, the payloads, requeue and delete), the recent
 messages (list, payload, new arrivals, opened large), and the box that publishes a test message. Formal only. All data is mock (topic

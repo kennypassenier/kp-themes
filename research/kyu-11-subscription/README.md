@@ -1,5 +1,7 @@
 # research/kyu-11-subscription: kyu's Subscription page on kp-themes 11.0.0
 
+**Decided (2026-10-19 02:38):** Kenny approved every pair. Defaults kept. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Part of the kyu review demo (Kenny, 2026-10-19). It asks how `/t/notify.kenny/dashboard/subs/desktop` looks with the new components used to the full. Formal only, mock data in kyu's real shape (nothing is read from a server). Sections marked New need kyu backend work.
 
 | Section | Components and options | Choice sets (default) |

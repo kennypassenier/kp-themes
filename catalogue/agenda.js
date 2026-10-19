@@ -641,6 +641,17 @@ document.addEventListener(ANSWER_EVENT, render);
 
 /* ------------------------------------------------------------------ start */
 
+/** Many reads land at once while the page loads: one render per frame, never one per read. */
+let renderQueued = false;
+function renderSoon() {
+    if (renderQueued) return;
+    renderQueued = true;
+    requestAnimationFrame(() => {
+        renderQueued = false;
+        render();
+    });
+}
+
 render();
 
 for (const demo of demos) {
@@ -653,14 +664,22 @@ for (const demo of demos) {
         .catch(() => {
             demo.failed = true;
         })
-        .finally(render);
+        .finally(renderSoon);
 }
-for (const entry of archive) {
-    readDecided(entry.page.href).then((decided) => {
-        entry.decided = decided;
-        render();
-    });
-}
+// The archive's decision files are read only once Done is opened: 126 of them on every load, each followed by a
+// whole render, made the Agenda slow (Kenny, 2026-10-19 05:11: "De agenda pagina begint traag te worden").
+let archiveRead = false;
+const readArchive = () => {
+    if (archiveRead || !ui.done.open) return;
+    archiveRead = true;
+    for (const entry of archive)
+        readDecided(entry.page.href).then((decided) => {
+            entry.decided = decided;
+            renderSoon();
+        });
+};
+ui.done.addEventListener('toggle', readArchive);
+readArchive();
 gatherBlocks()
     .then(async (gathered) => {
         blocks.gathered = gathered;

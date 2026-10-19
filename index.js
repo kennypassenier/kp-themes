@@ -183,73 +183,13 @@ export {
     unsaved,
     unsavedSaved,
 } from './js/unsaved.js';
-export {
-    ENTITY_ACTION_EVENT,
-    ENTITY_CARD,
-    ENTITY_FLAG_EVENT,
-    ENTITY_GRID,
-    ENTITY_GRID_RETRY_EVENT,
-    ENTITY_NEW_EVENT,
-    ENTITY_RETRY_EVENT,
-    ENTITY_STAR_EVENT,
-    ENTITY_TICK_EVENT,
-    attachEntityCards,
-    setEntity,
-    setEntityGrid,
-    setEntityGridState,
-} from './js/entity-card.js';
-export {
-    TRACE,
-    TRACE_RETRY_EVENT,
-    TRACE_RULE_EVENT,
-    TRACE_SWAP_EVENT,
-    attachTraces,
-    setTrace,
-    trace,
-    traceStates,
-    traceSummary,
-    traceText,
-} from './js/path-trace.js';
+export { ENTITY_ACTION_EVENT, ENTITY_CARD, ENTITY_FLAG_EVENT, ENTITY_GRID, ENTITY_GRID_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_RETRY_EVENT, ENTITY_STAR_EVENT, ENTITY_TICK_EVENT, attachEntityCards, setEntity, setEntityGrid, setEntityGridState } from './js/entity-card.js';
+export { TRACE, TRACE_RETRY_EVENT, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, attachTraces, setTrace, trace, traceStates, traceSummary, traceText } from './js/path-trace.js';
 export { DEPLIST, DEPLIST_COLLAPSE, DEPLIST_RETRY_EVENT, attachDeplists, depText, deplist, orderDependencies, setDeplist } from './js/deplist.js';
 export { ACK_EVENT, ACK_GATE, ACK_RETRY_EVENT, ackGate, attachAckGates } from './js/ack-gate.js';
-export {
-    VERSION_COPY_EVENT,
-    VERSION_DELTA,
-    VERSION_LEVELS,
-    VERSION_SORT,
-    attachVersionDeltas,
-    githubRepo,
-    releaseUrl,
-    setVersionDelta,
-    summarizeDeltas,
-    versionLevel,
-    versionNumbers,
-} from './js/version-delta.js';
-export {
-    INTENT_MAX_SHOWN,
-    intentRanges,
-    intentScore,
-    intentTokens,
-    intentWords,
-    matchIntent,
-    noMatchText,
-    queryWords,
-    rankCommands,
-    startsWord,
-} from './js/intent.js';
-export {
-    TOGGLE,
-    TOGGLE_CHANGED_EVENT,
-    TOGGLE_EVENT,
-    TOGGLE_LOOKS,
-    TOGGLE_MODES,
-    TOGGLE_REFUSED_MS,
-    attachToggles,
-    toggle,
-    toggleGroup,
-    toggleKey,
-    togglePressedKeys,
-} from './js/toggle.js';
+export { VERSION_COPY_EVENT, VERSION_DELTA, VERSION_LEVELS, VERSION_SORT, attachVersionDeltas, githubRepo, releaseUrl, setVersionDelta, summarizeDeltas, versionLevel, versionNumbers } from './js/version-delta.js';
+export { INTENT_MAX_SHOWN, intentRanges, intentScore, intentTokens, intentWords, matchIntent, noMatchText, queryWords, rankCommands, startsWord } from './js/intent.js';
+export { TOGGLE, TOGGLE_CHANGED_EVENT, TOGGLE_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, attachToggles, toggle, toggleGroup, toggleKey, togglePressedKeys } from './js/toggle.js';
 export {
     AUTOSIZE,
     AUTOSIZE_EVENT,
@@ -327,7 +267,15 @@ export {
     usualNotToday,
     usualPicker,
 } from './js/usual-picker.js';
-export { CALM_TONES, CALM_TONES_ATTRIBUTE, calmLegendEntries, calmTone, calmWord, inPausedRange, isCalmTones } from './js/calm-tones.js';
+export {
+    CALM_TONES,
+    CALM_TONES_ATTRIBUTE,
+    calmLegendEntries,
+    calmTone,
+    calmWord,
+    inPausedRange,
+    isCalmTones,
+} from './js/calm-tones.js';
 export {
     QUOTE,
     QUOTE_FOLD_EVENT,
@@ -434,78 +382,12 @@ export {
 } from './js/weekdays.js';
 export { COMPARE, COMPARE_EVENT, attachCompares, compareKey, setCompare } from './js/compare.js';
 export { FEED, FEED_EARLIER, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_RELATIVE_MS, FEED_RETRY_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_TICK_MS, FEED_TIME_ZONE, attachFeeds, feedOf, setFeed } from './js/feed.js';
-export {
-    NOTICES,
-    NOTICES_END_QUIET_EVENT,
-    NOTICES_INBOX_EVENT,
-    NOTICES_READ_ALL_EVENT,
-    NOTICES_RETRY_EVENT,
-    NOTICES_SOURCE_EVENT,
-    NOTICE_FIX_EVENT,
-    NOTICE_READ_EVENT,
-    NOTICE_SEVERITIES,
-    attachNotices,
-    noticesOf,
-    setNotices,
-} from './js/notices.js';
-export {
-    QUESTIONS,
-    QUESTION_ANSWER_EVENT,
-    QUESTION_DISMISS_EVENT,
-    QUESTION_EXPIRE_EVENT,
-    QUESTION_URGENT_AT,
-    askQuestion,
-    attachQuestions,
-    questionOf,
-} from './js/question-card.js';
-export {
-    TRANSFER,
-    TRANSFER_DONE_EVENT,
-    TRANSFER_LEAVE_EVENT,
-    TRANSFER_RETRY_EVENT,
-    attachTransfers,
-    resetTransfer,
-    setTransfer,
-    transferEta,
-    transferRate,
-} from './js/transfer.js';
-export {
-    CONNECTION,
-    CONNECTION_RETRY_EVENT,
-    CONNECTION_STATES,
-    CONNECTION_STATE_EVENT,
-    attachConnection,
-    connectionOf,
-    setConnection,
-} from './js/connection.js';
-export {
-    REFRESH,
-    REFRESH_CHOICES,
-    REFRESH_DEFAULT,
-    REFRESH_EVENT,
-    REFRESH_INTERVAL_EVENT,
-    attachRefresh,
-    refreshDone,
-    refreshOf,
-    setRefreshInterval,
-} from './js/auto-refresh.js';
-export {
-    MASTER_DETAIL,
-    PANE_ASIDE_FOLD_AT,
-    PANE_ASIDE_WIDTH,
-    PANE_CLOSE_EVENT,
-    PANE_FOLD_AT,
-    PANE_OPEN_EVENT,
-    PANE_RETRY_EVENT,
-    PANE_SELECT_EVENT,
-    PANE_WIDTHS,
-    attachMasterDetails,
-    closePane,
-    masterDetail,
-    openPane,
-    selectPane,
-    setPaneState,
-} from './js/master-detail.js';
+export { NOTICES, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_RETRY_EVENT, NOTICES_SOURCE_EVENT, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICE_SEVERITIES, attachNotices, noticesOf, setNotices } from './js/notices.js';
+export { QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_DISMISS_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_URGENT_AT, askQuestion, attachQuestions, questionOf } from './js/question-card.js';
+export { TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_RETRY_EVENT, attachTransfers, resetTransfer, setTransfer, transferEta, transferRate } from './js/transfer.js';
+export { CONNECTION, CONNECTION_RETRY_EVENT, CONNECTION_STATES, CONNECTION_STATE_EVENT, attachConnection, connectionOf, setConnection } from './js/connection.js';
+export { REFRESH, REFRESH_CHOICES, REFRESH_DEFAULT, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, attachRefresh, refreshDone, refreshOf, setRefreshInterval } from './js/auto-refresh.js';
+export { MASTER_DETAIL, PANE_ASIDE_FOLD_AT, PANE_ASIDE_WIDTH, PANE_CLOSE_EVENT, PANE_FOLD_AT, PANE_OPEN_EVENT, PANE_RETRY_EVENT, PANE_SELECT_EVENT, PANE_WIDTHS, attachMasterDetails, closePane, masterDetail, openPane, selectPane, setPaneState } from './js/master-detail.js';
 // The dashboard components [scope-143].
 export {
     ACTION_LIST,
@@ -620,18 +502,7 @@ export {
 /** @typedef {import('./js/pipeline.js').PipelineCard} PipelineCard */
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 // The identity mark, the share bar, the bullet list, the code block and the live tick [kpadopt4-data].
-export {
-    IDMARK,
-    IDMARK_GLYPHS,
-    IDMARK_SLOTS,
-    IDMARK_STATUSES,
-    attachIdmarks,
-    idmarkColours,
-    idmarkFor,
-    idmarkLetters,
-    setIdmark,
-    setIdmarkGroup,
-} from './js/idmark.js';
+export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, IDMARK_STATUSES, attachIdmarks, idmarkColours, idmarkFor, idmarkLetters, setIdmark, setIdmarkGroup } from './js/idmark.js';
 /** @typedef {import('./js/idmark.js').IdmarkPerson} IdmarkPerson */
 export { STACKBAR, STACKBAR_PICK_EVENT, attachStackbars, setStackbar, shareText, stackbarParts } from './js/stackbar.js';
 /** @typedef {import('./js/stackbar.js').StackbarPart} StackbarPart */
@@ -713,16 +584,7 @@ export {
 } from './js/checklist.js';
 /** @typedef {import('./js/checklist.js').ChecklistItem} ChecklistItem */
 // The rows group [kpadopt5]: ticking with the keyboard, the selection bar, the undo toast, the new-lines pill, the JSON box, the request inspector.
-export {
-    CURSOR_CLASS,
-    LONG_PRESS_MS,
-    ROW_SELECT,
-    ROW_SELECT_AUTO,
-    ROW_SELECT_EVENT,
-    attachRowSelect,
-    rowSelect,
-    rowSelectKeys,
-} from './js/row-select.js';
+export { CURSOR_CLASS, LONG_PRESS_MS, ROW_SELECT, ROW_SELECT_AUTO, ROW_SELECT_EVENT, attachRowSelect, rowSelect, rowSelectKeys } from './js/row-select.js';
 export {
     SELECTION,
     SELECTION_ACTION_EVENT,
@@ -783,19 +645,7 @@ export {
     updateTimingOf,
 } from './js/update.js';
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';
-export {
-    CALM_ATTRIBUTE,
-    CALM_EVENT,
-    CALM_SCOPES,
-    CALM_SWITCH,
-    applyStoredCalm,
-    attachCalm,
-    calmScope,
-    isCalm,
-    motionAllowed,
-    setCalm,
-    systemReduced,
-} from './js/calm.js';
+export { CALM_ATTRIBUTE, CALM_EVENT, CALM_SCOPES, CALM_SWITCH, applyStoredCalm, attachCalm, calmScope, isCalm, motionAllowed, setCalm, systemReduced } from './js/calm.js';
 export {
     ALTGR_KEYS,
     CHORD_MS,
@@ -815,19 +665,7 @@ export { FOOTPRINT_HOSTS, FOOTPRINT_MAX, attachFootprints, holdFootprint } from 
 export { PROBLEMS, PROBLEM_DISMISS_EVENT, PROBLEM_MODES, PROBLEM_SEVERITIES, attachProblems, setProblems } from './js/problems.js';
 export { FLASH_BUTTON, FLASH_ERROR_MS, FLASH_EVENT, FLASH_MS, FLASH_RELOAD_EVENT, attachFlashButtons, runFlashButton } from './js/flash.js';
 export { DISABLED_REASON, attachDisabledReasons } from './js/reason.js';
-export {
-    TILES_EXIT_EVENT,
-    TILES_KEYS,
-    TILES_MOVE_EVENT,
-    TILES_SET,
-    TILE_ROW_MIN,
-    attachTileKeys,
-    attachTileSets,
-    evenTileSet,
-    nextTile,
-    tileSets,
-    tileStop,
-} from './js/tiles.js';
+export { TILES_EXIT_EVENT, TILES_KEYS, TILES_MOVE_EVENT, TILES_SET, TILE_ROW_MIN, attachTileKeys, attachTileSets, evenTileSet, nextTile, tileSets, tileStop } from './js/tiles.js';
 export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration, momentOf, setAgo } from './js/freshness.js';
 export {
     CHART,
@@ -1084,48 +922,15 @@ export {
     setConsoleContext,
     setConsoleRun,
 } from './js/console.js';
-/** @typedef {import('./js/console.js').ConsoleBlock} ConsoleBlock */
-/** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
-/** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
-/** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */
-// A live log viewer [gap-log-viewer].
-export {
-    LOGVIEWER,
-    LOGVIEWER_EVENT,
-    LOGVIEWER_MAX,
-    LOGVIEWER_RETRY_EVENT,
-    LOG_LEVELS,
-    appendLogLines,
-    attachLogViewers,
-    clearLogViewer,
-    logLevel,
-    logViewerLines,
-    logViewerText,
-    searchLogViewer,
-    setLogViewer,
-    stepLogMatch,
-} from './js/logviewer.js';
+export { LOGVIEWER, LOGVIEWER_EVENT, LOGVIEWER_MAX, LOGVIEWER_RETRY_EVENT, LOG_LEVELS, appendLogLines, attachLogViewers, clearLogViewer, logLevel, logViewerLines, logViewerText, searchLogViewer, setLogViewer, stepLogMatch } from './js/logviewer.js';
+export { DIFF, DIFF_CONTEXT, DIFF_COPY_EVENT, DIFF_EXPAND_EVENT, DIFF_FOLD_MIN, DIFF_MAX_LINES, DIFF_RETRY_EVENT, DIFF_STATUSES, DIFF_TOGGLE_EVENT, DIFF_WORD_LIMIT, DIFF_WORD_SHARE, attachDiffs, diffWords, foldContext, setDiff } from './js/diff.js';
 /** @typedef {import('./js/logviewer.js').LogLine} LogLine */
 /** @typedef {import('./js/logviewer.js').LogViewerSpec} LogViewerSpec */
-// A diff of several files with folded context and changed words [gap-diff-view].
-export {
-    DIFF,
-    DIFF_CONTEXT,
-    DIFF_COPY_EVENT,
-    DIFF_EXPAND_EVENT,
-    DIFF_FOLD_MIN,
-    DIFF_MAX_LINES,
-    DIFF_RETRY_EVENT,
-    DIFF_STATUSES,
-    DIFF_TOGGLE_EVENT,
-    DIFF_WORD_LIMIT,
-    DIFF_WORD_SHARE,
-    attachDiffs,
-    diffWords,
-    foldContext,
-    setDiff,
-} from './js/diff.js';
 /** @typedef {import('./js/diff.js').DiffFile} DiffFile */
 /** @typedef {import('./js/diff.js').DiffHunk} DiffHunk */
 /** @typedef {import('./js/diff.js').DiffLine} DiffLine */
 /** @typedef {import('./js/diff.js').DiffSpec} DiffSpec */
+/** @typedef {import('./js/console.js').ConsoleBlock} ConsoleBlock */
+/** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
+/** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
+/** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */

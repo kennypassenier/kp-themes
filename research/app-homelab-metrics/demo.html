@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-homelab-metrics" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Homelab dashboard: Metrics, live charts and range · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hm-page">
+            <header class="hm-intro">
+                <h1>Homelab dashboard: the Metrics page on kp-themes 11.0.0</h1>
+                <p class="cat-intro">
+                    The Metrics page shows how hard the host <b>pve</b> and each stack are working, with what the host did marked on every chart. This
+                    page rebuilds its charts, its time window, its key figures, its drives and its traffic from the package's own parts, in formal.
+                    Each section asks one thing to look at and carries its options as defaults you can flip; nothing is required.
+                </p>
+                <p>
+                    Mock on this page: every reading, hostname and drive is sample data shaped like the dashboard's own answers (host pve, the stacks
+                    jellyfin, immich, paperless, kyu, almanac and the others). Three things need the dashboard's backend first and are drawn from
+                    sample data here: a custom start and end for the charts, the SMART history of the drives, and the request samples per hostname.
+                    Nothing moves until you press a button.
+                </p>
+            </header>
+
+            <!-- ================================================================ live charts -->
+            <section
+                class="hm-sec"
+                id="live"
+                data-review-item="live"
+                data-review-topic="live"
+                data-review-topic-title="Live charts"
+                data-review-components="chart refresh freshness"
+                data-review-title="Live charts that keep your place"
+                data-review-choices='[{ "id": "live-while-reading", "label": "While you are reading a chart (a pinned reading, a zoom, a source switched off)", "once": true, "default": "keep", "options": [
+                    { "value": "keep", "label": "Keep updating in place", "hint": "Recommended. New readings join the right edge while the pinned reading, the zoom and the sources you switched off stay exactly as you left them. Nothing to wait for and nothing to lose." },
+                    { "value": "pause", "label": "Pause the refresh while you read", "hint": "Today’s behaviour: the page skips a refresh while a reading is pinned, a zoom is on or a source is off, and says so. Safe, but the numbers go stale while you look at them." }] }]'
+                aria-labelledby="h-live"
+            >
+                <div class="hm-sec__head">
+                    <h2 id="h-live">Live charts that keep your place</h2>
+                    <p>Refreshes the charts every 30 seconds and adds the new readings without redrawing the chart, so a pinned reading, a zoom and the sources you switched off survive each refresh.</p>
+                </div>
+                <div class="hm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The refresh control</b> (<code>.kp-refresh</code>) opens at every 5 min so nothing moves on its own; on the real page it
+                            opens at every 30 s. Pick Every 15 s or press <b>Play once</b>: six refreshes follow two seconds apart, each adding one
+                            reading at the right edge, and the line beside the control says &ldquo;updated 0 s ago&rdquo; and counts up.
+                        </li>
+                        <li>
+                            <b>Your place is kept</b>: <b>Pin a reading</b>, <b>Zoom to the last 10 min</b> and a legend click (Memory per container, turn
+                            off a source) all survive the control&rsquo;s own <b>Refresh now</b> and <b>Play once</b>. Today the page throws the whole chart away and draws it again
+                            on every refresh, so it has to skip a refresh while you read.
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): whether a refresh may run while you are reading. Both are real options; the button
+                            group <b>While reading</b> flips them and a paused refresh says it is waiting.
+                        </li>
+                        <li>
+                            <b>Data</b>: Loading pulses both plots at their final height; Failed fills each plot with the sentence and a <b>Retry</b>;
+                            Empty says there are no readings yet. The two charts keep their height in every state.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        One crosshair runs through both charts. After a refresh the pinned tooltip is still on the same moment, the zoom chip still says
+                        what is zoomed, and the sources you switched off stay off. The right edge grows by one reading per refresh (a few pixels) and
+                        nothing else moves. Look at the gap between the legend values and their plate edges, and that the readout line keeps its height.
+                    </p>
+                </div>
+                <div class="hm-controls" data-review-controls data-review-controls-for="live-component">
+                    <div role="group" aria-label="Poll">
+                        <b>Poll</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hm-live="play">Play once</button>
+                    </div>
+                    <div role="group" aria-label="Your place">
+                        <b>Your place</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hm-live="pin">Pin a reading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hm-live="zoom">Zoom to the last 10 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hm-live="unzoom">Reset zoom</button>
+                    </div>
+                    <div role="group" aria-label="While reading" data-review-latent>
+                        <b>While reading</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-while="keep">Keep updating</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-while="pause">Pause</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-live-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-live-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-live-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-live-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hm-frame" id="live-component">
+                    <div class="hm-bar">
+                        <div class="kp-refresh" data-kp-refresh="300" data-kp-refresh-choices="0,15,30,60,300" aria-label="Refresh the charts"></div>
+                        <span class="kp-chart-zoom" data-kp-chart-zoom data-kp-chart-zoom-for="live-group" hidden></span>
+                    </div>
+                    <p class="hm-note" id="live-note" role="status">Opens at every 5 min so this page stays still; the real page opens at every 30 s.</p>
+                    <div class="kp-chart-group hm-chart-group" data-kp-chart-group data-kp-chart-span="1h" id="live-group">
+                        <div class="hm-charts">
+                            <figure class="kp-chart" data-kp-chart id="live-cpu" data-kp-chart-loading aria-label="CPU used">
+                                <figcaption class="kp-chart__title">CPU used</figcaption>
+                            </figure>
+                            <figure class="kp-chart" data-kp-chart id="live-mem" data-kp-chart-loading data-kp-chart-sources="6" aria-label="Memory per container">
+                                <figcaption class="kp-chart__title">Memory per container</figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                    <pre class="hm-log" id="live-log" aria-live="polite">Press Play once, or pick an interval on the refresh control; each refresh is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ events on the charts -->
+            <section
+                class="hm-sec"
+                id="events"
+                data-review-item="events"
+                data-review-topic="events"
+                data-review-topic-title="What the host did, on the charts"
+                data-review-components="chart gantt"
+                data-review-title="What the host did, marked on the charts"
+                data-review-choices='[{ "id": "events-band", "label": "How a window of work (the nightly round, an update) is drawn on a chart", "once": true, "default": "hatch", "options": [
+                    { "value": "hatch", "label": "Hatched band", "hint": "Recommended. Diagonal lines across the stretch the host was busy: readable without colour, and a thin failure line still stands out on top of it." },
+                    { "value": "tint", "label": "Tinted band", "hint": "A soft colour wash across the stretch. Quieter, but it needs colour to be told apart from the plot." },
+                    { "value": "bracket", "label": "Bracket along the top", "hint": "A bar with short ticks along the top of the plot and nothing across the lines. The lightest, but the stretch is easy to miss." }] },
+                    { "id": "events-ribbon", "label": "The operations ribbon under the charts", "once": true, "default": "shown", "options": [
+                    { "value": "shown", "label": "Shown", "hint": "Recommended. One lane per kind (nightly round, updates, host work) over the same window, so what ran when reads at a glance and a bar opens its details." },
+                    { "value": "hidden", "label": "Hidden", "hint": "Only the marks on the charts. Less to look at, but you have to point at each mark to learn what it was." }] }]'
+                aria-labelledby="h-events"
+            >
+                <div class="hm-sec__head">
+                    <h2 id="h-events">What the host did, marked on the charts</h2>
+                    <p>Marks every operation, update and failure the host ran on the charts, with the work that took time drawn as a window and the failures as lines, and lists the same work in a ribbon under them.</p>
+                </div>
+                <div class="hm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>A key above the chart</b> names the three kinds in words with their marks: an operation the host ran, an update, a failure.
+                            It comes from the chart&rsquo;s own <code>kinds</code>; today the page draws that key by hand.
+                        </li>
+                        <li>
+                            <b>Windows of work</b> (the nightly round runs about 42 minutes, an update a few) are drawn as bands from the start to the
+                            end of the work (<code>until</code>). Failures stay lines. Point at or pin one: its tooltip names the kind and the time span
+                            (dd/mm/yyyy HH:mm).
+                        </li>
+                        <li>
+                            <b>The ribbon</b> (<code>.kp-gantt</code>) lists the same work as bars in lanes; a failed one is taller with a cross.
+                            Press a bar: the line under the ribbon says which one was opened. Press a window button on the chart: both follow.
+                        </li>
+                        <li>
+                            <b>The choices</b> (tick in the dialog): how a band is drawn, and whether the ribbon is shown. Both are real options; the
+                            groups <b>Windows drawn as</b> and <b>Show</b> flip them.
+                        </li>
+                        <li><b>Data</b>: Loading and Failed keep the chart&rsquo;s height; the ribbon shows its busy card or its sentence in the same lanes.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Hatching reads as stripes in the plot, not as a second chart; the key words never touch their marks; the tooltip lists a window
+                        as &ldquo;from to until&rdquo;. In the ribbon the lanes line up under the chart&rsquo;s own plot, a failure is the only taller
+                        bar, and nothing is cut at the lane labels.
+                    </p>
+                </div>
+                <div class="hm-controls" data-review-controls data-review-controls-for="events-component">
+                    <div role="group" aria-label="Windows drawn as">
+                        <b>Windows drawn as</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-band="hatch">Hatched</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-band="tint">Tinted</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-band="bracket">Bracket</button>
+                    </div>
+                    <div role="group" aria-label="Key">
+                        <b>Key</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-key="on">Shown</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-key="off">Hidden</button>
+                    </div>
+                    <div role="group" aria-label="Show">
+                        <b>Show</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-kind="operation">Operations</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-kind="update">Updates</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-kind="failure">Failures</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-kind="ribbon">Ribbon</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-events-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-events-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-events-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hm-frame" id="events-component">
+                    <div class="kp-chart-group hm-chart-group" data-kp-chart-group data-kp-chart-span="24h" id="events-group">
+                        <div class="kp-chart-group__bar hm-groupbar">
+                            <div class="kp-chart-ranges" role="group" aria-label="Time range">
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="7d">7 d</button>
+                                <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="30d">30 d</button>
+                            </div>
+                            <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+                        </div>
+                        <figure class="kp-chart" data-kp-chart id="events-chart" data-kp-chart-loading aria-label="CPU used">
+                            <figcaption class="kp-chart__title">CPU used</figcaption>
+                        </figure>
+                    </div>
+                    <section class="kp-gantt" data-kp-gantt data-kp-gantt-ranges="24h 7d 30d" data-kp-gantt-range="24h" data-kp-gantt-ghosts="1 1 1" id="events-ribbon" aria-label="What the host did"></section>
+                    <pre class="hm-log" id="events-log" aria-live="polite">Pin a mark on the chart or press a bar in the ribbon; what it says is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ typical level and runs -->
+            <section
+                class="hm-sec"
+                id="typical"
+                data-review-item="typical"
+                data-review-topic="typical"
+                data-review-topic-title="Typical level and runs"
+                data-review-components="chart"
+                data-review-title="Typical level, runs and too-early charts"
+                data-review-choices='[{ "id": "typical-line", "label": "What a CPU, load or memory chart draws about its normal level", "once": true, "default": "rings", "options": [
+                    { "value": "rings", "label": "The typical line and rings on runs", "hint": "Recommended. A dashed line per shown source at its middle value, worded &ldquo;typical&rdquo;, and a ring on every reading of a run of six or more on one side of it: &ldquo;memory above its typical level for 9 hours&rdquo; shows without any rule in the backend." },
+                    { "value": "line", "label": "The typical line only", "hint": "The dashed line stays, no rings. Quieter; a long stretch above the line is for you to spot." },
+                    { "value": "off", "label": "Neither", "hint": "Only the data lines. Cleanest with six or more sources, but you judge normal by eye." }] }]'
+                aria-labelledby="h-typical"
+            >
+                <div class="hm-sec__head">
+                    <h2 id="h-typical">Typical level, runs and too-early charts</h2>
+                    <p>Draws each source&rsquo;s typical level and rings the stretches that stayed on one side of it, so &ldquo;memory above its normal level for 9 hours&rdquo; shows without a rule in the backend; a chart with too little history says so instead of drawing a trend.</p>
+                </div>
+                <div class="hm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Memory per container</b> over 7 days opens on <b>immich</b> alone (click the legend to add the others). A dashed line
+                            marks its typical level and ringed readings mark the stretch since the 1.5.0 update, about 9 hours and 30 minutes, when
+                            its memory stayed above it. The key names what the rings mean.
+                        </li>
+                        <li>
+                            <b>Just started</b> (3 readings, fewer than the 48 the chart asks for) replaces the trend with one sentence in the plot
+                            saying it is too early, counting <em>readings</em>; <b>One reading</b> draws a dot and says the line grows as more readings
+                            arrive. Both keep the chart&rsquo;s height.
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): whether the typical line and the rings are on by default. All three are component
+                            options; the group <b>Normal level</b> flips them at once.
+                        </li>
+                        <li><b>Data</b>: Loading, Empty and Failed fill the same footprint.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The dashed typical line is quieter than the data line and its words sit clear of the plot edge; rings are visible on the run
+                        and nowhere else; the too-early and one-reading sentences are centred and never touch the plot edge.
+                    </p>
+                </div>
+                <div class="hm-controls" data-review-controls data-review-controls-for="typical-component">
+                    <div role="group" aria-label="Normal level">
+                        <b>Normal level</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-typical="rings">Line and rings</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-typical="line">Line only</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-typical="off">Neither</button>
+                    </div>
+                    <div role="group" aria-label="History">
+                        <b>History</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-history="plenty">7 days</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-history="new">Just started</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-history="one">One reading</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-typical-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-typical-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-typical-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-typical-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hm-frame" id="typical-component">
+                    <div class="kp-chart-group hm-chart-group" data-kp-chart-group data-kp-chart-span="7d" id="typical-group">
+                        <div class="kp-chart-group__bar hm-groupbar">
+                            <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+                        </div>
+                        <figure class="kp-chart" data-kp-chart id="typical-chart" data-kp-chart-loading data-kp-chart-sources="6" aria-label="Memory per container">
+                            <figcaption class="kp-chart__title">Memory per container</figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ range -->
+            <section
+                class="hm-sec"
+                id="range"
+                data-review-item="range"
+                data-review-topic="range"
+                data-review-topic-title="Time window"
+                data-review-components="range chart"
+                data-review-title="The time window: presets and a custom start and end"
+                data-review-choices='[{ "id": "range-presets", "label": "Which presets the window offers", "once": true, "default": "full", "options": [
+                    { "value": "full", "label": "1 h, 6 h, 24 h, 7 d, 30 d", "hint": "Recommended. What the page offers today, so nothing you use goes away." },
+                    { "value": "short", "label": "1 h, 24 h, 7 d", "hint": "Three presets. Fewer keys to read, but 6 h and 30 d need the custom window." }] },
+                    { "id": "range-max", "label": "The longest custom window", "once": true, "default": "31", "options": [
+                    { "value": "31", "label": "31 days", "hint": "Recommended. One month of readings per chart: fast to draw, and longer than any preset but 30 d." },
+                    { "value": "90", "label": "90 days", "hint": "A quarter. Draws up to three times the readings; useful for seasonal questions, slower on the 30 s refresh." },
+                    { "value": "0", "label": "No limit", "hint": "Whatever the store holds. A very long window draws coarsely and can take several seconds." }] }]'
+                aria-labelledby="h-range"
+            >
+                <div class="hm-sec__head">
+                    <h2 id="h-range">The time window: presets and a custom start and end</h2>
+                    <p>Sets how far back every chart on the page reaches, as one key press for the usual lengths or an exact start and end for a question like &ldquo;what happened on Saturday night&rdquo;, with the window written out in full.</p>
+                </div>
+                <div class="hm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The presets</b> (<code>.kp-range</code>) are one segmented key with <b>Custom&hellip;</b> after them; under them one line says exactly
+                            which window is drawn: &ldquo;Last 24 hours &middot; 18/10/2026 14:05 &ndash; 19/10/2026 14:05&rdquo; (dd/mm/yyyy HH:mm, 24-hour, Brussels).
+                            It replaces the page&rsquo;s own window line.
+                        </li>
+                        <li>
+                            <b>Custom&hellip;</b> opens a panel under the key with a date picker and a time for the start and the end; an end before the
+                            start, an end in the future or a window past the limit is refused under the fields with its reason, and Apply waits until
+                            it is right. Cancel or Escape keeps the window as it was.
+                        </li>
+                        <li>
+                            <b>All three charts</b> redraw for the window you apply and say nothing else changed. The dashboard&rsquo;s data endpoint takes
+                            a preset only today, so an exact start and end needs it to accept <code>from</code> and <code>to</code> (backend item C1: the
+                            adoption plan&rsquo;s request to the dashboard&rsquo;s server); here the readings are sample data for any window.
+                        </li>
+                        <li>
+                            <b>The choices</b> (tick in the dialog): which presets are offered and how long a custom window may be. Both are component
+                            options; the groups <b>Presets</b> and <b>Longest custom window</b> flip them and the picker is drawn again.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The preset key and Custom&hellip; stand on one line at desktop width and take two lines on a phone with every preset the same
+                        width; the line under them never touches the plate edge; the opened panel is the theme&rsquo;s opaque popover with the date and
+                        the time side by side.
+                    </p>
+                </div>
+                <div class="hm-controls" data-review-controls data-review-controls-for="range-component">
+                    <div role="group" aria-label="Presets">
+                        <b>Presets</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-presets="full">1 h to 30 d</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-presets="short">1 h, 24 h, 7 d</button>
+                    </div>
+                    <div role="group" aria-label="Longest custom window">
+                        <b>Longest custom window</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-max="31">31 days</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-max="90">90 days</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-max="0">No limit</button>
+                    </div>
+                    <div role="group" aria-label="Opens on">
+                        <b>Opens on</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-open="preset">Last 24 hours</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-open="custom">A custom window</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-open="off">Disabled</button>
+                    </div>
+                </div>
+                <div class="hm-frame hm-frame--range" id="range-component">
+                    <div class="hm-range" data-hm-range id="range-picker" aria-label="Metrics range"></div>
+                    <div class="kp-chart-group hm-chart-group" data-kp-chart-group data-kp-chart-span="24h" id="range-group">
+                        <div class="kp-chart-group__bar hm-groupbar">
+                            <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+                        </div>
+                        <div class="hm-charts hm-charts--three">
+                            <figure class="kp-chart" data-kp-chart id="range-cpu" data-kp-chart-loading aria-label="CPU used">
+                                <figcaption class="kp-chart__title">CPU used</figcaption>
+                            </figure>
+                            <figure class="kp-chart" data-kp-chart id="range-mem" data-kp-chart-loading aria-label="Memory used">
+                                <figcaption class="kp-chart__title">Memory used</figcaption>
+                            </figure>
+                            <figure class="kp-chart" data-kp-chart id="range-load" data-kp-chart-loading aria-label="Load average">
+                                <figcaption class="kp-chart__title">Load average</figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                    <pre class="hm-log" id="range-log" aria-live="polite">Pick a preset or apply a custom window; the event it fires is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ per-section windows -->
+            <section
+                class="hm-sec"
+                id="groups"
+                data-review-item="groups"
+                data-review-topic="groups"
+                data-review-topic-title="Per-section windows"
+                data-review-components="chart"
+                data-review-title="A window of its own for each section"
+                data-review-choices='[{ "id": "groups-link", "label": "Whether the sections share one window", "once": true, "default": "per-section", "options": [
+                    { "value": "per-section", "label": "One window per section", "hint": "Recommended. Compute can show the last hour while Storage shows a week; each section has its own crosshair and its own zoom." },
+                    { "value": "page", "label": "One window for the whole page", "hint": "Pressing a window in one section sets every section, as the page does today. Simple, but you cannot read a slow disk next to a fast CPU." }] }]'
+                aria-labelledby="h-groups"
+            >
+                <div class="hm-sec__head">
+                    <h2 id="h-groups">A window of its own for each section</h2>
+                    <p>Lets each section of the page choose how far back its charts reach, so fast things (CPU) and slow things (disks) can each be read at their own pace.</p>
+                </div>
+                <div class="hm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Compute</b> opens on the last hour, <b>Storage and temperature</b> on 7 days. Each section has its own window keys and
+                            its own zoom chip; pointing at a chart moves the crosshair in that section&rsquo;s charts only.
+                        </li>
+                        <li>
+                            Press <b>7 d</b> in Compute: only its two charts redraw. <b>Zoom Compute</b> zooms the two Compute charts together; the
+                            chip says what is zoomed and Reset undoes it, while Storage stays as it was.
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): per section, or one window for the whole page. Both are real options; the group
+                            <b>Windows</b> flips them, and with one window for the page a key in either section sets both.
+                        </li>
+                        <li><b>Data</b>: Loading and Failed fill every plot at its height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The two sections read as two separate cards of the page with a heading and one sentence each; window keys and zoom chips sit
+                        on one line above their charts and do not move when a chip appears; the four charts share one height.
+                    </p>
+                </div>
+                <div class="hm-controls" data-review-controls data-review-controls-for="groups-component">
+                    <div role="group" aria-label="Windows" data-review-latent>
+                        <b>Windows</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-link="per-section">Per section</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-link="page">One for the page</button>
+                    </div>
+                    <div role="group" aria-label="Zoom Compute">
+                        <b>Zoom Compute</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hm-groups-zoom="in">Zoom in</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hm-groups-zoom="reset">Reset</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-groups-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-groups-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-groups-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hm-frame" id="groups-component">
+                    <div class="hm-section">
+                        <div class="hm-section__head">
+                            <h3>Compute</h3>
+                            <p>CPU, memory and queue length of the host and its stacks.</p>
+                        </div>
+                        <div class="kp-chart-group hm-chart-group" data-kp-chart-group data-kp-chart-span="1h" id="groups-compute">
+                            <div class="kp-chart-group__bar hm-groupbar">
+                                <div class="kp-chart-ranges" role="group" aria-label="Time range, Compute">
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="1h">1 h</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="6h">6 h</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="7d">7 d</button>
+                                </div>
+                                <span class="kp-chart-zoom" data-kp-chart-zoom data-kp-chart-zoom-for="groups-compute" hidden></span>
+                            </div>
+                            <div class="hm-charts hm-charts--two">
+                                <figure class="kp-chart" data-kp-chart id="groups-cpu" data-kp-chart-loading aria-label="CPU used">
+                                    <figcaption class="kp-chart__title">CPU used</figcaption>
+                                </figure>
+                                <figure class="kp-chart" data-kp-chart id="groups-load" data-kp-chart-loading aria-label="Load average">
+                                    <figcaption class="kp-chart__title">Load average</figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hm-section">
+                        <div class="hm-section__head">
+                            <h3>Storage and temperature</h3>
+                            <p>How full the filesystems are and how warm the chips run.</p>
+                        </div>
+                        <div class="kp-chart-group hm-chart-group" data-kp-chart-group data-kp-chart-span="7d" id="groups-storage">
+                            <div class="kp-chart-group__bar hm-groupbar">
+                                <div class="kp-chart-ranges" role="group" aria-label="Time range, Storage and temperature">
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="24h">24 h</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="7d">7 d</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-kp-chart-range="30d">30 d</button>
+                                </div>
+                                <span class="kp-chart-zoom" data-kp-chart-zoom data-kp-chart-zoom-for="groups-storage" hidden></span>
+                            </div>
+                            <div class="hm-charts hm-charts--two">
+                                <figure class="kp-chart" data-kp-chart id="groups-disk" data-kp-chart-loading data-kp-chart-sources="3" aria-label="Disk used per filesystem">
+                                    <figcaption class="kp-chart__title">Disk used per filesystem</figcaption>
+                                </figure>
+                                <figure class="kp-chart" data-kp-chart id="groups-temp" data-kp-chart-loading data-kp-chart-sources="2" aria-label="Chip temperature">
+                                    <figcaption class="kp-chart__title">Chip temperature</figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                    <pre class="hm-log" id="groups-log" aria-live="polite">Press a window key in a section; the range it sets is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ scope and key figures -->
+            <section
+                class="hm-sec"
+                id="scope"
+                data-review-item="scope"
+                data-review-topic="scope"
+                data-review-topic-title="Scope and key figures"
+                data-review-components="usual-picker idmark kpi-trend hovercard"
+                data-review-title="Which machine, and its key figures"
+                data-review-choices='[{ "id": "scope-picker", "label": "How you pick the machine", "once": true, "default": "list", "options": [
+                    { "value": "list", "label": "A search list with the usual on top", "hint": "Recommended. The host and the few stacks you look at most stand first, the rest below by name, each with its colour mark; type to find one. Scales to any number of stacks." },
+                    { "value": "buttons", "label": "One row of buttons", "hint": "Every machine one press away while there are few; the row folds the rest into a menu. Faster for three or four, harder to scan past ten." }] },
+                    { "id": "scope-compare", "label": "Comparing machines", "once": true, "default": "multi", "options": [
+                    { "value": "multi", "label": "Up to three at once", "hint": "Recommended. Pick two or three stacks and their lines share one chart, each in the colour of its mark: the quickest way to see which stack is the odd one out." },
+                    { "value": "one", "label": "One at a time", "hint": "Today’s behaviour. The chart always shows one machine; comparing means switching back and forth and remembering." }] }]'
+                aria-labelledby="h-scope"
+            >
+                <div class="hm-sec__head">
+                    <h2 id="h-scope">Which machine, and its key figures</h2>
+                    <p>Picks whose charts the page shows (the host or a stack, or up to three stacks side by side) and sums each up in a key figure with its last 24 hours inside it.</p>
+                </div>
+                <div class="hm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The picker</b> opens on <b>The host (pve)</b>. The usual machines stand first (host, jellyfin, immich, kyu), the other ten
+                            follow by name; each has its colour mark (<code>.kp-idmark</code>) and, where the fleet names one, its container number.
+                            Picking a stack swaps the key figures to that stack&rsquo;s (CPU, Memory, Disk, Apps running, Restarts in the last hour) and
+                            redraws the chart.
+                        </li>
+                        <li>
+                            <b>Compare</b> turns the same picker into a field of tags (at most three). The chart then draws one CPU line per stack in the
+                            colour of its mark, and the key figures follow the first one.
+                        </li>
+                        <li>
+                            <b>A key figure</b> shows its number, a sentence with now, peak and the sample&rsquo;s window, and its last 24 hours as a
+                            line. Rest on a figure: a card says its highest and lowest reading with the time (dd/mm/yyyy HH:mm). Press it: the line under the chart
+                            says which chart it would open.
+                        </li>
+                        <li>
+                            <b>The choices</b> (tick in the dialog): the kind of picker and whether comparing is on. Both are real options; the groups
+                            <b>Picker</b> and <b>Compare</b> flip them live.
+                        </li>
+                        <li><b>Data</b>: Loading keeps the tiles and the chart at their height, pulsing; Failed says &ldquo;not read&rdquo; in each tile.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Marks and names never touch; the usual band is separated from the alphabetical list by its heading; the tiles share one height
+                        whatever the scope, with their trend and axis words clear of the tile edge; the raised list is the theme&rsquo;s opaque plate.
+                    </p>
+                </div>
+                <div class="hm-controls" data-review-controls data-review-controls-for="scope-component">
+                    <div role="group" aria-label="Picker">
+                        <b>Picker</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-picker="list">Search list</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-picker="buttons">Buttons</button>
+                    </div>
+                    <div role="group" aria-label="Compare">
+                        <b>Compare</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-compare="one">One machine</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-compare="multi">Up to three</button>
+                    </div>
+                    <div role="group" aria-label="Machines">
+                        <b>Machines</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hm-scope="host">The host</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hm-scope="trio">kyu, almanac, inbox</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-scope-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-scope-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-scope-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hm-frame" id="scope-component">
+                    <div class="hm-scope">
+                        <label class="hm-scope__label" for="scope-input" id="scope-label">Showing</label>
+                        <div
+                            class="kp-combobox kp-usual hm-scope__picker"
+                            data-kp-combobox
+                            data-kp-usual='["host","jellyfin","immich","kyu"]'
+                            data-kp-usual-label="Usual"
+                            data-kp-remember="metrics-scope"
+                            id="scope-combo"
+                        >
+                            <input class="kp-combobox__input" id="scope-input" type="text" role="combobox" autocomplete="off" aria-expanded="false" aria-controls="scope-list" />
+                            <ul class="kp-combobox__list" id="scope-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="host" data-kp-label="The host (pve)"><span class="hm-opt__name">The host (pve)</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="pve" aria-hidden="true"></span><small class="hm-opt__meta">Proxmox host</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="jellyfin" data-kp-label="jellyfin"><span class="hm-opt__name">jellyfin</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="jellyfin" aria-hidden="true"></span><small class="hm-opt__meta">Media server</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="immich" data-kp-label="immich"><span class="hm-opt__name">immich</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="immich" aria-hidden="true"></span><small class="hm-opt__meta">Photos</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="paperless" data-kp-label="paperless"><span class="hm-opt__name">paperless</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="paperless" aria-hidden="true"></span><small class="hm-opt__meta">Documents</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vaultwarden" data-kp-label="vaultwarden"><span class="hm-opt__name">vaultwarden</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="vaultwarden" aria-hidden="true"></span><small class="hm-opt__meta">Passwords</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="traefik" data-kp-label="traefik"><span class="hm-opt__name">traefik</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="traefik" aria-hidden="true"></span><small class="hm-opt__meta">Gateway</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="prometheus" data-kp-label="prometheus"><span class="hm-opt__name">prometheus</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="prometheus" aria-hidden="true"></span><small class="hm-opt__meta">Metrics store</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="grafana" data-kp-label="grafana"><span class="hm-opt__name">grafana</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="grafana" aria-hidden="true"></span><small class="hm-opt__meta">Dashboards</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="loki" data-kp-label="loki"><span class="hm-opt__name">loki</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="loki" aria-hidden="true"></span><small class="hm-opt__meta">Logs</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="kyu" data-kp-label="kyu"><span class="hm-opt__name">kyu</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="kyu" aria-hidden="true"></span><small class="hm-opt__meta">CT 109 · Message hub</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="almanac" data-kp-label="almanac"><span class="hm-opt__name">almanac</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="almanac" aria-hidden="true"></span><small class="hm-opt__meta">CT 112 · Calendar hub</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="syncthing" data-kp-label="syncthing"><span class="hm-opt__name">syncthing</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="syncthing" aria-hidden="true"></span><small class="hm-opt__meta">CT 108 · File sync</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="inbox" data-kp-label="inbox"><span class="hm-opt__name">inbox</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="inbox" aria-hidden="true"></span><small class="hm-opt__meta">CT 118 · Mail intake</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="metrics" data-kp-label="metrics"><span class="hm-opt__name">metrics</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="metrics" aria-hidden="true"></span><small class="hm-opt__meta">CT 113 · Prometheus and exporters</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="admin" data-kp-label="admin"><span class="hm-opt__name">admin</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="admin" aria-hidden="true"></span><small class="hm-opt__meta">CT 120 · This dashboard</small></li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                        <div
+                            class="kp-combobox kp-usual hm-scope__picker"
+                            data-kp-combobox
+                            data-kp-usual='["host","jellyfin","immich","kyu"]'
+                            data-kp-usual-label="Usual"
+                            data-kp-multiple
+                            data-kp-max-tags="3"
+                            data-kp-remember="metrics-scope-compare"
+                            id="scope-combo-multi"
+                        >
+                            <ul class="kp-tag-list" data-kp-tag-list></ul>
+                            <input class="kp-combobox__input" id="scope-input-multi" type="text" role="combobox" autocomplete="off" aria-label="Machines to compare" aria-expanded="false" aria-controls="scope-list-multi" />
+                            <ul class="kp-combobox__list" id="scope-list-multi" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="host" data-kp-label="The host (pve)"><span class="hm-opt__name">The host (pve)</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="pve" aria-hidden="true"></span><small class="hm-opt__meta">Proxmox host</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="jellyfin" data-kp-label="jellyfin"><span class="hm-opt__name">jellyfin</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="jellyfin" aria-hidden="true"></span><small class="hm-opt__meta">Media server</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="immich" data-kp-label="immich"><span class="hm-opt__name">immich</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="immich" aria-hidden="true"></span><small class="hm-opt__meta">Photos</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="paperless" data-kp-label="paperless"><span class="hm-opt__name">paperless</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="paperless" aria-hidden="true"></span><small class="hm-opt__meta">Documents</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vaultwarden" data-kp-label="vaultwarden"><span class="hm-opt__name">vaultwarden</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="vaultwarden" aria-hidden="true"></span><small class="hm-opt__meta">Passwords</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="traefik" data-kp-label="traefik"><span class="hm-opt__name">traefik</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="traefik" aria-hidden="true"></span><small class="hm-opt__meta">Gateway</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="prometheus" data-kp-label="prometheus"><span class="hm-opt__name">prometheus</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="prometheus" aria-hidden="true"></span><small class="hm-opt__meta">Metrics store</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="grafana" data-kp-label="grafana"><span class="hm-opt__name">grafana</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="grafana" aria-hidden="true"></span><small class="hm-opt__meta">Dashboards</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="loki" data-kp-label="loki"><span class="hm-opt__name">loki</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="loki" aria-hidden="true"></span><small class="hm-opt__meta">Logs</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="kyu" data-kp-label="kyu"><span class="hm-opt__name">kyu</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="kyu" aria-hidden="true"></span><small class="hm-opt__meta">CT 109 · Message hub</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="almanac" data-kp-label="almanac"><span class="hm-opt__name">almanac</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="almanac" aria-hidden="true"></span><small class="hm-opt__meta">CT 112 · Calendar hub</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="syncthing" data-kp-label="syncthing"><span class="hm-opt__name">syncthing</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="syncthing" aria-hidden="true"></span><small class="hm-opt__meta">CT 108 · File sync</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="inbox" data-kp-label="inbox"><span class="hm-opt__name">inbox</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="inbox" aria-hidden="true"></span><small class="hm-opt__meta">CT 118 · Mail intake</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="metrics" data-kp-label="metrics"><span class="hm-opt__name">metrics</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="metrics" aria-hidden="true"></span><small class="hm-opt__meta">CT 113 · Prometheus and exporters</small></li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="admin" data-kp-label="admin"><span class="hm-opt__name">admin</span><span class="kp-idmark kp-idmark--sm hm-opt__mark" data-kp-idmark="admin" aria-hidden="true"></span><small class="hm-opt__meta">CT 120 · This dashboard</small></li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                        <div class="kp-segmented hm-scope__buttons" data-kp-segmented="single" data-kp-segmented-overflow role="radiogroup" aria-label="Machine" id="scope-buttons" hidden>
+                            <button type="button" class="kp-segmented__item" data-value="host" role="radio" aria-checked="true"><span class="kp-segmented__label">The host</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="jellyfin" role="radio" aria-checked="false"><span class="kp-segmented__label">jellyfin</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="immich" role="radio" aria-checked="false"><span class="kp-segmented__label">immich</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="paperless" role="radio" aria-checked="false"><span class="kp-segmented__label">paperless</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="vaultwarden" role="radio" aria-checked="false"><span class="kp-segmented__label">vaultwarden</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="traefik" role="radio" aria-checked="false"><span class="kp-segmented__label">traefik</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="prometheus" role="radio" aria-checked="false"><span class="kp-segmented__label">prometheus</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="grafana" role="radio" aria-checked="false"><span class="kp-segmented__label">grafana</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="loki" role="radio" aria-checked="false"><span class="kp-segmented__label">loki</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="kyu" role="radio" aria-checked="false"><span class="kp-segmented__label">kyu</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="almanac" role="radio" aria-checked="false"><span class="kp-segmented__label">almanac</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="syncthing" role="radio" aria-checked="false"><span class="kp-segmented__label">syncthing</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="inbox" role="radio" aria-checked="false"><span class="kp-segmented__label">inbox</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="metrics" role="radio" aria-checked="false"><span class="kp-segmented__label">metrics</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="admin" role="radio" aria-checked="false"><span class="kp-segmented__label">admin</span></button>
+                        </div>
+                    </div>
+                    <div class="kp-chart-group hm-chart-group" data-kp-chart-group data-kp-chart-span="24h" id="scope-group">
+                        <div class="kp-chart-group__bar hm-groupbar">
+                            <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+                        </div>
+                        <div class="kp-kpis hm-tiles" data-kp-kpis-columns="5 3 2 1" role="group" aria-label="Right now" id="scope-tiles"></div>
+                        <figure class="kp-chart" data-kp-chart id="scope-chart" data-kp-chart-loading aria-label="CPU used">
+                            <figcaption class="kp-chart__title">CPU used</figcaption>
+                        </figure>
+                    </div>
+                    <pre class="hm-log" id="scope-log" aria-live="polite">Pick a machine or press a key figure; what it fires is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ traffic -->
+            <section
+                class="hm-sec"
+                id="traffic"
+                data-review-item="traffic"
+                data-review-topic="traffic"
+                data-review-topic-title="Traffic: status mix and hostnames"
+                data-review-components="stackbar heat datatable request-inspector chart"
+                data-review-title="Traffic: the status mix and who is asking"
+                data-review-choices='[{ "id": "traffic-hostnames", "label": "How the hostnames behind the gateway are shown", "once": true, "default": "heat", "options": [
+                    { "value": "heat", "label": "A heat grid, hostname by hour", "hint": "Recommended. Eight hostnames by 24 hours in one picture: the busy evening, the quiet night and the one hour a hostname failed (striped) show at a glance; press an hour to zoom the chart to it, a name to switch its line." },
+                    { "value": "table", "label": "A table with a detail row", "hint": "One sortable row per hostname with exact request counts, its share, its errors and the latest requests (needs the dashboard to keep request samples). Exact numbers and sorting, but the shape of the day is not visible." }] }]'
+                aria-labelledby="h-traffic"
+            >
+                <div class="hm-sec__head">
+                    <h2 id="h-traffic">Traffic: the status mix and who is asking</h2>
+                    <p>Shows how many requests reached the gateway in the last 24 hours, how many failed, and which hostname each one was for, as a share bar, a chart and either a heat grid or a table.</p>
+                </div>
+                <div class="hm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The status mix</b> (<code>.kp-stackbar</code>) is one bar over the exact total, split into 2xx, 3xx, 4xx and 5xx with the
+                            counts in a list under it; 4xx is the warning colour and 5xx the destructive one, each also with its pattern. Press a part: the
+                            hostnames below show that class only, press it again for all (the <b>Status class</b> keys do the same).
+                        </li>
+                        <li>
+                            <b>The heat grid</b> (<code>.kp-heat</code>) has one row per hostname and one column per hour, darker meaning more requests
+                            for that hostname; an hour with server errors is striped. Press an hour: the chart zooms to it and the chip says so; press it
+                            again to release. Press a hostname: only its line shows in the chart; press again to turn it off.
+                        </li>
+                        <li>
+                            <b>The table</b> has the same hostnames with exact counts, the share of all requests as a bar, and 4xx and 5xx counts; sort
+                            any column. Open a row for the requests the gateway kept (sample data, with authorisation headers masked and a Copy as curl).
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): heat grid or table. Both are real; the group <b>Hostnames as</b> flips them.
+                            <b>Data</b>: Loading lays the busy card over the grid; Empty and Failed fill the same footprint with a normal-size action.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The stripes on the 5xx part and on the failing hour are a pattern as well as a colour; the grid cells keep one square size, the
+                        hostnames stand in one column as wide as the longest, and no count touches its bar. In the table the numbers are right-aligned and
+                        the sort arrows sit clear of the headings.
+                    </p>
+                </div>
+                <div class="hm-controls" data-review-controls data-review-controls-for="traffic-component">
+                    <div role="group" aria-label="Hostnames as">
+                        <b>Hostnames as</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-hosts="heat">Heat grid</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-hosts="table">Table</button>
+                    </div>
+                    <div role="group" aria-label="Status class">
+                        <b>Status class</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-class="all">All</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-class="s2">2xx</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-class="s3">3xx</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-class="s4">4xx</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-class="s5">5xx</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-traffic-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-traffic-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-traffic-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-traffic-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hm-frame" id="traffic-component">
+                    <figure class="kp-stackbar" id="traffic-mix" aria-label="Status mix"></figure>
+                    <div class="kp-chart-group hm-chart-group" data-kp-chart-group data-kp-chart-span="24h" id="traffic-group">
+                        <div class="kp-chart-group__bar hm-groupbar">
+                            <span class="kp-chart-zoom" data-kp-chart-zoom hidden></span>
+                        </div>
+                        <figure class="kp-chart" data-kp-chart id="traffic-chart" data-kp-chart-loading data-kp-chart-sources="8" aria-label="Requests per hostname">
+                            <figcaption class="kp-chart__title">Requests per hostname</figcaption>
+                        </figure>
+                    </div>
+                    <div class="hm-hosts" id="traffic-heat-box">
+                        <div class="kp-heat" data-kp-heat data-kp-heat-toggle id="traffic-heat" aria-label="Requests per hostname per hour"></div>
+                        <ul class="kp-heat__legend hm-legend">
+                            <li><span class="kp-heat__ramp"></span> fewer to more requests for that hostname</li>
+                            <li><span class="kp-heat__swatch" data-kp-tone="bad"></span> an hour with server errors (5xx)</li>
+                        </ul>
+                    </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-page-size="10" data-kp-page-sizes="none" id="traffic-table" hidden>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">Requests per hostname, last 24 hours; open a row for the requests the gateway kept</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Hostname</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Requests</th>
+                                        <th scope="col" data-kp-sort="number">Share of all</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Client errors (4xx)</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Server errors (5xx)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="traffic-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No requests reached the gateway in this window.</div>
+                    </div>
+                    <pre class="hm-log" id="traffic-log" aria-live="polite">Press a part of the bar, an hour, a hostname or a row; what it fires is written here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ drives -->
+            <section
+                class="hm-sec"
+                id="drives"
+                data-review-item="drives"
+                data-review-topic="drives"
+                data-review-topic-title="Drives"
+                data-review-components="datatable uptime bar-cell chart"
+                data-review-title="Drives: health history and the readings that warn"
+                data-review-choices='[{ "id": "drives-strip", "label": "What the health strip of a drive covers", "once": true, "default": "days", "options": [
+                    { "value": "days", "label": "The last 90 days, one cell a day", "hint": "Recommended. A drive that is slowly failing shows as a few ruled days, then striped ones, long before anything breaks. Needs the dashboard to keep a daily SMART state per drive (backend item C2: the adoption plan’s request for stored health history)." },
+                    { "value": "hours", "label": "The last 48 hours, one cell an hour", "hint": "Good for seeing when a drive went bad, useless for seeing that it has been getting worse for weeks." }] }]'
+                aria-labelledby="h-drives"
+            >
+                <div class="hm-sec__head">
+                    <h2 id="h-drives">Drives: health history and the readings that warn</h2>
+                    <p>Lists each physical drive with its SMART health and the readings that warn before it fails, and opens a drive to show how long it has been healthy.</p>
+                </div>
+                <div class="hm-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>One row per drive</b> (<code>nvme0n1</code>, <code>sda</code>, <code>sdb</code>, <code>sdc</code>) in a sortable table: SMART as a badge
+                            with its word, temperature as a bar with its number (amber from 60 &deg;C, red from 72 &deg;C, of 80), pending and reallocated
+                            sectors as exact counts, and the hours powered on with the years.
+                        </li>
+                        <li>
+                            <b>Open a row</b>: the health strip (<code>.kp-uptime</code>) with the share of days healthy and the incident count in exact
+                            figures, then the 24-hour temperature and pending-sector lines. Ruled cells are degraded days (pending sectors appeared), striped ones are
+                            down (SMART not ok). With <b>One drive failing</b> sdb opens by itself and says since when.
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): 90 days or 48 hours for the strip. Both are real; the group <b>Strip covers</b> flips
+                            them. <b>Data</b>: Loading, Empty and Failed fill the table&rsquo;s own footprint with a normal-size Try again.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The temperature bar and its number stay on one line without touching; the sort arrows sit clear of the headings; the strip&rsquo;s
+                        ruled and striped cells differ by pattern, not only by colour; the two small lines in the detail have the same height.
+                    </p>
+                </div>
+                <div class="hm-controls" data-review-controls data-review-controls-for="drives-component">
+                    <div role="group" aria-label="Drives">
+                        <b>Drives</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-drives="healthy">All healthy</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-drives="failing">One drive failing</button>
+                    </div>
+                    <div role="group" aria-label="Strip covers">
+                        <b>Strip covers</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-strip="days">90 days</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-strip="hours">48 hours</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hm-drives-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-drives-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-drives-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hm-drives-data="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hm-frame" id="drives-component">
+                    <div class="kp-datatable" data-kp-datatable data-kp-expandable data-kp-page-size="10" data-kp-page-sizes="none" id="drives-table">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">Drives of the host pve; open a row for its health history</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Drive</th>
+                                        <th scope="col" data-kp-sort="text">SMART</th>
+                                        <th scope="col" data-kp-sort="number">Temperature</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Pending sectors</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Reallocated sectors</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Powered on</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="drives-rows"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>No drive was found on the host: Prometheus reports no SMART readings yet.</div>
+                    </div>
+                    <pre class="hm-log" id="drives-log" aria-live="polite">Press a cell of a health strip; what it fires is written here.</pre>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-homelab-metrics-69b50d89-b0dc-44d6-9e21-ca41be5e4186" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
