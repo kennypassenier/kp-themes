@@ -7965,7 +7965,7 @@
      * border the register draws: a border-box floor of one line and the
      * link's two block paddings, the label centred in it. */
         box-sizing: border-box;
-        min-block-size: calc(1lh + 2 * var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)));
+        min-block-size: calc(1lh + 2 * var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2)));
         padding: 0 0.5rem 0 0.75rem;
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
@@ -8005,8 +8005,11 @@
  * action, `.kp-nav__link--cta`, is a bar link and takes the same [scope-88]. The links sit in
  * a column item (below), so the padding holds its room even where a
  * register leaves the link inline. */
+    /* The default block padding makes a one-line link exactly
+     * --kp-control-height tall, so a link and a button in one bar row
+     * share a height (chassis-rs: 38.5px links beside 36px buttons). */
     .kp-nav__link {
-        padding-block: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem));
+        padding-block: var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2));
         font-size: var(--kp-nav-link-size, 0.9375rem);
         line-height: var(--kp-line-height, 1.5);
     }
@@ -8222,7 +8225,7 @@
         margin: 0;
         /* The bar link's block padding and type size [scope-87], restated
          * after `font: inherit`, which would reset them. */
-        padding: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0;
+        padding: var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2)) 0;
         border: 0;
         background: transparent;
         color: inherit;

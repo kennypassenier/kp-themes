@@ -363,7 +363,7 @@
         /* The copy lies over the word: the link's block padding is the
            package's [scope-87], so the inset reads it rather than restating
            the 0.7rem and 0.8rem this register used to pad with. */
-        inset: var(--kp-nav-link-padding-block, var(--kp-space-sm, 0.5rem)) 1.1rem;
+        inset: var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2)) 1.1rem;
         opacity: 0;
         pointer-events: none;
         color: var(--accent);

@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- A bar link's default block padding now makes a one-line link exactly `--kp-control-height` tall (36px), so links and buttons in one nav row share a height; the nav search follows (was 38.5px beside 36px buttons, reported by chassis-rs).
 
 - **Fixed: a share bar's legend is one grid with a shared value track** [gapviz-1019; homelab 53]. `.kp-stackbar__legend` now has the three tracks swatch, label and value, and every row is a subgrid of them, so the values of all rows start on one x (a hand-written legend measured five different starts, now one) with no script. Labels wrap at their spaces and are never cut or broken; a page no longer needs `--kp-stackbar-legend-min`. Removed with it: `--kp-stackbar-legend-min`, `--kp-stackbar-value-w` and the script's value measuring. New knob `--kp-stackbar-legend-columns` (1) sets how many swatch, label and value sets stand side by side.
 - **Fixed: a calm heat grid's legend lists only the tones its cells have** [gapviz-1019; AuDHD 41]. Logged, Nothing logged and Paused each appear only when a cell has that tone, redrawn with the data; `data-kp-legend="all"` keeps all three, a grid still loading keeps all three for its footprint.
