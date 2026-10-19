@@ -12,6 +12,10 @@ export declare const FOCUS_STEPS_RESUME_EVENT = "kp-focus-steps-resume";
 export declare const FOCUS_STEPS_RETRY_EVENT = "kp-focus-steps-retry";
 /** Fired on the root when Try again is pressed on the plate of answers that could not be saved. */
 export declare const FOCUS_STEPS_SAVE_RETRY_EVENT = "kp-focus-steps-save-retry";
+/** Fired on the root when the active track changed: `{ track, key, from, index, step, reason }`. */
+export declare const FOCUS_STEPS_TRACK_EVENT = "kp-focus-steps-track";
+/** Fired on the root when a track asks for the person: `{ track, key, reason: 'timer' | 'ready', index }`. */
+export declare const FOCUS_STEPS_TRACK_ATTENTION_EVENT = "kp-focus-steps-track-attention";
 /** How far a finger has to travel across the step to turn it [px]. */
 export declare const SWIPE_DISTANCE = 56;
 export type FocusIngredient = {
@@ -54,10 +58,34 @@ export type FocusStep = {
      */
     answer?: FocusAnswer;
     ingredients?: (FocusIngredient | string)[];
+    /**
+     * `id` names the timer in the timer list (default: the step's `id`)
+     */
     timer?: {
         seconds: number;
         name?: string;
+        id?: string;
     };
+    /**
+     * names the step for `waitFor` and for its timer (default `step-<n>`)
+     */
+    id?: string;
+    /**
+     * the line of work it belongs to ("Pasta"); steps with none belong to the shared lane
+     */
+    track?: string;
+    /**
+     * a short name for the step, used in the lanes and where another step waits for it
+     */
+    title?: string;
+    /**
+     * step ids, or track names, that must be done before this step can start
+     */
+    waitFor?: string | string[];
+    /**
+     * the same as `waitFor`
+     */
+    after?: string | string[];
     note?: string;
     noteTone?: 'info' | 'warning';
 };
@@ -80,6 +108,34 @@ export type FocusState = {
      */
     timer: number;
     startedAt: number;
+    /**
+     * the lines of work, in the order the steps name them (one only: no lanes)
+     */
+    tracks: Track[];
+    /**
+     * the key of the active track
+     */
+    track: string;
+    /**
+     * the steps passed with Next
+     */
+    done: Set<number>;
+    /**
+     * the tracks asking for the person, by track key
+     */
+    alerts: Map<string, TrackAlert>;
+    /**
+     * the tracks that waited when the lanes were last read
+     */
+    waiting: Set<string>;
+    /**
+     * the steps the shown step waits for, as a key
+     */
+    lockKey: string;
+    /**
+     * the interval that keeps the lanes' clocks, 0 when none
+     */
+    ticker: number;
     pendingResume: {
         index: number;
         answers: FocusState['answers'];
@@ -91,6 +147,54 @@ export type FocusState = {
         startedAt: number;
         finishedAt: number;
     } | null;
+};
+export type Track = {
+    /**
+     * the name the steps give it ('' for the shared lane)
+     */
+    key: string;
+    name: string;
+    /**
+     * the step indexes, in recipe order
+     */
+    order: number[];
+    /**
+     * where on the track the person is
+     */
+    pos: number;
+};
+export type TrackAlert = {
+    reason: 'timer' | 'ready';
+    title: string;
+    text: string;
+    /**
+     * the step the track is on
+     */
+    index: number;
+    timerId?: string;
+};
+/**
+ * What a step waits for and has not got yet: for a step reference that step, for a track reference the first step of it
+ * that is not done. A reference nobody carries waits for nothing.
+ * @param {FocusState} state @param {number} i @param {import('./timer.js').TimerState[]} timers
+ * @returns {{ index: number, whole: boolean, track: Track | undefined }[]}
+ */
+declare function blockersOf(state: FocusState, i: number, timers: import('./timer.js').TimerState[]): {
+    index: number;
+    whole: boolean;
+    track: Track | undefined;
+}[];
+export type Lane = {
+    track: Track;
+    key: string;
+    name: string;
+    active: boolean;
+    status: 'ready' | 'running' | 'paused' | 'waiting' | 'ringing' | 'finished';
+    /**
+     * the clock the lane shows
+     */
+    timer: import('./timer.js').TimerState | null;
+    blocks: ReturnType<typeof blockersOf>;
 };
 /**
  * Go to a step (as a person did: the event fires when it moved).
@@ -121,3 +225,4 @@ export declare function setFocusStepsState(root: Element, kind: 'loading' | 'err
  * @returns {() => void} detach
  */
 export declare function attachFocusSteps(scope?: ParentNode): () => void;
+export {};

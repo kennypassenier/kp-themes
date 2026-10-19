@@ -19596,6 +19596,307 @@
         content: var(--kp-glyph-check, '✓');
     }
 
+    /* --- Parallel tracks [focus-tracks-1019] -------------------------------
+ *
+ * `.kp-focus-steps[data-kp-focus-tracked]` (js/focus-steps.js): steps that carry a `track` show the active track's step large and
+ * every track as a lane. The composition is a grid of two columns, the step on 2fr and the tracks on 1fr (data-kp-lanes-at="side",
+ * a root 44rem wide or more); on a narrow root the lanes become short rows between the head and the step. Rows: the band that asks for
+ * you (only while it holds something), the head, the step (the one flexible row), the buttons. In the column of the tracks the
+ * lanes share one height, the clock of every lane stands in one column that is as wide as the widest clock, and the words under
+ * them share the next. The band uses the package's attention band (js/attention.js); a lane is a package button.
+ * Knobs: --kp-focus-lane-min (6.5rem), --kp-focus-lane-clock (1.75rem), --kp-focus-rail-min (15rem). */
+    .kp-focus-steps[data-kp-focus-tracked] {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        grid-template-areas: 'head' 'lanes' 'body' 'nav';
+    }
+
+    .kp-focus-steps[data-kp-focus-tracked]:has(> .kp-focus-steps__band > .kp-attention__item) {
+        grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+        grid-template-areas: 'band' 'head' 'lanes' 'body' 'nav';
+    }
+
+    .kp-focus-steps[data-kp-focus-tracked][data-kp-lanes-at='side'] {
+        grid-template-columns: minmax(0, 2fr) minmax(var(--kp-focus-rail-min, 15rem), 1fr);
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-areas: 'head lanes' 'body lanes' 'nav lanes';
+        column-gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-focus-steps[data-kp-focus-tracked][data-kp-lanes-at='side']:has(> .kp-focus-steps__band > .kp-attention__item) {
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        grid-template-areas: 'band lanes' 'head lanes' 'body lanes' 'nav lanes';
+    }
+
+    .kp-focus-steps[data-kp-focus-tracked] > .kp-focus-steps__band {
+        grid-area: band;
+    }
+
+    .kp-focus-steps[data-kp-focus-tracked] > .kp-focus-steps__head {
+        grid-area: head;
+    }
+
+    .kp-focus-steps[data-kp-focus-tracked] > .kp-focus-steps__body {
+        grid-area: body;
+    }
+
+    .kp-focus-steps[data-kp-focus-tracked] > .kp-focus-steps__nav {
+        grid-area: nav;
+    }
+
+    .kp-focus-steps__lanes {
+        grid-area: lanes;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto minmax(0, 1fr);
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-focus-steps__lanes-title {
+        margin: 0;
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 600;
+    }
+
+    .kp-focus-steps__lanes-done {
+        align-self: center;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* The hint stands at the foot of the column of tracks, level with the buttons; a narrow root has the lanes alone. */
+    .kp-focus-steps__lanes-hint {
+        grid-column: 1 / -1;
+        align-self: end;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lanes-hint {
+        display: none;
+    }
+
+    /* Beside the step the lanes share the column: one height each, never taller than a lane needs. */
+    .kp-focus-steps__lane-list {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-auto-rows: minmax(var(--kp-focus-lane-min, 6.5rem), 10rem);
+        gap: var(--kp-space-sm, 0.5rem);
+        align-content: start;
+    }
+
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane-list {
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: auto;
+    }
+
+    /* A lane: the name and the clock on the first line, what it is doing and where it is on the second, the theme's bar under them. */
+    .kp-focus-steps__lane.kp-button {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: 'name time' 'step step' 'state count' 'bar bar';
+        grid-template-rows: auto 1fr auto auto;
+        align-items: start;
+        justify-content: stretch;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        text-align: start;
+        white-space: normal;
+    }
+
+    .kp-focus-steps__lane-name {
+        grid-area: name;
+        font-size: var(--kp-text-lg, 1.125rem);
+        font-weight: 700;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__lane-time {
+        grid-area: time;
+        min-inline-size: 5ch;
+        font-size: var(--kp-focus-lane-clock, 1.75rem);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        line-height: 1.1;
+        text-align: end;
+    }
+
+    .kp-focus-steps__lane-step {
+        grid-area: step;
+        align-self: start;
+        font-size: var(--kp-text-md, 1rem);
+        line-height: 1.3;
+        overflow-wrap: anywhere;
+        opacity: 0.85;
+    }
+
+    .kp-focus-steps__lane-state {
+        grid-area: state;
+        display: flex;
+        align-items: baseline;
+        gap: 0.5em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.3;
+        overflow-wrap: anywhere;
+    }
+
+    /* The mark before the words: hollow = can go on, filled = a clock runs, dashed = waits, a check = done. */
+    .kp-focus-steps__lane-state::before {
+        content: '';
+        flex: none;
+        inline-size: 0.7em;
+        block-size: 0.7em;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        translate: 0 0.05em;
+    }
+
+    .kp-focus-steps__lane[data-kp-lane-status='running'] .kp-focus-steps__lane-state::before {
+        background: currentColor;
+    }
+
+    .kp-focus-steps__lane[data-kp-lane-status='paused'] .kp-focus-steps__lane-state::before {
+        background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+    }
+
+    .kp-focus-steps__lane[data-kp-lane-status='waiting'] .kp-focus-steps__lane-state::before {
+        border-style: dashed;
+    }
+
+    .kp-focus-steps__lane[data-kp-lane-status='ringing'] .kp-focus-steps__lane-state::before {
+        background: currentColor;
+    }
+
+    .kp-focus-steps__lane[data-kp-lane-status='finished'] .kp-focus-steps__lane-state::before {
+        content: var(--kp-glyph-check, '✓');
+        inline-size: auto;
+        block-size: auto;
+        border: 0;
+        translate: none;
+    }
+
+    .kp-focus-steps__lane-count {
+        grid-area: count;
+        align-self: start;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.3;
+        text-align: end;
+        opacity: 0.85;
+    }
+
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane-count,
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane-step,
+    .kp-focus-steps[data-kp-lane-detail='compact'] .kp-focus-steps__lane-count {
+        display: none;
+    }
+
+    .kp-focus-steps__lane-bar.kp-progressbar {
+        grid-area: bar;
+        align-self: end;
+        max-inline-size: none;
+    }
+
+    /* On a narrow root the lanes are short rows, one under the other: name, what it is doing, clock, and the bar under them. A word
+       never breaks per letter, so a lane is never squeezed into a column. */
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane.kp-button {
+        grid-template-columns: max-content minmax(0, 1fr) auto;
+        grid-template-areas: 'name state time' 'bar bar bar';
+        grid-template-rows: auto auto;
+        align-items: center;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane-name {
+        overflow-wrap: normal;
+    }
+
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane-state {
+        overflow-wrap: break-word;
+    }
+
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane-time {
+        min-inline-size: 0;
+        font-size: calc(var(--kp-focus-lane-clock, 1.75rem) * 0.85);
+    }
+
+    /* On a narrow root the count has its own line; the screen line and Read aloud go under it. */
+    .kp-focus-steps[data-kp-focus-tracked][data-kp-lanes-at='top'] .kp-focus-steps__head {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-focus-steps[data-kp-focus-tracked][data-kp-lanes-at='top'] .kp-focus-steps__tools {
+        justify-content: flex-start;
+    }
+
+    .kp-focus-steps__lane[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1.5px var(--primary);
+    }
+
+    /* A lane whose timer ended is a warning plate and says so with its words, never by colour alone. */
+    .kp-focus-steps__lane[data-kp-lane-status='ringing'].kp-button {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-focus-steps__lane[data-kp-lane-status='running'] .kp-focus-steps__lane-state::before {
+            animation: kp-focus-lane-beat 2.4s ease-in-out infinite;
+        }
+
+        .kp-focus-steps__lane[data-kp-lane-status='ringing'] .kp-focus-steps__lane-time {
+            animation: kp-focus-lane-beat 1.6s ease-in-out infinite;
+        }
+    }
+
+    @keyframes kp-focus-lane-beat {
+        50% {
+            opacity: 0.35;
+        }
+    }
+
+    /* A step that waits: the sentence stays readable, what it waits for sits in an info plate with the track that can go on. */
+    .kp-focus-steps__step[data-kp-focus-steps-locked] > .kp-focus-steps__text {
+        color: var(--muted-foreground);
+    }
+
+    .kp-focus-steps__wait {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+    }
+
+    .kp-focus-steps__wait-text {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-focus-steps__wait-line {
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__wait-go.kp-button {
+        min-block-size: var(--kp-focus-steps-tool, 2.75rem);
+        white-space: normal;
+    }
+
+    .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__wait {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     /* --- A wheel that picks [kpadopt4] ------------------------------------
  *
  * A round wheel of soft segments in the theme's five chart colours, a still

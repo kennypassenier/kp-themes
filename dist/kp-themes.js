@@ -1277,7 +1277,7 @@ var init_strings = __esm({
       shortcutsSheet: "Show these shortcuts",
       shortcutsPending: "Waiting for the next key",
       shortcutsUnknown: (keys) => `No shortcut on ${keys}`,
-      shortcutsAltGr: (keys, suggestion) => `The key "${keys}" needs AltGr on an AZERTY keyboard, which is awkward with one hand. Consider ${suggestion}.`,
+      shortcutsAltGr: (keys, suggestion2) => `The key "${keys}" needs AltGr on an AZERTY keyboard, which is awkward with one hand. Consider ${suggestion2}.`,
       shortcutsUnavailable: "Not available right now",
       ledeMore: "More",
       ledeLess: "Less",
@@ -1734,6 +1734,45 @@ var init_strings = __esm({
       focusSaveFailedText: "Your answers are kept here, nothing is lost.",
       focusSaveRetry: "Try again",
       focusAnswerLoading: "Reading the questions",
+      // Parallel tracks and the read-mode plates (js/focus-steps.js) [focus-tracks-1019].
+      focusReadEmptyTitle: "No steps yet",
+      focusReadFailedTitle: "The steps could not be loaded",
+      focusReadFailedText: "Check the connection and try again.",
+      focusTrackShared: "Together",
+      focusTracksTitle: "Tracks",
+      focusTracksHint: "Tap a track, or press T, to switch. Back and Next move the track you are on.",
+      focusTracksDone: (n, total) => `${n} of ${total} steps done`,
+      focusTrackCount: (track, n, total) => `${track}: step ${n} of ${total}`,
+      focusTrackStepName: (track, n) => `${track}, step ${n}`,
+      focusLaneStep: (n, total) => `Step ${n} of ${total}`,
+      focusLaneHere: "You are here",
+      focusLaneReady: "Ready for you",
+      focusLaneRunning: (timer2) => `${timer2} running`,
+      focusLanePaused: (timer2) => `${timer2} paused`,
+      focusLaneWaiting: (names) => `Waiting for ${names}`,
+      focusLaneRinging: "Time is up",
+      focusLaneFinished: "Done",
+      focusTrackBand: "Needs you now",
+      focusTrackTimerDone: (timer2, track) => `${timer2} is done (${track})`,
+      focusTrackReadyTitle: (track) => `${track} can go on`,
+      focusTrackNextUp: (step) => `Next: ${step}`,
+      focusTrackNothingLeft: (track) => `Nothing is left on ${track}.`,
+      focusTrackGo: (track) => `Go to ${track}`,
+      focusTrackGotIt: "Got it",
+      focusTrackWaitTitle: (what) => `Waiting for ${what}`,
+      focusTrackWaitLeft: (clock4) => `${clock4} left`,
+      focusTrackWaitOpen: "not done yet",
+      focusTrackFinishedTitle: (track) => `${track} is done`,
+      focusTrackFinishedText: "Nothing is left on this track.",
+      focusTrackFinishedNext: (next2) => `${next2} is ready for you.`,
+      focusTrackFinish: (track) => `Finish ${track}`,
+      focusTrackSwitched: (track, place2, text) => `${track}. ${place2}. ${text}`,
+      focusTrackUnlocked: (step) => `${step} is done. You can go on.`,
+      focusTimerRunning: (clock4) => `Timer running \xB7 ${clock4}`,
+      focusTimerPaused: (clock4) => `Timer paused \xB7 ${clock4}`,
+      focusTimerDone: "Timer done",
+      focusTrackKeyNext: "Next track",
+      focusTrackKeyPrevious: "Previous track",
       // A picker with the usual on top (js/usual-picker.js) [kpadopt6].
       usualLabel: "Usual",
       usualAll: "All",
@@ -7733,8 +7772,8 @@ function unlisten() {
 function altGrProblem(steps) {
   const bad = steps.find((s2) => ALTGR_KEYS.includes(s2.key));
   if (!bad) return null;
-  const suggestion = bad.key === "[" || bad.key === "]" ? "Shift ArrowLeft / Shift ArrowRight, or a digit" : 'a letter, a digit, an arrow key or a chord such as "g s"';
-  return getStrings().shortcutsAltGr(bad.key, suggestion);
+  const suggestion2 = bad.key === "[" || bad.key === "]" ? "Shift ArrowLeft / Shift ArrowRight, or a digit" : 'a letter, a digit, an arrow key or a chord such as "g s"';
+  return getStrings().shortcutsAltGr(bad.key, suggestion2);
 }
 function registerShortcuts(scope, list, options = {}) {
   const guard = options.layoutGuard ?? config.layoutGuard;
@@ -9381,19 +9420,19 @@ function raiseOverlay(element, place2) {
   const added = !element.hasAttribute("popover");
   if (added) element.setAttribute("popover", "manual");
   if (!element.matches(":popover-open")) element.showPopover();
-  const follow2 = () => {
+  const follow3 = () => {
     if (element.isConnected && !element.hidden && !element.matches(":popover-open")) element.showPopover();
     place2(element);
   };
-  follow2();
-  window.addEventListener("scroll", follow2, { capture: true, passive: true });
-  window.addEventListener("resize", follow2);
-  const resized = typeof ResizeObserver === "function" ? new ResizeObserver(follow2) : null;
+  follow3();
+  window.addEventListener("scroll", follow3, { capture: true, passive: true });
+  window.addEventListener("resize", follow3);
+  const resized = typeof ResizeObserver === "function" ? new ResizeObserver(follow3) : null;
   resized?.observe(element);
   return () => {
     resized?.disconnect();
-    window.removeEventListener("scroll", follow2, { capture: true });
-    window.removeEventListener("resize", follow2);
+    window.removeEventListener("scroll", follow3, { capture: true });
+    window.removeEventListener("resize", follow3);
     if (element.matches(":popover-open")) element.hidePopover();
     if (added) element.removeAttribute("popover");
     clearBlockSide(element);
@@ -12741,7 +12780,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     let restoreFocusTo = null;
     const launchedByMarkup = panel.hasAttribute(OPTIONS.launched);
     const mode2 = () => read(OPTIONS.mode) ?? "side";
-    const isOpen2 = () => panel.getAttribute(OPTIONS.open) !== "false" && (mode2() === "side" || panel.getAttribute(OPTIONS.open) === "true");
+    const isOpen3 = () => panel.getAttribute(OPTIONS.open) !== "false" && (mode2() === "side" || panel.getAttribute(OPTIONS.open) === "true");
     const covering = () => mode2() === "over";
     const turnEase = () => {
       const style = getComputedStyle(panel);
@@ -12900,7 +12939,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
           })
         );
         void Promise.all(motions).then(() => {
-          if (turn2 !== lightTurn || isOpen2()) return;
+          if (turn2 !== lightTurn || isOpen3()) return;
           shut();
         });
       });
@@ -12939,7 +12978,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       set(false, true, true, "backdrop");
     };
     const onTrap = (event) => {
-      if (event.key !== "Tab" || !covering() || !isOpen2() || !on(OPTIONS.focusTrap, true)) return;
+      if (event.key !== "Tab" || !covering() || !isOpen3() || !on(OPTIONS.focusTrap, true)) return;
       const stops = [.../** @type {NodeListOf<HTMLElement>} */
       panel.querySelectorAll(FOCUSABLE)].filter((el16) => el16.offsetParent !== null);
       if (stops.length === 0) return;
@@ -13067,13 +13106,13 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       panel.toggleAttribute(OPTIONS.slimCollapsed, next2);
       saySlim(next2);
       if (save2) memory?.write("rail", next2);
-      offsetContent(isOpen2());
+      offsetContent(isOpen3());
       syncRail();
       if (asked === "told") panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next2, reason } }));
     };
     const setMode = (next2) => {
       panel.setAttribute(OPTIONS.mode, next2);
-      set(isOpen2(), false, false, "mode");
+      set(isOpen3(), false, false, "mode");
     };
     const isRail = () => panel.hasAttribute(OPTIONS.slimCollapsed) && !panel.hasAttribute(OPTIONS.peek);
     const flying = () => isRail() && on(OPTIONS.flyout, true);
@@ -13313,7 +13352,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (event.key.toLowerCase() !== chord.key) return;
       if (event.ctrlKey !== chord.ctrl || event.metaKey !== chord.meta || event.altKey !== chord.alt || event.shiftKey !== chord.shift) return;
       event.preventDefault();
-      set(!isOpen2(), true, true, "shortcut");
+      set(!isOpen3(), true, true, "shortcut");
     };
     const saveGroups = () => {
       if (memory === null) return;
@@ -13358,7 +13397,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (ownedBy !== "" && toggler.matches(ownedBy)) return;
       const controls = toggler.getAttribute("aria-controls");
       if (controls !== null && controls !== panel.id) return;
-      set(!isOpen2(), true, true, "toggler");
+      set(!isOpen3(), true, true, "toggler");
     };
     const onSlimClick = (event) => {
       const toggler = (
@@ -13372,7 +13411,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       setSlim(void 0, true, "toggler");
     };
     const onEsc = (event) => {
-      if (event.key !== "Escape" || !on(OPTIONS.closeOnEsc, true) || mode2() === "side" || !isOpen2()) return;
+      if (event.key !== "Escape" || !on(OPTIONS.closeOnEsc, true) || mode2() === "side" || !isOpen3()) return;
       set(false, true, true, "escape");
     };
     const overBelow = read(OPTIONS.overBelow);
@@ -13468,7 +13507,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       const next2 = clampWidth(px4);
       panel.style.setProperty("--kp-sidenav-width", `${next2}px`);
       wroteWidth = true;
-      offsetContent(isOpen2());
+      offsetContent(isOpen3());
       sayWidth();
       if (save2) memory?.write("width", next2);
       return next2;
@@ -13537,7 +13576,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       panel.style.removeProperty("--kp-sidenav-width");
       wroteWidth = false;
       memory?.forget("width");
-      still(() => offsetContent(isOpen2()));
+      still(() => offsetContent(isOpen3()));
       sayWidth();
     };
     if (grip !== null) {
@@ -13660,10 +13699,10 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       element: panel,
       open: open4,
       close,
-      toggle: ({ remember: remember3 = true } = {}) => set(!isOpen2(), true, remember3),
+      toggle: ({ remember: remember3 = true } = {}) => set(!isOpen3(), true, remember3),
       setMode,
       setSlim: (collapsed) => setSlim(collapsed),
-      isOpen: isOpen2,
+      isOpen: isOpen3,
       destroy: () => {
       }
     };
@@ -14686,7 +14725,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     list.style.width = `${box.width}px`;
     if (raised(list)) placeBlockSide(list, box);
   };
-  const isOpen2 = () => list.hidden === false;
+  const isOpen3 = () => list.hidden === false;
   let lower = () => {
   };
   const open4 = () => {
@@ -14701,7 +14740,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     select.dispatchEvent(new CustomEvent(OPEN_EVENT, { bubbles: true, detail: { open: true } }));
   };
   const close = () => {
-    if (!isOpen2()) return;
+    if (!isOpen3()) return;
     lower();
     lower = () => {
     };
@@ -14733,7 +14772,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
   const onKeyDownCapture = (event) => {
     if (event.ctrlKey || event.metaKey) return;
     const printable = event.key.length === 1 && !event.altKey;
-    if (!isOpen2()) {
+    if (!isOpen3()) {
       if (["ArrowDown", "ArrowUp", "Home", "End", "Enter", " ", "F4"].includes(event.key) || printable) {
         event.preventDefault();
         open4();
@@ -14759,7 +14798,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     if (event.button !== 0 || select.disabled) return;
     event.preventDefault();
     select.focus();
-    if (isOpen2()) close();
+    if (isOpen3()) close();
     else open4();
   };
   const onListMouseDown = (event) => event.preventDefault();
@@ -14769,7 +14808,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     }, 0);
   };
   const onChange = () => {
-    if (isOpen2()) build9();
+    if (isOpen3()) build9();
   };
   select.addEventListener("keydown", onKeyDownCapture, { capture: true });
   select.addEventListener("mousedown", onMouseDown);
@@ -21867,7 +21906,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       /** @type {HTMLElement | null} */
       picker.querySelector("[data-kp-colorpicker-contrast]")
     );
-    const follow2 = picker.dataset.kpFollowTheme === void 0 ? followTheme : picker.dataset.kpFollowTheme !== "false";
+    const follow3 = picker.dataset.kpFollowTheme === void 0 ? followTheme : picker.dataset.kpFollowTheme !== "false";
     const target = () => picker.dataset.kpAgainst ?? "--background";
     const level = () => (
       /** @type {'text' | 'large' | 'non-text'} */
@@ -21908,7 +21947,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
     const onInput = () => update2(true);
     for (const channel of ["h", "s", "l"]) slider2(channel)?.addEventListener("input", onInput);
     const onTheme = () => update2(false);
-    if (follow2) document.addEventListener("kp-theme-change", onTheme);
+    if (follow3) document.addEventListener("kp-theme-change", onTheme);
     update2(false);
     const handle = {
       element: picker,
@@ -33535,6 +33574,8 @@ __export(focus_steps_exports, {
   FOCUS_STEPS_RESUME_EVENT: () => FOCUS_STEPS_RESUME_EVENT,
   FOCUS_STEPS_RETRY_EVENT: () => FOCUS_STEPS_RETRY_EVENT,
   FOCUS_STEPS_SAVE_RETRY_EVENT: () => FOCUS_STEPS_SAVE_RETRY_EVENT,
+  FOCUS_STEPS_TRACK_ATTENTION_EVENT: () => FOCUS_STEPS_TRACK_ATTENTION_EVENT,
+  FOCUS_STEPS_TRACK_EVENT: () => FOCUS_STEPS_TRACK_EVENT,
   FOCUS_STEPS_WAKE_EVENT: () => FOCUS_STEPS_WAKE_EVENT,
   SWIPE_DISTANCE: () => SWIPE_DISTANCE,
   attachFocusSteps: () => attachFocusSteps,
@@ -33544,7 +33585,7 @@ __export(focus_steps_exports, {
   setFocusStepsState: () => setFocusStepsState
 });
 function build2(root) {
-  if (root.querySelector(":scope > .kp-focus-steps__head")) return;
+  if (root.querySelector(".kp-focus-steps__head")) return;
   const strings = getStrings();
   serial6 += 1;
   const head = el7("kp-focus-steps__head");
@@ -33607,6 +33648,414 @@ ${strings.focusStopReading}`);
   root.append(head, body, nav, live4);
   if (!root.hasAttribute("role")) root.setAttribute("role", "region");
   if (root.tabIndex < 0 && !root.hasAttribute("tabindex")) root.tabIndex = -1;
+}
+function layTracks(root) {
+  const state2 = stateOf3(root);
+  const shared = opt(root, "track-shared") || getStrings().focusTrackShared;
+  const found = /* @__PURE__ */ new Map();
+  state2.steps.forEach((step, i) => {
+    const key = step.track ?? "";
+    let track = found.get(key);
+    if (!track) {
+      track = { key, name: key || shared, order: [], pos: 0 };
+      found.set(key, track);
+    }
+    track.order.push(i);
+  });
+  const before = new Map(state2.tracks.map((t) => [t.key, t.pos]));
+  state2.tracks = [...found.values()];
+  for (const track of state2.tracks) track.pos = Math.min(track.order.length - 1, before.get(track.key) ?? 0);
+  if (!state2.tracks.some((t) => t.key === state2.track)) state2.track = state2.tracks[0]?.key ?? "";
+}
+function timerList(root) {
+  const named = root.getAttribute("data-kp-focus-steps-timers");
+  const found = named ? document.getElementById(named) : document.querySelector("[data-kp-timers]");
+  return found instanceof HTMLElement ? found : null;
+}
+function timerStates(root) {
+  const list = timerList(root);
+  return list && timerModule ? timerModule.getTimers(list) : [];
+}
+function blockersOf(state2, i, timers) {
+  const out = [];
+  for (const ref of refsOf(state2.steps[i] ?? /** @type {FocusStep} */
+  {})) {
+    const at = state2.steps.findIndex((_, k) => stepKeyOf(state2, k) === ref);
+    const whole = at < 0;
+    const track = whole ? state2.tracks.find((t) => t.key === ref || t.name === ref) : trackOfStep(state2, at);
+    const targets = whole ? track?.order ?? [] : [at];
+    const index = targets.find((k) => k !== i && !stepDone(state2, k, timers));
+    if (index !== void 0 && !out.some((b) => b.index === index)) out.push({ index, whole, track });
+  }
+  return out;
+}
+function stepLabel(state2, i) {
+  const track = trackOfStep(state2, i);
+  return state2.steps[i]?.title ?? getStrings().focusTrackStepName(track?.name ?? "", (track?.order.indexOf(i) ?? 0) + 1);
+}
+function joinNames(names) {
+  try {
+    return new Intl.ListFormat(document.documentElement.lang || "en", { type: "conjunction" }).format(names);
+  } catch {
+    return names.join(", ");
+  }
+}
+function laneSummaries(root) {
+  const state2 = stateOf3(root);
+  const timers = timerStates(root);
+  return state2.tracks.map((track) => {
+    const cur = track.order[track.pos] ?? 0;
+    const passed = track.order.every((i) => state2.done.has(i));
+    const timersOf = track.order.map((i) => timers.find((t) => t.id === timerIdOf(state2, i))).filter((t) => t !== void 0);
+    const running2 = timersOf.filter((t) => t.state === "running").sort((a, b) => a.remaining - b.remaining);
+    const paused = timersOf.filter((t) => t.state === "paused").sort((a, b) => a.remaining - b.remaining);
+    const alert = state2.alerts.get(track.key);
+    const blocks = passed ? [] : blockersOf(state2, cur, timers);
+    const status = passed && running2.length === 0 && paused.length === 0 ? "finished" : alert?.reason === "timer" ? "ringing" : blocks.length ? "waiting" : running2.length ? "running" : paused.length ? "paused" : "ready";
+    const ringer = alert?.timerId ? timers.find((t) => t.id === alert.timerId) : void 0;
+    const timer2 = status === "ringing" ? ringer ?? null : running2[0] ?? paused[0] ?? null;
+    return { track, key: track.key, name: track.name, active: track.key === state2.track, status, timer: timer2, blocks };
+  });
+}
+function setText(node, selector, text) {
+  const target = node.querySelector(selector);
+  if (target && target.textContent !== text) target.textContent = text;
+}
+function ensureLanes(root) {
+  const found = root.querySelector(".kp-focus-steps__lanes");
+  if (found) return found;
+  const strings = getStrings();
+  serial6 += 1;
+  const lanes = el7("kp-focus-steps__lanes", "section");
+  const title = el7("kp-focus-steps__lanes-title", "h3");
+  title.id = `kp-focus-steps-${serial6}-lanes`;
+  title.textContent = strings.focusTracksTitle;
+  const done = el7("kp-focus-steps__lanes-done", "span");
+  const list = el7("kp-focus-steps__lane-list");
+  list.setAttribute("role", "group");
+  list.setAttribute("aria-labelledby", title.id);
+  const hint2 = el7("kp-focus-steps__lanes-hint", "p");
+  hint2.textContent = strings.focusTracksHint;
+  lanes.setAttribute("aria-labelledby", title.id);
+  lanes.append(title, done, list, hint2);
+  const band = el7("kp-attention kp-focus-steps__band");
+  band.setAttribute("aria-label", strings.focusTrackBand);
+  const head = part3(root, "head");
+  head.before(band);
+  head.after(lanes);
+  return lanes;
+}
+function dropLanes(root) {
+  root.querySelector(".kp-focus-steps__lanes")?.remove();
+  root.querySelector(".kp-focus-steps__band")?.remove();
+  root.removeAttribute("data-kp-focus-tracked");
+  root.removeAttribute("data-kp-lanes-at");
+}
+function buildLane(lane, at) {
+  const button = (
+    /** @type {HTMLButtonElement} */
+    el7("kp-button kp-focus-steps__lane", "button")
+  );
+  button.type = "button";
+  button.setAttribute("data-kp-track-at", String(at));
+  button.setAttribute("data-kp-track-key", lane.key);
+  for (const name of ["name", "time", "step", "state", "count"]) button.append(el7(`kp-focus-steps__lane-${name}`, "span"));
+  const bar = el7("kp-progressbar kp-focus-steps__lane-bar", "span");
+  bar.setAttribute("aria-hidden", "true");
+  buildProgressbar(bar);
+  bar.removeAttribute("role");
+  button.append(bar);
+  return button;
+}
+function paintLanes(root, lanes = laneSummaries(root)) {
+  const section = root.querySelector(".kp-focus-steps__lanes");
+  if (!section) return;
+  const strings = getStrings();
+  const state2 = stateOf3(root);
+  const list = (
+    /** @type {HTMLElement} */
+    section.querySelector(".kp-focus-steps__lane-list")
+  );
+  if (list.children.length !== lanes.length || lanes.some((l, i) => list.children[i]?.getAttribute("data-kp-track-key") !== l.key))
+    list.replaceChildren(...lanes.map(buildLane));
+  list.style.setProperty("--kp-focus-lanes", String(lanes.length));
+  lanes.forEach((lane, i) => {
+    const button = (
+      /** @type {HTMLElement} */
+      list.children[i]
+    );
+    const total = lane.track.order.length;
+    const words = lane.status === "running" && lane.timer ? strings.focusLaneRunning(lane.timer.name) : lane.status === "paused" && lane.timer ? strings.focusLanePaused(lane.timer.name) : lane.status === "waiting" ? strings.focusLaneWaiting(blockerNames(state2, lane.blocks)) : lane.status === "ringing" ? strings.focusLaneRinging : lane.status === "finished" ? strings.focusLaneFinished : lane.active ? strings.focusLaneHere : strings.focusLaneReady;
+    setText(button, ".kp-focus-steps__lane-name", lane.name);
+    setText(button, ".kp-focus-steps__lane-time", lane.timer ? lane.status === "ringing" ? clockOfTimer({ ...lane.timer, remaining: 0 }) : clockOfTimer(lane.timer) : "");
+    setText(button, ".kp-focus-steps__lane-step", stepLabel(state2, lane.track.order[lane.track.pos] ?? 0));
+    setText(button, ".kp-focus-steps__lane-state", words);
+    setText(button, ".kp-focus-steps__lane-count", strings.focusLaneStep(lane.track.pos + 1, total));
+    if (button.getAttribute("data-kp-lane-status") !== lane.status) button.setAttribute("data-kp-lane-status", lane.status);
+    const pressed = String(lane.active);
+    if (button.getAttribute("aria-pressed") !== pressed) button.setAttribute("aria-pressed", pressed);
+    const share = String(lane.status === "finished" ? 1 : (lane.track.pos + 1) / total);
+    const bar = (
+      /** @type {HTMLElement} */
+      button.querySelector(".kp-focus-steps__lane-bar")
+    );
+    if (bar.style.getPropertyValue("--kp-value") !== share) bar.style.setProperty("--kp-value", share);
+  });
+  setText(section, ".kp-focus-steps__lanes-done", strings.focusTracksDone(state2.done.size, state2.steps.length));
+}
+function layoutLanes(root) {
+  const asked = opt(root, "lanes", "auto");
+  const rem = Number.parseFloat(getComputedStyle(root).fontSize) || 16;
+  const at = asked === "side" || asked === "top" ? asked : root.clientWidth >= 44 * rem ? "side" : "top";
+  if (root.getAttribute("data-kp-lanes-at") !== at) root.setAttribute("data-kp-lanes-at", at);
+}
+function renderBand(root) {
+  const band = root.querySelector(".kp-focus-steps__band");
+  if (!(band instanceof HTMLElement)) return;
+  const state2 = stateOf3(root);
+  const strings = getStrings();
+  const off = opt(root, "track-attention", "on") === "off";
+  const items = off ? [] : [...state2.alerts].map(([key, alert]) => {
+    const at = state2.tracks.findIndex((t) => t.key === key);
+    const track = state2.tracks[at];
+    const action = (
+      /** @type {HTMLButtonElement} */
+      el7("kp-button kp-button--sm", "button")
+    );
+    action.type = "button";
+    if (key !== state2.track) {
+      action.textContent = strings.focusTrackGo(track?.name ?? "");
+      action.setAttribute("data-kp-focus-go", String(at));
+    } else {
+      action.textContent = strings.focusTrackGotIt;
+      action.setAttribute("data-kp-focus-dismiss", String(at));
+    }
+    return { key: `track-${at}`, severity: (
+      /** @type {const} */
+      "warning"
+    ), title: alert.title, text: alert.text, action };
+  });
+  setAttention(band, items);
+}
+function raiseAlert(root, track, alert) {
+  const state2 = stateOf3(root);
+  state2.alerts.set(track.key, alert);
+  renderBand(root);
+  say7(root, `${alert.title}. ${alert.text}`);
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_TRACK_ATTENTION_EVENT, { bubbles: true, detail: { track: track.name, key: track.key, reason: alert.reason, index: alert.index } })
+  );
+}
+function clearAlert(root, key) {
+  if (stateOf3(root).alerts.delete(key)) renderBand(root);
+}
+function waitLine(state2, blocks, timers, index) {
+  const strings = getStrings();
+  return blocks.map((b) => {
+    const timer2 = timers.find((t) => t.id === timerIdOf(state2, b.index));
+    const where = b.track && b.track !== trackOfStep(state2, index) ? b.track.name : "";
+    const words = isOpen(timer2) && timer2 ? strings.focusTrackWaitLeft(clockOfTimer(timer2)) : strings.focusTrackWaitOpen;
+    return where ? `${where}, ${words}` : words;
+  }).join(" \xB7 ");
+}
+function switchTrack(root, key, reason) {
+  const state2 = stateOf3(root);
+  const to = state2.tracks.find((t) => t.key === key);
+  if (!to || key === state2.track || root.hasAttribute("aria-busy")) return false;
+  const from = activeTrack(state2);
+  state2.track = key;
+  state2.index = to.order[to.pos] ?? 0;
+  state2.alerts.delete(key);
+  renderBand(root);
+  paint5(root, true);
+  const strings = getStrings();
+  say7(root, strings.focusTrackSwitched(to.name, strings.focusLaneStep(to.pos + 1, to.order.length), state2.steps[state2.index]?.text ?? ""));
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_TRACK_EVENT, {
+      bubbles: true,
+      detail: { track: to.name, key: to.key, from: from?.name ?? "", index: state2.index, step: state2.steps[state2.index] ?? null, reason }
+    })
+  );
+  return true;
+}
+function stepTrack(root, by, reason = "key") {
+  const state2 = stateOf3(root);
+  const at = state2.tracks.findIndex((t) => t.key === state2.track);
+  const to = state2.tracks[(at + by + state2.tracks.length) % state2.tracks.length];
+  return to ? switchTrack(root, to.key, reason) : false;
+}
+function follow(root) {
+  if (opt(root, "track-follow", "suggest") !== "auto") return;
+  const lanes = laneSummaries(root);
+  const here = lanes.find((l) => l.active);
+  if (!here || here.status !== "waiting" && here.status !== "finished") return;
+  const next2 = suggestion(lanes);
+  if (next2) switchTrack(root, next2.key, "auto");
+}
+function lockKeyOf(root) {
+  const state2 = stateOf3(root);
+  const here = activeTrack(state2);
+  if (!here || here.order.every((i) => state2.done.has(i))) return "";
+  return blockersOf(state2, here.order[here.pos] ?? 0, timerStates(root)).map((b) => b.index).join(",");
+}
+function recompute(root) {
+  if (!tracksOn(root)) return;
+  const state2 = stateOf3(root);
+  const lanes = laneSummaries(root);
+  const strings = getStrings();
+  for (const lane of lanes) {
+    if (lane.status === "waiting" || !state2.waiting.has(lane.key) || lane.status === "finished") continue;
+    const cur = lane.track.order[lane.track.pos] ?? 0;
+    if (lane.active) {
+      say7(root, strings.focusTrackUnlocked(stepLabel(state2, cur)));
+    } else if (!state2.alerts.has(lane.key)) {
+      raiseAlert(root, lane.track, {
+        reason: "ready",
+        title: strings.focusTrackReadyTitle(lane.name),
+        text: strings.focusTrackNextUp(stepLabel(state2, cur)),
+        index: cur
+      });
+    }
+  }
+  state2.waiting = new Set(lanes.filter((l) => l.status === "waiting").map((l) => l.key));
+  if (lockKeyOf(root) !== state2.lockKey) paint5(root, false);
+  else {
+    paintLanes(root, laneSummaries(root));
+    paintLive(root, timerStates(root));
+  }
+  follow(root);
+}
+function paintLive(root, timers) {
+  const state2 = stateOf3(root);
+  const strings = getStrings();
+  const holder = part3(root, "step");
+  const button = holder.querySelector(".kp-focus-steps__timer");
+  const step = state2.steps[state2.index];
+  if (button && step?.timer) {
+    const timer2 = timers.find((t) => t.id === timerIdOf(state2, state2.index));
+    const minutes = Math.round(step.timer.seconds / 60);
+    const base = strings.focusTimer(step.timer.seconds < 60 ? `${step.timer.seconds} s` : `${minutes} min`);
+    const words = !timer2 ? base : timer2.state === "running" ? strings.focusTimerRunning(clockOfTimer(timer2)) : timer2.state === "paused" ? strings.focusTimerPaused(clockOfTimer(timer2)) : strings.focusTimerDone;
+    if (button.textContent !== words) button.textContent = words;
+  }
+  const line = holder.querySelector(".kp-focus-steps__wait-line");
+  if (line) {
+    const here = activeTrack(state2);
+    const text = waitLine(state2, blockersOf(state2, state2.index, timers), timers, state2.index);
+    if (here && line.textContent !== text) line.textContent = text;
+  }
+}
+function trackNext(root) {
+  const state2 = stateOf3(root);
+  const track = activeTrack(state2);
+  if (!track || !state2.steps.length || root.hasAttribute("aria-busy")) return;
+  const from = track.order[track.pos] ?? 0;
+  if (blockersOf(state2, from, timerStates(root)).length) return;
+  state2.alerts.delete(track.key);
+  state2.done.add(from);
+  if (track.pos < track.order.length - 1) {
+    track.pos += 1;
+    state2.index = track.order[track.pos] ?? from;
+  }
+  if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+  renderBand(root);
+  paint5(root, true);
+  const strings = getStrings();
+  const finished = track.order.every((i) => state2.done.has(i));
+  say7(
+    root,
+    finished ? strings.focusTrackFinishedTitle(track.name) : `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state2.steps[state2.index]?.text ?? ""}`
+  );
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_EVENT, {
+      bubbles: true,
+      detail: { index: state2.index, from, total: state2.steps.length, step: state2.steps[state2.index] ?? null, track: track.name }
+    })
+  );
+  recompute(root);
+  if (state2.tracks.every((t) => t.order.every((i) => state2.done.has(i))))
+    root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail: { total: state2.steps.length, tracks: state2.tracks.map((t) => t.name) } }));
+}
+function trackPrev(root) {
+  const state2 = stateOf3(root);
+  const track = activeTrack(state2);
+  if (!track || root.hasAttribute("aria-busy")) return false;
+  const from = track.order[track.pos] ?? 0;
+  if (state2.done.has(from)) state2.done.delete(from);
+  else if (track.pos > 0) {
+    track.pos -= 1;
+    state2.index = track.order[track.pos] ?? from;
+    state2.done.delete(state2.index);
+  } else return false;
+  state2.alerts.delete(track.key);
+  if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
+  renderBand(root);
+  paint5(root, true);
+  const strings = getStrings();
+  say7(root, `${strings.focusTrackCount(track.name, track.pos + 1, track.order.length)}. ${state2.steps[state2.index]?.text ?? ""}`);
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_EVENT, {
+      bubbles: true,
+      detail: { index: state2.index, from, total: state2.steps.length, step: state2.steps[state2.index] ?? null, track: track.name }
+    })
+  );
+  recompute(root);
+  return true;
+}
+function trackGo(root, index) {
+  const state2 = stateOf3(root);
+  const to = Math.max(0, Math.min(state2.steps.length - 1, index));
+  const track = trackOfStep(state2, to);
+  if (!track || root.hasAttribute("aria-busy")) return false;
+  const was = state2.index;
+  if (track.key === state2.track && to === was) return false;
+  track.pos = track.order.indexOf(to);
+  if (track.key !== state2.track) {
+    state2.track = track.key;
+    state2.index = to;
+    state2.alerts.delete(track.key);
+    renderBand(root);
+    paint5(root, true);
+    root.dispatchEvent(
+      new CustomEvent(FOCUS_STEPS_TRACK_EVENT, {
+        bubbles: true,
+        detail: { track: track.name, key: track.key, from: "", index: to, step: state2.steps[to] ?? null, reason: "script" }
+      })
+    );
+  } else {
+    state2.index = to;
+    paint5(root, true);
+  }
+  root.dispatchEvent(
+    new CustomEvent(FOCUS_STEPS_EVENT, { bubbles: true, detail: { index: to, from: was, total: state2.steps.length, step: state2.steps[to] ?? null, track: track.name } })
+  );
+  recompute(root);
+  return true;
+}
+function timerEnded(root, i, timer2) {
+  const state2 = stateOf3(root);
+  const track = trackOfStep(state2, i);
+  if (!track) return;
+  const strings = getStrings();
+  const lane = laneSummaries(root).find((l) => l.key === track.key);
+  const cur = track.order[track.pos] ?? i;
+  const text = !lane || lane.status === "finished" ? strings.focusTrackNothingLeft(track.name) : lane.status === "waiting" ? strings.focusLaneWaiting(blockerNames(state2, lane.blocks)) : strings.focusTrackNextUp(stepLabel(state2, cur));
+  raiseAlert(root, track, { reason: "timer", title: strings.focusTrackTimerDone(timer2.name, track.name), text, index: cur, timerId: timer2.id });
+}
+function startTracks(root, start) {
+  const state2 = stateOf3(root);
+  state2.done = /* @__PURE__ */ new Set();
+  state2.alerts = /* @__PURE__ */ new Map();
+  state2.waiting = /* @__PURE__ */ new Set();
+  state2.lockKey = "";
+  state2.tracks = [];
+  layTracks(root);
+  const at = state2.tracks.find((t) => t.order.includes(start)) ?? state2.tracks[0];
+  if (at) {
+    state2.track = at.key;
+    at.pos = Math.max(0, at.order.indexOf(start));
+    state2.index = at.order[at.pos] ?? 0;
+  }
 }
 function answering(root) {
   return root.getAttribute("data-kp-focus-mode") === "answer" || stateOf3(root).steps.some((step) => step.answer);
@@ -33709,6 +34158,7 @@ function scheduleAdvance(root) {
   state2.timer = window.setTimeout(() => goNext(root), Number.isFinite(ms) && ms >= 0 ? ms : 350);
 }
 function goNext(root) {
+  if (tracksOn(root)) return trackNext(root);
   const state2 = stateOf3(root);
   window.clearTimeout(state2.timer);
   if (!state2.steps.length || root.hasAttribute("aria-busy")) return;
@@ -33946,10 +34396,22 @@ function paint5(root, arrive2) {
   const step = steps[index];
   const asking = answering(root);
   const onSum = onSummary(root);
-  part3(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : asking ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
+  const tracked = tracksOn(root);
+  const track = tracked ? activeTrack(state2) : void 0;
+  const showLanes = tracked && root.getAttribute("data-kp-focus-steps-error") === null && !root.hasAttribute("aria-busy");
+  if (showLanes) {
+    root.setAttribute("data-kp-focus-tracked", "");
+    ensureLanes(root);
+    layoutLanes(root);
+  } else if (root.hasAttribute("data-kp-focus-tracked")) dropLanes(root);
+  const passed = track !== void 0 && track.order.every((i) => state2.done.has(i));
+  const timers = tracked ? timerStates(root) : [];
+  const blocks = tracked && step && !passed ? blockersOf(state2, index, timers) : [];
+  state2.lockKey = blocks.map((b) => b.index).join(",");
+  part3(root, "count").textContent = !total ? "" : onSum ? strings.focusSummaryTitle : track ? strings.focusTrackCount(track.name, track.pos + 1, track.order.length) : asking ? strings.focusQuestionCount(index + 1, total) : strings.focusCount(index + 1, total);
   const bar = part3(root, "bar");
   const shownTotal = total + (summaryOn(root) ? 1 : 0);
-  bar.style.setProperty("--kp-value", String(shownTotal ? (index + 1) / shownTotal : 0));
+  bar.style.setProperty("--kp-value", String(track ? (track.pos + 1) / track.order.length : shownTotal ? (index + 1) / shownTotal : 0));
   const progress = asking ? opt(root, "progress", "count") ?? "count" : "count";
   bar.hidden = progress !== "count";
   part3(root, "count").hidden = progress === "off";
@@ -33967,6 +34429,7 @@ function paint5(root, arrive2) {
   const error = root.getAttribute("data-kp-focus-steps-error");
   holder.replaceChildren();
   holder.removeAttribute("data-kp-focus-steps-kind");
+  holder.removeAttribute("data-kp-focus-steps-locked");
   const saveError = root.getAttribute("data-kp-state") === "save-error";
   if (asking || root.getAttribute("data-kp-focus-mode") === "answer") {
     if (saveError) {
@@ -34033,22 +34496,66 @@ function paint5(root, arrive2) {
       }
     }
   } else if (error !== null) {
-    const alert = el7("kp-alert kp-alert--destructive kp-focus-steps__message", "p");
-    alert.setAttribute("role", "alert");
-    alert.textContent = error;
-    holder.append(alert);
+    holder.append(
+      statePlate(document, {
+        kind: "error",
+        title: strings.focusReadFailedTitle,
+        text: error === strings.focusFailed ? strings.focusReadFailedText : error,
+        actionLabel: strings.focusRetry,
+        actionAttribute: "data-kp-focus-retry"
+      })
+    );
     holder.setAttribute("data-kp-focus-steps-kind", "error");
   } else if (!step) {
     if (!root.hasAttribute("aria-busy")) {
-      const empty = el7("kp-empty kp-focus-steps__message", "p");
-      empty.textContent = root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusEmpty;
-      holder.append(empty);
+      holder.append(
+        statePlate(document, {
+          kind: "empty",
+          title: strings.focusReadEmptyTitle,
+          text: root.getAttribute("data-kp-focus-steps-empty") ?? strings.focusEmpty
+        })
+      );
       holder.setAttribute("data-kp-focus-steps-kind", "empty");
     }
+  } else if (track && passed) {
+    const next3 = suggestion(laneSummaries(root));
+    const plate = statePlate(document, {
+      kind: "empty",
+      title: strings.focusTrackFinishedTitle(track.name),
+      text: next3 ? strings.focusTrackFinishedNext(next3.name) : strings.focusTrackFinishedText,
+      ...next3 ? { actionLabel: strings.focusTrackGo(next3.name) } : {}
+    });
+    if (next3) plate.querySelector(".kp-stateplate__action")?.setAttribute("data-kp-focus-go", String(state2.tracks.indexOf(next3.track)));
+    holder.append(plate);
+    holder.setAttribute("data-kp-focus-steps-kind", "finished");
   } else {
     const text = el7("kp-focus-steps__text", "p");
     text.textContent = step.text;
     holder.append(text);
+    if (blocks.length) {
+      holder.setAttribute("data-kp-focus-steps-locked", "");
+      const wait = el7("kp-alert kp-alert--info kp-focus-steps__wait", "div");
+      wait.setAttribute("role", "status");
+      const what = el7("kp-focus-steps__wait-text");
+      const title = el7("kp-focus-steps__wait-title", "strong");
+      title.textContent = strings.focusTrackWaitTitle(blockerNames(state2, blocks));
+      const line = el7("kp-focus-steps__wait-line", "span");
+      line.textContent = waitLine(state2, blocks, timers, index);
+      what.append(title, line);
+      wait.append(what);
+      const next3 = suggestion(laneSummaries(root));
+      if (next3) {
+        const go = (
+          /** @type {HTMLButtonElement} */
+          el7("kp-button kp-button--primary kp-focus-steps__wait-go", "button")
+        );
+        go.type = "button";
+        go.setAttribute("data-kp-focus-go", String(state2.tracks.indexOf(next3.track)));
+        go.textContent = strings.focusTrackGo(next3.name);
+        wait.append(go);
+      }
+      holder.append(wait);
+    }
     if (step.ingredients?.length) {
       const needs = el7("kp-focus-steps__needs", "section");
       const title = el7("kp-focus-steps__needs-title", "h3");
@@ -34079,6 +34586,8 @@ function paint5(root, arrive2) {
       button.type = "button";
       button.setAttribute("data-kp-timer-start", String(step.timer.seconds));
       button.setAttribute("data-kp-timer-name", step.timer.name ?? strings.focusCount(index + 1, total));
+      button.setAttribute("data-kp-timer-id", timerIdOf(state2, index));
+      if (blocks.length) button.setAttribute("aria-disabled", "true");
       const list = root.getAttribute("data-kp-focus-steps-timers");
       if (list) button.setAttribute("data-kp-timer-for", list);
       button.textContent = strings.focusTimer(step.timer.seconds < 60 ? `${step.timer.seconds} s` : `${minutes} min`);
@@ -34100,20 +34609,25 @@ function paint5(root, arrive2) {
   );
   const busy = root.hasAttribute("aria-busy");
   const blocked = !step && !onSum || error !== null || busy || saveError;
-  if (blocked || index === 0) prev.setAttribute("aria-disabled", "true");
+  const atStart = track ? track.pos === 0 && !passed : index === 0;
+  if (blocked || atStart) prev.setAttribute("aria-disabled", "true");
   else prev.removeAttribute("aria-disabled");
   prev.hidden = asking && opt(root, "back") === "off";
-  if (blocked) next2.setAttribute("aria-disabled", "true");
+  if (blocked || passed || blocks.length > 0) next2.setAttribute("aria-disabled", "true");
   else next2.removeAttribute("aria-disabled");
-  const last = total > 0 && index === lastIndex(root);
+  const last = track ? passed || track.pos === track.order.length - 1 : total > 0 && index === lastIndex(root);
   const nextText = (
     /** @type {HTMLElement} */
     next2.querySelector(".kp-button__text")
   );
-  nextText.textContent = last ? strings.focusDone : asking && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
+  nextText.textContent = track ? last ? passed ? strings.focusDone : strings.focusTrackFinish(track.name) : strings.focusNext : last ? strings.focusDone : asking && summaryOn(root) && index === total - 1 ? strings.focusReview : strings.focusNext;
   next2.toggleAttribute("data-kp-focus-steps-last", last);
   if (asking && step?.answer && !blocked) paintAnswerState(root);
   part3(root, "body").scrollTop = 0;
+  if (showLanes) {
+    paintLanes(root);
+    paintLive(root, timers);
+  }
   if (arrive2) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => holder.isConnected && m.arriveShown(holder));
 }
 function paintWake(root, wakeState) {
@@ -34162,8 +34676,16 @@ function letScreenGo(root) {
   state2.wake = null;
   if (sentinel && !sentinel.released) void sentinel.release().catch(() => void 0);
 }
+function applyWake(root) {
+  const wake = root.getAttribute("data-kp-wake") ?? root.getAttribute("data-kp-focus-steps-wake");
+  if (wake === "false" || wake === null && answering(root)) {
+    letScreenGo(root);
+    paintWake(root, "off");
+  } else void holdScreen(root);
+}
 function goToStep(root, index) {
   if (!(root instanceof HTMLElement)) return false;
+  if (tracksOn(root)) return trackGo(root, index);
   const state2 = stateOf3(root);
   const to = Math.max(0, Math.min(lastIndex(root), index));
   if (!state2.steps.length || to === state2.index || root.hasAttribute("aria-busy")) return false;
@@ -34193,12 +34715,19 @@ function setFocusSteps(root, steps, { start = 0 } = {}) {
   const state2 = stateOf3(root);
   state2.steps = steps.map((step) => ({ ...step }));
   state2.index = Math.max(0, Math.min(steps.length - 1, start));
-  if (steps.some((step) => step.timer)) void Promise.resolve().then(() => (init_timer(), timer_exports)).then((m) => m.attachTimers(root));
+  startTracks(root, state2.index);
+  if (steps.some((step) => step.timer))
+    void Promise.resolve().then(() => (init_timer(), timer_exports)).then((m) => {
+      timerModule = m;
+      m.attachTimers(root);
+      recompute(root);
+    });
   state2.answers = {};
   state2.draft = {};
   state2.finished = null;
   state2.pendingResume = null;
   paint5(root, false);
+  recompute(root);
   if (start === 0) startResume(root);
 }
 function setFocusStepsState(root, kind, message) {
@@ -34250,11 +34779,27 @@ function attachFocusSteps(scope = document) {
       }
       goNext(root);
     };
-    const prev = () => goToStep(root, state2.index - 1);
+    const prev = () => tracksOn(root) ? trackPrev(root) : goToStep(root, state2.index - 1);
     const click = (event) => {
       const button = event.target instanceof Element ? event.target.closest("button") : null;
       if (!button || !root.contains(button) || button.getAttribute("aria-disabled") === "true") return;
       if (pressAnswer(root, button)) return;
+      const go = button.getAttribute("data-kp-focus-go");
+      if (button.classList.contains("kp-focus-steps__lane")) {
+        switchTrack(root, button.getAttribute("data-kp-track-key") ?? "", "tap");
+        return;
+      }
+      if (go !== null) {
+        const to = state2.tracks[Number(go)];
+        if (to) switchTrack(root, to.key, button.closest(".kp-focus-steps__band") ? "attention" : "tap");
+        return;
+      }
+      const dismiss = button.getAttribute("data-kp-focus-dismiss");
+      if (dismiss !== null) {
+        const gone = state2.tracks[Number(dismiss)];
+        if (gone) clearAlert(root, gone.key);
+        return;
+      }
       if (button.hasAttribute("data-kp-focus-retry")) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_RETRY_EVENT, { bubbles: true }));
       else if (button.hasAttribute("data-kp-focus-save-retry")) {
         root.dispatchEvent(new CustomEvent(FOCUS_STEPS_SAVE_RETRY_EVENT, { bubbles: true }));
@@ -34306,12 +34851,25 @@ function attachFocusSteps(scope = document) {
         }
         return;
       }
+      if ((event.key === "ArrowUp" || event.key === "ArrowDown") && onButton instanceof HTMLElement && onButton.classList.contains("kp-focus-steps__lane")) {
+        const all = (
+          /** @type {HTMLElement[]} */
+          [...root.querySelectorAll(".kp-focus-steps__lane")]
+        );
+        const at = all.indexOf(onButton);
+        const to = all[Math.max(0, Math.min(all.length - 1, at + (event.key === "ArrowDown" ? 1 : -1)))];
+        if (at >= 0 && to) {
+          event.preventDefault();
+          to.focus();
+        }
+        return;
+      }
       let act = null;
       if (event.key === "PageDown" || event.key === (rtl ? "ArrowLeft" : "ArrowRight")) act = next2;
       else if (event.key === "PageUp" || event.key === (rtl ? "ArrowRight" : "ArrowLeft")) act = prev;
       else if (event.key === " " && !onButton) act = next2;
-      else if (event.key === "Home") act = () => goToStep(root, 0);
-      else if (event.key === "End") act = () => goToStep(root, lastIndex(root));
+      else if (event.key === "Home") act = () => goToStep(root, tracksOn(root) ? activeTrack(state2)?.order[0] ?? 0 : 0);
+      else if (event.key === "End") act = () => goToStep(root, tracksOn(root) ? activeTrack(state2)?.order.at(-1) ?? 0 : lastIndex(root));
       if (!act) return;
       event.preventDefault();
       act();
@@ -34372,10 +34930,14 @@ function attachFocusSteps(scope = document) {
         run: tap(".kp-focus-steps__skip")
       }
     ]);
-    const watch2 = new MutationObserver(() => paint5(root, false));
-    watch2.observe(root, {
-      attributes: true,
-      attributeFilter: [
+    const tracking = () => tracksOn(root) && (root.contains(document.activeElement) || document.activeElement === document.body);
+    const unkeyTracks = registerShortcuts(root, [
+      { keys: "t", what: getStrings().focusTrackKeyNext, group: "Tracks", when: tracking, run: () => stepTrack(root, 1) },
+      { keys: "Shift T", what: getStrings().focusTrackKeyPrevious, group: "Tracks", when: tracking, run: () => stepTrack(root, -1) }
+    ]);
+    const stopWatch = watchOptions(
+      root,
+      [
         "data-kp-progress",
         "data-kp-back",
         "data-kp-same",
@@ -34384,12 +34946,53 @@ function attachFocusSteps(scope = document) {
         "data-kp-summary",
         "data-kp-pinned-first",
         "data-kp-speak",
-        "data-kp-focus-mode"
-      ]
-    });
+        "data-kp-focus-mode",
+        "data-kp-wake",
+        "data-kp-focus-steps-wake",
+        "data-kp-tracks",
+        "data-kp-lanes",
+        "data-kp-lane-detail",
+        "data-kp-track-follow",
+        "data-kp-track-attention",
+        "data-kp-track-shared"
+      ],
+      (names) => {
+        if (names.some((n) => n === "data-kp-wake" || n === "data-kp-focus-steps-wake")) applyWake(root);
+        if (names.includes("data-kp-track-shared")) layTracks(root);
+        paint5(root, false);
+        if (names.includes("data-kp-track-attention") || names.includes("data-kp-tracks")) renderBand(root);
+        recompute(root);
+      }
+    );
+    const timerEvent = (event) => {
+      const timer2 = (
+        /** @type {CustomEvent} */
+        event.detail?.timer
+      );
+      if (!timer2 || !tracksOn(root)) return;
+      const at = state2.steps.findIndex((_, i) => timerIdOf(state2, i) === timer2.id);
+      if (at < 0) return;
+      if (event.type === "kp-timer-done") timerEnded(root, at, timer2);
+      else if (event.type === "kp-timer-stop") {
+        for (const [key2, alert] of state2.alerts) if (alert.timerId === timer2.id) clearAlert(root, key2);
+      }
+      recompute(root);
+    };
+    const timerEvents = ["kp-timer-start", "kp-timer-change", "kp-timer-done", "kp-timer-stop"];
+    for (const type of timerEvents) document.addEventListener(type, timerEvent);
+    state2.ticker = window.setInterval(() => {
+      if (!document.hidden) recompute(root);
+    }, 1e3);
+    const resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => tracksOn(root) && layoutLanes(root)) : null;
+    resize?.observe(root);
     undo.push(() => {
-      watch2.disconnect();
+      stopWatch();
       unkey();
+      unkeyTracks();
+      for (const type of timerEvents) document.removeEventListener(type, timerEvent);
+      window.clearInterval(state2.ticker);
+      state2.ticker = 0;
+      resize?.disconnect();
       window.clearTimeout(state2.timer);
       WIRED3.delete(root);
       root.removeEventListener("click", click);
@@ -34405,7 +35008,7 @@ function attachFocusSteps(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, SWIPE_DISTANCE, STATES2, WIRED3, serial6, el7, stateOf3, part3, opt, summaryOn, lastIndex, onSummary, memoryOf, getStepIndex, typing3;
+var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED3, serial6, el7, stateOf3, part3, timerModule, tracksOn, stepKeyOf, timerIdOf, trackOfStep, activeTrack, isOpen, stepDone, refsOf, blockerNames, clockOfTimer, suggestion, opt, summaryOn, lastIndex, onSummary, memoryOf, getStepIndex, typing3;
 var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
@@ -34416,6 +35019,9 @@ var init_focus_steps = __esm({
     init_remember();
     init_state_plate();
     init_freshness();
+    init_countdown();
+    init_attention();
+    init_live_options();
     FOCUS_STEPS = "[data-kp-focus-steps]";
     FOCUS_STEPS_EVENT = "kp-focus-steps-change";
     FOCUS_STEPS_DONE_EVENT = "kp-focus-steps-done";
@@ -34425,6 +35031,8 @@ var init_focus_steps = __esm({
     FOCUS_STEPS_RESUME_EVENT = "kp-focus-steps-resume";
     FOCUS_STEPS_RETRY_EVENT = "kp-focus-steps-retry";
     FOCUS_STEPS_SAVE_RETRY_EVENT = "kp-focus-steps-save-retry";
+    FOCUS_STEPS_TRACK_EVENT = "kp-focus-steps-track";
+    FOCUS_STEPS_TRACK_ATTENTION_EVENT = "kp-focus-steps-track-attention";
     SWIPE_DISTANCE = 56;
     STATES2 = /* @__PURE__ */ new WeakMap();
     WIRED3 = /* @__PURE__ */ new WeakSet();
@@ -34448,7 +35056,14 @@ var init_focus_steps = __esm({
           timer: 0,
           startedAt: 0,
           pendingResume: null,
-          finished: null
+          finished: null,
+          tracks: [],
+          track: "",
+          done: /* @__PURE__ */ new Set(),
+          alerts: /* @__PURE__ */ new Map(),
+          waiting: /* @__PURE__ */ new Set(),
+          lockKey: "",
+          ticker: 0
         };
         STATES2.set(root, state2);
       }
@@ -34458,6 +35073,18 @@ var init_focus_steps = __esm({
       /** @type {HTMLElement} */
       root.querySelector(`.kp-focus-steps__${name}`)
     );
+    timerModule = null;
+    tracksOn = (root) => stateOf3(root).tracks.length > 1 && opt(root, "tracks", "auto") !== "off";
+    stepKeyOf = (state2, i) => state2.steps[i]?.id ?? `step-${i + 1}`;
+    timerIdOf = (state2, i) => state2.steps[i]?.timer?.id ?? stepKeyOf(state2, i);
+    trackOfStep = (state2, i) => state2.tracks.find((t) => t.order.includes(i));
+    activeTrack = (state2) => state2.tracks.find((t) => t.key === state2.track) ?? state2.tracks[0];
+    isOpen = (timer2) => timer2 !== void 0 && (timer2.state === "running" || timer2.state === "paused");
+    stepDone = (state2, i, timers) => state2.done.has(i) && !isOpen(timers.find((t) => t.id === timerIdOf(state2, i)));
+    refsOf = (step) => [step.waitFor, step.after].flat().filter((ref) => typeof ref === "string" && ref !== "");
+    blockerNames = (state2, blocks) => joinNames(blocks.map((b) => b.whole ? b.track?.name ?? "" : stepLabel(state2, b.index)));
+    clockOfTimer = (timer2) => formatCountdown(timer2.remaining * 1e3, timer2.seconds >= 3600);
+    suggestion = (lanes) => lanes.find((l) => !l.active && l.status === "ringing") ?? lanes.find((l) => !l.active && l.status === "ready");
     opt = (root, name, fallback2) => root.getAttribute(`data-kp-${name}`) ?? fallback2;
     summaryOn = (root) => answering(root) && opt(root, "summary") === "on";
     lastIndex = (root) => stateOf3(root).steps.length - 1 + (summaryOn(root) ? 1 : 0);
@@ -41777,7 +42404,7 @@ function paintParts(host, p, remedyLabel) {
     what.prepend(word);
   }
   const sr = `${severity === "critical" ? s2.attentionCritical : severity === "warning" ? s2.attentionWarning : s2.attentionInfo}: `;
-  setText(word, sr);
+  setText2(word, sr);
   const words = [...what.childNodes].filter((n) => n !== word);
   if (words.map((n) => n.textContent).join("") !== p.what) {
     for (const n of words) n.remove();
@@ -41793,7 +42420,7 @@ function paintParts(host, p, remedyLabel) {
     const el16 = host.querySelector(`:scope > .kp-alert__${name}`);
     if (text) {
       const node = el16 ?? part5(host, `.kp-alert__${name}`, "p", `kp-alert__${name}`);
-      setText(node, text);
+      setText2(node, text);
       if (!el16) anchor.after(node);
       anchor = /** @type {HTMLElement} */
       node;
@@ -41864,7 +42491,7 @@ function paintAlert(existing, p, doc, remedyLabel, container) {
     icon.setAttribute("aria-hidden", "true");
     el16.prepend(icon);
   }
-  setText(icon, GLYPH2[severity]);
+  setText2(icon, GLYPH2[severity]);
   let body = (
     /** @type {HTMLElement | null} */
     el16.querySelector(":scope > .kp-alert__body")
@@ -41997,7 +42624,7 @@ function paint10(container, items, options) {
     icon.setAttribute("aria-hidden", "true");
     summary.prepend(icon);
   }
-  setText(icon, GLYPH2[worst]);
+  setText2(icon, GLYPH2[worst]);
   let body = (
     /** @type {HTMLElement | null} */
     summary.querySelector(":scope > .kp-alert__body")
@@ -42013,7 +42640,7 @@ function paint10(container, items, options) {
     heading.className = "kp-alert__summary";
     body.prepend(heading);
   }
-  setText(heading, s2.problemListLabel(list.length));
+  setText2(heading, s2.problemListLabel(list.length));
   let ul = (
     /** @type {HTMLElement | null} */
     body.querySelector(":scope > .kp-alert__list")
@@ -42083,7 +42710,7 @@ function paint10(container, items, options) {
       body.append(more);
     }
     more.setAttribute("aria-expanded", String(expanded));
-    setText(more, expanded ? s2.problemShowFewer : s2.problemShowOthers(list.length - open4));
+    setText2(more, expanded ? s2.problemShowFewer : s2.problemShowOthers(list.length - open4));
   } else more?.remove();
   if (fresh) host.prepend(summary);
 }
@@ -42109,7 +42736,7 @@ function attachProblems(root = document) {
     for (const clean of cleanups) clean();
   };
 }
-var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, severityOf, setText, LAST;
+var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, severityOf, setText2, LAST;
 var init_problems = __esm({
   "js/problems.js"() {
     "use strict";
@@ -42130,7 +42757,7 @@ var init_problems = __esm({
       /** @type {'critical' | 'warning' | 'info'} */
       p.severity
     ) : "warning";
-    setText = (el16, text) => {
+    setText2 = (el16, text) => {
       if (el16.textContent !== text) el16.textContent = text;
     };
     LAST = /* @__PURE__ */ new WeakMap();
@@ -50062,13 +50689,13 @@ function openViewer(options) {
   doc.body.append(dialog);
   let card = null;
   let current2 = "ready";
-  const setText2 = (node, text) => {
+  const setText3 = (node, text) => {
     node.textContent = text;
     node.hidden = text === "";
   };
-  setText2(title, options.title);
-  setText2(desc, options.desc ?? "");
-  setText2(facts, options.facts ?? "");
+  setText3(title, options.title);
+  setText3(desc, options.desc ?? "");
+  setText3(facts, options.facts ?? "");
   const drawActions = (actions) => {
     foot.replaceChildren();
     for (const action of actions) {
@@ -50197,9 +50824,9 @@ function openViewer(options) {
     stage,
     content,
     foot,
-    setTitle: (text) => setText2(title, text),
-    setDesc: (text) => setText2(desc, text),
-    setFacts: (text) => setText2(facts, text),
+    setTitle: (text) => setText3(title, text),
+    setDesc: (text) => setText3(desc, text),
+    setFacts: (text) => setText3(facts, text),
     setPosition(at) {
       if (!at) {
         position.hidden = true;
@@ -54355,7 +54982,7 @@ function setClaim(list, id, claim) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
   );
 }
-function joinNames(names) {
+function joinNames2(names) {
   if (names.length <= 1) return names.join("");
   return `${names.slice(0, -1).join(", ")} ${getStrings().claimAnd} ${names[names.length - 1]}`;
 }
@@ -54453,7 +55080,7 @@ function fillRow(list, row, item) {
     }
   }
   people.setAttribute("role", "group");
-  people.setAttribute("aria-label", by.length ? s2.claimBy(joinNames(by.map((p) => p.name))) : s2.claimNobodyLabel);
+  people.setAttribute("aria-label", by.length ? s2.claimBy(joinNames2(by.map((p) => p.name))) : s2.claimNobodyLabel);
   const control = (
     /** @type {HTMLElement} */
     cell.querySelector(".kp-claim__control")
@@ -54811,7 +55438,7 @@ function refuse(list, item, by, why) {
 function announce2(list, label, by, joining, person) {
   const s2 = getStrings();
   if (list.getAttribute("data-kp-announce") === "off") return;
-  say12(list, by.length ? s2.claimAnnounce(label, joinNames(by.map((p) => p.name))) : s2.claimAnnounceNobody(label));
+  say12(list, by.length ? s2.claimAnnounce(label, joinNames2(by.map((p) => p.name))) : s2.claimAnnounceNobody(label));
   void joining;
   void person;
 }
@@ -58558,7 +59185,7 @@ function startTicker(root) {
     }
   }, 1e3);
 }
-function follow(root, force = false) {
+function follow2(root, force = false) {
   const body = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-console__body")
@@ -58588,7 +59215,7 @@ function applyChange(root, id, change2) {
   const finished = !["sending", "queued", "running"].includes(b.state ?? "");
   if (finished && b.endedAt === void 0) b.endedAt = Date.now();
   drawBody2(root);
-  follow(root);
+  follow2(root);
   root.dispatchEvent(new CustomEvent(CONSOLE_BLOCK_EVENT, { bubbles: true, detail: { block: { ...b } } }));
   if (finished && was !== b.state) {
     st.jobs.delete(id);
@@ -58609,7 +59236,7 @@ async function runCommand(root, command, { again: again2 = false } = {}) {
   const block = { id: crypto.randomUUID(), command, context: context2, state: "sending", output: "", startedAt: Date.now(), collapsed: false };
   st.blocks.push(block);
   drawBody2(root);
-  follow(root, true);
+  follow2(root, true);
   root.dispatchEvent(new CustomEvent(CONSOLE_BLOCK_EVENT, { bubbles: true, detail: { block: { ...block } } }));
   try {
     const job = await st.run(command, context2);
@@ -58699,7 +59326,7 @@ function clearConsole(root, { undo = true } = {}) {
       undo: () => {
         st.blocks = [...gone, ...st.blocks];
         drawBody2(root);
-        follow(root, true);
+        follow2(root, true);
       }
     });
 }
@@ -59277,13 +59904,13 @@ function ensureParts4(root) {
   only.textContent = s2.logviewerOnly;
   search.append(field, matches2, previous, next2, only);
   const tools = el14("kp-logviewer__tools");
-  const follow2 = (
+  const follow3 = (
     /** @type {HTMLButtonElement} */
     el14("kp-button kp-button--sm kp-logviewer__follow", "button")
   );
-  follow2.type = "button";
-  follow2.setAttribute("data-kp-follow-toggle", id);
-  follow2.textContent = s2.newpillPause;
+  follow3.type = "button";
+  follow3.setAttribute("data-kp-follow-toggle", id);
+  follow3.textContent = s2.newpillPause;
   const wrap = (
     /** @type {HTMLButtonElement} */
     el14("kp-button kp-button--sm", "button")
@@ -59356,7 +59983,7 @@ function ensureParts4(root) {
   download2.setAttribute("data-kp-logviewer-download", "");
   download2.setAttribute("data-kp-disabled-reason", s2.logviewerNothing);
   download2.textContent = s2.logviewerDownload;
-  tools.append(follow2, wrap, time, levelWrap, copy3, download2);
+  tools.append(follow3, wrap, time, levelWrap, copy3, download2);
   bar.append(search, tools);
   const stage = el14("kp-logviewer__stage");
   const log = el14("kp-log kp-logviewer__log");
@@ -59953,7 +60580,7 @@ function normalize(files) {
     };
   });
 }
-function isOpen(root, st, file, index) {
+function isOpen2(root, st, file, index) {
   const own = st.opened.get(file.path);
   if (own !== void 0) return own;
   switch (attr15(root, "open", "all")) {
@@ -60124,7 +60751,7 @@ function proportion(added, removed) {
 }
 function fileEl(root, st, file, index) {
   const s2 = getStrings();
-  const open4 = isOpen(root, st, file, index);
+  const open4 = isOpen2(root, st, file, index);
   serial16 += 1;
   const id = `kp-diffview-${serial16}`;
   const section = el15("kp-diffview__file", "section");
@@ -62486,6 +63113,8 @@ export {
   FOCUS_STEPS_RESUME_EVENT,
   FOCUS_STEPS_RETRY_EVENT,
   FOCUS_STEPS_SAVE_RETRY_EVENT,
+  FOCUS_STEPS_TRACK_ATTENTION_EVENT,
+  FOCUS_STEPS_TRACK_EVENT,
   FOCUS_STEPS_WAKE_EVENT,
   FOLDING_OUT,
   FOLD_SELECTOR,

@@ -7377,7 +7377,7 @@ startTimer(ring, { name: 'Toast', seconds: 4 });
         title: 'One step at a time',
         group: 'Navigation',
         classes: ['kp-focus-steps'],
-        aliases: ['focus-mode', 'advance', 'same', 'skip', 'pinned-first', 'back', 'choice-layout', 'choice-height', 'progress', 'resume', 'resume-until', 'summary', 'wake', 'speak', 'text-optional', 'value', 'pinned', 'chosen', 'done', 'current', 'layout'],
+        aliases: ['tracks', 'lanes', 'lane', 'track', 'focus-mode', 'advance', 'same', 'skip', 'pinned-first', 'back', 'choice-layout', 'choice-height', 'progress', 'resume', 'resume-until', 'summary', 'wake', 'speak', 'text-optional', 'value', 'pinned', 'chosen', 'done', 'current', 'layout'],
         exports: [],
         intro: 'Cook mode: one step of a recipe large on the screen, with what that step needs, a timer button and a note, the count and the theme’s progress bar on top, and two big buttons at the foot. `data-kp-focus-steps` on the root; js/focus-steps.js (`setFocusSteps`, `goToStep`, `getStepIndex`, `setFocusStepsState`, `attachFocusSteps`) keeps the screen on with the Wake Lock API while it is attached, turns the step with the arrows, PageUp/PageDown, Space and a swipe, reads it aloud on request and fires `kp-focus-steps-change` so the page can remember where a person stopped.',
         whenToUse: 'For instructions followed with the hands busy: a recipe, a repair, an exercise. For a form filled in parts use the wizard; for the steps of a running process use the step list.',

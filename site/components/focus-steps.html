@@ -498,9 +498,15 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>data-kp-focus-steps-error</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-focus-steps-kind</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-focus-steps-last</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-focus-steps-locked</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-focus-steps-screen</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-focus-steps-timers</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-focus-steps-wake</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-lane</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-lane-detail</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-lane-status</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-lanes</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-lanes-at</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-layout</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-pinned</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-pinned-first</code></td><td>written</td></tr>
@@ -514,6 +520,13 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>data-kp-speak</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-summary</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-text-optional</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-track</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-track-at</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-attention</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-follow</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-track-key</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-track-shared</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-tracks</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-value</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-wake</code></td><td>read</td></tr>
                     </tbody></table></div>
@@ -537,6 +550,8 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>kp-focus-steps-resume</code></td><td>Fired on the root when answers were put back after a break: `{ index, answers }`.</td></tr>
                             <tr><td><code>kp-focus-steps-retry</code></td><td>Fired on the root when Retry is pressed on the plate of questions that could not be read.</td></tr>
                             <tr><td><code>kp-focus-steps-save-retry</code></td><td>Fired on the root when Try again is pressed on the plate of answers that could not be saved.</td></tr>
+                            <tr><td><code>kp-focus-steps-track</code></td><td>Fired on the root when the active track changed: `{ track, key, from, index, step, reason }`.</td></tr>
+                            <tr><td><code>kp-focus-steps-track-attention</code></td><td>Fired on the root when a track asks for the person: `{ track, key, reason: 'timer' | 'ready', index }`.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -544,6 +559,9 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-focus-answer-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-focus-answer-min</code></td><td><code>3.5rem</code></td></tr>
+                            <tr><td><code>--kp-focus-lane-clock</code></td><td><code>1.75rem</code></td></tr>
+                            <tr><td><code>--kp-focus-lane-min</code></td><td><code>6.5rem</code></td></tr>
+                            <tr><td><code>--kp-focus-rail-min</code></td><td><code>15rem</code></td></tr>
                             <tr><td><code>--kp-focus-steps-busy-height</code></td><td><code>12rem</code></td></tr>
                             <tr><td><code>--kp-focus-steps-button-text</code></td><td><code>1.125rem</code></td></tr>
                             <tr><td><code>--kp-focus-steps-height</code></td><td><code>100%</code></td></tr>
@@ -570,6 +588,7 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xl</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-lg</code></td><td><code>1.125rem</code></td></tr>
                             <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-transfer-eta</code></td><td><code>9rem</code></td></tr>
