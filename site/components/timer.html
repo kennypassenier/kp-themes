@@ -330,7 +330,10 @@ startTimer(ring, { name: <span class="kp-code__string">'Toast'</span>, seconds: 
                             <tr><td><code>data-kp-timer-start</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-timer-state</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-timers</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-timers-covered</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-timers-empty</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-timers-error</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-timers-failed</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-timers-notify</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-timers-ring</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-timers-sound</code></td><td>read</td></tr>
@@ -352,6 +355,7 @@ startTimer(ring, { name: <span class="kp-code__string">'Toast'</span>, seconds: 
                             <tr><td><code>kp-timer-change</code></td><td></td></tr>
                             <tr><td><code>kp-timer-done</code></td><td></td></tr>
                             <tr><td><code>kp-timer-stop</code></td><td></td></tr>
+                            <tr><td><code>kp-timers-retry</code></td><td>Fired on the list, bubbling, when the Retry of its failed state is pressed [r6r8-1019].</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -376,6 +380,7 @@ startTimer(ring, { name: <span class="kp-code__string">'Toast'</span>, seconds: 
                             <tr><td><code>--kp-timer-min</code></td><td><code>19.5rem</code></td></tr>
                             <tr><td><code>--kp-timer-size</code></td><td><code>2.75rem</code></td></tr>
                             <tr><td><code>--kp-timer-target</code></td><td><code>2.75rem</code></td></tr>
+                            <tr><td><code>--kp-timers-state-min</code></td><td><code>calc(var(--kp-timer-size, 2.75rem) * 1.15 + 8.125rem)</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">

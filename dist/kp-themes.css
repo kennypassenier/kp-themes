@@ -11843,6 +11843,27 @@
         min-inline-size: 0;
     }
 
+    /* The Copy button keeps its word in one piece [r6r8-1019; almanac gap 15]: the shared overflow floor (`overflow-wrap: anywhere`)
+     * lowers a flex item's minimum width to one letter, so a narrow cell squeezed "Copy" into "Co / py" while the long value
+     * kept its room. The button is a short fixed word, so it neither wraps nor shrinks; the value takes what is left. */
+    .kp-copyable__button {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        overflow-wrap: normal;
+    }
+
+    .kp-copyable__value {
+        flex: 1 1 auto;
+    }
+
+    /* In a fact list the copyable takes its value cell and the Copy button stands at the cell's end, so the buttons of every
+     * row line up in one column and the value wraps in the room beside them. */
+    .kp-kv__row > dd > .kp-copyable {
+        display: flex;
+        flex: 1 1 100%;
+        justify-content: space-between;
+    }
+
     /* Confirmed in words on the button, not by colour: a green flash is
  * invisible to a screen reader and to anyone who looked away.
  *
@@ -19346,6 +19367,38 @@
         text-align: center;
     }
 
+    /* The states fill the box a row of timer cards fills [r6r8-1019; audhd-recepten gap 30]: empty and failed are the state plate
+       (js/state-plate.js) as high as a card (`--kp-timers-state-min`), the busy card lies over the same box while loading, and a
+       list that was read first holds the height it had (js/footprint.js). A failed list shows its plate and nothing else; the
+       timers keep running and come back with the next ready. */
+    .kp-timers {
+        position: relative;
+    }
+
+    .kp-timers__empty:not([hidden]) {
+        display: grid;
+        /* A card's own height: its time (1.15 lines of `--kp-timer-size`) and 8.125 rem of head, bar, buttons, gaps and padding. */
+        min-block-size: var(--kp-timers-state-min, calc(var(--kp-timer-size, 2.75rem) * 1.15 + 8.125rem));
+    }
+
+    .kp-timers[aria-busy] > .kp-timers__empty {
+        border-color: transparent;
+    }
+
+    .kp-timers__empty[data-kp-timers-failed] {
+        border-style: solid;
+        border-color: var(--destructive);
+        color: var(--foreground);
+    }
+
+    .kp-timers[data-kp-timers-covered] .kp-timers__list {
+        display: none;
+    }
+
+    .kp-timers:is([data-kp-state='empty'], [data-kp-state='error'], [data-kp-state='loading']) {
+        align-content: stretch;
+    }
+
     .kp-timer {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -21412,7 +21465,9 @@
  * Knobs [KT6]: --kp-snooze-gap (--kp-space-sm), --kp-snooze-panel-width (22rem), --kp-snooze-time-width (5.5rem),
  * --kp-snooze-chip-min (12rem). */
     .kp-snooze {
-        container: kp-snooze / inline-size;
+        /* No size container [r6r8-1019; homelab gap 24]: `container-type: inline-size` makes the picker's own width 0 in any
+         * grid cell, row or bar that sizes it from its content, so "Not snoozed" wrapped letter by letter and every page
+         * set a fixed width. The narrow fold is plain flex-wrap below, which needs no container. */
         display: grid;
         grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-xs, 0.25rem);
@@ -21558,16 +21613,21 @@
         gap: var(--kp-space-sm, 0.5rem);
     }
 
-    @container kp-snooze (max-width: 24rem) {
-        .kp-snooze__bar > .kp-menu-button,
-        .kp-snooze__bar > .kp-menu-button > .kp-snooze__trigger {
-            flex: 1 1 100%;
-            inline-size: 100%;
-        }
+    /* The trigger takes the room the picker is given (its cell, row or bar) and End snooze wraps under it when both do not
+     * fit; both are buttons of the picker's own bar, so they never squeeze each other [r6r8-1019]. */
+    .kp-snooze__bar > .kp-menu-button {
+        display: flex;
+        flex: 1 1 var(--kp-snooze-trigger-min, 9.75rem);
+        min-inline-size: 0;
+    }
 
-        .kp-snooze__end {
-            flex: 1 1 100%;
-        }
+    .kp-snooze__bar > .kp-menu-button > .kp-snooze__trigger {
+        flex: 1 1 auto;
+        inline-size: 100%;
+    }
+
+    .kp-snooze__end {
+        flex: 0 1 auto;
     }
 
     /* --- Dated option picker: a choice where every option has a date and an age [kpadopt5-time] ---
@@ -30335,15 +30395,6 @@
         inset: 0;
         z-index: 1;
         background: var(--background);
-    }
-
-    .kp-claim__retry {
-        margin-block-start: var(--kp-space-md, 0.75rem);
-        min-block-size: 2.25rem;
-    }
-
-    .kp-checklist__empty:has(.kp-claim__retry) {
-        align-content: center;
     }
 
     @container kp-checklist (max-width: 34rem) {
