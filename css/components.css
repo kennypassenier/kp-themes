@@ -16749,20 +16749,24 @@
     .kp-focus-steps__lane-list {
         grid-column: 1 / -1;
         display: grid;
+        /* The list owns the column tracks (name | clock); every lane is a subgrid of them, so names, clocks, states and counts line up. */
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: var(--kp-space-md, 0.75rem);
+        row-gap: var(--kp-space-sm, 0.5rem);
         grid-auto-rows: minmax(var(--kp-focus-lane-min, 6.5rem), 10rem);
-        gap: var(--kp-space-sm, 0.5rem);
         align-content: start;
     }
 
     .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane-list {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: max-content minmax(0, 1fr) auto;
         grid-auto-rows: auto;
     }
 
     /* A lane: the name and the clock on the first line, what it is doing and where it is on the second, the theme's bar under them. */
     .kp-focus-steps__lane.kp-button {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
         grid-template-areas: 'name time' 'step step' 'state count' 'bar bar';
         grid-template-rows: auto 1fr auto auto;
         align-items: start;
@@ -16872,7 +16876,7 @@
     /* On a narrow root the lanes are short rows, one under the other: name, what it is doing, clock, and the bar under them. A word
        never breaks per letter, so a lane is never squeezed into a column. */
     .kp-focus-steps[data-kp-lanes-at='top'] .kp-focus-steps__lane.kp-button {
-        grid-template-columns: max-content minmax(0, 1fr) auto;
+        grid-template-columns: subgrid;
         grid-template-areas: 'name state time' 'bar bar bar';
         grid-template-rows: auto auto;
         align-items: center;
