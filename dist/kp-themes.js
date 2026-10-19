@@ -4754,10 +4754,17 @@ var init_ack_gate = __esm({
 var action_tiles_exports = {};
 __export(action_tiles_exports, {
   ACTION_BUSY_EVENT: () => ACTION_BUSY_EVENT,
+  ACTION_SIZES: () => ACTION_SIZES,
   ACTION_TILE: () => ACTION_TILE,
   attachActionTiles: () => attachActionTiles,
-  setActionBusy: () => setActionBusy
+  setActionBusy: () => setActionBusy,
+  setActionSize: () => setActionSize
 });
+function setActionSize(element, size2) {
+  if (size2 === null) element.removeAttribute("data-kp-action-size");
+  else if (ACTION_SIZES.includes(size2)) element.setAttribute("data-kp-action-size", size2);
+  return element;
+}
 function syncTile(tile, { announce: announce3 = false } = {}) {
   const busy = tile.getAttribute("aria-busy") === "true";
   let mark = tile.querySelector(":scope > .kp-action__mark");
@@ -4833,13 +4840,15 @@ function attachActionTiles(root = document) {
     watch2?.disconnect();
   };
 }
-var ACTION_TILE, ACTION_BUSY_EVENT, synced, inert, span;
+var ACTION_TILE, ACTION_BUSY_EVENT, ACTION_SIZES, synced, inert, span;
 var init_action_tiles = __esm({
   "js/action-tiles.js"() {
     "use strict";
     init_strings();
     ACTION_TILE = ".kp-action";
     ACTION_BUSY_EVENT = "kp-action-busy";
+    ACTION_SIZES = /** @type {const} */
+    ["compact", "large"];
     synced = /* @__PURE__ */ new WeakMap();
     inert = (tile) => tile instanceof HTMLButtonElement && tile.disabled || tile.getAttribute("aria-disabled") === "true" || tile.getAttribute("aria-busy") === "true";
     span = (className) => {
@@ -10677,17 +10686,18 @@ __export(freshness_exports, {
   momentOf: () => momentOf,
   setAgo: () => setAgo
 });
-function humanDuration(seconds2, strings = getStrings()) {
+function humanDuration(seconds2, strings = getStrings(), units = void 0) {
   const d = Math.max(0, Math.round(Number.isFinite(seconds2) ? seconds2 : 0));
   const pair = (big, small, unit2) => small === 0 ? big : `${big} ${unit2(small)}`;
   if (d < 60) return strings.agoSeconds(d);
   if (d < 3600) return pair(strings.agoMinutes(Math.floor(d / 60)), d % 60, strings.agoSeconds);
   if (d < 86400) return pair(strings.agoHours(Math.floor(d / 3600)), Math.floor(d % 3600 / 60), strings.agoMinutes);
+  if (units === "days") return strings.agoDays(Math.floor(d / 86400));
   return pair(strings.agoDays(Math.floor(d / 86400)), Math.floor(d % 86400 / 3600), strings.agoHours);
 }
-function agoText(verb, atMs, nowMs, strings = getStrings()) {
+function agoText(verb, atMs, nowMs, strings = getStrings(), units = void 0) {
   if (atMs == null || !Number.isFinite(atMs)) return strings.agoNever(verb);
-  return strings.agoText(verb, humanDuration(Math.max(0, Math.floor((nowMs - atMs) / 1e3)), strings));
+  return strings.agoText(verb, humanDuration(Math.max(0, Math.floor((nowMs - atMs) / 1e3)), strings, units));
 }
 function agoMoment(ms, timeZone = FRESHNESS_TIME_ZONE) {
   let format = FORMATS.get(timeZone);
@@ -10714,11 +10724,11 @@ function momentOf(el16) {
   const ms = /^-?\d+(\.\d+)?$/.test(raw) ? Number(raw) : Date.parse(raw);
   return Number.isFinite(ms) ? ms : null;
 }
-function widest(verb, at, now, strings) {
+function widest(verb, at, now, strings, units) {
   if (at == null) return strings.agoNever(verb || strings.agoVerb);
   const age = Math.max(0, (now - at) / 1e3);
   const top = age < 3600 ? 3599 : age < 86400 ? 86399 : 99 * 86400 + 23 * 3600;
-  return strings.agoText(verb, humanDuration(top, strings)).trim();
+  return strings.agoText(verb, humanDuration(top, strings, units)).trim();
 }
 function reserve(el16, sample) {
   const own = el16.getAttribute("data-kp-ago-width");
@@ -10755,13 +10765,14 @@ function paint2(el16, ctx) {
   const now = ctx.now();
   const at = momentOf(el16);
   const verb = el16.hasAttribute("data-kp-ago-bare") ? "" : el16.getAttribute("data-kp-ago-verb") || strings.agoVerb;
-  const text = agoText(verb || (at == null ? strings.agoVerb : ""), at, now, strings).trim();
+  const units = unitsOf(el16);
+  const text = agoText(verb || (at == null ? strings.agoVerb : ""), at, now, strings, units).trim();
   let state2 = states.get(el16);
   if (!state2) {
     state2 = { at: void 0, sample: "", stale: null };
     states.set(el16, state2);
   }
-  const sample = widest(verb, at, now, strings);
+  const sample = widest(verb, at, now, strings, units);
   if (sample !== state2.sample) {
     state2.sample = sample;
     reserve(el16, sample);
@@ -10869,7 +10880,7 @@ function attachAgo(root = document, { timeZone = FRESHNESS_TIME_ZONE, now = () =
     childList: true,
     subtree: true,
     attributes: true,
-    attributeFilter: ["datetime", "data-kp-ago", "data-kp-ago-verb", "data-kp-stale-after", "data-kp-ago-width"]
+    attributeFilter: ["datetime", "data-kp-ago", "data-kp-ago-verb", "data-kp-stale-after", "data-kp-ago-width", "data-kp-ago-units", "data-kp-ago-bare"]
   });
   const remeasure = () => {
     widths.clear();
@@ -10893,13 +10904,14 @@ function attachAgo(root = document, { timeZone = FRESHNESS_TIME_ZONE, now = () =
     steer();
   };
 }
-var AGO, FRESHNESS_TIME_ZONE, FORMATS, live, states, timer, warned, listening2, widths, defaultContext, onVisibility;
+var AGO, FRESHNESS_TIME_ZONE, unitsOf, FORMATS, live, states, timer, warned, listening2, widths, defaultContext, onVisibility;
 var init_freshness = __esm({
   "js/freshness.js"() {
     "use strict";
     init_strings();
     AGO = "[data-kp-ago]";
     FRESHNESS_TIME_ZONE = "Europe/Brussels";
+    unitsOf = (el16) => el16.getAttribute("data-kp-ago-units") === "days" ? "days" : void 0;
     FORMATS = /* @__PURE__ */ new Map();
     live = /* @__PURE__ */ new Map();
     states = /* @__PURE__ */ new WeakMap();
@@ -52823,6 +52835,7 @@ __export(sentence_exports, {
   attachSentences: () => attachSentences,
   sentence: () => sentence,
   sentenceSummary: () => sentenceSummary,
+  setSentenceComputed: () => setSentenceComputed,
   setSentenceFieldState: () => setSentenceFieldState,
   setSentenceInvalid: () => setSentenceInvalid,
   setSentenceWhy: () => setSentenceWhy
@@ -52837,8 +52850,23 @@ function nameOf5(control) {
     );
   return "";
 }
+function computedText(output) {
+  return output.hasAttribute("data-kp-sentence-empty") ? getStrings().sentenceEmpty(nameOf5(output)) : output.textContent?.trim() ?? "";
+}
+function setSentenceComputed(element, name, text) {
+  const value = text === null || text === void 0 ? "" : String(text).trim();
+  for (const output of element.querySelectorAll("[data-kp-sentence-computed]")) {
+    if (output.getAttribute("data-kp-sentence-computed") !== name) continue;
+    output.toggleAttribute("data-kp-sentence-empty", value === "");
+    const shown4 = value === "" ? COMPUTED_NONE : value;
+    if (output.textContent !== shown4) output.textContent = shown4;
+    output.setAttribute("aria-live", "off");
+  }
+}
 function fieldText(field) {
   const s2 = getStrings();
+  const computed = field.querySelector("[data-kp-sentence-computed]");
+  if (computed) return computedText(computed);
   const picker = field.querySelector(".kp-weekdays");
   if (picker) return weekdays(picker)?.summary() ?? "";
   const select = field.querySelector("select");
@@ -52855,6 +52883,7 @@ function sentenceSummary(element) {
     if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? "";
     if (!(node instanceof HTMLElement) || node.hidden) return "";
     if (node.classList.contains("kp-sentence__field")) return ` ${fieldText(node)} `;
+    if (node.hasAttribute("data-kp-sentence-computed")) return ` ${computedText(node)} `;
     if (node.classList.contains("kp-sr-only") || node.matches("script, style, [data-kp-sentence-skip]")) return "";
     return [...node.childNodes].map(walk).join("");
   };
@@ -52938,7 +52967,7 @@ function valueOfControl(root, name) {
   if (c instanceof HTMLInputElement || c instanceof HTMLSelectElement || c instanceof HTMLTextAreaElement) return c.value;
   return null;
 }
-function attachSentences(root = document) {
+function attachSentences(root = document, { computed = {} } = {}) {
   const cleanups = [];
   const found = (
     /** @type {HTMLElement[]} */
@@ -53035,8 +53064,31 @@ function attachSentences(root = document) {
         field.toggleAttribute("data-kp-own-line", own);
       }
     };
+    const fns = new Map(Object.entries(computed));
+    let warnedComputed = false;
+    const compute = () => {
+      if (fns.size === 0) return;
+      const values = {};
+      for (const control of el16.querySelectorAll("[name]")) {
+        const name = control.getAttribute("name") ?? "";
+        if (name && !(name in values)) values[name] = valueOfControl(el16, name);
+      }
+      for (const [name, fn] of fns) {
+        let text2 = null;
+        try {
+          text2 = fn(values, el16);
+        } catch (error) {
+          if (!warnedComputed) {
+            warnedComputed = true;
+            console.warn(`kp-sentence: the computed field "${name}" threw`, error);
+          }
+        }
+        setSentenceComputed(el16, name, text2);
+      }
+    };
     const refresh3 = () => {
       phrases();
+      compute();
       place2();
     };
     let timer2 = 0;
@@ -53074,8 +53126,21 @@ function attachSentences(root = document) {
     const watch2 = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => place2());
     watch2?.observe(el16);
     void doc.fonts?.ready.then(place2);
-    const handle = { element: el16, line, summary: () => sentenceSummary(el16), refresh: refresh3 };
+    const handle = {
+      element: el16,
+      line,
+      summary: () => sentenceSummary(el16),
+      refresh: refresh3,
+      compute: (name, fn) => {
+        if (fn) fns.set(name, fn);
+        else fns.delete(name);
+        refresh3();
+        live4.textContent = sentenceSummary(el16);
+      }
+    };
     HANDLES12.set(el16, handle);
+    for (const output of el16.querySelectorAll("[data-kp-sentence-computed]"))
+      setSentenceComputed(el16, output.getAttribute("data-kp-sentence-computed") ?? "", output.textContent);
     refresh3();
     live4.textContent = sentenceSummary(el16);
     cleanups.push(() => {
@@ -53095,7 +53160,7 @@ function attachSentences(root = document) {
     for (const c of cleanups) c();
   };
 }
-var SENTENCE, SENTENCE_EVENT, CONTROLS, tidy, HANDLES12, seq8;
+var SENTENCE, SENTENCE_EVENT, CONTROLS, tidy, COMPUTED_NONE, HANDLES12, seq8;
 var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
@@ -53105,6 +53170,7 @@ var init_sentence = __esm({
     SENTENCE_EVENT = "kp-sentence-change";
     CONTROLS = 'input, select, textarea, button, [role="combobox"]';
     tidy = (text) => text.replace(/\s+/g, " ").replace(/\s+([.,;:!?])/g, "$1").trim();
+    COMPUTED_NONE = "\u2014";
     HANDLES12 = /* @__PURE__ */ new WeakMap();
     seq8 = 0;
   }
@@ -63173,6 +63239,7 @@ export {
   ACK_RETRY_EVENT,
   ACTION_BUSY_EVENT,
   ACTION_LIST,
+  ACTION_SIZES,
   ACTION_TILE,
   AGO,
   ALARM_CLOSE_EVENT,
@@ -64379,6 +64446,7 @@ export {
   sentence_exports as sentenceExports,
   sentenceSummary,
   setActionBusy,
+  setActionSize,
   setAgo,
   setAttention,
   setAutosizeState,
@@ -64477,6 +64545,7 @@ export {
   setSelectionBusy,
   setSelectionResult,
   setSelectionRules,
+  setSentenceComputed,
   setSentenceFieldState,
   setSentenceInvalid,
   setSentenceWhy,

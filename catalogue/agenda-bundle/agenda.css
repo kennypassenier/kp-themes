@@ -6366,6 +6366,17 @@
         box-shadow: 0 0 0 var(--kp-ago-stale-edge, 0.25em) var(--kp-ago-stale-bg, var(--warning));
     }
 
+    /* --- Freshness line: a calm stale tone [audhd-opts-1019; audhd-recepten 2] ---
+ * `data-kp-stale-tone="calm"` on the line: once stale it is a quiet plate (the muted ground, the ordinary ink) and not the
+ * amber warning, for data that is old on purpose. The same edge shadow as the warning plate, so turning
+ * stale still moves nothing. Knobs [KT6]: --kp-ago-calm-bg (the muted), --kp-ago-calm-fg (the foreground),
+ * --kp-ago-stale-edge (0.25em, shared). */
+    :where(.kp-ago, [data-kp-ago])[data-kp-stale][data-kp-stale-tone='calm'] {
+        background: var(--kp-ago-calm-bg, var(--muted));
+        color: var(--kp-ago-calm-fg, var(--foreground));
+        box-shadow: 0 0 0 var(--kp-ago-stale-edge, 0.25em) var(--kp-ago-calm-bg, var(--muted));
+    }
+
     /* --- Attention band [scope-143] --------------------------------------- */
 
     /* One alert per problem, worst first, each with its own fix. With no
@@ -18813,7 +18824,7 @@
         inline-size: 100%;
         min-inline-size: 0;
         margin: 0;
-        padding: var(--kp-action-pad, 0.625rem 0.75rem);
+        padding: var(--kp-action-size-pad, var(--kp-action-pad, 0.625rem 0.75rem));
         border: var(--kp-action-line, 1px) solid var(--kp-action-tone-edge, var(--kp-action-edge, var(--border)));
         border-radius: var(--kp-action-radius, var(--radius, 0.5rem));
         background: var(--kp-action-ground, var(--card));
@@ -18829,7 +18840,7 @@
     .kp-action__title {
         grid-column: 1;
         font-family: var(--kp-action-title-font, inherit);
-        font-size: var(--kp-action-title-size, inherit);
+        font-size: var(--kp-action-size-title, var(--kp-action-title-size, inherit));
         font-weight: var(--kp-action-title-weight, 600);
         letter-spacing: var(--kp-action-title-tracking, normal);
         text-transform: var(--kp-action-title-case, none);
@@ -18840,12 +18851,12 @@
     .kp-action__meta {
         grid-column: 1 / -1;
         color: var(--muted-foreground);
-        font-size: var(--kp-text-sm, 0.8125rem);
+        font-size: var(--kp-action-size-text, var(--kp-text-sm, 0.8125rem));
         overflow-wrap: anywhere;
     }
 
     .kp-action__meta {
-        font-size: var(--kp-text-xs, 0.75rem);
+        font-size: var(--kp-action-size-meta, var(--kp-text-xs, 0.75rem));
         font-variant-numeric: tabular-nums;
     }
 
@@ -18971,6 +18982,31 @@
 
     .kp-action[aria-busy='true'] {
         cursor: progress;
+    }
+
+    /* --- Action tiles: a size [audhd-opts-1019; audhd-recepten 1] ---
+ * `data-kp-action-size="compact" | "large"` on the `.kp-actions` grid (or on one tile, or on any element above them; no value
+ * is the theme's own size). The size sets the tile's padding, the title, the sentence and the mark, and the width the grid
+ * lets a column shrink to, so a compact board carries more tiles on a line and a large one fewer. It is CSS only, so it
+ * follows the attribute at runtime (`setActionSize()` in js/action-tiles.js writes it). The tile reads `--kp-action-size-*`
+ * before the register's `--kp-action-pad` / `--kp-action-title-size`, so a theme's own sizes stay the default and the
+ * option wins over them in every theme. A page's own `--kp-actions-min` on the grid still wins. */
+    [data-kp-action-size='compact'] {
+        --kp-actions-min: 11rem;
+        --kp-action-size-pad: 0.375rem 0.625rem;
+        --kp-action-size-title: 0.875rem;
+        --kp-action-size-text: var(--kp-text-xs, 0.75rem);
+        --kp-action-size-meta: var(--kp-text-xs, 0.75rem);
+        --kp-action-mark: 1rem;
+    }
+
+    [data-kp-action-size='large'] {
+        --kp-actions-min: 20rem;
+        --kp-action-size-pad: 1rem 1.25rem;
+        --kp-action-size-title: 1.125rem;
+        --kp-action-size-text: 0.9375rem;
+        --kp-action-size-meta: var(--kp-text-sm, 0.8125rem);
+        --kp-action-mark: 1.5rem;
     }
 
     /* --- Status rows ----------------------------------------------------------
@@ -22371,6 +22407,34 @@
         border-block-end-style: dashed;
         color: var(--muted-foreground);
         cursor: not-allowed;
+    }
+
+    /* --- Sentence form: a read-only computed field [audhd-opts-1019; audhd-recepten 24] ---
+ * `<output class="kp-sentence__computed" data-kp-sentence-computed="ready">` inside a `.kp-sentence__field` (js/sentence.js): a word the
+ * sentence works out from its other fields. It is drawn apart from an editable one, a quiet plate and no underline in the primary
+ * colour, but on the same line box (the same transparent 2px under-edge an input has), so it sits on the words' baseline and
+ * is as tall as the fields beside it. Nothing to say yet (`data-kp-sentence-empty`) is a dash in the muted ink. Knobs [KT6]:
+ * --kp-sentence-computed-bg (the muted), --kp-sentence-computed-fg (the foreground). */
+    .kp-sentence__field > .kp-sentence__computed {
+        box-sizing: border-box;
+        display: inline-block;
+        max-inline-size: 100%;
+        margin: 0;
+        padding: 0 0.4em;
+        border: 0;
+        border-block-end: var(--kp-sentence-edge-width, 2px) solid transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-sentence-computed-bg, var(--muted));
+        color: var(--kp-sentence-computed-fg, var(--foreground));
+        font: inherit;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        line-height: inherit;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-sentence__field > .kp-sentence__computed[data-kp-sentence-empty] {
+        color: var(--muted-foreground);
     }
 
     .kp-sentence__field[data-kp-state='loading'] > :not(.kp-sentence__skeleton) {

@@ -67,7 +67,7 @@ export { CALM_TONES, CALM_TONES_ATTRIBUTE, calmLegendEntries, calmTone, calmWord
 export { QUOTE, QUOTE_FOLD_EVENT, QUOTE_HIDE_EVENT, QUOTE_LINES, QUOTE_LIST, QUOTE_LIST_MAX, QUOTE_RETRY_EVENT, QUOTE_STATES, attachQuotes, quote, quoteWhen, setQuote, setQuoteState, } from './js/quote.js';
 export { RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, attachRatings, rating, ratingCell, setRating, setRatingState, snapRating, } from './js/rating.js';
 export { SLIDER, SLIDER_CHANGE_EVENT, SLIDER_INPUT_EVENT, SLIDER_STATES, attachSliders, parseSliderText, setSliderState, setSliderValues, slider, sliderPercent, sliderValues, snapSlider, } from './js/slider.js';
-export { SENTENCE, SENTENCE_EVENT, attachSentences, sentence, sentenceSummary, setSentenceFieldState, setSentenceInvalid, setSentenceWhy, } from './js/sentence.js';
+export { SENTENCE, SENTENCE_EVENT, attachSentences, sentence, sentenceSummary, setSentenceComputed, setSentenceFieldState, setSentenceInvalid, setSentenceWhy, } from './js/sentence.js';
 export { DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, attachDatedOptions, datedAge, datedOptions, datedValue, orderDated, setDatedOptions, setDatedState, } from './js/dated-options.js';
 export { SNOOZE, SNOOZE_CHOICES, SNOOZE_END_EVENT, SNOOZE_EVENT, attachSnoozes, dayAt, openSnoozePanel, setSnoozeBusy, setSnoozedUntil, snooze, snoozeChoices, } from './js/snooze.js';
 export { RUNS, RUNS_RETRY_EVENT, RUNS_STATES, attachRuns, clockShift, runMoment, runs, runsRelative, setRuns, setRunsState, zoneOffset, } from './js/runs.js';
@@ -105,7 +105,7 @@ export type BarCell = import('./js/barcell.js').BarCell;
 export type KeyPair = import('./js/keys.js').KeyPair;
 /** @typedef {import('./js/barcell.js').BarCell} BarCell */
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
-export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
+export { ACTION_BUSY_EVENT, ACTION_SIZES, ACTION_TILE, attachActionTiles, setActionBusy, setActionSize } from './js/action-tiles.js';
 export { CALM_STATUS_STATES, STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_PAUSE_EVENT, STATUS_RESUME_EVENT, STATUS_RETRY_EVENT, STATUS_STATES, STATUS_UNDO_EVENT, attachStatusLists, buildStatusList, countStatus, setStatus, setTodayState, settleToday, } from './js/statusrow.js';
 export type StatusRow = import('./js/statusrow.js').StatusRow;
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
