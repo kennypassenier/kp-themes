@@ -29033,7 +29033,7 @@ function prettyJson(text) {
 }
 function jsonLine(doc, line) {
   const out = [];
-  const pattern = /("(?:[^"\\]|\\.)*")(\s*:)?|([{}[\],:])/g;
+  const pattern = /("(?:[^"\\]|\\.)*")(\s*:)?|([{}[\],:]+)/g;
   let last = 0;
   for (const match of line.matchAll(pattern)) {
     const at = match.index ?? 0;
@@ -29259,7 +29259,6 @@ function drawLoading4(el16, memory) {
   body.style.setProperty("--kp-code-min-lines", String(lines));
   body.style.minBlockSize = was > 0 ? `${was}px` : "";
   body.replaceChildren(make6(doc, "", "code"));
-  body.removeAttribute("tabindex");
   if (memory.card) {
     memory.card.place();
     return;
@@ -29320,10 +29319,10 @@ function drawBody(el16, memory) {
   memory.lines = lines.length;
   const body = make6(doc, "kp-code__body", "pre");
   body.id ||= `kp-code-${serial3 += 1}`;
-  body.setAttribute("tabindex", "0");
-  body.setAttribute("role", "region");
-  body.setAttribute("aria-label", spec.title ?? spec.language ?? strings.codeLabel);
   const code = make6(doc, "", "code");
+  code.setAttribute("tabindex", "0");
+  code.setAttribute("role", "region");
+  code.setAttribute("aria-label", spec.title ?? spec.language ?? strings.codeLabel);
   for (const line of lines) {
     const row = make6(doc, "kp-code__line");
     const words = make6(doc, "kp-code__text");
@@ -30601,7 +30600,6 @@ function attachOne4(el16, options) {
     if (n > 0) {
       number.textContent = strings.newpillNew(n, n === 1 ? unitOne : unitMany);
       back.textContent = head ? strings.newpillBackHead : strings.newpillBackTail;
-      pill.style.setProperty("--kp-newpill-digits", String(Math.max(2, String(n).length)));
     }
     el16.setAttribute("data-kp-following", String(following && !paused));
     for (const toggle2 of toggles()) {
@@ -31995,7 +31993,7 @@ function drawDisc(root, measure) {
     /** @type {SVGGElement} */
     root.querySelector(".kp-wheel__segments")
   );
-  const labels = new Map(state2.items.map((item) => [item.id, item.label]));
+  const items = new Map(state2.items.map((item) => [item.id, item]));
   const ids = state2.order.filter((id) => (state2.shown.get(id) ?? 0) > 1e-4);
   const angles = wheelAngles(ids.map((id) => state2.shown.get(id) ?? 0));
   const won = root.getAttribute("data-kp-wheel-won");
@@ -32018,45 +32016,82 @@ function drawDisc(root, measure) {
     group.append(shape);
     const mid = (a0 + a1) / 2;
     const half = Math.min(Math.PI / 2, span3 / 2 * Math.PI / 180);
-    const size2 = Math.min(9, 2 * ((LABEL_IN + LABEL_OUT) / 2) * Math.sin(half) * 0.62);
-    const start = Math.max(LABEL_IN, size2 * 0.75 / Math.max(1e-4, Math.sin(half)));
-    if (size2 < 4.5 || LABEL_OUT - start < 16) return;
+    const item = items.get(id);
+    const plan = fitLabel(group, [item?.label ?? "", item?.short ?? ""], half, measure);
+    if (!plan) {
+      const name = svg("title");
+      name.textContent = item?.label ?? "";
+      shape.append(name);
+      return;
+    }
     const left = mid > 180;
     const text = svg("text", {
       class: "kp-wheel__label",
       transform: `rotate(${(left ? mid + 90 : mid - 90).toFixed(3)})`,
-      x: String(left ? -start : start),
+      x: String(left ? -plan.start : plan.start),
       y: "0",
       "dominant-baseline": "central",
       "text-anchor": left ? "end" : "start",
-      "font-size": size2.toFixed(2)
+      "font-size": plan.size.toFixed(2)
     });
     if (won === id) text.setAttribute("data-kp-wheel-chosen", "");
     text.setAttribute("data-span", span3.toFixed(3));
-    const full = labels.get(id) ?? "";
-    text.textContent = full;
+    if (plan.lines.length === 1) text.textContent = plan.lines[0];
+    else
+      plan.lines.forEach((line, n) => {
+        const row = svg("tspan", {
+          x: String(left ? -plan.start : plan.start),
+          dy: (n === 0 ? -0.55 * plan.size : 1.1 * plan.size).toFixed(2)
+        });
+        row.textContent = line;
+        text.append(row);
+      });
     group.append(text);
-    const room = LABEL_OUT - start;
-    if (!measure) {
-      const fits = Math.max(1, Math.floor(room / (size2 * 0.56)));
-      if (full.length > fits) text.textContent = `${full.slice(0, Math.max(1, fits - 1)).trimEnd()}\u2026`;
-      return;
-    }
-    const length = () => (
-      /** @type {SVGTextElement} */
-      text.getComputedTextLength()
-    );
-    if (length() <= room) return;
-    let lo = 0;
-    let hi = full.length;
-    while (lo < hi) {
-      const m = Math.ceil((lo + hi) / 2);
-      text.textContent = `${full.slice(0, m).trimEnd()}\u2026`;
-      if (length() <= room) lo = m;
-      else hi = m - 1;
-    }
-    text.textContent = `${full.slice(0, Math.max(1, lo)).trimEnd()}\u2026`;
   });
+}
+function fitLabel(group, names, half, measure) {
+  const sin = Math.max(1e-4, Math.sin(half));
+  const mid = (LABEL_IN + LABEL_OUT) / 2;
+  const unit2 = (text) => {
+    if (!measure) return text.length * 0.56;
+    const probe = svg("text", { class: "kp-wheel__label", "font-size": "10", visibility: "hidden" });
+    probe.textContent = text;
+    group.append(probe);
+    const width = (
+      /** @type {SVGTextElement} */
+      probe.getComputedTextLength() / 10
+    );
+    probe.remove();
+    return width;
+  };
+  const halves = (text) => {
+    const spaces = [...text.matchAll(/ /g)].map((m) => m.index ?? 0);
+    if (!spaces.length) return null;
+    const at = spaces.reduce((best2, i) => Math.abs(i - text.length / 2) < Math.abs(best2 - text.length / 2) ? i : best2);
+    return [text.slice(0, at).trim(), text.slice(at + 1).trim()];
+  };
+  let best = null;
+  for (const name of names) {
+    const text = name.trim();
+    if (!text) continue;
+    const two9 = halves(text);
+    for (const lines of two9 ? [[text], two9] : [[text]]) {
+      const rows = lines.length;
+      const allowed2 = Math.min(LABEL_MAX, 2 * mid * sin * 0.62 / (rows === 2 ? 1.5 : 1));
+      if (allowed2 < LABEL_MIN) continue;
+      const start = Math.max(LABEL_IN, allowed2 * 0.75 * (rows === 2 ? 1.5 : 1) / sin);
+      const room = LABEL_OUT - start;
+      if (room < 16) continue;
+      const widest2 = Math.max(...lines.map(unit2));
+      const size2 = Math.min(allowed2, room / Math.max(1e-4, widest2));
+      if (size2 < LABEL_MIN) continue;
+      const grown = Math.max(LABEL_IN, size2 * 0.75 * (rows === 2 ? 1.5 : 1) / sin);
+      const plan = { size: size2, start: grown, lines };
+      if (size2 >= LABEL_COMFORT) return plan;
+      if (!best || size2 > best.size) best = plan;
+    }
+  }
+  return best;
 }
 function paint3(root) {
   const strings = getStrings();
@@ -32280,7 +32315,7 @@ function attachWheels(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, WIRED, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el5, stateOf, part, reduced3;
+var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, WIRED, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el5, stateOf, part, LABEL_MIN, LABEL_COMFORT, LABEL_MAX, reduced3;
 var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
@@ -32325,6 +32360,9 @@ var init_wheel = __esm({
       /** @type {HTMLElement} */
       root.querySelector(`.kp-wheel__${name}`)
     );
+    LABEL_MIN = 4.5;
+    LABEL_COMFORT = 6.5;
+    LABEL_MAX = 9;
     reduced3 = () => !motionAllowed();
   }
 });

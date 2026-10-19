@@ -5507,8 +5507,9 @@
         text-transform: uppercase;
     }
     [data-theme='deco'] .kp-dialog__section--danger {
-        padding-inline-start: 0;
         border-inline-start: 0;
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
     }
     [data-theme='deco'] .kp-dialog__section--danger .kp-dialog__heading {
         justify-self: start;

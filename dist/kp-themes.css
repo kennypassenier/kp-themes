@@ -8861,6 +8861,21 @@
         border-block-start: 1px solid var(--border);
     }
 
+    /* A section is ruled off along its top, and its words keep air from the ends of that rule: the section's box is
+     * wider than the text column by `--kp-dialog-section-inset` (0.5rem) on each side and pads it back, so the words stay
+     * in line with the title above while the rule runs on past them (text never touches the edge of its plate). The body
+     * takes the same room as its own padding, so its scrolling edge does not cut the rule. The danger section has its
+     * own edge and padding below and is not pulled out. */
+    .kp-dialog__body {
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+    }
+
+    .kp-dialog__section:not(.kp-dialog__section--danger) {
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+    }
+
     .kp-dialog__section:first-child {
         padding-block-start: 0;
         border-block-start: 0;
@@ -10360,6 +10375,9 @@
     .kp-palette__keys {
         margin-inline-start: auto;
         font-size: var(--kp-text-xs, 0.75rem);
+        /* A chord (Ctrl K, Ctrl Shift P) is one unit: it keeps its width and its line, and the label gives way. */
+        flex: none;
+        white-space: nowrap;
     }
 
     .kp-palette__status {
@@ -16080,11 +16098,12 @@
         outline-offset: 1px;
     }
 
+    /* A label is never cut with an ellipsis: a long name wraps onto a second line (the row grows to hold it) and only
+     * a word longer than the label column breaks, at the column's edge. */
     .kp-heat__label-text {
         min-inline-size: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: break-word;
+        white-space: normal;
     }
 
     .kp-heat__label-text--muted {
@@ -16934,14 +16953,15 @@
         display: none;
     }
 
-    /* The count. Over the icon's end corner, out of the flow, so a count that
- * appears, grows or goes moves nothing. Empty, it is a dot. */
+    /* The count. Beside the icon at its end corner, never over it (text never touches
+ * an icon, DEMO_RULES ch. 2), out of the flow, so a count that appears, grows or
+ * goes moves nothing. Empty, it is a dot. */
     .kp-tabbar__badge {
         --kp-badge-size: var(--kp-text-xs, 0.75rem);
         --kp-badge-padding-block: 0;
         position: absolute;
         inset-block-start: 0.125rem;
-        inset-inline-start: calc(50% + var(--kp-tabbar-icon, 1.5rem) / 2 - 0.5rem);
+        inset-inline-start: calc(50% + var(--kp-tabbar-icon, 1.5rem) / 2 + 0.25rem);
         justify-content: center;
         min-inline-size: 1.25rem;
         box-sizing: border-box;
@@ -22772,7 +22792,9 @@
         display: none;
     }
 
-    .kp-flash[data-kp-width='grow']:is([data-kp-flash-state='success'], [data-kp-flash-state='refused']) .kp-flash__stack > :is(.kp-flash__face--rest, .kp-flash__face--busy) {
+    .kp-flash[data-kp-width='grow']:is([data-kp-flash-state='success'], [data-kp-flash-state='refused'])
+        .kp-flash__stack
+        > :is(.kp-flash__face--rest, .kp-flash__face--busy) {
         display: none;
     }
 
@@ -26106,10 +26128,15 @@
         overscroll-behavior-inline: contain;
     }
 
+    /* The code scrolls sideways, not the body: the body is the plate and keeps its padding on both sides, so a long
+     * line runs out of sight 0.75rem short of the plate's edge instead of touching it (text never touches an edge). */
     .kp-code__body > :is(code) {
         display: block;
-        min-inline-size: max-content;
+        min-inline-size: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
         font: inherit;
+        overscroll-behavior-inline: contain;
     }
 
     .kp-code[data-kp-code-wrap] .kp-code__body {
@@ -26118,7 +26145,7 @@
     }
 
     .kp-code[data-kp-code-wrap] .kp-code__body > :is(code) {
-        min-inline-size: 0;
+        overflow: visible;
     }
 
     /* Folded: the box stops at the line count and a fade says there is more. */
@@ -26321,8 +26348,8 @@
     /* js/newpill.js: a pill on the end of a live list that says how many rows came
      * out of sight, and jumps back. It sits in the list's parent (`data-kp-newpill-host`),
      * so it never scrolls with the rows, ruled in along its start edge at the
-     * theme's rule time and taken out the way it came. The count keeps the room
-     * of the next digit. Knobs: --kp-newpill-digits (written by the module). */
+     * theme's rule time and taken out the way it came. The count is as wide as its
+     * words. */
     [data-kp-newpill-host] {
         position: relative;
     }
@@ -26362,10 +26389,10 @@
         animation-direction: reverse;
     }
 
+    /* The count is as wide as its words: a reserved second digit left an empty space of a letter or two before a
+     * one-digit count, so the words sat off-centre in the pill. A digit more grows the pill, round its centre. */
     .kp-newpill__count {
-        min-inline-size: calc(var(--kp-newpill-digits, 2) * 1ch + 10ch);
         font-variant-numeric: tabular-nums;
-        text-align: end;
     }
 
     .kp-newpill__back {
@@ -45844,7 +45871,8 @@
     [data-theme='synthwave'] .kp-dialog__section--danger {
         border-inline-start: 0;
         border-image: none;
-        padding-inline-start: 0;
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
     }
     [data-theme='synthwave'] .kp-dialog__section--danger > .kp-dialog__heading {
         --kp-sw4-tone: var(--destructive);
@@ -52119,7 +52147,8 @@
         font-weight: 500;
     }
     [data-theme='brutalism'] .kp-dialog__section--danger {
-        padding-inline: 0;
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
         padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.5rem);
         border-inline-start: 0;
         background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat;
@@ -75905,8 +75934,9 @@
         text-transform: uppercase;
     }
     [data-theme='deco'] .kp-dialog__section--danger {
-        padding-inline-start: 0;
         border-inline-start: 0;
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
     }
     [data-theme='deco'] .kp-dialog__section--danger .kp-dialog__heading {
         justify-self: start;
@@ -96827,6 +96857,15 @@
         border-radius: 0;
         background: repeating-linear-gradient(to bottom, transparent 0 calc(1.2rem - 1px), var(--border) calc(1.2rem - 1px) 1.2rem) center bottom
             1rem / calc(100% - 4rem) 3.6rem no-repeat;
+    }
+
+    /* Inside a card the empty state is the card's stage, which has its frame: the double rule along the top of the plate
+       would be two hairlines under the card's sentence that belong to nothing (the loading, failed and filled stages draw none), and the
+       ruled lines drawn at the foot of the plate would float, unrelated to the words centred above them. */
+    [data-theme='formal'] .kp-card__state > .kp-card__empty {
+        padding-block-end: 1.25rem;
+        border-block-start: 0;
+        background: none;
     }
 
     [data-theme='formal'] .kp-empty__title {
