@@ -385,7 +385,54 @@ if (document.getElementById('hover-component')) {
         }
         return dl;
     };
-    attachHoverCards(document, { fill });
+    // One card per page; auto.js attached it, this hands it the `fill` and returns the same handle.
+    const cards = attachHoverCards(document, { fill });
+    const box = /** @type {HTMLElement} */ (document.getElementById('hover-component'));
+    const names = () => /** @type {HTMLElement[]} */ ([...box.querySelectorAll('[data-hp-profile]')]);
+    const isName = (/** @type {EventTarget | null} */ t) => t instanceof Element && box.contains(t) && t.closest('[data-hp-profile]') !== null;
+
+    // Room for the card. In the review dialog the section stands in a frame as tall as its content, and the card (fixed to
+    // the frame's window) would be cut off or squeezed to a scrolling sliver. The room is given when a name is rested on
+    // or focused, the card is placed again once the frame has grown, and the room is taken back after the card has left.
+    let settle = 0;
+    const room = (/** @type {boolean} */ on) => box.classList.toggle('hp-frame--room', on);
+    const release = () => {
+        window.clearTimeout(settle);
+        settle = window.setTimeout(() => {
+            if (cards.anchor() === null && !names().some((n) => n.matches(':hover, :focus'))) room(false);
+        }, 600);
+    };
+    const grant = () => {
+        window.clearTimeout(settle);
+        room(true);
+        // The review dialog isolates a section in its frame by setting aside every sibling of the section's ancestors with
+        // `data-rv-off` (display: none), and the one shared card, a child of <body> made at boot, is such a sibling: it
+        // opened (hidden=false) and was never drawn. Its host is not set aside.
+        cards.card.removeAttribute('data-rv-off');
+    };
+    document.addEventListener('pointerover', (e) => isName(e.target) && grant(), true);
+    document.addEventListener('pointerout', (e) => isName(e.target) && release(), true);
+    document.addEventListener('focusin', (e) => isName(e.target) && grant(), true);
+    document.addEventListener('focusout', (e) => isName(e.target) && release(), true);
+    document.addEventListener('kp-hovercard', (e) => {
+        const { open, anchor } = /** @type {CustomEvent} */ (e).detail;
+        if (!isName(anchor)) return;
+        // The button of the profile whose card is on screen is the one pressed, however the card was opened or closed.
+        const key = anchor.getAttribute('data-hp-profile');
+        for (const b of document.querySelectorAll('[data-hp-hover-open]')) b.setAttribute('aria-pressed', String(open && b.getAttribute('data-hp-hover-open') === key));
+        if (!open) return release();
+        grant();
+        // The frame follows the room within a frame or two (its window resizes); the card is placed once more then.
+        let placed = false;
+        const again = () => {
+            if (placed) return;
+            placed = true;
+            window.removeEventListener('resize', again);
+            requestAnimationFrame(() => cards.anchor() && cards.refresh());
+        };
+        window.addEventListener('resize', again);
+        window.setTimeout(again, 350);
+    });
 
     const paintBadges = () => {
         for (const badge of document.querySelectorAll('[data-hp-hover-badge]')) {
@@ -395,21 +442,27 @@ if (document.getElementById('hover-component')) {
             badge.className = `kp-badge kp-badge--${HEALTH_TONE[st]}`;
         }
     };
+    // A press on Health leaves the focus where it is, so an opened card stays on screen and shows the new state at once.
+    for (const b of document.querySelectorAll('[data-hp-hover-health]')) b.addEventListener('mousedown', (e) => e.preventDefault());
     stateButtons('data-hp-hover-health', (value) => {
         scenario = /** @type {Health} */ (value);
         paintBadges();
+        if (cards.anchor()) cards.refresh();
     });
 
-    // "Show the card": a keyboard focus on the name opens the card at once, so the opened state is on screen.
-    const openers = /** @type {HTMLButtonElement[]} */ ([...document.querySelectorAll('[data-hp-hover-open]')]);
-    for (const button of openers) {
+    // "Show the card": a keyboard focus on the name opens the card at once, so the opened state is on screen. The pressed
+    // state itself follows the card (the kp-hovercard handler above), so Escape or a click elsewhere un-presses it.
+    for (const button of /** @type {HTMLButtonElement[]} */ ([...document.querySelectorAll('[data-hp-hover-open]')])) {
         button.addEventListener('click', () => {
             const key = button.getAttribute('data-hp-hover-open');
-            const on = button.getAttribute('aria-pressed') !== 'true';
-            for (const other of openers) other.setAttribute('aria-pressed', String(other === button && on));
-            const anchor = /** @type {HTMLElement | null} */ (document.querySelector(`.hp-names [data-hp-profile="${key}"]`));
-            if (on) anchor?.focus();
-            else anchor?.blur();
+            const anchor = /** @type {HTMLElement | null} */ (box.querySelector(`[data-hp-profile="${key}"]`));
+            if (button.getAttribute('aria-pressed') === 'true') {
+                cards.hide();
+                anchor?.blur();
+            } else {
+                grant();
+                anchor?.focus({ preventScroll: true });
+            }
         });
     }
 }

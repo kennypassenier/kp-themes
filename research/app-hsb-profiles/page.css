@@ -165,12 +165,26 @@
 }
 
 .hp-names__name {
+    justify-self: start;
     font-weight: 600;
+}
+
+/* Room under the names while their card is open: the card hangs under its name, and a review frame is as tall as its
+   content, so without this the card is cut off at the frame's foot. Given and taken back by demo.js. */
+.hp-frame--room {
+    padding-block-end: 21rem;
 }
 
 /* The card's own rows: label column and value, as wide as the longest label. */
 .hp-card-kv {
     min-inline-size: min(22rem, 80vw);
+}
+
+/* formal sets a tooltip's words in small capitals; the labels keep that voice, the values (hosts, templates, dates) are
+   data and read as written. */
+.hp-card-kv dd {
+    font-variant-caps: normal;
+    letter-spacing: normal;
 }
 
 @media (max-width: 40rem) {
