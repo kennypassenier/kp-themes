@@ -17,15 +17,23 @@
 //
 // Run (a static server on the repository root first):
 //   node research/_review/measure-gaps.mjs <port> <research/topic/demo.html> [themes=formal,dark] [widths=1280,390]
-import { createRequire } from 'node:module';
+// An app behind a login, or one serving its own copy of kp-themes (cli-context.mjs; the options also work on
+// measure-states.mjs and measure-align.mjs):
+//   KP_LOGIN_USER=… KP_LOGIN_PASS=… node research/_review/measure-gaps.mjs --url https://host/app/page [themes] [widths] \
+//     --login-form /login,username,password,'button[type=submit]' --storage-state ~/.cache/x/state.json \
+//     --assets-from /static/kp=$HOME/Projects/kp-themes --ignore-https-errors
+//   --url <page url> (replaces <port> <page>) · --cookie name=value (repeatable) · --login-form url,userField,passField,submit
+//   (credentials from KP_LOGIN_USER/KP_LOGIN_PASS or --login-env USERVAR,PASSVAR, never argv) · --storage-state <file>
+//   (reuse/save a login) · --assets-from <prefix>=<dir> (repeatable) · --ignore-https-errors
 import { ALIGN_TOLERANCE, measureAlign, measureAlignOpened } from './measure-align.mjs';
 import { measureStatesAt } from './measure-states.mjs';
+import { launch, locate, OPTIONS_USAGE, parseArgs } from './cli-context.mjs';
 
-const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
-const { firefox } = require('playwright-core');
-const [port, path, themeArg = 'formal,dark', widthArg = '1280,390'] = process.argv.slice(2);
-if (!port || !path) {
-    console.error('usage: node research/_review/measure-gaps.mjs <port> <research/topic/demo.html> [themes] [widths]');
+const { positional, opts } = parseArgs(process.argv.slice(2));
+const where = locate(positional, opts);
+const [themeArg = 'formal,dark', widthArg = '1280,390'] = where.rest;
+if (!where.page) {
+    console.error(`usage: node research/_review/measure-gaps.mjs <port> <research/topic/demo.html> [themes] [widths] ${OPTIONS_USAGE}`);
     process.exit(2);
 }
 const MIN = 4;
@@ -160,15 +168,15 @@ function measure([min, only]) {
     return [...new Set(res)];
 }
 
-const browser = await firefox.launch({ executablePath: `${process.env.HOME}/.cache/ms-playwright/firefox-1538/firefox/firefox` });
+const browser = await launch(new URL(where.page).origin, opts);
 let found = 0;
 for (const width of widthArg.split(',').map(Number))
     for (const theme of themeArg.split(',')) {
         const page = await browser.newPage({ viewport: { width, height: 900 } });
-        const response = await page.goto(`http://127.0.0.1:${port}/${path}?theme=${theme}`);
+        const response = await page.goto(where.urlFor(theme));
         // A missing page must never read as clear: another server on the same port once answered 404 [port-1017].
         if (!response || !response.ok()) {
-            console.error(`${path} answered ${response ? response.status() : 'nothing'} on port ${port}; is this worktree's server on that port?`);
+            console.error(`${where.label} answered ${response ? response.status() : 'nothing'}; is this worktree's server on that port?`);
             process.exit(2);
         }
         await page.waitForTimeout(1500);
@@ -192,7 +200,7 @@ for (const width of widthArg.split(',').map(Number))
             align = align.concat(await measureAlignOpened(page, id));
         }
         await page.close();
-        const states = await measureStatesAt(browser, `http://127.0.0.1:${port}/${path}?theme=${theme}`, { width });
+        const states = await measureStatesAt(browser, where.urlFor(theme), { width });
         found += out.length + align.length + states.length;
         const said = [
             out.length ? `${out.length} text(s) closer than ${MIN}px` : '',

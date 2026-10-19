@@ -39,8 +39,11 @@
 //
 // Run (a static server on the repository root first):
 //   node research/_review/measure-align.mjs <port> <research/topic/demo.html> [themes=formal] [widths=1280,390] [ids]
-import { createRequire } from 'node:module';
+// An app behind a login or serving its own kp-themes copy: --url <page url> (instead of <port> <page>), --cookie n=v,
+// --login-form url,userField,passField,submit (KP_LOGIN_USER/KP_LOGIN_PASS), --storage-state <file>, --assets-from
+// <prefix>=<dir>, --ignore-https-errors; see cli-context.mjs and README.md. The page needs data-review-item sections.
 import { fileURLToPath } from 'node:url';
+import { launch, locate, OPTIONS_USAGE, parseArgs } from './cli-context.mjs';
 
 /** Tolerance in px (Kenny's brief: "beyond 1 px"). */
 export const ALIGN_TOLERANCE = 1;
@@ -780,22 +783,22 @@ export async function measureAlignOpened(page, id) {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
-    const { firefox } = require('playwright-core');
-    const [port, path, themeArg = 'formal', widthArg = '1280,390', idArg = ''] = process.argv.slice(2);
-    if (!port || !path) {
-        console.error('usage: node research/_review/measure-align.mjs <port> <research/topic/demo.html> [themes] [widths] [section ids]');
+    const { positional, opts } = parseArgs(process.argv.slice(2));
+    const where = locate(positional, opts);
+    const [themeArg = 'formal', widthArg = '1280,390', idArg = ''] = where.rest;
+    if (!where.page) {
+        console.error(`usage: node research/_review/measure-align.mjs <port> <research/topic/demo.html> [themes] [widths] [section ids] ${OPTIONS_USAGE}`);
         process.exit(2);
     }
-    const browser = await firefox.launch({ executablePath: `${process.env.HOME}/.cache/ms-playwright/firefox-1538/firefox/firefox` });
+    const browser = await launch(new URL(where.page).origin, opts);
     let found = 0;
     for (const width of widthArg.split(',').map(Number))
         for (const theme of themeArg.split(',')) {
             const page = await browser.newPage({ viewport: { width, height: 900 } });
-            const response = await page.goto(`http://127.0.0.1:${port}/${path}?theme=${theme}`);
+            const response = await page.goto(where.urlFor(theme));
             if (!response || !response.ok()) {
                 console.error(
-                    `${path} answered ${response ? response.status() : 'nothing'} on port ${port}; is this worktree's server on that port?`,
+                    `${where.label} answered ${response ? response.status() : 'nothing'}; is this worktree's server on that port?`,
                 );
                 process.exit(2);
             }

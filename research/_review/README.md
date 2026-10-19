@@ -448,6 +448,32 @@ python3 -m http.server 8743 --bind 127.0.0.1   # from the repository root
 node research/_review/measure-plate.mjs [theme …] [--port 8743]
 ```
 
+## Measuring an app behind a login (measure-login-1019)
+
+`measure-gaps.mjs`, `measure-states.mjs` and `measure-align.mjs` share `cli-context.mjs`, so an app that needs a login, or serves
+its own old copy of kp-themes, is measured without a hand-written wrapper (gap http-switchboard 37). The `<port> <page>` form
+still works unchanged. The options:
+
+- `--url <page url>`: the full page address (`https://host/app/page`); replaces `<port> <page>`, the other positionals
+  (`[themes] [widths]`) stay. `?theme=` is appended.
+- `--cookie name=value` (repeatable): a cookie on the page's origin.
+- `--login-form url,userField,passField,submitSelector`: log in once through the form (field = name, id or CSS selector; the
+  submit selector may contain commas). Credentials come from the environment, `KP_LOGIN_USER` and `KP_LOGIN_PASS` (or the
+  variables named by `--login-env USERVAR,PASSVAR`), never from argv, and are never printed.
+- `--storage-state <file>`: a Playwright storageState every page starts from. Together with `--login-form` the file is
+  written after the login (mode 600) and read by later runs, which then skip the form while the file exists.
+- `--assets-from <prefix>=<dir>` (repeatable): requests under `<prefix>` are answered from `<dir>` with the right content
+  type (context.route; a path with no such file goes on to the app), e.g. `/static/kp=$HOME/Projects/kp-themes`.
+- `--ignore-https-errors`: accept a self-signed certificate.
+
+```sh
+KP_LOGIN_USER=… KP_LOGIN_PASS=… node research/_review/measure-states.mjs --url https://host/app/page formal 1280 \
+  --login-form /login,username,password,'button[type=submit]' --storage-state ~/.cache/app/state.json \
+  --assets-from /static/kp=$HOME/Projects/kp-themes --ignore-https-errors
+```
+
+measure-gaps and measure-align still need the page's `data-review-item` sections; measure-states does not.
+
 ## Every data component uses its standard states
 
 Kenny, 2026-10-19 11:25, after the project threads built tables without the busy card and graphs, lists, cards and forms

@@ -29,9 +29,11 @@
 //
 // Run (a static server on the repository root first, or the project's own server):
 //   node research/_review/measure-states.mjs <port> <page path> [themes=formal,dark] [widths=1280,390] [--no-drive]
+// An app behind a login or serving its own kp-themes copy: --url <page url> (instead of <port> <page>), --cookie, --login-form,
+// --storage-state, --assets-from <prefix>=<dir>, --ignore-https-errors; see cli-context.mjs and README.md.
 // A project's page: node research/_review/measure-states.mjs 8080 index.html formal 1280   (any page on 127.0.0.1:<port>)
-import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { launch, locate, OPTIONS_USAGE, parseArgs } from './cli-context.mjs';
 import { readFileSync, existsSync } from 'node:fs';
 
 /** The repository this script belongs to: a page whose package modules cannot be found is driven through its copy. */
@@ -1164,25 +1166,23 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
 }
 
 async function main() {
-    const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
-    const { firefox } = require('playwright-core');
-    const args = process.argv.slice(2);
-    const drive = !args.includes('--no-drive');
-    const [port, path, themeArg = 'formal,dark', widthArg = '1280,390'] = args.filter((a) => !a.startsWith('--'));
-    if (!port || !path) {
-        console.error('usage: node research/_review/measure-states.mjs <port> <page path> [themes] [widths] [--no-drive]');
+    const { positional, opts } = parseArgs(process.argv.slice(2));
+    const drive = !opts.noDrive;
+    const where = locate(positional, opts);
+    const [themeArg = 'formal,dark', widthArg = '1280,390'] = where.rest;
+    if (!where.page) {
+        console.error(`usage: node research/_review/measure-states.mjs <port> <page path> [themes] [widths] [--no-drive] ${OPTIONS_USAGE}`);
         process.exit(2);
     }
-    const browser = await firefox.launch({ executablePath: `${process.env.HOME}/.cache/ms-playwright/firefox-1538/firefox/firefox` });
+    const browser = await launch(new URL(where.page).origin, opts);
     let found = 0;
     for (const width of widthArg.split(',').map(Number))
         for (const theme of themeArg.split(',')) {
-            const sep = path.includes('?') ? '&' : '?';
             let lines;
             try {
-                lines = await measureStatesAt(browser, `http://127.0.0.1:${port}/${path}${sep}theme=${theme}`, { width, drive });
+                lines = await measureStatesAt(browser, where.urlFor(theme), { width, drive });
             } catch (e) {
-                console.error(`${path}: ${e instanceof Error ? e.message : e}; is the server on port ${port}?`);
+                console.error(`${where.label}: ${e instanceof Error ? e.message : e}; is the server up?`);
                 process.exit(2);
             }
             found += lines.length;
