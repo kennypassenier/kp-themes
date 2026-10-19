@@ -17517,6 +17517,11 @@ function attachDataTables(root = document, {
         const top = head === null ? body2.top : head.getBoundingClientRect().bottom;
         let from = Math.max(0, Math.round(top - hostBox.top - host.clientTop));
         let to = Math.max(0, Math.round(hostBox.bottom - Math.max(tableBox.bottom, top) - host.clientTop));
+        if (all.length === 0) {
+          const foot = host.querySelector("[data-kp-datatable-status]")?.closest(".kp-datatable__bar") ?? null;
+          const footTop = foot !== null && foot.getBoundingClientRect().top >= top ? foot.getBoundingClientRect().top : hostBox.bottom;
+          to = Math.max(0, Math.round(hostBox.bottom - footTop - host.clientTop));
+        }
         const need = Math.max(panel2.offsetHeight + 8, Math.min(host.clientHeight / 2, 128));
         if (host.clientHeight - from - to < need) {
           to = Math.max(0, host.clientHeight - from - need);
@@ -17526,8 +17531,9 @@ function attachDataTables(root = document, {
         layer.style.setProperty("--kp-busy-overlay-bottom", `${to}px`);
         const innerLeft = hostBox.left + host.clientLeft;
         const seen = seenAcross(host, innerLeft, innerLeft + host.clientWidth);
-        layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(Math.max(tableBox.left, seen.left) - innerLeft))}px`);
-        layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(innerLeft + host.clientWidth - Math.min(tableBox.right, seen.right)))}px`);
+        const spans = tableBox.width >= seen.right - seen.left - 1;
+        layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round((spans ? Math.max(tableBox.left, seen.left) : seen.left) - innerLeft))}px`);
+        layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(innerLeft + host.clientWidth - (spans ? Math.min(tableBox.right, seen.right) : seen.right)))}px`);
       };
       layer.append(panel2);
       host.append(layer);

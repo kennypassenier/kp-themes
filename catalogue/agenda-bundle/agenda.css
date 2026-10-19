@@ -29968,6 +29968,12 @@
         overflow-wrap: break-word;
     }
 
+    /* A button in the title's line (a refresh, a filter) stands on the title's baseline, like the actions on the right do: centred
+     * in the line it would stand 5 px off the actions beside it [hlfour-1019]. */
+    .kp-page-header__line:has(> :is(.kp-button, .kp-icon-button, .kp-menu-button)) {
+        align-items: first baseline;
+    }
+
     .kp-page-header__lead {
         display: inline-flex;
         flex: none;
@@ -29977,6 +29983,32 @@
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
         white-space: nowrap;
+    }
+
+    /* The actions stand level with the title, whatever stands before it [hlfour-1019]. The header lays them on the first
+     * baseline of its left cell, and a lead (the mark before the title) has none of its own: the cell's first baseline was the
+     * mark's bottom edge, so the actions hung 10 px under the title. Beside a lead the actions are therefore a box as tall as
+     * the lead with their buttons centred in it, which is the title's own centre (the title is centred on the lead). The lead's
+     * size is --kp-idmark-size (2.75rem, the large mark); a header that sets another size on itself moves both. */
+    @container kp-page-header (min-width: 40.0625rem) {
+        .kp-page-header__inner:has(> * > .kp-page-header__heading > .kp-page-header__lead) {
+            align-items: start;
+        }
+
+        .kp-page-header__inner:has(> * > .kp-page-header__heading > .kp-page-header__lead) > .kp-page-header__actions {
+            align-content: center;
+            min-block-size: var(--kp-idmark-size, 2.75rem);
+        }
+    }
+
+    /* A line above the title (a way back, the trail): outside `.kp-page-header__inner`, first in the header, so the first line
+     * of the left cell is the title's and the actions level with it. Inside the cell it would be the first baseline. */
+    .kp-page-header > .kp-page-header__back {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
     }
 
     /* --- A number that ticks to its new value [kpadopt4-data] ----------- */
