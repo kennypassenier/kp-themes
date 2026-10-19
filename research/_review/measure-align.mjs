@@ -80,6 +80,8 @@ export function measureAlign([tol, only]) {
             if (!n.textContent?.trim()) continue;
             const p = /** @type {HTMLElement} */ (n.parentElement);
             if (inChrome(p) || !shown(p)) continue;
+            // Visually hidden words (a slim rail's clipped label, an sr-only span written as clip-path) are no line.
+            if (/inset\(50%\)/.test(getComputedStyle(p).clipPath)) continue;
             const range = document.createRange();
             range.selectNodeContents(n);
             const rect = [...range.getClientRects()].find((r) => r.width > 0.5 && r.height > 0.5);
@@ -464,6 +466,10 @@ export function measureAlign([tol, only]) {
             // Only blocks of more than one line: a mark beside its word is measured by measure-gaps.
             if (ar.height < controlH * 1.5 && br.height < controlH * 1.5) continue;
             if (plated(a) && plated(b) && Math.abs(ar.top - br.top) <= tol) continue;
+            // A collapsed icon rail has no text line to share with the page beside it: its icons are its composition
+            // (homelab gap 51, 2026-10-19).
+            if ([a, b].some((k) => k.matches('[data-kp-sidenav-slim-collapsed], [data-kp-sidenav-slim-collapsed] *') || k.querySelector('[data-kp-sidenav-slim-collapsed]')))
+                continue;
             // A plate beside open text: the plate's top on the text's first line top is a composition too.
             const fa = firstLine(a);
             const fb = firstLine(b);
