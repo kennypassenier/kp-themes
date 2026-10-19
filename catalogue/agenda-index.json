@@ -435,6 +435,31 @@
             "fingerprint": "2191b1e94ef12f8b",
             "update": null
         },
+        "research/almanac-align-1019/demo.html": {
+            "facts": {
+                "id": "almanac-align-1019",
+                "themes": "formal",
+                "ask": null,
+                "askText": "You approved five Almanac demos and then found labels, values and buttons lined up by accident instead of on a grid. This bundle shows ten spots of those pages, each with Now (the approved layout) and Fixed (the same content on the form grid, .kp-formgrid, or on named grid tracks). Nothing else on the pages changes. 11 sections, formal only. The content is the approved content: Almanac · Huishouden, Almanac · Infra, almanac-test, the source home-assistant; the calendar ids and every other source are made up, as before. Today is 19/10/2026.",
+                "sections": [
+                    { "item": "try-profile", "themes": null, "topic": "try-source", "mode": null },
+                    { "item": "try-editor", "themes": null, "topic": "try-source", "mode": null },
+                    { "item": "try-result", "themes": null, "topic": "try-source", "mode": null },
+                    { "item": "status-deliveries-head", "themes": null, "topic": "status", "mode": null },
+                    { "item": "status-glance", "themes": null, "topic": "status", "mode": null },
+                    { "item": "history-month-head", "themes": null, "topic": "history", "mode": null },
+                    { "item": "cal-header", "themes": null, "topic": "calendars", "mode": null },
+                    { "item": "cal-attention", "themes": null, "topic": "calendars", "mode": null },
+                    { "item": "cal-delete", "themes": null, "topic": "calendars", "mode": null },
+                    { "item": "cal-new", "themes": null, "topic": "calendars", "mode": null },
+                    { "item": "cal-cards", "themes": null, "topic": "calendars", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"almanacalign-6d3f1b8a-52c7-4e09-b1a4-9e7c2d05f318\", \"received\": [] }\n        "
+            },
+            "fingerprint": "0293d3312e95a890",
+            "update": null
+        },
         "research/chassis-kit-pages/demo.html": {
             "facts": {
                 "id": "chassis-kit-pages",

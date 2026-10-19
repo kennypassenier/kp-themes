@@ -236,6 +236,12 @@ export const PAGES = [
                 label: 'Almanac: deliveries per day and this week',
                 about: 'Two new views for Almanac: a month that shows how many events it delivered each day (pick a day to see them), and a week agenda of the events it put in the calendars, coloured per calendar. 2 sections, formal only, sample data.',
             },
+            // Kenny, 2026-10-19 ("ALLES DEFTIG VERTICAAL ALIGNEN EN GRID GEBRUIKEN IPV LINKS ALIGNEN"): fixes to the five approved Almanac demos, one bundle, formal only. Generator: research/almanac-align-1019/build.mjs.
+            {
+                href: 'research/almanac-align-1019/demo.html',
+                label: 'Almanac: alignment fixes on the approved pages',
+                about: 'Eleven spots on the five approved Almanac pages that were lined up by accident, each with Now and Fixed on one grid: the Copy buttons of the profile and event facts, the event editor, the head of Recent deliveries, the glance row, the month head, the Calendars header at 1280 and 390, the attention band, the typed delete and new-calendar fields, and the phone cards. 11 sections, formal only, sample data.',
+            },
             // Kenny, 2026-10-19: chassis-rs's shared kit pages rebuilt on kp-themes 11.0.0, bundled into one review (shared code and generator: research/chassis-kit-pages/build.mjs).
             {
                 href: 'research/chassis-kit-pages/demo.html',

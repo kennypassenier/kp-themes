@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="almanac-align-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Almanac: alignment fixes on the approved pages</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main aa-page">
+            <header class="aa-intro">
+                <h1>Almanac: alignment fixes on the approved pages</h1>
+                <p class="cat-intro">
+                    You approved five Almanac demos and then found labels, values and buttons lined up by accident instead of on a grid. This
+                    bundle shows ten spots of those pages, each with <b>Now</b> (the approved layout) and <b>Fixed</b> (the same content on the
+                    form grid, <code>.kp-formgrid</code>, or on named grid tracks). Nothing else on the pages changes. 11 sections, formal only.
+                    The content is the approved content: <b>Almanac · Huishouden</b>, <b>Almanac · Infra</b>, <b>almanac-test</b>, the source
+                    <b>home-assistant</b>; the calendar ids and every other source are made up, as before. Today is 19/10/2026.
+                </p>
+            </header>
+
+            <section
+                class="aa-sec"
+                id="try-profile"
+                data-review-item="try-profile"
+                data-review-topic="try-source"
+                data-review-topic-title="Try a source"
+                data-review-title="Try a source: the profile facts"
+                data-review-components="formgrid kv copy"
+                aria-labelledby="h-try-profile"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-try-profile">Try a source: the profile facts</h2>
+                    <p>Before, each Copy button stood straight after its own value, so the three buttons sat at three different distances from the edge, and at phone width one stood 4.8 px off its label; now every value starts on one line and every Copy stands in one column at the end.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Seven facts: Source id, Calendar, Calendar id (sample), Time zone, Default length, Schema version, File. In Fixed the values start on one vertical line, and the three Copy buttons (Source id, Calendar id, File) are the same size in one column at the right end, each on the line of its own label.</li>
+                        <li>Now is the approved list: a Copy right after each value, so the buttons start at different distances. Copy still copies and says Copied.</li>
+                        <li><b>The grid:</b> four tracks, label (as wide as &ldquo;Calendar id (sample)&rdquo;) | control (the value) | value (empty here) | actions (the Copy buttons); each fact is one row that shares them. At 390 px every row reads top to bottom: label, value, then Copy at the left edge.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Now and Fixed: run your eye down the Copy buttons (one column, one size) and down the values (one left edge); then across each row, label and Copy on one line.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="try-profile-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="try-profile:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="try-profile:version" data-aa-v="fixed">Fixed</button></div>
+                </div>
+                <div id="try-profile-component" class="aa-stage" data-aa-version="fixed">
+                    <div class="aa-variant" data-aa-variant="now">
+<section class="kp-card aa-card" aria-labelledby="tp-now-title">
+    <div class="kp-card__header aa-card__header"><h3 class="kp-card__title" id="tp-now-title">Profile of home-assistant</h3><span class="kp-badge kp-badge--success">Real source</span></div>
+    <div class="kp-card__stage"><div class="kp-card__data"><dl class="kp-kv kp-kv--columns kp-kv--lines" aria-label="The facts"><div class="kp-kv__row"><dt>Source id</dt><dd><span class="kp-copyable"><span class="kp-copyable__value" id="tp-now-v0">home-assistant</span><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="tp-now-v0">Copy</button></span></dd></div><div class="kp-kv__row"><dt>Calendar</dt><dd>Almanac · Huishouden</dd></div><div class="kp-kv__row"><dt>Calendar id (sample)</dt><dd><span class="kp-copyable"><span class="kp-copyable__value" id="tp-now-v2">huishouden-4f2a91@group.calendar.example</span><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="tp-now-v2">Copy</button></span></dd></div><div class="kp-kv__row"><dt>Time zone</dt><dd>Europe/Brussels</dd></div><div class="kp-kv__row"><dt>Default length</dt><dd>60 minutes</dd></div><div class="kp-kv__row"><dt>Schema version</dt><dd>2</dd></div><div class="kp-kv__row"><dt>File</dt><dd><span class="kp-copyable"><span class="kp-copyable__value" id="tp-now-v6">profiles/home-assistant.toml</span><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="tp-now-v6">Copy</button></span></dd></div></dl></div></div>
+</section>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<section class="kp-card aa-card" aria-labelledby="tp-fixed-title">
+    <div class="kp-card__header aa-card__header"><h3 class="kp-card__title" id="tp-fixed-title">Profile of home-assistant</h3><span class="kp-badge kp-badge--success">Real source</span></div>
+    <div class="kp-card__stage"><div class="kp-card__data"><div class="kp-formgrid" data-kp-formgrid-lines="lines" role="group" aria-label="The facts"><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tp-fixed-l0">Source id</span><div class="kp-formgrid__control"><span class="kp-copyable__value" id="tp-fixed-v0">home-assistant</span></div><div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="tp-fixed-v0" aria-describedby="tp-fixed-l0">Copy</button></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tp-fixed-l1">Calendar</span><div class="kp-formgrid__control"><span>Almanac · Huishouden</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tp-fixed-l2">Calendar id (sample)</span><div class="kp-formgrid__control"><span class="kp-copyable__value" id="tp-fixed-v2">huishouden-4f2a91@group.calendar.example</span></div><div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="tp-fixed-v2" aria-describedby="tp-fixed-l2">Copy</button></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tp-fixed-l3">Time zone</span><div class="kp-formgrid__control"><span>Europe/Brussels</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tp-fixed-l4">Default length</span><div class="kp-formgrid__control"><span>60 minutes</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tp-fixed-l5">Schema version</span><div class="kp-formgrid__control"><span>2</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tp-fixed-l6">File</span><div class="kp-formgrid__control"><span class="kp-copyable__value" id="tp-fixed-v6">profiles/home-assistant.toml</span></div><div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="tp-fixed-v6" aria-describedby="tp-fixed-l6">Copy</button></div></div></div></div></div>
+</section>
+                    </div>
+                    <p class="aa-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="try-editor"
+                data-review-item="try-editor"
+                data-review-topic="try-source"
+                data-review-topic-title="Try a source"
+                data-review-title="Try a source: the event editor"
+                data-review-components="formgrid json-field"
+                aria-labelledby="h-try-editor"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-try-editor">Try a source: the event editor</h2>
+                    <p>Before, the Format, Minify, Wrap and Copy tools, the Try it button and its note each started where they happened to land under the field; now the field, its tools, Try it and the note stand on the same tracks.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>In Fixed the field starts on the control edge and ends on the right edge of the actions column; its tool row (Format and Minify at the start, Wrap and Copy at the end) is inside the field, so it has the same two edges. <b>Try it</b> starts on the same left edge as Format, with its note, <b>Nothing is written to the calendar.</b>, in the next track on the same line.</li>
+                        <li>Press <b>Try it</b>: the answer appears in the line under it, and nothing else moves. Press Now: the approved layout, where Try it and its note are a loose row under the field.</li>
+                        <li><b>The grid:</b> label (&ldquo;Event call (the JSON body)&rdquo;) | control (the field, from here to the end of the actions column) | value (the note) | actions (the end of the field). Four rows: Source, the field, the Try it row, the answer. At 390 px the rows read top to bottom.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed: the left edge of Format, of Try it and of the field is one line; the right edge of Copy and of the field is one line; Try it and its note share a centre.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="try-editor-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="try-editor:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="try-editor:version" data-aa-v="fixed">Fixed</button></div>
+                </div>
+                <div id="try-editor-component" class="aa-stage" data-aa-version="fixed">
+                    <div class="aa-variant" data-aa-variant="now">
+<section class="kp-card aa-card" aria-labelledby="te-now-title">
+    <div class="kp-card__header aa-card__header"><h3 class="kp-card__title" id="te-now-title">Try an event call</h3></div>
+    <div class="kp-card__stage"><div class="kp-card__data"><form class="ps-stack" id="te-now-form" novalidate data-aa-editor>
+    <div class="ps-picker"><span class="ps-label" id="te-now-picker-label">Source</span><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-labelledby="te-now-picker-label" id="te-now-picker">
+    <button type="button" class="kp-segmented__item" data-value="home-assistant" role="radio" aria-checked="true"><span class="kp-segmented__label">home-assistant</span></button>
+    <button type="button" class="kp-segmented__item" data-value="homelab" role="radio" aria-checked="false"><span class="kp-segmented__label">homelab</span></button>
+    <button type="button" class="kp-segmented__item" data-value="kyu" role="radio" aria-checked="false"><span class="kp-segmented__label">kyu</span></button>
+    <button type="button" class="kp-segmented__item" data-value="claude-sessions" role="radio" aria-checked="false"><span class="kp-segmented__label">claude-sessions</span></button>
+</div></div>
+    <div class="kp-field"><label class="kp-field__label" for="te-now-body">Event call (the JSON body)</label><textarea class="kp-field__input kp-field__input--multiline" id="te-now-body" name="body" rows="12" data-kp-json="strict" data-kp-json-indent="2" data-kp-json-check="input" data-kp-json-format="button">{
+  &quot;external_id&quot;: &quot;switch.wasmachine&quot;,
+  &quot;title&quot;: &quot;Wasmachine klaar&quot;,
+  &quot;description&quot;: &quot;Cyclus voltooid&quot;,
+  &quot;start&quot;: &quot;2026-08-28T09:00:00+00:00&quot;
+}</textarea></div>
+    <div class="ps-actions"><button type="submit" class="kp-button kp-button--primary">Try it</button><span class="ps-actions__note">Nothing is written to the calendar.</span></div>
+    <div class="kp-alert kp-alert--info" id="te-now-answer" role="status" data-kp-semantic data-aa-answer><span><span class="kp-alert__label">Note: </span>Nothing tried yet. Press Try it.</span></div>
+</form></div></div>
+</section>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<section class="kp-card aa-card" aria-labelledby="te-fixed-title">
+    <div class="kp-card__header aa-card__header"><h3 class="kp-card__title" id="te-fixed-title">Try an event call</h3></div>
+    <div class="kp-card__stage"><div class="kp-card__data"><form id="te-fixed-form" novalidate data-aa-editor>
+    <div class="kp-formgrid">
+        <div class="kp-formgrid__row">
+            <span class="kp-formgrid__label" id="te-fixed-picker-label">Source</span>
+            <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-labelledby="te-fixed-picker-label" id="te-fixed-picker">
+    <button type="button" class="kp-segmented__item" data-value="home-assistant" role="radio" aria-checked="true"><span class="kp-segmented__label">home-assistant</span></button>
+    <button type="button" class="kp-segmented__item" data-value="homelab" role="radio" aria-checked="false"><span class="kp-segmented__label">homelab</span></button>
+    <button type="button" class="kp-segmented__item" data-value="kyu" role="radio" aria-checked="false"><span class="kp-segmented__label">kyu</span></button>
+    <button type="button" class="kp-segmented__item" data-value="claude-sessions" role="radio" aria-checked="false"><span class="kp-segmented__label">claude-sessions</span></button>
+</div></div>
+        </div>
+        <div class="kp-formgrid__row">
+            <label class="kp-formgrid__label" for="te-fixed-body">Event call (the JSON body)</label>
+            <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><textarea class="kp-field__input kp-field__input--multiline" id="te-fixed-body" name="body" rows="12" data-kp-json="strict" data-kp-json-indent="2" data-kp-json-check="input" data-kp-json-format="button">{
+  &quot;external_id&quot;: &quot;switch.wasmachine&quot;,
+  &quot;title&quot;: &quot;Wasmachine klaar&quot;,
+  &quot;description&quot;: &quot;Cyclus voltooid&quot;,
+  &quot;start&quot;: &quot;2026-08-28T09:00:00+00:00&quot;
+}</textarea></div>
+        </div>
+        <div class="kp-formgrid__row kp-formgrid__row--buttons">
+            <span class="kp-formgrid__label"></span>
+            <div class="kp-formgrid__control aa-tracks" data-kp-formgrid-span="wide">
+                <div class="kp-formgrid__buttons"><button type="submit" class="kp-button kp-button--primary">Try it</button></div>
+                <p class="kp-formgrid__value">Nothing is written to the calendar.</p>
+            </div>
+        </div>
+        <div class="kp-formgrid__row">
+            <span class="kp-formgrid__label">Answer</span>
+            <div class="kp-formgrid__control" data-kp-formgrid-span="wide"><div class="kp-alert kp-alert--info" id="te-fixed-answer" role="status" data-kp-semantic data-aa-answer><span><span class="kp-alert__label">Note: </span>Nothing tried yet. Press Try it.</span></div></div>
+        </div>
+    </div>
+</form></div></div>
+</section>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="try-result"
+                data-review-item="try-result"
+                data-review-topic="try-source"
+                data-review-topic-title="Try a source"
+                data-review-title="Try a source: the event facts and the marker"
+                data-review-components="formgrid kv copy"
+                aria-labelledby="h-try-result"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-try-result">Try a source: the event facts and the marker</h2>
+                    <p>Before, the Marker&rsquo;s Copy hung on the end of its value in the middle of the list; now the event&rsquo;s facts and the Marker&rsquo;s Copy follow the same tracks as the profile facts: the value on one line, Copy in the actions column.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Seven facts of the event Almanac would write (Title, When, Calendar, Description, Shows as, Reminders, Marker). The values start on one line; the one Copy button, on Marker, stands in the actions column on the line of the word Marker.</li>
+                        <li>Now is the approved list, with the Copy straight after the marker text.</li>
+                        <li><b>The grid:</b> label (as wide as &ldquo;Description&rdquo;) | control (the value) | value (empty) | actions (Copy). The same four tracks as the profile facts, so the two sections read alike. At 390 px the rows read top to bottom.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Now and Fixed: the Marker text starts on the same line as every other value, and Copy sits at the right end on the Marker line.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="try-result-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="try-result:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="try-result:version" data-aa-v="fixed">Fixed</button></div>
+                </div>
+                <div id="try-result-component" class="aa-stage" data-aa-version="fixed">
+                    <div class="aa-variant" data-aa-variant="now">
+<section class="kp-card aa-card" aria-labelledby="tr-now-title">
+    <div class="kp-card__header aa-card__header"><h3 class="kp-card__title" id="tr-now-title">What Almanac would write</h3><span class="kp-badge kp-badge--info">Would update</span></div>
+    <div class="kp-card__stage"><div class="kp-card__data"><h4 class="aa-h">The event</h4><dl class="kp-kv kp-kv--lines" aria-label="The facts"><div class="kp-kv__row"><dt>Title</dt><dd>Wasmachine klaar</dd></div><div class="kp-kv__row"><dt>When</dt><dd>28/08/2026 11:00 to 12:00 (Europe/Brussels)</dd></div><div class="kp-kv__row"><dt>Calendar</dt><dd>Almanac · Huishouden</dd></div><div class="kp-kv__row"><dt>Description</dt><dd>Cyclus voltooid</dd></div><div class="kp-kv__row"><dt>Shows as</dt><dd>Busy</dd></div><div class="kp-kv__row"><dt>Reminders</dt><dd>The calendar's defaults</dd></div><div class="kp-kv__row"><dt>Marker</dt><dd><span class="kp-copyable"><span class="kp-copyable__value" id="tr-now-v6">home-assistant:switch.wasmachine</span><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="tr-now-v6">Copy</button></span></dd></div></dl></div></div>
+</section>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<section class="kp-card aa-card" aria-labelledby="tr-fixed-title">
+    <div class="kp-card__header aa-card__header"><h3 class="kp-card__title" id="tr-fixed-title">What Almanac would write</h3><span class="kp-badge kp-badge--info">Would update</span></div>
+    <div class="kp-card__stage"><div class="kp-card__data"><h4 class="aa-h">The event</h4><div class="kp-formgrid" data-kp-formgrid-lines="lines" role="group" aria-label="The facts"><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tr-fixed-l0">Title</span><div class="kp-formgrid__control"><span>Wasmachine klaar</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tr-fixed-l1">When</span><div class="kp-formgrid__control"><span>28/08/2026 11:00 to 12:00 (Europe/Brussels)</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tr-fixed-l2">Calendar</span><div class="kp-formgrid__control"><span>Almanac · Huishouden</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tr-fixed-l3">Description</span><div class="kp-formgrid__control"><span>Cyclus voltooid</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tr-fixed-l4">Shows as</span><div class="kp-formgrid__control"><span>Busy</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tr-fixed-l5">Reminders</span><div class="kp-formgrid__control"><span>The calendar's defaults</span></div></div><div class="kp-formgrid__row"><span class="kp-formgrid__label" id="tr-fixed-l6">Marker</span><div class="kp-formgrid__control"><span class="kp-copyable__value" id="tr-fixed-v6">home-assistant:switch.wasmachine</span></div><div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="tr-fixed-v6" aria-describedby="tr-fixed-l6">Copy</button></div></div></div></div></div>
+</section>
+                    </div>
+                    <p class="aa-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="status-deliveries-head"
+                data-review-item="status-deliveries-head"
+                data-review-topic="status"
+                data-review-topic-title="Status page"
+                data-review-title="Status: the head of Recent deliveries"
+                data-review-components="formgrid auto-refresh card"
+                aria-labelledby="h-status-deliveries-head"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-status-deliveries-head">Status: the head of Recent deliveries</h2>
+                    <p>Before, the title, the interval chooser, the freshness words and Refresh now were a wrapping row whose right end stood off the card below it; now they are four cells of one grid that ends exactly where the card ends.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>In Fixed the title <b>Journal</b> starts on the card&rsquo;s left edge, the chooser (<b>Paused</b>), the freshness words (<b>not updated yet</b>) and <b>Refresh now</b> each have their own track, all centred on one line, and the right edge of Refresh now is the right edge of the card under it.</li>
+                        <li>Pick <b>15 s</b> in the chooser: the words change to <i>updated … ago</i> and a rule runs under the head; nothing moves sideways. Press Now: the approved row, where the head and the card do not share edges.</li>
+                        <li><b>The grid:</b> label (the title) | control (the chooser) | value (the freshness words) | actions (Refresh now); the card spans all four tracks. At 390 px the head reads top to bottom: title, chooser, words, Refresh now.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed: draw a vertical line from the right edge of Refresh now to the right edge of the card, and from the left edge of Journal to the left edge of the card: both are straight.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="status-deliveries-head-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="status-deliveries-head:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="status-deliveries-head:version" data-aa-v="fixed">Fixed</button></div>
+                </div>
+                <div id="status-deliveries-head-component" class="aa-stage" data-aa-version="fixed">
+                    <div class="aa-variant" data-aa-variant="now">
+<div class="aj-live"><div class="aj-live__head"><h3 class="aj-live__title">Journal</h3><div class="kp-refresh" data-kp-refresh="0" data-kp-refresh-choices="0,15,30,60" data-kp-look="menu"></div></div><section class="kp-card aj-card" aria-label="Recent deliveries, live">
+    <div class="kp-card__stage"><div class="kp-card__data"><div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none"><div class="kp-table-wrap"><table class="kp-table">
+        <caption class="kp-sr-only">Recent deliveries, newest first (sample data)</caption>
+        <thead><tr><th scope="col" data-kp-sort="text">When</th><th scope="col" data-kp-sort="text">Source</th><th scope="col" data-kp-sort="text">Result</th></tr></thead>
+        <tbody><tr><td data-label="When">delivered 1 min 2 s ago</td><td data-label="Source"><span class="kp-tag">homelab</span></td><td data-label="Result"><span class="kp-badge kp-badge--warning" data-kp-semantic>Retrying</span></td></tr><tr><td data-label="When">delivered 4 min 2 s ago</td><td data-label="Source"><span class="kp-tag">home-assistant</span></td><td data-label="Result"><span class="kp-badge kp-badge--success" data-kp-semantic>Created</span></td></tr><tr><td data-label="When">delivered 38 min 2 s ago</td><td data-label="Source"><span class="kp-tag">kyu</span></td><td data-label="Result"><span class="kp-badge kp-badge--info" data-kp-semantic>Updated</span></td></tr><tr><td data-label="When">delivered 2 h 10 min ago</td><td data-label="Source"><span class="kp-tag">claude-sessions</span></td><td data-label="Result"><span class="kp-badge kp-badge--success" data-kp-semantic>Created</span></td></tr><tr><td data-label="When">delivered 5 h ago</td><td data-label="Source"><span class="kp-tag">homelab</span></td><td data-label="Result"><span class="kp-badge kp-badge--destructive" data-kp-semantic>Failed</span></td></tr><tr><td data-label="When">delivered 9 h ago</td><td data-label="Source"><span class="kp-tag">home-assistant</span></td><td data-label="Result"><span class="kp-badge kp-badge--info" data-kp-semantic>Updated</span></td></tr></tbody>
+    </table></div></div></div></div>
+</section></div>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<div class="kp-formgrid aa-live" data-kp-formgrid-align="center"><h3 class="aa-live__title">Journal</h3><div class="kp-refresh" data-kp-refresh="0" data-kp-refresh-choices="0,15,30,60" data-kp-look="menu"></div><div class="aa-live__card"><section class="kp-card aj-card" aria-label="Recent deliveries, live">
+    <div class="kp-card__stage"><div class="kp-card__data"><div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none"><div class="kp-table-wrap"><table class="kp-table">
+        <caption class="kp-sr-only">Recent deliveries, newest first (sample data)</caption>
+        <thead><tr><th scope="col" data-kp-sort="text">When</th><th scope="col" data-kp-sort="text">Source</th><th scope="col" data-kp-sort="text">Result</th></tr></thead>
+        <tbody><tr><td data-label="When">delivered 1 min 2 s ago</td><td data-label="Source"><span class="kp-tag">homelab</span></td><td data-label="Result"><span class="kp-badge kp-badge--warning" data-kp-semantic>Retrying</span></td></tr><tr><td data-label="When">delivered 4 min 2 s ago</td><td data-label="Source"><span class="kp-tag">home-assistant</span></td><td data-label="Result"><span class="kp-badge kp-badge--success" data-kp-semantic>Created</span></td></tr><tr><td data-label="When">delivered 38 min 2 s ago</td><td data-label="Source"><span class="kp-tag">kyu</span></td><td data-label="Result"><span class="kp-badge kp-badge--info" data-kp-semantic>Updated</span></td></tr><tr><td data-label="When">delivered 2 h 10 min ago</td><td data-label="Source"><span class="kp-tag">claude-sessions</span></td><td data-label="Result"><span class="kp-badge kp-badge--success" data-kp-semantic>Created</span></td></tr><tr><td data-label="When">delivered 5 h ago</td><td data-label="Source"><span class="kp-tag">homelab</span></td><td data-label="Result"><span class="kp-badge kp-badge--destructive" data-kp-semantic>Failed</span></td></tr><tr><td data-label="When">delivered 9 h ago</td><td data-label="Source"><span class="kp-tag">home-assistant</span></td><td data-label="Result"><span class="kp-badge kp-badge--info" data-kp-semantic>Updated</span></td></tr></tbody>
+    </table></div></div></div></div>
+</section></div></div>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="status-glance"
+                data-review-item="status-glance"
+                data-review-topic="status"
+                data-review-topic-title="Status page"
+                data-review-title="Status: Journal at a glance"
+                data-review-components="formgrid kpi health"
+                aria-labelledby="h-status-glance"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-status-glance">Status: Journal at a glance</h2>
+                    <p>Before, the Journal and Store health lines used their own two columns, so &ldquo;Store&rdquo; and the words after the names stood nowhere near the edges of the four tiles above; now each pair uses the tile tracks: a name starts where a tile&rsquo;s text starts, its words start where the next tile&rsquo;s text starts.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Four tiles in one row at 1280 (two at 390). In Fixed, <b>Journal</b> starts on the text edge of the first tile and <b>Readable, nothing pending</b> on the text edge of the second; <b>Store</b> on the third tile&rsquo;s and <b>Writable</b> on the fourth&rsquo;s. Dot and words share one line with the name.</li>
+                        <li>Press Now: the approved lines, with the names and words on columns of their own.</li>
+                        <li><b>The grid:</b> the tiles&rsquo; four equal tracks (two at 390); each health pair spans two of them as a subgrid: the name in the first, the words in the second. The tiles and the health lines can never drift apart because they are one set of tracks.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed: draw a vertical line down from the text of the first tile through the word Journal, and from the second tile through the status words: both are straight.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="status-glance-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="status-glance:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="status-glance:version" data-aa-v="fixed">Fixed</button></div>
+                </div>
+                <div id="status-glance-component" class="aa-stage" data-aa-version="fixed">
+                    <div class="aa-variant" data-aa-variant="now">
+<section class="kp-card aj-card" aria-label="Journal at a glance">
+    <div class="kp-card__header"><h3 class="kp-card__title">Journal</h3></div>
+    <p class="kp-card__body">What is waiting and what happened since the service started.</p>
+    <div class="kp-card__stage"><div class="kp-card__data aj-glance"><div class="kp-kpis" role="group" aria-label="Journal figures">
+    <div class="kp-kpi"><span class="kp-kpi__label">Waiting to be delivered</span><span class="kp-kpi__value"><span>0</span><small>events</small></span><span class="kp-kpi__trend">Nothing is waiting</span></div>
+    <button type="button" class="kp-kpi kp-kpi--toggle" data-aa-outcome aria-pressed="false"><span class="kp-kpi__label">Delivered since start</span><span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this ×</span></span><span class="kp-kpi__value"><span>3</span><small>events</small></span><span class="kp-kpi__trend">3 accepted in all</span></button>
+    <button type="button" class="kp-kpi kp-kpi--toggle" data-aa-outcome aria-pressed="false"><span class="kp-kpi__label">Failed since start</span><span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this ×</span></span><span class="kp-kpi__value"><span>0</span><small>events</small></span><span class="kp-kpi__trend">None gave up</span></button>
+    <div class="kp-kpi kp-kpi--trend"><span class="kp-kpi__label">Deliveries per hour <span class="kp-kpi__label-note">sample data</span></span><span class="kp-kpi__value">1<small>per hour</small></span><span class="kp-kpi__trend">Last 24 hours, sample data</span><figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative" aria-label="Deliveries per hour, last 24 hours, sample data"><script type="application/json" data-kp-chart-data>{"unit":"events","digits":0,"series":[{"label":"Deliveries","start":1792360800000,"step":3600000,"values":[0,0,1,0,0,0,0,1,2,1,0,1,0,0,1,1,0,2,1,0,0,1,0,1,1]}]}</script></figure></div>
+</div><div class="aj-health" role="group" aria-label="Subsystems">
+    <div class="aj-health__item"><span class="aj-health__name">Journal</span><span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> <span>Readable, nothing pending</span></span></div>
+    <div class="aj-health__item"><span class="aj-health__name">Store</span><span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> <span>Writable</span></span></div>
+</div></div></div>
+</section>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<div class="aa-glance-wrap"><section class="kp-card aj-card" aria-label="Journal at a glance">
+    <div class="kp-card__header"><h3 class="kp-card__title">Journal</h3></div>
+    <p class="kp-card__body">What is waiting and what happened since the service started.</p>
+    <div class="kp-card__stage"><div class="kp-card__data aa-glance"><div class="kp-kpis" role="group" aria-label="Journal figures">
+    <div class="kp-kpi"><span class="kp-kpi__label">Waiting to be delivered</span><span class="kp-kpi__value"><span>0</span><small>events</small></span><span class="kp-kpi__trend">Nothing is waiting</span></div>
+    <button type="button" class="kp-kpi kp-kpi--toggle" data-aa-outcome aria-pressed="false"><span class="kp-kpi__label">Delivered since start</span><span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this ×</span></span><span class="kp-kpi__value"><span>3</span><small>events</small></span><span class="kp-kpi__trend">3 accepted in all</span></button>
+    <button type="button" class="kp-kpi kp-kpi--toggle" data-aa-outcome aria-pressed="false"><span class="kp-kpi__label">Failed since start</span><span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this ×</span></span><span class="kp-kpi__value"><span>0</span><small>events</small></span><span class="kp-kpi__trend">None gave up</span></button>
+    <div class="kp-kpi kp-kpi--trend"><span class="kp-kpi__label">Deliveries per hour <span class="kp-kpi__label-note">sample data</span></span><span class="kp-kpi__value">1<small>per hour</small></span><span class="kp-kpi__trend">Last 24 hours, sample data</span><figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative" aria-label="Deliveries per hour, last 24 hours, sample data"><script type="application/json" data-kp-chart-data>{"unit":"events","digits":0,"series":[{"label":"Deliveries","start":1792360800000,"step":3600000,"values":[0,0,1,0,0,0,0,1,2,1,0,1,0,0,1,1,0,2,1,0,0,1,0,1,1]}]}</script></figure></div>
+</div><div class="aa-health" role="group" aria-label="Subsystems">
+    <div class="aj-health__item"><span class="aj-health__name">Journal</span><span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> <span>Readable, nothing pending</span></span></div>
+    <div class="aj-health__item"><span class="aj-health__name">Store</span><span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> <span>Writable</span></span></div>
+</div></div></div>
+</section></div>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="history-month-head"
+                data-review-item="history-month-head"
+                data-review-topic="history"
+                data-review-topic-title="History page"
+                data-review-title="History: the month head"
+                data-review-components="formgrid calendar-nav"
+                aria-labelledby="h-history-month-head"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-history-month-head">History: the month head</h2>
+                    <p>Before, Prev, the month, Next and Today were a left-aligned run of four that ended well before the right edge of the days; now they are four tracks of one grid, Prev on the first day&rsquo;s edge, Next and Today ending on the last day&rsquo;s edge, the title centred on the same line.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>In Fixed <b>‹ Prev</b> starts on the left edge of the Monday column, <b>Today</b> ends on the right edge of the Sunday column, <b>OCTOBER 2026</b> is centred between Prev and Next, and the four share one centre line. Prev and Next, Today share one height.</li>
+                        <li>Press <b>Next</b>: the month changes and nothing in the head moves. Press Now: the approved run of four at the left.</li>
+                        <li><b>The grid:</b> four tracks, Prev (as wide as its word) | the month (the rest) | Next | Today; at 390 px and under 21rem the title takes a row of its own over three equal tracks, Prev | Next | Today, edge to edge. Needs only page CSS on the package&rsquo;s nav grid; the package itself keeps its left run.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed: Prev starts above Monday&rsquo;s plate edge, Today ends above Sunday&rsquo;s plate edge, the month sits in the middle on the buttons&rsquo; centre line.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="history-month-head-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="history-month-head:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="history-month-head:version" data-aa-v="fixed">Fixed</button></div>
+                    <div role="group" aria-label="Width of the calendar"><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="history-month-head:width" data-aa-v="full">Wide (44rem)</button><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="history-month-head:width" data-aa-v="phone">Phone (390)</button></div>
+                </div>
+                <div id="history-month-head-component" class="aa-stage" data-aa-version="fixed" data-aa-width="full">
+                    <div class="aa-variant" data-aa-variant="now">
+<div class="aa-month aa-month--now"><section class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-calendar-month="2026-10" data-kp-calendar-selected="2026-10-19" data-kp-time-zone="Europe/Brussels" lang="en-GB" aria-label="Events delivered per day (sample data)" data-aa-calendar></section></div>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<div class="aa-month aa-month--fixed"><section class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-calendar-month="2026-10" data-kp-calendar-selected="2026-10-19" data-kp-time-zone="Europe/Brussels" lang="en-GB" aria-label="Events delivered per day (sample data)" data-aa-calendar></section></div>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="cal-header"
+                data-review-item="cal-header"
+                data-review-topic="calendars"
+                data-review-topic-title="Calendars page"
+                data-review-title="Calendars: the page header at 1280 and at 390"
+                data-review-components="page-header grid menu-button"
+                aria-labelledby="h-cal-header"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-cal-header">Calendars: the page header at 1280 and at 390</h2>
+                    <p>Before, at 390 px New calendar ran full width and More stood alone under it at the left, and at 1280 the buttons sat above the title&rsquo;s line with two different widths; now the two buttons are two equal tracks of one grid, side by side at both widths, on the title&rsquo;s centre line.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>1280 (Fixed):</b> the title <b>Calendars</b> and the two buttons on one centre line, <b>New calendar</b> and <b>More ▾</b> equally wide, the sentence under the title. <b>390 (Fixed):</b> title, sentence, then the two buttons side by side, each half of the width, no lone button on its own row.</li>
+                        <li>Press <b>More ▾</b>: the menu opens at its button with <b>Reload profiles from disk</b> and its hint, on an opaque plate, inside the screen. Press Now: the approved header, with the primary full width at 390.</li>
+                        <li><b>The grid:</b> 1280: the text (the rest) | the actions (two equal tracks); 390: one column for the text, then the actions as two equal tracks edge to edge.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed at 1280, then at 390: two equal buttons side by side, their edges are the edges of the header; at 1280 their centre line is the title&rsquo;s.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="cal-header-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-header:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-header:version" data-aa-v="fixed">Fixed</button></div>
+                    <div role="group" aria-label="Width"><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-header:width" data-aa-v="full">Full width (1280)</button><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-header:width" data-aa-v="phone">Phone (390)</button></div>
+                </div>
+                <div id="cal-header-component" class="aa-stage" data-aa-version="fixed" data-aa-width="full">
+                    <div class="aa-variant" data-aa-variant="now">
+<header class="kp-page-header aa-header--now">
+    <div class="kp-page-header__inner">
+        <div class="aa-header__text">
+            <h1 class="kp-page-header__title">Calendars</h1>
+            <p class="kp-page-header__description">The Google calendars Almanac writes into, which source writes to which, and the profile files that make that so.</p>
+        </div>
+        <div class="kp-page-header__actions">
+            <button type="button" class="kp-button kp-button--primary">New calendar</button>
+            <div class="kp-menu-button" data-kp-menu-button data-kp-key="ch-now-more">
+                <button type="button" class="kp-button">More ▾</button>
+                <div class="kp-menu kp-menu--rich" role="menu" aria-label="Other actions on this page" hidden>
+                    <button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-labelledby="ch-now-mi-l" aria-describedby="ch-now-mi-h" data-kp-value="reload"><span class="kp-menu__label" id="ch-now-mi-l">Reload profiles from disk</span><span class="kp-menu__hint" id="ch-now-mi-h">Read every profile file again, without restarting the service</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<header class="kp-page-header aa-header--fixed">
+    <div class="kp-page-header__inner">
+        <div class="aa-header__text">
+            <h1 class="kp-page-header__title">Calendars</h1>
+            <p class="kp-page-header__description">The Google calendars Almanac writes into, which source writes to which, and the profile files that make that so.</p>
+        </div>
+        <div class="kp-page-header__actions">
+            <button type="button" class="kp-button kp-button--primary">New calendar</button>
+            <div class="kp-menu-button" data-kp-menu-button data-kp-key="ch-fixed-more">
+                <button type="button" class="kp-button">More ▾</button>
+                <div class="kp-menu kp-menu--rich" role="menu" aria-label="Other actions on this page" hidden>
+                    <button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-labelledby="ch-fixed-mi-l" aria-describedby="ch-fixed-mi-h" data-kp-value="reload"><span class="kp-menu__label" id="ch-fixed-mi-l">Reload profiles from disk</span><span class="kp-menu__hint" id="ch-fixed-mi-h">Read every profile file again, without restarting the service</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="cal-attention"
+                data-review-item="cal-attention"
+                data-review-topic="calendars"
+                data-review-topic-title="Calendars page"
+                data-review-title="Calendars: the attention band"
+                data-review-components="attention formgrid flash-button"
+                aria-labelledby="h-cal-attention"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-cal-attention">Calendars: the attention band</h2>
+                    <p>Before, each problem plate placed its own fix button, so Check again and Reload profiles from disk ended 74.6 px apart and the two texts ended on different lines; now the plates share one grid: icon, text and one actions column where both buttons start and end on the same lines.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Both</b> problems: <b>Google Calendar cannot be reached</b> (red) above <b>1 profile file is not being served</b> (amber). In Fixed the two icons, the two texts and the two buttons each stand on one line down the band; both buttons are the same width (as wide as &ldquo;Reload profiles from disk&rdquo;), and the text ends on one edge.</li>
+                        <li>Press a fix button: it shows busy, then Done, and the problem leaves the band. <b>Google only</b>, <b>File only</b> and <b>None</b> show the band with one problem or none (none takes no room). Press Now: the approved band.</li>
+                        <li><b>The grid:</b> three tracks used by every plate: icon (as wide as the icon) | text (the rest) | actions (as wide as the widest button). It is the package&rsquo;s <code>data-kp-subgrid</code> on the band, placed on the form grid. At 390 px each plate stacks, the button under its text.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed: the two buttons have one left and one right edge; the two texts end on one edge; the icons are in one column.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="cal-attention-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-attention:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-attention:version" data-aa-v="fixed">Fixed</button></div>
+                    <div role="group" aria-label="Problems"><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-attention:problems" data-aa-v="both">Both</button><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-attention:problems" data-aa-v="google">Google only</button><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-attention:problems" data-aa-v="file">File only</button><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-attention:problems" data-aa-v="none">None</button></div>
+                </div>
+                <div id="cal-attention-component" class="aa-stage" data-aa-version="fixed">
+                    <div class="aa-variant" data-aa-variant="now">
+<div class="kp-attention" role="region" aria-label="Needs attention" data-aa-attention></div>
+                        <p class="aa-below kp-text-muted">The calendars card follows here.</p>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<div class="kp-formgrid aa-attention-grid"><div class="kp-attention" data-kp-subgrid role="region" aria-label="Needs attention" data-aa-attention></div></div>
+                        <p class="aa-below kp-text-muted">The calendars card follows here.</p>
+                    </div>
+                    <p class="aa-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="cal-delete"
+                data-review-item="cal-delete"
+                data-review-topic="calendars"
+                data-review-topic-title="Calendars page"
+                data-review-title="Calendars: the typed delete confirm"
+                data-review-components="type-confirm formgrid dialog"
+                aria-labelledby="h-cal-delete"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-cal-delete">Calendars: the typed delete confirm</h2>
+                    <p>Before, the name field stopped 86 px short of the right edge that the &ldquo;What you lose&rdquo; box above it and the status line below it end on; now the whole confirm stands in one grid cell and the field fills it.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>In Fixed the <b>What you lose</b> box, the label with the name in code, the field, the rule and the status line all end on one right edge; the field starts on the box&rsquo;s left edge.</li>
+                        <li><b>Wrong name</b> says it does not match and keeps Delete off; <b>Right name</b> shows the success badge and turns Delete on; nothing moves between the three. Press Now: the approved dialog, with the short field.</li>
+                        <li><b>The grid:</b> one row of the form grid, its control track spanning all four tracks; the typed-confirm block fills it. The dialog&rsquo;s own Cancel and Delete calendar stay at the foot, as approved.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed: the field&rsquo;s right edge is the right edge of the red-edged box above it and of the status line under it.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="cal-delete-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-delete:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-delete:version" data-aa-v="fixed">Fixed</button></div>
+                    <div role="group" aria-label="What is typed"><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-delete:typed" data-aa-v="nothing">Nothing typed</button><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-delete:typed" data-aa-v="wrong">Wrong name</button><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-delete:typed" data-aa-v="right">Right name</button></div>
+                </div>
+                <div id="cal-delete-component" class="aa-stage" data-aa-version="fixed">
+                    <div class="aa-variant" data-aa-variant="now">
+<dialog class="kp-dialog kp-confirm aa-inplace" open aria-labelledby="cd-now-title" aria-describedby="cd-now-desc" data-aa-delete>
+    <h2 class="kp-dialog__title" id="cd-now-title">Delete the calendar almanac-test?</h2>
+    <p class="kp-dialog__description" id="cd-now-desc">This cannot be undone. Cancel leaves everything as it is.</p>
+    <div data-aa-type-block></div>
+    <p class="aa-result kp-text-muted" role="status" data-aa-result></p>
+    <div class="kp-dialog__actions">
+        <button type="button" class="kp-button" data-aa-cancel>Cancel</button>
+        <button type="button" class="kp-button kp-button--destructive" data-aa-go disabled data-kp-disabled-reason="Type the calendar name first.">Delete calendar</button>
+    </div>
+</dialog>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<dialog class="kp-dialog kp-confirm aa-inplace" open aria-labelledby="cd-fixed-title" aria-describedby="cd-fixed-desc" data-aa-delete>
+    <h2 class="kp-dialog__title" id="cd-fixed-title">Delete the calendar almanac-test?</h2>
+    <p class="kp-dialog__description" id="cd-fixed-desc">This cannot be undone. Cancel leaves everything as it is.</p>
+    <div class="kp-formgrid"><div class="kp-formgrid__row"><div class="kp-formgrid__control" data-kp-formgrid-span="all"><div data-aa-type-block></div></div></div></div>
+    <p class="aa-result kp-text-muted" role="status" data-aa-result></p>
+    <div class="kp-dialog__actions">
+        <button type="button" class="kp-button" data-aa-cancel>Cancel</button>
+        <button type="button" class="kp-button kp-button--destructive" data-aa-go disabled data-kp-disabled-reason="Type the calendar name first.">Delete calendar</button>
+    </div>
+</dialog>
+                    </div>
+                    <p class="aa-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="cal-new"
+                data-review-item="cal-new"
+                data-review-topic="calendars"
+                data-review-topic-title="Calendars page"
+                data-review-title="Calendars: the new-calendar dialog"
+                data-review-components="formgrid dialog form"
+                aria-labelledby="h-cal-new"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-cal-new">Calendars: the new-calendar dialog</h2>
+                    <p>Before, the Calendar name field stopped 86 px short of the dialog&rsquo;s right edge, so it ended where the Sharing sentence below it does not; now the label, the field and its help are one row of the form grid and the field fills the width.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>In Fixed the field starts and ends on the same two edges as the Name and Sharing headings&rsquo; rules and the Sharing sentence; the help <b>It shows in Google Calendar exactly as typed.</b> sits under the field on its left edge.</li>
+                        <li>Press <b>Make and share</b> with the name empty: the field turns red with its message and the summary names it; with a name typed it makes the calendar (a toast says so). Press Now: the approved dialog, with the short field.</li>
+                        <li><b>The grid:</b> label (Calendar name, required) | control (the field) | value (the help); at the dialog&rsquo;s width the grid reads top to bottom, so the field takes the whole width.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed: the right edge of the field is the right edge of the dialog&rsquo;s content, the same as the Sharing sentence.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="cal-new-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-new:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-new:version" data-aa-v="fixed">Fixed</button></div>
+                    <div role="group" aria-label="Form"><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-new:form" data-aa-v="empty">Empty</button><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-new:form" data-aa-v="filled">Filled</button></div>
+                </div>
+                <div id="cal-new-component" class="aa-stage" data-aa-version="fixed">
+                    <div class="aa-variant" data-aa-variant="now">
+<dialog class="kp-dialog aa-inplace" open aria-labelledby="cn-now-title" aria-describedby="cn-now-desc">
+<h2 class="kp-dialog__title" id="cn-now-title">New calendar</h2>
+<p class="kp-dialog__description" id="cn-now-desc">Almanac makes the calendar in Google and shares it with you.</p>
+<form class="kp-form" data-kp-form novalidate data-aa-new>
+<div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+<div class="kp-dialog__body">
+<section class="kp-dialog__section">
+<h3 class="kp-dialog__heading">Name</h3>
+<div class="kp-field"><label class="kp-field__label" for="cn-now-name">Calendar name <span class="kp-field__required">required</span></label><input class="kp-field__input" id="cn-now-name" name="name" required autocomplete="off" aria-describedby="cn-now-help" placeholder="Household" /><span class="kp-field__help" id="cn-now-help">It shows in Google Calendar exactly as typed.</span><span class="kp-field__error" data-kp-field-error hidden></span></div>
+</section>
+<section class="kp-dialog__section">
+<h3 class="kp-dialog__heading">Sharing</h3>
+<p class="kp-dialog__note">The calendar is shared with the owner Almanac is set up for, so it shows up in their Google Calendar at once.</p>
+</section>
+</div>
+<div class="kp-dialog__actions">
+<button type="button" class="kp-button" data-aa-new-cancel>Cancel</button>
+<button type="submit" class="kp-button kp-button--primary" data-kp-submit>Make and share</button>
+</div>
+</form>
+</dialog>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<dialog class="kp-dialog aa-inplace" open aria-labelledby="cn-fixed-title" aria-describedby="cn-fixed-desc">
+<h2 class="kp-dialog__title" id="cn-fixed-title">New calendar</h2>
+<p class="kp-dialog__description" id="cn-fixed-desc">Almanac makes the calendar in Google and shares it with you.</p>
+<form class="kp-form" data-kp-form novalidate data-aa-new>
+<div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+<div class="kp-dialog__body">
+<section class="kp-dialog__section">
+<h3 class="kp-dialog__heading">Name</h3>
+<div class="kp-formgrid"><div class="kp-formgrid__row"><label class="kp-formgrid__label" for="cn-fixed-name"><span>Calendar name <span class="kp-field__required">required</span></span></label><div class="kp-formgrid__control kp-field"><input class="kp-field__input" id="cn-fixed-name" name="name" required autocomplete="off" aria-describedby="cn-fixed-help" placeholder="Household" /><span class="kp-field__error" data-kp-field-error hidden></span></div><p class="kp-formgrid__value" id="cn-fixed-help">It shows in Google Calendar exactly as typed.</p></div></div>
+</section>
+<section class="kp-dialog__section">
+<h3 class="kp-dialog__heading">Sharing</h3>
+<p class="kp-dialog__note">The calendar is shared with the owner Almanac is set up for, so it shows up in their Google Calendar at once.</p>
+</section>
+</div>
+<div class="kp-dialog__actions">
+<button type="button" class="kp-button" data-aa-new-cancel>Cancel</button>
+<button type="submit" class="kp-button kp-button--primary" data-kp-submit>Make and share</button>
+</div>
+</form>
+</dialog>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <section
+                class="aa-sec"
+                id="cal-cards"
+                data-review-item="cal-cards"
+                data-review-topic="calendars"
+                data-review-topic-title="Calendars page"
+                data-review-title="Calendars: the table as cards on a phone"
+                data-review-components="datatable grid cards"
+                aria-labelledby="h-cal-cards"
+            >
+                <div class="aa-sec__head">
+                    <h2 id="h-cal-cards">Calendars: the table as cards on a phone</h2>
+                    <p>Before, in a phone card the labels stood at the left but the values were pushed to the right edge, while the calendar id block started at the left, so the values stood on three different edges; now every card has two tracks, label and value, and every value starts on the value track&rsquo;s left edge.</p>
+                </div>
+                <div class="aa-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Three cards (Almanac · Huishouden, Almanac · Infra, almanac-test) in a 390 px frame. In Fixed each card has four lines (Name, Calendar id, Used by, Actions); the labels are in one column, and the name, the id block, the source tags and the Delete button all start on one vertical line, the same in every card.</li>
+                        <li>Delete is on the same track in every card (off for the two in use, on for almanac-test); the id still copies with its Copy button. Press Now: the approved cards, values right-aligned.</li>
+                        <li><b>The grid:</b> two tracks per card: label (as wide as &ldquo;Calendar id&rdquo;, at most 40 %) | value (the rest); each line a subgrid of the card. Page CSS only; a package option for this card layout would make it the default for every table.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press Fixed: the values start on one vertical line inside each card, and the three cards are laid out alike.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="cal-cards-component">
+                    <div role="group" aria-label="Now or Fixed"><button type="button" class="kp-button" aria-pressed="false" data-aa-ctl="cal-cards:version" data-aa-v="now">Now</button><button type="button" class="kp-button" aria-pressed="true" data-aa-ctl="cal-cards:version" data-aa-v="fixed">Fixed</button></div>
+                </div>
+                <div id="cal-cards-component" class="aa-stage" data-aa-version="fixed" data-aa-width="phone">
+                    <div class="aa-variant" data-aa-variant="now">
+<section class="kp-card aa-card" aria-labelledby="cc-now-title">
+    <div class="kp-card__header"><h3 class="kp-card__title" id="cc-now-title">Calendars</h3></div>
+    <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-sort-multi="click" data-kp-page-sizes="none">
+        <div class="kp-table-wrap">
+            <table class="kp-table">
+                <caption class="kp-sr-only">Calendars the service account can see</caption>
+                <thead><tr><th scope="col" data-kp-sort="text">Name</th><th scope="col">Calendar id</th><th scope="col" data-kp-sort="number">Used by</th><th scope="col"><span class="kp-sr-only">Actions</span></th></tr></thead>
+                <tbody>
+<tr data-kp-row-key="huishouden">
+<td data-label="Name" data-kp-sort-value="Almanac · Huishouden">Almanac · Huishouden</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of Almanac · Huishouden"><pre class="kp-code__body"><code>c_4d1f09b2a7e35c68@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="1"><ul class="kp-tag-list" aria-label="Sources that write to Almanac · Huishouden"><li class="kp-tag" tabindex="0" data-kp-hovercard="home-assistant: token active. Last used 19/10/2026 13:48. 128 events posted.">home-assistant</li></ul></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar Almanac · Huishouden?" data-kp-confirm-type="Almanac · Huishouden" data-kp-confirm-loses="ac-lose-huishouden" data-kp-confirm-label="Delete calendar" data-ac-delete="huishouden" disabled data-kp-disabled-reason="Used by home-assistant. Delete that source first, on the Sources page.">Delete</button></span></td>
+</tr>
+<tr data-kp-row-key="infra">
+<td data-label="Name" data-kp-sort-value="Almanac · Infra">Almanac · Infra</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of Almanac · Infra"><pre class="kp-code__body"><code>c_91ab33e07f5d2c14@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="3"><ul class="kp-tag-list" aria-label="Sources that write to Almanac · Infra"><li class="kp-tag" tabindex="0" data-kp-hovercard="homelab: token active. Last used 18/10/2026 22:10. 41 events posted.">homelab</li><li class="kp-tag" tabindex="0" data-kp-hovercard="kyu: token active. Last used 19/10/2026 07:30. 17 events posted.">kyu</li><li class="kp-tag" tabindex="0" data-kp-hovercard="claude-sessions: token revoked, so posts are refused. Last used 02/10/2026 09:12. 9 events posted.">claude-sessions</li></ul></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar Almanac · Infra?" data-kp-confirm-type="Almanac · Infra" data-kp-confirm-loses="ac-lose-infra" data-kp-confirm-label="Delete calendar" data-ac-delete="infra" disabled data-kp-disabled-reason="Used by homelab, kyu, claude-sessions. Delete those sources first, on the Sources page.">Delete</button></span></td>
+</tr>
+<tr data-kp-row-key="test">
+<td data-label="Name" data-kp-sort-value="almanac-test">almanac-test</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of almanac-test"><pre class="kp-code__body"><code>c_0e7b5a6c13d94f82@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="0"><span class="kp-text-muted">No source writes here</span></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar almanac-test?" data-kp-confirm-type="almanac-test" data-kp-confirm-loses="ac-lose-test" data-kp-confirm-label="Delete calendar" data-ac-delete="test">Delete</button></span></td>
+</tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+                    </div>
+                    <div class="aa-variant" data-aa-variant="fixed">
+<div class="aa-cards"><section class="kp-card aa-card" aria-labelledby="cc-fixed-title">
+    <div class="kp-card__header"><h3 class="kp-card__title" id="cc-fixed-title">Calendars</h3></div>
+    <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-sort-multi="click" data-kp-page-sizes="none">
+        <div class="kp-table-wrap">
+            <table class="kp-table">
+                <caption class="kp-sr-only">Calendars the service account can see</caption>
+                <thead><tr><th scope="col" data-kp-sort="text">Name</th><th scope="col">Calendar id</th><th scope="col" data-kp-sort="number">Used by</th><th scope="col"><span class="kp-sr-only">Actions</span></th></tr></thead>
+                <tbody>
+<tr data-kp-row-key="huishouden">
+<td data-label="Name" data-kp-sort-value="Almanac · Huishouden">Almanac · Huishouden</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of Almanac · Huishouden"><pre class="kp-code__body"><code>c_4d1f09b2a7e35c68@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="1"><ul class="kp-tag-list" aria-label="Sources that write to Almanac · Huishouden"><li class="kp-tag" tabindex="0" data-kp-hovercard="home-assistant: token active. Last used 19/10/2026 13:48. 128 events posted.">home-assistant</li></ul></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar Almanac · Huishouden?" data-kp-confirm-type="Almanac · Huishouden" data-kp-confirm-loses="ac-lose-huishouden" data-kp-confirm-label="Delete calendar" data-ac-delete="huishouden" disabled data-kp-disabled-reason="Used by home-assistant. Delete that source first, on the Sources page.">Delete</button></span></td>
+</tr>
+<tr data-kp-row-key="infra">
+<td data-label="Name" data-kp-sort-value="Almanac · Infra">Almanac · Infra</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of Almanac · Infra"><pre class="kp-code__body"><code>c_91ab33e07f5d2c14@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="3"><ul class="kp-tag-list" aria-label="Sources that write to Almanac · Infra"><li class="kp-tag" tabindex="0" data-kp-hovercard="homelab: token active. Last used 18/10/2026 22:10. 41 events posted.">homelab</li><li class="kp-tag" tabindex="0" data-kp-hovercard="kyu: token active. Last used 19/10/2026 07:30. 17 events posted.">kyu</li><li class="kp-tag" tabindex="0" data-kp-hovercard="claude-sessions: token revoked, so posts are refused. Last used 02/10/2026 09:12. 9 events posted.">claude-sessions</li></ul></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar Almanac · Infra?" data-kp-confirm-type="Almanac · Infra" data-kp-confirm-loses="ac-lose-infra" data-kp-confirm-label="Delete calendar" data-ac-delete="infra" disabled data-kp-disabled-reason="Used by homelab, kyu, claude-sessions. Delete those sources first, on the Sources page.">Delete</button></span></td>
+</tr>
+<tr data-kp-row-key="test">
+<td data-label="Name" data-kp-sort-value="almanac-test">almanac-test</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of almanac-test"><pre class="kp-code__body"><code>c_0e7b5a6c13d94f82@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="0"><span class="kp-text-muted">No source writes here</span></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar almanac-test?" data-kp-confirm-type="almanac-test" data-kp-confirm-loses="ac-lose-test" data-kp-confirm-label="Delete calendar" data-ac-delete="test">Delete</button></span></td>
+</tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section></div>
+                    </div>
+                    <p class="aa-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+<template id="ac-lose-huishouden"><ul class="kp-type-confirm__list"><li>Every event on it: 212 events</li><li>The calendar itself, for everyone it is shared with</li></ul></template>
+<template id="ac-lose-infra"><ul class="kp-type-confirm__list"><li>Every event on it: 87 events</li><li>The calendar itself, for everyone it is shared with</li></ul></template>
+<template id="ac-lose-test"><ul class="kp-type-confirm__list"><li>Every event on it: 3 events</li><li>The calendar itself, for everyone it is shared with</li></ul></template>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "almanacalign-6d3f1b8a-52c7-4e09-b1a4-9e7c2d05f318", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
