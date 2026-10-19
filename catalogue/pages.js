@@ -142,12 +142,6 @@ export const PAGES = [
                 label: 'Homelab dashboard: Activity and Jobs, timeline, failure grid and History',
                 about: "How the dashboard's Activity and Jobs pages would look on the new components: a timeline you drag across, a grid of stack by day that shows which stack keeps failing, a History table with a heading per day and rows that open to their steps, a Jobs timeline that shows how long each job waited, and the detail of one job (steps, where the time went, why it failed). 5 sections (5 pairs, formal only), plus one default to set: whether the History opens as a table or a feed.",
             },
-            // Kenny, 2026-10-19 02:38 (kyu overview, graph-loading-1019): the network graph's decided loading picture was never in the package, so every theme showed one generic pulse. Asked again in all twelve themes with what was wrong and what is different now.
-            {
-                href: 'research/graph-loading-1019/demo.html',
-                label: 'Network graph while loading: the picture you chose, in twelve themes',
-                about: 'The loading picture you decided for the network graph in each theme (character-graph, 2026-10-06), now in the package instead of one generic pulse: formal\'s courier, the packet race, hazard tape, embers and so on. One section, asked in each theme, says what the graph showed before and what it shows now. 1 section, 12 pairs.',
-            },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): the Metrics page (T10) rebuilt on the package, formal only: live charts that keep your place, kinds and hatched windows on events, typical level and runs, the time window with a custom start and end, a window per section, scope and key figures, traffic (status mix, heat, table) and drives.
             {
                 href: 'research/app-homelab-metrics/demo.html',
@@ -301,6 +295,13 @@ export const PAGES = [
                 href: 'research/round-4-1019/demo.html',
                 label: 'Fixes from the project threads, round 4',
                 about: 'Fixes from the project threads, each in the package: the heat grid row and column names and the dependency list status column; the path trace verdict column and a long token in a diff line; a key figure name and note, and the entity card actions, meter tones and empty grid; and a form field filling its place and the problems fix column. 11 sections (11 pairs), in formal only.',
+            },
+            // Superseded 2026-10-19 11:22: Kenny rejected the per-theme pictures; the graph uses the theme's data loading animation (research/graph-loading-1019/VERDICTS.json).
+            // Kenny, 2026-10-19 02:38 (kyu overview, graph-loading-1019): the network graph's decided loading picture was never in the package, so every theme showed one generic pulse. Asked again in all twelve themes with what was wrong and what is different now.
+            {
+                href: 'research/graph-loading-1019/demo.html',
+                label: 'Network graph while loading: the picture you chose, in twelve themes',
+                about: 'The loading picture you decided for the network graph in each theme (character-graph, 2026-10-06), now in the package instead of one generic pulse: formal\'s courier, the packet race, hazard tape, embers and so on. One section, asked in each theme, says what the graph showed before and what it shows now. 1 section, 12 pairs.',
             },
             // Decided 2026-10-19 06:43: Kenny approved every pair (research/audhd-recepten/cook/decided.json).
             // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's cook mode, formal only (new demo). research/audhd-recepten/.

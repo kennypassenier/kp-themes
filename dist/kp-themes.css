@@ -5922,78 +5922,14 @@
         background: var(--destructive);
     }
 
-    /* The ghost of the coming network while loading. A register paints its decided loading picture through
- * these knobs: --kp-graph-ghost (the ghost's opacity), --kp-graph-ghost-anim (the whole ghost's motion, the generic
- * pulse unless a register sets none), and --kp-graph-edge-anim / --kp-graph-node-anim with a stagger per --i and a
- * delay for the links and the nodes. Each link carries pathLength 100, so a travelling dash is a percentage. */
     .kp-graph__ghost {
-        opacity: var(--kp-graph-ghost, 0.45);
+        opacity: 0.45;
         pointer-events: none;
-    }
-
-    .kp-graph__ghost .kp-graph__node {
-        transform-box: fill-box;
-        transform-origin: center;
-    }
-
-    /* The sentence stands at the foot of the box, under the picture and not over it: the picture gives up the height of
- * one line (--kp-graph-note-h), so the box keeps the height of the drawn network and nothing jumps when it arrives. */
-    .kp-graph[data-kp-state='loading'] .kp-graph__svg {
-        block-size: calc(var(--kp-graph-h, 480px) - var(--kp-graph-note-h, 2.5rem));
-    }
-
-    .kp-graph[data-kp-state='loading'] .kp-graph__note {
-        position: static;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        min-block-size: var(--kp-graph-note-h, 2.5rem);
-        padding-inline: var(--kp-space-md, 1rem);
-    }
-
-    .kp-graph[data-kp-state='loading'] .kp-graph__note[hidden] {
-        display: none;
-    }
-
-    @keyframes kp-graph-spark {
-        to {
-            stroke-dashoffset: -100;
-        }
-    }
-
-    @keyframes kp-graph-signal {
-        from {
-            stroke-dashoffset: 100;
-        }
-        to {
-            stroke-dashoffset: -16;
-        }
-    }
-
-    @keyframes kp-graph-glow {
-        0%,
-        100% {
-            filter: brightness(1);
-        }
-        50% {
-            filter: brightness(1.6);
-        }
     }
 
     @media (prefers-reduced-motion: no-preference) {
         .kp-graph__ghost {
-            animation: var(--kp-graph-ghost-anim, kp-pulse 1600ms ease-in-out infinite);
-        }
-
-        .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__edge {
-            animation: var(--kp-graph-edge-anim, none);
-            animation-delay: calc(var(--i, 0) * var(--kp-graph-edge-stagger, 0ms) + var(--kp-graph-edge-delay, 0ms));
-        }
-
-        .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__node {
-            animation: var(--kp-graph-node-anim, none);
-            animation-delay: calc(var(--i, 0) * var(--kp-graph-node-stagger, 0ms) + var(--kp-graph-node-delay, 0ms));
+            animation: kp-pulse 1600ms ease-in-out infinite;
         }
 
         .kp-graph__edge,
@@ -42427,23 +42363,6 @@
 }
 /* ── end t56-q2 schedule ── */
 
-/* ── graph loading · r3-b-cp-load-4 · The packet race (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='cyberpunk'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='cyberpunk'] .kp-graph__ghost {
-        --kp-graph-ghost: 0.62;
-    }
-
-    [data-theme='cyberpunk'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 12 88;
-        --kp-graph-edge-anim: kp-graph-spark 900ms linear infinite;
-        --kp-graph-edge-stagger: -80ms;
-    }
-}
-
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
@@ -48774,23 +48693,6 @@
     }
 }
 /* ── end t56-q2 schedule ── */
-
-/* ── graph loading · r3-b-sw-load-4 · The outrun pulse (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='synthwave'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='synthwave'] .kp-graph__ghost {
-        --kp-graph-ghost: 0.62;
-    }
-
-    [data-theme='synthwave'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 18 82;
-        --kp-graph-edge-anim: kp-graph-spark 1400ms linear infinite;
-        --kp-graph-edge-stagger: -110ms;
-    }
-}
 
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
@@ -55149,96 +55051,6 @@
     }
 }
 
-/* ── graph loading · r5-br-load-3 · The site is taped off (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='brutalism'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='brutalism'] .kp-graph__ghost {
-        --kp-graph-ghost: 1;
-    }
-
-    [data-theme='brutalism'] .kp-graph[data-kp-state='loading'] .kp-graph__box {
-        background: var(--foreground);
-    }
-
-    [data-theme='brutalism'] .kp-graph[data-kp-state='loading'] .kp-graph__note {
-        color: var(--secondary);
-    }
-
-    [data-theme='brutalism'] .kp-graph__ghost .kp-graph__edge {
-        stroke: var(--secondary);
-        stroke-width: 11;
-        stroke-linecap: butt;
-        stroke-dasharray: 4 4;
-        --kp-graph-edge-anim: kp-graph-tape 640ms linear infinite;
-        --kp-graph-edge-stagger: 0ms;
-    }
-
-    [data-theme='brutalism'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
-        fill: var(--foreground);
-        stroke: var(--secondary);
-        stroke-width: 6;
-        stroke-dasharray: 7 5;
-    }
-
-    [data-theme='brutalism'] .kp-graph__ghost .kp-graph__node .kp-graph__core {
-        opacity: 1;
-        fill: var(--warning);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='brutalism'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
-            animation: kp-graph-beacon 480ms steps(3) infinite;
-        }
-
-        [data-theme='brutalism'] .kp-graph__ghost .kp-graph__node .kp-graph__core {
-            animation: kp-graph-lamp 960ms linear infinite;
-            animation-delay: calc(var(--i, 0) * 120ms - 960ms);
-        }
-
-        @keyframes kp-graph-tape {
-            0% {
-                stroke-dashoffset: 0;
-                stroke-width: 11;
-                animation-timing-function: steps(4, end);
-            }
-            50% {
-                stroke-dashoffset: -8;
-                stroke-width: 11;
-                animation-timing-function: steps(1, end);
-            }
-            62% {
-                stroke-width: 15;
-                stroke-dashoffset: -8;
-                animation-timing-function: steps(1, end);
-            }
-            75%,
-            100% {
-                stroke-width: 11;
-                stroke-dashoffset: -8;
-            }
-        }
-        @keyframes kp-graph-beacon {
-            to {
-                stroke-dashoffset: -24;
-            }
-        }
-        @keyframes kp-graph-lamp {
-            0%,
-            49% {
-                fill: var(--warning);
-                animation-timing-function: steps(1, end);
-            }
-            50%,
-            100% {
-                fill: var(--destructive);
-            }
-        }
-    }
-}
-
 /* The header's mega menu is held on screen while a transition on its panel runs
    (js/components.js settleClosing): this number is that transition, 1 open and 0
    shut, run over the panel's cut. At the top level because Firefox does not
@@ -60722,19 +60534,6 @@
 @layer kp.signature {
     [data-theme='titanium'] :is(.kp-snooze__end, .kp-weekdays__preset, .kp-entity__plus).kp-button--ghost {
         border-color: var(--border-strong);
-    }
-}
-
-/* ── graph loading · r3-tn-load-3 · The signal runs the harness (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='titanium'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='titanium'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 8 92;
-        --kp-graph-edge-anim: kp-graph-signal 1500ms linear infinite;
-        --kp-graph-edge-stagger: 130ms;
     }
 }
 
@@ -66686,23 +66485,6 @@
 }
 /* ── end t56-q2 schedule ── */
 
-/* ── graph loading · r3-b-ps-load-4 · The sprinkle drift (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='pastel'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='pastel'] .kp-graph__ghost {
-        --kp-graph-ghost: 0.62;
-    }
-
-    [data-theme='pastel'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 10 90;
-        --kp-graph-edge-anim: kp-graph-spark 1800ms ease-in-out infinite;
-        --kp-graph-edge-stagger: -130ms;
-    }
-}
-
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
    registered so the keyframes interpolate it; at the top level because
    Firefox does not register an @property inside a layer. */
@@ -72601,26 +72383,6 @@
     }
 }
 /* ── end t56-q2 schedule ── */
-
-/* ── graph loading · r3-fr-load-3 · Fireflies trace the clearing (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='forest'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='forest'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 8 92;
-        --kp-graph-edge-anim: kp-graph-spark 2600ms linear infinite;
-        --kp-graph-edge-stagger: -120ms;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='forest'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
-            animation: kp-graph-glow 2600ms ease-in-out infinite;
-            animation-delay: calc(var(--i) * 190ms);
-        }
-    }
-}
 
 /* The numbers deco's motion is made of, registered at the top level because
    Firefox does not register an @property inside a cascade layer; with no
@@ -78998,59 +78760,6 @@
     }
 }
 
-/* ── graph loading · r4-dec-load-3 · The engraving is cut (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='deco'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='deco'] .kp-graph__ghost {
-        --kp-graph-ghost: 0.55;
-    }
-
-    [data-theme='deco'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 3 7;
-        --kp-graph-edge-anim: kp-graph-engrave 2600ms ease-in infinite;
-        --kp-graph-edge-stagger: 210ms;
-    }
-
-    [data-theme='deco'] .kp-graph__ghost .kp-graph__node {
-        clip-path: inset(18%);
-        --kp-graph-node-anim: kp-graph-bevel 2600ms ease-in infinite;
-        --kp-graph-node-stagger: 210ms;
-    }
-
-    @keyframes kp-graph-engrave {
-        0%,
-        30% {
-            stroke-dasharray: 2 14;
-        }
-        50% {
-            stroke-dasharray: 3 7;
-        }
-        70%,
-        100% {
-            stroke-dasharray: 100;
-        }
-    }
-    @keyframes kp-graph-bevel {
-        0%,
-        68% {
-            clip-path: inset(18%);
-            filter: brightness(1);
-        }
-        72% {
-            clip-path: inset(4%);
-            filter: brightness(1.5);
-        }
-        80%,
-        100% {
-            clip-path: inset(18%);
-            filter: brightness(1);
-        }
-    }
-}
-
 /* The pen's numbers [scope-143, Kenny 2026-10-07 23:41: the tracing pen is the
    anchor of the theme]. Registered at the top level because Firefox does not
    register an @property inside a cascade layer; with no registration every
@@ -85327,26 +85036,6 @@
     }
 }
 
-/* ── graph loading · r3-bp-load-3 · Current finds the circuit (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='blueprint'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='blueprint'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 9 91;
-        --kp-graph-edge-anim: kp-graph-spark 2000ms linear infinite;
-        --kp-graph-edge-stagger: -110ms;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] .kp-graph__ghost .kp-graph__node .kp-graph__core {
-            animation: kp-graph-glow 2000ms ease-in-out infinite;
-            animation-delay: calc(var(--i) * 160ms);
-        }
-    }
-}
-
 @layer kp.register {
     /* @kp-soft/themes — css/nostromo-register.css
    The nostromo register, 5.0.0 [S48, LIFT_PLAN nostromo row]: cassette
@@ -91451,44 +91140,6 @@
     }
 }
 
-/* ── graph loading · r3-no-load-2 · Blips surface round the scope (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='nostromo'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='nostromo'] .kp-graph__ghost {
-        --kp-graph-ghost: 0.7;
-    }
-
-    [data-theme='nostromo'] .kp-graph__ghost .kp-graph__edge {
-        filter: drop-shadow(0 0 1.5px var(--success));
-    }
-
-    [data-theme='nostromo'] .kp-graph__ghost .kp-graph__node--hub {
-        --kp-graph-node-anim: kp-graph-breathe 2400ms ease-in-out infinite;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='nostromo'] .kp-graph__ghost .kp-graph__node .kp-graph__ring {
-            animation: kp-graph-blink 1000ms steps(1) infinite;
-            animation-delay: calc(var(--i) * 130ms);
-        }
-    }
-
-    @keyframes kp-graph-breathe {
-        50% {
-            transform: scale(1.06);
-        }
-    }
-
-    @keyframes kp-graph-blink {
-        50% {
-            visibility: hidden;
-        }
-    }
-}
-
 /* The numbers dark's motion is made of, registered at the top level because
    Firefox does not register an @property inside a cascade layer; with no
    registration every keyframe that moves one would flip between its two poses
@@ -97117,19 +96768,6 @@
 }
 /* ── end t56-q2 schedule ── */
 
-/* ── graph loading · r3-dk-load-3 · A packet runs the bus (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='dark'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='dark'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 6 94;
-        --kp-graph-edge-anim: kp-graph-signal 1300ms linear infinite;
-        --kp-graph-edge-stagger: 110ms;
-    }
-}
-
 /* The numbers formal's motion is made of, registered at the top level
    because Firefox does not register an @property inside a cascade layer;
    with no registration every keyframe below would flip between its two
@@ -101970,19 +101608,6 @@
 }
 /* ── end entity card ── */
 
-/* ── graph loading · r3-fm-load-3 · The courier’s round (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='formal'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='formal'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 7 93;
-        --kp-graph-edge-anim: kp-graph-signal 2000ms linear infinite;
-        --kp-graph-edge-stagger: 170ms;
-    }
-}
-
 /* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at
    rest, 1 at the end of the unit. Registered so the browser can transition
    them, at the top level because Firefox does not register an @property
@@ -106528,38 +106153,6 @@
         border-color: var(--border-strong);
         color: var(--foreground);
         box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
-    }
-}
-
-/* ── graph loading · r3-d-sol-load-2 · Embers catching (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
-@layer kp.signature {
-    [data-theme='solstice'] .kp-graph {
-        --kp-graph-ghost-anim: none;
-    }
-
-    [data-theme='solstice'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 10 90;
-        filter: drop-shadow(0 0 3px color-mix(in oklch, var(--warning) 70%, transparent));
-        --kp-graph-edge-anim: kp-graph-spark 1300ms linear infinite;
-        --kp-graph-edge-stagger: 90ms;
-    }
-
-    [data-theme='solstice'] .kp-graph__ghost .kp-graph__node {
-        --kp-graph-node-anim: kp-graph-flare 1300ms ease-out infinite;
-        --kp-graph-node-stagger: 90ms;
-        --kp-graph-node-delay: 420ms;
-    }
-
-    @keyframes kp-graph-flare {
-        0%,
-        100% {
-            transform: scale(1);
-            filter: brightness(1);
-        }
-        50% {
-            transform: scale(1.28);
-            filter: brightness(1.8);
-        }
     }
 }
 

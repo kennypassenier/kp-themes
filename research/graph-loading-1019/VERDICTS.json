@@ -1,4 +1,75 @@
 {
     "demo": "graph-loading-1019",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "graphloading-e06b53ff-94b0-4282-9031-dbead458a6c7",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 11:22: 12 of 12 judged, 0 approved, 12 not approved. \"elk thema heeft hier al een animatie voor, gebruik die!\" The per-theme pictures are removed; the graph uses the theme's data loading animation (the busy card).",
+            "approved": [],
+            "notApproved": [
+                {
+                    "item": "graph-loading",
+                    "theme": "formal",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "dark",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "pastel",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "cyberpunk",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "synthwave",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "forest",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "solstice",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "brutalism",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "deco",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "blueprint",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "nostromo",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                },
+                {
+                    "item": "graph-loading",
+                    "theme": "titanium",
+                    "note": "elk thema heeft hier al een animatie voor, gebruik die!"
+                }
+            ],
+            "choices": []
+        }
+    ]
 }

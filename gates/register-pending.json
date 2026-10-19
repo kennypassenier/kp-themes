@@ -12,6 +12,7 @@
     "attention": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
     "page-header": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
     "state-word": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports); each register answers it once it is judged in that theme",
+    "graph": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",
     "calendar": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",
     "calendar-layout": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",
     "meter": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",

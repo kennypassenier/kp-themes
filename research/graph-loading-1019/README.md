@@ -1,4 +1,5 @@
 # research/graph-loading-1019: the network graph's decided loading picture
+**Decided (2026-10-19 11:22):** Kenny did not approve any of the 12 pairs ("elk thema heeft hier al een animatie voor, gebruik die!"). Superseded: the per-theme pictures are removed again and a loading graph is the theme's data loading animation, the busy card (js/busy-card.js), over its whole box. Recorded in `VERDICTS.json`; the page is not offered again.
 
 Round `graphloading-<uuid>` (see `demo.html`, 2026-10-19): 1 section asked in 12 themes, 12 pairs. Kenny rejected kyu's overview graph
 (2026-10-19 02:38: "dit is toch niet de standaard laadanimatie die Formeel heeft voor een netwerkdiagram?"): the loading pictures decided in

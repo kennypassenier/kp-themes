@@ -203,26 +203,6 @@
             "fingerprint": "cb51855968e32768",
             "update": null
         },
-        "research/graph-loading-1019/demo.html": {
-            "facts": {
-                "id": "graph-loading-1019",
-                "themes": "formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium",
-                "ask": null,
-                "askText": "You decided a loading picture for the network graph in every theme (character-graph, 2026-10-06), but the package only had one generic pulse for all of them, and kyu’s overview showed it. Now each theme draws its own: 12 pairs, one section per theme. Each section says under What changed since you approved it which picture you chose and how the graph looked before.",
-                "sections": [
-                    {
-                        "item": "graph-loading",
-                        "themes": "formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium",
-                        "topic": null,
-                        "mode": null
-                    }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"graphloading-e06b53ff-94b0-4282-9031-dbead458a6c7\", \"received\": [] }\n        "
-            },
-            "fingerprint": "ed3d00efd46d1fd1",
-            "update": null
-        },
         "research/app-homelab-metrics/demo.html": {
             "facts": {
                 "id": "app-homelab-metrics",
@@ -501,6 +481,7 @@
         "research/live-options-1019/demo.html": "2026-10-19 11:22, Kenny: every pair approved (research/live-options-1019/VERDICTS.json)",
         "research/round-2-1019/demo.html": "2026-10-19 11:22, Kenny: every pair approved (research/round-2-1019/VERDICTS.json)",
         "research/round-4-1019/demo.html": "2026-10-19 11:22, Kenny: not reviewed. Not reviewed: fixes to approved components ship without a demo (Kenny, 2026-10-19 11:22)",
+        "research/graph-loading-1019/demo.html": "",
         "research/audhd-recepten/cook/demo.html": "2026-10-19 06:43, Kenny: 5 of 5 approved, defaults kept (research/audhd-recepten/cook/VERDICTS.json)",
         "research/audhd-recepten/wheel/demo.html": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed for every theme: \"All slices equal\" (research/audhd-recepten/wheel/VERDICTS.json)",
         "research/audhd-recepten/timing/demo.html": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed: the start disc is \"A 60-minute dial\" (research/audhd-recepten/timing/VERDICTS.json)",
