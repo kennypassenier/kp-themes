@@ -40946,7 +40946,9 @@ function placeLabels(c) {
   const room = c.plot.clientWidth;
   dropOutside(c);
   if (!room || c.state === "loading") return;
+  const nowRect = c.nowLine.hidden || c.nowLine.hasAttribute("data-kp-out") ? null : c.nowLine.getBoundingClientRect();
   for (const lane of c.lanes) {
+    const nowBox = nowRect ? { left: nowRect.left - lane.track.getBoundingClientRect().left, right: nowRect.right - lane.track.getBoundingClientRect().left } : null;
     const rows = /* @__PURE__ */ new Map();
     for (const b of lane.bars) {
       if (b.bar.hidden) continue;
@@ -40956,8 +40958,9 @@ function placeLabels(c) {
       list.push({ bar: b.bar, left, right });
       rows.set(b.row, list);
     }
-    const marks = clearMarks2(lane, rows.get(0) ?? []);
+    const first = clearMarks2(lane, rows.get(0) ?? []);
     for (const [row, list] of rows) {
+      const marks = (row === 0 ? nowBox ? [...first, nowBox] : first : nowBox ? [nowBox] : []).sort((a, b) => a.left - b.left);
       list.sort((a, b) => a.left - b.left);
       let taken = 0;
       list.forEach((item, i) => {
@@ -40966,33 +40969,45 @@ function placeLabels(c) {
         let place2 = "";
         let roomPx = 0;
         let shift = 0;
-        if (need > right - left - 2) {
+        let inset = 0;
+        let crossed = false;
+        if (nowBox && need <= right - left - 2 && nowBox.right + NOW_GAP_PX > left && nowBox.left - NOW_GAP_PX < left + need) {
+          crossed = nowBox.left > left && nowBox.left < right;
+          if (crossed) {
+            const free = right - nowBox.right - NOW_GAP_PX - 1;
+            if (need <= free) {
+              inset = nowBox.right + NOW_GAP_PX - left;
+              crossed = false;
+            }
+          }
+        }
+        if (inset) bar.style.setProperty("--kp-g-label-inset", `${Math.round(inset)}px`);
+        else bar.style.removeProperty("--kp-g-label-inset");
+        if (need > right - left - 2 || crossed) {
           const start = bar.dataset.kpState === "running" || bar.dataset.kpState === "queued" ? 8 : 4;
           const wanted = need - 2 * 0.375 * 16 + 8;
           let next2 = list[i + 1]?.left ?? room;
           let from = right + start;
           let upTo = left - 4;
           let floor = taken;
-          if (row === 0) {
-            for (const m of marks) {
-              if (m.right <= from - 1) continue;
-              if (m.left < from + wanted + OUTSIDE_GAP_PX) from = m.right + MARK_GAP_PX + 2;
-              else {
-                next2 = Math.min(next2, m.left);
-                break;
-              }
+          for (const m of marks) {
+            if (m.right <= from - 1) continue;
+            if (m.left < from + wanted + OUTSIDE_GAP_PX) from = m.right + MARK_GAP_PX + 2;
+            else {
+              next2 = Math.min(next2, m.left);
+              break;
             }
-            for (let k = marks.length - 1; k >= 0; k--) {
-              const m = (
-                /** @type {{ left: number, right: number }} */
-                marks[k]
-              );
-              if (m.left >= upTo + 1) continue;
-              if (m.right > upTo - wanted - OUTSIDE_GAP_PX) upTo = m.left - MARK_GAP_PX - 2;
-              else {
-                floor = Math.max(floor, m.right);
-                break;
-              }
+          }
+          for (let k = marks.length - 1; k >= 0; k--) {
+            const m = (
+              /** @type {{ left: number, right: number }} */
+              marks[k]
+            );
+            if (m.left >= upTo + 1) continue;
+            if (m.right > upTo - wanted - OUTSIDE_GAP_PX) upTo = m.left - MARK_GAP_PX - 2;
+            else {
+              floor = Math.max(floor, m.right);
+              break;
             }
           }
           const after = next2 - from - OUTSIDE_GAP_PX;
@@ -41516,7 +41531,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint8(c);
 }
-var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX;
+var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX, NOW_GAP_PX;
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
@@ -41552,6 +41567,7 @@ var init_gantt = __esm({
     MEASURERS = /* @__PURE__ */ new WeakMap();
     OUTSIDE_GAP_PX = 6;
     MARK_GAP_PX = 2;
+    NOW_GAP_PX = 4;
   }
 });
 

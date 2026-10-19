@@ -13668,6 +13668,7 @@
     .kp-gantt__label {
         display: block;
         padding-inline: 0.375rem;
+        margin-inline-start: var(--kp-g-label-inset, 0px);
         overflow: hidden;
         line-height: calc(var(--kp-gantt-bar, 1.125rem) - 2px);
         text-overflow: clip;
