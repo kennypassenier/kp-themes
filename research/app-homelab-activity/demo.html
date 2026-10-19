@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-homelab-activity" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Homelab dashboard: Activity and Jobs · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hx-page">
+            <header class="hx-intro">
+                <h1>Homelab dashboard: Activity and Jobs</h1>
+                <p class="cat-intro">
+                    The Activity page answers "what happened to my stacks, and what keeps failing". The Jobs page answers "what is running or waiting
+                    right now". Today both draw their own timeline, their own failure list and a "Show N more" feed. This page shows them on
+                    kp-themes 11.0.0: a run timeline you drag across, a grid of stack by day that shows which stack is flaky, a History table
+                    with day groups and openable rows, a Jobs timeline whose waiting time is visible, and the detail of one job.
+                </p>
+                <p>
+                    Mock on this page: all the data. The stacks, containers and their numbers follow the real fleet (jellyfin, immich, paperless,
+                    vaultwarden, traefik, prometheus, grafana, loki, kyu on CT 109, almanac on CT 112, syncthing on CT 108, inbox on CT 118, metrics
+                    on CT 113, admin on CT 120); the operations, their times and the failures are invented but built from the clock, so
+                    <b>today is today</b> and a running bar grows for real. Judge in the review dialog; nothing moves until you press a button.
+                    The five sections are separate views of one page: the dashboard connects them (a range dragged on the timeline narrows the
+                    History table); here each shows that link with its own button.
+                </p>
+            </header>
+
+            <section
+                class="hx-sec"
+                id="timeline"
+                data-review-item="timeline"
+                data-review-topic="timeline"
+                data-review-topic-title="Run timeline"
+                data-review-components="gantt toolbar tick"
+                data-review-title="The timeline: what ran in the last 14 days"
+                aria-labelledby="h-timeline"
+            >
+                <div class="hx-sec__head">
+                    <h2 id="h-timeline">The timeline: what ran in the last 14 days</h2>
+                    <p>Draws every operation as a bar on a time axis, so you see when things ran, how long they took and which failed, and lets you drag across it to pick a range.</p>
+                </div>
+                <div class="hx-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Two lanes: <b>By hand</b> (what you pressed: update, apply, restart) and <b>Scheduled</b> (the backup round at about 02:00 and the Tuesday and Friday image updates). Finished bars are inked by kind (the legend names them); a failed bar is red and a <b>diamond</b> sits on it for every stack that failed, so a failure stays visible even when the bar is a hair wide.</li>
+                        <li>The window starts on the last <b>14 days</b>; <b>24 h</b> and <b>7 d</b> are on the toolbar of the timeline itself, and every day name on the axis is a button that picks that whole day. <b>Live</b> follows the clock, so the bar that is running now keeps growing.</li>
+                        <li><b>Drag across the plot</b> to pick a range (or press <b>Select a range</b> below): the timeline shows the range with Zoom and Clear, and the bar above it, which is the page's own filter bar, gets the tag <i>From the timeline: dd/mm/yyyy HH:mm to dd/mm/yyyy HH:mm</i> with its cross and Clear all. The numbers under it (operations, failed) count that range and tick to their new value. On the dashboard this same range narrows the History table (section 3).</li>
+                        <li><b>Click a bar</b> (or Enter on it) opens that operation: here the card under the timeline says which one, on the dashboard it opens the matching History row. Hovering or focusing a bar opens its card with name, times, length and state (<b>Show a bar's card</b> opens one without a pointer).</li>
+                        <li><b>Loading</b> lays the busy card over lanes of their final height; <b>Empty</b> and <b>Error</b> fill the same frame with a plate and a normal-size action. The frame keeps its height in every state.</li>
+                        <li><b>Replaces</b> the home-made SVG timeline and pointer brush (about 220 lines). Mock: the operations. Real: the shapes (<code>GanttRun</code> with lane, state, start, end, detail).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">White plate with a hairline, navy for the picked range, state read by the bar's mark and word in its card, never by colour alone. Look at: the bars in both lanes, the diamonds on the failed ones, the chip with Zoom and Clear when a range is picked, the filter tag above, and that the frame does not change height between Loaded, Loading, Empty and Error.</p>
+                </div>
+                <div class="hx-controls" data-review-controls data-review-controls-for="timeline-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-tl-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-tl-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-tl-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-tl-data="error">Error</button>
+                    </div>
+                    <div role="group" aria-label="Range">
+                        <b>Range</b>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-tl-select">Select a range</button>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-tl-clear">Clear the range</button>
+                    </div>
+                    <div role="group" aria-label="Opened state">
+                        <b>Opened state</b>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-tl-card">Show a bar's card</button>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-tl-open">Open the failed backup</button>
+                    </div>
+                </div>
+                <div class="hx-frame" id="timeline-component">
+                    <div class="kp-toolbar hx-bar" data-kp-toolbar id="hx-tl-bar" role="group" aria-label="Filters set from the timeline">
+                        <div class="kp-toolbar__state" id="hx-tl-state" role="status"></div>
+                        <div class="kp-toolbar__active" hidden></div>
+                    </div>
+                    <div class="hx-cover" id="hx-tl-cover">
+                    <section
+                        class="kp-gantt"
+                        data-kp-gantt
+                        data-kp-gantt-days
+                        data-kp-gantt-ranges="24h 7d 14d"
+                        data-kp-gantt-range="14d"
+                        data-kp-gantt-ghosts="2 3"
+                        id="hx-tl"
+                        aria-label="Operations of the last 14 days"
+                    ></section>
+                    </div>
+                    <dl class="kp-kv hx-facts" aria-label="What the timeline holds">
+                        <div class="kp-kv__row"><dt>Operations in view</dt><dd><b data-kp-tick id="hx-tl-n">0</b></dd></div>
+                        <div class="kp-kv__row"><dt>Failed in view</dt><dd><b data-kp-tick id="hx-tl-failed">0</b></dd></div>
+                        <div class="kp-kv__row"><dt>Opened</dt><dd id="hx-tl-opened">Nothing yet. Click a bar.</dd></div>
+                    </dl>
+                </div>
+            </section>
+
+            <section
+                class="hx-sec"
+                id="heat"
+                data-review-item="heat"
+                data-review-topic="heat"
+                data-review-topic-title="Stack by day"
+                data-review-components="heat toolbar"
+                data-review-title="Which stack is flaky: stacks by day"
+                aria-labelledby="h-heat"
+            >
+                <div class="hx-sec__head">
+                    <h2 id="h-heat">Which stack is flaky: stacks by day</h2>
+                    <p>Shows every stack against every day, coloured by whether it ran cleanly, so a stack that keeps failing stands out at a glance; the missing view today.</p>
+                </div>
+                <div class="hx-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>One row per stack (20 of them), one column per day, newest on the right. A cell is green when everything that ran that day was fine, red when something failed, empty (an outline) when the stack was not touched, and each says so in words in its card (<i>immich, 18/10: 1 operation, 1 failed (Nightly backup)</i>). The first rows to look at: <b>immich</b> (four red nights in a row), <b>paperless</b> and <b>vaultwarden</b> (one each).</li>
+                        <li>The top row is the whole <b>Fleet</b>: how large a share of the stacks that ran had a failure that day, filled from the bottom.</li>
+                        <li><b>Press a day</b> (a column) and the page's filter bar gets the tag <i>Day: dd/mm/yyyy</i>; <b>press a stack name</b> and it gets <i>Stack: immich</i>. Both can be on at once, and the line under the grid says how many History rows that leaves. On the dashboard this filters the History table.</li>
+                        <li><b>14 days / 30 days</b> changes how far back the grid reaches (the 30-day one also shows the weekly rhythm).</li>
+                        <li><b>Loading</b>, <b>Empty</b> and <b>Error</b> fill the same frame; Error has Retry.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Cells in the theme's ok and bad inks with a hairline between, a gap between a cell and the next, day numbers on the axis, the stack names in one column as wide as the longest. Look at the red run of immich, the empty cells (nothing happened) being clearly different from green, and the fleet row on top.</p>
+                </div>
+                <div class="hx-controls" data-review-controls data-review-controls-for="heat-component">
+                    <div role="group" aria-label="Reach">
+                        <b>Reach</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-ht-window="14">14 days</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-ht-window="30">30 days</button>
+                    </div>
+                    <div role="group" aria-label="Pick">
+                        <b>Pick</b>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-ht-day">Pick yesterday</button>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-ht-stack">Pick immich</button>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-ht-clear">Clear the picks</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-ht-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-ht-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-ht-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-ht-data="error">Error</button>
+                    </div>
+                </div>
+                <div class="hx-frame" id="heat-component">
+                    <div class="kp-toolbar hx-bar" data-kp-toolbar id="hx-ht-bar" role="group" aria-label="Filters set from the grid">
+                        <div class="kp-toolbar__state" id="hx-ht-state" role="status"></div>
+                        <div class="kp-toolbar__active" hidden></div>
+                    </div>
+                    <div class="hx-cover hx-heat" id="hx-ht-cover">
+                        <div class="kp-heat" data-kp-heat data-kp-heat-toggle id="hx-heat" aria-label="Operations per stack per day"></div>
+                    </div>
+                    <ul class="kp-heat__legend hx-legend">
+                        <li><span class="kp-heat__swatch" data-kp-tone="ok"></span> everything ran fine</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="bad"></span> something failed</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="none"></span> not touched that day</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section
+                class="hx-sec"
+                id="history"
+                data-review-item="history"
+                data-review-topic="history"
+                data-review-topic-title="History feed"
+                data-review-components="datatable toolbar steplist code"
+                data-review-title="History: every operation, grouped by day"
+                data-review-choices='[{ "id": "activity-history-view", "label": "Which look the History opens with", "once": true, "default": "table", "options": [
+                    { "value": "table", "label": "Table", "hint": "Recommended. Sortable on every column, filters as tags, a heading per day that folds, rows that open to their steps, page sizes. It answers which operation, when, by whom, and lets you compare." },
+                    { "value": "feed", "label": "Feed", "hint": "A list with day headings and a state badge in front. It reads like a diary; it has no sort and no filter tags." }] }]'
+                aria-labelledby="h-history"
+            >
+                <div class="hx-sec__head">
+                    <h2 id="h-history">History: every operation, grouped by day</h2>
+                    <p>Lists every operation in the order it happened, a heading per day, so you can find one by stack, kind or outcome and open it to see its steps.</p>
+                </div>
+                <div class="hx-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>A table with a heading row per day (<i>Today, 19/10/2026</i>, <i>Yesterday</i>, then the date) that folds, with the exact number of operations in it; the first days are open and <b>days older than three are folded</b>. Columns: Started (dd/mm/yyyy HH:mm), Stack, Operation, By, Outcome, Took. Press a header to sort (Shift adds a second key); the sort stays inside each day.</li>
+                        <li><b>+ Add filter</b> sets Stack, Operation, By and Outcome one at a time as tags; the search box finds a word anywhere. The table is remembered (sort, filters, page size) between visits. A page holds 25 operations; the page sizes replace the home-made "Show 50 more".</li>
+                        <li><b>Press a row</b> (or its arrow, or Enter) to open it: its facts, its steps as a list with the time each took, and for a failed one the error as a code block with Copy. One row is open at a time. <b>Open the immich failure</b> does what a click on the failed bar in section 1 does.</li>
+                        <li><b>Narrow it</b> shows what the other sections do to this table: a range from the timeline, a day or a stack from the grid. The filter bar above the table shows the tag with its cross; the table says how many it left.</li>
+                        <li><b>View: Feed</b> shows the same operations as a list with day headings, a state badge in front and the stack, kind and time as words: the second look. Both are real options; the dashboard opens with the one you tick as default.</li>
+                        <li>Loading lays the busy card over the rows; Empty and Error fill the same footprint (Error says why and has Try again). On a phone the table becomes one card per row.</li>
+                        <li><b>Needs checking before the dashboard adopts it</b>: day groups together with a page of 25 (the page cuts through a day; headings repeat); this page shows how it behaves. The row's own look (a feed row component) waits on kp-themes.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Day headings as the theme's group row with a count, numbers right-aligned in one column, badges that say the outcome in words, actions in no column of their own (the row opens). Look at: the open row, the folded old days, the tag above the table, and the feed list: its lead column as wide as the widest badge.</p>
+                </div>
+                <div class="hx-controls" data-review-controls data-review-controls-for="history-component">
+                    <div role="group" aria-label="View">
+                        <b>View</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-hi-view="table">Table</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-hi-view="feed">Feed</button>
+                    </div>
+                    <div role="group" aria-label="Narrow it">
+                        <b>Narrow it</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-hi-narrow="none">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-hi-narrow="range">A range from the timeline</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-hi-narrow="day">A day from the grid</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-hi-narrow="stack">A stack from the grid</button>
+                    </div>
+                    <div role="group" aria-label="Open">
+                        <b>Open</b>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-hi-open">Open the immich failure</button>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-hi-close">Close it</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-hi-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-hi-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-hi-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-hi-data="error">Error</button>
+                    </div>
+                </div>
+                <div class="hx-frame hx-history" id="history-component">
+                    <div class="kp-toolbar hx-bar" data-kp-toolbar id="hx-hi-bar" role="group" aria-label="Filters set from the timeline and the grid">
+                        <div class="kp-toolbar__state" id="hx-hi-state" role="status"></div>
+                        <div class="kp-toolbar__active" hidden></div>
+                    </div>
+                    <div class="hx-cover hx-history-area" id="hx-hi-cover">
+                    <div
+                        class="kp-datatable"
+                        data-kp-datatable
+                        data-kp-expandable
+                        data-kp-expand-single
+                        data-kp-filter-mode="add"
+                        data-kp-page-size="25"
+                        data-kp-page-sizes="10,25,50"
+                        data-kp-sort-multi
+                        data-kp-remember="homelab-activity-history"
+                        data-kp-cards
+                        data-kp-busy-overlay
+                        id="hx-table"
+                    >
+                        <div class="kp-datatable__bar">
+                            <button type="button" class="kp-button kp-button--sm" data-kp-datatable-add-filter>+ Add filter</button>
+                            <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the history" placeholder="Search the history" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Operations on the stacks, newest first, a heading per day. Each row opens to its steps.
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="number">Started</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">Stack</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">Operation</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">By</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice" data-kp-sort-order="Failed,Running,Done">Outcome</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Took</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hx-body"></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden>
+                            <div data-kp-datatable-empty-none>
+                                <p class="kp-empty__title">Nothing has run yet</p>
+                                <p>Every update, apply, restart and backup is listed here as soon as it starts.</p>
+                            </div>
+                            <div data-kp-datatable-empty-nomatch hidden>
+                                <p class="kp-empty__title">No operation matches</p>
+                                <button type="button" class="kp-button kp-button--secondary" data-kp-datatable-clear>Clear the search and filters</button>
+                            </div>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                    <div class="hx-feed" id="hx-feed" hidden></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="hx-sec"
+                id="jobs"
+                data-review-item="jobs"
+                data-review-topic="jobs"
+                data-review-topic-title="Jobs timeline"
+                data-review-components="gantt tick"
+                data-review-title="Jobs: what runs and what waits"
+                aria-labelledby="h-jobs"
+            >
+                <div class="hx-sec__head">
+                    <h2 id="h-jobs">Jobs: what runs and what waits</h2>
+                    <p>Draws every job on a lane of its stack, with the time it waited in the queue before it started, so you see at once what is stuck behind what.</p>
+                </div>
+                <div class="hx-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>One lane per stack that had a job in the last 24 hours (six). A job is a bar from when it started to when it finished; <b>the time it waited</b> in the queue is a thin band in the same lane before the bar, labelled <i>waited 2 min 10 s</i>. Failed jobs are red; the job that is running grows with the clock; the job that is still queued is a ghost bar from the moment it was queued.</li>
+                        <li><b>Live</b> buttons make it move: <b>Start a job</b> adds a running bar, <b>Queue one</b> adds a waiting one, <b>Finish the oldest</b> ends the oldest running job, <b>Fail it</b> ends it red. A job that finishes keeps its place; nothing around it jumps.</li>
+                        <li><b>Drag across the plot</b> to pick a range: the numbers under the timeline (jobs, waited longest) follow it, and on the dashboard the jobs table below narrows to it. A click on a bar opens that job (section 5 shows what the job dialog holds).</li>
+                        <li><b>Loading</b> lays the busy card over lanes of their final height; Empty and Error fill the frame.</li>
+                        <li><b>Blocked on the backend</b>: the waiting band uses queued_at and started_at, which the dashboard has; the second in-flight figure ("1.2 of 4 GB") needs a byte counter in job progress (backend item C5), so it is not shown here.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Bars with the success ink for done, the alarm ink for failed, the primary for running, and the queued ghost clearly lighter than a finished bar. Look at the band of waiting before each bar (it is not a bar), that six lanes line up in one label column, and that a new bar arrives without moving the others.</p>
+                </div>
+                <div class="hx-controls" data-review-controls data-review-controls-for="jobs-component">
+                    <div role="group" aria-label="Live">
+                        <b>Live</b>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-jb-start">Start a job</button>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-jb-queue">Queue one</button>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-jb-finish">Finish the oldest</button>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-jb-fail">Fail it</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-jb-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-jb-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-jb-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-jb-data="error">Error</button>
+                    </div>
+                </div>
+                <div class="hx-frame" id="jobs-component">
+                    <div class="hx-cover" id="hx-jb-cover">
+                    <section
+                        class="kp-gantt"
+                        data-kp-gantt
+                        data-kp-gantt-ranges="1h 6h 24h"
+                        data-kp-gantt-range="6h"
+                        data-kp-gantt-ghosts="1 2 2 1 1 1"
+                        id="hx-jobs"
+                        aria-label="Jobs of the last 6 hours, a lane per stack"
+                    ></section>
+                    </div>
+                    <dl class="kp-kv hx-facts" aria-label="What the timeline holds">
+                        <div class="kp-kv__row"><dt>Jobs in view</dt><dd><b data-kp-tick id="hx-jb-n">0</b></dd></div>
+                        <div class="kp-kv__row"><dt>Waiting or running now</dt><dd><b data-kp-tick id="hx-jb-live">0</b></dd></div>
+                        <div class="kp-kv__row"><dt>Longest wait in view</dt><dd id="hx-jb-wait">none</dd></div>
+                        <div class="kp-kv__row"><dt>Opened</dt><dd id="hx-jb-opened">Nothing yet. Click a bar.</dd></div>
+                    </dl>
+                </div>
+            </section>
+
+            <section
+                class="hx-sec"
+                id="job"
+                data-review-item="job"
+                data-review-topic="job"
+                data-review-topic-title="Job detail"
+                data-review-components="steplist stackbar code problems timer-disc tick"
+                data-review-title="One job: its steps, where the time went, and why it failed"
+                aria-labelledby="h-job"
+            >
+                <div class="hx-sec__head">
+                    <h2 id="h-job">One job: its steps, where the time went, and why it failed</h2>
+                    <p>Opens a single job and shows what it is doing step by step, where its time went, how long it still needs, and when it failed, what went wrong and what to do.</p>
+                </div>
+                <div class="hx-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Header: the job (<i>Update images · immich</i>), who started it, the state badge, and three figures that tick when they change: steps done, time taken and the median for this operation (<i>4 min 12 s against a median of 3 min 40 s</i>, with the difference as a badge).</li>
+                        <li><b>Steps</b> are a list: a mark per state (done, running, failed, skipped, waiting), the step's name, one line of what it does and the time it took. <b>Play the run</b> runs the job in about 20 seconds: steps turn running then done, the figures tick, and the disc shrinks.</li>
+                        <li><b>Where the time went</b> is one bar split by step in seconds (<i>Pull the images 1 min 52 s</i>); press a part to see its share. <b>About 4 min left</b> is a disc that shrinks while the job runs (a range from the median, not a promise) and is replaced by the time taken when it ends.</li>
+                        <li><b>Failed</b>: a red alert says what happened, why and what to do now, with the command to retry; the error is a code block with Copy. <b>Done</b> has no alert. Running shows the disc, Failed and Done do not.</li>
+                        <li><b>Loading</b> lays the busy card over the whole panel; <b>Error</b> fills it with a plate and Retry. A job that has no median yet (a first run) says <i>no median yet</i>, never a number.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The step list reading top to bottom as one column, marks in a column, times right-aligned in another; the share bar with its legend under it; the alert with What now; the code block with Copy at its corner. Look at the failed step, which is red with the steps after it dimmed and marked skipped, and at the disc being the only moving thing while it runs.</p>
+                </div>
+                <div class="hx-controls" data-review-controls data-review-controls-for="job-component">
+                    <div role="group" aria-label="Outcome">
+                        <b>Outcome</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-jd-outcome="running">Running</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-jd-outcome="done">Done</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-jd-outcome="failed">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Run">
+                        <b>Run</b>
+                        <button type="button" class="kp-button kp-button--sm" id="hx-jd-play">Play the run</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hx-jd-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-jd-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hx-jd-data="error">Error</button>
+                    </div>
+                </div>
+                <div class="hx-frame hx-job" id="job-component">
+                    <header class="hx-job__head">
+                        <div>
+                            <h3 id="hx-jd-title">Update images · immich</h3>
+                            <p id="hx-jd-sub" class="hx-muted"></p>
+                        </div>
+                        <span class="kp-badge" id="hx-jd-badge">running</span>
+                    </header>
+                    <dl class="kp-kv hx-facts" aria-label="The job in figures">
+                        <div class="kp-kv__row"><dt>Steps done</dt><dd><b data-kp-tick id="hx-jd-steps">0</b> of <span id="hx-jd-total">4</span></dd></div>
+                        <div class="kp-kv__row"><dt>Time taken</dt><dd id="hx-jd-took">0 s</dd></div>
+                        <div class="kp-kv__row"><dt>Median for this operation</dt><dd><span id="hx-jd-median">3 min 40 s</span> <span class="kp-badge" id="hx-jd-delta" hidden></span></dd></div>
+                    </dl>
+                    <figure class="kp-stackbar" id="hx-jd-bar"></figure>
+                    <div class="hx-job__cols">
+                        <div class="hx-job__steps" id="hx-jd-steps-host"></div>
+                        <div class="hx-job__disc" id="hx-jd-disc-host">
+                            <div class="kp-timer-disc" id="hx-jd-disc" data-kp-timer-disc-scale="300" data-kp-timer-disc-name="Time left on the update" data-kp-timer-disc-disabled></div>
+                            <p class="hx-muted" id="hx-jd-disc-text" aria-live="off">About 3 min left</p>
+                        </div>
+                    </div>
+                    <div class="kp-problems" data-kp-problems data-kp-problems-mode="each" id="hx-jd-problems"></div>
+                    <div class="kp-code" id="hx-jd-code" hidden></div>
+                    <div class="hx-job__plate" id="hx-jd-plate" hidden></div>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-homelab-activity-3b7c1e52-0f4a-4d58-9a64-6d2e8b1c7f90" }
+        </script>
+        <script type="module" src="table.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): topic T1, Activity and Jobs. The run timeline (gantt), the stack-by-day failure grid (heat), History as a data table with day groups and openable rows, the Jobs timeline with queue waiting time, and the detail of one job; formal only until approved. Hand-written page: research/app-homelab-activity.
+            {
+                href: 'research/app-homelab-activity/demo.html',
+                label: 'Homelab dashboard: Activity and Jobs, timeline, failure grid and History',
+                about: 'How the dashboard\'s Activity and Jobs pages would look on the new components: a timeline you drag across, a grid of stack by day that shows which stack keeps failing, a History table with a heading per day and rows that open to their steps, a Jobs timeline that shows how long each job waited, and the detail of one job (steps, where the time went, why it failed). 5 sections (5 pairs, formal only), plus one default to set: whether the History opens as a table or a feed.',
+            },
             // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's cook mode, formal only (new demo). research/audhd-recepten/.
             {
                 href: 'research/audhd-recepten/cook/demo.html',

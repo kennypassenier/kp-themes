@@ -1,0 +1,262 @@
+/* research/app-homelab-activity: the page's own frame. Everything with a kp- class is the package; these hx- rules only
+   lay the sections out and size the frames so a state never changes the footprint. */
+
+.hx-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hx-intro,
+.hx-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hx-intro :is(h1, p),
+.hx-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hx-intro p,
+.hx-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hx-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hx-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hx-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hx-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+/* One box of buttons that drive the component below it; groups share one row. */
+.hx-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.hx-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.hx-controls > [role='group'] > b {
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+}
+
+.hx-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.hx-frame > [hidden] {
+    display: none;
+}
+
+/* The filter bar above a component keeps one line of room whether or not a tag is on. */
+.hx-bar {
+    min-block-size: 3.25rem;
+}
+
+/* The figures under a timeline: labels in one column as wide as the longest. */
+.hx-facts {
+    max-inline-size: 40rem;
+}
+
+.hx-muted {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* Heat: the frame keeps the height of 20 stacks plus the fleet row for 14 and for 30 days and for the states. */
+.hx-heat {
+    min-block-size: 41.5rem;
+}
+
+.hx-legend {
+    margin: 0;
+}
+
+/* History: the scroll box keeps one height, so Loaded, Loading, Empty and Error stand in the same footprint. */
+.hx-history .kp-table-wrap {
+    min-block-size: 30rem;
+    max-block-size: 30rem;
+}
+
+.hx-history-area {
+    min-block-size: 42rem;
+}
+
+.hx-feed {
+    block-size: 42rem;
+    overflow: auto;
+    position: relative;
+}
+
+.hx-feed__more {
+    margin: var(--kp-space-sm, 0.5rem) 0 0;
+}
+
+/* The detail of an open History row: facts on one side, the steps on the other, one column on a phone. */
+.hx-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem) var(--kp-space-xl, 2rem);
+    padding: var(--kp-space-sm, 0.5rem) 0;
+}
+
+.hx-detail > .hx-detail__wide {
+    grid-column: 1 / -1;
+}
+
+/* Job detail */
+.hx-job {
+    min-block-size: 56rem;
+    position: relative;
+}
+
+.hx-job__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hx-job__head h3 {
+    margin: 0;
+}
+
+.hx-job__cols {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(16rem, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.hx-job__side {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+}
+
+.hx-job__disc {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-block-size: 20rem;
+}
+
+.hx-job__disc > p {
+    text-align: center;
+    max-inline-size: 22rem;
+}
+
+.hx-job__plate {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: stretch;
+    background: var(--card);
+}
+
+.hx-job__plate > * {
+    min-block-size: 100%;
+}
+
+@media (max-width: 48rem) {
+    .hx-job {
+        min-block-size: 94rem;
+    }
+    .hx-job__disc {
+        min-block-size: 0;
+    }
+    .hx-history-area {
+        min-block-size: 51rem;
+    }
+    .hx-feed {
+        block-size: 51rem;
+    }
+    .hx-detail,
+    .hx-job__cols {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .hx-sec {
+        padding: var(--kp-space-md, 1rem);
+    }
+}
+
+/* The share bar's legend names are whole words: a column wide enough for the longest step name and its time. */
+#hx-jd-bar {
+    --kp-stackbar-legend-min: 22rem;
+}
+
+/* A data area covered by the theme's empty or failed plate: the plate fills the area's whole footprint. */
+.hx-cover {
+    position: relative;
+    min-inline-size: 0;
+}
+
+.hx-plate {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: grid;
+    background: var(--card);
+}
+
+.hx-plate > * {
+    min-block-size: 100%;
+}
+
+/* The disc only reports the time left here; nobody starts, pauses or resets it. The component has no read-only mode yet. */
+.hx-job__disc .kp-timer-disc__controls {
+    display: none;
+}
+
+/* The words in a filter bar wrap on a phone instead of widening the page. */
+.hx-bar .kp-toolbar__state {
+    min-inline-size: 0;
+    white-space: normal;
+}
+
+/* Six stack lanes, two of them with a second row for a running or waiting job, all in view without a scroll. */
+#hx-jobs {
+    --kp-gantt-height: 26rem;
+}
