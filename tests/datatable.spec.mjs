@@ -902,8 +902,9 @@ test.describe('datatable — a group folds as its open played backwards', { tag:
     });
 
     test('under reduced motion the group folds and opens at once', async ({ page }) => {
-        await page.emulateMedia({ reducedMotion: 'reduce' });
         await ready(page, 'formal');
+        // After ready(), which asks for no-preference to read the glide in the other tests.
+        await page.emulateMedia({ reducedMotion: 'reduce' });
         const fold = await glideOf(page);
         expect(fold.glide).toBe(false);
         const hidden = await page.evaluate(() =>
