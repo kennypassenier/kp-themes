@@ -1,0 +1,33 @@
+{
+    "demo": "audhd-cook",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "audhd-cook-584cb3c6-43ff-45a7-9734-7f7ebd521da4",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 06:43: 5 of 5 approved, defaults kept. Approved in full: formal.",
+            "approved": [
+                {
+                    "item": "mise",
+                    "theme": "formal"
+                },
+                {
+                    "item": "cook",
+                    "theme": "formal"
+                },
+                {
+                    "item": "timers",
+                    "theme": "formal"
+                },
+                {
+                    "item": "discs",
+                    "theme": "formal"
+                },
+                {
+                    "item": "calm",
+                    "theme": "formal"
+                }
+            ]
+        }
+    ]
+}

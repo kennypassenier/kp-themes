@@ -207,25 +207,6 @@
             "fingerprint": "cb51855968e32768",
             "update": null
         },
-        "research/audhd-recepten/cook/demo.html": {
-            "facts": {
-                "id": "audhd-cook",
-                "themes": "formal",
-                "ask": null,
-                "askText": "The part of the recipe app that carries someone through a dish without asking them to hold the sequence in their head. It starts with one small step (gather the things), shows one cooking step at a time, keeps every timer running where it can be seen, and asks for attention only when something is done. The sample dish is Spaghetti with tomato sauce and meatballs, where the pasta and the sauce run at the same time. The timers here run fast (1 minute lasts 3 seconds) so you can watch them end; Real time is one button away. All data is mock.",
-                "sections": [
-                    { "item": "mise", "themes": null, "topic": "mise", "mode": null },
-                    { "item": "cook", "themes": null, "topic": "cook", "mode": null },
-                    { "item": "timers", "themes": null, "topic": "timers", "mode": null },
-                    { "item": "discs", "themes": null, "topic": "discs", "mode": null },
-                    { "item": "calm", "themes": null, "topic": "calm", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"audhd-cook-584cb3c6-43ff-45a7-9734-7f7ebd521da4\", \"received\": [] }\n        "
-            },
-            "fingerprint": "1ae92a4515affcc6",
-            "update": null
-        },
         "research/graph-loading-1019/demo.html": {
             "facts": {
                 "id": "graph-loading-1019",
@@ -291,42 +272,6 @@
             "fingerprint": "327c919723d158c0",
             "update": null
         },
-        "research/audhd-recepten/wheel/demo.html": {
-            "facts": {
-                "id": "audhd-wheel",
-                "themes": "formal",
-                "ask": null,
-                "askText": "The screen for the moment you freeze on “what do we eat tonight”. The wheel chooses and you only say yes or spin again; filters keep the wheel to what fits; a No energy today switch cuts it down to dishes that ask almost nothing of you. The dishes are sample data (Belgian home cooking), the clock stands at Sunday 18/10/2026 17:10 and dinner is at 18:30. Judge it in the review dialog, in formal.",
-                "sections": [
-                    { "item": "wheel", "themes": null, "topic": "wheel", "mode": null },
-                    { "item": "filters", "themes": null, "topic": "filters", "mode": null },
-                    { "item": "no-energy", "themes": null, "topic": "no-energy", "mode": null },
-                    { "item": "states", "themes": null, "topic": "states", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"audhd-wheel-3f6d1c52-8a4e-4b7d-9c1a-52e0b7a9d6c1\", \"received\": [] }\n        "
-            },
-            "fingerprint": "e03ceedb5fdd38fd",
-            "update": null
-        },
-        "research/audhd-recepten/timing/demo.html": {
-            "facts": {
-                "id": "audhd-timing",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Time blindness means “I have plenty of time” is true until it suddenly is not. The app answers it backwards: you say when you eat, it works out when each part of the meal has to start, shows it as lanes you can see at a glance, shrinks the wait to the start as a disc instead of ticking numbers, and nudges you once, kindly. The sample dish is spaghetti with meatballs; the step times are mock data and nothing is saved. The page runs on a demo clock that starts at 17:22 on 18/10/2026.",
-                "sections": [
-                    { "item": "timing-sentence", "themes": null, "topic": "timing-sentence", "mode": null },
-                    { "item": "timing-plan", "themes": null, "topic": "timing-plan", "mode": null },
-                    { "item": "timing-disc", "themes": null, "topic": "timing-disc", "mode": null },
-                    { "item": "timing-nudge", "themes": null, "topic": "timing-nudge", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"audhd-timing-0a1f5c52-7d2e-4b8c-9e43-6b1d0f2a8c71\", \"received\": [] }\n        "
-            },
-            "fingerprint": "3629c1c2c440ad52",
-            "update": null
-        },
         "research/app-homelab-inbox/demo.html": {
             "facts": {
                 "id": "app-homelab-inbox",
@@ -348,44 +293,30 @@
             "fingerprint": "b038076f203b1461",
             "update": null
         },
-        "research/audhd-recepten/recipe/demo.html": {
+        "research/audhd-recepten/grid-fix/demo.html": {
             "facts": {
-                "id": "audhd-recipe",
+                "id": "audhd-grid-fix",
                 "themes": "formal",
                 "ask": null,
-                "askText": "The screen of a recipe app for someone with AuDHD: the recipe with its amounts that follow the number of portions, a big Begin cooking button, a code that opens cook mode on the phone, a printable sheet, the calm switch with theme and language, a cooking log in which an empty week is quiet, and the states of the page. Nothing here counts, scores or judges: no streaks, no red for a day without cooking. The recipe is a Belgian one (witloof in the oven); the dates are sample dates, today is Friday 16/10/2026 in this demo.",
+                "askText": "Twelve sections of the recipe app's approved screens that did not stand on a grid: a column that started lower than the one beside it, a button off its row's line, chips whose words did not line up on a phone. Each is rebuilt so its columns share one line and its rows share one set of tracks; the settings and the wheel's filters are now one form grid. Only these sections are here; everything else stays approved on its own page. 12 sections, 12 pairs, formal only.",
                 "sections": [
+                    { "item": "zero-prep", "themes": null, "topic": null, "mode": null },
                     { "item": "recipe", "themes": null, "topic": "recipe", "mode": null },
                     { "item": "recipe-states", "themes": null, "topic": "recipe", "mode": null },
                     { "item": "qr", "themes": null, "topic": "carry", "mode": null },
                     { "item": "qr-states", "themes": null, "topic": "carry", "mode": null },
-                    { "item": "print", "themes": null, "topic": "carry", "mode": null },
                     { "item": "settings", "themes": null, "topic": "calm", "mode": null },
-                    { "item": "log", "themes": null, "topic": "calm", "mode": null }
+                    { "item": "log", "themes": null, "topic": "calm", "mode": null },
+                    { "item": "wheel", "themes": null, "topic": "wheel", "mode": null },
+                    { "item": "filters", "themes": null, "topic": "filters", "mode": null },
+                    { "item": "no-energy", "themes": null, "topic": "no-energy", "mode": null },
+                    { "item": "states", "themes": null, "topic": "states", "mode": null },
+                    { "item": "cook", "themes": null, "topic": "cook", "mode": null }
                 ],
                 "extra": null,
-                "round": "\n            { \"round\": \"audhd-recipe-5e355e17-1524-4a51-a1b2-dc98f1492786\", \"received\": [] }\n        "
+                "round": "\n            { \"round\": \"audhd-grid-fix-27ac1bf0-b80b-40b4-862a-bf5aefc89d5d\", \"received\": [] }\n        "
             },
-            "fingerprint": "f8121d848146bee6",
-            "update": null
-        },
-        "research/audhd-recepten/baddays/demo.html": {
-            "facts": {
-                "id": "audhd-baddays",
-                "themes": "formal",
-                "ask": null,
-                "askText": "The screen for a day with no energy. Five parts, each answering one question without asking for effort: which dishes always work, what is in the freezer, what can be eaten without cooking, how a recipe shrinks to its smallest version, and when things went in. Nothing here counts calories or weight, nothing turns red, and every action can be taken back. This page asks formal only. The dish names and dates are sample content; the portions, the clock and the server are pretend.",
-                "sections": [
-                    { "item": "safe-dishes", "themes": null, "topic": null, "mode": null },
-                    { "item": "freezer", "themes": null, "topic": null, "mode": null },
-                    { "item": "zero-prep", "themes": null, "topic": null, "mode": null },
-                    { "item": "mini-recipe", "themes": null, "topic": null, "mode": null },
-                    { "item": "freezer-month", "themes": null, "topic": null, "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"audhd-baddays-1\", \"received\": [] }\n        "
-            },
-            "fingerprint": "5504cdac23954998",
+            "fingerprint": "49c823c8aef63748",
             "update": null
         },
         "research/almanac-calendars/demo.html": {
@@ -612,6 +543,11 @@
         }
     },
     "decided": {
+        "research/audhd-recepten/cook/demo.html": "2026-10-19 06:43, Kenny: 5 of 5 approved, defaults kept (research/audhd-recepten/cook/VERDICTS.json)",
+        "research/audhd-recepten/wheel/demo.html": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed for every theme: \"All slices equal\" (research/audhd-recepten/wheel/VERDICTS.json)",
+        "research/audhd-recepten/timing/demo.html": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed: the start disc is \"A 60-minute dial\" (research/audhd-recepten/timing/VERDICTS.json)",
+        "research/audhd-recepten/recipe/demo.html": "2026-10-19 02:38, Kenny: 7 of 7 approved, defaults kept (research/audhd-recepten/recipe/VERDICTS.json)",
+        "research/audhd-recepten/baddays/demo.html": "2026-10-19 02:38, Kenny: 5 of 5 approved, defaults kept (research/audhd-recepten/baddays/VERDICTS.json)",
         "research/gap-round-1/demo.html": "2026-10-19 06:43, Kenny: every pair approved (research/gap-round-1/VERDICTS.json)",
         "research/rule-fixes-1019/demo.html": "2026-10-19 06:43, Kenny: every pair approved (research/rule-fixes-1019/VERDICTS.json)",
         "research/kyu-11-overview/demo.html": "2026-10-19 06:43, Kenny: every pair approved over two rounds (research/kyu-11-overview/VERDICTS.json)",

@@ -289,10 +289,11 @@ function drawRecipe(data, titleId) {
         h(
             'div',
             { class: 'rc-recipe' },
+            // The title row spans both columns, so the two columns under it start on one line (grid rule, 19/10/2026).
+            h('div', { class: 'rc-recipe__head' }, h('h2', { id: titleId }, words.title), h('span', { class: 'kp-badge' }, words.effortBadge)),
             h(
                 'div',
                 { class: 'rc-recipe__main' },
-                h('div', { class: 'rc-recipe__head' }, h('h2', { id: titleId }, words.title), h('span', { class: 'kp-badge' }, words.effortBadge)),
                 summary,
                 h(
                     'dl',
@@ -754,7 +755,8 @@ if (logCard) {
         grid.setAttribute('data-kp-logged-fill', view.fill);
         if (view.fill === 'accent') grid.removeAttribute('data-kp-logged-fill');
         setHeat(grid, {
-            columns: DAYS.en.map((label, i) => ({ key: String(i), label })),
+            // On a phone seven three-letter days do not fit with 4 px between them: two letters there, never cut.
+            columns: DAYS.en.map((label, i) => ({ key: String(i), label: matchMedia('(max-width: 36rem)').matches ? label.slice(0, 2) : label })),
             every: 1,
             rows: shown.map((monday, r) => ({
                 key: monday,

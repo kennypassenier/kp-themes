@@ -1,0 +1,41 @@
+{
+    "demo": "audhd-recipe",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "audhd-recipe-5e355e17-1524-4a51-a1b2-dc98f1492786",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 02:38: 7 of 7 approved, defaults kept. Approved in full: formal.",
+            "approved": [
+                {
+                    "item": "recipe",
+                    "theme": "formal"
+                },
+                {
+                    "item": "recipe-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "qr",
+                    "theme": "formal"
+                },
+                {
+                    "item": "qr-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "print",
+                    "theme": "formal"
+                },
+                {
+                    "item": "settings",
+                    "theme": "formal"
+                },
+                {
+                    "item": "log",
+                    "theme": "formal"
+                }
+            ]
+        }
+    ]
+}

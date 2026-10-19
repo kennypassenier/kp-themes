@@ -1,0 +1,29 @@
+{
+    "demo": "audhd-timing",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "audhd-timing-0a1f5c52-7d2e-4b8c-9e43-6b1d0f2a8c71",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 02:38: 4 of 4 approved; one default changed: the start disc is \"A 60-minute dial\". Approved in full: formal.",
+            "approved": [
+                {
+                    "item": "timing-sentence",
+                    "theme": "formal"
+                },
+                {
+                    "item": "timing-plan",
+                    "theme": "formal"
+                },
+                {
+                    "item": "timing-disc",
+                    "theme": "formal"
+                },
+                {
+                    "item": "timing-nudge",
+                    "theme": "formal"
+                }
+            ]
+        }
+    ]
+}

@@ -1,5 +1,7 @@
 # AuDHD recipes: the recipe page and calm settings (formal only)
 
+**Decided (2026-10-19 02:38):** Kenny approved every pair (7 of 7 approved, defaults kept). Recorded in `VERDICTS.json`; the page is not offered again. Six sections were rebuilt afterwards for the grid rule and are asked again in research/audhd-recepten/grid-fix.
+
 Demo `demo.html` (+ `demo.js`, `page.css`), `data-review="audhd-recipe"`, formal only. 7 sections in 3 topics.
 
 | Topic | Section | Components |

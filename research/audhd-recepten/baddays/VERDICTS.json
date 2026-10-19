@@ -1,0 +1,33 @@
+{
+    "demo": "audhd-baddays",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "audhd-baddays-1",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 02:38: 5 of 5 approved, defaults kept. Approved in full: formal.",
+            "approved": [
+                {
+                    "item": "safe-dishes",
+                    "theme": "formal"
+                },
+                {
+                    "item": "freezer",
+                    "theme": "formal"
+                },
+                {
+                    "item": "zero-prep",
+                    "theme": "formal"
+                },
+                {
+                    "item": "mini-recipe",
+                    "theme": "formal"
+                },
+                {
+                    "item": "freezer-month",
+                    "theme": "formal"
+                }
+            ]
+        }
+    ]
+}

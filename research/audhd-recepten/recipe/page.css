@@ -80,7 +80,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-lg, 1.5rem);
-    align-items: start;
+    align-items: first baseline;
 }
 
 @container rc-card (min-width: 54rem) {
@@ -99,10 +99,11 @@
 }
 
 .rc-recipe__head {
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
-    align-items: start;
+    align-items: center;
 }
 
 .rc-recipe__head h2 {
@@ -166,6 +167,14 @@
 
 .rc-portions h3 {
     margin: 0;
+}
+
+/* On a phone the stepper needs the whole width: the word goes above it, never cut. */
+@media (max-width: 36rem) {
+    .rc-portions {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+    }
 }
 
 /* The ingredients share three columns for the whole list: the amount, the unit and the name stay under each other. */
@@ -276,12 +285,14 @@ html[data-kp-calm] .rc-ing__amount[data-changed] {
     font-weight: 600;
 }
 
+.rc-share__code,
 .rc-share__words {
     display: grid;
     gap: var(--kp-space-sm, 0.5rem);
     align-content: start;
 }
 
+.rc-share__code h3,
 .rc-share__words :is(h3, p) {
     margin: 0;
 }
@@ -328,33 +339,14 @@ html[data-kp-calm] .rc-ing__amount[data-changed] {
 
 /* ---- 5 · settings: one name and sentence on the left, its control on the right, every row on the same two columns ----- */
 
-.rc-settings {
-    display: grid;
-    gap: 0;
-}
-
-.rc-set {
-    display: grid;
-    grid-template-columns: minmax(12rem, 24rem) minmax(0, 1fr);
-    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-xl, 2rem);
-    align-items: center;
-    padding-block: var(--kp-space-md, 1rem);
-    border-block-end: 1px solid var(--border);
-}
-
-.rc-set:first-child {
-    padding-block-start: 0;
-}
-
-.rc-set:last-child {
-    padding-block-end: 0;
-    border-block-end: 0;
+/* Every control in the settings is short, so the control track is capped and what each setting says now gets the room. */
+.rc-settings .kp-formgrid {
+    --kp-formgrid-control: 16rem;
 }
 
 .rc-set__name {
     display: grid;
     gap: var(--kp-space-2xs, 0.125rem);
-    min-inline-size: 0;
 }
 
 .rc-set__name :is(h3, p) {
@@ -364,18 +356,6 @@ html[data-kp-calm] .rc-ing__amount[data-changed] {
 .rc-set__name p {
     color: var(--muted-foreground);
     font-size: var(--kp-text-sm, 0.8125rem);
-}
-
-.rc-set__control {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
-    min-inline-size: 0;
-}
-
-.rc-set__control > * {
-    min-inline-size: 0;
 }
 
 .rc-swatches {
@@ -420,7 +400,8 @@ html[data-kp-calm] .rc-ing__amount[data-changed] {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--kp-space-md, 1rem);
-    align-items: center;
+    align-items: first baseline;
+    box-sizing: border-box;
     inline-size: 100%;
     padding: var(--kp-space-md, 0.75rem);
     border: 1px dashed var(--border-strong);
@@ -495,7 +476,6 @@ html[data-kp-calm] .rc-ing__amount[data-changed] {
 }
 
 @media (max-width: 52rem) {
-    .rc-set,
     .rc-log__add {
         grid-template-columns: minmax(0, 1fr);
     }

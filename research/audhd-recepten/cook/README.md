@@ -1,5 +1,7 @@
 # Cook mode (AuDHD recipe app, screen demo)
 
+**Decided (2026-10-19 06:43):** Kenny approved every pair (5 of 5 approved, defaults kept). Recorded in `VERDICTS.json`; the page is not offered again. One section was rebuilt afterwards for the grid rule and is asked again in research/audhd-recepten/grid-fix.
+
 Open `demo.html` (review id `audhd-cook`, formal only). Brief: `../BRIEF.md`. Sample dish: Spaghetti with tomato sauce and
 meatballs, nine steps, where the pasta and the sauce run at the same time. All data is mock; the timers run fast by default
 (1 minute = 3 s) so they can be watched ending, `Timers: Real time` switches to real seconds.

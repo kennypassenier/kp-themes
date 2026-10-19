@@ -1,0 +1,1472 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="audhd-grid-fix" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Recipe app: every column on one line</title>
+        <link rel="stylesheet" href="../../../css/fonts.css" />
+        <link rel="stylesheet" href="../../../css/themes.css" />
+        <link rel="stylesheet" href="../../../css/components.css" />
+        <link rel="stylesheet" href="../../../css/layout.css" />
+        <link rel="stylesheet" href="../../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+        <link rel="stylesheet" href="../baddays/page.css" />
+        <link rel="stylesheet" href="../recipe/page.css" />
+        <link rel="stylesheet" href="../wheel/page.css" />
+        <link rel="stylesheet" href="../cook/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main gf-page">
+            <header class="gf-intro">
+                <h1>Recipe app: every column on one line</h1>
+                <p class="cat-intro">
+                    Twelve sections of the recipe app's approved screens that did not stand on a grid: a column that started lower than the one beside
+                    it, a button off its row's line, chips whose words did not line up on a phone. Each is rebuilt so its columns share one line and
+                    its rows share one set of tracks; the settings and the wheel's filters are now one form grid. Only these sections are here;
+                    everything else stays approved on its own page. 12 sections, 12 pairs, formal only.
+                </p>
+                <p>
+                    Every section says under <b>What changed</b> what was wrong and what is different now, and under <b>Expected</b> what you should
+                    see.
+                </p>
+            </header>
+
+            <div class="bd-page">
+                <section
+                    class="bd-sec"
+                    id="zero-prep"
+                    data-review-item="zero-prep"
+                    data-review-components="card-state"
+                    data-review-title="The zero-prep shelf: food that needs no cooking"
+                    data-review-choices='[
+                    {"id":"shelf-lead","label":"What stands before each food","default":"minutes","options":[
+                        {"value":"minutes","label":"The minutes it takes (recommended)","hint":"0 min, 2 min, 5 min: a number says how little it asks."},
+                        {"value":"effort","label":"A plain word","hint":"Open, Easy, Simple: no number, nothing to compare."}]}]'
+                    aria-labelledby="h-zero-prep"
+                >
+                    <div class="bd-sec__head">
+                        <h2 id="h-zero-prep">The zero-prep shelf</h2>
+                        <p>
+                            Food that is eaten without cooking, sorted by how much you can manage today. Say how much that is, and the list shrinks to
+                            what fits.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> Was: each row’s badge sat on the title line and “This one” in the middle of the row, 21 px lower. Now the
+                        badge, the title’s first line and the button share one line, and every button stands in one column. On a phone the three
+                        levels went under the title and scroll inside their own bar; before, they pushed the page 80 px sideways.
+                    </p>
+                    <div class="bd-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Nine foods in rows, each with a lead (minutes or a word), a sentence, what it needs and a <b>This one</b> button in
+                                one column.
+                            </li>
+                            <li>
+                                The three choices above the rows filter them: <b>Just open it</b> 4, <b>One easy step</b> 7, <b>Anything here</b> 9.
+                                The numbers are exact and never move the rows.
+                            </li>
+                            <li>
+                                Press <b>This one</b>: a line under the list says it is chosen. <b>Loading</b>, <b>Nothing on the shelf</b> and
+                                <b>Could not open</b> fill the same area.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the three choices as one segmented control, the rows ruled, every title starting at one edge and every button in
+                            one column.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="bd-shelf-card">
+                        <div role="group" aria-label="State of the shelf" class="bd-actions">
+                            <button type="button" class="kp-button" aria-pressed="true" data-bd-state="ready">Ready</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-bd-state="loading">Loading</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-bd-state="empty">Nothing on the shelf</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-bd-state="error">Could not open</button>
+                        </div>
+                        <div role="group" aria-label="Lead of each food" class="bd-actions">
+                            <b>Lead:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-bd-opt="shelf-lead" data-value="minutes">
+                                Minutes (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-bd-opt="shelf-lead" data-value="effort">A word</button>
+                        </div>
+                    </div>
+                    <section
+                        class="kp-card bd-card"
+                        id="bd-shelf-card"
+                        data-kp-state="loading"
+                        aria-labelledby="bd-shelf-t"
+                        data-kp-loading-words="Opening the shelf…"
+                    >
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="bd-shelf-t">What I can manage today</h3>
+                            <div class="kp-card__actions">
+                                <div
+                                    class="kp-segmented"
+                                    data-kp-segmented="single"
+                                    role="radiogroup"
+                                    aria-label="How much I can manage today"
+                                    data-bd-level
+                                >
+                                    <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="0">
+                                        <span class="kp-segmented__label">Just open it</span
+                                        ><span class="kp-segmented__count" data-bd-count="0">4</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="1">
+                                        <span class="kp-segmented__label">One easy step</span
+                                        ><span class="kp-segmented__count" data-bd-count="1">7</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="2">
+                                        <span class="kp-segmented__label">Anything here</span
+                                        ><span class="kp-segmented__count" data-bd-count="2">9</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="kp-card__body">No stove, no oven, no pan. Choose what fits today, not what you think you should manage.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <ul class="kp-action-list kp-action-list--lead bd-shelf" aria-label="Foods without cooking" data-bd-shelf></ul>
+                            </div>
+                        </div>
+                        <div class="kp-card__footer"><p class="bd-readout" role="status" data-bd-shelf-readout>Nothing chosen yet.</p></div>
+                    </section>
+                </section>
+            </div>
+
+            <div class="rc-page">
+                <section
+                    class="rc-sec"
+                    id="recipe"
+                    data-review-item="recipe"
+                    data-review-components="card lede quantity hovercard flash"
+                    data-review-topic="recipe"
+                    data-review-topic-title="The recipe page"
+                    data-review-title="Recipe page: read it, scale it, begin"
+                    data-review-choices='[
+                    { "id": "recipe-summary", "label": "The summary of a long recipe", "once": true, "default": "fold", "options": [
+                        { "value": "fold", "label": "Folded behind More", "hint": "Recommended. Two sentences and More: the page starts short, and the rest is one press away. Less to read before the first press." },
+                        { "value": "whole", "label": "Always whole", "hint": "The whole summary is on screen, with its last-time advice. Nothing hides; the page is longer before the Begin cooking button." }] },
+                    { "id": "recipe-notes", "label": "Where an ingredient note shows", "once": true, "default": "hover", "options": [
+                        { "value": "hover", "label": "On a hover card", "hint": "Recommended. The list stays short and calm; a note opens when the pointer or the keyboard arrives on the name. A finger has no hover, so on a phone the note is not reachable." },
+                        { "value": "inline", "label": "Written under the name", "hint": "Every note is on the page, also on a phone and on paper. The list is longer and busier." }] },
+                    { "id": "recipe-amounts", "label": "How a part of a whole is written", "once": true, "default": "fractions", "options": [
+                        { "value": "fractions", "label": "Kitchen fractions (½ ¼ ¾)", "hint": "Recommended. Half an onion reads as half an onion, the way a person says it at the cutting board." },
+                        { "value": "decimals", "label": "Decimals (0.5 0.25 0.75)", "hint": "The same amounts as plain numbers, with the comma or point of the page language." }] }]'
+                    aria-labelledby="h-recipe"
+                >
+                    <div class="rc-sec__head">
+                        <h2 id="h-recipe">Recipe page: read it, scale it, begin</h2>
+                        <p>
+                            The title, a short summary, the time and effort it costs, a big Begin cooking button, and the ingredients with every
+                            amount following the number of portions. Press Begin cooking: it shows busy and done here; cook mode is the next screen
+                            and is not part of this demo.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> Was: the title stood in the left column only, so “Portions” on the right started 9 px off it. Now the
+                        title row spans both columns and the two columns under it start on one line.
+                    </p>
+                    <div class="rc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The card is <b>Fetching the recipe</b> under the theme&rsquo;s busy card from the first frame, then fills: title with
+                                an <b>Effort: Low</b> badge, the summary folded to two sentences with <b>More</b>, <b>Total time</b>,
+                                <b>Hands-on</b> and <b>Effort</b> in three columns, the big <b>Begin cooking</b> button with its one line under it,
+                                and <b>Last time</b>
+                                (04/10/2026 18:40) with what you wrote then.
+                            </li>
+                            <li>
+                                <b>Portions</b> stands at 4. Press <b>+</b> or <b>&minus;</b>, hold either, or type a number: every amount changes at
+                                once and lights for a moment (not in calm mode). Chicory 8 becomes 12 at 6; onion 1 becomes <b>½</b> at 2; milk 500 ml
+                                becomes <b>1.5 l</b> at 12; the pinch of nutmeg never changes.
+                            </li>
+                            <li>
+                                Point at <b>Chicory</b>, or Tab to it: a hover card with the note. The amounts, units and names stay in three columns
+                                that line up in every row.
+                            </li>
+                            <li>
+                                <b>Begin cooking</b>: the spinner, then <b>Opening</b>, then the button is as before. The first step it announces is
+                                only to get the nine things out.
+                            </li>
+                            <li>
+                                Buttons above: <b>Summary</b> folded or whole, <b>Notes</b> on a hover card or written under the name,
+                                <b>Parts of a whole</b> as fractions or decimals. Each redraws the card at once and keeps the portions you set.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal&rsquo;s paper and navy: the big button is the one filled navy plate on the card, the amounts are bold and
+                            right-aligned so the numbers read down in one column, the dotted underline marks the names that carry a note, and nothing
+                            else competes with Begin cooking. Look at the line between each row and at the air round the amounts.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="rc-card">
+                        <div role="group" aria-label="The summary" class="rc-actions">
+                            <b>Summary:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="summary" data-value="fold">
+                                Folded (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-opt="summary" data-value="whole">Whole</button>
+                        </div>
+                        <div role="group" aria-label="Ingredient notes" class="rc-actions">
+                            <b>Notes:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="notes" data-value="hover">
+                                Hover card (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-opt="notes" data-value="inline">
+                                Under the name
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Parts of a whole" class="rc-actions">
+                            <b>Parts of a whole:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="amounts" data-value="fractions">
+                                ½ ¼ (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-opt="amounts" data-value="decimals">0.5 0.25</button>
+                        </div>
+                    </div>
+                    <section class="kp-card rc-card" id="rc-card" data-kp-state="loading" aria-label="Recipe" data-rc-card="main">
+                        <div class="kp-card__stage"><div class="kp-card__data" id="rc-data"></div></div>
+                    </section>
+                </section>
+
+                <section
+                    class="rc-sec"
+                    id="recipe-states"
+                    data-review-item="recipe-states"
+                    data-review-components="card"
+                    data-review-topic="recipe"
+                    data-review-title="Recipe page: loading, not found, could not load"
+                    data-review-choices='[
+                    { "id": "missing-action", "label": "What a missing recipe offers next", "once": true, "default": "back", "options": [
+                        { "value": "back", "label": "Back to my recipes", "hint": "Recommended. The one calm way out: the list you came from. Nothing to decide." },
+                        { "value": "wheel", "label": "Pick something with the wheel", "hint": "Turns the dead end into dinner: the wheel chooses so you do not have to. One more idea on a screen that already says no." }] }]'
+                    aria-labelledby="h-states"
+                >
+                    <div class="rc-sec__head">
+                        <h2 id="h-states">Recipe page: loading, not found, could not load</h2>
+                        <p>
+                            The same card when the recipe is being fetched, when it does not exist any more, and when the server did not answer. Each
+                            state keeps the card&rsquo;s size, so nothing around it moves.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change"><b>What changed:</b> The same change as above: the title row spans both columns.</p>
+                    <div class="rc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Loading</b>: the theme&rsquo;s busy card centred over the whole card with <b>Fetching the recipe</b>; the recipe
+                                under it is dimmed and cannot be pressed. It keeps moving.
+                            </li>
+                            <li>
+                                <b>Not found</b>: the card&rsquo;s empty plate fills the card, centred, at heading size:
+                                <b>We cannot find this recipe</b>, <b>It may have been renamed or removed. Nothing you saved is lost.</b> and one
+                                button under it. It is calm: no red, no exclamation mark, no &ldquo;error&rdquo;.
+                            </li>
+                            <li>
+                                <b>Could not load</b>: the destructive alert fills the card, centred: <b>The recipe could not be loaded</b>, why, and
+                                a normal-size <b>Try again</b>. Press it: it loads for a second and the recipe is back. The words say the connection
+                                failed, never that anything you made is gone.
+                            </li>
+                            <li>
+                                The card is exactly as tall in all four states. The buttons above switch them; the dialog sets the default of the
+                                button under <b>Not found</b>.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal&rsquo;s empty plate and its destructive alert, in the middle of the card and large; the busy card is formal&rsquo;s
+                            navy ring. Look at the text centre against the card centre, and at the card&rsquo;s height in the four states.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="rs-card">
+                        <div role="group" aria-label="State of the card" class="rc-actions">
+                            <b>State:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-state="ready">Ready</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-state="loading">Loading</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-state="empty">Not found</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-state="error">Could not load</button>
+                        </div>
+                        <div role="group" aria-label="What a missing recipe offers" class="rc-actions">
+                            <b>Not found offers:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="missing" data-value="back">
+                                Back to my recipes (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-opt="missing" data-value="wheel">The wheel</button>
+                        </div>
+                    </div>
+                    <section class="kp-card rc-card" id="rs-card" data-kp-state="loading" aria-label="Recipe states" data-rc-card="states">
+                        <div class="kp-card__stage"><div class="kp-card__data" id="rs-data"></div></div>
+                    </section>
+                </section>
+
+                <section
+                    class="rc-sec"
+                    id="qr"
+                    data-review-item="qr"
+                    data-review-components="qr"
+                    data-review-topic="carry"
+                    data-review-topic-title="Take it with you"
+                    data-review-title="Cook on your phone: a code that opens cook mode"
+                    data-review-choices='[
+                    { "id": "qr-size", "label": "How big the code is", "once": true, "default": "standard", "options": [
+                        { "value": "standard", "label": "Standard (12 rem)", "hint": "Recommended. Reads from arm&#39;s length on a laptop and leaves room for the words beside it." },
+                        { "value": "lg", "label": "Large (16 rem)", "hint": "Reads from further away, for a phone propped against the cooker. Takes more of the screen." }] },
+                    { "id": "qr-caption", "label": "The link under the code", "once": true, "default": "link", "options": [
+                        { "value": "link", "label": "Shown as text", "hint": "Recommended. The link is readable, wraps at any character and can be typed on a device with no camera." },
+                        { "value": "none", "label": "Hidden", "hint": "Only the code and its buttons. Quieter, but a device without a camera has nothing to type." }] },
+                    { "id": "qr-modules", "label": "The shape of the dots", "once": true, "default": "square", "options": [
+                        { "value": "square", "label": "Square", "hint": "Recommended. The classic code: every camera reads it first time." },
+                        { "value": "round", "label": "Round", "hint": "Softer to look at; the three big corner marks stay square so it still scans." }] },
+                    { "id": "qr-reveal", "label": "When the code is shown", "once": true, "default": "shown", "options": [
+                        { "value": "shown", "label": "Always shown", "hint": "Recommended. Nothing to press: the code is there when you look for it." },
+                        { "value": "click", "label": "Behind a Show button", "hint": "The code stays covered until you ask, for a screen others can see." }] }]'
+                    aria-labelledby="h-qr"
+                >
+                    <div class="rc-sec__head">
+                        <h2 id="h-qr">Cook on your phone: a code that opens cook mode</h2>
+                        <p>
+                            Scan the code with the phone&rsquo;s camera and cook mode opens there with the same number of portions, so the laptop can
+                            stay in the other room. The code is drawn on this page; the link never leaves the device.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> Was: the steps started at the top while the code’s first words were under it, 197 px apart. Now both
+                        columns open with a heading on one line: “Scan with the phone” over the code.
+                    </p>
+                    <div class="rc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                A black-on-white code on its own light plate (the one place the theme does not colour, so every camera reads it), the
+                                link as text under it, and a <b>Copy link</b> button. Press it: a spinner, then <b>Copied</b>, same width.
+                            </li>
+                            <li>
+                                Beside it, three numbered steps in plain words: <b>Point the camera</b>, <b>Tap the link</b>, <b>Cook</b>, and a line
+                                saying the screen stays on while you cook.
+                            </li>
+                            <li>
+                                Buttons above: <b>Size</b> standard or large, <b>Link</b> shown or hidden, <b>Dots</b> square or round,
+                                <b>Show</b> always or behind a <b>Show QR code</b> button (then a <b>Hide</b> button covers it again). Each redraws
+                                the code at once.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            The plate is white with a thin formal border, the link is formal&rsquo;s small muted text, Copy is the plain button. Look
+                            at the quiet zone round the code and at the words beside it.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="rq-share">
+                        <div role="group" aria-label="Size of the code" class="rc-actions">
+                            <b>Size:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-qr="size" data-value="standard">
+                                Standard (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qr="size" data-value="lg">Large</button>
+                        </div>
+                        <div role="group" aria-label="The link under the code" class="rc-actions">
+                            <b>Link:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-qr="caption" data-value="link">
+                                Shown (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qr="caption" data-value="none">Hidden</button>
+                        </div>
+                        <div role="group" aria-label="Shape of the dots" class="rc-actions">
+                            <b>Dots:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-qr="modules" data-value="square">
+                                Square (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qr="modules" data-value="round">Round</button>
+                        </div>
+                        <div role="group" aria-label="When the code is shown" class="rc-actions">
+                            <b>Show:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-qr="reveal" data-value="shown">
+                                Always (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qr="reveal" data-value="click">
+                                Behind a button
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rc-share" id="rq-share">
+                        <div class="rc-share__code">
+                            <h3>Scan with the phone</h3>
+                            <div class="kp-qr" id="rq-code" data-kp-qr data-kp-qr-label="QR code that opens cook mode for witloof in the oven"></div>
+                        </div>
+                        <div class="rc-share__words">
+                            <h3>Open cook mode on the phone</h3>
+                            <ol class="rc-steps">
+                                <li>Point the phone&rsquo;s camera at the code.</li>
+                                <li>Tap the link that appears on the phone.</li>
+                                <li>Cook mode opens with 4 portions, the same as here. The screen stays on while you cook.</li>
+                            </ol>
+                            <p class="rc-line">No account, no app to install, and the link works for this recipe only.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="rc-sec"
+                    id="qr-states"
+                    data-review-item="qr-states"
+                    data-review-components="qr"
+                    data-review-topic="carry"
+                    data-review-title="Cook on your phone: while the link is made, and when it cannot be"
+                    data-review-choices='[
+                    { "id": "qr-retry", "label": "Whether a failed code offers another try", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "Try again is offered", "hint": "Recommended. A code that could not be made has one button to ask for a new link." },
+                        { "value": "off", "label": "No button", "hint": "The failed plate only explains and says to copy the link. For a link the app cannot make again." }] }]'
+                    aria-labelledby="h-qr-states"
+                >
+                    <div class="rc-sec__head">
+                        <h2 id="h-qr-states">Cook on your phone: while the link is made, and when it cannot be</h2>
+                        <p>
+                            The code before its link is ready, when there is no link yet, when the link is too long to be a code, and when the link
+                            has run out. Each fills the same plate, so the words beside it do not move.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> The same change as above: a heading over the code, on the line of the steps’ heading.
+                    </p>
+                    <div class="rc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li><b>Loading</b>: the theme&rsquo;s busy card over the plate with <b>Making the link</b>; Copy is dimmed.</li>
+                            <li>
+                                <b>No link yet</b>: the empty plate, centred, with a sentence. <b>Link too long</b>: the destructive plate, centred,
+                                saying to copy the link instead, with <b>Try again</b> when that is offered. <b>Link ran out</b>: the plate says so
+                                and the link under it is struck through; nothing of the old code stays on screen.
+                            </li>
+                            <li>The plate is as large in every state, and the steps beside it stay where they are.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            The empty and the destructive plates are formal&rsquo;s own, filling the code&rsquo;s plate and centred in it. Look at the
+                            plate&rsquo;s size in the five states and at the Try again button.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="rqs-share">
+                        <div role="group" aria-label="State of the code" class="rc-actions">
+                            <b>State:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-qrstate="ready">Ready</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qrstate="loading">Loading</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qrstate="empty">No link yet</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qrstate="error">Link too long</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qrstate="expired">Link ran out</button>
+                        </div>
+                        <div role="group" aria-label="Try again" class="rc-actions">
+                            <b>Try again:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-qrretry="on">Offered (default)</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-qrretry="off">Not offered</button>
+                        </div>
+                    </div>
+                    <div class="rc-share" id="rqs-share">
+                        <div class="rc-share__code">
+                            <h3>Scan with the phone</h3>
+                            <div class="kp-qr" id="rqs-code" data-kp-qr data-kp-qr-retry data-kp-qr-label="QR code that opens cook mode"></div>
+                        </div>
+                        <div class="rc-share__words">
+                            <h3>Open cook mode on the phone</h3>
+                            <ol class="rc-steps">
+                                <li>Point the phone&rsquo;s camera at the code.</li>
+                                <li>Tap the link that appears on the phone.</li>
+                                <li>Cook mode opens with 4 portions, the same as here.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="rc-sec"
+                    id="settings"
+                    data-review-item="settings"
+                    data-review-components="calm theme-picker segmented flash"
+                    data-review-topic="calm"
+                    data-review-topic-title="Calm settings and the cooking log"
+                    data-review-title="Calm settings: motion, theme and language"
+                    data-review-choices='[
+                    { "id": "calm-scope", "label": "What calm mode switches off", "once": true, "default": "effects", "options": [
+                        { "value": "motion", "label": "Movement only", "hint": "Transitions stop; entrances, glow and flicker stay. The mildest calm." },
+                        { "value": "effects", "label": "Movement and effects", "hint": "Recommended. Transitions, entrances, glow, flicker and glitch are off; loading keeps one slow pulse so you can tell something is happening." },
+                        { "value": "all", "label": "Everything, loading too", "hint": "The same, and a loading part holds still as well. Only choose it with the slow pulse below set to still, or nothing says that it is working." }] },
+                    { "id": "calm-loading", "label": "What loading does in calm mode", "once": true, "default": "slow", "options": [
+                        { "value": "slow", "label": "One slow pulse", "hint": "Recommended. A loading part breathes slowly. It still says it is working, and it does not pull the eye." },
+                        { "value": "still", "label": "Holds still", "hint": "Nothing moves at all, also while loading. The wait is only a word." }] },
+                    { "id": "settings-picker", "label": "How the theme is chosen", "once": true, "default": "menu", "options": [
+                        { "value": "menu", "label": "An icon with a menu", "hint": "Recommended. One small button on the page; the twelve themes are in a menu, light and dark apart." },
+                        { "value": "swatches", "label": "All twelve in view", "hint": "Every theme as a swatch with its name: more to look at at once, and nothing to open." }] },
+                    { "id": "settings-lang", "label": "How the language is chosen", "once": true, "default": "segmented", "options": [
+                        { "value": "segmented", "label": "A switch with two sides", "hint": "Recommended. NL and EN side by side with a plate under the chosen one." },
+                        { "value": "chips", "label": "Two separate chips", "hint": "The same two choices as pills. More air between them, a lighter look." }] }]'
+                    aria-labelledby="h-settings"
+                >
+                    <div class="rc-sec__head">
+                        <h2 id="h-settings">Calm settings: motion, theme and language</h2>
+                        <p>
+                            The three settings a person with a sensitive day reaches for first: one switch that turns movement and effects off, the
+                            theme, and the language of the recipe. Each change applies at once and nothing asks you to confirm it.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> Was: two loose columns, the language switch 28 px under its name. Now one form grid with three shared
+                        columns: name and sentence, the control, and what it says now; every row on one line.
+                    </p>
+                    <div class="rc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Four rows on one grid: a name with one sentence, its control, and what it says now, each column on one edge.
+                                <b>Calm mode</b> is off; switch it on and the line under it says what is quiet now; the rest of this demo page keeps
+                                its calm until you switch it off (this demo does not remember it between visits).
+                            </li>
+                            <li>
+                                <b>Theme</b>: an icon button with a menu of twelve themes (light and dark apart). Pick one: the check shows which, and
+                                the line says it would apply at once and be kept for next time; this page stays in formal so you can judge it.
+                            </li>
+                            <li>
+                                <b>Language</b>: <b>NL</b> and <b>EN</b>. Pick one: the preview line under it (the recipe title, the portions, the
+                                button) is in that language, and the recipe page of the first section opens in it next time.
+                            </li>
+                            <li>
+                                <b>Try it</b>: <b>Save settings</b> shows the spinner and then <b>Saved</b>; press it again and it says
+                                <b>Not saved</b>
+                                with the reason in a line under it. In calm mode the spinner breathes or holds still, as set.
+                            </li>
+                            <li>
+                                Buttons above: what <b>Calm</b> switches off (movement, movement and effects, everything), what <b>Loading</b> does in
+                                calm mode (slow pulse, still), how the <b>Theme</b> is chosen (menu or twelve swatches) and how the <b>Language</b> is
+                                chosen (switch or chips).
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal&rsquo;s switch is a navy track with a white thumb, the language switch has a navy plate under the chosen side, and
+                            the rows are separated by thin rules. Look at the left column: every name and sentence starts at the same edge.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="rs-settings">
+                        <div role="group" aria-label="What calm mode switches off" class="rc-actions">
+                            <b>Calm:</b>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-calm="scope" data-value="motion">Movement</button>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-calm="scope" data-value="effects">
+                                Movement and effects (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-calm="scope" data-value="all">Everything</button>
+                        </div>
+                        <div role="group" aria-label="Loading in calm mode" class="rc-actions">
+                            <b>Loading:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-calm="loading" data-value="slow">
+                                Slow pulse (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-calm="loading" data-value="still">
+                                Holds still
+                            </button>
+                        </div>
+                        <div role="group" aria-label="How the theme is chosen" class="rc-actions">
+                            <b>Theme:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-set="picker" data-value="menu">Menu (default)</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-set="picker" data-value="swatches">
+                                Twelve swatches
+                            </button>
+                        </div>
+                        <div role="group" aria-label="How the language is chosen" class="rc-actions">
+                            <b>Language:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-set="lang" data-value="segmented">
+                                Switch (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-set="lang" data-value="chips">Chips</button>
+                        </div>
+                    </div>
+                    <section class="kp-card rc-settings" id="rs-settings" aria-label="Settings">
+                        <div class="kp-formgrid" data-kp-formgrid-lines="lines">
+                            <div class="kp-formgrid__row">
+                                <div class="kp-formgrid__label rc-set__name">
+                                    <h3>Calm mode</h3>
+                                    <p>Turns movement and effects off with one switch. Loading keeps a slow pulse so you can tell it is working.</p>
+                                </div>
+                                <div class="kp-formgrid__control">
+                                    <label class="kp-switch"
+                                        ><input
+                                            class="kp-switch__input"
+                                            type="checkbox"
+                                            role="switch"
+                                            data-kp-calm-switch
+                                            data-kp-calm-remember="false"
+                                        /><span class="kp-switch__state" aria-hidden="true"
+                                            ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
+                                        ><span>Use calm mode</span></label
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value rc-readout" id="rs-readout" role="status" aria-live="polite">Calm mode is off.</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <div class="kp-formgrid__label rc-set__name">
+                                    <h3>Theme</h3>
+                                    <p>How the app looks. The choice applies at once and is kept for next time.</p>
+                                </div>
+                                <div class="kp-formgrid__control"><div id="rs-picker"></div></div>
+                                <p class="kp-formgrid__value rc-readout" id="rs-theme-said" role="status" aria-live="polite">Formal is on.</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <div class="kp-formgrid__label rc-set__name">
+                                    <h3>Language</h3>
+                                    <p>The language of the recipes and the buttons. Dutch and English.</p>
+                                </div>
+                                <div class="kp-formgrid__control"><div id="rs-lang"></div></div>
+                                <div class="kp-formgrid__value rc-preview" id="rs-preview" aria-live="polite">
+                                    <div>
+                                        <strong data-rc-pv="title"></strong>
+                                        <small data-rc-pv="meta"></small>
+                                    </div>
+                                    <span class="kp-badge" data-rc-pv="badge"></span>
+                                </div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <div class="kp-formgrid__label rc-set__name">
+                                    <h3>Try it</h3>
+                                    <p>Saves these settings. It shows busy while it works, and says plainly when it could not.</p>
+                                </div>
+                                <div class="kp-formgrid__control">
+                                    <button
+                                        type="button"
+                                        class="kp-button kp-button--primary"
+                                        id="rs-save"
+                                        data-kp-flash-button
+                                        data-kp-flash-words="Saved,Not saved"
+                                    >
+                                        Save settings
+                                    </button>
+                                </div>
+                                <p class="kp-formgrid__value rc-line" id="rs-save-line" role="status"></p>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+
+                <section
+                    class="rc-sec"
+                    id="log"
+                    data-review-item="log"
+                    data-review-components="heat card segmented"
+                    data-review-topic="calm"
+                    data-review-title="Cooking log: a quiet week is only quiet"
+                    data-review-choices='[
+                    { "id": "log-fill", "label": "The colour of a day you logged", "once": true, "default": "accent", "options": [
+                        { "value": "accent", "label": "The theme&#39;s accent", "hint": "Recommended. A logged day is the theme&#39;s own colour, never green or red: nothing here is right or wrong." },
+                        { "value": "success", "label": "The success colour", "hint": "A logged day in the theme&#39;s green. It reads as done, which turns a day with nothing into a day not done." }] },
+                    { "id": "log-rows", "label": "How a week is named", "once": true, "default": "words", "options": [
+                        { "value": "words", "label": "In words (This week, Last week)", "hint": "Recommended. Time is easier to feel in words than in dates; the date is in the card that opens on a day." },
+                        { "value": "dates", "label": "By its first day (12/10/2026)", "hint": "Exact, and the same on every device. You have to count from today to know how long ago it was." }] },
+                    { "id": "log-weeks", "label": "How many weeks are shown", "once": true, "default": "4", "options": [
+                        { "value": "4", "label": "Four weeks", "hint": "Recommended. A month in view, enough to see a rhythm without a long list." },
+                        { "value": "2", "label": "Two weeks", "hint": "The last fortnight only. Less to take in, and an old quiet week is not on screen." }] }]'
+                    aria-labelledby="h-log"
+                >
+                    <div class="rc-sec__head">
+                        <h2 id="h-log">Cooking log: a quiet week is only quiet</h2>
+                        <p>
+                            The weeks you cooked, as a grid: a day you logged is filled, a day you did not is a pale plate with no mark, no number and
+                            no red. It never counts days, never says missed, and a whole week with nothing in it looks like a week of rest.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> Was: on a phone the three-letter days stood 3 px apart. Now the phone shows two letters (Mo, Tu, We…),
+                        never cut; a wide screen is unchanged.
+                    </p>
+                    <div class="rc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Four rows of seven days, named <b>3 weeks ago</b>, <b>2 weeks ago</b>, <b>Last week</b> and <b>This week</b> (the
+                                weeks starting 21/09, 28/09, 05/10 and 12/10). The first week is <b>all quiet</b>: seven pale plates and nothing else,
+                                no warning, no count. The second has three logged days; the third has three <b>paused</b> days (hatched: you were ill)
+                                and two logged; the fourth ends with two days that have not come yet (dashed).
+                            </li>
+                            <li>
+                                Point at a logged day: <b>Witloof in the oven · felt easy</b>. Point at a quiet one:
+                                <b>14/10/2026, nothing logged</b>. Press a day: it is marked, and the line above the grid says
+                                <b>Log dinner for Wednesday 14/10/2026</b>: adding a day afterwards is always allowed. Press it again to go back to
+                                today.
+                            </li>
+                            <li>
+                                <b>Log today&rsquo;s dinner</b>: choose how it felt (<b>Easy</b>, <b>Fine</b>, <b>Heavy</b>, or nothing at all) and
+                                press <b>Add to the log</b>: today fills in, the button says <b>Added</b>, and <b>Remove today&rsquo;s entry</b> takes
+                                it back. There is no streak and no total.
+                            </li>
+                            <li>
+                                <b>A quiet week</b> (button above): every day of every week is quiet and the note under the grid says
+                                <b>Nothing logged. That is fine.</b> <b>Nothing yet</b>: the empty plate fills the card, centred:
+                                <b>Nothing logged yet</b>, <b>That is fine: the log starts whenever you do.</b> <b>Loading</b>: the busy card over the
+                                grid. <b>Could not read</b>: the alert says the log could not be read and that the entries are safe, with
+                                <b>Try again</b>.
+                            </li>
+                            <li>
+                                Buttons above: <b>State</b>, the <b>Colour</b> of a logged day (accent or success), how a week is <b>named</b> (<b
+                                    >This week</b
+                                >, <b>Last week</b>, or its first day) and how many <b>Weeks</b> show (four or two).
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal&rsquo;s navy is a logged day; a quiet day is a tone barely darker than the paper with no border; the paused hatch
+                            is the one the heat grid already uses. Look at the quiet week: it must draw no eye, and nothing in it may look like a
+                            fault.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="rl-card">
+                        <div role="group" aria-label="State of the log" class="rc-actions">
+                            <b>State:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-log="ready">Ready</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-log="quiet">A quiet week</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-log="empty">Nothing yet</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-log="loading">Loading</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-log="error">Could not read</button>
+                        </div>
+                        <div role="group" aria-label="The colour of a logged day" class="rc-actions">
+                            <b>Colour:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-logopt="fill" data-value="accent">
+                                Accent (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-logopt="fill" data-value="success">Success</button>
+                        </div>
+                        <div role="group" aria-label="How a week is named" class="rc-actions">
+                            <b>Weeks named:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-logopt="rows" data-value="words">
+                                In words (default)
+                            </button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-logopt="rows" data-value="dates">By date</button>
+                        </div>
+                        <div role="group" aria-label="How many weeks show" class="rc-actions">
+                            <b>Weeks:</b>
+                            <button type="button" class="kp-button" aria-pressed="true" data-rc-logopt="weeks" data-value="4">Four (default)</button>
+                            <button type="button" class="kp-button" aria-pressed="false" data-rc-logopt="weeks" data-value="2">Two</button>
+                        </div>
+                    </div>
+                    <section class="kp-card rc-logcard" id="rl-card" data-kp-state="loading" aria-label="Cooking log">
+                        <div class="kp-card__stage"><div class="kp-card__data" id="rl-data"></div></div>
+                    </section>
+                </section>
+            </div>
+
+            <div class="wl-page">
+                <section
+                    class="wl-sec"
+                    id="wheel"
+                    data-review-item="wheel"
+                    data-review-topic="wheel"
+                    data-review-topic-title="What do we eat?"
+                    data-review-components="wheel card-state art"
+                    data-review-title="The wheel and its answer"
+                    data-review-motion="none"
+                    data-review-choices='[
+                    { "id": "odds", "label": "How the slices are sized", "once": true, "default": "recency", "options": [
+                        { "value": "recency", "label": "Long not eaten: bigger", "hint": "Default. A dish you have not cooked for a long time gets a bigger slice and so a better chance; yesterday&#39;s dish a small one. It stops the same three dishes coming round every week." },
+                        { "value": "freezer", "label": "Use up the freezer first", "hint": "The same, and a dish with portions in the freezer counts three times as much, so the freezer empties before the food in it turns old." },
+                        { "value": "equal", "label": "All slices equal", "hint": "Every dish the same size. Plainest; nothing is steered." }] },
+                    { "id": "spin", "label": "How long a spin lasts", "once": true, "default": "calm", "options": [
+                        { "value": "calm", "label": "Calm: 3.6 s, 3 to 6 turns", "hint": "Default. Long enough to feel chosen by luck, short enough not to be a wait." },
+                        { "value": "quick", "label": "Quick: 1.5 s, 1 to 2 turns", "hint": "For a day with little patience; the wheel is only a short turn." },
+                        { "value": "slow", "label": "Slow: 6 s, 6 to 9 turns", "hint": "A little ceremony, for when choosing should feel like an event." }] },
+                    { "id": "repeat", "label": "Spin again may land on the same dish", "once": true, "default": "never", "options": [
+                        { "value": "never", "label": "Never twice in a row", "hint": "Default. Spin again always gives another dish while there is one." },
+                        { "value": "allow", "label": "May repeat", "hint": "Pure chance: the same dish can come up again." }] },
+                    { "id": "skip", "label": "The button that sets a dish aside", "once": true, "default": "week", "options": [
+                        { "value": "week", "label": "Not this one, not again this week", "hint": "Default. The dish rests until the same day next week and can be brought back with one press." },
+                        { "value": "tonight", "label": "Not this one, not tonight", "hint": "The dish leaves the wheel for tonight only." },
+                        { "value": "off", "label": "No such button", "hint": "Only Yes and Spin again: the fewest choices on screen." }] }]'
+                    aria-labelledby="h-wheel"
+                >
+                    <div class="wl-sec__head">
+                        <h2 id="h-wheel">The wheel and its answer</h2>
+                        <p>
+                            Press Spin and the wheel picks tonight&rsquo;s dinner; dishes you have not cooked for a long time get a bigger slice, and
+                            all you do is say yes or spin again.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> Was: the answer was centred beside the wheel, 167 px below its top. Now both columns open with a small
+                        heading on one line, “Tonight’s wheel” over the wheel.
+                    </p>
+                    <div class="wl-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Thirteen real dishes on one round wheel. <b>Witloof in ham and cheese</b> (40 days), <b>waterzooi</b> (31) and
+                                <b>stoofvlees</b> (24) have the largest slices; <b>Croque monsieur</b> (2 days) and <b>yoghurt</b> (1 day) the
+                                smallest.
+                            </li>
+                            <li>
+                                <b>Spin</b> (the wheel&rsquo;s hub, or Space on it, or <b>Spin again</b> beside the wheel): the wheel turns and slows
+                                to a stop on one dish. At the right the card then names it, says when it was last cooked and why its slice was that
+                                size. Nothing on the page moves while it turns.
+                            </li>
+                            <li>
+                                <b>Yes, cook this</b> is dimmed, with a reason, until the wheel has chosen. Pressed, it fixes tonight&rsquo;s dinner
+                                and counts back from 18:30 to when to start (and says so plainly when that moment is already past).
+                            </li>
+                            <li>
+                                <b>Not this one, not again this week</b> takes the dish off the wheel (the slices glide to their new size) and lists
+                                it under <b>Resting</b> with a <b>Bring back</b> button.
+                            </li>
+                            <li>
+                                The state buttons above the card: <b>Loading</b> lays the busy card over the whole card, <b>No dish fits</b> shows a
+                                large centred note with <b>Loosen a filter</b>, <b>Failed</b> a large centred alert with <b>Try again</b>.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the wheel is the one large shape, its slices soft washes of the chart colours with navy ink, the hub a navy disc;
+                            the answer at its right is a plain ruled column. Look at the room round every word on the card and at the three buttons
+                            standing in one column with their one-line descriptions beside them.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="wl-card-a">
+                        <div role="group" aria-label="Try it" class="wl-controls">
+                            <b>Try it:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-wl-try="spin" title="Spin the wheel as if the hub was pressed">
+                                Spin the wheel
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-wl-try="reset"
+                                title="Clear the answer and bring every resting dish back"
+                            >
+                                Start over
+                            </button>
+                        </div>
+                        <div role="group" aria-label="State of the card" class="wl-controls" data-wl-states="wl-card-a">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-wl-state="ready">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="loading">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="empty">No dish fits</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="error">Failed</button>
+                        </div>
+                    </div>
+                    <section
+                        class="kp-card wl-card"
+                        id="wl-card-a"
+                        data-kp-state="ready"
+                        aria-labelledby="wl-card-a-t"
+                        data-kp-loading-words="Reading your dishes"
+                    >
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="wl-card-a-t">Tonight&rsquo;s dinner</h3>
+                            <div class="kp-card__actions"><span class="kp-badge" data-wl-fitcount>13 dishes</span></div>
+                        </div>
+                        <p class="kp-card__body">
+                            Dinner is at 18:30. Spin once; if the answer does not feel right, spin again or set that dish aside.
+                        </p>
+                        <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                    </section>
+                </section>
+
+                <section
+                    class="wl-sec"
+                    id="filters"
+                    data-review-item="filters"
+                    data-review-topic="filters"
+                    data-review-topic-title="Filters for the wheel"
+                    data-review-components="segmented toggle card-state art"
+                    data-review-title="Filters: want, not, or either way"
+                    data-review-motion="none"
+                    data-review-choices='[
+                    { "id": "time-ask", "label": "How the time is asked", "once": true, "default": "tri", "options": [
+                        { "value": "tri", "label": "Want / not / either way per band", "hint": "Default. Three bands (up to 20 min, 21 to 45, over 45); each can be wanted, left out or ignored, like the meals and the ingredients." },
+                        { "value": "limit", "label": "One limit: up to 20, 45 or 90 min", "hint": "One toggle button group, one on at most: a single ceiling for the time a dish may take. Quicker to read on a tired day." }] },
+                    { "id": "loosen", "label": "What Loosen a filter lets go of", "once": true, "default": "smart", "options": [
+                        { "value": "smart", "label": "The one that frees the most dishes", "hint": "Default. The button measures every chip you set and lets go of the one that brings the most dishes back, and says which." },
+                        { "value": "last", "label": "The one you pressed last", "hint": "Undo in the order you set them: the newest chip goes first." }] }]'
+                    aria-labelledby="h-filters"
+                >
+                    <div class="wl-sec__head">
+                        <h2 id="h-filters">Filters: want, not, or either way</h2>
+                        <p>
+                            Each chip is pressed once to require something, twice to leave it out and a third time to let it go, so &ldquo;dinner,
+                            quick, without cheese&rdquo; is three presses and the wheel only holds what fits.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> Was: on a phone the chips wrapped to different widths, so their words and counts did not line up. Now the
+                        filters are one form grid, and on a phone the chips stand two per row in equal columns (the time ranges one per row, never
+                        cut).
+                    </p>
+                    <div class="wl-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Three rows with their names in one column: <b>Meal</b>, <b>Time</b> and <b>Ingredients</b>. Each chip shows the exact
+                                number of dishes behind it. Press a chip: it is filled with a tick (required); press again: struck through with a
+                                cross (left out); a third time: neutral. The line under each row says what is chosen in words.
+                            </li>
+                            <li>
+                                Required meals and times mean <b>any of them</b>, required ingredients mean <b>all of them</b>; anything left out
+                                removes the dish. The card below lists the dishes that fit and the badge says &ldquo;N of 13&rdquo; (the real number).
+                            </li>
+                            <li>
+                                <b>Clear all filters</b> lets every chip go. A set that leaves nothing (try <b>Nothing fits</b>) fills the card with a
+                                large centred note and <b>Loosen a filter</b>, which lets go of the chip that frees the most dishes and says which.
+                            </li>
+                            <li>
+                                <b>Loading</b> puts the busy card over the list and a placeholder where the chip counts are; <b>Failed</b> a large
+                                alert with <b>Try again</b>. The chips themselves stay usable in every state.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: a pressed chip turns its face round (navy, light words) with a tick; a left-out chip keeps its face but strikes
+                            its word through in the destructive ink. Look at the three label columns lining up and at the chips never changing width
+                            when they change state.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="wl-filters">
+                        <div role="group" aria-label="Try a set of filters" class="wl-controls">
+                            <b>Try a set:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-wl-preset="quick" title="Dinner, up to 20 minutes, no cheese">
+                                Quick dinner
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-wl-preset="nothing"
+                                title="Breakfast and a long dish: no dish is both"
+                            >
+                                Nothing fits
+                            </button>
+                        </div>
+                        <div role="group" aria-label="State of the list" class="wl-controls" data-wl-states="wl-fits">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-wl-state="ready">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="loading">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="error">Failed</button>
+                        </div>
+                    </div>
+                    <div class="kp-formgrid wl-filters" id="wl-filters">
+                        <div class="kp-formgrid__row">
+                            <p class="kp-formgrid__label wl-filters__name" id="wl-f-meal-l">Meal</p>
+                            <div class="kp-formgrid__control wl-filters__row" data-kp-formgrid-span="wide">
+                                <div
+                                    class="kp-segmented kp-segmented--chips"
+                                    data-kp-segmented="tri"
+                                    data-kp-segmented-summary
+                                    aria-labelledby="wl-f-meal-l"
+                                    id="wl-f-meal"
+                                >
+                                    <button type="button" class="kp-segmented__item" data-value="breakfast">
+                                        <span class="kp-segmented__label">Breakfast</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="lunch">
+                                        <span class="kp-segmented__label">Lunch</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="dinner">
+                                        <span class="kp-segmented__label">Dinner</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <p class="kp-formgrid__label wl-filters__name" id="wl-f-time-l">Time</p>
+                            <div class="kp-formgrid__control wl-filters__row" data-kp-formgrid-span="wide">
+                                <div
+                                    class="kp-segmented kp-segmented--chips"
+                                    data-kp-segmented="tri"
+                                    data-kp-segmented-summary
+                                    aria-labelledby="wl-f-time-l"
+                                    id="wl-f-time"
+                                >
+                                    <button type="button" class="kp-segmented__item" data-value="quick">
+                                        <span class="kp-segmented__label">Up to 20 min</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="mid">
+                                        <span class="kp-segmented__label">21 to 45 min</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="long">
+                                        <span class="kp-segmented__label">Over 45 min</span>
+                                    </button>
+                                </div>
+                                <div
+                                    class="kp-toggles"
+                                    role="group"
+                                    aria-labelledby="wl-f-time-l"
+                                    id="wl-f-limit"
+                                    data-kp-toggle-group="limit"
+                                    data-kp-toggle-mode="single-or-none"
+                                    hidden
+                                >
+                                    <button
+                                        type="button"
+                                        class="kp-button"
+                                        data-kp-toggle
+                                        data-kp-look="chip"
+                                        aria-pressed="false"
+                                        data-kp-toggle-value="20"
+                                    >
+                                        Up to 20 min
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="kp-button"
+                                        data-kp-toggle
+                                        data-kp-look="chip"
+                                        aria-pressed="false"
+                                        data-kp-toggle-value="45"
+                                    >
+                                        Up to 45 min
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="kp-button"
+                                        data-kp-toggle
+                                        data-kp-look="chip"
+                                        aria-pressed="false"
+                                        data-kp-toggle-value="90"
+                                    >
+                                        Up to 90 min
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <p class="kp-formgrid__label wl-filters__name" id="wl-f-ing-l">Ingredients</p>
+                            <div class="kp-formgrid__control wl-filters__row" data-kp-formgrid-span="wide">
+                                <div
+                                    class="kp-segmented kp-segmented--chips"
+                                    data-kp-segmented="tri"
+                                    data-kp-segmented-summary
+                                    aria-labelledby="wl-f-ing-l"
+                                    id="wl-f-ing"
+                                >
+                                    <button type="button" class="kp-segmented__item" data-value="chicken">
+                                        <span class="kp-segmented__label">Chicken</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="beef">
+                                        <span class="kp-segmented__label">Beef</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="egg">
+                                        <span class="kp-segmented__label">Egg</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="cheese">
+                                        <span class="kp-segmented__label">Cheese</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="tomato">
+                                        <span class="kp-segmented__label">Tomato</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="potato">
+                                        <span class="kp-segmented__label">Potato</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row wl-filters__foot">
+                            <div class="kp-formgrid__control wl-filters__foot-cell" data-kp-formgrid-span="wide">
+                                <button type="button" class="kp-button kp-button--sm" id="wl-f-clear">Clear all filters</button>
+                                <p class="wl-live" role="status" id="wl-f-live">Nothing is filtered: every dish is on the list.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <section
+                        class="kp-card wl-card wl-card--list"
+                        id="wl-fits"
+                        data-kp-state="ready"
+                        aria-labelledby="wl-fits-t"
+                        data-kp-loading-words="Reading your dishes"
+                    >
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="wl-fits-t">Dishes that fit</h3>
+                            <div class="kp-card__actions"><span class="kp-badge" id="wl-fits-count">13 of 13</span></div>
+                        </div>
+                        <p class="kp-card__body">These are the dishes on the wheel right now, with how long ago each was cooked.</p>
+                        <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                    </section>
+                </section>
+
+                <section
+                    class="wl-sec"
+                    id="no-energy"
+                    data-review-item="no-energy"
+                    data-review-topic="no-energy"
+                    data-review-topic-title="No energy today"
+                    data-review-components="toggle wheel card-state"
+                    data-review-title="No energy today: only what is possible"
+                    data-review-motion="none"
+                    data-review-choices='[
+                    { "id": "easy-mode", "label": "What the switch does to the wheel", "once": true, "default": "limit", "options": [
+                        { "value": "limit", "label": "Only easy dishes on the wheel", "hint": "Default. Everything that needs real cooking leaves the wheel, so any answer is one you can manage today." },
+                        { "value": "weight", "label": "All dishes, easy ones four times as big", "hint": "A softer day: nothing is taken away, but the easy dishes are four times as likely." }] },
+                    { "id": "easy-calm", "label": "Calm look while it is on", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "Calm mode comes on with it", "hint": "Default. The page turns movement and effects down while No energy is on (the wheel then turns only a short way); it is not remembered." },
+                        { "value": "off", "label": "The page stays as it is", "hint": "Only the dishes change; the page keeps all its motion." }] }]'
+                    aria-labelledby="h-easy"
+                >
+                    <div class="wl-sec__head">
+                        <h2 id="h-easy">No energy today: only what is possible</h2>
+                        <p>
+                            One switch for the days with nothing in the tank: the wheel only holds safe favourites, portions from the freezer and food
+                            that needs no preparing at all.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> The same change as the first section: both columns open with a heading on one line.
+                    </p>
+                    <div class="wl-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Off: the wheel holds all 13 dishes. Press the <b>No energy today</b> switch: the slices that ask real effort shrink
+                                away and eight dishes are left (the badge says &ldquo;8 dishes&rdquo;); the wheel keeps its size and place.
+                            </li>
+                            <li>
+                                <b>What counts as easy</b> are three toggle chips with their exact counts (Safe favourites 6, Freezer portions 3, No
+                                prep 4). Turn one off and the dishes only it allowed leave the wheel; turn all three off and the card says nothing is
+                                left and offers <b>Loosen a filter</b>. While the switch is off the chips are dimmed with a reason.
+                            </li>
+                            <li>
+                                Spin, and the answer card says in its facts why the dish is easy (&ldquo;Safe&rdquo;, &ldquo;Freezer, 4
+                                portions&rdquo;, &ldquo;No prep&rdquo;); the start time counts back from dinner as before.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the switch is the package&rsquo;s own, its track navy when on. Look at the wheel shrinking to fewer, larger slices
+                            without moving, and at the sentence beside the switch saying what it does.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="wl-easy">
+                        <div role="group" aria-label="State of the card" class="wl-controls" data-wl-states="wl-card-c">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-wl-state="ready">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="loading">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="error">Failed</button>
+                        </div>
+                    </div>
+                    <div class="wl-easy" id="wl-easy">
+                        <div class="wl-easy__side">
+                            <label class="kp-switch">
+                                <input class="kp-switch__input" type="checkbox" role="switch" id="wl-easy-switch" />
+                                <span class="kp-switch__state" aria-hidden="true"></span>
+                                <span>No energy today</span>
+                            </label>
+                            <p class="wl-easy__says">
+                                On: the wheel only holds dishes you can manage today. Nothing is deleted; switch it off and everything is back.
+                            </p>
+                            <p class="wl-filters__name" id="wl-easy-kinds-l">What counts as easy</p>
+                            <div
+                                class="kp-toggles"
+                                role="group"
+                                aria-labelledby="wl-easy-kinds-l"
+                                id="wl-easy-kinds"
+                                data-kp-toggle-group="easy"
+                                data-kp-toggle-mode="multi"
+                            >
+                                <button
+                                    type="button"
+                                    class="kp-button"
+                                    data-kp-toggle
+                                    data-kp-look="chip"
+                                    data-kp-pressed-mark="check"
+                                    aria-pressed="true"
+                                    data-kp-toggle-value="safe"
+                                >
+                                    Safe favourites
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-button"
+                                    data-kp-toggle
+                                    data-kp-look="chip"
+                                    data-kp-pressed-mark="check"
+                                    aria-pressed="true"
+                                    data-kp-toggle-value="freezer"
+                                >
+                                    Freezer portions
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-button"
+                                    data-kp-toggle
+                                    data-kp-look="chip"
+                                    data-kp-pressed-mark="check"
+                                    aria-pressed="true"
+                                    data-kp-toggle-value="noprep"
+                                >
+                                    No prep
+                                </button>
+                            </div>
+                            <p class="wl-live" role="status" id="wl-easy-live">No energy today is off: the wheel holds every dish.</p>
+                        </div>
+                        <section
+                            class="kp-card wl-card"
+                            id="wl-card-c"
+                            data-kp-state="ready"
+                            aria-labelledby="wl-card-c-t"
+                            data-kp-loading-words="Reading your dishes"
+                        >
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title" id="wl-card-c-t">Tonight&rsquo;s dinner</h3>
+                                <div class="kp-card__actions"><span class="kp-badge" data-wl-fitcount>13 dishes</span></div>
+                            </div>
+                            <p class="kp-card__body">Same wheel, limited by the switch at the left.</p>
+                            <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                        </section>
+                    </div>
+                </section>
+
+                <section
+                    class="wl-sec"
+                    id="states"
+                    data-review-item="states"
+                    data-review-topic="states"
+                    data-review-topic-title="When the wheel cannot spin"
+                    data-review-components="card-state art wheel"
+                    data-review-title="Loading, nothing fits and failed"
+                    data-review-motion="none"
+                    data-review-choices='[
+                    { "id": "art", "label": "The drawing on an empty or failed card", "once": true, "default": "with", "options": [
+                        { "value": "with", "label": "With the theme&#39;s drawing", "hint": "Default. Formal draws its ledger: a page with an entry struck through. It says at a glance what kind of emptiness this is." },
+                        { "value": "without", "label": "Words only", "hint": "No drawing: the note is the title, one sentence and the action." }] }]'
+                    aria-labelledby="h-wheel-states"
+                >
+                    <div class="wl-sec__head">
+                        <h2 id="h-wheel-states">Loading, nothing fits and failed</h2>
+                        <p>
+                            What the card shows while the dishes load, when the filters leave nothing and when the dishes could not be read; it keeps
+                            its size in every state so the page does not jump.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> The same change as the first section: both columns open with a heading on one line.
+                    </p>
+                    <div class="wl-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Loading</b>: the theme&rsquo;s busy card centred over the whole card (the wheel under it dimmed), animated from the
+                                first frame. The card is as tall as when it is ready.
+                            </li>
+                            <li>
+                                <b>No dish fits</b>: a large centred note (heading size) filling the card, with the drawing, one sentence about what
+                                blocks and a normal-size <b>Loosen a filter</b>. Press it: the card says which filter it let go of and the wheel is
+                                back.
+                            </li>
+                            <li>
+                                <b>Failed</b>: a large centred alert, &ldquo;The dishes could not be read&rdquo;, and <b>Try again</b>; pressing it
+                                shows the busy card for a moment and then the wheel.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the empty note is formal&rsquo;s dashed plate with the ledger drawing, the failure its destructive alert; the
+                            words sit in the middle of the card with air on every side, never in a corner. Compare the three heights with the ready
+                            card.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="wl-card-d">
+                        <div role="group" aria-label="State of the card" class="wl-controls" data-wl-states="wl-card-d">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-wl-state="ready">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="loading">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="empty">No dish fits</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-wl-state="error">Failed</button>
+                        </div>
+                    </div>
+                    <section
+                        class="kp-card wl-card"
+                        id="wl-card-d"
+                        data-kp-state="ready"
+                        aria-labelledby="wl-card-d-t"
+                        data-kp-loading-words="Reading your dishes"
+                    >
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="wl-card-d-t">Tonight&rsquo;s dinner</h3>
+                            <div class="kp-card__actions"><span class="kp-badge" data-wl-fitcount>13 dishes</span></div>
+                        </div>
+                        <p class="kp-card__body">
+                            Dinner is at 18:30. Use the state buttons above to see how the card behaves when something is wrong.
+                        </p>
+                        <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                    </section>
+                </section>
+            </div>
+
+            <div class="ar-page">
+                <section
+                    class="ar-sec"
+                    id="cook"
+                    data-review-item="cook"
+                    data-review-topic="cook"
+                    data-review-topic-title="Cook mode"
+                    data-review-components="focus-steps"
+                    data-review-title="Cook mode: one step at a time, timers kept in view"
+                    aria-labelledby="h-cook"
+                    data-review-choices='[{"id":"wake","label":"Screen while cooking","default":"true","options":[{"value":"true","label":"Keep the screen on"},{"value":"false","label":"Let it dim"}]}]'
+                >
+                    <div class="ar-sec__head">
+                        <h2 id="h-cook">Cook mode: one step at a time</h2>
+                        <p>
+                            Nine steps on the counter, one at a time and large, with what the step needs and a timer button; started timers keep
+                            running in the list beside it while you go on to the next step.
+                        </p>
+                    </div>
+                    <p class="gf-expected-change">
+                        <b>What changed:</b> Was: the steps column began with its toolbar, 2 px off the heading “Timers running” beside it. Now the
+                        steps column has its own heading, “Steps”, on that line.
+                    </p>
+                    <div class="ar-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Step 1 shows <b>Step 1 of 9</b>, the progress bar, the screen line (<b>Screen stays on</b> where the browser can),
+                                <b>Read aloud</b>, the step, what it needs, a timer button and a note saying which track it belongs to (Pasta or
+                                Sauce).
+                            </li>
+                            <li>
+                                Press <b>Start a timer &middot; 10 min</b> on step 1: a Water timer appears in the list and keeps counting. Go on with
+                                Next: steps 3, 4 and 5 start Onion, Sauce and Pasta, so Water, Sauce and Pasta run side by side while you stir and
+                                taste.
+                            </li>
+                            <li>
+                                When a timer ends its card turns to the done plate with a chime, and the band above the step says which one and offers
+                                <b>Go to step N</b> for what comes next: nothing has to be remembered.
+                            </li>
+                            <li>
+                                Arrow keys, Space, Home and End move between steps; a swipe does the same on a touch screen. The buttons never move,
+                                whatever the step&rsquo;s length.
+                            </li>
+                            <li>
+                                Why it helps: one thing on screen at a time (no scanning a recipe), the running timers are always visible (time
+                                blindness), the screen stays on with messy hands, and the end of a timer asks for attention once, kindly.
+                            </li>
+                            <li>
+                                The parallel tracks are shown with what the package has today: the track is named in each step&rsquo;s note and the
+                                timers carry the track names. The real track option is under Component gaps in the README.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the step is large dark text on the white card, the two navigation buttons sit at the foot in fixed places, and the
+                            timer cards on the right show the time left in figures that do not jump as they count.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="cook-component">
+                        <div role="group" aria-label="Recipe state">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-opt="cook-state" data-value="ready" aria-pressed="true">
+                                Ready
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-opt="cook-state" data-value="loading" aria-pressed="false">
+                                Loading
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-opt="cook-state" data-value="empty" aria-pressed="false">
+                                No steps
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-opt="cook-state" data-value="error" aria-pressed="false">
+                                Failed
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Screen while cooking (live option)">
+                            <b>Screen:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-opt="wake" data-value="true" aria-pressed="true">
+                                Keep on
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-opt="wake" data-value="false" aria-pressed="false">Dim</button>
+                        </div>
+                        <div role="group" aria-label="Timer speed of this demo">
+                            <b>Timers:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="fast" aria-pressed="true">Fast</button>
+                            <button type="button" class="kp-button kp-button--sm" data-opt="speed" data-value="real" aria-pressed="false">
+                                Real time
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Jump to a step">
+                            <b>Jump to step:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-act="goto" data-value="0" aria-label="Step 1">1</button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-act="goto"
+                                data-value="4"
+                                aria-label="Step 5, the pasta goes in"
+                            >
+                                5
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-act="goto" data-value="7" aria-label="Step 8, drain">8</button>
+                        </div>
+                    </div>
+                    <div class="ar-screen" id="cook-component">
+                        <div class="ar-screen__main">
+                            <h3 class="ar-part">Steps</h3>
+                            <div class="kp-attention" id="cm-band" aria-label="Needs you now"></div>
+                            <div
+                                class="kp-focus-steps"
+                                data-kp-focus-steps
+                                data-kp-focus-steps-timers="cm-timers"
+                                data-kp-state="loading"
+                                data-kp-focus-steps-empty="This recipe has no steps yet."
+                                id="cm-steps"
+                                aria-label="Spaghetti with tomato sauce and meatballs"
+                            ></div>
+                        </div>
+                        <div class="ar-screen__side">
+                            <h3 class="ar-part">Timers running</h3>
+                            <p class="ar-part-note">
+                                Every timer you start stays here, whichever step you are on.
+                                <span data-ar-speed-line>Demo clock: fast, 1 minute lasts 3 seconds.</span>
+                            </p>
+                            <div
+                                class="kp-timers"
+                                data-kp-timers
+                                id="cm-timers"
+                                aria-label="Kitchen timers"
+                                data-kp-timers-empty="No timer running. Start one from a step."
+                            ></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "audhd-grid-fix-27ac1bf0-b80b-40b4-862a-bf5aefc89d5d", "received": [] }
+        </script>
+        <script type="module" src="../../../js/auto.js"></script>
+        <script type="module" src="../baddays/demo.js"></script>
+        <script type="module" src="../recipe/demo.js"></script>
+        <script type="module" src="../wheel/demo.js"></script>
+        <script type="module" src="../cook/demo.js"></script>
+        <script type="module" src="../../_review/review.js"></script>
+        <script src="../../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../../catalogue/catalogue.js"></script>
+    </body>
+</html>

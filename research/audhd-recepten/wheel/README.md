@@ -1,5 +1,7 @@
 # audhd-recepten / wheel: "What do we eat?"
 
+**Decided (2026-10-19 02:38):** Kenny approved every pair (4 of 4 approved; one default changed for every theme: "All slices equal"). Recorded in `VERDICTS.json`; the page is not offered again. All four sections were rebuilt afterwards for the grid rule and are asked again in research/audhd-recepten/grid-fix.
+
 Screen demo for the AuDHD recipe app (concept: pillars "no choice stress" and "bad days"). Formal only
 (`data-review="audhd-wheel"`). Open `demo.html`; judge in the review dialog.
 

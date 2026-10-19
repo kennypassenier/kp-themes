@@ -230,3 +230,30 @@
 .bd-freezer .kp-datatable:has(> .bd-state:not([hidden])) > .kp-table-wrap {
     display: none;
 }
+
+/* Grid rule (Kenny, 19/10/2026 06:43): the lead badge, the title's first line and "This one" share one baseline,
+   so every row reads on one line and the buttons stand in one column. */
+.bd-shelf > li,
+.bd-shelf > li > .kp-action-list__lead,
+.bd-shelf > li > .kp-row-actions {
+    align-items: first baseline;
+    align-self: first baseline;
+}
+
+/* On a phone the three levels do not fit beside the title: they go under it, and the package scrolls them inside their own
+   bar (whole segments, a fade on the side with more) instead of pushing the page sideways. */
+@media (max-width: 36rem) {
+    #bd-shelf-card > .kp-card__header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #bd-shelf-card > .kp-card__header > .kp-card__actions {
+        justify-self: stretch;
+        min-inline-size: 0;
+    }
+
+    #bd-shelf-card [data-bd-level] {
+        max-inline-size: 100%;
+    }
+}

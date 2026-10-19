@@ -1,5 +1,7 @@
 # AuDHD recipe app · bad days (demo, formal only)
 
+**Decided (2026-10-19 02:38):** Kenny approved every pair (5 of 5 approved, defaults kept). Recorded in `VERDICTS.json`; the page is not offered again. One section was rebuilt afterwards for the grid rule and is asked again in research/audhd-recepten/grid-fix.
+
 `demo.html` (data-review `audhd-baddays`). Five sections, each with a heading, one sentence, an Expected block, a look-at line and
 working state buttons (ready, loading, empty, failed). No calorie or weight field anywhere. Sample content, dates and the server are pretend.
 

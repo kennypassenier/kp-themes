@@ -1,0 +1,31 @@
+/* research/audhd-recepten/grid-fix: the frame of the bundled page. Everything with a kp- class is the package; these gf- rules lay
+   out the intro and the "What changed" line. Each source demo keeps its own rules in its page.css, linked after this file. */
+
+.gf-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.gf-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gf-intro :is(h1, p) {
+    margin: 0;
+}
+
+.gf-intro p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.gf-expected-change {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    max-inline-size: 80ch;
+}

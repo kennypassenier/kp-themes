@@ -33,11 +33,11 @@
             <header class="rc-intro">
                 <h1>The recipe page and calm settings</h1>
                 <p class="cat-intro">
-                    The screen of a recipe app for someone with AuDHD: the recipe with its amounts that follow the number of portions, a big
-                    Begin cooking button, a code that opens cook mode on the phone, a printable sheet, the calm switch with theme and language, a
-                    cooking log in which an empty week is quiet, and the states of the page. Nothing here counts, scores or judges: no streaks,
-                    no red for a day without cooking. The recipe is a Belgian one (witloof in the oven); the dates are sample dates, today is
-                    Friday 16/10/2026 in this demo.
+                    The screen of a recipe app for someone with AuDHD: the recipe with its amounts that follow the number of portions, a big Begin
+                    cooking button, a code that opens cook mode on the phone, a printable sheet, the calm switch with theme and language, a cooking
+                    log in which an empty week is quiet, and the states of the page. Nothing here counts, scores or judges: no streaks, no red for a
+                    day without cooking. The recipe is a Belgian one (witloof in the oven); the dates are sample dates, today is Friday 16/10/2026 in
+                    this demo.
                 </p>
             </header>
 
@@ -80,8 +80,8 @@
                             (04/10/2026 18:40) with what you wrote then.
                         </li>
                         <li>
-                            <b>Portions</b> stands at 4. Press <b>+</b> or <b>&minus;</b>, hold either, or type a number: every amount changes at once and
-                            lights for a moment (not in calm mode). Chicory 8 becomes 12 at 6; onion 1 becomes <b>½</b> at 2; milk 500 ml becomes
+                            <b>Portions</b> stands at 4. Press <b>+</b> or <b>&minus;</b>, hold either, or type a number: every amount changes at once
+                            and lights for a moment (not in calm mode). Chicory 8 becomes 12 at 6; onion 1 becomes <b>½</b> at 2; milk 500 ml becomes
                             <b>1.5 l</b> at 12; the pinch of nutmeg never changes.
                         </li>
                         <li>
@@ -93,16 +93,16 @@
                             to get the nine things out.
                         </li>
                         <li>
-                            Buttons above: <b>Summary</b> folded or whole, <b>Notes</b> on a hover card or written under the name, <b>Parts of a
-                            whole</b> as fractions or decimals. Each redraws the card at once and keeps the portions you set.
+                            Buttons above: <b>Summary</b> folded or whole, <b>Notes</b> on a hover card or written under the name,
+                            <b>Parts of a whole</b> as fractions or decimals. Each redraws the card at once and keeps the portions you set.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
                         Formal&rsquo;s paper and navy: the big button is the one filled navy plate on the card, the amounts are bold and right-aligned
-                        so the numbers read down in one column, the dotted underline marks the names that carry a note, and nothing else competes
-                        with Begin cooking. Look at the line between each row and at the air round the amounts.
+                        so the numbers read down in one column, the dotted underline marks the names that carry a note, and nothing else competes with
+                        Begin cooking. Look at the line between each row and at the air round the amounts.
                     </p>
                 </div>
                 <div data-review-controls data-review-controls-for="rc-card">
@@ -113,12 +113,16 @@
                     </div>
                     <div role="group" aria-label="Ingredient notes" class="rc-actions">
                         <b>Notes:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="notes" data-value="hover">Hover card (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="notes" data-value="hover">
+                            Hover card (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-opt="notes" data-value="inline">Under the name</button>
                     </div>
                     <div role="group" aria-label="Parts of a whole" class="rc-actions">
                         <b>Parts of a whole:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="amounts" data-value="fractions">½ ¼ (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="amounts" data-value="fractions">
+                            ½ ¼ (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-opt="amounts" data-value="decimals">0.5 0.25</button>
                     </div>
                 </div>
@@ -152,20 +156,23 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>Loading</b>: the theme&rsquo;s busy card centred over the whole card with <b>Fetching the recipe</b>; the recipe under it
-                            is dimmed and cannot be pressed. It keeps moving.
+                            <b>Loading</b>: the theme&rsquo;s busy card centred over the whole card with <b>Fetching the recipe</b>; the recipe under
+                            it is dimmed and cannot be pressed. It keeps moving.
                         </li>
                         <li>
-                            <b>Not found</b>: the card&rsquo;s empty plate fills the card, centred, at heading size: <b>We cannot find this recipe</b>,
-                            <b>It may have been renamed or removed. Nothing you saved is lost.</b> and one button under it. It is calm: no red, no
-                            exclamation mark, no &ldquo;error&rdquo;.
+                            <b>Not found</b>: the card&rsquo;s empty plate fills the card, centred, at heading size:
+                            <b>We cannot find this recipe</b>, <b>It may have been renamed or removed. Nothing you saved is lost.</b> and one button
+                            under it. It is calm: no red, no exclamation mark, no &ldquo;error&rdquo;.
                         </li>
                         <li>
                             <b>Could not load</b>: the destructive alert fills the card, centred: <b>The recipe could not be loaded</b>, why, and a
                             normal-size <b>Try again</b>. Press it: it loads for a second and the recipe is back. The words say the connection failed,
                             never that anything you made is gone.
                         </li>
-                        <li>The card is exactly as tall in all four states. The buttons above switch them; the dialog sets the default of the button under <b>Not found</b>.</li>
+                        <li>
+                            The card is exactly as tall in all four states. The buttons above switch them; the dialog sets the default of the button
+                            under <b>Not found</b>.
+                        </li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -184,7 +191,9 @@
                     </div>
                     <div role="group" aria-label="What a missing recipe offers" class="rc-actions">
                         <b>Not found offers:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="missing" data-value="back">Back to my recipes (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-opt="missing" data-value="back">
+                            Back to my recipes (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-opt="missing" data-value="wheel">The wheel</button>
                     </div>
                 </div>
@@ -232,8 +241,8 @@
                             as text under it, and a <b>Copy link</b> button. Press it: a spinner, then <b>Copied</b>, same width.
                         </li>
                         <li>
-                            Beside it, three numbered steps in plain words: <b>Point the camera</b>, <b>Tap the link</b>, <b>Cook</b>, and a line saying
-                            the screen stays on while you cook.
+                            Beside it, three numbered steps in plain words: <b>Point the camera</b>, <b>Tap the link</b>, <b>Cook</b>, and a line
+                            saying the screen stays on while you cook.
                         </li>
                         <li>
                             Buttons above: <b>Size</b> standard or large, <b>Link</b> shown or hidden, <b>Dots</b> square or round, <b>Show</b> always
@@ -247,10 +256,12 @@
                         the quiet zone round the code and at the words beside it.
                     </p>
                 </div>
-                <div data-review-controls data-review-controls-for="rq-code">
+                <div data-review-controls data-review-controls-for="rq-share">
                     <div role="group" aria-label="Size of the code" class="rc-actions">
                         <b>Size:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-qr="size" data-value="standard">Standard (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-qr="size" data-value="standard">
+                            Standard (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-qr="size" data-value="lg">Large</button>
                     </div>
                     <div role="group" aria-label="The link under the code" class="rc-actions">
@@ -269,8 +280,11 @@
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-qr="reveal" data-value="click">Behind a button</button>
                     </div>
                 </div>
-                <div class="rc-share">
-                    <div class="kp-qr" id="rq-code" data-kp-qr data-kp-qr-label="QR code that opens cook mode for witloof in the oven"></div>
+                <div class="rc-share" id="rq-share">
+                    <div class="rc-share__code">
+                        <h3>Scan with the phone</h3>
+                        <div class="kp-qr" id="rq-code" data-kp-qr data-kp-qr-label="QR code that opens cook mode for witloof in the oven"></div>
+                    </div>
                     <div class="rc-share__words">
                         <h3>Open cook mode on the phone</h3>
                         <ol class="rc-steps">
@@ -309,9 +323,9 @@
                     <ul>
                         <li><b>Loading</b>: the theme&rsquo;s busy card over the plate with <b>Making the link</b>; Copy is dimmed.</li>
                         <li>
-                            <b>No link yet</b>: the empty plate, centred, with a sentence. <b>Link too long</b>: the destructive plate, centred, saying
-                            to copy the link instead, with <b>Try again</b> when that is offered. <b>Link ran out</b>: the plate says so and the link
-                            under it is struck through; nothing of the old code stays on screen.
+                            <b>No link yet</b>: the empty plate, centred, with a sentence. <b>Link too long</b>: the destructive plate, centred,
+                            saying to copy the link instead, with <b>Try again</b> when that is offered. <b>Link ran out</b>: the plate says so and
+                            the link under it is struck through; nothing of the old code stays on screen.
                         </li>
                         <li>The plate is as large in every state, and the steps beside it stay where they are.</li>
                     </ul>
@@ -322,7 +336,7 @@
                         plate&rsquo;s size in the five states and at the Try again button.
                     </p>
                 </div>
-                <div data-review-controls data-review-controls-for="rqs-code">
+                <div data-review-controls data-review-controls-for="rqs-share">
                     <div role="group" aria-label="State of the code" class="rc-actions">
                         <b>State:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-rc-qrstate="ready">Ready</button>
@@ -337,8 +351,11 @@
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-qrretry="off">Not offered</button>
                     </div>
                 </div>
-                <div class="rc-share">
-                    <div class="kp-qr" id="rqs-code" data-kp-qr data-kp-qr-retry data-kp-qr-label="QR code that opens cook mode"></div>
+                <div class="rc-share" id="rqs-share">
+                    <div class="rc-share__code">
+                        <h3>Scan with the phone</h3>
+                        <div class="kp-qr" id="rqs-code" data-kp-qr data-kp-qr-retry data-kp-qr-label="QR code that opens cook mode"></div>
+                    </div>
                     <div class="rc-share__words">
                         <h3>Open cook mode on the phone</h3>
                         <ol class="rc-steps">
@@ -376,8 +393,8 @@
                 <div class="rc-sec__head">
                     <h2 id="h-print">Printable recipe: the sheet</h2>
                     <p>
-                        The same recipe on paper for a cook who wants no screen: the ingredients as a list to tick, the steps below, no buttons, black on
-                        white. The frame shows what the printer gets; Print this recipe opens the real print dialog.
+                        The same recipe on paper for a cook who wants no screen: the ingredients as a list to tick, the steps below, no buttons, black
+                        on white. The frame shows what the printer gets; Print this recipe opens the real print dialog.
                     </p>
                 </div>
                 <div class="rc-expected">
@@ -392,9 +409,7 @@
                             Buttons above: <b>Notes</b> on the paper or left out, <b>Box</b> square or round, <b>Columns</b> one or two,
                             <b>Lines</b> to write on or not. The sheet changes at once.
                         </li>
-                        <li>
-                            <b>Print this recipe</b> (on the page, outside the sheet) opens the browser&rsquo;s print dialog with the same sheet.
-                        </li>
+                        <li><b>Print this recipe</b> (on the page, outside the sheet) opens the browser&rsquo;s print dialog with the same sheet.</li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -474,26 +489,26 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            Four rows on the same two columns: a name with one sentence on the left, its control on the right. <b>Calm mode</b> is off;
-                            switch it on and the line under it says what is quiet now; the rest of this demo page keeps its calm until you switch it
-                            off (this demo does not remember it between visits).
+                            Four rows on one grid: a name with one sentence, its control, and what it says now, each column on one edge.
+                            <b>Calm mode</b> is off; switch it on and the line under it says what is quiet now; the rest of this demo page keeps its
+                            calm until you switch it off (this demo does not remember it between visits).
                         </li>
                         <li>
                             <b>Theme</b>: an icon button with a menu of twelve themes (light and dark apart). Pick one: the check shows which, and the
                             line says it would apply at once and be kept for next time; this page stays in formal so you can judge it.
                         </li>
                         <li>
-                            <b>Language</b>: <b>NL</b> and <b>EN</b>. Pick one: the preview line under it (the recipe title, the portions, the
-                            button) is in that language, and the recipe page of the first section opens in it next time.
+                            <b>Language</b>: <b>NL</b> and <b>EN</b>. Pick one: the preview line under it (the recipe title, the portions, the button)
+                            is in that language, and the recipe page of the first section opens in it next time.
                         </li>
                         <li>
                             <b>Try it</b>: <b>Save settings</b> shows the spinner and then <b>Saved</b>; press it again and it says <b>Not saved</b>
                             with the reason in a line under it. In calm mode the spinner breathes or holds still, as set.
                         </li>
                         <li>
-                            Buttons above: what <b>Calm</b> switches off (movement, movement and effects, everything), what <b>Loading</b> does in calm
-                            mode (slow pulse, still), how the <b>Theme</b> is chosen (menu or twelve swatches) and how the <b>Language</b> is chosen
-                            (switch or chips).
+                            Buttons above: what <b>Calm</b> switches off (movement, movement and effects, everything), what <b>Loading</b> does in
+                            calm mode (slow pulse, still), how the <b>Theme</b> is chosen (menu or twelve swatches) and how the <b>Language</b> is
+                            chosen (switch or chips).
                         </li>
                     </ul>
                 </div>
@@ -507,60 +522,70 @@
                     <div role="group" aria-label="What calm mode switches off" class="rc-actions">
                         <b>Calm:</b>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-calm="scope" data-value="motion">Movement</button>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-calm="scope" data-value="effects">Movement and effects (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-calm="scope" data-value="effects">
+                            Movement and effects (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-calm="scope" data-value="all">Everything</button>
                     </div>
                     <div role="group" aria-label="Loading in calm mode" class="rc-actions">
                         <b>Loading:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-calm="loading" data-value="slow">Slow pulse (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-calm="loading" data-value="slow">
+                            Slow pulse (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-calm="loading" data-value="still">Holds still</button>
                     </div>
                     <div role="group" aria-label="How the theme is chosen" class="rc-actions">
                         <b>Theme:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-rc-set="picker" data-value="menu">Menu (default)</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-rc-set="picker" data-value="swatches">Twelve swatches</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rc-set="picker" data-value="swatches">
+                            Twelve swatches
+                        </button>
                     </div>
                     <div role="group" aria-label="How the language is chosen" class="rc-actions">
                         <b>Language:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-set="lang" data-value="segmented">Switch (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-set="lang" data-value="segmented">
+                            Switch (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-set="lang" data-value="chips">Chips</button>
                     </div>
                 </div>
                 <section class="kp-card rc-settings" id="rs-settings" aria-label="Settings">
-                    <div class="rc-set">
-                        <div class="rc-set__name">
-                            <h3>Calm mode</h3>
-                            <p>Turns movement and effects off with one switch. Loading keeps a slow pulse so you can tell it is working.</p>
+                    <div class="kp-formgrid" data-kp-formgrid-lines="lines">
+                        <div class="kp-formgrid__row">
+                            <div class="kp-formgrid__label rc-set__name">
+                                <h3>Calm mode</h3>
+                                <p>Turns movement and effects off with one switch. Loading keeps a slow pulse so you can tell it is working.</p>
+                            </div>
+                            <div class="kp-formgrid__control">
+                                <label class="kp-switch"
+                                    ><input
+                                        class="kp-switch__input"
+                                        type="checkbox"
+                                        role="switch"
+                                        data-kp-calm-switch
+                                        data-kp-calm-remember="false"
+                                    /><span class="kp-switch__state" aria-hidden="true"
+                                        ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
+                                    ><span>Use calm mode</span></label
+                                >
+                            </div>
+                            <p class="kp-formgrid__value rc-readout" id="rs-readout" role="status" aria-live="polite">Calm mode is off.</p>
                         </div>
-                        <div class="rc-set__control">
-                            <label class="kp-switch"
-                                ><input class="kp-switch__input" type="checkbox" role="switch" data-kp-calm-switch data-kp-calm-remember="false" /><span
-                                    class="kp-switch__state"
-                                    aria-hidden="true"
-                                    ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
-                                ><span>Use calm mode</span></label
-                            >
-                            <p class="rc-readout" id="rs-readout" role="status" aria-live="polite">Calm mode is off.</p>
+                        <div class="kp-formgrid__row">
+                            <div class="kp-formgrid__label rc-set__name">
+                                <h3>Theme</h3>
+                                <p>How the app looks. The choice applies at once and is kept for next time.</p>
+                            </div>
+                            <div class="kp-formgrid__control"><div id="rs-picker"></div></div>
+                            <p class="kp-formgrid__value rc-readout" id="rs-theme-said" role="status" aria-live="polite">Formal is on.</p>
                         </div>
-                    </div>
-                    <div class="rc-set">
-                        <div class="rc-set__name">
-                            <h3>Theme</h3>
-                            <p>How the app looks. The choice applies at once and is kept for next time.</p>
-                        </div>
-                        <div class="rc-set__control">
-                            <div id="rs-picker"></div>
-                            <p class="rc-readout" id="rs-theme-said" role="status" aria-live="polite">Formal is on.</p>
-                        </div>
-                    </div>
-                    <div class="rc-set">
-                        <div class="rc-set__name">
-                            <h3>Language</h3>
-                            <p>The language of the recipes and the buttons. Dutch and English.</p>
-                        </div>
-                        <div class="rc-set__control">
-                            <div id="rs-lang"></div>
-                            <div class="rc-preview" id="rs-preview" aria-live="polite">
+                        <div class="kp-formgrid__row">
+                            <div class="kp-formgrid__label rc-set__name">
+                                <h3>Language</h3>
+                                <p>The language of the recipes and the buttons. Dutch and English.</p>
+                            </div>
+                            <div class="kp-formgrid__control"><div id="rs-lang"></div></div>
+                            <div class="kp-formgrid__value rc-preview" id="rs-preview" aria-live="polite">
                                 <div>
                                     <strong data-rc-pv="title"></strong>
                                     <small data-rc-pv="meta"></small>
@@ -568,15 +593,23 @@
                                 <span class="kp-badge" data-rc-pv="badge"></span>
                             </div>
                         </div>
-                    </div>
-                    <div class="rc-set">
-                        <div class="rc-set__name">
-                            <h3>Try it</h3>
-                            <p>Saves these settings. It shows busy while it works, and says plainly when it could not.</p>
-                        </div>
-                        <div class="rc-set__control">
-                            <button type="button" class="kp-button kp-button--primary" id="rs-save" data-kp-flash-button data-kp-flash-words="Saved,Not saved">Save settings</button>
-                            <p class="rc-line" id="rs-save-line" role="status"></p>
+                        <div class="kp-formgrid__row">
+                            <div class="kp-formgrid__label rc-set__name">
+                                <h3>Try it</h3>
+                                <p>Saves these settings. It shows busy while it works, and says plainly when it could not.</p>
+                            </div>
+                            <div class="kp-formgrid__control">
+                                <button
+                                    type="button"
+                                    class="kp-button kp-button--primary"
+                                    id="rs-save"
+                                    data-kp-flash-button
+                                    data-kp-flash-words="Saved,Not saved"
+                                >
+                                    Save settings
+                                </button>
+                            </div>
+                            <p class="kp-formgrid__value rc-line" id="rs-save-line" role="status"></p>
                         </div>
                     </div>
                 </section>
@@ -614,9 +647,9 @@
                     <ul>
                         <li>
                             Four rows of seven days, named <b>3 weeks ago</b>, <b>2 weeks ago</b>, <b>Last week</b> and <b>This week</b> (the weeks
-                            starting 21/09, 28/09, 05/10 and 12/10). The first week is <b>all quiet</b>: seven pale
-                            plates and nothing else, no warning, no count. The second has three logged days; the third has three <b>paused</b> days
-                            (hatched: you were ill) and two logged; the fourth ends with two days that have not come yet (dashed).
+                            starting 21/09, 28/09, 05/10 and 12/10). The first week is <b>all quiet</b>: seven pale plates and nothing else, no
+                            warning, no count. The second has three logged days; the third has three <b>paused</b> days (hatched: you were ill) and
+                            two logged; the fourth ends with two days that have not come yet (dashed).
                         </li>
                         <li>
                             Point at a logged day: <b>Witloof in the oven · felt easy</b>. Point at a quiet one: <b>14/10/2026, nothing logged</b>.
@@ -629,21 +662,23 @@
                             There is no streak and no total.
                         </li>
                         <li>
-                            <b>A quiet week</b> (button above): every day of every week is quiet and the note under the grid says <b>Nothing logged.
-                            That is fine.</b> <b>Nothing yet</b>: the empty plate fills the card, centred: <b>Nothing logged yet</b>, <b>That is fine:
-                            the log starts whenever you do.</b> <b>Loading</b>: the busy card over the grid. <b>Could not read</b>: the alert says the
-                            log could not be read and that the entries are safe, with <b>Try again</b>.
+                            <b>A quiet week</b> (button above): every day of every week is quiet and the note under the grid says
+                            <b>Nothing logged. That is fine.</b> <b>Nothing yet</b>: the empty plate fills the card, centred:
+                            <b>Nothing logged yet</b>, <b>That is fine: the log starts whenever you do.</b> <b>Loading</b>: the busy card over the
+                            grid. <b>Could not read</b>: the alert says the log could not be read and that the entries are safe, with
+                            <b>Try again</b>.
                         </li>
                         <li>
-                            Buttons above: <b>State</b>, the <b>Colour</b> of a logged day (accent or success), how a week is
-                            <b>named</b> (<b>This week</b>, <b>Last week</b>, or its first day) and how many <b>Weeks</b> show (four or two).
+                            Buttons above: <b>State</b>, the <b>Colour</b> of a logged day (accent or success), how a week is <b>named</b> (<b
+                                >This week</b
+                            >, <b>Last week</b>, or its first day) and how many <b>Weeks</b> show (four or two).
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Formal&rsquo;s navy is a logged day; a quiet day is a tone barely darker than the paper with no border; the paused hatch is the
-                        one the heat grid already uses. Look at the quiet week: it must draw no eye, and nothing in it may look like a fault.
+                        Formal&rsquo;s navy is a logged day; a quiet day is a tone barely darker than the paper with no border; the paused hatch is
+                        the one the heat grid already uses. Look at the quiet week: it must draw no eye, and nothing in it may look like a fault.
                     </p>
                 </div>
                 <div data-review-controls data-review-controls-for="rl-card">
@@ -657,12 +692,16 @@
                     </div>
                     <div role="group" aria-label="The colour of a logged day" class="rc-actions">
                         <b>Colour:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-logopt="fill" data-value="accent">Accent (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-logopt="fill" data-value="accent">
+                            Accent (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-logopt="fill" data-value="success">Success</button>
                     </div>
                     <div role="group" aria-label="How a week is named" class="rc-actions">
                         <b>Weeks named:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-rc-logopt="rows" data-value="words">In words (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rc-logopt="rows" data-value="words">
+                            In words (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-rc-logopt="rows" data-value="dates">By date</button>
                     </div>
                     <div role="group" aria-label="How many weeks show" class="rc-actions">
@@ -677,7 +716,7 @@
             </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "audhd-recipe-5e355e17-1524-4a51-a1b2-dc98f1492786", "received": [] }
+            { "round": "audhd-recipe-5e355e17-1524-4a51-a1b2-dc98f1492786", "received": ["audhd-recipe-5e355e17-1524-4a51-a1b2-dc98f1492786"] }
         </script>
         <script type="module" src="../../../js/auto.js"></script>
         <script type="module" src="./demo.js"></script>

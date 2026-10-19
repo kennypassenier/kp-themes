@@ -249,7 +249,7 @@ function mountView(card, model, how) {
     if (how.kind === 'wheel') {
         data.innerHTML = `
             <div class="wl-screen">
-                <div class="wl-wheelcol"><div class="kp-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div></div>
+                <div class="wl-wheelcol"><p class="wl-result__kicker wl-wheelcol__kicker">Tonight&rsquo;s wheel</p><div class="kp-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div></div>
                 <div class="wl-result" role="group" aria-label="The wheel’s answer">
                     <p class="wl-result__kicker" data-wl="kicker"></p>
                     <p class="wl-result__name" data-wl="name"></p>

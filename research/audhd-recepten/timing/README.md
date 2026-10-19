@@ -1,5 +1,7 @@
 # AuDHD recepten: backward timing (time blindness)
 
+**Decided (2026-10-19 02:38):** Kenny approved every pair (4 of 4 approved; one default changed: the start disc is "A 60-minute dial"). Recorded in `VERDICTS.json`; the page is not offered again.
+
 Demo for the screen "backward timing" of the recipe app (BRIEF.md, CONCEPT.md pillar 4). Formal only
 (`data-review="audhd-timing"`, `data-review-themes="formal"`). Open `demo.html`; everything is mock data (the
 sample dish is spaghetti with meatballs, three tracks: pasta, sauce, oven) and nothing is saved. A demo clock
