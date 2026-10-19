@@ -14010,6 +14010,421 @@
         color: var(--foreground);
     }
 
+    /* --- A diff of several files [gap-diff-view; homelab's editui.js diffBlocks] -------------------------------------
+ *
+ * js/diff.js writes the lines `.kp-diff` already dresses and adds what a diff of several files needs: a header per file
+ * (a chevron, a status word on a badge, the path, exact +N and -M counts with five blocks for their share, Copy path),
+ * the unchanged lines folded into one row that is a button, and the changed words marked inside a changed line. The
+ * header's columns are as wide as the longest of the page (--kp-diffview-added-ch and -removed-ch are written by the
+ * script) so the headers of several files line up. Every state (reading, nothing changed, failed) stands in the box the
+ * diff had (js/footprint.js). Knobs [KT6]: --kp-diffview-min (least height of a state, 18rem), --kp-diffview-status
+ * (the status column, 5.5rem), --kp-diffview-gap (between files). */
+    .kp-diffview {
+        --kp-diffview-min: 18rem;
+        --kp-diffview-status: 5.5rem;
+        --kp-diffview-gap: var(--kp-space-sm, 0.5rem);
+        container: kp-diffview / inline-size;
+        position: relative;
+        display: grid;
+        gap: var(--kp-diffview-gap);
+        min-inline-size: 0;
+    }
+
+    .kp-diffview:not([data-kp-state='ready']) {
+        min-block-size: var(--kp-diffview-min);
+    }
+
+    .kp-diffview__stage {
+        position: relative;
+        display: grid;
+        min-block-size: 0;
+    }
+
+    .kp-diffview__stage > .kp-stateplate {
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-diffview__bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: var(--kp-button-height, 2.25rem);
+    }
+
+    .kp-diffview__summary {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin: 0;
+    }
+
+    .kp-diffview__tools {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-diffview__list {
+        display: grid;
+        gap: var(--kp-diffview-gap);
+        min-inline-size: 0;
+    }
+
+    .kp-diffview__file {
+        min-inline-size: 0;
+        overflow: clip;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card, var(--background));
+    }
+
+    .kp-diffview__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding-inline-end: var(--kp-space-sm, 0.5rem);
+        background: var(--muted);
+    }
+
+    .kp-diffview__title {
+        min-inline-size: 0;
+        margin: 0;
+        font: inherit;
+    }
+
+    .kp-diffview__toggle {
+        display: grid;
+        grid-template-columns: 1rem var(--kp-diffview-status) minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: 2.75rem;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--foreground);
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-diffview__toggle:hover {
+        background: hsl(from var(--foreground) h s l / 0.06);
+    }
+
+    .kp-diffview__toggle:focus-visible,
+    .kp-diff__row-button:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--primary));
+        outline-offset: -2px;
+    }
+
+    /* The chevron is drawn, not typed: a corner turned a quarter, a half further when the file is open. */
+    .kp-diffview__chevron {
+        justify-self: center;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-inline-end: 2px solid currentColor;
+        border-block-end: 2px solid currentColor;
+        transform: rotate(-45deg);
+    }
+
+    .kp-diffview__file[data-kp-diff-file-open='true'] .kp-diffview__chevron {
+        transform: translateY(-0.125rem) rotate(45deg);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-diffview__chevron {
+            transition: transform var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    .kp-diffview__status {
+        justify-content: center;
+        box-sizing: border-box;
+        inline-size: 100%;
+    }
+
+    .kp-diffview__path {
+        min-inline-size: 0;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-diffview__dir,
+    .kp-diffview__arrow {
+        color: var(--muted-foreground);
+    }
+
+    .kp-diffview__arrow {
+        padding-inline: 0.5ch;
+    }
+
+    .kp-diffview__name {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    /* A long token wraps in the text column instead of running out of the plate (the column may shrink below its content). */
+    .kp-diffview .kp-diff__line {
+        grid-template-columns: 3rem 1ch minmax(0, 1fr);
+    }
+
+    .kp-diffview .kp-diff__text {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* Exact counts on their own quiet plates, a column as wide as the longest of the page. The sign is the carrier;
+     * the tint is the second one [DI4]. */
+    .kp-diffview__counts {
+        display: inline-flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-diffview__added,
+    .kp-diffview__removed {
+        box-sizing: border-box;
+        padding-inline: 0.375rem;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-diffview__added {
+        min-inline-size: calc(var(--kp-diffview-added-ch, 2) * 1ch + 0.75rem);
+        background: hsl(from var(--success) h s l / 0.14);
+    }
+
+    .kp-diffview__removed {
+        min-inline-size: calc(var(--kp-diffview-removed-ch, 2) * 1ch + 0.75rem);
+        background: hsl(from var(--destructive) h s l / 0.12);
+    }
+
+    .kp-diffview__summary > .kp-diffview__added,
+    .kp-diffview__summary > .kp-diffview__removed {
+        min-inline-size: 0;
+    }
+
+    .kp-diffview__proportion {
+        display: inline-flex;
+        gap: 2px;
+    }
+
+    .kp-diffview__block {
+        display: block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        background: var(--border);
+    }
+
+    .kp-diffview__block[data-kind='added'] {
+        background: var(--success);
+    }
+
+    .kp-diffview__block[data-kind='removed'] {
+        background: var(--destructive);
+    }
+
+    .kp-diffview__body {
+        border-block-start: 1px solid var(--border);
+        min-inline-size: 0;
+    }
+
+    .kp-diffview__body:focus {
+        outline: none;
+    }
+
+    /* The diff inside a file has no frame of its own: the file's frame is the frame. */
+    .kp-diffview .kp-diffview__body .kp-diff {
+        border: 0;
+        border-radius: 0;
+    }
+
+    .kp-diffview .kp-diff__number,
+    .kp-diffview .kp-diff__sign {
+        user-select: none;
+    }
+
+    .kp-diffview__note {
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-diffview__plate {
+        min-block-size: 8rem;
+        border-radius: 0;
+    }
+
+    /* The changed words: weight and a line are the carriers, the deeper tint the second. Added words are underlined,
+     * removed words struck through, so the two sides differ without colour. */
+    .kp-diff__word {
+        padding: 0;
+        border-radius: 2px;
+        background: hsl(from var(--success) h s l / 0.34);
+        color: inherit;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-diff__line[data-kind='removed'] .kp-diff__word {
+        background: hsl(from var(--destructive) h s l / 0.3);
+        text-decoration-line: line-through;
+        text-decoration-thickness: 2px;
+    }
+
+    /* The folded run and the "show the rest" row: a button across the diff's own three columns, so its words stand where
+     * the code stands and a pointer finds it anywhere along the row. */
+    .kp-diff__row-button {
+        display: grid;
+        grid-template-columns: 3rem 1ch minmax(0, 1fr);
+        align-items: center;
+        gap: 0.5rem;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-block-size: 2rem;
+        margin: 0;
+        padding: 0.125rem 0.5rem;
+        border: 0;
+        border-block: 1px dashed var(--border);
+        border-radius: 0;
+        background: hsl(from var(--muted) h s l / 0.6);
+        color: var(--muted-foreground);
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-diff__row-button:hover {
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-diff__row-button + .kp-diff__row-button,
+    .kp-diff__line + .kp-diff__row-button[aria-expanded='true'] {
+        border-block-start-width: 0;
+    }
+
+    /* Three dots for a fold that is closed, one rule for a fold that is open. */
+    .kp-diff__row-glyph {
+        justify-self: end;
+        inline-size: 1.25rem;
+        block-size: 0.5rem;
+        background: radial-gradient(circle, currentColor 1.5px, transparent 2px) 0 50% / 0.4rem 0.5rem repeat-x;
+    }
+
+    .kp-diff__row-button[aria-expanded='true'] > .kp-diff__row-glyph {
+        background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat;
+    }
+
+    .kp-diff__row-label {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* Reading: the file headers at their final size, the first with its lines, the busy card over them. */
+    .kp-diffview__wait {
+        display: grid;
+        gap: var(--kp-diffview-gap);
+        align-content: start;
+        min-inline-size: 0;
+    }
+
+    .kp-diffview__head--wait {
+        grid-template-columns: var(--kp-diffview-status) minmax(0, 1fr) 5rem;
+        min-block-size: 2.75rem;
+        padding-inline: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-diffview__wait-badge,
+    .kp-diffview__wait-counts {
+        block-size: 1.25rem;
+    }
+
+    .kp-diffview__wait-path {
+        block-size: 1rem;
+        max-inline-size: 60%;
+    }
+
+    .kp-diffview__body--wait {
+        display: grid;
+        gap: 0.5rem;
+        padding: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-diffview__wait-line {
+        block-size: 1rem;
+    }
+
+    .kp-diffview__wait-line:nth-child(3n + 2) {
+        max-inline-size: 80%;
+    }
+
+    .kp-diffview__wait-line:nth-child(3n) {
+        max-inline-size: 55%;
+    }
+
+    @container kp-diffview (max-width: 40rem) {
+        /* The path takes a line of its own under the status and the counts; the blocks go (the numbers say it). */
+        .kp-diffview__toggle {
+            grid-template-columns: 1rem var(--kp-diffview-status) minmax(0, 1fr);
+            grid-template-areas:
+                'chevron status counts'
+                'path path path';
+            row-gap: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-diffview__chevron {
+            grid-area: chevron;
+        }
+
+        .kp-diffview__status {
+            grid-area: status;
+        }
+
+        .kp-diffview__counts {
+            grid-area: counts;
+            justify-self: end;
+        }
+
+        .kp-diffview__path {
+            grid-area: path;
+        }
+
+        .kp-diffview__proportion {
+            display: none;
+        }
+
+        .kp-diffview__copy {
+            min-block-size: 2.75rem;
+        }
+
+        .kp-diffview__bar {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-diffview__tools .kp-button {
+            min-block-size: 2.75rem;
+        }
+    }
+
+    @media (pointer: coarse) {
+        .kp-diff__row-button {
+            min-block-size: 2.75rem;
+        }
+    }
+
     /* Visually hidden, still announced. Used where a change is obvious on
  * screen and silent otherwise — a button whose own label changed, for
  * instance, which a screen reader does not report on its own. */

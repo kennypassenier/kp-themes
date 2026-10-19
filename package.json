@@ -548,6 +548,10 @@
             "types": "./js/logviewer.d.ts",
             "default": "./js/logviewer.js"
         },
+        "./js/diff": {
+            "types": "./js/diff.d.ts",
+            "default": "./js/diff.js"
+        },
         "./js/strings": {
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"

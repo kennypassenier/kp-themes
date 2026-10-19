@@ -56,6 +56,7 @@ export const CARD = [
     'js/qr.js',
     'js/console.js',
     'js/logviewer.js',
+    'js/diff.js',
     'js/usual-picker.js',
     'js/palette.js',
     'js/deplist.js',

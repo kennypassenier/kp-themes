@@ -36,6 +36,7 @@
         "kp-passkeys",
         "kp-console",
         "kp-logviewer",
+        "kp-diffview",
         "kp-time",
         "kp-qr",
         "kp-availability",

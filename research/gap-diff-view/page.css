@@ -1,0 +1,51 @@
+/* research/gap-diff-view: the frame of the demo page. Everything with a kp- class is the package. */
+
+.gdv-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem);
+}
+
+.gdv-page > section {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+.gdv-sec__head h2 {
+    margin: 0;
+}
+
+.gdv-sec__head p,
+.gdv-expected p,
+.gdv-expected ul {
+    margin: 0.25rem 0 0;
+}
+
+.gdv-expected ul {
+    padding-inline-start: 1.25rem;
+}
+
+[data-review-look] {
+    margin: 0;
+}
+
+.gdv-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.gdv-controls [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.gdv-controls button[aria-pressed='true'] {
+    border-color: var(--primary);
+    background: hsl(from var(--primary) h s l / 0.12);
+}

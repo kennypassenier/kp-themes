@@ -196,6 +196,7 @@ export const FILES = [
     'js/passkeys.js',
     'js/console.js',
     'js/logviewer.js',
+    'js/diff.js',
     'js/timefield.js',
     'js/vendor/qr-encode.js',
     'js/qr.js',

@@ -248,6 +248,12 @@ export const REQUIRED = [
         why: 'The snooze picker measures its own width and stretches its button and End snooze over the line on a phone; the query reaches only its own parts [kpadopt5-time].',
     },
     {
+        container: 'kp-diffview',
+        class: 'kp-diffview',
+        self: true,
+        why: 'The diff view measures its own width and moves each file path under its status and counts on a phone; the query reaches only its own parts [gap-diff-view].',
+    },
+    {
         container: 'kp-runs',
         class: 'kp-runs',
         self: true,

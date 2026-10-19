@@ -339,15 +339,16 @@ export const NEEDS = [
     { name: 'timefield', when: '[data-kp-time]', load: () => import('./timefield.js'), attach: (m, root) => [m.attachTimes(root)] },
     {
         // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the entity
-        // grid, the checklist, the notices, the gallery, the availability grid, the request inspector and the operations page. The selector is
+        // grid, the checklist, the notices, the gallery, the availability grid, the request inspector, the diff view and the operations page. The selector is
         // `FOOTPRINT_HOSTS` of js/footprint.js.
         name: 'footprint',
-        when: '[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-gallery], [data-kp-availability], [data-kp-requests], .kp-ops',
+        when: '[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-diffview], .kp-ops',
         load: () => import('./footprint.js'),
         attach: (m, root) => [m.attachFootprints(root)],
     },
     { name: 'console', when: '[data-kp-console]', load: () => import('./console.js'), attach: (m, root) => [m.attachConsoles(root)] },
     { name: 'logviewer', when: '[data-kp-logviewer]', load: () => import('./logviewer.js'), attach: (m, root) => [m.attachLogViewers(root)] },
+    { name: 'diff', when: '[data-kp-diffview]', load: () => import('./diff.js'), attach: (m, root) => [m.attachDiffs(root)] },
     {
         // The reason of a disabled control [kpadopt5], last and late: a dozen
         // modules mark the controls they draw or own disabled with a reason as
