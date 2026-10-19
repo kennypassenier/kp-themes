@@ -99,10 +99,12 @@ export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
 // The root already exports upload's `setProgress` (a file row), so the bar's
 // two setters are named for the bar here; js/progressbar.js keeps the short names.
 export {
+    PROGRESSBAR_RETRY_EVENT,
     attachProgressbars,
     buildProgressbar,
     setIndeterminate as setProgressbarIndeterminate,
     setProgress as setProgressbar,
+    setProgressFailed as setProgressbarFailed,
     syncProgressbar,
 } from './js/progressbar.js';
 export { STEPLIST_EVENT, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from './js/steplist.js';
@@ -146,6 +148,7 @@ export {
     UPTIME,
     UPTIME_COUNT,
     UPTIME_PICK_EVENT,
+    UPTIME_RETRY_EVENT,
     UPTIME_STATES,
     attachUptimes,
     setUptime,

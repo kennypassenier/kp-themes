@@ -33,7 +33,7 @@ export { REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_HOLD_ATTRIBUTE, REME
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
 export { FILE_EVENT as UPLOAD_FILE_EVENT, REJECT_EVENT as UPLOAD_REJECT_EVENT, attachUploads, setProgress } from './js/upload.js';
 export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
-export { attachProgressbars, buildProgressbar, setIndeterminate as setProgressbarIndeterminate, setProgress as setProgressbar, syncProgressbar, } from './js/progressbar.js';
+export { PROGRESSBAR_RETRY_EVENT, attachProgressbars, buildProgressbar, setIndeterminate as setProgressbarIndeterminate, setProgress as setProgressbar, setProgressFailed as setProgressbarFailed, syncProgressbar, } from './js/progressbar.js';
 export { STEPLIST_EVENT, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from './js/steplist.js';
 export { WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, attachWeeks, pillCapacity, setWeekEvents, setWeekLegend, setWeekStart, setWeekState, stackPills, } from './js/week.js';
 export { GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_STEPS, GANTT_TICK_MS, GANTT_WINDOW_EVENT, attachGantts, axisStep, packRows, rangeSeconds, setGanttKinds, setGanttLegend, setGanttPoints, setGanttRuns, setGanttSelection, setGanttState, setGanttWindow, setGanttZones, } from './js/gantt.js';
@@ -42,7 +42,7 @@ export type BusyCard = import('./js/busy-card.js').BusyCard;
 export type BusyCardOptions = import('./js/busy-card.js').BusyCardOptions;
 /** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
 /** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
-export { UPTIME, UPTIME_COUNT, UPTIME_PICK_EVENT, UPTIME_STATES, attachUptimes, setUptime, uptimeFigures, uptimeFit, uptimePercent, } from './js/uptime.js';
+export { UPTIME, UPTIME_COUNT, UPTIME_PICK_EVENT, UPTIME_RETRY_EVENT, UPTIME_STATES, attachUptimes, setUptime, uptimeFigures, uptimeFit, uptimePercent, } from './js/uptime.js';
 export { COMMAND, COMMAND_SHELLS, attachCommands, commandLines } from './js/command.js';
 export { COUNTDOWN, COUNTDOWN_END_EVENT, COUNTDOWN_EVENT, COUNTDOWN_STEP, attachCountdowns, countdownClock, countdownOf, formatCountdown, parseDuration, timerButton, } from './js/countdown.js';
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';

@@ -850,6 +850,8 @@ var init_strings = __esm({
       chartNow: "now",
       chartEmpty: "No readings in this window yet.",
       chartRetry: "Retry",
+      chartTrendFailed: "The trend could not be read.",
+      progressFailed: "This could not be finished.",
       chartOnePoint: "Only one reading so far: the line grows as more readings arrive.",
       chartLoading: "Loading the readings\u2026",
       chartPinnedOutside: "(pinned, outside the window)",
@@ -22472,12 +22474,14 @@ var init_log = __esm({
 var progressbar_exports = {};
 __export(progressbar_exports, {
   INDETERMINATE_ATTRIBUTE: () => INDETERMINATE_ATTRIBUTE,
+  PROGRESSBAR_RETRY_EVENT: () => PROGRESSBAR_RETRY_EVENT,
   PROGRESSBAR_SELECTOR: () => PROGRESSBAR_SELECTOR,
   VALUE_PROPERTY: () => VALUE_PROPERTY,
   attachProgressbars: () => attachProgressbars,
   buildProgressbar: () => buildProgressbar,
   setIndeterminate: () => setIndeterminate,
   setProgress: () => setProgress2,
+  setProgressFailed: () => setProgressFailed,
   syncProgressbar: () => syncProgressbar
 });
 function buildProgressbar(el16) {
@@ -22504,6 +22508,7 @@ function syncProgressbar(el16) {
   return share;
 }
 function setProgress2(el16, value) {
+  clearFailure(el16);
   const min = numberAttribute(el16, "aria-valuemin", 0);
   const max = numberAttribute(el16, "aria-valuemax", 100);
   el16.removeAttribute(INDETERMINATE_ATTRIBUTE);
@@ -22511,6 +22516,7 @@ function setProgress2(el16, value) {
   syncProgressbar(el16);
 }
 function setIndeterminate(el16, on) {
+  if (on) clearFailure(el16);
   if (on) {
     el16.setAttribute(INDETERMINATE_ATTRIBUTE, "");
     el16.removeAttribute("aria-valuenow");
@@ -22518,6 +22524,41 @@ function setIndeterminate(el16, on) {
     el16.removeAttribute(INDETERMINATE_ATTRIBUTE);
     syncProgressbar(el16);
   }
+}
+function clearFailure(el16) {
+  const failed = FAILED2.get(el16);
+  if (!failed) return;
+  FAILED2.delete(el16);
+  failed.plate.remove();
+  failed.row.hidden = false;
+  el16.removeAttribute("data-kp-state");
+  el16.removeAttribute("aria-valuetext");
+}
+function setProgressFailed(el16, failure) {
+  if (failure === null) return clearFailure(el16);
+  const had = FAILED2.get(el16);
+  const row = had?.row ?? /** @type {HTMLElement} */
+  (el16.closest(".kp-progress__wrap") ?? el16);
+  const width = row.getBoundingClientRect().width;
+  const height = row.getBoundingClientRect().height;
+  had?.plate.remove();
+  const title = failure.title ?? getStrings().progressFailed;
+  const plate = hostStatePlate(el16, {
+    kind: "error",
+    title,
+    ...failure.text ? { text: failure.text } : {},
+    art: failure.art,
+    retryEvent: PROGRESSBAR_RETRY_EVENT
+  });
+  plate.classList.add("kp-progressbar__plate");
+  if (width > 0 && !had) plate.style.setProperty("max-inline-size", `${Math.round(width)}px`);
+  else if (had) plate.style.setProperty("max-inline-size", had.plate.style.getPropertyValue("max-inline-size"));
+  if (height > 0 && !had) plate.style.setProperty("min-block-size", `${Math.round(height)}px`);
+  row.after(plate);
+  row.hidden = true;
+  el16.setAttribute("data-kp-state", "error");
+  el16.setAttribute("aria-valuetext", title);
+  FAILED2.set(el16, { plate, row });
 }
 function attachProgressbars(root = document) {
   const bars = (
@@ -22539,18 +22580,22 @@ function attachProgressbars(root = document) {
   for (const bar of bars) watch2.observe(bar, { attributes: true, attributeFilter: ["aria-valuenow", "aria-valuemin", "aria-valuemax"] });
   return () => watch2.disconnect();
 }
-var PROGRESSBAR_SELECTOR, VALUE_PROPERTY, INDETERMINATE_ATTRIBUTE, numberAttribute;
+var PROGRESSBAR_SELECTOR, VALUE_PROPERTY, PROGRESSBAR_RETRY_EVENT, INDETERMINATE_ATTRIBUTE, numberAttribute, FAILED2;
 var init_progressbar = __esm({
   "js/progressbar.js"() {
     "use strict";
+    init_state_plate();
+    init_strings();
     PROGRESSBAR_SELECTOR = ".kp-progressbar";
     VALUE_PROPERTY = "--kp-value";
+    PROGRESSBAR_RETRY_EVENT = "kp-progressbar-retry";
     INDETERMINATE_ATTRIBUTE = "data-kp-indeterminate";
     numberAttribute = (el16, name, fallback2) => {
       const raw = el16.getAttribute(name);
       const value = raw === null || raw.trim() === "" ? NaN : Number(raw);
       return Number.isFinite(value) ? value : fallback2;
     };
+    FAILED2 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -23800,6 +23845,7 @@ function chartWords(overrides) {
     now: s2.chartNow,
     empty: s2.chartEmpty,
     retry: s2.chartRetry,
+    trendFailed: s2.chartTrendFailed,
     onePoint: s2.chartOnePoint,
     loading: s2.chartLoading,
     pinnedOutside: s2.chartPinnedOutside,
@@ -24061,8 +24107,16 @@ function setTrendData(figure, data) {
     CHARTS.get(figure)?.draw();
     return;
   }
-  const { points, step, unit: unit2, unitKind, digits } = data;
-  setChartData(figure, { unit: unit2, unitKind, digits, series: [{ label: figure.getAttribute("aria-label") ?? "", points, step }] });
+  const { points = [], step, unit: unit2, unitKind, digits, error, text, art } = data;
+  setChartData(figure, {
+    unit: unit2,
+    unitKind,
+    digits,
+    ...error ? { error } : {},
+    ...text ? { errorText: text } : {},
+    ...art ? { art } : {},
+    series: [{ label: figure.getAttribute("aria-label") ?? "", points, step }]
+  });
 }
 function chartSelect(el16, index, on) {
   return CHARTS.get(el16)?.select(index, on) ?? false;
@@ -25237,6 +25291,10 @@ function trendChart(host, group, locale, ctx) {
     /** @type {HTMLElement | null} */
     host.closest(".kp-kpi")?.querySelector(".kp-kpi__link") ?? null
   );
+  let busy = null;
+  let plate = null;
+  let leaving = false;
+  let first = true;
   const hide2 = () => {
     at = null;
     index = null;
@@ -25280,9 +25338,40 @@ function trendChart(host, group, locale, ctx) {
     }
     if (announce3) live4.textContent = `${moment} \xB7 ${fmt(value, "readout")}`;
   };
+  const kind = () => loading() ? "loading" : data?.error ? "error" : (data?.series[0] ? pointsOf(data.series[0]).length : 0) === 0 ? "empty" : "ready";
+  function setPlate(k) {
+    plate?.remove();
+    plate = null;
+    plot.hidden = k !== null;
+    if (axis) axis.row.hidden = k !== null;
+    if (k === null) return;
+    plate = hostStatePlate(host, {
+      kind: k,
+      title: k === "error" ? data?.error ?? strings.trendFailed : strings.empty,
+      ...k === "error" && data?.errorText ? { text: data.errorText } : {},
+      art: data?.art,
+      retryEvent: CHART_RETRY_EVENT,
+      retryLabel: strings.retry
+    });
+    plate.addEventListener("click", (event) => {
+      if (event.target instanceof Element && event.target.closest("button")) link?.focus({ preventScroll: true });
+    }, true);
+    host.append(plate);
+  }
   function draw8() {
     const series = data?.series[0];
-    pts = !loading() && series ? pointsOf(series) : [];
+    const k = kind();
+    host.setAttribute("data-kp-state", k);
+    setPlate(k === "empty" || k === "error" ? k : null);
+    if (k === "loading") {
+      if (busy && !leaving) busy.place();
+      else if (!busy) busy = openBusyCard(host, { words: strings.loading, area: () => [plot], className: "kp-kpi__busy", arrive: !first });
+    } else if (busy && !leaving) {
+      busy.remove();
+      busy = null;
+    }
+    first = false;
+    pts = k === "ready" && series ? pointsOf(series) : [];
     plot.setAttribute("aria-label", data?.label ?? host.getAttribute("aria-label") ?? series?.label ?? "");
     drawSparkline(
       svg2,
@@ -25364,7 +25453,17 @@ function trendChart(host, group, locale, ctx) {
     setData: (next2) => {
       data = next2;
       if (data.key != null) host.setAttribute("data-kp-key", data.key);
-      draw8();
+      if (busy && !leaving && kind() !== "loading") {
+        const card = busy;
+        busy = null;
+        leaving = true;
+        void card.close().then(() => {
+          leaving = false;
+          draw8();
+        });
+        return;
+      }
+      if (!leaving) draw8();
     },
     select: () => false,
     // The trend reads on its own crosshair, not the group's.
@@ -25373,6 +25472,9 @@ function trendChart(host, group, locale, ctx) {
     lastTime: () => pts[pts.length - 1]?.[0] ?? null,
     destroy: () => {
       for (const part7 of parts2) part7.remove();
+      plate?.remove();
+      busy?.remove();
+      host.removeAttribute("data-kp-state");
       host.closest(".kp-kpi")?.removeAttribute("aria-busy");
     },
     unobserve: () => {
@@ -25388,6 +25490,7 @@ var init_chart = __esm({
     init_strings();
     init_kpi();
     init_state_plate();
+    init_busy_card();
     CHART = "[data-kp-chart]";
     CHART_GROUP = "[data-kp-chart-group]";
     CHART_SELECT_EVENT = "kp-chart-select";
@@ -40625,7 +40728,7 @@ function setGanttRuns(el16, runs2, lanes) {
   if (!c) return;
   c.runs = runs2;
   if (lanes) c.lanesGiven = lanes;
-  if (c.state === "loading" || c.state === "empty") c.state = "ready";
+  if (c.state === "loading" || c.state === "empty" || c.state === "error") c.state = "ready";
   paint8(c);
   tick4(c);
 }
@@ -40688,7 +40791,7 @@ function setGanttPoints(el16, points, lanes) {
   if (!c) return;
   c.points = points;
   if (lanes) c.lanesGiven = lanes;
-  if (c.state === "loading" || c.state === "empty") c.state = "ready";
+  if (c.state === "loading" || c.state === "empty" || c.state === "error") c.state = "ready";
   paint8(c);
   tick4(c);
 }
@@ -41113,6 +41216,7 @@ __export(uptime_exports, {
   UPTIME_COUNT: () => UPTIME_COUNT,
   UPTIME_OPEN_EVENT: () => UPTIME_OPEN_EVENT,
   UPTIME_PICK_EVENT: () => UPTIME_PICK_EVENT,
+  UPTIME_RETRY_EVENT: () => UPTIME_RETRY_EVENT,
   UPTIME_STATES: () => UPTIME_STATES,
   attachUptimes: () => attachUptimes,
   setUptime: () => setUptime,
@@ -41245,8 +41349,21 @@ function draw6(el16, spec) {
   const info = infoMode(el16);
   el16.classList.add("kp-uptime");
   el16.dataset.kpUptimeState = state2;
+  el16.setAttribute("data-kp-state", state2);
   if (loading) el16.setAttribute("aria-busy", "true");
   else el16.removeAttribute("aria-busy");
+  if (state2 === "empty" || failed) {
+    const keepLayer = CARDS2.get(el16)?.layer;
+    const plate = hostStatePlate(el16, {
+      kind: failed ? "error" : "empty",
+      title: failed ? spec.error ?? spec.message ?? s2.uptimeError : spec.message ?? s2.uptimeEmpty,
+      ...spec.text ? { text: spec.text } : {},
+      art: spec.art,
+      retryEvent: UPTIME_RETRY_EVENT
+    });
+    el16.replaceChildren(...keepLayer && keepLayer.parentElement === el16 ? [plate, keepLayer] : [plate]);
+    return;
+  }
   const head = make15(el16, "div", "kp-uptime__head");
   const title = make15(el16, "span", "kp-uptime__title");
   title.textContent = label;
@@ -41675,7 +41792,7 @@ function attachUptimes(root = document) {
     for (const c of cleanups) c();
   };
 }
-var toneFor, wordFor, UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, infoMade, infoMode, countOf2, make15;
+var toneFor, wordFor, UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, UPTIME_RETRY_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, infoMade, infoMode, countOf2, make15;
 var init_uptime = __esm({
   "js/uptime.js"() {
     "use strict";
@@ -41685,6 +41802,7 @@ var init_uptime = __esm({
     init_motion();
     init_top_layer();
     init_calm_tones();
+    init_state_plate();
     toneFor = (el16, state2) => isCalmTones(el16) ? state2 === "down" ? "quiet" : state2 === "none" ? "none" : "logged" : state2;
     wordFor = (el16, tone) => (isCalmTones(el16) ? calmWord(tone) : null) ?? getStrings().uptimeStateWord(
       /** @type {any} */
@@ -41693,6 +41811,7 @@ var init_uptime = __esm({
     UPTIME = "[data-kp-uptime]";
     UPTIME_PICK_EVENT = "kp-uptime-pick";
     UPTIME_OPEN_EVENT = "kp-uptime-open";
+    UPTIME_RETRY_EVENT = "kp-uptime-retry";
     CELL = ".kp-uptime__cell:is(button, a)";
     UPTIME_STATES = /** @type {const} */
     ["up", "degraded", "down", "none"];
@@ -49072,6 +49191,7 @@ var init_footprint = __esm({
     FOOTPRINT_HOSTS = [
       "[data-kp-matrix]",
       "[data-kp-heat]",
+      "[data-kp-uptime]",
       "[data-kp-entity-grid]",
       "[data-kp-checklist]",
       "[data-kp-timers]",
@@ -64045,6 +64165,7 @@ export {
   PROBLEM_DISMISS_EVENT,
   PROBLEM_MODES,
   PROBLEM_SEVERITIES,
+  PROGRESSBAR_RETRY_EVENT,
   PROGRESSBAR_SELECTOR,
   QR,
   QR_COPY_EVENT,
@@ -64289,6 +64410,7 @@ export {
   UPTIME_COUNT,
   UPTIME_OPEN_EVENT,
   UPTIME_PICK_EVENT,
+  UPTIME_RETRY_EVENT,
   UPTIME_STATES,
   USES_COLLAPSE_BELOW,
   USES_MAP,
@@ -64969,6 +65091,7 @@ export {
   setPipelineSelected,
   setPipelineState,
   setProblems,
+  setProgressFailed,
   setQr,
   setQuantity,
   setQuote,

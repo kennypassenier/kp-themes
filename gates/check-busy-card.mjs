@@ -70,7 +70,7 @@ export const CARD = [
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */
 export const OWN = {
     'js/calendar.js': "the busy month's own card over the days (`.kp-calendar__busy`, --busy-whole) or every day's loading tone",
-    'js/chart.js': "the plot's loading plate (`.kp-chart__state` as a skeleton block) over the whole plot",
+    'js/chart.js': "the plot's loading plate (`.kp-chart__state` as a skeleton block) over the whole plot; a key figure's trend (trendChart) lays the busy card over its plot [kyu-plates-1019]",
     'js/request-inspector.js': "the request list is a card in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over the whole stage [kpadopt5]",
     'js/quote.js': "the quote card is a `.kp-card` in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over a quote-shaped stage [kpadopt6]",
     'js/kpi.js': "a KPI tile's own skeleton figure and meter: one figure, not a data area",

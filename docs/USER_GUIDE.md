@@ -469,6 +469,14 @@ The package root re-exports them as `setProgressbar` and
 In React, `<Progress value={40} label="Export" />` renders the same markup, and
 leaving `value` out renders the busy bar.
 
+Driving its states [kyu-plates-1019]: loading is the busy bar (`setIndeterminate(bar, true)`); done is `setProgress(bar, 100)`.
+A task that failed is `setProgressFailed(bar, { title, text?, art? })` (the package root: `setProgressbarFailed`): the bar's row
+(`.kp-progress__wrap`, label and reading with it) gives way to the package's failed plate, the title at heading size, with a
+normal-size Retry that fires `kp-progressbar-retry` on the bar (bubbling; `PROGRESSBAR_RETRY_EVENT`). A bar is one line high, so
+this is the one state that cannot keep the height. Listen for the event, restart the task and call `setProgress()` or
+`setIndeterminate(bar, true)` (or `setProgressFailed(bar, null)`): any of them puts the bar back. Without `title` the
+dictionary's `progressFailed` speaks.
+
 Beside a reading, a bar goes in `.kp-progress__wrap` with a
 `.kp-progress__value`; several labelled bars go in `.kp-progress-group`, which
 gives the labels one column as wide as the longest of them so every track
@@ -1056,6 +1064,14 @@ events; `data-kp-matrix-select="follow"` pins the cell the arrow keys land on.
 or `setBarCell(span, { value: 0.62, text: '62%' })`. A data table sorts a cell by `data-kp-sort-value` (on the `td`) when it
 has one, else by its text; `setBarCell` writes it for the cell it is in.
 
+#### Driving the states of the heat grid, the matrix and the run timeline [kyu-plates-1019]
+
+`setHeat(el, { state: 'loading' | 'empty' | 'error', message?, text?, art? })` and `setMatrix(el, { state, … })` (`js/heat.js`)
+take the grid's whole footprint with the busy card (loading) or the state plate (empty, failed); a failure's Retry fires
+`kp-heat-retry` or `kp-matrix-retry` on the host (bubbling). The run timeline (`js/gantt.js`) is `setGanttState(el, 'loading' |
+'empty' | 'error', words?, { text?, art? })`, its Retry `kp-gantt-retry`; `setGanttRuns()` and `setGanttPoints()` bring a
+loading, empty or failed timeline back to ready.
+
 ### Key figures on allowed column counts
 
 A strip whose number of tiles changes can leave one tile alone on its last
@@ -1130,8 +1146,14 @@ The data is the page's, as for any chart, or the short way:
 import { setTrendData } from '@kp-soft/themes/js/chart';
 
 setTrendData(figure, { points: [[ms, 3.31], [ms + 600_000, 3.28] /* … */], step: 600_000, unit: 'bar', digits: 2 });
-setTrendData(figure, null); // loading: the trend empty at its height, the tile aria-busy
+setTrendData(figure, null); // loading: the theme's busy card over the trend, the tile aria-busy
 ```
+
+Driving its states [kyu-plates-1019]: `setTrendData(figure, null)` is loading (the busy card over the trend at its height);
+`setTrendData(figure, { points: [] })` is empty (the state plate in the trend's place, `art` and `text` optional);
+`setTrendData(figure, { error: 'Could not read the trend', text?, art? })` is failed (the failed plate, its Retry fires
+`kp-chart-retry` on the figure, bubbling: read again and call `setTrendData(figure, data)`). The plate is at heading size, so
+the tile grows by what its words need; loading keeps the tile's height. One reading (not empty) still draws no line.
 
 No points is a tile with no trend; one point keeps the axis row with two
 no-break spaces. The trend is a tab stop only with two points or more;
@@ -1604,7 +1626,7 @@ width redraws the picture.
 | Call                                    | What it does                                                                                                                                                                                 |
 | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `setGraphData(el, data)`                | a live update: ids that stay keep their pick and the focus; picks whose node went are dropped (and `kp-graph-change` says so)                                                                |
-| `setGraphState(el, state, words?)`      | `loading` (the ring pulses; still under reduced motion), `empty` or `error` (a red dot), with the page's sentence in the picture at its full height; loading says `graphLoading` without one |
+| `setGraphState(el, state, words?, { text?, art? })` | `loading` (the theme's busy card over the whole picture), `empty` or `error` (the state plate over the picture at its full height, `words` its heading; an error has a Retry that fires `kp-graph-retry` on the graph, bubbling) [kyu-plates-1019] |
 | `graphSelect(el, ids)`                  | picks these nodes and only these                                                                                                                                                             |
 | `graphHideKind(el, kind, hide)`         | turns one kind of link off or on                                                                                                                                                             |
 | `decorate: (part, info) => void`        | called with every control the graph builds, each time it builds it: `info.kind` is `node` (`value` the id), `kind` (`value` the kind) or `show-all`, with `host`, `key` (`data-kp-key`), `index` and `label` |
@@ -2113,8 +2135,11 @@ setUptime(strip, {
 
 Until the page calls `setUptime()` the strip shows its loading state from its attributes (`data-kp-uptime-count`
 skeleton cells under the data table's busy card), so it is loading from the first frame. `state` is `ready` (the
-default), `loading`, `empty` (every cell without data, "No data yet") or `error` (the page's short `error` sentence on
-the destructive plate where the summary stands); the strip keeps its height and place in every one.
+default), `loading`, `empty` or `error`. Empty and failed are the package's state plate over the strip's whole footprint
+(js/footprint.js holds the height the strip had with its cells): `setUptime(el, { state: 'empty', message?, text?, art? })`
+("No data yet" without `message`) and `setUptime(el, { state: 'error', error: 'The checks could not be read', text?, art? })`,
+a failure with a Retry that fires `kp-uptime-retry` on the strip (bubbling; `UPTIME_RETRY_EVENT`): read again and call
+`setUptime(el, { periods })`. A strip with data but no period that has any stays ready and says "No data yet" in its summary.
 
 The figures are exact: the share is cut to one decimal, never rounded up, so only a window without any time down reads
 100%, and the incident count is the number. A period counts with its `uptime` (0 to 1) when given, else 1 for up and

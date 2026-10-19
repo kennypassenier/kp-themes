@@ -4799,6 +4799,21 @@
         color: var(--kp-chart-series, var(--chart-1));
     }
 
+    /* An empty or failed trend is the state plate in the plot's place (js/chart.js, js/state-plate.js); loading is the busy card over
+     * the plot [kyu-plates-1019]. The tile grows by what the plate's words need: a heading-size plate cannot stand in the trend's
+     * line of 2.75rem. */
+    .kp-kpi__chart:is([data-kp-state='empty'], [data-kp-state='error']) {
+        grid-template-rows: minmax(0, 1fr);
+    }
+
+    .kp-kpi__chart > [hidden] {
+        display: none;
+    }
+
+    .kp-kpi__chart > .kp-stateplate {
+        block-size: 100%;
+    }
+
     .kp-kpi__chart-plot {
         position: relative;
         display: block;
@@ -9768,6 +9783,21 @@
         align-items: center;
         gap: var(--kp-progress-group-gap, calc(var(--kp-space-xs) * var(--kp-progress-group-scale, 1)))
             calc(var(--kp-space-sm) * var(--kp-progress-group-scale, 1));
+    }
+
+    /* A failed bar's row gives way to the failed plate (js/progressbar.js setProgressFailed) [kyu-plates-1019]; in a group the plate
+     * takes every column. */
+    .kp-progress__wrap[hidden],
+    .kp-progress-group .kp-progress__wrap[hidden] {
+        display: none;
+    }
+
+    .kp-progressbar__plate {
+        flex: none;
+    }
+
+    .kp-progress-group > .kp-progressbar__plate {
+        grid-column: 1 / -1;
     }
 
     .kp-progress-group .kp-progress__wrap {
@@ -20621,6 +20651,16 @@
     /* Before the script draws it, the strip already takes the room it will have. */
     .kp-uptime:empty {
         min-block-size: calc(var(--kp-uptime-height, 1.75rem) + 2lh + 2 * var(--kp-space-xs, 0.25rem));
+    }
+
+    /* An empty or failed strip is the state plate over the whole footprint (js/state-plate.js, held by js/footprint.js): one row,
+     * not the head, the strip and the axis [kyu-plates-1019]. */
+    .kp-uptime:is([data-kp-state='empty'], [data-kp-state='error']) {
+        grid-template-rows: minmax(0, 1fr);
+    }
+
+    .kp-uptime > .kp-stateplate {
+        block-size: 100%;
     }
 
     /* One line whatever it holds: a theme's waiting line (formal rules a 1.5rem ledger line) stands inside it. */

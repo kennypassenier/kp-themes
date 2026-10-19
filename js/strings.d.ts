@@ -2384,6 +2384,14 @@ export type Strings = {
      */
     chartRetry: string;
     /**
+     * The failed plate's heading of a key figure's trend when the page gives no sentence [kyu-plates-1019]
+     */
+    chartTrendFailed: string;
+    /**
+     * The failed plate's heading of a progress bar when the page gives no title [kyu-plates-1019]
+     */
+    progressFailed: string;
+    /**
      * Under a chart whose every source has one reading (with `onePointNote`) [scope-143]
      */
     chartOnePoint: string;
@@ -6752,6 +6760,8 @@ export type Strings = {
  * @property {string} chartNow  A spark line's value when no time is under the crosshair [scope-143]
  * @property {string} chartEmpty  A time chart with no readings in its window, in the plot at its height [scope-143]
  * @property {string} chartRetry  The Retry under a failed chart's sentence [t56-statefix-1018]
+ * @property {string} chartTrendFailed  The failed plate's heading of a key figure's trend when the page gives no sentence [kyu-plates-1019]
+ * @property {string} progressFailed  The failed plate's heading of a progress bar when the page gives no title [kyu-plates-1019]
  * @property {string} chartOnePoint  Under a chart whose every source has one reading (with `onePointNote`) [scope-143]
  * @property {string} chartLoading  A loading chart (`data-kp-chart-loading`), for a screen reader [scope-143]
  * @property {string} chartPinnedOutside  A pinned tooltip's head once a live update moved the window past the pin [scope-143]
