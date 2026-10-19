@@ -193,8 +193,8 @@ export declare function nextSorts<K>(keys: {
 export declare function filterActive(kind: FilterKind, value: FilterValue | undefined): boolean;
 /**
  * A filter bound as the reader writes it [b3b4-1019; homelab gap 33]. A date bound is held as ISO (`2026-10-03`) so the
- * filter compares it exactly, but a pill, an error and a screen reader say it the way the page's locale writes a date
- * (the field it came from shows the same). A number bound, or text that is not an ISO day, is returned as it is.
+ * filter compares it exactly, but a pill, an error and a screen reader say it the way the two date pickers beside it write
+ * it (their `data-kp-date-format`, `rule52` by default: dd/mm/yyyy whatever the locale; Kenny, 2026-10-19, "Zelfde notatie"). A number bound, or text that is not an ISO day, is returned as it is.
  *
  * @param {FilterKind} kind
  * @param {string} bound
