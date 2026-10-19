@@ -1,0 +1,122 @@
+[
+  {
+    "at": "2026-10-18T23:39:23Z",
+    "method": "POST",
+    "path": "/v1/messages",
+    "headers": [
+      [
+        "accept",
+        "*/*"
+      ],
+      [
+        "authorization",
+        "***"
+      ],
+      [
+        "content-length",
+        "30"
+      ],
+      [
+        "content-type",
+        "application/json"
+      ],
+      [
+        "host",
+        "127.0.0.1:18080"
+      ],
+      [
+        "x-chassis-test",
+        "1"
+      ],
+      [
+        "x-request-id",
+        "c893b29b-423d-4b2f-9976-12c6d8c38954"
+      ]
+    ],
+    "body": "{\"hello\":\"from the dashboard\"}",
+    "body_bytes": 30,
+    "truncated": false,
+    "status": 202,
+    "source": "api"
+  },
+  {
+    "at": "2026-10-18T23:39:23Z",
+    "method": "POST",
+    "path": "/v1/messages",
+    "headers": [
+      [
+        "accept",
+        "*/*"
+      ],
+      [
+        "authorization",
+        "***"
+      ],
+      [
+        "content-length",
+        "12"
+      ],
+      [
+        "content-type",
+        "application/json"
+      ],
+      [
+        "host",
+        "127.0.0.1:18080"
+      ],
+      [
+        "user-agent",
+        "curl/8.22.0"
+      ],
+      [
+        "x-request-id",
+        "01a81dbc-0ab6-4ef5-ad3c-c9528cf99f41"
+      ]
+    ],
+    "body": "{\"text\":\"x\"}",
+    "body_bytes": 12,
+    "truncated": false,
+    "status": 202,
+    "source": "api"
+  },
+  {
+    "at": "2026-10-18T23:39:23Z",
+    "method": "POST",
+    "path": "/v1/messages",
+    "headers": [
+      [
+        "accept",
+        "*/*"
+      ],
+      [
+        "authorization",
+        "***"
+      ],
+      [
+        "content-length",
+        "37"
+      ],
+      [
+        "content-type",
+        "application/json"
+      ],
+      [
+        "host",
+        "127.0.0.1:18080"
+      ],
+      [
+        "user-agent",
+        "curl/8.22.0"
+      ],
+      [
+        "x-request-id",
+        "e0ef3d53-769f-4123-ad86-090e7326abd9"
+      ]
+    ],
+    "body": "{\"topic\":\"alerts\",\"text\":\"door open\"}",
+    "body_bytes": 37,
+    "truncated": false,
+    "status": 202,
+    "source": "api"
+  }
+]

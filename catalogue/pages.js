@@ -166,6 +166,32 @@ export const PAGES = [
                 label: 'Almanac: deliveries per day and this week',
                 about: 'Two new views for Almanac: a month that shows how many events it delivered each day (pick a day to see them), and a week agenda of the events it put in the calendars, coloured per calendar. 2 sections, formal only, sample data.',
             },
+            // Kenny, 2026-10-19: chassis-rs's shared kit pages rebuilt on kp-themes 11.0.0, five parts judged one by one (shared code: research/chassis-kit-pages).
+            {
+                href: 'research/chassis-kit-shell/demo.html',
+                label: 'chassis-rs kit pages: the shell and the error page',
+                about: 'The navigation bar with its search palette (Ctrl K) and shortcut sheet, the phone\'s tab bar with exact counts, and the error page, rebuilt from kp-themes 11 components. 3 sections (3 pairs, formal).',
+            },
+            {
+                href: 'research/chassis-kit-status/demo.html',
+                label: 'chassis-rs kit pages: the status page',
+                about: 'The status page as an operations page (figures, problems, health rows, version chip, availability strip) and the sections a service adds (table, figures, a card that reads its own data). 2 sections (2 pairs, formal).',
+            },
+            {
+                href: 'research/chassis-kit-clients/demo.html',
+                label: 'chassis-rs kit pages: the clients page',
+                about: 'The client list with figures that filter and idle clients called out, issuing a client with the token in the same dialog, the manage dialog (secret, command, test, request inspector, typed delete) and the first-client walk-through. 4 sections (4 pairs, formal).',
+            },
+            {
+                href: 'research/chassis-kit-login/demo.html',
+                label: 'chassis-rs kit pages: the login page',
+                about: 'A passkey first, the token as the fallback, a switch for staying signed in, and the service\'s health on the page before anyone is in. 1 section (1 pair, formal).',
+            },
+            {
+                href: 'research/chassis-kit-passkeys/demo.html',
+                label: 'chassis-rs kit pages: the passkeys page',
+                about: 'Ways to sign in with this device marked, rename in place and a confirmed remove, and registering from another device with a QR code. 2 sections (2 pairs, formal).',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.

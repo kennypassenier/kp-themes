@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="chassis-kit-shell" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>chassis-rs kit pages: The shell and the error page</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../chassis-kit-pages/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ck-page">
+            <header class="ck-intro">
+                <h1>chassis-rs kit pages on kp-themes 11.0.0: The shell and the error page</h1>
+                <p class="cat-intro">
+                    The bar, the search palette, the shortcuts, the phone’s tab bar and the error page: what stands around every page of the kit. In formal. 3 sections, 3 pairs. The pages are
+                    rendered from data the running example service answered (clients, requests, status, health); rows it did not have are more rows of
+                    the same shape and say so on the page.
+                </p>
+            </header>
+            <section
+                class="ck-sec"
+                id="shell-bar"
+                data-review-item="shell-bar"
+                data-review-topic="shell"
+                data-review-topic-title="The shell around every page"
+                data-review-components="nav-bar command-palette shortcut-sheet connection"
+                data-review-title="The navigation bar, the search palette and the shortcuts"
+                aria-labelledby="h-shell-bar"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-shell-bar">The navigation bar, the search palette and the shortcuts</h2>
+                    <p>Every page of the kit stands in this shell. The bar folds links that do not fit, Search opens a palette (Ctrl K) that reaches every page and the things you do most, and one sheet lists the keys.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>The bar:</b> brand, the four pages, <b>Search</b> with its <b>Ctrl K</b> hint, the theme menu and <b>Log out</b>, on one row. Press <b>Narrow</b>: the links that do not fit fold behind <b>More</b>, nothing wraps to a second row.</li>
+                        <li><b>The palette</b> (open, left) groups places and actions, each with a description and its keys; <b>Typed</b> fills it with “rev ho”: words in any order find “Manage home-assistant”’s relatives and mark the matched words. <b>The sheet</b> (right) lists the chords the page registers (<b>g s</b>, <b>g c</b>).</li>
+                        <li><b>The banner</b> under the bar says when the connection is gone or the service refuses, with the exact number of changes waiting, and takes no room while all is well.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The bar is one row with the Ctrl K hint visible; the palette and the sheet stand side by side at the same height, every row has its description and key in its own column; the banner appears under the bar and pushes the page down.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="shell-bar-component">
+                    <div role="group" aria-label="Width"><b>Width:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="wide" aria-pressed="true">Wide</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="narrow" aria-pressed="false">Narrow</button></div>
+                    <div role="group" aria-label="Palette"><b>Palette:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="query" data-ck-value="empty" aria-pressed="true">Empty</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="query" data-ck-value="typed" aria-pressed="false">Typed</button></div>
+                    <div role="group" aria-label="Connection"><b>Connection:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="connection" data-ck-value="online" aria-pressed="true">Online</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="connection" data-ck-value="reconnecting" aria-pressed="false">Reconnecting</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="connection" data-ck-value="refused" aria-pressed="false">Refused</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="connection" data-ck-value="offline" aria-pressed="false">Offline</button></div>
+                </div>
+                <div id="shell-bar-component" class="ck-stage" data-ck-view="shell-bar" data-ck-width="wide" data-ck-query="empty" data-ck-connection="online"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="shell-phone"
+                data-review-item="shell-phone"
+                data-review-topic="shell"
+                data-review-components="tabbar drawer nav-bar"
+                data-review-title="The phone: a tab bar with exact counts"
+                aria-labelledby="h-shell-phone"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-shell-phone">The phone: a tab bar with exact counts</h2>
+                    <p>On a phone the pages are four tabs at the thumb; the rest and the session live behind More. A count on a tab is the exact number.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Top:</b> only the brand, Search and the theme menu. <b>Bottom:</b> Messages, Status, Clients and <b>More</b>; the current page is marked by more than colour.</li>
+                        <li><b>Count on Clients:</b> 3 shows 3, 1534 shows <b>1534</b> whole, never “99+”. <b>More open</b> shows the drawer with Passkeys, theme and Log out.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The tab bar sits at the foot of the phone frame with its four tabs equal in width; the count badge shows every digit without growing the bar; the More drawer opens from the bar and holds three entries with a hint each.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="shell-phone-component">
+                    <div role="group" aria-label="Count on Clients"><b>Count on Clients:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="count" data-ck-value="none" aria-pressed="true">None</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="count" data-ck-value="3" aria-pressed="false">3</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="count" data-ck-value="1534" aria-pressed="false">1534</button></div>
+                    <div role="group" aria-label="More"><b>More:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="more" data-ck-value="closed" aria-pressed="true">Closed</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="more" data-ck-value="open" aria-pressed="false">Open</button></div>
+                </div>
+                <div id="shell-phone-component" class="ck-stage" data-ck-view="shell-phone" data-ck-count="none" data-ck-more="closed"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="error-page"
+                data-review-item="error-page"
+                data-review-topic="error"
+                data-review-topic-title="Errors"
+                data-review-components="empty-state copyable kv"
+                data-review-title="An error page: one plate, the way out and a request to quote"
+                aria-labelledby="h-error-page"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-error-page">An error page: one plate, the way out and a request to quote</h2>
+                    <p>The kit’s error and its remedy, as a page in the shell with the navigation around it: what is wrong in plain words, why, what to do, two ways out, and the request number to copy into a report.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Press <b>403</b>, <b>404</b>, <b>500</b>, <b>503</b>: each has its own drawing in the theme’s hand, a heading in plain words (no ids, no raw errors), the reason and the remedy under it.</li>
+                        <li>The request number sits in a copyable value with a Copy button; <b>Go back</b> and <b>Open the status page</b> are normal-size buttons, and Back to the dashboard is the one primary button.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The plate is centred in the card at heading size; the two buttons are normal size; the facts below it use one label column.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="error-page-component">
+                    <div role="group" aria-label="Status"><b>Status:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="status" data-ck-value="403" aria-pressed="true">403</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="status" data-ck-value="404" aria-pressed="false">404</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="status" data-ck-value="500" aria-pressed="false">500</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="status" data-ck-value="503" aria-pressed="false">503</button></div>
+                </div>
+                <div id="error-page-component" class="ck-stage" data-ck-view="error-page" data-ck-status="403"></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "chassis-kit-shell-0a03b1be-8fc4-4ad2-a1f1-928e31093dd7" }
+        </script>
+        <script type="module" src="../chassis-kit-pages/demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

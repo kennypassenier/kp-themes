@@ -1,0 +1,58 @@
+{
+  "backup": null,
+  "health": {
+    "status": "ok",
+    "subsystems": {
+      "store": {
+        "detail": "writable",
+        "ok": true
+      }
+    },
+    "version": "0.1.0"
+  },
+  "listen": "127.0.0.1:18080",
+  "problems": [],
+  "sections": [
+    {
+      "actions": [
+        {
+          "busy_label": "Clearing\u2026",
+          "confirm": "Clear every message? They are kept nowhere else.",
+          "destructive": true,
+          "label": "Clear messages",
+          "method": "POST",
+          "route": "/messages/clear"
+        }
+      ],
+      "explain": "Everything clients posted to /v1/messages since the service started; the newest five are listed.",
+      "html": null,
+      "rows": [
+        [
+          "Received",
+          "3"
+        ],
+        [
+          "#3",
+          "home-assistant \u2192 {\"hello\":\"from the dashboard\"}"
+        ],
+        [
+          "#2",
+          "home-assistant \u2192 {\"text\":\"x\"}"
+        ],
+        [
+          "#1",
+          "home-assistant \u2192 {\"text\":\"door open\",\"topic\":\"alerts\"}"
+        ]
+      ],
+      "title": "Messages"
+    }
+  ],
+  "started_at": "2026-10-18T23:39:02Z",
+  "update": {
+    "last_check": "2026-10-18T23:44:03Z",
+    "latest": "not checked yet",
+    "mode": "off",
+    "note": "GET https://github.com/kennypassenier/chassis-rs/releases/latest/download/VERSION answered 404. What now: the newest release is published but not signed yet (sign-release.sh adds VERSION last); nothing to install until it is, and the next check retries"
+  },
+  "version": "0.1.0"
+}

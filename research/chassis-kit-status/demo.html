@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="chassis-kit-status" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>chassis-rs kit pages: The status page</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../chassis-kit-pages/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ck-page">
+            <header class="ck-intro">
+                <h1>chassis-rs kit pages on kp-themes 11.0.0: The status page</h1>
+                <p class="cat-intro">
+                    The status page as an operations page, and the sections a service adds to it. In formal. 2 sections, 2 pairs. The pages are
+                    rendered from data the running example service answered (clients, requests, status, health); rows it did not have are more rows of
+                    the same shape and say so on the page.
+                </p>
+            </header>
+            <section
+                class="ck-sec"
+                id="status-page"
+                data-review-item="status-page"
+                data-review-topic="status"
+                data-review-topic-title="Status"
+                data-review-components="ops-page problems status-row version-delta uptime refresh freshness connection"
+                data-review-title="The status page as an operations page" data-review-choices='[{&quot;id&quot;:&quot;problems-mode&quot;,&quot;label&quot;:&quot;How several problems are shown&quot;,&quot;default&quot;:&quot;each&quot;,&quot;options&quot;:[{&quot;value&quot;:&quot;each&quot;,&quot;label&quot;:&quot;One alert each&quot;,&quot;hint&quot;:&quot;Every problem its own alert, the worst first.&quot;},{&quot;value&quot;:&quot;list&quot;,&quot;label&quot;:&quot;One alert with a list&quot;,&quot;hint&quot;:&quot;One alert, in the tone of the worst, holding every problem.&quot;},{&quot;value&quot;:&quot;fold&quot;,&quot;label&quot;:&quot;The worst, the rest folded&quot;,&quot;hint&quot;:&quot;The worst stays open, “Show the other N” holds the rest.&quot;}]}]'
+                aria-labelledby="h-status-page"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-status-page">The status page as an operations page</h2>
+                    <p>One page header with the freshness line, four key figures, what needs a person (one alert per problem, with its fix), then the cards: service, health per part, updates and the last 48 hours.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Healthy:</b> header, “updated 12 s ago” with the refresh control (every 30 s, remembered), four figures that include <b>Up for</b> and the client count, no attention band (it takes no room), three cards and the availability strip.</li>
+                        <li><b>Degraded:</b> the Health figure turns red, two problems appear (what, why, what now, with a Copy command), and the failing part is a red row. <b>Problems as</b> (choice) is <b>One alert each</b> by default; the other two modes are real options.</li>
+                        <li><b>Retry failed deliveries</b> (a service’s own section action) is a button with a spinner, then “Retried”, and a toast says <b>Retried 12 entries</b>: the page does not reload and keeps its place. <b>Update found</b> shows the version chip <b>0.1.0 → 0.2.0</b> with its size in words and a link to the release; <b>Failed</b> is one plate with Try again; <b>Loading</b> keeps the final geometry.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The figures strip is one row of equal tiles; the three cards share one height; the availability strip spans the whole width with its summary above; Degraded is readable without colour (words and shapes).</p>
+                </div>
+                <div data-review-controls data-review-controls-for="status-page-component">
+                    <div role="group" aria-label="State"><b>State:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="healthy" aria-pressed="true">Healthy</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="degraded" aria-pressed="false">Degraded</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="loading" aria-pressed="false">Loading</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="failed" aria-pressed="false">Failed</button></div>
+                    <div role="group" aria-label="Updates"><b>Updates:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="update" data-ck-value="off" aria-pressed="true">Off (captured)</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="update" data-ck-value="current" aria-pressed="false">Up to date</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="update" data-ck-value="available" aria-pressed="false">Update found</button></div>
+                    <div role="group" aria-label="Width"><b>Width:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">Full</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">Phone</button></div>
+                </div>
+                <div id="status-page-component" class="ck-stage" data-ck-view="status-page" data-ck-state="healthy" data-ck-update="off" data-ck-width="full"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="status-sections"
+                data-review-item="status-sections"
+                data-review-topic="status"
+                data-review-components="datatable status-row card-state kv health"
+                data-review-title="A service’s own sections: a table, key figures and a card that reads its own data"
+                aria-labelledby="h-status-sections"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-status-sections">A service’s own sections: a table, key figures and a card that reads its own data</h2>
+                    <p>What a service adds to the status page is no longer only rows of text: a section can be a sortable table, key figures with checks, or a card that fetches its own JSON and shows loading, empty and failed by itself.</p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Messages</b> is the capture’s own section as a data table (sort, search, remembered); <b>Delivery</b> is key figures and two check rows; <b>Store, read live</b> is a card that reads <code>/healthz</code> and shows its state.</li>
+                        <li>Press <b>Loading</b>, <b>Empty</b>, <b>Failed</b>: each card keeps its place and size, shows the theme’s busy card, the empty plate or the failed plate with Try again, and the other cards stay as they are.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">In every state the three cards keep their footprint; loading is the busy card centred over the card, empty and failed fill the card with a heading-size plate and a normal Try again.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="status-sections-component">
+                    <div role="group" aria-label="Cards"><b>Cards:</b> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="ready" aria-pressed="true">Ready</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="loading" aria-pressed="false">Loading</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="empty" aria-pressed="false">Empty</button> <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="error" aria-pressed="false">Failed</button></div>
+                </div>
+                <div id="status-sections-component" class="ck-stage" data-ck-view="status-sections" data-ck-state="ready"></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "chassis-kit-status-8f4d47e7-df65-436b-8b67-6254caf06077" }
+        </script>
+        <script type="module" src="../chassis-kit-pages/demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
