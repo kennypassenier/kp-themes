@@ -24419,6 +24419,9 @@
     .kp-formgrid__group > .kp-refresh {
         grid-column: label-start / actions-end;
         grid-template-columns: subgrid;
+        /* The grid's column gap, not the refresh's own 0.75rem: the chooser starts on the same edge as every other control
+           [formgrid-notes-1019; homelab 54]. */
+        column-gap: inherit;
     }
 
     .kp-formgrid :is(.kp-refresh) > :not(.kp-refresh__bar) {
@@ -24429,6 +24432,26 @@
         grid-column: label-start / actions-end;
         grid-template-columns: subgrid;
         column-gap: inherit;
+    }
+
+    /* A label for the refresh [formgrid-notes-1019; homelab 52]: data-kp-refresh-label draws it as the bar's first cell. On its own
+       it is a heading line above the bar; in a form grid it stands in the label track of the row, so the chooser, the
+       freshness line and Refresh now stand beside it on the control, value and actions tracks, on one first baseline. */
+    .kp-refresh__label {
+        grid-column: 1 / -1;
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+    }
+
+    .kp-formgrid .kp-refresh__bar:has(> .kp-refresh__label) {
+        align-items: first baseline;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__label {
+        grid-column: label;
     }
 
     .kp-formgrid .kp-refresh__bar > .kp-refresh__chooser {
@@ -27526,6 +27549,65 @@
         :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
         > :is(.kp-formgrid__control, .kp-formrow__control) {
         align-self: start;
+    }
+
+    /* A JSON field's tool row is its first line, so the row's own action (the actions column) stands on that line, not
+       on the field's top [formgrid-notes-1019; chassis-rs]: "Send test" in the actions column is centred on the line
+       of Format, Minify, Wrap and Copy, whatever its own height. The cell is exactly one tool row high and centres its
+       button on it (a taller button overflows evenly), so the row's height stays the field's. Stacked, the action
+       falls below the field as before. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > .kp-formgrid__actions {
+        align-self: start;
+        align-items: center;
+        block-size: var(
+            --kp-tools-height,
+            var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))))
+        );
+    }
+
+    /* The row's hint or default (the value column) stands on that line too, its first line centred like the label. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > :is(.kp-formgrid__value, .kp-formrow__aside) {
+        align-self: start;
+        padding-block-start: calc(
+            (
+                    var(
+                            --kp-tools-height,
+                            var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))))
+                        ) -
+                        1lh
+                ) /
+                2
+        );
+    }
+
+    @container kp-formgrid (max-width: 36rem) {
+        .kp-formgrid:not([data-kp-formgrid-stack='never'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+            > .kp-formgrid__actions {
+            block-size: auto;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+            > :is(.kp-formgrid__value, .kp-formrow__aside) {
+            padding-block-start: 0;
+        }
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always']
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > .kp-formgrid__actions {
+        block-size: auto;
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always']
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > :is(.kp-formgrid__value, .kp-formrow__aside) {
+        padding-block-start: 0;
     }
 
     /* Control widths per kind: a field fills the track, a short control one

@@ -11432,6 +11432,21 @@ function wire(el16, clock4) {
   failure.append(note3, retry);
   const bar = make23("div", "kp-refresh__bar");
   bar.append(chooser, line, now);
+  let labelCell = null;
+  const paintLabel = () => {
+    const words = (el16.getAttribute("data-kp-refresh-label") ?? "").trim();
+    if (!words) {
+      labelCell?.remove();
+      labelCell = null;
+      return;
+    }
+    if (!labelCell) {
+      labelCell = make23("span", "kp-refresh__label kp-formgrid__label");
+      bar.prepend(labelCell);
+    }
+    labelCell.textContent = words;
+  };
+  paintLabel();
   el16.replaceChildren(bar, count2, custom, failure);
   let unwireChooser = null;
   const wireChooser = () => {
@@ -11677,8 +11692,9 @@ function wire(el16, clock4) {
   doc.addEventListener("visibilitychange", onVisible);
   const stopWatching = watchOptions(
     el16,
-    ["data-kp-look", "data-kp-refresh", "data-kp-refresh-choices", "data-kp-stale-after", "data-kp-announce"],
+    ["data-kp-look", "data-kp-refresh", "data-kp-refresh-choices", "data-kp-stale-after", "data-kp-announce", "data-kp-refresh-label"],
     (names) => {
+      if (names.includes("data-kp-refresh-label")) paintLabel();
       if (names.includes("data-kp-look") && look() !== drawnLook) {
         const hadFocus = chooser.contains(doc.activeElement);
         unwireChooser?.();

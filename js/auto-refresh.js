@@ -17,6 +17,9 @@
 //   data-kp-refresh-region   selector of the element to swap in `region` mode
 //   data-kp-look             segmented (default, Kenny 2026-10-17: "Segments") | menu; switchable at runtime, like the
 //                            choices, the freshness options and a new data-kp-refresh (js/live-options.js)
+//   data-kp-refresh-label    words for the bar's own label cell ("Auto-refresh"); in a `.kp-formgrid` it stands in the
+//                            label track beside the chooser, the freshness line and Refresh now, on one first baseline;
+//                            elsewhere it is a line above the bar. Switchable at runtime; none by default
 //   data-kp-remember         name: the choice per page per device (js/remember.js, component `refresh`)
 //   data-kp-stale-after      seconds; the freshness line turns stale after it (default 3 x the interval)
 //   data-kp-refresh-hover    "pause": no refresh while the pointer is over a `.kp-table-wrap` being read
@@ -221,6 +224,22 @@ function wire(el, clock) {
     failure.append(note, retry);
     const bar = make('div', 'kp-refresh__bar');
     bar.append(chooser, line, now);
+    /** The bar's label cell, drawn while `data-kp-refresh-label` has words [formgrid-notes-1019; homelab 52]. @type {HTMLElement | null} */
+    let labelCell = null;
+    const paintLabel = () => {
+        const words = (el.getAttribute('data-kp-refresh-label') ?? '').trim();
+        if (!words) {
+            labelCell?.remove();
+            labelCell = null;
+            return;
+        }
+        if (!labelCell) {
+            labelCell = make('span', 'kp-refresh__label kp-formgrid__label');
+            bar.prepend(labelCell);
+        }
+        labelCell.textContent = words;
+    };
+    paintLabel();
     el.replaceChildren(bar, count, custom, failure);
     /** The detach of the menu or segmented wiring of the look drawn now. @type {(() => void) | null} */
     let unwireChooser = null;
@@ -489,8 +508,9 @@ function wire(el, clock) {
     // menu), the choices and the freshness line follow their attributes, and a new `data-kp-refresh` sets the interval.
     const stopWatching = watchOptions(
         el,
-        ['data-kp-look', 'data-kp-refresh', 'data-kp-refresh-choices', 'data-kp-stale-after', 'data-kp-announce'],
+        ['data-kp-look', 'data-kp-refresh', 'data-kp-refresh-choices', 'data-kp-stale-after', 'data-kp-announce', 'data-kp-refresh-label'],
         (names) => {
+            if (names.includes('data-kp-refresh-label')) paintLabel();
             if (names.includes('data-kp-look') && look() !== drawnLook) {
                 const hadFocus = chooser.contains(doc.activeElement);
                 unwireChooser?.();
