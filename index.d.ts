@@ -73,6 +73,7 @@ export { SNOOZE, SNOOZE_CHOICES, SNOOZE_END_EVENT, SNOOZE_EVENT, attachSnoozes, 
 export { RUNS, RUNS_RETRY_EVENT, RUNS_STATES, attachRuns, clockShift, runMoment, runs, runsRelative, setRuns, setRunsState, zoneOffset, } from './js/runs.js';
 export { WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, attachWeekdays, dayNames, dayNumber, joinWords, monthSummary, setWeekdays, weekdaySummary, weekdays, weekdaysOf, } from './js/weekdays.js';
 export { COMPARE, COMPARE_EVENT, attachCompares, compareKey, setCompare } from './js/compare.js';
+export { FEED, FEED_EARLIER, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_RELATIVE_MS, FEED_RETRY_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_TICK_MS, FEED_TIME_ZONE, attachFeeds, feedOf, setFeed } from './js/feed.js';
 export { NOTICES, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_RETRY_EVENT, NOTICES_SOURCE_EVENT, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICE_SEVERITIES, attachNotices, noticesOf, setNotices, } from './js/notices.js';
 export { QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_DISMISS_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_URGENT_AT, askQuestion, attachQuestions, questionOf, } from './js/question-card.js';
 export { TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_RETRY_EVENT, attachTransfers, resetTransfer, setTransfer, transferEta, transferRate, } from './js/transfer.js';

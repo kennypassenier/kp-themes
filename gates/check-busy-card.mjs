@@ -48,6 +48,7 @@ export const CARD = [
     'js/thread.js',
     'js/master-detail.js',
     'js/notices.js',
+    'js/feed.js',
     'js/runs.js',
     'js/dated-options.js',
     'js/viewer.js',

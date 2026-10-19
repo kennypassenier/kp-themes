@@ -265,6 +265,8 @@ export const NEEDS = [
     // The question card's region [kpadopt5-ops]; the cards are made with askQuestion().
     { name: 'question-card', when: '[data-kp-questions]', load: () => import('./question-card.js'), attach: (m, root) => [m.attachQuestions(root)] },
     // The notification centre [kpadopt5-ops].
+    // The activity feed [gap-activity-feed-1019]: rows with a state mark, an actor chip and the ticking time, grouped by day.
+    { name: 'feed', when: '[data-kp-feed]', load: () => import('./feed.js'), attach: (m, root) => [m.attachFeeds(root)] },
     { name: 'notices', when: '[data-kp-notices]', load: () => import('./notices.js'), attach: (m, root) => [m.attachNotices(root)] },
     // The time and sentence parts [kpadopt5-time]: the weekday picker, the next-runs list, the snooze picker, the dated option picker, the sentence form, the slider and the unsaved-changes bar.
     { name: 'rating', when: '[data-kp-rating]', load: () => import('./rating.js'), attach: (m, root) => [m.attachRatings(root)] },
@@ -339,10 +341,10 @@ export const NEEDS = [
     { name: 'timefield', when: '[data-kp-time]', load: () => import('./timefield.js'), attach: (m, root) => [m.attachTimes(root)] },
     {
         // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the entity
-        // grid, the checklist, the notices, the gallery, the availability grid, the request inspector, the diff view and the operations page. The selector is
+        // grid, the checklist, the notices, the activity feed, the gallery, the availability grid, the request inspector, the diff view and the operations page. The selector is
         // `FOOTPRINT_HOSTS` of js/footprint.js.
         name: 'footprint',
-        when: '[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-diffview], .kp-ops',
+        when: '[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-diffview], .kp-ops',
         load: () => import('./footprint.js'),
         attach: (m, root) => [m.attachFootprints(root)],
     },

@@ -432,6 +432,7 @@ export {
     weekdaysOf,
 } from './js/weekdays.js';
 export { COMPARE, COMPARE_EVENT, attachCompares, compareKey, setCompare } from './js/compare.js';
+export { FEED, FEED_EARLIER, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_RELATIVE_MS, FEED_RETRY_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_TICK_MS, FEED_TIME_ZONE, attachFeeds, feedOf, setFeed } from './js/feed.js';
 export {
     NOTICES,
     NOTICES_END_QUIET_EVENT,
