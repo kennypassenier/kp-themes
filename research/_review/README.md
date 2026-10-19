@@ -158,6 +158,15 @@ instead of about 250 files. A change to a demo, its `update.json`, its `decided.
 component page is committed with the index regenerated: `node gates/generate-agenda-index.mjs` (Firefox starts only
 when the blocks moved). The commit gate refuses a stale index; a demo the index does not hold is read live.
 
+The Agenda's own code is one generated bundle as well: `catalogue/agenda-bundle/agenda.js` (esbuild's bundle of the
+module graph catalogue/agenda.html used to load as about 36 files, every `import()` resolved inside it so each module
+exists once) and `agenda-bundle/agenda.css` (the library sheets and the catalogue's, concatenated; the theme registers
+stay linked on their own). The page opens in 10 requests. A change to any module or sheet it reaches is committed with
+the bundle regenerated: `node gates/generate-agenda-bundle.mjs`; the commit gate refuses a stale one. A page that
+brings its own sheet (`catalogue-shell.js`, `flow.js`) skips it when the bundle's link says it holds it
+(`data-kp-bundled`). `node gates/measure-agenda-bundle.mjs <checkout before>` compares the Agenda's computed state
+with and without the bundle.
+
 A demo republished without a new round id is caught as well: every verdict
 carries the round it was given in and a fingerprint of the demo's page and
 of the scripts and sheets in its own folder (`progress.js`, `fingerprintOf`).

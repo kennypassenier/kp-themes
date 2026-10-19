@@ -19,6 +19,7 @@ import {
     JUDGEMENT_EVENT,
     JUDGEMENTS_KEY,
     loadJudgements,
+    readReviewNotes,
     registerReady,
     restoreVerdict,
     stateOf,
@@ -58,16 +59,9 @@ import { mountReviewDialog } from './review-dialog.js';
 /** @type {Record<string, Record<string, { rejected: string, change: string, commit?: string, given: string }>>} */
 let reviewNotes = {};
 /** Resolves once catalogue/review-notes.json is read (or found missing); never rejects. */
-const notesReady = (async () => {
-    try {
-        const response = await fetch(new URL('./review-notes.json', import.meta.url), { cache: 'no-cache' });
-        if (!response.ok) return;
-        const data = await response.json();
-        if (data && typeof data === 'object' && !Array.isArray(data)) reviewNotes = data;
-    } catch {
-        /* no notes */
-    }
-})();
+const notesReady = readReviewNotes().then((data) => {
+    if (data) reviewNotes = data;
+});
 
 /** The review note of a block in a theme, if Claude left one. */
 const reviewNoteOf = (key, theme) => reviewNotes[key]?.[theme] ?? null;

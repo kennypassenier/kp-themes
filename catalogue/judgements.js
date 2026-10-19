@@ -163,6 +163,29 @@ export const pixelsReopened = (
     return ['reopened', 'unstable'].includes(check?.state ?? '') && (!check?.from || check.from === commit);
 };
 
+/* --------------------------------------------------------- the review notes */
+
+/** @type {Promise<Record<string, any> | null> | null} */
+let notesRead = null;
+/**
+ * catalogue/review-notes.json, fetched once for every module that wants it (judging.js and open-pairs.js both did, and
+ * the Agenda loads both): the notes, or null when the file is missing or is not an object. Never rejects.
+ * @returns {Promise<Record<string, any> | null>}
+ */
+export function readReviewNotes() {
+    notesRead ??= (async () => {
+        try {
+            const response = await fetch(new URL('./review-notes.json', import.meta.url), { cache: 'no-cache' });
+            if (!response.ok) return null;
+            const data = await response.json();
+            return data && typeof data === 'object' && !Array.isArray(data) ? data : null;
+        } catch {
+            return null;
+        }
+    })();
+    return notesRead;
+}
+
 /* ------------------------------------------------------------ the register */
 
 let register = { hashVersion: HASH_VERSION, verdicts: {} };

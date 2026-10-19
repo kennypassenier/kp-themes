@@ -643,8 +643,8 @@
         "check:signature": "node gates/advice-signature.mjs",
         "gates": "npm run check:generated && npm run check:layers && npm run check:relative-colour && npm run check:pressed-state && npm run check:closure && npm run check:utilities && npm run check:min && npm run check:css-parse && npm run check:wrappers && npm run check:docs-private && npm run check:docs-runnable && npm run check:doc-quotes && npm run check:drift && npm run check:strings && npm run check:showcase && npm run check:site && npm run check:examples && npm run check:examples-wired && npm run check:ids && npm run check:catalogue && npm run check:demo-variants && npm run check:round && npm run check:verdicts && npm run check:rereview && npm run check:raised-plate && npm run check:busy-card && npm run check:hooks && npm run check:tags && npm run check:register-coverage && npm run check:fonts && npm run check:inline-styles && npm run check:tokens-tar && npm run check:manifest && npm run check:types && npm run check:types:consumer && npm test",
         "generate": "node gates/generate-themes.mjs",
-        "generate:all": "npm run generate && npm run generate:code-version && npm run generate:agenda-index && npm run generate:fonts-css && npm run generate:utilities && npm run generate:bundle && npm run generate:min && npm run generate:examples && npm run generate:portraits && npm run generate:showcase && npm run generate:site && node gates/generate-compare.mjs && npm run generate:types && node gates/compliance.mjs && npm run checksums && prettier --write . >/dev/null",
-        "check:generated": "node gates/generate-themes.mjs --check && node gates/generate-code-version.mjs --check && node gates/generate-agenda-index.mjs --check",
+        "generate:all": "npm run generate && npm run generate:code-version && npm run generate:agenda-index && npm run generate:agenda-bundle && npm run generate:fonts-css && npm run generate:utilities && npm run generate:bundle && npm run generate:min && npm run generate:examples && npm run generate:portraits && npm run generate:showcase && npm run generate:site && node gates/generate-compare.mjs && npm run generate:types && node gates/compliance.mjs && npm run checksums && prettier --write . >/dev/null",
+        "check:generated": "node gates/generate-themes.mjs --check && node gates/generate-code-version.mjs --check && node gates/generate-agenda-index.mjs --check && node gates/generate-agenda-bundle.mjs --check",
         "test": "node --test gates/",
         "check:invariants": "node gates/check-invariants.mjs",
         "check:compliance": "node gates/compliance.mjs --check",
@@ -707,6 +707,7 @@
         "check:round": "node gates/check-round.mjs",
         "generate:code-version": "node gates/generate-code-version.mjs",
         "generate:agenda-index": "node gates/generate-agenda-index.mjs",
+        "generate:agenda-bundle": "node gates/generate-agenda-bundle.mjs",
         "release:preflight": "node gates/release-preflight.mjs",
         "check:demo-variants": "node gates/check-demo-variants.mjs"
     },

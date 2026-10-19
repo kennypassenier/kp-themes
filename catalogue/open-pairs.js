@@ -14,21 +14,14 @@ import { COMPONENT_PAGES } from './pages.js';
 import { readPage } from './review.js';
 import { readBlocks } from './block-hash.js';
 import { ENGINE } from './engine.js';
-import { loadJudgements, registerReady, stateOf, verdictOf } from './judgements.js';
+import { loadJudgements, readReviewNotes, registerReady, stateOf, verdictOf } from './judgements.js';
 import { indexedBlocks, pageUsesIndex } from './agenda-index.js';
 
 /** @type {Record<string, Record<string, unknown>>} */
 let reviewNotes = {};
-const notesReady = (async () => {
-    try {
-        const response = await fetch(new URL('./review-notes.json', import.meta.url), { cache: 'no-cache' });
-        if (!response.ok) return;
-        const data = await response.json();
-        if (data && typeof data === 'object' && !Array.isArray(data)) reviewNotes = data;
-    } catch {
-        /* no notes */
-    }
-})();
+const notesReady = readReviewNotes().then((data) => {
+    if (data) reviewNotes = data;
+});
 
 /**
  * @typedef {object} GatheredBlock

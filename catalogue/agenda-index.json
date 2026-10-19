@@ -641,7 +641,7 @@
     },
     "pixels": { "checks": {}, "commit": "5f5a51298f5297d819b1c9e0604f191b6f7125bb", "checked": "2026-10-16T22:01:29.552Z" },
     "blocks": {
-        "inputs": "28f16449194a88ac",
+        "inputs": "97833d54c824aac2",
         "engine": "firefox",
         "list": [
             ["button--variants", "d2cf426f854b95db17a9312e313f30f4965b71e28076519a75b74e713a80a29c", null, "Buttons › Variants"],

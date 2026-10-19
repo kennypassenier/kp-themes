@@ -10,11 +10,7 @@
              sheets and writes the register of formal (the theme it opens in) and of the stored theme; the theme menu
              fetches any other on the switch (js/lazy-register.js, attached by catalogue-shell.js), and laying the
              blocks out fetches them all (agenda.js). -->
-        <link rel="stylesheet" href="../css/fonts.css" />
-        <link rel="stylesheet" href="../css/themes.css" />
-        <link rel="stylesheet" href="../css/components.css" />
-        <link rel="stylesheet" href="../css/layout.css" />
-        <link rel="stylesheet" href="../css/utilities.css" />
+        <link rel="stylesheet" href="./agenda-bundle/agenda.css" data-rv-progress-css data-kp-bundled="catalogue flow" />
         <script>
             (function () {
                 var names = ['formal'];
@@ -25,8 +21,6 @@
                 for (var i = 0; i < names.length; i++) document.write('<link rel="stylesheet" href="../css/' + names[i] + '-register.css" />');
             })();
         </script>
-        <link rel="stylesheet" href="./catalogue.css" />
-        <link rel="stylesheet" href="./agenda.css" />
     </head>
     <body>
         <a class="kp-skip-link" href="#main">Skip to content</a>
@@ -109,12 +103,7 @@
             </details>
         </main>
 
-        <script type="module" src="../js/auto.js"></script>
         <script src="./boot-check.js"></script>
-        <script type="module" src="./catalogue-shell.js"></script>
-        <script type="module" src="./agenda.js"></script>
-        <script type="module" src="./play.js"></script>
-        <script type="module" src="./checklist.js"></script>
-        <script type="module" src="./shortcuts.js"></script>
+        <script type="module" src="./agenda-bundle/agenda.js"></script>
     </body>
 </html>

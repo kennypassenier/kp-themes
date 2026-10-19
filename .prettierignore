@@ -22,6 +22,9 @@ showcase/themes/
 # source permanently at odds.
 dist/
 
+# The Agenda's bundle, written by gates/generate-agenda-bundle.mjs (esbuild's output and the concatenated sheets).
+catalogue/agenda-bundle/
+
 # The documentation site, written by gates/generate-site.mjs. Its shape
 # is the generator's; reformatting it would put the file and its source
 # permanently at odds.

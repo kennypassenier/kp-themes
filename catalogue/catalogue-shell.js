@@ -105,6 +105,8 @@ function buildNavigation() {
  */
 function mountStyles() {
     const href = new URL('catalogue/catalogue.css', ROOT).href;
+    // The Agenda carries this sheet inside its own (gates/generate-agenda-bundle.mjs) and says so on that link.
+    if (document.querySelector('link[data-kp-bundled~="catalogue"]')) return;
     if ([...document.styleSheets].some((sheet) => sheet.href === href)) return;
     if (document.querySelector(`link[rel='stylesheet'][href='${href}']`)) return;
     const link = document.createElement('link');

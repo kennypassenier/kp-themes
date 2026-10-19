@@ -342,8 +342,11 @@ function main() {
     // to reach the next page from it (Kenny, 2026-09-13: "die sidenav moet op
     // elke pagina terugkomen, anders is er ook niks aan").
     // The Agenda loads the shell without the blocks' demo scripts (catalogue-shell.js) and brings those when it lays
-    // blocks out.
-    const shellless = reviewPages.filter((page) => !/src="[^"]*catalogue(?:-shell)?\.js"/.test(readFileSync(new URL(page, root), 'utf8'))).sort();
+    // blocks out; it loads them inside its own bundle (catalogue/agenda-bundle/agenda.js, gates/generate-agenda-bundle.mjs),
+    // which starts with the shell.
+    const shellless = reviewPages
+        .filter((page) => !/src="[^"]*(?:catalogue(?:-shell)?|agenda-bundle\/agenda)\.js"/.test(readFileSync(new URL(page, root), 'utf8')))
+        .sort();
     if (shellless.length) {
         console.error(
             `${shellless.length} review page(s) do not load catalogue/catalogue.js, so they have no navigation:\n  ` + shellless.join('\n  '),

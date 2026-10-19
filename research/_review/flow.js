@@ -89,6 +89,8 @@ export function onOptions(/** @type {() => void} */ listener) {
 /** The stylesheet of the flow's parts, once. */
 export function loadStyle() {
     const href = new URL('flow.css', import.meta.url).href;
+    // The Agenda carries this sheet inside its own (gates/generate-agenda-bundle.mjs) and says so on that link.
+    if (document.querySelector('link[data-kp-bundled~="flow"]')) return;
     if ([...document.querySelectorAll('link[rel="stylesheet"]')].some((l) => /** @type {HTMLLinkElement} */ (l).href === href)) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet';
