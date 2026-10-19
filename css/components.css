@@ -13319,7 +13319,7 @@
 
     .kp-heat {
         display: grid;
-        grid-template-columns: clamp(4.5rem, 26%, var(--kp-heat-label, 8rem)) minmax(0, 1fr);
+        grid-template-columns: minmax(min-content, clamp(4.5rem, 26%, var(--kp-heat-label, 8rem))) minmax(0, 1fr);
         column-gap: var(--kp-heat-gap-x, 0.75rem);
         row-gap: var(--kp-heat-gap-y, 6px);
         align-content: start;
@@ -13384,11 +13384,13 @@
         outline-offset: 1px;
     }
 
-    /* A label is never cut with an ellipsis: a long name wraps onto a second line (the row grows to hold it) and only
-     * a word longer than the label column breaks, at the column's edge. */
+    /* A label is never cut with an ellipsis and never broken inside a word [heat-deplist-1019]: a long name wraps onto a
+     * second line at its spaces (the row grows to hold it), and the label column is at least as wide as the longest
+     * word of any label (the cells give way), whatever the page's width. */
     .kp-heat__label-text {
-        min-inline-size: 0;
-        overflow-wrap: break-word;
+        min-inline-size: min-content;
+        overflow-wrap: normal;
+        word-break: normal;
         white-space: normal;
     }
 
@@ -13415,9 +13417,10 @@
         border-block-start: 1px solid var(--border);
     }
 
-    /* The column axis: one name per few columns; the others stay in their
- * column, in no colour, so every name keeps its own column and a screen
- * reader still has every header. */
+    /* The column axis: one name per few columns; the others keep their header cell (a screen reader still has every
+ * header) but draw no text, so there is nothing for the eye or a measuring script to find under a neighbour's name
+ * [heat-deplist-1019]. The script writes a minor header's name into its aria-label and leaves the cell empty; a page's own
+ * markup with the text in it is given no size here. */
     .kp-heat__col {
         display: flex;
         justify-content: center;
@@ -13432,22 +13435,24 @@
         justify-content: flex-end;
     }
 
-    .kp-heat__col[data-kp-minor] {
+    .kp-heat .kp-heat__col[data-kp-minor] {
         overflow: hidden;
-        color: transparent;
+        font-size: 0;
         user-select: none;
     }
 
     /* On a phone every second name goes: thirty columns are 8 px each there. */
     @media (max-width: 40rem) {
-        .kp-heat__col:not([data-kp-minor], :last-child):nth-child(6n + 4) {
-            color: transparent;
+        .kp-heat .kp-heat__col:not([data-kp-minor], [data-kp-picked], :last-child):nth-child(6n + 4) {
+            overflow: hidden;
+            font-size: 0;
             user-select: none;
         }
     }
 
-    .kp-heat__col[data-kp-picked] {
+    .kp-heat .kp-heat__col[data-kp-picked] {
         color: var(--foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
         font-weight: 700;
     }
 
@@ -29207,8 +29212,13 @@
         color: var(--muted-foreground);
     }
 
+    /* One status column [heat-deplist-1019]: every badge fills the column's width (the widest word's), its word centred,
+     * so Running, Stopped and Unknown start and end on the same two edges. */
     .kp-deplist__state {
-        justify-self: start;
+        justify-self: stretch;
+        justify-content: center;
+        text-align: center;
+        white-space: nowrap;
     }
 
     .kp-deplist__row--cycle {
@@ -29272,8 +29282,11 @@
             color: var(--muted-foreground);
         }
 
+        /* One column of the narrow list's states: the same width for each, a word's own width at the least. */
         .kp-deplist__row > .kp-deplist__state {
             grid-column: 2;
+            justify-self: start;
+            min-inline-size: var(--kp-deplist-state, 6rem);
         }
     }
 }

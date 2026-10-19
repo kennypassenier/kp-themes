@@ -37422,17 +37422,21 @@ function setHeat(el16, spec) {
   }
   const column = (key, text, minor) => {
     const head = make11(doc, "span", "kp-heat__col", { role: "columnheader", "data-col-key": key });
+    const isPicked = picked != null && key === picked;
     if (minor) head.setAttribute("data-kp-minor", "");
-    if (picked != null && key === picked) head.setAttribute("data-kp-picked", "");
-    head.textContent = text;
+    if (isPicked) head.setAttribute("data-kp-picked", "");
+    if (minor && !isPicked && text) head.setAttribute("aria-label", text);
+    else head.textContent = text;
     return head;
   };
   const axis = make11(doc, "div", "kp-heat__row kp-heat__axis", { role: "row" });
   axis.append(make11(doc, "span", "kp-heat__label", { role: "columnheader", "aria-hidden": "true" }));
   const heads = make11(doc, "div", "kp-heat__cells", { role: "none" });
-  columns2.forEach(
-    (c, i) => heads.append(column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !(i % every === 0 || i === columns2.length - 1)))
-  );
+  const open4 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
+  const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
+  const before = open4[open4.length - 2];
+  if (every > 1 && before !== void 0 && before === open4[open4.length - 1] - 1) named.delete(before);
+  columns2.forEach((c, i) => heads.append(column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i))));
   axis.append(heads);
   let r = -1;
   const rowNode = (row, summary) => {
