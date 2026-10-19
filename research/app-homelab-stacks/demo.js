@@ -80,6 +80,10 @@ function h(tag, attrs, ...kids) {
     return el;
 }
 const esc = (/** @type {string} */ s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+/** One shared hover card for the page: each section adds a filler that answers for its own anchors (undefined = not mine). @type {((anchor: HTMLElement) => any)[]} */
+const hoverFills = [];
+attachHoverCards(document, { selector: '[data-kp-hovercard]', fill: (anchor) => { for (const f of hoverFills) { const r = f(anchor); if (r !== undefined) return r; } return null; } });
+
 /** A hover card's facts on the form grid: a title, then label | value rows that share their edges. @param {string} title @param {[string, string, string?][]} rows */
 function facts(title, rows) {
     const dl = h('dl', { class: 'kp-kv' }, ...rows.map(([k, v, cls]) => h('div', { class: 'kp-kv__row' }, h('dt', null, k), h('dd', cls ? { class: cls } : null, v))));
@@ -473,9 +477,9 @@ if (byId('apps-launcher-component')) {
         if (all5) values = null;
         if (data === 'ready') drawBody();
     });
-    attachHoverCards(document, {
-        selector: '[data-sk-app]',
-        fill: (anchor) => {
+    hoverFills.push((anchor) => {
+        if (!anchor.matches('[data-sk-app]')) return undefined;
+        {
             const [sn, an] = (anchor.dataset.skApp ?? '/').split('/');
             const s = byName(sn);
             const a = s.apps.find((x) => x.name === an);
@@ -483,7 +487,7 @@ if (byId('apps-launcher-component')) {
             const w = wordOf(a, s);
             const line = w === 'failing' || w === 'down' ? `${w} since ${stamp(a.since ?? NOW)}, ${a.why}` : w === 'deploying' ? `${a.why} since ${timeOf(a.since ?? NOW)}` : w === 'not watched' ? 'No probe is configured for this app.' : `answers: ${a.health}`;
             return facts(an, [['Stack', sn], ['Now', line], ['Image', a.image, 'kp-mono']]);
-        },
+        }
     });
     stateButtons('data-sk-apps-show', (v) => {
         const next = v === 'trouble' ? ['failing', 'down'] : v === 'unwatched' ? ['not watched'] : null;
@@ -1268,7 +1272,7 @@ if (byId('map-panel-component')) {
     const stateOf = (/** @type {string} */ n) => /** @type {'running' | 'stopped'} */ (byName(n).state === 'parked' ? 'stopped' : 'running');
     const affected = (/** @type {string} */ n) => [...new Set(usedBy(n).map((x) => x.other))];
     const drawNodes = () => {
-        nodes.innerHTML = S.MAP_STACKS.map((n) => `<button type="button" class="kp-button sk-node" aria-pressed="${n === picked}" data-sk-node="${n}"${mode === 'blast' && affected(picked).includes(n) ? ' data-ring' : ''}>${mark(n)}<span><b>${n}</b><br /><span class="kp-timestamp">CT ${byName(n).ct}</span></span></button>`).join('');
+        nodes.innerHTML = S.MAP_STACKS.map((n) => `<button type="button" class="kp-button sk-node" aria-pressed="${n === picked}" data-kp-hovercard data-sk-node="${n}"${mode === 'blast' && affected(picked).includes(n) ? ' data-ring' : ''}>${mark(n)}<span><b>${n}</b><br /><span class="kp-timestamp">CT ${byName(n).ct}</span></span></button>`).join('');
         attachIdmarks(nodes);
     };
     const drawPanel = () => {
@@ -1300,13 +1304,13 @@ if (byId('map-panel-component')) {
             /** @type {HTMLElement | null} */ (nodes.querySelector(`[data-sk-node="${picked}"]`))?.focus();
         }
     });
-    attachHoverCards(document, {
-        selector: '[data-sk-node]',
-        fill: (anchor) => {
+    hoverFills.push((anchor) => {
+        if (!anchor.matches('[data-sk-node]')) return undefined;
+        {
             const n = anchor.dataset.skNode ?? '';
             const s = byName(n);
             return facts(n, [['Container', `CT ${s.ct}`], ['Image', s.apps[0].image, 'kp-mono'], ['CPU', `${Math.round(s.cpu * 1000) / 10} %`], ['Traffic', `${Math.round((S.TRAFFIC[/** @type {keyof typeof S.TRAFFIC} */ (n)] ?? 0) * 100)} % of the busiest`]]);
-        },
+        }
     });
     stateButtons('data-sk-panel-mode', (v) => ((mode = v), draw()));
     stateButtons('data-sk-panel-data', (v) => ((data = v), drawPanel()));
