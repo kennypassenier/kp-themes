@@ -11,6 +11,11 @@
 import { expect, test } from '@playwright/test';
 import { measured } from './paint.mjs';
 
+// This file reads motion itself (a count in flight, a pointer that is followed): the suite's default is
+// reduced motion (playwright.config.mjs, made real by 9edea86a), and the one test that wants reduced
+// motion asks for it itself.
+test.use({ contextOptions: { reducedMotion: 'no-preference' } });
+
 const px = (page) => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--kp-px').trim());
 
 test('the bus writes the pointer position, once the theme asks for it [scope-16]', { tag: ['@component:page-effects'] }, async ({ page }) => {

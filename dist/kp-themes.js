@@ -61325,6 +61325,7 @@ function ensureParts4(root) {
   );
   follow3.type = "button";
   follow3.setAttribute("data-kp-follow-toggle", id);
+  follow3.setAttribute("aria-pressed", "false");
   follow3.textContent = s2.newpillPause;
   const wrap = (
     /** @type {HTMLButtonElement} */

@@ -551,6 +551,9 @@ for (const theme of FLASH_THEMES) {
         { tag: ['@component:alarm', `@theme:${theme}`] },
         async ({ page, browser }) => {
             test.setTimeout(180_000);
+            // The flash rate is read from the motion itself, so this test opts out of the
+            // suite's default reduced motion (contextOptions, 9edea86a made that default real).
+            await page.emulateMedia({ reducedMotion: 'no-preference' });
             await page.setViewportSize({ width: 1024, height: 768 });
             await open(page);
             await wear(page, theme);

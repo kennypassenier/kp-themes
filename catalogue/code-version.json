@@ -65,7 +65,7 @@
             "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
         },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
-        "js/logviewer.js": { "digest": "8413cc6db754146a", "when": "[data-kp-logviewer]" },
+        "js/logviewer.js": { "digest": "c209f67ede3a2afd", "when": "[data-kp-logviewer]" },
         "js/master-detail.js": { "digest": "bba7442ffce0a3e5", "when": "[data-kp-master-detail]" },
         "js/menu-button.js": { "digest": "6363f9aecedcbf05", "when": "[data-kp-menu-button]" },
         "js/motion.js": {

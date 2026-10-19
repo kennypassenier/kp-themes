@@ -303,6 +303,9 @@ test.describe(
                             return {
                                 block: b.closest('.cat-block')?.id,
                                 retry: b.matches('[data-kp-datatable-failed] [data-kp-datatable-retry]'),
+                                // The failed plate that stands as the VCR-stop tube (t56-q, approved 2026-10-18): a
+                                // dark card with its own coral frame on its buttons, not a solid red plate.
+                                tube: alert.matches('.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure'),
                                 text: b.textContent?.trim(),
                                 frame: rgb(getComputedStyle(b).borderTopColor),
                                 own,
@@ -317,7 +320,18 @@ test.describe(
             expect([...new Set(read.map((r) => r.block))].sort()).toEqual(['datatable-states', 'empty']);
             expect([...new Set(read.filter((r) => r.retry).map((r) => r.block))]).toEqual(['datatable-states']);
             for (const r of read) {
-                // The data table's retry in its failed slot included: one frame for every button.
+                if (r.tube) {
+                    // The data table's failed slot is the package's failed plate since pkg-states-1019
+                    // ([data-kp-datatable-failed].kp-stateplate--error): synthwave draws it as the tube, a dark
+                    // card ground, and its buttons keep the theme's framed key with the frame in the failure's
+                    // coral (the plate colour of a solid red alert), not the near-white of a key on a solid plate.
+                    expect(
+                        r.frame.map((c) => Math.round(c * 255)),
+                        `${r.block} ${r.text}: the failure's coral frame on the tube plate`,
+                    ).toEqual([254, 67, 80]);
+                    continue;
+                }
+                // Every button on a solid red alert is the dark key, the plain Try again of #empty included.
                 expect(
                     r.frame.map((c) => Math.round(c * 255)),
                     `${r.block} ${r.text}: the near-white frame of the dark key`,

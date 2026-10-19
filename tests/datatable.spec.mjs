@@ -109,7 +109,10 @@ for (const channel of CHANNELS) {
             // td { display: flex }` rule was deleted from css/components.css
             // and both channels went red here; restored, both pass.
             const cell = table.locator('tbody tr:visible td').nth(1);
-            await expect(cell).toHaveCSS('display', 'flex');
+            // A card's cell is a subgrid of the row's label and value tracks, so every label starts on one
+            // edge (backupstwo-1019, Kenny 2026-10-19 17:20: "in the card layout a cell's label always starts
+            // on its track"); it was a flex row before. `data-kp-cards="spread"` keeps the flex row.
+            await expect(cell).toHaveCSS('display', 'grid');
 
             // And the column name travels with the cell, which is what the
             // stylesheet's ::before shows: a value with no question
@@ -782,6 +785,9 @@ test.describe('datatable — a group folds as its open played backwards', { tag:
 
     /** @param {import('@playwright/test').Page} page @param {string} theme */
     const ready = async (page, theme) => {
+        // The fold is read as motion: the suite's default is reduced motion (9edea86a made it real), under
+        // which a group snaps and there is no glide to measure.
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.goto('/catalogue/table.html');
         await waitForJudging(page);
         await page.evaluate((name) => {

@@ -10826,7 +10826,7 @@ draw('ready');
     {
         id: 'feed',
         title: 'Activity feed',
-        group: 'Showing data',
+        group: 'Data',
         classes: ['kp-feed'],
         exports: [],
         aliases: ['activity', 'history', 'earlier', 'load-earlier', 'day-heading'],

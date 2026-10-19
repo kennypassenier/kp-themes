@@ -622,7 +622,11 @@ test(
 
         const linked = page.locator('[id="navigation--bar-long"]');
         await expect(linked).toBeVisible();
-        await verdict('navigation--bar-long', 'approved').click();
+        // The page is 210 000 px tall with the register empty, and the address leaves it scrolled
+        // ~108 000 px down among hundreds of running skeleton animations: a frame takes ~90 ms there and
+        // Playwright's two-identical-frames stability check never passes (180 s, 11.1.0 suite), though
+        // the button does not move. The handler is what is under test, so the verdicts are dispatched.
+        await verdict('navigation--bar-long', 'approved').dispatchEvent('click');
         await expect(linked).toHaveAttribute('data-cat-state', 'approved');
         await expect(linked).toBeHidden();
         // The address no longer pins it, so a reload does not bring it back.
@@ -630,7 +634,7 @@ test(
 
         const noted = page.locator('[id="navigation--bar-search"]');
         await expect(noted).toHaveAttribute('data-cat-review-note', '');
-        await verdict('navigation--bar-search', 'approved').click();
+        await verdict('navigation--bar-search', 'approved').dispatchEvent('click');
         await expect(noted).toBeHidden();
 
         // A rejection releases the pin as well: a link followed on the page itself.
@@ -638,7 +642,7 @@ test(
         const mega = page.locator('[id="navigation--mega-menu"]');
         await expect(mega).toBeVisible();
         await page.locator('[id="navigation--mega-menu"] > .cat-judge textarea').fill('The panel covers the bar');
-        await verdict('navigation--mega-menu', 'rejected').click();
+        await verdict('navigation--mega-menu', 'rejected').dispatchEvent('click');
         await expect(mega).toHaveAttribute('data-cat-state', 'rejected');
         await expect(mega).toBeHidden();
 

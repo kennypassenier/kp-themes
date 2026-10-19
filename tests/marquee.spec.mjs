@@ -111,6 +111,8 @@ test.describe('the marquee [M1]', { tag: ['@component:media'] }, () => {
     });
 
     test('the duration is a knob a consumer may answer without leaving the theme', async ({ page }) => {
+        // The pass is read as motion, so motion is asked for: the suite's default is reduced motion (9edea86a).
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
         await open(page, BAND);
         await page.evaluate(async () => {
             const band = document.querySelector('#probe [data-kp-marquee]');
@@ -223,6 +225,8 @@ test.describe('the band on a page [M1, G14]', { tag: ['@component:media', '@comp
     });
 
     test('the five props are five knobs, and the browser shows all five [M1, KT6]', async ({ page }) => {
+        // The pass is read as motion, so motion is asked for: the suite's default is reduced motion (9edea86a).
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
         // The React band is mounted after js/auto.js has run, so the module
         // is asked once more; it skips a band it has already built.
         await page.goto('/tests/fixtures/components.html');
@@ -274,6 +278,8 @@ test.describe('the band on a page [M1, G14]', { tag: ['@component:media', '@comp
     });
 
     test('the framework-free twin of that band is the same band [AR7]', async ({ page }) => {
+        // The pass is read as motion, so motion is asked for: the suite's default is reduced motion (9edea86a).
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.goto('/tests/fixtures/components.html');
         const plain = page.locator('[data-test="plain-marquee"]');
         // Written the way a server writes it, and the module has already

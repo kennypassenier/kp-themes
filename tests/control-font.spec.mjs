@@ -91,6 +91,11 @@ for (const { href } of REVIEW_PAGES) {
                                 ),
                             ]
                                 .filter((el) => !el.closest('.cat-judge, .cat-approval, .cat-feedback-field, .cat-look'))
+                                // A control that is never drawn has no font to see: a hidden input (the date
+                                // picker's value) and a screen-reader-only aria-hidden mirror input (a page's own
+                                // form post, app-homelab-settings) show no glyph.
+                                .filter((el) => !(el instanceof HTMLInputElement && el.type === 'hidden'))
+                                .filter((el) => !el.matches('.kp-sr-only[aria-hidden="true"]'))
                                 // A research demo's own mock controls are the demo's, not the package's.
                                 .filter((el) => !/(^|\s)demo-/.test(el.closest('[class]')?.className ?? ''))
                                 // On a research page, a bare button with no kp- class is the page's own (the all-themes

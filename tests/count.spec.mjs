@@ -15,6 +15,11 @@ import { expect, test } from '@playwright/test';
 
 const PAGE = '/tests/fixtures/count.html';
 
+// This file reads motion itself (a count in flight, a pointer that is followed): the suite's default is
+// reduced motion (playwright.config.mjs, made real by 9edea86a), and the one test that wants reduced
+// motion asks for it itself.
+test.use({ contextOptions: { reducedMotion: 'no-preference' } });
+
 /** @param {import('@playwright/test').Page} page */
 const settled = async (page) => {
     await page.waitForSelector('[data-attached]');
