@@ -1332,6 +1332,42 @@
  * @property {string} consoleKeyFocusReason  Why the focus key does nothing now (js/console.js) [kpadopt6]
  * @property {(n: number) => string} qrShowAllChars  The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
  * @property {string} qrShowLess  The button that folds it again (js/qr.js) [kpadopt6]
+ * @property {string} diffLabel  The diff view's accessible name when it has none (js/diff.js) [gap-diff-view]
+ * @property {(files: number) => string} diffSummary  The bar's count of files: "3 files changed" (js/diff.js) [gap-diff-view]
+ * @property {string} diffExpandAll  The button that opens every file (js/diff.js) [gap-diff-view]
+ * @property {string} diffCollapseAll  The button that closes every file (js/diff.js) [gap-diff-view]
+ * @property {string} diffAllOpen  Why Expand all is off: every file is already open (js/diff.js) [gap-diff-view]
+ * @property {string} diffAllClosed  Why Collapse all is off: every file is already closed (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusAdded  The badge of a new file (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusRemoved  The badge of a deleted file (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusModified  The badge of a changed file (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusRenamed  The badge of a moved file (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusBinary  The badge of a file that is not text (js/diff.js) [gap-diff-view]
+ * @property {(from: string) => string} diffRenamedFrom  A renamed file's path for a screen reader: "renamed from old/path" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffAddedCount  The +N count for a screen reader: "3 lines added" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffRemovedCount  The -M count for a screen reader: "1 line removed" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchanged  The folded context row: "12 unchanged lines" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchangedName  That row's accessible name: "Show 12 unchanged lines" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchangedHide  The same row once opened: "Hide 12 unchanged lines" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchangedShown  Said politely after a fold opened: "12 unchanged lines shown" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchangedHidden  Said politely after a fold closed: "12 unchanged lines hidden" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffShowMore  The row that shows the lines past the file's limit: "Show the other 1240 lines" (js/diff.js) [gap-diff-view]
+ * @property {string} diffBinaryTitle  The heading of a file that is not text (js/diff.js) [gap-diff-view]
+ * @property {string} diffBinaryText  Its sentence (js/diff.js) [gap-diff-view]
+ * @property {string} diffNoLines  A file with no line changes (a rename or a mode change) (js/diff.js) [gap-diff-view]
+ * @property {(path: string) => string} diffChangesIn  A file's body name: "Changes in stacks/media/compose.yml" (js/diff.js) [gap-diff-view]
+ * @property {string} diffCopyPath  The Copy path button (js/diff.js) [gap-diff-view]
+ * @property {string} diffCopied  Its result word (js/diff.js) [gap-diff-view]
+ * @property {string} diffCopyFailed  Its refusal word (js/diff.js) [gap-diff-view]
+ * @property {string} diffLoading  The words under the busy card while the changes are read (js/diff.js) [gap-diff-view]
+ * @property {(files: number, added: number, removed: number) => string} diffReady  Said politely when the changes are drawn (js/diff.js) [gap-diff-view]
+ * @property {string} diffEmptyTitle  The empty plate's heading (js/diff.js) [gap-diff-view]
+ * @property {string} diffEmptyText  Its sentence (js/diff.js) [gap-diff-view]
+ * @property {(name: string) => string} diffEmptySame  Its sentence when one name was compared: "compose.yml is the same on both sides." (js/diff.js) [gap-diff-view]
+ * @property {(from: string, to: string) => string} diffEmptyBetween  Its sentence when two names were compared (js/diff.js) [gap-diff-view]
+ * @property {string} diffFailedTitle  The failed plate's heading (js/diff.js) [gap-diff-view]
+ * @property {string} diffFailedText  Its sentence (js/diff.js) [gap-diff-view]
+ * @property {string} diffRetry  The failed plate's button (js/diff.js) [gap-diff-view]
  * @property {(item: string) => string} ratingGroupName  The star row's name for a screen reader: "Rating for Lasagne" (js/rating.js) [kpadopt6]
  * @property {string} ratingGroupNameBare  The same when the row names no item [kpadopt6]
  * @property {(n: number, max: number) => string} ratingStarName  One star's name: "4 of 5" [kpadopt6]
@@ -3008,6 +3044,43 @@ export const DEFAULT_STRINGS = Object.freeze({
     // Qr (js/qr.js) [kpadopt6].
     qrShowAllChars: (n) => `Show all ${n} characters`,
     qrShowLess: 'Show less',
+    // The diff view (js/diff.js) [gap-diff-view].
+    diffLabel: 'Changes',
+    diffSummary: (files) => `${files} ${files === 1 ? 'file' : 'files'} changed`,
+    diffExpandAll: 'Expand all',
+    diffCollapseAll: 'Collapse all',
+    diffAllOpen: 'Every file is already open.',
+    diffAllClosed: 'Every file is already closed.',
+    diffStatusAdded: 'Added',
+    diffStatusRemoved: 'Removed',
+    diffStatusModified: 'Modified',
+    diffStatusRenamed: 'Renamed',
+    diffStatusBinary: 'Binary',
+    diffRenamedFrom: (from) => `renamed from ${from}`,
+    diffAddedCount: (n) => `${n} ${n === 1 ? 'line' : 'lines'} added`,
+    diffRemovedCount: (n) => `${n} ${n === 1 ? 'line' : 'lines'} removed`,
+    diffUnchanged: (n) => `${n} unchanged ${n === 1 ? 'line' : 'lines'}`,
+    diffUnchangedName: (n) => `Show ${n} unchanged ${n === 1 ? 'line' : 'lines'}`,
+    diffUnchangedHide: (n) => `Hide ${n} unchanged ${n === 1 ? 'line' : 'lines'}`,
+    diffUnchangedShown: (n) => `${n} unchanged ${n === 1 ? 'line' : 'lines'} shown`,
+    diffUnchangedHidden: (n) => `${n} unchanged ${n === 1 ? 'line' : 'lines'} hidden`,
+    diffShowMore: (n) => `Show the other ${n} ${n === 1 ? 'line' : 'lines'}`,
+    diffBinaryTitle: 'Binary file, not shown',
+    diffBinaryText: 'Its contents cannot be shown as text.',
+    diffNoLines: 'No line changes in this file.',
+    diffChangesIn: (path) => `Changes in ${path}`,
+    diffCopyPath: 'Copy path',
+    diffCopied: 'Copied',
+    diffCopyFailed: 'Not copied',
+    diffLoading: 'Reading the changes…',
+    diffReady: (files, added, removed) => `${files} ${files === 1 ? 'file' : 'files'} changed, ${added} added, ${removed} removed`,
+    diffEmptyTitle: 'No changes',
+    diffEmptyText: 'Both sides are the same.',
+    diffEmptySame: (name) => `${name} is the same on both sides.`,
+    diffEmptyBetween: (from, to) => `${from} and ${to} are the same.`,
+    diffFailedTitle: 'Could not read the changes',
+    diffFailedText: 'The comparison did not finish. Nothing was changed.',
+    diffRetry: 'Try again',
     // The star rating (js/rating.js) [kpadopt6].
     ratingGroupName: (item) => `Rating for ${item}`,
     ratingGroupNameBare: 'Rating',

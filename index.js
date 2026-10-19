@@ -921,3 +921,25 @@ export {
 /** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
 /** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
 /** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */
+// A diff of several files with folded context and changed words [gap-diff-view].
+export {
+    DIFF,
+    DIFF_CONTEXT,
+    DIFF_COPY_EVENT,
+    DIFF_EXPAND_EVENT,
+    DIFF_FOLD_MIN,
+    DIFF_MAX_LINES,
+    DIFF_RETRY_EVENT,
+    DIFF_STATUSES,
+    DIFF_TOGGLE_EVENT,
+    DIFF_WORD_LIMIT,
+    DIFF_WORD_SHARE,
+    attachDiffs,
+    diffWords,
+    foldContext,
+    setDiff,
+} from './js/diff.js';
+/** @typedef {import('./js/diff.js').DiffFile} DiffFile */
+/** @typedef {import('./js/diff.js').DiffHunk} DiffHunk */
+/** @typedef {import('./js/diff.js').DiffLine} DiffLine */
+/** @typedef {import('./js/diff.js').DiffSpec} DiffSpec */

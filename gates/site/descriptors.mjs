@@ -1359,7 +1359,7 @@ wrap.addEventListener('kp-datatable-sort', (event) => {
         id: 'diff',
         title: 'Diff',
         group: 'Data',
-        classes: ['kp-diff'],
+        classes: ['kp-diff', 'kp-diffview'],
         exports: ['Diff'],
         intro: 'Two versions of a text side by side in one column: a line number, a sign, and the line. The sign has a column of its own, so the difference survives printing, high contrast, and a reader who cannot tell green from red.',
         whenToUse:
@@ -1391,8 +1391,54 @@ wrap.addEventListener('kp-datatable-sort', (event) => {
 </pre>
 `,
             },
+            {
+                title: 'Several files, folded context, changed words',
+                why: '`setDiff(el, { files })` draws a header per file (the status word on a badge, the path, exact counts), folds a long run of unchanged lines into one button row that opens in place, and marks the words that differ inside a replaced line. The app brings the hunks; `diffWords` and `foldContext` are pure functions you can call yourself.',
+                markup: `
+<div class="kp-diffview" data-kp-diffview data-kp-diff-label="Changes to the media stack" data-kp-diff-state="loading"></div>
+`,
+                script: `
+import { attachDiffs, setDiff } from '@kp-soft/themes/js/diff';
+
+const same = (no, text) => ({ kind: 'same', no, text });
+const el = document.querySelector('[data-kp-diffview]');
+attachDiffs(el.parentElement);
+setDiff(el, {
+    files: [
+        {
+            path: 'stacks/media/compose.yml',
+            status: 'modified',
+            hunks: [
+                {
+                    oldStart: 3, oldLen: 12, newStart: 3, newLen: 12, context: 'services:',
+                    lines: [
+                        same(3, 'services:'),
+                        same(4, '  jellyfin:'),
+                        { kind: 'removed', no: 5, text: '    image: jellyfin/jellyfin:10.11.11' },
+                        { kind: 'added', no: 5, text: '    image: jellyfin/jellyfin:12.1.0' },
+                        ...Array.from({ length: 8 }, (_, i) => same(6 + i, '    # kept line ' + (i + 1))),
+                        same(14, '  sonarr:'),
+                    ],
+                },
+            ],
+        },
+        { path: 'stacks/media/backup.sh', status: 'added', hunks: [{ oldStart: 0, oldLen: 0, newStart: 1, newLen: 2, lines: [{ kind: 'added', no: 1, text: '#!/bin/sh' }, { kind: 'added', no: 2, text: 'set -eu' }] }] },
+    ],
+});
+`,
+            },
         ],
         variants: [
+            { name: 'data-kp-diff-open', what: '`all` (default), `first`, `none` or `changed`: which files start open. A file the reader opened or closed keeps its choice when the data is given again.' },
+            { name: 'data-kp-diff-context', what: 'Unchanged lines kept next to each change before the rest folds (3); `0` or `off` folds nothing. A run that would hide fewer than 3 lines is not folded.' },
+            { name: 'data-kp-diff-words', what: '`on` (default) or `off`: mark the changed words inside a replaced line (not past 60% of a line changed, nor in a line over 500 characters).' },
+            { name: 'data-kp-diff-bar', what: '`on` (default) or `off`: the five blocks that show the share of added and removed lines in a file header.' },
+            { name: 'data-kp-diff-copy', what: '`on` (default) or `off`: Copy path in each header.' },
+            { name: 'data-kp-diff-max-lines', what: 'Lines drawn per file before “Show the other N lines” (400); `0` or `off` draws all.' },
+            { name: 'data-kp-diff-label', what: 'The region’s accessible name.' },
+            { name: 'data-kp-diff-state', what: '`loading`, `empty` or `error` before the first `setDiff`, so the first frame is already the waiting one. `setDiff(el, { state })` sets it later; empty, reading and failed keep the height the diff had.' },
+            { name: '.kp-diff__fold', what: 'The row “12 unchanged lines”, a button across the diff’s three columns; open it says “Hide 12 unchanged lines”.' },
+            { name: '.kp-diff__word', what: 'A changed word inside a line: bold and underlined when added, bold and struck through when removed, with a deeper tint.' },
             { name: '.kp-diff__hunk', what: 'The `@@` header row that opens a block of changes: a muted band with a rule under it, and a rule over it from the second hunk on. It wraps long headers instead of widening the block.' },
             { name: '.kp-diff__hunk-context', what: 'Optional: wraps the text after the range (the function or section the hunk sits in) in the foreground colour. A header may be one text node without it.' },
             { name: 'same', what: 'Context: no tint, a blank sign, the line as it is.' },

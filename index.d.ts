@@ -255,3 +255,12 @@ export type ConsoleRun = import('./js/console.js').ConsoleRun;
 /** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
 /** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
 /** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */
+export { DIFF, DIFF_CONTEXT, DIFF_COPY_EVENT, DIFF_EXPAND_EVENT, DIFF_FOLD_MIN, DIFF_MAX_LINES, DIFF_RETRY_EVENT, DIFF_STATUSES, DIFF_TOGGLE_EVENT, DIFF_WORD_LIMIT, DIFF_WORD_SHARE, attachDiffs, diffWords, foldContext, setDiff, } from './js/diff.js';
+export type DiffFile = import('./js/diff.js').DiffFile;
+export type DiffHunk = import('./js/diff.js').DiffHunk;
+export type DiffLine = import('./js/diff.js').DiffLine;
+export type DiffSpec = import('./js/diff.js').DiffSpec;
+/** @typedef {import('./js/diff.js').DiffFile} DiffFile */
+/** @typedef {import('./js/diff.js').DiffHunk} DiffHunk */
+/** @typedef {import('./js/diff.js').DiffLine} DiffLine */
+/** @typedef {import('./js/diff.js').DiffSpec} DiffSpec */

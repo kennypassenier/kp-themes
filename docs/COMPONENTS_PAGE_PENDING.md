@@ -12,6 +12,8 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- New component `.kp-diffview[data-kp-diffview]` (`__bar`, `__summary`, `__tools`, `__list`, `__file[data-kp-diff-status|data-kp-diff-file-open]`, `__head`, `__title`, `__toggle`, `__chevron`, `__status` = a `.kp-badge`, `__path`, `__dir`, `__name`, `__renamed`, `__arrow`, `__counts`, `__added`, `__removed`, `__proportion`, `__block`, `__copy`, `__body`, `__note`, `__plate`, `__stage`, `__wait`, `__live`; inside the lines `.kp-diff__fold`, `.kp-diff__more`, `.kp-diff__row-button`, `.kp-diff__text`, `.kp-diff__word`) with `js/diff.js`: `attachDiffs`, `setDiff`, `diffWords`, `foldContext`, `DIFF`, `DIFF_TOGGLE_EVENT` (`kp-diff-toggle`), `DIFF_EXPAND_EVENT`, `DIFF_COPY_EVENT`, `DIFF_RETRY_EVENT`, `DIFF_CONTEXT`, `DIFF_FOLD_MIN`, `DIFF_MAX_LINES`, `DIFF_WORD_LIMIT`, `DIFF_WORD_SHARE`, `DIFF_STATUSES`; attributes `data-kp-diff-open|context|words|bar|copy|max-lines|label|state`; knobs `--kp-diffview-min|status|gap`; strings `diff…`. The existing diff page gains a live example with data (2026-10-19, research/gap-diff-view, formal only until approved).
+
 (The pass of 2026-10-18, on Kenny's go "components-page: Nu bijwerken", brought every line that stood here onto its page: the new components rating,
 quote, passkeys, thread, idmark, stackbar, bullets, kv, formrows, code, pipeline, quantity, checklist (with its claim part), timers, focus steps,
 wheel, uptime, command, weekdays, runs, snooze, dated options, sentence, gallery, viewer, docpreview, slider, availability, qr, time, console,

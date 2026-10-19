@@ -132,6 +132,7 @@ js/command.js              one command to run, with its terminal, privilege and 
 js/compare.js              two versions stacked with a draggable divider between them
 js/connection.js           the connection banner: offline and reconnecting, apart from stale data
 js/console.js              a prompt and, per command, a block saying whether it runs, succeeded or failed
+js/diff.js                 a diff of several files: a header per file, folded unchanged lines, the changed words, and its states
 js/countdown.js            a named timer in digits, with Start, Pause, Reset and a minute more
 js/dated-options.js        a choice where every option has a date and an age
 js/deplist.js              rows "A → B" saying what needs what, numbered in order
