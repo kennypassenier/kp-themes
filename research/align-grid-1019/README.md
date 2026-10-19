@@ -1,5 +1,7 @@
 # research/align-grid-1019: the form grid
 
+**Decided (2026-10-19 18:55):** Kenny approved every pair (formal) over three rounds: form, request, tools in round 1, settings in round 2, facts and phone in round 3. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `aligngrid-<uuid>` (see `demo.html`, 2026-10-19): 6 sections, 6 pairs, formal. After Kenny rejected seven settings
 sections of the homelab and chassis-rs demos for misalignment (2026-10-19 06:43, "Gebruik het grid en align deftig
 verticaal!"), the package got one layout for forms, settings, key-value panels and button groups, `.kp-formgrid`

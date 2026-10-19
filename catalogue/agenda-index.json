@@ -38,22 +38,6 @@
             "fingerprint": "bf865298b415bec6",
             "update": null
         },
-        "research/align-grid-1019/demo.html": {
-            "facts": {
-                "id": "align-grid-1019",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Third round, two sections: the facts and the phone width, which you did not approve on 19/10 at 17:20 (settings is approved and left the page). The fixes are in the package itself, .kp-formgrid, so every app gets them: the grid no longer stretches across a wide panel and groups stand side by side as columns, a group’s buttons stand beside what they act on, and on a phone every row is label, control and hint with its Reset, controls fill the width and centre what they show, and a pair of buttons is two equal columns. 2 sections, formal only; the content is made up.",
-                "sections": [
-                    { "item": "facts", "themes": "formal", "topic": "facts", "mode": null },
-                    { "item": "phone", "themes": "formal", "topic": "phone", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            {\n                \"round\": \"aligngrid-fa793bb3-a33e-49a6-9287-c27683fdda54\",\n                \"received\": [\"aligngrid-7ef59f03-3ba5-4693-9472-818f60de9fdb\", \"aligngrid-0e13cf1b-0cf3-409d-b7f8-9cf941e134c0\"]\n            }\n        "
-            },
-            "fingerprint": "ab2e51c3d7ab32fd",
-            "update": null
-        },
         "research/app-hsb-align/demo.html": {
             "facts": {
                 "id": "app-hsb-align",
@@ -422,6 +406,7 @@
         }
     },
     "decided": {
+        "research/align-grid-1019/demo.html": "2026-10-19 18:55, Kenny: every pair approved (research/align-grid-1019/VERDICTS.json)",
         "research/round-3-1019/demo.html": "2026-10-19 17:20, Kenny: every pair approved (research/round-3-1019/VERDICTS.json)",
         "research/app-homelab-backups/demo.html": "2026-10-19 17:20, Kenny: 22 of 25 approved; repos, fw-guard and ho-checks not approved and rebuilt in the homelab dashboard itself, not here (research/app-homelab-backups/VERDICTS.json)",
         "research/audhd-recepten/grid-fix/demo.html": "2026-10-19 09:22, Kenny: every pair approved (research/audhd-recepten/grid-fix/VERDICTS.json)",
