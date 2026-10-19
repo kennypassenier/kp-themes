@@ -2,6 +2,12 @@
 export declare const GROUP_ROW = "[data-kp-row-group]";
 /** A detail row, directly after the row it belongs to. */
 export declare const DETAIL = "[data-kp-row-detail]";
+/**
+ * A row the page holds out of the table for a while (an Undo window): `<tr data-kp-row-hidden>`. The table does not count
+ * it, page it, search it or show it, and never un-hides it; the page takes the attribute off to give it back
+ * [b3b4-1019; kyu gap 28].
+ */
+export declare const HELD_ROW = "[data-kp-row-hidden]";
 export type Direction = 'ascending' | 'descending' | 'none';
 export type Sort = {
     column: number;
@@ -23,6 +29,7 @@ export type View = {
     shown: number;
     total: number;
     page: number;
+    pageNumber: number;
     pages: number;
     pageSize: number;
     query: string;
@@ -74,7 +81,7 @@ export type EditDetail = {
 /** @typedef {'comfortable' | 'compact'} Density */
 /** @typedef {'text' | 'number' | 'select' | 'date'} EditKind */
 /**
- * @typedef {{ shown: number, total: number, page: number, pages: number, pageSize: number, query: string, scope: number | null,
+ * @typedef {{ shown: number, total: number, page: number, pageNumber: number, pages: number, pageSize: number, query: string, scope: number | null,
  *   filters: Record<number, FilterValue>, sort: Sort, sorts: SortKey[], hidden: number[], expanded: string[], density: Density, state: State,
  *   keys: string[], pageKeys: string[], folded: string[] }} View
  */
@@ -185,6 +192,16 @@ export declare function nextSorts<K>(keys: {
  */
 export declare function filterActive(kind: FilterKind, value: FilterValue | undefined): boolean;
 /**
+ * A filter bound as the reader writes it [b3b4-1019; homelab gap 33]. A date bound is held as ISO (`2026-10-03`) so the
+ * filter compares it exactly, but a pill, an error and a screen reader say it the way the page's locale writes a date
+ * (the field it came from shows the same). A number bound, or text that is not an ISO day, is returned as it is.
+ *
+ * @param {FilterKind} kind
+ * @param {string} bound
+ * @param {string | undefined} [locale]  none: the page's own
+ */
+export declare function boundText(kind: FilterKind, bound: string, locale?: string | undefined): string;
+/**
  * The one pill a filter shows in the add-filter mode [Kenny, 2026-09-14]:
  * the column and every value the filter holds, or null when it holds
  * nothing. Both channels call this, so their pills read the same.
@@ -193,9 +210,10 @@ export declare function filterActive(kind: FilterKind, value: FilterValue | unde
  * @param {string} column the column's name
  * @param {FilterValue | undefined} value
  * @param {import('./strings.js').Strings} s
+ * @param {string} [locale]  how a date bound is written; the page's own when absent
  * @returns {string | null}
  */
-export declare function filterPillLabel(kind: FilterKind, column: string, value: FilterValue | undefined, s: import('./strings.js').Strings): string | null;
+export declare function filterPillLabel(kind: FilterKind, column: string, value: FilterValue | undefined, s: import('./strings.js').Strings, locale?: string): string | null;
 /**
  * Read the two bounds of an add-filter editor into a filter value, or say
  * what is wrong with them [Kenny, 2026-09-14, #filter-add]: a number bound
@@ -206,13 +224,14 @@ export declare function filterPillLabel(kind: FilterKind, column: string, value:
  * @param {'range' | 'date'} kind
  * @param {Record<'from' | 'to', { text: string, iso?: string, label: string }>} bounds  `text` as the field shows it; `iso` a date picker's value
  * @param {import('./strings.js').Strings} s
+ * @param {string} [locale]  how a date bound is written in the refusal; the page's own when absent
  * @returns {{ value: { from: string, to: string } | null, error?: string, bound?: 'from' | 'to' }}
  */
 export declare function readFilterBounds(kind: 'range' | 'date', bounds: Record<'from' | 'to', {
     text: string;
     iso?: string;
     label: string;
-}>, s: import('./strings.js').Strings): {
+}>, s: import('./strings.js').Strings, locale?: string): {
     value: {
         from: string;
         to: string;
@@ -240,9 +259,10 @@ export declare function matchesFilter(kind: FilterKind, value: FilterValue | und
  * @param {string} column the column's name
  * @param {FilterValue | undefined} value
  * @param {import('./strings.js').Strings} s
+ * @param {string} [locale]  how a date bound is written; the page's own when absent
  * @returns {{ label: string, without: FilterValue | undefined }[]}
  */
-export declare function filterPills(kind: FilterKind, column: string, value: FilterValue | undefined, s: import('./strings.js').Strings): {
+export declare function filterPills(kind: FilterKind, column: string, value: FilterValue | undefined, s: import('./strings.js').Strings, locale?: string): {
     label: string;
     without: FilterValue | undefined;
 }[];
@@ -324,6 +344,9 @@ export type DataTableHandle = {
      * sort on several columns, the first key first
      */
     sortBy: (keys: readonly SortKey[]) => void;
+    /**
+     * show a page, counted from 0 as `view().page` is (the pager prints it from 1: `view().pageNumber`); past the last page it stops at the last [b3b4-1019]
+     */
     page: (page: number) => void;
     pageSize: (size: number) => void;
     query: (query: string) => void;
@@ -385,9 +408,11 @@ export type DataTableHandle = {
     selected: () => string[];
     select: (keys: readonly string[]) => void;
     /**
-     * re-read the rows after the consumer added or removed some, and the filter panel's choice lists with them
+     * re-read the rows after the consumer added or removed some, and the filter panel's choice lists with them; the page goes back to the first unless `keepPage`. The table also notices rows added to or removed from its body by itself (a client-side table), so a removed row leaves the count and the pager at once and the reader stays on the page; a row marked `data-kp-row-hidden` is held out of the table and stays hidden until the attribute goes [b3b4-1019]
      */
-    refresh: () => void;
+    refresh: (options?: {
+        keepPage?: boolean;
+    }) => void;
 };
 /** The handle for an attached table, for code that did not call attach. @param {Element} element */
 export declare function dataTable(element: Element): DataTableHandle | null;
