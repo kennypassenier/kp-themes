@@ -233,7 +233,6 @@ export const PAGES = [
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, kyu): kyu's dashboard with every component that fits used to the full, formal only, five parts; map in kyu docs/KP_THEMES_11_ADOPTION.md.
             {
                 href: 'research/kyu-11-overview/demo.html',
-                rework: 'round 2 (formal graph loading) waits on a review-kit fix: check-kit counts an svg links group as an empty region',
                 label: 'kyu, part 1 of 5: across every page',
                 about: 'The command palette, keyboard shortcuts and their help sheet, a first-visit tour, links to a heading or a row, and two overviews of which app reads which topic. Formal only.',
             },
