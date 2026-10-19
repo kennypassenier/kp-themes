@@ -26823,7 +26823,7 @@
      * the free rest as the track; a legend under it gives every part its
      * exact value. js/stackbar.js draws both from a list. Knobs:
      * --kp-stackbar-height (0.75rem), --kp-stackbar-gap (the 2px seam in the
-     * card colour), --kp-stackbar-radius, --kp-stackbar-legend-min (11rem). */
+     * card colour), --kp-stackbar-radius, --kp-stackbar-legend-columns (1: how many label, value pairs side by side). */
     .kp-stackbar {
         display: grid;
         gap: var(--kp-space-sm, 0.5rem);
@@ -26932,8 +26932,8 @@
 
     .kp-stackbar__legend {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-stackbar-legend-min, 11rem)), 1fr));
-        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-lg, 1rem);
+        grid-template-columns: repeat(var(--kp-stackbar-legend-columns, 1), auto minmax(min-content, 1fr) max-content);
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         margin: 0;
         padding: 0;
         list-style: none;
@@ -26942,9 +26942,9 @@
 
     .kp-stackbar__item {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-column: span 3;
+        grid-template-columns: subgrid;
         align-items: center;
-        gap: var(--kp-space-sm, 0.5rem);
         min-block-size: 1.5rem;
         padding-inline: 0.25rem;
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
@@ -26974,13 +26974,12 @@
     }
 
     /* align-pkg-1019:stackbar:start
-     * A legend is a table: the value column is one width for every row (the script writes the longest value as
-     * --kp-stackbar-value-n, a count of characters), so the labels all end and the values all start on one edge. The
-     * value cell used to be as wide as its own text, which left the label edge up to 36 px apart at 390 px (measure-align,
-     * homelab stacks/backups). A label is never cut with an ellipsis [R4]: it wraps, and the swatch and the value stand
-     * on its first line, a band 1.5 rem high. */
+     * A legend is one grid [gapviz-1019; homelab 53]: swatch, label and value are three tracks of the legend, every row is a
+     * subgrid of them, so the labels all end and the values all start on one edge whatever the digits and the unit are (the
+     * value track is as wide as the widest value, max-content), with no script and no measuring. Each row used to be a grid of
+     * its own, which put the value of every row on its own x. A label is never cut with an ellipsis [R4]: it wraps at its
+     * spaces (a word is never broken), and the swatch and the value stand on its first line, a band 1.5 rem high. */
     .kp-stackbar__item {
-        grid-template-columns: auto minmax(0, 1fr) minmax(calc(var(--kp-stackbar-value-n, 0) * 1.15ch), max-content);
         align-items: start;
         min-block-size: 0;
     }
@@ -26995,7 +26994,8 @@
 
     .kp-stackbar__item > .kp-stackbar__label {
         overflow: visible;
-        overflow-wrap: anywhere;
+        overflow-wrap: normal;
+        word-break: normal;
         text-overflow: clip;
         white-space: normal;
     }
@@ -27004,15 +27004,6 @@
         align-self: center;
     }
     /* align-pkg-1019:stackbar:end */
-
-    /* stackbar-refresh-1019:stackbar-value-track:start
-     * The value column is the widest value's own width (js/stackbar.js fitValues writes --kp-stackbar-value-w, px), so every row of
-     * a legend ends its label and starts its value on one edge whatever the digits and the unit are; the character estimate
-     * stays as the fallback. */
-    .kp-stackbar__item {
-        grid-template-columns: auto minmax(0, 1fr) minmax(var(--kp-stackbar-value-w, calc(var(--kp-stackbar-value-n, 0) * 1.15ch)), max-content);
-    }
-    /* stackbar-refresh-1019:stackbar-value-track:end */
 
     /* stackbar-refresh-1019:stackbar-picked:start
      * A picked part [homelab 61; N18]. setStackbar(el, { picked: [keys] }) presses parts the way a chart's filter does: the part is

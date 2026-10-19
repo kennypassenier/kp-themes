@@ -29335,11 +29335,7 @@ function setStackbar(el16, spec) {
     );
     const stop = segs.find((seg) => seg.dataset.kpStackbarKey === focusedKey) ?? segs[0];
     stop?.setAttribute("tabindex", "0");
-    if (legend) {
-      const widest2 = Math.max(0, ...[...legend.querySelectorAll(".kp-stackbar__value")].map((v) => (v.textContent ?? "").length));
-      legend.style.setProperty("--kp-stackbar-value-n", String(widest2));
-      nodes.push(legend);
-    }
+    if (legend) nodes.push(legend);
   }
   el16.replaceChildren(...nodes);
   if (refocus) {
@@ -29348,30 +29344,10 @@ function setStackbar(el16, spec) {
   }
   if (focusedKey) el16.querySelector(`.kp-stackbar__seg[tabindex="0"]`)?.focus();
   if (state2 !== "loading") attachHoverCards(doc);
-  fitValues(el16);
   if (!memory.wired) {
     memory.wired = true;
     wire5(el16);
   }
-}
-function fitValues(el16) {
-  const legend = (
-    /** @type {HTMLElement | null} */
-    el16.querySelector(":scope > .kp-stackbar__legend")
-  );
-  if (!legend) return;
-  const measure = () => {
-    let widest2 = 0;
-    for (const value of legend.querySelectorAll(".kp-stackbar__value")) {
-      const range = el16.ownerDocument.createRange();
-      range.selectNodeContents(value);
-      widest2 = Math.max(widest2, range.getBoundingClientRect().width);
-    }
-    if (widest2 > 0) legend.style.setProperty("--kp-stackbar-value-w", `${Math.ceil(widest2 * 100) / 100}px`);
-  };
-  measure();
-  const fonts = el16.ownerDocument.fonts;
-  if (fonts && fonts.status === "loading") fonts.ready.then(() => legend.isConnected && measure());
 }
 function wire5(el16) {
   const keyOf8 = (target) => target instanceof Element ? (
@@ -37943,6 +37919,7 @@ function setHeat(el16, spec) {
   for (const row of rows) body.push(rowNode(row, false));
   if (spec.axis === "end") body.push(axis);
   replaceKeepingCard(el16, body);
+  if (spec.legend === void 0) syncCalmLegend(el16);
   syncCard2(
     el16,
     loading,
@@ -38011,8 +37988,13 @@ function syncCalmLegend(el16) {
   const own = legend?.getAttribute("data-kp-legend-source") === "auto";
   if (legend && !own && legend.childElementCount > 0) return;
   if (isCalmTones(el16) && el16.getAttribute("data-kp-legend") !== "hide") {
-    if (own && !legend?.hidden) return;
-    setHeatLegend(el16, calmLegendEntries(), { source: "auto" });
+    const present = new Set([...el16.querySelectorAll(".kp-heat__cell[data-kp-tone]")].map((c) => c.getAttribute("data-kp-tone")));
+    const all = el16.getAttribute("data-kp-legend") === "all" || !["logged", "quiet", "paused"].some((t) => present.has(t));
+    const entries3 = calmLegendEntries().filter((e) => all || present.has(e.tone));
+    const signature2 = entries3.map((e) => e.tone).join(" ");
+    if (own && !legend?.hidden && legend?.getAttribute("data-kp-legend-tones") === signature2) return;
+    const made6 = setHeatLegend(el16, entries3, { source: "auto" });
+    made6?.setAttribute("data-kp-legend-tones", signature2);
   } else if (own) removeLegend(el16);
 }
 function setHeatLegend(el16, entries3, options = {}) {
