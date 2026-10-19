@@ -24364,6 +24364,48 @@
     }
 
     /* kpadopt5-ops:auto-refresh:end */
+
+    /* stackbar-refresh-1019:refresh:start
+     * Two faults of the bar outside its own grid [homelab 30, almanac 22; N8, N12].
+     * 1. Its words start at the start. A centred ancestor (a card or a page with `text-align: center`) was inherited by the
+     *    freshness line and the label, so "updated 12 s ago" stood in the middle of its wide value track, off the edge the
+     *    chooser above and the rows around it start on. The bar says `start` itself.
+     * 2. It folds on a phone. Outside a `.kp-formgrid` the three tracks (chooser | freshness | Refresh now) had nothing to
+     *    fold on, so at 390 px the chooser and the button left the freshness line a zero-width track and "not updated yet"
+     *    ran under "Refresh now". Under 40rem the bar is one column, in the form grid's own reading order (chooser, line,
+     *    button), everything on the start edge. No size container (see .kp-snooze): the fold follows the viewport, and a
+     *    form grid keeps its own fold on its own width (above); data-kp-refresh-stack picks it by hand. */
+    .kp-refresh {
+        text-align: start;
+    }
+
+    .kp-refresh__line {
+        justify-items: start;
+    }
+
+    @media (max-width: 40rem) {
+        .kp-refresh:not(.kp-formgrid .kp-refresh, [data-kp-refresh-stack='never']) > .kp-refresh__bar {
+            grid-template-columns: minmax(0, 1fr);
+            justify-items: start;
+        }
+    }
+
+    /* The same fold, whatever the screen: data-kp-refresh-stack="always" (a narrow column on a wide screen), "never" keeps the
+       row, "auto" (the default) is the fold above. Read by CSS alone, like data-kp-formgrid-stack. */
+    .kp-refresh[data-kp-refresh-stack='always']:not(.kp-formgrid .kp-refresh) > .kp-refresh__bar {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+    }
+    /* stackbar-refresh-1019:refresh:end */
+
+    /* stackbar-refresh-1019:formgrid-start:start
+     * A form grid reads from the start too (found while measuring the refresh's start edge): a label inherited a centred parent's
+     * `text-align: center`, so "Name" stood in the middle of the label track while "Auto-refresh" filled it, two edges for one
+     * column. One `start` on the grid, which every cell inherits. */
+    .kp-formgrid {
+        text-align: start;
+    }
+    /* stackbar-refresh-1019:formgrid-start:end */
 }
 
 @layer kp.components {
@@ -26455,6 +26497,43 @@
         align-self: center;
     }
     /* align-pkg-1019:stackbar:end */
+
+    /* stackbar-refresh-1019:stackbar-value-track:start
+     * The value column is the widest value's own width (js/stackbar.js fitValues writes --kp-stackbar-value-w, px), so every row of
+     * a legend ends its label and starts its value on one edge whatever the digits and the unit are; the character estimate
+     * stays as the fallback. */
+    .kp-stackbar__item {
+        grid-template-columns: auto minmax(0, 1fr) minmax(var(--kp-stackbar-value-w, calc(var(--kp-stackbar-value-n, 0) * 1.15ch)), max-content);
+    }
+    /* stackbar-refresh-1019:stackbar-value-track:end */
+
+    /* stackbar-refresh-1019:stackbar-picked:start
+     * A picked part [homelab 61; N18]. setStackbar(el, { picked: [keys] }) presses parts the way a chart's filter does: the part is
+     * a toggle button (`aria-pressed`) and part and legend row carry `data-kp-stackbar-picked`. Not colour alone: the bar part
+     * takes a heavier ring than the hover's (4 px of foreground past a 2 px card gap, against 3 px), and its legend row a 3 px
+     * rule on its start edge and a heavier label, over the same muted ground a lit row has. Knob --kp-stackbar-picked-ring (4px). */
+    .kp-stackbar__seg[aria-pressed] {
+        cursor: pointer;
+    }
+
+    .kp-stackbar__seg[data-kp-stackbar-picked] {
+        z-index: 2;
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card),
+            0 0 0 2px var(--card),
+            0 0 0 var(--kp-stackbar-picked-ring, 4px) var(--foreground);
+    }
+
+    .kp-stackbar__item[data-kp-stackbar-picked] {
+        background: var(--muted);
+        box-shadow: inset 3px 0 0 var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-stackbar__item[data-kp-stackbar-picked]:dir(rtl) {
+        box-shadow: inset -3px 0 0 var(--foreground);
+    }
+    /* stackbar-refresh-1019:stackbar-picked:end */
 
     .kp-stackbar__value {
         color: var(--muted-foreground);

@@ -28972,6 +28972,8 @@ function setStackbar(el16, spec) {
   if (state2 === "loading") el16.setAttribute("aria-busy", "true");
   else el16.removeAttribute("aria-busy");
   const nodes = [];
+  const pickable = Array.isArray(spec.picked);
+  const pickedKeys = new Set(spec.picked ?? []);
   const calc = stackbarParts(spec.parts ?? [], spec.total, spec.other ?? 0);
   if (spec.title !== void 0) {
     const head = make4(doc, "kp-stackbar__head", "div");
@@ -29052,7 +29054,11 @@ function setStackbar(el16, spec) {
       spoken.push(strings.stackbarPart(part7.label, format(part7.value), shareText(part7.share, lang)));
       const seg = make4(doc, "kp-stackbar__seg");
       seg.dataset.kpStackbarKey = part7.key;
-      seg.setAttribute("role", "img");
+      seg.setAttribute("role", pickable ? "button" : "img");
+      if (pickable) {
+        seg.setAttribute("aria-pressed", String(pickedKeys.has(part7.key)));
+        seg.toggleAttribute("data-kp-stackbar-picked", pickedKeys.has(part7.key));
+      }
       seg.setAttribute("aria-label", words);
       seg.setAttribute("data-kp-hovercard", words);
       seg.setAttribute("tabindex", "-1");
@@ -29063,6 +29069,7 @@ function setStackbar(el16, spec) {
       if (legend) {
         const item = make4(doc, "kp-stackbar__item", "li");
         item.dataset.kpStackbarKey = part7.key;
+        item.toggleAttribute("data-kp-stackbar-picked", pickable && pickedKeys.has(part7.key));
         const swatch = make4(doc, "kp-stackbar__swatch");
         swatch.setAttribute("aria-hidden", "true");
         swatch.style.setProperty("--kp-stackbar-colour", colour);
@@ -29125,10 +29132,30 @@ function setStackbar(el16, spec) {
   }
   if (focusedKey) el16.querySelector(`.kp-stackbar__seg[tabindex="0"]`)?.focus();
   if (state2 !== "loading") attachHoverCards(doc);
+  fitValues(el16);
   if (!memory.wired) {
     memory.wired = true;
     wire5(el16);
   }
+}
+function fitValues(el16) {
+  const legend = (
+    /** @type {HTMLElement | null} */
+    el16.querySelector(":scope > .kp-stackbar__legend")
+  );
+  if (!legend) return;
+  const measure = () => {
+    let widest2 = 0;
+    for (const value of legend.querySelectorAll(".kp-stackbar__value")) {
+      const range = el16.ownerDocument.createRange();
+      range.selectNodeContents(value);
+      widest2 = Math.max(widest2, range.getBoundingClientRect().width);
+    }
+    if (widest2 > 0) legend.style.setProperty("--kp-stackbar-value-w", `${Math.ceil(widest2 * 100) / 100}px`);
+  };
+  measure();
+  const fonts = el16.ownerDocument.fonts;
+  if (fonts && fonts.status === "loading") fonts.ready.then(() => legend.isConnected && measure());
 }
 function wire5(el16) {
   const keyOf8 = (target) => target instanceof Element ? (
