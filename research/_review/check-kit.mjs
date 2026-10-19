@@ -927,6 +927,9 @@ for (const [width, height] of [
             const kept = [];
             for (const el of root.querySelectorAll('*')) {
                 if (/^(script|style|option|html|body|head|link|meta|title)$/i.test(el.tagName) || !shown(el)) continue;
+                // A part drawn inside an `<svg>` (a graph's group of edges, strokes with no fill) is the picture the svg itself is: the
+                // svg matches CONTENT and is judged as one (state-plates-1019: g.kp-graph__edges, the network graph's links).
+                if (el.ownerSVGElement) continue;
                 const r = el.getBoundingClientRect();
                 const c = {
                     left: Math.max(r.left + dx, box.left),

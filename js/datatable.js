@@ -1584,20 +1584,65 @@ export function attachDataTables(
         // loads its own rows and calls state('failed') or fail() showed only
         // "Showing 0 of 0" [fix-85]. The reason goes in the words.
         if (failedSlot === null) {
-            failedSlot = add(make('div', 'kp-alert kp-alert--destructive'));
+            // The package's failed plate: the reason at heading size and a normal Retry, filling the table's footprint
+            // while the rows are covered (syncCover) [state-plates-1019].
+            failedSlot = add(make('div', 'kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error'));
             failedSlot.dataset.kpDatatableFailed = '';
             failedSlot.setAttribute('role', 'alert');
             failedSlot.hidden = true;
-            const text = make('p');
+            const text = make('p', 'kp-stateplate__title');
             text.dataset.kpDatatableFailedReason = '';
             text.textContent = s0.tableFailed;
-            const retry = /** @type {HTMLButtonElement} */ (make('button', 'kp-button'));
+            const retry = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-stateplate__action'));
             retry.type = 'button';
             retry.dataset.kpDatatableRetry = '';
             retry.textContent = s0.tableRetry;
             failedSlot.append(text, retry);
             wrap.insertBefore(failedSlot, tableBlock);
+        } else if (!failedSlot.classList.contains('kp-stateplate')) {
+            // A slot the page wrote is the same plate [state-plates-1019].
+            const authored = failedSlot;
+            authored.classList.add('kp-stateplate', 'kp-stateplate--error');
+            undo.push(() => authored.classList.remove('kp-stateplate', 'kp-stateplate--error'));
         }
+        if (empty !== null && !empty.classList.contains('kp-stateplate')) {
+            const authored = empty;
+            authored.classList.add('kp-stateplate', 'kp-stateplate--empty');
+            undo.push(() => authored.classList.remove('kp-stateplate', 'kp-stateplate--empty'));
+        }
+
+        // ── The plate takes the table's place ───────────────────────────
+        // A failed table, and a table with nothing to show, is not a notice under a table that is still drawn: the rows are
+        // covered and the plate fills the height the table had with its rows (the last height it was measured at while it showed
+        // rows), centred, with its normal-size action. Covered, not removed: the rows and their state stay in the document.
+        // [state-plates-1019, Kenny 2026-10-16 "de hele grootte van de component gebruiken"]
+        let heldHeight = 0;
+        const coverBox = /** @type {HTMLElement} */ (tableBlock);
+        const coverSizes =
+            typeof ResizeObserver === 'function'
+                ? new ResizeObserver(() => {
+                      if (coverBox.hasAttribute('data-kp-state-covered')) return;
+                      const height = coverBox.getBoundingClientRect().height;
+                      if (height > 0 && state === 'ready' && all.length > 0) heldHeight = height;
+                  })
+                : null;
+        coverSizes?.observe(coverBox);
+        undo.push(() => {
+            coverSizes?.disconnect();
+            coverBox.removeAttribute('data-kp-state-covered');
+            for (const slot of [failedSlot, empty]) slot?.style.removeProperty('--kp-datatable-held');
+        });
+        const syncCover = () => {
+            const failedNow = state === 'failed' && failedSlot !== null;
+            const emptyNow = !failedNow && empty !== null && !emptyHidden;
+            coverBox.toggleAttribute('data-kp-state-covered', failedNow || emptyNow);
+            for (const slot of [failedSlot, empty]) {
+                if (slot === null) continue;
+                const mine = (slot === failedSlot && failedNow) || (slot === empty && emptyNow);
+                if (mine && heldHeight > 0) slot.style.setProperty('--kp-datatable-held', `${Math.round(heldHeight)}px`);
+                else slot.style.removeProperty('--kp-datatable-held');
+            }
+        };
 
         // ── The page-size choice ───────────────────────────────────────
         /** @type {HTMLLabelElement | null} */
@@ -1998,6 +2043,7 @@ export function attachDataTables(
             // anything to dim.
             if (loadingSlot !== null) loadingSlot.hidden = !(state === 'loading' && all.length === 0);
             if (failedSlot !== null) failedSlot.hidden = state !== 'failed';
+            syncCover();
             syncSkeleton();
         };
 

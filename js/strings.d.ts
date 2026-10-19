@@ -3512,6 +3512,22 @@ export type Strings = {
      */
     usesEmptyText: string;
     /**
+     * The Retry of every failed data area drawn with the state plate (heat, matrix, timeline, week, graph, table) [state-plates-1019]
+     */
+    stateRetry: string;
+    /**
+     * The sentence under a failed data area's heading when the page gives none [state-plates-1019]
+     */
+    stateFailedText: string;
+    /**
+     * The empty network's heading when the page gives no words [state-plates-1019]
+     */
+    graphEmpty: string;
+    /**
+     * The failed network's heading when the page gives no words [state-plates-1019]
+     */
+    graphFailed: string;
+    /**
      * The failed map's Retry [kpadopt6-media]
      */
     usesRetry: string;
@@ -6350,6 +6366,10 @@ export type Strings = {
  * @property {string} usesFailedText  Its sentence [kpadopt6-media]
  * @property {string} usesEmpty  The empty map's heading [kpadopt6-media]
  * @property {string} usesEmptyText  Its sentence [kpadopt6-media]
+ * @property {string} stateRetry  The Retry of every failed data area drawn with the state plate (heat, matrix, timeline, week, graph, table) [state-plates-1019]
+ * @property {string} stateFailedText  The sentence under a failed data area's heading when the page gives none [state-plates-1019]
+ * @property {string} graphEmpty  The empty network's heading when the page gives no words [state-plates-1019]
+ * @property {string} graphFailed  The failed network's heading when the page gives no words [state-plates-1019]
  * @property {string} usesRetry  The failed map's Retry [kpadopt6-media]
  * @property {string} usesLoading  The busy card's words while the map loads [kpadopt6-media]
  * @property {string} usesNotUsed  What a source nothing uses says [kpadopt6-media]

@@ -33,6 +33,10 @@
 // setUptime() the strip draws the loading state from its attributes, so a
 // page shows loading from its first frame.
 //
+// Strips that load together have ONE busy card over the group, not one card each [state-plates-1019]: mark the box that holds
+// them `data-kp-uptime-group` (`="off"` on a strip's ancestor opts out), or let two or more strips that are direct children of
+// one parent be a group by themselves. The card covers the strips that load at that moment and leaves when the last one has data.
+//
 // Keys: the strip is one tab stop (the latest cell); the arrows move through
 // the cells that are shown, Home and End go to the first and the latest, and
 // Enter or Space picks. The hover card opens at once on focus.
@@ -169,6 +173,10 @@ const SPECS = new WeakMap();
 const CARDS = new WeakMap();
 /** A card on its way out and the spec that waits for it. @type {WeakMap<HTMLElement, { card: import('./busy-card.js').BusyCard, spec: UptimeSpec }>} */
 const WAITING = new WeakMap();
+/** The one busy card of a group of strips, and the strips of the group that are loading now [state-plates-1019]. @type {WeakMap<Element, { card: import('./busy-card.js').BusyCard, loading: Set<HTMLElement>, closing: boolean }>} */
+const GROUPS = new WeakMap();
+/** The group host a loading strip shares its card with. @type {WeakMap<HTMLElement, Element>} */
+const GROUP_OF = new WeakMap();
 /** Scrolling strips the reader scrolled away from the latest period. @type {WeakSet<HTMLElement>} */
 const UNPINNED = new WeakSet();
 /** Strips drawn before: a card on the first render is the page, not news. @type {WeakSet<HTMLElement>} */
@@ -177,6 +185,70 @@ const DRAWN = new WeakSet();
 const INFO = new WeakMap();
 /** Ids for the quick-info panels. */
 let infoMade = 0;
+
+/**
+ * The box that holds a group of strips, if this strip belongs to one: the nearest `[data-kp-uptime-group]` (`off` opts a strip
+ * out), else the parent that holds two or more strips of its own, which is then marked `data-kp-uptime-group="auto"`. Strips of
+ * a group that load together are covered by ONE busy card over the group, not by one card each [state-plates-1019].
+ * @param {HTMLElement} el
+ * @returns {Element | null}
+ */
+function groupHost(el) {
+    const marked = el.closest('[data-kp-uptime-group]');
+    if (marked) return marked.getAttribute('data-kp-uptime-group') === 'off' ? null : marked;
+    const parent = el.parentElement;
+    if (!parent || parent.querySelectorAll(':scope > [data-kp-uptime]').length < 2) return null;
+    parent.setAttribute('data-kp-uptime-group', 'auto');
+    return parent;
+}
+
+/**
+ * A loading strip joins its group's busy card, opening it when it is the first, and covers the strips that load now.
+ * @param {HTMLElement} el @param {Element} host @param {string} words @param {boolean} first
+ * @returns {import('./busy-card.js').BusyCard}
+ */
+function joinGroupCard(el, host, words, first) {
+    let group = GROUPS.get(host);
+    if (group?.closing) {
+        // A strip loads again while the card leaves: one card at a time, a new one.
+        group.card.remove();
+        GROUPS.delete(host);
+        group = undefined;
+    }
+    if (!group) {
+        /** @type {Set<HTMLElement>} */
+        const loading = new Set();
+        const card = openBusyCard(/** @type {HTMLElement} */ (host), {
+            words,
+            area: () => [...loading].filter((strip) => strip.isConnected),
+            className: 'kp-uptime__busy kp-uptime__busy--group',
+            arrive: !first,
+        });
+        group = { card, loading, closing: false };
+        GROUPS.set(host, group);
+    }
+    group.loading.add(el);
+    GROUP_OF.set(el, host);
+    group.card.place();
+    return group.card;
+}
+
+/**
+ * A strip leaves its group's loading: true when it was the last, so the shared card must close before it is drawn.
+ * @param {HTMLElement} el
+ * @returns {{ last: boolean, card: import('./busy-card.js').BusyCard, host: Element } | null} null for a strip with no group card
+ */
+function leaveGroupCard(el) {
+    const host = GROUP_OF.get(el);
+    if (!host) return null;
+    GROUP_OF.delete(el);
+    CARDS.delete(el);
+    const group = GROUPS.get(host);
+    if (!group) return null;
+    group.loading.delete(el);
+    if (group.loading.size > 0) group.card.place();
+    return { last: group.loading.size === 0, card: group.card, host };
+}
 
 /** Whether a press on a cell opens its quick info. @param {HTMLElement} el */
 const infoMode = (el) => (SPECS.get(el)?.open ?? el.dataset.kpUptimeOpen) === 'info';
@@ -212,11 +284,22 @@ export function setUptime(el, spec) {
             return;
         }
         const card = CARDS.get(el);
+        const left = card ? leaveGroupCard(el) : null;
+        if (left && !left.last) {
+            // Others in the group still load: this strip is drawn now, the shared card shrinks to the rest.
+            draw(el, spec);
+            return;
+        }
         if (card) {
             CARDS.delete(el);
+            if (left) {
+                const group = GROUPS.get(left.host);
+                if (group) group.closing = true;
+            }
             const entry = { card, spec };
             WAITING.set(el, entry);
             void card.close().then(() => {
+                if (left && GROUPS.get(left.host)?.card === card) GROUPS.delete(left.host);
                 if (WAITING.get(el) !== entry) return;
                 WAITING.delete(el);
                 draw(el, entry.spec);
@@ -367,11 +450,15 @@ function draw(el, spec) {
     }
     const card = CARDS.get(el);
     if (loading) {
-        if (card) card.place();
+        const host = groupHost(el);
+        if (card && !host) card.place();
+        else if (host) CARDS.set(el, joinGroupCard(el, host, s.uptimeLoading, first));
         else CARDS.set(el, openBusyCard(el, { words: s.uptimeLoading, area: () => [track], className: 'kp-uptime__busy', arrive: !first }));
     } else if (card) {
         CARDS.delete(el);
-        card.remove();
+        const left = leaveGroupCard(el);
+        if (!left || left.last) card.remove();
+        if (left?.last) GROUPS.delete(left.host);
     }
 }
 
@@ -683,7 +770,10 @@ export function attachUptimes(root = document) {
             doc.removeEventListener('pointerdown', onOutside, true);
             INFO.get(el)?.();
             INFO.delete(el);
-            CARDS.get(el)?.remove();
+            const own = CARDS.get(el);
+            const left = leaveGroupCard(el);
+            if (!left || left.last) own?.remove();
+            if (left?.last) GROUPS.delete(left.host);
             CARDS.delete(el);
             delete el.dataset.kpUptimeAttached;
         });

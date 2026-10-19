@@ -8,6 +8,8 @@ export declare const GANTT_SELECT_EVENT = "kp-gantt-select";
 export declare const GANTT_WINDOW_EVENT = "kp-gantt-window";
 /** How often a live window moves, in ms. */
 export declare const GANTT_TICK_MS = 1000;
+/** Fired on the timeline, bubbling, when the Retry of its failed state is pressed [state-plates-1019]. */
+export declare const GANTT_RETRY_EVENT = "kp-gantt-retry";
 /** The steps an axis chooses from, in seconds. */
 export declare const GANTT_STEPS: readonly number[];
 export type GanttRunState = 'queued' | 'running' | 'ok' | 'failed';
@@ -166,6 +168,10 @@ export type GanttModel = {
     brushBox: HTMLElement;
     selectBox: HTMLElement;
     stateLine: HTMLElement;
+    plate: HTMLElement;
+    plateKey: string;
+    plateText: string;
+    plateArt: Node | string | null;
     announcer: HTMLElement;
     ranges: HTMLElement;
     liveButton: HTMLButtonElement;
@@ -250,12 +256,18 @@ export declare function attachGantts(root?: ParentNode, options?: GanttOptions):
 export declare function setGanttRuns(el: Element, runs: GanttRun[], lanes?: GanttLane[]): void;
 /**
  * The timeline as a whole: `loading` (ghost lanes at their final size),
- * `ready`, `empty` or `error` (`words` over the plot).
+ * `ready`, `empty` or `error`. An empty or failed timeline is the package's state plate over the whole plot (`words` its
+ * heading, `text` its sentence, `art` a picture over the heading), an error with a Retry that fires `kp-gantt-retry`
+ * [state-plates-1019].
  * @param {Element} el
  * @param {GanttState} state
  * @param {string} [words]
+ * @param {{ text?: string, art?: Node | string | null }} [plate]
  */
-export declare function setGanttState(el: Element, state: GanttState, words?: string): void;
+export declare function setGanttState(el: Element, state: GanttState, words?: string, { text, art }?: {
+    text?: string;
+    art?: Node | string | null;
+}): void;
 /**
  * Set the window; no event, the page asked. `span` in seconds; `live: false`
  * with `to` (epoch ms) holds the window there.

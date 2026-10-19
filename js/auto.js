@@ -329,11 +329,11 @@ export const NEEDS = [
     { name: 'qr', when: '[data-kp-qr]', load: () => import('./qr.js'), attach: (m, root) => [m.attachQr(root)] },
     { name: 'timefield', when: '[data-kp-time]', load: () => import('./timefield.js'), attach: (m, root) => [m.attachTimes(root)] },
     {
-        // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the entity
+        // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the heat grid, the entity
         // grid, the checklist, the notices, the gallery, the availability grid, the request inspector and the operations page. The selector is
         // `FOOTPRINT_HOSTS` of js/footprint.js.
         name: 'footprint',
-        when: '[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-gallery], [data-kp-availability], [data-kp-requests], .kp-ops',
+        when: '[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-gallery], [data-kp-availability], [data-kp-requests], .kp-ops',
         load: () => import('./footprint.js'),
         attach: (m, root) => [m.attachFootprints(root)],
     },

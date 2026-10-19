@@ -10,6 +10,10 @@ export declare const HEAT_ROW_EVENT = "kp-heat-row";
 export declare const HEAT_PAGE_EVENT = "kp-heat-page";
 /** Fired on a matrix when a cell is pinned. */
 export declare const MATRIX_PICK_EVENT = "kp-matrix-pick";
+/** Fired on a heat grid, bubbling, when the Retry of its failed state is pressed [state-plates-1019]. */
+export declare const HEAT_RETRY_EVENT = "kp-heat-retry";
+/** Fired on a matrix (either view), bubbling, when the Retry of its failed state is pressed [state-plates-1019]. */
+export declare const MATRIX_RETRY_EVENT = "kp-matrix-retry";
 /** Fired on a matrix when the lit headers change. */
 export declare const MATRIX_LIGHT_EVENT = "kp-matrix-light";
 export type GridTone = 'ok' | 'warn' | 'bad' | 'muted' | 'future' | 'before' | 'none' | 'level' | 'loading' | 'self' | 'logged' | 'quiet' | 'paused';
@@ -76,9 +80,17 @@ export type HeatSpec = {
      */
     state?: 'ready' | 'loading' | 'empty' | 'error';
     /**
-     * the words of the empty and error states
+     * the words of the empty and error states (the plate's heading)
      */
     message?: string;
+    /**
+     * the plate's sentence under the heading (an error says the package's own when none is given)
+     */
+    text?: string;
+    /**
+     * a picture over the heading of the empty and error plates
+     */
+    art?: Node | string | null;
     /**
      * the shape of the loading state when there is no data yet
      */
@@ -150,7 +162,18 @@ export type MatrixSpec = {
      */
     cell?: (row: string, column: string) => MatrixCell | null | undefined;
     state?: 'ready' | 'loading' | 'empty' | 'error';
+    /**
+     * the plate's heading in the empty and error states
+     */
     message?: string;
+    /**
+     * the plate's sentence under the heading
+     */
+    text?: string;
+    /**
+     * a picture over the heading of the empty and error plates
+     */
+    art?: Node | string | null;
     /**
      * the size of the loading state when there are no names yet
      */

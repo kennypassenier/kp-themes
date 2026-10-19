@@ -101,6 +101,7 @@ import { CHART_TIME_ZONE, wallTime, zonedTime } from './chart.js';
 import { dayKey, formatDayKey, shiftDay } from './calendar.js';
 import { resolveStrings } from './strings.js';
 import { openBusyCard } from './busy-card.js';
+import { hostStatePlate } from './state-plate.js';
 
 /** A run timeline: `section.kp-gantt[data-kp-gantt]`. */
 export const GANTT = '[data-kp-gantt]';
@@ -112,6 +113,8 @@ export const GANTT_SELECT_EVENT = 'kp-gantt-select';
 export const GANTT_WINDOW_EVENT = 'kp-gantt-window';
 /** How often a live window moves, in ms. */
 export const GANTT_TICK_MS = 1000;
+/** Fired on the timeline, bubbling, when the Retry of its failed state is pressed [state-plates-1019]. */
+export const GANTT_RETRY_EVENT = 'kp-gantt-retry';
 /** The steps an axis chooses from, in seconds. */
 export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_600, 43_200, 86_400, 172_800, 604_800, 1_209_600, 2_419_200]);
 /** A week step and longer starts on a Monday: 1970-01-05, in seconds [kpadopt4]. */
@@ -162,7 +165,7 @@ const CLUSTER_PLATE_PX = 24;
  *   bars: Map<string, HTMLButtonElement>, states: Map<string, GanttRunState>, state: GanttState, active: string | null,
  *   selected: { from: number, to: number } | null, body: HTMLElement, scroll: HTMLElement, axis: HTMLElement,
  *   plot: HTMLElement, lines: HTMLElement, nowLine: HTMLElement, brushBox: HTMLElement, selectBox: HTMLElement,
- *   stateLine: HTMLElement, announcer: HTMLElement, ranges: HTMLElement, liveButton: HTMLButtonElement,
+ *   stateLine: HTMLElement, plate: HTMLElement, plateKey: string, plateText: string, plateArt: Node | string | null, announcer: HTMLElement, ranges: HTMLElement, liveButton: HTMLButtonElement,
  *   selection: HTMLElement, selectionText: HTMLElement, ticks: Map<number, { label: HTMLElement, line: HTMLElement }>,
  *   legend: HTMLElement, days: boolean, dayStop: string | null,
  *   points: GanttPoint[], pointEls: Map<string, HTMLButtonElement>, kinds: GanttKind[], zones: GanttZone[], fit: boolean, line: boolean,
@@ -411,7 +414,11 @@ function build(c) {
     c.announcer.setAttribute('role', 'status');
     const frame = make(doc, 'div', 'kp-gantt__frame');
     c.selection.hidden = true;
-    frame.append(c.scroll, c.stateLine);
+    // Empty and failed are the package's state plate over the plot, not a sentence; the line keeps only the loading words for a
+    // screen reader (the busy card is drawn) [state-plates-1019].
+    c.plate = make(doc, 'div', 'kp-gantt__plate');
+    c.plate.hidden = true;
+    frame.append(c.scroll, c.stateLine, c.plate);
     const hint = make(doc, 'p', 'kp-gantt__hint', c.el.hasAttribute('data-kp-gantt-points') ? s.ganttPointsHint : s.ganttHint);
     const legend = make(doc, 'ul', 'kp-gantt__legend');
     c.legend = legend;
@@ -696,37 +703,42 @@ function paint(c) {
     c.body.toggleAttribute('aria-busy', c.state === 'loading');
     drawBusy(c);
     const empty = c.state === 'ready' && c.runs.length === 0 && c.points.length === 0 && lanes.length === 0;
-    const words = c.state === 'loading' ? s.ganttLoading : c.state === 'empty' || empty ? s.ganttEmpty : c.stateLine.dataset.kpWords || '';
+    const words =
+        c.state === 'loading'
+            ? s.ganttLoading
+            : c.state === 'empty' || empty
+              ? c.stateLine.dataset.kpWords || s.ganttEmpty
+              : c.stateLine.dataset.kpWords || s.heatFailed;
     // A timeline of moments with nothing to show has no line for now running through its sentence [kpadopt4].
     c.nowLine.hidden = c.el.hasAttribute('data-kp-gantt-points') && (c.state === 'error' || c.state === 'empty' || empty);
     // An empty or failed sentence waits, as the runs do, until the card has gone.
-    c.stateLine.textContent = (c.state === 'ready' && !empty) || c.leaving !== null ? '' : words;
+    const plateKind = c.leaving === null && (c.state === 'error' || c.state === 'empty' || (c.state === 'ready' && empty)) ? c.state : null;
+    c.stateLine.textContent = c.state === 'loading' && c.leaving === null ? words : '';
     c.stateLine.dataset.kpState = empty && c.state === 'ready' ? 'empty' : c.state;
+    // Rebuilt only when what it says changes, so the focus on its Retry survives a repaint.
+    const plateKey = plateKind ? `${plateKind}|${words}|${c.plateText}` : '';
+    if (c.plateKey !== plateKey) {
+        c.plateKey = plateKey;
+        c.plate.replaceChildren();
+        if (plateKind)
+            c.plate.append(
+                hostStatePlate(c.el, {
+                    kind: plateKind === 'error' ? 'error' : 'empty',
+                    title: words,
+                    ...(c.plateText ? { text: c.plateText } : {}),
+                    art: c.plateArt,
+                    retryEvent: GANTT_RETRY_EVENT,
+                }),
+            );
+    }
+    c.plate.hidden = plateKind === null;
+    c.plate.dataset.kpState = plateKind ?? '';
     paintGhosts(c);
     c.busy?.place();
-    roomForWords(c);
     holdHeight(c);
     visible(c);
     refresh(c, nowMs);
     syncTabStops(c);
-}
-
-/**
- * A timeline with no lane (empty or failed) gives its sentence a room of its own under the axis, as tall as the words
- * need at this width (a long failure reason wraps on a phone), so the sentence never runs out of the frame onto the
- * legend. The room is `--kp-gantt-words` on the body, read by the body's min-block-size in css/components.css.
- * @param {GanttModel} c
- */
-function roomForWords(c) {
-    if (c.state === 'loading' || !c.stateLine.textContent || c.body.querySelector('.kp-gantt__lane')) {
-        c.body.style.removeProperty('--kp-gantt-words');
-        return;
-    }
-    const range = c.el.ownerDocument.createRange();
-    range.selectNodeContents(c.stateLine);
-    const style = getComputedStyle(c.stateLine);
-    const need = range.getBoundingClientRect().height + parseFloat(style.paddingBlockStart) + parseFloat(style.paddingBlockEnd);
-    c.body.style.setProperty('--kp-gantt-words', `${Math.ceil(need)}px`);
 }
 
 /**
@@ -1194,6 +1206,10 @@ export function attachGantts(root = document, options = {}) {
             brushBox: el,
             selectBox: el,
             stateLine: el,
+            plate: el,
+            plateKey: '',
+            plateText: '',
+            plateArt: null,
             announcer: el,
             ranges: el,
             liveButton: /** @type {HTMLButtonElement} */ (/** @type {unknown} */ (el)),
@@ -1442,7 +1458,6 @@ export function attachGantts(root = document, options = {}) {
                 last = width;
                 c.tickKey = '';
                 tick(c);
-                roomForWords(c);
             });
             c.observer.observe(c.plot);
         }
@@ -1513,16 +1528,21 @@ export function setGanttRuns(el, runs, lanes) {
 
 /**
  * The timeline as a whole: `loading` (ghost lanes at their final size),
- * `ready`, `empty` or `error` (`words` over the plot).
+ * `ready`, `empty` or `error`. An empty or failed timeline is the package's state plate over the whole plot (`words` its
+ * heading, `text` its sentence, `art` a picture over the heading), an error with a Retry that fires `kp-gantt-retry`
+ * [state-plates-1019].
  * @param {Element} el
  * @param {GanttState} state
  * @param {string} [words]
+ * @param {{ text?: string, art?: Node | string | null }} [plate]
  */
-export function setGanttState(el, state, words = '') {
+export function setGanttState(el, state, words = '', { text = '', art = null } = {}) {
     const c = gantts.get(el);
     if (!c) return;
     c.state = state;
     c.stateLine.dataset.kpWords = words;
+    c.plateText = text;
+    c.plateArt = art;
     paint(c);
 }
 
