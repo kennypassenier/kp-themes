@@ -1819,6 +1819,7 @@ What it does for you, without hand work:
   secret, code block or command fills the track; a short control (stepper, time, number, date, `.kp-field__input--short`,
   `.kp-formgrid__short`) takes one fixed step, `--kp-formgrid-short` (14rem), and a stepper is never squeezed under its unit;
   a switch or a checkbox keeps its own size. So the column ends on at most two edges.
+- **A combobox's status is the row's value text.** In a row whose control is a `.kp-combobox` and that has no `.kp-formgrid__value` of its own, `attachComboboxes` moves the combobox's status line ("11 results") into the value track, so the row is as high as its label and the status stands in the column of every other row's hint. A row with value text of its own, or a combobox outside a form grid, keeps the status under the input.
 - **Every row on one line.** Cells align on the row's first baseline: the label's first line, the text in a field, the number
   of a stepper, a switch's word, a value's words. A multi-line label or a field with help under it keeps its first line on
   that line. `data-kp-formgrid-align="center"` centres instead.
@@ -2245,7 +2246,7 @@ Custom… opens a panel under the control on the theme's popover plate, with Fro
 force. Apply checks that both are whole, that the end comes after the start, that it is not in the future (unless
 `data-kp-range-future`) and that it spans at most `data-kp-range-max-days`; what is wrong is said under the fields,
 which are marked, and the panel stays. Cancel, Escape (after an open calendar) or a press outside closes it and keeps
-the window. `data-kp-range-start` and `-end` start with a custom window, `data-kp-range-disabled` turns the picker off.
+the window. `data-kp-range-start` and `-end` start with a custom window, `data-kp-range-disabled` turns the picker off. `data-kp-range-custom="off"` makes it presets only: the Custom… button and the panel are not built, so they are not in the page or the tab order, and the window's name takes the whole line (a custom window from the markup or `setRange` is ignored).
 Narrower than 26rem of its own, the presets take the whole line and Custom… stands under them beside the line.
 
 From a script: `setRange(el, { preset: '7d' })` or `setRange(el, { start, end })` sets the window without the event,

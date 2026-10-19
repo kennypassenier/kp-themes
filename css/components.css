@@ -18362,6 +18362,15 @@
         }
     }
 
+    /* --- Presets only [combo-range-1019, N17] ---
+ * `data-kp-range-custom="off"` builds no Custom… button and no panel (js/range.js). The presets keep the line they had, and
+ * the window's name stands under them on the same left edge and across the whole width, in both container widths. */
+    @container kp-range (max-width: 26rem) {
+        .kp-range[data-kp-range-custom='off'] > .kp-range__label {
+            grid-column: 1 / span 2;
+        }
+    }
+
     /* --- Weekday picker: seven chips, or the days of a month [kpadopt5-time] ---
  * `.kp-weekdays[data-kp-weekdays]` (js/weekdays.js). The package's chip group in `multi` mode, one chip per day, seven
  * equal columns so the week reads as a week at any width (a month is the same seven columns, five rows); under the chips the
@@ -24272,9 +24281,7 @@
        of Format, Minify, Wrap and Copy, whatever its own height. The cell is exactly one tool row high and centres its
        button on it (a taller button overflows evenly), so the row's height stays the field's. Stacked, the action
        falls below the field as before. */
-    .kp-formgrid
-        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
-        > .kp-formgrid__actions {
+    .kp-formgrid :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield) > .kp-formgrid__actions {
         align-self: start;
         align-items: center;
         block-size: var(
