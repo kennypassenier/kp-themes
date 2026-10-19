@@ -26,7 +26,7 @@
         "js/command.js": { "digest": "ab80478d40ba7776", "when": "[data-kp-command]" },
         "js/compare.js": { "digest": "dcef5bea97a3e554", "when": "[data-kp-compare]" },
         "js/components.js": {
-            "digest": "2bc8860b017e2452",
+            "digest": "cd5bc39fd9e3b5d4",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], [data-kp-type-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
         "js/connection.js": { "digest": "0f479260a75c16d2", "when": "[data-kp-connection]" },

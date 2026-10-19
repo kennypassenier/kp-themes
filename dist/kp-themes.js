@@ -12020,6 +12020,7 @@ function attachConfirmations(root = document, { mode: mode2 = "dialog", windowMs
       el16
     );
     if (ownedBy !== "" && button.matches(ownedBy)) continue;
+    if (!button.matches('button, a[href], input[type="button"], input[type="submit"], [role="button"]')) continue;
     if (button.dataset.kpConfirmAttached === "1") continue;
     button.dataset.kpConfirmAttached = "1";
     const original = button.textContent ?? "";
