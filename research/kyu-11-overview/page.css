@@ -443,3 +443,50 @@
     background: var(--popover);
     color: var(--popover-foreground);
 }
+
+.ky-changed {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+}
+
+.ky-changed p {
+    margin: 0;
+}
+
+/* Formal's decided graph loading (research/character-graph/decided.json: loading "r3-fm-load-3", The courier's round),
+   as research/character-graph/ghost.css and round2-a.css wrote it, applied to the ghost network the package draws
+   (js/graph.js ghostOf). The package carries no formal rule for it yet (see the report, Package gaps). */
+[data-theme='formal'] [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__ghost {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+[data-theme='formal'] [data-cg] .kp-graph[data-kp-state='loading'] .kp-graph__note {
+    inset: auto var(--kp-space-md, 1rem) var(--kp-space-sm, 0.5rem);
+}
+
+[data-theme='formal'] [data-cg-loading='r3-fm-load-3'] .kp-graph__ghost .kp-graph__edge {
+    stroke-dasharray: 7 93;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    [data-theme='formal'] [data-cg-loading='r3-fm-load-3'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost {
+        animation: none;
+    }
+
+    [data-theme='formal'] [data-cg-loading='r3-fm-load-3'] .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__edge {
+        animation: ky-edge-signal 2000ms linear infinite;
+        animation-delay: calc(var(--i, 0) * 170ms);
+    }
+}
+
+@keyframes ky-edge-signal {
+    from {
+        stroke-dashoffset: 100;
+    }
+    to {
+        stroke-dashoffset: -16;
+    }
+}

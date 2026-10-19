@@ -1,5 +1,7 @@
 # research/kyu-11-topic-subs: kyu on kp-themes 11, the Topic page's top half
 
+**Decided (2026-10-19 02:38):** Kenny approved every pair. Default changed for formal: subs Rows to Comfortable, subs Filter look to Chips. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Kenny asked (2026-10-19) how kyu's pages look when they use as many of the new kp-themes 11.0.0 components as make sense, every option to the full. This part is the top half of the Topic page (`/t/notify.kenny/dashboard`): the page header, "Send and receive", and "Subscriptions". Formal only, mock data in kyu's real shape. Source map: kyu `docs/KP_THEMES_11_ADOPTION.md`.
 
 `demo.html` is generated: edit `demo.template.html` and `options.mjs`, then run `node research/kyu-11-topic-subs/build.mjs` (the control buttons and the dialog's choice sets come from the one list in `options.mjs`).

@@ -1,5 +1,7 @@
 # research/kyu-11-topics: kyu's Topics page on kp-themes 11.0.0
 
+**Decided (2026-10-19 02:38):** Kenny approved every pair. Defaults kept. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Part of the kyu review demo (adoption map `kyu/docs/KP_THEMES_11_ADOPTION.md`). It asks how kyu's `/topics` page looks when it is built from the
 11.0.0 components instead of the hand-written table and snippet. Formal only. All data is mock: five topics (`notify.kenny`, `ha.events`,
 `almanac.sync`, `jobtracker.mail`, `newsflash.items`), five subscriptions, the dead letter `{"title":"eerste echte bericht","body":"hello from HA"}`
