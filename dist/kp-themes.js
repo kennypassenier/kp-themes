@@ -53170,6 +53170,7 @@ function ghostOf(doc, last, W, H) {
       svgEl(doc, "path", {
         class: "kp-graph__edge",
         d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
+        pathLength: "100",
         "data-kp-kind": e.kind,
         "data-kp-style": kind?.style ?? "solid",
         style: `--i: ${Math.max(0, order2.indexOf(e.from === hub ? e.to : e.from))}${kind?.colour ? `; --kp-graph-edge-colour: ${kind.colour}` : ""}`
