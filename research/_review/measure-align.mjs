@@ -24,6 +24,10 @@
 //     start edge (the phone layout Kenny rejected 2026-10-19 11:22: "niet alles links alignen").
 //  D. Tracks. A group of buttons under a row group, inside its width, starts on one of that group's column edges or ends
 //     on one (tolerance 1 px). A segmented control's own box is its edge: its items sit inside its padding.
+//     A group of buttons that stands in a box narrower than the row group above (a phone-width frame under a full-width band,
+//     whose folded rows are no rows to `kids()`) is in another column and is not compared with the band's edges [measure-tools-1019].
+//     A cell's own buttons (table, grid, console, status list), a combobox's input (not its status line) and a radio tile's
+//     tile (not its inner radio) are the edges a reader sees; measure-gaps.mjs skips marks scrolled out of a scrolling log.
 //  E/F. Fields fill their track; columns side by side start on one line.
 //  G. No two buttons overlap; a `.kp-snooze` lies on one grid (trigger, End snooze and status on shared tracks, every part
 //     the whole width of its element, no part taller than its content) [snooze-width, 2026-10-19 11:22].
@@ -496,6 +500,12 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
             const r = gr.el.getBoundingClientRect();
             if (r.bottom > br.top + tol) continue;
             if (first.left < r.left - tol || last.right > r.right + tol) continue;
+            // A frame of its own (a phone-width mock stacked under a full-width band) is another column, not a row of the band:
+            // when the buttons stand in a box that is narrower than the group and does not contain it, the band's edges are not theirs.
+            let framed = false;
+            for (let a = bg.parentElement; a && a !== section.parentElement && !a.contains(gr.el); a = a.parentElement)
+                if (a.getBoundingClientRect().width < r.width - tol) framed = true;
+            if (framed) continue;
             if (!best || r.bottom > best.r.bottom) best = { gr, r };
         }
         if (!best) continue;

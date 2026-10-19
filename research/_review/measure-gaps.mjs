@@ -18,12 +18,8 @@
 // Run (a static server on the repository root first):
 //   node research/_review/measure-gaps.mjs <port> <research/topic/demo.html> [themes=formal,dark] [widths=1280,390]
 import { createRequire } from 'node:module';
-<<<<<<< Updated upstream
-import { ALIGN_TOLERANCE, measureAlign } from './measure-align.mjs';
+import { ALIGN_TOLERANCE, measureAlign, measureAlignOpened } from './measure-align.mjs';
 import { measureStatesAt } from './measure-states.mjs';
-=======
-import { measureAlignOpened } from './measure-align.mjs';
->>>>>>> Stashed changes
 
 const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
 const { firefox } = require('playwright-core');
