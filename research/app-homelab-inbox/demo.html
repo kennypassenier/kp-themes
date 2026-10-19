@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-homelab-inbox" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Homelab dashboard: Inbox and Notification rules · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hi-page">
+            <header class="hi-intro">
+                <h1>Homelab dashboard: Inbox and Notification rules</h1>
+                <p class="cat-intro">
+                    The Inbox is where the homelab tells you what needs you: a question from the host, something that failed, an app with a newer
+                    version, a stack that needs setting up, a check only a person can answer. Notification rules decide what reaches your phone and
+                    when. This page shows both pages rebuilt on kp-themes 11.0.0, in seven sections: the list and its triage keys, ticking many rows at
+                    once, a question from the host with its clock, the manual checks one by one, the delivery rules, the routing per kind and per stack,
+                    and quiet hours.
+                </p>
+                <p>
+                    Mock on this page: all the data (stacks such as jellyfin, immich, paperless, vaultwarden, traefik, kyu on CT 109, almanac on CT 112,
+                    host pve) is sample data in the shapes the dashboard reads today. Three things need the server to grow before the real pages can do
+                    them, and here they run on sample data only: a snooze for one row (today a manual check can only say &ldquo;later&rdquo;, 7 days), a
+                    quiet-hours field in the notification settings, and a &ldquo;Send a test push&rdquo; endpoint. Each section says so where it
+                    applies. Judge in the review dialog; nothing moves until you press something.
+                </p>
+            </header>
+
+            <!-- ================================================================ 1 · the Inbox list -->
+            <section
+                class="hi-sec"
+                id="inbox-list"
+                data-review-item="inbox-list"
+                data-review-topic="inbox"
+                data-review-topic-title="Inbox: triage"
+                data-review-components="action-list version-delta snooze segmented facets problems"
+                data-review-title="The Inbox list: worst first, with keys, snooze and version jumps"
+                data-review-choices='[{ "id": "inbox-kind-filter", "label": "How the Inbox filters by kind", "once": true, "default": "chips", "options": [
+                    { "value": "chips", "label": "Chips", "hint": "Recommended. One row of five chips above the list, each with its exact count. It costs one line of height and is a single press to narrow the list." },
+                    { "value": "facets", "label": "Facets with Only", "hint": "A column of checkboxes with counts and an Only button on each. It takes more room but is the one to use when the kinds are many; here there are five." }] }]'
+                aria-labelledby="h-inbox-list"
+            >
+                <div class="hi-sec__head">
+                    <h2 id="h-inbox-list">The Inbox list: worst first, with keys, snooze and version jumps</h2>
+                    <p>Shows everything that needs you in one list, grouped by how urgent it is, and lets you work down it with the keyboard: open, snooze or mark seen without leaving the row.</p>
+                </div>
+                <div class="hi-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Seven items in five groups (<b>Urgent</b>, <b>Updates</b>, <b>Setup</b>, <b>Checks</b>, <b>Snoozed</b>). Every row has its
+                            kind as a word in the first column (<b>Question</b>, <b>Failure</b>, <b>Update</b>, <b>Setup</b>, <b>Check</b>), a bar on
+                            its start edge for how serious it is, and its buttons in the same three columns on every row: <b>Remind me later</b>,
+                            the action, <b>Mark seen</b>. A question cannot be marked seen, so its last column is empty, not shifted.
+                        </li>
+                        <li>
+                            The update row shows a chip per app: <b>jellyfin 10.11.11 &rarr; 12.1</b> carries the word <b>major</b> and a <b>!</b>;
+                            immich (a minor jump) and paperless (a patch) are quiet. A failure folds open (<b>What went wrong</b>) to its
+                            reason, what to do and a command with <b>Copy</b>.
+                        </li>
+                        <li>
+                            Click a row, then <b>j</b> / <b>k</b> (or the arrows) walk the rows, <b>Enter</b> opens, <b>s</b> opens that row&rsquo;s
+                            snooze menu, <b>d</b> marks it seen. <b>Remind me later</b> offers 1 hour, 4 hours, tonight, tomorrow, Monday, or a date and
+                            time, each with the exact moment it means; after a choice the row moves to <b>Snoozed</b> and its button says when it comes
+                            back, with <b>End snooze</b>. (Needs a server field for one row; sample data here.)
+                        </li>
+                        <li>
+                            <b>Mark seen</b>: the row dims, the pressed button shows the spinner without changing width, then the row folds away and the
+                            focus goes to the same button of the next row. The chips keep exact counts (never 9+). <b>Loading</b> lays the busy card
+                            over the list; <b>Empty</b> and <b>Failed</b> fill the same height with a plate and a normal-size button.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        White rows with a hairline between them, navy for the primary and a thin coloured bar on the start edge (red for failures,
+                        amber for warnings, blue for new). The kind words are small plates of one width; the buttons of one role line up from row to row;
+                        no text touches the edge of its plate; the major chip is the only loud one in the list.
+                    </p>
+                </div>
+                <div class="hi-controls" data-review-controls data-review-controls-for="inbox-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-data="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Filter by kind">
+                        <b>Filter by kind</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-filter="chips">Chips</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-filter="facets">Facets</button>
+                    </div>
+                    <div role="group" aria-label="The next Mark seen" data-review-latent>
+                        <b>The next Mark seen</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-seen="works">Works</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-seen="fails">Fails</button>
+                    </div>
+                    <div role="group" aria-label="Rows">
+                        <b>Rows</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-reset="inbox">Put the rows back</button>
+                    </div>
+                </div>
+                <div class="hi-frame" id="inbox-component">
+                    <section class="kp-card hi-card" data-kp-state="ready" aria-labelledby="hi-inbox-t" id="hi-inbox-card">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hi-inbox-t">Inbox</h3>
+                            <div class="kp-card__actions"><span class="kp-timestamp" id="hi-inbox-count" aria-live="polite"></span></div>
+                        </div>
+                        <p class="kp-card__body">What needs you on pve and its stacks, worst first. A snoozed item comes back at the time you chose.</p>
+                        <div class="hi-kinds" id="hi-kinds">
+                            <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" aria-label="Show these kinds" id="hi-kinds-chips"></div>
+                            <div class="kp-facets hi-facets" data-kp-facets data-kp-facets-all="Every kind" role="group" aria-label="Kind" id="hi-kinds-facets" hidden>
+                                <ul class="kp-facets__list"></ul>
+                            </div>
+                        </div>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <ul class="kp-action-list kp-action-list--lead" aria-label="Inbox" data-kp-row-keys id="hi-inbox"></ul>
+                            </div>
+                        </div>
+                        <div class="hi-keys" id="hi-inbox-keys"></div>
+                    </section>
+                    <pre class="hi-log" id="hi-inbox-log" aria-live="polite">Press a row button; what the page would do shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ 2 · bulk triage -->
+            <section
+                class="hi-sec"
+                id="inbox-bulk"
+                data-review-item="inbox-bulk"
+                data-review-topic="inbox"
+                data-review-components="row-select selection-bar undo-toast snooze"
+                data-review-title="Bulk triage: tick rows, then act on all of them"
+                aria-labelledby="h-inbox-bulk"
+            >
+                <div class="hi-sec__head">
+                    <h2 id="h-inbox-bulk">Bulk triage: tick rows, then act on all of them</h2>
+                    <p>Lets you clear a long run of notices in one go: tick them with the keyboard or the mouse, then mark them seen, snooze them or fix them together, with Undo for a few seconds.</p>
+                </div>
+                <div class="hi-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Ten notices from the last day, each with a box. The bar at the top of the list says <b>Select rows to act on them</b> while
+                            nothing is ticked. Tick two: it names them and offers <b>Mark seen</b>, <b>Remind me later</b> and <b>Fix all</b>; with 37
+                            notices matching, it offers <b>Select all 37 that match</b>. <b>Clear</b> (or Esc) unticks everything.
+                        </li>
+                        <li>
+                            Keys: <b>j</b> / <b>k</b> move the ring, <b>x</b> ticks the row, <b>Shift+x</b> ticks a run, <b>Ctrl+A</b> ticks all shown,
+                            <b>Esc</b> unticks. The ring and the ticked tint read apart.
+                        </li>
+                        <li>
+                            <b>Mark seen</b> hides the rows at once and shows a toast <b>3 notices marked seen</b> with a clock and <b>Undo</b>
+                            (6 seconds; nothing reaches the server before the clock ends). <b>Remind me later</b> does the same with the moment in the
+                            toast.
+                        </li>
+                        <li>
+                            <b>Fix all</b> is only on for the notices that can be fixed (the two failed backups and the missed schedule); with others
+                            ticked it says <b>2 of 3 can be fixed</b>. While it runs the bar says <b>Fixing 3&hellip;</b>; with <b>One is refused</b> it
+                            ends with <b>2 done, 1 refused: why</b> and a mark on the refused row.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A white bar with a hairline above the list, the count in navy and the names in plain ink; the ring on the row under the cursor
+                        is a thin navy outline, a ticked row a light navy tint. The toast is the opaque white plate with its clock ring.
+                    </p>
+                </div>
+                <div class="hi-controls" data-review-controls data-review-controls-for="bulk-component">
+                    <div role="group" aria-label="Select">
+                        <b>Select</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-pick="failures">The 3 that can be fixed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-pick="all">All 10 shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-pick="none">None</button>
+                    </div>
+                    <div role="group" aria-label="Fix all" data-review-latent>
+                        <b>Fix all</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-fix="works">Works</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-fix="refuses">One is refused</button>
+                    </div>
+                    <div role="group" aria-label="Rows">
+                        <b>Rows</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-reset="bulk">Put the rows back</button>
+                    </div>
+                </div>
+                <div class="hi-frame" id="bulk-component">
+                    <section class="kp-card hi-card" aria-labelledby="hi-bulk-t">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hi-bulk-t">Notices of the last 24 hours</h3>
+                            <div class="kp-card__actions"><span class="kp-timestamp" id="hi-bulk-count" aria-live="polite"></span></div>
+                        </div>
+                        <div
+                            class="kp-selection hi-bar"
+                            data-kp-selection
+                            data-kp-selection-for="hi-bulk"
+                            data-kp-placement="inline"
+                            data-kp-select-matching="37"
+                            data-kp-undo-ms="6000"
+                            id="hi-bulk-bar"
+                            aria-label="Selected notices"
+                        >
+                            <div class="kp-selection__actions">
+                                <button type="button" class="kp-button" data-kp-selection-action="seen">Mark seen</button>
+                                <div class="kp-snooze" data-kp-snooze data-kp-look="menu" data-kp-snooze-choices="1h 4h tonight tomorrow monday" data-kp-now="2026-10-19T09:41:00+02:00" id="hi-bulk-snooze"></div>
+                                <button type="button" class="kp-button kp-button--primary" data-kp-selection-action="fix">Fix all</button>
+                            </div>
+                        </div>
+                        <ul class="kp-action-list kp-action-list--lead hi-bulk" data-kp-select-keys aria-label="Notices" id="hi-bulk"></ul>
+                        <div class="hi-keys" id="hi-bulk-keys"></div>
+                    </section>
+                    <div class="hi-toastbed" id="hi-bulk-bed" aria-label="Toasts of this section"></div>
+                    <pre class="hi-log" id="hi-bulk-log" aria-live="polite">Tick a row; what the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ 3 · host questions -->
+            <section
+                class="hi-sec"
+                id="host-question"
+                data-review-item="host-question"
+                data-review-topic="questions"
+                data-review-topic-title="Questions from the host and manual checks"
+                data-review-components="question-card ack-gate"
+                data-review-title="A question from the host: answer before it stops waiting"
+                data-review-choices='[{ "id": "question-clock", "label": "How the time left is drawn on a question", "once": true, "default": "ring", "options": [
+                    { "value": "ring", "label": "Ring", "hint": "Recommended. A ring that drains around the time in words; it is the quietest and its shape says how much is left even before you read it." },
+                    { "value": "bar", "label": "Bar", "hint": "A rule that shrinks along the card; easier to compare between several open questions, needs the card wide." },
+                    { "value": "text", "label": "Words only", "hint": "No drawing, only the time in words; the plainest, nothing moves." }] }]'
+                aria-labelledby="h-host-question"
+            >
+                <div class="hi-sec__head">
+                    <h2 id="h-host-question">A question from the host: answer before it stops waiting</h2>
+                    <p>When an operation on pve stops and waits for you, the card says what each answer would set in motion and how long the host still waits; if nobody answers, the safe answer happens.</p>
+                </div>
+                <div class="hi-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two open questions, oldest first, both with a still clock (<b>Clock: Still</b>). Each says what it asks, the time left in
+                            words, <b>If nobody answers: Leave it stopped</b>, and two buttons, each with its consequence written beside it (what
+                            <b>Allow</b> deletes, what <b>Leave it stopped</b> keeps). With the card focused, <b>1</b> and <b>2</b> answer.
+                        </li>
+                        <li>
+                            The first question deletes backups, so <b>Allow</b> stays off until its box under the card is ticked (<b>I know this deletes
+                            14 backups (3.2 GB)</b>); pressing the off button takes you to the box. The second restarts a service and has no gate.
+                        </li>
+                        <li>
+                            Answer one: the buttons show the spinner, then the card says the outcome and stays with a <b>Dismiss</b> button. With the
+                            host set to <b>Refuses</b> the card says <b>Not sent: why. Nothing changed; answer again.</b> and the buttons come back.
+                            <b>Clock: Running</b> counts down for real: under 30 seconds the card turns urgent (stronger colour, bold time, announced
+                            once); at zero the safe answer is applied and the card keeps its outcome.
+                        </li>
+                        <li>
+                            <b>Leave all stopped</b> answers every open question with its safe answer. Mock: the package has no batch answer yet (the
+                            button only calls each card&rsquo;s own answer); it is the stand-in for that gap.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        An amber-edged card on white that turns red when urgent; the time left is navy ink with the ring or rule beside it; the two
+                        buttons stand in one column with their consequences in muted ink beside them, and nothing sits against the card&rsquo;s edge.
+                        The gate under the first card is the amber warning plate with a plain checkbox.
+                    </p>
+                </div>
+                <div class="hi-controls" data-review-controls data-review-controls-for="question-component">
+                    <div role="group" aria-label="Time left">
+                        <b>Time left</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-clock-look="ring">Ring</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-clock-look="bar">Bar</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-clock-look="text">Words only</button>
+                    </div>
+                    <div role="group" aria-label="Clock">
+                        <b>Clock</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-clock="still">Still</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-clock="running">Running</button>
+                    </div>
+                    <div role="group" aria-label="The host" data-review-latent>
+                        <b>The host</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-host="accepts">Accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-host="refuses">Refuses</button>
+                    </div>
+                    <div role="group" aria-label="Questions">
+                        <b>Questions</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-ask="another">Ask another</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-ask="short">Ask one that ends in 12 s</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-ask="reset">Put the questions back</button>
+                    </div>
+                </div>
+                <div class="hi-frame hi-frame--questions" id="question-component">
+                    <div class="hi-qhead">
+                        <b id="hi-q-count" aria-live="polite"></b>
+                        <button type="button" class="kp-button kp-button--sm" id="hi-q-all">Leave all stopped</button>
+                    </div>
+                    <div data-kp-questions data-kp-title="off" id="hi-questions" aria-label="Questions from the host"></div>
+                    <pre class="hi-log" id="hi-q-log" aria-live="polite">Answer a question; the event it fires shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ 4 · manual checks -->
+            <section
+                class="hi-sec"
+                id="manual-checks"
+                data-review-item="manual-checks"
+                data-review-topic="questions"
+                data-review-components="focus-steps"
+                data-review-title="Manual checks, one question per screen"
+                aria-labelledby="h-manual-checks"
+            >
+                <div class="hi-sec__head">
+                    <h2 id="h-manual-checks">Manual checks, one question per screen</h2>
+                    <p>Walks you through the checks only a person can answer, one at a time with big buttons, and offers the same answer as last time in one press.</p>
+                </div>
+                <div class="hi-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three checks. Each screen is one question, the stack it is about, and big answer buttons <b>It works</b> and <b>It fails</b>,
+                            then <b>Same as last time: It works</b> and <b>Not now</b> (asks again in 7 days). Choosing an answer moves on after a
+                            moment; <b>Back</b> keeps every answer given.
+                        </li>
+                        <li>
+                            After the last one the page says what would happen: an answer <b>It fails</b> becomes a failure in the Inbox list (section
+                            1), <b>It works</b> closes the check, <b>Not now</b> asks again on a date.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the question; <b>Failed</b> says the checks could not be read with a normal-size
+                            button; all keep the height of a question.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A white plate with a navy progress bar, the question in large type, answer buttons at least 56 px high in one column, and the
+                        Back and Next buttons in the same place on every screen whatever the question&rsquo;s length.
+                    </p>
+                </div>
+                <div class="hi-controls" data-review-controls data-review-controls-for="checks-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-checks="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-checks="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-checks="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Checks">
+                        <b>Checks</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-checks-restart>Start again</button>
+                    </div>
+                </div>
+                <div class="hi-frame" id="checks-component">
+                    <div class="kp-focus-steps hi-checks" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-focus-steps-wake="false" aria-label="Manual checks" id="hi-checks"></div>
+                    <pre class="hi-log" id="hi-checks-log" aria-live="polite">Answer a check; what the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ 5 · delivery -->
+            <section
+                class="hi-sec"
+                id="rules-delivery"
+                data-review-item="rules-delivery"
+                data-review-topic="rules"
+                data-review-topic-title="Notification rules"
+                data-review-components="snooze timefield undo-toast ack-gate flash"
+                data-review-title="Delivery: snooze everything, the daily digest, push off, test push"
+                data-review-choices='[{ "id": "rules-snooze-look", "label": "How the snooze picker looks on the Notification rules page", "once": true, "default": "chips", "options": [
+                    { "value": "chips", "label": "Chips", "hint": "Recommended. All the choices on one row, each with its exact moment; the page has the room, so nothing is hidden behind a button." },
+                    { "value": "menu", "label": "Menu", "hint": "One button that opens the choices; saves a row of height, hides the moments until it opens. It is the look used inside the Inbox rows." }] }]'
+                aria-labelledby="h-rules-delivery"
+            >
+                <div class="hi-sec__head">
+                    <h2 id="h-rules-delivery">Delivery: snooze everything, the daily digest, push off, test push</h2>
+                    <p>Controls whether and when pushes reach your phone: hold everything for a while, set the hour of the daily digest, switch push off with a deliberate tick, and send yourself a test.</p>
+                </div>
+                <div class="hi-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The word at the top says the state in one place: <b>Push on &middot; not snoozed</b>, <b>Snoozed until 20/10/2026 07:00</b> or
+                            <b>Push off</b>; the plate keeps one width for all three. <b>Hold every push</b> offers 1 hour, 4 hours, tonight 18:00,
+                            tomorrow 07:00, Monday 07:00 and a date and time, never more than 7 days (what the server accepts), each with the exact
+                            moment; after a choice the picker says <b>Snoozed until &hellip;</b> with <b>End snooze</b>, no seconds ticking.
+                        </li>
+                        <li>
+                            <b>Daily digest at</b> is the package&rsquo;s time field (24 hours, type <b>0930</b> or pick from the list). It saves as you
+                            change it: no Save button; a toast says <b>Digest set to 09:30</b> with <b>Undo</b> for 6 seconds that puts the old time
+                            back. With the relay on <b>Refuses</b> the toast says it was not saved and the old time returns.
+                        </li>
+                        <li>
+                            <b>Turn push off&hellip;</b> opens an amber box with a tick (<b>I understand nothing reaches my phone until I turn it on
+                            again</b>); <b>Turn push off</b> stays dimmed, saying why, until it is ticked. <b>Send a test push</b> shows the spinner,
+                            then <b>Sent</b> for a moment; refused, it shows <b>Refused</b> and the sentence with what to do right under it. (Needs a
+                            test endpoint on the server; sample data here.)
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        White card, navy for the primary button and the state word, amber for the push-off warning. The time field is a plain
+                        underline-free box with a list; the snooze chips are small pills of one height with the moment under each label. The buttons
+                        of this card stand in one column and never change width when they show their result.
+                    </p>
+                </div>
+                <div class="hi-controls" data-review-controls data-review-controls-for="delivery-component">
+                    <div role="group" aria-label="Snooze look">
+                        <b>Snooze look</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-snooze-look="chips">Chips</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-snooze-look="menu">Menu</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-delivery="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-delivery="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-delivery="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="The push relay" data-review-latent>
+                        <b>The push relay</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-relay="accepts">Accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-relay="refuses">Refuses</button>
+                    </div>
+                    <div role="group" aria-label="Rules">
+                        <b>Rules</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hi-reset="delivery">Put the rules back</button>
+                    </div>
+                </div>
+                <div class="hi-frame" id="delivery-component">
+                    <section class="kp-card hi-card" data-kp-state="ready" aria-labelledby="hi-delivery-t" id="hi-delivery-card">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hi-delivery-t">Delivery</h3>
+                            <div class="kp-card__actions">
+                                <span
+                                    class="kp-badge kp-badge--success kp-state-word kp-state-word--center"
+                                    id="hi-push-state"
+                                    data-kp-words="Push on · not snoozed&#10;Snoozed until 20/10/2026 07:00&#10;Push off"
+                                ></span>
+                            </div>
+                        </div>
+                        <p class="kp-card__body">What reaches your phone from pve and its stacks, and when.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <dl class="hi-rules">
+                                    <div class="hi-rule">
+                                        <dt id="hi-snooze-l">Hold every push</dt>
+                                        <dd>
+                                            <div class="kp-snooze" data-kp-snooze data-kp-look="chips" data-kp-snooze-choices="1h 4h tonight tomorrow monday pick" data-kp-snooze-morning="07:00" data-kp-snooze-max="7d" data-kp-now="2026-10-19T09:41:00+02:00" id="hi-snooze" aria-labelledby="hi-snooze-l"></div>
+                                            <p class="hi-hint">For a night, a weekend or a holiday. The list keeps filling; only the pushes wait. At most 7 days.</p>
+                                        </dd>
+                                    </div>
+                                    <div class="hi-rule">
+                                        <dt id="hi-digest-l">Daily digest at</dt>
+                                        <dd>
+                                            <div class="kp-time" data-kp-time data-kp-name="digest_at" data-kp-value="09:00" data-kp-label="Daily digest at" data-kp-time-step="15" data-kp-time-presets="Morning=09:00,Evening=18:00" id="hi-digest"></div>
+                                            <p class="hi-hint">One message with everything that did not need to wake you. Saves as you change it.</p>
+                                        </dd>
+                                    </div>
+                                    <div class="hi-rule">
+                                        <dt id="hi-push-l">Push to phone</dt>
+                                        <dd>
+                                            <div class="hi-pushrow">
+                                                <button type="button" class="kp-button hi-col-btn" id="hi-push-open" aria-expanded="false" aria-controls="hi-push-gate">Turn push off…</button>
+                                                <button type="button" class="kp-button kp-button--primary hi-col-btn" id="hi-push-on" hidden>Turn push on</button>
+                                            </div>
+                                            <div class="kp-alert kp-alert--warning hi-gate" id="hi-push-gate" hidden data-kp-ack data-kp-ack-for="#hi-push-off" data-kp-ack-key="push-off" data-kp-ack-label="I understand nothing reaches my phone until I turn it on again" data-kp-ack-tone="warning">
+                                                <div class="kp-alert__body">
+                                                    <strong>Push off holds everything, including failures.</strong> The Inbox keeps filling and the daily digest still goes out,
+                                                    but a failed backup will not wake you.
+                                                </div>
+                                                <div class="hi-gate__actions">
+                                                    <button type="button" class="kp-button kp-button--destructive hi-col-btn" id="hi-push-off">Turn push off</button>
+                                                    <button type="button" class="kp-button hi-col-btn" id="hi-push-keep">Keep push on</button>
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </div>
+                                    <div class="hi-rule">
+                                        <dt id="hi-test-l">Test</dt>
+                                        <dd>
+                                            <button type="button" class="kp-button hi-col-btn" id="hi-test" data-kp-flash-button data-kp-flash-words="Sent,Refused">Send a test push</button>
+                                            <p class="hi-hint">Sends one push to the phones that are signed in, to prove the way is open.</p>
+                                        </dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="hi-toastbed" id="hi-delivery-bed" aria-label="Toasts of this section"></div>
+                    <pre class="hi-log" id="hi-delivery-log" aria-live="polite">Change a rule; what the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ 6 · routing -->
+            <section
+                class="hi-sec"
+                id="rules-routing"
+                data-review-item="rules-routing"
+                data-review-topic="rules"
+                data-review-components="segmented facets notices"
+                data-review-title="Routing: which kinds push, which stacks are muted"
+                aria-labelledby="h-rules-routing"
+            >
+                <div class="hi-sec__head">
+                    <h2 id="h-rules-routing">Routing: which kinds push, which stacks are muted</h2>
+                    <p>Decides, for every kind of notice and every stack, whether it pushes to your phone or waits for the digest, and shows what the last five pushes would have done under these rules.</p>
+                </div>
+                <div class="hi-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>By kind</b>: nine chips, one press = <b>always push</b> (a tick), a second press = <b>digest only</b> (a cross, struck
+                            through), a third = <b>by default</b>. The line under the chips says in words what is set. (A server field per kind and
+                            severity does not exist yet; sample data here.)
+                        </li>
+                        <li>
+                            <b>By stack</b>: fourteen stacks with their unread counts, each with a box and an <b>Only</b> button (<b>Only jellyfin</b>
+                            turns the others off), and an <b>Every stack</b> row that shows a mixed state while some are off. Every change is one
+                            request with the whole muted list; the line below says it. Counts are exact.
+                        </li>
+                        <li>
+                            <b>The last five pushes</b> under these rules: each notice says whether it went to the phone, was held for the digest, or
+                            came from a muted stack; changing a chip or a box above changes this list at once. <b>Loading</b>, <b>Empty</b> and
+                            <b>Failed</b> fill the same height.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Chips as small pills with a mark that is always there (tick, cross, or none) so nothing moves when one changes; facet rows
+                        with a coloured square and a pattern per stack, the count at the row&rsquo;s end; the preview as quiet rows with a bar for
+                        severity.
+                    </p>
+                </div>
+                <div class="hi-controls" data-review-controls data-review-controls-for="routing-component">
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-routing="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-routing="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-routing="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-routing="error">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Start from">
+                        <b>Start from</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-start="default">Defaults</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-start="quiet">Three noisy stacks muted</button>
+                    </div>
+                </div>
+                <div class="hi-frame" id="routing-component">
+                    <section class="kp-card hi-card" data-kp-state="ready" aria-labelledby="hi-routing-t" id="hi-routing-card">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hi-routing-t">Routing</h3>
+                            <div class="kp-card__actions"><span class="kp-timestamp" id="hi-routing-count" aria-live="polite"></span></div>
+                        </div>
+                        <p class="kp-card__body">Pushes wake you; the digest waits for the morning.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hi-routing">
+                                <div class="hi-routing__kinds">
+                                    <h4 class="hi-h4" id="hi-kinds-h">By kind</h4>
+                                    <div class="kp-segmented kp-segmented--chips" data-kp-segmented="tri" aria-labelledby="hi-kinds-h" id="hi-tri" data-kp-segmented-words='{"include":"always pushed","exclude":"digest only","any":"by default"}'></div>
+                                    <p class="hi-hint" id="hi-tri-say" aria-live="polite"></p>
+                                </div>
+                                <div class="hi-routing__stacks">
+                                    <h4 class="hi-h4" id="hi-stacks-h">By stack</h4>
+                                    <div class="kp-facets hi-facets hi-facets--stacks" data-kp-facets data-kp-facets-all="Every stack" role="group" aria-labelledby="hi-stacks-h" id="hi-stacks">
+                                        <ul class="kp-facets__list"></ul>
+                                    </div>
+                                    <p class="hi-hint" id="hi-stacks-say" aria-live="polite"></p>
+                                </div>
+                                <div class="hi-routing__preview">
+                                    <h4 class="hi-h4" id="hi-preview-h">The last five pushes under these rules</h4>
+                                    <div class="kp-notices hi-notices" data-kp-notices data-kp-notices-look="page" data-kp-keys="off" data-kp-toast-new="none" data-kp-count-in-title="off" aria-labelledby="hi-preview-h" id="hi-preview"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <pre class="hi-log" id="hi-routing-log" aria-live="polite">Change a chip or a box; the request the page would send shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ 7 · quiet hours -->
+            <section
+                class="hi-sec"
+                id="rules-quiet"
+                data-review-item="rules-quiet"
+                data-review-topic="rules"
+                data-review-components="sentence timefield weekdays heat"
+                data-review-title="Quiet hours: hold pushes at night, see what it would have held"
+                aria-labelledby="h-rules-quiet"
+            >
+                <div class="hi-sec__head">
+                    <h2 id="h-rules-quiet">Quiet hours: hold pushes at night, see what it would have held</h2>
+                    <p>Lets you say once that pushes wait between two times on chosen days, and shows on the last 14 days of pushes which hours that would have kept quiet before you save.</p>
+                </div>
+                <div class="hi-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            One sentence you fill in: <b>Hold pushes from [22:00] until [07:00] on these days [Mon Tue Wed Thu Fri Sat Sun]</b>. The times are the
+                            package&rsquo;s 24-hour field (an end earlier than the start means past midnight, and the sentence says so:
+                            <b>until 07:00 the next morning</b>); the days are seven chips with the quick picks <b>Weekdays</b>, <b>Weekend</b> and
+                            <b>Every day</b>; none picked is refused with a line. A tick lets <b>Question and failure notices</b> through.
+                        </li>
+                        <li>
+                            The grid under it is the last 14 days of pushes, one row per stack (the six busiest) and one column per hour, darker for
+                            more; the row at the foot totals each hour. Hours that fall inside the quiet window are drawn grey: those pushes would
+                            have been held. The line under the grid counts them exactly: <b>41 of 153 pushes would have been held (26.8 %)</b>.
+                        </li>
+                        <li>
+                            The buttons <b>Nights</b>, <b>Working hours</b> and <b>Weekend</b> fill the sentence with a sensible window so you can see
+                            the grid change. <b>Save</b> is not needed: it saves as you change it, with Undo. (Needs a quiet-hours field on the server;
+                            sample data here.)
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The sentence at reading size with the fields as underlined boxes in navy; the grid in one navy hue getting darker, grey for the
+                        held hours, the hour axis naming every third hour, the totals row filled from its foot.
+                    </p>
+                </div>
+                <div class="hi-controls" data-review-controls data-review-controls-for="quiet-component">
+                    <div role="group" aria-label="Try a window">
+                        <b>Try a window</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-window="nights">Nights</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-window="work">Working hours</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-window="weekend">Weekend</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hi-quiet="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-quiet="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-quiet="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hi-quiet="error">Failed</button>
+                    </div>
+                </div>
+                <div class="hi-frame" id="quiet-component">
+                    <section class="kp-card hi-card" data-kp-state="ready" aria-labelledby="hi-quiet-t" id="hi-quiet-card">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hi-quiet-t">Quiet hours</h3>
+                            <div class="kp-card__actions"><span class="kp-timestamp" id="hi-quiet-say" aria-live="polite"></span></div>
+                        </div>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hi-quiet">
+                                <form class="kp-sentence" data-kp-sentence data-kp-sentence-size="md" id="hi-quiet-form">
+                                    <p class="kp-sentence__text">
+                                        Hold pushes from
+                                        <span class="kp-sentence__field"><span class="kp-time" data-kp-time data-kp-name="from" data-kp-value="22:00" data-kp-label="Quiet from" data-kp-time-step="30" data-kp-time-look="inline" id="hi-q-from"></span></span>
+                                        until
+                                        <span class="kp-sentence__field"><span class="kp-time" data-kp-time data-kp-name="until" data-kp-value="07:00" data-kp-label="Quiet until" data-kp-time-step="30" data-kp-time-look="inline" id="hi-q-until"></span></span>
+                                        <span id="hi-q-next" class="hi-q-next"></span>
+                                        on these days
+                                        <span class="kp-sentence__field" data-kp-block><span class="kp-weekdays" data-kp-weekdays data-kp-week-starts-on="1" data-kp-value="mon,tue,wed,thu,fri,sat,sun" aria-label="Quiet on" id="hi-q-days"></span></span>
+                                    </p>
+                                </form>
+                                <div class="kp-field kp-field--check hi-q-through">
+                                    <input class="kp-field__check" id="hi-q-through" type="checkbox" checked />
+                                    <label class="kp-field__label" for="hi-q-through">Let questions and failures through</label>
+                                </div>
+                                <div>
+                                    <h4 class="hi-h4" id="hi-q-heat-h">Pushes of the last 14 days, by hour</h4>
+                                    <div class="kp-heat hi-heat" data-kp-heat data-kp-remember="hi-quiet-heat" aria-labelledby="hi-q-heat-h" id="hi-q-heat"></div>
+                                    <p class="hi-hint" id="hi-q-held" aria-live="polite"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="hi-toastbed" id="hi-quiet-bed" aria-label="Toasts of this section"></div>
+                    <pre class="hi-log" id="hi-quiet-log" aria-live="polite">Change the window; what the page would send shows here.</pre>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-homelab-inbox-0d4f6a52-7e1b-4c8e-9f2a-3b6c1d8e5a97" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

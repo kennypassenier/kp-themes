@@ -1,0 +1,390 @@
+/* research/app-homelab-inbox: the page's own frame. Everything with a kp- class is the package; these hi- rules only lay the
+   sections out and draw the readouts. */
+
+.hi-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hi-intro,
+.hi-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hi-intro :is(h1, p),
+.hi-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hi-intro p,
+.hi-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hi-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hi-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hi-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hi-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+/* One box of buttons that drive the component below it; groups share one row. */
+.hi-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.hi-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.hi-controls > [role='group'] > b {
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+}
+
+.hi-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.hi-frame > [hidden] {
+    display: none;
+}
+
+.hi-card {
+    min-inline-size: 0;
+}
+
+.hi-log {
+    box-sizing: border-box;
+    min-block-size: calc(2lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.hi-keys {
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+.hi-h4 {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.hi-hint {
+    margin: var(--kp-space-xs, 0.25rem) 0 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    min-block-size: 1lh;
+}
+
+/* 1 · the Inbox: the kind filter holds one height in both looks. */
+.hi-kinds {
+    min-block-size: 2.5rem;
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+.hi-kinds > [hidden] {
+    display: none;
+}
+
+#hi-kinds-facets .kp-facets__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+}
+
+.hi-card .kp-card__stage {
+    --kp-card-stage-min: 22rem;
+}
+
+.hi-more-list {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hi-apps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+}
+
+.hi-app {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hi-app > b {
+    font-weight: 600;
+}
+
+/* 2 · bulk: the bar and the list stand in one column; the ticked row's box is the lead. */
+.hi-bar {
+    margin-block: var(--kp-space-sm, 0.5rem);
+}
+
+.hi-bulk .kp-action-list__lead {
+    min-inline-size: 1.5rem;
+}
+
+.hi-toastbed {
+    min-block-size: 0;
+}
+
+/* 3 · questions: the head line holds one height whatever it says. */
+.hi-frame--questions {
+    min-block-size: 24rem;
+}
+
+.hi-qhead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-block-size: 2.25rem;
+}
+
+#hi-questions {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-block-size: 18rem;
+    align-content: start;
+}
+
+.hi-gate-slot {
+    display: grid;
+}
+
+/* 4 · checks */
+.hi-checks {
+    min-block-size: 22rem;
+}
+
+/* 5 · delivery: label column and control column are one grid; buttons share one column width. */
+.hi-rules {
+    display: grid;
+    grid-template-columns: minmax(8rem, max-content) minmax(0, 1fr);
+    gap: 0 var(--kp-space-lg, 1.5rem);
+    margin: 0;
+}
+
+.hi-rule {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    align-items: start;
+    padding-block: var(--kp-space-md, 1rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.hi-rule:last-child {
+    border-block-end: 0;
+}
+
+.hi-rule > dt {
+    font-weight: 600;
+    padding-block-start: 0.4rem;
+}
+
+.hi-rule > dd {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    min-inline-size: 0;
+    justify-items: start;
+}
+
+.hi-col-btn {
+    min-inline-size: 11rem;
+    justify-content: center;
+}
+
+.hi-pushrow {
+    display: grid;
+}
+
+.hi-gate {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+    inline-size: min(100%, 44rem);
+}
+
+.hi-gate[hidden] {
+    display: none;
+}
+
+.hi-gate__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* 6 · routing */
+.hi-routing {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    grid-template-columns: minmax(0, 1fr);
+}
+
+
+.hi-facets--stacks {
+    max-inline-size: 28rem;
+}
+
+@media (min-width: 64rem) {
+    .hi-routing {
+        grid-template-columns: minmax(0, 1fr) 28rem;
+        grid-template-areas:
+            'kinds stacks'
+            'preview stacks';
+        align-items: start;
+    }
+    .hi-routing__kinds {
+        grid-area: kinds;
+    }
+    .hi-routing__stacks {
+        grid-area: stacks;
+    }
+    .hi-routing__preview {
+        grid-area: preview;
+    }
+}
+
+.hi-notices {
+    min-block-size: 14rem;
+}
+
+/* 7 · quiet hours */
+.hi-quiet {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.hi-q-next {
+    color: var(--muted-foreground);
+}
+
+.hi-heat {
+    min-block-size: 16rem;
+}
+
+/* In an Inbox row the picker is one button in its own column: a size-contained picker has no width of its own, so it
+   gets the column's; its "Not snoozed" line is left out (the row says it when it is snoozed). */
+#hi-inbox .kp-snooze {
+    inline-size: 10.5rem;
+}
+
+#hi-inbox .kp-snooze .kp-snooze__status {
+    display: none;
+}
+
+#hi-inbox .kp-snooze .kp-snooze__trigger {
+    inline-size: 100%;
+}
+
+#hi-inbox .kp-snooze .kp-snooze__trigger {
+    min-height: var(--kp-button-height-sm, 1.75rem);
+    min-block-size: var(--kp-button-height-sm, 1.75rem);
+    padding-block: var(--kp-button-padding-block-sm, 0.25rem);
+    padding-inline: var(--kp-button-padding-inline-sm, 0.5rem);
+    font-size: var(--kp-button-text-sm, var(--kp-text-sm, 0.8125rem));
+}
+
+/* In the selection bar the picker is one button among the bar's buttons (same reason as in a row). */
+#hi-bulk-bar .kp-snooze {
+    inline-size: 11rem;
+}
+
+#hi-bulk-bar .kp-snooze .kp-snooze__status {
+    display: none;
+}
+
+#hi-bulk-bar .kp-snooze .kp-snooze__trigger {
+    inline-size: 100%;
+}
+
+/* The picker is size-contained (no width of its own): in the rules it takes the whole column. */
+.hi-rule > dd > .kp-snooze {
+    justify-self: stretch;
+    inline-size: 100%;
+}
+
+/* The package cuts a heat row's label with an ellipsis; here the label wraps and its column is wide enough for the longest
+   stack name (a gap for the package: the label column should size to its labels). */
+.hi-heat {
+    grid-template-columns: clamp(6.5rem, 30%, 9rem) minmax(0, 1fr);
+}
+
+.hi-heat .kp-heat__label-text {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 40rem) {
+    .hi-sec {
+        padding: var(--kp-space-md, 0.75rem);
+    }
+    .hi-rules {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .hi-rule > dt {
+        padding-block-start: 0;
+    }
+    .hi-col-btn {
+        min-inline-size: 0;
+    }
+}

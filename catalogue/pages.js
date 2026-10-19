@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): the Inbox triage and the Notification rules pages rebuilt on 11.0.0 components, formal only, with sample data in the dashboard's own shapes.
+            {
+                href: 'research/app-homelab-inbox/demo.html',
+                label: 'Homelab dashboard: Inbox triage and notification rules',
+                about: 'What needs you in the homelab, and what reaches your phone. 7 sections (7 pairs): the Inbox list with keys, snooze and version jumps; ticking many rows and acting on all of them with Undo; a question from the host with its clock and a tick before it deletes; the manual checks one question per screen; delivery (snooze everything, the daily digest, push off behind a tick, a test push); routing per kind and per stack; and quiet hours with the last 14 days of pushes. Formal only; three things need the server first (a snooze for one row, a quiet-hours field, a test push) and run on sample data.',
+            },
             // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's recipe page and calm settings, formal only (new demo). research/audhd-recepten/.
             {
                 href: 'research/audhd-recepten/recipe/demo.html',
