@@ -420,32 +420,6 @@
             "fingerprint": "b038076f203b1461",
             "update": null
         },
-        "research/audhd-recepten/grid-fix/demo.html": {
-            "facts": {
-                "id": "audhd-grid-fix",
-                "themes": "formal",
-                "ask": null,
-                "askText": "Twelve sections of the recipe app's approved screens that did not stand on a grid: a column that started lower than the one beside it, a button off its row's line, chips whose words did not line up on a phone. Each is rebuilt so its columns share one line and its rows share one set of tracks; the settings and the wheel's filters are now one form grid. Only these sections are here; everything else stays approved on its own page. 12 sections, 12 pairs, formal only.",
-                "sections": [
-                    { "item": "zero-prep", "themes": null, "topic": null, "mode": null },
-                    { "item": "recipe", "themes": null, "topic": "recipe", "mode": null },
-                    { "item": "recipe-states", "themes": null, "topic": "recipe", "mode": null },
-                    { "item": "qr", "themes": null, "topic": "carry", "mode": null },
-                    { "item": "qr-states", "themes": null, "topic": "carry", "mode": null },
-                    { "item": "settings", "themes": null, "topic": "calm", "mode": null },
-                    { "item": "log", "themes": null, "topic": "calm", "mode": null },
-                    { "item": "wheel", "themes": null, "topic": "wheel", "mode": null },
-                    { "item": "filters", "themes": null, "topic": "filters", "mode": null },
-                    { "item": "no-energy", "themes": null, "topic": "no-energy", "mode": null },
-                    { "item": "states", "themes": null, "topic": "states", "mode": null },
-                    { "item": "cook", "themes": null, "topic": "cook", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"audhd-grid-fix-27ac1bf0-b80b-40b4-862a-bf5aefc89d5d\", \"received\": [] }\n        "
-            },
-            "fingerprint": "49c823c8aef63748",
-            "update": null
-        },
         "research/almanac-calendars/demo.html": {
             "facts": {
                 "id": "almanac-calendars",
@@ -652,6 +626,7 @@
         }
     },
     "decided": {
+        "research/audhd-recepten/grid-fix/demo.html": "2026-10-19 09:22, Kenny: every pair approved (research/audhd-recepten/grid-fix/VERDICTS.json)",
         "research/chassis-kit-pages/demo.html": "",
         "research/audhd-recepten/cook/demo.html": "2026-10-19 06:43, Kenny: 5 of 5 approved, defaults kept (research/audhd-recepten/cook/VERDICTS.json)",
         "research/audhd-recepten/wheel/demo.html": "2026-10-19 02:38, Kenny: 4 of 4 approved; one default changed for every theme: \"All slices equal\" (research/audhd-recepten/wheel/VERDICTS.json)",

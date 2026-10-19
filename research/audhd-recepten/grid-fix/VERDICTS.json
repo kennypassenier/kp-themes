@@ -1,4 +1,61 @@
 {
     "demo": "audhd-grid-fix",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "audhd-grid-fix-27ac1bf0-b80b-40b4-862a-bf5aefc89d5d",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 09:22: 12 of 12 judged, 12 approved, 0 not approved. Approved in full: formal. Defaults kept.",
+            "approved": [
+                {
+                    "item": "zero-prep",
+                    "theme": "formal"
+                },
+                {
+                    "item": "recipe",
+                    "theme": "formal"
+                },
+                {
+                    "item": "recipe-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "qr",
+                    "theme": "formal"
+                },
+                {
+                    "item": "qr-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "settings",
+                    "theme": "formal"
+                },
+                {
+                    "item": "log",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel",
+                    "theme": "formal"
+                },
+                {
+                    "item": "filters",
+                    "theme": "formal"
+                },
+                {
+                    "item": "no-energy",
+                    "theme": "formal"
+                },
+                {
+                    "item": "states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "cook",
+                    "theme": "formal"
+                }
+            ]
+        }
+    ]
 }
