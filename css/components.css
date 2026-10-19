@@ -2880,14 +2880,78 @@
         background: var(--destructive);
     }
 
+    /* The ghost of the coming network while loading. A register paints its decided loading picture through
+ * these knobs: --kp-graph-ghost (the ghost's opacity), --kp-graph-ghost-anim (the whole ghost's motion, the generic
+ * pulse unless a register sets none), and --kp-graph-edge-anim / --kp-graph-node-anim with a stagger per --i and a
+ * delay for the links and the nodes. Each link carries pathLength 100, so a travelling dash is a percentage. */
     .kp-graph__ghost {
-        opacity: 0.45;
+        opacity: var(--kp-graph-ghost, 0.45);
         pointer-events: none;
+    }
+
+    .kp-graph__ghost .kp-graph__node {
+        transform-box: fill-box;
+        transform-origin: center;
+    }
+
+    /* The sentence stands at the foot of the box, under the picture and not over it: the picture gives up the height of
+ * one line (--kp-graph-note-h), so the box keeps the height of the drawn network and nothing jumps when it arrives. */
+    .kp-graph[data-kp-state='loading'] .kp-graph__svg {
+        block-size: calc(var(--kp-graph-h, 480px) - var(--kp-graph-note-h, 2.5rem));
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__note {
+        position: static;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-block-size: var(--kp-graph-note-h, 2.5rem);
+        padding-inline: var(--kp-space-md, 1rem);
+    }
+
+    .kp-graph[data-kp-state='loading'] .kp-graph__note[hidden] {
+        display: none;
+    }
+
+    @keyframes kp-graph-spark {
+        to {
+            stroke-dashoffset: -100;
+        }
+    }
+
+    @keyframes kp-graph-signal {
+        from {
+            stroke-dashoffset: 100;
+        }
+        to {
+            stroke-dashoffset: -16;
+        }
+    }
+
+    @keyframes kp-graph-glow {
+        0%,
+        100% {
+            filter: brightness(1);
+        }
+        50% {
+            filter: brightness(1.6);
+        }
     }
 
     @media (prefers-reduced-motion: no-preference) {
         .kp-graph__ghost {
-            animation: kp-pulse 1600ms ease-in-out infinite;
+            animation: var(--kp-graph-ghost-anim, kp-pulse 1600ms ease-in-out infinite);
+        }
+
+        .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__edge {
+            animation: var(--kp-graph-edge-anim, none);
+            animation-delay: calc(var(--i, 0) * var(--kp-graph-edge-stagger, 0ms) + var(--kp-graph-edge-delay, 0ms));
+        }
+
+        .kp-graph[data-kp-state='loading'] .kp-graph__ghost .kp-graph__node {
+            animation: var(--kp-graph-node-anim, none);
+            animation-delay: calc(var(--i, 0) * var(--kp-graph-node-stagger, 0ms) + var(--kp-graph-node-delay, 0ms));
         }
 
         .kp-graph__edge,

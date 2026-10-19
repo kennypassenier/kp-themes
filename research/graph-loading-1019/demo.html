@@ -1,0 +1,183 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="formal"
+    data-review="graph-loading-1019"
+    data-review-themes="formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The network graph while it loads: the decided picture in twelve themes</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>The network graph while it loads</h1>
+                <p class="cat-intro">
+                    You decided a loading picture for the network graph in every theme (character-graph, 2026-10-06), but the package only had one
+                    generic pulse for all of them, and kyu&rsquo;s overview showed it. Now each theme draws its own: 12 pairs, one section per theme.
+                    Each section says under <b>What changed since you approved it</b> which picture you chose and how the graph looked before.
+                </p>
+            </header>
+
+            <section
+                class="kc-sec"
+                id="graph-loading"
+                data-review-item="graph-loading"
+                data-review-components="graph"
+                data-review-title="Network graph while loading"
+                data-review-themes="formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+                aria-labelledby="h-graph-loading"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Before, every theme showed the same plain network fading in and out, not the
+                        picture you chose; kyu&rsquo;s overview showed it. Now each theme draws its own: Formal &ldquo;The courier’s round&rdquo;;
+                        Dark &ldquo;A packet runs the bus&rdquo;; Cyberpunk &ldquo;The packet race&rdquo;; Synthwave &ldquo;The outrun pulse&rdquo;;
+                        Pastel &ldquo;The sprinkle drift&rdquo;; Forest &ldquo;Fireflies trace the clearing&rdquo;; Blueprint &ldquo;Current finds the
+                        circuit&rdquo;; Solstice &ldquo;Embers catching&rdquo;; Brutalism &ldquo;The site is taped off&rdquo;; Deco &ldquo;The
+                        engraving is cut&rdquo;; Nostromo &ldquo;Blips surface round the scope&rdquo;; Titanium &ldquo;The signal runs the
+                        harness&rdquo;. The sentence that says it is loading stands at the foot, under the picture, so the middle stays clear.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-graph-loading">Network graph while loading</h2>
+                    <p>The network graph while its data is read, in the picture you chose for each theme.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The network is drawn faintly and moves in the theme&rsquo;s own way (see the line for the theme); it keeps moving as long
+                            as the page is open.
+                        </li>
+                        <li>
+                            The words &ldquo;Reading the network&hellip;&rdquo; stand at the foot of the box, clear of the hub and of every node, and
+                            the box is as tall as the drawn network.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: &ldquo;The courier’s round&rdquo;: a small pulse leaves the hub along each link in turn, round the ring; the words at
+                        the foot are readable and touch nothing.
+                    </p>
+                    <p data-for="dark">
+                        Dark: &ldquo;A packet runs the bus&rdquo;: a bright pulse runs out along each link in turn; the words at the foot are readable
+                        and touch nothing.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk: &ldquo;The packet race&rdquo;: a bright packet races along every link at once; the words at the foot are readable
+                        and touch nothing.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave: &ldquo;The outrun pulse&rdquo;: a long streak of light runs along every link at once; the words at the foot are
+                        readable and touch nothing.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel: &ldquo;The sprinkle drift&rdquo;: a soft dot drifts along every link at once; the words at the foot are readable and
+                        touch nothing.
+                    </p>
+                    <p data-for="forest">
+                        Forest: &ldquo;Fireflies trace the clearing&rdquo;: a spark runs along each link and the ring of the node it reaches glows;
+                        the words at the foot are readable and touch nothing.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint: &ldquo;Current finds the circuit&rdquo;: a short pulse runs along each link and the core of the node it reaches
+                        glows; the words at the foot are readable and touch nothing.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice: &ldquo;Embers catching&rdquo;: an amber coal races out along each link and each node it reaches flares; the words at
+                        the foot are readable and touch nothing.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism: &ldquo;The site is taped off&rdquo;: the box goes black, the links are hazard tape and the nodes warning lamps; the
+                        words at the foot are readable and touch nothing.
+                    </p>
+                    <p data-for="deco">
+                        Deco: &ldquo;The engraving is cut&rdquo;: each link fills from sparse strokes to a fine line and its medallion flashes a
+                        bevel; the words at the foot are readable and touch nothing.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo: &ldquo;Blips surface round the scope&rdquo;: the sites blink in turn round the ring while the hub breathes slowly;
+                        the words at the foot are readable and touch nothing.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium: &ldquo;The signal runs the harness&rdquo;: a bright pulse runs out along each link in turn; the words at the foot
+                        are readable and touch nothing.
+                    </p>
+                </div>
+                <div class="gl-stack">
+                    <figure class="kp-graph" data-kp-graph data-gl-graph aria-label="Pump network, loading">
+                        <script type="application/json" data-kp-graph-data>
+                            {
+                                "hub": "hub",
+                                "nodes": [
+                                    { "id": "hub", "label": "Control centre", "description": "where every reading arrives" },
+                                    { "id": "a", "label": "Pump house 1", "description": "west ring main" },
+                                    { "id": "b", "label": "Pump house 2", "description": "the old town" },
+                                    { "id": "c", "label": "Pump house 3", "description": "north ring main" },
+                                    { "id": "d", "label": "Reservoir North", "description": "level sensor" },
+                                    { "id": "e", "label": "Reservoir South", "description": "inlet valve" },
+                                    { "id": "f", "label": "Weather service", "description": "outside the network" }
+                                ],
+                                "edges": [
+                                    { "from": "a", "to": "hub", "kind": "telemetry" },
+                                    { "from": "b", "to": "hub", "kind": "telemetry" },
+                                    { "from": "c", "to": "hub", "kind": "telemetry" },
+                                    { "from": "d", "to": "hub", "kind": "telemetry" },
+                                    { "from": "e", "to": "hub", "kind": "telemetry" },
+                                    { "from": "f", "to": "hub", "kind": "telemetry" }
+                                ],
+                                "kinds": [
+                                    {
+                                        "kind": "telemetry",
+                                        "label": "Telemetry",
+                                        "hint": "Readings sent every minute",
+                                        "style": "solid",
+                                        "colour": "var(--chart-1)"
+                                    }
+                                ]
+                            }
+                        </script>
+                    </figure>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "graphloading-e06b53ff-94b0-4282-9031-dbead458a6c7", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

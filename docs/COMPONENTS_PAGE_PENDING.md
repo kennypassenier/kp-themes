@@ -12,6 +12,7 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- graph-loading-1019, site/components/graph.html: the loading state now draws each theme's decided picture (a ghost of the network moving in the register's own way); document the knobs `--kp-graph-ghost`, `--kp-graph-ghost-anim`, `--kp-graph-edge-anim`, `--kp-graph-node-anim` (+ `-stagger`, `-delay`) and that the sentence stands at the foot.
 - rule-fixes-1019, site/components/wheel.html: item option `short` (a shorter name for the face of the wheel); the sentence that a long name is cut on its segment is no longer true (largest type, two lines, `short`, else not drawn and the segment's tooltip).
 - rule-fixes-1019, site/components/new-pill.html: remove the `--kp-newpill-digits` row (the pill is as wide as its words).
 - rule-fixes-1019, site/components/dialog.html: knob `--kp-dialog-section-inset` (0.5rem), the room between a section's text and the ends of its rule.
