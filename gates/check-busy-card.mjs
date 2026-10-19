@@ -92,6 +92,7 @@ export const NOT_DATA = {
     'js/idmark.js': "a mark is one small plate: a loading mark is the plate's own skeleton",
     'js/stackbar.js': "one figure, as a meter is: its bar shows the meter's own loading picture (js/kpi.js setMeter) and the legend keeps its rows",
     'js/flash.js': "a button's busy state: the theme's spinner stands in the button's own face [kpadopt5]",
+    'js/footprint.js': "holds a data component's height while a state shows in its place; it draws no loading look (it reads the table's skeleton rows to leave them out)",
     'js/tick.js': 'a number counting to its value, no loading state of its own',
     'js/barcell.js': 'a cell of a data table, which lays the card over its rows (`dataTable().busy({ overlay: true })`)',
     'js/forms.js': "a submit button's busy state",

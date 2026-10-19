@@ -44,7 +44,7 @@
         "js/flash.js": { "digest": "044b7e057d3bd243", "when": "[data-kp-flash-button], [data-kp-post]" },
         "js/focus-steps.js": { "digest": "a824862be86e3508", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
-            "digest": "d28c56bd6a8b00a8",
+            "digest": "452bceff9d6e7e06",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-graph], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"
         },
         "js/forms.js": { "digest": "caf5da1afe4a65a3", "when": "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]" },
@@ -66,7 +66,7 @@
         },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/logviewer.js": { "digest": "8413cc6db754146a", "when": "[data-kp-logviewer]" },
-        "js/master-detail.js": { "digest": "771c8698bbc09e59", "when": "[data-kp-master-detail]" },
+        "js/master-detail.js": { "digest": "bba7442ffce0a3e5", "when": "[data-kp-master-detail]" },
         "js/menu-button.js": { "digest": "6363f9aecedcbf05", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "2620bd6cb4175e2b",
@@ -11238,6 +11238,7 @@
                 "data-kp-calm-map",
                 "data-kp-card-built",
                 "data-kp-card-retry",
+                "data-kp-cards",
                 "data-kp-chart",
                 "data-kp-chart-annotation-key",
                 "data-kp-chart-band",
@@ -11702,6 +11703,7 @@
                 "data-kp-side",
                 "data-kp-since-left",
                 "data-kp-size",
+                "data-kp-skeleton-row",
                 "data-kp-sort-value",
                 "data-kp-source",
                 "data-kp-spark",

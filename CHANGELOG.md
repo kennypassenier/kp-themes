@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: a master-detail's loading look covers the data area that is on screen** [kyugaps-1019; kyu 48]. At phone width the detail pane is a closed sheet (`display: none`), so the busy card laid in it was 0 x 0; it is now laid on the master-detail over the list while the sheet is closed, moves to the sheet when it opens and back when it closes, and follows the list's size as the panes fold (390: 340 x 384 over a 384 px list, was 0 x 0).
+- **Fixed: a data table that opens empty or failed holds a footprint, also as cards** [kyugaps-1019; kyu 50]. `js/footprint.js` took the frame of a table with no rows (98 px) for its loaded height and held that, so the failed plate stood at 564 px at 390; a table with no rows has no loaded height to remember now, and the first-load footprint it falls back on counts a card in the card layout as one line per column (`--kp-footprint-row` still wins). Formal first-load failed table: 390 564 px to 770 px (the 48rem cap), 1280 384 px to 634 px.
+- kyu 49 (a graph loading as the busy card) is already fixed on main by the chart loading picture [graphload-1019]; `measure-states` on research/kyu-11-overview is clear at 1280 and 390.
+
 ## 11.1.0 — 2026-10-19
 
 Released on Kenny's go (form release-111 "Na de uitlijn-demo", screenshots "Zonder"), after he approved the form grid demo in full (2026-10-19 18:55). A minor release: everything is added or fixed, nothing an app uses is removed. The gaps the app threads (homelab, almanac, kyu, http-switchboard, chassis-rs, Kitchen) reported against 11.0.0, the form grid and its measure, the standard states with their per-kind loading look and the measure-states check, and 44px touch targets. The screenshot check was skipped (KP_RELEASE_SKIP_APPROVALS=1); the network graph's per-theme loading picture follows in a patch.

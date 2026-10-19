@@ -29856,6 +29856,13 @@ function holdFootprint(host) {
     const size2 = Number.parseInt(host.getAttribute("data-kp-page-size") ?? "", 10);
     return size2 > 0 ? size2 : 10;
   };
+  const cardRow = (rem) => {
+    if (!host.matches("[data-kp-datatable]") || !(host.hasAttribute("data-kp-cards") || host.querySelector("table[data-kp-cards]"))) return 0;
+    if (host.getBoundingClientRect().width > 40 * rem) return 0;
+    const lines = [...host.querySelectorAll("thead th")].filter((th) => (th.textContent ?? "").trim() !== "").length;
+    return lines > 0 ? (1.75 + lines * 2.5) * rem : 0;
+  };
+  const hasRows = () => !host.matches("[data-kp-datatable]") || host.querySelector("tbody > tr:not([data-kp-skeleton-row])") !== null;
   const estimate = () => {
     const rows = rowsHint();
     if (!rows) return 0;
@@ -29863,7 +29870,7 @@ function holdFootprint(host) {
     const rem = parseFloat(view?.getComputedStyle(host.ownerDocument.documentElement).fontSize ?? "16") || 16;
     const raw = getComputedStyle(host).getPropertyValue("--kp-footprint-row").trim();
     const unit2 = /^(\d+(?:\.\d+)?)(px|rem)?$/.exec(raw);
-    const row = unit2 ? Number(unit2[1]) * (unit2[2] === "px" ? 1 : rem) : 2.75 * rem;
+    const row = unit2 ? Number(unit2[1]) * (unit2[2] === "px" ? 1 : rem) : cardRow(rem) || 2.75 * rem;
     const inPlace = [...host.querySelectorAll("tbody, .kp-stateplate, [data-kp-datatable-empty]")].reduce(
       (sum, e) => sum + (e.parentElement?.closest(".kp-stateplate, [data-kp-datatable-empty]") ? 0 : e.getBoundingClientRect().height),
       0
@@ -29900,6 +29907,7 @@ function holdFootprint(host) {
   const sizes = new ResizeObserver((entries3) => {
     if (!host.isConnected) return detach();
     if (HOLDING.has(state2())) return;
+    if (!hasRows()) return;
     const entry = entries3[entries3.length - 1];
     const rect = host.getBoundingClientRect();
     border = entry?.borderBoxSize?.[0]?.blockSize ?? rect.height;
@@ -44568,11 +44576,14 @@ function wire9(rootEl, historyOption) {
   let opener = null;
   let listScroll = 0;
   let pushed = false;
+  let reseatBusy = () => {
+  };
   const sync4 = () => {
     rootEl.toggleAttribute("data-kp-narrow-on", narrow);
     rootEl.toggleAttribute("data-kp-aside-folded", Boolean(aside) && asideNarrow && !narrow);
     if (narrow && mode2() !== "stack") rootEl.setAttribute("data-kp-pane-shown", shown4);
     else rootEl.removeAttribute("data-kp-pane-shown");
+    reseatBusy();
   };
   let head = (
     /** @type {HTMLElement | null} */
@@ -44621,6 +44632,34 @@ function wire9(rootEl, historyOption) {
   let busy = null;
   let state2 = "ready";
   let drawn2 = false;
+  let busyAt = null;
+  let busyWords = "";
+  const detailShown = () => detail.getBoundingClientRect().width > 0 && getComputedStyle(detail).display !== "none";
+  let unwatchList = () => {
+  };
+  const layBusy = (arrive2) => {
+    unwatchList();
+    const onDetail = detailShown();
+    busyAt = onDetail ? detail : rootEl;
+    const lists = () => [...rootEl.querySelectorAll(':scope > [data-kp-pane="list"]')].filter((pane) => pane.getBoundingClientRect().width > 0);
+    const card = openBusyCard(busyAt, {
+      words: busyWords,
+      area: () => onDetail ? [bodyEl.hidden ? detail : stateEl.hidden ? bodyEl : stateEl] : lists(),
+      className: "kp-pane__busy",
+      arrive: arrive2
+    });
+    if (!onDetail && typeof ResizeObserver === "function") {
+      const watcher2 = new ResizeObserver(() => card.place());
+      for (const pane of rootEl.querySelectorAll(':scope > [data-kp-pane="list"]')) watcher2.observe(pane);
+      unwatchList = () => watcher2.disconnect();
+    }
+    return card;
+  };
+  reseatBusy = () => {
+    if (!busy || busyAt === (detailShown() ? detail : rootEl)) return;
+    busy.remove();
+    busy = layBusy(false);
+  };
   const setState2 = (next2, options = {}) => {
     state2 = next2;
     rootEl.setAttribute("data-kp-state", next2);
@@ -44653,16 +44692,14 @@ function wire9(rootEl, historyOption) {
       stateEl.hidden = true;
       stateEl.replaceChildren();
     }
+    if (loading) busyWords = options.words ?? strings().paneLoading;
     if (loading && !busy) {
-      busy = openBusyCard(detail, {
-        words: options.words ?? strings().paneLoading,
-        area: () => [bodyEl.hidden ? detail : stateEl.hidden ? bodyEl : stateEl],
-        className: "kp-pane__busy",
-        arrive: drawn2
-      });
+      busy = layBusy(drawn2);
     } else if (!loading && busy) {
       const card = busy;
       busy = null;
+      busyAt = null;
+      unwatchList();
       void card.close();
     }
     drawn2 = true;
@@ -44815,6 +44852,7 @@ function wire9(rootEl, historyOption) {
     watcher?.disconnect();
     attributes.disconnect();
     busy?.remove();
+    unwatchList();
     handles14.delete(rootEl);
     rootEl.removeAttribute("data-kp-pane-shown");
     rootEl.removeAttribute("data-kp-narrow-on");
