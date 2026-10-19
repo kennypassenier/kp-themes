@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's recipe page and calm settings, formal only (new demo). research/audhd-recepten/.
+            {
+                href: 'research/audhd-recepten/recipe/demo.html',
+                label: 'Recipe app: the recipe page, QR, print and calm settings',
+                about: 'The AuDHD recipe app recipe page: summary, portions that rescale every amount, ingredient notes, a big Begin cooking button and last time\'s note; a QR code to open cook mode on the phone, a printable recipe, calm settings (calm mode, theme, language) and a cooking log where an empty week stays quiet. 7 sections, formal only.',
+            },
             // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's bad-days screen, formal only (new demo). research/audhd-recepten/.
             {
                 href: 'research/audhd-recepten/baddays/demo.html',

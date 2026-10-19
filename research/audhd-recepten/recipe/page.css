@@ -1,0 +1,516 @@
+/* research/audhd-recepten/recipe: the page's own frame. Everything with a kp- class is the package; the rc- rules only lay
+   things out (grids, widths, the A4 frame) and write the readouts. No colour here that is not a token. */
+
+.rc-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.rc-intro,
+.rc-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.rc-intro :is(h1, p),
+.rc-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.rc-intro p,
+.rc-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.rc-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.rc-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rc-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.rc-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.rc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.rc-sec :is(code) {
+    padding-inline: 0.2em;
+    box-decoration-break: clone;
+}
+
+/* ---- 1 · the recipe card -------------------------------------------------------------------------------------- */
+
+/* The card keeps one footprint in every state: the stage holds the data, hidden but not removed, under the state's note. */
+.rc-card {
+    --kp-card-stage-min: 22rem;
+    container: rc-card / inline-size;
+}
+
+.rc-recipe {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@container rc-card (min-width: 54rem) {
+    .rc-recipe {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        gap: var(--kp-space-xl, 2rem);
+    }
+}
+
+.rc-recipe__main,
+.rc-recipe__side {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.rc-recipe__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    align-items: start;
+}
+
+.rc-recipe__head h2 {
+    margin: 0;
+}
+
+.rc-recipe__head .kp-badge {
+    justify-self: start;
+}
+
+.rc-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    margin: 0;
+}
+
+.rc-facts > div {
+    display: grid;
+    gap: var(--kp-space-2xs, 0.125rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.rc-facts dt {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rc-facts dd {
+    margin: 0;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* The big action: the whole width of the column, and the one thing that asks for a press. */
+.rc-begin {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.rc-begin .kp-button {
+    inline-size: 100%;
+    min-block-size: 3.5rem;
+    justify-content: center;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.rc-begin__hint {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rc-portions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-md, 1rem);
+    align-items: center;
+}
+
+.rc-portions h3 {
+    margin: 0;
+}
+
+/* The ingredients share three columns for the whole list: the amount, the unit and the name stay under each other. */
+.rc-ings {
+    display: grid;
+    grid-template-columns: max-content max-content minmax(0, 1fr);
+    gap: 0 var(--kp-space-md, 1rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rc-ing {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    align-items: baseline;
+    padding-block: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.rc-ing__amount {
+    min-inline-size: 3.5ch;
+    text-align: end;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.rc-ing__amount[data-changed] {
+    animation: rc-changed 1.2s ease-out;
+}
+
+@keyframes rc-changed {
+    from {
+        background: var(--muted);
+        box-shadow: 0 0 0 0.25rem var(--muted);
+    }
+    to {
+        background: transparent;
+        box-shadow: 0 0 0 0.25rem transparent;
+    }
+}
+
+/* Calm mode and a system that asks for less motion: the amount is simply the new number. */
+html[data-kp-calm] .rc-ing__amount[data-changed] {
+    animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rc-ing__amount[data-changed] {
+        animation: none;
+    }
+}
+
+.rc-ing__unit {
+    color: var(--muted-foreground);
+}
+
+.rc-ing__name {
+    display: grid;
+    gap: var(--kp-space-2xs, 0.125rem);
+    min-inline-size: 0;
+}
+
+.rc-ing__word[data-kp-hovercard] {
+    justify-self: start;
+    cursor: help;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.25em;
+}
+
+.rc-ing__note {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* ---- 3 · the QR code ---------------------------------------------------------------------------------------- */
+
+.rc-share {
+    inline-size: 100%;
+    max-inline-size: 60rem;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (min-width: 48rem) {
+    .rc-share {
+        grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr);
+        gap: var(--kp-space-xl, 2rem);
+    }
+}
+
+.rc-share > * {
+    min-inline-size: 0;
+}
+
+.rc-steps {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.rc-steps li::marker {
+    font-weight: 600;
+}
+
+.rc-share__words {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+}
+
+.rc-share__words :is(h3, p) {
+    margin: 0;
+}
+
+/* ---- 4 · the printed sheet, shown on screen (the page's real print rules in a frame the shape of A4) --------------- */
+
+.rc-print {
+    inline-size: 100%;
+    max-inline-size: 64rem;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (min-width: 48rem) {
+    .rc-print {
+        grid-template-columns: minmax(18rem, 30rem) minmax(0, 1fr);
+        gap: var(--kp-space-xl, 2rem);
+    }
+}
+
+.rc-sheet {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 210 / 297;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: Canvas;
+    color-scheme: light;
+}
+
+.rc-print__words {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    max-inline-size: 48ch;
+}
+
+.rc-print__words :is(h3, p) {
+    margin: 0;
+}
+
+/* ---- 5 · settings: one name and sentence on the left, its control on the right, every row on the same two columns ----- */
+
+.rc-settings {
+    display: grid;
+    gap: 0;
+}
+
+.rc-set {
+    display: grid;
+    grid-template-columns: minmax(12rem, 24rem) minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-xl, 2rem);
+    align-items: center;
+    padding-block: var(--kp-space-md, 1rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.rc-set:first-child {
+    padding-block-start: 0;
+}
+
+.rc-set:last-child {
+    padding-block-end: 0;
+    border-block-end: 0;
+}
+
+.rc-set__name {
+    display: grid;
+    gap: var(--kp-space-2xs, 0.125rem);
+    min-inline-size: 0;
+}
+
+.rc-set__name :is(h3, p) {
+    margin: 0;
+}
+
+.rc-set__name p {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rc-set__control {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.rc-set__control > * {
+    min-inline-size: 0;
+}
+
+.rc-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rc-swatches button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-block-size: 2.75rem;
+    padding-inline: var(--kp-space-md, 0.75rem);
+}
+
+.rc-swatches li {
+    display: contents;
+}
+
+.rc-swatches button[aria-pressed='true'] {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.rc-readout {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--border-strong);
+    background: var(--muted);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rc-readout[data-on] {
+    border-inline-start-color: var(--primary);
+}
+
+.rc-preview {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-md, 1rem);
+    align-items: center;
+    inline-size: 100%;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.rc-preview > div {
+    display: grid;
+    gap: var(--kp-space-2xs, 0.125rem);
+    min-inline-size: 0;
+}
+
+.rc-preview strong {
+    overflow-wrap: anywhere;
+}
+
+.rc-preview small {
+    color: var(--muted-foreground);
+}
+
+.rc-line {
+    min-block-size: 1.5rem;
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* ---- 6 · the cooking log -------------------------------------------------------------------------------------- */
+
+.rc-logcard {
+    --kp-card-stage-min: 24rem;
+}
+
+.rc-log {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    align-content: start;
+}
+
+.rc-log__add {
+    display: grid;
+    grid-template-columns: minmax(12rem, 24rem) minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: center;
+}
+
+.rc-log__add h3 {
+    margin: 0;
+}
+
+.rc-log__add p {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rc-log__buttons {
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.rc-log__grid {
+    min-inline-size: 0;
+    max-inline-size: 60rem;
+}
+
+.rc-log__note {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+@media (max-width: 52rem) {
+    .rc-set,
+    .rc-log__add {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rc-preview {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 40rem) {
+    .rc-facts {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rc-recipe__head {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
