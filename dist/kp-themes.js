@@ -40625,11 +40625,13 @@ function drawBusy2(c) {
     });
     return;
   }
-  for (const old of frameBox.querySelectorAll(":scope > .kp-gantt__busy")) old.remove();
+  const laid = c.line ? frameBox : c.el;
+  for (const old of laid.querySelectorAll(":scope > .kp-gantt__busy")) old.remove();
   c.leaving = null;
-  c.busy = openBusyCard(frameBox, {
+  c.busy = openBusyCard(laid, {
     words: c.strings.ganttLoading,
     area: () => {
+      const hostFloor = () => c.el.getBoundingClientRect().bottom - c.el.clientTop - (Number.parseFloat(getComputedStyle(c.el).paddingBottom) || 0);
       if (c.line) return [c.scroll];
       const tracks = (
         /** @type {HTMLElement[]} */
@@ -40647,7 +40649,7 @@ function drawBusy2(c) {
           left: c.line ? Math.min(...boxes.map((b) => b.left)) : frameBox.getBoundingClientRect().left,
           right: c.line ? Math.max(...boxes.map((b) => b.right)) : frameBox.getBoundingClientRect().right,
           // The whole data area: down to the frame's foot, which a held footprint has grown past the ghost lanes [gaps-time-1019].
-          bottom: c.line ? Math.min(axis.top, Math.max(...boxes.map((b) => b.bottom))) : Math.max(scroll.bottom, frameBox.getBoundingClientRect().bottom - 1)
+          bottom: c.line ? Math.min(axis.top, Math.max(...boxes.map((b) => b.bottom))) : Math.max(scroll.bottom, frameBox.getBoundingClientRect().bottom - 1, hostFloor())
         }
       ];
     },
@@ -44709,54 +44711,6 @@ function wire9(rootEl, historyOption) {
     busy.remove();
     busy = layBusy(false);
   };
-  const lineUp = () => {
-    const plate = (
-      /** @type {HTMLElement | null} */
-      stateEl.firstElementChild
-    );
-    const first = (
-      /** @type {HTMLElement | null} */
-      plate?.firstElementChild ?? null
-    );
-    if (!plate || !first) return;
-    plate.style.removeProperty("padding-block-start");
-    plate.style.removeProperty("margin-block-start");
-    if (state2 !== "empty" || stateEl.hidden || narrow || rootEl.hasAttribute("data-kp-state-wide")) return;
-    const item = (
-      /** @type {HTMLElement | null} */
-      rootEl.querySelector('[data-kp-pane="list"] [data-kp-pane-key]')
-    );
-    if (!item || item.getBoundingClientRect().width === 0) return;
-    const ghost = (
-      /** @type {HTMLElement} */
-      plate.cloneNode(true)
-    );
-    ghost.setAttribute("aria-hidden", "true");
-    ghost.removeAttribute("role");
-    ghost.style.cssText = "grid-area:1/1;visibility:hidden;pointer-events:none;padding-block-start:0;margin-block-start:0";
-    stateEl.append(ghost);
-    const centre = (el16) => {
-      let top = 0;
-      for (let node = (
-        /** @type {HTMLElement | null} */
-        el16
-      ); node && node !== rootEl; node = /** @type {HTMLElement | null} */
-      node.offsetParent) top += node.offsetTop;
-      const range = doc.createRange();
-      range.selectNodeContents(el16);
-      const line = range.getClientRects()[0];
-      const inset = Number.parseFloat(getComputedStyle(el16).paddingTop) || 0;
-      return top + inset + (line ? line.height : el16.offsetHeight) / 2;
-    };
-    const air = centre(item) - centre(
-      /** @type {HTMLElement} */
-      ghost.firstElementChild
-    );
-    ghost.remove();
-    const gap = 4;
-    plate.style.setProperty("padding-block-start", `${Math.max(gap, air).toFixed(1)}px`);
-    if (air < gap) plate.style.setProperty("margin-block-start", `${(air - gap).toFixed(1)}px`);
-  };
   const setState2 = (next2, options = {}) => {
     state2 = next2;
     rootEl.setAttribute("data-kp-state", next2);
@@ -44800,7 +44754,6 @@ function wire9(rootEl, historyOption) {
       void card.close();
     }
     drawn2 = true;
-    lineUp();
   };
   const select = (key, how = {}) => {
     const item = itemOf2(key);
@@ -44918,7 +44871,6 @@ function wire9(rootEl, historyOption) {
     asideNarrow = width < px4(asideFoldAt);
     if (was && !narrow) shown4 = "list";
     sync4();
-    lineUp();
   };
   rootEl.addEventListener("click", onClick);
   rootEl.addEventListener("keydown", onKey3);

@@ -314,46 +314,6 @@ function wire(rootEl, historyOption) {
         busy = layBusy(false);
     };
 
-    /**
-     * An empty detail beside a list with items starts at the pane's top, and its first line is the list's first line [hlcomp-1019;
-     * homelab 80]. The plate keeps its theme's own frame, and the air above its title is what puts the title's centre on the centre
-     * of the list's first row: its padding is worked out from a measure, not guessed (the frames differ per theme). The title
-     * never stands closer than a gap to the plate's top edge: where the row is too high for that, the plate rises into the pane's own
-     * padding by the rest.
-     */
-    const lineUp = () => {
-        const plate = /** @type {HTMLElement | null} */ (stateEl.firstElementChild);
-        const first = /** @type {HTMLElement | null} */ (plate?.firstElementChild ?? null);
-        if (!plate || !first) return;
-        plate.style.removeProperty('padding-block-start');
-        plate.style.removeProperty('margin-block-start');
-        if (state !== 'empty' || stateEl.hidden || narrow || rootEl.hasAttribute('data-kp-state-wide')) return;
-        const item = /** @type {HTMLElement | null} */ (rootEl.querySelector('[data-kp-pane="list"] [data-kp-pane-key]'));
-        if (!item || item.getBoundingClientRect().width === 0) return;
-        // The plate arrives with an animation of its height, margins and padding (js/motion.js), so the plate itself is not measured: an
-        // unanimated copy laid in the same cell stands where the plate will stand, with no air above its title.
-        const ghost = /** @type {HTMLElement} */ (plate.cloneNode(true));
-        ghost.setAttribute('aria-hidden', 'true');
-        ghost.removeAttribute('role');
-        ghost.style.cssText = 'grid-area:1/1;visibility:hidden;pointer-events:none;padding-block-start:0;margin-block-start:0';
-        stateEl.append(ghost);
-        /** @param {HTMLElement} el */
-        const centre = (el) => {
-            let top = 0;
-            for (let node = /** @type {HTMLElement | null} */ (el); node && node !== rootEl; node = /** @type {HTMLElement | null} */ (node.offsetParent)) top += node.offsetTop;
-            const range = doc.createRange();
-            range.selectNodeContents(el);
-            const line = range.getClientRects()[0];
-            const inset = Number.parseFloat(getComputedStyle(el).paddingTop) || 0;
-            return top + inset + (line ? line.height : el.offsetHeight) / 2;
-        };
-        const air = centre(item) - centre(/** @type {HTMLElement} */ (ghost.firstElementChild));
-        ghost.remove();
-        const gap = 4;
-        plate.style.setProperty('padding-block-start', `${Math.max(gap, air).toFixed(1)}px`);
-        if (air < gap) plate.style.setProperty('margin-block-start', `${(air - gap).toFixed(1)}px`);
-    };
-
     /** @param {PaneState} next @param {PaneStateOptions} [options] */
     const setState = (next, options = {}) => {
         state = next;
@@ -404,7 +364,6 @@ function wire(rootEl, historyOption) {
             void card.close();
         }
         drawn = true;
-        lineUp();
         // Nothing selected and nothing loading: the empty plate says what to do.
     };
 
@@ -530,7 +489,6 @@ function wire(rootEl, historyOption) {
         asideNarrow = width < px(asideFoldAt);
         if (was && !narrow) shown = 'list';
         sync();
-        lineUp();
     };
 
     rootEl.addEventListener('click', onClick);

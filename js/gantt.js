@@ -834,11 +834,16 @@ function drawBusy(c) {
         });
         return;
     }
-    for (const old of frameBox.querySelectorAll(':scope > .kp-gantt__busy')) old.remove();
+    // A timeline's card is laid on the whole component and covers what the held footprint holds under the toolbar: the frame, and the
+    // legend and hint beneath it, which a frame as short as its ghost lanes would leave the card (100 px over a 260 px area at 390)
+    // [hlcomp-1019 gantt-busy]. A dated line keeps the card in its frame.
+    const laid = c.line ? frameBox : c.el;
+    for (const old of laid.querySelectorAll(':scope > .kp-gantt__busy')) old.remove();
     c.leaving = null;
-    c.busy = openBusyCard(frameBox, {
+    c.busy = openBusyCard(laid, {
         words: c.strings.ganttLoading,
         area: () => {
+            const hostFloor = () => c.el.getBoundingClientRect().bottom - c.el.clientTop - (Number.parseFloat(getComputedStyle(c.el).paddingBottom) || 0);
             // A dated line is short: its card covers the whole frame, the line and its dates [kpadopt4].
             if (c.line) return [c.scroll];
             const tracks = /** @type {HTMLElement[]} */ ([...c.body.querySelectorAll(':scope > .kp-gantt__track')]);
@@ -855,7 +860,7 @@ function drawBusy(c) {
                     left: c.line ? Math.min(...boxes.map((b) => b.left)) : frameBox.getBoundingClientRect().left,
                     right: c.line ? Math.max(...boxes.map((b) => b.right)) : frameBox.getBoundingClientRect().right,
                     // The whole data area: down to the frame's foot, which a held footprint has grown past the ghost lanes [gaps-time-1019].
-                    bottom: c.line ? Math.min(axis.top, Math.max(...boxes.map((b) => b.bottom))) : Math.max(scroll.bottom, frameBox.getBoundingClientRect().bottom - 1),
+                    bottom: c.line ? Math.min(axis.top, Math.max(...boxes.map((b) => b.bottom))) : Math.max(scroll.bottom, frameBox.getBoundingClientRect().bottom - 1, hostFloor()),
                 },
             ];
         },

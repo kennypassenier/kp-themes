@@ -24665,19 +24665,6 @@
         visibility: hidden;
     }
 
-    /* hlcomp-1019:pane-empty:start
-     * An empty detail beside a list with items ("Pick a schedule") is the plate from the pane's top, not centred in what is left under
-     * the (hidden) heading: its first line is the list's first line [homelab 80]. The plate keeps its own look (the theme's frame
-     * and padding) and the pane's whole footprint; its words stand at its start. */
-    .kp-split--panes[data-kp-state='empty']:not([data-kp-state-wide], [data-kp-narrow-on]) .kp-pane__state {
-        grid-area: 1 / 1 / -1 / -1;
-    }
-
-    .kp-split--panes[data-kp-state='empty']:not([data-kp-state-wide], [data-kp-narrow-on]) .kp-pane__state > .kp-stateplate {
-        place-content: start center;
-    }
-    /* hlcomp-1019:pane-empty:end */
-
     .kp-split--panes[data-kp-state='empty']:not([data-kp-narrow-on]) .kp-pane__head > [data-kp-pane-heading] {
         visibility: hidden;
     }
@@ -34799,6 +34786,11 @@
 
     .kp-gantt[data-kp-state='loading'] > .kp-gantt__frame {
         flex: 1 1 auto;
+    }
+
+    /* The busy card is laid on the whole timeline (js/gantt.js drawBusy), over the frame and what the held footprint holds below it. */
+    .kp-gantt:has(> .kp-gantt__busy) {
+        position: relative;
     }
 
     /* A week held at its loaded height (js/footprint.js) gives its plate that whole height: the frame grows into what the week's
