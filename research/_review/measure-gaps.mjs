@@ -73,7 +73,18 @@ function measure([min, only]) {
                         : raw;
                     // A line the clip cuts away altogether (a folded quote's hidden lines) is not on screen.
                     if (clip && (raw.bottom <= clip.top + 0.5 || raw.top >= clip.bottom - 0.5)) continue;
-                    if (visible(rect)) texts.push({ el, rect, t: n.textContent.trim().slice(0, 28) });
+                    // A cell a kept (sticky) column of its row passes under is covered there: the opaque ground of the kept cell hides
+                    // its words, so they are not on screen (data-kp-fixed-end, datatable-r5-1019).
+                    const cell = el.closest('td, th');
+                    const covered =
+                        cell !== null &&
+                        getComputedStyle(cell).position !== 'sticky' &&
+                        [...(cell.parentElement?.children ?? [])].some((other) => {
+                            if (other === cell || getComputedStyle(other).position !== 'sticky') return false;
+                            const o = other.getBoundingClientRect();
+                            return Math.min(rect.right, o.right) - Math.max(rect.left, o.left) > 0.5;
+                        });
+                    if (visible(rect) && !covered) texts.push({ el, rect, t: n.textContent.trim().slice(0, 28) });
                 }
             }
             for (const el of s.querySelectorAll('*')) {
