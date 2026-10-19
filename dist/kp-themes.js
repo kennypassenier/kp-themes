@@ -1396,6 +1396,9 @@ var init_strings = __esm({
       // A wheel that picks (js/wheel.js) [kpadopt4].
       wheelSpin: "Spin",
       wheelSpinAgain: "Again",
+      wheelIdleKiosk: "Tap the wheel to let it choose.",
+      wheelSpinKiosk: "Spin the wheel",
+      wheelResting: "Resting",
       wheelIdle: "Press Spin to let the wheel choose.",
       wheelChose: "The wheel chose",
       wheelSpinning: "Turning\u2026",
@@ -22856,7 +22859,7 @@ function attachHoverCards(root = document, options = {}) {
     for (const [key, value] of Object.entries(options)) if (value !== void 0) held2.cfg[key] = value;
     return held2.handle;
   }
-  const cfg = { selector: `[${HOVERCARD_ATTRIBUTE}]`, openDelayMs: 300, closeDelayMs: 100, closeOnEscape: true, ...stripped(options) };
+  const cfg = { selector: `[${HOVERCARD_ATTRIBUTE}]`, openDelayMs: 300, closeDelayMs: 100, closeOnEscape: true, touch: true, ...stripped(options) };
   const doc = root instanceof Document ? root : root.ownerDocument;
   const card = doc.createElement("div");
   card.className = `kp-popover kp-tooltip${cfg.cardClass ? ` ${cfg.cardClass}` : ""}`;
@@ -22869,6 +22872,7 @@ function attachHoverCards(root = document, options = {}) {
   let wanted = null;
   let described = null;
   let timer2 = 0;
+  let openedAt = 0;
   let going = false;
   let overCard = false;
   let lower = null;
@@ -22934,6 +22938,7 @@ function attachHoverCards(root = document, options = {}) {
       announce3(false, was);
     }
     current2 = anchor;
+    openedAt = performance.now();
     describe(anchor);
     if (card.hidden) {
       card.hidden = false;
@@ -23008,6 +23013,7 @@ function attachHoverCards(root = document, options = {}) {
     clearTimeout(timer2);
   };
   const onCardLeave = (event) => {
+    if (event.pointerType === "touch") return;
     overCard = false;
     const to = event.relatedTarget;
     if (current2 !== null && to instanceof Node && current2.contains(to)) return;
@@ -23026,6 +23032,34 @@ function attachHoverCards(root = document, options = {}) {
       clearTimeout(timer2);
       wanted = null;
     }
+  };
+  const isControl = (anchor) => anchor.matches('a[href], button, input, select, textarea, summary, [role="button"], [role="link"]');
+  const touchMode = (anchor) => {
+    const own = anchor.getAttribute("data-kp-touch");
+    if (cfg.touch === false || own === "off") return "off";
+    return own === "tap" || !isControl(anchor) ? "tap" : "off";
+  };
+  const onTouchDown = (event) => {
+    if (event.pointerType !== "touch" || current2 === null) return;
+    const target = event.target;
+    if (target instanceof Node && (card.contains(target) || current2.contains(target))) return;
+    hide2();
+  };
+  const onTap = (event) => {
+    if (
+      /** @type {PointerEvent} */
+      event.pointerType !== "touch"
+    ) return;
+    const anchor = anchorOf(event);
+    if (anchor === null || touchMode(anchor) === "off") return;
+    if (anchor === current2) {
+      if (performance.now() - openedAt > 400) hide2();
+      else if (isControl(anchor)) event.preventDefault();
+      return;
+    }
+    clearTimeout(timer2);
+    open4(anchor);
+    if (current2 === anchor && isControl(anchor)) event.preventDefault();
   };
   const onKey3 = (event) => {
     if (event.key !== "Escape" || current2 === null) return;
@@ -23059,6 +23093,17 @@ function attachHoverCards(root = document, options = {}) {
     onCardLeave
   );
   doc.addEventListener("keydown", onKey3);
+  root.addEventListener(
+    "click",
+    /** @type {EventListener} */
+    onTap
+  );
+  doc.addEventListener(
+    "pointerdown",
+    /** @type {EventListener} */
+    onTouchDown,
+    true
+  );
   const detach = () => {
     clearTimeout(timer2);
     root.removeEventListener(
@@ -23082,6 +23127,17 @@ function attachHoverCards(root = document, options = {}) {
       onFocusOut
     );
     doc.removeEventListener("keydown", onKey3);
+    root.removeEventListener(
+      "click",
+      /** @type {EventListener} */
+      onTap
+    );
+    doc.removeEventListener(
+      "pointerdown",
+      /** @type {EventListener} */
+      onTouchDown,
+      true
+    );
     watch2?.disconnect();
     if (current2?.isConnected) undescribe(current2);
     current2 = null;
@@ -32317,7 +32373,8 @@ __export(wheel_exports, {
   wheelAngles: () => wheelAngles
 });
 function pickWeighted(items, { random = Math.random, avoid = null } = {}) {
-  const open4 = items.map((item, index) => ({ item, index })).filter(({ item }) => items.length < 2 || item.id !== avoid);
+  const awake = items.some((item) => !item.resting);
+  const open4 = items.map((item, index) => ({ item, index })).filter(({ item }) => (items.length < 2 || item.id !== avoid) && (!awake || !item.resting));
   const total = open4.reduce((sum, { item }) => sum + weightOf(item), 0);
   if (!open4.length || total <= 0) return -1;
   let at = random() * total;
@@ -32359,7 +32416,8 @@ function build(root) {
   result.setAttribute("role", "status");
   const caption = el5("kp-wheel__caption", "p");
   const outcome = el5("kp-wheel__outcome", "p");
-  result.append(caption, outcome);
+  const tag = el5("kp-wheel__tag", "p");
+  result.append(caption, outcome, tag);
   root.append(stage, result);
   if (!root.hasAttribute("role")) root.setAttribute("role", "group");
 }
@@ -32389,17 +32447,18 @@ function drawDisc(root, measure) {
     shape.setAttribute("data-tone", String(tone));
     shape.setAttribute("data-id", id);
     if (won !== null) shape.setAttribute(won === id ? "data-kp-wheel-chosen" : "data-kp-wheel-other", "");
+    const known4 = items.get(id);
+    const resting = known4?.resting === true;
+    if (resting) shape.setAttribute("data-kp-wheel-resting", "");
     group.append(shape);
     const mid = (a0 + a1) / 2;
     const half = Math.min(Math.PI / 2, span3 / 2 * Math.PI / 180);
     const item = items.get(id);
     const plan = fitLabel(group, [item?.label ?? "", item?.short ?? ""], half, measure);
-    if (!plan) {
-      const name = svg("title");
-      name.textContent = item?.label ?? "";
-      shape.append(name);
-      return;
-    }
+    const name = svg("title");
+    name.textContent = [item?.label ?? "", item?.tag ?? "", resting ? getStrings().wheelResting : ""].filter(Boolean).join(" \xB7 ");
+    shape.append(name);
+    if (!plan) return;
     const left = mid > 180;
     const text = svg("text", {
       class: "kp-wheel__label",
@@ -32411,6 +32470,7 @@ function drawDisc(root, measure) {
       "font-size": plan.size.toFixed(2)
     });
     if (won === id) text.setAttribute("data-kp-wheel-chosen", "");
+    if (resting) text.setAttribute("data-kp-wheel-resting", "");
     text.setAttribute("data-span", span3.toFixed(3));
     if (plan.lines.length === 1) text.textContent = plan.lines[0];
     else
@@ -32478,7 +32538,9 @@ function paint3(root) {
   );
   const caption = part(root, "caption");
   const outcome = part(root, "outcome");
+  const tag = part(root, "tag");
   const result = part(root, "result");
+  const kiosk = root.hasAttribute("data-kp-wheel-kiosk");
   const error = root.getAttribute("data-kp-wheel-error");
   const busy = root.hasAttribute("aria-busy");
   const won = root.getAttribute("data-kp-wheel-won");
@@ -32502,15 +32564,28 @@ function paint3(root) {
     caption.textContent = state2.items.length === 1 ? strings.wheelOnlyOne : strings.wheelChose;
     outcome.textContent = chosen.label;
   } else {
-    caption.textContent = strings.wheelIdle;
+    caption.textContent = kiosk ? strings.wheelIdleKiosk : strings.wheelIdle;
     outcome.textContent = "";
   }
+  tag.textContent = chosen && !state2.spinning && !note3 ? chosen.tag ?? "" : "";
+  tag.title = tag.textContent;
   outcome.title = outcome.textContent ?? "";
   caption.title = caption.textContent ?? "";
   const blocked = busy || error !== null || state2.items.length < 2 || state2.spinning;
   spin.textContent = won !== null && state2.items.length > 1 ? strings.wheelSpinAgain : strings.wheelSpin;
   if (blocked) spin.setAttribute("aria-disabled", "true");
   else spin.removeAttribute("aria-disabled");
+  const stage = part(root, "stage");
+  spin.hidden = kiosk;
+  if (kiosk) {
+    stage.setAttribute("role", "button");
+    stage.tabIndex = 0;
+    stage.setAttribute("aria-label", strings.wheelSpinKiosk);
+    if (blocked) stage.setAttribute("aria-disabled", "true");
+    else stage.removeAttribute("aria-disabled");
+  } else {
+    for (const name of ["role", "tabindex", "aria-label", "aria-disabled"]) stage.removeAttribute(name);
+  }
 }
 async function glideTo(root) {
   const state2 = stateOf(root);
@@ -32678,15 +32753,29 @@ function attachWheels(scope = document) {
     drawDisc(root, true);
     paint3(root);
     const click = (event) => {
-      const spin = event.target instanceof Element ? event.target.closest(".kp-wheel__spin") : null;
-      if (!spin || !root.contains(spin) || spin.getAttribute("aria-disabled") === "true") return;
+      const kiosk = root.hasAttribute("data-kp-wheel-kiosk");
+      const target = event.target instanceof Element ? event.target : null;
+      const spin = target?.closest(kiosk ? ".kp-wheel__stage, .kp-wheel__result" : ".kp-wheel__spin");
+      if (!spin || !root.contains(spin) || root.hasAttribute("aria-busy")) return;
+      if (!kiosk && spin.getAttribute("aria-disabled") === "true") return;
+      void spinWheel(root);
+    };
+    const key = (event) => {
+      if (!root.hasAttribute("data-kp-wheel-kiosk") || event.target !== part(root, "stage")) return;
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
       void spinWheel(root);
     };
     root.addEventListener("click", click);
+    root.addEventListener("keydown", key);
+    const watch2 = new MutationObserver(() => paint3(root));
+    watch2.observe(root, { attributes: true, attributeFilter: ["data-kp-wheel-kiosk"] });
     void document.fonts?.ready.then(() => root.isConnected && !stateOf(root).spinning && drawDisc(root, true));
     undo.push(() => {
       WIRED.delete(root);
       root.removeEventListener("click", click);
+      root.removeEventListener("keydown", key);
+      watch2.disconnect();
     });
   }
   return () => undo.forEach((u) => u());

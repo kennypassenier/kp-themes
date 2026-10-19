@@ -57,6 +57,17 @@
 //   kp-wheel-spin    { item, index, turns }        the outcome is drawn and the wheel starts (turns: whole turns it will make)
 //   kp-wheel-result  { item, index, source }       'spin' | 'only'
 //
+// Kiosk, tags and the answer card [hover-wheel-1019; the AuDHD recipes app's page for Kenny's parents]:
+//   - `data-kp-wheel-kiosk`: no controls. The Spin button in the hub is gone and the wheel itself is the one control: a
+//     tap (or Enter / Space with the focus on it) on the disc or on the answer spins it. The hub stays as a quiet plate.
+//     A page with only the wheel over a chosen list needs nothing else. Live: set or remove it at any time.
+//   - `tag` on an item (`{ label: 'Lasagne', tag: 'Oven, 45 min' }`): a short line about the choice. It stands under the
+//     name in the answer card and in the segment's tooltip.
+//   - `resting: true` on an item: it stays on the disc so the list is whole, but it is stepped back (faded, dashed edge,
+//     its name in italics, "resting" in its tooltip) and the wheel never lands on it while another choice is not resting.
+//   - `data-kp-wheel-answer`: the answer card. The caption, the name and the tag stand in one bordered card of reserved
+//     size (a tag line is kept even when the choice has none), so nothing under it moves.
+//
 // Every word it adds is in js/strings.js. Nothing runs on import.
 
 import { getStrings } from './strings.js';
@@ -72,6 +83,8 @@ export const WHEEL_RESULT_EVENT = 'kp-wheel-result';
  * @property {string} id
  * @property {string} label
  * @property {number} [weight]  1 by default; larger is likelier and a larger segment
+ * @property {string} [tag]  a short line about the choice, shown in the answer card and the segment's tooltip
+ * @property {boolean} [resting]  stays on the wheel, marked, and is never drawn while another choice is not resting
  * @property {string} [short]  a shorter name for the wheel's face, used when the whole label does not fit a thin segment
  */
 
@@ -111,7 +124,11 @@ const weightOf = (item) => Math.max(0.05, Number.isFinite(item.weight) ? Number(
  * @returns {number} the index drawn, -1 when there is none
  */
 export function pickWeighted(items, { random = Math.random, avoid = null } = {}) {
-    const open = items.map((item, index) => ({ item, index })).filter(({ item }) => items.length < 2 || item.id !== avoid);
+    // A resting choice is not drawn while another is not resting; when every one rests, they are all in play again.
+    const awake = items.some((item) => !item.resting);
+    const open = items
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => (items.length < 2 || item.id !== avoid) && (!awake || !item.resting));
     const total = open.reduce((sum, { item }) => sum + weightOf(item), 0);
     if (!open.length || total <= 0) return -1;
     let at = random() * total;
@@ -188,7 +205,8 @@ function build(root) {
     result.setAttribute('role', 'status');
     const caption = el('kp-wheel__caption', 'p');
     const outcome = el('kp-wheel__outcome', 'p');
-    result.append(caption, outcome);
+    const tag = el('kp-wheel__tag', 'p');
+    result.append(caption, outcome, tag);
     root.append(stage, result);
     if (!root.hasAttribute('role')) root.setAttribute('role', 'group');
 }
@@ -225,20 +243,21 @@ function drawDisc(root, measure) {
         shape.setAttribute('data-tone', String(tone));
         shape.setAttribute('data-id', id);
         if (won !== null) shape.setAttribute(won === id ? 'data-kp-wheel-chosen' : 'data-kp-wheel-other', '');
+        const known = items.get(id);
+        const resting = known?.resting === true;
+        if (resting) shape.setAttribute('data-kp-wheel-resting', '');
         group.append(shape);
         // The label along the radius, reading outward on the right and inward on the left, so it is never upside down.
         const mid = (a0 + a1) / 2;
         const half = Math.min(Math.PI / 2, ((span / 2) * Math.PI) / 180);
         const item = items.get(id);
         const plan = fitLabel(group, [item?.label ?? '', item?.short ?? ''], half, measure);
-        if (!plan) {
-            // No size fits the name whole, on one line or two, and it has no shorter form: nothing is drawn rather than a cut
-            // name; the segment says its name when pointed at, and the result says it whole.
-            const name = svg('title');
-            name.textContent = item?.label ?? '';
-            shape.append(name);
-            return;
-        }
+        // The segment says its whole name, its tag and that it rests when pointed at, whether or not the name fits on the disc.
+        const name = svg('title');
+        name.textContent = [item?.label ?? '', item?.tag ?? '', resting ? getStrings().wheelResting : ''].filter(Boolean).join(' · ');
+        shape.append(name);
+        // No size fits the name whole, on one line or two, and it has no shorter form: nothing is drawn rather than a cut name.
+        if (!plan) return;
         const left = mid > 180;
         const text = svg('text', {
             class: 'kp-wheel__label',
@@ -250,6 +269,7 @@ function drawDisc(root, measure) {
             'font-size': plan.size.toFixed(2),
         });
         if (won === id) text.setAttribute('data-kp-wheel-chosen', '');
+        if (resting) text.setAttribute('data-kp-wheel-resting', '');
         text.setAttribute('data-span', span.toFixed(3));
         if (plan.lines.length === 1) text.textContent = plan.lines[0];
         else
@@ -333,7 +353,9 @@ function paint(root) {
     const spin = /** @type {HTMLButtonElement} */ (part(root, 'spin'));
     const caption = part(root, 'caption');
     const outcome = part(root, 'outcome');
+    const tag = part(root, 'tag');
     const result = part(root, 'result');
+    const kiosk = root.hasAttribute('data-kp-wheel-kiosk');
     const error = root.getAttribute('data-kp-wheel-error');
     const busy = root.hasAttribute('aria-busy');
     const won = root.getAttribute('data-kp-wheel-won');
@@ -357,15 +379,29 @@ function paint(root) {
         caption.textContent = state.items.length === 1 ? strings.wheelOnlyOne : strings.wheelChose;
         outcome.textContent = chosen.label;
     } else {
-        caption.textContent = strings.wheelIdle;
+        caption.textContent = kiosk ? strings.wheelIdleKiosk : strings.wheelIdle;
         outcome.textContent = '';
     }
+    tag.textContent = chosen && !state.spinning && !note ? (chosen.tag ?? '') : '';
+    tag.title = tag.textContent;
     outcome.title = outcome.textContent ?? '';
     caption.title = caption.textContent ?? '';
     const blocked = busy || error !== null || state.items.length < 2 || state.spinning;
     spin.textContent = won !== null && state.items.length > 1 ? strings.wheelSpinAgain : strings.wheelSpin;
     if (blocked) spin.setAttribute('aria-disabled', 'true');
     else spin.removeAttribute('aria-disabled');
+    // Kiosk: the wheel is the one control. The hub's button leaves the tab order and the reading order; the stage takes over.
+    const stage = part(root, 'stage');
+    spin.hidden = kiosk;
+    if (kiosk) {
+        stage.setAttribute('role', 'button');
+        stage.tabIndex = 0;
+        stage.setAttribute('aria-label', strings.wheelSpinKiosk);
+        if (blocked) stage.setAttribute('aria-disabled', 'true');
+        else stage.removeAttribute('aria-disabled');
+    } else {
+        for (const name of ['role', 'tabindex', 'aria-label', 'aria-disabled']) stage.removeAttribute(name);
+    }
 }
 
 /** @returns {boolean} */
@@ -583,16 +619,32 @@ export function attachWheels(scope = document) {
         paint(root);
         /** @param {MouseEvent} event */
         const click = (event) => {
-            const spin = event.target instanceof Element ? event.target.closest('.kp-wheel__spin') : null;
-            if (!spin || !root.contains(spin) || spin.getAttribute('aria-disabled') === 'true') return;
+            const kiosk = root.hasAttribute('data-kp-wheel-kiosk');
+            const target = event.target instanceof Element ? event.target : null;
+            const spin = target?.closest(kiosk ? '.kp-wheel__stage, .kp-wheel__result' : '.kp-wheel__spin');
+            if (!spin || !root.contains(spin) || root.hasAttribute('aria-busy')) return;
+            if (!kiosk && spin.getAttribute('aria-disabled') === 'true') return;
+            void spinWheel(root);
+        };
+        /** Kiosk: Enter or Space on the focused wheel spins it. @param {KeyboardEvent} event */
+        const key = (event) => {
+            if (!root.hasAttribute('data-kp-wheel-kiosk') || event.target !== part(root, 'stage')) return;
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
             void spinWheel(root);
         };
         root.addEventListener('click', click);
+        root.addEventListener('keydown', key);
+        // The kiosk attribute is live.
+        const watch = new MutationObserver(() => paint(root));
+        watch.observe(root, { attributes: true, attributeFilter: ['data-kp-wheel-kiosk'] });
         // Labels are cut to their room in the theme's face: again once the fonts are in.
         void document.fonts?.ready.then(() => root.isConnected && !stateOf(root).spinning && drawDisc(root, true));
         undo.push(() => {
             WIRED.delete(root);
             root.removeEventListener('click', click);
+            root.removeEventListener('keydown', key);
+            watch.disconnect();
         });
     }
     return () => undo.forEach((u) => u());

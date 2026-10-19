@@ -358,15 +358,18 @@ setWheelState(document.getElementById(<span class="kp-code__string">'doc-wheel-f
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-wheel</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-wheel-answer</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-wheel-chosen</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-wheel-duration</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-wheel-empty</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-wheel-error</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-wheel-failed</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-wheel-kiosk</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-wheel-note</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-wheel-other</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-wheel-reduced-ms</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-wheel-repeat</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-wheel-resting</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-wheel-spinning</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-wheel-turns</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-wheel-turns-max</code></td><td>written</td></tr>
@@ -397,6 +400,7 @@ setWheelState(document.getElementById(<span class="kp-code__string">'doc-wheel-f
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-wheel-answer-pad</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-wheel-font</code></td><td><code>var(--theme-font-display, inherit)</code></td></tr>
                             <tr><td><code>--kp-wheel-hub</code></td><td><code>30%</code></td></tr>
                             <tr><td><code>--kp-wheel-hub-ring</code></td><td><code>4px</code></td></tr>
@@ -404,6 +408,7 @@ setWheelState(document.getElementById(<span class="kp-code__string">'doc-wheel-f
                             <tr><td><code>--kp-wheel-other</code></td><td><code>0.45</code></td></tr>
                             <tr><td><code>--kp-wheel-outcome</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-wheel-pointer</code></td><td><code>var(--primary)</code></td></tr>
+                            <tr><td><code>--kp-wheel-resting</code></td><td><code>0.5</code></td></tr>
                             <tr><td><code>--kp-wheel-size</code></td><td><code>min(24rem, 100%)</code></td></tr>
                             <tr><td><code>--kp-wheel-tint</code></td><td><code>30%</code></td></tr>
                             <tr><td><code>--kp-wheel-tint-chosen</code></td><td><code>62%</code></td></tr>

@@ -20284,6 +20284,72 @@
         color: var(--destructive-foreground);
     }
 
+    /* --- A wheel for a page of its own: kiosk, resting choices, answer card [hover-wheel-1019] ----------------
+ * `data-kp-wheel-kiosk` removes the hub's button: the wheel (and the answer) is the one control, a plain tap spins, and
+ * the stage carries the focus ring. A `resting` item stays on the disc faded with a dashed edge and an italic name.
+ * `data-kp-wheel-answer` turns the result into a bordered card with a reserved line for the item's `tag`. Knobs:
+ * --kp-wheel-resting (opacity of a resting segment, 0.5), --kp-wheel-answer-pad (the card's padding, 0.75rem). */
+    .kp-wheel[data-kp-wheel-kiosk] .kp-wheel__spin {
+        display: none;
+    }
+
+    .kp-wheel[data-kp-wheel-kiosk] :is(.kp-wheel__stage, .kp-wheel__result) {
+        cursor: pointer;
+    }
+
+    .kp-wheel[data-kp-wheel-kiosk] .kp-wheel__stage {
+        border-radius: 50%;
+    }
+
+    .kp-wheel[data-kp-wheel-kiosk] .kp-wheel__stage:focus-visible {
+        outline: 2px solid var(--ring, var(--primary));
+        outline-offset: 4px;
+    }
+
+    .kp-wheel[data-kp-wheel-kiosk] .kp-wheel__stage[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-wheel__segment[data-kp-wheel-resting] {
+        opacity: var(--kp-wheel-resting, 0.5);
+        stroke-dasharray: 3 2;
+    }
+
+    .kp-wheel__segment[data-kp-wheel-resting][data-kp-wheel-other] {
+        opacity: calc(var(--kp-wheel-resting, 0.5) * var(--kp-wheel-other, 0.45));
+    }
+
+    .kp-wheel__label[data-kp-wheel-resting] {
+        font-style: italic;
+        opacity: var(--kp-wheel-resting, 0.5);
+    }
+
+    /* The tag is only there in the answer card; without it the result keeps the two lines it always had. */
+    .kp-wheel__tag {
+        display: none;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-wheel[data-kp-wheel-answer] .kp-wheel__result {
+        box-sizing: border-box;
+        padding: var(--kp-wheel-answer-pad, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, inherit);
+    }
+
+    .kp-wheel[data-kp-wheel-answer] .kp-wheel__tag {
+        display: block;
+        max-inline-size: 100%;
+        min-block-size: 1lh;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
     /* --- Uptime strip: one cell per period, in exact figures [kpadopt4-ideas] ---
  * `.kp-uptime[data-kp-uptime]` (js/uptime.js). A title and the window's summary on one line, a thin strip of cells
  * (one per day or hour, oldest first) that never wraps, and the first and the latest period's names under it. A cell
