@@ -276,8 +276,9 @@ export declare function filterPills(kind: FilterKind, column: string, value: Fil
  *
  * @param {HTMLTableElement} table
  * @param {number} count how many leading columns stay; 0 takes the marks away
+ * @param {number} [endCount] how many trailing columns stay at the end edge (`data-kp-fixed-end`); 0 takes the marks away
  */
-export declare function syncFixedColumns(table: HTMLTableElement, count: number): void;
+export declare function syncFixedColumns(table: HTMLTableElement, count: number, endCount?: number): void;
 /**
  * Mark a data table while its scroll box is scrolled away from the top
  * [scope-90]: `data-kp-scrolled` on `element` while `box.scrollTop` is

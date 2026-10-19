@@ -16933,7 +16933,7 @@ function filterPills(kind, column, value, s2, locale) {
     }
   ];
 }
-function syncFixedColumns(table, count2) {
+function syncFixedColumns(table, count2, endCount = 0) {
   const head = table.tHead?.rows[0];
   const starts = /* @__PURE__ */ new Map();
   let last = -1;
@@ -16947,6 +16947,21 @@ function syncFixedColumns(table, count2) {
       last = cell.cellIndex;
     }
   }
+  const ends = /* @__PURE__ */ new Map();
+  let first = -1;
+  if (head !== void 0 && endCount > 0) {
+    let offset = 0;
+    let taken = 0;
+    for (let at = head.cells.length - 1; at >= 0 && taken < endCount; at--) {
+      const cell = head.cells[at];
+      if (!shown(cell)) continue;
+      if (starts.has(cell.cellIndex)) break;
+      ends.set(cell.cellIndex, offset);
+      offset += cell.getBoundingClientRect().width;
+      first = cell.cellIndex;
+      taken += 1;
+    }
+  }
   for (const row of table.rows) {
     const whole = row.matches(DETAIL);
     for (const cell of row.cells) {
@@ -16956,10 +16971,20 @@ function syncFixedColumns(table, count2) {
           delete cell.dataset.kpFixed;
           cell.style.removeProperty("--kp-datatable-fixed-start");
         }
-        continue;
+      } else {
+        cell.dataset.kpFixed = cell.cellIndex === last ? "last" : "";
+        cell.style.setProperty("--kp-datatable-fixed-start", `${Math.round(start * 100) / 100}px`);
       }
-      cell.dataset.kpFixed = cell.cellIndex === last ? "last" : "";
-      cell.style.setProperty("--kp-datatable-fixed-start", `${Math.round(start * 100) / 100}px`);
+      const end = whole ? void 0 : ends.get(cell.cellIndex);
+      if (end === void 0) {
+        if (cell.dataset.kpFixedEnd !== void 0) {
+          delete cell.dataset.kpFixedEnd;
+          cell.style.removeProperty("--kp-datatable-fixed-end");
+        }
+      } else {
+        cell.dataset.kpFixedEnd = cell.cellIndex === first ? "first" : "";
+        cell.style.setProperty("--kp-datatable-fixed-end", `${Math.round(end * 100) / 100}px`);
+      }
     }
   }
 }
@@ -17548,11 +17573,12 @@ function attachDataTables(root = document, {
     let toggle2 = null;
     let pills = null;
     const addMode = (wrap.dataset.kpFilterMode ?? filterMode) === "add";
+    const bareFilters = wrap.dataset.kpFilterUi === "none";
     let addButton = null;
     let addPop = null;
     let addMenu = null;
     let filterEditor = null;
-    if (filterColumns.length > 0 && addMode) {
+    if (filterColumns.length > 0 && addMode && !bareFilters) {
       const s2 = s0;
       const popId = `${id}-add-filter`;
       addButton = /** @type {HTMLButtonElement | null} */
@@ -17605,7 +17631,7 @@ function attachDataTables(root = document, {
       filterEditor.hidden = true;
       wrap.insertBefore(filterEditor, tableBlock);
     }
-    if (filterColumns.length > 0 && !addMode) {
+    if (filterColumns.length > 0 && !addMode && !bareFilters) {
       panel = /** @type {HTMLElement | null} */
       wrap.querySelector(FILTERS);
       if (panel === null) {
@@ -17671,7 +17697,7 @@ function attachDataTables(root = document, {
       toggle2.setAttribute("aria-controls", panel.id);
       toggle2.setAttribute("aria-expanded", String(!panel.hidden));
     }
-    if (filterColumns.length > 0) {
+    if (filterColumns.length > 0 && !bareFilters) {
       pills = /** @type {HTMLElement | null} */
       wrap.querySelector(PILLS);
       if (pills === null) {
@@ -18369,11 +18395,32 @@ function attachDataTables(root = document, {
     };
     const fixedAttribute = wrap.dataset.kpFixedColumns;
     const fixedCount = fixedAttribute === void 0 ? 0 : Number.parseInt(fixedAttribute, 10) || keyColumn + 1;
+    const fixedEndCount = Math.max(0, Number.parseInt(wrap.dataset.kpFixedEnd ?? "", 10) || (wrap.dataset.kpFixedEnd === void 0 ? 0 : 1));
     const syncFixed = () => {
-      if (fixedCount > 0) syncFixedColumns(table, fixedCount);
+      if (fixedCount > 0 || fixedEndCount > 0) syncFixedColumns(table, fixedCount, fixedEndCount);
     };
+    const derivedLabels = /* @__PURE__ */ new Set();
+    const cardsWanted = wrap.hasAttribute("data-kp-cards") || table.hasAttribute("data-kp-cards");
+    const labelCells = () => {
+      if (!cardsWanted) return;
+      for (const row of all) {
+        if (row.matches(DETAIL) || row.matches(GROUP_ROW) || row.matches(SKELETON_ROW)) continue;
+        for (const cell of row.cells) {
+          if (cell.hasAttribute("data-label")) continue;
+          const words = labelOf5(cell.cellIndex);
+          if (words === "") continue;
+          cell.setAttribute("data-label", words);
+          derivedLabels.add(cell);
+        }
+      }
+    };
+    undo.push(() => {
+      for (const cell of derivedLabels) cell.removeAttribute("data-label");
+      derivedLabels.clear();
+    });
     let grid2 = null;
     const render7 = () => {
+      labelCells();
       const count2 = serverMode ? total || 0 : shownRows.length;
       const pages = Math.max(1, Math.ceil(count2 / size2));
       page = Math.min(page, pages - 1);
@@ -19829,7 +19876,7 @@ function attachDataTables(root = document, {
       } else request3();
     } else applyFilter();
     let resizeFrame = 0;
-    const resize = fixedCount > 0 && typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => {
+    const resize = (fixedCount > 0 || fixedEndCount > 0) && typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => {
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(syncFixed);
     }) : null;
@@ -19964,7 +20011,7 @@ function attachDataTables(root = document, {
       });
     }
     undo.push(
-      watchOptions(wrap, ["data-kp-sort-multi", "data-kp-filter-mode", "data-kp-expand-single"], () => {
+      watchOptions(wrap, ["data-kp-sort-multi", "data-kp-filter-mode", "data-kp-filter-ui", "data-kp-expand-single", "data-kp-fixed-end"], () => {
         const old = handles7.get(wrap);
         if (old === void 0) return;
         const was = old.view();

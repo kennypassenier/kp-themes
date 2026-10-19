@@ -2776,6 +2776,14 @@ exposed as a knob.
 </div>
 ```
 
+**The card's lines are on two tracks** [datatable-r5-1019]. A card is a grid of a
+name track (the longest name, at most `--kp-datatable-card-label`, 40 %) and a
+value track; every line is a subgrid of both, so the values of a card start on
+one edge, a code cell included. A cell with no `data-label` in a table that
+asks for cards (`data-kp-cards` on the `.kp-datatable`) takes its header's
+words; a column with no header words (selection, actions) spans the card.
+`data-kp-cards="spread"` keeps the earlier look (name left, value pushed right).
+
 `<Table cards />` writes both the attribute and every `data-label`;
 `<DataTable>` has done the card layout since 1.0.0 and now does it by
 container width. For a plain table it is opt-in, so no table that ships
@@ -3005,6 +3013,15 @@ own); the stylesheet sticks them on an opaque ground,
 last fixed column draws a hairline, `--kp-datatable-fixed-rule` and
 `--kp-datatable-fixed-rule-width`. In the card layout nothing is fixed.
 React: `fixedColumns` (`true`, or a count).
+
+**A last column that stays** [datatable-r5-1019]: `data-kp-fixed-end="1"` (or a
+count) keeps the last columns at the end edge, with the same opaque ground and a
+hairline on their inner side (`syncFixedColumns(table, count, endCount)`; cells
+carry `data-kp-fixed-end` and `--kp-datatable-fixed-end`). Cards keep nothing.
+
+**Filters the page draws itself** [datatable-r5-1019]: `data-kp-filter-ui="none"`
+on a table with `data-kp-filter` headers keeps `handle.filter()`, the view and
+the events, and draws no Filters button, panel, "+ Add filter" or pills.
 
 A header that stays (any `data-kp-max-height`, or React's `maxHeight`)
 stands on `--kp-datatable-head-ground` (the page's `--background` by

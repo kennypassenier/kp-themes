@@ -307,7 +307,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-19 [round-3-1019]: the four fix and option branches merged (remind-me, Copy, checklist and timer states, action size, calm freshness, computed sentence field, hover card, wheel, form grid); recounted with extractKnobs(): 1021.
     // Re-pinned 2026-10-19 [round-4-1019]: heat-deplist merged; recounted: 1022.
     // Re-pinned 2026-10-19 [stackbar-refresh-1019]: the share bar's picked ring (--kp-stackbar-picked-ring) and the legend's value track (--kp-stackbar-value-w), both read through var(): 1022 + 2.
-    assert.equal(result.expected, 1024, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-19 [datatable-r5-1019]: the data table's card label track, card gap and fixed end column (--kp-datatable-card-label, -card-gap, -fixed-end), all read through var(): 1024 + 3.
+    assert.equal(result.expected, 1027, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -376,7 +377,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Recounted 2026-10-19 [round-3-1019] after the four fix and option merges, every one read through var(): 1012.
     // Recounted 2026-10-19 [round-4-1019]: heat-deplist merged; recounted: 1013.
     // Recounted 2026-10-19 [stackbar-refresh-1019]: the two new stackbar knobs, both read through var(): 1015.
-    assert.equal(result.readCount, 1015);
+    // Recounted 2026-10-19 [datatable-r5-1019]: the three new data table knobs, all read through var(): 1018.
+    assert.equal(result.readCount, 1018);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

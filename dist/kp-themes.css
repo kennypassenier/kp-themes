@@ -11395,6 +11395,27 @@
         z-index: 3;
     }
 
+    /* A last column that stays [datatable-r5-1019, O22]. `data-kp-fixed-end="n"`
+ * keeps the last n columns at the end edge while the box scrolls sideways
+ * (an action column stays reachable). The script marks the cells
+ * (`data-kp-fixed-end`, `first` on the one that draws the hairline) and
+ * writes the offset each sticks at; the ground is opaque like the start
+ * columns', and the header's cells stay above the body's. */
+    .kp-datatable[data-kp-fixed-end] .kp-table :is(th, td)[data-kp-fixed-end] {
+        position: sticky;
+        inset-inline-end: var(--kp-datatable-fixed-end, 0);
+        z-index: 1;
+        background-color: var(--kp-datatable-fixed-ground, var(--kp-datatable-head-ground, var(--background)));
+    }
+
+    .kp-datatable[data-kp-fixed-end] .kp-table :is(th, td)[data-kp-fixed-end='first'] {
+        box-shadow: inset var(--kp-datatable-fixed-rule-width, 1px) 0 var(--kp-datatable-fixed-rule, var(--border-strong));
+    }
+
+    .kp-datatable[data-kp-fixed-end] .kp-table thead th[data-kp-fixed-end] {
+        z-index: 3;
+    }
+
     /* Editing a value in its cell [#inline-edit]: an editable value is a
  * button with a dashed underline and a pencil, so it can be told apart
  * before a pointer finds it; the editor is the package's own field, in
@@ -11649,6 +11670,87 @@
      * second layout to reason about, so there is only one. */
         .kp-table .kp-col-low {
             display: none;
+        }
+    }
+
+    /* The card's lines on two tracks [datatable-r5-1019, B2, N20]. Each card
+ * is a grid of a label track (the longest label, at most 40 % of the card:
+ * `--kp-datatable-card-label`) and a value track, and every line of it is a
+ * subgrid of those two, so the values of one card start on one edge whatever
+ * they hold: a word, a badge, a code cell. A line whose column has no name
+ * (the selection box, the actions) has no label track and spans the card; a
+ * cell that holds several controls puts its label on a line of its own and
+ * the controls in a wrapping row under it, so the row actions of every card
+ * stand on the same edge at their own widths. `data-kp-cards="spread"` keeps
+ * the earlier look (label left, value pushed to the right edge). */
+    @container kp-table (max-width: 40rem) {
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) {
+            --kp-datatable-card-gap: var(--kp-space-md, 0.75rem);
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) {
+            display: grid;
+            grid-template-columns: fit-content(var(--kp-datatable-card-label, 40%)) minmax(0, 1fr);
+            column-gap: var(--kp-datatable-card-gap);
+            align-items: baseline;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: subgrid;
+            align-items: baseline;
+            column-gap: var(--kp-datatable-card-gap);
+            justify-content: normal;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td::before {
+            grid-column: 1;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > * {
+            grid-column: 2;
+            min-inline-size: 0;
+            justify-self: start;
+        }
+
+        /* A value that is a block of its own (a code cell, a field) fills the track. */
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > :is(.kp-code, .kp-field__input, .kp-jsonfield) {
+            justify-self: stretch;
+        }
+
+        /* Several controls in one cell: the label above, the controls in a row. */
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:has(> * + *) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--kp-space-sm, 0.5rem);
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:has(> * + *)::before {
+            flex: 0 0 100%;
+        }
+
+        /* No column name: no label track; the content starts on the card's edge. */
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:is(:not([data-label]), [data-label='']) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--kp-space-sm, 0.5rem);
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:is(:not([data-label]), [data-label=''])::before {
+            display: none;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr[data-kp-row-detail] > td:is(:not([data-label]), [data-label], :has(> * + *)) {
+            display: block;
+        }
+
+        /* A card has no columns to keep in place, at the end either. */
+        .kp-datatable[data-kp-cards] .kp-table :is(th, td)[data-kp-fixed-end] {
+            position: static;
+            box-shadow: none;
         }
     }
 
