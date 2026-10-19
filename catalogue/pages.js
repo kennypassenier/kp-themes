@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Gap list from the homelab admin dashboard, 2026-10-19 (gap-activity-feed-1019): the activity feed, the one row it still drew by hand (state mark, actor chip, detail, the ticking time, a heading per day, load earlier). New component kp-feed (js/feed.js), five sections in formal only; the other themes follow once it is approved.
+            {
+                href: 'research/gap-activity-feed/demo.html',
+                label: 'Activity feed: who did what, and when, day by day',
+                about: 'A new component for the lists the dashboard drew by hand: each row has its outcome, what happened, who started it and when, under a heading per day, with Load earlier at the foot. 5 sections (5 pairs, formal only): the states, what a row shows, lines under a row, load earlier, and a narrow scrolling column.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
