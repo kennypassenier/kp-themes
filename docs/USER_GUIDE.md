@@ -156,6 +156,22 @@ The swatch wears the theme it previews (`data-theme` works on any element,
 not only on `<html>`), so it shows that theme's live colours instead of a
 copy that drifts.
 
+**In a form row** [anchors-picker-1019]. Put the picker in a `.kp-formgrid__control` (see "the form grid"): a theme button takes the
+baseline of its own name (its colour dot is centred on it), so the row's label and the buttons share one line. A grouped picker
+(`themeOptionsMarkup()` in a plain `ul[data-kp-theme-picker]`) draws each group as one line, the themes from the control's start edge
+and the Light or Dark word at the line's end, in a column of its own. A picker inside a menu keeps its stacked sections.
+
+**Previewing a theme without choosing it** [anchors-picker-1019]. `data-kp-theme-preview="hover"` on the picker (or
+`attachThemePickers(root, { preview: true })`) shows a theme while the pointer rests on its button or the keyboard is on it, and
+goes back when it leaves (after `PREVIEW_LEAVE_MS`, 90 ms, so crossing the gap between two buttons does not flicker). Nothing is
+chosen, stored or announced: `currentTheme()`, the marks and every `kp-theme-change` listener keep the real theme; a press still
+chooses. `data-kp-theme-preview-target="#sample"` names the element that wears the preview (default: the page's theme root). A
+touch screen has no hover, so a tap chooses. A picker in a menu ends the preview when the menu closes. The picker fires
+`kp-theme-preview` (`{ theme }`, `{ theme: null }` at the end). For your own code: `previewTheme(theme, { root })`,
+`endPreview({ root })` and `previewedTheme({ root })` in js/theme-core.js (the root carries `data-theme-preview-from` while it
+shows one). On a page that loads registers on demand (js/lazy-register.js) the register is loaded before the theme is shown.
+Off by default.
+
 **How deep a theme nests** [gap-10, measured 2026-09-20,
 `research/gap-10-nested-themes/demo.html`]. One level works completely: a
 pane carrying `data-theme="cyberpunk"` inside a `formal` page gets
@@ -2424,7 +2440,7 @@ A growing text box, link anchors, a gallery, a document preview, a map of what i
 <div class="kp-checklist" data-kp-checklist data-kp-print-title="Packing list"></div>
 ```
 
-`data-kp-autosize` makes the field as tall as its text between its `rows` and 20 lines (`data-kp-autosize-max`), then it scrolls inside; `data-kp-counter` and `maxlength` give an exact count, `setAutosizeState(el, 'loading' | 'error', sentence)` the other states. `data-kp-anchors` puts a `#` beside headings of levels 2 and 3 and beside rows that carry `data-kp-anchor="<their own id>"`: it shows on hover or keyboard focus (always on a phone), a press copies the link and says "Copied", and opening a link marks the place for two seconds. `setGallery(el, { items })` draws the grid; a press opens the lightbox (arrows stop at the end, `data-kp-lightbox-loop="on"` wraps), and `openViewer()` is the shell it and the preview share. `data-kp-preview` opens a file in the viewer with Open in a new tab and Download always in the foot; `.kp-docglyph[data-kp-doc-kind]` is the page icon. `setMatrix(el, { view: 'lines', rows, columns, cell })` draws the relation as two columns joined by lines, under 640 px as cards with chips. Ctrl+P on a page with a checklist prints black on white with drawn boxes (`data-kp-print-done` show, hide or strike); `js/print.js` adds the date and the sentence for a list that has no rows. The words are `autosize…`, `anchor…`, `gallery…`, `viewer…`, `preview…`, `uses…` and `print…`.
+`data-kp-autosize` makes the field as tall as its text between its `rows` and 20 lines (`data-kp-autosize-max`), then it scrolls inside; `data-kp-counter` and `maxlength` give an exact count, `setAutosizeState(el, 'loading' | 'error', sentence)` the other states. `data-kp-anchors` puts a `#` beside headings of levels 2 and 3 and beside rows that carry `data-kp-anchor="<their own id>"`: it shows on hover or keyboard focus (always on a phone), a press copies the link and says "Copied", and opening a link marks the place for two seconds. A link to a row that is not there says "That item is no longer here" after about a second (`data-kp-anchor-wait` is the longest wait, 10 s by default, `0` says it at once; the wait goes on only while something in an anchored container is loading or changing). The `y l` key is listed once on the shortcut sheet however many containers there are. Under a `.kp-formgrid` a row's mark stands at the end of its label cell and a group heading's mark at the grid's end edge [anchors-picker-1019]. `setGallery(el, { items })` draws the grid; a press opens the lightbox (arrows stop at the end, `data-kp-lightbox-loop="on"` wraps), and `openViewer()` is the shell it and the preview share. `data-kp-preview` opens a file in the viewer with Open in a new tab and Download always in the foot; `.kp-docglyph[data-kp-doc-kind]` is the page icon. `setMatrix(el, { view: 'lines', rows, columns, cell })` draws the relation as two columns joined by lines, under 640 px as cards with chips. Ctrl+P on a page with a checklist prints black on white with drawn boxes (`data-kp-print-done` show, hide or strike); `js/print.js` adds the date and the sentence for a list that has no rows. The words are `autosize…`, `anchor…`, `gallery…`, `viewer…`, `preview…`, `uses…` and `print…`.
 
 ### A star rating
 

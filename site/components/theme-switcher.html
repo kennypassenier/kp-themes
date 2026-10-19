@@ -911,12 +911,14 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-register</code></td><td>written</td></tr>
-                            <tr><td><code>data-kp-theme</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-register</code></td><td>written, selector, read</td></tr>
+                            <tr><td><code>data-kp-theme</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-theme-attached</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-theme-from-query</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-theme-group</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-theme-picker</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-theme-preview</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-theme-preview-target</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-theme-status</code></td><td>selector</td></tr>
                     </tbody></table></div>
                 </section>
@@ -961,6 +963,7 @@
                             <tr><td><code>kp-theme-before-change</code></td><td>Fired before a change, cancelable: `{ theme, previous }`. preventDefault() keeps the current theme.</td></tr>
                             <tr><td><code>kp-theme-unknown</code></td><td>Fired when a name was dropped: `{ requested, applied, source }` [TH97]. `source` is one of `stored`, `current`, `apply` or `cross-tab` — the four places a name can be dropped (AR25). A consumer listening to this learns what its page asked for and what it got, which is the whole of what the silence used to cost.</td></tr>
                             <tr><td><code>kp-theme-pick</code></td><td>Dispatched on the picker, bubbling, when a person chose a theme here: `{ theme, stored }`.</td></tr>
+                            <tr><td><code>kp-theme-preview</code></td><td>Dispatched on the picker, bubbling, when a theme is previewed or the preview ends: `{ theme }`, `{ theme: null }` at the end.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">

@@ -145,6 +145,58 @@
         font-size: var(--kp-theme-status-size, 0.875rem);
     }
 
+    /* anchors-picker-1019:picker-baseline:start */
+    /* --- The theme picker on a baseline [anchors-picker-1019; homelab 50] ------------------------------------------
+     * A theme button took its baseline from its swatch (an empty box, whose baseline is its bottom edge), so in a form row the
+     * button stood 9 px off its label. The button now takes the baseline of its own words and the swatch centres on them. A
+     * grouped picker drew its Light / Dark word above the first theme, which pushed that theme off the row's label line; now each
+     * group is one line, the themes from the control's start edge and the word at the line's end, in a column of its own (as wide
+     * as the widest word), on the baseline of the group's first theme. A picker inside a menu keeps its stacked sections. */
+    [data-kp-theme-picker]:not(.kp-menu) [data-kp-theme] {
+        align-items: baseline;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu) [data-kp-theme] > .kp-swatch {
+        align-self: center;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu):has(> .kp-theme-group) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: var(--kp-picker-label-gap, var(--kp-space-md, 0.75rem));
+        row-gap: var(--kp-picker-gap, 0.25rem);
+        align-items: first baseline;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu) > .kp-theme-group {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        flex-basis: auto;
+        align-items: first baseline;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu) > .kp-theme-group > .kp-theme-group__list {
+        grid-column: 1;
+        grid-row: 1;
+        min-inline-size: 0;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu) > .kp-theme-group > .kp-theme-group__label {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+    /* A theme menu does not replay its entrance while a theme is previewed [anchors-picker-1019]. A theme's menu enters with its own
+     * motion (synthwave's climbs in from below), and a preview changes the theme under the open menu: the menu would start again
+     * with the pointer on a button, the button would slide away from it, and the preview would end and start again. `!important`
+     * in this earlier layer beats the theme's register. */
+    [data-theme-preview-from] .kp-theme-menu :is(.kp-popover, .kp-menu, .kp-menu *) {
+        animation: none !important;
+        transition: none !important;
+    }
+    /* anchors-picker-1019:picker-baseline:end */
+
     /* --- Showing data [TH33] --------------------------------------------
  *
  * Six patterns that are not components — nobody imports a "URL" — but
@@ -26733,6 +26785,63 @@
         overflow-wrap: anywhere;
     }
     /* kpadopt6-media:anchors:end */
+}
+
+@layer kp.components {
+    /* anchors-picker-1019:anchors-formgrid:start */
+    /* --- Anchors under a form grid [anchors-picker-1019; homelab 49] -------------------------------------------------
+     * A row of a `.kp-formgrid` is a subgrid with a cell per track, so the row's mark (js/anchors.js prepends it to the row, where
+     * a table puts it in its first cell) used to fall into the next free track and push the row's cells along. Now it stands in
+     * the label track, at the end of the label's own cell, on the label's first baseline, and the label keeps
+     * `--kp-anchor-room` free for it: every row's mark has one x. The mark of a group's heading stands in a column of its own
+     * at the heading's end edge, on the heading's first baseline: every heading's mark has one x too, whatever the heading says.
+     * Knob: --kp-anchor-room (the width the label cell keeps for the mark, 1.75rem). */
+    .kp-formgrid [data-kp-anchored='row'] > .kp-anchor {
+        grid-column: label;
+        grid-row: 1;
+        align-self: first baseline;
+        justify-self: end;
+        margin: 0;
+    }
+
+    .kp-formgrid [data-kp-anchored='row'] > :is(.kp-formgrid__label, .kp-formrow__label, dt) {
+        grid-row: 1;
+        padding-inline-end: var(--kp-anchor-room, 1.75rem);
+    }
+
+    .kp-formgrid [data-kp-anchored='heading'] {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: first baseline;
+        column-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-formgrid [data-kp-anchored='heading'] > .kp-anchor {
+        grid-column: 2;
+        margin: 0;
+    }
+
+    /* Stacked (a narrow grid): the label and its mark share the row's first line, the rest follows. */
+    @container kp-formgrid (max-width: 36rem) {
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) [data-kp-anchored='row'] > .kp-anchor {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) [data-kp-anchored='row'] > :is(.kp-formgrid__label, .kp-formrow__label, dt) {
+            grid-row: 1;
+        }
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] [data-kp-anchored='row'] > .kp-anchor {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] [data-kp-anchored='row'] > :is(.kp-formgrid__label, .kp-formrow__label, dt) {
+        grid-row: 1;
+    }
+    /* anchors-picker-1019:anchors-formgrid:end */
 }
 
 @layer kp.components {

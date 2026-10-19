@@ -8012,6 +8012,7 @@ __export(anchors_exports, {
   ANCHOR_COPY_EVENT: () => ANCHOR_COPY_EVENT,
   ANCHOR_HIT_MS: () => ANCHOR_HIT_MS,
   ANCHOR_MISSING_EVENT: () => ANCHOR_MISSING_EVENT,
+  ANCHOR_QUIET_MS: () => ANCHOR_QUIET_MS,
   ANCHOR_REVEAL_EVENT: () => ANCHOR_REVEAL_EVENT,
   ANCHOR_WAIT_MS: () => ANCHOR_WAIT_MS,
   anchorSlug: () => anchorSlug,
@@ -8043,7 +8044,7 @@ function plainText(el16) {
 function nameOf(el16) {
   const own = el16.getAttribute("data-kp-anchor-label");
   if (own) return own;
-  if (/^h[1-6]$/i.test(el16.tagName)) return plainText(el16);
+  if (isHeading(el16)) return plainText(el16);
   const cell = el16.querySelector('th, td, [role="cell"], [role="gridcell"], .kp-action-list__title') ?? el16;
   return plainText(cell) || el16.id;
 }
@@ -8068,11 +8069,55 @@ async function copyText(doc, text) {
     return ok;
   }
 }
+function serveCopyKey(doc, strings, provider) {
+  let shared = COPY_KEY.get(doc);
+  if (!shared) {
+    const made6 = { providers: /* @__PURE__ */ new Set(), off: (
+      /** @type {(() => void) | null} */
+      null
+    ) };
+    shared = made6;
+    COPY_KEY.set(doc, made6);
+    void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
+      if (made6.providers.size === 0 || COPY_KEY.get(doc) !== made6) return;
+      made6.off = registerShortcuts2(
+        doc.body,
+        [
+          {
+            keys: "y l",
+            what: strings.anchorKeyCopy,
+            group: strings.anchorKeyGroup,
+            when: () => [...made6.providers].some((p) => p() !== null),
+            run: () => {
+              for (const p of made6.providers) {
+                const go = p();
+                if (go) return go();
+              }
+            }
+          }
+        ],
+        { dev: false }
+      );
+    });
+  }
+  const mine = shared;
+  mine.providers.add(provider);
+  return () => {
+    mine.providers.delete(provider);
+    if (mine.providers.size === 0) {
+      mine.off?.();
+      if (COPY_KEY.get(doc) === mine) COPY_KEY.delete(doc);
+    }
+  };
+}
 function attachAnchors(root = document, options = {}) {
   const cleanups = [];
   const found = (
     /** @type {HTMLElement[]} */
-    [...root instanceof HTMLElement && root.matches(ANCHORS) ? [root] : [], ...root.querySelectorAll(ANCHORS)]
+    [
+      ...root instanceof HTMLElement && root.matches(ANCHORS) ? [root] : [],
+      ...root.querySelectorAll(ANCHORS)
+    ]
   );
   for (const box of found) {
     if (box.dataset.kpAnchorsAttached !== void 0) continue;
@@ -8091,6 +8136,13 @@ function attachAnchors(root = document, options = {}) {
     const highlights = () => (options.target ?? attr(box, "data-kp-anchor-target", "highlight")) !== "none";
     const opensFirst = () => (options.open ?? attr(box, "data-kp-anchor-open", "on") !== "off") !== false;
     const copiedMs = () => Number(attr(box, "data-kp-flash-ms", "")) || options.copiedMs || ANCHOR_COPIED_MS;
+    const waitMs = () => {
+      const said = options.wait ?? (box.hasAttribute("data-kp-anchor-wait") ? Number(box.getAttribute("data-kp-anchor-wait")) : Number.NaN);
+      return Number.isFinite(said) && said >= 0 ? said : ANCHOR_WAIT_MS;
+    };
+    const drawing2 = () => [...doc.querySelectorAll(ANCHORS)].some(
+      (c) => c.matches('[aria-busy="true"]') || c.querySelector('[aria-busy="true"], .kp-skeleton, [data-kp-state="loading"]') !== null
+    );
     box.classList.add("kp-anchors");
     box.setAttribute("data-kp-anchor-show", showMode());
     const offset = box.getAttribute("data-kp-anchor-offset");
@@ -8111,8 +8163,8 @@ function attachAnchors(root = document, options = {}) {
       const said = el16.getAttribute("data-kp-anchor");
       if (said) return said;
       if (el16.id) return el16.id;
-      const base = /^h[1-6]$/i.test(el16.tagName) ? anchorSlug(nameOf(el16)) : el16.getAttribute("data-kp-row-key") ? `row-${anchorSlug(el16.getAttribute("data-kp-row-key") ?? "")}` : "";
-      return uniqueAnchorId(doc, base, /^h[1-6]$/i.test(el16.tagName) ? "section" : "row");
+      const base = isHeading(el16) ? anchorSlug(nameOf(el16)) : el16.getAttribute("data-kp-row-key") ? `row-${anchorSlug(el16.getAttribute("data-kp-row-key") ?? "")}` : "";
+      return uniqueAnchorId(doc, base, isHeading(el16) ? "section" : "row");
     };
     const isReal = (el16) => !el16.matches('.kp-skeleton, [aria-busy="true"], [data-kp-state="loading"]') && el16.querySelector(":scope > .kp-skeleton") === null;
     const mark = (el16, kind) => {
@@ -8148,14 +8200,16 @@ function attachAnchors(root = document, options = {}) {
       if (want === "headings" || want === "both") {
         const wanted = levels().map((n) => `h${n}`).join(",");
         if (wanted) {
-          for (const h2 of box.querySelectorAll(wanted)) if (h2 instanceof HTMLElement && !h2.closest('[data-kp-anchors="off"]')) mark(h2, "heading");
+          for (const h2 of box.querySelectorAll(wanted))
+            if (h2 instanceof HTMLElement && !h2.closest('[data-kp-anchors="off"]')) mark(h2, "heading");
         }
       }
       if (want === "rows" || want === "both") {
-        for (const row of box.querySelectorAll(`[data-kp-anchor], ${KEYED_ROWS}`)) if (row instanceof HTMLElement && !/^h[1-6]$/i.test(row.tagName)) mark(row, "row");
+        for (const row of box.querySelectorAll(`[data-kp-anchor], ${KEYED_ROWS}`))
+          if (row instanceof HTMLElement && !isHeading(row)) mark(row, "row");
       }
       for (const lone of box.querySelectorAll("[data-kp-anchor]")) {
-        if (lone instanceof HTMLElement && /^h[1-6]$/i.test(lone.tagName)) mark(lone, "heading");
+        if (lone instanceof HTMLElement && isHeading(lone)) mark(lone, "heading");
       }
       for (const [el16, button] of marks) {
         if (!el16.isConnected || !box.contains(el16)) {
@@ -8241,7 +8295,9 @@ function attachAnchors(root = document, options = {}) {
           return;
         }
         if (there) return;
-        if (Date.now() - startedAt >= ANCHOR_WAIT_MS) {
+        const now = Date.now();
+        const still = !drawing2() && now - Math.max(startedAt, LAST_CHANGE.get(doc) ?? 0) >= ANCHOR_QUIET_MS;
+        if (now - startedAt >= waitMs() || still) {
           if (doc.querySelector(ANCHORS) === box) showMissing(id);
           return;
         }
@@ -8274,7 +8330,8 @@ function attachAnchors(root = document, options = {}) {
       button.setAttribute("data-kp-anchor-state", ok ? "copied" : "failed");
       const done = button.querySelector(".kp-anchor__done");
       const kind = el16.getAttribute("data-kp-anchored");
-      if (done) done.setAttribute("data-kp-text", ok ? kind === "row" ? "\u2713" : strings.anchorCopied : kind === "row" ? "!" : strings.anchorFailed);
+      if (done)
+        done.setAttribute("data-kp-text", ok ? kind === "row" ? "\u2713" : strings.anchorCopied : kind === "row" ? "!" : strings.anchorFailed);
       say19(ok ? strings.anchorCopiedAnnounce(nameOf(el16)) : strings.anchorFailedAnnounce);
       button.dispatchEvent(new CustomEvent(ANCHOR_COPY_EVENT, { bubbles: true, detail: { id, url, text, markdown, ok } }));
       const timer2 = view.setTimeout(() => {
@@ -8286,6 +8343,7 @@ function attachAnchors(root = document, options = {}) {
     view.addEventListener("hashchange", arrive2);
     let scheduled = false;
     const observer = new MutationObserver(() => {
+      LAST_CHANGE.set(doc, Date.now());
       if (scheduled) return;
       scheduled = true;
       queueMicrotask(() => {
@@ -8294,33 +8352,17 @@ function attachAnchors(root = document, options = {}) {
       });
     });
     observer.observe(box, { childList: true, subtree: true });
-    let unregister = null;
-    void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
-      if (!box.isConnected && !doc.contains(box)) return;
-      unregister = registerShortcuts2(
-        box,
-        [
-          {
-            keys: "y l",
-            what: strings.anchorKeyCopy,
-            group: strings.anchorKeyGroup,
-            when: () => focusedRow() !== null,
-            run: () => {
-              const el16 = focusedRow();
-              const button = el16 ? marks.get(el16) : void 0;
-              if (el16 && button) void copyLink2(el16, button);
-            }
-          }
-        ],
-        { dev: false }
-      );
-    });
     const focusedRow = () => {
       const active = doc.activeElement;
       if (!(active instanceof Element) || !box.contains(active)) return null;
       for (const el16 of marks.keys()) if (el16.contains(active) && el16.getAttribute("data-kp-anchored") === "row") return el16;
       return null;
     };
+    const releaseKey = serveCopyKey(doc, strings, () => {
+      const el16 = focusedRow();
+      const button = el16 ? marks.get(el16) : void 0;
+      return el16 && button ? () => void copyLink2(el16, button) : null;
+    });
     REBUILD.set(box, () => {
       for (const [el16, button] of marks) {
         button.remove();
@@ -8336,7 +8378,7 @@ function attachAnchors(root = document, options = {}) {
       view.removeEventListener("hashchange", arrive2);
       observer.disconnect();
       REBUILD.delete(box);
-      unregister?.();
+      releaseKey();
       for (const t of timers) view.clearTimeout(t);
       window.clearTimeout(waitTimer);
       window.clearTimeout(litTimer);
@@ -8357,7 +8399,7 @@ function attachAnchors(root = document, options = {}) {
     for (const clean of cleanups) clean();
   };
 }
-var REBUILD, ANCHORS, ANCHOR, ANCHOR_COPY_EVENT, ANCHOR_REVEAL_EVENT, ANCHOR_MISSING_EVENT, ANCHOR_HIT_MS, ANCHOR_WAIT_MS, ANCHOR_COPIED_MS, attr, KEYED_ROWS;
+var REBUILD, ANCHORS, ANCHOR, ANCHOR_COPY_EVENT, ANCHOR_REVEAL_EVENT, ANCHOR_MISSING_EVENT, ANCHOR_HIT_MS, ANCHOR_WAIT_MS, ANCHOR_QUIET_MS, ANCHOR_COPIED_MS, attr, isHeading, KEYED_ROWS, LAST_CHANGE, COPY_KEY;
 var init_anchors = __esm({
   "js/anchors.js"() {
     "use strict";
@@ -8371,9 +8413,13 @@ var init_anchors = __esm({
     ANCHOR_MISSING_EVENT = "kp-anchor-missing";
     ANCHOR_HIT_MS = 2e3;
     ANCHOR_WAIT_MS = 1e4;
+    ANCHOR_QUIET_MS = 1e3;
     ANCHOR_COPIED_MS = 1500;
     attr = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
+    isHeading = (el16) => /^h[1-6]$/i.test(el16.tagName) || el16.matches("legend, .kp-formgrid__heading");
     KEYED_ROWS = 'tr[data-kp-row-key], [role="row"][data-kp-row-key], li[data-kp-row-key]';
+    LAST_CHANGE = /* @__PURE__ */ new WeakMap();
+    COPY_KEY = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -61787,6 +61833,7 @@ __export(theme_core_exports, {
   BEFORE_THEME_EVENT: () => BEFORE_THEME_EVENT,
   DEFAULT_THEME: () => DEFAULT_THEME,
   PENDING_THEME_ATTRIBUTE: () => PENDING_THEME_ATTRIBUTE,
+  PREVIEW_THEME_ATTRIBUTE: () => PREVIEW_THEME_ATTRIBUTE,
   STORAGE_KEY: () => STORAGE_KEY,
   THEMES: () => THEMES,
   THEME_EVENT: () => THEME_EVENT,
@@ -61794,10 +61841,13 @@ __export(theme_core_exports, {
   applyTheme: () => applyTheme,
   configureTheme: () => configureTheme,
   currentTheme: () => currentTheme,
+  endPreview: () => endPreview,
   initializeTheme: () => initializeTheme,
   isTheme: () => isTheme,
   onThemeChange: () => onThemeChange,
   pendingTheme: () => pendingTheme,
+  previewTheme: () => previewTheme,
+  previewedTheme: () => previewedTheme,
   storeTheme: () => storeTheme,
   storedTheme: () => storedTheme
 });
@@ -61806,6 +61856,7 @@ var THEME_EVENT = "kp-theme-change";
 var BEFORE_THEME_EVENT = "kp-theme-before-change";
 var UNKNOWN_THEME_EVENT = "kp-theme-unknown";
 var PENDING_THEME_ATTRIBUTE = "data-theme-pending";
+var PREVIEW_THEME_ATTRIBUTE = "data-theme-preview-from";
 var config3 = { root: (
   /** @type {Element | null} */
   null
@@ -61863,7 +61914,7 @@ var isDropped = (raw) => raw !== null && raw !== "" && !isTheme(raw);
 function currentTheme({ root } = {}) {
   if (typeof document === "undefined") return DEFAULT_THEME;
   const element = rootOf(root);
-  const raw = element.getAttribute("data-theme");
+  const raw = element.getAttribute(PREVIEW_THEME_ATTRIBUTE) ?? element.getAttribute("data-theme");
   if (isDropped(raw)) reportUnknown(raw, DEFAULT_THEME, "current", element);
   return asTheme(raw) ?? DEFAULT_THEME;
 }
@@ -61877,11 +61928,15 @@ function applyTheme(theme, { root, darkClass, strict = false, announce: announce
   const next2 = known4 ?? DEFAULT_THEME;
   const element = rootOf(root);
   if (known4 === null && theme !== null && theme !== void 0 && theme !== "") reportUnknown(theme, next2, "apply", element);
-  const previous = asTheme(element.getAttribute("data-theme"));
+  const previous = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE) ?? element.getAttribute("data-theme"));
   if (announce3 && previous !== next2) {
     const ask = new CustomEvent(BEFORE_THEME_EVENT, { bubbles: true, cancelable: true, detail: { theme: next2, previous } });
-    if (!element.dispatchEvent(ask)) return previous ?? DEFAULT_THEME;
+    if (!element.dispatchEvent(ask)) {
+      endPreview({ root: element, darkClass });
+      return previous ?? DEFAULT_THEME;
+    }
   }
+  element.removeAttribute(PREVIEW_THEME_ATTRIBUTE);
   element.setAttribute("data-theme", next2);
   element.removeAttribute(PENDING_THEME_ATTRIBUTE);
   const cls = darkClass === void 0 ? config3.darkClass : darkClass;
@@ -61890,6 +61945,39 @@ function applyTheme(theme, { root, darkClass, strict = false, announce: announce
     element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next2, previous, root: element } }));
   }
   return next2;
+}
+function previewTheme(theme, { root, darkClass } = {}) {
+  const known4 = asTheme(theme);
+  if (known4 === null || typeof document === "undefined") return null;
+  const element = rootOf(root);
+  const real = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE)) ?? asTheme(element.getAttribute("data-theme")) ?? DEFAULT_THEME;
+  if (known4 === real) {
+    endPreview({ root: element, darkClass });
+    return known4;
+  }
+  element.setAttribute(PREVIEW_THEME_ATTRIBUTE, real);
+  element.setAttribute("data-theme", known4);
+  const cls = darkClass === void 0 ? config3.darkClass : darkClass;
+  if (cls) element.classList.toggle(cls, DARK.has(known4));
+  return known4;
+}
+function endPreview({ root, darkClass } = {}) {
+  if (typeof document === "undefined") return false;
+  const element = rootOf(root);
+  const real = asTheme(element.getAttribute(PREVIEW_THEME_ATTRIBUTE));
+  if (!element.hasAttribute(PREVIEW_THEME_ATTRIBUTE)) return false;
+  element.removeAttribute(PREVIEW_THEME_ATTRIBUTE);
+  if (real) {
+    element.setAttribute("data-theme", real);
+    const cls = darkClass === void 0 ? config3.darkClass : darkClass;
+    if (cls) element.classList.toggle(cls, DARK.has(real));
+  }
+  return true;
+}
+function previewedTheme({ root } = {}) {
+  if (typeof document === "undefined") return null;
+  const element = rootOf(root);
+  return element.hasAttribute(PREVIEW_THEME_ATTRIBUTE) ? asTheme(element.getAttribute("data-theme")) : null;
 }
 function storeTheme(theme, { key, storage: storage2 } = {}) {
   try {
@@ -61948,6 +62036,8 @@ init_overlays();
 var theme_picker_exports = {};
 __export(theme_picker_exports, {
   PICK_EVENT: () => PICK_EVENT,
+  PREVIEW_EVENT: () => PREVIEW_EVENT,
+  PREVIEW_LEAVE_MS: () => PREVIEW_LEAVE_MS,
   THEMES: () => THEMES,
   THEME_MENU_ICON: () => THEME_MENU_ICON,
   attachThemePickers: () => attachThemePickers,
@@ -61958,7 +62048,56 @@ init_strings();
 var PICKER = "[data-kp-theme-picker]";
 var OPTION = "[data-kp-theme]";
 var STATUS = "[data-kp-theme-status]";
+function previewRoot(picker) {
+  const selector = picker.getAttribute("data-kp-theme-preview-target");
+  if (!selector) return void 0;
+  try {
+    return picker.ownerDocument.querySelector(selector) ?? void 0;
+  } catch {
+    return void 0;
+  }
+}
+async function registerFirst(doc, theme) {
+  const first = doc.querySelector("link[data-kp-register]");
+  if (!first) return;
+  const wearing = first.getAttribute("data-kp-register") ?? "";
+  const href = (
+    /** @type {HTMLLinkElement} */
+    first.href
+  );
+  if (!wearing || !href.includes(`${wearing}-register.css`)) return;
+  const url = new URL(href.split(`${wearing}-register.css`).join(`${theme}-register.css`), doc.baseURI).href;
+  const found = [...doc.querySelectorAll('link[rel~="stylesheet"]')].find(
+    (el16) => el16.getAttribute("data-kp-register") === theme || /** @type {HTMLLinkElement} */
+    el16.href === url
+  );
+  if (found && /** @type {HTMLLinkElement} */
+  found.sheet) return;
+  await new Promise((resolve, reject) => {
+    const el16 = (
+      /** @type {HTMLLinkElement} */
+      found ?? doc.createElement("link")
+    );
+    el16.addEventListener("load", () => resolve(void 0), { once: true });
+    el16.addEventListener(
+      "error",
+      () => {
+        if (!found) el16.remove();
+        reject(new Error("register"));
+      },
+      { once: true }
+    );
+    if (!found) {
+      el16.rel = "stylesheet";
+      el16.href = url;
+      el16.setAttribute("data-kp-register", theme);
+      doc.head.append(el16);
+    }
+  });
+}
 var PICK_EVENT = "kp-theme-pick";
+var PREVIEW_EVENT = "kp-theme-preview";
+var PREVIEW_LEAVE_MS = 90;
 var saveFailedText = () => getStrings().themeSaveFailed;
 function showSaveState(root, failed) {
   for (const el16 of root.querySelectorAll(STATUS)) {
@@ -61985,7 +62124,7 @@ function clearMarks(root) {
     el16.classList.remove("is-selected");
   }
 }
-function attachThemePickers(root = document, { persist = true, closePopover = true, status = null } = {}) {
+function attachThemePickers(root = document, { persist = true, closePopover = true, status = null, preview = void 0 } = {}) {
   const cleanups = [];
   const pickers = [];
   for (const el16 of root.querySelectorAll(PICKER)) {
@@ -62008,17 +62147,96 @@ function attachThemePickers(root = document, { persist = true, closePopover = tr
         option.dataset.kpTheme
       );
       if (!next2) return;
+      settlePreview();
       const applied = applyTheme(next2);
       const chosen = pendingTheme() ?? applied;
       const stored = persist ? storeTheme(chosen) : true;
       showSaveState(status ?? picker.parentNode ?? document, !stored);
       picker.dispatchEvent(new CustomEvent(PICK_EVENT, { bubbles: true, detail: { theme: chosen, stored } }));
-      const popover = closePopover ? picker.closest("[popover]") : null;
-      if (popover && popover.matches(":popover-open")) popover.hidePopover();
+      const popover2 = closePopover ? picker.closest("[popover]") : null;
+      if (popover2 && popover2.matches(":popover-open")) popover2.hidePopover();
     };
     picker.addEventListener("click", onClick);
+    const wantsPreview = () => preview ?? picker.getAttribute("data-kp-theme-preview") === "hover";
+    let shownOn;
+    let showing = false;
+    let leaveTimer = 0;
+    let ask = 0;
+    const say19 = (theme) => picker.dispatchEvent(new CustomEvent(PREVIEW_EVENT, { bubbles: true, detail: { theme } }));
+    const stopPreview = () => {
+      ask += 1;
+      window.clearTimeout(leaveTimer);
+      if (showing && endPreview({ root: shownOn })) say19(null);
+      showing = false;
+      shownOn = void 0;
+    };
+    const startPreview = async (theme) => {
+      window.clearTimeout(leaveTimer);
+      const mine = ++ask;
+      const on = previewRoot(picker);
+      try {
+        await registerFirst(picker.ownerDocument, theme);
+      } catch {
+        return;
+      }
+      if (mine !== ask || !wantsPreview()) return;
+      if (showing && shownOn !== on) endPreview({ root: shownOn });
+      shownOn = on;
+      showing = true;
+      if (previewTheme(theme, { root: on })) say19(theme);
+    };
+    const settlePreview = () => {
+      ask += 1;
+      window.clearTimeout(leaveTimer);
+      if (showing && shownOn !== void 0 && endPreview({ root: shownOn })) say19(null);
+      showing = false;
+      shownOn = void 0;
+    };
+    const leaveSoon = () => {
+      window.clearTimeout(leaveTimer);
+      leaveTimer = window.setTimeout(stopPreview, PREVIEW_LEAVE_MS);
+    };
+    const optionOf = (event) => {
+      const option = event.target instanceof Element ? event.target.closest(OPTION) : null;
+      return option && picker.contains(option) ? (
+        /** @type {HTMLElement} */
+        option
+      ) : null;
+    };
+    const onEnter = (event) => {
+      if (!wantsPreview() || event.pointerType === "touch") return;
+      const theme = optionOf(event)?.dataset.kpTheme;
+      if (theme) void startPreview(theme);
+    };
+    const onFocusIn = (event) => {
+      if (!wantsPreview()) return;
+      const option = optionOf(event);
+      if (!option || !option.matches(":focus-visible")) return;
+      if (option.dataset.kpTheme) void startPreview(option.dataset.kpTheme);
+    };
+    picker.addEventListener("pointerover", onEnter);
+    picker.addEventListener("pointerleave", leaveSoon);
+    picker.addEventListener("focusin", onFocusIn);
+    picker.addEventListener("focusout", leaveSoon);
+    const popover = (
+      /** @type {HTMLElement | null} */
+      picker.closest("[popover]")
+    );
+    const onToggle = (event) => {
+      if (
+        /** @type {ToggleEvent} */
+        event.newState === "closed"
+      ) stopPreview();
+    };
+    popover?.addEventListener("toggle", onToggle);
     markSelection(picker, initializeTheme(currentTheme()));
     cleanups.push(() => {
+      stopPreview();
+      picker.removeEventListener("pointerover", onEnter);
+      picker.removeEventListener("pointerleave", leaveSoon);
+      picker.removeEventListener("focusin", onFocusIn);
+      picker.removeEventListener("focusout", leaveSoon);
+      popover?.removeEventListener("toggle", onToggle);
       picker.removeEventListener("click", onClick);
       delete picker.dataset.kpThemeAttached;
       clearMarks(picker);
@@ -63474,6 +63692,7 @@ export {
   ANCHOR_COPY_EVENT,
   ANCHOR_HIT_MS,
   ANCHOR_MISSING_EVENT,
+  ANCHOR_QUIET_MS,
   ANCHOR_REVEAL_EVENT,
   ANCHOR_WAIT_MS,
   ARRIVAL,
@@ -63816,6 +64035,9 @@ export {
   PRESS_KNOB,
   PRESS_SIZE,
   PREVIEW,
+  PREVIEW_EVENT,
+  PREVIEW_LEAVE_MS,
+  PREVIEW_THEME_ATTRIBUTE,
   PREVIEW_TIMEOUT_MS,
   PRINT_ACTION,
   PRINT_EVENT,
@@ -64383,6 +64605,7 @@ export {
   drawsSelect,
   easeSize,
   effects_exports as effectsExports,
+  endPreview,
   enforceContracts,
   ensureRegister,
   entity_card_exports as entityCardExports,
@@ -64588,7 +64811,9 @@ export {
   preparePrint,
   presetMs,
   prettyJson,
+  previewTheme,
   previewTypeOf,
+  previewedTheme,
   print_exports as printExports,
   problems_exports as problemsExports,
   progressbar_exports as progressbarExports,
