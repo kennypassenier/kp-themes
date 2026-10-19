@@ -4438,8 +4438,7 @@
     }
 
     [data-theme='formal'] .kp-gantt__zone[data-kp-lane-zone] {
-        block-size: 2px;
-        inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - 2px) / 2);
+        --kp-gantt-zone: 2px;
         border: 0;
         border-radius: 0;
         background: var(--kp-gantt-mark);
