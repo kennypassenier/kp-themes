@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (project threads): four more fix/option rounds bundled in ONE page (research/round-3-1019, built by build.mjs from research/r6r8-1019, audhd-opts-1019, hover-wheel-1019 and formgrid-notes-1019, which stay as its sources and are off the Agenda). Formal only; each section says what was wrong and what is different now.
+            {
+                href: 'research/round-3-1019/demo.html',
+                label: 'Fixes from the project threads, round 3',
+                about: 'Fixes and options from the project threads, each in the package: the remind-me picker width, the Copy button in a key-value cell, the checklist and timer list when loading, empty or failed; three options (action tile size, calm freshness in days, a computed field in a sentence form); the hover card on touch and the wheel (answer, kiosk, resting); and the form grid (a form block gap, a JSON field action, the refresh bar label, two review-kit measures). 16 sections (16 pairs), in formal only.',
+            },
             // Kenny, 2026-10-19 (project threads): four package-fix rounds bundled in ONE page (research/round-2-1019, built by build.mjs from research/align-pkg-1019, r1r2-1019, r3r5-1019 and b3b4-1019, which stay as its sources and are off the Agenda). Formal only; each section says what was wrong and what is different now.
             {
                 href: 'research/round-2-1019/demo.html',

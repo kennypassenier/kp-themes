@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="audhd-opts-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Three options for the recipe app: tile size, calm freshness, computed sentence word</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Three options for the recipe app</h1>
+                <p class="cat-intro">
+                    The AuDHD recipe project asked for three things its pages could not do: action tiles in a smaller or larger size, a freshness line
+                    that says &ldquo;frozen 97 days ago&rdquo; on a calm plate instead of a warning, and a sentence form with words it works out
+                    itself. Each is an option of a component you approved, with its old look as the default. Three sections, formal only; under
+                    <b>What changed since you approved it</b> each says what is new.
+                </p>
+            </header>
+
+            <section
+                class="kc-sec"
+                id="action-size"
+                data-review-item="action-size"
+                data-review-topic="action-size"
+                data-review-topic-title="Action tiles: a size"
+                data-review-components="action"
+                data-review-title="Action tiles: a size"
+                data-review-themes="formal"
+                aria-labelledby="h-action-size"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Action tiles had one size in every place they were used, so a page with many small
+                        actions and a page with three important ones looked the same. The board, one tile, or any element above them can now say
+                        <code>data-kp-action-size="compact"</code> or <code>"large"</code>. The tile&rsquo;s padding, title, sentence and mark scale
+                        together, and so does the width a column may shrink to, so a compact board fits more tiles on a line and a large one fewer.
+                        With no attribute nothing changes. The option follows the attribute at runtime, in every theme.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-action-size">Action tiles: a size</h2>
+                    <p>
+                        A board of buttons and links, each with a title and the one sentence that says what it does. The board can now be compact, the
+                        theme&rsquo;s own size, or large.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The board opens at the theme&rsquo;s own size. The block beside it reads <b>Default</b> and lists the tile height, title
+                            size, padding and tiles per line.
+                        </li>
+                        <li>
+                            Press <b>Compact</b> in the control group above the board: every tile shrinks together, more tiles stand on a line, and
+                            the readout follows. Press <b>Large</b>: tiles grow and fewer fit on a line. Press <b>Default</b> to come back.
+                        </li>
+                        <li>
+                            All six tiles keep one height whatever their state: a button, a link with its arrow, a destructive one with its bar, one
+                            that is busy with its spinner and one that is disabled.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        six tiles on one grid, all one height; the mark column keeps its place in every size; the readout column lines its numbers up
+                        under each other.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="action-size-board">
+                    <div role="group" aria-label="Size">
+                        <b>Size:</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ao-target="ao-tiles"
+                            data-ao-attr="data-kp-action-size"
+                            data-ao-value="compact"
+                            aria-pressed="false"
+                        >
+                            Compact
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ao-target="ao-tiles"
+                            data-ao-attr="data-kp-action-size"
+                            data-ao-remove
+                            aria-pressed="true"
+                        >
+                            Default
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ao-target="ao-tiles"
+                            data-ao-attr="data-kp-action-size"
+                            data-ao-value="large"
+                            aria-pressed="false"
+                        >
+                            Large
+                        </button>
+                    </div>
+                </div>
+                <div class="ao-board" id="action-size-board">
+                    <div class="ao-block ao-span-8">
+                        <h3 class="ao-block__title">Backup actions</h3>
+                        <p class="ao-block__about">Mock actions of a backup page. Each tile does one thing and says which.</p>
+                        <div class="kp-actions" id="ao-tiles">
+                            <button type="button" class="kp-action">
+                                <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span>
+                            </button>
+                            <button type="button" class="kp-action">
+                                <strong class="kp-action__title">Restart stack</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Stops the stack, starts it again and waits until it answers.</span>
+                            </button>
+                            <a class="kp-action" href="#ao-tiles"
+                                ><strong class="kp-action__title">Open host page</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Shows the disks, the temperature and the last boot of this host.</span></a
+                            >
+                            <button type="button" class="kp-action kp-action--destructive">
+                                <strong class="kp-action__title">Delete old snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Removes every snapshot older than 30 days. This cannot be undone.</span>
+                            </button>
+                            <button type="button" class="kp-action" aria-busy="true">
+                                <strong class="kp-action__title">Check disks</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Reads every disk&rsquo;s health report and lists what it found.</span>
+                            </button>
+                            <button type="button" class="kp-action" disabled>
+                                <strong class="kp-action__title">Export logs</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Saves the last seven days of logs as one file.</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ao-block ao-span-4">
+                        <h3 class="ao-block__title">What the size sets</h3>
+                        <p class="ao-block__about">Read from the tiles as they are drawn, so it follows every press.</p>
+                        <dl class="kp-kv">
+                            <div class="kp-kv__row">
+                                <dt>Size</dt>
+                                <dd data-ao-read="size">Default</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Tile height</dt>
+                                <dd data-ao-read="height"></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Title size</dt>
+                                <dd data-ao-read="title"></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Padding</dt>
+                                <dd data-ao-read="pad"></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Tiles per line</dt>
+                                <dd data-ao-read="per-line"></dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="freshness-tone"
+                data-review-item="freshness-tone"
+                data-review-topic="freshness-tone"
+                data-review-topic-title="Freshness line: a calm stale tone and days only"
+                data-review-components="ago"
+                data-review-title="Freshness line: a calm stale tone and days only"
+                data-review-themes="formal"
+                aria-labelledby="h-freshness-tone"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Once a line was older than its limit it turned into an amber warning plate, and it
+                        counted in two units (&ldquo;97 days 4 h&rdquo;). Two options are new. <code>data-kp-stale-tone="calm"</code> draws the stale
+                        line as a quiet plate in the muted ground and ordinary ink, with the same size, so turning stale still moves nothing.
+                        <code>data-kp-ago-units="days"</code> counts whole days from one day on (&ldquo;frozen 97 days ago&rdquo;), and keeps hours
+                        and minutes under a day. With neither attribute nothing changes. Both follow their attribute at runtime.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-freshness-tone">Freshness line: a calm stale tone and days only</h2>
+                    <p>
+                        The line that says how old data is (&ldquo;updated 12 s ago&rdquo;). For data that is old on purpose, such as a frozen recipe,
+                        it no longer has to look like a warning.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The first row is the amber plate as before: <b>frozen 97 days 4 h ago</b>. The second is the same age on a quiet grey
+                            plate, the third reads <b>frozen 97 days ago</b>.
+                        </li>
+                        <li>The fourth row is only 3 h old, so it has no plate at all and still reads <b>3 h 12 min</b>, also with days only.</li>
+                        <li>
+                            Press <b>Calm</b> and <b>Days only</b> in the control group: the last row (the live line) changes tone and units, and the
+                            block beside it shows the exact moment and the limit.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        the four lines start on the same edge of the control column and sit on their label&rsquo;s baseline; the plates change colour
+                        but not size.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="freshness-tone-board">
+                    <div role="group" aria-label="Tone">
+                        <b>Tone:</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ao-target="ao-ago-live"
+                            data-ao-attr="data-kp-stale-tone"
+                            data-ao-remove
+                            aria-pressed="true"
+                        >
+                            Warning
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ao-target="ao-ago-live"
+                            data-ao-attr="data-kp-stale-tone"
+                            data-ao-value="calm"
+                            aria-pressed="false"
+                        >
+                            Calm
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Units">
+                        <b>Units:</b>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ao-target="ao-ago-live"
+                            data-ao-attr="data-kp-ago-units"
+                            data-ao-remove
+                            aria-pressed="true"
+                        >
+                            Two units
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-ao-target="ao-ago-live"
+                            data-ao-attr="data-kp-ago-units"
+                            data-ao-value="days"
+                            aria-pressed="false"
+                        >
+                            Days only
+                        </button>
+                    </div>
+                </div>
+                <div class="ao-board" id="freshness-tone-board">
+                    <div class="ao-block ao-span-8">
+                        <h3 class="ao-block__title">Four lines, one age</h3>
+                        <p class="ao-block__about">Mock lines of a recipe box. The first three are 97 days 4 h old, the fourth 3 h 12 min.</p>
+                        <div class="kp-formgrid" data-kp-formgrid-lines="lines">
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">Warning plate</span>
+                                <div class="kp-formgrid__control">
+                                    <time
+                                        class="kp-ago"
+                                        data-kp-ago
+                                        data-kp-ago-verb="frozen"
+                                        data-kp-stale-after="1209600"
+                                        data-ao-age="8395200"
+                                    ></time>
+                                </div>
+                                <p class="kp-formgrid__value">As it was: amber, two units.</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">Calm plate</span>
+                                <div class="kp-formgrid__control">
+                                    <time
+                                        class="kp-ago"
+                                        data-kp-ago
+                                        data-kp-ago-verb="frozen"
+                                        data-kp-stale-after="1209600"
+                                        data-kp-stale-tone="calm"
+                                        data-ao-age="8395200"
+                                    ></time>
+                                </div>
+                                <p class="kp-formgrid__value">Quiet grey, two units.</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">Calm, days only</span>
+                                <div class="kp-formgrid__control">
+                                    <time
+                                        class="kp-ago"
+                                        data-kp-ago
+                                        data-kp-ago-verb="frozen"
+                                        data-kp-stale-after="1209600"
+                                        data-kp-stale-tone="calm"
+                                        data-kp-ago-units="days"
+                                        data-ao-age="8395200"
+                                    ></time>
+                                </div>
+                                <p class="kp-formgrid__value">Quiet grey, whole days.</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">Not stale yet</span>
+                                <div class="kp-formgrid__control">
+                                    <time
+                                        class="kp-ago"
+                                        data-kp-ago
+                                        data-kp-ago-verb="frozen"
+                                        data-kp-stale-after="1209600"
+                                        data-kp-stale-tone="calm"
+                                        data-kp-ago-units="days"
+                                        data-ao-age="11520"
+                                    ></time>
+                                </div>
+                                <p class="kp-formgrid__value">Under a day, so no plate and exact.</p>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">Live line</span>
+                                <div class="kp-formgrid__control">
+                                    <time
+                                        class="kp-ago"
+                                        id="ao-ago-live"
+                                        data-kp-ago
+                                        data-kp-ago-verb="frozen"
+                                        data-kp-stale-after="1209600"
+                                        data-ao-age="8395200"
+                                    ></time>
+                                </div>
+                                <p class="kp-formgrid__value">Follows the buttons above.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ao-block ao-span-4">
+                        <h3 class="ao-block__title">The live line</h3>
+                        <p class="ao-block__about">What the line carries under its words.</p>
+                        <dl class="kp-kv">
+                            <div class="kp-kv__row">
+                                <dt>Frozen on</dt>
+                                <dd data-ao-read="moment"></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Stale after</dt>
+                                <dd>14 days</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Tone</dt>
+                                <dd data-ao-read="tone">Warning</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Units</dt>
+                                <dd data-ao-read="units">Two units</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="sentence-computed"
+                data-review-item="sentence-computed"
+                data-review-topic="sentence-computed"
+                data-review-topic-title="Sentence form: a field the sentence works out"
+                data-review-components="sentence"
+                data-review-title="Sentence form: a field the sentence works out"
+                data-review-themes="formal"
+                aria-labelledby="h-sentence-computed"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Every field in a sentence form was something the person typed or chose. A sentence
+                        can now hold a read-only computed field:
+                        <code>&lt;output class="kp-sentence__computed" data-kp-sentence-computed="ready"&gt;</code> inside a
+                        <code>.kp-sentence__field</code>, with a function that gets the value of the other fields and returns its words (<code
+                            >attachSentences(root, { computed })</code
+                        >, <code>sentence(form).compute(name, fn)</code>, or <code>setSentenceComputed(form, name, text)</code> to push the text in).
+                        It is drawn on a quiet plate with no underline in the primary colour, so it is not mistaken for something to fill in; it is
+                        not a tab stop, is not sent with the form, and is part of the spoken summary. With nothing to say it shows a dash.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-sentence-computed">Sentence form: a field the sentence works out</h2>
+                    <p>
+                        A form that reads as a sentence. Some words in it can now be worked out from the fields you fill in, and are not fields you
+                        type in yourself.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Read the sentence:
+                            <b
+                                >Start cooking at 17:30. It takes 70 min, so dinner is ready at 18:40. It serves 4 people at 150 g each: 600 g in
+                                total.</b
+                            >
+                            The two grey words are worked out.
+                        </li>
+                        <li>
+                            Change the start time or the minutes, the people or the grams: the grey words change at once. Press <b>95 min</b> and
+                            dinner is ready at 19:05; press <b>Clear minutes</b> and it shows a dash and the spoken summary says <b>(Ready at)</b>.
+                        </li>
+                        <li>
+                            Press Tab through the sentence: the focus visits the four fields you type in and never the grey ones. The block beside it
+                            shows what is sent with the form: only those four.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        the grey words stand on the line of the words around them, as tall as the fields beside them, with no underline.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="sentence-computed-board">
+                    <div role="group" aria-label="Minutes">
+                        <b>Minutes:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ao-field="minutes" data-ao-text="70">70 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ao-field="minutes" data-ao-text="95">95 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ao-field="minutes" data-ao-text="">Clear minutes</button>
+                    </div>
+                    <div role="group" aria-label="People">
+                        <b>People:</b> <button type="button" class="kp-button kp-button--sm" data-ao-field="people" data-ao-text="4">4 people</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ao-field="people" data-ao-text="10">10 people</button>
+                    </div>
+                </div>
+                <div class="ao-board" id="sentence-computed-board">
+                    <div class="ao-block ao-span-8">
+                        <h3 class="ao-block__title">Tonight&rsquo;s dinner</h3>
+                        <p class="ao-block__about">A mock cooking plan. Four fields to fill in, two words worked out from them.</p>
+                        <form class="kp-sentence" data-kp-sentence data-kp-sentence-size="lg" id="ao-sentence" onsubmit="return false;">
+                            <p class="kp-sentence__text">
+                                Start cooking at
+                                <span class="kp-sentence__field"><input name="start" size="5" value="17:30" aria-label="Start time (HH:MM)" /></span>.
+                                It takes
+                                <span class="kp-sentence__field"
+                                    ><input name="minutes" size="3" inputmode="numeric" value="70" aria-label="Minutes"
+                                /></span>
+                                min, so dinner is ready at
+                                <span class="kp-sentence__field"
+                                    ><output class="kp-sentence__computed" data-kp-sentence-computed="ready" aria-label="Ready at"></output></span
+                                >. It serves
+                                <span class="kp-sentence__field"
+                                    ><input name="people" size="3" inputmode="numeric" value="4" aria-label="People"
+                                /></span>
+                                people at
+                                <span class="kp-sentence__field"
+                                    ><input name="grams" size="4" inputmode="numeric" value="150" aria-label="Grams each"
+                                /></span>
+                                g each:
+                                <span class="kp-sentence__field"
+                                    ><output class="kp-sentence__computed" data-kp-sentence-computed="total" aria-label="In total"></output
+                                ></span>
+                                in total.
+                            </p>
+                        </form>
+                    </div>
+                    <div class="ao-block ao-span-4">
+                        <h3 class="ao-block__title">What the sentence says</h3>
+                        <p class="ao-block__about">Updated after every change.</p>
+                        <dl class="kp-kv">
+                            <div class="kp-kv__row">
+                                <dt>Spoken summary</dt>
+                                <dd data-ao-read="summary"></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Sent with the form</dt>
+                                <dd data-ao-read="sent"></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Computed words</dt>
+                                <dd>2</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "audhdopts-31762585-6050-4e83-b3e7-35caebe6f40d", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

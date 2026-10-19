@@ -1,0 +1,1722 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="round-3-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Fixes from the project threads, round 3</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../r6r8-1019/page.css" />
+        <link rel="stylesheet" href="../audhd-opts-1019/page.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="../hover-wheel-1019/page.css" />
+        <link rel="stylesheet" href="../formgrid-notes-1019/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Fixes from the project threads, round 3</h1>
+                <p class="cat-intro">
+                    Fixes and options from the project threads, each in the package. The remind-me picker's width, the Copy button in a key-value
+                    cell, the checklist and timer list when loading, empty or failed; three options (action tile size, a calm freshness line counted
+                    in days, a computed field in a sentence form); the hover card on touch and the wheel's answer, kiosk and resting states; and the
+                    form grid (a form block's gap, a JSON field's action, the refresh bar's label, two review-kit measures). 16 pairs, all in formal.
+                    Every section says under <b>What changed since you approved it</b> what was wrong and what is different now.
+                </p>
+            </header>
+
+            <div class="r3-states">
+                <section
+                    class="rr-sec"
+                    id="snooze-width"
+                    data-review-item="snooze-width"
+                    data-review-topic="snooze-width"
+                    data-review-topic-title="Remind me later: the picker in a cell, a bar and a form"
+                    data-review-components="snooze"
+                    data-review-title="Remind me later: the picker in a cell, a bar and a form"
+                    aria-labelledby="h-snooze-width"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The picker had no width of its own: wherever its cell, row or bar sized itself
+                            from what it held, the picker came out as wide as nothing, so &ldquo;Not snoozed&rdquo; broke letter by letter and each
+                            page had to give it a fixed width. Now the picker is as wide as its button and its line, and fills the room it is given:
+                            in a column of a grid it takes the column, in a bar it sits among the other buttons, and in a narrow cell End snooze goes
+                            under the button. The choices, the menu, the date panel and the snoozed line are as you approved them.
+                        </p>
+                    </div>
+                    <div class="rr-sec__head">
+                        <h2 id="h-snooze-width">Remind me later: the picker in a cell, a bar and a form</h2>
+                        <p>
+                            The button that puts a reminder off, with its line under it, in the places a page puts it: a table row, a selection bar, a
+                            form row and a narrow cell.
+                        </p>
+                    </div>
+                    <div class="rr-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Table row</b>: the picker is one button in its own column, &ldquo;Not snoozed&rdquo; under it on one line; the
+                                second row shows a snoozed reminder with <b>End snooze</b> beside the button.
+                            </li>
+                            <li><b>Selection bar</b>: the button stands among the bar&rsquo;s buttons on one line.</li>
+                            <li>
+                                <b>Form row</b>: the button fills the control column, the line under it; <b>narrow cell</b>: button and End snooze on
+                                two lines, none cut.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: every &ldquo;Not snoozed&rdquo; is one line, and the buttons stand on a common line and edge.</p>
+                    </div>
+                    <div class="rr-stage" id="snooze-width-component">
+                        <div class="rr-stage-stack">
+                            <div>
+                                <p class="rr-label">In a table and its selection bar: name, picker and action, each in its own column</p>
+                                <div class="rr-cells">
+                                    <p class="rr-cells__head">Reminder</p>
+                                    <p class="rr-cells__head">Put off</p>
+                                    <p class="rr-cells__head">Action</p>
+                                    <p class="rr-cells__name">Backup of the photos stack failed</p>
+                                    <div
+                                        class="kp-snooze"
+                                        data-kp-snooze
+                                        data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                        data-kp-look="menu"
+                                    ></div>
+                                    <button type="button" class="kp-button">Open</button>
+                                    <p class="rr-cells__name">Certificate expires in 12 days</p>
+                                    <div
+                                        class="kp-snooze"
+                                        data-kp-snooze
+                                        data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                        data-kp-look="menu"
+                                        data-rr-snoozed
+                                    ></div>
+                                    <button type="button" class="kp-button">Open</button>
+                                    <hr class="rr-cells__rule" />
+                                    <div class="rr-cells__bar"><b>3 selected</b><button type="button" class="kp-button">Mark read</button></div>
+                                    <div
+                                        class="kp-snooze"
+                                        data-kp-snooze
+                                        data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                        data-kp-look="menu"
+                                    ></div>
+                                    <button type="button" class="kp-button kp-button--destructive">Delete</button>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="rr-label">In a form row</p>
+                                <div class="kp-formgrid">
+                                    <div class="kp-formgrid__row">
+                                        <span class="kp-formgrid__label">Remind me</span>
+                                        <div class="kp-formgrid__control">
+                                            <div
+                                                class="kp-snooze"
+                                                data-kp-snooze
+                                                data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                                data-kp-look="menu"
+                                            ></div>
+                                        </div>
+                                        <p class="kp-formgrid__value">Nothing is snoozed.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="rr-label">In a narrow cell (13 rem)</p>
+                                <div class="rr-narrow">
+                                    <div
+                                        class="kp-snooze"
+                                        data-kp-snooze
+                                        data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                        data-kp-look="menu"
+                                        data-rr-snoozed
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="rr-sec"
+                    id="copyable-kv"
+                    data-review-item="copyable-kv"
+                    data-review-topic="copyable-kv"
+                    data-review-topic-title="Facts with a Copy button"
+                    data-review-components="copyable"
+                    data-review-title="Facts with a Copy button"
+                    aria-labelledby="h-copyable-kv"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> In a narrow cell the Copy button was squeezed until its word broke in the
+                            middle (&ldquo;Co&rdquo; over &ldquo;py&rdquo;) while the long value kept its room. Now the button keeps its word whole
+                            and its size, and it is the value that wraps. In a list of facts the copyable fills its value cell and the Copy button
+                            stands at the end of the cell, so the buttons of every row line up in one column. The list, its labels and the other
+                            values are as you approved them.
+                        </p>
+                    </div>
+                    <div class="rr-sec__head">
+                        <h2 id="h-copyable-kv">Facts with a Copy button</h2>
+                        <p>A list of facts (name left, value right) where two values can be copied, in a narrow cell and in a wide one.</p>
+                    </div>
+                    <div class="rr-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In both lists <b>Copy</b> is one word on one line, and the two Copy buttons stand under each other at the end of the
+                                value column.
+                            </li>
+                            <li>In the narrow list the long address wraps in the room beside the button; nothing is cut.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: Copy is whole, the two buttons share one right edge, and the value has air before the button.</p>
+                    </div>
+                    <div class="rr-stage" id="copyable-kv-component">
+                        <div class="rr-stage-stack">
+                            <div>
+                                <p class="rr-label">A narrow cell (19 rem)</p>
+                                <div class="rr-kvcell rr-kvcell--narrow">
+                                    <dl class="kp-kv">
+                                        <div class="kp-kv__row">
+                                            <dt>Client</dt>
+                                            <dd>kyu-runner</dd>
+                                        </div>
+                                        <div class="kp-kv__row">
+                                            <dt>Token id</dt>
+                                            <dd>
+                                                <span class="kp-copyable"
+                                                    ><span class="kp-copyable__value" id="rr-n-id">tok_3f9a21c8d4</span
+                                                    ><button
+                                                        type="button"
+                                                        class="kp-button kp-button--ghost kp-copyable__button"
+                                                        data-kp-copy="rr-n-id"
+                                                    >
+                                                        Copy
+                                                    </button></span
+                                                >
+                                            </dd>
+                                        </div>
+                                        <div class="kp-kv__row">
+                                            <dt>Endpoint</dt>
+                                            <dd>
+                                                <span class="kp-copyable"
+                                                    ><span class="kp-copyable__value" id="rr-n-url">https://kyu.example.internal/v1/messages</span
+                                                    ><button
+                                                        type="button"
+                                                        class="kp-button kp-button--ghost kp-copyable__button"
+                                                        data-kp-copy="rr-n-url"
+                                                    >
+                                                        Copy
+                                                    </button></span
+                                                >
+                                            </dd>
+                                        </div>
+                                        <div class="kp-kv__row">
+                                            <dt>Last used</dt>
+                                            <dd>19/10/2026 08:41</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="rr-label">A wide cell</p>
+                                <div class="rr-kvcell">
+                                    <dl class="kp-kv">
+                                        <div class="kp-kv__row">
+                                            <dt>Client</dt>
+                                            <dd>kyu-runner</dd>
+                                        </div>
+                                        <div class="kp-kv__row">
+                                            <dt>Token id</dt>
+                                            <dd>
+                                                <span class="kp-copyable"
+                                                    ><span class="kp-copyable__value" id="rr-w-id">tok_3f9a21c8d4</span
+                                                    ><button
+                                                        type="button"
+                                                        class="kp-button kp-button--ghost kp-copyable__button"
+                                                        data-kp-copy="rr-w-id"
+                                                    >
+                                                        Copy
+                                                    </button></span
+                                                >
+                                            </dd>
+                                        </div>
+                                        <div class="kp-kv__row">
+                                            <dt>Endpoint</dt>
+                                            <dd>
+                                                <span class="kp-copyable"
+                                                    ><span class="kp-copyable__value" id="rr-w-url">https://kyu.example.internal/v1/messages</span
+                                                    ><button
+                                                        type="button"
+                                                        class="kp-button kp-button--ghost kp-copyable__button"
+                                                        data-kp-copy="rr-w-url"
+                                                    >
+                                                        Copy
+                                                    </button></span
+                                                >
+                                            </dd>
+                                        </div>
+                                        <div class="kp-kv__row">
+                                            <dt>Last used</dt>
+                                            <dd>19/10/2026 08:41</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="rr-sec"
+                    id="checklist-failed"
+                    data-review-item="checklist-failed"
+                    data-review-topic="checklist-failed"
+                    data-review-topic-title="Checklist: failed and empty"
+                    data-review-components="checklist"
+                    data-review-title="Checklist: failed and empty"
+                    aria-labelledby="h-checklist-failed"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A checklist that could not be read said so in one line of text, with no way to
+                            try again unless the page drew its own button, and its empty line was the same small line. Now both are the
+                            package&rsquo;s state plate: the title at heading size, centred in the whole body of the list (the same height as the list
+                            with its rows), a sentence under a failure and a normal-size <b>Retry</b>. Retry fires <code>kp-checklist-retry</code> on
+                            the list. The rows, the ticking, Clear checked and Undo are as you approved them.
+                        </p>
+                    </div>
+                    <div class="rr-sec__head">
+                        <h2 id="h-checklist-failed">Checklist: failed and empty</h2>
+                        <p>The shopping list. Press a state: it loads, is empty, or could not be read; Retry on the failed list reads it again.</p>
+                    </div>
+                    <div class="rr-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Failed</b>: one red plate over the whole list body, the title at heading size, a sentence and a
+                                <b>Retry</b> button; the bar above it rests.
+                            </li>
+                            <li>
+                                <b>Empty</b>: the empty plate in the same place and the same height; <b>Loading</b>: the loading card over the body.
+                            </li>
+                            <li>Press <b>Retry</b>: the list loads for a moment and the rows come back.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the plate fills the body at the height of the loaded list, its words centred; Retry is a normal button.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="checklist-failed-component">
+                        <div role="group" aria-label="State">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="ready" aria-pressed="true">
+                                Ready
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="loading" aria-pressed="false">
+                                Loading
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="empty" aria-pressed="false">
+                                Empty
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="error" aria-pressed="false">
+                                Failed
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rr-stage" id="checklist-failed-component">
+                        <div class="kp-checklist" data-kp-checklist data-rr-checklist aria-label="Shopping list"></div>
+                    </div>
+                </section>
+
+                <section
+                    class="rr-sec"
+                    id="timers-states"
+                    data-review-item="timers-states"
+                    data-review-topic="timers-states"
+                    data-review-topic-title="Kitchen timers: loading, empty and failed"
+                    data-review-components="timer"
+                    data-review-title="Kitchen timers: loading, empty and failed"
+                    aria-labelledby="h-timers-states"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The timer list had no loading and no failed state, and with no timer it showed
+                            a small dashed line, much lower than a row of cards, so the page jumped when the first timer started. Now loading is the
+                            theme&rsquo;s loading card over the whole row, empty and failed are the package&rsquo;s state plate as high as a card (a
+                            list that was read first keeps the height it had), and a failed list has a normal-size
+                            <b>Retry</b> (<code>kp-timers-retry</code>). The cards, the clock and the buttons are as you approved them.
+                        </p>
+                    </div>
+                    <div class="rr-sec__head">
+                        <h2 id="h-timers-states">Kitchen timers: loading, empty and failed</h2>
+                        <p>
+                            The row of timer cards. Press a state: the timers load, none are running, or they could not be read; Retry reads them
+                            again.
+                        </p>
+                    </div>
+                    <div class="rr-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Ready</b>: two timer cards. <b>Empty</b>: a plate as high as the cards, &ldquo;No timers running.&rdquo; at heading
+                                size, centred.
+                            </li>
+                            <li>
+                                <b>Failed</b>: a red plate of the same height with a sentence and a <b>Retry</b>; <b>Loading</b>: the loading card
+                                over the same box.
+                            </li>
+                            <li>Nothing under the list moves when the state changes.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: every state is as high as the ready row, the words centred; Retry is a normal button.</p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="timers-states-component">
+                        <div role="group" aria-label="State">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="ready" aria-pressed="true">
+                                Ready
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="loading" aria-pressed="false">
+                                Loading
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="empty" aria-pressed="false">
+                                Empty
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="error" aria-pressed="false">
+                                Failed
+                            </button>
+                        </div>
+                    </div>
+                    <div class="rr-stage" id="timers-states-component">
+                        <div class="rr-timers-stage"><div class="kp-timers" data-kp-timers data-rr-timers aria-label="Kitchen timers"></div></div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r3-options">
+                <section
+                    class="kc-sec"
+                    id="action-size"
+                    data-review-item="action-size"
+                    data-review-topic="action-size"
+                    data-review-topic-title="Action tiles: a size"
+                    data-review-components="action"
+                    data-review-title="Action tiles: a size"
+                    data-review-themes="formal"
+                    aria-labelledby="h-action-size"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> Action tiles had one size in every place they were used, so a page with many
+                            small actions and a page with three important ones looked the same. The board, one tile, or any element above them can now
+                            say <code>data-kp-action-size="compact"</code> or <code>"large"</code>. The tile&rsquo;s padding, title, sentence and mark
+                            scale together, and so does the width a column may shrink to, so a compact board fits more tiles on a line and a large one
+                            fewer. With no attribute nothing changes. The option follows the attribute at runtime, in every theme.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-action-size">Action tiles: a size</h2>
+                        <p>
+                            A board of buttons and links, each with a title and the one sentence that says what it does. The board can now be compact,
+                            the theme&rsquo;s own size, or large.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The board opens at the theme&rsquo;s own size. The block beside it reads <b>Default</b> and lists the tile height,
+                                title size, padding and tiles per line.
+                            </li>
+                            <li>
+                                Press <b>Compact</b> in the control group above the board: every tile shrinks together, more tiles stand on a line,
+                                and the readout follows. Press <b>Large</b>: tiles grow and fewer fit on a line. Press <b>Default</b> to come back.
+                            </li>
+                            <li>
+                                All six tiles keep one height whatever their state: a button, a link with its arrow, a destructive one with its bar,
+                                one that is busy with its spinner and one that is disabled.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            six tiles on one grid, all one height; the mark column keeps its place in every size; the readout column lines its numbers
+                            up under each other.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="action-size-board">
+                        <div role="group" aria-label="Size">
+                            <b>Size:</b>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-ao-target="ao-tiles"
+                                data-ao-attr="data-kp-action-size"
+                                data-ao-value="compact"
+                                aria-pressed="false"
+                            >
+                                Compact
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-ao-target="ao-tiles"
+                                data-ao-attr="data-kp-action-size"
+                                data-ao-remove
+                                aria-pressed="true"
+                            >
+                                Default
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-ao-target="ao-tiles"
+                                data-ao-attr="data-kp-action-size"
+                                data-ao-value="large"
+                                aria-pressed="false"
+                            >
+                                Large
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ao-board" id="action-size-board">
+                        <div class="ao-block ao-span-8">
+                            <h3 class="ao-block__title">Backup actions</h3>
+                            <p class="ao-block__about">Mock actions of a backup page. Each tile does one thing and says which.</p>
+                            <div class="kp-actions" id="ao-tiles">
+                                <button type="button" class="kp-action">
+                                    <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span>
+                                </button>
+                                <button type="button" class="kp-action">
+                                    <strong class="kp-action__title">Restart stack</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Stops the stack, starts it again and waits until it answers.</span>
+                                </button>
+                                <a class="kp-action" href="#ao-tiles"
+                                    ><strong class="kp-action__title">Open host page</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Shows the disks, the temperature and the last boot of this host.</span></a
+                                >
+                                <button type="button" class="kp-action kp-action--destructive">
+                                    <strong class="kp-action__title">Delete old snapshots</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Removes every snapshot older than 30 days. This cannot be undone.</span>
+                                </button>
+                                <button type="button" class="kp-action" aria-busy="true">
+                                    <strong class="kp-action__title">Check disks</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Reads every disk&rsquo;s health report and lists what it found.</span>
+                                </button>
+                                <button type="button" class="kp-action" disabled>
+                                    <strong class="kp-action__title">Export logs</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Saves the last seven days of logs as one file.</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ao-block ao-span-4">
+                            <h3 class="ao-block__title">What the size sets</h3>
+                            <p class="ao-block__about">Read from the tiles as they are drawn, so it follows every press.</p>
+                            <dl class="kp-kv">
+                                <div class="kp-kv__row">
+                                    <dt>Size</dt>
+                                    <dd data-ao-read="size">Default</dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Tile height</dt>
+                                    <dd data-ao-read="height"></dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Title size</dt>
+                                    <dd data-ao-read="title"></dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Padding</dt>
+                                    <dd data-ao-read="pad"></dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Tiles per line</dt>
+                                    <dd data-ao-read="per-line"></dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="freshness-tone"
+                    data-review-item="freshness-tone"
+                    data-review-topic="freshness-tone"
+                    data-review-topic-title="Freshness line: a calm stale tone and days only"
+                    data-review-components="ago"
+                    data-review-title="Freshness line: a calm stale tone and days only"
+                    data-review-themes="formal"
+                    aria-labelledby="h-freshness-tone"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> Once a line was older than its limit it turned into an amber warning plate, and
+                            it counted in two units (&ldquo;97 days 4 h&rdquo;). Two options are new. <code>data-kp-stale-tone="calm"</code> draws the
+                            stale line as a quiet plate in the muted ground and ordinary ink, with the same size, so turning stale still moves
+                            nothing. <code>data-kp-ago-units="days"</code> counts whole days from one day on (&ldquo;frozen 97 days ago&rdquo;), and
+                            keeps hours and minutes under a day. With neither attribute nothing changes. Both follow their attribute at runtime.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-freshness-tone">Freshness line: a calm stale tone and days only</h2>
+                        <p>
+                            The line that says how old data is (&ldquo;updated 12 s ago&rdquo;). For data that is old on purpose, such as a frozen
+                            recipe, it no longer has to look like a warning.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The first row is the amber plate as before: <b>frozen 97 days 4 h ago</b>. The second is the same age on a quiet grey
+                                plate, the third reads <b>frozen 97 days ago</b>.
+                            </li>
+                            <li>The fourth row is only 3 h old, so it has no plate at all and still reads <b>3 h 12 min</b>, also with days only.</li>
+                            <li>
+                                Press <b>Calm</b> and <b>Days only</b> in the control group: the last row (the live line) changes tone and units, and
+                                the block beside it shows the exact moment and the limit.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            the four lines start on the same edge of the control column and sit on their label&rsquo;s baseline; the plates change
+                            colour but not size.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="freshness-tone-board">
+                        <div role="group" aria-label="Tone">
+                            <b>Tone:</b>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-ao-target="ao-ago-live"
+                                data-ao-attr="data-kp-stale-tone"
+                                data-ao-remove
+                                aria-pressed="true"
+                            >
+                                Warning
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-ao-target="ao-ago-live"
+                                data-ao-attr="data-kp-stale-tone"
+                                data-ao-value="calm"
+                                aria-pressed="false"
+                            >
+                                Calm
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Units">
+                            <b>Units:</b>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-ao-target="ao-ago-live"
+                                data-ao-attr="data-kp-ago-units"
+                                data-ao-remove
+                                aria-pressed="true"
+                            >
+                                Two units
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-ao-target="ao-ago-live"
+                                data-ao-attr="data-kp-ago-units"
+                                data-ao-value="days"
+                                aria-pressed="false"
+                            >
+                                Days only
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ao-board" id="freshness-tone-board">
+                        <div class="ao-block ao-span-8">
+                            <h3 class="ao-block__title">Four lines, one age</h3>
+                            <p class="ao-block__about">Mock lines of a recipe box. The first three are 97 days 4 h old, the fourth 3 h 12 min.</p>
+                            <div class="kp-formgrid" data-kp-formgrid-lines="lines">
+                                <div class="kp-formgrid__row">
+                                    <span class="kp-formgrid__label">Warning plate</span>
+                                    <div class="kp-formgrid__control">
+                                        <time
+                                            class="kp-ago"
+                                            data-kp-ago
+                                            data-kp-ago-verb="frozen"
+                                            data-kp-stale-after="1209600"
+                                            data-ao-age="8395200"
+                                        ></time>
+                                    </div>
+                                    <p class="kp-formgrid__value">As it was: amber, two units.</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <span class="kp-formgrid__label">Calm plate</span>
+                                    <div class="kp-formgrid__control">
+                                        <time
+                                            class="kp-ago"
+                                            data-kp-ago
+                                            data-kp-ago-verb="frozen"
+                                            data-kp-stale-after="1209600"
+                                            data-kp-stale-tone="calm"
+                                            data-ao-age="8395200"
+                                        ></time>
+                                    </div>
+                                    <p class="kp-formgrid__value">Quiet grey, two units.</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <span class="kp-formgrid__label">Calm, days only</span>
+                                    <div class="kp-formgrid__control">
+                                        <time
+                                            class="kp-ago"
+                                            data-kp-ago
+                                            data-kp-ago-verb="frozen"
+                                            data-kp-stale-after="1209600"
+                                            data-kp-stale-tone="calm"
+                                            data-kp-ago-units="days"
+                                            data-ao-age="8395200"
+                                        ></time>
+                                    </div>
+                                    <p class="kp-formgrid__value">Quiet grey, whole days.</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <span class="kp-formgrid__label">Not stale yet</span>
+                                    <div class="kp-formgrid__control">
+                                        <time
+                                            class="kp-ago"
+                                            data-kp-ago
+                                            data-kp-ago-verb="frozen"
+                                            data-kp-stale-after="1209600"
+                                            data-kp-stale-tone="calm"
+                                            data-kp-ago-units="days"
+                                            data-ao-age="11520"
+                                        ></time>
+                                    </div>
+                                    <p class="kp-formgrid__value">Under a day, so no plate and exact.</p>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <span class="kp-formgrid__label">Live line</span>
+                                    <div class="kp-formgrid__control">
+                                        <time
+                                            class="kp-ago"
+                                            id="ao-ago-live"
+                                            data-kp-ago
+                                            data-kp-ago-verb="frozen"
+                                            data-kp-stale-after="1209600"
+                                            data-ao-age="8395200"
+                                        ></time>
+                                    </div>
+                                    <p class="kp-formgrid__value">Follows the buttons above.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ao-block ao-span-4">
+                            <h3 class="ao-block__title">The live line</h3>
+                            <p class="ao-block__about">What the line carries under its words.</p>
+                            <dl class="kp-kv">
+                                <div class="kp-kv__row">
+                                    <dt>Frozen on</dt>
+                                    <dd data-ao-read="moment"></dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Stale after</dt>
+                                    <dd>14 days</dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Tone</dt>
+                                    <dd data-ao-read="tone">Warning</dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Units</dt>
+                                    <dd data-ao-read="units">Two units</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="sentence-computed"
+                    data-review-item="sentence-computed"
+                    data-review-topic="sentence-computed"
+                    data-review-topic-title="Sentence form: a field the sentence works out"
+                    data-review-components="sentence"
+                    data-review-title="Sentence form: a field the sentence works out"
+                    data-review-themes="formal"
+                    aria-labelledby="h-sentence-computed"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> Every field in a sentence form was something the person typed or chose. A
+                            sentence can now hold a read-only computed field:
+                            <code>&lt;output class="kp-sentence__computed" data-kp-sentence-computed="ready"&gt;</code> inside a
+                            <code>.kp-sentence__field</code>, with a function that gets the value of the other fields and returns its words (<code
+                                >attachSentences(root, { computed })</code
+                            >, <code>sentence(form).compute(name, fn)</code>, or <code>setSentenceComputed(form, name, text)</code> to push the text
+                            in). It is drawn on a quiet plate with no underline in the primary colour, so it is not mistaken for something to fill in;
+                            it is not a tab stop, is not sent with the form, and is part of the spoken summary. With nothing to say it shows a dash.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-sentence-computed">Sentence form: a field the sentence works out</h2>
+                        <p>
+                            A form that reads as a sentence. Some words in it can now be worked out from the fields you fill in, and are not fields
+                            you type in yourself.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Read the sentence:
+                                <b
+                                    >Start cooking at 17:30. It takes 70 min, so dinner is ready at 18:40. It serves 4 people at 150 g each: 600 g in
+                                    total.</b
+                                >
+                                The two grey words are worked out.
+                            </li>
+                            <li>
+                                Change the start time or the minutes, the people or the grams: the grey words change at once. Press <b>95 min</b> and
+                                dinner is ready at 19:05; press <b>Clear minutes</b> and it shows a dash and the spoken summary says
+                                <b>(Ready at)</b>.
+                            </li>
+                            <li>
+                                Press Tab through the sentence: the focus visits the four fields you type in and never the grey ones. The block beside
+                                it shows what is sent with the form: only those four.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            the grey words stand on the line of the words around them, as tall as the fields beside them, with no underline.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="sentence-computed-board">
+                        <div role="group" aria-label="Minutes">
+                            <b>Minutes:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-ao-field="minutes" data-ao-text="70">70 min</button>
+                            <button type="button" class="kp-button kp-button--sm" data-ao-field="minutes" data-ao-text="95">95 min</button>
+                            <button type="button" class="kp-button kp-button--sm" data-ao-field="minutes" data-ao-text="">Clear minutes</button>
+                        </div>
+                        <div role="group" aria-label="People">
+                            <b>People:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-ao-field="people" data-ao-text="4">4 people</button>
+                            <button type="button" class="kp-button kp-button--sm" data-ao-field="people" data-ao-text="10">10 people</button>
+                        </div>
+                    </div>
+                    <div class="ao-board" id="sentence-computed-board">
+                        <div class="ao-block ao-span-8">
+                            <h3 class="ao-block__title">Tonight&rsquo;s dinner</h3>
+                            <p class="ao-block__about">A mock cooking plan. Four fields to fill in, two words worked out from them.</p>
+                            <form class="kp-sentence" data-kp-sentence data-kp-sentence-size="lg" id="ao-sentence" onsubmit="return false;">
+                                <p class="kp-sentence__text">
+                                    Start cooking at
+                                    <span class="kp-sentence__field"
+                                        ><input name="start" size="5" value="17:30" aria-label="Start time (HH:MM)" /></span
+                                    >. It takes
+                                    <span class="kp-sentence__field"
+                                        ><input name="minutes" size="3" inputmode="numeric" value="70" aria-label="Minutes"
+                                    /></span>
+                                    min, so dinner is ready at
+                                    <span class="kp-sentence__field"
+                                        ><output class="kp-sentence__computed" data-kp-sentence-computed="ready" aria-label="Ready at"></output></span
+                                    >. It serves
+                                    <span class="kp-sentence__field"
+                                        ><input name="people" size="3" inputmode="numeric" value="4" aria-label="People"
+                                    /></span>
+                                    people at
+                                    <span class="kp-sentence__field"
+                                        ><input name="grams" size="4" inputmode="numeric" value="150" aria-label="Grams each"
+                                    /></span>
+                                    g each:
+                                    <span class="kp-sentence__field"
+                                        ><output class="kp-sentence__computed" data-kp-sentence-computed="total" aria-label="In total"></output
+                                    ></span>
+                                    in total.
+                                </p>
+                            </form>
+                        </div>
+                        <div class="ao-block ao-span-4">
+                            <h3 class="ao-block__title">What the sentence says</h3>
+                            <p class="ao-block__about">Updated after every change.</p>
+                            <dl class="kp-kv">
+                                <div class="kp-kv__row">
+                                    <dt>Spoken summary</dt>
+                                    <dd data-ao-read="summary"></dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Sent with the form</dt>
+                                    <dd data-ao-read="sent"></dd>
+                                </div>
+                                <div class="kp-kv__row">
+                                    <dt>Computed words</dt>
+                                    <dd>2</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r3-hover">
+                <section
+                    class="kc-sec"
+                    id="hovercard-touch"
+                    data-review-item="hovercard-touch"
+                    data-review-components="hovercard"
+                    data-review-title="Hover card: reachable with a finger"
+                    data-review-themes="formal"
+                    data-review-topic="hovercard"
+                    data-review-topic-title="Hover card"
+                    aria-labelledby="h-hovercard-touch"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The hover card ignored touch altogether, so on a phone the note behind an
+                            ingredient could not be read. Now a <b>tap</b> on an ingredient opens its note, a tap on the same ingredient or
+                            <b>anywhere outside</b> the card closes it, and a tap <b>inside</b> the card keeps it open. A tap on another ingredient
+                            moves the card there. The keyboard works as before (focus opens, Escape closes), and a link or a button used as an anchor
+                            keeps its own tap unless the page asks for two taps with <code>data-kp-touch="tap"</code>.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-hovercard-touch">Hover card: reachable with a finger</h2>
+                        <p>
+                            The ingredient list of a recipe. Each ingredient has a note that a mouse reads by pointing; on a phone there is no
+                            pointing.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                On a phone: tap <b>Ripe bananas</b>, its note opens under it; tap the white page, it closes; tap <b>Cinnamon</b> while
+                                it is open, the card moves there.
+                            </li>
+                            <li>
+                                On a desktop: the button <b>Tap it like a finger</b> at the end of each row sends the same touch tap, so you can see
+                                it without a phone. Pointing with the mouse still opens the card after a short wait.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: a tap opens the note under the ingredient, a tap outside closes it, and the rows stay in their four columns.
+                        </p>
+                    </div>
+                    <div class="hw-wide">
+                        <div class="kp-formgrid" data-kp-formgrid-lines="lines" aria-label="Ingredients">
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">200 g</span>
+                                <div class="kp-formgrid__control">
+                                    <span class="hw-ingredient" data-kp-hovercard="Soak overnight, or the oats stay chewy." data-hw-ingredient="0"
+                                        >Rolled oats</span
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value">note on tap</p>
+                                <div class="kp-formgrid__actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-hw-tap="0">Tap it like a finger</button>
+                                </div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">2</span>
+                                <div class="kp-formgrid__control">
+                                    <span class="hw-ingredient" data-kp-hovercard="Spotty skins are sweetest; freeze the rest." data-hw-ingredient="1"
+                                        >Ripe bananas</span
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value">note on tap</p>
+                                <div class="kp-formgrid__actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-hw-tap="1">Tap it like a finger</button>
+                                </div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">1 tbsp</span>
+                                <div class="kp-formgrid__control">
+                                    <span
+                                        class="hw-ingredient"
+                                        data-kp-hovercard="Nut-free? Sunflower seed butter works the same."
+                                        data-hw-ingredient="2"
+                                        >Peanut butter</span
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value">note on tap</p>
+                                <div class="kp-formgrid__actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-hw-tap="2">Tap it like a finger</button>
+                                </div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">1 tsp</span>
+                                <div class="kp-formgrid__control">
+                                    <span
+                                        class="hw-ingredient"
+                                        data-kp-hovercard="Fresh-ground if you have it; it lifts the whole bowl."
+                                        data-hw-ingredient="3"
+                                        >Cinnamon</span
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value">note on tap</p>
+                                <div class="kp-formgrid__actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-hw-tap="3">Tap it like a finger</button>
+                                </div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">1 pinch</span>
+                                <div class="kp-formgrid__control">
+                                    <span
+                                        class="hw-ingredient"
+                                        data-kp-hovercard="Barely a pinch: it is what makes the banana taste sweeter."
+                                        data-hw-ingredient="4"
+                                        >Sea salt</span
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value">note on tap</p>
+                                <div class="kp-formgrid__actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-hw-tap="4">Tap it like a finger</button>
+                                </div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">250 ml</span>
+                                <div class="kp-formgrid__control">
+                                    <span
+                                        class="hw-ingredient"
+                                        data-kp-hovercard="Any milk works; warm it first if you like the porridge creamy."
+                                        data-hw-ingredient="5"
+                                        >Oat milk</span
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value">note on tap</p>
+                                <div class="kp-formgrid__actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-hw-tap="5">Tap it like a finger</button>
+                                </div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">1 handful</span>
+                                <div class="kp-formgrid__control">
+                                    <span
+                                        class="hw-ingredient"
+                                        data-kp-hovercard="Toast them dry in a pan for two minutes, they stay crisp longer."
+                                        data-hw-ingredient="6"
+                                        >Walnuts</span
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value">note on tap</p>
+                                <div class="kp-formgrid__actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-hw-tap="6">Tap it like a finger</button>
+                                </div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <span class="kp-formgrid__label">1 tbsp</span>
+                                <div class="kp-formgrid__control">
+                                    <span class="hw-ingredient" data-kp-hovercard="Skip it for a child under one year old." data-hw-ingredient="7"
+                                        >Honey</span
+                                    >
+                                </div>
+                                <p class="kp-formgrid__value">note on tap</p>
+                                <div class="kp-formgrid__actions">
+                                    <button type="button" class="kp-button kp-button--sm" data-hw-tap="7">Tap it like a finger</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="wheel-kiosk"
+                    data-review-item="wheel-kiosk"
+                    data-review-components="wheel"
+                    data-review-title="Wheel: a page with only the wheel"
+                    data-review-themes="formal"
+                    data-review-topic="wheel"
+                    data-review-topic-title="Wheel"
+                    aria-labelledby="h-wheel-kiosk"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> Until now a wheel always carried its <b>Spin</b> button in the middle, which a
+                            page for someone who should only see the wheel could not remove. The new option <code>data-kp-wheel-kiosk</code> takes the
+                            button away: the <b>wheel itself</b> is the one control. Tap it, or press Enter or Space while it has the focus, and it
+                            spins. The middle stays as a quiet plate, the line under the wheel says <b>Tap the wheel to let it choose</b>, and a
+                            screen reader hears one button, &ldquo;Spin the wheel&rdquo;. Tapping the answer spins again.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-wheel-kiosk">Wheel: a page with only the wheel</h2>
+                        <p>
+                            The wheel over a chosen list for a page that has nothing else on it: left as it was, right with the new
+                            <code>data-kp-wheel-kiosk</code> option.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The left wheel is as you approved it (Spin in the middle). The right one has a plain middle, nothing to press but the
+                                wheel.
+                            </li>
+                            <li>
+                                Tap the right wheel: it turns, stops on a name, says it. Tab to it and press Space: the same. Tapping its answer spins
+                                again.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the right wheel has no button anywhere, its middle is a calm plate, and both wheels keep the same size and place.
+                        </p>
+                    </div>
+                    <div class="hw-pair">
+                        <div class="hw-pane">
+                            <p class="hw-pane__label">With the Spin button (as before)</p>
+                            <div class="kp-wheel" data-kp-wheel data-hw-wheel="plain" aria-label="Tonight's dinner"></div>
+                        </div>
+                        <div class="hw-pane">
+                            <p class="hw-pane__label">Kiosk: the wheel is the control</p>
+                            <div class="kp-wheel" data-kp-wheel data-hw-wheel="kiosk" data-kp-wheel-kiosk aria-label="Tonight's dinner"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="wheel-resting"
+                    data-review-item="wheel-resting"
+                    data-review-components="wheel"
+                    data-review-title="Wheel: a choice that is resting"
+                    data-review-themes="formal"
+                    data-review-topic="wheel"
+                    aria-labelledby="h-wheel-resting"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A choice could only be left off the wheel (it vanished) or stay on it (it could
+                            be drawn). The new item field <code>resting: true</code> is the third state: the choice <b>stays on the wheel</b> so the
+                            list is whole, but it is stepped back (faded, a dashed edge, its name in italics, &ldquo;Resting&rdquo; when you point at
+                            it) and the wheel <b>never lands on it</b> while another choice is awake. If every choice rests, they are all in play
+                            again.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-wheel-resting">Wheel: a choice that is resting</h2>
+                        <p>A list where yesterday&rsquo;s dinner and the one from two days ago are on the wheel but should not come up.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li><b>Fried rice</b> and <b>Tomato soup</b> are faded with a dashed edge and italic names; the others are as before.</li>
+                            <li>
+                                Press <b>Spin</b> a dozen times: the wheel stops on Curry, Pasta, Wraps or Stew, never on a resting one. The slice
+                                sizes are unchanged.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the two resting slices read as quieter at a glance, with dashed edges, and their names are whole.
+                        </p>
+                    </div>
+                    <div class="hw-pair">
+                        <div class="hw-pane">
+                            <p class="hw-pane__label">Two choices resting</p>
+                            <div class="kp-wheel" data-kp-wheel data-hw-wheel="resting" aria-label="Tonight's dinner"></div>
+                        </div>
+                        <div class="hw-pane hw-pane--note">
+                            <p class="hw-pane__label">What to look for</p>
+                            <dl class="hw-facts">
+                                <dt>Faded, dashed, italic</dt>
+                                <dd>Fried rice and Tomato soup: <code>resting: true</code></dd>
+                                <dt>Point at a slice</dt>
+                                <dd>The tooltip says the name and &ldquo;Resting&rdquo;</dd>
+                                <dt>Spin</dt>
+                                <dd>Never lands on a resting slice</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="wheel-answer"
+                    data-review-item="wheel-answer"
+                    data-review-components="wheel"
+                    data-review-title="Wheel: a tag and the answer card"
+                    data-review-themes="formal"
+                    data-review-topic="wheel"
+                    aria-labelledby="h-wheel-answer"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The answer was two bare lines under the wheel and a choice could say nothing
+                            but its name. Now an item can carry a <code>tag</code> (a short line about it), and
+                            <code>data-kp-wheel-answer</code> turns the result into a <b>built-in answer card</b>: a bordered card with the line
+                            &ldquo;The wheel chose&rdquo;, the name, and the tag under it. The card keeps one size whether or not the choice has a
+                            tag, so nothing under it moves. Without the option the result is exactly as you approved it.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-wheel-answer">Wheel: a tag and the answer card</h2>
+                        <p>
+                            The same dinner wheel; each choice has a short line about it (&ldquo;Oven, 45 min&rdquo;), and the answer stands in a
+                            card.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Left: the result as before. Right: the answer card; spin and it shows the name with its tag (<b>Oven, 45 min</b>).
+                            </li>
+                            <li>Wraps has no tag: its card keeps the empty line, the wheel and the card do not change size.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the right wheel&rsquo;s result is a framed card with the name and the tag in their own lines, the same height for
+                            every choice.
+                        </p>
+                    </div>
+                    <div class="hw-pair">
+                        <div class="hw-pane">
+                            <p class="hw-pane__label">Result as before</p>
+                            <div class="kp-wheel" data-kp-wheel data-hw-wheel="plain-tags" aria-label="Tonight's dinner"></div>
+                        </div>
+                        <div class="hw-pane">
+                            <p class="hw-pane__label">Answer card (data-kp-wheel-answer)</p>
+                            <div class="kp-wheel" data-kp-wheel data-hw-wheel="answer" data-kp-wheel-answer aria-label="Tonight's dinner"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="r3-grid">
+                <section
+                    class="kc-sec"
+                    id="form-gap"
+                    data-review-item="form-gap"
+                    data-review-components="formgrid"
+                    data-review-title="Form grid: a form between rows keeps the grid’s gap"
+                    data-review-themes="formal"
+                    aria-labelledby="h-form-gap"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> Formal drew its own 1 rem gap on every form (<code>.kp-form</code>). When that
+                            form was a block of a form grid, its rows are rows of the grid (the form is a subgrid of it), but this gap, being more
+                            specific than the grid’s, overrode the grid’s: the two rows inside the form stood further apart than the rows around them,
+                            and a page that set <code>--kp-formgrid-gap</code> got its setting everywhere except inside the form. Now the form takes
+                            the grid’s gap, and a form on its own page keeps formal’s gap. The rows, the columns and everything else of the grid are
+                            as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-form-gap">Form grid: a form between rows keeps the grid’s gap</h2>
+                        <p>
+                            One form grid with a row, then a form (two rows of its own), then a row again. The rows are spaced by the grid’s row gap
+                            wherever they stand.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The distance from <b>Name</b> to <b>Region</b>, from <b>Region</b> to <b>Retention</b> (both inside the form), and
+                                from <b>Retention</b> to <b>Contact</b> is the same in all four steps.
+                            </li>
+                            <li>The labels, the fields and the <b>Save</b> button keep their columns from row to row, in and out of the form.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: four rows with one and the same space between them, the form’s two rows not further apart than the rest.
+                        </p>
+                    </div>
+                    <div class="fg-stage">
+                        <div class="kp-formgrid" style="--kp-formgrid-gap: 0.5rem">
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="fg-gap-name">Name</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" type="text" id="fg-gap-name" value="Nightly snapshot" />
+                                </div>
+                                <p class="kp-formgrid__value">shown in the list</p>
+                                <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Rename</button></div>
+                            </div>
+                            <form class="kp-form" action="#" onsubmit="return false;">
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="fg-gap-region">Region</label>
+                                    <div class="kp-formgrid__control">
+                                        <input class="kp-field__input" type="text" id="fg-gap-region" value="eu-west" />
+                                    </div>
+                                    <p class="kp-formgrid__value">where it runs</p>
+                                    <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Change</button></div>
+                                </div>
+                                <div class="kp-formgrid__row">
+                                    <label class="kp-formgrid__label" for="fg-gap-keep">Retention</label>
+                                    <div class="kp-formgrid__control">
+                                        <input class="kp-field__input" type="text" id="fg-gap-keep" value="30 days" />
+                                    </div>
+                                    <p class="kp-formgrid__value">oldest is removed</p>
+                                    <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="submit">Save</button></div>
+                                </div>
+                            </form>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="fg-gap-contact">Contact</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" type="text" id="fg-gap-contact" value="ops@example.net" />
+                                </div>
+                                <p class="kp-formgrid__value">told when it fails</p>
+                                <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Edit</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="json-action"
+                    data-review-item="json-action"
+                    data-review-components="formgrid json-field"
+                    data-review-title="Form grid: a row’s action on the JSON field’s tool row"
+                    data-review-themes="formal"
+                    aria-labelledby="h-json-action"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> A JSON field’s first line is its tool row, and its label already stood on that
+                            line. The row’s own action in the actions column had no way to: it stood at the top of the cell, level with the field’s
+                            top edge, so “Send test” was a few pixels off the line of Format and Minify. Now, in a row that holds a JSON field, the
+                            actions cell is exactly one tool row high and centres its button on it, so Send test stands on the line of the tools and
+                            in the column of every other row action. Stacked on a phone the action falls below the field as before. The JSON field
+                            itself is as you approved it.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-json-action">Form grid: a row’s action on the JSON field’s tool row</h2>
+                        <p>
+                            A request body in a JSON field with its tools (Format, Minify, Wrap, Copy) above it, and the row’s own action, Send test,
+                            in the actions column.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The label <b>Request body</b>, the four tools and <b>Send test</b> stand on one line; <b>Send test</b> is in the same
+                                column as <b>Check</b> in the row above.
+                            </li>
+                            <li>Press <b>Format</b> or <b>Minify</b>: the row does not move. At 390 px the action falls below the field.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the word Request body, the four tools and Send test on one line, with Send test in the actions column.
+                        </p>
+                    </div>
+                    <div class="fg-stage">
+                        <div class="kp-formgrid">
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="fg-json-url">Endpoint</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" type="text" id="fg-json-url" value="https://kyu.example.internal/v1/messages" />
+                                </div>
+                                <p class="kp-formgrid__value">where it is sent</p>
+                                <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Check</button></div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="fg-json-body">Request body</label>
+                                <div class="kp-formgrid__control">
+                                    <textarea
+                                        class="kp-field__input kp-field__input--multiline"
+                                        id="fg-json-body"
+                                        rows="5"
+                                        data-kp-json="strict"
+                                        data-kp-json-indent="2"
+                                        data-kp-json-format="button"
+                                    >
+{
+  "topic": "backup.done",
+  "ok": true,
+  "stacks": ["media", "photos"]
+}</textarea>
+                                </div>
+                                <p class="kp-formgrid__value">checked as you type</p>
+                                <div class="kp-formgrid__actions">
+                                    <button class="kp-button kp-button--sm kp-button--primary" type="button">Send test</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="refresh-label"
+                    data-review-item="refresh-label"
+                    data-review-components="formgrid refresh"
+                    data-review-title="Form grid: the refresh next to its label"
+                    data-review-themes="formal"
+                    aria-labelledby="h-refresh-label"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> The refresh bar of a form grid is a subgrid of it, which left no cell for a
+                            label: the label had to go in a row of its own, or the page drew its own nested grid. Now the refresh takes
+                            <code>data-kp-refresh-label="Auto-refresh"</code> and draws that word as the first cell of its bar, in the label column,
+                            with the chooser in the control column, the freshness line in the value column and Refresh now in the actions column, all
+                            on one first baseline. The chooser also started 4 px left of every other control (the refresh kept its own column gap
+                            instead of the grid’s); it now starts on the same edge. Outside a form grid the label is a line above the bar. The
+                            chooser, the countdown, the freshness line and Refresh now are as you approved them.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-refresh-label">Form grid: the refresh next to its label</h2>
+                        <p>
+                            A settings list with the automatic refresh as one of its rows: a label, the interval chooser, the freshness line and
+                            Refresh now.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                The word <b>Auto-refresh</b> stands in the label column like <b>Name</b> and <b>Retention</b>; the chooser starts on
+                                the edge of the fields above and below it.
+                            </li>
+                            <li>
+                                The freshness line stands in the value column and <b>Refresh now</b> in the actions column, in line with the other
+                                rows’ actions.
+                            </li>
+                            <li>Press <b>Refresh now</b>: the line says it is updating and then that it is fresh; nothing moves.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the label, the chooser, the freshness line and Refresh now on one line, on the same four columns as the rows
+                            around them.
+                        </p>
+                    </div>
+                    <div class="fg-stage">
+                        <div class="kp-formgrid">
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="fg-ref-name">Name</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" type="text" id="fg-ref-name" value="Nightly snapshot" />
+                                </div>
+                                <p class="kp-formgrid__value">shown in the list</p>
+                                <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Rename</button></div>
+                            </div>
+                            <div
+                                class="kp-refresh"
+                                data-kp-refresh="30"
+                                data-kp-refresh-choices="0,30,300"
+                                data-kp-refresh-label="Auto-refresh"
+                            ></div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="fg-ref-keep">Retention</label>
+                                <div class="kp-formgrid__control"><input class="kp-field__input" type="text" id="fg-ref-keep" value="30 days" /></div>
+                                <p class="kp-formgrid__value">oldest is removed</p>
+                                <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Save</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="check-segmented"
+                    data-review-item="check-segmented"
+                    data-review-components="formgrid segmented"
+                    data-review-title="Alignment check: a segmented control’s own edge"
+                    data-review-themes="formal"
+                    aria-labelledby="h-check-segmented"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> This changes the check, not a component. The check that holds every page to the
+                            grid (<code>measure-align.mjs</code>, rule D: a group of buttons under a list starts on one of its column edges) read a
+                            segmented control by its first item, which stands 4 px inside the control’s box (its own padding), and reported the filter
+                            as 4 px off the list’s edge. A segmented control is one box, drawn with its own padding: that box is its edge. The check
+                            now reads the box. A filter whose box is off the columns is still reported, as the proof below shows. Nothing on this
+                            page, and no component, looks different.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-check-segmented">Alignment check: a segmented control’s own edge</h2>
+                        <p>A settings list with a segmented filter under it, starting on the list’s own left edge.</p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>The filter’s box starts on the left edge of the list above it; the check passes this page.</li>
+                            <li>
+                                The proof table lists a filter flush with the list (only the old check reported it) and one 24 px off the list’s
+                                columns (both report it).
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">Formal: the filter’s outer edge on the left edge of the list above it.</p>
+                    </div>
+                    <div class="fg-stage">
+                        <div class="kp-formgrid">
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="fg-seg-name">Name</label>
+                                <div class="kp-formgrid__control">
+                                    <input class="kp-field__input" type="text" id="fg-seg-name" value="Nightly snapshot" />
+                                </div>
+                                <p class="kp-formgrid__value">shown in the list</p>
+                                <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Rename</button></div>
+                            </div>
+                            <div class="kp-formgrid__row">
+                                <label class="kp-formgrid__label" for="fg-seg-keep">Retention</label>
+                                <div class="kp-formgrid__control"><input class="kp-field__input" type="text" id="fg-seg-keep" value="30 days" /></div>
+                                <p class="kp-formgrid__value">oldest is removed</p>
+                                <div class="kp-formgrid__actions"><button class="kp-button kp-button--sm" type="button">Save</button></div>
+                            </div>
+                        </div>
+                        <div style="margin-block-start: var(--kp-space-md, 0.75rem)">
+                            <div class="kp-segmented" role="group" aria-label="Show" data-kp-segmented="single">
+                                <button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="true">
+                                    <span class="kp-segmented__label">All</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="failed" role="radio" aria-checked="false">
+                                    <span class="kp-segmented__label">Failed</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="running" role="radio" aria-checked="false">
+                                    <span class="kp-segmented__label">Running</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fg-proof">
+                        <p>
+                            <b>The check still catches a real misalignment.</b> The same fixtures, measured by the check as it was and as it is now
+                            (script: <code>research/formgrid-notes-1019/proof.mjs</code>).
+                        </p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Fixture</th>
+                                    <th scope="col">Should be</th>
+                                    <th scope="col">Check as it was</th>
+                                    <th scope="col">Check now</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A segmented filter flush with the list above it</td>
+                                    <td>not reported (it is aligned)</td>
+                                    <td>
+                                        1 line: buttons "All, Failed, Running" start at x 316, off the column edges of div.kp-formgrid above (x 312,
+                                        372, 388, 819.8, 835.8, 1123.6, 1139.6, 1208; 4 p
+                                    </td>
+                                    <td>none</td>
+                                </tr>
+                                <tr>
+                                    <td>The same filter 24 px right of the list’s columns</td>
+                                    <td>reported</td>
+                                    <td>
+                                        1 line: buttons "All, Failed, Running" start at x 340, off the column edges of div.kp-formgrid above (x 312,
+                                        372, 388, 819.8, 835.8, 1123.6, 1139.6, 1208; 28
+                                    </td>
+                                    <td>
+                                        1 line: buttons "All, Failed, Running" start at x 336, off the column edges of div.kp-formgrid above (x 312,
+                                        372, 388, 819.8, 835.8, 1123.6, 1139.6, 1208; 24
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section
+                    class="kc-sec"
+                    id="check-buttons"
+                    data-review-item="check-buttons"
+                    data-review-components="formgrid button"
+                    data-review-title="Alignment check: buttons that are not on one line"
+                    data-review-themes="formal"
+                    aria-labelledby="h-check-buttons"
+                >
+                    <div class="k56-changed">
+                        <p>
+                            <b>What changed since you approved it:</b> This changes the check, not a component. Rule C (two buttons that stand side by
+                            side share a top, a centre or a bottom) compared every pair whose boxes overlapped by even a pixel, so a button at the
+                            foot of one card and a button at the head of the next column were reported as “off one line” by chance, and so was a
+                            button inside a box it had scrolled out of or that was hidden. Now a pair is two buttons that stand on one line (their
+                            boxes share at least three quarters of the shorter one), and a button that cannot be seen is not part of the composition.
+                            “Send test” 9 px off “Format” is still reported, as the proof below shows. Nothing on this page, and no component, looks
+                            different.
+                        </p>
+                    </div>
+                    <div class="kc-sec__head">
+                        <h2 id="h-check-buttons">Alignment check: buttons that are not on one line</h2>
+                        <p>
+                            Two cards side by side, each with a button at its own height, and the real case: Format, Minify and Send test on one line.
+                        </p>
+                    </div>
+                    <div class="kc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>The check passes this page: the two cards’ buttons and the three buttons on one line.</li>
+                            <li>
+                                The proof table lists Send test 9 px off Format, which both checks report, and two buttons that overlap by chance and
+                                a button scrolled out of its box, which only the old check reported.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: Format, Minify and Send test on one line; the buttons of the two cards each in their own card.
+                        </p>
+                    </div>
+                    <div class="fg-stage">
+                        <div class="fg-pair">
+                            <div class="fg-card">
+                                <p>A short card with its button at the head.</p>
+                                <button class="kp-button kp-button--sm" type="button">Open</button>
+                            </div>
+                            <div class="fg-card">
+                                <p>
+                                    A tall card: a longer text that takes three lines in a column this wide, so its button stands lower than the one
+                                    beside it.
+                                </p>
+                                <p>A second paragraph of the same card.</p>
+                                <button class="kp-button kp-button--sm" type="button">Details</button>
+                            </div>
+                        </div>
+                        <div
+                            class="fg-pair"
+                            role="group"
+                            aria-label="Control group: every button variant"
+                            style="
+                                margin-block-start: var(--kp-space-md, 0.75rem);
+                                display: flex;
+                                flex-wrap: wrap;
+                                align-items: center;
+                                gap: var(--kp-space-sm, 0.5rem);
+                            "
+                        >
+                            <button class="kp-button kp-button--secondary" type="button">Secondary</button>
+                            <button class="kp-button kp-button--ghost" type="button">Ghost</button>
+                            <button class="kp-button kp-button--destructive" type="button">Destructive</button>
+                            <button class="kp-button kp-button--mirror" type="button">Mirror</button>
+                            <button class="kp-button kp-button--lg" type="button">Large</button>
+                        </div>
+                        <div class="kp-formgrid" style="margin-block-start: var(--kp-space-md, 0.75rem)">
+                            <div class="kp-formgrid__row kp-formgrid__row--buttons">
+                                <div class="kp-formgrid__control">
+                                    <div class="kp-formgrid__buttons">
+                                        <button class="kp-button" type="button">Format</button>
+                                        <button class="kp-button" type="button">Minify</button>
+                                    </div>
+                                </div>
+                                <div class="kp-formgrid__actions"><button class="kp-button kp-button--primary" type="button">Send test</button></div>
+                            </div>
+                        </div>
+                        <div class="fg-proof">
+                            <p>
+                                <b>The check still catches a real misalignment.</b> The same fixtures, measured by the check as it was and as it is
+                                now (script: <code>research/formgrid-notes-1019/proof.mjs</code>).
+                            </p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Fixture</th>
+                                        <th scope="col">Should be</th>
+                                        <th scope="col">Check as it was</th>
+                                        <th scope="col">Check now</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Format, Minify and Send test on one line</td>
+                                        <td>not reported (it is aligned)</td>
+                                        <td>none</td>
+                                        <td>none</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Send test 9 px below Format and Minify</td>
+                                        <td>reported</td>
+                                        <td>
+                                            2 lines: button.kp-button "Format" (y 513.2 to 549.2) and button.kp-button "Send test" (y 522.2 to 558.2)
+                                            stand side by side 9 px off one line (tops 9 px apart
+                                        </td>
+                                        <td>
+                                            2 lines: button.kp-button "Format" (y 513.2 to 549.2) and button.kp-button "Send test" (y 522.2 to 558.2)
+                                            stand side by side 9 px off one line (tops 9 px apart
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Buttons of two columns that overlap by 5 px (one button at the foot of a column, one at the head of the
+                                            next)
+                                        </td>
+                                        <td>not reported (it is aligned)</td>
+                                        <td>
+                                            1 line: button.kp-button "Open" (y 605.2 to 633.2) and button.kp-button "Details" (y 628.2 to 656.2) stand
+                                            side by side 23 px off one line (tops 23 px apart)
+                                        </td>
+                                        <td>none</td>
+                                    </tr>
+                                    <tr>
+                                        <td>A button scrolled out of its box, 4 px below a visible button of the next column</td>
+                                        <td>not reported (it is aligned)</td>
+                                        <td>
+                                            1 line: button.kp-button "Out of sight" (y 748.2 to 776.2) and button.kp-button "Visible" (y 752.2 to
+                                            780.2) stand side by side 4 px off one line (tops 4 px a
+                                        </td>
+                                        <td>none</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "round-3-1019-fa8ee9a3-f87d-4160-9200-87315ae33a90", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../r6r8-1019/demo.js"></script>
+        <script type="module" src="../audhd-opts-1019/demo.js"></script>
+        <script type="module" src="../hover-wheel-1019/demo.js"></script>
+        <script type="module" src="../formgrid-notes-1019/demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

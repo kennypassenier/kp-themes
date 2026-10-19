@@ -1,0 +1,163 @@
+/* research/r6r8-1019: the frame of the page. Everything with a kp- class is the package; the rr- rules only lay out. */
+
+/* A section is a composition on a 12-column grid: the component (the thing under review) takes the larger span, 8 of 12, on the
+   right with its state buttons directly above it; the words about it (head, what to expect, what to look at) form one block of
+   4 columns on the left, the head lined up with the buttons. Under 56rem it stacks: head, buttons, component, then the notes. */
+.rr-sec {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-areas:
+        'changed changed changed changed changed changed changed changed changed changed changed changed'
+        'head head head head controls controls controls controls controls controls controls controls'
+        'expected expected expected expected stage stage stage stage stage stage stage stage'
+        'look look look look stage stage stage stage stage stage stage stage'
+        '. . . . stage stage stage stage stage stage stage stage';
+    grid-template-rows: auto auto auto auto 1fr;
+    column-gap: var(--kp-space-lg, 1.5rem);
+    row-gap: 0; /* the spacing is margin on the blocks, so a block the review dialog moves away leaves no empty band */
+    align-items: start;
+}
+
+.rr-sec > .k56-changed {
+    grid-area: changed;
+}
+
+.rr-sec > .rr-sec__head {
+    grid-area: head;
+}
+
+.rr-sec > [data-review-controls] {
+    grid-area: controls;
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.rr-sec > .rr-expected {
+    grid-area: expected;
+}
+
+.rr-sec > [data-review-look] {
+    grid-area: look;
+}
+
+.rr-sec > .rr-stage {
+    grid-area: stage;
+}
+
+.rr-sec > * {
+    min-inline-size: 0;
+}
+
+.rr-sec > :not(.rr-stage) {
+    margin-block-end: var(--kp-space-md, 1rem);
+}
+
+@media (max-width: 56rem) {
+    .rr-sec {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: 'changed' 'head' 'controls' 'stage' 'expected' 'look';
+        grid-template-rows: none;
+    }
+}
+
+.rr-stage {
+    min-inline-size: 0;
+}
+
+/* The stages: each is a small composition on a grid, so the component is judged where a page really puts it. */
+.rr-cells {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) auto auto;
+    column-gap: var(--kp-space-lg, 1.5rem);
+    row-gap: var(--kp-space-md, 1rem);
+    align-items: start;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+}
+
+.rr-cells > .rr-cells__name {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--kp-button-height, 2.25rem);
+    margin: 0;
+    min-inline-size: 0;
+}
+
+.rr-cells > .rr-cells__head {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rr-cells > .rr-cells__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.rr-cells > .rr-cells__rule {
+    grid-column: 1 / -1;
+    inline-size: 100%;
+    margin: 0;
+    border: 0;
+    border-block-start: 1px solid var(--border);
+}
+
+.rr-cells__bar > b {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--kp-button-height, 2.25rem);
+    margin-inline-end: auto;
+}
+
+.rr-narrow {
+    inline-size: min(100%, 13rem);
+}
+
+.rr-stage-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.rr-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rr-kvcell {
+    box-sizing: border-box;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+}
+
+.rr-kvcell--narrow {
+    inline-size: min(100%, 19rem);
+}
+
+.rr-timers-stage .kp-timers {
+    min-block-size: 0;
+}
+
+/* On a phone the table folds to two columns: the name and the bar's words over the whole width, the picker and its action
+   under them, still one column each. */
+@media (max-width: 40rem) {
+    .rr-cells {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .rr-cells > .rr-cells__head {
+        display: none;
+    }
+
+    .rr-cells > .rr-cells__name,
+    .rr-cells > .rr-cells__bar {
+        grid-column: 1 / -1;
+    }
+}

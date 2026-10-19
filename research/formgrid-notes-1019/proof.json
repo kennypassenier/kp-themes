@@ -1,0 +1,68 @@
+{
+    "fixtures": [
+        {
+            "id": "seg-flush",
+            "section": "check-segmented",
+            "what": "A segmented filter flush with the list above it",
+            "expect": "not reported (it is aligned)",
+            "old": [
+                "seg-flush: buttons \"All, Failed, Running\" start at x 316, off the column edges of div.kp-formgrid above (x 312, 372, 388, 819.8, 835.8, 1123.6, 1139.6, 1208; 4 px from the nearest)"
+            ],
+            "now": []
+        },
+        {
+            "id": "seg-off",
+            "section": "check-segmented",
+            "what": "The same filter 24 px right of the list’s columns",
+            "expect": "reported",
+            "old": [
+                "seg-off: buttons \"All, Failed, Running\" start at x 340, off the column edges of div.kp-formgrid above (x 312, 372, 388, 819.8, 835.8, 1123.6, 1139.6, 1208; 28 px from the nearest)"
+            ],
+            "now": [
+                "seg-off: buttons \"All, Failed, Running\" start at x 336, off the column edges of div.kp-formgrid above (x 312, 372, 388, 819.8, 835.8, 1123.6, 1139.6, 1208; 24 px from the nearest)"
+            ]
+        },
+        {
+            "id": "btn-line",
+            "section": "check-buttons",
+            "what": "Format, Minify and Send test on one line",
+            "expect": "not reported (it is aligned)",
+            "old": [],
+            "now": []
+        },
+        {
+            "id": "btn-off",
+            "section": "check-buttons",
+            "what": "Send test 9 px below Format and Minify",
+            "expect": "reported",
+            "old": [
+                "btn-off: button.kp-button \"Format\" (y 513.2 to 549.2) and button.kp-button \"Send test\" (y 522.2 to 558.2) stand side by side 9 px off one line (tops 9 px apart)",
+                "btn-off: button.kp-button \"Minify\" (y 513.2 to 549.2) and button.kp-button \"Send test\" (y 522.2 to 558.2) stand side by side 9 px off one line (tops 9 px apart)"
+            ],
+            "now": [
+                "btn-off: button.kp-button \"Format\" (y 513.2 to 549.2) and button.kp-button \"Send test\" (y 522.2 to 558.2) stand side by side 9 px off one line (tops 9 px apart)",
+                "btn-off: button.kp-button \"Minify\" (y 513.2 to 549.2) and button.kp-button \"Send test\" (y 522.2 to 558.2) stand side by side 9 px off one line (tops 9 px apart)"
+            ]
+        },
+        {
+            "id": "btn-chance",
+            "section": "check-buttons",
+            "what": "Buttons of two columns that overlap by 5 px (one button at the foot of a column, one at the head of the next)",
+            "expect": "not reported (it is aligned)",
+            "old": [
+                "btn-chance: button.kp-button \"Open\" (y 605.2 to 633.2) and button.kp-button \"Details\" (y 628.2 to 656.2) stand side by side 23 px off one line (tops 23 px apart)"
+            ],
+            "now": []
+        },
+        {
+            "id": "btn-hidden",
+            "section": "check-buttons",
+            "what": "A button scrolled out of its box, 4 px below a visible button of the next column",
+            "expect": "not reported (it is aligned)",
+            "old": [
+                "btn-hidden: button.kp-button \"Out of sight\" (y 748.2 to 776.2) and button.kp-button \"Visible\" (y 752.2 to 780.2) stand side by side 4 px off one line (tops 4 px apart)"
+            ],
+            "now": []
+        }
+    ]
+}

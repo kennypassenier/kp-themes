@@ -1,0 +1,48 @@
+/* research/formgrid-notes-1019: the frame of the page. Everything with a kp- class is the package; the fg- rules only lay out. */
+
+.fg-stage {
+    box-sizing: border-box;
+    inline-size: min(100%, 56rem);
+    margin-inline: auto;
+}
+
+.fg-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1rem);
+    align-items: start;
+}
+
+@media (max-width: 36rem) {
+    .fg-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.fg-card {
+    box-sizing: border-box;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.fg-card > p {
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+}
+
+.fg-proof {
+    margin-block-start: var(--kp-space-lg, 1rem);
+}
+
+.fg-proof table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.fg-proof :is(th, td) {
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+    text-align: start;
+    vertical-align: top;
+}

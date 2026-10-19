@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="r6r8-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Four fixes on the grid: remind-me picker, Copy in facts, checklist and timer states</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Four fixes on the grid</h1>
+                <p class="cat-intro">
+                    The project threads found four places where an approved component did not hold its place: the remind-me picker had no width of its
+                    own, a Copy button broke in the middle of its word in a narrow cell, a checklist that could not be read had no Retry, and the
+                    timer list had no loading or failed state and a too-low empty line. 4 sections, formal only (every fix is the theme&rsquo;s own
+                    plate, button and loading card). Each section says under <b>What changed since you approved it</b> what was wrong and what is
+                    different now.
+                </p>
+            </header>
+
+            <section
+                class="rr-sec"
+                id="snooze-width"
+                data-review-item="snooze-width"
+                data-review-topic="snooze-width"
+                data-review-topic-title="Remind me later: the picker in a cell, a bar and a form"
+                data-review-components="snooze"
+                data-review-title="Remind me later: the picker in a cell, a bar and a form"
+                aria-labelledby="h-snooze-width"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The picker had no width of its own: wherever its cell, row or bar sized itself from
+                        what it held, the picker came out as wide as nothing, so &ldquo;Not snoozed&rdquo; broke letter by letter and each page had to
+                        give it a fixed width. Now the picker is as wide as its button and its line, and fills the room it is given: in a column of a
+                        grid it takes the column, in a bar it sits among the other buttons, and in a narrow cell End snooze goes under the button. The
+                        choices, the menu, the date panel and the snoozed line are as you approved them.
+                    </p>
+                </div>
+                <div class="rr-sec__head">
+                    <h2 id="h-snooze-width">Remind me later: the picker in a cell, a bar and a form</h2>
+                    <p>
+                        The button that puts a reminder off, with its line under it, in the places a page puts it: a table row, a selection bar, a
+                        form row and a narrow cell.
+                    </p>
+                </div>
+                <div class="rr-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Table row</b>: the picker is one button in its own column, &ldquo;Not snoozed&rdquo; under it on one line; the second
+                            row shows a snoozed reminder with <b>End snooze</b> beside the button.
+                        </li>
+                        <li><b>Selection bar</b>: the button stands among the bar&rsquo;s buttons on one line.</li>
+                        <li>
+                            <b>Form row</b>: the button fills the control column, the line under it; <b>narrow cell</b>: button and End snooze on two
+                            lines, none cut.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: every &ldquo;Not snoozed&rdquo; is one line, and the buttons stand on a common line and edge.</p>
+                </div>
+                <div class="rr-stage" id="snooze-width-component">
+                    <div class="rr-stage-stack">
+                        <div>
+                            <p class="rr-label">In a table and its selection bar: name, picker and action, each in its own column</p>
+                            <div class="rr-cells">
+                                <p class="rr-cells__head">Reminder</p>
+                                <p class="rr-cells__head">Put off</p>
+                                <p class="rr-cells__head">Action</p>
+                                <p class="rr-cells__name">Backup of the photos stack failed</p>
+                                <div
+                                    class="kp-snooze"
+                                    data-kp-snooze
+                                    data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                    data-kp-look="menu"
+                                ></div>
+                                <button type="button" class="kp-button">Open</button>
+                                <p class="rr-cells__name">Certificate expires in 12 days</p>
+                                <div
+                                    class="kp-snooze"
+                                    data-kp-snooze
+                                    data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                    data-kp-look="menu"
+                                    data-rr-snoozed
+                                ></div>
+                                <button type="button" class="kp-button">Open</button>
+                                <hr class="rr-cells__rule" />
+                                <div class="rr-cells__bar"><b>3 selected</b><button type="button" class="kp-button">Mark read</button></div>
+                                <div
+                                    class="kp-snooze"
+                                    data-kp-snooze
+                                    data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                    data-kp-look="menu"
+                                ></div>
+                                <button type="button" class="kp-button kp-button--destructive">Delete</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="rr-label">In a form row</p>
+                            <div class="kp-formgrid">
+                                <div class="kp-formgrid__row">
+                                    <span class="kp-formgrid__label">Remind me</span>
+                                    <div class="kp-formgrid__control">
+                                        <div
+                                            class="kp-snooze"
+                                            data-kp-snooze
+                                            data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                            data-kp-look="menu"
+                                        ></div>
+                                    </div>
+                                    <p class="kp-formgrid__value">Nothing is snoozed.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="rr-label">In a narrow cell (13 rem)</p>
+                            <div class="rr-narrow">
+                                <div
+                                    class="kp-snooze"
+                                    data-kp-snooze
+                                    data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                                    data-kp-look="menu"
+                                    data-rr-snoozed
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="rr-sec"
+                id="copyable-kv"
+                data-review-item="copyable-kv"
+                data-review-topic="copyable-kv"
+                data-review-topic-title="Facts with a Copy button"
+                data-review-components="copyable"
+                data-review-title="Facts with a Copy button"
+                aria-labelledby="h-copyable-kv"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> In a narrow cell the Copy button was squeezed until its word broke in the middle
+                        (&ldquo;Co&rdquo; over &ldquo;py&rdquo;) while the long value kept its room. Now the button keeps its word whole and its size,
+                        and it is the value that wraps. In a list of facts the copyable fills its value cell and the Copy button stands at the end of
+                        the cell, so the buttons of every row line up in one column. The list, its labels and the other values are as you approved
+                        them.
+                    </p>
+                </div>
+                <div class="rr-sec__head">
+                    <h2 id="h-copyable-kv">Facts with a Copy button</h2>
+                    <p>A list of facts (name left, value right) where two values can be copied, in a narrow cell and in a wide one.</p>
+                </div>
+                <div class="rr-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            In both lists <b>Copy</b> is one word on one line, and the two Copy buttons stand under each other at the end of the value
+                            column.
+                        </li>
+                        <li>In the narrow list the long address wraps in the room beside the button; nothing is cut.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: Copy is whole, the two buttons share one right edge, and the value has air before the button.</p>
+                </div>
+                <div class="rr-stage" id="copyable-kv-component">
+                    <div class="rr-stage-stack">
+                        <div>
+                            <p class="rr-label">A narrow cell (19 rem)</p>
+                            <div class="rr-kvcell rr-kvcell--narrow">
+                                <dl class="kp-kv">
+                                    <div class="kp-kv__row">
+                                        <dt>Client</dt>
+                                        <dd>kyu-runner</dd>
+                                    </div>
+                                    <div class="kp-kv__row">
+                                        <dt>Token id</dt>
+                                        <dd>
+                                            <span class="kp-copyable"
+                                                ><span class="kp-copyable__value" id="rr-n-id">tok_3f9a21c8d4</span
+                                                ><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="rr-n-id">
+                                                    Copy
+                                                </button></span
+                                            >
+                                        </dd>
+                                    </div>
+                                    <div class="kp-kv__row">
+                                        <dt>Endpoint</dt>
+                                        <dd>
+                                            <span class="kp-copyable"
+                                                ><span class="kp-copyable__value" id="rr-n-url">https://kyu.example.internal/v1/messages</span
+                                                ><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="rr-n-url">
+                                                    Copy
+                                                </button></span
+                                            >
+                                        </dd>
+                                    </div>
+                                    <div class="kp-kv__row">
+                                        <dt>Last used</dt>
+                                        <dd>19/10/2026 08:41</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="rr-label">A wide cell</p>
+                            <div class="rr-kvcell">
+                                <dl class="kp-kv">
+                                    <div class="kp-kv__row">
+                                        <dt>Client</dt>
+                                        <dd>kyu-runner</dd>
+                                    </div>
+                                    <div class="kp-kv__row">
+                                        <dt>Token id</dt>
+                                        <dd>
+                                            <span class="kp-copyable"
+                                                ><span class="kp-copyable__value" id="rr-w-id">tok_3f9a21c8d4</span
+                                                ><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="rr-w-id">
+                                                    Copy
+                                                </button></span
+                                            >
+                                        </dd>
+                                    </div>
+                                    <div class="kp-kv__row">
+                                        <dt>Endpoint</dt>
+                                        <dd>
+                                            <span class="kp-copyable"
+                                                ><span class="kp-copyable__value" id="rr-w-url">https://kyu.example.internal/v1/messages</span
+                                                ><button type="button" class="kp-button kp-button--ghost kp-copyable__button" data-kp-copy="rr-w-url">
+                                                    Copy
+                                                </button></span
+                                            >
+                                        </dd>
+                                    </div>
+                                    <div class="kp-kv__row">
+                                        <dt>Last used</dt>
+                                        <dd>19/10/2026 08:41</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="rr-sec"
+                id="checklist-failed"
+                data-review-item="checklist-failed"
+                data-review-topic="checklist-failed"
+                data-review-topic-title="Checklist: failed and empty"
+                data-review-components="checklist"
+                data-review-title="Checklist: failed and empty"
+                aria-labelledby="h-checklist-failed"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> A checklist that could not be read said so in one line of text, with no way to try
+                        again unless the page drew its own button, and its empty line was the same small line. Now both are the package&rsquo;s state
+                        plate: the title at heading size, centred in the whole body of the list (the same height as the list with its rows), a
+                        sentence under a failure and a normal-size <b>Retry</b>. Retry fires <code>kp-checklist-retry</code> on the list. The rows,
+                        the ticking, Clear checked and Undo are as you approved them.
+                    </p>
+                </div>
+                <div class="rr-sec__head">
+                    <h2 id="h-checklist-failed">Checklist: failed and empty</h2>
+                    <p>The shopping list. Press a state: it loads, is empty, or could not be read; Retry on the failed list reads it again.</p>
+                </div>
+                <div class="rr-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Failed</b>: one red plate over the whole list body, the title at heading size, a sentence and a <b>Retry</b> button;
+                            the bar above it rests.
+                        </li>
+                        <li><b>Empty</b>: the empty plate in the same place and the same height; <b>Loading</b>: the loading card over the body.</li>
+                        <li>Press <b>Retry</b>: the list loads for a moment and the rows come back.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the plate fills the body at the height of the loaded list, its words centred; Retry is a normal button.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="checklist-failed-component">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="ready" aria-pressed="true">
+                            Ready
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="loading" aria-pressed="false">
+                            Loading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="empty" aria-pressed="false">
+                            Empty
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div class="rr-stage" id="checklist-failed-component">
+                    <div class="kp-checklist" data-kp-checklist data-rr-checklist aria-label="Shopping list"></div>
+                </div>
+            </section>
+
+            <section
+                class="rr-sec"
+                id="timers-states"
+                data-review-item="timers-states"
+                data-review-topic="timers-states"
+                data-review-topic-title="Kitchen timers: loading, empty and failed"
+                data-review-components="timer"
+                data-review-title="Kitchen timers: loading, empty and failed"
+                aria-labelledby="h-timers-states"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The timer list had no loading and no failed state, and with no timer it showed a
+                        small dashed line, much lower than a row of cards, so the page jumped when the first timer started. Now loading is the
+                        theme&rsquo;s loading card over the whole row, empty and failed are the package&rsquo;s state plate as high as a card (a list
+                        that was read first keeps the height it had), and a failed list has a normal-size <b>Retry</b> (<code>kp-timers-retry</code>).
+                        The cards, the clock and the buttons are as you approved them.
+                    </p>
+                </div>
+                <div class="rr-sec__head">
+                    <h2 id="h-timers-states">Kitchen timers: loading, empty and failed</h2>
+                    <p>
+                        The row of timer cards. Press a state: the timers load, none are running, or they could not be read; Retry reads them again.
+                    </p>
+                </div>
+                <div class="rr-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Ready</b>: two timer cards. <b>Empty</b>: a plate as high as the cards, &ldquo;No timers running.&rdquo; at heading
+                            size, centred.
+                        </li>
+                        <li>
+                            <b>Failed</b>: a red plate of the same height with a sentence and a <b>Retry</b>; <b>Loading</b>: the loading card over
+                            the same box.
+                        </li>
+                        <li>Nothing under the list moves when the state changes.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: every state is as high as the ready row, the words centred; Retry is a normal button.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="timers-states-component">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="ready" aria-pressed="true">
+                            Ready
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="loading" aria-pressed="false">
+                            Loading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="empty" aria-pressed="false">
+                            Empty
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-rr-set="state" data-rr-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div class="rr-stage" id="timers-states-component">
+                    <div class="rr-timers-stage"><div class="kp-timers" data-kp-timers data-rr-timers aria-label="Kitchen timers"></div></div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "r6r8-e0daf2b5-9497-4a25-8d34-cffdeeec458d", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

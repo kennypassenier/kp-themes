@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="hover-wheel-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Touch for the hover card, a kiosk and an answer card for the wheel</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Touch for the hover card, a kiosk wheel</h1>
+                <p class="cat-intro">
+                    The AuDHD recipes app asked for two things the package could not do: ingredient notes that a phone can open, and a wheel for a
+                    page of its own, with no controls, with choices that are resting and with a card for the answer. 4 pairs in all, formal only
+                    (nothing here differs per theme). Each section says under <b>What changed since you approved it</b> what is different now.
+                </p>
+            </header>
+
+            <section
+                class="kc-sec"
+                id="hovercard-touch"
+                data-review-item="hovercard-touch"
+                data-review-components="hovercard"
+                data-review-title="Hover card: reachable with a finger"
+                data-review-themes="formal"
+                data-review-topic="hovercard"
+                data-review-topic-title="Hover card"
+                aria-labelledby="h-hovercard-touch"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The hover card ignored touch altogether, so on a phone the note behind an
+                        ingredient could not be read. Now a <b>tap</b> on an ingredient opens its note, a tap on the same ingredient or
+                        <b>anywhere outside</b> the card closes it, and a tap <b>inside</b> the card keeps it open. A tap on another ingredient moves
+                        the card there. The keyboard works as before (focus opens, Escape closes), and a link or a button used as an anchor keeps its
+                        own tap unless the page asks for two taps with <code>data-kp-touch="tap"</code>.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-hovercard-touch">Hover card: reachable with a finger</h2>
+                    <p>
+                        The ingredient list of a recipe. Each ingredient has a note that a mouse reads by pointing; on a phone there is no pointing.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            On a phone: tap <b>Ripe bananas</b>, its note opens under it; tap the white page, it closes; tap <b>Cinnamon</b> while it
+                            is open, the card moves there.
+                        </li>
+                        <li>
+                            On a desktop: the button <b>Tap it like a finger</b> at the end of each row sends the same touch tap, so you can see it
+                            without a phone. Pointing with the mouse still opens the card after a short wait.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: a tap opens the note under the ingredient, a tap outside closes it, and the rows stay in their four columns.
+                    </p>
+                </div>
+                <div class="hw-wide">
+                    <div class="kp-formgrid" data-kp-formgrid-lines="lines" aria-label="Ingredients">
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label">200 g</span>
+                            <div class="kp-formgrid__control">
+                                <span class="hw-ingredient" data-kp-hovercard="Soak overnight, or the oats stay chewy." data-hw-ingredient="0"
+                                    >Rolled oats</span
+                                >
+                            </div>
+                            <p class="kp-formgrid__value">note on tap</p>
+                            <div class="kp-formgrid__actions">
+                                <button type="button" class="kp-button kp-button--sm" data-hw-tap="0">Tap it like a finger</button>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label">2</span>
+                            <div class="kp-formgrid__control">
+                                <span class="hw-ingredient" data-kp-hovercard="Spotty skins are sweetest; freeze the rest." data-hw-ingredient="1"
+                                    >Ripe bananas</span
+                                >
+                            </div>
+                            <p class="kp-formgrid__value">note on tap</p>
+                            <div class="kp-formgrid__actions">
+                                <button type="button" class="kp-button kp-button--sm" data-hw-tap="1">Tap it like a finger</button>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label">1 tbsp</span>
+                            <div class="kp-formgrid__control">
+                                <span class="hw-ingredient" data-kp-hovercard="Nut-free? Sunflower seed butter works the same." data-hw-ingredient="2"
+                                    >Peanut butter</span
+                                >
+                            </div>
+                            <p class="kp-formgrid__value">note on tap</p>
+                            <div class="kp-formgrid__actions">
+                                <button type="button" class="kp-button kp-button--sm" data-hw-tap="2">Tap it like a finger</button>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label">1 tsp</span>
+                            <div class="kp-formgrid__control">
+                                <span
+                                    class="hw-ingredient"
+                                    data-kp-hovercard="Fresh-ground if you have it; it lifts the whole bowl."
+                                    data-hw-ingredient="3"
+                                    >Cinnamon</span
+                                >
+                            </div>
+                            <p class="kp-formgrid__value">note on tap</p>
+                            <div class="kp-formgrid__actions">
+                                <button type="button" class="kp-button kp-button--sm" data-hw-tap="3">Tap it like a finger</button>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label">1 pinch</span>
+                            <div class="kp-formgrid__control">
+                                <span
+                                    class="hw-ingredient"
+                                    data-kp-hovercard="Barely a pinch: it is what makes the banana taste sweeter."
+                                    data-hw-ingredient="4"
+                                    >Sea salt</span
+                                >
+                            </div>
+                            <p class="kp-formgrid__value">note on tap</p>
+                            <div class="kp-formgrid__actions">
+                                <button type="button" class="kp-button kp-button--sm" data-hw-tap="4">Tap it like a finger</button>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label">250 ml</span>
+                            <div class="kp-formgrid__control">
+                                <span
+                                    class="hw-ingredient"
+                                    data-kp-hovercard="Any milk works; warm it first if you like the porridge creamy."
+                                    data-hw-ingredient="5"
+                                    >Oat milk</span
+                                >
+                            </div>
+                            <p class="kp-formgrid__value">note on tap</p>
+                            <div class="kp-formgrid__actions">
+                                <button type="button" class="kp-button kp-button--sm" data-hw-tap="5">Tap it like a finger</button>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label">1 handful</span>
+                            <div class="kp-formgrid__control">
+                                <span
+                                    class="hw-ingredient"
+                                    data-kp-hovercard="Toast them dry in a pan for two minutes, they stay crisp longer."
+                                    data-hw-ingredient="6"
+                                    >Walnuts</span
+                                >
+                            </div>
+                            <p class="kp-formgrid__value">note on tap</p>
+                            <div class="kp-formgrid__actions">
+                                <button type="button" class="kp-button kp-button--sm" data-hw-tap="6">Tap it like a finger</button>
+                            </div>
+                        </div>
+                        <div class="kp-formgrid__row">
+                            <span class="kp-formgrid__label">1 tbsp</span>
+                            <div class="kp-formgrid__control">
+                                <span class="hw-ingredient" data-kp-hovercard="Skip it for a child under one year old." data-hw-ingredient="7"
+                                    >Honey</span
+                                >
+                            </div>
+                            <p class="kp-formgrid__value">note on tap</p>
+                            <div class="kp-formgrid__actions">
+                                <button type="button" class="kp-button kp-button--sm" data-hw-tap="7">Tap it like a finger</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="wheel-kiosk"
+                data-review-item="wheel-kiosk"
+                data-review-components="wheel"
+                data-review-title="Wheel: a page with only the wheel"
+                data-review-themes="formal"
+                data-review-topic="wheel"
+                data-review-topic-title="Wheel"
+                aria-labelledby="h-wheel-kiosk"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Until now a wheel always carried its <b>Spin</b> button in the middle, which a page
+                        for someone who should only see the wheel could not remove. The new option <code>data-kp-wheel-kiosk</code> takes the button
+                        away: the <b>wheel itself</b> is the one control. Tap it, or press Enter or Space while it has the focus, and it spins. The
+                        middle stays as a quiet plate, the line under the wheel says <b>Tap the wheel to let it choose</b>, and a screen reader hears
+                        one button, &ldquo;Spin the wheel&rdquo;. Tapping the answer spins again.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-wheel-kiosk">Wheel: a page with only the wheel</h2>
+                    <p>
+                        The wheel over a chosen list for a page that has nothing else on it: left as it was, right with the new
+                        <code>data-kp-wheel-kiosk</code> option.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The left wheel is as you approved it (Spin in the middle). The right one has a plain middle, nothing to press but the
+                            wheel.
+                        </li>
+                        <li>
+                            Tap the right wheel: it turns, stops on a name, says it. Tab to it and press Space: the same. Tapping its answer spins
+                            again.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the right wheel has no button anywhere, its middle is a calm plate, and both wheels keep the same size and place.
+                    </p>
+                </div>
+                <div class="hw-pair">
+                    <div class="hw-pane">
+                        <p class="hw-pane__label">With the Spin button (as before)</p>
+                        <div class="kp-wheel" data-kp-wheel data-hw-wheel="plain" aria-label="Tonight's dinner"></div>
+                    </div>
+                    <div class="hw-pane">
+                        <p class="hw-pane__label">Kiosk: the wheel is the control</p>
+                        <div class="kp-wheel" data-kp-wheel data-hw-wheel="kiosk" data-kp-wheel-kiosk aria-label="Tonight's dinner"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="wheel-resting"
+                data-review-item="wheel-resting"
+                data-review-components="wheel"
+                data-review-title="Wheel: a choice that is resting"
+                data-review-themes="formal"
+                data-review-topic="wheel"
+                aria-labelledby="h-wheel-resting"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> A choice could only be left off the wheel (it vanished) or stay on it (it could be
+                        drawn). The new item field <code>resting: true</code> is the third state: the choice <b>stays on the wheel</b> so the list is
+                        whole, but it is stepped back (faded, a dashed edge, its name in italics, &ldquo;Resting&rdquo; when you point at it) and the
+                        wheel <b>never lands on it</b> while another choice is awake. If every choice rests, they are all in play again.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-wheel-resting">Wheel: a choice that is resting</h2>
+                    <p>A list where yesterday&rsquo;s dinner and the one from two days ago are on the wheel but should not come up.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Fried rice</b> and <b>Tomato soup</b> are faded with a dashed edge and italic names; the others are as before.</li>
+                        <li>
+                            Press <b>Spin</b> a dozen times: the wheel stops on Curry, Pasta, Wraps or Stew, never on a resting one. The slice sizes
+                            are unchanged.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the two resting slices read as quieter at a glance, with dashed edges, and their names are whole.</p>
+                </div>
+                <div class="hw-pair">
+                    <div class="hw-pane">
+                        <p class="hw-pane__label">Two choices resting</p>
+                        <div class="kp-wheel" data-kp-wheel data-hw-wheel="resting" aria-label="Tonight's dinner"></div>
+                    </div>
+                    <div class="hw-pane hw-pane--note">
+                        <p class="hw-pane__label">What to look for</p>
+                        <dl class="hw-facts">
+                            <dt>Faded, dashed, italic</dt>
+                            <dd>Fried rice and Tomato soup: <code>resting: true</code></dd>
+                            <dt>Point at a slice</dt>
+                            <dd>The tooltip says the name and &ldquo;Resting&rdquo;</dd>
+                            <dt>Spin</dt>
+                            <dd>Never lands on a resting slice</dd>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="wheel-answer"
+                data-review-item="wheel-answer"
+                data-review-components="wheel"
+                data-review-title="Wheel: a tag and the answer card"
+                data-review-themes="formal"
+                data-review-topic="wheel"
+                aria-labelledby="h-wheel-answer"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The answer was two bare lines under the wheel and a choice could say nothing but
+                        its name. Now an item can carry a <code>tag</code> (a short line about it), and <code>data-kp-wheel-answer</code> turns the
+                        result into a <b>built-in answer card</b>: a bordered card with the line &ldquo;The wheel chose&rdquo;, the name, and the tag
+                        under it. The card keeps one size whether or not the choice has a tag, so nothing under it moves. Without the option the
+                        result is exactly as you approved it.
+                    </p>
+                </div>
+                <div class="kc-sec__head">
+                    <h2 id="h-wheel-answer">Wheel: a tag and the answer card</h2>
+                    <p>The same dinner wheel; each choice has a short line about it (&ldquo;Oven, 45 min&rdquo;), and the answer stands in a card.</p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Left: the result as before. Right: the answer card; spin and it shows the name with its tag (<b>Oven, 45 min</b>).</li>
+                        <li>Wraps has no tag: its card keeps the empty line, the wheel and the card do not change size.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the right wheel&rsquo;s result is a framed card with the name and the tag in their own lines, the same height for
+                        every choice.
+                    </p>
+                </div>
+                <div class="hw-pair">
+                    <div class="hw-pane">
+                        <p class="hw-pane__label">Result as before</p>
+                        <div class="kp-wheel" data-kp-wheel data-hw-wheel="plain-tags" aria-label="Tonight's dinner"></div>
+                    </div>
+                    <div class="hw-pane">
+                        <p class="hw-pane__label">Answer card (data-kp-wheel-answer)</p>
+                        <div class="kp-wheel" data-kp-wheel data-hw-wheel="answer" data-kp-wheel-answer aria-label="Tonight's dinner"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "hoverwheel-eca4d5be-5ce0-420a-92c4-02e275510bbe", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

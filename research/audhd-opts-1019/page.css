@@ -1,0 +1,55 @@
+/* research/audhd-opts-1019: the frame of the page. Everything with a kp- class is the package; the ao- rules only lay out.
+   Every section is a board of twelve columns: the component being judged on eight, a readout that follows it on four. */
+
+.ao-board {
+    container: ao-board / inline-size;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+.ao-block {
+    box-sizing: border-box;
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground, var(--foreground));
+}
+
+.ao-span-8 {
+    grid-column: span 8;
+}
+
+.ao-span-4 {
+    grid-column: span 4;
+}
+
+@container ao-board (max-width: 44rem) {
+    .ao-span-8,
+    .ao-span-4 {
+        grid-column: 1 / -1;
+    }
+}
+
+.ao-block__title {
+    margin: 0;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.ao-block__about {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The readout is a key-value panel; its values are numbers and short words, so they keep their digits in step. */
+.ao-block .kp-kv {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}

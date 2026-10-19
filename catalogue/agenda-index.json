@@ -1,6 +1,36 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/round-3-1019/demo.html": {
+            "facts": {
+                "id": "round-3-1019",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Fixes and options from the project threads, each in the package. The remind-me picker's width, the Copy button in a key-value cell, the checklist and timer list when loading, empty or failed; three options (action tile size, a calm freshness line counted in days, a computed field in a sentence form); the hover card on touch and the wheel's answer, kiosk and resting states; and the form grid (a form block's gap, a JSON field's action, the refresh bar's label, two review-kit measures). 16 pairs, all in formal. Every section says under What changed since you approved it what was wrong and what is different now.",
+                "sections": [
+                    { "item": "snooze-width", "themes": null, "topic": "snooze-width", "mode": null },
+                    { "item": "copyable-kv", "themes": null, "topic": "copyable-kv", "mode": null },
+                    { "item": "checklist-failed", "themes": null, "topic": "checklist-failed", "mode": null },
+                    { "item": "timers-states", "themes": null, "topic": "timers-states", "mode": null },
+                    { "item": "action-size", "themes": "formal", "topic": "action-size", "mode": null },
+                    { "item": "freshness-tone", "themes": "formal", "topic": "freshness-tone", "mode": null },
+                    { "item": "sentence-computed", "themes": "formal", "topic": "sentence-computed", "mode": null },
+                    { "item": "hovercard-touch", "themes": "formal", "topic": "hovercard", "mode": null },
+                    { "item": "wheel-kiosk", "themes": "formal", "topic": "wheel", "mode": null },
+                    { "item": "wheel-resting", "themes": "formal", "topic": "wheel", "mode": null },
+                    { "item": "wheel-answer", "themes": "formal", "topic": "wheel", "mode": null },
+                    { "item": "form-gap", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "json-action", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "refresh-label", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "check-segmented", "themes": "formal", "topic": null, "mode": null },
+                    { "item": "check-buttons", "themes": "formal", "topic": null, "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"round-3-1019-fa8ee9a3-f87d-4160-9200-87315ae33a90\", \"received\": [] }\n        "
+            },
+            "fingerprint": "deb11628d9b93a6e",
+            "update": null
+        },
         "research/round-2-1019/demo.html": {
             "facts": {
                 "id": "round-2-1019",

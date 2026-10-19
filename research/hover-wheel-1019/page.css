@@ -1,0 +1,72 @@
+/* research/hover-wheel-1019: the frame of the page. Everything with a kp- class is the package; the hw- rules only lay out. */
+
+.hw-wide {
+    inline-size: min(100%, 56rem);
+    margin-inline: auto;
+}
+
+/* Two panes on two equal tracks; one track on a phone. Each pane is a grid of its own label over its content. */
+.hw-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    inline-size: min(100%, 56rem);
+    margin-inline: auto;
+    align-items: stretch;
+}
+
+@media (max-width: 40rem) {
+    .hw-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.hw-pane {
+    display: grid;
+    grid-template-rows: auto auto;
+    align-content: start;
+    justify-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.hw-pane__label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    text-align: center;
+}
+
+.hw-pane .kp-wheel {
+    --kp-wheel-size: min(18rem, 100%);
+}
+
+.hw-pane--note {
+    align-content: start;
+    justify-items: stretch;
+}
+
+.hw-facts {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    margin: 0;
+}
+
+.hw-facts > dt {
+    font-weight: 600;
+}
+
+.hw-facts > dd {
+    margin: 0;
+}
+
+/* An ingredient is plain text with a dotted rule, the sign that it has a note. */
+.hw-ingredient {
+    text-decoration: underline dotted;
+    text-underline-offset: 0.25em;
+    cursor: help;
+}
