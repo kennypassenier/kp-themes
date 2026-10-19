@@ -15587,7 +15587,7 @@ function createIntentFilter(dialog, list, status) {
     const valueOf3 = (option) => option.dataset.value ?? (option.textContent ?? "").trim();
     const items = options.map((option) => {
       clearMarks3(option);
-      if (dialog.dataset.kpHighlight !== "off" && !option.querySelector(":scope > .kp-palette__label")) wrapLabel(option);
+      if (!option.querySelector(":scope > .kp-palette__label")) wrapLabel(option);
       const { label, hint: hint2 } = textsOf(option);
       const value = valueOf3(option);
       const inContext = context2 !== null && option.dataset.kpContextOf === context2;
@@ -44779,14 +44779,16 @@ function wire9(rootEl, historyOption) {
   const setState2 = (next2, options = {}) => {
     state2 = next2;
     rootEl.setAttribute("data-kp-state", next2);
-    const wide = next2 === "error" || next2 === "empty" && !rootEl.querySelector('[data-kp-pane="list"] [data-kp-pane-key]');
+    const own = next2 === "error" && [...bodyEl.querySelectorAll(":is([data-kp-state='error'], .kp-stateplate--error)")].some((el16) => el16.getBoundingClientRect().width > 0);
+    rootEl.toggleAttribute("data-kp-error-own", own);
+    const wide = next2 === "error" && !own || next2 === "empty" && !rootEl.querySelector('[data-kp-pane="list"] [data-kp-pane-key]');
     rootEl.toggleAttribute("data-kp-state-wide", wide);
     for (const pane of rootEl.querySelectorAll(':scope > [data-kp-pane="list"], :scope > [data-kp-pane="aside"]')) pane.toggleAttribute("inert", wide);
     const loading = next2 === "loading";
-    bodyEl.toggleAttribute("inert", loading || next2 === "empty" || next2 === "error");
+    bodyEl.toggleAttribute("inert", loading || next2 === "empty" || next2 === "error" && !own);
     if (loading) bodyEl.setAttribute("aria-busy", "true");
     else bodyEl.removeAttribute("aria-busy");
-    if (next2 === "empty" || next2 === "error") {
+    if (next2 === "empty" || next2 === "error" && !own) {
       const s2 = strings();
       const plate = next2 === "empty" ? statePlate(doc, {
         kind: "empty",

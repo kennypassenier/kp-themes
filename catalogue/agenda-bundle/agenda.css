@@ -11135,7 +11135,7 @@
     }
 
     .kp-palette__description {
-        margin-inline-start: var(--kp-space-sm);
+        margin-inline-start: var(--kp-space-md, 1rem);
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
     }
@@ -11201,7 +11201,16 @@
         font-size: var(--kp-text-md, 1rem);
     }
 
+    /* The list is ONE grid and every row a subgrid of it, so the icon, the label, the hint and the key cap of every row start on
+     * one edge down the whole list, whichever group or wrapper a row sits in [kyugaps-1020, kyu gap 51]. The tracks are
+     * content-sized: the label's column is as wide as the longest label (at most 45% of the list, then labels wrap), the hint
+     * takes the rest, and an icon or key column nobody uses is 0 wide. Gaps are margins on the cells, so an empty track adds
+     * nothing. A label that is a bare text node is placed by the module, which wraps it in `.kp-palette__label`; write that
+     * span yourself in rows that stand beside an icon. */
     .kp-palette__list {
+        display: grid;
+        grid-template-columns: [icon] auto [label] fit-content(var(--kp-palette-label-max, 45%)) [hint] minmax(0, 1fr) [keys] auto;
+        align-content: start;
         max-height: var(--kp-palette-list-max-height, 50vh);
         margin: 0;
         padding: 0.25rem;
@@ -11209,13 +11218,52 @@
         list-style: none;
     }
 
+    /* Groups, their lists and the `<li role="presentation">` that wraps a link are passed through: the row is what sits on the tracks. */
+    .kp-palette__list > :is(.kp-palette__group, .kp-palette__nomatch),
+    .kp-palette__group > :is(ul, .kp-palette__group-label),
     .kp-palette__option {
-        display: flex;
+        grid-column: 1 / -1;
+    }
+
+    .kp-palette__group:not([hidden]),
+    .kp-palette__group > ul {
+        display: grid;
+        grid-template-columns: subgrid;
+    }
+
+    .kp-palette__group[hidden] {
+        display: none;
+    }
+
+    .kp-palette__list li[role='presentation']:not(.kp-palette__group, [hidden]) {
+        display: contents;
+    }
+
+    .kp-palette__option {
+        display: grid;
+        grid-template-columns: subgrid;
         align-items: center;
-        gap: 0.75rem;
         padding: 0.5rem 0.75rem;
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         cursor: pointer;
+    }
+
+    .kp-palette__option > * {
+        grid-row: 1;
+        min-inline-size: 0;
+    }
+
+    .kp-palette__option > .kp-palette__icon {
+        grid-column: icon;
+        margin-inline-end: 0.75rem;
+    }
+
+    .kp-palette__option > .kp-palette__label {
+        grid-column: label;
+    }
+
+    .kp-palette__option > .kp-palette__description {
+        grid-column: hint;
     }
 
     /* A command that is a link [scope-48] looks like every other command:
@@ -11241,6 +11289,13 @@
         /* A chord (Ctrl K, Ctrl Shift P) is one unit: it keeps its width and its line, and the label gives way. */
         flex: none;
         white-space: nowrap;
+    }
+
+    /* In a row it stands on the last track, at its end, a gap away from what comes before. */
+    .kp-palette__option > .kp-palette__keys {
+        grid-column: keys;
+        justify-self: end;
+        margin-inline-start: var(--kp-space-md, 1rem);
     }
 
     .kp-palette__status {
@@ -25012,7 +25067,7 @@
         display: none;
     }
 
-    .kp-split--panes:is([data-kp-state='empty'], [data-kp-state='error']) .kp-pane__body {
+    .kp-split--panes:is([data-kp-state='empty'], [data-kp-state='error']:not([data-kp-error-own])) .kp-pane__body {
         visibility: hidden;
     }
 

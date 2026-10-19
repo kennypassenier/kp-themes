@@ -9113,6 +9113,30 @@ document.querySelector('[data-doc-confirm="blocked"]').addEventListener('click',
 `,
             },
             {
+                title: 'Rows on shared tracks',
+                why: 'The list is one grid and every row a subgrid of it, so the icon, the label, the hint and the key cap of every row start on one edge down the whole list, whatever group or link wrapper a row sits in. The label column is as wide as the longest label (at most 45% of the list, `--kp-palette-label-max`), the hint takes the rest, and a column no row uses is 0 wide. Rows with a link, with a hint, with a key and with an icon stand mixed on purpose.',
+                markup: `
+<dialog class="kp-palette" data-kp-palette data-kp-hotkey="none" data-kp-highlight="off" id="doc-tracks" aria-label="Commands" open>
+<input class="kp-palette__input" type="text" role="combobox" aria-label="Commands" aria-expanded="true" aria-controls="doc-tracks-list" autocomplete="off" placeholder="Go to a topic or an app, or type a verb" />
+<ul class="kp-palette__list" id="doc-tracks-list" role="listbox" aria-label="Commands">
+<li role="presentation" class="kp-palette__group" data-kp-group><span class="kp-palette__group-label">Do</span>
+<ul role="group" aria-label="Do">
+<li class="kp-palette__option" role="option" data-kp-option data-value="publish"><span class="kp-palette__icon" aria-hidden="true">+</span><span class="kp-palette__label">Publish a test message</span><kbd class="kp-palette__keys" data-kp-keys="p">p</kbd></li>
+<li class="kp-palette__option" role="option" data-kp-option data-value="prune"><span class="kp-palette__icon" aria-hidden="true">-</span><span class="kp-palette__label">Prune dead letters</span><span class="kp-palette__description">3 waiting</span></li>
+<li role="presentation"><a class="kp-palette__option" role="option" data-kp-option data-value="apps" href="#doc-tracks"><span class="kp-palette__icon" aria-hidden="true">&gt;</span><span class="kp-palette__label">Apps</span><span class="kp-palette__description">Every app with its own token</span><kbd class="kp-palette__keys" data-kp-keys="g a">g a</kbd></a></li>
+</ul></li>
+<li role="presentation" class="kp-palette__group" data-kp-group><span class="kp-palette__group-label">Topics</span>
+<ul role="group" aria-label="Topics">
+<li role="presentation"><a class="kp-palette__option" role="option" data-kp-option data-value="orders" href="#doc-tracks"><span class="kp-palette__label">orders</span><span class="kp-palette__description">12,408 messages, 2 subscriptions</span></a></li>
+<li role="presentation"><a class="kp-palette__option" role="option" data-kp-option data-value="notifications-and-reminders" href="#doc-tracks"><span class="kp-palette__label">notifications-and-reminders</span><span class="kp-palette__description">Quiet</span></a></li>
+<li role="presentation"><a class="kp-palette__option" role="option" data-kp-option data-value="audit" href="#doc-tracks"><span class="kp-palette__label">audit</span></a></li>
+</ul></li>
+</ul>
+<p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+`,
+            },
+            {
                 title: 'Words in any order, marked',
                 why: 'The query “upd jelly” is typed for you: every typed word has to start a word of the command, in whatever order, so “Update jellyfin” answers and “Update immich” and “Open the firewall” do not; the matched words are marked (`.kp-palette__mark`, a wash and a heavier weight, never colour alone; `data-kp-mark-look="wash"` keeps the wash in a theme that rules its marks instead) and the best answer comes first. “Upgrade” is a hidden synonym (`data-kp-words`) that counts weaker than the label. `data-kp-typo="1"` also finds a word one letter off.',
                 markup: `
@@ -9144,9 +9168,10 @@ setTimeout(() => {
             { name: '.kp-palette', what: 'The dialog: near the top rather than in the middle, so a list that grows downwards does not push its own input off centre.' },
             { name: '.kp-palette__input', what: 'The filter, at full width, with the list under it.' },
             { name: '.kp-palette__group / __group-label', what: 'Commands under a small heading. A group whose commands are all filtered out hides itself.' },
-            { name: '.kp-palette__option', what: 'One command; is-active marks where the keyboard is.' },
-            { name: '.kp-palette__description', what: 'A second line on a command, for one whose name is not enough.' },
-            { name: '.kp-palette__keys', what: 'The key hint at the end of a row, which never competes with the label.' },
+            { name: '.kp-palette__option', what: 'One command; is-active marks where the keyboard is. The list is one grid with four tracks (icon, label, hint, keys) and every row is a subgrid of it, so each column starts on one edge in every group, link wrapper and row; a track no row uses is 0 wide. Write `.kp-palette__label` around the words of a row that stands beside an icon.' },
+            { name: '.kp-palette__icon', what: 'An optional mark before the label, on the first track; it keeps a gap to the label, and rows without one still start their label where the others do.' },
+            { name: '.kp-palette__description', what: 'A hint beside the label, on the track after it, for a command whose name is not enough.' },
+            { name: '.kp-palette__keys', what: 'The key hint on the last track, at the end of a row, which never competes with the label.' },
             { name: '.kp-palette__status', what: 'The live region that says how many commands are left after typing.' },
             { name: 'a link as a command', what: 'An `<a href>` carrying the option’s role and `data-kp-option`, inside a presentational list item (a command with an `href` in React). Enter and a click follow it; the module keeps it out of the Tab order so focus stays in the filter, and a page without JavaScript still has a list of working links.' },
             { name: 'matching', what: 'The filter matches by words in any order by default — every typed word has to start a word of the command, so “read” finds “Readings for line 2” and not “Report an incident”, and “line readings” finds it too. The best answer comes first in its group and the matched words are marked. `data-kp-match` (the `match` prop in React) brings back `substring`, `prefix` or `subsequence` (“nap” finds “new application”).' },
@@ -11056,6 +11081,24 @@ setPaneState(document.getElementById('doc-panes-error'), 'error', { title: 'Coul
 `,
             },
             {
+                title: 'A failure the detail already shows itself',
+                why: 'Which plate wins: the innermost component\'s own. A data component in the detail (here a code block) draws its own failed plate with its own Retry for its own failure, and `setPaneState(root, \'error\')` then draws nothing over it: the master-detail stays usable and the component\'s Retry stays reachable. The master-detail\'s own plate, over the whole master-detail with `kp-pane-retry`, is only for a failure no component in the detail owns, as in the example above.',
+                markup: `
+<div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="12rem 1fr" data-kp-pane-history="off" id="doc-panes-own" style="min-block-size: 14rem">
+<section class="kp-split__pane" data-kp-pane="list" aria-label="Messages"><ul class="kp-pane__list" role="listbox" aria-label="Messages"><li role="option" data-kp-pane-key="m1">Message 1</li><li role="option" data-kp-pane-key="m2">Message 2</li></ul></section>
+<section class="kp-split__pane" data-kp-pane="detail" aria-label="Message"><h2 data-kp-pane-heading tabindex="-1">Message 1</h2><div class="kp-pane__body"><figure id="doc-panes-own-code" data-kp-code data-kp-code-title="Payload"></figure></div></section>
+</div>
+`,
+                script: `
+import { attachMasterDetails, setPaneState } from '@kp-soft/themes/js/master-detail';
+import { setCode } from '@kp-soft/themes/js/code';
+
+setCode(document.getElementById('doc-panes-own-code'), { state: 'error', message: 'The payload could not be read' });
+attachMasterDetails(document.getElementById('doc-panes-own'));
+setPaneState(document.getElementById('doc-panes-own'), 'error');
+`,
+            },
+            {
                 title: 'The state plate on its own',
                 why: 'An empty or failed area anywhere is drawn with `statePlate(doc, { kind, title, text, actionLabel, onAction })` (js/state-plate.js): `kind: \'empty\'` is the package’s empty plate, `kind: \'error\'` the destructive alert; both carry `.kp-stateplate`, which centres the words in the whole box it is given and sets the title at the heading size. The action is a normal-size button, `.kp-stateplate__action` at the control size, never a strip.',
                 markup: `
@@ -11088,7 +11131,7 @@ document.getElementById('doc-plate-error').append(
             { name: 'data-kp-resizable', what: 'Present: a separator between the list and the detail drags like the split’s; add `data-kp-remember` to keep the width.' },
             { name: 'data-kp-pane-history', what: '`off` leaves the browser’s history alone.' },
             { name: 'data-kp-aside-closable', what: 'Esc in the aside closes it.' },
-            { name: 'states of the detail', what: '`empty` (“Pick an item on the left”), `loading` (the busy card over the detail only; the list stays usable), `error` (the destructive plate with Retry) and `ready`.' },
+            { name: 'states of the detail', what: '`empty` (“Pick an item on the left”), `loading` (the busy card over the detail only; the list stays usable), `error` (the destructive plate with Retry, over the whole master-detail, unless a component in the detail already shows its own failed plate: the innermost plate wins, the root then reads `data-kp-error-own` and nothing is drawn over it) and `ready`.' },
             { name: '.kp-stateplate', what: 'The plate an empty or failed area is drawn with: the title at the heading size and a normal-size action, centred in the whole box it is given.' },
         ],
         accessibility: [
