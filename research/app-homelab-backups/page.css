@@ -152,7 +152,7 @@
 .hb-table .hb-group {
     display: inline-flex;
     vertical-align: middle;
-    inline-size: calc(100% - 1.875rem);
+    inline-size: calc(100% - 2.125rem); /* the fold button (1.625rem) and its gap (--kp-datatable-group-toggle-gap, 0.5rem) */
     flex-wrap: wrap;
     align-items: center;
     gap: var(--kp-space-sm, 0.5rem);

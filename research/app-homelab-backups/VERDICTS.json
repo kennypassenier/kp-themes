@@ -1,0 +1,135 @@
+{
+    "demo": "app-homelab-backups",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "app-homelab-backups-3b6f0e0a-6f4c-4a3e-9d0c-51a8b7c2e1f4",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 17:20: 25 of 25 judged, 22 approved, 3 not approved (repos, fw-guard, ho-checks). The follow-up is rebuilt in the homelab dashboard itself, so this demo is not offered again.",
+            "approved": [
+                {
+                    "item": "grid",
+                    "theme": "formal"
+                },
+                {
+                    "item": "month",
+                    "theme": "formal"
+                },
+                {
+                    "item": "night",
+                    "theme": "formal"
+                },
+                {
+                    "item": "restore",
+                    "theme": "formal"
+                },
+                {
+                    "item": "fw-totals",
+                    "theme": "formal"
+                },
+                {
+                    "item": "fw-trace",
+                    "theme": "formal"
+                },
+                {
+                    "item": "fw-rules",
+                    "theme": "formal"
+                },
+                {
+                    "item": "fw-lines",
+                    "theme": "formal"
+                },
+                {
+                    "item": "fw-live",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ho-disk",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ho-refresh",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ho-containers",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ho-landing",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ho-version",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ho-link",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sh-console",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sh-safety",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sh-session",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sh-mode",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sh-log",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sh-density",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sh-keys",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "repos",
+                    "theme": "formal",
+                    "note": "Jesus, wat een verspilling van plaats. Ten eerste, de teksten zoals 'immich' plakken weer tegen het icoon links, ik had gezegd dat daar altijd marge voor moest zijn. ten tweede, what the fuck is going on met die plaats in het midden? Verspil niet zo veel plek. Die stacks konden toch veel beter gepositioneerd worden in een grid? de iconen in de checkboxen zijn ook lelijk en mogen weg. Die boxen waar die iconen en bv 'immich 2' in staan zijn ook pure plaatsverspilling, zoveel witruimte, waarom zo veel witruimte achter het cijfer? Kan ook veel denser en dan moet er niet gescrolled worden. … één van de slechtste ontwerpen die ik al van je gezien heb. De tabel daaronder dan. Die restore knoppen staan helemaal niet onder elkaar, ook iets wat ik al vele keren uitdrukkelijk heb gezegd. De iconen plakken NOG ALTIJD tegen de opening/sluitingsknop. Staan nog altijd lelijk links uitgelijnd. Gebruik nu in godsnaam een grid en plaats de elementen beter!"
+                },
+                {
+                    "item": "fw-guard",
+                    "theme": "formal",
+                    "note": "Ik had gezegd van de laadanimatie te gebruiken, je hebt dit niet gedaan"
+                },
+                {
+                    "item": "ho-checks",
+                    "theme": "formal",
+                    "note": "Ook hier heb je niet naar mijn vorige commentaar geluisterd, er is niks veranderd, die reading rij, wat is het nut daarvan?"
+                }
+            ],
+            "choices": [
+                {
+                    "item": "fw-live",
+                    "theme": "every theme",
+                    "change": "default changed: the comparison opens on Live"
+                },
+                {
+                    "item": "sh-density",
+                    "theme": "every theme",
+                    "change": "default changed: opens on \"Sources by time\""
+                },
+                {
+                    "item": "fw-lines",
+                    "theme": "every theme",
+                    "change": "remove option: \"Lines\" from which view the Firewall opens in"
+                }
+            ]
+        }
+    ]
+}

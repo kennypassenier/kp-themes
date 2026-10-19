@@ -8521,8 +8521,10 @@
         white-space: normal;
     }
 
+    /* Whatever follows the toggle (a mark, an icon, the name) keeps a gap of its own: 0.25rem left the group mark touching the
+     * button (Kenny, 2026-10-19 17:20, "De iconen plakken NOG ALTIJD tegen de opening/sluitingsknop"). */
     .kp-datatable__group-toggle {
-        margin-inline-end: var(--kp-space-xs, 0.25rem);
+        margin-inline-end: var(--kp-datatable-group-toggle-gap, var(--kp-space-sm, 0.5rem));
     }
 
     /* In the card layout a group row is the heading over its cards, not a
@@ -8889,6 +8891,9 @@
 
         :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td::before {
             grid-column: 1;
+            /* The label stands on its track's start edge whatever the cell's own alignment: a number cell (`kp-text-end`) pushed its
+             * label to the track's far side, so "Snapshots" sat 16 px right of every other label (Kenny, 2026-10-19 17:20). */
+            text-align: start;
         }
 
         :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > * {
@@ -16532,6 +16537,28 @@
         grid-template-columns: minmax(0, 1fr) auto;
         border: 1px solid var(--border);
         white-space: nowrap;
+    }
+
+    /* With a pointer that hovers, a chip does not keep a column for "only": the button takes the place of the count while the
+     * chip is hovered or has focus, so the chip ends right after its count and a bar of chips stays dense (Kenny, 2026-10-19 17:20,
+     * "waarom zo veel witruimte achter het cijfer?"). On a touch screen the button stays beside the count, as there is no hover. */
+    @media (hover: hover) and (pointer: fine) {
+        .kp-facets--row .kp-facet {
+            position: relative;
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-facets--row .kp-facet > .kp-facet__only {
+            position: absolute;
+            inset-block: 0;
+            inset-inline-end: 0;
+            margin: auto 0;
+            background: var(--kp-facet-only-ground, var(--background));
+        }
+
+        .kp-facets--row .kp-facet:is(:hover, :focus-within):not(:has(.kp-facet__check:disabled)) .kp-facet__count {
+            visibility: hidden;
+        }
     }
 
     /* --- A quantity with minus and plus [kpadopt4] ------------------------
