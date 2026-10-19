@@ -24,6 +24,11 @@ export type StatePlateOptions = {
      * a picture over the title: a node, or a glyph (aria-hidden either way)
      */
     art?: Node | string | null;
+    /**
+     * an element that already stands where the plate goes (a part a theme dresses by its own class):
+     * it becomes the plate, keeping its classes, instead of a new element being built [r6r8-1019]
+     */
+    into?: HTMLElement;
 };
 /**
  * @typedef {object} StatePlateOptions
@@ -34,6 +39,8 @@ export type StatePlateOptions = {
  * @property {(event: MouseEvent) => void} [onAction] what the action does
  * @property {string} [actionAttribute] a data attribute written on the action (so a container can listen for it by delegation)
  * @property {Node | string | null} [art] a picture over the title: a node, or a glyph (aria-hidden either way)
+ * @property {HTMLElement} [into] an element that already stands where the plate goes (a part a theme dresses by its own class):
+ *   it becomes the plate, keeping its classes, instead of a new element being built [r6r8-1019]
  */
 /**
  * Build an empty or failed plate.
@@ -41,7 +48,7 @@ export type StatePlateOptions = {
  * @param {StatePlateOptions} options
  * @returns {HTMLElement}
  */
-export declare function statePlate(doc: Document, { kind, title, text, actionLabel, onAction, actionAttribute, art }: StatePlateOptions): HTMLElement;
+export declare function statePlate(doc: Document, { kind, title, text, actionLabel, onAction, actionAttribute, art, into }: StatePlateOptions): HTMLElement;
 export type HostPlateOptions = {
     kind: 'empty' | 'error';
     /**
@@ -64,6 +71,10 @@ export type HostPlateOptions = {
      * the Retry's words (default `stateRetry`)
      */
     retryLabel?: string;
+    /**
+     * an element that becomes the plate (see StatePlateOptions)
+     */
+    into?: HTMLElement;
 };
 /**
  * @typedef {object} HostPlateOptions
@@ -73,6 +84,7 @@ export type HostPlateOptions = {
  * @property {Node | string | null} [art] a picture over the title
  * @property {string} [retryEvent] the event an error's Retry fires on `host` (bubbling): `kp-<component>-retry`; without it no Retry
  * @property {string} [retryLabel] the Retry's words (default `stateRetry`)
+ * @property {HTMLElement} [into] an element that becomes the plate (see StatePlateOptions)
  */
 /**
  * The plate of a data component's host: an empty or failed area drawn the one way, with its Retry as an event on the host, so a
@@ -82,4 +94,4 @@ export type HostPlateOptions = {
  * @param {HostPlateOptions} options
  * @returns {HTMLElement}
  */
-export declare function hostStatePlate(host: HTMLElement, { kind, title, text, art, retryEvent, retryLabel }: HostPlateOptions): HTMLElement;
+export declare function hostStatePlate(host: HTMLElement, { kind, title, text, art, retryEvent, retryLabel, into }: HostPlateOptions): HTMLElement;

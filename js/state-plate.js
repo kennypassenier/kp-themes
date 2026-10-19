@@ -34,6 +34,8 @@ import { getStrings } from './strings.js';
  * @property {(event: MouseEvent) => void} [onAction] what the action does
  * @property {string} [actionAttribute] a data attribute written on the action (so a container can listen for it by delegation)
  * @property {Node | string | null} [art] a picture over the title: a node, or a glyph (aria-hidden either way)
+ * @property {HTMLElement} [into] an element that already stands where the plate goes (a part a theme dresses by its own class):
+ *   it becomes the plate, keeping its classes, instead of a new element being built [r6r8-1019]
  */
 
 /**
@@ -42,10 +44,16 @@ import { getStrings } from './strings.js';
  * @param {StatePlateOptions} options
  * @returns {HTMLElement}
  */
-export function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttribute, art }) {
-    const plate = doc.createElement('div');
-    plate.className =
+export function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttribute, art, into }) {
+    const plate = into ?? doc.createElement('div');
+    const classes =
         kind === 'error' ? 'kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error' : 'kp-empty kp-stateplate kp-stateplate--empty';
+    if (into) {
+        // The other kind's classes go, the part's own stay; what it held goes (a replaced plate is one plate, never two).
+        into.classList.remove('kp-alert', 'kp-alert--destructive', 'kp-empty', 'kp-stateplate--error', 'kp-stateplate--empty');
+        into.replaceChildren();
+        into.classList.add(...classes.split(' '));
+    } else plate.className = classes;
     plate.setAttribute('role', kind === 'error' ? 'alert' : 'status');
     if (art) {
         const picture = doc.createElement('span');
@@ -85,6 +93,7 @@ export function statePlate(doc, { kind, title, text, actionLabel, onAction, acti
  * @property {Node | string | null} [art] a picture over the title
  * @property {string} [retryEvent] the event an error's Retry fires on `host` (bubbling): `kp-<component>-retry`; without it no Retry
  * @property {string} [retryLabel] the Retry's words (default `stateRetry`)
+ * @property {HTMLElement} [into] an element that becomes the plate (see StatePlateOptions)
  */
 
 /**
@@ -95,7 +104,7 @@ export function statePlate(doc, { kind, title, text, actionLabel, onAction, acti
  * @param {HostPlateOptions} options
  * @returns {HTMLElement}
  */
-export function hostStatePlate(host, { kind, title, text, art, retryEvent, retryLabel }) {
+export function hostStatePlate(host, { kind, title, text, art, retryEvent, retryLabel, into }) {
     const s = getStrings();
     const failedText = text ?? (kind === 'error' ? s.stateFailedText : undefined);
     return statePlate(host.ownerDocument, {
@@ -103,6 +112,7 @@ export function hostStatePlate(host, { kind, title, text, art, retryEvent, retry
         title,
         ...(failedText ? { text: failedText } : {}),
         ...(art ? { art } : {}),
+        ...(into ? { into } : {}),
         ...(kind === 'error' && retryEvent
             ? {
                   actionLabel: retryLabel ?? s.stateRetry,

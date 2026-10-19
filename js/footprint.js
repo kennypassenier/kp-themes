@@ -28,6 +28,7 @@ export const FOOTPRINT_HOSTS = [
     '[data-kp-heat]',
     '[data-kp-entity-grid]',
     '[data-kp-checklist]',
+    '[data-kp-timers]',
     '[data-kp-notices]',
     '[data-kp-feed]',
     '[data-kp-gallery]',

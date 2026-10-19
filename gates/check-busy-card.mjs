@@ -40,6 +40,7 @@ export const CARD = [
     'js/card-state.js',
     'js/pipeline.js',
     'js/checklist.js',
+    'js/timer.js',
     'js/focus-steps.js',
     'js/wheel.js',
     'js/uptime.js',

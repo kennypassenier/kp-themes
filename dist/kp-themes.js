@@ -1375,6 +1375,8 @@ var init_strings = __esm({
       timerAddMinuteTo: (name) => `One more minute for ${name}`,
       timerRemove: (name) => `Remove ${name}`,
       timerEmpty: "No timers running.",
+      timersLoading: "Reading the timers\u2026",
+      timersFailed: "The timers could not be read.",
       timerLastMinute: (name) => `${name}: one minute left`,
       timerStartedNamed: (name, clock4) => `${name} started, ${clock4}`,
       timerAlready: (name) => `${name} is already running`,
@@ -15052,9 +15054,14 @@ var init_intent = __esm({
 });
 
 // js/state-plate.js
-function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttribute, art }) {
-  const plate = doc.createElement("div");
-  plate.className = kind === "error" ? "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error" : "kp-empty kp-stateplate kp-stateplate--empty";
+function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttribute, art, into }) {
+  const plate = into ?? doc.createElement("div");
+  const classes = kind === "error" ? "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error" : "kp-empty kp-stateplate kp-stateplate--empty";
+  if (into) {
+    into.classList.remove("kp-alert", "kp-alert--destructive", "kp-empty", "kp-stateplate--error", "kp-stateplate--empty");
+    into.replaceChildren();
+    into.classList.add(...classes.split(" "));
+  } else plate.className = classes;
   plate.setAttribute("role", kind === "error" ? "alert" : "status");
   if (art) {
     const picture = doc.createElement("span");
@@ -15085,7 +15092,7 @@ function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttri
   }
   return plate;
 }
-function hostStatePlate(host, { kind, title, text, art, retryEvent, retryLabel }) {
+function hostStatePlate(host, { kind, title, text, art, retryEvent, retryLabel, into }) {
   const s2 = getStrings();
   const failedText = text ?? (kind === "error" ? s2.stateFailedText : void 0);
   return statePlate(host.ownerDocument, {
@@ -15093,6 +15100,7 @@ function hostStatePlate(host, { kind, title, text, art, retryEvent, retryLabel }
     title,
     ...failedText ? { text: failedText } : {},
     ...art ? { art } : {},
+    ...into ? { into } : {},
     ...kind === "error" && retryEvent ? {
       actionLabel: retryLabel ?? s2.stateRetry,
       onAction: () => host.dispatchEvent(new CustomEvent(retryEvent, { bubbles: true }))
@@ -33035,6 +33043,7 @@ var init_countdown = __esm({
 var timer_exports = {};
 __export(timer_exports, {
   TIMERS: () => TIMERS,
+  TIMERS_RETRY_EVENT: () => TIMERS_RETRY_EVENT,
   TIMER_CHANGE_EVENT: () => TIMER_CHANGE_EVENT,
   TIMER_DONE_EVENT: () => TIMER_DONE_EVENT,
   TIMER_SOUNDS: () => TIMER_SOUNDS,
@@ -33051,6 +33060,7 @@ __export(timer_exports, {
   playTimerSound: () => playTimerSound,
   restoreTimers: () => restoreTimers,
   resumeTimer: () => resumeTimer,
+  setTimersState: () => setTimersState,
   speakTimerMessage: () => speakTimerMessage,
   startTimer: () => startTimer,
   stopTimer: () => stopTimer,
@@ -33069,7 +33079,7 @@ function part2(list, name) {
     node = el6("kp-timers__list", "ul");
     list.prepend(node);
   } else if (name === "empty") {
-    node = el6("kp-timers__empty", "p");
+    node = el6("kp-timers__empty", "div");
     part2(list, "list").after(node);
   } else {
     node = el6(`kp-sr-only kp-timers__${name}`, "span");
@@ -33187,8 +33197,26 @@ function paint4(timer2) {
 function sync2(list) {
   const timers = listOf2(list);
   const empty = part2(list, "empty");
-  empty.textContent = list.getAttribute("data-kp-timers-empty") ?? getStrings().timerEmpty;
-  empty.hidden = timers.size > 0;
+  const strings = getStrings();
+  const error = list.getAttribute("data-kp-timers-error");
+  const loading = list.hasAttribute("aria-busy");
+  const shown4 = list.getAttribute("data-kp-state");
+  if (shown4 === null || shown4 === "ready" || shown4 === "empty") {
+    if (timers.size === 0) list.setAttribute("data-kp-state", "empty");
+    else if (shown4 === "empty") list.setAttribute("data-kp-state", "ready");
+  }
+  const title = error ?? list.getAttribute("data-kp-timers-empty") ?? strings.timerEmpty;
+  const plateKey = loading ? "loading" : `${error !== null ? "error" : "empty"}|${title}`;
+  if (PLATE.get(empty) !== plateKey) {
+    PLATE.set(empty, plateKey);
+    if (loading) {
+      empty.replaceChildren();
+      empty.classList.remove("kp-alert", "kp-alert--destructive", "kp-empty", "kp-stateplate", "kp-stateplate--error", "kp-stateplate--empty");
+    } else hostStatePlate(list, { kind: error !== null ? "error" : "empty", title, retryEvent: TIMERS_RETRY_EVENT, into: empty });
+  }
+  empty.hidden = !(error !== null || timers.size === 0);
+  empty.toggleAttribute("data-kp-timers-failed", error !== null);
+  list.toggleAttribute("data-kp-timers-covered", error !== null || timers.size === 0);
   const running2 = [...timers.values()].some((t) => t.state === "running");
   const ticker2 = TICKERS.get(list);
   if (running2 && !ticker2)
@@ -33200,6 +33228,28 @@ function sync2(list) {
     clearInterval(ticker2);
     TICKERS.delete(list);
   }
+}
+function setTimersState(list, state2, message) {
+  if (!(list instanceof HTMLElement)) return;
+  list.setAttribute("data-kp-state", state2);
+  if (state2 === "error") list.setAttribute("data-kp-timers-error", message ?? getStrings().timersFailed);
+  else list.removeAttribute("data-kp-timers-error");
+  const card = BUSY.get(list);
+  if (state2 === "loading") {
+    list.setAttribute("aria-busy", "true");
+    if (!card)
+      BUSY.set(
+        list,
+        openBusyCard(list, { words: message ?? getStrings().timersLoading, area: () => [list], className: "kp-timers__busy" })
+      );
+  } else {
+    list.removeAttribute("aria-busy");
+    if (card) {
+      BUSY.delete(list);
+      void card.close();
+    }
+  }
+  sync2(list);
 }
 function tick2(list) {
   for (const timer2 of listOf2(list).values()) {
@@ -33537,19 +33587,22 @@ function attachTimers(root = document) {
   });
   return () => undo.forEach((u) => u());
 }
-var TIMERS, TIMER_START, TIMER_START_EVENT, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_STOP_EVENT, TIMER_TICK_MS, LISTS, TICKERS, WIRED2, HANDLED2, audio, serial5, clockOf, leftOf, stateOf2, el6, listOf2, TIMER_SOUNDS, SOUNDS, emit2, find, targetOf;
+var TIMERS, TIMER_START, TIMER_START_EVENT, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_STOP_EVENT, TIMERS_RETRY_EVENT, TIMER_TICK_MS, LISTS, TICKERS, WIRED2, HANDLED2, audio, serial5, clockOf, leftOf, stateOf2, el6, listOf2, BUSY, PLATE, TIMER_SOUNDS, SOUNDS, emit2, find, targetOf;
 var init_timer = __esm({
   "js/timer.js"() {
     "use strict";
     init_strings();
     init_progressbar();
     init_countdown();
+    init_busy_card();
+    init_state_plate();
     TIMERS = "[data-kp-timers]";
     TIMER_START = "[data-kp-timer-start]";
     TIMER_START_EVENT = "kp-timer-start";
     TIMER_CHANGE_EVENT = "kp-timer-change";
     TIMER_DONE_EVENT = "kp-timer-done";
     TIMER_STOP_EVENT = "kp-timer-stop";
+    TIMERS_RETRY_EVENT = "kp-timers-retry";
     TIMER_TICK_MS = 250;
     LISTS = /* @__PURE__ */ new WeakMap();
     TICKERS = /* @__PURE__ */ new WeakMap();
@@ -33581,6 +33634,8 @@ var init_timer = __esm({
       }
       return timers;
     };
+    BUSY = /* @__PURE__ */ new WeakMap();
+    PLATE = /* @__PURE__ */ new WeakMap();
     TIMER_SOUNDS = ["chime", "bell", "buzzer"];
     SOUNDS = {
       // A soft two-note chime.
@@ -35182,6 +35237,7 @@ __export(checklist_exports, {
   CHECKLIST_CLEAR_EVENT: () => CHECKLIST_CLEAR_EVENT,
   CHECKLIST_EVENT: () => CHECKLIST_EVENT,
   CHECKLIST_RENDER_EVENT: () => CHECKLIST_RENDER_EVENT,
+  CHECKLIST_RETRY_EVENT: () => CHECKLIST_RETRY_EVENT,
   CHECKLIST_UNDO_EVENT: () => CHECKLIST_UNDO_EVENT,
   CHECKLIST_UNDO_MS: () => CHECKLIST_UNDO_MS,
   attachChecklists: () => attachChecklists,
@@ -35237,7 +35293,7 @@ function part4(list, name) {
     node.setAttribute("role", "status");
     list.append(node);
   } else {
-    node = el8(`kp-checklist__${name}`, "p");
+    node = el8(`kp-checklist__${name}`, "div");
     part4(list, "body").append(node);
   }
   return node;
@@ -35338,8 +35394,8 @@ function render(list) {
       section.append(el8("kp-checklist__list", "ul"));
     }
     const done2 = members.filter((i) => i.checked).length;
-    const title = section.querySelector(".kp-checklist__title");
-    if (title) title.textContent = key;
+    const title2 = section.querySelector(".kp-checklist__title");
+    if (title2) title2.textContent = key;
     const count2 = section.querySelector(".kp-checklist__count");
     if (count2) count2.textContent = strings.checklistCount(done2, members.length);
     section.toggleAttribute("data-kp-checklist-done", done2 === members.length);
@@ -35417,10 +35473,14 @@ function render(list) {
     if (total === 0) list.setAttribute("data-kp-state", "empty");
     else if (shown4 === "empty") list.setAttribute("data-kp-state", "ready");
   }
-  empty.textContent = error ?? list.getAttribute("data-kp-checklist-empty") ?? strings.checklistEmpty;
+  const title = error ?? list.getAttribute("data-kp-checklist-empty") ?? strings.checklistEmpty;
+  const plateKey = `${error !== null ? "error" : "empty"}|${title}`;
+  if (PLATE2.get(empty) !== plateKey) {
+    PLATE2.set(empty, plateKey);
+    hostStatePlate(list, { kind: error !== null ? "error" : "empty", title, retryEvent: CHECKLIST_RETRY_EVENT, into: empty });
+  }
   empty.hidden = !(error !== null || total === 0 && !list.hasAttribute("aria-busy"));
   empty.toggleAttribute("data-kp-checklist-failed", error !== null);
-  empty.setAttribute("role", error !== null ? "alert" : "note");
   body.append(empty);
   list.dispatchEvent(new CustomEvent(CHECKLIST_RENDER_EVENT));
   return before;
@@ -35465,11 +35525,11 @@ function setChecklistState(list, state2, message) {
   if (state2 === "error") list.setAttribute("data-kp-checklist-error", message ?? getStrings().checklistFailed);
   else list.removeAttribute("data-kp-checklist-error");
   const body = part4(list, "body");
-  const card = BUSY.get(list);
+  const card = BUSY2.get(list);
   if (state2 === "loading") {
     list.setAttribute("aria-busy", "true");
     if (!card) {
-      BUSY.set(
+      BUSY2.set(
         list,
         openBusyCard(body, { words: message ?? getStrings().checklistLoading, area: () => [body], className: "kp-checklist__busy" })
       );
@@ -35477,7 +35537,7 @@ function setChecklistState(list, state2, message) {
   } else {
     list.removeAttribute("aria-busy");
     if (card) {
-      BUSY.delete(list);
+      BUSY2.delete(list);
       void card.close();
     }
   }
@@ -35610,22 +35670,25 @@ function attachChecklists(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var CHECKLIST, CHECKLIST_EVENT, CHECKLIST_CLEAR_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_RENDER_EVENT, CHECKLIST_UNDO_MS, ITEMS, UNDO2, BUSY, WIRED4, serial7, el8, sinks, shownOrder, emit3;
+var CHECKLIST, CHECKLIST_EVENT, CHECKLIST_CLEAR_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_RETRY_EVENT, CHECKLIST_RENDER_EVENT, CHECKLIST_UNDO_MS, ITEMS, UNDO2, PLATE2, BUSY2, WIRED4, serial7, el8, sinks, shownOrder, emit3;
 var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_strings();
     init_busy_card();
+    init_state_plate();
     init_calm();
     CHECKLIST = "[data-kp-checklist]";
     CHECKLIST_EVENT = "kp-checklist-change";
     CHECKLIST_CLEAR_EVENT = "kp-checklist-clear";
     CHECKLIST_UNDO_EVENT = "kp-checklist-undo";
+    CHECKLIST_RETRY_EVENT = "kp-checklist-retry";
     CHECKLIST_RENDER_EVENT = "kp-checklist-render";
     CHECKLIST_UNDO_MS = 6e3;
     ITEMS = /* @__PURE__ */ new WeakMap();
     UNDO2 = /* @__PURE__ */ new WeakMap();
-    BUSY = /* @__PURE__ */ new WeakMap();
+    PLATE2 = /* @__PURE__ */ new WeakMap();
+    BUSY2 = /* @__PURE__ */ new WeakMap();
     WIRED4 = /* @__PURE__ */ new WeakSet();
     serial7 = 0;
     el8 = (className, tag = "div") => {
@@ -48737,6 +48800,7 @@ var init_footprint = __esm({
       "[data-kp-heat]",
       "[data-kp-entity-grid]",
       "[data-kp-checklist]",
+      "[data-kp-timers]",
       "[data-kp-notices]",
       "[data-kp-feed]",
       "[data-kp-gallery]",
@@ -49298,8 +49362,8 @@ function setEntityGrid(grid2, list) {
   grid2.setAttribute("role", "list");
 }
 function clearGridState(grid2) {
-  BUSY2.get(grid2)?.remove();
-  BUSY2.delete(grid2);
+  BUSY3.get(grid2)?.remove();
+  BUSY3.delete(grid2);
   for (const el16 of grid2.querySelectorAll(":scope > .kp-stateplate, :scope > .kp-card--ghost")) el16.remove();
   grid2.removeAttribute("aria-busy");
 }
@@ -49322,7 +49386,7 @@ function setEntityGridState(grid2, state2, options = {}) {
       setEntity(ghost, { key: `loading-${i}`, name: "", status: "loading" });
       ghost.classList.add("kp-card--ghost");
     }
-    BUSY2.set(
+    BUSY3.set(
       grid2,
       openBusyCard(grid2, {
         words: options.words ?? (tiles ? s2.entityTileLoading : s2.entityLoading),
@@ -49420,7 +49484,7 @@ function attachEntityCards(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN5, opt2, made5, sig, SLOTS, kindOf, slotOf, ACTIONS_QUEUED, KEYED, BUSY2;
+var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN5, opt2, made5, sig, SLOTS, kindOf, slotOf, ACTIONS_QUEUED, KEYED, BUSY3;
 var init_entity_card = __esm({
   "js/entity-card.js"() {
     "use strict";
@@ -49460,7 +49524,7 @@ var init_entity_card = __esm({
     );
     ACTIONS_QUEUED = /* @__PURE__ */ new WeakSet();
     KEYED = /* @__PURE__ */ new WeakSet();
-    BUSY2 = /* @__PURE__ */ new WeakMap();
+    BUSY3 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -55538,22 +55602,6 @@ function decorate(list) {
       body.append(note3);
     }
   } else note3?.remove();
-  const empty = (
-    /** @type {HTMLElement | null} */
-    body.querySelector(":scope > .kp-checklist__empty")
-  );
-  if (empty) {
-    const retry = empty.querySelector(".kp-claim__retry");
-    if (list.hasAttribute("data-kp-checklist-error") && !retry) {
-      const b = (
-        /** @type {HTMLButtonElement} */
-        el9("kp-button kp-stateplate__action kp-claim__retry", "button")
-      );
-      b.type = "button";
-      b.textContent = s2.claimRetry;
-      empty.append(b);
-    } else if (!list.hasAttribute("data-kp-checklist-error") && retry) retry.remove();
-  }
   if (loading) list.setAttribute("data-kp-claim-loading", "");
   else list.removeAttribute("data-kp-claim-loading");
 }
@@ -55749,7 +55797,6 @@ function attachClaims(root = document) {
       if (chip) return setClaimFilter(list, chip.getAttribute("data-value") ?? "all");
       if (target.closest(".kp-claim__take-all")) return void takeAll(list);
       if (target.closest(".kp-claim__copy")) return void copyGaps(list);
-      if (target.closest(".kp-claim__retry")) list.dispatchEvent(new CustomEvent(CLAIM_RETRY_EVENT, { bubbles: true }));
     };
     const onMenu = (event) => {
       const detail = (
@@ -55788,6 +55835,8 @@ function attachClaims(root = document) {
       attributeFilter: ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map((n) => `data-kp-claim-${n}`)
     });
     list.addEventListener("click", onClick);
+    const onRetry = () => list.dispatchEvent(new CustomEvent(CLAIM_RETRY_EVENT, { bubbles: true }));
+    list.addEventListener(CHECKLIST_RETRY_EVENT, onRetry);
     list.addEventListener(MENU_SELECT_EVENT, onMenu);
     let stopKeys;
     if (list.getAttribute("data-kp-claim-keys") !== "false") {
@@ -55821,6 +55870,7 @@ function attachClaims(root = document) {
       () => watcher.disconnect(),
       () => list.removeEventListener("keydown", onKey3),
       () => list.removeEventListener("click", onClick),
+      () => list.removeEventListener(CHECKLIST_RETRY_EVENT, onRetry),
       () => list.removeEventListener(MENU_SELECT_EVENT, onMenu),
       () => stopKeys?.(),
       stopReasons
@@ -63194,6 +63244,7 @@ export {
   CHECKLIST_CLEAR_EVENT,
   CHECKLIST_EVENT,
   CHECKLIST_RENDER_EVENT,
+  CHECKLIST_RETRY_EVENT,
   CHECKLIST_UNDO_EVENT,
   CHECKLIST_UNDO_MS,
   CHOOSE_EVENT,
@@ -63657,6 +63708,7 @@ export {
   TILE_ROW_MIN,
   TIME,
   TIMERS,
+  TIMERS_RETRY_EVENT,
   TIMER_CHANGE_EVENT,
   TIMER_DISC,
   TIMER_DISC_LEFT,
@@ -64444,6 +64496,7 @@ export {
   setThread,
   setTime,
   setTimePresets,
+  setTimersState,
   setTodayState,
   setToolbarActive,
   setTrace,

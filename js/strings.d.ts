@@ -4092,6 +4092,14 @@ export type Strings = {
      */
     timerEmpty: string;
     /**
+     * The busy card over a timer list that is being read [r6r8-1019]
+     */
+    timersLoading: string;
+    /**
+     * A timer list that could not be read, when the page gives no message [r6r8-1019]
+     */
+    timersFailed: string;
+    /**
      * Said once when a timer has a minute left [kpadopt4]
      */
     timerLastMinute: (name: string) => string;
@@ -7178,6 +7186,8 @@ export type Strings = {
  * @property {(name: string) => string} timerAddMinuteTo  That button's accessible name [kpadopt4]
  * @property {(name: string) => string} timerRemove  The remove button's accessible name and tooltip [kpadopt4]
  * @property {string} timerEmpty  A list with no timer [kpadopt4]
+ * @property {string} timersLoading  The busy card over a timer list that is being read [r6r8-1019]
+ * @property {string} timersFailed  A timer list that could not be read, when the page gives no message [r6r8-1019]
  * @property {(name: string) => string} timerLastMinute  Said once when a timer has a minute left [kpadopt4]
  * @property {(name: string, clock: string) => string} timerStartedNamed  Said when a kitchen timer starts, with its name and its clock [kpadopt4]
  * @property {(name: string) => string} timerAlready  Said when a starter is pressed while its timer runs [kpadopt4]

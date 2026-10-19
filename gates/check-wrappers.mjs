@@ -254,12 +254,6 @@ export const REQUIRED = [
         why: 'The dated option picker measures its own width and drops the meta column under the name on a phone; the query reaches only its own parts [kpadopt5-time].',
     },
     {
-        container: 'kp-snooze',
-        class: 'kp-snooze',
-        self: true,
-        why: 'The snooze picker measures its own width and stretches its button and End snooze over the line on a phone; the query reaches only its own parts [kpadopt5-time].',
-    },
-    {
         container: 'kp-diffview',
         class: 'kp-diffview',
         self: true,
