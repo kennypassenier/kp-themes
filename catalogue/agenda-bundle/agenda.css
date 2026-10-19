@@ -13565,6 +13565,12 @@
             align-content: start;
         }
 
+        /* A loading list holds at least the busy card's panel, so the card has a data area to cover and centre on even when
+         * the list is empty or held short (a first load, one item): the held footprint wins when it is taller. */
+        .kp-week[data-kp-state='loading'] .kp-week__upcoming {
+            min-block-size: max(var(--kp-week-hold, 0px), 7.5rem);
+        }
+
         .kp-week__next {
             display: grid;
             grid-template-columns: var(--kp-week-day-label, 5.5rem) minmax(0, 1fr);

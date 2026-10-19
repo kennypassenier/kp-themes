@@ -7672,7 +7672,7 @@
         "||@container kp-week (max-width: 39.99rem)||.kp-week__state": "e97cc6444934d79c",
         "||@container kp-week (max-width: 39.99rem)||.kp-week__title": "debac05d8704c153",
         "||@container kp-week (max-width: 39.99rem)||.kp-week__today": "bbb6e38544273369",
-        "||@container kp-week (max-width: 39.99rem)||.kp-week__upcoming": "6f7d3c58a57ee04d",
+        "||@container kp-week (max-width: 39.99rem)||.kp-week__upcoming": "3b7af44b099a60a4",
         "||@container kp-week (min-width: 40rem)||.kp-week__pill[data-kp-overflow]": "17ad19ea97ac2a4c",
         "||@container kp-weekdays (max-width: 22rem)||.kp-segmented__item": "b3f56aa811c263df",
         "||@media (forced-colors: active)||.kp-idmark": "c635a27f757e7a42",
