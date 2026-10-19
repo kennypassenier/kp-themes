@@ -44,6 +44,21 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "2",
+            "page": "state-plates-3c06b96c-833d-419f-84e3-03a5d636617a",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 17:20: 1 of 1 judged, 0 approved, 1 not approved. graph-states loading is being fixed.",
+            "approved": [],
+            "notApproved": [
+                {
+                    "item": "graph-states",
+                    "theme": "formal",
+                    "note": "Dit element heeft voor elk thema een animatie, gebruik die!"
+                }
+            ],
+            "choices": []
         }
     ]
 }

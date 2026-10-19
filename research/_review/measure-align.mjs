@@ -305,6 +305,32 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
                 roles.get(key)?.push({ row: ri, cell: c });
             });
         });
+        // The phone fold of a form grid [formgrid-phone-1019]: a switch stands beside its label in the actions track (the edge
+        // where every Reset ends), and a hint runs to the end of the row when the row has no action of its own. Those cells
+        // are placed on purpose, so each is compared with its own kind: a switch with nothing, a hint under a Reset with the
+        // hints under a Reset.
+        const folded =
+            g.matches('.kp-formgrid') &&
+            g.getBoundingClientRect().width < 36 * parseFloat(getComputedStyle(document.documentElement).fontSize) &&
+            !/^(never|always)$/.test(g.getAttribute('data-kp-formgrid-stack') || '');
+        if (folded)
+            for (const [role, list] of [...roles]) {
+                if (/control/.test(role)) {
+                    const keep = list.filter(({ cell }) => !(kids(cell).length === 1 && kids(cell)[0].matches('.kp-switch')));
+                    if (keep.length !== list.length) roles.set(role, keep);
+                } else if (/label/.test(role)) {
+                    // The label of a switch row stops where its switch stands.
+                    const keep = list.filter(
+                        ({ row }) => !kids(rows[row]).some((c) => kids(c).length === 1 && kids(c)[0].matches('.kp-switch')),
+                    );
+                    if (keep.length !== list.length) roles.set(role, keep);
+                } else if (/value|aside/.test(role)) {
+                    const withAction = list.filter(({ row }) => !!rows[row].querySelector(':scope > .kp-formgrid__actions > *'));
+                    const without = list.filter((x) => !withAction.includes(x));
+                    roles.set(role, withAction);
+                    roles.set(`${role} (no action)`, without);
+                }
+            }
         for (const [role, list] of roles) {
             if (list.length < 2) continue;
             const starts = spread(list.map(({ row, cell }) => ({ v: cell.getBoundingClientRect().left, label: `row ${row + 1}` })));

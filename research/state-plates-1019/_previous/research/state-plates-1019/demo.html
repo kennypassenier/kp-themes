@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="state-plates-1019" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Empty, failed and loading states on one plate</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Empty, failed and loading states on one plate</h1>
+                <p class="cat-intro">
+                    Your rule is that a failed, empty or loading component fills the whole size it has with its data, centred, with a normal-size
+                    Retry, and the loading card sits over the whole component. The gaps the projects found were components that did not follow it: the
+                    network graph, the data table, the heat grid and matrix, the run timeline, the week agenda, a group of uptime strips and the
+                    card&rsquo;s notes. They all use the package&rsquo;s one state plate and loading card now. 8 sections, formal only (every fix is
+                    the theme&rsquo;s own plate and loading card, so the other themes follow). Each section says under
+                    <b>What changed since you approved it</b> what was wrong and what is different now. Press a state under the section&rsquo;s title
+                    to see it.
+                </p>
+            </header>
+
+            <section
+                class="sp-sec"
+                id="graph-states"
+                data-review-item="graph-states"
+                data-review-topic="graph"
+                data-review-topic-title="Network graph"
+                data-review-components="graph"
+                data-review-title="Network graph: loading, empty and failed"
+                aria-labelledby="h-graph-states"
+            >
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> Empty and failed were one line of grey text in the middle of the picture, with no
+                        plate and no Retry button, and loading was a line of words over the faint network, without the loading card every table has.
+                        Now loading is the theme&rsquo;s loading card centred over the whole picture (the faint network stays under it); empty and
+                        failed are the package&rsquo;s state plate filling the whole picture, the title at heading size and centred, and a failed
+                        picture has a normal-size Retry. The loaded network is not touched.
+                    </p>
+                </div>
+                <div class="sp-sec__head">
+                    <h2 id="h-graph-states">Network graph: loading, empty and failed</h2>
+                    <p>
+                        The picture of what talks to what. Press a state to see how the picture waits, is empty, or could not be read; Retry on the
+                        failed picture reads it again.
+                    </p>
+                </div>
+                <div class="sp-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Loading</b>: the faint network with the loading card (spinner and words) in the middle of the picture.</li>
+                        <li>
+                            <b>Empty</b> and <b>Failed</b>: a plate as big as the picture with a title at heading size, a sentence and, when failed, a
+                            <b>Retry</b> button of normal size; the picture keeps the height it has with its network.
+                        </li>
+                        <li>Press <b>Retry</b>: the loading card shows for a moment and the network comes back.</li>
+                        <li><b>Ready</b>: the network exactly as you approved it.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the plate is centred in the picture at the same height as the loaded network; Retry is a normal button.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="graph-states-component">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="ready" aria-pressed="true">
+                            Ready
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="loading" aria-pressed="false">
+                            Loading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="empty" aria-pressed="false">
+                            Empty
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-sp-set="state" data-sp-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div class="sp-stage" id="graph-states-component" data-sp-view="graph-states">
+                    <figure class="kp-graph" data-kp-graph aria-label="What talks to what"></figure>
+                </div>
+            </section>
+
+
+
+
+
+
+
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "state-plates-3c06b96c-833d-419f-84e3-03a5d636617a", "received": ["state-plates-0f2626d7-9b76-45d9-abc0-088f54516acd"] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        </body>
+</html>

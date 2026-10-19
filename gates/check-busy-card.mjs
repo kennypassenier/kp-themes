@@ -64,12 +64,12 @@ export const CARD = [
     'js/deplist.js',
     'js/path-trace.js',
     'js/entity-card.js',
-    'js/graph.js',
 ];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */
 export const OWN = {
     'js/calendar.js': "the busy month's own card over the days (`.kp-calendar__busy`, --busy-whole) or every day's loading tone",
+    'js/graph.js': "the network graph's loading picture is the chart's own (`.kp-chart__state` as a skeleton block, the picture every register draws for a chart's plot) over the whole picture, the words read out [graph-loading-1019; Kenny 2026-10-19 17:20]",
     'js/chart.js': "the plot's loading plate (`.kp-chart__state` as a skeleton block) over the whole plot; a key figure's trend (trendChart) lays the busy card over its plot [kyu-plates-1019]",
     'js/request-inspector.js': "the request list is a card in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over the whole stage [kpadopt5]",
     'js/quote.js': "the quote card is a `.kp-card` in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over a quote-shaped stage [kpadopt6]",

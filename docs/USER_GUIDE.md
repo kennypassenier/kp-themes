@@ -1673,7 +1673,7 @@ width redraws the picture.
 | Call                                    | What it does                                                                                                                                                                                 |
 | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `setGraphData(el, data)`                | a live update: ids that stay keep their pick and the focus; picks whose node went are dropped (and `kp-graph-change` says so)                                                                |
-| `setGraphState(el, state, words?, { text?, art? })` | `loading` (the theme's busy card over the whole picture), `empty` or `error` (the state plate over the picture at its full height, `words` its heading; an error has a Retry that fires `kp-graph-retry` on the graph, bubbling) [kyu-plates-1019] |
+| `setGraphState(el, state, words?, { text?, art? })` | `loading` (the chart's own loading picture over the whole picture: every theme's decided look for a data plot, the sentence read out) [graph-loading-1019], `empty` or `error` (the state plate over the picture at its full height, `words` its heading; an error has a Retry that fires `kp-graph-retry` on the graph, bubbling) [kyu-plates-1019] |
 | `graphSelect(el, ids)`                  | picks these nodes and only these                                                                                                                                                             |
 | `graphHideKind(el, kind, hide)`         | turns one kind of link off or on                                                                                                                                                             |
 | `decorate: (part, info) => void`        | called with every control the graph builds, each time it builds it: `info.kind` is `node` (`value` the id), `kind` (`value` the kind) or `show-all`, with `host`, `key` (`data-kp-key`), `index` and `label` |
@@ -1931,6 +1931,15 @@ What it does for you, without hand work:
 - **The attention band and problem alerts in the grid.** A `.kp-attention[data-kp-subgrid]` placed in the grid takes its
   tracks: the icon in the label track, the words from the control edge, the fix in the actions column (see "The
   attention band").
+- **The grid does not stretch across a wide panel** [formgrid-columns-1019]. A form grid is at most `--kp-formgrid-max` (60rem) wide, so a hint
+  stays beside its control and an action beside its row instead of being flung to the panel's far edge (Kenny, 2026-10-19 17:20: hints at
+  x 1120 and an action at x 1945 on a 2000 px panel, "Zo veel verspilling van plek"). The room that is left is for columns, or stays empty on purpose.
+- **Groups side by side.** A grid whose children are all `.kp-formgrid__group` (facts and settings, say) lays them as columns of one
+  composition when the panel is wide: each group is a grid of its own with the same four tracks (its rows are still subgrids of it), at least
+  `--kp-formgrid-column-min` (36rem) and at most `--kp-formgrid-column-max` (48rem) wide, `--kp-formgrid-group-gap` (2rem) apart; when
+  they do not fit they stand under each other. Put each group's buttons in the group (a `.kp-formgrid__row--buttons` with the buttons in
+  its control cell), so they stand beside what they act on. `data-kp-formgrid-columns="never"` keeps the groups under each other on the
+  grid's shared tracks.
 - **A field fills its track.** A `.kp-field` has no width cap of its own (`--kp-field-max-width` sets one where a page
   wants a measure), so a field in a value track or a page's grid column ends on the column's edge.
 - **Cards that share rows: `data-kp-formgrid-stage`** [gapform-1019]. A form grid is a size container (it folds on its own
@@ -1955,12 +1964,14 @@ What it does for you, without hand work:
 
 - **A cell that needs more room says so**: `data-kp-formgrid-span="control-value"`, `"wide"` (control to actions) or
   `"all"`.
-- **The phone.** Under 36rem of the grid's own width the rows stay on the grid's tracks (Kenny, 2026-10-19 11:22: "Grid
-  gebruiken, niet alles links alignen"): the label and the row's action share the first line, the action in the actions
-  track at the end (so every action ends on one edge and has one width), the control runs the full width under them and
-  the value stands under the control. A fact and its value share one line (key in the label track, value from the
-  control edge). A row of buttons without a label puts its buttons first and its action at the end of the next line.
-  The fields keep their widths per kind. `data-kp-formgrid-stack="always"` keeps the plain top-to-bottom column.
+- **The phone** [formgrid-phone-1019]. Under 36rem of the grid's own width every row is three lines on the grid's tracks (Kenny,
+  2026-10-19 11:22 and 17:20): the label with its note across the whole width (a button never stands beside wrapping text), the control
+  across the whole width, and under it the hint on the start side with the row's action in the actions track at the end, so every action has
+  one width and ends on one edge. Short controls (stepper, time, number, date, short field) fill the width, and every one-line field, select,
+  stepper and time field centres what it shows. A switch is the exception: label on the left, the switch in the actions track on the right.
+  A fact and its value share one line. A group of buttons is equal columns (a pair is two equal columns, four are two by two, an odd last
+  one runs across), a row of buttons without a label puts its note centred under them and a lone action across the width.
+  `data-kp-formgrid-stack="always"` keeps the plain top-to-bottom column.
 
 Options, all attributes on `.kp-formgrid`, read by CSS alone, so changing one at run time re-lays the grid at once:
 
@@ -1971,9 +1982,10 @@ Options, all attributes on `.kp-formgrid`, read by CSS alone, so changing one at
 | `data-kp-formgrid-stack`  | `auto` (the phone layout under 36rem), `always` (one plain column), `never` | `auto` |
 | `data-kp-formgrid-lines`  | `none`, `lines` (a rule under every row)   | `none`     |
 | `data-kp-formgrid-rows`   | `own`, `subgrid` (rows from a `data-kp-formgrid-stage` parent) | `own` |
+| `data-kp-formgrid-columns` | `auto` (groups side by side when wide), `never` | `auto` |
 
 Knobs: `--kp-formgrid-gap` (between rows, the md step), `--kp-formgrid-column-gap` (the lg step), `--kp-formgrid-label-min`,
-`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`; on a stage
+`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`, `--kp-formgrid-max` (60rem), `--kp-formgrid-column-min` (36rem), `--kp-formgrid-column-max` (48rem), `--kp-formgrid-group-gap` (2rem); on a stage
 `--kp-formgrid-stage-min` (24rem), `--kp-formgrid-stage-gap` (the lg step) and `--kp-formgrid-rows`. A row takes
 `data-kp-changed` and `data-kp-state="error"` like a form row.
 

@@ -318,7 +318,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-19 [gaps-time-1019]: the planned run's hatching (--kp-gantt-hatch) and the outside label's room (--kp-g-label-room): 1023 + 2 = 1025.
     // Re-pinned 2026-10-19 [formflash-1019]: a start mark's dodge off a bar (--kp-g-dodge) and a label's shift clear of a mark (--kp-g-label-shift): 1025 + 2 = 1027.
     // Re-pinned 2026-10-19 [backupstwo-1019]: the data table group toggle's gap (--kp-datatable-group-toggle-gap) and the facet chip's overlaid only button: 1027 + 2 = 1029.
-    assert.equal(result.expected, 1029, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-19 [formgridthree-1019]: the form grid's tracks (--kp-formgrid-tracks), width cap (--kp-formgrid-max) and the group columns (--kp-formgrid-column-min, -column-max, -group-gap), all read through var(): 1029 + 6 = 1035.
+    assert.equal(result.expected, 1035, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -396,7 +397,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Recounted 2026-10-19 [gaps-time-1019]: the same two, read through var(): 1015 + 2 = 1017.
     // Recounted 2026-10-19 [formflash-1019]: the two new gantt knobs, read through var(): 1017 + 2 = 1019.
     // Re-pinned 2026-10-19 [backupstwo-1019]: both new knobs are read through var(): 1019 + 2.
-    assert.equal(result.readCount, 1021);
+    // Recounted 2026-10-19 [formgridthree-1019]: the form grid's six new knobs, five of them read through var(): 1021 + 6 = 1027.
+    assert.equal(result.readCount, 1027);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

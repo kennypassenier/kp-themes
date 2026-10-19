@@ -23,12 +23,18 @@ import prettier from 'prettier';
 const here = new URL('./', import.meta.url);
 const ID = 'align-grid-1019';
 const PAGE_THEMES = ['formal'];
+// Round 3 (2026-10-19, after the verdicts of 17:20): only the two sections Kenny did not approve. settings, form, request and
+// tools are approved and left the page (DEMO_RULES ch. 6); their markup stays here so the builder still describes the whole demo.
+const SHOWN = new Set(['facts', 'phone']);
 
 /**
  * One section.
  * @param {{ id: string, title: string, intro: string, changed: string, grid: string, expect: string[], look: string, body: string, components: string, controls?: string, choices?: string }} s
  */
-const section = (s) => `
+const section = (s) =>
+    !SHOWN.has(s.id)
+        ? ''
+        : `
 <section
     class="kc-sec"
     id="${s.id}"
@@ -210,18 +216,18 @@ const sections = [
     section({
         id: 'facts',
         title: 'Facts and settings in one grid',
-        intro: 'A backup job&rsquo;s panel: what the last run did (a key-value list) and when it runs (two settings), with the job&rsquo;s buttons under them.',
+        intro: 'A backup job&rsquo;s panel: what the last run did (a key-value list) and when it runs (two settings), each with its own buttons.',
         components: 'formgrid kv formrows',
         changed:
-            'New: a <code>.kp-kv</code> and a <code>.kp-formrows</code> placed inside one <code>.kp-formgrid</code> become subgrids of it, without a class on their rows. Before, each list sized its own label column, so the facts and the settings beside each other started on two edges. Now &ldquo;Last run&rdquo; and &ldquo;Keep daily snapshots&rdquo; share one label column, the facts start on the edge where the controls start, and the buttons under them start there too. <b>Fixed after your verdict of 19/10 11:22</b> (&ldquo;lelijke opmaak, alles staat zo ver van mekaar&rdquo;): the schedule list was a size container of its own, and a size container cannot share the grid&rsquo;s columns, so its two rows fell back to one column and floated in the middle of the panel; the facts stood 32 px apart (the gap between fields) and each heading had 20 px above its rows. Now the schedule rows stand on the grid&rsquo;s tracks, the facts keep the key-value list&rsquo;s own gap (25.5 px from line to line instead of 32), and a heading sits 4 px above its rows.',
-        grid: 'the same four columns; a heading row spanning all four, five fact rows (label | value across control and value), a second heading, a <code>.kp-formrows</code> of two rows (label | control | aside in the value column), a row of buttons (two in the control column, Pause in the actions column).',
+            '<b>Rebuilt after your two notes</b> (19/10 11:22 &ldquo;alles staat zo ver van mekaar&rdquo;; 17:20 &ldquo;Kijk naar hoe de ruimte gebruikt werd? &hellip; Zo veel verspilling van plek?&rdquo;). At about 2000 px the panel was one stack on a grid that stretched across the whole width: labels in a narrow column, the values at x 225 and then nothing, the hints flung to x 1120, &ldquo;Pause the schedule&rdquo; at the far right edge (x 1720 to 1945) while &ldquo;Run now&rdquo; sat at x 225, and most of the panel empty. Now, in the package: (1) the grid no longer stretches, its tracks stop at 60rem, so a hint stays beside its control; (2) a grid whose children are groups lays them as columns of one composition when the panel is wide (Last run | Schedule), each group on its own four tracks, 36 to 48rem wide; (3) a group&rsquo;s buttons stand together in its control column, under what they act on, so &ldquo;Run now&rdquo; and &ldquo;Show the log&rdquo; close the facts and &ldquo;Pause the schedule&rdquo; closes the schedule; (4) dense: facts keep the key-value gap and a heading sits close on its rows. When the panel is not wide enough for two columns the groups stand under each other, still compact.',
+        grid: 'wide panel: two columns of 36 to 48rem, left aligned with a 2rem gap; each column is a group on the form grid&rsquo;s four tracks (label | control | value | actions). Last run: heading, five fact rows (label | value across the tracks), a row of buttons in the control column. Schedule: heading, two settings rows (label | control | hint), a row with Pause the schedule in the control column. Narrow panel: the same groups stacked.',
         expect: [
-            'The labels of both lists form one column; the facts (Succeeded, 19/10/2026 03:41, &hellip;) start on the same edge as the time field and the stepper.',
-            'Each fact stands on its label&rsquo;s line; the badge &ldquo;Succeeded&rdquo; too.',
-            'The facts read as one compact list: no wide gaps between the rows, each heading close on its rows; &ldquo;Runs at&rdquo; and &ldquo;Keep daily snapshots&rdquo; in the label column, their controls on the control edge.',
-            '&ldquo;Run now&rdquo; starts on the control edge; &ldquo;Pause the schedule&rdquo; stands on its line at the right end.',
+            'At 1920 px the two groups stand side by side from the left edge of the panel; nothing is flung to the right edge, and the space left is one block at the right, not gaps inside the groups.',
+            'Each hint (&ldquo;every night, host time&rdquo;) stands right beside its control, in the column after it.',
+            'The buttons of a group stand in the control column under its last row: Run now and Show the log under the facts, Pause the schedule under the settings.',
+            'At 1280 px the groups stand under each other in one compact block; at 390 px the facts read key | value on one line and each setting is label, control, hint.',
         ],
-        look: 'one label column through both lists; the values of the facts and the controls of the settings start on one line.',
+        look: 'on a wide screen: two columns side by side and each hint beside its control; the buttons under what they act on, on the control edge.',
         body: `<div class="kp-card ag-card"><div class="kp-formgrid" id="ag-facts" aria-label="Photo library backup job">
     <section class="kp-formgrid__group" aria-labelledby="ag-facts-last">
         <h3 class="kp-formgrid__heading" id="ag-facts-last">Last run</h3>
@@ -232,6 +238,12 @@ const sections = [
             <div class="kp-kv__row"><dt>Uploaded</dt><dd>1,204 files, 6.8 GB of 182.4 GB</dd></div>
             <div class="kp-kv__row"><dt>Next run</dt><dd>20/10/2026 03:30</dd></div>
         </dl>
+        <div class="kp-formgrid__row kp-formgrid__row--buttons">
+            <span class="kp-formgrid__label"></span>
+            <div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button kp-button--primary">Run now</button><button type="button" class="kp-button">Show the log</button></div></div>
+            <p class="kp-formgrid__value"></p>
+            <div class="kp-formgrid__actions"></div>
+        </div>
     </section>
     <section class="kp-formgrid__group" aria-labelledby="ag-facts-when">
         <h3 class="kp-formgrid__heading" id="ag-facts-when">Schedule</h3>
@@ -247,13 +259,13 @@ const sections = [
                 <div class="kp-formrow__aside">then one a week for a year</div>
             </div>
         </div>
+        <div class="kp-formgrid__row kp-formgrid__row--buttons">
+            <span class="kp-formgrid__label"></span>
+            <div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button">Pause the schedule</button></div></div>
+            <p class="kp-formgrid__value"></p>
+            <div class="kp-formgrid__actions"></div>
+        </div>
     </section>
-    <div class="kp-formgrid__row kp-formgrid__row--buttons">
-        <span class="kp-formgrid__label"></span>
-        <div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button kp-button--primary">Run now</button><button type="button" class="kp-button">Show the log</button></div></div>
-        <p class="kp-formgrid__value"></p>
-        <div class="kp-formgrid__actions"><button type="button" class="kp-button">Pause the schedule</button></div>
-    </div>
 </div></div>`,
     }),
     section({
@@ -341,21 +353,23 @@ const sections = [
         intro: 'The same settings as the first section in a frame as wide as a phone (360 px), composed on the grid&rsquo;s tracks.',
         components: 'formgrid',
         changed:
-            'The grid lays itself out by its own width, not the window&rsquo;s. <b>Fixed after your verdict of 19/10 11:22</b> (&ldquo;Grid gebruiken, niet alles links alignen, maak het mooi!&rdquo;): under 36rem every row was one column, label, control, value and Reset under each other, all on one left edge. Now the rows stay on the grid&rsquo;s tracks: the label and its Reset share the first line, Reset in the actions track at the end, so the three Resets form one column of one width; the control runs the full width under them (a time, stepper or number one step), and the value stands under the control. A fact and its value share one line, and a row of buttons puts its action at the end of its own line.',
-        grid: 'two tracks in 310 px: the label track (to the actions track) and the actions track (as wide as &ldquo;Reset target&rdquo;, 93 px) at the right; each row: label | Reset on its first line, the control across both tracks, the value under it; the Save row: the two buttons, then the note.',
+            '<b>Rebuilt after your two notes</b> (19/10 11:22 &ldquo;Grid gebruiken, niet alles links alignen, maak het mooi!&rdquo;; 17:20 &ldquo;de knoppen passen niet naast de tekst, de inputs en die &lsquo;- 4 files +&rsquo; staan niet gecentreerd, de verify after upload block is lelijk links uitgelijnd, de input met 40 gebruikt niet de hele breedte, Save 2 changes en discard zijn ook lelijk links uitgelijnd&rdquo;). Under 36rem every row is now three lines on the grid&rsquo;s tracks: the label with its note across the whole width (no button crammed beside wrapping text any more), the control across the whole width, and under it the hint on the left with the row&rsquo;s Reset in the actions track at the right, so the three Resets share one edge and one width. Every control fills the track and centres what it shows: the field, the time, the stepper (&ldquo;&minus; 4 files +&rdquo;), the select and the number 40. A switch is label on the left, switch on the right edge where the Resets end. Save 2 changes and Discard are two equal columns across the width, the note centred under them.',
+        grid: 'two tracks in 310 px: the label track (to the actions track) and the actions track (as wide as &ldquo;Reset target&rdquo;, 93 px) at the right. Per row: line 1 the label across both tracks (the switch row: label | switch in the actions track), line 2 the control across both tracks, line 3 the hint in the label track and the Reset in the actions track; the Save row: two equal columns, the note centred under them.',
         expect: [
-            'Each Reset stands at the right end of its label&rsquo;s line; the three Resets end on one edge and have one width; nothing scrolls sideways.',
-            'Labels, controls and values start on one left edge; the label with a note has Reset on the centre of its block.',
-            'The field and the select are the full width; the time, the stepper and the number end on one shorter edge.',
+            'No button stands beside wrapping text: the label and its note are one block across the width; every Reset is on the hint&rsquo;s line, at the right.',
+            'The field, the time, the stepper, the select and the number all run from edge to edge of the card, and what they show is centred.',
+            '&ldquo;Verify after upload&rdquo; on the left and its switch on the right edge, the edge where the Resets end.',
+            'Save 2 changes and Discard are two buttons of one height in two equal columns, the note centred under them; nothing scrolls sideways.',
         ],
-        look: 'two columns: the labels and controls on the left edge, the Resets in their own column at the right; the short controls end together.',
+        look: 'one left edge for the labels and hints, one right edge for the Resets and the switch, every control the full width with its content in the middle.',
         body: `<div class="ag-phone"><div class="kp-card ag-card"><div class="kp-formgrid" id="ag-phone" data-kp-formgrid-lines="lines" aria-label="Offsite backup settings at phone width">${settingsRows('p')}
 </div></div></div>`,
     }),
 ];
 
-const body = sections.join('\n');
-const pairs = sections.length * PAGE_THEMES.length;
+const shownSections = sections.filter(Boolean);
+const body = shownSections.join('\n');
+const pairs = shownSections.length * PAGE_THEMES.length;
 
 const verdictsFile = new URL('VERDICTS.json', here);
 if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
@@ -402,12 +416,11 @@ const page = `<!doctype html>
             <header class="k56-intro">
                 <h1>The form grid: forms, settings, facts and buttons on one grid</h1>
                 <p class="cat-intro">
-                    You rejected seven settings sections for misalignment: a second column that was not uniform, rows off their labels, and
-                    &ldquo;Send test&rdquo; off the line of &ldquo;Format&rdquo; and &ldquo;Minify&rdquo;. The package now has one layout for
-                    all of these, <code>.kp-formgrid</code>: four columns, label, control, value and actions, that every row shares, so
-                    things line up by construction rather than by care. ${pairs} sections, formal only; the content is made up. Every section
-                    names its grid under <b>The grid</b>. The project threads move their own pages onto it once you approve it, and a new
-                    measurement holds every demo to it.
+                    Third round, two sections: the facts and the phone width, which you did not approve on 19/10 at 17:20 (settings is approved and
+                    left the page). The fixes are in the package itself, <code>.kp-formgrid</code>, so every app gets them: the grid no longer
+                    stretches across a wide panel and groups stand side by side as columns, a group&rsquo;s buttons stand beside what they act
+                    on, and on a phone every row is label, control and hint with its Reset, controls fill the width and centre what they show,
+                    and a pair of buttons is two equal columns. ${pairs} sections, formal only; the content is made up.
                 </p>
             </header>
 ${body}
@@ -425,4 +438,4 @@ ${body}
 `;
 const config = (await prettier.resolveConfig(out)) ?? {};
 writeFileSync(out, await prettier.format(page, { ...config, filepath: out }));
-console.log(`${ID}: ${sections.length} sections, ${pairs} pairs, round ${roundId}`);
+console.log(`${ID}: ${shownSections.length} sections, ${pairs} pairs, round ${roundId}`);

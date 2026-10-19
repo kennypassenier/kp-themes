@@ -38,7 +38,7 @@
                     Your rule is that a failed, empty or loading component fills the whole size it has with its data, centred, with a normal-size
                     Retry, and the loading card sits over the whole component. The gaps the projects found were components that did not follow it: the
                     network graph, the data table, the heat grid and matrix, the run timeline, the week agenda, a group of uptime strips and the
-                    card&rsquo;s notes. They all use the package&rsquo;s one state plate and loading card now. 8 sections, formal only (every fix is
+                    card&rsquo;s notes. They all use the package&rsquo;s one state plate and loading card now. 1 section, formal only (every fix is
                     the theme&rsquo;s own plate and loading card, so the other themes follow). Each section says under
                     <b>What changed since you approved it</b> what was wrong and what is different now. Press a state under the section&rsquo;s title
                     to see it.
@@ -57,11 +57,15 @@
             >
                 <div class="k56-changed">
                     <p>
-                        <b>What changed since you approved it:</b> Empty and failed were one line of grey text in the middle of the picture, with no
-                        plate and no Retry button, and loading was a line of words over the faint network, without the loading card every table has.
-                        Now loading is the theme&rsquo;s loading card centred over the whole picture (the faint network stays under it); empty and
-                        failed are the package&rsquo;s state plate filling the whole picture, the title at heading size and centred, and a failed
-                        picture has a normal-size Retry. The loaded network is not touched.
+                        <b>What changed since you approved it:</b> <b>Third round, loading only.</b> You rejected loading twice (19/10 11:22
+                        &ldquo;elk thema heeft al een loading animatie voor dit soort element, gebruik het!&rdquo;; 17:20 &ldquo;Dit element heeft
+                        voor elk thema een animatie, gebruik die!&rdquo;): the first time new pictures were drawn, the second time the generic loading
+                        card was put on it. Now a loading graph is exactly the picture the chart already has in every theme (<code
+                            >.kp-chart__state</code
+                        >
+                        as a skeleton block, the one the theme dresses for a chart&rsquo;s plot), over the graph&rsquo;s whole footprint, with its
+                        sentence read out for screen readers as the chart does. Nothing new is drawn, the faint network under it is gone, and the
+                        loading card is gone from the graph. Empty, failed and the loaded network are as you approved them.
                     </p>
                 </div>
                 <div class="sp-sec__head">
@@ -74,7 +78,10 @@
                 <div class="sp-expected">
                     <p><b>Expected:</b></p>
                     <ul>
-                        <li><b>Loading</b>: the faint network with the loading card (spinner and words) in the middle of the picture.</li>
+                        <li>
+                            <b>Loading</b>: the theme&rsquo;s own chart loading picture over the whole graph, edge to edge, the same one a chart shows
+                            while it loads in that theme; no loading card, no network under it.
+                        </li>
                         <li>
                             <b>Empty</b> and <b>Failed</b>: a plate as big as the picture with a title at heading size, a sentence and, when failed, a
                             <b>Retry</b> button of normal size; the picture keeps the height it has with its network.
@@ -109,16 +116,12 @@
                     <figure class="kp-graph" data-kp-graph aria-label="What talks to what"></figure>
                 </div>
             </section>
-
-
-
-
-
-
-
         </main>
         <script type="application/json" data-review-round>
-            { "round": "state-plates-3c06b96c-833d-419f-84e3-03a5d636617a", "received": ["state-plates-0f2626d7-9b76-45d9-abc0-088f54516acd"] }
+            {
+                "round": "state-plates-746c7e49-82c0-4213-bf97-a1ce85917589",
+                "received": ["state-plates-0f2626d7-9b76-45d9-abc0-088f54516acd", "state-plates-3c06b96c-833d-419f-84e3-03a5d636617a"]
+            }
         </script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="./demo.js"></script>

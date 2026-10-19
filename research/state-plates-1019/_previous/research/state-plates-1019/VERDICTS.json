@@ -1,0 +1,49 @@
+{
+    "demo": "state-plates-1019",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "state-plates-0f2626d7-9b76-45d9-abc0-088f54516acd",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 11:22: 8 of 8 judged, 7 approved, 1 not approved. Approved: formal; the rest is being fixed.",
+            "approved": [
+                {
+                    "item": "table-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "heat-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "matrix-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "week-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "uptime-group",
+                    "theme": "formal"
+                },
+                {
+                    "item": "card-states",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "graph-states",
+                    "theme": "formal",
+                    "note": "elk thema heeft al een loading animatie voor dit soort element, gebruik het!"
+                }
+            ],
+            "choices": []
+        }
+    ]
+}

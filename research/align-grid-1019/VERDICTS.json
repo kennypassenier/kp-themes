@@ -38,6 +38,31 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "2",
+            "page": "aligngrid-0e13cf1b-0cf3-409d-b7f8-9cf941e134c0",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 17:20: 3 of 3 judged, 1 approved, 2 not approved. Approved: settings; facts and phone are being fixed.",
+            "approved": [
+                {
+                    "item": "settings",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "facts",
+                    "theme": "formal",
+                    "note": "maar allee, dat ziet er toch nog altijd echt slecht uit? Kijk naar hoe de ruimte gebruikt werd? … Zo veel verspilling van plek?"
+                },
+                {
+                    "item": "phone",
+                    "theme": "formal",
+                    "note": "de knoppen passen niet naast de tekst (ze staan er wel, maar het is niet mooi). De inputs en bv die '- 4 files +' staan niet gecentreerd, de verify after upload block is lelijk links uitgelijnd. de input met 40 gebruikt niet de hele breedte. Save 2 changes en discard zijn ook lelijk links uitgelijnd ipv de ene links en de andere rechts of het grid te gebruiken? doe beter"
+                }
+            ],
+            "choices": []
         }
     ]
 }

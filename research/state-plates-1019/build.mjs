@@ -3,7 +3,7 @@
 // components he had approved, so they come back through the review dialog (DEMO_RULES ch. 7 and 9), in formal (every fix is the
 // theme's existing plate and busy card), with a plain "What changed" text per section.
 //
-//   1. graph-states    the network graph: busy card over the picture, a plate for empty and failed (js/graph.js)
+//   1. graph-states    the network graph: the chart's own loading picture over the picture, a plate for empty and failed (js/graph.js)
 //   2. table-states    the data table: a failed table and an empty one take the table's place (js/datatable.js)
 //   3. heat-states     the heat grid: a plate with a Retry (js/heat.js)
 //   4. matrix-states   the matrix, grid and lines: a plate with a Retry, the busy card over the whole map (js/heat.js, js/uses-map.js)
@@ -21,6 +21,8 @@ import prettier from 'prettier';
 const here = new URL('./', import.meta.url);
 const ID = 'state-plates-1019';
 const THEMES = ['formal'];
+// Round 3 (2026-10-19, after Kenny's 17:20 verdict): only the section he did not approve; the other seven are approved and left the page.
+const SHOWN = new Set(['graph-states']);
 
 /** @param {string} text */
 const looks = (text) => THEMES.map((t) => `<p data-for="${t}">${t[0].toUpperCase()}${t.slice(1)}: ${text}</p>`).join('\n');
@@ -41,7 +43,10 @@ const group = (key, label, options) =>
  * One section.
  * @param {{ id: string, topic: string, topicTitle?: string, title: string, intro: string, changed: string, expect: string[], look: string, components: string, groups: string, stage: string }} s
  */
-const section = (s) => `
+const section = (s) =>
+    !SHOWN.has(s.id)
+        ? ''
+        : `
 <section
     class="sp-sec"
     id="${s.id}"
@@ -88,9 +93,9 @@ const sections = [
         title: 'Network graph: loading, empty and failed',
         intro: 'The picture of what talks to what. Press a state to see how the picture waits, is empty, or could not be read; Retry on the failed picture reads it again.',
         changed:
-            'Empty and failed were one line of grey text in the middle of the picture, with no plate and no Retry button, and loading was a line of words over the faint network, without the loading card every table has. Now loading is the theme&rsquo;s loading card centred over the whole picture (the faint network stays under it); empty and failed are the package&rsquo;s state plate filling the whole picture, the title at heading size and centred, and a failed picture has a normal-size Retry. The loaded network is not touched.',
+            '<b>Third round, loading only.</b> You rejected loading twice (19/10 11:22 &ldquo;elk thema heeft al een loading animatie voor dit soort element, gebruik het!&rdquo;; 17:20 &ldquo;Dit element heeft voor elk thema een animatie, gebruik die!&rdquo;): the first time new pictures were drawn, the second time the generic loading card was put on it. Now a loading graph is exactly the picture the chart already has in every theme (<code>.kp-chart__state</code> as a skeleton block, the one the theme dresses for a chart&rsquo;s plot), over the graph&rsquo;s whole footprint, with its sentence read out for screen readers as the chart does. Nothing new is drawn, the faint network under it is gone, and the loading card is gone from the graph. Empty, failed and the loaded network are as you approved them.',
         expect: [
-            '<b>Loading</b>: the faint network with the loading card (spinner and words) in the middle of the picture.',
+            '<b>Loading</b>: the theme&rsquo;s own chart loading picture over the whole graph, edge to edge, the same one a chart shows while it loads in that theme; no loading card, no network under it.',
             '<b>Empty</b> and <b>Failed</b>: a plate as big as the picture with a title at heading size, a sentence and, when failed, a <b>Retry</b> button of normal size; the picture keeps the height it has with its network.',
             'Press <b>Retry</b>: the loading card shows for a moment and the network comes back.',
             '<b>Ready</b>: the network exactly as you approved it.',
@@ -289,7 +294,8 @@ const sections = [
     }),
 ];
 
-const body = sections.join('\n');
+const shownSections = sections.filter(Boolean);
+const body = shownSections.join('\n');
 
 const verdictsFile = new URL('VERDICTS.json', here);
 if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
@@ -298,7 +304,7 @@ const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) 
 const out = fileURLToPath(new URL('demo.html', here));
 const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
 const roundId = current && /^state-plates-[0-9a-f]{8}-/.test(current) ? current : `state-plates-${randomUUID()}`;
-const pairs = THEMES.length * sections.length;
+const pairs = THEMES.length * shownSections.length;
 
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="${THEMES.join(',')}">
@@ -340,7 +346,7 @@ const page = `<!doctype html>
                     Your rule is that a failed, empty or loading component fills the whole size it has with its data, centred, with a normal-size Retry,
                     and the loading card sits over the whole component. The gaps the projects found were components that did not follow it: the network
                     graph, the data table, the heat grid and matrix, the run timeline, the week agenda, a group of uptime strips and the card&rsquo;s
-                    notes. They all use the package&rsquo;s one state plate and loading card now. ${sections.length} sections, formal only (every
+                    notes. They all use the package&rsquo;s one state plate and loading card now. ${shownSections.length} section, formal only (every
                     fix is the theme&rsquo;s own plate and loading card, so the other themes follow). Each section says under <b>What changed since you
                     approved it</b> what was wrong and what is different now. Press a state under the section&rsquo;s title to see it.
                 </p>
@@ -360,4 +366,4 @@ ${body}
 `;
 const config = (await prettier.resolveConfig(out)) ?? {};
 writeFileSync(out, await prettier.format(page, { ...config, filepath: out }));
-console.log(`${ID}: ${sections.length} sections, ${pairs} pairs, round ${roundId}`);
+console.log(`${ID}: ${shownSections.length} sections, ${pairs} pairs, round ${roundId}`);
