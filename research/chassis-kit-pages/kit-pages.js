@@ -190,8 +190,17 @@ export function clientsPage(uid, { state = 'ready', filter = '', cards = false }
 /** The token as the page knows it: never in the markup. This stand-in is shown only after Reveal answers. */
 export const SAMPLE_TOKEN = '9f2c41d07be85a63c7a1f0e4d28b9a56731ce04f8d2b6a9051c7e3fa48d0b26e';
 
+/** The address a client calls, as the example service serves it. */
+const CALL_PATH = '/v1/messages';
+const CALL_URL = `http://127.0.0.1:8080${CALL_PATH}`;
+
 /**
  * The manage dialog of one client, open (a dialog the page keeps in the page).
+ *
+ * A composition on the 12-column grid (page.css, `.ck-manage`): the head is identity (columns 1-5) against the client's three facts
+ * (6-12); the rail (1-5) holds the controls in fixed order, token, command, test; the request inspector is the wide area (6-12) and
+ * is as tall as the rail in every state; the danger band repeats the same split, its words under the rail and its three actions,
+ * each with its consequence, in three equal cells under the inspector. On a phone the same parts form their own arrangement.
  * @param {string} uid
  * @param {{ client?: any, requests?: 'ready' | 'loading' | 'empty' | 'error', open?: boolean }} o
  */
@@ -200,74 +209,119 @@ export function manageDialog(uid, { client = DATA.clients[0], requests = 'ready'
     const active = c.active;
     const state = active ? '<span class="kp-badge kp-badge--success">active</span>' : `<span class="kp-badge">revoked ${esc(fmt(c.revoked_at))}</span>`;
     const lost = `<ul class="kp-type-confirm__list"><li>the token, which stops working at once</li><li>${plural('request', c.uses)} of history</li></ul>`;
-    return `<dialog class="kp-dialog kp-dialog--wide ck-manage" id="${uid}-dialog" aria-labelledby="${uid}-title"${open ? ' open' : ''}>
-  <div class="kp-dialog__head"><span class="kp-idmark kp-idmark--lg" data-kp-idmark="${esc(c.name)}" aria-hidden="true"></span><h2 class="kp-dialog__title" id="${uid}-title">${esc(c.name)}</h2>${state}
-    <p class="kp-dialog__description">Issued ${esc(fmt(c.issued_at))} · ${c.last_used_at ? `last used ${esc(fmt(c.last_used_at))} (${c.uses} ${c.uses === 1 ? 'request' : 'requests'})` : 'never used'}</p></div>
-  <div class="kp-dialog__body">
-    ${
-        active
-            ? `<section class="kp-dialog__section"><h3 class="kp-dialog__heading">Token</h3>
-      <div class="kp-secret" data-kp-secret data-kp-secret-ttl="10" data-kp-secret-label="Token of ${esc(c.name)}" data-ck-secret="${esc(c.id)}"></div>
-      <p class="kp-dialog__note">The token is not in this page: it is read from the service when you press Reveal or Copy, and hides again after 10 seconds.</p></section>
-    <section class="kp-dialog__section"><h3 class="kp-dialog__heading">Use it</h3>
-      <div class="kp-command" data-kp-command="bash" data-kp-command-where="the machine that calls this service"><pre class="kp-command__code"><code>export CLIENT_TOKEN='…'
-curl -sS -X POST http://127.0.0.1:8080/v1/messages \\
+    const fact = (/** @type {string} */ label, /** @type {string} */ value, /** @type {string} */ note) =>
+        `<div class="kp-kpi"><span class="kp-kpi__label">${label}</span><span class="kp-kpi__value">${value}</span><span class="kp-kpi__trend">${note}</span></div>`;
+    const facts = `<div class="kp-kpis ck-manage__facts" role="group" aria-label="${esc(c.name)} at a glance">${fact('Requests', String(c.uses), 'since it was issued')}${fact('Last call', c.last_used_at ? esc(agoWords(c.last_used_at)) : 'never', c.last_used_at ? esc(fmt(c.last_used_at)) : 'it has not called yet')}${fact('Topic', esc(c.fields.topic), 'what its messages are about')}</div>`;
+    const rail = active
+        ? `<div class="kp-card ck-manage__rail">
+        <section class="kp-dialog__section ck-manage__tool" aria-labelledby="${uid}-h-token"><h3 class="kp-dialog__heading" id="${uid}-h-token">Token</h3>
+          <div class="kp-secret" data-kp-secret data-kp-secret-ttl="10" data-kp-secret-label="Token of ${esc(c.name)}" data-ck-secret="${esc(c.id)}"></div>
+          <p class="kp-dialog__note">Read from the service on Reveal or Copy; hides again after 10 seconds.</p></section>
+        <section class="kp-dialog__section ck-manage__tool" aria-labelledby="${uid}-h-use"><h3 class="kp-dialog__heading" id="${uid}-h-use">Use it</h3>
+          <div class="kp-command" data-kp-command="bash" data-kp-command-where="the machine that calls this service"><pre class="kp-command__code"><code>export CLIENT_TOKEN='…'
+curl -sS -X POST \\
   -H "Authorization: Bearer $CLIENT_TOKEN" \\
-  -H 'Content-Type: application/json' -d '{}'</code></pre></div>
-      <div class="kp-row ck-actions">${flashButton('Copy with the token filled in', { words: 'Copied,Copy failed', attrs: `data-ck-copy-full="${esc(c.id)}"` })}</div>
-      <p class="kp-dialog__note">The block above is safe to paste into a chat. The button copies the same command with the real token in it.</p></section>
-    <section class="kp-dialog__section"><h3 class="kp-dialog__heading">Test it</h3>
-      <div class="kp-field"><label class="kp-field__label" for="${uid}-body">Body of the test request</label><textarea class="kp-field__input kp-field__input--multiline" id="${uid}-body" data-kp-json="strict" rows="3">{"hello":"from the dashboard"}</textarea></div>
-      <div class="kp-row ck-actions">${flashButton('Send test', { kind: 'primary', words: 'Sent,Refused', attrs: `data-ck-send="${esc(c.id)}"` })}</div>
-      <p class="kp-dialog__note">One request with this client’s token to the service’s own test route, so you see the round trip before the real program is wired.</p></section>`
-            : `<section class="kp-dialog__section"><h3 class="kp-dialog__heading">Token</h3><div class="kp-alert kp-alert--info" role="status"><span class="kp-alert__what">This token no longer works</span><span class="kp-alert__why">It was revoked on ${esc(fmt(c.revoked_at))}; every call with it is refused.</span><span class="kp-alert__remedy"><span class="kp-alert__remedy-label">What now</span> Issue a new client if the program should call again.</span></div></section>`
-    }
-    <section class="kp-dialog__section"><h3 class="kp-dialog__heading">Requests</h3>
+  -H 'Content-Type: application/json' \\
+  -d '{}' ${CALL_URL}</code></pre></div>
+          ${flashButton('Copy with the token filled in', { words: 'Copied,Copy failed', attrs: `data-ck-copy-full="${esc(c.id)}"` })}
+          <p class="kp-dialog__note">Safe to paste into a chat. The button copies it with the real token in.</p></section>
+      </div>`
+        : `<div class="kp-card ck-manage__rail ck-manage__rail--revoked"><section class="kp-dialog__section ck-manage__tool"><h3 class="kp-dialog__heading">Token</h3><div class="kp-alert kp-alert--info" role="status"><span class="kp-alert__what">This token no longer works</span><span class="kp-alert__why">It was revoked on ${esc(fmt(c.revoked_at))}; every call with it is refused.</span><span class="kp-alert__remedy"><span class="kp-alert__remedy-label">What now</span> Issue a new client if the program should call again.</span></div></section></div>`;
+    const test = `<section class="kp-card ck-manage__test" aria-labelledby="${uid}-h-test">
+      <div class="ck-manage__test-head"><h3 class="kp-dialog__heading" id="${uid}-h-test">Test it</h3><p class="kp-dialog__note">One request with this token to the service’s own test route: the round trip before the real program is wired.</p></div>
+      <div class="kp-field ck-manage__test-body"><label class="kp-field__label" for="${uid}-body">Body of the test request</label><textarea class="kp-field__input kp-field__input--multiline" id="${uid}-body" data-kp-json="strict" rows="3"${active ? '' : ' disabled'}>{"hello":"from the dashboard"}</textarea></div>
+      <div class="ck-manage__test-send">${active ? flashButton('Send test', { kind: 'primary', words: 'Sent,Refused', attrs: `data-ck-send="${esc(c.id)}"` }) : '<button type="button" class="kp-button kp-button--primary" disabled aria-describedby="' + uid + '-send-why">Send test</button>'}<p class="kp-dialog__note" id="${uid}-send-why">${active ? 'The answer appears at the top of the requests.' : 'A revoked client cannot send a test.'}</p></div></section>`;
+    const act = (/** @type {string} */ button, /** @type {string} */ note) => `<div class="ck-manage__act">${button}<p class="kp-dialog__note">${note}</p></div>`;
+    const reissue = `<button type="button" class="kp-button" data-kp-destructive data-kp-confirm="Re-issue the token of ${esc(c.name)}?" data-kp-confirm-label="Re-issue" data-kp-confirm-loses="${uid}-lost-reissue"${active ? '' : ' disabled'}>Re-issue</button>`;
+    const revoke = `<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Revoke the token of ${esc(c.name)}?" data-kp-confirm-label="Revoke"${active ? '' : ' disabled'}>Revoke</button>`;
+    const del = `<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete ${esc(c.name)} and its history?" data-kp-confirm-type="${esc(c.name)}" data-kp-confirm-loses="${uid}-lost-delete" data-kp-confirm-label="Delete for good">Delete</button>`;
+    return `<dialog class="kp-dialog kp-dialog--wide ck-dlg ck-manage" id="${uid}-dialog" aria-labelledby="${uid}-title"${open ? ' open' : ''}>
+  <div class="kp-dialog__body ck-frame"><div class="ck-grid ck-manage__grid">
+    <div class="kp-dialog__head ck-manage__head"><span class="kp-idmark kp-idmark--lg" data-kp-idmark="${esc(c.name)}" aria-hidden="true"></span><h2 class="kp-dialog__title" id="${uid}-title">${esc(c.name)}</h2>${state}
+      <p class="kp-dialog__description">Issued ${esc(fmt(c.issued_at))}</p></div>
+    ${facts}
+    ${rail}
+    ${test}
+    <section class="ck-manage__requests" aria-labelledby="${uid}-h-req"><div class="ck-manage__requests-in"><h3 class="kp-dialog__heading" id="${uid}-h-req">Requests</h3>
       <div class="kp-card kp-inspector" data-kp-requests data-kp-requests-open="failed" id="${uid}-requests" data-ck-requests="${requests}" data-kp-requests-max="5"></div>
-      <p class="kp-dialog__note">Secrets are masked, bodies are cut at ${DATA.clientsInfo.capture_body_bytes} bytes, requests are kept ${DATA.clientsInfo.capture_ttl_minutes} minutes.</p></section>
-    <section class="kp-dialog__section kp-dialog__section--danger"><h3 class="kp-dialog__heading">Danger zone</h3>
-      <div class="kp-row ck-actions">
-        ${active ? `<button type="button" class="kp-button" data-kp-destructive data-kp-confirm="Re-issue the token of ${esc(c.name)}?" data-kp-confirm-label="Re-issue" data-kp-confirm-loses="${uid}-lost-reissue">Re-issue</button><button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Revoke the token of ${esc(c.name)}?" data-kp-confirm-label="Revoke">Revoke</button>` : ''}
-        <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete ${esc(c.name)} and its history?" data-kp-confirm-type="${esc(c.name)}" data-kp-confirm-loses="${uid}-lost-delete" data-kp-confirm-label="Delete for good">Delete</button></div>
+      <p class="kp-dialog__note">Secrets are masked, bodies are cut at ${DATA.clientsInfo.capture_body_bytes} bytes, requests are kept ${DATA.clientsInfo.capture_ttl_minutes} minutes.</p></div></section>
+    <section class="ck-manage__danger" aria-labelledby="${uid}-h-danger">
+      <div class="ck-manage__danger-head kp-dialog__section--danger"><h3 class="kp-dialog__heading" id="${uid}-h-danger">Danger zone</h3><p class="kp-dialog__note">Revoking keeps the row and its history; deleting does not. Re-issuing keeps the name and the history.</p></div>
+      <div class="ck-manage__acts">${act(reissue, active ? 'A new token, the same name and history.' : 'Already revoked: its token no longer works.')}${act(revoke, active ? 'The token stops working at once; the history stays.' : 'Already revoked: the history stays.')}${act(del, 'The client and its history are removed.')}</div>
       <template id="${uid}-lost-reissue"><ul class="kp-type-confirm__list"><li>The current token stops working at once; the program must be given the new one.</li></ul></template>
       <template id="${uid}-lost-delete">${lost}</template>
-      <p class="kp-dialog__note">Revoking keeps the row and its history; deleting does not. Re-issuing keeps the name and the history.</p></section>
-  </div>
+    </section>
+  </div></div>
   <div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Close</button></div>
 </dialog>`;
 }
 
 /**
- * The issue dialog: a form, and then the new token on the spot.
+ * The issue dialog: a form beside a live preview of what it creates, then the token and the first command beside the client made.
+ *
+ * Both steps are one composition (page.css, `.ck-issue`): a title across the 12 columns, and two cards on one shared set of rows,
+ * the main card in columns 1-7, the client card in 8-12. Their heads, their contents and their foot notes sit on the same three
+ * rows (subgrid), so the edges meet across the columns, and the dialog is as tall in every step. On a phone the client card
+ * becomes a strip of mark, name and state above the main card.
  * @param {string} uid @param {{ step?: 'form' | 'taken' | 'issued', open?: boolean }} o
  */
 export function issueDialog(uid, { step = 'form', open = true } = {}) {
     const topics = [...new Set(DATA.clients.map((c) => c.fields.topic))];
     const usual = JSON.stringify(topics.slice(0, 3));
     const taken = step === 'taken';
+    const issued = step === 'issued';
     const f = DATA.clientsInfo.form_fields[0];
-    const field = `<div class="kp-field"><label class="kp-field__label" for="${uid}-topic">${esc(f.label)} <span class="kp-field__required">required</span></label>
-      <div class="kp-combobox kp-usual" data-kp-combobox data-kp-usual='${esc(usual)}' data-kp-add="inline" data-kp-usual-label="Used before" data-kp-all="open"><input class="kp-combobox__input kp-field__input" id="${uid}-topic" name="topic" type="text" role="combobox" aria-expanded="false" aria-controls="${uid}-topic-list" autocomplete="off" placeholder="${esc(f.placeholder)}" value="${step === 'form' ? '' : 'alerts'}" />
-      <ul class="kp-combobox__list" id="${uid}-topic-list" role="listbox" hidden>${topics.map((t) => `<li class="kp-combobox__option" role="option" data-kp-option data-value="${esc(t)}">${esc(t)}</li>`).join('')}</ul>
-      <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p></div>
-      <p class="kp-field__help">${esc('What this client’s messages are about. Pick one used before, or type a new one.')}</p></div>`;
-    if (step === 'issued') {
-        return `<dialog class="kp-dialog ck-issue" id="${uid}-dialog" aria-labelledby="${uid}-title"${open ? ' open' : ''}>
-  <div class="kp-dialog__head"><h2 class="kp-dialog__title" id="${uid}-title">kyu-runner is ready</h2><span class="kp-badge kp-badge--success">active</span><p class="kp-dialog__description">Copy the token now and give it to the program; it stays available on the client’s page.</p></div>
-  <div class="kp-dialog__body"><section class="kp-dialog__section"><h3 class="kp-dialog__heading">Token</h3><div class="kp-secret" data-kp-secret data-kp-secret-ttl="0" data-kp-secret-label="Token of kyu-runner" data-kp-secret-value="${SAMPLE_TOKEN}"></div></section>
-  <section class="kp-dialog__section"><h3 class="kp-dialog__heading">First call</h3><div class="kp-command" data-kp-command="bash" data-kp-command-where="the machine that will call this service"><pre class="kp-command__code"><code>curl -sS -X POST http://127.0.0.1:8080/v1/messages \\
-  -H "Authorization: Bearer $CLIENT_TOKEN" -d '{}'</code></pre></div>
-  <p class="kp-dialog__note">The client’s page will say “first request seen” as soon as it calls.</p></section></div>
+    const name = issued ? 'kyu-runner' : taken ? 'home-assistant' : '';
+    const topic = step === 'form' ? '' : 'alerts';
+    const head = (/** @type {string} */ id, /** @type {string} */ title, /** @type {string} */ about) => `<div class="ck-card__head"><h3 class="kp-dialog__heading" id="${id}">${esc(title)}</h3><p class="kp-lede" data-kp-lede-measure="full">${esc(about)}</p></div>`;
+    const stateBadge = issued
+        ? '<span class="kp-badge kp-badge--success">active</span>'
+        : taken
+          ? '<span class="kp-badge kp-badge--destructive">not issued</span>'
+          : '<span class="kp-badge kp-badge--info" data-ck-live-state>will be active</span>';
+    const fact = (/** @type {string} */ k, /** @type {string} */ v) => `<div class="kp-kv__row"><dt>${k}</dt><dd>${v}</dd></div>`;
+    const side = `<section class="kp-card ck-issue__card ck-issue__side" aria-labelledby="${uid}-t-side">
+      ${head(`${uid}-t-side`, issued ? 'The client' : 'What you will get', issued ? 'What was made, and where it appears.' : 'Fills in as you type: this is the client that will be made.')}
+      <div class="ck-card__main"><div class="ck-prev${name ? '' : ' ck-prev--empty'}" data-ck-live-card>
+        <span class="kp-idmark kp-idmark--lg ck-prev__mark" data-kp-idmark="${esc(name || 'new client')}" aria-hidden="true" data-ck-live-mark></span>
+        <span class="ck-prev__name" data-ck-live-name data-ck-empty="No name yet">${esc(name || 'No name yet')}</span>
+        <span class="ck-prev__topic" data-ck-live-topic data-ck-empty="No topic yet">${esc(topic || 'No topic yet')}</span>
+        <span class="ck-prev__state">${stateBadge}</span></div>
+        <dl class="kp-kv kp-kv--lines ck-prev__facts">${fact('Token', issued ? `Made ${esc(fmt(NOW))}` : 'Made when you press Issue token')}${fact('Calls', `<span class="mono">POST ${CALL_PATH}</span>`)}${fact('Listed in', 'Clients, with its request history')}${fact('First call', issued ? 'Not yet: this page notices it' : 'Not yet')}</dl></div>
+      <p class="kp-dialog__note ck-card__foot">${issued ? 'It stays on the client’s page, with its token.' : 'Nothing is made until you press Issue token.'}</p></section>`;
+    if (issued) {
+        return `<dialog class="kp-dialog kp-dialog--wide ck-dlg ck-issue" id="${uid}-dialog" aria-labelledby="${uid}-title"${open ? ' open' : ''}>
+  <div class="ck-frame"><div class="ck-grid ck-issue__grid">
+    <div class="kp-dialog__head ck-issue__title"><h2 class="kp-dialog__title" id="${uid}-title">kyu-runner is ready</h2><span class="kp-badge kp-badge--success">active</span><p class="kp-dialog__description">Copy the token now and give it to the program.</p></div>
+    <section class="kp-card ck-issue__card ck-issue__main" aria-labelledby="${uid}-t-main">
+      ${head(`${uid}-t-main`, 'Token and first call', 'The token, and the command that uses it, in one place.')}
+      <div class="ck-card__main ck-result">
+        <div class="ck-result__token"><span class="ck-result__label">Token</span><div class="kp-secret" data-kp-secret data-kp-secret-ttl="0" data-kp-secret-label="Token of kyu-runner" data-kp-secret-value="${SAMPLE_TOKEN}"></div></div>
+        <div class="ck-result__command"><span class="ck-result__label">First call</span><div class="kp-command" data-kp-command="bash" data-kp-command-where="the machine that will call this service"><pre class="kp-command__code"><code>curl -sS -X POST ${CALL_URL} \\
+  -H "Authorization: Bearer $CLIENT_TOKEN" -d '{}'</code></pre></div></div></div>
+      <p class="kp-dialog__note ck-card__foot">The client’s page will say “first request seen” as soon as it calls.</p></section>
+    ${side}
+  </div></div>
   <div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Done</button><button type="button" class="kp-button kp-button--primary">Open the client</button></div>
 </dialog>`;
     }
-    return `<dialog class="kp-dialog ck-issue" id="${uid}-dialog" aria-labelledby="${uid}-title"${open ? ' open' : ''}>
-  <form class="kp-form" data-kp-form novalidate id="${uid}-form">
-  <div class="kp-dialog__head"><h2 class="kp-dialog__title" id="${uid}-title">Issue a client</h2><p class="kp-dialog__description">Give the program a name you will recognise in the logs, such as home-assistant.</p></div>
-  <div class="kp-dialog__body">
-    <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
-    <div class="kp-field"><label class="kp-field__label" for="${uid}-name">Name <span class="kp-field__required">required</span></label><input class="kp-field__input" type="text" id="${uid}-name" name="name" required pattern="[A-Za-z0-9._\\-]{1,64}" value="${taken ? 'home-assistant' : ''}" placeholder="home-assistant"${taken ? ' aria-invalid="true"' : ''} /><p class="kp-field__help">Letters, digits, dots, underscores and hyphens; 1 to 64 characters.</p><span class="kp-field__error" data-kp-field-error${taken ? '' : ' hidden'}>${taken ? 'A client named home-assistant already exists. Pick another name, or open that client.' : ''}</span></div>
-    ${field}
+    const field = `<div class="kp-field"><label class="kp-field__label" for="${uid}-topic">${esc(f.label)} <span class="kp-field__required">required</span></label>
+      <div class="kp-combobox kp-usual" data-kp-combobox data-kp-usual='${esc(usual)}' data-kp-add="inline" data-kp-usual-label="Used before" data-kp-all="open"><input class="kp-combobox__input kp-field__input" id="${uid}-topic" name="topic" type="text" role="combobox" aria-expanded="false" aria-controls="${uid}-topic-list" autocomplete="off" placeholder="${esc(f.placeholder)}" value="${esc(topic)}" data-ck-live-in="topic" />
+      <ul class="kp-combobox__list" id="${uid}-topic-list" role="listbox" hidden>${topics.map((t) => `<li class="kp-combobox__option" role="option" data-kp-option data-value="${esc(t)}">${esc(t)}</li>`).join('')}</ul>
+      <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p></div>
+      <p class="kp-field__help">What this client’s messages are about. Pick one used before, or type a new one.</p></div>`;
+    return `<dialog class="kp-dialog kp-dialog--wide ck-dlg ck-issue" id="${uid}-dialog" aria-labelledby="${uid}-title"${open ? ' open' : ''}>
+  <form class="kp-form ck-frame" data-kp-form novalidate id="${uid}-form">
+  <div class="ck-grid ck-issue__grid">
+    <div class="kp-dialog__head ck-issue__title"><h2 class="kp-dialog__title" id="${uid}-title">Issue a client</h2><p class="kp-dialog__description">One client is one program with its own token, so you can switch it off without touching the rest.</p></div>
+    <section class="kp-card ck-issue__card ck-issue__main" aria-labelledby="${uid}-t-main">
+      ${head(`${uid}-t-main`, 'Who is calling', 'Give the program a name you will recognise in the logs, such as home-assistant.')}
+      <div class="ck-card__main ck-issue__fields">
+        <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+        <div class="kp-field"><label class="kp-field__label" for="${uid}-name">Name <span class="kp-field__required">required</span></label><input class="kp-field__input" type="text" id="${uid}-name" name="name" required pattern="[A-Za-z0-9._\\-]{1,64}" value="${name}" placeholder="home-assistant" data-ck-live-in="name"${taken ? ' aria-invalid="true"' : ''} /><p class="kp-field__help">Letters, digits, dots, underscores and hyphens; 1 to 64 characters.</p><span class="kp-field__error" data-kp-field-error${taken ? '' : ' hidden'}>${taken ? 'A client named home-assistant already exists. Pick another name, or open that client.' : ''}</span></div>
+        ${field}</div>
+      <p class="kp-dialog__note ck-card__foot">The token is made by the service when you press Issue token, and shown once, here.</p></section>
+    ${side}
   </div>
   <div class="kp-dialog__actions"><button type="button" class="kp-button" data-kp-dialog-close>Cancel</button>${flashButton('Issue token', { kind: 'primary', words: 'Issued,Refused', attrs: 'type="submit" data-kp-submit' })}</div>
   </form>

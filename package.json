@@ -424,6 +424,10 @@
             "types": "./js/undo-toast.d.ts",
             "default": "./js/undo-toast.js"
         },
+        "./js/feed": {
+            "types": "./js/feed.d.ts",
+            "default": "./js/feed.js"
+        },
         "./js/newpill": {
             "types": "./js/newpill.d.ts",
             "default": "./js/newpill.js"
@@ -543,6 +547,14 @@
         "./js/console": {
             "types": "./js/console.d.ts",
             "default": "./js/console.js"
+        },
+        "./js/logviewer": {
+            "types": "./js/logviewer.d.ts",
+            "default": "./js/logviewer.js"
+        },
+        "./js/diff": {
+            "types": "./js/diff.d.ts",
+            "default": "./js/diff.js"
         },
         "./js/strings": {
             "types": "./js/strings.d.ts",

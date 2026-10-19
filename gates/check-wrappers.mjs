@@ -194,6 +194,12 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-feed',
+        class: 'kp-feed',
+        self: true,
+        why: 'The feed measures its own width and puts each row\u2019s actor and time on a line under its text when narrow; the query reaches only its own rows [gap-activity-feed-1019].',
+    },
+    {
         container: 'kp-selection',
         class: 'kp-selection',
         self: true,
@@ -248,6 +254,12 @@ export const REQUIRED = [
         why: 'The snooze picker measures its own width and stretches its button and End snooze over the line on a phone; the query reaches only its own parts [kpadopt5-time].',
     },
     {
+        container: 'kp-diffview',
+        class: 'kp-diffview',
+        self: true,
+        why: 'The diff view measures its own width and moves each file path under its status and counts on a phone; the query reaches only its own parts [gap-diff-view].',
+    },
+    {
         container: 'kp-runs',
         class: 'kp-runs',
         self: true,
@@ -282,6 +294,12 @@ export const REQUIRED = [
         class: 'kp-console',
         self: true,
         why: 'The console measures its own width and stacks the select, prompt and Run on a phone; the query reaches only its own parts [kpadopt6-social].',
+    },
+    {
+        container: 'kp-logviewer',
+        class: 'kp-logviewer',
+        self: true,
+        why: 'The viewer lays its search and its tools in two rows or three by its own width; the query reaches only its own parts [gap-log-viewer].',
     },
     {
         container: 'kp-range',

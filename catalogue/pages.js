@@ -99,18 +99,48 @@ export const PAGES = [
                 label: 'Empty, failed and loading states on one plate: graph, table, heat, matrix, timeline, week, uptime and card',
                 about: 'Failed, empty and loading components fill the whole size they have with data, centred, with a normal-size Retry, and the loading card sits over the whole component. Eight components did not: the network graph, the data table, the heat grid, the matrix, the run timeline, the week agenda, a stack of uptime strips and the card notes. 8 sections (8 pairs, formal): each has state buttons and says what was wrong and what is different now.',
             },
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): settings, passkeys, secrets and the app frame on 11.0.0 components, formal only, sample data in the dashboard's own shapes: the Settings page (unsaved bar with per-key revert and leave guard, editors that fit each key, typed-key gate, ssh how-to, links to one key, remembered groups, the This browser card, auto-refresh), passkeys and machine tokens, a QR to register a phone, secret reveal with an audit line, the secrets master-detail, undo-toast write, restart order, uses-map, per-stack reads, and the frame (connection banner, folding bar and tab bar, slim rail, AZERTY-safe shortcuts, problems, page states).
+            {
+                href: 'research/app-homelab-settings/demo.html',
+                label: 'Homelab dashboard: settings, passkeys, secrets and the app frame',
+                about: 'How three parts of the homelab dashboard would work and look on kp-themes 11.0.0. 24 sections in formal with sample data: staged settings with a Save bar, revert per key and a leave guard, an editor for each kind of key, a typed-key gate, the ssh how-to, links to one setting, remembered groups and a This browser card; passkeys, machine tokens and a QR to register a phone; revealing secrets with an audit line, the secrets list and change drawer, write with undo, restart order, which file feeds which app, per-stack reads; and the frame around every page: connection banner, folding bar, slim rail, keys for a Belgian keyboard, problems and page states. You judge each section and set its default.',
+            },
+            // Kenny, 2026-10-19 02:38 ("als ze van hetzelfde project komen kan je ze bundelen tot 25 items groot"): the five component demos of the homelab admin dashboard's gap report, bundled into ONE review page (research/gap-round-1, built by build.mjs from research/gap-log-viewer, gap-diff-view, gap-activity-feed, gap-entity-tiles and gap-tab-count, which stay as its sources and are off the Agenda). Formal only; the other eleven themes come after the verdict.
+            {
+                href: 'research/gap-round-1/demo.html',
+                label: 'New components for the homelab dashboard, round 1',
+                about: 'Five things the homelab admin dashboard drew by hand because the package had none, now built in the package: the live log viewer (capped buffer, find, wrap, time column, level, copy), a diff of several files (headers with counts, folded context, changed words), the activity feed (who did what and when, day by day), two entity card options (a 24-hour trend line and the app tile with a favourite star) and three small ones (a count on a tab, arrow keys over a board of tiles, the legend under a heat grid). 21 sections (21 pairs), in formal only.',
+            },
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): topic T1, Activity and Jobs. The run timeline (gantt), the stack-by-day failure grid (heat), History as a data table with day groups and openable rows, the Jobs timeline with queue waiting time, and the detail of one job; formal only until approved. Hand-written page: research/app-homelab-activity.
+            {
+                href: 'research/app-homelab-activity/demo.html',
+                label: 'Homelab dashboard: Activity and Jobs, timeline, failure grid and History',
+                about: 'How the dashboard\'s Activity and Jobs pages would look on the new components: a timeline you drag across, a grid of stack by day that shows which stack keeps failing, a History table with a heading per day and rows that open to their steps, a Jobs timeline that shows how long each job waited, and the detail of one job (steps, where the time went, why it failed). 5 sections (5 pairs, formal only), plus one default to set: whether the History opens as a table or a feed.',
+            },
+            // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's cook mode, formal only (new demo). research/audhd-recepten/.
+            {
+                href: 'research/audhd-recepten/cook/demo.html',
+                label: 'Recipe app: cook mode with timers side by side',
+                about: 'The AuDHD recipe app cook mode: Begin opens a short checklist of what to take out, then one step at a time with the screen kept on, named timers for pasta and sauce running side by side, a band that says which step to go to when one ends, discs on a 60-minute dial, and calm mode on a phone. 5 sections, formal only.',
+            },
+            // Kenny, 2026-10-19 (rule-fixes-1019): nine faults against the text rules (a count over its icon, a chord that wrapped, text on a section's edge, a long code line at the plate's edge, touching punctuation, two stray hairlines in formal's empty card, a gap before the pill's count, a cut heat label, a cut wheel label), each a change to an approved component, bundled in one page with what was wrong and what is different now. Generated by research/rule-fixes-1019/build.mjs.
+            {
+                href: 'research/rule-fixes-1019/demo.html',
+                label: 'Nine faults against the text rules: tab bar, palette, dialog, code, card, pill, heat grid, wheel',
+                about: 'Faults found by the project threads where an approved component broke a standing rule: text touching an icon or an edge, text cut with an ellipsis, a word broken per letter, a stray mark. Each section says what was wrong and what is different now. 9 sections, 11 pairs (formal; the wheel also in dark and cyberpunk).',
+            },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): the Metrics page (T10) rebuilt on the package, formal only: live charts that keep your place, kinds and hatched windows on events, typical level and runs, the time window with a custom start and end, a window per section, scope and key figures, traffic (status mix, heat, table) and drives.
             {
                 href: 'research/app-homelab-metrics/demo.html',
                 label: 'Homelab dashboard: Metrics, live charts and the time window',
-                about: 'The dashboard\'s Metrics page on the package: charts that keep a pinned reading, a zoom and switched-off sources through every refresh, marks for what the host did (windows hatched, failures as lines) with a ribbon, a typical level and runs, a time window with an exact start and end, a window per section, a machine picker with key figures, and the traffic and drives views. 8 sections (8 pairs, formal); each only asks for a default.',
+                about: "The dashboard's Metrics page on the package: charts that keep a pinned reading, a zoom and switched-off sources through every refresh, marks for what the host did (windows hatched, failures as lines) with a ribbon, a typical level and runs, a time window with an exact start and end, a window per section, a machine picker with key figures, and the traffic and drives views. 8 sections (8 pairs, formal); each only asks for a default.",
             },
             // Kenny, 2026-10-19 (findings-1019): four package faults found while the components page was checked, each a change to an approved component, so asked again in all twelve themes with what was wrong and what is different now: Copy in a command block and Back/Next of the check-in broke per letter on a phone, the flash button set to grow by hand was empty, a lede with fold and link never folded. Generated by research/findings-1019/build.mjs.
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, homelab admin dashboard): T9 Schedules, how the Schedules page would look on 11.0.0 (week grid, next-run countdown and preview, the sentence form with weekdays and a 24-hour time field, the datatable with bulk turn-off and delete with undo, pause until a date, the busy-hours and coverage maps, the run history), formal only, sample data.
             {
                 href: 'research/app-homelab-schedules/demo.html',
                 label: 'Homelab dashboard: the Schedules page, week, form, table, pause and history',
-                about: 'How the homelab dashboard\'s Schedules page would work and look: the next 7 days on one calendar, the next run counting down, a form that reads as a sentence with a preview, the table with bulk turn-off and delete with undo, pausing until a date, where two schedules start together, which stack has no backup, and the run history. 9 sections in formal, with sample data; you judge the look, and you set defaults for three things (turned-off schedules in the week, drawer or beside the list, menu or chips for pausing).',
+                about: "How the homelab dashboard's Schedules page would work and look: the next 7 days on one calendar, the next run counting down, a form that reads as a sentence with a preview, the table with bulk turn-off and delete with undo, pausing until a date, where two schedules start together, which stack has no backup, and the run history. 9 sections in formal, with sample data; you judge the look, and you set defaults for three things (turned-off schedules in the week, drawer or beside the list, menu or chips for pausing).",
             },
             // Kenny, 2026-10-19 (findings-1019): four package faults found while the components page was checked, each a change to an approved component, so asked again in all twelve themes with what was wrong and what is different now: Copy in a command block and Back/Next of the check-in broke per letter on a phone, the flash button set to grow by hand was empty, a lede with fold and link never folded. Generated by research/findings-1019/build.mjs.
             // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's wheel screen, formal only (new demo). research/audhd-recepten/.
@@ -135,7 +165,7 @@ export const PAGES = [
             {
                 href: 'research/audhd-recepten/recipe/demo.html',
                 label: 'Recipe app: the recipe page, QR, print and calm settings',
-                about: 'The AuDHD recipe app recipe page: summary, portions that rescale every amount, ingredient notes, a big Begin cooking button and last time\'s note; a QR code to open cook mode on the phone, a printable recipe, calm settings (calm mode, theme, language) and a cooking log where an empty week stays quiet. 7 sections, formal only.',
+                about: "The AuDHD recipe app recipe page: summary, portions that rescale every amount, ingredient notes, a big Begin cooking button and last time's note; a QR code to open cook mode on the phone, a printable recipe, calm settings (calm mode, theme, language) and a cooking log where an empty week stays quiet. 7 sections, formal only.",
             },
             // Kenny, 2026-10-19 (AuDHD recepten thread): the recipe app's bad-days screen, formal only (new demo). research/audhd-recepten/.
             {
@@ -182,8 +212,10 @@ export const PAGES = [
             // Kenny, 2026-10-19: chassis-rs's shared kit pages rebuilt on kp-themes 11.0.0, bundled into one review (shared code and generator: research/chassis-kit-pages/build.mjs).
             {
                 href: 'research/chassis-kit-pages/demo.html',
+                label: 'chassis-rs kit pages, round 2: client dialogs, login and passkeys',
+                about: 'Round 2 of the kit pages (round 1: shell, status, error, clients list and first client approved). Open: the issue dialog as a form beside a live card of the client it makes, and the manage dialog as a grid with a control rail, a wide request inspector and a danger band, both redrawn as compositions with their own phone arrangement; the login page and the two passkeys pages, not judged in round 1, unchanged. 5 sections (5 pairs, formal).',
                 label: 'chassis-rs kit pages: shell, status, clients, login and passkeys',
-                about: 'Every page the kit serves to every service, rebuilt from kp-themes 11 components: the bar with its search palette (Ctrl K), shortcuts and the phone\'s tab bar with exact counts; the error page; the status page as an operations page with the sections a service adds; the clients list, issuing and managing a client; the login page with the service\'s health; the passkeys page with this device, rename and a QR code for another device. 12 sections (12 pairs, formal).',
+                about: "Every page the kit serves to every service, rebuilt from kp-themes 11 components: the bar with its search palette (Ctrl K), shortcuts and the phone's tab bar with exact counts; the error page; the status page as an operations page with the sections a service adds; the clients list, issuing and managing a client; the login page with the service's health; the passkeys page with this device, rename and a QR code for another device. 12 sections (12 pairs, formal).",
             },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
@@ -204,7 +236,7 @@ export const PAGES = [
             {
                 href: 'research/app-hsb-settings/demo.html',
                 label: 'HTTPSwitchboard: profile settings and recheck',
-                about: 'Whether a profile\'s settings read at a glance, with its retry budget against its lease as a bar, and whether the Recheck button, its toasts and the per-profile recheck feel right, in formal.',
+                about: "Whether a profile's settings read at a glance, with its retry budget against its lease as a bar, and whether the Recheck button, its toasts and the per-profile recheck feel right, in formal.",
             },
             // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, HTTPSwitchboard): the profiles view of the service dashboard (map or cards as the main view, the path of one profile, the card on a profile name), formal only; plan rows 1, 2, 3 and 15 of http-switchboard/docs/KP_THEMES_11_ADOPTION.md.
             {
@@ -230,6 +262,17 @@ export const PAGES = [
                 label: 'kyu, part 1 of 5: across every page',
                 about: 'The command palette, keyboard shortcuts and their help sheet, a first-visit tour, links to a heading or a row, and two overviews of which app reads which topic. Formal only.',
             },
+        ],
+    },
+    {
+        // Every demo here has its decision taken. A new research demo goes in
+        // a 'Research to look at' group of its own, above this one, and moves
+        // down here once Kenny has decided on it [scope-81].
+        group: 'Archived research',
+        // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
+        nav: false,
+        pages: [
+            // Decided 2026-10-19 02:38: Kenny approved every pair of kyu parts 2 to 5 (research/kyu-11-*/decided.json).
             {
                 href: 'research/kyu-11-topics/demo.html',
                 label: 'kyu, part 2 of 5: the Topics page',
@@ -250,16 +293,6 @@ export const PAGES = [
                 label: 'kyu, part 5 of 5: the Subscription page',
                 about: 'One subscription: its header, its policy, gauges against the lease and the attempts, the backlog with bulk delete, and three new views of delivery attempts and 90 days of history. Formal only; items marked New need kyu backend work.',
             },
-        ],
-    },
-    {
-        // Every demo here has its decision taken. A new research demo goes in
-        // a 'Research to look at' group of its own, above this one, and moves
-        // down here once Kenny has decided on it [scope-81].
-        group: 'Archived research',
-        // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
-        nav: false,
-        pages: [
             // Decided 2026-10-19 01:52: Kenny approved every findings pair (research/findings-1019/decided.json).
             // Kenny, 2026-10-19 (findings-1019): four package faults found while the components page was checked, each a change to an approved component, so asked again in all twelve themes with what was wrong and what is different now: Copy in a command block and Back/Next of the check-in broke per letter on a phone, the flash button set to grow by hand was empty, a lede with fold and link never folded. Generated by research/findings-1019/build.mjs.
             {
@@ -272,7 +305,7 @@ export const PAGES = [
             {
                 href: 'research/synth-alert-buttons/demo.html',
                 label: 'Synthwave: buttons on a red alert, dark keys everywhere or only on the named plates',
-                about: 'Your September ruling (only the data table\'s Try again takes the alert\'s ink, every other button keeps its pink frame) and the dark keys you approved on 18/10 disagree for the plain Try again and any plain red alert. 1 section (1 pair, synthwave): five red alerts one under the other, and an option to see each ruling.',
+                about: "Your September ruling (only the data table's Try again takes the alert's ink, every other button keeps its pink frame) and the dark keys you approved on 18/10 disagree for the plain Try again and any plain red alert. 1 section (1 pair, synthwave): five red alerts one under the other, and an option to see each ruling.",
             },
             // Decided 2026-10-18 22:36: Kenny approved every choose pair over three rounds (research/kpadopt56-choose/decided.json).
             {

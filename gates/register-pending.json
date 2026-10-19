@@ -80,6 +80,8 @@
     "qr": "a social piece built at kpadopt6-social from the tokens alone, demoed in formal only (research/kpadopt6-social); each register answers it once it is judged in that theme",
     "time": "a social piece built at kpadopt6-social from the tokens alone, demoed in formal only (research/kpadopt6-social); each register answers it once it is judged in that theme",
     "console": "a social piece built at kpadopt6-social from the tokens alone, demoed in formal only (research/kpadopt6-social); each register answers it once it is judged in that theme",
+    "logviewer": "built at gap-log-viewer from the tokens and the existing .kp-log alone, demoed in formal only (research/gap-log-viewer); each register answers it once it is judged in that theme",
+    "diffview": "built at gap-diff-view from the tokens alone, demoed in formal only (research/gap-diff-view); each register answers it once it is judged in that theme",
     "rating": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-calm), demoed in formal only; each register answers it once it is judged in that theme",
     "quote": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-calm), demoed in formal only; each register answers it once it is judged in that theme",
     "quote-list": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-calm), demoed in formal only; each register answers it once it is judged in that theme",
@@ -88,5 +90,6 @@
     "ack": "a new part built for Kenny's review on 2026-10-17 (research/kpadopt6-ops), demoed in formal only; each register answers it once it is judged in that theme",
     "deplist": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-ops), demoed in formal only; each register answers it once it is judged in that theme",
     "trace": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-ops), demoed in formal only; each register answers it once it is judged in that theme",
-    "entity-grid": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-ops), demoed in formal only; each register answers it once it is judged in that theme"
+    "entity-grid": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-ops), demoed in formal only; each register answers it once it is judged in that theme",
+    "feed": "a new component from the admin dashboard's gap list [gap-activity-feed-1019], built from the package's parts and judged in formal only first (research/gap-activity-feed); each register answers it once it is judged in that theme"
 }

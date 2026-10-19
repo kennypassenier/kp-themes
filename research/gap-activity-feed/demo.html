@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="gap-activity-feed" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Activity feed</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main gaf-page">
+            <header>
+                <h1>The activity feed</h1>
+                <p class="cat-intro">
+                    A new component for the lists that say who did what and when: the homelab dashboard&rsquo;s History tab and Activity page drew it
+                    by hand, and it was the last thing they drew themselves. It is made from parts the package already has: the status marks, the
+                    identity chip, the ticking time, the timeline&rsquo;s rule, the thread&rsquo;s day divider and the empty and failed plates. Five
+                    sections, each with its own controls above the feed; formal only, the other themes follow once you approve it here. The data is
+                    mock (stacks such as jellyfin, sonarr and traefik), and its times are relative to the moment you open the page.
+                </p>
+            </header>
+            <section
+                id="feed-days"
+                data-review-item="feed-days"
+                data-review-topic="activity-feed"
+                data-review-topic-title="The activity feed"
+                data-review-components="feed"
+                data-review-title="The activity feed: a day of activity, in every state"
+                aria-labelledby="h-feed-days"
+            >
+                <div class="gaf-asked">
+                    <p>
+                        <b>What is asked:</b> A new component, built because the admin dashboard drew this row by hand twice (a stack&rsquo;s History
+                        tab and the Activity page). Does it read as one tidy list &mdash; a mark you recognise by its shape, the chip of whoever
+                        started it, the time on the right, one rule joining the marks of a day &mdash; and are the five states (ready, loading, empty,
+                        failed, stale) what you would want to see when the dashboard cannot read its log? Press <b>Grouping</b> to see the same rows
+                        as one list.
+                    </p>
+                </div>
+                <div class="gaf-intro">
+                    <h2 id="h-feed-days">Who did what, day by day</h2>
+                    <p>
+                        One feed of a homelab: every row has its outcome, what happened, who started it and when, and the rows sit under a heading per
+                        day with that day’s count.
+                    </p>
+                </div>
+                <div class="gaf-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Each day has a heading: <b>Today</b>, <b>Yesterday</b>, then the weekday, then the date as dd/mm/yyyy, with that
+                            day&rsquo;s exact count and <b>N failed</b> (or <b>all ok</b>) at the end.
+                        </li>
+                        <li>
+                            A row: a round mark (tick, cross, exclamation, spinner or <b>i</b>), the title in bold, a muted detail line, a chip with
+                            the actor, and the time. The chips and the times stand in one column each, whichever row is longer.
+                        </li>
+                        <li>
+                            The time says <b>12 min ago</b> for the first 24 hours and ticks by itself; after that it is the moment, dd/mm/yyyy HH:mm.
+                            Pointing at it gives the full moment.
+                        </li>
+                        <li>
+                            <b>Loading</b> keeps the feed&rsquo;s height with the theme&rsquo;s busy card over a skeleton of rows; <b>Empty</b> and
+                            <b>Failed</b> fill the same height with a large centred plate (Failed has a Retry that reads the log again);
+                            <b>Stale</b> keeps every row and says in the head line why the feed was not refreshed, with a button to read it again.
+                        </li>
+                        <li>Nothing moves sideways or jumps in height between the states. Labels are whole, never cut.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a paper plate: quiet ink, square-ish corners, one border weight. Check that the marks are legible by shape alone,
+                        that a failed row stands out without shouting, that text keeps 8 px from every edge, and that the chip column lines up from
+                        the first day to the last.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="feed-days-component">
+                    <div role="group" aria-label="State of the feed">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-state="error" aria-pressed="false">Could not read</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-state="stale" aria-pressed="false">Not refreshed</button>
+                    </div>
+                    <div role="group" aria-label="Grouping">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-group="day" aria-pressed="true">By day</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-group="none" aria-pressed="false">One list</button>
+                    </div>
+                </div>
+                <div id="feed-days-component" class="kp-card gaf-card">
+                    <div
+                        class="kp-feed"
+                        id="gaf-days"
+                        data-kp-feed
+                        data-kp-feed-unit="operation,operations"
+                        aria-label="Activity of the homelab"
+                    ></div>
+                </div>
+            </section>
+            <section
+                id="feed-row-options"
+                data-review-item="feed-row-options"
+                data-review-topic="activity-feed"
+                data-review-components="feed"
+                data-review-title="The activity feed: what a row shows"
+                aria-labelledby="h-feed-row-options"
+            >
+                <div class="gaf-asked">
+                    <p>
+                        <b>What is asked:</b> Each of these is a setting of the component with a default (time <b>auto</b>, actor <b>chip</b>, rule
+                        <b>on</b>), switchable at run time. Press them and say which default is right, and whether the others are worth keeping as
+                        options. The rows reach back three days so the time options differ.
+                    </p>
+                </div>
+                <div class="gaf-intro">
+                    <h2 id="h-feed-row-options">The time, the actor and the rule</h2>
+                    <p>
+                        Three things a page may want different: how the time reads, whether the actor is a chip, a mark or left out, and whether the
+                        timeline&rsquo;s rule joins the marks.
+                    </p>
+                </div>
+                <div class="gaf-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Auto</b> (default): <b>12 min ago</b> for 24 hours, then dd/mm/yyyy HH:mm. <b>Ago line</b>: always
+                            <b>1 day 20 h ago</b> and so on. <b>Clock</b>: the ago line, then only HH:mm under its day heading. <b>Moment</b>: always
+                            dd/mm/yyyy HH:mm.
+                        </li>
+                        <li>
+                            <b>Chip</b> (default): mark and name. <b>Mark only</b>: the round or square mark with the name as its title (a screen
+                            reader still hears it). <b>No actor</b>: the column is gone and the title gets the room.
+                        </li>
+                        <li>
+                            <b>Rule</b>: a thin line joins one mark to the next inside a day and stops at the day heading; off, the marks stand alone.
+                        </li>
+                        <li>Every press changes the feed at once, and the columns stay aligned.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Compare Auto with Clock: the older rows lose their date and keep only the hour. Compare Chip with Mark only: the name leaves
+                        but the mark stays recognisable by its colour and pattern. Check that the title uses the room when the actor is off.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="feed-row-options-component">
+                    <div role="group" aria-label="Time">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-time="auto" aria-pressed="true">Auto</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-time="relative" aria-pressed="false">Ago line</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-time="clock" aria-pressed="false">Clock</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-time="moment" aria-pressed="false">Moment</button>
+                    </div>
+                    <div role="group" aria-label="Actor">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-actor="chip" aria-pressed="true">Chip</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-actor="mark" aria-pressed="false">Mark only</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-actor="off" aria-pressed="false">No actor</button>
+                    </div>
+                    <div role="group" aria-label="Rule between the marks">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-rail="on" aria-pressed="true">On</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-rail="off" aria-pressed="false">Off</button>
+                    </div>
+                </div>
+                <div id="feed-row-options-component" class="kp-card gaf-card">
+                    <div
+                        class="kp-feed"
+                        id="gaf-options"
+                        data-kp-feed
+                        data-kp-feed-unit="operation,operations"
+                        aria-label="Activity of the homelab, three days"
+                    ></div>
+                </div>
+            </section>
+            <section
+                id="feed-rows-open"
+                data-review-item="feed-rows-open"
+                data-review-topic="activity-feed"
+                data-review-components="feed"
+                data-review-title="The activity feed: lines under a row"
+                aria-labelledby="h-feed-rows-open"
+            >
+                <div class="gaf-asked">
+                    <p>
+                        <b>What is asked:</b> In the dashboard a row opens an inline detail. Here the title is the button (a chevron says so), the
+                        lines come in the mono face on the muted plate, and a row that has both lines and a page shows <b>Open</b> inside.
+                        <b>Opening</b> is a setting: several rows at once (default), one at a time, or not at all.
+                    </p>
+                </div>
+                <div class="gaf-intro">
+                    <h2 id="h-feed-rows-open">Open a row to read its log</h2>
+                    <p>
+                        A row that has lines (a log excerpt) opens under its title; a row that only has a place to go is a link; the rows keep their
+                        state when the feed refreshes.
+                    </p>
+                </div>
+                <div class="gaf-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press a title with a chevron: its lines open under it, the chevron turns, and the row below moves down by exactly the
+                            lines&rsquo; height. Press again: it closes.
+                        </li>
+                        <li>
+                            <b>One at a time</b>: opening a row closes the others (and if several are open when you switch to it, the one opened last
+                            stays). <b>Not openable</b>: no chevrons, the titles are plain text or links.
+                        </li>
+                        <li>
+                            The arrow keys move from one title to the next. <b>Open all</b> and <b>Close all</b> act on the rows; <b>Refresh</b> reads
+                            the feed again and the rows you opened stay open, with the focus where it was.
+                        </li>
+                        <li>The failed row&rsquo;s lines show the real error; the running row shows the pull as it goes.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal keeps the lines on a quiet muted plate with a hairline border, in the mono face. Check the lines never touch the
+                        plate&rsquo;s edge, that long lines wrap instead of being cut, and that pressing Refresh does not close what you opened.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="feed-rows-open-component">
+                    <div role="group" aria-label="Opening">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-expand="many" aria-pressed="true">Several at once</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-expand="one" aria-pressed="false">One at a time</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-expand="off" aria-pressed="false">Not openable</button>
+                    </div>
+                    <div role="group" aria-label="Rows" class="gaf-actions">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-open="all">Open all</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-open="none">Close all</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-refresh>Refresh</button>
+                    </div>
+                </div>
+                <div id="feed-rows-open-component" class="kp-card gaf-card">
+                    <div
+                        class="kp-feed"
+                        id="gaf-open"
+                        data-kp-feed
+                        data-kp-feed-unit="operation,operations"
+                        aria-label="Operations with their logs"
+                    ></div>
+                </div>
+            </section>
+            <section
+                id="feed-earlier"
+                data-review-item="feed-earlier"
+                data-review-topic="activity-feed"
+                data-review-components="feed"
+                data-review-title="The activity feed: load earlier"
+                aria-labelledby="h-feed-earlier"
+            >
+                <div class="gaf-asked">
+                    <p>
+                        <b>What is asked:</b> The foot keeps the same room in all its states, so nothing moves when it changes. The button here is
+                        real: press it and two older days come in (after a short wait), then the foot says there is nothing earlier. The state buttons
+                        show each foot without waiting.
+                    </p>
+                </div>
+                <div class="gaf-intro">
+                    <h2 id="h-feed-earlier">Reach further back</h2>
+                    <p>
+                        A feed shows the newest rows first; at its foot a button loads the earlier ones, says how far back it has got, and says
+                        plainly when there is nothing more.
+                    </p>
+                </div>
+                <div class="gaf-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Load earlier</b>: a normal button with the note <b>Showing 6 of 30, back to dd/mm/yyyy</b> (exact numbers).</li>
+                        <li>
+                            <b>Loading</b>: the same button, disabled, with the spinner and <b>Loading earlier&hellip;</b>; the rows stay on screen.
+                            <b>Failed</b>: the sentence and <b>Try again</b>. <b>End</b>: <b>Nothing earlier: all 30 are shown, back to &hellip;</b>.
+                            <b>Hidden</b>: no foot and no room for it.
+                        </li>
+                        <li>
+                            Pressing the real button: the rows grow downward, the day headings are right, the count in the head line rises (6 of 30,
+                            12 of 30, then 30 operations).
+                        </li>
+                        <li><b>Start over</b> puts the first six rows back.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: a plain button centred under the list with a quiet note. Check that the button does not change width between Load
+                        earlier and Loading, that the foot keeps its height from state to state, and that the head count is the exact number, never
+                        rounded.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="feed-earlier-component">
+                    <div role="group" aria-label="The foot">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-foot="more" aria-pressed="true">Load earlier</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-foot="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-foot="error" aria-pressed="false">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-foot="end" aria-pressed="false">Nothing earlier</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-foot="none" aria-pressed="false">Hidden</button>
+                    </div>
+                    <div role="group" aria-label="Feed" class="gaf-actions">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-restart>Start over</button>
+                    </div>
+                </div>
+                <div id="feed-earlier-component" class="kp-card gaf-card">
+                    <div
+                        class="kp-feed"
+                        id="gaf-earlier"
+                        data-kp-feed
+                        data-kp-feed-unit="operation,operations"
+                        aria-label="Activity, newest first"
+                    ></div>
+                </div>
+            </section>
+            <section
+                id="feed-narrow"
+                data-review-item="feed-narrow"
+                data-review-topic="activity-feed"
+                data-review-components="feed"
+                data-review-title="The activity feed: in a narrow column that scrolls"
+                aria-labelledby="h-feed-narrow"
+            >
+                <div class="gaf-asked">
+                    <p>
+                        <b>What is asked:</b> The layout reads its own width, not the window&rsquo;s, so it holds in a side panel as well as on a
+                        phone. <b>Scrolls inside</b> is the setting <code>data-kp-feed-max</code>: the list scrolls in a box of 26 rem and the day
+                        headings stick.
+                    </p>
+                </div>
+                <div class="gaf-intro">
+                    <h2 id="h-feed-narrow">A phone-wide column</h2>
+                    <p>
+                        The same feed in a column as wide as a phone: the actor and the time move under the text, and the list can scroll inside a
+                        fixed height while the day heading stays at its top.
+                    </p>
+                </div>
+                <div class="gaf-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Each row: the mark and the title on the first line, the detail under it, then the chip on the left and the time on the
+                            right on a line of their own. Nothing is cut and nothing runs sideways.
+                        </li>
+                        <li>
+                            <b>Scrolls inside</b>: the list is 26 rem high and scrolls; scroll it and the heading of the day you are in stays at the
+                            top, on the card&rsquo;s ground.
+                        </li>
+                        <li>The states keep the same footprint: Loading, Empty and Failed fill the box the rows had.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: check at this width that the heading of each day fits on one line or wraps cleanly, that the chip and the time are
+                        never closer than 8 px, and that the sticky heading is opaque (no row shows through).
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="feed-narrow-component">
+                    <div role="group" aria-label="State of the feed">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-n-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-n-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-n-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-n-state="error" aria-pressed="false">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="Height">
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-n-height="whole" aria-pressed="true">Whole list</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gaf-n-height="scroll" aria-pressed="false">Scrolls inside</button>
+                    </div>
+                </div>
+                <div id="feed-narrow-component" class="gaf-narrow">
+                    <div class="kp-card gaf-card">
+                        <div
+                            class="kp-feed"
+                            id="gaf-narrow"
+                            data-kp-feed
+                            data-kp-feed-unit="operation,operations"
+                            aria-label="Activity, narrow column"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "gap-activity-feed-20d466eb-19f4-45d6-ae44-6579548ca243", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

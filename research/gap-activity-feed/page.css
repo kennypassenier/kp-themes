@@ -1,0 +1,41 @@
+/* research/gap-activity-feed: the frame of the page. Everything with a kp- class is the package. */
+
+.gaf-page {
+    max-inline-size: 72rem;
+    margin-inline: auto;
+}
+
+.gaf-intro,
+.gaf-expected,
+.gaf-asked {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.gaf-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* The card the feed stands in: the sticky day headings are drawn on the card's ground. */
+.gaf-card {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+/* The narrow section: a feed in a column as wide as a phone, centred in the frame. */
+.gaf-narrow {
+    inline-size: min(100%, 24rem);
+    margin-inline: auto;
+}
+
+.gaf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* A failed or loading feed fills the height the rows had. The package holds at most 48 rem of it (js/footprint.js: a plate in the middle of a very tall
+   list is out of sight); these feeds are a little taller, so the page lifts the cap to show the rule whole. */
+.gaf-page .kp-feed {
+    --kp-footprint-max: 100rem;
+}

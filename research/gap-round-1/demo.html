@@ -1,0 +1,1745 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="gap-round-1" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>New components for the homelab dashboard, round 1</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+        <link rel="stylesheet" href="../gap-log-viewer/page.css" />
+        <link rel="stylesheet" href="../gap-diff-view/page.css" />
+        <link rel="stylesheet" href="../gap-activity-feed/page.css" />
+        <link rel="stylesheet" href="../gap-entity-tiles/page.css" />
+        <link rel="stylesheet" href="../gap-tab-count/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main gr1-page">
+            <header class="gr1-intro">
+                <h1>New components for the homelab dashboard, round 1</h1>
+                <p class="cat-intro">
+                    The homelab admin dashboard drew five things by hand because the package had none of them. Each is now a part of the package,
+                    shown here in formal only: the live log viewer, a diff of several files, the activity feed, two options of the entity card (a
+                    trend line and the app tile with a favourite star), and three small things around tabs, tiles and the heat grid (a count on a tab,
+                    arrow keys over a board of tiles, the legend under a heat grid). 21 sections, 21 pairs. All data is mock (a seeded homelab with
+                    jellyfin, sonarr and traefik); nothing is read from a host.
+                </p>
+                <p>Every section says under <b>Expected</b> what you should see and what each control does.</p>
+            </header>
+
+            <div class="glv-page">
+                <section
+                    id="ring-section"
+                    data-review-item="ring"
+                    data-review-topic="logviewer"
+                    data-review-topic-title="The live log viewer"
+                    data-review-components="logviewer"
+                    data-review-title="Lines keep arriving and the log keeps only the newest"
+                    aria-labelledby="h-ring"
+                >
+                    <div class="glv-intro">
+                        <h2 id="h-ring">Lines keep arriving and the log keeps only the newest</h2>
+                        <p>
+                            A host log that grows while you read it. The viewer keeps a fixed number of lines (here a small number, so you can see
+                            it), drops the oldest first and says how many it dropped. Following the newest line, Pause and the &ldquo;N new
+                            lines&rdquo; pill are the package&rsquo;s own.
+                        </p>
+                    </div>
+                    <div class="glv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                It opens with 46 lines and a cap of 60. <b>Add 10 lines</b> adds them at the foot and the view follows; the second
+                                press crosses the cap and the foot says <b>N earlier lines dropped, the newest 60 are kept</b>, with the exact number.
+                            </li>
+                            <li>
+                                Scroll up a little, then <b>Play once</b>: the view stays where you are and a pill says <b>N new lines</b> with the
+                                exact count; pressing it (or End) goes back to the newest line and follows again. <b>Pause</b> in the bar holds the
+                                view and becomes <b>Resume</b>.
+                            </li>
+                            <li>
+                                <b>Lines kept</b> 30, 60 or 200 changes the cap at once: at 30 the oldest lines leave the log and the dropped count
+                                grows, at 200 nothing is dropped.
+                            </li>
+                            <li>
+                                The level is a word first (WARNING, ERROR) and a tint second; each stack keeps its own hue; <b>Copy</b> says Copied
+                                without changing its width, <b>Download</b> saves a text file.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            The viewer is the log of a homelab host: stacks such as jellyfin, sonarr and traefik write into one list. The panel is an
+                            opaque paper plate in a strong hairline with a 3 px navy rule on its start edge; things are ruled in from that edge in a
+                            straight line, nothing fades. Check that the text keeps clear of every edge, that the level colours still read as words
+                            first, and that nothing moves when a state changes.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="glv-ring">
+                        <div role="group" aria-label="Lines">
+                            <b>Lines:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-action="add">Add 10 lines</button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-action="play">Play once</button>
+                        </div>
+                        <div role="group" aria-label="Lines kept" data-glv-group="cap">
+                            <b>Lines kept:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="cap" data-glv-value="30" aria-pressed="false">
+                                30
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="cap" data-glv-value="60" aria-pressed="true">
+                                60
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="cap" data-glv-value="200" aria-pressed="false">
+                                200
+                            </button>
+                        </div>
+                    </div>
+                    <div id="glv-ring">
+                        <div
+                            class="kp-logviewer"
+                            data-kp-logviewer
+                            data-kp-log-max="60"
+                            data-kp-log-filename="host-log"
+                            aria-label="Host log, newest 60 lines"
+                        ></div>
+                    </div>
+                </section>
+
+                <section
+                    id="find-section"
+                    data-review-item="find"
+                    data-review-topic="logviewer"
+                    data-review-components="logviewer"
+                    data-review-title="Find a word in the log and walk the matches"
+                    aria-labelledby="h-find"
+                >
+                    <div class="glv-intro">
+                        <h2 id="h-find">Find a word in the log and walk the matches</h2>
+                        <p>
+                            Type in the search box, or press one of the words below it. Every match is marked, the count says how many there are, and
+                            Enter and Shift+Enter (or the two buttons) go from one to the next.
+                        </p>
+                    </div>
+                    <div class="glv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                It opens on <b>timeout</b>: the matches are marked in bold with an underline, the count says <b>N matches</b>, and the
+                                first press of <b>Next match</b> makes the first one the filled plate and reads <b>1 of N</b>, scrolling it into view.
+                            </li>
+                            <li><b>Nothing</b> clears the find; <b>zzz</b> finds nothing and says <b>No matches</b> with both buttons off.</li>
+                            <li>
+                                <b>Only matching lines</b> hides every line without a match; the foot says <b>N of 170 lines shown</b>. Off shows all
+                                again and the marks stay.
+                            </li>
+                            <li><b>/</b> jumps to the search from anywhere in the viewer; Esc in the box clears it.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            The marks are the one place the page uses the primary colour for text; the current match is the filled plate with a rule
+                            round it. The panel is an opaque paper plate in a strong hairline with a 3 px navy rule on its start edge; things are
+                            ruled in from that edge in a straight line, nothing fades. Check that the text keeps clear of every edge, that the level
+                            colours still read as words first, and that nothing moves when a state changes.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="glv-find">
+                        <div role="group" aria-label="Find" data-glv-group="text">
+                            <b>Find:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="text" data-glv-value="" aria-pressed="false">
+                                Nothing
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="text" data-glv-value="timeout" aria-pressed="true">
+                                timeout
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-glv-group="text"
+                                data-glv-value="jellyfin"
+                                aria-pressed="false"
+                            >
+                                jellyfin
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="text" data-glv-value="zzz" aria-pressed="false">
+                                zzz
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Only matching lines" data-glv-group="only">
+                            <b>Only matching lines:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="only" data-glv-value="off" aria-pressed="true">
+                                Off
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="only" data-glv-value="on" aria-pressed="false">
+                                On
+                            </button>
+                        </div>
+                    </div>
+                    <div id="glv-find">
+                        <div
+                            class="kp-logviewer"
+                            data-kp-logviewer
+                            data-kp-log-max="400"
+                            data-kp-log-filename="host-log"
+                            aria-label="Host log with a search"
+                        ></div>
+                    </div>
+                </section>
+
+                <section
+                    id="look-section"
+                    data-review-item="look"
+                    data-review-topic="logviewer"
+                    data-review-components="logviewer"
+                    data-review-title="Wrap, the time column and the level"
+                    aria-labelledby="h-look"
+                >
+                    <div class="glv-intro">
+                        <h2 id="h-look">Wrap, the time column and the level</h2>
+                        <p>
+                            Three settings of how the lines look. Wrap decides whether a long line breaks or scrolls sideways, the time column can
+                            show the time, the date and time, or nothing, and the level hides the quiet lines.
+                        </p>
+                    </div>
+                    <div class="glv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Wrap On</b>: the two long lines (a stack trace and a database message) break and every line starts at the same
+                                column.
+                            </li>
+                            <li>
+                                <b>Wrap Off</b>: every line is one row and the log scrolls sideways; the time stays at the start edge while you
+                                scroll.
+                            </li>
+                            <li><b>Time column</b> Time, Date and time or Off: the columns after it close up with no gap left behind.</li>
+                            <li>
+                                <b>Level</b> Warning and above or Error and above hides the lines below it and the foot says
+                                <b>N of 28 lines shown</b>.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Warnings carry a yellow plate on the word and errors a red one, with the same tone faint behind the whole line. The panel
+                            is an opaque paper plate in a strong hairline with a 3 px navy rule on its start edge; things are ruled in from that edge
+                            in a straight line, nothing fades. Check that the text keeps clear of every edge, that the level colours still read as
+                            words first, and that nothing moves when a state changes.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="glv-look">
+                        <div role="group" aria-label="Wrap" data-glv-group="wrap">
+                            <b>Wrap:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="wrap" data-glv-value="on" aria-pressed="true">
+                                On
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="wrap" data-glv-value="off" aria-pressed="false">
+                                Off
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Time column" data-glv-group="time">
+                            <b>Time column:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="time" data-glv-value="time" aria-pressed="true">
+                                Time
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-glv-group="time"
+                                data-glv-value="datetime"
+                                aria-pressed="false"
+                            >
+                                Date and time
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="time" data-glv-value="off" aria-pressed="false">
+                                Off
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Level" data-glv-group="level">
+                            <b>Level:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="level" data-glv-value="debug" aria-pressed="true">
+                                All
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-glv-group="level"
+                                data-glv-value="warning"
+                                aria-pressed="false"
+                            >
+                                Warning and above
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="level" data-glv-value="error" aria-pressed="false">
+                                Error and above
+                            </button>
+                        </div>
+                    </div>
+                    <div id="glv-look">
+                        <div
+                            class="kp-logviewer"
+                            data-kp-logviewer
+                            data-kp-log-max="200"
+                            data-kp-log-filename="host-log"
+                            aria-label="Host log with long lines"
+                        ></div>
+                    </div>
+                </section>
+
+                <section
+                    id="states-section"
+                    data-review-item="log-states"
+                    data-review-topic="logviewer"
+                    data-review-components="logviewer"
+                    data-review-title="Reading, no lines yet, could not read, nothing matches"
+                    aria-labelledby="h-log-states"
+                >
+                    <div class="glv-intro">
+                        <h2 id="h-log-states">Reading, no lines yet, could not read, nothing matches</h2>
+                        <p>
+                            The states of the viewer. Each one fills the whole log area, so the bar above it and the foot under it stay where they
+                            are.
+                        </p>
+                    </div>
+                    <div class="glv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li><b>Reading</b>: the theme&rsquo;s busy card is centred over the whole log area and moves; the bar stays.</li>
+                            <li>
+                                <b>No lines yet</b>: an empty plate at heading size, centred, saying new lines show up as they arrive.
+                                <b>Could not read</b>: a red plate with a normal-size <b>Retry</b>; Retry reads again for a moment and shows the
+                                lines.
+                            </li>
+                            <li>
+                                <b>Filter hides all</b>: a plate saying no line matches, with <b>Clear search and level</b> that brings the lines
+                                back.
+                            </li>
+                            <li>The height of the log area is the same in all five states, and so is everything around it.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Compare the height of the log area in every state against the lines; the plates are the theme&rsquo;s own empty and alert
+                            plates. The panel is an opaque paper plate in a strong hairline with a 3 px navy rule on its start edge; things are ruled
+                            in from that edge in a straight line, nothing fades. Check that the text keeps clear of every edge, that the level colours
+                            still read as words first, and that nothing moves when a state changes.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="glv-states">
+                        <div role="group" aria-label="State" data-glv-group="state">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="state" data-glv-value="lines" aria-pressed="true">
+                                Lines
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-glv-group="state"
+                                data-glv-value="loading"
+                                aria-pressed="false"
+                            >
+                                Reading
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="state" data-glv-value="empty" aria-pressed="false">
+                                No lines yet
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-glv-group="state" data-glv-value="error" aria-pressed="false">
+                                Could not read
+                            </button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--sm"
+                                data-glv-group="state"
+                                data-glv-value="filtered"
+                                aria-pressed="false"
+                            >
+                                Filter hides all
+                            </button>
+                        </div>
+                    </div>
+                    <div id="glv-states">
+                        <div
+                            class="kp-logviewer"
+                            data-kp-logviewer
+                            data-kp-log-max="200"
+                            data-kp-log-filename="host-log"
+                            aria-label="Host log in its states"
+                        ></div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="gdv-page">
+                <section
+                    id="diff-files"
+                    data-review-item="diff-files"
+                    data-review-topic="diff"
+                    data-review-topic-title="A diff of several files"
+                    data-review-components="diffview"
+                    data-review-title="Several files in one diff"
+                    aria-labelledby="h-diff-files"
+                >
+                    <div class="gdv-sec__head">
+                        <h2 id="h-diff-files">Several files in one diff</h2>
+                        <p>
+                            The edit plan of the media stack as the dashboard shows it before it is applied: one block per file, each with what
+                            happened to the file, its path and how many lines changed.
+                        </p>
+                    </div>
+                    <div class="gdv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Every file has a header: a status word on a badge (Modified, Renamed, Added, Removed, Binary), the path with the
+                                folder quiet and the file name strong, and exact <b>+N</b> and <b>-M</b> counts. The counts and the five little blocks
+                                stand in the same column in every header.
+                            </li>
+                            <li>
+                                A renamed file shows <b>old path → new path</b>; a renamed file with no line changes says
+                                <b>No line changes in this file.</b> and a picture says <b>Binary file, not shown</b>.
+                            </li>
+                            <li>
+                                A header opens and closes its file (Enter or Space on the header); <b>Expand all</b> and <b>Collapse all</b> above do
+                                every file, and each is off, with its reason on hover, when it has nothing left to do.
+                            </li>
+                            <li>
+                                <b>Open</b> decides which files start open; <b>Header blocks</b> and <b>Copy path</b> show or hide those parts of
+                                every header; each press changes the diff at once.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal is the ruled ledger: an opaque paper plate in a strong hairline, flat and ruled, nothing fades. Check that each
+                            file block reads as one ruled entry, that the counts line up from header to header, that every label is whole and clear of
+                            its plate&rsquo;s edge, and that at 390 px the path takes its own line under the status.
+                        </p>
+                    </div>
+                    <div class="gdv-controls" data-review-controls data-review-controls-for="diff-files-component">
+                        <div role="group" aria-label="Which files start open">
+                            <b>Open:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-open="all" aria-pressed="true">All files</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-open="first" aria-pressed="false">First file</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-open="none" aria-pressed="false">No files</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-open="changed" aria-pressed="false">
+                                Files with line changes
+                            </button>
+                        </div>
+                        <div role="group" aria-label="The share of added and removed lines in each header">
+                            <b>Header blocks:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-bar="on" aria-pressed="true">Shown</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-bar="off" aria-pressed="false">Hidden</button>
+                        </div>
+                        <div role="group" aria-label="The Copy path button in each header">
+                            <b>Copy path:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-copy="on" aria-pressed="true">Shown</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-copy="off" aria-pressed="false">Hidden</button>
+                        </div>
+                    </div>
+                    <div
+                        id="diff-files-component"
+                        class="kp-diffview"
+                        data-kp-diffview
+                        data-kp-diff-state="loading"
+                        data-kp-diff-label="Changes to the media stack"
+                    ></div>
+                </section>
+
+                <section
+                    id="diff-context"
+                    data-review-item="diff-context"
+                    data-review-topic="diff"
+                    data-review-components="diffview"
+                    data-review-title="Unchanged lines fold away"
+                    aria-labelledby="h-diff-context"
+                >
+                    <div class="gdv-sec__head">
+                        <h2 id="h-diff-context">Unchanged lines fold away</h2>
+                        <p>
+                            A long run of lines nobody touched becomes one row, &ldquo;42 unchanged lines&rdquo;, that opens where it stands, so the
+                            change is what you see.
+                        </p>
+                    </div>
+                    <div class="gdv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                In the static config three runs fold with the default of 3 kept lines: the start of the file, the stretch between the
+                                two changes and the end. Each fold row says its exact number and is a button; <b>Enter</b> or a click opens it in
+                                place, and the same row now says <b>Hide 42 unchanged lines</b>.
+                            </li>
+                            <li>
+                                <b>Context lines</b>: with 1 more is hidden, with <b>All shown</b> nothing folds. A run that would hide fewer than 3
+                                lines is never folded.
+                            </li>
+                            <li><b>A new file</b> has no unchanged lines, so nothing folds and every line is shown with a plus sign.</li>
+                            <li>
+                                Opening a fold keeps the focus on its row, and the line numbers stay true: the new file&rsquo;s number for kept and
+                                added lines, the old one for removed lines.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the fold row is a quiet dashed rule across the three columns of the diff, its words standing where the code
+                            stands. Check that the words are clear of the edge, that the three dots turn into a single rule when the fold is open, and
+                            that opening a fold moves nothing above it.
+                        </p>
+                    </div>
+                    <div class="gdv-controls" data-review-controls data-review-controls-for="diff-context-component">
+                        <div role="group" aria-label="Unchanged lines kept next to each change">
+                            <b>Context lines:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-context="3" aria-pressed="true">3 (default)</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-context="1" aria-pressed="false">1</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-context="off" aria-pressed="false">All shown</button>
+                        </div>
+                        <div role="group" aria-label="Which change is shown">
+                            <b>Sample:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-sample="config" aria-pressed="true">
+                                Traefik static config
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-sample="newfile" aria-pressed="false">A new file</button>
+                        </div>
+                    </div>
+                    <div
+                        id="diff-context-component"
+                        class="kp-diffview"
+                        data-kp-diffview
+                        data-kp-diff-state="loading"
+                        data-kp-diff-label="Changes to the Traefik static config"
+                    ></div>
+                </section>
+
+                <section
+                    id="diff-words"
+                    data-review-item="diff-words"
+                    data-review-topic="diff"
+                    data-review-components="diffview"
+                    data-review-title="The changed words inside a line"
+                    aria-labelledby="h-diff-words"
+                >
+                    <div class="gdv-sec__head">
+                        <h2 id="h-diff-words">The changed words inside a line</h2>
+                        <p>
+                            When a line is replaced by a nearly identical one, only the words that differ are marked, so a version bump reads as the
+                            version and not as a whole line.
+                        </p>
+                    </div>
+                    <div class="gdv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Image tags</b>: in <code>jellyfin/jellyfin:10.11.11</code> becoming <code>jellyfin/jellyfin:12.1.0</code> only the
+                                version is marked. Added words are bold and underlined, removed words bold and struck through, so the two sides differ
+                                without colour.
+                            </li>
+                            <li>
+                                <b>Settings</b> marks the port, the log level and the memory limit alone; <b>Log lines</b> marks the dates, the times
+                                and the version in a startup log, and a line that has no partner stays plain.
+                            </li>
+                            <li>
+                                <b>A rewritten line</b> is not marked word by word: when more than 60% of a line changed, the whole line is the change
+                                and marking every word would say nothing.
+                            </li>
+                            <li><b>Words: Not marked</b> shows the same lines with whole-line tints only.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: a deeper tint and a heavier weight inside the line, nothing flashing. Check that the marked words stay inside
+                            their line without moving the text beside them, that the sign column and the numbers stay quiet, and that a marked word is
+                            readable on both the green and the red line.
+                        </p>
+                    </div>
+                    <div class="gdv-controls" data-review-controls data-review-controls-for="diff-words-component">
+                        <div role="group" aria-label="Mark the changed words">
+                            <b>Words:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-words="on" aria-pressed="true">Marked</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-words="off" aria-pressed="false">Not marked</button>
+                        </div>
+                        <div role="group" aria-label="Which change is shown">
+                            <b>Sample:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-sample="images" aria-pressed="true">Image tags</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-sample="settings" aria-pressed="false">Settings</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-sample="logs" aria-pressed="false">Log lines</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-sample="rewrite" aria-pressed="false">
+                                A rewritten line
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        id="diff-words-component"
+                        class="kp-diffview"
+                        data-kp-diffview
+                        data-kp-diff-state="loading"
+                        data-kp-diff-label="Changed words in the media stack"
+                    ></div>
+                </section>
+
+                <section
+                    id="diff-states"
+                    data-review-item="diff-states"
+                    data-review-topic="diff"
+                    data-review-components="diffview"
+                    data-review-title="Reading, nothing changed, could not read"
+                    aria-labelledby="h-diff-states"
+                >
+                    <div class="gdv-sec__head">
+                        <h2 id="h-diff-states">Reading, nothing changed, could not read</h2>
+                        <p>The three states a diff has besides the changes themselves, each in the box the diff had so nothing around it jumps.</p>
+                    </div>
+                    <div class="gdv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Reading</b> shows the file headers at their final size with the theme&rsquo;s busy card in the middle, and it keeps
+                                animating.
+                            </li>
+                            <li>
+                                <b>Nothing changed</b> is the package&rsquo;s empty plate at heading size, centred, with the names that were compared;
+                                <b>Could not read</b> is its alert with the reason and a normal-size <b>Try again</b>.
+                            </li>
+                            <li>
+                                Each state has the height the changes had (measure it by pressing <b>Changes shown</b> and then a state): the
+                                surroundings do not move. <b>Try again</b> reads again and shows the changes.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the empty plate is dashed and muted, the failed plate is the red alert; both are centred in the whole box with air
+                            on every side. Check the box keeps the same height in all four states and that Try again is a normal button, not a strip.
+                        </p>
+                    </div>
+                    <div class="gdv-controls" data-review-controls data-review-controls-for="diff-states-component">
+                        <div role="group" aria-label="The state of the diff">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-state="ready" aria-pressed="true">Changes shown</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-state="loading" aria-pressed="false">Reading</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-state="empty" aria-pressed="false">Nothing changed</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-state="error" aria-pressed="false">Could not read</button>
+                        </div>
+                    </div>
+                    <div
+                        id="diff-states-component"
+                        class="kp-diffview"
+                        data-kp-diffview
+                        data-kp-diff-state="loading"
+                        data-kp-diff-label="Changes to the media stack, in four states"
+                    ></div>
+                </section>
+
+                <section
+                    id="diff-long"
+                    data-review-item="diff-long"
+                    data-review-topic="diff"
+                    data-review-components="diffview"
+                    data-review-title="A long file draws a first part"
+                    aria-labelledby="h-diff-long"
+                >
+                    <div class="gdv-sec__head">
+                        <h2 id="h-diff-long">A long file draws a first part</h2>
+                        <p>
+                            A file added whole, with 453 lines, draws its first lines and keeps the rest behind one button, so the page stays quick
+                            and nothing is lost.
+                        </p>
+                    </div>
+                    <div class="gdv-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                With <b>40</b> lines first the file shows 40 lines and a row <b>Show the other 413 lines</b>; with <b>400</b> (the
+                                default) it shows 400 and <b>Show the other 53 lines</b>; with <b>All</b> there is no row.
+                            </li>
+                            <li>
+                                Pressing the row draws every line of that file at once and says so politely to a screen reader; the count in the
+                                header (+453) never changes.
+                            </li>
+                            <li>A file added whole has no unchanged lines, so no fold rows appear in it.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: the &ldquo;show the rest&rdquo; row looks like the fold row, a quiet dashed rule across the diff&rsquo;s columns
+                            with its words where the code stands. Check that the exact number is on the row, that it is clear of the edge, and that
+                            the lines drawn do not shift when the row is pressed.
+                        </p>
+                    </div>
+                    <div class="gdv-controls" data-review-controls data-review-controls-for="diff-long-component">
+                        <div role="group" aria-label="How many lines of a file are drawn before the rest waits">
+                            <b>Lines drawn first:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-max="40" aria-pressed="false">40</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-max="400" aria-pressed="true">400 (default)</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gdv-max="off" aria-pressed="false">All</button>
+                        </div>
+                    </div>
+                    <div
+                        id="diff-long-component"
+                        class="kp-diffview"
+                        data-kp-diffview
+                        data-kp-diff-state="loading"
+                        data-kp-diff-label="The new monitoring alert rules"
+                    ></div>
+                </section>
+            </div>
+
+            <div class="gaf-page">
+                <section
+                    id="feed-days"
+                    data-review-item="feed-days"
+                    data-review-topic="activity-feed"
+                    data-review-topic-title="The activity feed"
+                    data-review-components="feed"
+                    data-review-title="The activity feed: a day of activity, in every state"
+                    aria-labelledby="h-feed-days"
+                >
+                    <div class="gaf-asked">
+                        <p>
+                            <b>What is asked:</b> A new component, built because the admin dashboard drew this row by hand twice (a stack&rsquo;s
+                            History tab and the Activity page). Does it read as one tidy list &mdash; a mark you recognise by its shape, the chip of
+                            whoever started it, the time on the right, one rule joining the marks of a day &mdash; and are the five states (ready,
+                            loading, empty, failed, stale) what you would want to see when the dashboard cannot read its log? Press <b>Grouping</b> to
+                            see the same rows as one list.
+                        </p>
+                    </div>
+                    <div class="gaf-intro">
+                        <h2 id="h-feed-days">Who did what, day by day</h2>
+                        <p>
+                            One feed of a homelab: every row has its outcome, what happened, who started it and when, and the rows sit under a heading
+                            per day with that day’s count.
+                        </p>
+                    </div>
+                    <div class="gaf-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Each day has a heading: <b>Today</b>, <b>Yesterday</b>, then the weekday, then the date as dd/mm/yyyy, with that
+                                day&rsquo;s exact count and <b>N failed</b> (or <b>all ok</b>) at the end.
+                            </li>
+                            <li>
+                                A row: a round mark (tick, cross, exclamation, spinner or <b>i</b>), the title in bold, a muted detail line, a chip
+                                with the actor, and the time. The chips and the times stand in one column each, whichever row is longer.
+                            </li>
+                            <li>
+                                The time says <b>12 min ago</b> for the first 24 hours and ticks by itself; after that it is the moment, dd/mm/yyyy
+                                HH:mm. Pointing at it gives the full moment.
+                            </li>
+                            <li>
+                                <b>Loading</b> keeps the feed&rsquo;s height with the theme&rsquo;s busy card over a skeleton of rows;
+                                <b>Empty</b> and <b>Failed</b> fill the same height with a large centred plate (Failed has a Retry that reads the log
+                                again); <b>Stale</b> keeps every row and says in the head line why the feed was not refreshed, with a button to read
+                                it again.
+                            </li>
+                            <li>Nothing moves sideways or jumps in height between the states. Labels are whole, never cut.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal is a paper plate: quiet ink, square-ish corners, one border weight. Check that the marks are legible by shape
+                            alone, that a failed row stands out without shouting, that text keeps 8 px from every edge, and that the chip column lines
+                            up from the first day to the last.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="feed-days-component">
+                        <div role="group" aria-label="State of the feed">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-state="ready" aria-pressed="true">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-state="loading" aria-pressed="false">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-state="empty" aria-pressed="false">Empty</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-state="error" aria-pressed="false">Could not read</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-state="stale" aria-pressed="false">Not refreshed</button>
+                        </div>
+                        <div role="group" aria-label="Grouping">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-group="day" aria-pressed="true">By day</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-group="none" aria-pressed="false">One list</button>
+                        </div>
+                    </div>
+                    <div id="feed-days-component" class="kp-card gaf-card">
+                        <div
+                            class="kp-feed"
+                            id="gaf-days"
+                            data-kp-feed
+                            data-kp-feed-unit="operation,operations"
+                            aria-label="Activity of the homelab"
+                        ></div>
+                    </div>
+                </section>
+
+                <section
+                    id="feed-row-options"
+                    data-review-item="feed-row-options"
+                    data-review-topic="activity-feed"
+                    data-review-components="feed"
+                    data-review-title="The activity feed: what a row shows"
+                    aria-labelledby="h-feed-row-options"
+                >
+                    <div class="gaf-asked">
+                        <p>
+                            <b>What is asked:</b> Each of these is a setting of the component with a default (time <b>auto</b>, actor <b>chip</b>,
+                            rule <b>on</b>), switchable at run time. Press them and say which default is right, and whether the others are worth
+                            keeping as options. The rows reach back three days so the time options differ.
+                        </p>
+                    </div>
+                    <div class="gaf-intro">
+                        <h2 id="h-feed-row-options">The time, the actor and the rule</h2>
+                        <p>
+                            Three things a page may want different: how the time reads, whether the actor is a chip, a mark or left out, and whether
+                            the timeline&rsquo;s rule joins the marks.
+                        </p>
+                    </div>
+                    <div class="gaf-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Auto</b> (default): <b>12 min ago</b> for 24 hours, then dd/mm/yyyy HH:mm. <b>Ago line</b>: always
+                                <b>1 day 20 h ago</b> and so on. <b>Clock</b>: the ago line, then only HH:mm under its day heading. <b>Moment</b>:
+                                always dd/mm/yyyy HH:mm.
+                            </li>
+                            <li>
+                                <b>Chip</b> (default): mark and name. <b>Mark only</b>: the round or square mark with the name as its title (a screen
+                                reader still hears it). <b>No actor</b>: the column is gone and the title gets the room.
+                            </li>
+                            <li>
+                                <b>Rule</b>: a thin line joins one mark to the next inside a day and stops at the day heading; off, the marks stand
+                                alone.
+                            </li>
+                            <li>Every press changes the feed at once, and the columns stay aligned.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Compare Auto with Clock: the older rows lose their date and keep only the hour. Compare Chip with Mark only: the name
+                            leaves but the mark stays recognisable by its colour and pattern. Check that the title uses the room when the actor is
+                            off.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="feed-row-options-component">
+                        <div role="group" aria-label="Time">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-time="auto" aria-pressed="true">Auto</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-time="relative" aria-pressed="false">Ago line</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-time="clock" aria-pressed="false">Clock</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-time="moment" aria-pressed="false">Moment</button>
+                        </div>
+                        <div role="group" aria-label="Actor">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-actor="chip" aria-pressed="true">Chip</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-actor="mark" aria-pressed="false">Mark only</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-actor="off" aria-pressed="false">No actor</button>
+                        </div>
+                        <div role="group" aria-label="Rule between the marks">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-rail="on" aria-pressed="true">On</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-rail="off" aria-pressed="false">Off</button>
+                        </div>
+                    </div>
+                    <div id="feed-row-options-component" class="kp-card gaf-card">
+                        <div
+                            class="kp-feed"
+                            id="gaf-options"
+                            data-kp-feed
+                            data-kp-feed-unit="operation,operations"
+                            aria-label="Activity of the homelab, three days"
+                        ></div>
+                    </div>
+                </section>
+
+                <section
+                    id="feed-rows-open"
+                    data-review-item="feed-rows-open"
+                    data-review-topic="activity-feed"
+                    data-review-components="feed"
+                    data-review-title="The activity feed: lines under a row"
+                    aria-labelledby="h-feed-rows-open"
+                >
+                    <div class="gaf-asked">
+                        <p>
+                            <b>What is asked:</b> In the dashboard a row opens an inline detail. Here the title is the button (a chevron says so), the
+                            lines come in the mono face on the muted plate, and a row that has both lines and a page shows <b>Open</b> inside.
+                            <b>Opening</b> is a setting: several rows at once (default), one at a time, or not at all.
+                        </p>
+                    </div>
+                    <div class="gaf-intro">
+                        <h2 id="h-feed-rows-open">Open a row to read its log</h2>
+                        <p>
+                            A row that has lines (a log excerpt) opens under its title; a row that only has a place to go is a link; the rows keep
+                            their state when the feed refreshes.
+                        </p>
+                    </div>
+                    <div class="gaf-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Press a title with a chevron: its lines open under it, the chevron turns, and the row below moves down by exactly the
+                                lines&rsquo; height. Press again: it closes.
+                            </li>
+                            <li>
+                                <b>One at a time</b>: opening a row closes the others (and if several are open when you switch to it, the one opened
+                                last stays). <b>Not openable</b>: no chevrons, the titles are plain text or links.
+                            </li>
+                            <li>
+                                The arrow keys move from one title to the next. <b>Open all</b> and <b>Close all</b> act on the rows;
+                                <b>Refresh</b> reads the feed again and the rows you opened stay open, with the focus where it was.
+                            </li>
+                            <li>The failed row&rsquo;s lines show the real error; the running row shows the pull as it goes.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal keeps the lines on a quiet muted plate with a hairline border, in the mono face. Check the lines never touch the
+                            plate&rsquo;s edge, that long lines wrap instead of being cut, and that pressing Refresh does not close what you opened.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="feed-rows-open-component">
+                        <div role="group" aria-label="Opening">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-expand="many" aria-pressed="true">Several at once</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-expand="one" aria-pressed="false">One at a time</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-expand="off" aria-pressed="false">Not openable</button>
+                        </div>
+                        <div role="group" aria-label="Rows" class="gaf-actions">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-open="all">Open all</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-open="none">Close all</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-refresh>Refresh</button>
+                        </div>
+                    </div>
+                    <div id="feed-rows-open-component" class="kp-card gaf-card">
+                        <div
+                            class="kp-feed"
+                            id="gaf-open"
+                            data-kp-feed
+                            data-kp-feed-unit="operation,operations"
+                            aria-label="Operations with their logs"
+                        ></div>
+                    </div>
+                </section>
+
+                <section
+                    id="feed-earlier"
+                    data-review-item="feed-earlier"
+                    data-review-topic="activity-feed"
+                    data-review-components="feed"
+                    data-review-title="The activity feed: load earlier"
+                    aria-labelledby="h-feed-earlier"
+                >
+                    <div class="gaf-asked">
+                        <p>
+                            <b>What is asked:</b> The foot keeps the same room in all its states, so nothing moves when it changes. The button here is
+                            real: press it and two older days come in (after a short wait), then the foot says there is nothing earlier. The state
+                            buttons show each foot without waiting.
+                        </p>
+                    </div>
+                    <div class="gaf-intro">
+                        <h2 id="h-feed-earlier">Reach further back</h2>
+                        <p>
+                            A feed shows the newest rows first; at its foot a button loads the earlier ones, says how far back it has got, and says
+                            plainly when there is nothing more.
+                        </p>
+                    </div>
+                    <div class="gaf-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li><b>Load earlier</b>: a normal button with the note <b>Showing 6 of 30, back to dd/mm/yyyy</b> (exact numbers).</li>
+                            <li>
+                                <b>Loading</b>: the same button, disabled, with the spinner and <b>Loading earlier&hellip;</b>; the rows stay on
+                                screen. <b>Failed</b>: the sentence and <b>Try again</b>. <b>End</b>:
+                                <b>Nothing earlier: all 30 are shown, back to &hellip;</b>. <b>Hidden</b>: no foot and no room for it.
+                            </li>
+                            <li>
+                                Pressing the real button: the rows grow downward, the day headings are right, the count in the head line rises (6 of
+                                30, 12 of 30, then 30 operations).
+                            </li>
+                            <li><b>Start over</b> puts the first six rows back.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: a plain button centred under the list with a quiet note. Check that the button does not change width between Load
+                            earlier and Loading, that the foot keeps its height from state to state, and that the head count is the exact number,
+                            never rounded.
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="feed-earlier-component">
+                        <div role="group" aria-label="The foot">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-foot="more" aria-pressed="true">Load earlier</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-foot="loading" aria-pressed="false">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-foot="error" aria-pressed="false">Failed</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-foot="end" aria-pressed="false">Nothing earlier</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-foot="none" aria-pressed="false">Hidden</button>
+                        </div>
+                        <div role="group" aria-label="Feed" class="gaf-actions">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-restart>Start over</button>
+                        </div>
+                    </div>
+                    <div id="feed-earlier-component" class="kp-card gaf-card">
+                        <div
+                            class="kp-feed"
+                            id="gaf-earlier"
+                            data-kp-feed
+                            data-kp-feed-unit="operation,operations"
+                            aria-label="Activity, newest first"
+                        ></div>
+                    </div>
+                </section>
+
+                <section
+                    id="feed-narrow"
+                    data-review-item="feed-narrow"
+                    data-review-topic="activity-feed"
+                    data-review-components="feed"
+                    data-review-title="The activity feed: in a narrow column that scrolls"
+                    aria-labelledby="h-feed-narrow"
+                >
+                    <div class="gaf-asked">
+                        <p>
+                            <b>What is asked:</b> The layout reads its own width, not the window&rsquo;s, so it holds in a side panel as well as on a
+                            phone. <b>Scrolls inside</b> is the setting <code>data-kp-feed-max</code>: the list scrolls in a box of 26 rem and the day
+                            headings stick.
+                        </p>
+                    </div>
+                    <div class="gaf-intro">
+                        <h2 id="h-feed-narrow">A phone-wide column</h2>
+                        <p>
+                            The same feed in a column as wide as a phone: the actor and the time move under the text, and the list can scroll inside a
+                            fixed height while the day heading stays at its top.
+                        </p>
+                    </div>
+                    <div class="gaf-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Each row: the mark and the title on the first line, the detail under it, then the chip on the left and the time on the
+                                right on a line of their own. Nothing is cut and nothing runs sideways.
+                            </li>
+                            <li>
+                                <b>Scrolls inside</b>: the list is 26 rem high and scrolls; scroll it and the heading of the day you are in stays at
+                                the top, on the card&rsquo;s ground.
+                            </li>
+                            <li>The states keep the same footprint: Loading, Empty and Failed fill the box the rows had.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal: check at this width that the heading of each day fits on one line or wraps cleanly, that the chip and the time are
+                            never closer than 8 px, and that the sticky heading is opaque (no row shows through).
+                        </p>
+                    </div>
+                    <div data-review-controls data-review-controls-for="feed-narrow-component">
+                        <div role="group" aria-label="State of the feed">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-n-state="ready" aria-pressed="true">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-n-state="loading" aria-pressed="false">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-n-state="empty" aria-pressed="false">Empty</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-n-state="error" aria-pressed="false">
+                                Could not read
+                            </button>
+                        </div>
+                        <div role="group" aria-label="Height">
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-n-height="whole" aria-pressed="true">Whole list</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gaf-n-height="scroll" aria-pressed="false">
+                                Scrolls inside
+                            </button>
+                        </div>
+                    </div>
+                    <div id="feed-narrow-component" class="gaf-narrow">
+                        <div class="kp-card gaf-card">
+                            <div
+                                class="kp-feed"
+                                id="gaf-narrow"
+                                data-kp-feed
+                                data-kp-feed-unit="operation,operations"
+                                aria-label="Activity, narrow column"
+                            ></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="gt-page">
+                <section
+                    id="trend"
+                    data-review-item="trend"
+                    data-review-topic="entity-card"
+                    data-review-topic-title="Entity card: trend line and app tile"
+                    data-review-components="entity-grid entity"
+                    data-review-title="Stack card with a trend line"
+                    aria-labelledby="h-trend"
+                >
+                    <div class="gt-head">
+                        <h2 id="h-trend">Stack card with a trend line</h2>
+                        <p>
+                            Each stack card gets one more row under its meters: a label, the last 24 hours as a line, and the current value. It is the
+                            same line the key-figure tiles draw. The row is there on every card as soon as one card has readings, so the cards stay
+                            level.
+                        </p>
+                    </div>
+                    <div class="gt-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Four stack cards (jellyfin, sonarr, traefik, paperless), each with RAM and disk meters and, under them,
+                                <b>CPU 24 h</b>
+                                with a line over a soft area and its value (<b>34%</b>) at the end of the row, on the same columns as the meters. All
+                                four cards are exactly as high as each other.
+                            </li>
+                            <li>
+                                <b>Trend line: Hidden</b> takes the row away on every card at once; <b>A full day</b> brings it back.
+                                <b>Sonarr has one reading</b> keeps sonarr&rsquo;s row and says <b>no line yet</b> in the same box, since a line needs
+                                two readings. <b>Live: Add a reading</b> draws every line again from one more number; the cards are the same elements,
+                                so nothing moves.
+                            </li>
+                            <li>
+                                <b>State: Loading</b> shows skeleton cards under the busy card, <b>Not measured</b> says so in the figures and the
+                                trend row, <b>Failed</b> turns each card destructive with a Retry where the buttons were. The card keeps its height in
+                                each state.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal&rsquo;s card is a page of the ledger: the identity row is ruled off, the rows under it share their columns. Look at
+                            the line: does it read as a quiet 24-hour shape beside the meters, is its value legible at the row end, and does the row
+                            sit on the meters&rsquo; columns without making the card feel crowded?
+                        </p>
+                    </div>
+                    <div class="gt-controls" data-review-controls data-review-controls-for="gt-trend-grid">
+                        <div role="group" aria-label="Trend line">
+                            <b>Trend line:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-trend="day" aria-pressed="true">
+                                A full day for every stack
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-trend="one" aria-pressed="false">
+                                Sonarr has one reading
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-trend="off" aria-pressed="false">Hidden</button>
+                        </div>
+                        <div role="group" aria-label="State">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-state="ready" aria-pressed="true">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-state="loading" aria-pressed="false">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-state="empty" aria-pressed="false">Not measured</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-state="error" aria-pressed="false">Failed</button>
+                        </div>
+                        <div role="group" aria-label="Live">
+                            <b>Live:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-add-reading>Add a reading</button>
+                        </div>
+                    </div>
+                    <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-min="22rem" id="gt-trend-grid"></div>
+                    <pre class="gt-log" id="gt-trend-log" aria-live="polite">Press Restart or Logs on a card: its event shows here.</pre>
+                </section>
+
+                <section
+                    id="tile"
+                    data-review-item="tile"
+                    data-review-topic="entity-card"
+                    data-review-components="entity-grid entity"
+                    data-review-title="App tile: one link, a favourite star"
+                    aria-labelledby="h-tile"
+                >
+                    <div class="gt-head">
+                        <h2 id="h-tile">App tile: one link, a favourite star</h2>
+                        <p>
+                            The Apps page as a board of tiles. The whole tile opens the app; the star in its corner marks a favourite and never opens
+                            the link. A tile holds the mark, the name, the state in a dot and a word, a description and a few facts at the foot.
+                        </p>
+                    </div>
+                    <div class="gt-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                Eight tiles, favourites first (<b>Jellyfin</b> and <b>Traefik</b> start starred), every tile exactly as high as the
+                                tallest. Each has the mark made from its name, the name, a hollow star (a filled star in a dark square once pressed),
+                                the state as a dot and a word (<b>up</b>, <b>degraded</b>, <b>starting</b>, <b>down</b>), the description, and under
+                                it the lines: a count and the last log line. The lines of every tile in a row stand on one line at the foot.
+                            </li>
+                            <li>
+                                <b>Click anywhere on a tile</b> (not the star): the readout says the app opened and the page stays (this page is a
+                                mock, it does not leave). <b>Press the star, or the key S while the tile has the focus</b>: the star flips, the
+                                readout says so, and the link did not open. Tab goes tile by tile (one stop each) and then to the next star.
+                            </li>
+                            <li>
+                                <b>Opens in: A new tab</b> adds a small &nearr; before the star and tells a screen reader. <b>Favourites</b> sets the
+                                stars in the data (the board is drawn again in place). <b>Star button: Hidden</b> takes the star away from every tile.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal reads as a register of services. Look at the tile as one object: is it clear that all of it is a link, is the star
+                            clearly separate and clearly pressed or not, and do the lines at the foot make the board feel like a grid? The hovered
+                            tile and the tile with the focus each show their own edge.
+                        </p>
+                    </div>
+                    <div class="gt-controls" data-review-controls data-review-controls-for="gt-tile-grid">
+                        <div role="group" aria-label="Opens in">
+                            <b>Opens in:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-ext="same" aria-pressed="true">This tab</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-ext="new" aria-pressed="false">A new tab</button>
+                        </div>
+                        <div role="group" aria-label="Favourites">
+                            <b>Favourites:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-fav="two" aria-pressed="true">Jellyfin and Traefik</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-fav="none" aria-pressed="false">None</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-fav="all" aria-pressed="false">All eight</button>
+                        </div>
+                        <div role="group" aria-label="Star button">
+                            <b>Star button:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-star="on" aria-pressed="true">Shown</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-star="off" aria-pressed="false">Hidden</button>
+                        </div>
+                    </div>
+                    <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-kind="tile" id="gt-tile-grid"></div>
+                    <pre class="gt-log" id="gt-tile-log" aria-live="polite">Click a tile, press a star, or focus a tile and press S.</pre>
+                </section>
+
+                <section
+                    id="tile-states"
+                    data-review-item="tile-states"
+                    data-review-topic="entity-card"
+                    data-review-components="entity-grid entity"
+                    data-review-title="App tile: states and width"
+                    aria-labelledby="h-tile-states"
+                >
+                    <div class="gt-head">
+                        <h2 id="h-tile-states">App tile: states and width</h2>
+                        <p>
+                            What the board does while the apps are read, when nothing is known, when one app cannot be read and when all of them fail,
+                            and how it folds on a phone.
+                        </p>
+                    </div>
+                    <div class="gt-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Loading</b>: six skeleton tiles with the final geometry, under the busy card. <b>Not measured</b>: every tile keeps
+                                its name, state and description, and its lines row says so. <b>One tile failed</b>: Sonarr&rsquo;s state turns to a
+                                red dot and <b>failed</b>, and its description and lines are replaced by <b>reading failed</b> and a Retry of normal
+                                size; the board does not change height. The mock log line of the failure sits in the Retry&rsquo;s tooltip.
+                            </li>
+                            <li>
+                                <b>Grid failed</b> and <b>No apps</b> are the package&rsquo;s state plates, centred and at heading size, filling the
+                                board&rsquo;s footprint, with a normal Retry or Add button.
+                            </li>
+                            <li>
+                                <b>Width: Phone</b> narrows the board to one column of 20 rem: nothing is cut, long words wrap, the star stays
+                                reachable.
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Check each state against the loaded board: same frame, same height, nothing jumping. In the failed tile the Retry must be
+                            a normal button and the sentence must be legible, with air on every side of its text.
+                        </p>
+                    </div>
+                    <div class="gt-controls" data-review-controls data-review-controls-for="gt-states-frame">
+                        <div role="group" aria-label="State">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-board="ready" aria-pressed="true">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-board="loading" aria-pressed="false">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-board="empty" aria-pressed="false">Not measured</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-board="one" aria-pressed="false">One tile failed</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-board="error" aria-pressed="false">Grid failed</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-board="none" aria-pressed="false">No apps</button>
+                        </div>
+                        <div role="group" aria-label="Width">
+                            <b>Width:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-width="wide" aria-pressed="true">Wide</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gt-width="phone" aria-pressed="false">Phone (20 rem)</button>
+                        </div>
+                    </div>
+                    <div class="gt-frame" id="gt-states-frame" data-gt-width="wide">
+                        <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-kind="tile" id="gt-states-grid"></div>
+                    </div>
+                    <pre class="gt-log" id="gt-states-log" aria-live="polite">Press Retry on the failed tile: its event shows here.</pre>
+                </section>
+            </div>
+
+            <div class="gtc-page">
+                <section
+                    class="gtc-sec"
+                    id="tab-count"
+                    data-review-item="tab-count"
+                    data-review-topic="gap"
+                    data-review-topic-title="A count on a tab, arrow keys over tiles, the heat grid legend"
+                    data-review-components="tab"
+                    data-review-title="A count on a tab: Apps 7, Logs 12"
+                    aria-labelledby="h-tab-count"
+                >
+                    <div class="gtc-head">
+                        <h2 id="h-tab-count">A count on a tab: Apps 7, Logs 12</h2>
+                        <p>
+                            A tab can carry the exact number of what is behind it, in a colour that says how urgent it is, and it can say that it is
+                            still counting. The Logs tab below is the one the buttons drive; Apps and History show the same count with their own tone
+                            and word.
+                        </p>
+                    </div>
+                    <div class="gtc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>The number</b> is the whole number: 1534 reads 1534, never &ldquo;1.5k&rdquo; or &ldquo;99+&rdquo;. A number with
+                                no count (<b>Not counted yet</b>) and a 0 draw nothing; <b>0, shown</b> draws the 0, as History does for &ldquo;0
+                                incidents&rdquo;.
+                            </li>
+                            <li>
+                                <b>Tone</b> changes the colour of the count only. <b>Counting</b> turns the count into a pulsing bar as wide as the
+                                number was, and <b>Could not count</b> into a dash; the tabs beside it do not move in either.
+                            </li>
+                            <li>
+                                <b>Number and word</b> writes the unit after the number (&ldquo;12 errors&rdquo;, and &ldquo;1 error&rdquo; for one).
+                                The word is always there for a screen reader, which hears &ldquo;Logs, 12 errors&rdquo;.
+                            </li>
+                            <li>Select another tab: its count stays readable on the selected tab, and no tab changes width when it is selected.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal is ruled paper: an opaque plate in a strong hairline, a 3 px navy rule, nothing fades. Check that the count sits on
+                            the tab like a small stamp on the same baseline as the label, that its colours are the status plates the badges already
+                            have, and that there is clear space between the label and the count and between the count and the tab&rsquo;s edge.
+                        </p>
+                    </div>
+                    <div class="gtc-controls" data-review-controls data-review-controls-for="tab-count-component">
+                        <div role="group" aria-label="The number on Logs">
+                            <b>The number on Logs:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-count="12" aria-pressed="true">12</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-count="1" aria-pressed="false">1</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-count="1534" aria-pressed="false">1534</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-count="0" aria-pressed="false">0</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-count="0-shown" aria-pressed="false">0, shown</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-count="none" aria-pressed="false">Not counted yet</button>
+                        </div>
+                        <div role="group" aria-label="Tone of the count on Logs">
+                            <b>Tone:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-tone="neutral" aria-pressed="false">Neutral</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-tone="info" aria-pressed="false">Info</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-tone="success" aria-pressed="false">Success</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-tone="warning" aria-pressed="false">Warning</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-tone="error" aria-pressed="true">Error</button>
+                        </div>
+                        <div role="group" aria-label="State of the count on Logs">
+                            <b>State:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-state="ready" aria-pressed="true">Counted</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-state="loading" aria-pressed="false">Counting</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-state="error" aria-pressed="false">Could not count</button>
+                        </div>
+                        <div role="group" aria-label="Words on the counts">
+                            <b>Words:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-unit="hide" aria-pressed="true">Number only</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-unit="show" aria-pressed="false">Number and word</button>
+                        </div>
+                    </div>
+                    <div id="tab-count-component" class="gtc-stack">
+                        <p class="gtc-note">
+                            The stack &ldquo;media&rdquo;: its apps, the latest log lines and its incidents, behind three tabs (the other two have no
+                            count).
+                        </p>
+                        <div class="kp-tabs gtc-tabs">
+                            <div class="kp-tabs__list" role="tablist" aria-label="Stack media">
+                                <button
+                                    type="button"
+                                    class="kp-tab"
+                                    role="tab"
+                                    id="gtc-tab-apps"
+                                    aria-controls="gtc-panel-apps"
+                                    aria-selected="false"
+                                    data-kp-tab-count="7"
+                                    data-kp-tab-count-unit="app,apps"
+                                >
+                                    Apps
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-tab"
+                                    role="tab"
+                                    id="gtc-tab-logs"
+                                    aria-controls="gtc-panel-logs"
+                                    aria-selected="true"
+                                    data-kp-tab-count="12"
+                                    data-kp-tab-count-tone="error"
+                                    data-kp-tab-count-unit="error,errors"
+                                    data-gtc-logs
+                                >
+                                    Logs
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-tab"
+                                    role="tab"
+                                    id="gtc-tab-history"
+                                    aria-controls="gtc-panel-history"
+                                    aria-selected="false"
+                                    data-kp-tab-count="2"
+                                    data-kp-tab-count-tone="warning"
+                                    data-kp-tab-count-unit="incident,incidents"
+                                    data-kp-tab-count-zero="show"
+                                >
+                                    History
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-tab"
+                                    role="tab"
+                                    id="gtc-tab-backups"
+                                    aria-controls="gtc-panel-backups"
+                                    aria-selected="false"
+                                >
+                                    Backups
+                                </button>
+                                <button
+                                    type="button"
+                                    class="kp-tab"
+                                    role="tab"
+                                    id="gtc-tab-settings"
+                                    aria-controls="gtc-panel-settings"
+                                    aria-selected="false"
+                                >
+                                    Settings
+                                </button>
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-apps" aria-labelledby="gtc-tab-apps" hidden>
+                                <ul class="gtc-panel-list">
+                                    <li>
+                                        <b>jellyfin</b><span>Movies, shows and music</span><span class="kp-badge kp-badge--success">Running</span>
+                                    </li>
+                                    <li><b>sonarr</b><span>Series downloads</span><span class="kp-badge kp-badge--success">Running</span></li>
+                                    <li><b>radarr</b><span>Film downloads</span><span class="kp-badge kp-badge--success">Running</span></li>
+                                    <li>
+                                        <b>prowlarr</b><span>Indexers for sonarr and radarr</span
+                                        ><span class="kp-badge kp-badge--success">Running</span>
+                                    </li>
+                                    <li><b>qbittorrent</b><span>Download client</span><span class="kp-badge kp-badge--warning">Updating</span></li>
+                                    <li><b>bazarr</b><span>Subtitles</span><span class="kp-badge kp-badge--destructive">Down</span></li>
+                                    <li>
+                                        <b>jellyseerr</b><span>Requests from the family</span><span class="kp-badge kp-badge--success">Running</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-logs" aria-labelledby="gtc-tab-logs">
+                                <div class="kp-log">
+                                    <p class="kp-log__line" data-kp-severity="info">
+                                        <time class="kp-log__time">03:12:08</time>
+                                        <span class="kp-log__source" data-kp-source="jellyfin">jellyfin</span>
+                                        <span class="kp-log__level">info</span>
+                                        <span class="kp-log__message">Library scan finished: 4 new items in Films</span>
+                                    </p>
+                                    <p class="kp-log__line" data-kp-severity="warning">
+                                        <time class="kp-log__time">03:14:51</time>
+                                        <span class="kp-log__source" data-kp-source="sonarr">sonarr</span>
+                                        <span class="kp-log__level">warning</span>
+                                        <span class="kp-log__message">Indexer NZBgeek returned 429, retrying in 30 min</span>
+                                    </p>
+                                    <p class="kp-log__line" data-kp-severity="error">
+                                        <time class="kp-log__time">03:20:17</time>
+                                        <span class="kp-log__source" data-kp-source="bazarr">bazarr</span>
+                                        <span class="kp-log__level">error</span>
+                                        <span class="kp-log__message">OpenSubtitles login failed: HTTP 401, check the API key</span>
+                                    </p>
+                                    <p class="kp-log__line" data-kp-severity="error">
+                                        <time class="kp-log__time">03:20:48</time>
+                                        <span class="kp-log__source" data-kp-source="bazarr">bazarr</span>
+                                        <span class="kp-log__level">error</span>
+                                        <span class="kp-log__message">Could not fetch subtitles for 3 episodes of Severance S02</span>
+                                    </p>
+                                    <p class="kp-log__line" data-kp-severity="info">
+                                        <time class="kp-log__time">03:31:02</time>
+                                        <span class="kp-log__source" data-kp-source="traefik">traefik</span>
+                                        <span class="kp-log__level">info</span>
+                                        <span class="kp-log__message">Certificate for jellyfin.kp-soft.dev renewed, valid until 17/01/2027</span>
+                                    </p>
+                                    <p class="kp-log__line" data-kp-severity="error">
+                                        <time class="kp-log__time">03:44:39</time>
+                                        <span class="kp-log__source" data-kp-source="qbittorrent">qbittorrent</span>
+                                        <span class="kp-log__level">error</span>
+                                        <span class="kp-log__message">Tracker returned: connection timed out after 30 s</span>
+                                    </p>
+                                    <p class="kp-log__line" data-kp-severity="warning">
+                                        <time class="kp-log__time">03:52:10</time>
+                                        <span class="kp-log__source" data-kp-source="jellyfin">jellyfin</span>
+                                        <span class="kp-log__level">warning</span>
+                                        <span class="kp-log__message">Transcode of Dune.mkv fell back to software: no free VAAPI slot</span>
+                                    </p>
+                                    <p class="kp-log__line" data-kp-severity="info">
+                                        <time class="kp-log__time">04:05:00</time>
+                                        <span class="kp-log__source" data-kp-source="restic">restic</span>
+                                        <span class="kp-log__level">info</span>
+                                        <span class="kp-log__message">Snapshot 7d3e1a9c saved: media, 41.8 GB, 2 min 41 s</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-history" aria-labelledby="gtc-tab-history" hidden>
+                                <ol class="kp-timeline">
+                                    <li class="kp-timeline__item">
+                                        <span class="kp-timeline__marker" aria-hidden="true"></span>
+                                        <span
+                                            ><time class="kp-timeline__when" datetime="2026-10-18T22:40">18/10/2026 22:40</time>bazarr is down since
+                                            the update to 1.5.2</span
+                                        >
+                                    </li>
+                                    <li class="kp-timeline__item">
+                                        <span class="kp-timeline__marker" aria-hidden="true"></span>
+                                        <span
+                                            ><time class="kp-timeline__when" datetime="2026-10-16T04:05">16/10/2026 04:05</time>Nightly snapshot of
+                                            media missed, disk was 94 percent full</span
+                                        >
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-backups" aria-labelledby="gtc-tab-backups" hidden>
+                                Last snapshot of media: 19/10/2026 03:02, 41.8 GB, kept for 30 nights.
+                            </div>
+                            <div class="kp-tabs__panel" role="tabpanel" id="gtc-panel-settings" aria-labelledby="gtc-tab-settings" hidden>
+                                Compose file, environment and the update schedule of the media stack.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="gtc-sec"
+                    id="tile-keys"
+                    data-review-item="tile-keys"
+                    data-review-topic="gap"
+                    data-review-components="tiles"
+                    data-review-title="Arrow keys over a board of tiles"
+                    aria-labelledby="h-tile-keys"
+                >
+                    <div class="gtc-head">
+                        <h2 id="h-tile-keys">Arrow keys over a board of tiles</h2>
+                        <p>
+                            A board of app tiles is one place in the tab order: Tab enters it once, the arrow keys move between the tiles by where
+                            they are drawn, and Tab leaves it. Click a tile (or use <b>Put the focus on the board</b>) and press the arrow keys.
+                        </p>
+                    </div>
+                    <div class="gtc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Keys on:</b> the readings under the board say one tab stop for all the tiles. Right and Left walk a row and go on
+                                to the next row; Up and Down go to the tile above or below in the same column, and from the last tile of a short row
+                                to the last tile of the next row, never skipping a row. Home and End go to the first and last tile. Up on the first
+                                row lands in the search box.
+                            </li>
+                            <li>
+                                <b>Keys off</b> gives the ordinary tab order back: every tile is a tab stop (the readings say so) and the arrow keys
+                                do nothing.
+                            </li>
+                            <li>
+                                <b>Board width</b> changes how many tiles stand in a row (four, three, two, one); the keys follow whatever is drawn.
+                                <b>Folded</b> and <b>Only apps with a problem</b> take tiles out; the keys skip them.
+                            </li>
+                            <li>Press <b>S</b> on a tile to star it; the star is in the key line because it is not a tab stop of its own.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal is ruled paper. Check that the focused tile shows the package&rsquo;s focus ring with clear space round the tile,
+                            that the ring moves with the key at once, and that the tiles keep one height in every width.
+                        </p>
+                    </div>
+                    <div class="gtc-controls" data-review-controls data-review-controls-for="tile-keys-component">
+                        <div role="group" aria-label="Arrow keys">
+                            <b>Arrow keys:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-keys="on" aria-pressed="true">On</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-keys="off" aria-pressed="false">Off</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-focus>Put the focus on the board</button>
+                        </div>
+                        <div role="group" aria-label="Board width">
+                            <b>Board width:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-width="wide" aria-pressed="true">Wide</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-width="medium" aria-pressed="false">Medium</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-width="narrow" aria-pressed="false">Narrow</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-width="phone" aria-pressed="false">Phone</button>
+                        </div>
+                        <div role="group" aria-label="The platform group">
+                            <b>Platform group:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-fold="open" aria-pressed="true">Open</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-fold="folded" aria-pressed="false">Folded</button>
+                        </div>
+                        <div role="group" aria-label="Which apps">
+                            <b>Show:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-show="all" aria-pressed="true">All 19 apps</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-show="problem" aria-pressed="false">
+                                Only apps with a problem
+                            </button>
+                        </div>
+                    </div>
+                    <div id="tile-keys-component" class="gtc-board" data-gtc-width="wide">
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="gtc-search">Find an app</label>
+                            <input
+                                class="kp-field__input"
+                                id="gtc-search"
+                                type="search"
+                                autocomplete="off"
+                                placeholder="jellyfin, traefik, zigbee2mqtt"
+                            />
+                        </div>
+                        <div class="gtc-groups" id="gtc-board" data-kp-tiles-set="apps" data-kp-tiles-keys data-kp-tiles-keys-exit="gtc-search"></div>
+                        <div id="gtc-keyline"></div>
+                        <dl class="gtc-readings" aria-live="off">
+                            <dt>Tab stops on the board</dt>
+                            <dd data-gtc-stops></dd>
+                            <dt>Tile in focus</dt>
+                            <dd data-gtc-focus-name></dd>
+                            <dt>Tiles shown</dt>
+                            <dd data-gtc-shown></dd>
+                        </dl>
+                    </div>
+                </section>
+
+                <section
+                    class="gtc-sec"
+                    id="heat-legend"
+                    data-review-item="heat-legend"
+                    data-review-topic="gap"
+                    data-review-components="heat"
+                    data-review-title="The legend under a heat grid"
+                    aria-labelledby="h-heat-legend"
+                >
+                    <div class="gtc-head">
+                        <h2 id="h-heat-legend">The legend under a heat grid</h2>
+                        <p>
+                            A heat grid can write its own legend: a swatch and its words per state, a scale from less to more for a grid of values,
+                            and at the end the line of keys. The legend keeps its place while the grid loads or fails.
+                        </p>
+                    </div>
+                    <div class="gtc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>
+                                <b>Nightly backups:</b> five states in words (backed up, some missed, missed, before any history, keeps no data by
+                                design) and the key line at the end. <b>Requests per hour</b> swaps the grid for values, and the legend for a scale
+                                from fewer to more requests.
+                            </li>
+                            <li><b>Words only</b> drops the key line, <b>Hidden</b> removes the legend; neither moves the grid.</li>
+                            <li><b>Loading</b> and <b>Could not be read</b> leave the legend where it is, under a grid that keeps its size.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal is ruled paper. Check that every swatch is the same colour and pattern as the cell it describes, that the words
+                            have clear space from the swatch and from each other, and that the key line stands at the end and wraps whole when it does
+                            not fit.
+                        </p>
+                    </div>
+                    <div class="gtc-controls" data-review-controls data-review-controls-for="heat-legend-component">
+                        <div role="group" aria-label="What the grid shows">
+                            <b>The grid shows:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-data="nights" aria-pressed="true">Nightly backups</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-data="requests" aria-pressed="false">
+                                Requests per hour
+                            </button>
+                        </div>
+                        <div role="group" aria-label="The legend">
+                            <b>Legend:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-legend="keys" aria-pressed="true">
+                                With the key line
+                            </button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-legend="words" aria-pressed="false">Words only</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-legend="none" aria-pressed="false">Hidden</button>
+                        </div>
+                        <div role="group" aria-label="State of the grid">
+                            <b>Grid:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-grid="ready" aria-pressed="true">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-grid="loading" aria-pressed="false">Loading</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-grid="error" aria-pressed="false">
+                                Could not be read
+                            </button>
+                        </div>
+                    </div>
+                    <div id="heat-legend-component" class="gtc-stack">
+                        <div class="gtc-heat">
+                            <div class="kp-heat" id="gtc-heat" data-kp-heat data-kp-heat-latest="end" data-kp-heat-toggle></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="gtc-sec"
+                    id="heat-calm"
+                    data-review-item="heat-calm"
+                    data-review-topic="gap"
+                    data-review-components="heat"
+                    data-review-title="A calm grid draws its own legend"
+                    aria-labelledby="h-heat-calm"
+                >
+                    <div class="gtc-head">
+                        <h2 id="h-heat-calm">A calm grid draws its own legend</h2>
+                        <p>
+                            A tracker where a day without an entry is simply empty never shows red. A heat grid in the calm vocabulary now says what
+                            its three tones mean by itself: Logged, Nothing logged, Paused.
+                        </p>
+                    </div>
+                    <div class="gtc-expected">
+                        <p><b>Expected:</b></p>
+                        <ul>
+                            <li>The legend appears with the grid and names the three tones, in words that never say &ldquo;missed&rdquo;.</li>
+                            <li><b>Hidden</b> takes the legend away and <b>Automatic</b> brings it back, without the grid being drawn again.</li>
+                            <li><b>Paused for 3 days</b> turns the middle of the week hatched, and the legend already names that tone.</li>
+                            <li><b>Loading</b> keeps the legend where it is.</li>
+                        </ul>
+                    </div>
+                    <div data-review-look>
+                        <p data-for="formal">
+                            Formal is ruled paper. Check that the three swatches match the cells (filled, empty, hatched) and that nothing in the grid
+                            or the legend reads as a failure.
+                        </p>
+                    </div>
+                    <div class="gtc-controls" data-review-controls data-review-controls-for="heat-calm-component">
+                        <div role="group" aria-label="The legend">
+                            <b>Legend:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-calm-legend="auto" aria-pressed="true">Automatic</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-calm-legend="hide" aria-pressed="false">Hidden</button>
+                        </div>
+                        <div role="group" aria-label="Paused days">
+                            <b>Pause:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-pause="none" aria-pressed="true">None</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-pause="three" aria-pressed="false">
+                                Paused for 3 days
+                            </button>
+                        </div>
+                        <div role="group" aria-label="State of the grid">
+                            <b>Grid:</b>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-calm-grid="ready" aria-pressed="true">Ready</button>
+                            <button type="button" class="kp-button kp-button--sm" data-gtc-calm-grid="loading" aria-pressed="false">Loading</button>
+                        </div>
+                    </div>
+                    <div id="heat-calm-component" class="gtc-stack">
+                        <div class="gtc-heat">
+                            <div class="kp-heat" id="gtc-calm" data-kp-heat data-kp-tones="calm" aria-label="Habits this week"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "gap-round-1-a0038e7c-8f87-477a-846d-660f15c47ae8", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../gap-log-viewer/demo.js"></script>
+        <script type="module" src="../gap-diff-view/demo.js"></script>
+        <script type="module" src="../gap-activity-feed/demo.js"></script>
+        <script type="module" src="../gap-entity-tiles/demo.js"></script>
+        <script type="module" src="../gap-tab-count/demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

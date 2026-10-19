@@ -4,6 +4,14 @@ export type Strings = {
      */
     toggleCounting: string;
     /**
+     * The count on a tab, while it is still being counted: its name for a screen reader (js/tabbar.js, setTabCount) [gap-tab-count]
+     */
+    tabCountCounting: string;
+    /**
+     * The count on a tab that could not be counted, in words (the dash on the tab says nothing) [gap-tab-count]
+     */
+    tabCountFailed: string;
+    /**
      * The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
      */
     toggleOn: (label: string, count: number | null) => string;
@@ -375,6 +383,46 @@ export type Strings = {
      * The empty plate's action [kpadopt6-ops]
      */
     entityNew: string;
+    /**
+     * The favourite button's name, "Favourite jellyfin" [gap-entity-tiles-1019]
+     */
+    entityStar: (name: string) => string;
+    /**
+     * What a screen reader adds to a link that opens a new tab [gap-entity-tiles-1019]
+     */
+    entityOpensNew: string;
+    /**
+     * The trend row's label when the data gives none [gap-entity-tiles-1019]
+     */
+    entityTrend: string;
+    /**
+     * What the trend row says where there are fewer than two readings [gap-entity-tiles-1019]
+     */
+    entityTrendNone: string;
+    /**
+     * The trend line's text alternative, "CPU, last 24 h, now 34%" [gap-entity-tiles-1019]
+     */
+    entityTrendName: (label: string, text: string) => string;
+    /**
+     * What a tile says where its app could not be read [gap-entity-tiles-1019]
+     */
+    entityTileFailed: string;
+    /**
+     * The busy card's words while a board of tiles is read [gap-entity-tiles-1019]
+     */
+    entityTileLoading: string;
+    /**
+     * The failed plate's title for a board of tiles [gap-entity-tiles-1019]
+     */
+    entityTileGridFailed: string;
+    /**
+     * The empty plate's title for a board with no tile [gap-entity-tiles-1019]
+     */
+    entityTileGridEmpty: string;
+    /**
+     * The empty board's action [gap-entity-tiles-1019]
+     */
+    entityTileNew: string;
     alertSuccess: string;
     alertWarning: string;
     alertInfo: string;
@@ -1817,6 +1865,34 @@ export type Strings = {
      * A heat grid or matrix that could not be read [kpadopt2-grids]
      */
     heatFailed: string;
+    /**
+     * The less end of a heat legend's value ramp (js/heat.js, setHeatLegend) [gap-tab-count]
+     */
+    heatLegendLess: string;
+    /**
+     * The more end of the ramp [gap-tab-count]
+     */
+    heatLegendMore: string;
+    /**
+     * The name of a heat grid's legend for a screen reader [gap-tab-count]
+     */
+    heatLegendLabel: string;
+    /**
+     * The heat legend's key line: the arrow keys [gap-tab-count]
+     */
+    heatKeysMove: string;
+    /**
+     * Enter or Space on a cell: pick the column [gap-tab-count]
+     */
+    heatKeysPick: string;
+    /**
+     * Escape: drop the picked column [gap-tab-count]
+     */
+    heatKeysDrop: string;
+    /**
+     * Page Up and Page Down: show earlier or later columns [gap-tab-count]
+     */
+    heatKeysPage: string;
     /**
      * A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
      */
@@ -4820,6 +4896,150 @@ export type Strings = {
      */
     qrShowLess: string;
     /**
+     * The diff view's accessible name when it has none (js/diff.js) [gap-diff-view]
+     */
+    diffLabel: string;
+    /**
+     * The bar's count of files: "3 files changed" (js/diff.js) [gap-diff-view]
+     */
+    diffSummary: (files: number) => string;
+    /**
+     * The button that opens every file (js/diff.js) [gap-diff-view]
+     */
+    diffExpandAll: string;
+    /**
+     * The button that closes every file (js/diff.js) [gap-diff-view]
+     */
+    diffCollapseAll: string;
+    /**
+     * Why Expand all is off: every file is already open (js/diff.js) [gap-diff-view]
+     */
+    diffAllOpen: string;
+    /**
+     * Why Collapse all is off: every file is already closed (js/diff.js) [gap-diff-view]
+     */
+    diffAllClosed: string;
+    /**
+     * The badge of a new file (js/diff.js) [gap-diff-view]
+     */
+    diffStatusAdded: string;
+    /**
+     * The badge of a deleted file (js/diff.js) [gap-diff-view]
+     */
+    diffStatusRemoved: string;
+    /**
+     * The badge of a changed file (js/diff.js) [gap-diff-view]
+     */
+    diffStatusModified: string;
+    /**
+     * The badge of a moved file (js/diff.js) [gap-diff-view]
+     */
+    diffStatusRenamed: string;
+    /**
+     * The badge of a file that is not text (js/diff.js) [gap-diff-view]
+     */
+    diffStatusBinary: string;
+    /**
+     * A renamed file's path for a screen reader: "renamed from old/path" (js/diff.js) [gap-diff-view]
+     */
+    diffRenamedFrom: (from: string) => string;
+    /**
+     * The +N count for a screen reader: "3 lines added" (js/diff.js) [gap-diff-view]
+     */
+    diffAddedCount: (n: number) => string;
+    /**
+     * The -M count for a screen reader: "1 line removed" (js/diff.js) [gap-diff-view]
+     */
+    diffRemovedCount: (n: number) => string;
+    /**
+     * The folded context row: "12 unchanged lines" (js/diff.js) [gap-diff-view]
+     */
+    diffUnchanged: (n: number) => string;
+    /**
+     * That row's accessible name: "Show 12 unchanged lines" (js/diff.js) [gap-diff-view]
+     */
+    diffUnchangedName: (n: number) => string;
+    /**
+     * The same row once opened: "Hide 12 unchanged lines" (js/diff.js) [gap-diff-view]
+     */
+    diffUnchangedHide: (n: number) => string;
+    /**
+     * Said politely after a fold opened: "12 unchanged lines shown" (js/diff.js) [gap-diff-view]
+     */
+    diffUnchangedShown: (n: number) => string;
+    /**
+     * Said politely after a fold closed: "12 unchanged lines hidden" (js/diff.js) [gap-diff-view]
+     */
+    diffUnchangedHidden: (n: number) => string;
+    /**
+     * The row that shows the lines past the file's limit: "Show the other 1240 lines" (js/diff.js) [gap-diff-view]
+     */
+    diffShowMore: (n: number) => string;
+    /**
+     * The heading of a file that is not text (js/diff.js) [gap-diff-view]
+     */
+    diffBinaryTitle: string;
+    /**
+     * Its sentence (js/diff.js) [gap-diff-view]
+     */
+    diffBinaryText: string;
+    /**
+     * A file with no line changes (a rename or a mode change) (js/diff.js) [gap-diff-view]
+     */
+    diffNoLines: string;
+    /**
+     * A file's body name: "Changes in stacks/media/compose.yml" (js/diff.js) [gap-diff-view]
+     */
+    diffChangesIn: (path: string) => string;
+    /**
+     * The Copy path button (js/diff.js) [gap-diff-view]
+     */
+    diffCopyPath: string;
+    /**
+     * Its result word (js/diff.js) [gap-diff-view]
+     */
+    diffCopied: string;
+    /**
+     * Its refusal word (js/diff.js) [gap-diff-view]
+     */
+    diffCopyFailed: string;
+    /**
+     * The words under the busy card while the changes are read (js/diff.js) [gap-diff-view]
+     */
+    diffLoading: string;
+    /**
+     * Said politely when the changes are drawn (js/diff.js) [gap-diff-view]
+     */
+    diffReady: (files: number, added: number, removed: number) => string;
+    /**
+     * The empty plate's heading (js/diff.js) [gap-diff-view]
+     */
+    diffEmptyTitle: string;
+    /**
+     * Its sentence (js/diff.js) [gap-diff-view]
+     */
+    diffEmptyText: string;
+    /**
+     * Its sentence when one name was compared: "compose.yml is the same on both sides." (js/diff.js) [gap-diff-view]
+     */
+    diffEmptySame: (name: string) => string;
+    /**
+     * Its sentence when two names were compared (js/diff.js) [gap-diff-view]
+     */
+    diffEmptyBetween: (from: string, to: string) => string;
+    /**
+     * The failed plate's heading (js/diff.js) [gap-diff-view]
+     */
+    diffFailedTitle: string;
+    /**
+     * Its sentence (js/diff.js) [gap-diff-view]
+     */
+    diffFailedText: string;
+    /**
+     * The failed plate's button (js/diff.js) [gap-diff-view]
+     */
+    diffRetry: string;
+    /**
      * The star row's name for a screen reader: "Rating for Lasagne" (js/rating.js) [kpadopt6]
      */
     ratingGroupName: (item: string) => string;
@@ -5411,10 +5631,280 @@ export type Strings = {
      * The word a screen reader hears after a chip with no answer [kpadopt6]
      */
     usualUnansweredWord: string;
+    /**
+     * The pill's word for a log line, singular and plural (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerUnit: string;
+    /**
+     * The viewer's name for a screen reader when the page gives none (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLabel: string;
+    /**
+     * The scrolling list's name for a screen reader (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLogLabel: string;
+    /**
+     * The search box's label (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerSearch: string;
+    /**
+     * The search box's placeholder (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerSearchHint: string;
+    /**
+     * The count when nothing matches (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerSearchNone: string;
+    /**
+     * The count while the box is empty (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerSearchIdle: string;
+    /**
+     * The count when there are matches and none is current (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerMatches: (n: number) => string;
+    /**
+     * The count with the current match (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerMatchAt: (at: number, n: number) => string;
+    /**
+     * The button that goes to the match before (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerPrevious: string;
+    /**
+     * The button that goes to the next match (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNext: string;
+    /**
+     * The toggle that hides lines without a match (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerOnly: string;
+    /**
+     * The toggle that wraps long lines (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerWrap: string;
+    /**
+     * The time column control's name (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerTimeLabel: string;
+    /**
+     * Its first choice, the time of day (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerTimeShort: string;
+    /**
+     * Its second choice, date and time (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerTimeFull: string;
+    /**
+     * Its third choice, no time column (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerTimeOff: string;
+    /**
+     * The level select's label (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLevel: string;
+    /**
+     * Its first entry, every level (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLevelAll: string;
+    /**
+     * Its other entries: 'info', 'warning' or 'error' and above (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLevelFrom: (level: 'info' | 'warning' | 'error') => string;
+    /**
+     * The copy button (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerCopy: string;
+    /**
+     * The copy button's result word (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerCopied: string;
+    /**
+     * The copy button's refusal word (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNotCopied: string;
+    /**
+     * The download button (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerDownload: string;
+    /**
+     * Why copy and download are off when no line is shown (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNothing: string;
+    /**
+     * The foot's count of lines shown (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerCount: (shown: number, total: number) => string;
+    /**
+     * The foot's note about lines pushed out by the cap (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerDropped: (n: number, max: number) => string;
+    /**
+     * The words under the busy card while the lines are read (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLoading: string;
+    /**
+     * The empty plate's heading (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerEmptyTitle: string;
+    /**
+     * Its sentence (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerEmptyText: string;
+    /**
+     * The plate's heading when a search or level hides every line (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNoMatchTitle: string;
+    /**
+     * Its sentence (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNoMatchText: string;
+    /**
+     * Its button that takes the search and the level away (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerClear: string;
+    /**
+     * The failed plate's heading (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerFailed: string;
+    /**
+     * Its sentence (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerFailedText: string;
+    /**
+     * Its button (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerRetry: string;
+    /**
+     * The shortcut sheet's line for the search key (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerKeySearch: string;
+    /**
+     * The sheet's heading (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerKeyGroup: string;
+    /**
+     * The accessible name of the feed's list when the host has none (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedLabel: string;
+    /**
+     * The word for one row when the page names none, "event" (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedUnitOne: string;
+    /**
+     * The word for several rows, "events" (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedUnitMany: string;
+    /**
+     * The heading of today's rows (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedToday: string;
+    /**
+     * The heading of yesterday's rows (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedYesterday: string;
+    /**
+     * The count above the list when only some rows are loaded, "24 of 129 operations" (exact numbers) (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedShown: (shown: number, total: number, unit: string) => string;
+    /**
+     * A day heading's failed count, "2 failed" (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedFailed: (n: number) => string;
+    /**
+     * A day heading when nothing failed, "all ok" (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedAllOk: string;
+    /**
+     * A running row, as a screen reader hears it (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedStateRunning: string;
+    /**
+     * A row that is a note, not an outcome, as a screen reader hears it (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedStateInfo: string;
+    /**
+     * The word before who started a row, for a screen reader, "by Claude" (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedBy: string;
+    /**
+     * The accessible name of the lines that open under a row (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedMoreLabel: (title: string) => string;
+    /**
+     * The link inside an opened row that goes where its title would (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedOpen: string;
+    /**
+     * The head line of a feed whose refresh failed while its rows are still good, "Not refreshed: the host did not answer. Rows from 14:02." (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedStale: (reason: string, since: string) => string;
+    /**
+     * The button that reads a stale feed again (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedStaleAction: string;
+    /**
+     * What the busy card over the feed says (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedLoading: string;
+    /**
+     * The empty plate's title (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedEmptyTitle: string;
+    /**
+     * The empty plate's sentence when the page gives no reason (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedEmptyText: string;
+    /**
+     * The failed plate's title (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedErrorTitle: string;
+    /**
+     * The failed plate's sentence when the page gives no reason (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedErrorText: string;
+    /**
+     * The failed plate's Retry button (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedRetry: string;
+    /**
+     * The button that loads earlier rows (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedEarlier: string;
+    /**
+     * The same button while it works (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedEarlierLoading: string;
+    /**
+     * The sentence when earlier rows could not be loaded (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedEarlierError: string;
+    /**
+     * The button that tries again (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedEarlierRetry: string;
+    /**
+     * The note under Load earlier, "Showing 24 of 129, back to 14/10/2026" (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedBackTo: (shown: number, total: number, date: string) => string;
+    /**
+     * The foot when there is nothing earlier, "Nothing earlier: all 24 are shown, back to 14/10/2026" (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedEnd: (shown: number, date: string) => string;
+    /**
+     * Announced when one new row arrived (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedNew: (title: string) => string;
+    /**
+     * Announced when several arrived, naming the newest (js/feed.js) [gap-activity-feed-1019]
+     */
+    feedNewMany: (n: number, title: string) => string;
 };
 /**
  * @typedef {object} Strings
  * @property {string} toggleCounting  The count's name while it is still being counted (js/toggle.js) [kpadopt6-ops]
+ * @property {string} tabCountCounting  The count on a tab, while it is still being counted: its name for a screen reader (js/tabbar.js, setTabCount) [gap-tab-count]
+ * @property {string} tabCountFailed  The count on a tab that could not be counted, in words (the dash on the tab says nothing) [gap-tab-count]
  * @property {(label: string, count: number | null) => string} toggleOn  The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
  * @property {(label: string, count: number | null) => string} toggleOff  The line said once it is switched off [kpadopt6-ops]
  * @property {(label: string, n: number) => string} toggleCount  The line said when the count beside a toggle changed (data-kp-announce="all") [kpadopt6-ops]
@@ -5508,6 +5998,16 @@ export type Strings = {
  * @property {string} entityGridFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
  * @property {string} entityGridEmpty  The empty plate's title for a grid with no cards [kpadopt6-ops]
  * @property {string} entityNew  The empty plate's action [kpadopt6-ops]
+ * @property {(name: string) => string} entityStar  The favourite button's name, "Favourite jellyfin" [gap-entity-tiles-1019]
+ * @property {string} entityOpensNew  What a screen reader adds to a link that opens a new tab [gap-entity-tiles-1019]
+ * @property {string} entityTrend  The trend row's label when the data gives none [gap-entity-tiles-1019]
+ * @property {string} entityTrendNone  What the trend row says where there are fewer than two readings [gap-entity-tiles-1019]
+ * @property {(label: string, text: string) => string} entityTrendName  The trend line's text alternative, "CPU, last 24 h, now 34%" [gap-entity-tiles-1019]
+ * @property {string} entityTileFailed  What a tile says where its app could not be read [gap-entity-tiles-1019]
+ * @property {string} entityTileLoading  The busy card's words while a board of tiles is read [gap-entity-tiles-1019]
+ * @property {string} entityTileGridFailed  The failed plate's title for a board of tiles [gap-entity-tiles-1019]
+ * @property {string} entityTileGridEmpty  The empty plate's title for a board with no tile [gap-entity-tiles-1019]
+ * @property {string} entityTileNew  The empty board's action [gap-entity-tiles-1019]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo
@@ -5891,6 +6391,13 @@ export type Strings = {
  * @property {string} heatLoading           What a heat grid's or matrix's cell says while its value is being read (js/heat.js) [kpadopt2-grids]
  * @property {string} heatEmpty             A heat grid or matrix with no rows [kpadopt2-grids]
  * @property {string} heatFailed            A heat grid or matrix that could not be read [kpadopt2-grids]
+ * @property {string} heatLegendLess        The less end of a heat legend's value ramp (js/heat.js, setHeatLegend) [gap-tab-count]
+ * @property {string} heatLegendMore        The more end of the ramp [gap-tab-count]
+ * @property {string} heatLegendLabel       The name of a heat grid's legend for a screen reader [gap-tab-count]
+ * @property {string} heatKeysMove          The heat legend's key line: the arrow keys [gap-tab-count]
+ * @property {string} heatKeysPick          Enter or Space on a cell: pick the column [gap-tab-count]
+ * @property {string} heatKeysDrop          Escape: drop the picked column [gap-tab-count]
+ * @property {string} heatKeysPage          Page Up and Page Down: show earlier or later columns [gap-tab-count]
  * @property {string} matrixSelf            A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
  * @property {string} matrixUnknown         A matrix cell with no answer, for a screen reader [kpadopt2-grids]
  * @property {string} tableClearSearch      The way out of the no-match state
@@ -6712,6 +7219,42 @@ export type Strings = {
  * @property {string} consoleKeyFocusReason  Why the focus key does nothing now (js/console.js) [kpadopt6]
  * @property {(n: number) => string} qrShowAllChars  The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
  * @property {string} qrShowLess  The button that folds it again (js/qr.js) [kpadopt6]
+ * @property {string} diffLabel  The diff view's accessible name when it has none (js/diff.js) [gap-diff-view]
+ * @property {(files: number) => string} diffSummary  The bar's count of files: "3 files changed" (js/diff.js) [gap-diff-view]
+ * @property {string} diffExpandAll  The button that opens every file (js/diff.js) [gap-diff-view]
+ * @property {string} diffCollapseAll  The button that closes every file (js/diff.js) [gap-diff-view]
+ * @property {string} diffAllOpen  Why Expand all is off: every file is already open (js/diff.js) [gap-diff-view]
+ * @property {string} diffAllClosed  Why Collapse all is off: every file is already closed (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusAdded  The badge of a new file (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusRemoved  The badge of a deleted file (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusModified  The badge of a changed file (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusRenamed  The badge of a moved file (js/diff.js) [gap-diff-view]
+ * @property {string} diffStatusBinary  The badge of a file that is not text (js/diff.js) [gap-diff-view]
+ * @property {(from: string) => string} diffRenamedFrom  A renamed file's path for a screen reader: "renamed from old/path" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffAddedCount  The +N count for a screen reader: "3 lines added" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffRemovedCount  The -M count for a screen reader: "1 line removed" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchanged  The folded context row: "12 unchanged lines" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchangedName  That row's accessible name: "Show 12 unchanged lines" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchangedHide  The same row once opened: "Hide 12 unchanged lines" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchangedShown  Said politely after a fold opened: "12 unchanged lines shown" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffUnchangedHidden  Said politely after a fold closed: "12 unchanged lines hidden" (js/diff.js) [gap-diff-view]
+ * @property {(n: number) => string} diffShowMore  The row that shows the lines past the file's limit: "Show the other 1240 lines" (js/diff.js) [gap-diff-view]
+ * @property {string} diffBinaryTitle  The heading of a file that is not text (js/diff.js) [gap-diff-view]
+ * @property {string} diffBinaryText  Its sentence (js/diff.js) [gap-diff-view]
+ * @property {string} diffNoLines  A file with no line changes (a rename or a mode change) (js/diff.js) [gap-diff-view]
+ * @property {(path: string) => string} diffChangesIn  A file's body name: "Changes in stacks/media/compose.yml" (js/diff.js) [gap-diff-view]
+ * @property {string} diffCopyPath  The Copy path button (js/diff.js) [gap-diff-view]
+ * @property {string} diffCopied  Its result word (js/diff.js) [gap-diff-view]
+ * @property {string} diffCopyFailed  Its refusal word (js/diff.js) [gap-diff-view]
+ * @property {string} diffLoading  The words under the busy card while the changes are read (js/diff.js) [gap-diff-view]
+ * @property {(files: number, added: number, removed: number) => string} diffReady  Said politely when the changes are drawn (js/diff.js) [gap-diff-view]
+ * @property {string} diffEmptyTitle  The empty plate's heading (js/diff.js) [gap-diff-view]
+ * @property {string} diffEmptyText  Its sentence (js/diff.js) [gap-diff-view]
+ * @property {(name: string) => string} diffEmptySame  Its sentence when one name was compared: "compose.yml is the same on both sides." (js/diff.js) [gap-diff-view]
+ * @property {(from: string, to: string) => string} diffEmptyBetween  Its sentence when two names were compared (js/diff.js) [gap-diff-view]
+ * @property {string} diffFailedTitle  The failed plate's heading (js/diff.js) [gap-diff-view]
+ * @property {string} diffFailedText  Its sentence (js/diff.js) [gap-diff-view]
+ * @property {string} diffRetry  The failed plate's button (js/diff.js) [gap-diff-view]
  * @property {(item: string) => string} ratingGroupName  The star row's name for a screen reader: "Rating for Lasagne" (js/rating.js) [kpadopt6]
  * @property {string} ratingGroupNameBare  The same when the row names no item [kpadopt6]
  * @property {(n: number, max: number) => string} ratingStarName  One star's name: "4 of 5" [kpadopt6]
@@ -6860,6 +7403,73 @@ export type Strings = {
  * @property {string} usualHadItWord  The word a screen reader hears after a chip that is had it [kpadopt6]
  * @property {(label: string) => string} usualUnanswered  What is said when an answer is taken back: "Headache: not answered" [kpadopt6]
  * @property {string} usualUnansweredWord  The word a screen reader hears after a chip with no answer [kpadopt6]
+ * @property {string} logviewerUnit  The pill's word for a log line, singular and plural (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLabel  The viewer's name for a screen reader when the page gives none (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLogLabel  The scrolling list's name for a screen reader (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearch  The search box's label (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchHint  The search box's placeholder (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchNone  The count when nothing matches (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchIdle  The count while the box is empty (js/logviewer.js) [gap-log-viewer]
+ * @property {(n: number) => string} logviewerMatches  The count when there are matches and none is current (js/logviewer.js) [gap-log-viewer]
+ * @property {(at: number, n: number) => string} logviewerMatchAt  The count with the current match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerPrevious  The button that goes to the match before (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNext  The button that goes to the next match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerOnly  The toggle that hides lines without a match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerWrap  The toggle that wraps long lines (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeLabel  The time column control's name (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeShort  Its first choice, the time of day (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeFull  Its second choice, date and time (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeOff  Its third choice, no time column (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLevel  The level select's label (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLevelAll  Its first entry, every level (js/logviewer.js) [gap-log-viewer]
+ * @property {(level: 'info' | 'warning' | 'error') => string} logviewerLevelFrom  Its other entries: 'info', 'warning' or 'error' and above (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerCopy  The copy button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerCopied  The copy button's result word (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNotCopied  The copy button's refusal word (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerDownload  The download button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNothing  Why copy and download are off when no line is shown (js/logviewer.js) [gap-log-viewer]
+ * @property {(shown: number, total: number) => string} logviewerCount  The foot's count of lines shown (js/logviewer.js) [gap-log-viewer]
+ * @property {(n: number, max: number) => string} logviewerDropped  The foot's note about lines pushed out by the cap (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLoading  The words under the busy card while the lines are read (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerEmptyTitle  The empty plate's heading (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerEmptyText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNoMatchTitle  The plate's heading when a search or level hides every line (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNoMatchText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerClear  Its button that takes the search and the level away (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerFailed  The failed plate's heading (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerFailedText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerRetry  Its button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerKeySearch  The shortcut sheet's line for the search key (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerKeyGroup  The sheet's heading (js/logviewer.js) [gap-log-viewer]
+ * @property {string} feedLabel  The accessible name of the feed's list when the host has none (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedUnitOne  The word for one row when the page names none, "event" (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedUnitMany  The word for several rows, "events" (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedToday  The heading of today's rows (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedYesterday  The heading of yesterday's rows (js/feed.js) [gap-activity-feed-1019]
+ * @property {(shown: number, total: number, unit: string) => string} feedShown  The count above the list when only some rows are loaded, "24 of 129 operations" (exact numbers) (js/feed.js) [gap-activity-feed-1019]
+ * @property {(n: number) => string} feedFailed  A day heading's failed count, "2 failed" (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedAllOk  A day heading when nothing failed, "all ok" (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedStateRunning  A running row, as a screen reader hears it (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedStateInfo  A row that is a note, not an outcome, as a screen reader hears it (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedBy  The word before who started a row, for a screen reader, "by Claude" (js/feed.js) [gap-activity-feed-1019]
+ * @property {(title: string) => string} feedMoreLabel  The accessible name of the lines that open under a row (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedOpen  The link inside an opened row that goes where its title would (js/feed.js) [gap-activity-feed-1019]
+ * @property {(reason: string, since: string) => string} feedStale  The head line of a feed whose refresh failed while its rows are still good, "Not refreshed: the host did not answer. Rows from 14:02." (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedStaleAction  The button that reads a stale feed again (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedLoading  What the busy card over the feed says (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEmptyTitle  The empty plate's title (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEmptyText  The empty plate's sentence when the page gives no reason (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedErrorTitle  The failed plate's title (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedErrorText  The failed plate's sentence when the page gives no reason (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedRetry  The failed plate's Retry button (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEarlier  The button that loads earlier rows (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEarlierLoading  The same button while it works (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEarlierError  The sentence when earlier rows could not be loaded (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEarlierRetry  The button that tries again (js/feed.js) [gap-activity-feed-1019]
+ * @property {(shown: number, total: number, date: string) => string} feedBackTo  The note under Load earlier, "Showing 24 of 129, back to 14/10/2026" (js/feed.js) [gap-activity-feed-1019]
+ * @property {(shown: number, date: string) => string} feedEnd  The foot when there is nothing earlier, "Nothing earlier: all 24 are shown, back to 14/10/2026" (js/feed.js) [gap-activity-feed-1019]
+ * @property {(title: string) => string} feedNew  Announced when one new row arrived (js/feed.js) [gap-activity-feed-1019]
+ * @property {(n: number, title: string) => string} feedNewMany  Announced when several arrived, naming the newest (js/feed.js) [gap-activity-feed-1019]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

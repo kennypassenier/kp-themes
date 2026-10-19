@@ -149,31 +149,36 @@ const SECTIONS = [
     {
         id: 'clients-issue',
         topic: 'clients',
-        title: 'Issue a client: a form that ends with the token in your hand',
-        components: 'dialog, form, combobox, flash, secret, command',
-        about: 'The name is checked as you leave the field, the topic offers the ones already used, and the new token appears in the same dialog with a ready command, instead of a reload and a hunt through the table.',
+        title: 'Issue a client: the form beside the client it will make, then the token and first call beside the client made',
+        components: 'dialog, form, combobox, flash, secret, command, idmark, kv',
+        about: 'Round 2: a composition on the 12-column grid instead of one column. The form (columns 1 to 7) stands against a live card of the client it will make (8 to 12); after Issue, the token and the first command are one block in the same place and the card shows what was made.',
         expect: [
-            '<b>Form:</b> Name and Topic with a help line each; Topic opens a list with <b>Used before</b> on top and lets you type a new one. <b>Name taken</b> shows the error under the field in words and keeps what you typed.',
-            '<b>Issued:</b> the token is in a secret field that stays shown until you hide it, with Copy; a first command is under it, and Done closes. Issue token is one button with a spinner and then “Issued”, never changing width.',
+            '<b>Form:</b> Name and Topic in the left card; the right card fills in as you type (mark, name, topic, state, what is made and where it appears). Topic opens <b>Used before</b> on top; <b>Name taken</b> shows the error under the field in words, and the card says <b>not issued</b>.',
+            '<b>Issued:</b> the token and the first command share one block (one label, one width), the card on the right becomes the receipt. Heads, contents and foot notes of both cards sit on the same three rows, and the dialog keeps its size in all three steps.',
+            '<b>Phone</b> (the Width control): the client card becomes a strip of mark, name, topic and state above the form; the buttons share the width equally.',
         ],
-        look: 'The dialog is one column with its sections in a fixed order; the Topic list opens at its field with the opaque menu plate; the error is a line under the field in the destructive colour with words.',
-        controls: [{ key: 'step', label: 'Step', options: [['form', 'Form'], ['taken', 'Name taken'], ['issued', 'Issued']] }],
+        look: 'The two cards share their top, their bottom and their three inner rows; the dialog is exactly as tall in Form, Name taken and Issued; at Phone the strip comes first and nothing scrolls sideways.',
+        controls: [
+            { key: 'step', label: 'Step', options: [['form', 'Form'], ['taken', 'Name taken'], ['issued', 'Issued']] },
+            { key: 'width', label: 'Width', options: [['full', 'Full'], ['phone', 'Phone']] },
+        ],
     },
     {
         id: 'clients-manage',
         topic: 'clients',
-        title: 'Manage a client: token, command, test and what it sent',
+        title: 'Manage a client: the controls in a rail, the requests as the wide area',
         components: 'dialog, secret, command, json-field, flash, request-inspector, type-confirm, idmark',
-        about: 'Everything about one client in one dialog, in the order you use it: reveal or copy the token, copy a command, send a test with a body of your choosing, read what it sent, and the dangerous things last behind a typed name.',
+        about: 'Round 2: one grid of 12 columns. The client and its three figures across the top (5 | 7); the token and the command in a fixed rail (1 to 5); the test and the request inspector as the wide area (6 to 12); the danger zone as a band with its words under the rail and its three actions, each with its consequence, under the inspector.',
         expect: [
-            '<b>Token:</b> the field is masked; Reveal shows it for 10 s with a countdown and Copy never shows it. <b>Use it:</b> the command block never holds the token (safe to paste in a chat); the button copies the same command with the token in it.',
-            '<b>Test it:</b> the body is a JSON box that says what is wrong and where; Send test shows a spinner, then “Sent”. <b>Requests</b> are the inspector: method, path and status in words, headers with <code>authorization</code> masked, the body, and Copy as curl. Press the four request states.',
-            '<b>Danger zone:</b> Delete asks for the exact name <b>home-assistant</b> before Confirm turns on; Revoke and Re-issue ask once and say what happens. <b>Revoked</b> shows only the history and Delete.',
+            '<b>Rail:</b> Token (Reveal shows it for 10 s, Copy never shows it) and Use it (the block never holds the token; the button copies it with the token). <b>Wide area:</b> Test it (the body is a JSON box that says what is wrong and where; the button sits beside it) above the Requests: method, path and status in words, <code>authorization</code> masked, Copy as curl.',
+            '<b>Danger zone:</b> Re-issue, Revoke and Delete are three equal cells, each with what it does; Delete asks for the exact name <b>home-assistant</b>. <b>Revoked</b> keeps every area: the rail says the token no longer works, Send test is off with its reason, Re-issue and Revoke are off with theirs.',
+            'Press the four request states: the inspector keeps its area. <b>Phone</b>: the three figures become one tall tile beside two, the test sits under the rail, the three actions stay three equal buttons.',
         ],
-        look: 'The dialog is wide with one heading per section and a note under each; the secret line keeps its height while it counts down; the inspector’s states keep one height; the danger section is last and marked.',
+        look: 'The rail, the test and the inspector share their top and bottom edges; the danger words start under the rail and the three actions under the inspector, on the same columns as the areas above; the dialog is exactly as tall in every Client and Requests state.',
         controls: [
             { key: 'client', label: 'Client', options: [['active', 'Active'], ['revoked', 'Revoked']] },
             { key: 'requests', label: 'Requests', options: [['ready', 'Ready'], ['loading', 'Loading'], ['empty', 'Empty'], ['error', 'Failed']] },
+            { key: 'width', label: 'Width', options: [['full', 'Full'], ['phone', 'Phone']] },
         ],
     },
     {
@@ -294,8 +299,17 @@ ${s.expect.map((e) => `                        <li>${e}</li>`).join('\n')}
 }
 
 /** One bundled review (Kenny, 2026-10-19: demos from one project are bundled, up to 25 items): every kit page in one demo. */
+const OPEN = ['clients-issue', 'clients-manage', 'login', 'passkeys-list', 'passkeys-qr'];
+/** The page rounds of round 1 (the five part pages Kenny judged, 2026-10-19 03:11): their answers are recorded in VERDICTS.json and must not come back. */
+const RECEIVED = [
+    'chassis-kit-shell-0a03b1be-8fc4-4ad2-a1f1-928e31093dd7',
+    'chassis-kit-status-8f4d47e7-df65-436b-8b67-6254caf06077',
+    'chassis-kit-clients-7904a752-e0d6-4bd7-91c1-e278ce9246bc',
+    'chassis-kit-login-ad2c2843-1d5d-4dce-a21a-ebd268059fa4',
+    'chassis-kit-passkeys-d279180e-25d8-48e8-8c9a-09ba1d76960f',
+];
 const PARTS = [
-    { dir: 'chassis-kit-pages', name: 'kit-pages', round: 'ce3d6376-0a26-4d7b-a547-d3ab4a480025', title: 'every kit page', ids: SECTIONS.map((s) => s.id), about: 'The shell and the error page, the status page and the sections a service adds, the clients page, the login page and the passkeys page: everything the kit serves to every service.' },
+    { dir: 'chassis-kit-pages', name: 'kit-pages', round: '27d90ddd-5b32-4b7b-94d5-f2bfd1d4d99a', title: 'the two client dialogs, login and passkeys (round 2)', ids: OPEN, about: 'Round 2 of the kit pages: only what is still open. The issue and the manage dialog of the clients page are redrawn as grid compositions (round 1 was rejected for plain left/right alignment); the login page and the two passkeys pages were not judged in round 1 and come back unchanged. Everything else was approved and has left the page.' },
 ];
 
 for (const part of PARTS) {
@@ -344,7 +358,7 @@ for (const part of PARTS) {
 ${secs.map(section).join('\n')}
         </main>
         <script type="application/json" data-review-round>
-            { "round": "${part.dir}-${part.round}" }
+            { "round": "${part.dir}-${part.round}", "received": ${JSON.stringify(RECEIVED)} }
         </script>
         <script type="module" src="../chassis-kit-pages/demo.js"></script>
         <script type="module" src="../_review/review.js"></script>

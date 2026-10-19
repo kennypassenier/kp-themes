@@ -298,7 +298,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-18 [release-11-1018]: 11 knobs arrived with the day's merged rounds, all real and read through var():
     // --kp-notices-sizer, the segmented fade (--kp-seg-fade, -start, -end), the shortcuts hint view (--kp-shortcuts-hint-view-height, -top),
     // the shortcuts view (--kp-shortcuts-view-height, -top), the toggle hint (--kp-toggle-hint-gap, -line) and --kp-usual-check-gap: 944 + 11.
-    assert.equal(result.expected, 955, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-19 [gap-log-viewer + gap-diff-view-1019]: the log viewer's two knobs (--kp-logviewer-height, -min) and the diff view's five (--kp-diffview-min, -status, -gap, -added-ch, -removed-ch), all read through var(): 955 + 2 + 5.
+    // Re-pinned 2026-10-19 [gap-int-1019]: the five component rounds merged into one branch (log viewer 2, diff view 5, tab count, activity feed, entity tiles) and main's 955; recounted with extractKnobs() after the last merge: 978.
+    assert.equal(result.expected, 978, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -360,7 +362,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And the action slot's two: 351 + 2.
     // And the resize handle's width, --kp-sidenav-resizer-size, read through var(): 353 + 1.
     // And the 11 of 2026-10-18 [release-11-1018] (see the pin above), every one read through var(): 936 + 11.
-    assert.equal(result.readCount, 947);
+    // And the log viewer's two and the diff view's five of 2026-10-19, every one read through var(): 947 + 2 + 5.
+    // Recounted 2026-10-19 [gap-int-1019] after merging the five rounds into main's 947, every one read through var(): 970.
+    assert.equal(result.readCount, 970);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

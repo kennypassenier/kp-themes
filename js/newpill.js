@@ -171,8 +171,6 @@ function attachOne(el, options) {
         if (n > 0) {
             number.textContent = strings.newpillNew(n, n === 1 ? unitOne : unitMany);
             back.textContent = head ? strings.newpillBackHead : strings.newpillBackTail;
-            // The widest the pill gets for this count: the next digit's room is held.
-            pill.style.setProperty('--kp-newpill-digits', String(Math.max(2, String(n).length)));
         }
         el.setAttribute('data-kp-following', String(following && !paused));
         for (const toggle of toggles()) {

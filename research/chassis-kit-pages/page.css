@@ -220,11 +220,6 @@
     inset-inline-start: calc(50% + var(--kp-tabbar-icon, 1.5rem) / 2 + var(--kp-space-xs, 0.25rem));
 }
 
-/* A dialog section's text keeps a margin from its edge. */
-.ck-manage .kp-dialog__section {
-    padding-inline: var(--kp-space-sm, 0.5rem);
-}
-
 .ck-login__state {
     display: flex;
     flex-wrap: wrap;
@@ -246,4 +241,471 @@
     .kp-datatable[data-kp-cards] .ck-fit {
         inline-size: auto;
     }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------
+   The issue and the manage dialogs: two compositions on the 12-column grid (Kenny, 2026-10-19: "ik wil mooie composities van
+   elementen, niet gewoon lelijke links/rechts alignde brol"). Each names its areas and spans; edges and rows meet across the
+   columns; the geometry is the same in every state; a phone gets its own arrangement. The dialog is the container the
+   arrangements answer to, so the same dialog is right in the page, in a modal over the list and on a phone. */
+
+.ck-dlg {
+    --kp-dialog-wide: 60rem;
+    container: ckd / inline-size;
+}
+
+.ck-manage {
+    --kp-dialog-wide: 76rem;
+}
+
+.ck-stage > dialog.ck-dlg[open] {
+    inline-size: min(var(--kp-dialog-wide), 100%);
+    max-inline-size: 100%;
+}
+
+.ck-dlg .kp-form {
+    display: block;
+}
+
+.ck-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--kp-space-lg, 1.5rem);
+    row-gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.ck-grid > * {
+    min-inline-size: 0;
+}
+
+.ck-dlg .kp-dialog__head {
+    margin: 0;
+}
+
+/* --- Issue: the title across, the form card in columns 1-7 against the client card in 8-12, on three shared rows --- */
+.ck-issue__grid {
+    grid-template-rows: auto minmax(var(--ck-issue-head, 6.5rem), auto) minmax(var(--ck-issue-main, 27rem), 1fr) minmax(var(--ck-issue-foot, 3rem), auto);
+    row-gap: 0;
+    grid-template-areas:
+        'title title title title title title title title title title title title'
+        'main main main main main main main side side side side side'
+        'main main main main main main main side side side side side'
+        'main main main main main main main side side side side side';
+}
+
+.ck-issue__title {
+    grid-area: title;
+    min-block-size: 4.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin-block-end: var(--kp-space-md, 1rem);
+}
+
+.ck-issue__main {
+    grid-area: main;
+}
+
+.ck-issue__side {
+    grid-area: side;
+}
+
+.ck-issue__card {
+    display: grid;
+    grid-template-rows: subgrid;
+    align-content: stretch;
+    row-gap: 0;
+    min-inline-size: 0;
+}
+
+.ck-card__head {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin-block-end: var(--kp-space-md, 1rem);
+}
+
+.ck-card__head :is(h3, p) {
+    margin: 0;
+}
+
+.ck-card__foot {
+    align-self: end;
+    margin-block: var(--kp-space-md, 1rem) 0;
+}
+
+.ck-issue__fields {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ck-issue__fields > * {
+    margin: 0;
+}
+
+/* The client as it will be, drawn from what is typed: mark, name, topic and state on one aligned block. */
+.ck-prev {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        'mark name state'
+        'mark topic state';
+    align-items: center;
+    column-gap: var(--kp-space-md, 1rem);
+    row-gap: var(--kp-space-2xs, 0.125rem);
+    margin-block-end: var(--kp-space-md, 1rem);
+}
+
+.ck-prev__mark {
+    grid-area: mark;
+}
+
+.ck-prev__name {
+    grid-area: name;
+    font-size: var(--kp-text-lg, 1.125rem);
+    font-weight: 600;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.ck-prev__topic {
+    grid-area: topic;
+    color: var(--muted-foreground);
+    overflow-wrap: anywhere;
+}
+
+.ck-prev__state {
+    grid-area: state;
+}
+
+.ck-prev--empty .ck-prev__name {
+    color: var(--muted-foreground);
+}
+
+.ck-prev--empty .ck-prev__mark {
+    opacity: 0.45;
+}
+
+/* The token and the first command as one composed block: one label column of equal weight over the same width. */
+.ck-result {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ck-result__token,
+.ck-result__command {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.ck-result__label {
+    font-size: var(--kp-text-sm, 0.875rem);
+    font-weight: 600;
+}
+
+.ck-issue .kp-secret {
+    --kp-secret-min: 12rem;
+}
+
+/* --- Manage: identity | facts, then the control rail | the request inspector, then the danger words | its three actions --- */
+.ck-manage__grid {
+    grid-template-rows: auto auto minmax(var(--ck-manage-requests, 15rem), 1fr) auto;
+    grid-template-areas:
+        'id id id id id facts facts facts facts facts facts facts'
+        'rail rail rail rail rail test test test test test test test'
+        'rail rail rail rail rail req req req req req req req'
+        'dh dh dh dh dh acts acts acts acts acts acts acts';
+}
+
+.ck-manage .ck-manage__head {
+    grid-area: id;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        'mark title badge'
+        'mark desc desc';
+    align-items: center;
+    align-content: center;
+    column-gap: var(--kp-space-md, 1rem);
+    row-gap: var(--kp-space-2xs, 0.125rem);
+}
+
+.ck-manage__head > .kp-idmark {
+    grid-area: mark;
+}
+
+.ck-manage__head > .kp-dialog__title {
+    grid-area: title;
+}
+
+.ck-manage__head > .kp-badge {
+    grid-area: badge;
+}
+
+.ck-manage__head > .kp-dialog__description {
+    grid-area: desc;
+}
+
+.ck-manage__facts {
+    grid-area: facts;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+.ck-manage__rail {
+    grid-area: rail;
+    display: grid;
+    align-content: start;
+    gap: 0;
+    padding-block: 0;
+}
+
+.ck-manage__rail--revoked {
+    align-content: center;
+}
+
+.ck-manage__tool {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding: var(--kp-space-md, 1rem) var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.ck-manage__tool > * {
+    margin: 0;
+}
+
+.ck-manage__tool .kp-button[data-kp-flash-button] {
+    inline-size: 100%;
+}
+
+.ck-manage .kp-secret {
+    --kp-secret-min: 8rem;
+}
+
+/* The test: the body in columns 1-5 of its seven, the send button and what it does in 6-7, on the same top edge. */
+.ck-manage__test {
+    grid-area: test;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-areas:
+        'head head head head head head head'
+        'body body body body body send send';
+    align-content: start;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.ck-manage__test-head {
+    grid-area: head;
+}
+
+.ck-manage__test-head > * {
+    margin: 0;
+}
+
+.ck-manage__test-head > .kp-dialog__note {
+    margin-block-start: var(--kp-space-xs, 0.25rem);
+}
+
+.ck-manage__test-body {
+    grid-area: body;
+    min-inline-size: 0;
+    margin: 0;
+}
+
+.ck-manage__test-send {
+    grid-area: send;
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ck-manage__test-send > * {
+    margin: 0;
+}
+
+.ck-manage__test-send > .kp-button {
+    inline-size: 100%;
+}
+
+/* The requests are the wide area: as tall as the rail, scrolling inside, never making the row taller. */
+.ck-manage__requests {
+    grid-area: req;
+    position: relative;
+    min-block-size: 0;
+}
+
+.ck-manage__requests-in {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-block-size: 0;
+}
+
+.ck-manage__requests-in > * {
+    margin: 0;
+    min-block-size: 0;
+}
+
+.ck-manage__requests-in > .kp-inspector {
+    overflow: auto;
+}
+
+.ck-manage__danger {
+    display: contents;
+}
+
+.ck-manage__danger-head {
+    grid-area: dh;
+    padding-inline-start: var(--kp-space-md, 1rem);
+    border-inline-start: 3px solid var(--destructive);
+    align-self: stretch;
+}
+
+.ck-manage__danger-head > * {
+    margin: 0;
+}
+
+.ck-manage__danger-head > .kp-dialog__note {
+    margin-block-start: var(--kp-space-xs, 0.25rem);
+}
+
+.ck-manage__acts {
+    grid-area: acts;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+.ck-manage__act {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.ck-manage__act > .kp-button {
+    inline-size: 100%;
+    white-space: nowrap;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+}
+
+.ck-manage__act > .kp-dialog__note {
+    margin: 0;
+}
+
+/* --- The phone: its own arrangements ----------------------------------------------------------------------------- */
+@container ckd (max-width: 39.99rem) {
+    .ck-dlg .kp-dialog__actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ck-dlg .kp-dialog__actions > :only-child {
+        grid-column: 1 / -1;
+    }
+
+    .ck-issue__grid {
+        grid-template-rows: auto;
+        row-gap: var(--kp-space-md, 1rem);
+        grid-template-areas:
+            'title title title title title title title title title title title title'
+            'side side side side side side side side side side side side'
+            'main main main main main main main main main main main main';
+    }
+
+    .ck-issue__card {
+        grid-template-rows: none;
+    }
+
+    .ck-issue__title {
+        min-block-size: 6.5rem;
+    }
+
+    .ck-issue__main {
+        min-block-size: 34rem;
+    }
+
+    /* The name's error has its room before it appears, so the dialog is as tall with and without it. */
+    .ck-issue__fields .kp-field:has(> .kp-field__error[hidden])::after {
+        content: '';
+        display: block;
+        block-size: 3lh;
+        font-size: 0.8125rem;
+        line-height: 1.5;
+    }
+
+    /* The client card is a strip of mark, name, topic and state above the form; its facts stay for the wide dialog. */
+    .ck-issue__side .ck-card__head,
+    .ck-issue__side .ck-prev__facts,
+    .ck-issue__side .ck-card__foot {
+        display: none;
+    }
+
+    .ck-issue__side .ck-prev {
+        margin-block-end: 0;
+        grid-template-areas:
+            'mark name name'
+            'mark topic state';
+    }
+
+    .ck-manage__grid {
+        grid-template-rows: auto;
+        grid-template-areas:
+            'id id id id id id id id id id id id'
+            'facts facts facts facts facts facts facts facts facts facts facts facts'
+            'rail rail rail rail rail rail rail rail rail rail rail rail'
+            'test test test test test test test test test test test test'
+            'req req req req req req req req req req req req'
+            'dh dh dh dh dh dh dh dh dh dh dh dh'
+            'acts acts acts acts acts acts acts acts acts acts acts acts';
+    }
+
+    .ck-manage__requests {
+        min-block-size: 24rem;
+    }
+
+    /* The facts: the last call is the tall tile, requests and topic stand stacked beside it. */
+    .ck-manage__facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas:
+            'req last'
+            'topic last';
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .ck-manage__facts > :nth-child(1) {
+        grid-area: req;
+    }
+
+    .ck-manage__facts > :nth-child(2) {
+        grid-area: last;
+    }
+
+    .ck-manage__facts > :nth-child(3) {
+        grid-area: topic;
+    }
+
+    .ck-manage__test {
+        grid-template-areas:
+            'head head head head head head head'
+            'body body body body body body body'
+            'send send send send send send send';
+    }
+}
+
+/* The revoked client's alert in the rail says its three parts one under the other, at the rail's width. */
+.ck-manage__rail--revoked .kp-alert {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem);
 }

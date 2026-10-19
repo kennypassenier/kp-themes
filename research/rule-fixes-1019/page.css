@@ -1,0 +1,79 @@
+/* research/rule-fixes-1019: the frame of the page. Everything with a kp- class is the package; the rf- rules only lay out. */
+
+.rf-frame {
+    box-sizing: border-box;
+    inline-size: min(100%, 26rem);
+    margin-inline: auto;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.rf-frame__label {
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    text-align: center;
+}
+
+.rf-col {
+    inline-size: min(var(--rf-w, 270px), 100%);
+    margin-inline: auto;
+}
+
+/* An open dialog or palette shown in place: it takes its box in the flow, not the window. */
+.rf-static[open] {
+    position: static;
+    inset: auto;
+    margin: 0;
+    inline-size: auto;
+    max-inline-size: 100%;
+    max-block-size: none;
+}
+
+.rf-dialog {
+    inline-size: min(100%, 42rem);
+    margin-inline: auto;
+}
+
+.rf-stack {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    inline-size: min(100%, 48rem);
+    margin-inline: auto;
+}
+
+.rf-files {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.rf-log {
+    block-size: 14rem;
+}
+
+.rf-log__list {
+    box-sizing: border-box;
+    block-size: 100%;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem);
+    overflow: auto;
+    list-style: none;
+    border: 1px solid var(--border);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.rf-log__list > li {
+    padding-block: 0.125rem;
+}
+
+.rf-heat {
+    --kp-heat-cols: 10;
+    max-inline-size: 36rem;
+}
+
+.rf-wheel {
+    display: grid;
+    place-items: center;
+}
