@@ -39,14 +39,24 @@
 //    "all-themes"; a topic of that section alone is skipped; the answer names the group once; a copied row opened again
 //    shows the copy and changes on its own; W undoes the whole group.
 //
+// 7. A verdict changed after everything was approved (verdict-change-1019, Kenny 2026-10-19 11:24: "Bij deze ben ik na het
+//    goedkeuren teruggegaan en heb ik toch dingen afgekeurd", and the summary he copied still read "11 of 11 judged, 11
+//    approved, 0 not approved"), in a fresh profile: every step approved until the kit leaves for the Agenda, a second
+//    copy of the page loaded then and left there, its storage events held back (as a page the browser keeps in its
+//    back-forward cache misses them); the demo opened again, the first row of the first step set to Not approved with a
+//    note. Then: the page's own Copy answer, the left copy's Copy answer, a second Not approved given in the left copy, and
+//    the Agenda's Copy prompt each say every change (the latest verdict per pair wins), and the journal's rebuilt answer
+//    too.
+//
 // Run (a static server on the repository root first):
-//   node research/_review/check-kit.mjs <port> <research/topic/demo.html> [--only-every]
+//   node research/_review/check-kit.mjs <port> <research/topic/demo.html> [--only-every] [--only-change]
 import { createRequire } from 'node:module';
 
 const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
 const { firefox } = require('playwright-core');
 const [port, path, ...flags] = process.argv.slice(2);
 const ONLY_EVERY = flags.includes('--only-every');
+const ONLY_CHANGE = flags.includes('--only-change');
 if (!port || !path) {
     console.error('usage: node research/_review/check-kit.mjs <port> <research/topic/demo.html>');
     process.exit(2);
@@ -849,6 +859,140 @@ async function checkEveryTheme() {
         fault(`every theme: W did not journal an undo for each pair of the group`);
     console.log(`  every theme: ${item} from ${sourceTheme}, ${sections.themes - 1} copies${sections.lone ? ', topic skipped' : ''}, undone`);
 }
+/**
+ * 7 · A verdict changed after everything was approved reaches every summary (verdict-change-1019). Its own profile, with a
+ * clipboard that keeps what is written to it, so the text each Copy gives is read back.
+ */
+async function checkVerdictChange() {
+    const own = await browser.newContext({ viewport: { width: 1600, height: 950 } });
+    await own.addInitScript(() => {
+        const keep = (/** @type {string} */ text) => {
+            const list = JSON.parse(sessionStorage.getItem('__kit-copied') || '[]');
+            sessionStorage.setItem('__kit-copied', JSON.stringify([...list, text]));
+        };
+        Object.defineProperty(navigator, 'clipboard', {
+            value: { writeText: async (/** @type {string} */ t) => keep(String(t)) },
+            configurable: true,
+        });
+    });
+    const agenda = `${ORIGIN}/catalogue/agenda.html`;
+    const address = `${URL_}${URL_.includes('?') ? '&' : '?'}next=${encodeURIComponent(agenda)}`;
+    const onAgenda = (/** @type {import('playwright-core').Page} */ p) => new URL(p.url()).pathname.endsWith('/catalogue/agenda.html');
+    const copied = async (/** @type {import('playwright-core').Page} */ p) =>
+        /** @type {string} */ (JSON.parse((await p.evaluate(() => sessionStorage.getItem('__kit-copied'))) || '[]').at(-1) || '');
+    const open = async (/** @type {import('playwright-core').Page} */ p) => {
+        await p.waitForSelector('[data-rv-open]');
+        await p.waitForTimeout(800);
+        await p.click('[data-rv-open]');
+        await p.waitForSelector('dialog.rv-dialog[open] [data-rv-list] .rv-row', { state: 'attached', timeout: 15000 });
+        await p.waitForTimeout(1200);
+    };
+    const reject = async (/** @type {import('playwright-core').Page} */ p, /** @type {string} */ key, /** @type {string} */ note) => {
+        const row = p.locator(`dialog.rv-dialog [data-rv-list] .rv-row[data-rv-key="${key}"]`);
+        await row.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+        await row.locator('[data-rv-reject]').check();
+        await row.locator('[data-rv-row-note]').fill(note);
+        await row.locator('[data-rv-row-note]').dispatchEvent('input');
+        await p.waitForTimeout(900);
+    };
+    const a = await own.newPage();
+    a.on('pageerror', (error) => !/dynamically imported module/.test(error.message) && fault(`verdict change: page error: ${error.message}`));
+    await a.goto(address);
+    await a.evaluate(() => localStorage.clear());
+    await a.goto(address);
+    await open(a);
+    const id = await a.evaluate(() => document.documentElement.dataset.review || '');
+    const steps = Number(
+        (await a.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent || '')).match(/\/(\d+)/)?.[1] || 1,
+    );
+    for (let i = 0; i < steps * 2 + 2 && !onAgenda(a); i++) {
+        const was = await a.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent).catch(() => '');
+        await a.click('dialog.rv-dialog [data-rv-approve]').catch(() => {});
+        await Promise.race([
+            a.waitForURL((u) => u.pathname.endsWith('/catalogue/agenda.html'), { timeout: 15000 }),
+            a.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, { timeout: 15000 }),
+        ]).catch(() => {});
+        await a.waitForTimeout(1500);
+    }
+    if (!onAgenda(a)) {
+        fault(`verdict change: approving every step did not end on the Agenda (still on ${a.url()})`);
+        await own.close();
+        return;
+    }
+    await a.waitForLoadState('load');
+    // The copy left behind: loaded now, it then misses every storage event, as a page kept in the back-forward cache does.
+    const b = await own.newPage();
+    await b.addInitScript(() => addEventListener('storage', (event) => event.stopImmediatePropagation(), true));
+    await b.goto(address);
+    await b.waitForSelector('[data-rv-open]');
+    await b.waitForTimeout(1500);
+    // Back on the demo: the first row of the first step changed to Not approved, with a note.
+    await a.goto(address);
+    await open(a);
+    const keys = await a.evaluate(() =>
+        [...document.querySelectorAll('dialog.rv-dialog [data-rv-list] .rv-row[data-rv-key]')].map(
+            (r) => /** @type {HTMLElement} */ (r).dataset.rvKey || '',
+        ),
+    );
+    const stamp = Date.now() % 100000;
+    const firstNote = `verdict-change check first ${stamp}`;
+    const lastNote = `verdict-change check last ${stamp}`;
+    await reject(a, keys[0], firstNote);
+    await a.click('dialog.rv-dialog [data-rv-close]');
+    await a.locator('.rv-answer [data-rv-copy]').click();
+    await a.waitForTimeout(400);
+    const total = (/** @type {string} */ text) => text.match(/(\d+) approved, (\d+) not approved/);
+    const says = (/** @type {string} */ where, /** @type {string} */ text, /** @type {string[]} */ notes) => {
+        const head = text.split('\n').find((l) => l.startsWith(`Demo review · ${id} ·`)) || '';
+        const counts = total(head);
+        if (!head) fault(`verdict change: ${where} holds no answer of ${id}`);
+        else if (!counts || Number(counts[2]) !== notes.length) fault(`verdict change: ${where} reads "${head}", not ${notes.length} not approved`);
+        for (const note of notes) if (!text.includes(note)) fault(`verdict change: ${where} lacks the Not approved "${note}"`);
+    };
+    says("the demo's Copy answer", await copied(a), [firstNote]);
+    // The copy left behind, shown again: its Copy answer, then a change of its own, which must keep the first one.
+    await b.bringToFront();
+    await b.locator('.rv-answer [data-rv-copy]').click();
+    await b.waitForTimeout(400);
+    says("the left copy's Copy answer", await copied(b), [firstNote]);
+    const notes = [firstNote];
+    if (keys.length > 1) {
+        await open(b);
+        await reject(b, /** @type {string} */ (keys.at(-1)), lastNote);
+        await b.click('dialog.rv-dialog [data-rv-close]');
+        notes.push(lastNote);
+        const stored = await b.evaluate((demoId) => JSON.parse(localStorage.getItem(`kp-demo-review:${demoId}`) || '{}'), id);
+        if (stored[keys[0]]?.verdict !== 'rejected' || stored[keys[0]]?.note !== firstNote)
+            fault(`verdict change: a change in the left copy wrote its older verdict of ${keys[0]} over the newer Not approved`);
+    }
+    // The Agenda's Copy prompt, the way Kenny passes it on.
+    await a.goto(agenda);
+    await a.waitForTimeout(3500);
+    await a.click('[data-cat-prompt-bar] [data-cat-prompt-copy]');
+    await a.waitForTimeout(800);
+    says("the Agenda's Copy prompt", await copied(a), notes);
+    // The journal's rebuilt answer (the Agenda's Saved verdicts) holds the latest verdict per pair too.
+    const rebuilt = await a.evaluate(
+        async ({ demoId }) => {
+            const kit = await import('/research/_review/progress.js');
+            const round = kit.journalOf(demoId).at(-1)?.round || '';
+            return kit.rebuildAnswer(demoId, round);
+        },
+        { demoId: id },
+    );
+    for (const note of notes) if (!rebuilt.includes(note)) fault(`verdict change: the journal's rebuilt answer lacks the Not approved "${note}"`);
+    if (!new RegExp(`${notes.length} not approved`).test(rebuilt.split('\n')[0] || ''))
+        fault(`verdict change: the journal's rebuilt answer reads "${rebuilt.split('\n')[0]}", not ${notes.length} not approved`);
+    console.log(`  verdict change: ${steps} step(s) approved, ${notes.length} changed to Not approved afterwards, every summary checked`);
+    await own.close();
+}
+if (ONLY_CHANGE) {
+    await checkVerdictChange();
+    await browser.close();
+    console.log(`${path}: ${faults.length ? `${faults.length} fault(s)` : 'clear'}`);
+    for (const line of [...new Set(faults)]) console.log(`  ${line}`);
+    process.exit(faults.length ? 1 : 0);
+}
 if (ONLY_EVERY) {
     await checkEveryTheme();
     await browser.close();
@@ -1232,6 +1376,9 @@ if (await page.evaluate(() => Boolean(document.querySelector('[data-agenda-recei
 
 // ---------------------------------------------------------------- 6 · "Every theme"
 await checkEveryTheme();
+
+// ---------------------------------------------------------------- 7 · a verdict changed after approving everything
+await checkVerdictChange();
 
 await browser.close();
 console.log(`${path}: ${faults.length ? `${faults.length} fault(s)` : 'clear'}`);

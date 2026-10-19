@@ -107,7 +107,8 @@ export function mountPrompt({ bar, main }) {
                 setTimeout(render, 1500);
             } catch {
                 // Without clipboard permission the text is selected instead, so
-                // one Ctrl+C still does it.
+                // one Ctrl+C still does it: the text read now, never the one drawn earlier (verdict-change-1019).
+                pre.textContent = text;
                 pre.hidden = false;
                 if (pre === topText) {
                     show.setAttribute('aria-expanded', 'true');
@@ -158,6 +159,10 @@ export function mountPrompt({ bar, main }) {
         if (event.key === null || STORAGE_KEYS.includes(event.key) || /^kp-demo-review:.+:answer$/.test(event.key)) render();
     });
     document.documentElement.addEventListener(THEME_EVENT, () => setTimeout(render, 400));
+    // Back on this page from the back-forward cache (the browser's Back or Forward), or into view again: a verdict changed
+    // meanwhile on a demo page never reached it as a storage event, so the prompt is read again (verdict-change-1019).
+    window.addEventListener('pageshow', (event) => event.persisted && render());
+    document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && render());
     // Counted only once the register is read: before it, every verdict this browser keeps looked unrecorded, and the
     // bar said "447 new item(s)" for approvals the register already held (Kenny, 2026-10-13).
     for (const pre of texts) pre.textContent = 'Reading the register…';

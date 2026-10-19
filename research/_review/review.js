@@ -784,6 +784,43 @@ function load() {
     }
 }
 let state = load();
+/*
+ * The latest verdict always wins (verdict-change-1019, Kenny 2026-10-19 11:24: he approved everything, went back, set some
+ * to Not approved, and the summary he copied still read "11 of 11 judged, 11 approved, 0 not approved"). This page keeps
+ * its verdicts in memory (`state`) and used to write that whole object back on every change, re-reading the store only on
+ * a `storage` event. A page that missed those events (one the browser restores from its back-forward cache, where
+ * nothing runs while it waits, or a tab that slept) held the verdicts of the moment it was left: its answer and its Copy
+ * said the old verdicts, and its next change wrote them back over the newer ones. Now every key remembers what this page
+ * last read from, or wrote to, the store (`synced`): a key changed on this page since is this page's word, the latest;
+ * every other key is taken from the store before anything is shown, copied or written (merge, resync).
+ */
+const snapshotOf = (/** @type {Record<string, any>} */ obj) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, JSON.stringify(v)]));
+/** Every key as this page last read it from, or wrote it to, the store. @type {Record<string, string>} */
+let synced = snapshotOf(state);
+/**
+ * Takes from the store every key that changed there and not on this page since this page last read or wrote it.
+ * @returns {boolean} whether anything was taken
+ */
+function merge() {
+    const stored = load();
+    const mine = snapshotOf(state);
+    let pulled = false;
+    for (const key of new Set([...Object.keys(stored), ...Object.keys(synced), ...Object.keys(mine)])) {
+        // Changed on this page since it last met the store: this page's word is the latest.
+        if (mine[key] !== synced[key]) continue;
+        const theirs = key in stored ? JSON.stringify(stored[key]) : undefined;
+        if (theirs === mine[key]) continue;
+        pulled = true;
+        if (theirs === undefined) {
+            delete state[key];
+            delete synced[key];
+        } else {
+            state[key] = stored[key];
+            synced[key] = theirs;
+        }
+    }
+    return pulled;
+}
 /** This version of the demo (progress.js, fingerprintOf), once read. @type {string | null} */
 let fingerprint = null;
 function save() {
@@ -794,8 +831,11 @@ function save() {
                 entry.fingerprint = fingerprint;
                 entry.round = round?.round || '';
             }
+    // What another page wrote since (a newer verdict) is kept, never overwritten by what this page last saw.
+    merge();
     try {
         localStorage.setItem(STORE, JSON.stringify(state));
+        synced = snapshotOf(state);
     } catch {
         /* a private window: the answer on the page still holds everything */
     }
@@ -1149,6 +1189,7 @@ const say = (message) => {
  * effectief iets naar jou toe paste"). A demo opened on its own passes its answer on here.
  */
 async function copyAnswer() {
+    resync(); // verdict-change-1019: the answer copied is the store's latest, never this page's older copy
     const { text } = answer();
     try {
         await navigator.clipboard.writeText(text);
@@ -2768,6 +2809,8 @@ function paintUpdate(step) {
 async function show(at) {
     if (busy) return;
     flushNotes();
+    // verdict-change-1019: the rows are drawn from the store's latest verdicts, never from an older copy kept here.
+    if (merge()) render();
     busy = true;
     try {
         await booted;
@@ -2935,6 +2978,9 @@ function approveStep() {
         const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
         // A row copied from another theme and left as it is stays as the copy (its journal entry says where it came from).
         if (state[pair.key]?.copiedFrom && rejected && state[pair.key].verdict === 'rejected' && state[pair.key].note === note) continue;
+        // A row Approve leaves as it stands is no new verdict: only what changes is written (verdict-change-1019), so
+        // approving a step again never stamps the verdicts it shows as given now.
+        if (state[pair.key]?.verdict === (rejected ? 'rejected' : 'approved') && (state[pair.key]?.note || '') === note) continue;
         state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at, copiedFrom: undefined };
         record(pair, { verdict: rejected ? 'rejected' : 'approved', note });
     }
@@ -3180,12 +3226,26 @@ bar.querySelector('[data-rv-open]').addEventListener('click', () => {
     show(first < 0 ? 0 : first);
 });
 
+/**
+ * Reads the store's latest verdicts into this page (merge) and, when any changed, draws the answer and the step on screen
+ * again (verdict-change-1019). @returns {boolean} whether anything changed
+ */
+function resync() {
+    if (!merge()) return false;
+    render();
+    if (dialog.open && !busy) void show(index);
+    return true;
+}
+// Another tab or page wrote the verdicts.
 window.addEventListener('storage', (event) => {
-    if (event.key === STORE) {
-        state = load();
-        render();
-    }
+    if (event.key === STORE || event.key === null) resync();
 });
+// The page comes back from the back-forward cache (the browser's Back or Forward), where it missed every change made
+// meanwhile, or into view after a sleep: read again (verdict-change-1019).
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) resync();
+});
+document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && resync());
 
 // [kit-keys] The key helpers get closures over the kit's own state; everything else is in rv-keys.js.
 const kk = mountKeys({
