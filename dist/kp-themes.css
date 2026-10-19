@@ -28534,6 +28534,9 @@
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
             :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)
             > .kp-formgrid__actions {
+            /* After the hint whatever the source order (an action written before its hint stood on the start edge under
+               its label: Kitchen ck-begin, "Begin"). */
+            order: 1;
             flex: 0 0 auto;
             margin-inline-start: auto;
         }
