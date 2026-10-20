@@ -44,7 +44,7 @@
         "js/flash.js": { "digest": "044b7e057d3bd243", "when": "[data-kp-flash-button], [data-kp-post]" },
         "js/focus-steps.js": { "digest": "a824862be86e3508", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
-            "digest": "452bceff9d6e7e06",
+            "digest": "807892478678b1fb",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-graph], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"
         },
         "js/forms.js": { "digest": "caf5da1afe4a65a3", "when": "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]" },

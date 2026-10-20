@@ -29984,6 +29984,7 @@ function holdFootprint(host) {
   const states3 = new MutationObserver(sync4);
   sizes.observe(host);
   states3.observe(host, { attributes: true, attributeFilter: ["data-kp-state", "data-kp-state-covered"] });
+  sync4();
   function detach() {
     sizes.disconnect();
     states3.disconnect();
