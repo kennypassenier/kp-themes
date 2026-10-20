@@ -369,7 +369,7 @@ const SECTIONS = [
         expected: ['Closing plays the alert&rsquo;s own leaving motion and keeps the choice. After a reload the alert is not there at all, with no flash of it first.', '<b>Show it again</b> forgets the choice and shows the alert.'],
         look: 'Formal: an info alert with a close cross. Check the cross has room and the page below does not jump when it is gone beyond the alert&rsquo;s own fold.',
         controls: group('Memory', 'alert', [['close', 'Close it'], ['again', 'Show it again', true]]),
-        component: `<div class="kp-card pg-card"><div class="kp-alert kp-alert--info pg-alert" id="pg-alert" data-kp-remember="wishes-1120-inbox-note" role="note"><div class="kp-alert__body"><strong>What the Inbox is.</strong> It keeps what happened while you were away; nothing here needs you to act.</div><button type="button" class="kp-alert__close" aria-label="Close this note">&times;</button></div>
+        component: `<div class="kp-card pg-card"><div class="kp-alert kp-alert--info pg-alert" id="pg-alert" data-kp-remember="wishes-1120-inbox-note" role="note"><div class="kp-alert__body"><strong>What the Inbox is.</strong> It keeps what happened while you were away; nothing here needs you to act.</div><button type="button" class="kp-icon-button kp-alert__close" aria-label="Close this note">&times;</button></div>
             <p class="pg-log">The rest of the Inbox would stand here.</p></div>`,
     },
     {

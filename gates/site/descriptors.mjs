@@ -11944,7 +11944,7 @@ setJobLine(document.getElementById('doc-job-line'), { done: 1200000000, total: 4
                 script: `
 import { markdownFragment } from '@kp-soft/themes/js/markdown';
 
-const text = '## 12.1\n\n- **Faster** library scans\n- Fixed [the login loop](https://example.com/issue/1)\n\n\`\`\`\njellyfin --version\n\`\`\`';
+const text = '## 12.1\\n\\n- **Faster** library scans\\n- Fixed [the login loop](https://example.com/issue/1)\\n\\n\`\`\`\\njellyfin --version\\n\`\`\`';
 document.getElementById('doc-markdown').replaceChildren(markdownFragment(document, text, { headings: 3 }));
 `,
             },

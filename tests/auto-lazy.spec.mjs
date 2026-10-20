@@ -287,8 +287,14 @@ for (const path of PAGES) {
             const dropCard = (await page.locator('[data-kp-hovercard]').count()) === 0;
             const withoutCard = (/** @type {string[]} */ lines) =>
                 dropCard ? lines.filter((line) => !line.includes('data-kp-hovercard-card')) : lines;
-            const eagerLines = withoutCard(whole);
-            const lazyLines = withoutCard(lazy);
+            // A freshness line (`data-kp-stale-after`) turns stale on the wall clock, and its voice is
+            // written when it does: the two pages are read seconds apart (the catalogue composes for
+            // 15 s), so one can be past the line and the other not. That is time, not a missing `when`
+            // [release-1120].
+            const withoutClock = (/** @type {string[]} */ lines) =>
+                lines.filter((line) => !line.includes('data-kp-ago-voice')).map((line) => line.replace(/ data-kp-stale=(?=\s|$)/, ''));
+            const eagerLines = withoutClock(withoutCard(whole));
+            const lazyLines = withoutClock(withoutCard(lazy));
 
             /** Lines as counts, so a duplicate on one side is a difference too. @param {string[]} a @param {string[]} b */
             const beyond = (a, b) => {
