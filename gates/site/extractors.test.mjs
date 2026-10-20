@@ -329,7 +329,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-20 [wish-1120]: the contents list's knobs (--kp-contents-top, --kp-contents-indent, --kp-level): 1092 + 3 = 1095.
     // Re-pinned 2026-10-20 [wish-1120]: the quiet hours label column (--kp-quiet-label): 1095 + 1 = 1096.
     // Re-pinned 2026-10-20 [wish-1120, round 2]: the acknowledge gate's loading room (--kp-ack-loading-min): 1096 + 1 = 1097.
-    assert.equal(result.expected, 1097, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-20 [hsbwish-1020]: --kp-subgrid-rows and --kp-subgrid-count of data-kp-subgrid="rows": 1097 + 2 = 1099.
+    assert.equal(result.expected, 1099, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -414,7 +415,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-19 [hlcomp-1019]: --kp-chart-legend-columns is read through var(): 1078 + 1.
     // Re-pinned 2026-10-20 [kyufive-1020]: --kp-palette-label-max is read through var(): 1079 + 1.
     // Re-pinned 2026-10-20 [wish-1120, round 2]: --kp-ack-loading-min is read through var(): 1086 + 1 = 1087.
-    assert.equal(result.readCount, 1087);
+    // Re-pinned 2026-10-20 [hsbwish-1020]: --kp-subgrid-rows and --kp-subgrid-count are read through var(): 1087 + 2 = 1089.
+    assert.equal(result.readCount, 1089);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

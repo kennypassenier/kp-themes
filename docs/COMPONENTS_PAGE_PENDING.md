@@ -118,3 +118,4 @@ the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; th
 - wish-1120, site/components/page-contents.html (generated from its descriptor): the contents list from headings and from items with counts, the sticky modifier and the loading bars.
 - wish-1120, site/components/quiet-hours.html (generated from its descriptor): quiet hours on, off, refused and with a stored value set by `setQuiet`.
 - wish-1120, site/components/page-contents.html: option `data-kp-contents-scroller`.
+- hsbwish-1020 (2026-10-20), site/components/attention.html and problems.html: `data-kp-subgrid="rows"` (the host is a subgrid of the page grid's rows, one row per item, counted up to eight or set by `--kp-subgrid-rows`), so a band and a list of alerts side by side share rows.

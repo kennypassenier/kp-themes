@@ -21417,6 +21417,61 @@
     }
     /* field-problems-1019:problems-subgrid:end */
 
+    /* hsbwish-1020:subgrid-rows:start [HTTPSwitchboard gap 25]
+     * `data-kp-subgrid="rows"` also hands the band (or the problem list) the ROWS of the page grid it stands in: the host
+     * spans as many parent rows as it has items and is a subgrid of them, so item N stands on one row with whatever the
+     * page puts beside it (alert N next to band item N), at the height of the taller, without a script. The count is read
+     * from the items for up to eight; `--kp-subgrid-rows` sets it where there are more (or a page wants another). The
+     * columns stay the band's own three tracks (icon | words | actions) and the narrow fold above is unchanged: a folded
+     * item is taller inside its row. Plain `data-kp-subgrid` is untouched. */
+    .kp-attention[data-kp-subgrid='rows'],
+    .kp-problems[data-kp-subgrid='rows'] {
+        grid-row: span var(--kp-subgrid-rows, var(--kp-subgrid-count, 1));
+        grid-template-rows: subgrid;
+        row-gap: normal;
+    }
+
+    .kp-attention[data-kp-subgrid='rows'] > .kp-attention__item,
+    .kp-problems[data-kp-subgrid='rows'] > .kp-problem {
+        align-self: stretch;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(2)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(2)) {
+        --kp-subgrid-count: 2;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(3)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(3)) {
+        --kp-subgrid-count: 3;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(4)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(4)) {
+        --kp-subgrid-count: 4;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(5)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(5)) {
+        --kp-subgrid-count: 5;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(6)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(6)) {
+        --kp-subgrid-count: 6;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(7)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(7)) {
+        --kp-subgrid-count: 7;
+    }
+
+    .kp-attention[data-kp-subgrid='rows']:has(> :nth-child(8)),
+    .kp-problems[data-kp-subgrid='rows']:has(> :nth-child(8)) {
+        --kp-subgrid-count: 8;
+    }
+    /* hsbwish-1020:subgrid-rows:end */
+
     .kp-problems__more {
         justify-self: start;
         margin-block-start: var(--kp-space-xs, 0.25rem);

@@ -26,6 +26,8 @@
 //     on one (tolerance 1 px). A segmented control's own box is its edge: its items sit inside its padding.
 //     A group of buttons that stands in a box narrower than the row group above (a phone-width frame under a full-width band,
 //     whose folded rows are no rows to `kids()`) is in another column and is not compared with the band's edges [measure-tools-1019].
+//     A folded row (an aria-hidden icon, words and a button stacked) is recognised as a row, and its button is skipped here
+//     [hsbwish-1020, HTTPSwitchboard 34].
 //     A cell's own buttons (table, grid, console, status list), a combobox's input (not its status line) and a radio tile's
 //     tile (not its inner radio) are the edges a reader sees; measure-gaps.mjs skips marks scrolled out of a scrolling log.
 //     A `.kp-action-list` row names its buttons' roles (`data-kp-action`): a button is compared with the same role's button of
@@ -576,9 +578,24 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
             kids(el).every(onScreen)
         );
     });
+    // A folded row [hsbwish-1020, HTTPSwitchboard 34]: an alert or band item whose icon is aria-hidden (so `kids()` leaves it out),
+    // with its words and its button stacked under each other on a phone. It is a row of its group, folded, not a bare
+    // button group: its buttons are not compared with the column edges of a full-width band elsewhere on the page.
+    const foldedRows = all.filter((el) => {
+        if (el === section || seenRows.has(el)) return false;
+        const cells = [...el.children].filter((c) => !c.matches('[hidden]') && getComputedStyle(c).display !== 'none' && c.getBoundingClientRect().height > 0.5);
+        if (cells.length < 2 || !cells.some((c) => c.matches('[aria-hidden="true"]'))) return false;
+        if (!kids(el).length || !hasKp(el)) return false;
+        const rest = cells.filter((c) => !c.matches('[aria-hidden="true"]')).map((c) => c.getBoundingClientRect());
+        // Stacked: the words and the button do not stand side by side.
+        for (let i = 1; i < rest.length; i++) if (overlapY(rest[i - 1], rest[i]) > 1) return false;
+        return rest.length >= 2 && !!el.querySelector('button, .kp-button');
+    });
     for (const bg of groupsOfButtons) {
         // Inside a row of a row group: that row's own cells are measured by A.
         if ([...seenRows].some((r) => r.contains(bg))) continue;
+        // Inside a folded row: no column edges of another group are its own.
+        if (foldedRows.some((r) => r.contains(bg))) continue;
         const br = bg.getBoundingClientRect();
         // A segmented control is one box: its own padding (4 px) is its edge, not its first and last item, which sit
         // inside that padding [formgrid-notes-1019]. A segmented that is off the tracks is still caught, by its box.
