@@ -1660,6 +1660,12 @@ a letter at a time and ends in `…`, and the full name stays in the node's
 title and accessible name. The labels are fitted again when a web font
 arrives.
 
+Known limitation (accepted by Kenny, 2026-10-21 [graph-1020]): with names
+beside the ring, about fourteen long names cannot all stand clear in a
+phone-width box (390 px); a few pairs still touch. A page that shows long
+names on a phone sets `data-kp-labels="below"`, which wraps a name onto two
+lines under its node and makes the room it needs.
+
 Hover or focus a node to see only its links (the rest dim); click it, or
 press Enter or Space, to keep it picked, several at once; Esc or Show all
 clears the picks and the kinds turned off. A toggle in the list turns a kind
