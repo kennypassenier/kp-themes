@@ -9,6 +9,7 @@
         "kp-checklist",
         "kp-feed",
         "kp-inspector",
+        "kp-codefield",
         "kp-jobline",
         "kp-markdown",
         "kp-jsonfield",

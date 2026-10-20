@@ -320,6 +320,10 @@
             "types": "./js/markdown.d.ts",
             "default": "./js/markdown.js"
         },
+        "./js/code-field": {
+            "types": "./js/code-field.d.ts",
+            "default": "./js/code-field.js"
+        },
         "./js/transfer": {
             "types": "./js/transfer.d.ts",
             "default": "./js/transfer.js"

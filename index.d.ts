@@ -77,6 +77,7 @@ export { FEED, FEED_EARLIER, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_RELATIVE_
 export { NOTICES, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_RETRY_EVENT, NOTICES_SOURCE_EVENT, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICE_SEVERITIES, attachNotices, noticesOf, setNotices } from './js/notices.js';
 export { QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_DISMISS_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_URGENT_AT, askQuestion, attachQuestions, questionOf } from './js/question-card.js';
 export { TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_RETRY_EVENT, attachTransfers, resetTransfer, setTransfer, transferEta, transferRate } from './js/transfer.js';
+export { CODE_FIELD, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, CODE_FIELD_STATE_EVENT, attachCodeFields, caretPosition, codeField, setCodeFieldError } from './js/code-field.js';
 export { JOBLINE, JOBLINE_EVENT, attachJobLines, buildJobLine, jobLineText, setJobLine, stepPosition } from './js/job-line.js';
 export { MARKDOWN_LIMIT, markdownFragment, safeHref } from './js/markdown.js';
 export { CONNECTION, CONNECTION_RETRY_EVENT, CONNECTION_STATES, CONNECTION_STATE_EVENT, attachConnection, connectionOf, setConnection } from './js/connection.js';

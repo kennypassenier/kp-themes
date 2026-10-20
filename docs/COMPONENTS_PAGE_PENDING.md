@@ -114,3 +114,4 @@ the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; th
 - wish-1120, site/components/type-confirm.html: `buildTypeConfirm` options `id` and `fieldName`.
 - wish-1120, site/components/snooze.html: `data-kp-snooze-words` (the built-in `pause` set, `registerSnoozeWords`) and the per-picker word attributes.
 - wish-1120, site/components/ack-gate.html: `setAckNotes`, the notes fold and its four attributes; a markdown page for js/markdown.js with a note example (the descriptor is written, the page is generated).
+- wish-1120, site/components/code-field.html (generated from its descriptor): the code field, the YAML example with the page's own check, the server-answers-later call and the form held back.

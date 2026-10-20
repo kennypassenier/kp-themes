@@ -1276,6 +1276,26 @@ export type Strings = {
      */
     jsonTabHint: string;
     /**
+     * The caret's place under a code field, "Line 3, column 12" (js/code-field.js) [wish-1120]
+     */
+    codeFieldPosition: (line: number, column: number) => string;
+    /**
+     * The problem the page found in a code field, with its place [wish-1120]
+     */
+    codeFieldError: (line: number, column: number, message: string) => string;
+    /**
+     * The same when only the line is known [wish-1120]
+     */
+    codeFieldErrorLine: (line: number, message: string) => string;
+    /**
+     * The same when no place is known [wish-1120]
+     */
+    codeFieldErrorPlain: (message: string) => string;
+    /**
+     * Why a form is held back while a code field has an error [wish-1120]
+     */
+    codeFieldBlocked: string;
+    /**
      * The accessible name of the line numbers [kpadopt5]
      */
     jsonGutter: string;
@@ -6492,6 +6512,11 @@ export type Strings = {
  * @property {string} jsonWrap  The Wrap toggle [kpadopt5]
  * @property {string} jsonCopy  The Copy button [kpadopt5]
  * @property {string} jsonTabHint  The help line under the field: how to leave it with the keyboard [kpadopt5]
+ * @property {(line: number, column: number) => string} codeFieldPosition  The caret's place under a code field, "Line 3, column 12" (js/code-field.js) [wish-1120]
+ * @property {(line: number, column: number, message: string) => string} codeFieldError  The problem the page found in a code field, with its place [wish-1120]
+ * @property {(line: number, message: string) => string} codeFieldErrorLine  The same when only the line is known [wish-1120]
+ * @property {(message: string) => string} codeFieldErrorPlain  The same when no place is known [wish-1120]
+ * @property {string} codeFieldBlocked  Why a form is held back while a code field has an error [wish-1120]
  * @property {string} jsonGutter  The accessible name of the line numbers [kpadopt5]
  * @property {string} jsonBlocked  The validity message that stops a form with broken JSON [kpadopt5]
  * @property {(why: string) => string} jsonSchemaFailed  The error line when the page's shape check refuses valid JSON [kpadopt5]

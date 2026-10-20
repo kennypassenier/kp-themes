@@ -360,6 +360,11 @@
  * @property {string} jsonWrap  The Wrap toggle [kpadopt5]
  * @property {string} jsonCopy  The Copy button [kpadopt5]
  * @property {string} jsonTabHint  The help line under the field: how to leave it with the keyboard [kpadopt5]
+ * @property {(line: number, column: number) => string} codeFieldPosition  The caret's place under a code field, "Line 3, column 12" (js/code-field.js) [wish-1120]
+ * @property {(line: number, column: number, message: string) => string} codeFieldError  The problem the page found in a code field, with its place [wish-1120]
+ * @property {(line: number, message: string) => string} codeFieldErrorLine  The same when only the line is known [wish-1120]
+ * @property {(message: string) => string} codeFieldErrorPlain  The same when no place is known [wish-1120]
+ * @property {string} codeFieldBlocked  Why a form is held back while a code field has an error [wish-1120]
  * @property {string} jsonGutter  The accessible name of the line numbers [kpadopt5]
  * @property {string} jsonBlocked  The validity message that stops a form with broken JSON [kpadopt5]
  * @property {(why: string) => string} jsonSchemaFailed  The error line when the page's shape check refuses valid JSON [kpadopt5]
@@ -2024,6 +2029,11 @@ export const DEFAULT_STRINGS = Object.freeze({
     jsonWrap: 'Wrap',
     jsonCopy: 'Copy',
     jsonTabHint: 'Tab indents. Esc, then Tab, leaves the field.',
+    codeFieldPosition: (line, column) => `Line ${line}, column ${column}`,
+    codeFieldError: (line, column, message) => `Line ${line}, column ${column}: ${message}`,
+    codeFieldErrorLine: (line, message) => `Line ${line}: ${message}`,
+    codeFieldErrorPlain: (message) => message,
+    codeFieldBlocked: 'Fix the marked line first',
     jsonGutter: 'Line numbers',
     jsonBlocked: 'Fix the JSON before sending.',
     jsonSchemaFailed: (why) => `Does not match the expected shape: ${why}`,

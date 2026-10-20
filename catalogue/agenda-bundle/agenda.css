@@ -36642,6 +36642,17 @@
     }
 }
 
+@layer kp.components {
+    /* --- Code field: a config file's text box [wish-1120, homelab 94] ---
+     * Drawn with the JSON field's look (`.kp-jsonfield`); the readout under the field says where the caret is, in tabular figures, in the
+     * muted help ink, one line high so it never moves what is below. */
+    .kp-codefield__readout {
+        margin: 0;
+        font-variant-numeric: tabular-nums;
+        min-block-size: 1lh;
+    }
+}
+
 /* ---- css/layout.css ---- */
 @layer kp.layout {
     /* @kp-soft/themes — css/layout.css
