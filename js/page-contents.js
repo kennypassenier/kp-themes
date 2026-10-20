@@ -19,9 +19,10 @@
 //   data-kp-contents-title     the heading over the list ("On this page"); `none` leaves it out
 //   data-kp-contents-hash      `off`: a press does not write the address's #fragment    on
 //   data-kp-contents-scroller  a selector for the box that scrolls the sections, when it is not the page (a pane with its own scroll); the
-//                              offset then counts from the box's top edge                the page
+//                              offset then counts from the box's top edge. Left out, the pane the first section sits in is found by itself   the page
 //
-// A heading without an `id` gets one from its words. A press scrolls to the section (smoothly, unless the reader asked for less motion),
+// A heading without an `id` gets one from its words. A press (or Enter on the entry) scrolls to the section, in its pane when it has one and the
+// page does not move (smoothly, unless the reader asked for less motion),
 // writes `#id` into the address without a new history entry, and gives the section's heading the focus, so a keyboard reader arrives where
 // the page did. The entry of the section the reader is in has `aria-current="location"` and `data-kp-current`; it follows the scroll, and
 // at the foot of the page the last entry is the current one. Entries nest by heading level (`data-kp-level`). `kp-contents-change`
@@ -115,9 +116,26 @@ function attachOne(nav) {
     let current = null;
     let raf = 0;
 
+    /**
+     * The element a selector names, looked for from the list outwards: the nearest ancestor that holds a match wins, so a page that shows
+     * the same markup twice (a copy in a dialog, a preview beside the page) is read from its own copy, not from the first one in the document.
+     * @param {string | null} selector
+     * @returns {Element | null}
+     */
+    const lookup = (selector) => {
+        if (!selector) return null;
+        try {
+            for (let up = nav.parentElement; up; up = up.parentElement) {
+                const hit = up.querySelector(selector);
+                if (hit) return hit;
+            }
+            return doc.querySelector(selector);
+        } catch {
+            return null;
+        }
+    };
     const scope = () => {
-        const named = nav.getAttribute('data-kp-contents-for');
-        const found = named ? doc.querySelector(named) : null;
+        const found = lookup(nav.getAttribute('data-kp-contents-for'));
         return found ?? nav.closest('body')?.querySelector('main') ?? doc.body;
     };
     const offset = () => {
@@ -128,11 +146,20 @@ function attachOne(nav) {
         const n = Number(nav.getAttribute('data-kp-contents-min'));
         return nav.hasAttribute('data-kp-contents-min') && Number.isFinite(n) ? n : 2;
     };
-    /** The box that scrolls, when the sections scroll inside one. @returns {HTMLElement | null} */
+    /** The nearest ancestor of `el` that scrolls vertically (below the page itself), or null. @param {Element} el @returns {HTMLElement | null} */
+    const scrollParent = (el) => {
+        for (let up = el.parentElement; up && up !== doc.body && up !== doc.documentElement; up = up.parentElement) {
+            const overflow = view.getComputedStyle(up).overflowY;
+            if ((overflow === 'auto' || overflow === 'scroll' || overflow === 'overlay') && up.scrollHeight > up.clientHeight + 1) return up;
+        }
+        return null;
+    };
+    /** The box that scrolls the sections when they live in a pane of their own: the one the page names, else the one the first section sits in. @returns {HTMLElement | null} */
     const scroller = () => {
-        const named = nav.getAttribute('data-kp-contents-scroller');
-        const found = named ? doc.querySelector(named) : null;
-        return found instanceof HTMLElement ? found : null;
+        const found = lookup(nav.getAttribute('data-kp-contents-scroller'));
+        if (found instanceof HTMLElement) return found;
+        const first = entries[0]?.target;
+        return first ? scrollParent(first) : null;
     };
     const motion = () => (view.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
 
@@ -140,7 +167,7 @@ function attachOne(nav) {
     const read = () => {
         if (given) {
             return given.flatMap((item) => {
-                const target = doc.getElementById(item.id);
+                const target = /** @type {HTMLElement | null} */ (lookup(`#${view.CSS.escape(item.id)}`));
                 return target ? [{ item, target }] : [];
             });
         }
@@ -186,6 +213,7 @@ function attachOne(nav) {
     const spy = () => {
         raf = 0;
         if (!entries.length) return;
+        bindPane();
         const own = scroller();
         const root = own ?? doc.scrollingElement ?? doc.documentElement;
         const atEnd = own
@@ -215,7 +243,10 @@ function attachOne(nav) {
         wait.hidden = state !== 'loading';
         nav.toggleAttribute('aria-busy', state === 'loading');
         /** @type {HTMLElement} */ (nav).hidden = state !== 'loading' && next.length < least();
-        if (nav.getAttribute('data-kp-contents-sig') === signature) return queueSpy();
+        if (nav.getAttribute('data-kp-contents-sig') === signature) {
+            bindPane();
+            return queueSpy();
+        }
         nav.setAttribute('data-kp-contents-sig', signature);
         entries = next.map(({ item, target }) => {
             const li = doc.createElement('li');
@@ -239,6 +270,7 @@ function attachOne(nav) {
         });
         list.replaceChildren(.../** @type {any[]} */ (entries).map((e) => e.li));
         current = null;
+        bindPane();
         queueSpy();
     };
 
@@ -250,7 +282,12 @@ function attachOne(nav) {
         const hit = entries.find((e) => e.link === link);
         if (!hit) return;
         event.preventDefault();
-        hit.target.scrollIntoView({ behavior: motion(), block: 'start' });
+        const own = scroller();
+        if (own) {
+            // The sections scroll in a pane: move the pane (never the page) so the section's top lands on the offset line.
+            const gap = hit.target.getBoundingClientRect().top - own.getBoundingClientRect().top - Math.min(offset(), own.clientHeight / 4);
+            own.scrollTo({ top: Math.max(0, own.scrollTop + gap), behavior: motion() });
+        } else hit.target.scrollIntoView({ behavior: motion(), block: 'start' });
         if (!hit.target.hasAttribute('tabindex') && !hit.target.matches('a[href], button, input, select, textarea, summary')) hit.target.tabIndex = -1;
         hit.target.focus({ preventScroll: true });
         if (nav.getAttribute('data-kp-contents-hash') !== 'off') {
@@ -265,9 +302,16 @@ function attachOne(nav) {
     nav.addEventListener('click', onClick);
     view.addEventListener('scroll', queueSpy, { passive: true });
     view.addEventListener('resize', queueSpy);
-    // A pane with its own scroll: its scroll does not bubble to the window.
-    const pane = scroller();
-    pane?.addEventListener('scroll', queueSpy, { passive: true });
+    // A pane with its own scroll: its scroll does not bubble to the window, so it is listened to itself (and again when the sections move to another pane).
+    /** @type {HTMLElement | null} */
+    let pane = null;
+    const bindPane = () => {
+        const next = scroller();
+        if (next === pane) return;
+        pane?.removeEventListener('scroll', queueSpy);
+        pane = next;
+        pane?.addEventListener('scroll', queueSpy, { passive: true });
+    };
     const changes = new view.MutationObserver((records) => {
         if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw);
     });

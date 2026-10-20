@@ -172,13 +172,7 @@
     grid-template-columns: minmax(0, 1fr);
 }
 
-/* logviewer: the margin the viewer must fit inside the dashed frame with (narrower on a phone, where the viewer has little room to give). */
+/* logviewer: the margin the viewer must fit inside the dashed frame with. */
 .pg-fit .kp-logviewer[data-pg-margin='on'] {
     margin: 1rem 2rem;
-}
-
-@media (max-width: 40rem) {
-    .pg-fit .kp-logviewer[data-pg-margin='on'] {
-        margin-inline: 0.5rem;
-    }
 }

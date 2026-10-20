@@ -34288,7 +34288,8 @@
  * `.kp-alert.kp-ack[data-kp-ack]` (js/ack-gate.js). The warning alert's words, then the side: the release-notes link and
  * the tick with its sentence, the whole label one hit area. Wide: the side stands at the end of the alert; under 30rem of
  * its own width it goes under the words and the label is 44 px tall. While the notes are looked up the words are held in
- * place and two skeleton lines lie over them, so the alert keeps its height (`--kp-ack-keep`, written by the script); a
+ * place and the busy card of a loading data table (spinner and words, centred, js/busy-card.js) lies over them, so the alert keeps its
+ * height (`--kp-ack-keep`, written by the script, never under `--kp-ack-loading-min`, 8rem, the room the card needs); a
  * failed lookup says so in a line and, with `data-kp-ack-retry`, offers Retry. Knobs [KT6]: --kp-ack-gap, --kp-ack-side
  * (the side's width, 18rem). */
     .kp-ack {
@@ -34321,6 +34322,10 @@
     .kp-ack[data-kp-state='loading'],
     .kp-ack[data-kp-state='error'] {
         min-block-size: var(--kp-ack-keep, 0px);
+    }
+
+    .kp-ack[data-kp-state='loading'] {
+        min-block-size: max(var(--kp-ack-keep, 0px), var(--kp-ack-loading-min, 8rem));
     }
 
     .kp-ack__frame > :not(.kp-ack__side, .kp-ack__problem) {
@@ -34372,28 +34377,9 @@
         visibility: hidden;
     }
 
-    .kp-ack__wait {
-        position: absolute;
-        inset: var(--kp-space-md, 0.75rem);
-        display: grid;
-        align-content: center;
-        gap: var(--kp-space-sm, 0.5rem);
-    }
-
-    .kp-ack__wait[hidden],
     .kp-ack__problem[hidden],
     .kp-ack__retry[hidden] {
         display: none;
-    }
-
-    .kp-ack__bone {
-        display: block;
-        block-size: 1rem;
-        inline-size: 70%;
-    }
-
-    .kp-ack__bone + .kp-ack__bone {
-        inline-size: 45%;
     }
 
     .kp-ack__problem {
@@ -35819,6 +35805,30 @@
             display: grid;
             grid-template-columns: auto minmax(0, 1fr);
             margin-inline-start: 0;
+        }
+    }
+
+    /* A very narrow viewer (about 17rem, a phone with a margin) [wish-1120, homelab fault 15]: the time, source and level cells
+     * size to their words and left the message a sliver, so the lines ran to the edge. The three stay on the line's first row and
+     * the message takes the whole row under them, with the line's own padding on both sides. Not when the log does not wrap
+     * (it scrolls sideways there, as it always did). */
+    @container kp-logviewer (max-width: 20rem) {
+        .kp-logviewer:not([data-kp-log-wrap='off']) .kp-logviewer__log {
+            grid-template-columns: auto auto minmax(0, 1fr);
+        }
+
+        .kp-logviewer:not([data-kp-log-wrap='off'])[data-kp-log-time='off'] .kp-logviewer__log,
+        .kp-logviewer:not([data-kp-log-wrap='off'])[data-kp-log-nosource] .kp-logviewer__log {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-logviewer:not([data-kp-log-wrap='off'])[data-kp-log-time='off'][data-kp-log-nosource] .kp-logviewer__log {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-logviewer:not([data-kp-log-wrap='off']) .kp-logviewer__log .kp-log__message {
+            grid-column: 1 / -1;
+            padding-inline-start: var(--kp-space-md, 0.75rem);
         }
     }
 }

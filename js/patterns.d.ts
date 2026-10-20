@@ -25,6 +25,8 @@ export type ActionDetail = {
 export declare const COMMIT_EVENT = "kp-action-commit";
 /** Fired on the row when it is undone instead. Detail: ActionDetail. */
 export declare const UNDO_EVENT = "kp-action-undo";
+/** How long after a Copy the clipboard is emptied again, in ms [wish-1120, homelab 108]. */
+export declare const CLEAR_AFTER_MS = 30000;
 /** Fired on the copy button after a successful copy: `{ text }`. */
 export declare const COPY_EVENT = "kp-copy";
 /** Fired on the copy button when the clipboard refused: `{ text, error }`. */
@@ -36,13 +38,17 @@ export declare const COPY_FAILED_EVENT = "kp-copy-failed";
  * value is in the page only while it is shown; without it a field asks through `kp-secret-request`, and last reads its
  * own `data-kp-secret-value`.
  *
+ * `clearAfterMs` is how long after a Copy the clipboard is emptied again (default 30 000 ms; 0 or false: never), for every
+ * secret field without its own `data-kp-secret-clear`.
+ *
  * @param {ParentNode} root
- * @param {{ copiedMs?: number, undoMs?: number, toastOnCopyFailure?: boolean, undoClassName?: string, secretLoad?: SecretLoad }} [options]
+ * @param {{ copiedMs?: number, undoMs?: number, clearAfterMs?: number | false, toastOnCopyFailure?: boolean, undoClassName?: string, secretLoad?: SecretLoad }} [options]
  * @returns {() => void} detach
  */
-export declare function attachPatterns(root?: ParentNode, { copiedMs, undoMs, toastOnCopyFailure, undoClassName, secretLoad }?: {
+export declare function attachPatterns(root?: ParentNode, { copiedMs, undoMs, clearAfterMs, toastOnCopyFailure, undoClassName, secretLoad }?: {
     copiedMs?: number;
     undoMs?: number;
+    clearAfterMs?: number | false;
     toastOnCopyFailure?: boolean;
     undoClassName?: string;
     secretLoad?: SecretLoad;
@@ -62,10 +68,11 @@ export declare function hideSecret(field: Element): void;
 /**
  * Attach every secret field under `root`.
  * @param {ParentNode} [root]
- * @param {{ load?: SecretLoad, copiedMs?: number }} [options]
+ * @param {{ load?: SecretLoad, copiedMs?: number, clearAfterMs?: number | false }} [options]
  * @returns {() => void} detach
  */
-export declare function attachSecrets(root?: ParentNode, { load, copiedMs }?: {
+export declare function attachSecrets(root?: ParentNode, { load, copiedMs, clearAfterMs }?: {
     load?: SecretLoad;
     copiedMs?: number;
+    clearAfterMs?: number | false;
 }): () => void;

@@ -20,6 +20,66 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
+// js/as-of.js
+function asOf(root, present, attach) {
+  const own = {
+    querySelectorAll: Object.getOwnPropertyDescriptor(root, "querySelectorAll"),
+    querySelector: Object.getOwnPropertyDescriptor(root, "querySelector")
+  };
+  const all = root.querySelectorAll;
+  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
+  Object.defineProperty(root, "querySelectorAll", { configurable: true, value: filtered });
+  Object.defineProperty(root, "querySelector", { configurable: true, value: (selector) => filtered(selector)[0] ?? null });
+  try {
+    return attach();
+  } finally {
+    for (
+      const name of
+      /** @type {const} */
+      ["querySelectorAll", "querySelector"]
+    ) {
+      const before = own[name];
+      if (before) Object.defineProperty(root, name, before);
+      else delete /** @type {any} */
+      root[name];
+    }
+  }
+}
+function afterPaint(fn) {
+  if (typeof requestAnimationFrame !== "function") {
+    setTimeout(fn, 0);
+    return;
+  }
+  requestAnimationFrame(() => requestAnimationFrame(fn));
+}
+function settleAfter(root, done) {
+  holds.set(root, (holds.get(root) ?? 0) + 1);
+  root.setAttribute(SETTLING_ATTRIBUTE, "");
+  let held2 = true;
+  const release = () => {
+    if (!held2) return;
+    held2 = false;
+    const left = (holds.get(root) ?? 1) - 1;
+    holds.set(root, left);
+    if (left <= 0) root.removeAttribute(SETTLING_ATTRIBUTE);
+  };
+  done.then(
+    () => afterPaint(release),
+    () => afterPaint(release)
+  );
+  return release;
+}
+var presentUnder, SETTLING_ATTRIBUTE, holds, settling;
+var init_as_of = __esm({
+  "js/as-of.js"() {
+    "use strict";
+    presentUnder = (root) => new WeakSet([...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")]);
+    SETTLING_ATTRIBUTE = "data-kp-settling";
+    holds = /* @__PURE__ */ new WeakMap();
+    settling = (el16) => el16.closest(`[${SETTLING_ATTRIBUTE}]`) !== null;
+  }
+});
+
 // js/strings.js
 var strings_exports = {};
 __export(strings_exports, {
@@ -1946,432 +2006,6 @@ var init_strings = __esm({
   }
 });
 
-// js/remember.js
-var remember_exports = {};
-__export(remember_exports, {
-  REMEMBER_ATTRIBUTE: () => REMEMBER_ATTRIBUTE,
-  REMEMBER_CLASH_EVENT: () => REMEMBER_CLASH_EVENT,
-  REMEMBER_HOLD_ATTRIBUTE: () => REMEMBER_HOLD_ATTRIBUTE,
-  REMEMBER_PREFIX: () => REMEMBER_PREFIX,
-  attachRemembered: () => attachRemembered,
-  columnId: () => columnId,
-  configureRemember: () => configureRemember,
-  forgetClaims: () => forgetClaims,
-  forgetRememberedExcept: () => forgetRememberedExcept,
-  memoryFor: () => memoryFor,
-  paintRemembered: () => paintRemembered,
-  rememberedName: () => rememberedName,
-  restoreRemembered: () => restoreRemembered,
-  sidenavGroups: () => sidenavGroups,
-  treeItemId: () => treeItemId
-});
-function configureRemember(next2) {
-  if (next2.prefix !== void 0) config.prefix = next2.prefix;
-  if (next2.storage !== void 0) config.storage = next2.storage;
-}
-function storage(given2) {
-  if (given2 !== void 0) return given2;
-  if (config.storage !== void 0) return config.storage;
-  try {
-    return globalThis.localStorage ?? null;
-  } catch {
-    return null;
-  }
-}
-function rememberedName(element, component) {
-  const own = element.getAttribute(REMEMBER_ATTRIBUTE);
-  if (own !== null && own !== "") return own;
-  const alias = ALIASES[component];
-  const older = alias === void 0 ? null : element.getAttribute(alias);
-  return older === null || older === "" ? null : older;
-}
-function forgetClaims() {
-  claims.clear();
-  reported.clear();
-}
-function reportClash(element, component, name, other) {
-  const claim = `${component}:${name}`;
-  if (!reported.has(claim)) {
-    reported.add(claim);
-    console.warn(getStrings().rememberClash(name, component));
-  }
-  element.dispatchEvent(new CustomEvent(REMEMBER_CLASH_EVENT, { bubbles: true, detail: { name, component, other } }));
-}
-function memoryFor(element, component, { storage: given2 } = {}) {
-  const name = rememberedName(element, component);
-  if (name === null) return null;
-  const claim = `${component}:${name}`;
-  const holder = claims.get(claim);
-  if (holder !== void 0 && holder !== element && holder.isConnected) {
-    reportClash(element, component, name, holder);
-    return null;
-  }
-  claims.set(claim, element);
-  const key = (slot) => `${config.prefix}:${component}:${name}:${slot}`;
-  return {
-    name,
-    key,
-    read: (slot, fallback2) => {
-      const store = storage(given2);
-      if (store === null) return fallback2;
-      try {
-        const raw = store.getItem(key(slot));
-        if (raw === null) return fallback2;
-        return JSON.parse(raw);
-      } catch {
-        return fallback2;
-      }
-    },
-    write: (slot, value) => {
-      const store = storage(given2);
-      if (store === null) return false;
-      try {
-        store.setItem(key(slot), JSON.stringify(value));
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    forget: (slot) => {
-      const store = storage(given2);
-      if (store === null) return;
-      try {
-        store.removeItem(key(slot));
-      } catch {
-      }
-    }
-  };
-}
-function sidenavGroups(panel) {
-  return [...panel.querySelectorAll(".kp-sidenav__category")].map((group, at) => {
-    const toggle2 = group.querySelector(".kp-sidenav__category-toggle");
-    const own = group.getAttribute(REMEMBER_ATTRIBUTE);
-    const words = (toggle2?.textContent ?? "").trim();
-    return { group, toggle: toggle2, id: own !== null && own !== "" ? own : words !== "" ? words : String(at) };
-  });
-}
-function treeItemId(item) {
-  return (
-    /** @type {HTMLElement} */
-    item.dataset.kpItem ?? item.id ?? (item.textContent ?? "").trim()
-  );
-}
-function columnId(header) {
-  return (
-    /** @type {HTMLElement} */
-    header.dataset.kpField ?? (header.textContent ?? "").trim()
-  );
-}
-function paintSidenav(panel, memory) {
-  const open4 = memory.read("open", null);
-  if (typeof open4 === "boolean") panel.setAttribute("data-kp-sidenav-open", String(open4));
-  const rail = memory.read("rail", null);
-  if (typeof rail === "boolean") panel.toggleAttribute("data-kp-sidenav-slim-collapsed", rail);
-  const width = memory.read("width", null);
-  if (typeof width === "number" && panel.hasAttribute("data-kp-sidenav-resizable") && panel instanceof HTMLElement)
-    panel.style.setProperty("--kp-sidenav-width", `${width}px`);
-  const groups = memory.read("groups", null);
-  if (!isFlags(groups)) return;
-  for (const { group, toggle: toggle2, id } of sidenavGroups(panel)) {
-    const state2 = groups[id];
-    if (typeof state2 !== "boolean") continue;
-    group.toggleAttribute("data-kp-sidenav-expanded", state2);
-    toggle2?.setAttribute("aria-expanded", String(state2));
-  }
-}
-function paintDisclosure(element, memory) {
-  const open4 = memory.read("open", null);
-  if (typeof open4 === "boolean") element.toggleAttribute("open", open4);
-}
-function paintTree(tree, memory) {
-  const branches = memory.read("branches", null);
-  if (!isFlags(branches)) return;
-  for (const item of tree.querySelectorAll('[role="treeitem"][aria-expanded]')) {
-    const state2 = branches[treeItemId(item)];
-    if (typeof state2 === "boolean") item.setAttribute("aria-expanded", String(state2));
-  }
-}
-function paintSplit(split, memory) {
-  const value = memory.read("value", null);
-  const separator = split.querySelector('[role="separator"]');
-  if (typeof value !== "number" || !Number.isFinite(value) || separator === null) return;
-  separator.setAttribute("aria-valuenow", String(Math.round(value)));
-  split.style.setProperty("--kp-split", `${Math.round(value)}%`);
-}
-function paintDatatable(wrap, memory) {
-  const density = memory.read("density", null);
-  if (density === "compact") wrap.setAttribute("data-density", "compact");
-  else if (density === "comfortable") wrap.removeAttribute("data-density");
-  const headers = headersOf(wrap);
-  const columns2 = (
-    /** @type {unknown} */
-    memory.read("columns", null)
-  );
-  if (Array.isArray(columns2)) {
-    for (const header of headers) header.toggleAttribute("data-kp-column-hidden", columns2.includes(columnId(header)));
-  }
-  const sort = (
-    /** @type {unknown} */
-    memory.read("sort", null)
-  );
-  if (!Array.isArray(sort)) return;
-  for (const header of headers) {
-    if (header.dataset.kpSort === void 0) continue;
-    const at = sort.findIndex((key) => key?.column === columnId(header));
-    if (at === -1) {
-      header.setAttribute("aria-sort", "none");
-      delete header.dataset.kpSortPriority;
-    } else {
-      header.setAttribute("aria-sort", sort[at].direction === "descending" ? "descending" : "ascending");
-      header.dataset.kpSortPriority = String(at + 1);
-    }
-  }
-}
-function paintAlert(element, memory) {
-  if (memory.read(
-    "dismissed",
-    /** @type {boolean} */
-    false
-  ) === true) element.hidden = true;
-}
-function paintRemembered(element, component, options) {
-  const memory = memoryFor(element, component, options);
-  if (memory !== null) PAINTERS[component](element, memory);
-  return memory;
-}
-function restoreRemembered(root = document) {
-  const selector = `[${REMEMBER_ATTRIBUTE}], [${ALIASES.sidenav}]`;
-  for (const element of root.querySelectorAll(selector)) {
-    for (const [component, mark] of KINDS) {
-      if (!element.matches(mark)) continue;
-      paintRemembered(element, component);
-      break;
-    }
-  }
-}
-function attachRemembered(root = document) {
-  const wired3 = /* @__PURE__ */ new Map();
-  const wire16 = (scope) => {
-    const found = [
-      ...scope instanceof Element && scope.matches(`details[${REMEMBER_ATTRIBUTE}]`) ? [scope] : [],
-      ...scope.querySelectorAll(`details[${REMEMBER_ATTRIBUTE}]`)
-    ];
-    for (const element of found) {
-      const details = (
-        /** @type {HTMLDetailsElement} */
-        element
-      );
-      if (wiredDisclosures.has(details)) continue;
-      const memory = held(details) ? memoryFor(details, "disclosure") : paintRemembered(details, "disclosure");
-      if (memory === null) continue;
-      wiredDisclosures.add(details);
-      details.dataset.kpRememberAttached = "";
-      const onToggle = () => {
-        if (!held(details)) memory.write("open", details.open);
-      };
-      details.addEventListener("toggle", onToggle);
-      wired3.set(details, {
-        memory,
-        cleanup: () => {
-          details.removeEventListener("toggle", onToggle);
-          wiredDisclosures.delete(details);
-          delete details.dataset.kpRememberAttached;
-        }
-      });
-    }
-  };
-  wire16(root);
-  const doc = root instanceof Document ? root : root.ownerDocument ?? (typeof document === "undefined" ? null : document);
-  const view = doc?.defaultView;
-  if (!view) return () => wired3.forEach(({ cleanup }) => cleanup());
-  let sweeping = false;
-  const sweep = () => {
-    sweeping = false;
-    for (const [details, { cleanup }] of wired3)
-      if (!details.isConnected) {
-        cleanup();
-        wired3.delete(details);
-      }
-  };
-  const later = new view.MutationObserver((records) => {
-    for (const record of records) {
-      if (record.type === "attributes") {
-        const target = (
-          /** @type {Element} */
-          record.target
-        );
-        if (target.hasAttribute(REMEMBER_HOLD_ATTRIBUTE)) continue;
-        for (const [details, { memory }] of wired3)
-          if ((details === target || target.contains(details)) && !held(details)) paintDisclosure(details, memory);
-        continue;
-      }
-      for (const node of record.addedNodes) if (node instanceof view.Element) wire16(node);
-      if (record.removedNodes.length && !sweeping) {
-        sweeping = true;
-        queueMicrotask(sweep);
-      }
-    }
-  });
-  later.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: [REMEMBER_HOLD_ATTRIBUTE]
-  });
-  return () => {
-    later.disconnect();
-    for (const { cleanup } of wired3.values()) cleanup();
-    wired3.clear();
-  };
-}
-function forgetRememberedExcept(component, prefix, names, { storage: given2 } = {}) {
-  const store = storage(given2);
-  if (store === null) return 0;
-  const keep = new Set(names);
-  const head = `${config.prefix}:${component}:`;
-  let removed = 0;
-  try {
-    const doomed = [];
-    for (let at = 0; at < store.length; at += 1) {
-      const key = store.key(at);
-      if (key === null || !key.startsWith(head)) continue;
-      const rest = key.slice(head.length);
-      const name = rest.slice(0, rest.lastIndexOf(":"));
-      if (name.startsWith(prefix) && !keep.has(name)) doomed.push(key);
-    }
-    for (const key of doomed) {
-      store.removeItem(key);
-      removed += 1;
-    }
-  } catch {
-  }
-  return removed;
-}
-var REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, config, ALIASES, claims, reported, headersOf, isFlags, PAINTERS, KINDS, REMEMBER_HOLD_ATTRIBUTE, held, wiredDisclosures;
-var init_remember = __esm({
-  "js/remember.js"() {
-    "use strict";
-    init_strings();
-    REMEMBER_ATTRIBUTE = "data-kp-remember";
-    REMEMBER_CLASH_EVENT = "kp-remember-clash";
-    REMEMBER_PREFIX = "kp-remember";
-    config = { prefix: REMEMBER_PREFIX, storage: (
-      /** @type {Storage | null | undefined} */
-      void 0
-    ) };
-    ALIASES = { sidenav: "data-kp-sidenav-remember" };
-    claims = /* @__PURE__ */ new Map();
-    reported = /* @__PURE__ */ new Set();
-    headersOf = (element) => [...element.querySelector("table")?.tHead?.rows[0]?.cells ?? []];
-    isFlags = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
-    PAINTERS = {
-      sidenav: paintSidenav,
-      disclosure: paintDisclosure,
-      tree: paintTree,
-      split: paintSplit,
-      datatable: paintDatatable,
-      // A tour has no markup to paint: js/tour.js reads its memory itself.
-      tour: () => {
-      },
-      // The refresh chooser and the notification centre read their own memory [kpadopt5-ops].
-      refresh: () => {
-      },
-      notices: () => {
-      },
-      // The claim chips, the availability grid, the time field and the console read their own memory [kpadopt6].
-      claim: () => {
-      },
-      availability: () => {
-      },
-      time: () => {
-      },
-      console: () => {
-      },
-      // The check-in's progress and the picker's folded list are read by their own modules [kpadopt6].
-      "focus-steps": () => {
-      },
-      picker: () => {
-      },
-      // A dismissible alert that stays closed, `data-kp-remember` on a `.kp-alert`; js/overlays.js writes it on a dismissal [wish-1120].
-      alert: paintAlert
-    };
-    KINDS = [
-      ["sidenav", ".kp-sidenav"],
-      ["tree", "[data-kp-tree]"],
-      ["split", "[data-kp-split]"],
-      ["datatable", "[data-kp-datatable]"],
-      ["disclosure", "details"],
-      ["alert", ".kp-alert"]
-    ];
-    REMEMBER_HOLD_ATTRIBUTE = "data-kp-remember-hold";
-    held = (element) => element.closest(`[${REMEMBER_HOLD_ATTRIBUTE}]`) !== null;
-    wiredDisclosures = /* @__PURE__ */ new WeakSet();
-  }
-});
-
-// js/as-of.js
-function asOf(root, present, attach) {
-  const own = {
-    querySelectorAll: Object.getOwnPropertyDescriptor(root, "querySelectorAll"),
-    querySelector: Object.getOwnPropertyDescriptor(root, "querySelector")
-  };
-  const all = root.querySelectorAll;
-  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
-  Object.defineProperty(root, "querySelectorAll", { configurable: true, value: filtered });
-  Object.defineProperty(root, "querySelector", { configurable: true, value: (selector) => filtered(selector)[0] ?? null });
-  try {
-    return attach();
-  } finally {
-    for (
-      const name of
-      /** @type {const} */
-      ["querySelectorAll", "querySelector"]
-    ) {
-      const before = own[name];
-      if (before) Object.defineProperty(root, name, before);
-      else delete /** @type {any} */
-      root[name];
-    }
-  }
-}
-function afterPaint(fn) {
-  if (typeof requestAnimationFrame !== "function") {
-    setTimeout(fn, 0);
-    return;
-  }
-  requestAnimationFrame(() => requestAnimationFrame(fn));
-}
-function settleAfter(root, done) {
-  holds.set(root, (holds.get(root) ?? 0) + 1);
-  root.setAttribute(SETTLING_ATTRIBUTE, "");
-  let held2 = true;
-  const release = () => {
-    if (!held2) return;
-    held2 = false;
-    const left = (holds.get(root) ?? 1) - 1;
-    holds.set(root, left);
-    if (left <= 0) root.removeAttribute(SETTLING_ATTRIBUTE);
-  };
-  done.then(
-    () => afterPaint(release),
-    () => afterPaint(release)
-  );
-  return release;
-}
-var presentUnder, SETTLING_ATTRIBUTE, holds, settling;
-var init_as_of = __esm({
-  "js/as-of.js"() {
-    "use strict";
-    presentUnder = (root) => new WeakSet([...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")]);
-    SETTLING_ATTRIBUTE = "data-kp-settling";
-    holds = /* @__PURE__ */ new WeakMap();
-    settling = (el16) => el16.closest(`[${SETTLING_ATTRIBUTE}]`) !== null;
-  }
-});
-
 // js/calm.js
 var calm_exports = {};
 __export(calm_exports, {
@@ -4103,6 +3737,498 @@ var init_motion = __esm({
   }
 });
 
+// js/busy-card.js
+var busy_card_exports = {};
+__export(busy_card_exports, {
+  BUSY_CARD: () => BUSY_CARD,
+  openBusyCard: () => openBusyCard,
+  scrollersAround: () => scrollersAround,
+  seenAcross: () => seenAcross
+});
+function scrollersAround(host) {
+  const found = [];
+  for (let a = host.parentElement; a && a !== host.ownerDocument.documentElement; a = a.parentElement) {
+    const x = getComputedStyle(a).overflowX;
+    if (x !== "visible" && a.clientWidth > 0) found.push(a);
+  }
+  return found;
+}
+function seenAcross(host, left, right) {
+  let seenLeft = left;
+  let seenRight = right;
+  for (const a of scrollersAround(host)) {
+    const box = a.getBoundingClientRect();
+    seenLeft = Math.max(seenLeft, box.left + a.clientLeft);
+    seenRight = Math.min(seenRight, box.left + a.clientLeft + a.clientWidth);
+  }
+  return { left: seenLeft, right: Math.max(seenLeft, seenRight) };
+}
+function openBusyCard(host, { words, area, className = "", arrive: arrive2 = true }) {
+  const doc = host.ownerDocument;
+  const layer = doc.createElement("div");
+  layer.className = `kp-datatable__busy-overlay kp-datatable__busy-card${className ? ` ${className}` : ""}`;
+  layer.setAttribute("aria-hidden", "true");
+  const panel = doc.createElement("div");
+  panel.className = "kp-datatable__busy-panel";
+  const spinner = doc.createElement("span");
+  spinner.className = "kp-spinner";
+  const said = doc.createElement("span");
+  said.className = "kp-datatable__busy-words";
+  said.textContent = words;
+  panel.append(spinner, said);
+  layer.append(panel);
+  const place2 = () => {
+    if (!layer.isConnected) return;
+    const box = host.getBoundingClientRect();
+    const viewTop = box.top + host.clientTop;
+    const viewLeft = box.left + host.clientLeft;
+    const viewBottom = viewTop + host.clientHeight;
+    const viewRight = viewLeft + host.clientWidth;
+    const seen = seenAcross(host, viewLeft, viewRight);
+    const rects = area().map((b) => "getBoundingClientRect" in b ? b.getBoundingClientRect() : b);
+    if (!rects.length) return;
+    let top = Math.max(viewTop, Math.min(...rects.map((r) => r.top)));
+    let left = Math.max(seen.left, Math.min(...rects.map((r) => r.left)));
+    let bottom = Math.max(top, Math.min(viewBottom, Math.max(...rects.map((r) => r.bottom))));
+    let right = Math.max(left, Math.min(seen.right, Math.max(...rects.map((r) => r.right))));
+    const originTop = viewTop - host.scrollTop;
+    const originLeft = viewLeft - host.scrollLeft;
+    const write3 = () => {
+      layer.style.setProperty("--kp-busy-overlay-top", px(top - originTop));
+      layer.style.setProperty("--kp-busy-overlay-left", px(left - originLeft));
+      layer.style.setProperty("--kp-busy-overlay-bottom", px(host.clientHeight - (bottom - originTop)));
+      layer.style.setProperty("--kp-busy-overlay-right", px(host.clientWidth - (right - originLeft)));
+    };
+    write3();
+    const need = panel.offsetHeight + 8;
+    if (need > bottom - top) {
+      const grow = (need - (bottom - top)) / 2;
+      top = Math.max(viewTop, top - grow);
+      bottom = Math.min(viewBottom, bottom + grow);
+      write3();
+    }
+    const wide = Math.max(panel.offsetWidth + 17, (seen.right - seen.left) / 2 + 1);
+    if (wide > right - left) {
+      const grow = (wide - (right - left)) / 2;
+      left = Math.max(seen.left, left - grow);
+      right = Math.min(seen.right, right + grow);
+      if (right - left < wide) {
+        if (left === seen.left) right = Math.min(seen.right, left + wide);
+        else left = Math.max(seen.left, right - wide);
+      }
+      write3();
+    }
+  };
+  host.append(layer);
+  place2();
+  const watcher = typeof ResizeObserver === "function" ? new ResizeObserver(() => place2()) : null;
+  watcher?.observe(host);
+  host.addEventListener("scroll", place2, { passive: true });
+  const scrollers = scrollersAround(host);
+  for (const scroller of scrollers) scroller.addEventListener("scroll", place2, { passive: true });
+  const unwatch = () => {
+    watcher?.disconnect();
+    host.removeEventListener("scroll", place2);
+    for (const scroller of scrollers) scroller.removeEventListener("scroll", place2);
+  };
+  if (arrive2) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => layer.isConnected && m.arriveShown(layer));
+  let closing2 = null;
+  return {
+    layer,
+    place: place2,
+    remove() {
+      unwatch();
+      layer.remove();
+    },
+    close() {
+      closing2 ??= Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => {
+        if (!layer.isConnected) return void 0;
+        if (m.leavesState(layer)) return m.leave(layer);
+        layer.setAttribute(m.CLOSING_ATTRIBUTE, "");
+        return m.playClose(panel).then(() => void 0);
+      }).catch(() => void 0).then(() => {
+        unwatch();
+        layer.remove();
+      });
+      return closing2;
+    }
+  };
+}
+var BUSY_CARD, px;
+var init_busy_card = __esm({
+  "js/busy-card.js"() {
+    "use strict";
+    BUSY_CARD = ".kp-datatable__busy-card";
+    px = (v) => `${Math.round(v)}px`;
+  }
+});
+
+// js/remember.js
+var remember_exports = {};
+__export(remember_exports, {
+  REMEMBER_ATTRIBUTE: () => REMEMBER_ATTRIBUTE,
+  REMEMBER_CLASH_EVENT: () => REMEMBER_CLASH_EVENT,
+  REMEMBER_HOLD_ATTRIBUTE: () => REMEMBER_HOLD_ATTRIBUTE,
+  REMEMBER_PREFIX: () => REMEMBER_PREFIX,
+  attachRemembered: () => attachRemembered,
+  columnId: () => columnId,
+  configureRemember: () => configureRemember,
+  forgetClaims: () => forgetClaims,
+  forgetRememberedExcept: () => forgetRememberedExcept,
+  memoryFor: () => memoryFor,
+  paintRemembered: () => paintRemembered,
+  rememberedName: () => rememberedName,
+  restoreRemembered: () => restoreRemembered,
+  sidenavGroups: () => sidenavGroups,
+  treeItemId: () => treeItemId
+});
+function configureRemember(next2) {
+  if (next2.prefix !== void 0) config.prefix = next2.prefix;
+  if (next2.storage !== void 0) config.storage = next2.storage;
+}
+function storage(given2) {
+  if (given2 !== void 0) return given2;
+  if (config.storage !== void 0) return config.storage;
+  try {
+    return globalThis.localStorage ?? null;
+  } catch {
+    return null;
+  }
+}
+function rememberedName(element, component) {
+  const own = element.getAttribute(REMEMBER_ATTRIBUTE);
+  if (own !== null && own !== "") return own;
+  const alias = ALIASES[component];
+  const older = alias === void 0 ? null : element.getAttribute(alias);
+  return older === null || older === "" ? null : older;
+}
+function forgetClaims() {
+  claims.clear();
+  reported.clear();
+}
+function reportClash(element, component, name, other) {
+  const claim = `${component}:${name}`;
+  if (!reported.has(claim)) {
+    reported.add(claim);
+    console.warn(getStrings().rememberClash(name, component));
+  }
+  element.dispatchEvent(new CustomEvent(REMEMBER_CLASH_EVENT, { bubbles: true, detail: { name, component, other } }));
+}
+function memoryFor(element, component, { storage: given2 } = {}) {
+  const name = rememberedName(element, component);
+  if (name === null) return null;
+  const claim = `${component}:${name}`;
+  const holder = claims.get(claim);
+  if (holder !== void 0 && holder !== element && holder.isConnected) {
+    reportClash(element, component, name, holder);
+    return null;
+  }
+  claims.set(claim, element);
+  const key = (slot) => `${config.prefix}:${component}:${name}:${slot}`;
+  return {
+    name,
+    key,
+    read: (slot, fallback2) => {
+      const store = storage(given2);
+      if (store === null) return fallback2;
+      try {
+        const raw = store.getItem(key(slot));
+        if (raw === null) return fallback2;
+        return JSON.parse(raw);
+      } catch {
+        return fallback2;
+      }
+    },
+    write: (slot, value) => {
+      const store = storage(given2);
+      if (store === null) return false;
+      try {
+        store.setItem(key(slot), JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    forget: (slot) => {
+      const store = storage(given2);
+      if (store === null) return;
+      try {
+        store.removeItem(key(slot));
+      } catch {
+      }
+    }
+  };
+}
+function sidenavGroups(panel) {
+  return [...panel.querySelectorAll(".kp-sidenav__category")].map((group, at) => {
+    const toggle2 = group.querySelector(".kp-sidenav__category-toggle");
+    const own = group.getAttribute(REMEMBER_ATTRIBUTE);
+    const words = (toggle2?.textContent ?? "").trim();
+    return { group, toggle: toggle2, id: own !== null && own !== "" ? own : words !== "" ? words : String(at) };
+  });
+}
+function treeItemId(item) {
+  return (
+    /** @type {HTMLElement} */
+    item.dataset.kpItem ?? item.id ?? (item.textContent ?? "").trim()
+  );
+}
+function columnId(header) {
+  return (
+    /** @type {HTMLElement} */
+    header.dataset.kpField ?? (header.textContent ?? "").trim()
+  );
+}
+function paintSidenav(panel, memory) {
+  const open4 = memory.read("open", null);
+  if (typeof open4 === "boolean") panel.setAttribute("data-kp-sidenav-open", String(open4));
+  const rail = memory.read("rail", null);
+  if (typeof rail === "boolean") panel.toggleAttribute("data-kp-sidenav-slim-collapsed", rail);
+  const width = memory.read("width", null);
+  if (typeof width === "number" && panel.hasAttribute("data-kp-sidenav-resizable") && panel instanceof HTMLElement)
+    panel.style.setProperty("--kp-sidenav-width", `${width}px`);
+  const groups = memory.read("groups", null);
+  if (!isFlags(groups)) return;
+  for (const { group, toggle: toggle2, id } of sidenavGroups(panel)) {
+    const state2 = groups[id];
+    if (typeof state2 !== "boolean") continue;
+    group.toggleAttribute("data-kp-sidenav-expanded", state2);
+    toggle2?.setAttribute("aria-expanded", String(state2));
+  }
+}
+function paintDisclosure(element, memory) {
+  const open4 = memory.read("open", null);
+  if (typeof open4 === "boolean") element.toggleAttribute("open", open4);
+}
+function paintTree(tree, memory) {
+  const branches = memory.read("branches", null);
+  if (!isFlags(branches)) return;
+  for (const item of tree.querySelectorAll('[role="treeitem"][aria-expanded]')) {
+    const state2 = branches[treeItemId(item)];
+    if (typeof state2 === "boolean") item.setAttribute("aria-expanded", String(state2));
+  }
+}
+function paintSplit(split, memory) {
+  const value = memory.read("value", null);
+  const separator = split.querySelector('[role="separator"]');
+  if (typeof value !== "number" || !Number.isFinite(value) || separator === null) return;
+  separator.setAttribute("aria-valuenow", String(Math.round(value)));
+  split.style.setProperty("--kp-split", `${Math.round(value)}%`);
+}
+function paintDatatable(wrap, memory) {
+  const density = memory.read("density", null);
+  if (density === "compact") wrap.setAttribute("data-density", "compact");
+  else if (density === "comfortable") wrap.removeAttribute("data-density");
+  const headers = headersOf(wrap);
+  const columns2 = (
+    /** @type {unknown} */
+    memory.read("columns", null)
+  );
+  if (Array.isArray(columns2)) {
+    for (const header of headers) header.toggleAttribute("data-kp-column-hidden", columns2.includes(columnId(header)));
+  }
+  const sort = (
+    /** @type {unknown} */
+    memory.read("sort", null)
+  );
+  if (!Array.isArray(sort)) return;
+  for (const header of headers) {
+    if (header.dataset.kpSort === void 0) continue;
+    const at = sort.findIndex((key) => key?.column === columnId(header));
+    if (at === -1) {
+      header.setAttribute("aria-sort", "none");
+      delete header.dataset.kpSortPriority;
+    } else {
+      header.setAttribute("aria-sort", sort[at].direction === "descending" ? "descending" : "ascending");
+      header.dataset.kpSortPriority = String(at + 1);
+    }
+  }
+}
+function paintAlert(element, memory) {
+  if (memory.read(
+    "dismissed",
+    /** @type {boolean} */
+    false
+  ) === true) element.hidden = true;
+}
+function paintRemembered(element, component, options) {
+  const memory = memoryFor(element, component, options);
+  if (memory !== null) PAINTERS[component](element, memory);
+  return memory;
+}
+function restoreRemembered(root = document) {
+  const selector = `[${REMEMBER_ATTRIBUTE}], [${ALIASES.sidenav}]`;
+  for (const element of root.querySelectorAll(selector)) {
+    for (const [component, mark] of KINDS) {
+      if (!element.matches(mark)) continue;
+      paintRemembered(element, component);
+      break;
+    }
+  }
+}
+function attachRemembered(root = document) {
+  const wired3 = /* @__PURE__ */ new Map();
+  const wire16 = (scope) => {
+    const found = [
+      ...scope instanceof Element && scope.matches(`details[${REMEMBER_ATTRIBUTE}]`) ? [scope] : [],
+      ...scope.querySelectorAll(`details[${REMEMBER_ATTRIBUTE}]`)
+    ];
+    for (const element of found) {
+      const details = (
+        /** @type {HTMLDetailsElement} */
+        element
+      );
+      if (wiredDisclosures.has(details)) continue;
+      const memory = held(details) ? memoryFor(details, "disclosure") : paintRemembered(details, "disclosure");
+      if (memory === null) continue;
+      wiredDisclosures.add(details);
+      details.dataset.kpRememberAttached = "";
+      const onToggle = () => {
+        if (!held(details)) memory.write("open", details.open);
+      };
+      details.addEventListener("toggle", onToggle);
+      wired3.set(details, {
+        memory,
+        cleanup: () => {
+          details.removeEventListener("toggle", onToggle);
+          wiredDisclosures.delete(details);
+          delete details.dataset.kpRememberAttached;
+        }
+      });
+    }
+  };
+  wire16(root);
+  const doc = root instanceof Document ? root : root.ownerDocument ?? (typeof document === "undefined" ? null : document);
+  const view = doc?.defaultView;
+  if (!view) return () => wired3.forEach(({ cleanup }) => cleanup());
+  let sweeping = false;
+  const sweep = () => {
+    sweeping = false;
+    for (const [details, { cleanup }] of wired3)
+      if (!details.isConnected) {
+        cleanup();
+        wired3.delete(details);
+      }
+  };
+  const later = new view.MutationObserver((records) => {
+    for (const record of records) {
+      if (record.type === "attributes") {
+        const target = (
+          /** @type {Element} */
+          record.target
+        );
+        if (target.hasAttribute(REMEMBER_HOLD_ATTRIBUTE)) continue;
+        for (const [details, { memory }] of wired3)
+          if ((details === target || target.contains(details)) && !held(details)) paintDisclosure(details, memory);
+        continue;
+      }
+      for (const node of record.addedNodes) if (node instanceof view.Element) wire16(node);
+      if (record.removedNodes.length && !sweeping) {
+        sweeping = true;
+        queueMicrotask(sweep);
+      }
+    }
+  });
+  later.observe(root instanceof Document ? root.documentElement : (
+    /** @type {Node} */
+    root
+  ), {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: [REMEMBER_HOLD_ATTRIBUTE]
+  });
+  return () => {
+    later.disconnect();
+    for (const { cleanup } of wired3.values()) cleanup();
+    wired3.clear();
+  };
+}
+function forgetRememberedExcept(component, prefix, names, { storage: given2 } = {}) {
+  const store = storage(given2);
+  if (store === null) return 0;
+  const keep = new Set(names);
+  const head = `${config.prefix}:${component}:`;
+  let removed = 0;
+  try {
+    const doomed = [];
+    for (let at = 0; at < store.length; at += 1) {
+      const key = store.key(at);
+      if (key === null || !key.startsWith(head)) continue;
+      const rest = key.slice(head.length);
+      const name = rest.slice(0, rest.lastIndexOf(":"));
+      if (name.startsWith(prefix) && !keep.has(name)) doomed.push(key);
+    }
+    for (const key of doomed) {
+      store.removeItem(key);
+      removed += 1;
+    }
+  } catch {
+  }
+  return removed;
+}
+var REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_PREFIX, config, ALIASES, claims, reported, headersOf, isFlags, PAINTERS, KINDS, REMEMBER_HOLD_ATTRIBUTE, held, wiredDisclosures;
+var init_remember = __esm({
+  "js/remember.js"() {
+    "use strict";
+    init_strings();
+    REMEMBER_ATTRIBUTE = "data-kp-remember";
+    REMEMBER_CLASH_EVENT = "kp-remember-clash";
+    REMEMBER_PREFIX = "kp-remember";
+    config = { prefix: REMEMBER_PREFIX, storage: (
+      /** @type {Storage | null | undefined} */
+      void 0
+    ) };
+    ALIASES = { sidenav: "data-kp-sidenav-remember" };
+    claims = /* @__PURE__ */ new Map();
+    reported = /* @__PURE__ */ new Set();
+    headersOf = (element) => [...element.querySelector("table")?.tHead?.rows[0]?.cells ?? []];
+    isFlags = (value) => typeof value === "object" && value !== null && !Array.isArray(value);
+    PAINTERS = {
+      sidenav: paintSidenav,
+      disclosure: paintDisclosure,
+      tree: paintTree,
+      split: paintSplit,
+      datatable: paintDatatable,
+      // A tour has no markup to paint: js/tour.js reads its memory itself.
+      tour: () => {
+      },
+      // The refresh chooser and the notification centre read their own memory [kpadopt5-ops].
+      refresh: () => {
+      },
+      notices: () => {
+      },
+      // The claim chips, the availability grid, the time field and the console read their own memory [kpadopt6].
+      claim: () => {
+      },
+      availability: () => {
+      },
+      time: () => {
+      },
+      console: () => {
+      },
+      // The check-in's progress and the picker's folded list are read by their own modules [kpadopt6].
+      "focus-steps": () => {
+      },
+      picker: () => {
+      },
+      // A dismissible alert that stays closed, `data-kp-remember` on a `.kp-alert`; js/overlays.js writes it on a dismissal [wish-1120].
+      alert: paintAlert
+    };
+    KINDS = [
+      ["sidenav", ".kp-sidenav"],
+      ["tree", "[data-kp-tree]"],
+      ["split", "[data-kp-split]"],
+      ["datatable", "[data-kp-datatable]"],
+      ["disclosure", "details"],
+      ["alert", ".kp-alert"]
+    ];
+    REMEMBER_HOLD_ATTRIBUTE = "data-kp-remember-hold";
+    held = (element) => element.closest(`[${REMEMBER_HOLD_ATTRIBUTE}]`) !== null;
+    wiredDisclosures = /* @__PURE__ */ new WeakSet();
+  }
+});
+
 // js/overlays.js
 var overlays_exports = {};
 __export(overlays_exports, {
@@ -5104,10 +5230,7 @@ function attachOne(gate) {
   const live4 = make23("kp-sr-only", "span");
   live4.setAttribute("role", "status");
   live4.setAttribute("aria-live", "polite");
-  const wait = make23("kp-ack__wait");
-  wait.setAttribute("aria-hidden", "true");
-  wait.hidden = true;
-  for (let i = 0; i < 2; i++) wait.append(make23("kp-skeleton kp-ack__bone", "span"));
+  let busy = null;
   const problem = make23("kp-ack__problem");
   problem.hidden = true;
   const problemText = make23("kp-ack__problem-text", "span");
@@ -5123,11 +5246,12 @@ function attachOne(gate) {
   const authored = [...gate.childNodes];
   side.prepend(problem);
   frame3.append(...authored, side);
-  gate.append(frame3, wait, live4);
+  gate.append(frame3, live4);
   undo.push(() => {
     gate.prepend(...authored);
     frame3.remove();
-    wait.remove();
+    busy?.remove();
+    busy = null;
     live4.remove();
   });
   const labelText = () => gate.getAttribute("data-kp-ack-label") ?? s2.ackLabel;
@@ -5207,7 +5331,13 @@ function attachOne(gate) {
     else tick6.removeAttribute("data-kp-reason");
     tick6.title = block;
     const state2 = gate.getAttribute("data-kp-state");
-    wait.hidden = state2 !== "loading";
+    if (state2 === "loading") {
+      busy ??= openBusyCard(gate, { words: s2.ackLooking, area: () => [gate], className: "kp-ack__busy", arrive: true });
+    } else if (busy !== null) {
+      const leaving = busy;
+      busy = null;
+      void leaving.close();
+    }
     gate.toggleAttribute("aria-busy", state2 === "loading");
     if (state2 === "empty") {
       if (!gate.hidden) gate.setAttribute("data-kp-ack-hid", "");
@@ -5268,7 +5398,7 @@ function attachOne(gate) {
         if (notes?.open) notesOpened = true;
         paint14();
       });
-      gate.insertBefore(notes, wait);
+      gate.insertBefore(notes, live4);
       if (gate.hasAttribute("data-kp-ack-notes-open")) {
         notes.open = true;
         notesOpened = true;
@@ -5382,6 +5512,7 @@ var ACK_GATE, ACK_EVENT, ACK_RETRY_EVENT, HANDLES, targetsOf, siblingsOf, open, 
 var init_ack_gate = __esm({
   "js/ack-gate.js"() {
     "use strict";
+    init_busy_card();
     init_reason();
     init_strings();
     init_markdown();
@@ -15525,132 +15656,6 @@ var init_state_plate = __esm({
   }
 });
 
-// js/busy-card.js
-var busy_card_exports = {};
-__export(busy_card_exports, {
-  BUSY_CARD: () => BUSY_CARD,
-  openBusyCard: () => openBusyCard,
-  scrollersAround: () => scrollersAround,
-  seenAcross: () => seenAcross
-});
-function scrollersAround(host) {
-  const found = [];
-  for (let a = host.parentElement; a && a !== host.ownerDocument.documentElement; a = a.parentElement) {
-    const x = getComputedStyle(a).overflowX;
-    if (x !== "visible" && a.clientWidth > 0) found.push(a);
-  }
-  return found;
-}
-function seenAcross(host, left, right) {
-  let seenLeft = left;
-  let seenRight = right;
-  for (const a of scrollersAround(host)) {
-    const box = a.getBoundingClientRect();
-    seenLeft = Math.max(seenLeft, box.left + a.clientLeft);
-    seenRight = Math.min(seenRight, box.left + a.clientLeft + a.clientWidth);
-  }
-  return { left: seenLeft, right: Math.max(seenLeft, seenRight) };
-}
-function openBusyCard(host, { words, area, className = "", arrive: arrive2 = true }) {
-  const doc = host.ownerDocument;
-  const layer = doc.createElement("div");
-  layer.className = `kp-datatable__busy-overlay kp-datatable__busy-card${className ? ` ${className}` : ""}`;
-  layer.setAttribute("aria-hidden", "true");
-  const panel = doc.createElement("div");
-  panel.className = "kp-datatable__busy-panel";
-  const spinner = doc.createElement("span");
-  spinner.className = "kp-spinner";
-  const said = doc.createElement("span");
-  said.className = "kp-datatable__busy-words";
-  said.textContent = words;
-  panel.append(spinner, said);
-  layer.append(panel);
-  const place2 = () => {
-    if (!layer.isConnected) return;
-    const box = host.getBoundingClientRect();
-    const viewTop = box.top + host.clientTop;
-    const viewLeft = box.left + host.clientLeft;
-    const viewBottom = viewTop + host.clientHeight;
-    const viewRight = viewLeft + host.clientWidth;
-    const seen = seenAcross(host, viewLeft, viewRight);
-    const rects = area().map((b) => "getBoundingClientRect" in b ? b.getBoundingClientRect() : b);
-    if (!rects.length) return;
-    let top = Math.max(viewTop, Math.min(...rects.map((r) => r.top)));
-    let left = Math.max(seen.left, Math.min(...rects.map((r) => r.left)));
-    let bottom = Math.max(top, Math.min(viewBottom, Math.max(...rects.map((r) => r.bottom))));
-    let right = Math.max(left, Math.min(seen.right, Math.max(...rects.map((r) => r.right))));
-    const originTop = viewTop - host.scrollTop;
-    const originLeft = viewLeft - host.scrollLeft;
-    const write3 = () => {
-      layer.style.setProperty("--kp-busy-overlay-top", px(top - originTop));
-      layer.style.setProperty("--kp-busy-overlay-left", px(left - originLeft));
-      layer.style.setProperty("--kp-busy-overlay-bottom", px(host.clientHeight - (bottom - originTop)));
-      layer.style.setProperty("--kp-busy-overlay-right", px(host.clientWidth - (right - originLeft)));
-    };
-    write3();
-    const need = panel.offsetHeight + 8;
-    if (need > bottom - top) {
-      const grow = (need - (bottom - top)) / 2;
-      top = Math.max(viewTop, top - grow);
-      bottom = Math.min(viewBottom, bottom + grow);
-      write3();
-    }
-    const wide = Math.max(panel.offsetWidth + 17, (seen.right - seen.left) / 2 + 1);
-    if (wide > right - left) {
-      const grow = (wide - (right - left)) / 2;
-      left = Math.max(seen.left, left - grow);
-      right = Math.min(seen.right, right + grow);
-      if (right - left < wide) {
-        if (left === seen.left) right = Math.min(seen.right, left + wide);
-        else left = Math.max(seen.left, right - wide);
-      }
-      write3();
-    }
-  };
-  host.append(layer);
-  place2();
-  const watcher = typeof ResizeObserver === "function" ? new ResizeObserver(() => place2()) : null;
-  watcher?.observe(host);
-  host.addEventListener("scroll", place2, { passive: true });
-  const scrollers = scrollersAround(host);
-  for (const scroller of scrollers) scroller.addEventListener("scroll", place2, { passive: true });
-  const unwatch = () => {
-    watcher?.disconnect();
-    host.removeEventListener("scroll", place2);
-    for (const scroller of scrollers) scroller.removeEventListener("scroll", place2);
-  };
-  if (arrive2) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => layer.isConnected && m.arriveShown(layer));
-  let closing2 = null;
-  return {
-    layer,
-    place: place2,
-    remove() {
-      unwatch();
-      layer.remove();
-    },
-    close() {
-      closing2 ??= Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => {
-        if (!layer.isConnected) return void 0;
-        if (m.leavesState(layer)) return m.leave(layer);
-        layer.setAttribute(m.CLOSING_ATTRIBUTE, "");
-        return m.playClose(panel).then(() => void 0);
-      }).catch(() => void 0).then(() => {
-        unwatch();
-        layer.remove();
-      });
-      return closing2;
-    }
-  };
-}
-var BUSY_CARD, px;
-var init_busy_card = __esm({
-  "js/busy-card.js"() {
-    "use strict";
-    BUSY_CARD = ".kp-datatable__busy-card";
-    px = (v) => `${Math.round(v)}px`;
-  }
-});
-
 // js/palette.js
 var palette_exports = {};
 __export(palette_exports, {
@@ -17218,7 +17223,7 @@ function compareByOrder(order2, a, b, fallback2) {
   };
   return rank2(a) - rank2(b) || fallback2(a, b);
 }
-function nextSorts(keys, column, { add = false, cycle = "two" } = {}) {
+function nextSorts(keys, column, { add = false, cycle = "three" } = {}) {
   const current2 = keys.find((key) => key.column === column);
   if (add) {
     if (current2 === void 0) return [...keys, { column, direction: "ascending" }];
@@ -17536,7 +17541,7 @@ function attachDataTables(root = document, {
   compare: compareFn = compare,
   filter: filterFn = defaultFilter,
   debounceMs,
-  sortCycle = "two",
+  sortCycle = "three",
   multiSort = false,
   sortExternal = false,
   filterMode = "panel",
@@ -17632,7 +17637,7 @@ function attachDataTables(root = document, {
     const externalSort = wrap.dataset.kpSortExternal === void 0 ? sortExternal : wrap.dataset.kpSortExternal !== "false";
     const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? "", 10) || debounceMs || (serverMode ? SERVER_DEBOUNCE_MS : 0);
     const cycle = wrap.dataset.kpSortCycle ?? sortCycle;
-    const cycleName = cycle === "three" ? "three" : "two";
+    const cycleName = cycle === "two" ? "two" : "three";
     const multi = sortsSeveral(wrap);
     const addOnClick = multi && (wrap.dataset.kpSortMulti === "click" || wrap.dataset.kpSortMulti === void 0 && multiSort === "click");
     const glyphs = {
@@ -21212,6 +21217,7 @@ var init_forms = __esm({
 // js/patterns.js
 var patterns_exports = {};
 __export(patterns_exports, {
+  CLEAR_AFTER_MS: () => CLEAR_AFTER_MS,
   COMMIT_EVENT: () => COMMIT_EVENT,
   COPIED_MS: () => COPIED_MS,
   COPY_EVENT: () => COPY_EVENT,
@@ -21229,9 +21235,20 @@ __export(patterns_exports, {
   hideSecret: () => hideSecret,
   revealSecret: () => revealSecret
 });
-function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_MS, toastOnCopyFailure = true, undoClassName = "kp-button kp-button--ghost", secretLoad } = {}) {
+function clearDelay(attribute, fallback2) {
+  const text = (attribute ?? "").trim().toLowerCase();
+  if (text === "") return fallback2 || 0;
+  if (["off", "never", "false", "none"].includes(text)) return 0;
+  const match = /^(\d*\.?\d+)\s*(ms|sec|s|min|m|h)?$/.exec(text);
+  if (!match) return fallback2 || 0;
+  return Number.parseFloat(
+    /** @type {string} */
+    match[1]
+  ) * (CLEAR_UNITS[match[2] ?? "s"] ?? 1e3);
+}
+function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_MS, clearAfterMs = CLEAR_AFTER_MS, toastOnCopyFailure = true, undoClassName = "kp-button kp-button--ghost", secretLoad } = {}) {
   const cleanups = [];
-  cleanups.push(attachSecrets(root, { copiedMs, ...secretLoad ? { load: secretLoad } : {} }));
+  cleanups.push(attachSecrets(root, { copiedMs, clearAfterMs, ...secretLoad ? { load: secretLoad } : {} }));
   for (const element of root.querySelectorAll(COPY)) {
     const button = (
       /** @type {HTMLButtonElement} */
@@ -21347,7 +21364,7 @@ function revealSecret(field) {
 function hideSecret(field) {
   secrets.get(field)?.hide("call");
 }
-function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
+function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfterMs = CLEAR_AFTER_MS } = {}) {
   const cleanups = [];
   const fields = (
     /** @type {HTMLElement[]} */
@@ -21638,7 +21655,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
     const scheduleClear = (secret) => {
       window.clearTimeout(clearTimer);
       dropClearFocus?.();
-      const wait = Number.parseFloat(field.dataset.kpSecretClear ?? "");
+      const wait = clearDelay(field.dataset.kpSecretClear, clearAfterMs);
       if (!(wait > 0)) return;
       const done = (cleared, reason) => {
         if (cleared) say19(s2.secretClipboardCleared);
@@ -21671,7 +21688,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
           };
         }
       };
-      clearTimer = window.setTimeout(() => void clear(), wait * 1e3);
+      clearTimer = window.setTimeout(() => void clear(), wait);
     };
     const onFocusIn = (event) => {
       if (event.target === value) pause(true);
@@ -21761,7 +21778,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
     for (const c of cleanups.splice(0)) c();
   };
 }
-var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, COPY_EVENT, COPY_FAILED_EVENT, secrets;
+var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, CLEAR_AFTER_MS, CLEAR_UNITS, COPY_EVENT, COPY_FAILED_EVENT, secrets;
 var init_patterns = __esm({
   "js/patterns.js"() {
     "use strict";
@@ -21780,6 +21797,9 @@ var init_patterns = __esm({
     COPIED_MS = 1500;
     COMMIT_EVENT = "kp-action-commit";
     UNDO_EVENT = "kp-action-undo";
+    CLEAR_AFTER_MS = 3e4;
+    CLEAR_UNITS = /** @type {Record<string, number>} */
+    { ms: 1, s: 1e3, sec: 1e3, min: 6e4, m: 6e4, h: 36e5 };
     COPY_EVENT = "kp-copy";
     COPY_FAILED_EVENT = "kp-copy-failed";
     secrets = /* @__PURE__ */ new WeakMap();
@@ -24537,6 +24557,7 @@ __export(chart_exports, {
   CHART_RANGE_EVENT: () => CHART_RANGE_EVENT,
   CHART_RETRY_EVENT: () => CHART_RETRY_EVENT,
   CHART_SELECT_EVENT: () => CHART_SELECT_EVENT,
+  CHART_TIME_UNITS: () => CHART_TIME_UNITS,
   CHART_TIME_ZONE: () => CHART_TIME_ZONE,
   CHART_ZOOM_EVENT: () => CHART_ZOOM_EVENT,
   TREND_CHART: () => TREND_CHART,
@@ -24848,8 +24869,13 @@ function timeTicks(from, to, most, timeZone = CHART_TIME_ZONE) {
   return { stride, ticks: [...ticks].filter((t) => t >= from && t <= to).sort((x, y) => x - y) };
 }
 function chartInMilliseconds(data, attribute) {
-  if ((data.timeUnit ?? attribute) !== "s") return data;
-  const ms = (t) => typeof t === "number" ? Math.round(t * 1e3) : t;
+  const named = data.timeUnit ?? attribute;
+  const factor = named && Object.hasOwn(CHART_TIME_UNITS, named) ? CHART_TIME_UNITS[
+    /** @type {ChartTimeUnit} */
+    named
+  ] : 1;
+  if (factor === 1) return data;
+  const ms = (t) => typeof t === "number" ? Math.round(t * factor) : t;
   const out = { ...data, timeUnit: "ms" };
   if (data.from !== void 0) out.from = ms(data.from);
   if (data.to !== void 0) out.to = ms(data.to);
@@ -26287,7 +26313,7 @@ function trendChart(host, group, locale, ctx) {
   };
   return state2;
 }
-var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_TIME_ZONE, TREND_CHART, dashOf, BYTE_UNITS, isBytes, NUMBERS, MINUTE, HOUR, DAY, WALL, toMinute, two, BLANK, dayKeyOf, SUB_DAY_STRIDES, DAY_STRIDES, DATA, CHARTS, GROUPS, LOOSE, CHIPS, PAGES, SVGNS, clipIds, ChartGroup;
+var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_TIME_ZONE, TREND_CHART, dashOf, BYTE_UNITS, isBytes, NUMBERS, MINUTE, HOUR, DAY, WALL, toMinute, two, BLANK, dayKeyOf, SUB_DAY_STRIDES, DAY_STRIDES, DATA, CHARTS, GROUPS, LOOSE, CHIPS, PAGES, CHART_TIME_UNITS, SVGNS, clipIds, ChartGroup;
 var init_chart = __esm({
   "js/chart.js"() {
     "use strict";
@@ -26327,6 +26353,7 @@ var init_chart = __esm({
     LOOSE = /* @__PURE__ */ new WeakMap();
     CHIPS = /* @__PURE__ */ new WeakMap();
     PAGES = /* @__PURE__ */ new WeakMap();
+    CHART_TIME_UNITS = { ms: 1, s: 1e3, min: 6e4, h: 36e5, d: 864e5, w: 6048e5 };
     SVGNS = "http://www.w3.org/2000/svg";
     clipIds = 0;
     ChartGroup = class {
@@ -46931,9 +46958,20 @@ function attachOne8(nav) {
   let entries3 = [];
   let current2 = null;
   let raf = 0;
+  const lookup = (selector) => {
+    if (!selector) return null;
+    try {
+      for (let up = nav.parentElement; up; up = up.parentElement) {
+        const hit = up.querySelector(selector);
+        if (hit) return hit;
+      }
+      return doc.querySelector(selector);
+    } catch {
+      return null;
+    }
+  };
   const scope = () => {
-    const named = nav.getAttribute("data-kp-contents-for");
-    const found = named ? doc.querySelector(named) : null;
+    const found = lookup(nav.getAttribute("data-kp-contents-for"));
     return found ?? nav.closest("body")?.querySelector("main") ?? doc.body;
   };
   const offset = () => {
@@ -46944,16 +46982,27 @@ function attachOne8(nav) {
     const n = Number(nav.getAttribute("data-kp-contents-min"));
     return nav.hasAttribute("data-kp-contents-min") && Number.isFinite(n) ? n : 2;
   };
+  const scrollParent = (el16) => {
+    for (let up = el16.parentElement; up && up !== doc.body && up !== doc.documentElement; up = up.parentElement) {
+      const overflow = view.getComputedStyle(up).overflowY;
+      if ((overflow === "auto" || overflow === "scroll" || overflow === "overlay") && up.scrollHeight > up.clientHeight + 1) return up;
+    }
+    return null;
+  };
   const scroller = () => {
-    const named = nav.getAttribute("data-kp-contents-scroller");
-    const found = named ? doc.querySelector(named) : null;
-    return found instanceof HTMLElement ? found : null;
+    const found = lookup(nav.getAttribute("data-kp-contents-scroller"));
+    if (found instanceof HTMLElement) return found;
+    const first = entries3[0]?.target;
+    return first ? scrollParent(first) : null;
   };
   const motion = () => view.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
   const read = () => {
     if (given2) {
       return given2.flatMap((item) => {
-        const target = doc.getElementById(item.id);
+        const target = (
+          /** @type {HTMLElement | null} */
+          lookup(`#${view.CSS.escape(item.id)}`)
+        );
         return target ? [{ item, target }] : [];
       });
     }
@@ -46997,6 +47046,7 @@ function attachOne8(nav) {
   const spy = () => {
     raf = 0;
     if (!entries3.length) return;
+    bindPane();
     const own = scroller();
     const root = own ?? doc.scrollingElement ?? doc.documentElement;
     const atEnd = own ? own.scrollTop + own.clientHeight >= own.scrollHeight - 2 && own.scrollTop > 0 : root.scrollTop + view.innerHeight >= root.scrollHeight - 2 && root.scrollTop > 0;
@@ -47023,7 +47073,10 @@ function attachOne8(nav) {
     wait.hidden = state2 !== "loading";
     nav.toggleAttribute("aria-busy", state2 === "loading");
     nav.hidden = state2 !== "loading" && next2.length < least();
-    if (nav.getAttribute("data-kp-contents-sig") === signature2) return queueSpy();
+    if (nav.getAttribute("data-kp-contents-sig") === signature2) {
+      bindPane();
+      return queueSpy();
+    }
     nav.setAttribute("data-kp-contents-sig", signature2);
     entries3 = next2.map(({ item, target }) => {
       const li = doc.createElement("li");
@@ -47048,6 +47101,7 @@ function attachOne8(nav) {
     list.replaceChildren(.../** @type {any[]} */
     entries3.map((e) => e.li));
     current2 = null;
+    bindPane();
     queueSpy();
   };
   const onClick = (raw) => {
@@ -47060,7 +47114,11 @@ function attachOne8(nav) {
     const hit = entries3.find((e) => e.link === link);
     if (!hit) return;
     event.preventDefault();
-    hit.target.scrollIntoView({ behavior: motion(), block: "start" });
+    const own = scroller();
+    if (own) {
+      const gap = hit.target.getBoundingClientRect().top - own.getBoundingClientRect().top - Math.min(offset(), own.clientHeight / 4);
+      own.scrollTo({ top: Math.max(0, own.scrollTop + gap), behavior: motion() });
+    } else hit.target.scrollIntoView({ behavior: motion(), block: "start" });
     if (!hit.target.hasAttribute("tabindex") && !hit.target.matches("a[href], button, input, select, textarea, summary")) hit.target.tabIndex = -1;
     hit.target.focus({ preventScroll: true });
     if (nav.getAttribute("data-kp-contents-hash") !== "off") {
@@ -47074,8 +47132,14 @@ function attachOne8(nav) {
   nav.addEventListener("click", onClick);
   view.addEventListener("scroll", queueSpy, { passive: true });
   view.addEventListener("resize", queueSpy);
-  const pane = scroller();
-  pane?.addEventListener("scroll", queueSpy, { passive: true });
+  let pane = null;
+  const bindPane = () => {
+    const next2 = scroller();
+    if (next2 === pane) return;
+    pane?.removeEventListener("scroll", queueSpy);
+    pane = next2;
+    pane?.addEventListener("scroll", queueSpy, { passive: true });
+  };
   const changes = new view.MutationObserver((records) => {
     if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw8);
   });
@@ -66589,6 +66653,7 @@ export {
   CHART_RANGE_EVENT,
   CHART_RETRY_EVENT,
   CHART_SELECT_EVENT,
+  CHART_TIME_UNITS,
   CHART_TIME_ZONE,
   CHART_ZOOM_EVENT,
   CHECKLIST,
@@ -66607,6 +66672,7 @@ export {
   CLAIM_REFUSED_MS,
   CLAIM_RETRY_EVENT,
   CLAIM_UNDO_MS,
+  CLEAR_AFTER_MS,
   CLOSING_ATTRIBUTE,
   CODE,
   CODE_COPIED_MS,

@@ -370,6 +370,7 @@ batch.addEventListener(<span class="kp-code__string">'kp-ack-change'</span>, (ev
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-ack-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-ack-keep</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-ack-loading-min</code></td><td><code>8rem</code></td></tr>
                             <tr><td><code>--kp-ack-notes-max</code></td><td><code>16rem</code></td></tr>
                             <tr><td><code>--kp-ack-side</code></td><td><code>18rem</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
@@ -394,7 +395,7 @@ batch.addEventListener(<span class="kp-code__string">'kp-ack-change'</span>, (ev
                             <tr><td><code>data-kp-ack-tone / -min-ms / -focus / -key / -locked / -version</code></td><td>The alert’s tone (`warning` default, `destructive` or `info`); a wait in milliseconds before the tick may be set; whether a press on the off control takes the focus to the first open tick (`off` to stop it); the name of the item in the event and the announcement; a lock while the job runs; and a version that clears the tick when it changes.</td></tr>
                             <tr><td><code>data-kp-checked</code></td><td>Written on the gate while its box is ticked.</td></tr>
                             <tr><td><code>.kp-ack__frame / __side / __link / __tick / __label</code></td><td>The parts: the frame round the alert and the tick, the side that holds the notes link, the link, the label with its checkbox and the sentence of the tick.</td></tr>
-                            <tr><td><code>.kp-ack__wait / __bone / __problem / __problem-text / __retry</code></td><td>The loading state (skeleton lines, the height kept), and the failed one: no notes found, with Retry (`data-kp-ack-retry`, `kp-ack-retry`).</td></tr>
+                            <tr><td><code>.kp-ack__busy / __problem / __problem-text / __retry</code></td><td>The loading state (the busy card of a loading table, centred, the height kept), and the failed one: no notes found, with Retry (`data-kp-ack-retry`, `kp-ack-retry`).</td></tr>
                             <tr><td><code>data-kp-ack-mode</code></td><td>`each` (default): one tick per gate; `all`: one tick for the lot, for low-risk batches.</td></tr>
                             <tr><td><code>data-kp-ack-reset</code></td><td>`on-change` (default): a changed key, label or version clears the tick; `never`.</td></tr>
                             <tr><td><code>data-kp-ack-require-link</code></td><td>The tick stays off until the notes link was opened once; `data-kp-ack-min-ms` waits a time instead.</td></tr>

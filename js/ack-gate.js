@@ -25,7 +25,7 @@
 //   data-kp-ack-focus        a press on the off control takes the focus to the first open tick (default on; `off`)
 //   data-kp-ack-key          names the item for the event and the announcement
 //   data-kp-ack-retry        a failed lookup offers a Retry button (`kp-ack-retry`)
-//   data-kp-state            `loading` (skeleton lines, the alert keeps its height, the tick off), `error` (no notes link
+//   data-kp-state            `loading` (the busy card of a loading table, centred over the alert, which keeps its height; the tick off), `error` (no notes link
 //                            found, the tick stays) or `empty` (no gate at all: hidden, the control simply enabled)
 //   data-kp-ack-locked       the tick is locked while the job runs
 //   data-kp-ack-notes-open   the release notes (below) stand open; default closed
@@ -43,6 +43,7 @@
 // can answer) and the reason as `data-kp-disabled-reason` (js/reason.js); the change is announced once, politely. Nothing
 // runs on import.
 
+import { openBusyCard } from './busy-card.js';
 import { attachDisabledReasons } from './reason.js';
 import { getStrings } from './strings.js';
 import { markdownFragment } from './markdown.js';
@@ -165,10 +166,8 @@ function attachOne(gate) {
     const live = make('kp-sr-only', 'span');
     live.setAttribute('role', 'status');
     live.setAttribute('aria-live', 'polite');
-    const wait = make('kp-ack__wait');
-    wait.setAttribute('aria-hidden', 'true');
-    wait.hidden = true;
-    for (let i = 0; i < 2; i++) wait.append(make('kp-skeleton kp-ack__bone', 'span'));
+    /** The busy card over the gate while the notes are looked up: the card a loading data table lays over its rows [wish-1120]. @type {import('./busy-card.js').BusyCard | null} */
+    let busy = null;
     const problem = make('kp-ack__problem');
     problem.hidden = true;
     const problemText = make('kp-ack__problem-text', 'span');
@@ -182,11 +181,12 @@ function attachOne(gate) {
     const authored = [...gate.childNodes];
     side.prepend(problem);
     frame.append(...authored, side);
-    gate.append(frame, wait, live);
+    gate.append(frame, live);
     undo.push(() => {
         gate.prepend(...authored);
         frame.remove();
-        wait.remove();
+        busy?.remove();
+        busy = null;
         live.remove();
     });
     const labelText = () => gate.getAttribute('data-kp-ack-label') ?? s.ackLabel;
@@ -279,7 +279,14 @@ function attachOne(gate) {
         else tick.removeAttribute('data-kp-reason');
         tick.title = block;
         const state = gate.getAttribute('data-kp-state');
-        wait.hidden = state !== 'loading';
+        if (state === 'loading') {
+            busy ??= openBusyCard(gate, { words: s.ackLooking, area: () => [gate], className: 'kp-ack__busy', arrive: true });
+        } else if (busy !== null) {
+            // It leaves the way the theme's busy table's card leaves.
+            const leaving = busy;
+            busy = null;
+            void leaving.close();
+        }
         gate.toggleAttribute('aria-busy', state === 'loading');
         if (state === 'empty') {
             if (!gate.hidden) gate.setAttribute('data-kp-ack-hid', '');
@@ -345,7 +352,7 @@ function attachOne(gate) {
                 if (notes?.open) notesOpened = true;
                 paint();
             });
-            gate.insertBefore(notes, wait);
+            gate.insertBefore(notes, live);
             if (gate.hasAttribute('data-kp-ack-notes-open')) {
                 notes.open = true;
                 notesOpened = true;

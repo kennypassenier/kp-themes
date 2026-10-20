@@ -176,8 +176,9 @@ export const TREND_CHART = '[data-kp-chart="spark"][data-kp-spark-head="none"]';
  * @property {number} [yMax] the top of the axis; else a round number above the highest value
  * @property {number | readonly number[]} [threshold] a dashed line (an alarm level), or several: the first is the main one, the others are
  *   drawn finer and dotted (a warning level beside the alarm) [wish-1120, homelab 104]
- * @property {'ms' | 's'} [timeUnit] the unit of every time in this data (a point's time, a series' `start` and `step`, an event's `at` and
- *   `until`, `from` and `to`): `s` for seconds since the epoch, which the chart turns into milliseconds itself; default `ms`. The element's
+ * @property {ChartTimeUnit} [timeUnit] the unit of every time in this data (a point's time, a series' `start` and `step`, an event's `at` and
+ *   `until`, `from` and `to`): `ms` (default), `s`, `min`, `h`, `d` or `w` since the epoch (a step in the same unit), which the chart turns into
+ *   milliseconds itself. Months and years are not units: their length varies, so a month is given as the moment it starts. The element's
  *   `data-kp-chart-time-unit` says the same for data given by markup [wish-1120, homelab 103]
  * @property {boolean} [stacked] sources on top of each other, as areas
  * @property {number} [height] px; else `--kp-chart-height` on the chart (px or rem), else 168
@@ -754,15 +755,21 @@ const PAGES = new WeakMap();
  * @property {() => number} now
  */
 
+/** @typedef {'ms' | 's' | 'min' | 'h' | 'd' | 'w'} ChartTimeUnit */
+/** Milliseconds in one of each time unit a chart's data can be given in. @type {Record<ChartTimeUnit, number>} */
+export const CHART_TIME_UNITS = { ms: 1, s: 1000, min: 60_000, h: 3_600_000, d: 86_400_000, w: 604_800_000 };
+
 /**
- * The data with every time in milliseconds: a copy, the page's own object is left alone. Data already in `ms` comes back as it is.
+ * The data with every time in milliseconds: a copy, the page's own object is left alone. Data already in `ms` (or in no known unit) comes back as it is.
  * @param {ChartData} data
  * @param {string | null} [attribute] the element's `data-kp-chart-time-unit`
  * @returns {ChartData}
  */
 export function chartInMilliseconds(data, attribute) {
-    if ((data.timeUnit ?? attribute) !== 's') return data;
-    const ms = (/** @type {number | undefined} */ t) => (typeof t === 'number' ? Math.round(t * 1000) : t);
+    const named = data.timeUnit ?? attribute;
+    const factor = named && Object.hasOwn(CHART_TIME_UNITS, named) ? CHART_TIME_UNITS[/** @type {ChartTimeUnit} */ (named)] : 1;
+    if (factor === 1) return data;
+    const ms = (/** @type {number | undefined} */ t) => (typeof t === 'number' ? Math.round(t * factor) : t);
     /** @type {ChartData} */
     const out = { ...data, timeUnit: 'ms' };
     if (data.from !== undefined) out.from = ms(data.from);
@@ -802,7 +809,7 @@ export function setChartData(el, data) {
  * @property {string} [text] one sentence under `error` (else the package's own), or under the empty plate
  * @property {Node | string | null} [art] a picture over the heading of the empty and failed plates
  * @property {number} [step] the points' spacing, ms (the axis says `now` while the last is at most two steps old)
- * @property {'ms' | 's'} [timeUnit] `s`: the points' times and `step` are in seconds [wish-1120]
+ * @property {ChartTimeUnit} [timeUnit] the unit of the points' times and `step`: `ms` (default), `s`, `min`, `h`, `d` or `w` [wish-1120]
  * @property {string} [unit]
  * @property {ChartUnitKind} [unitKind]
  * @property {number} [digits]

@@ -165,8 +165,10 @@ export declare function compareByOrder(order: readonly string[], a: string, b: s
 /**
  * The next sort keys after a header press [Kenny, 2026-09-13, #multi-sort].
  *
- * A plain press sorts on that column alone, turning it round when it already
- * was the only key. With `add` (Shift) the column joins the keys as the
+ * A plain press sorts on that column alone, ascending, then descending, then (cycle
+ * 'three', the default since wish-1120 / homelab 93) off again: the rows go back to their own
+ * order and the header says aria-sort none. Cycle 'two' keeps turning between the two
+ * directions and never leaves the sort. With `add` (Shift) the column joins the keys as the
  * last one, turns round when it is a key already, and leaves the keys on
  * its third press. Both channels call this, so they cannot disagree on
  * what a press does.
@@ -427,6 +429,9 @@ export type DataTableOptions = {
      * Default 0, and 300 for a server-backed table.
      */
     debounceMs?: number;
+    /**
+     * What a plain header press does after descending: 'three' (default) removes the sort again (aria-sort none, the rows in their own order), 'two' turns back to ascending. Per table `data-kp-sort-cycle`.
+     */
     sortCycle?: 'two' | 'three';
     /**
      * Shift + click adds a sort key; 'click': a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
@@ -497,7 +502,7 @@ export type DataTableDecorateInfo = {
  * @property {Compare} [compare]
  * @property {Filter} [filter]
  * @property {number} [debounceMs]  Default 0, and 300 for a server-backed table.
- * @property {'two' | 'three'} [sortCycle]
+ * @property {'two' | 'three'} [sortCycle]  What a plain header press does after descending: 'three' (default) removes the sort again (aria-sort none, the rows in their own order), 'two' turns back to ascending. Per table `data-kp-sort-cycle`.
  * @property {boolean | 'click'} [multiSort]  Shift + click adds a sort key; 'click': a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
  * @property {boolean} [sortExternal]  The page sorts: the table draws and announces the sort, the rows keep the order the page renders [kpadopt4]. Default false; per table `data-kp-sort-external`.
  * @property {'panel' | 'add'} [filterMode]  How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
