@@ -6560,6 +6560,31 @@
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
+    /* A tooltip is placed against the window, not against the nearest positioned ancestor [homelab 135]. The popover's
+       absolute box takes the area between its anchor and that ancestor: a button at the bottom of a positioned box
+       (a form grid's button row) has no height under it, so the reason was laid over the button, and a button at the end
+       of one has no width beside it, so the reason was squeezed into a 100 px column of ten lines. Fixed, the area runs to
+       the window's edges, as the add-filter menu does (below), and the reason falls back to the other side where it does not fit:
+       its own width is the one it wants (up to --kp-tooltip-max-width), so an area too narrow for it is a fallback, not a squeeze. */
+    .kp-tooltip.kp-popover:not([popover], [data-kp-hovercard-card]) {
+        position: fixed;
+        width: max-content;
+        max-width: min(var(--kp-tooltip-max-width, 18rem), calc(100vw - 1rem));
+        /* Last: the whole width of the window under or over the anchor, centred on it as far as the window allows, for the
+           button that has no room to either side (a phone). */
+        position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline, --kp-tooltip-below, --kp-tooltip-above;
+    }
+
+    @position-try --kp-tooltip-below {
+        position-area: block-end span-all;
+        justify-self: safe anchor-center;
+    }
+
+    @position-try --kp-tooltip-above {
+        position-area: block-start span-all;
+        justify-self: safe anchor-center;
+    }
+
     /* The page's one hover card (js/hovercard.js): a tooltip that lives in
      * <body>, not in an anchor, and is filled when it opens. In the top layer
      * the script places it in window coordinates, so the popover's UA inset
@@ -6567,6 +6592,17 @@
      * the gap a tooltip in its anchor has. It is wider than a one-line
      * tooltip because it may hold rows, and it can be entered by the pointer
      * (WCAG 1.4.13), so a long word wraps rather than widening it. */
+    /* A register may set a tooltip's words in capitals or small capitals, and everything a card is filled with inherits that:
+       a host, `application/json` or a template read in small caps, though they are case-sensitive [http-switchboard 21]. A
+       value (`.kp-tooltip__value`) keeps its case and its spacing, and so does whatever a hover card is filled with as
+       elements (that is the page's data, not the register's words); a string put in the card is text, and stays the register's. */
+    .kp-tooltip__value,
+    .kp-tooltip[data-kp-hovercard-card] > * {
+        text-transform: none;
+        font-variant-caps: normal;
+        letter-spacing: normal;
+    }
+
     .kp-tooltip[data-kp-hovercard-card] {
         position: fixed;
         inset: auto;
@@ -6849,6 +6885,10 @@
 
     .kp-tabs__list {
         display: flex;
+        /* The row is the containing block of what a tab positions: a scroller clips only what its own box contains, so the
+           `.kp-sr-only` comma in a tab's count (position: absolute) was laid against the page and widened it to 600 px
+           [homelab 134]. */
+        position: relative;
         gap: 0.25rem;
         border-bottom: 1px solid var(--border-strong);
     }
@@ -25772,10 +25812,16 @@
             min-inline-size: 6rem;
         }
 
-        /* Rows, groups and headings run to the last line, the filler of a compact grid included. */
+        /* Rows, groups and headings run to the last line, the filler of a compact grid included. A fieldset or form that
+           stands in a row's control (tiles under a select) is that control's own content, not a block of the grid: it fills
+           the control, which has no label-start line [homelab 129]. */
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
-            :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form),
-        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) :is(.kp-formgrid__group, fieldset) > :is(legend, .kp-formgrid__heading) {
+            :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-formgrid__group, .kp-formrows, .kp-kv),
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(fieldset, form):not(:is(.kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span]) *),
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__group, fieldset:not(:is(.kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span]) *))
+            > :is(legend, .kp-formgrid__heading) {
             grid-column: label-start / -1;
         }
 
@@ -25970,6 +26016,12 @@
         border-radius: var(--radius, 0.5rem);
         background: var(--kp-code-bg, var(--card));
         color: var(--card-foreground);
+    }
+
+    /* A code in a stage with spare height gives it to the code under the head, not to every auto row: the two auto rows
+       shared it, and the head stretched (136 px on a 420 px stage, 205 px with no title) [http-switchboard 41]. */
+    .kp-code:has(> .kp-code__head) {
+        grid-template-rows: auto minmax(0, 1fr);
     }
 
     .kp-code__head {
@@ -28032,9 +28084,31 @@
     /* A narrow grid (the phone layout, align-grid-1019): the label spans the label track to the actions track on the
        row's first line, so the mark stands at the end of that span; a fact's key keeps the label track. */
     @container kp-formgrid (max-width: 36rem) {
+        /* To the last line, as the label does: a compact grid's named tracks are 0 px and its filler takes the width, so
+           `label-start / value-end` was a 0 px area and the mark stood at the row's start [homelab 133]. */
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) [data-kp-anchored='row'] > .kp-anchor {
-            grid-column: label-start / value-end;
+            grid-column: label-start / -1;
             grid-row: 1;
+        }
+
+        /* A row with an action is a wrapping flex row on a phone, and its first child, the mark, took a line of its own above
+           the label (a "#" over the file name). The label goes first and takes what the mark leaves of the line; the mark ends
+           it, on the label's first baseline, at the row's end edge where the grid rows put it [homelab 133]. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)[data-kp-anchored='row']
+            > :is(.kp-formgrid__label, .kp-formrow__label) {
+            order: -2;
+            flex: 1 1 0;
+            min-inline-size: 0;
+            padding-inline-end: 0;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)[data-kp-anchored='row']
+            > .kp-anchor {
+            order: -1;
+            flex: 0 0 auto;
+            align-self: first baseline;
         }
 
         .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-kv__row[data-kp-anchored='row'] > .kp-anchor {
@@ -30438,7 +30512,15 @@
 
         .kp-console__tools {
             grid-row: 3;
-            grid-template-columns: repeat(3, 1fr);
+            /* `1fr` has a min-content floor: tools whose words do not break (a nowrap button, a long translated word) were
+               wider than a third and ran past the block, "Collapse" cut [homelab 132]. A third is a third; the words wrap. */
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .kp-console__tool {
+            min-inline-size: 0;
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
 
         .kp-console__tool[data-kp-console-tool='copy-command'] {
