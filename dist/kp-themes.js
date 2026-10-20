@@ -58339,13 +58339,13 @@ function ringGeometry(W, H, { ring = 0.36, inset } = {}) {
   }
   return { cx, cy, rx, ry };
 }
-function placeRing(data, { cx, cy, rx, ry }) {
+function placeRing(data, { cx, cy, rx, ry }, phase = 0) {
   const at = /* @__PURE__ */ new Map();
   const hub = hubOf(data);
   if (hub) at.set(hub, { x: cx, y: cy, angle: Math.PI / 2 });
   const ring = ringOf(data, hub);
   ring.forEach((n, i) => {
-    const angle = -Math.PI / 2 + i / Math.max(1, ring.length) * Math.PI * 2;
+    const angle = -Math.PI / 2 + (i + phase) / Math.max(1, ring.length) * Math.PI * 2;
     at.set(n.id, { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry, angle });
   });
   return at;
@@ -58360,35 +58360,39 @@ function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf(n), li
   let best = null;
   for (let guard = 0; guard < 40; guard += 1) {
     const geo = ringGeometry(W, height, layout3);
-    let rx = W > 600 ? geo.rx : Infinity;
     const ring = ringOf(data, hub);
-    for (const [i, n] of ring.entries()) {
-      const cos = Math.cos(-Math.PI / 2 + i / Math.max(1, ring.length) * Math.PI * 2);
-      const half = Math.max((widths2.get(n.id) ?? 0) / 2, rOf(n)) + pad2;
-      if (cos > 1e-3) rx = Math.min(rx, (W - half - geo.cx) / cos);
-      else if (cos < -1e-3) rx = Math.min(rx, (geo.cx - half) / -cos);
+    for (const phase of [0, 0.25, 0.5, 0.75]) {
+      const sized = { ...geo };
+      let rx = W > 600 ? sized.rx : Infinity;
+      for (const [i, n] of ring.entries()) {
+        const cos = Math.cos(-Math.PI / 2 + (i + phase) / Math.max(1, ring.length) * Math.PI * 2);
+        const half = Math.max((widths2.get(n.id) ?? 0) / 2, rOf(n)) + pad2;
+        if (cos > 1e-3) rx = Math.min(rx, (W - half - sized.cx) / cos);
+        else if (cos < -1e-3) rx = Math.min(rx, (sized.cx - half) / -cos);
+      }
+      sized.rx = Math.max(24, Number.isFinite(rx) ? rx : sized.rx);
+      const at = placeRing(data, sized, phase);
+      const boxes = nodes.map((n) => {
+        const p = (
+          /** @type {{ x: number, y: number }} */
+          at.get(n.id)
+        );
+        const r = rOf(n) + (n.flag === "mismatch" ? 5 : 0);
+        const w = widths2.get(n.id) ?? 0;
+        return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line } };
+      });
+      const top = layout3.inset?.top ?? 0;
+      const bottom = layout3.inset?.bottom ?? 0;
+      const hits = (a, b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
+      let misses = 0;
+      for (const [i, a] of boxes.entries()) {
+        if (a.label.x < pad2 || a.label.x + a.label.width > W - pad2 || a.circle.y < top + pad2 || a.label.y + a.label.height > height - bottom - pad2) misses += 1;
+        for (const b of boxes.slice(i + 1)) if (hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
+      }
+      if (!best || misses < best.misses) best = { misses, at, H: height };
+      if (misses === 0) break;
     }
-    geo.rx = Math.max(24, Number.isFinite(rx) ? rx : geo.rx);
-    const at = placeRing(data, geo);
-    const boxes = nodes.map((n) => {
-      const p = (
-        /** @type {{ x: number, y: number }} */
-        at.get(n.id)
-      );
-      const r = rOf(n) + (n.flag === "mismatch" ? 5 : 0);
-      const w = widths2.get(n.id) ?? 0;
-      return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line } };
-    });
-    const top = layout3.inset?.top ?? 0;
-    const bottom = layout3.inset?.bottom ?? 0;
-    const hits = (a, b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
-    let misses = 0;
-    for (const [i, a] of boxes.entries()) {
-      if (a.label.x < pad2 || a.label.x + a.label.width > W - pad2 || a.circle.y < top + pad2 || a.label.y + a.label.height > height - bottom - pad2) misses += 1;
-      for (const b of boxes.slice(i + 1)) if (hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
-    }
-    if (!best || misses < best.misses) best = { misses, at, H: height };
-    if (misses === 0 || height >= maxHeight) break;
+    if (best?.misses === 0 || height >= maxHeight) break;
     height = Math.min(maxHeight, Math.round(height * 1.1));
   }
   const chosen = (

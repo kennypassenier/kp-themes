@@ -205,16 +205,17 @@ function ringGeometry(W, H, { ring = 0.36, inset } = {}) {
  * Put the hub in the middle and the ring's nodes on the ellipse.
  * @param {GraphData} data
  * @param {GraphRing} geo
+ * @param {number} [phase]  a turn of the ring in nodes (0.25 = a quarter of the step between two nodes); 0 is the approved look
  * @returns {Map<string, { x: number, y: number, angle: number }>}
  */
-function placeRing(data, { cx, cy, rx, ry }) {
+function placeRing(data, { cx, cy, rx, ry }, phase = 0) {
     /** @type {Map<string, { x: number, y: number, angle: number }>} */
     const at = new Map();
     const hub = hubOf(data);
     if (hub) at.set(hub, { x: cx, y: cy, angle: Math.PI / 2 });
     const ring = ringOf(data, hub);
     ring.forEach((n, i) => {
-        const angle = -Math.PI / 2 + (i / Math.max(1, ring.length)) * Math.PI * 2;
+        const angle = -Math.PI / 2 + ((i + phase) / Math.max(1, ring.length)) * Math.PI * 2;
         at.set(n.id, { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry, angle });
     });
     return at;
@@ -256,34 +257,41 @@ export function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf
     let best = null;
     for (let guard = 0; guard < 40; guard += 1) {
         const geo = ringGeometry(W, height, layout);
-        // The ring's width: as wide as the box allows (a narrow box gives up the sides' room for labels, since the names are
-        // under the nodes now), and every name stays inside the box, whatever its place on the ring.
-        let rx = W > 600 ? geo.rx : Infinity;
         const ring = ringOf(data, hub);
-        for (const [i, n] of ring.entries()) {
-            const cos = Math.cos(-Math.PI / 2 + (i / Math.max(1, ring.length)) * Math.PI * 2);
-            const half = Math.max((widths.get(n.id) ?? 0) / 2, rOf(n)) + pad;
-            if (cos > 0.001) rx = Math.min(rx, (W - half - geo.cx) / cos);
-            else if (cos < -0.001) rx = Math.min(rx, (geo.cx - half) / -cos);
+        // The ring may be turned a quarter step at a time: two neighbours at the top or the bottom of a narrow ring stand side by side
+        // on one line, and a turn lets one stand lower than the other, so the names are not on one line. The first turn that clears
+        // every name wins, and 0 (the ring as it is everywhere else) is tried first.
+        for (const phase of [0, 0.25, 0.5, 0.75]) {
+            const sized = { ...geo };
+            // The ring's width: as wide as the box allows (a narrow box gives up the sides' room for labels, since the names are
+            // under the nodes now), and every name stays inside the box, whatever its place on the ring.
+            let rx = W > 600 ? sized.rx : Infinity;
+            for (const [i, n] of ring.entries()) {
+                const cos = Math.cos(-Math.PI / 2 + ((i + phase) / Math.max(1, ring.length)) * Math.PI * 2);
+                const half = Math.max((widths.get(n.id) ?? 0) / 2, rOf(n)) + pad;
+                if (cos > 0.001) rx = Math.min(rx, (W - half - sized.cx) / cos);
+                else if (cos < -0.001) rx = Math.min(rx, (sized.cx - half) / -cos);
+            }
+            sized.rx = Math.max(24, Number.isFinite(rx) ? rx : sized.rx);
+            const at = placeRing(data, sized, phase);
+            const boxes = nodes.map((n) => {
+                const p = /** @type {{ x: number, y: number }} */ (at.get(n.id));
+                const r = rOf(n) + (n.flag === 'mismatch' ? 5 : 0);
+                const w = widths.get(n.id) ?? 0;
+                return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line } };
+            });
+            const top = layout.inset?.top ?? 0;
+            const bottom = layout.inset?.bottom ?? 0;
+            const hits = (/** @type {GraphBox} */ a, /** @type {GraphBox} */ b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
+            let misses = 0;
+            for (const [i, a] of boxes.entries()) {
+                if (a.label.x < pad || a.label.x + a.label.width > W - pad || a.circle.y < top + pad || a.label.y + a.label.height > height - bottom - pad) misses += 1;
+                for (const b of boxes.slice(i + 1)) if (hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
+            }
+            if (!best || misses < best.misses) best = { misses, at, H: height };
+            if (misses === 0) break;
         }
-        geo.rx = Math.max(24, Number.isFinite(rx) ? rx : geo.rx);
-        const at = placeRing(data, geo);
-        const boxes = nodes.map((n) => {
-            const p = /** @type {{ x: number, y: number }} */ (at.get(n.id));
-            const r = rOf(n) + (n.flag === 'mismatch' ? 5 : 0);
-            const w = widths.get(n.id) ?? 0;
-            return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line } };
-        });
-        const top = layout.inset?.top ?? 0;
-        const bottom = layout.inset?.bottom ?? 0;
-        const hits = (/** @type {GraphBox} */ a, /** @type {GraphBox} */ b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
-        let misses = 0;
-        for (const [i, a] of boxes.entries()) {
-            if (a.label.x < pad || a.label.x + a.label.width > W - pad || a.circle.y < top + pad || a.label.y + a.label.height > height - bottom - pad) misses += 1;
-            for (const b of boxes.slice(i + 1)) if (hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
-        }
-        if (!best || misses < best.misses) best = { misses, at, H: height };
-        if (misses === 0 || height >= maxHeight) break;
+        if (best?.misses === 0 || height >= maxHeight) break;
         height = Math.min(maxHeight, Math.round(height * 1.1));
     }
     const chosen = /** @type {NonNullable<typeof best>} */ (best);

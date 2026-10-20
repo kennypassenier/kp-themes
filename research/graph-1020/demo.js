@@ -147,14 +147,20 @@ on('zoom-act', (value) => graphZoom(graph('gp-zoom'), /** @type {'in' | 'out' | 
 // ---------------------------------------------------------------- detail-slot
 let pageFills = true;
 on('det-mode', (value) => setGraphOptions(graph('gp-detail'), { detail: value === 'on' }));
+/** Show a group's button as the pressed one, when the page changes the state behind it. @param {string} group @param {string} value */
+const press = (group, value) => {
+    for (const button of document.querySelectorAll(`button[data-pg="${group}"]`)) button.setAttribute('aria-pressed', String(/** @type {HTMLElement} */ (button).dataset.value === value));
+};
+// Filling is shown on a panel, so a press of either filling makes sure there is one: details on, and a stack open (media, unless one is).
 on('det-fill', (value) => {
     pageFills = value === 'page';
-    // The panel that is open is drawn again with the other filling.
-    const open = graph('gp-detail').querySelector('.kp-graph__detail:not([hidden])') ? graph('gp-detail').dataset.kpDetailOf : undefined;
-    if (open) {
-        graphDetail(graph('gp-detail'), null);
-        graphDetail(graph('gp-detail'), open);
-    }
+    const el = graph('gp-detail');
+    setGraphOptions(el, { detail: true });
+    press('det-mode', 'on');
+    const open = el.querySelector('.kp-graph__detail:not([hidden])') ? el.dataset.kpDetailOf : undefined;
+    graphDetail(el, null);
+    graphDetail(el, open ?? 'media');
+    press('det-open', 'media');
 });
 on('det-open', (value) => graphDetail(graph('gp-detail'), value === 'none' ? null : value));
 // The page fills the panel through the graph's own event: the stack, what it calls and what calls it, and a button of the page's own.

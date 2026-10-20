@@ -22,6 +22,8 @@ const group = (label, name, buttons) =>
 
 /** The graph every section draws: the homelab's stacks, filled in by demo.js. */
 const graph = (id, label, extra = '') => `<figure class="kp-graph" id="${id}" data-kp-graph data-kp-key="${id}" aria-label="${label}"${extra}></figure>`;
+/** Every section but the first draws with the names under the nodes: at a phone width fourteen names beside the ring (the approved default) touch their neighbours, and the sections that show another option are not about that. */
+const BELOW = ' data-kp-labels="below"';
 const card = (inner, id = '') => `<div class="kp-card pg-card pg-graphcard"${id ? ` id="${id}"` : ''}>${inner}</div>`;
 
 /** @type {{ id: string, title: string, wish: string, asked: string, h2: string, intro: string, expected: string[], look: string, controls: string, component: string }[]} */
@@ -39,8 +41,8 @@ const SECTIONS = [
             '<b>Long names</b>: the ring narrows to the box and the picture grows taller until every name fits. It grows once, when the data or the width changes, and a hover or a pick never moves it.',
         ],
         look: 'Formal is a paper plate with quiet type. A name must never end in an ellipsis, and the gap between two names must be as even as the gap to the picture&rsquo;s edge.',
-        controls: group('Names', 'lab-place', [['beside', 'Beside the node (before)', true], ['below', 'Under the node (new)']]) + group('Stacks', 'lab-names', [['real', 'Real stack names', true], ['long', 'Long names']]),
-        component: card(graph('gp-labels', 'The homelab stacks and what talks to what')),
+        controls: group('Names', 'lab-place', [['beside', 'Beside the node (before)'], ['below', 'Under the node (new)', true]]) + group('Stacks', 'lab-names', [['real', 'Real stack names', true], ['long', 'Long names']]),
+        component: card(graph('gp-labels', 'The homelab stacks and what talks to what', BELOW)),
     },
     {
         id: 'chrome-inside',
@@ -56,7 +58,7 @@ const SECTIONS = [
         ],
         look: 'The hint must be whole at a phone width (it wraps, never cut) and never lie over a node or a name. Show all must keep 8 px from the picture&rsquo;s edges.',
         controls: group('Show all and hint', 'chr-place', [['outside', 'Bar above (before)', true], ['inside', 'Inside the picture (new)']]) + group('Picked', 'chr-pick', [['none', 'Nothing picked', true], ['two', 'Pick media and downloader']]),
-        component: card(graph('gp-chrome', 'The homelab stacks, with Show all and the hint')),
+        component: card(graph('gp-chrome', 'The homelab stacks, with Show all and the hint', BELOW)),
     },
     {
         id: 'fixed-colour',
@@ -72,7 +74,7 @@ const SECTIONS = [
         ],
         look: 'Formal&rsquo;s chart colours are a calm, mid-light set. With a fixed colour the ring must read on the formal ground as well as on dark: compare the two themes.',
         controls: group('Colour', 'col-mode', [['theme', 'Theme colour (before)', true], ['fixed', 'Fixed colour (new)']]) + group('Stacks bring', 'col-own', [['hue', 'A hue each', true], ['own', 'A colour each']]) + group('Theme of this picture', 'col-theme', [['formal', 'Formal', true], ['dark', 'Dark'], ['synthwave', 'Synthwave']]),
-        component: card(graph('gp-colour', 'The homelab stacks, one colour each'), 'gp-colour-card'),
+        component: card(graph('gp-colour', 'The homelab stacks, one colour each', BELOW), 'gp-colour-card'),
     },
     {
         id: 'arrows',
@@ -88,7 +90,7 @@ const SECTIONS = [
         ],
         look: 'The head must not touch the ring and must sit on the line, also on the bent link between kyu and almanac. A head must be clearly the colour of its kind.',
         controls: group('Links', 'dir-mode', [['none', 'Plain links (before)', true], ['arrows', 'Arrowheads (new)']]) + group('Picked', 'dir-pick', [['none', 'Nothing picked', true], ['downloader', 'Pick downloader']]),
-        component: card(graph('gp-arrows', 'The homelab stacks, who calls whom')),
+        component: card(graph('gp-arrows', 'The homelab stacks, who calls whom', BELOW)),
     },
     {
         id: 'zoom-pan',
@@ -104,7 +106,7 @@ const SECTIONS = [
         ],
         look: 'Formal eases plainly. The picture must stay inside its frame at every zoom and the three buttons must keep 8 px from the frame.',
         controls: group('Zoom', 'zoom-mode', [['off', 'Zoom off (before)'], ['on', 'Zoom on (new)', true]]) + group('View', 'zoom-act', [['in', 'Zoom in'], ['out', 'Zoom out'], ['reset', 'Reset view']]),
-        component: card(graph('gp-zoom', 'The homelab stacks, zoomable', ' data-kp-zoom')),
+        component: card(graph('gp-zoom', 'The homelab stacks, zoomable', `${BELOW} data-kp-zoom`)),
     },
     {
         id: 'detail-slot',
@@ -120,7 +122,7 @@ const SECTIONS = [
         ],
         look: 'Formal&rsquo;s plate is a quiet card on the picture&rsquo;s ground; it must be opaque, stay inside the frame and scroll inside itself when the content is long.',
         controls: group('Details', 'det-mode', [['off', 'Details off (before)'], ['on', 'Details on (new)', true]]) + group('Filled by', 'det-fill', [['page', 'The page', true], ['package', 'Package default']]) + group('Open', 'det-open', [['none', 'Nothing open', true], ['media', 'Open media']]),
-        component: card(graph('gp-detail', 'The homelab stacks, with their details', ' data-kp-detail')),
+        component: card(graph('gp-detail', 'The homelab stacks, with their details', `${BELOW} data-kp-detail`)),
     },
     {
         id: 'own-radius',
@@ -136,7 +138,7 @@ const SECTIONS = [
         ],
         look: 'Formal&rsquo;s ring is a thin line: a bigger node must keep its stroke weight, and names must still clear their nodes.',
         controls: group('Ring', 'rad-ring', [['default', 'Default (0.36)', true], ['0.26', 'Small (0.26)'], ['0.44', 'Large (0.44)']]) + group('Nodes', 'rad-node', [['default', 'Default (14 px)', true], ['10', 'Small (10 px)'], ['20', 'Large (20 px)']]) + group('Sized by', 'rad-size', [['same', 'The same size', true], ['traffic', 'Traffic']]),
-        component: card(graph('gp-radius', 'The homelab stacks, sized by traffic')),
+        component: card(graph('gp-radius', 'The homelab stacks, sized by traffic', BELOW)),
     },
     {
         id: 'states',
@@ -152,7 +154,7 @@ const SECTIONS = [
         ],
         look: 'Formal&rsquo;s plate is a quiet bordered card. Compare the height of Loading, Empty and Failed with Ready: they must be the same.',
         controls: group('State', 'st-state', [['ready', 'Ready', true], ['loading', 'Loading'], ['empty', 'Empty'], ['error', 'Failed']]) + group('Options', 'st-opts', [['approved', 'Approved look'], ['all', 'Every option on', true]]),
-        component: card(graph('gp-states', 'The homelab stacks in every state')),
+        component: card(graph('gp-states', 'The homelab stacks in every state', BELOW)),
     },
 ];
 
