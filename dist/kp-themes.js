@@ -58506,15 +58506,14 @@ function fitDrawnLabels(labels, W, H) {
     return l.text.getBBox();
   });
 }
-function ghostOf(doc, last, W, H, o) {
+function ghostOf(doc, last, W, H, layoutOptions, base) {
   const data = last?.nodes.length ? last : {
     nodes: ["hub", "a", "b", "c", "d", "e", "f"].map((id) => ({ id, label: id, description: "" })),
     edges: ["a", "b", "c", "d", "e", "f"].map((to) => ({ from: "hub", to, kind: "link" })),
     kinds: [],
     hub: "hub"
   };
-  const at = graphLayout(data, W, H, { ...o.ring != null ? { ring: o.ring } : {}, inset: insetOf(o, W) });
-  const base = o.node ?? 14;
+  const at = graphLayout(data, W, H, layoutOptions);
   const hub = hubOf(data);
   const order2 = [...hub ? [hub] : [], ...ringOf(data, hub).map((n) => n.id)];
   const bends = graphBends(data.edges);
@@ -58678,7 +58677,7 @@ function drawGraph(g) {
   const data = g.data;
   g.el.dataset.kpState = g.state;
   const below = o.labels === "below";
-  const inset = insetOf(o, W);
+  const inset = insetOf(o, o.chrome === "inside" && isShown(g.hint) ? g.hint.getBoundingClientRect().height : 0);
   const layoutOptions = { ...o.ring != null ? { ring: o.ring } : {}, inset };
   const base = o.node ?? 14;
   let at = null;
@@ -58710,7 +58709,7 @@ function drawGraph(g) {
   g.note.hidden = !loading;
   g.plate.replaceChildren();
   g.plate.hidden = loading || g.state === "ready";
-  if (loading) g.svg.append(ghostOf(doc, g.data, W, H, o));
+  if (loading) g.svg.append(ghostOf(doc, g.data, W, H, layoutOptions, base));
   else if (!g.plate.hidden)
     g.plate.append(
       hostStatePlate(g.el, {
@@ -59134,9 +59133,9 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       if (!g.options.zoom || event.pointerType === "mouse" && event.button !== 0) return;
       pointers.set(event.pointerId, { x: event.clientX, y: event.clientY, onNode: !!nodeOf(event.target) });
       if (pointers.size === 2) pinchStart();
-      else if (pointers.size === 1 && !nodeOf(event.target)) {
-        panFrom = { x: event.clientX, y: event.clientY };
+      else if (pointers.size === 1) {
         dragged = false;
+        panFrom = nodeOf(event.target) ? null : { x: event.clientX, y: event.clientY };
       }
     };
     const onMove = (event) => {
@@ -59390,7 +59389,7 @@ var init_graph = __esm({
     ZOOM_MAX = 4;
     ZOOM_STEP = 1.25;
     detailCount = 0;
-    insetOf = (o, W) => ({ top: o.chrome === "inside" || o.zoom ? 44 : 0, bottom: o.chrome === "inside" ? W < 600 ? 56 : 34 : 0 });
+    insetOf = (o, hintHeight) => ({ top: o.chrome === "inside" || o.zoom ? 44 : 0, bottom: o.chrome === "inside" ? Math.max(34, Math.ceil(hintHeight) + 12) : 0 });
   }
 });
 

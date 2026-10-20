@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="graph-1020" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The network graph can draw the homelab Map</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>The network graph can draw the homelab Map</h1>
+                <p class="cat-intro">
+                    The homelab admin dashboard draws its Map by hand because the network graph could not. These 7 options and the states give it
+                    everything the Map draws, so the dashboard can delete its own drawing. Everything is opt-in: a graph that is not given an option
+                    looks and behaves as you approved it. 8 sections, 8 pairs, formal only; the data is the homelab&rsquo;s own stacks, mock.
+                </p>
+                <p>Every section says under <b>Expected</b> what you should see and what each control does.</p>
+            </header>
+
+            <section
+                id="labels-below"
+                data-review-item="labels-below"
+                data-review-topic="graph"
+                data-review-topic-title="Network graph options"
+                data-review-components="labels-below"
+                data-review-title="The name under the node, never cut"
+                aria-labelledby="h-labels-below"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 102, part 1): The graph shortened a name that did not fit (<code>productiv…</code>) and put it
+                        beside, over or under the node by its angle. The Map draws every name whole, centred under its node. With the option the
+                        layout makes room instead of cutting: the ring is as wide as the box allows and the picture grows taller. It is an option
+                        (<code>data-kp-labels="below"</code>); names beside the nodes stay the default.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-labels-below">Names that are never cut</h2>
+                    <p>
+                        The homelab&rsquo;s stacks as a ring around the gateway. Put the names under the nodes, then try the long names, and look at
+                        the picture at a phone width.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Beside the node (before)</b>: names point away from the hub and the longest are cut with an ellipsis.
+                            <b>Under the node (new)</b>: every name is whole, centred under its node, none touches another or the edge.
+                        </li>
+                        <li>
+                            <b>Long names</b>: the ring narrows to the box and the picture grows taller until every name fits. It grows once, when the
+                            data or the width changes, and a hover or a pick never moves it.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a paper plate with quiet type. A name must never end in an ellipsis, and the gap between two names must be as even
+                        as the gap to the picture&rsquo;s edge.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="labels-below-component">
+                    <div role="group" aria-label="Names">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="lab-place" data-value="beside" aria-pressed="true">
+                            Beside the node (before)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="lab-place" data-value="below" aria-pressed="false">
+                            Under the node (new)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Stacks">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="lab-names" data-value="real" aria-pressed="true">
+                            Real stack names</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="lab-names" data-value="long" aria-pressed="false">
+                            Long names
+                        </button>
+                    </div>
+                </div>
+                <div id="labels-below-component" class="pg-component">
+                    <div class="kp-card pg-card pg-graphcard">
+                        <figure
+                            class="kp-graph"
+                            id="gp-labels"
+                            data-kp-graph
+                            data-kp-key="gp-labels"
+                            aria-label="The homelab stacks and what talks to what"
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="chrome-inside"
+                data-review-item="chrome-inside"
+                data-review-topic="graph"
+                data-review-components="chrome-inside"
+                data-review-title="Show all and the hint inside the drawing"
+                aria-labelledby="h-chrome-inside"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 102, part 2): Show all stood in a bar over the picture and the hint under it, in the
+                        page&rsquo;s flow. The Map keeps both inside the drawing. With the option (<code>data-kp-chrome="inside"</code>) Show all is
+                        the picture&rsquo;s top right and the hint its foot, and the ring keeps clear of both. The bar with the kinds stays above. Off
+                        by default.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-chrome-inside">Everything about the picture in the picture</h2>
+                    <p>Switch the controls between the bar and the picture, and pick two stacks so that Show all has something to clear.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Bar above (before)</b>: the kinds and Show all over the picture, the hint under it. <b>Inside the picture (new)</b>:
+                            Show all is at the top right of the picture and the hint at its foot, on the picture&rsquo;s own ground; the ring is
+                            smaller to keep clear of them.
+                        </li>
+                        <li>
+                            <b>Pick two stacks</b>: the two stacks and their links stay lit and Show all appears in its place. Show all keeps its
+                            place when there is nothing to show again, so the picture does not move.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The hint must be whole at a phone width (it wraps, never cut) and never lie over a node or a name. Show all must keep 8 px
+                        from the picture&rsquo;s edges.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="chrome-inside-component">
+                    <div role="group" aria-label="Show all and hint">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="chr-place" data-value="outside" aria-pressed="true">
+                            Bar above (before)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="chr-place" data-value="inside" aria-pressed="false">
+                            Inside the picture (new)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Picked">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="chr-pick" data-value="none" aria-pressed="true">
+                            Nothing picked</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="chr-pick" data-value="two" aria-pressed="false">
+                            Pick media and downloader
+                        </button>
+                    </div>
+                </div>
+                <div id="chrome-inside-component" class="pg-component">
+                    <div class="kp-card pg-card pg-graphcard">
+                        <figure
+                            class="kp-graph"
+                            id="gp-chrome"
+                            data-kp-graph
+                            data-kp-key="gp-chrome"
+                            aria-label="The homelab stacks, with Show all and the hint"
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="fixed-colour"
+                data-review-item="fixed-colour"
+                data-review-topic="graph"
+                data-review-components="fixed-colour"
+                data-review-title="A stack keeps its colour in every theme"
+                aria-labelledby="h-fixed-colour"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 102, part 3): A node took its hue at the lightness and strength of the theme&rsquo;s first chart
+                        colour, so a stack changed colour from theme to theme and did not match the colour it has on other pages. With the option
+                        (<code>data-kp-colour="fixed"</code>) a node is its hue at one fixed lightness, the same in every theme; a node may also bring
+                        its own <code>colour</code>. Off by default.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-fixed-colour">media is the same colour on every page</h2>
+                    <p>
+                        Switch the colour mode, then the theme of this picture: with a fixed colour the nodes do not move. Then give the stacks
+                        colours of their own.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Theme colour (before)</b>: change the theme below and every node shifts with it (lighter on dark, stronger on
+                            cyberpunk). <b>Fixed colour (new)</b>: change the theme and the nodes stay put; only the ground and the links change.
+                        </li>
+                        <li>
+                            <b>Own colours</b>: each stack shows the colour the page gave it (a CSS colour on the node), in both modes; a stack with
+                            no colour of its own keeps its hue.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s chart colours are a calm, mid-light set. With a fixed colour the ring must read on the formal ground as well as
+                        on dark: compare the two themes.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="fixed-colour-component">
+                    <div role="group" aria-label="Colour">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="col-mode" data-value="theme" aria-pressed="true">
+                            Theme colour (before)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="col-mode" data-value="fixed" aria-pressed="false">
+                            Fixed colour (new)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Stacks bring">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="col-own" data-value="hue" aria-pressed="true">
+                            A hue each</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="col-own" data-value="own" aria-pressed="false">
+                            A colour each
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Theme of this picture">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="col-theme" data-value="formal" aria-pressed="true">
+                            Formal</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="col-theme" data-value="dark" aria-pressed="false">Dark</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="col-theme" data-value="synthwave" aria-pressed="false">
+                            Synthwave
+                        </button>
+                    </div>
+                </div>
+                <div id="fixed-colour-component" class="pg-component">
+                    <div class="kp-card pg-card pg-graphcard" id="gp-colour-card">
+                        <figure
+                            class="kp-graph"
+                            id="gp-colour"
+                            data-kp-graph
+                            data-kp-key="gp-colour"
+                            aria-label="The homelab stacks, one colour each"
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="arrows"
+                data-review-item="arrows"
+                data-review-topic="graph"
+                data-review-components="arrows"
+                data-review-title="Arrows that show who talks to whom"
+                aria-labelledby="h-arrows"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 102, part 4): Every link was a plain line, and the Map has to say which stack calls which. With
+                        the option (<code>data-kp-direction="arrows"</code>) every link ends in an arrowhead at the node it goes to, in the
+                        kind&rsquo;s colour; a dashed kind gets an open head. A link may point both ways. Off by default.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-arrows">From the caller to the stack it calls</h2>
+                    <p>Turn the arrowheads on and hover or pick a stack: the heads follow the links they belong to.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Plain links (before)</b>: no heads. <b>Arrowheads (new)</b>: a head stops just short of the node, turns with the curve
+                            and has the colour of its kind; solid kinds have a filled head, dashed and dotted kinds an open one. kyu and almanac talk
+                            both ways and have a head at each end.
+                        </li>
+                        <li>
+                            <b>Pick downloader</b>: its links stay lit with their heads, the rest fade with theirs. Turning a kind off in the list
+                            hides its heads too.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The head must not touch the ring and must sit on the line, also on the bent link between kyu and almanac. A head must be
+                        clearly the colour of its kind.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="arrows-component">
+                    <div role="group" aria-label="Links">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dir-mode" data-value="none" aria-pressed="true">
+                            Plain links (before)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dir-mode" data-value="arrows" aria-pressed="false">
+                            Arrowheads (new)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Picked">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dir-pick" data-value="none" aria-pressed="true">
+                            Nothing picked</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dir-pick" data-value="downloader" aria-pressed="false">
+                            Pick downloader
+                        </button>
+                    </div>
+                </div>
+                <div id="arrows-component" class="pg-component">
+                    <div class="kp-card pg-card pg-graphcard">
+                        <figure
+                            class="kp-graph"
+                            id="gp-arrows"
+                            data-kp-graph
+                            data-kp-key="gp-arrows"
+                            aria-label="The homelab stacks, who calls whom"
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="zoom-pan"
+                data-review-item="zoom-pan"
+                data-review-topic="graph"
+                data-review-components="zoom-pan"
+                data-review-title="Zoom and move the picture"
+                aria-labelledby="h-zoom-pan"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 102, part 5): A busy map is too small to read. With the option (<code>data-kp-zoom</code>) the
+                        wheel or a pinch zooms about the pointer, a drag on the background moves the picture, <kbd>+</kbd>, <kbd>-</kbd> and
+                        <kbd>0</kbd> work from a node, and Zoom in, Zoom out and Reset view stand in the picture. A hover or a pick still only changes
+                        classes. Off by default.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-zoom-pan">Look closer without losing the picture</h2>
+                    <p>
+                        Turn zoom on, then scroll over the picture, drag the background, press the keys on a focused node, or use the three buttons.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Zoom off (before)</b>: nothing moves and there are no controls. <b>Zoom on (new)</b>: three buttons at the top left;
+                            the wheel zooms about the pointer, a drag moves, Shift with the arrows moves from a node, and a focus walk brings the node
+                            into view.
+                        </li>
+                        <li>
+                            <b>Zoom in, Zoom out, Reset</b> (here too, from the page): the buttons ease on the theme&rsquo;s own curve and not at all
+                            under reduced motion; Reset is dimmed when the view is already the first one. A drag never picks a stack.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal eases plainly. The picture must stay inside its frame at every zoom and the three buttons must keep 8 px from the
+                        frame.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="zoom-pan-component">
+                    <div role="group" aria-label="Zoom">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="zoom-mode" data-value="off" aria-pressed="false">
+                            Zoom off (before)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="zoom-mode" data-value="on" aria-pressed="true">
+                            Zoom on (new)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="View">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="zoom-act" data-value="in" aria-pressed="false">Zoom in</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="zoom-act" data-value="out" aria-pressed="false">
+                            Zoom out</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="zoom-act" data-value="reset" aria-pressed="false">
+                            Reset view
+                        </button>
+                    </div>
+                </div>
+                <div id="zoom-pan-component" class="pg-component">
+                    <div class="kp-card pg-card pg-graphcard">
+                        <figure
+                            class="kp-graph"
+                            id="gp-zoom"
+                            data-kp-graph
+                            data-kp-key="gp-zoom"
+                            aria-label="The homelab stacks, zoomable"
+                            data-kp-zoom
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="detail-slot"
+                data-review-item="detail-slot"
+                data-review-topic="graph"
+                data-review-components="detail-slot"
+                data-review-title="Details of the picked stack, inside the drawing"
+                aria-labelledby="h-detail-slot"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 102, part 6): The Map shows what a stack is and does in a panel beside the picture. With the
+                        option (<code>data-kp-detail</code>) a picked node opens a details panel inside the picture; the page fills it through the
+                        <code>kp-graph-detail</code> event (or the <code>detail</code> hook of <code>attachGraphs</code>), and without either the
+                        package shows the node&rsquo;s description. Esc closes it first, the next Esc shows all. Off by default.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-detail-slot">Pick a stack, read about it</h2>
+                    <p>Click a stack, or focus it and press Enter. Choose whether the page fills the panel or the package shows the description.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Page fills it</b>: the stack&rsquo;s name, what it talks to and what uses it, and a button of the page&rsquo;s own.
+                            <b>Package default</b>: the stack&rsquo;s description alone.
+                        </li>
+                        <li>
+                            <b>Esc</b> closes the panel and keeps the picks; <b>Esc again</b> shows all. The panel&rsquo;s Close button does the
+                            first. Picking a second stack shows that stack&rsquo;s details; taking a pick out closes them.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s plate is a quiet card on the picture&rsquo;s ground; it must be opaque, stay inside the frame and scroll inside
+                        itself when the content is long.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="detail-slot-component">
+                    <div role="group" aria-label="Details">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="det-mode" data-value="off" aria-pressed="false">
+                            Details off (before)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="det-mode" data-value="on" aria-pressed="true">
+                            Details on (new)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Filled by">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="det-fill" data-value="page" aria-pressed="true">
+                            The page</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="det-fill" data-value="package" aria-pressed="false">
+                            Package default
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Open">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="det-open" data-value="none" aria-pressed="true">
+                            Nothing open</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="det-open" data-value="media" aria-pressed="false">
+                            Open media
+                        </button>
+                    </div>
+                </div>
+                <div id="detail-slot-component" class="pg-component">
+                    <div class="kp-card pg-card pg-graphcard">
+                        <figure
+                            class="kp-graph"
+                            id="gp-detail"
+                            data-kp-graph
+                            data-kp-key="gp-detail"
+                            aria-label="The homelab stacks, with their details"
+                            data-kp-detail
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="own-radius"
+                data-review-item="own-radius"
+                data-review-topic="graph"
+                data-review-components="own-radius"
+                data-review-title="Your own ring and node sizes"
+                aria-labelledby="h-own-radius"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 102, part 7): The ring and the nodes had fixed sizes (a ring of 36 % of the picture, nodes of 14
+                        px) and the Map sizes its nodes by traffic. With the options (<code>data-kp-ring-radius</code>,
+                        <code>data-kp-node-radius</code>, and a <code>radius</code> or <code>weight</code> on a node) the page sets both. The defaults
+                        stay as they are.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-own-radius">A tighter ring, bigger nodes, sized by traffic</h2>
+                    <p>Change the ring, the base node size, and size the nodes by how much traffic each carries.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Ring</b>: small (0.26) pulls the stacks in towards the gateway, large (0.44) pushes them out to the edge of the
+                            picture. <b>Nodes</b>: 10 px, the default 14 px, or 20 px; the core and the flag ring follow.
+                        </li>
+                        <li>
+                            <b>By traffic</b>: media and the gateway are the biggest, syncthing the smallest; the base size scales them all and a
+                            node&rsquo;s own radius would win.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s ring is a thin line: a bigger node must keep its stroke weight, and names must still clear their nodes.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="own-radius-component">
+                    <div role="group" aria-label="Ring">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="rad-ring" data-value="default" aria-pressed="true">
+                            Default (0.36)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rad-ring" data-value="0.26" aria-pressed="false">
+                            Small (0.26)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rad-ring" data-value="0.44" aria-pressed="false">
+                            Large (0.44)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Nodes">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="rad-node" data-value="default" aria-pressed="true">
+                            Default (14 px)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rad-node" data-value="10" aria-pressed="false">
+                            Small (10 px)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rad-node" data-value="20" aria-pressed="false">
+                            Large (20 px)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Sized by">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="rad-size" data-value="same" aria-pressed="true">
+                            The same size</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rad-size" data-value="traffic" aria-pressed="false">
+                            Traffic
+                        </button>
+                    </div>
+                </div>
+                <div id="own-radius-component" class="pg-component">
+                    <div class="kp-card pg-card pg-graphcard">
+                        <figure
+                            class="kp-graph"
+                            id="gp-radius"
+                            data-kp-graph
+                            data-kp-key="gp-radius"
+                            aria-label="The homelab stacks, sized by traffic"
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="states"
+                data-review-item="states"
+                data-review-topic="graph"
+                data-review-components="states"
+                data-review-title="Loading, empty and failed, with every option on"
+                aria-labelledby="h-states"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 102, the states): The graph&rsquo;s three states must keep the footprint and the look that were
+                        approved, with or without the options. Here every option is on at once (names under the nodes, Show all inside, fixed colour,
+                        arrows, zoom, details) and you walk the states; Approved look turns them all off again.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-states">Reading, nothing yet, could not read</h2>
+                    <p>
+                        Press Loading, Empty and Failed, and switch between the approved look and every option on. The picture must not change size.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>: the ghost of the network, drawn with the theme&rsquo;s own loading picture, with a sentence at the foot.
+                            <b>Empty</b> and <b>Failed</b>: the package&rsquo;s state plate fills the picture, large and centred; Failed has a Retry
+                            that brings the network back.
+                        </li>
+                        <li>
+                            Show all, the hint and the zoom buttons are not drawn over a plate. The picture is as tall in all four states for the same
+                            width.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s plate is a quiet bordered card. Compare the height of Loading, Empty and Failed with Ready: they must be the
+                        same.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="states-component">
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="st-state" data-value="ready" aria-pressed="true">Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="st-state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="st-state" data-value="empty" aria-pressed="false">
+                            Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="st-state" data-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Options">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="st-opts" data-value="approved" aria-pressed="false">
+                            Approved look</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="st-opts" data-value="all" aria-pressed="true">
+                            Every option on
+                        </button>
+                    </div>
+                </div>
+                <div id="states-component" class="pg-component">
+                    <div class="kp-card pg-card pg-graphcard">
+                        <figure
+                            class="kp-graph"
+                            id="gp-states"
+                            data-kp-graph
+                            data-kp-key="gp-states"
+                            aria-label="The homelab stacks in every state"
+                        ></figure>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "graph-1020-76aa8363-b542-4372-9c23-8656b2706a55", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

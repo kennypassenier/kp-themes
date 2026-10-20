@@ -1,0 +1,52 @@
+/* research/graph-1020: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame. */
+
+.pg-page {
+    max-inline-size: 72rem;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* One frame for every component, so the sections have the same rhythm. */
+.pg-card {
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-component > .kp-card {
+    max-inline-size: 100%;
+}
+
+/* The graph fills the card edge to edge of its content box; the card takes the theme of the colour section's switch. */
+.pg-graphcard > .kp-graph {
+    min-inline-size: 0;
+}
+
+/* The details the page puts into the graph's panel: the stack's name and facts in two columns, then a button of the page's own. */
+.pg-facts {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: var(--kp-space-md, 0.75rem);
+    row-gap: var(--kp-space-xs, 0.25rem);
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+}
+
+.pg-facts dt {
+    color: var(--muted-foreground);
+}
+
+.pg-facts dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}

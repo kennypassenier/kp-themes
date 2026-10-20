@@ -1,6 +1,28 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/graph-1020/demo.html": {
+            "facts": {
+                "id": "graph-1020",
+                "themes": "formal",
+                "ask": null,
+                "askText": "The homelab admin dashboard draws its Map by hand because the network graph could not. These 7 options and the states give it everything the Map draws, so the dashboard can delete its own drawing. Everything is opt-in: a graph that is not given an option looks and behaves as you approved it. 8 sections, 8 pairs, formal only; the data is the homelab’s own stacks, mock.",
+                "sections": [
+                    { "item": "labels-below", "themes": null, "topic": "graph", "mode": null },
+                    { "item": "chrome-inside", "themes": null, "topic": "graph", "mode": null },
+                    { "item": "fixed-colour", "themes": null, "topic": "graph", "mode": null },
+                    { "item": "arrows", "themes": null, "topic": "graph", "mode": null },
+                    { "item": "zoom-pan", "themes": null, "topic": "graph", "mode": null },
+                    { "item": "detail-slot", "themes": null, "topic": "graph", "mode": null },
+                    { "item": "own-radius", "themes": null, "topic": "graph", "mode": null },
+                    { "item": "states", "themes": null, "topic": "graph", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"graph-1020-76aa8363-b542-4372-9c23-8656b2706a55\", \"received\": [] }\n        "
+            },
+            "fingerprint": "26f4e8eb7e4bf4f5",
+            "update": null
+        },
         "research/app-homelab-stacks/demo.html": {
             "facts": {
                 "id": "app-homelab-stacks",
