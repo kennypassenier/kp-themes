@@ -5119,6 +5119,28 @@
         opacity: 0.8;
     }
 
+    /* The levels after the first [wish-1120, homelab 104]: finer and dotted, so the alarm stays the main line. */
+    .kp-chart__threshold--more {
+        stroke-width: 1;
+        stroke-dasharray: 1.5 3;
+        opacity: 0.7;
+    }
+
+    /* A histogram column [wish-1120, homelab 104]: the series' colour, soft enough that the grid shows through, whole when singled out. */
+    .kp-chart__column {
+        fill: var(--kp-chart-series);
+        fill-opacity: 0.62;
+        stroke: none;
+    }
+
+    .kp-chart__series[data-kp-state='hot'] .kp-chart__column {
+        fill-opacity: 0.9;
+    }
+
+    .kp-chart__series[data-kp-state='dim'] .kp-chart__column {
+        fill-opacity: 0.12;
+    }
+
     .kp-chart__event-line {
         stroke: var(--muted-foreground);
         stroke-dasharray: 2 3;
@@ -11751,6 +11773,42 @@
 
     .kp-datatable__expand {
         min-inline-size: var(--kp-datatable-expand-size, 2em);
+    }
+
+    /* Row reorder [wish-1120, homelab 93]: a column of drag handles, first in the row, as wide as the handle. The grip is six dots drawn
+     * with two gradients, so it takes the text colour of whatever theme the table is in. */
+    .kp-table :is(th, td)[data-kp-reorder-column],
+    .kp-table :is(th, td)[data-kp-reorder-cell] {
+        inline-size: 1%;
+        white-space: nowrap;
+        padding-inline-end: 0;
+    }
+
+    .kp-datatable__handle {
+        cursor: grab;
+        touch-action: none;
+        min-inline-size: var(--kp-datatable-handle-size, 2em);
+    }
+
+    .kp-datatable__handle[aria-disabled] {
+        cursor: not-allowed;
+        opacity: 0.45;
+    }
+
+    .kp-datatable__grip {
+        display: block;
+        inline-size: 0.6em;
+        block-size: 1em;
+        margin-inline: auto;
+        background:
+            radial-gradient(circle, currentColor 0.09em, transparent 0.1em) 0 0 / 0.3em 0.33em repeat;
+        opacity: 0.8;
+    }
+
+    .kp-table tbody > tr[data-kp-dragging] {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: -2px;
+        cursor: grabbing;
     }
 
     .kp-table tr.kp-datatable__detail > td {
@@ -36096,6 +36154,31 @@
         border-radius: 0.125em;
         box-shadow: 0 0 0 0.08em color-mix(in oklab, var(--primary) 24%, transparent);
         font-weight: 700;
+    }
+}
+
+@layer kp.components {
+    /* --- Heat paging bar: Earlier / Today / Later [wish-1120, homelab 100] ---
+     * Three small buttons and the window's words on one line before the grid; the words take the rest and wrap, the buttons keep
+     * their width, so the bar is as high in every state. */
+    .kp-heat__pager {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-heat__pager > .kp-button {
+        flex: none;
+    }
+
+    .kp-heat__pager-label {
+        flex: 1 1 10rem;
+        min-inline-size: 0;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
     }
 }
 

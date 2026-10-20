@@ -4,7 +4,7 @@
    (ackGateExports, actionTilesExports, actionsExports, alarmExports, anchorsExports, artExports, attentionExports, autoRefreshExports, autoExports, autosizeExports, availabilityExports, barcellExports, bulletsExports, busyCardExports, calendarExports, calmTonesExports, calmExports, cardStateExports, chartExports, checklistExports, claimExports, codeExports, colorpickerExports, comboboxExports, commandExports, compareExports, componentsExports, connectionExports, consoleExports, contrastExports, countdownExports, datatableExports, datedOptionsExports, datepickerExports, deplistExports, diagnosticsExports, diffExports, docpreviewExports, effectsExports, entityCardExports, facetsExports, feedExports, flashExports, focusStepsExports, footprintExports, formsExports, freshnessExports, galleryExports, ganttExports, graphExports, gridlayoutExports, heatExports, hovercardExports, idmarkExports, intentExports, jobLineExports, jsonFieldExports, keysExports, kpiExports, lazyRegisterExports, ledeExports, listboxExports, liveOptionsExports, loadingPiecesExports, logviewerExports, masterDetailExports, menuButtonExports, motionExports, navFoldExports, newpillExports, noFlashExports, noticesExports, overlaysExports, paletteExports, passkeysExports, pathTraceExports, patternsExports, pipelineExports, printExports, problemsExports, progressbarExports, qrExports, quantityExports, questionCardExports, quoteExports, rangeExports, ratingExports, reasonExports, rememberExports, requestInspectorExports, rowSelectExports, runsExports, segmentedExports, selectionBarExports, sentenceExports, shortcutsExports, sidenavExports, sliderExports, snoozeExports, stackbarExports, statusrowExports, steplistExports, stringsExports, structureExports, tabbarExports, tablesExports, themeCoreExports, themePickerExports, themeRegistryExports, threadExports, tickExports, tilesExports, timefieldExports, timerDiscExports, timerExports, toggleExports, toolbarExports, tourExports, transferExports, undoToastExports, unsavedExports, updateExports, uploadExports, uptimeExports, usesMapExports, usualPickerExports, versionDeltaExports, viewerExports, weekExports, weekdaysExports, wheelExports, wizardExports),
    plus every export that exactly one module declares, flat.
    Reachable only through a namespace, because more than one module
-   declares them: ROW_OPEN_EVENT, OPEN_EVENT, MATCHERS, setProgress. */
+   declares them: ROW_OPEN_EVENT, OPEN_EVENT, MATCHERS, REORDER_EVENT, setProgress. */
 var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __esm = (fn, res, err) => function __init() {
@@ -628,6 +628,10 @@ var init_strings = __esm({
       heatKeysPick: "pick a column",
       heatKeysDrop: "drop the pick",
       heatKeysPage: "earlier or later",
+      heatPagerLabel: "Show another period",
+      heatEarlier: "Earlier",
+      heatToday: "Today",
+      heatLater: "Later",
       matrixSelf: "itself",
       matrixUnknown: "unknown",
       tableClearSearch: "Clear the search and filters",
@@ -694,6 +698,9 @@ var init_strings = __esm({
       tableColumnsShown: (shown4, total) => `${shown4} of ${total} columns shown`,
       tableDetailsColumn: "Details",
       tableRowDetails: (key) => `Details for ${key}`,
+      tableReorderColumn: "Move row",
+      tableReorderRow: (name) => `Move ${name} (Alt+Up or Alt+Down)`,
+      tableReorderOff: "Clear the sort, the filters and the search to reorder the rows",
       tableGroupRows: (group, count2) => `${group}: ${count2} ${count2 === 1 ? "row" : "rows"}`,
       tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
       tableEditField: (column, key) => `${column} of ${key}`,
@@ -16876,6 +16883,7 @@ __export(datatable_exports, {
   HELD_ROW: () => HELD_ROW,
   PAGE_SIZE: () => PAGE_SIZE,
   PAGE_SIZES: () => PAGE_SIZES,
+  REORDER_EVENT: () => REORDER_EVENT,
   REQUEST_EVENT: () => REQUEST_EVENT,
   RETRY_EVENT: () => RETRY_EVENT,
   SELECT_EVENT: () => SELECT_EVENT,
@@ -17373,6 +17381,7 @@ function attachDataTables(root = document, {
       if (wrap.dataset.kpKey !== void 0) full.key = wrap.dataset.kpKey;
       decorate2(part7, full);
     };
+    if (search !== null) decoratePart(search, { kind: "search" });
     const expanded = /* @__PURE__ */ new Set();
     if (expandable && headRow !== void 0 && headRow.querySelector(EXPAND_COLUMN) === null) {
       const th = add(make23("th"));
@@ -17383,6 +17392,40 @@ function attachDataTables(root = document, {
       th.append(label);
       headRow.prepend(th);
     }
+    const reorderable = wrap.dataset.kpRowsReorder !== void 0 && headRow !== void 0;
+    if (reorderable && headRow !== void 0 && headRow.querySelector(REORDER_COLUMN) === null) {
+      const th = add(make23("th"));
+      th.setAttribute("scope", "col");
+      th.dataset.kpReorderColumn = "";
+      const label = make23("span", "kp-sr-only");
+      label.textContent = s0.tableReorderColumn;
+      th.append(label);
+      headRow.prepend(th);
+    }
+    const insertReorderCell = (row) => {
+      if (!reorderable || row.matches(DETAIL) || row.matches(SKELETON_ROW) || row.matches(GROUP_ROW) || row.querySelector("[data-kp-reorder-cell]") !== null)
+        return;
+      const cell = (
+        /** @type {HTMLTableCellElement} */
+        make23("td")
+      );
+      cell.dataset.kpReorderCell = "";
+      cell.dataset.label = "";
+      const button = (
+        /** @type {HTMLButtonElement} */
+        make23("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__handle")
+      );
+      button.type = "button";
+      button.dataset.kpReorderHandle = "";
+      button.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
+      const grip = make23("span", "kp-datatable__grip");
+      grip.setAttribute("aria-hidden", "true");
+      button.append(grip);
+      cell.append(button);
+      row.prepend(cell);
+      const rowKey = row.dataset.kpRowKey ?? row.id ?? "";
+      decoratePart(button, { kind: "reorder-handle", value: rowKey, label: rowKey });
+    };
     const insertExpandCell = (row) => {
       if (!expandable || row.matches(DETAIL) || row.matches(SKELETON_ROW) || row.matches(GROUP_ROW) || row.querySelector("[data-kp-expand-cell]") !== null)
         return;
@@ -17406,7 +17449,10 @@ function attachDataTables(root = document, {
         decoratePart(button, { kind: "row-toggle", value: rowKey, label: s0.tableRowDetails(rowKey) });
       }
     };
-    for (const row of body.rows) insertExpandCell(row);
+    for (const row of body.rows) {
+      insertExpandCell(row);
+      insertReorderCell(row);
+    }
     const headers = (
       /** @type {HTMLTableCellElement[]} */
       [...headRow?.cells ?? []]
@@ -17434,7 +17480,7 @@ function attachDataTables(root = document, {
     });
     const controlColumn = (at) => {
       const header = headers[at];
-      return header === void 0 || header.querySelector(SELECT_ALL) !== null || header.matches(EXPAND_COLUMN);
+      return header === void 0 || header.querySelector(SELECT_ALL) !== null || header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN);
     };
     const keyColumn = headers.findIndex((_, at) => !controlColumn(at));
     const cellText = (row, at) => {
@@ -17723,6 +17769,7 @@ function attachDataTables(root = document, {
           node.textContent = text;
         });
       }
+      decoratePart(addButton, { kind: "add-filter", label: s2.tableAddFilter(0) });
       addButton.setAttribute("aria-haspopup", "true");
       addButton.setAttribute("aria-expanded", "false");
       addButton.setAttribute("aria-controls", popId);
@@ -18117,6 +18164,7 @@ function attachDataTables(root = document, {
       if (prepared.has(row)) return;
       prepared.add(row);
       insertExpandCell(row);
+      insertReorderCell(row);
       editKinds.forEach((kind, at) => {
         const cell = row.cells[at];
         if (kind === null || cell === void 0 || cell.querySelector(EDIT_CELL) !== null) return;
@@ -18138,6 +18186,7 @@ function attachDataTables(root = document, {
     };
     const unprepareRow = (row) => {
       row.querySelector("[data-kp-expand-cell]")?.remove();
+      row.querySelector("[data-kp-reorder-cell]")?.remove();
       for (const button of row.querySelectorAll(EDIT_CELL)) {
         const value = button.querySelector(EDIT_VALUE);
         if (value !== null) button.replaceWith(...value.childNodes);
@@ -18167,7 +18216,104 @@ function attachDataTables(root = document, {
         );
         button.setAttribute("aria-label", s2.tableEdit(labelOf5(cell.cellIndex), key, cellText(row, cell.cellIndex)));
       }
+      const grip = row.querySelector(REORDER_HANDLE);
+      if (grip !== null) {
+        const can = canReorder();
+        grip.setAttribute("aria-label", s2.tableReorderRow(reorderName(row)));
+        if (can) {
+          grip.removeAttribute("aria-disabled");
+          grip.removeAttribute("title");
+        } else {
+          grip.setAttribute("aria-disabled", "true");
+          grip.setAttribute("title", s2.tableReorderOff);
+        }
+      }
     };
+    const canReorder = () => reorderable && !serverMode && !externalSort && sorts.length === 0 && filters.size === 0 && query.trim() === "" && groups.size === 0;
+    const reorderName = (row) => (keyColumn >= 0 ? cellText(row, keyColumn) : "") || keyOf8(row);
+    let reorderLive = null;
+    const moveRow = (row, to) => {
+      if (!canReorder()) return false;
+      const from = all.indexOf(row);
+      const target = Math.max(0, Math.min(all.length - 1, to));
+      if (from < 0 || from === target) return false;
+      all.splice(from, 1);
+      all.splice(target, 0, row);
+      rendered.splice(0, rendered.length, ...all, ...rendered.filter((r) => !all.includes(r)));
+      shownRows = [...all];
+      if (pager !== null) page = Math.floor(target / size2);
+      render7();
+      row.querySelector(REORDER_HANDLE)?.focus({ preventScroll: true });
+      if (reorderLive === null) {
+        reorderLive = make23("span", "kp-sr-only");
+        reorderLive.setAttribute("role", "status");
+        reorderLive.setAttribute("aria-live", "polite");
+        wrap.append(reorderLive);
+        undo.push(() => reorderLive?.remove());
+      }
+      reorderLive.textContent = getStrings().reorderMoved(reorderName(row), target + 1, all.length);
+      wrap.dispatchEvent(new CustomEvent(REORDER_EVENT, { bubbles: true, detail: { order: all.map(keyOf8), key: keyOf8(row), from, to: target } }));
+      return true;
+    };
+    const onReorderKey = (event) => {
+      if (!reorderable || !event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+      const target = (
+        /** @type {HTMLElement} */
+        event.target
+      );
+      if (target.matches("input, textarea, select, [contenteditable]")) return;
+      const row = (
+        /** @type {HTMLTableRowElement | null} */
+        target.closest("tr")
+      );
+      if (row === null || row.parentElement !== body || !all.includes(row)) return;
+      event.preventDefault();
+      moveRow(row, all.indexOf(row) + (event.key === "ArrowUp" ? -1 : 1));
+    };
+    const onReorderPointer = (event) => {
+      if (event.button !== 0) return;
+      const handle2 = (
+        /** @type {HTMLElement | null} */
+        /** @type {HTMLElement} */
+        event.target.closest(REORDER_HANDLE)
+      );
+      const row = (
+        /** @type {HTMLTableRowElement | null} */
+        handle2?.closest("tr") ?? null
+      );
+      if (handle2 === null || row === null || !canReorder()) return;
+      event.preventDefault();
+      handle2.focus({ preventScroll: true });
+      row.dataset.kpDragging = "";
+      const id2 = event.pointerId;
+      const onMove = (move) => {
+        if (move.pointerId !== id2) return;
+        const over = pageRows.find((r) => {
+          const box = r.getBoundingClientRect();
+          return move.clientY >= box.top && move.clientY <= box.bottom;
+        });
+        if (over !== void 0 && over !== row) moveRow(row, all.indexOf(over));
+      };
+      const onUp = (up) => {
+        if (up.pointerId !== id2) return;
+        delete row.dataset.kpDragging;
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+    };
+    if (reorderable) {
+      body.addEventListener("keydown", onReorderKey);
+      body.addEventListener("pointerdown", onReorderPointer);
+      undo.push(() => {
+        body.removeEventListener("keydown", onReorderKey);
+        body.removeEventListener("pointerdown", onReorderPointer);
+      });
+    }
     for (const row of all) {
       if (row.dataset.kpExpanded !== void 0) expanded.add(keyOf8(row));
       prepareRow(row);
@@ -18675,6 +18821,7 @@ function attachDataTables(root = document, {
       add(make23("button", `kp-button kp-button--ghost kp-datatable__clear-filters${addMode ? " kp-button--sm" : ""}`))
     );
     clearButton.type = "button";
+    decoratePart(clearButton, { kind: "clear-filters" });
     clearButton.addEventListener("click", () => {
       clearFilters();
       (toggle2 ?? addButton)?.focus();
@@ -19198,7 +19345,7 @@ function attachDataTables(root = document, {
       const field = wrap.dataset.kpRowKeyField ?? headers[keyColumn]?.dataset.kpField;
       row.dataset.kpRowKey = rowKeyFn ? rowKeyFn(item) : String((field === void 0 ? void 0 : item[field]) ?? item.key ?? item.id ?? "");
       headers.forEach((header, at) => {
-        if (header.matches(EXPAND_COLUMN)) return;
+        if (header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN)) return;
         const cell = make23("td");
         if (header.querySelector(SELECT_ALL) !== null) {
           const box = (
@@ -20309,7 +20456,7 @@ function attachDataTables(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, ROW_TOGGLE, GROUP_ROW, GROUP_TOGGLE, GROUP_COUNT, ROW_CONTROLS, DETAIL, HELD_ROW, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList2, shown, defaultFilter, handles7, instances;
+var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, REORDER_COLUMN, REORDER_HANDLE, ROW_TOGGLE, GROUP_ROW, GROUP_TOGGLE, GROUP_COUNT, ROW_CONTROLS, DETAIL, HELD_ROW, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, REORDER_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList2, shown, defaultFilter, handles7, instances;
 var init_datatable = __esm({
   "js/datatable.js"() {
     "use strict";
@@ -20348,6 +20495,8 @@ var init_datatable = __esm({
     EXPAND_ALL = "[data-kp-datatable-expand-all]";
     COLLAPSE_ALL = "[data-kp-datatable-collapse-all]";
     EXPAND_COLUMN = "[data-kp-expand-column]";
+    REORDER_COLUMN = "[data-kp-reorder-column]";
+    REORDER_HANDLE = "[data-kp-reorder-handle]";
     ROW_TOGGLE = "[data-kp-row-toggle]";
     GROUP_ROW = "[data-kp-row-group]";
     GROUP_TOGGLE = "[data-kp-group-toggle]";
@@ -20369,6 +20518,7 @@ var init_datatable = __esm({
     REQUEST_EVENT = "kp-datatable-request";
     EDIT_EVENT = "kp-datatable-edit";
     GROUP_EVENT = "kp-datatable-group";
+    REORDER_EVENT = "kp-datatable-reorder";
     PAGE_SIZE = 25;
     PAGE_SIZES = Object.freeze([10, 25, 50, 100]);
     SERVER_DEBOUNCE_MS = 300;
@@ -21342,7 +21492,7 @@ var init_patterns = __esm({
 // js/structure.js
 var structure_exports = {};
 __export(structure_exports, {
-  REORDER_EVENT: () => REORDER_EVENT,
+  REORDER_EVENT: () => REORDER_EVENT2,
   SPLIT_EVENT: () => SPLIT_EVENT,
   TREE_EXPAND_EVENT: () => TREE_EXPAND_EVENT,
   TREE_SELECT_EVENT: () => TREE_SELECT_EVENT,
@@ -21597,7 +21747,7 @@ function attachStructure(root = document, {
       const name = item.dataset.kpLabel ?? item.querySelector("[data-kp-item-label]")?.textContent?.trim() ?? item.dataset.kpItem ?? "";
       if (live4) live4.textContent = s2.reorderMoved(name, to + 1, list.children.length);
       list.dispatchEvent(
-        new CustomEvent(REORDER_EVENT, { bubbles: true, detail: { order: order2(), id: item.dataset.kpItem ?? "", from, to } })
+        new CustomEvent(REORDER_EVENT2, { bubbles: true, detail: { order: order2(), id: item.dataset.kpItem ?? "", from, to } })
       );
     };
     const moveTo = (item, to) => {
@@ -21679,7 +21829,7 @@ function attachStructure(root = document, {
           );
           if (item) list.append(item);
         }
-        list.dispatchEvent(new CustomEvent(REORDER_EVENT, { bubbles: true, detail: { order: order2(), id: "", from: -1, to: -1 } }));
+        list.dispatchEvent(new CustomEvent(REORDER_EVENT2, { bubbles: true, detail: { order: order2(), id: "", from: -1, to: -1 } }));
       }
     };
     handles9.set(list, handle);
@@ -21780,7 +21930,7 @@ function attachStructure(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var TREE, REORDER, SPLIT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, REORDER_EVENT, SPLIT_EVENT, handles9;
+var TREE, REORDER, SPLIT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, REORDER_EVENT2, SPLIT_EVENT, handles9;
 var init_structure = __esm({
   "js/structure.js"() {
     "use strict";
@@ -21792,7 +21942,7 @@ var init_structure = __esm({
     SPLIT = "[data-kp-split]";
     TREE_EXPAND_EVENT = "kp-tree-expand";
     TREE_SELECT_EVENT = "kp-tree-select";
-    REORDER_EVENT = "kp-reorder";
+    REORDER_EVENT2 = "kp-reorder";
     SPLIT_EVENT = "kp-split";
     handles9 = /* @__PURE__ */ new WeakMap();
   }
@@ -24095,6 +24245,7 @@ __export(chart_exports, {
   TREND_CHART: () => TREND_CHART,
   attachCharts: () => attachCharts,
   attachTrendCharts: () => attachTrendCharts,
+  chartInMilliseconds: () => chartInMilliseconds,
   chartMedian: () => chartMedian,
   chartRuns: () => chartRuns,
   chartSelect: () => chartSelect,
@@ -24399,7 +24550,29 @@ function timeTicks(from, to, most, timeZone = CHART_TIME_ZONE) {
   }
   return { stride, ticks: [...ticks].filter((t) => t >= from && t <= to).sort((x, y) => x - y) };
 }
+function chartInMilliseconds(data, attribute) {
+  if ((data.timeUnit ?? attribute) !== "s") return data;
+  const ms = (t) => typeof t === "number" ? Math.round(t * 1e3) : t;
+  const out = { ...data, timeUnit: "ms" };
+  if (data.from !== void 0) out.from = ms(data.from);
+  if (data.to !== void 0) out.to = ms(data.to);
+  out.series = (data.series ?? []).map((series) => ({
+    ...series,
+    ...series.points ? { points: series.points.map((p) => (
+      /** @type {ChartPoint} */
+      [ms(p[0]), p[1]]
+    )) } : {},
+    ...series.start !== void 0 ? { start: ms(series.start) } : {},
+    ...series.step !== void 0 ? { step: ms(series.step) } : {}
+  }));
+  if (data.events) out.events = data.events.map((ev) => ({ ...ev, at: (
+    /** @type {number} */
+    ms(ev.at)
+  ), ...ev.until !== void 0 ? { until: ms(ev.until) } : {} }));
+  return out;
+}
 function setChartData(el16, data) {
+  data = chartInMilliseconds(data, el16.getAttribute("data-kp-chart-time-unit"));
   DATA.set(el16, data);
   el16.removeAttribute("data-kp-chart-loading");
   CHARTS.get(el16)?.setData(data);
@@ -24410,8 +24583,9 @@ function setTrendData(figure, data) {
     CHARTS.get(figure)?.draw();
     return;
   }
-  const { points = [], step, unit: unit2, unitKind, digits, error, text, art } = data;
+  const { points = [], step, unit: unit2, unitKind, digits, error, text, art, timeUnit } = data;
   setChartData(figure, {
+    ...timeUnit ? { timeUnit } : {},
     unit: unit2,
     unitKind,
     digits,
@@ -24467,7 +24641,7 @@ function dataInMarkup(el16) {
   const script = el16.querySelector(':scope > script[type="application/json"][data-kp-chart-data]');
   if (!script) return null;
   try {
-    return JSON.parse(script.textContent ?? "");
+    return chartInMilliseconds(JSON.parse(script.textContent ?? ""), el16.getAttribute("data-kp-chart-time-unit"));
   } catch {
     return null;
   }
@@ -24882,6 +25056,7 @@ function plotChart(host, group, locale, ctx) {
     const vis = visible3();
     const stacked = data.stacked ?? false;
     const kind = data.unitKind;
+    const thresholds = (Array.isArray(data.threshold) ? data.threshold : data.threshold != null ? [data.threshold] : []).filter(Number.isFinite);
     const inR = (p) => p[0] >= from && p[0] <= to;
     let hi = data.yMax ?? 0;
     if (data.yMax == null) {
@@ -24894,7 +25069,7 @@ function plotChart(host, group, locale, ctx) {
             );
         });
       } else for (const si of vis) for (const p of points[si]) if (inR(p)) hi = Math.max(hi, p[1]);
-      if (data.threshold != null) hi = Math.max(hi, data.threshold * 1.08);
+      for (const level of thresholds) hi = Math.max(hi, level * 1.08);
       hi = niceMax(hi, kind);
     }
     const ticksY = [0, hi / 2, hi].map((v) => fmt(v, "axis"));
@@ -24932,8 +25107,17 @@ function plotChart(host, group, locale, ctx) {
     }
     const g = s(doc, "g", { "clip-path": `url(#${clip})` });
     svg2.append(g);
-    if (data.threshold != null)
-      g.append(s(doc, "line", { class: "kp-chart__threshold", x1: P.l, x2: W - P.r, y1: y(data.threshold), y2: y(data.threshold) }));
+    thresholds.forEach(
+      (level, k) => g.append(
+        s(doc, "line", {
+          class: k === 0 ? "kp-chart__threshold" : "kp-chart__threshold kp-chart__threshold--more",
+          x1: P.l,
+          x2: W - P.r,
+          y1: y(level),
+          y2: y(level)
+        })
+      )
+    );
     const opt3 = option();
     const hatches = /* @__PURE__ */ new Set();
     const pool = shownEvents();
@@ -24996,6 +25180,25 @@ function plotChart(host, group, locale, ctx) {
       const sg = s(doc, "g", { class: "kp-chart__series" });
       paintSeries(sg, series, si);
       if (hot != null) sg.setAttribute("data-kp-state", hot === si ? "hot" : "dim");
+      if (series.shape === "columns") {
+        const gap = pts.length > 1 ? Math.min(...pts.slice(1).map((p, k) => p[0] - pts[k][0])) : (W - P.l - P.r) / 12;
+        const width = Math.max(1.5, Math.min(48, gap * 0.76));
+        pts.forEach((p, k) => {
+          const bottom = y(stacked ? base[k] ?? 0 : 0);
+          sg.append(
+            s(doc, "rect", {
+              class: "kp-chart__column",
+              x: (p[0] - width / 2).toFixed(1),
+              y: Math.min(p[1], bottom).toFixed(1),
+              width: width.toFixed(1),
+              height: Math.max(0, bottom - p[1]).toFixed(1)
+            })
+          );
+        });
+        if (stacked) points[si].forEach((p, k) => base[k] = (base[k] ?? 0) + p[1]);
+        g.append(sg);
+        return;
+      }
       if (stacked) {
         const back = points[si].map((p, k) => [x(p[0]), y(base[k] ?? 0)]).reverse().map((p) => `L${p[0].toFixed(1)},${p[1].toFixed(1)}`).join("");
         sg.append(s(doc, "path", { class: "kp-chart__area kp-chart__area--stacked", d: `${d}${back}Z` }));
@@ -37098,7 +37301,15 @@ function toolbarSearch(toolbar) {
   const input = toolbar.querySelector(SEARCH2);
   return input instanceof HTMLInputElement ? input : null;
 }
-function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\xD7" } = {}) {
+function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\xD7", decorate: decorate2 } = {}) {
+  const mark = (part7, info) => {
+    if (!decorate2) return;
+    const key = toolbar.getAttribute("data-kp-key");
+    decorate2(part7, { ...info, host: (
+      /** @type {HTMLElement} */
+      toolbar
+    ), ...key === null ? {} : { key } });
+  };
   const strings = getStrings();
   let row = (
     /** @type {HTMLElement | null} */
@@ -37140,10 +37351,12 @@ function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\x
       remove2.setAttribute("aria-label", strings.tableRemoveFilter(filter.label));
       remove2.textContent = removeGlyph;
       item.append(filter.label, remove2);
+      mark(remove2, { kind: "tag-remove", value: filter.id ?? filter.label, label: filter.label });
       return item;
     })
   );
   button.textContent = strings.toolbarClearAll;
+  mark(button, { kind: "clear-all", label: strings.toolbarClearAll });
   button.hidden = !clearAll;
   row.hidden = filters.length === 0;
 }
@@ -38395,8 +38608,11 @@ __export(heat_exports, {
   MATRIX_RETRY_EVENT: () => MATRIX_RETRY_EVENT,
   attachHeats: () => attachHeats,
   attachMatrices: () => attachMatrices,
+  heatOffset: () => heatOffset,
+  removeHeatPaging: () => removeHeatPaging,
   setHeat: () => setHeat,
   setHeatLegend: () => setHeatLegend,
+  setHeatPaging: () => setHeatPaging,
   setHeatPick: () => setHeatPick,
   setHeatRows: () => setHeatRows,
   setMatrix: () => setMatrix,
@@ -38488,9 +38704,21 @@ function placeStop(grid2, selector, stop) {
   at.setAttribute("tabindex", "0");
   STOPS.set(grid2, { r: Number(at.dataset.r), c: Number(at.dataset.c) });
 }
-function setHeat(el16, spec) {
+function setHeat(el16, spec, options) {
   const doc = el16.ownerDocument;
   const s2 = getStrings();
+  if (options && "decorate" in options) {
+    if (options.decorate) DECORATE.set(el16, options.decorate);
+    else DECORATE.delete(el16);
+  }
+  const decorate2 = DECORATE.get(el16);
+  const mark = (part7, info) => {
+    if (!decorate2) return;
+    const key = el16.getAttribute("data-kp-key");
+    decorate2(part7, { ...info, host: el16, ...key === null ? {} : { key } });
+  };
+  if (spec.paging === false) removeHeatPaging(el16);
+  else if (spec.paging) setHeatPaging(el16, spec.paging);
   const state2 = spec.state ?? "ready";
   const loading = state2 === "loading";
   if (spec.legend !== void 0) {
@@ -38580,15 +38808,16 @@ function setHeat(el16, spec) {
         "data-key": row.key
       }) : label;
       if (row.mark) {
-        const mark = make11(doc, "i", "kp-heat__mark", { "aria-hidden": "true" });
-        mark.style.setProperty("--kp-heat-mark", row.mark);
-        inner.append(mark);
+        const mark2 = make11(doc, "i", "kp-heat__mark", { "aria-hidden": "true" });
+        mark2.style.setProperty("--kp-heat-mark", row.mark);
+        inner.append(mark2);
       }
       const text = make11(doc, "span", `kp-heat__label-text${row.muted ? " kp-heat__label-text--muted" : ""}`);
       text.textContent = row.label;
       text.title = row.label;
       inner.append(text);
       if (inner !== label) label.append(inner);
+      if (inner !== label) mark(inner, { kind: "row-label", value: row.key, label: row.label });
     }
     const cells = make11(doc, "div", "kp-heat__cells", { role: "none" });
     columns2.forEach((col, c) => {
@@ -38634,6 +38863,7 @@ function setHeat(el16, spec) {
         button.setAttribute("data-kp-picked", "");
         button.setAttribute("aria-selected", "true");
       }
+      mark(button, { kind: "cell", value: `${row.key}/${col.key}`, index: c, label: button.getAttribute("aria-label") ?? "" });
       cells.append(button);
     });
     node.append(label, cells);
@@ -38707,6 +38937,91 @@ function setHeatRows(el16, keys) {
   ) {
     button.setAttribute("aria-pressed", String(set.has(button.dataset.key ?? "")));
   }
+}
+function pagerOf(el16) {
+  const kept = PAGERS.get(el16);
+  if (kept?.isConnected) return kept;
+  const before = el16.previousElementSibling;
+  return before instanceof HTMLElement && before.matches(".kp-heat__pager") ? before : null;
+}
+function heatOffset(el16) {
+  const n = Number(el16.getAttribute("data-kp-heat-offset"));
+  return Number.isFinite(n) ? Math.trunc(n) : 0;
+}
+function setHeatPaging(el16, paging = {}) {
+  const doc = el16.ownerDocument;
+  const s2 = getStrings();
+  let bar = pagerOf(el16);
+  if (!bar) {
+    if (!el16.parentNode) return null;
+    bar = make11(doc, "div", "kp-heat__pager", { role: "group" });
+    const button = (part7) => make11(doc, "button", `kp-button kp-button--ghost kp-button--sm kp-heat__pager-${part7}`, { type: "button", "data-kp-heat-page": part7 });
+    const words = make11(doc, "span", "kp-heat__pager-label");
+    words.setAttribute("aria-live", "polite");
+    bar.append(button("earlier"), button("today"), button("later"), words);
+    el16.before(bar);
+    bar.addEventListener("click", (event) => {
+      const target = event.target instanceof Element ? event.target.closest("[data-kp-heat-page]") : null;
+      if (!target || !(target instanceof HTMLButtonElement) || target.disabled) return;
+      const direction = (
+        /** @type {'earlier' | 'later' | 'today'} */
+        target.getAttribute("data-kp-heat-page")
+      );
+      const now = heatOffset(el16);
+      const offset2 = direction === "today" ? 0 : direction === "earlier" ? now + 1 : now - 1;
+      if (!el16.hasAttribute("data-kp-heat-owned")) {
+        el16.setAttribute("data-kp-heat-offset", String(offset2));
+        setHeatPaging(el16, { ...PAGING.get(el16) ?? {}, offset: offset2 });
+      }
+      el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction, offset: offset2, source: "pager" } }));
+    });
+  }
+  PAGERS.set(el16, bar);
+  const given2 = { ...PAGING.get(el16) ?? {}, ...paging };
+  PAGING.set(el16, given2);
+  const offset = paging.offset ?? heatOffset(el16);
+  el16.setAttribute("data-kp-heat-offset", String(offset));
+  const min = given2.min ?? 0;
+  const text = [
+    ["earlier", s2.heatEarlier, given2.max !== void 0 && offset >= given2.max],
+    ["today", s2.heatToday, offset === 0],
+    ["later", s2.heatLater, offset <= min]
+  ];
+  bar.setAttribute("aria-label", s2.heatPagerLabel);
+  for (
+    const [part7, words, off] of
+    /** @type {[string, string, boolean][]} */
+    text
+  ) {
+    const b = (
+      /** @type {HTMLButtonElement} */
+      bar.querySelector(`[data-kp-heat-page="${part7}"]`)
+    );
+    if (b.textContent !== words) b.textContent = words;
+    b.disabled = off;
+    const decorate2 = DECORATE.get(el16);
+    if (decorate2 && !MARKED.has(b)) {
+      MARKED.add(b);
+      const key = el16.getAttribute("data-kp-key");
+      decorate2(b, { kind: (
+        /** @type {'pager-earlier' | 'pager-today' | 'pager-later'} */
+        `pager-${part7}`
+      ), host: el16, ...key === null ? {} : { key }, label: words });
+    }
+  }
+  const label = (
+    /** @type {HTMLElement} */
+    bar.querySelector(".kp-heat__pager-label")
+  );
+  const wanted = given2.label ?? "";
+  if (label.textContent !== wanted) label.textContent = wanted;
+  return bar;
+}
+function removeHeatPaging(el16) {
+  pagerOf(el16)?.remove();
+  PAGERS.delete(el16);
+  PAGING.delete(el16);
+  el16.removeAttribute("data-kp-heat-offset");
 }
 function legendOf(el16) {
   const next2 = el16.nextElementSibling;
@@ -38852,7 +39167,16 @@ function wireHeat(el16) {
       askLatest = latest !== null && key === (latest === "start" ? "Home" : "End");
     } else if (key === "PageUp" || key === "PageDown") {
       event.preventDefault();
-      el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: key === "PageUp" ? "earlier" : "later" } }));
+      const earlier = key === "PageUp";
+      const detail = { direction: earlier ? "earlier" : "later" };
+      if (PAGING.has(el16)) {
+        const bound = PAGING.get(el16) ?? {};
+        const next2 = heatOffset(el16) + (earlier ? 1 : -1);
+        if (bound.max !== void 0 && next2 > bound.max || next2 < (bound.min ?? 0)) return;
+        detail.offset = next2;
+        if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPaging(el16, { offset: next2 });
+      }
+      el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail }));
       return;
     } else if (key === "Escape") {
       if (el16.getAttribute("data-kp-heat-picked") == null) return;
@@ -39286,7 +39610,7 @@ function attachMatrices(root = document) {
   }
   return () => undo.forEach((fn) => fn());
 }
-var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES2, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, PLATES, HEAT_CELL, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
+var DECORATE, HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES2, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, PLATES, HEAT_CELL, MARKED, PAGERS, PAGING, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
 var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
@@ -39297,6 +39621,7 @@ var init_heat = __esm({
     init_uses_map();
     init_calm_tones();
     init_keys();
+    DECORATE = /* @__PURE__ */ new WeakMap();
     HEAT = "[data-kp-heat]";
     MATRIX = "[data-kp-matrix]";
     HEAT_PICK_EVENT = "kp-heat-pick";
@@ -39322,6 +39647,9 @@ var init_heat = __esm({
     DRAWN3 = /* @__PURE__ */ new WeakSet();
     PLATES = /* @__PURE__ */ new WeakMap();
     HEAT_CELL = ".kp-heat__cell[data-c]:not(.kp-skeleton)";
+    MARKED = /* @__PURE__ */ new WeakSet();
+    PAGERS = /* @__PURE__ */ new WeakMap();
+    PAGING = /* @__PURE__ */ new WeakMap();
     legendCount = 0;
     WIRED6 = /* @__PURE__ */ new WeakMap();
     MATRIX_CELL = ".kp-matrix__cell[data-c]:not([data-kp-inert])";
@@ -65356,7 +65684,6 @@ export {
   REMEMBER_HOLD_ATTRIBUTE,
   REMEMBER_PREFIX,
   REMOVE_EVENT,
-  REORDER_EVENT,
   REQUESTS,
   REQUESTS_COPIED_MS,
   REQUESTS_COPY_EVENT,
@@ -65786,6 +66113,7 @@ export {
   calmWord,
   card_state_exports as cardStateExports,
   chart_exports as chartExports,
+  chartInMilliseconds,
   chartMedian,
   chartRuns,
   chartSelect,
@@ -65935,6 +66263,7 @@ export {
   gridlayout_exports as gridlayoutExports,
   groupMessages,
   heat_exports as heatExports,
+  heatOffset,
   hideSecret,
   holdFootprint,
   hourChange,
@@ -66127,6 +66456,7 @@ export {
   rememberView,
   rememberedName,
   rememberedView,
+  removeHeatPaging,
   removeRow,
   renderDiagnostics,
   renderShortcutSheet,
@@ -66225,6 +66555,7 @@ export {
   setGraphState,
   setHeat,
   setHeatLegend,
+  setHeatPaging,
   setHeatPick,
   setHeatRows,
   setIdmark,

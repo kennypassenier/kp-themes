@@ -61,7 +61,7 @@ export {
 export { CommandPalette, PaletteTrigger, ShortcutSheet } from './components/palette.jsx';
 export { RUN_EVENT as PALETTE_RUN_EVENT, attachPalettes } from './js/palette.js';
 export { default as DataTable } from './components/datatable.jsx';
-export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachDataTables } from './js/datatable.js';
+export { PAGE_SIZE, REORDER_EVENT as DATATABLE_REORDER_EVENT, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachDataTables } from './js/datatable.js';
 export { WRAP_SELECTOR as TABLE_WRAP_SELECTOR, attachTableRegions } from './js/tables.js';
 export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachForms, attachSwitches, attachFormgridStages } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
@@ -454,8 +454,11 @@ export {
     MATRIX_PICK_EVENT,
     attachHeats,
     attachMatrices,
+    heatOffset,
+    removeHeatPaging,
     setHeat,
     setHeatLegend,
+    setHeatPaging,
     setHeatPick,
     setHeatRows,
     setMatrix,
@@ -686,6 +689,7 @@ export {
     TREND_CHART,
     attachCharts,
     attachTrendCharts,
+    chartInMilliseconds,
     chartMedian,
     chartRuns,
     chartSelect,

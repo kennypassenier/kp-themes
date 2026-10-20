@@ -122,6 +122,8 @@ export declare const REQUEST_EVENT = "kp-datatable-request";
 export declare const EDIT_EVENT = "kp-datatable-edit";
 /** Fired when a group row folds or unfolds [J2]: `{ key, row, open, members, folded }`; `members` are the group's rows, `folded` every folded key. */
 export declare const GROUP_EVENT = "kp-datatable-group";
+/** Fired on the table when a row was moved by its handle: `{ order, key, from, to }` (the row keys in the new order, the moved row's key, its old and new place, counted from 0) [wish-1120, homelab 93]. */
+export declare const REORDER_EVENT = "kp-datatable-reorder";
 /** Rows per page when the consumer does not say [Kenny, 2026-09-13]. Per table as `data-kp-page-size`. */
 export declare const PAGE_SIZE = 25;
 /** The page sizes on offer when the consumer does not say. Per table as `data-kp-page-sizes="10,25"`, or `none`. */
@@ -476,13 +478,13 @@ export type DataTableOptions = {
      */
     expandSingle?: boolean;
     /**
-     * Called with every row toggle and group toggle the
-     * table builds, each time it builds one, so the consumer can mark it (homelab's Live view marks what it can press) [J2, R-DRIVE].
+     * Called with every row toggle, group toggle, "+ Add filter",
+     * "Clear the search and filters" button, search box and reorder handle the table builds, each time it builds one, so the consumer can mark it (homelab's Live view marks what it can press) [J2, R-DRIVE].
      */
     decorate?: (part: HTMLElement, info: DataTableDecorateInfo) => void;
 };
 export type DataTableDecorateInfo = {
-    kind: 'row-toggle' | 'row-group-toggle';
+    kind: 'row-toggle' | 'row-group-toggle' | 'add-filter' | 'clear-filters' | 'search' | 'reorder-handle';
     host: HTMLElement;
     key?: string;
     index?: number;
@@ -512,14 +514,16 @@ export type DataTableDecorateInfo = {
  * @property {string} [collapseGlyph] Default ▾.
  * @property {number} [gridPageRows]  Default 5.
  * @property {boolean} [expandSingle]  Opening a row closes the one that was open. Default false; per table `data-kp-expand-single`.
- * @property {(part: HTMLElement, info: DataTableDecorateInfo) => void} [decorate]  Called with every row toggle and group toggle the
- *   table builds, each time it builds one, so the consumer can mark it (homelab's Live view marks what it can press) [J2, R-DRIVE].
+ * @property {(part: HTMLElement, info: DataTableDecorateInfo) => void} [decorate]  Called with every row toggle, group toggle, "+ Add filter",
+ *   "Clear the search and filters" button, search box and reorder handle the table builds, each time it builds one, so the consumer can mark it (homelab's Live view marks what it can press) [J2, R-DRIVE].
  */
 /**
  * What `decorate` is told about the control it is handed: the same shape every kp module's `decorate` takes.
  * `kind` is `row-toggle` (a row's expand button; `value` is the row key) or `row-group-toggle` (a group row's fold button;
- * `value` is the group key). `host` is the data table's wrapper and `key` its `data-kp-key`.
- * @typedef {{ kind: 'row-toggle' | 'row-group-toggle', host: HTMLElement, key?: string, index?: number, label?: string, value?: string }} DataTableDecorateInfo
+ * `value` is the group key); and, since wish-1120 (homelab 66), `add-filter` (the "+ Add filter" button), `clear-filters` ("Clear the
+ * search and filters") and `search` (the search box) and `reorder-handle` (a row's drag handle, `value` is the row key).
+ * `host` is the data table's wrapper and `key` its `data-kp-key`.
+ * @typedef {{ kind: 'row-toggle' | 'row-group-toggle' | 'add-filter' | 'clear-filters' | 'search' | 'reorder-handle', host: HTMLElement, key?: string, index?: number, label?: string, value?: string }} DataTableDecorateInfo
  */
 /**
  * Attach every data table under `root`.

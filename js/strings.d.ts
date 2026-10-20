@@ -1918,6 +1918,22 @@ export type Strings = {
      */
     heatKeysPage: string;
     /**
+     * The name of a heat grid's Earlier / Today / Later bar for a screen reader (js/heat.js) [wish-1120]
+     */
+    heatPagerLabel: string;
+    /**
+     * The paging bar's button to the page before [wish-1120]
+     */
+    heatEarlier: string;
+    /**
+     * The paging bar's button back to the present [wish-1120]
+     */
+    heatToday: string;
+    /**
+     * The paging bar's button to the page after [wish-1120]
+     */
+    heatLater: string;
+    /**
      * A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
      */
     matrixSelf: string;
@@ -2049,6 +2065,18 @@ export type Strings = {
      * A row's expand button
      */
     tableRowDetails: (key: string) => string;
+    /**
+     * The name of the data table's column of drag handles for a screen reader [wish-1120]
+     */
+    tableReorderColumn: string;
+    /**
+     * A row's drag handle: "Move media", with Alt+Up and Alt+Down named in the aria-keyshortcuts [wish-1120]
+     */
+    tableReorderRow: (name: string) => string;
+    /**
+     * Why the handles are off while the table is sorted, filtered or searched [wish-1120]
+     */
+    tableReorderOff: string;
     /**
      * A group row's fold button: the group's name and how many of its rows match [J2]
      */
@@ -6628,6 +6656,10 @@ export type Strings = {
  * @property {string} heatKeysPick          Enter or Space on a cell: pick the column [gap-tab-count]
  * @property {string} heatKeysDrop          Escape: drop the picked column [gap-tab-count]
  * @property {string} heatKeysPage          Page Up and Page Down: show earlier or later columns [gap-tab-count]
+ * @property {string} heatPagerLabel  The name of a heat grid's Earlier / Today / Later bar for a screen reader (js/heat.js) [wish-1120]
+ * @property {string} heatEarlier  The paging bar's button to the page before [wish-1120]
+ * @property {string} heatToday  The paging bar's button back to the present [wish-1120]
+ * @property {string} heatLater  The paging bar's button to the page after [wish-1120]
  * @property {string} matrixSelf            A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
  * @property {string} matrixUnknown         A matrix cell with no answer, for a screen reader [kpadopt2-grids]
  * @property {string} tableClearSearch      The way out of the no-match state
@@ -6673,6 +6705,9 @@ export type Strings = {
  * @property {(shown: number, total: number) => string} tableColumnsShown
  * @property {string} tableDetailsColumn    The expansion column's header, read by a screen reader only
  * @property {(key: string) => string} tableRowDetails  A row's expand button
+ * @property {string} tableReorderColumn  The name of the data table's column of drag handles for a screen reader [wish-1120]
+ * @property {(name: string) => string} tableReorderRow  A row's drag handle: "Move media", with Alt+Up and Alt+Down named in the aria-keyshortcuts [wish-1120]
+ * @property {string} tableReorderOff  Why the handles are off while the table is sorted, filtered or searched [wish-1120]
  * @property {(group: string, count: number) => string} tableGroupRows  A group row's fold button: the group's name and how many of its rows match [J2]
  * @property {(column: string, key: string, value: string) => string} tableEdit  An editable cell's button
  * @property {(column: string, key: string) => string} tableEditField  The editor's accessible name

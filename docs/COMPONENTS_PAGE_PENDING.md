@@ -104,3 +104,7 @@ the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; th
 - wish-1120, site/components/selection.html: `setSelectionProgress(bar, { done, total })`, the busy bar with "3 of 7 done".
 - wish-1120, site/components/entity-card.html: `match` on a tile (the marked part of the name) and the tile keys (`data-kp-tiles-keys` on an entity grid, `="letters"` for type-ahead, the star key default `.`).
 - wish-1120, site/components/tiles.html: `data-kp-tiles-keys="letters"` and `letterTile()`.
+- wish-1120, site/components/datatable.html: option `data-kp-rows-reorder`, the event `kp-datatable-reorder`, Alt+Up / Alt+Down, the handles off while sorted or filtered; one example.
+- wish-1120, site/components/heat.html: `paging` on `setHeat` / `setHeatPaging` (Earlier, Today, Later; `offset`, `min`, `max`, `label`) and the `offset` in `kp-heat-page`; `setHeat(el, spec, { decorate })`.
+- wish-1120, site/components/toolbar.html and datatable.html: the `decorate` option for `setToolbarActive` and the data table's new kinds (`add-filter`, `clear-filters`, `search`, `reorder-handle`).
+- wish-1120, site/components/chart.html: `timeUnit: 's'`, a list for `threshold`, and `shape: 'columns'` (a histogram, stacked too); one example of each.

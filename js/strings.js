@@ -540,6 +540,10 @@
  * @property {string} heatKeysPick          Enter or Space on a cell: pick the column [gap-tab-count]
  * @property {string} heatKeysDrop          Escape: drop the picked column [gap-tab-count]
  * @property {string} heatKeysPage          Page Up and Page Down: show earlier or later columns [gap-tab-count]
+ * @property {string} heatPagerLabel  The name of a heat grid's Earlier / Today / Later bar for a screen reader (js/heat.js) [wish-1120]
+ * @property {string} heatEarlier  The paging bar's button to the page before [wish-1120]
+ * @property {string} heatToday  The paging bar's button back to the present [wish-1120]
+ * @property {string} heatLater  The paging bar's button to the page after [wish-1120]
  * @property {string} matrixSelf            A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
  * @property {string} matrixUnknown         A matrix cell with no answer, for a screen reader [kpadopt2-grids]
  * @property {string} tableClearSearch      The way out of the no-match state
@@ -585,6 +589,9 @@
  * @property {(shown: number, total: number) => string} tableColumnsShown
  * @property {string} tableDetailsColumn    The expansion column's header, read by a screen reader only
  * @property {(key: string) => string} tableRowDetails  A row's expand button
+ * @property {string} tableReorderColumn  The name of the data table's column of drag handles for a screen reader [wish-1120]
+ * @property {(name: string) => string} tableReorderRow  A row's drag handle: "Move media", with Alt+Up and Alt+Down named in the aria-keyshortcuts [wish-1120]
+ * @property {string} tableReorderOff  Why the handles are off while the table is sorted, filtered or searched [wish-1120]
  * @property {(group: string, count: number) => string} tableGroupRows  A group row's fold button: the group's name and how many of its rows match [J2]
  * @property {(column: string, key: string, value: string) => string} tableEdit  An editable cell's button
  * @property {(column: string, key: string) => string} tableEditField  The editor's accessible name
@@ -2242,6 +2249,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     heatKeysPick: 'pick a column',
     heatKeysDrop: 'drop the pick',
     heatKeysPage: 'earlier or later',
+    heatPagerLabel: 'Show another period',
+    heatEarlier: 'Earlier',
+    heatToday: 'Today',
+    heatLater: 'Later',
     matrixSelf: 'itself',
     matrixUnknown: 'unknown',
     tableClearSearch: 'Clear the search and filters',
@@ -2309,6 +2320,9 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableColumnsShown: (shown, total) => `${shown} of ${total} columns shown`,
     tableDetailsColumn: 'Details',
     tableRowDetails: (key) => `Details for ${key}`,
+    tableReorderColumn: 'Move row',
+    tableReorderRow: (name) => `Move ${name} (Alt+Up or Alt+Down)`,
+    tableReorderOff: 'Clear the sort, the filters and the search to reorder the rows',
     tableGroupRows: (group, count) => `${group}: ${count} ${count === 1 ? 'row' : 'rows'}`,
     tableEdit: (column, key, value) => `${column} of ${key}: ${value}. Edit`,
     tableEditField: (column, key) => `${column} of ${key}`,

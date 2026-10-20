@@ -23,7 +23,7 @@ export { CHOOSE_EVENT as LISTBOX_CHOOSE_EVENT, HIGHLIGHT_EVENT as LISTBOX_HIGHLI
 export { CommandPalette, PaletteTrigger, ShortcutSheet } from './components/palette.jsx';
 export { RUN_EVENT as PALETTE_RUN_EVENT, attachPalettes } from './js/palette.js';
 export { default as DataTable } from './components/datatable.jsx';
-export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachDataTables } from './js/datatable.js';
+export { PAGE_SIZE, REORDER_EVENT as DATATABLE_REORDER_EVENT, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATABLE_VIEW_EVENT, attachDataTables } from './js/datatable.js';
 export { WRAP_SELECTOR as TABLE_WRAP_SELECTOR, attachTableRegions } from './js/tables.js';
 export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachForms, attachSwitches, attachFormgridStages } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
@@ -92,7 +92,7 @@ export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, set
 export type ToolbarFilter = import('./js/toolbar.js').ToolbarFilter;
 /** @typedef {import('./js/toolbar.js').ToolbarFilter} ToolbarFilter */
 export { KEYS, attachKeys, setKeys } from './js/keys.js';
-export { HEAT, HEAT_PAGE_EVENT, HEAT_PICK_EVENT, HEAT_ROW_EVENT, MATRIX, MATRIX_LIGHT_EVENT, MATRIX_PICK_EVENT, attachHeats, attachMatrices, setHeat, setHeatLegend, setHeatPick, setHeatRows, setMatrix, setMatrixLit, setMatrixPick, } from './js/heat.js';
+export { HEAT, HEAT_PAGE_EVENT, HEAT_PICK_EVENT, HEAT_ROW_EVENT, MATRIX, MATRIX_LIGHT_EVENT, MATRIX_PICK_EVENT, attachHeats, attachMatrices, heatOffset, removeHeatPaging, setHeat, setHeatLegend, setHeatPaging, setHeatPick, setHeatRows, setMatrix, setMatrixLit, setMatrixPick, } from './js/heat.js';
 export type HeatSpec = import('./js/heat.js').HeatSpec;
 export type MatrixSpec = import('./js/heat.js').MatrixSpec;
 export type HeatLegendEntry = import('./js/heat.js').HeatLegendEntry;
@@ -179,7 +179,7 @@ export { FLASH_BUTTON, FLASH_ERROR_MS, FLASH_EVENT, FLASH_MS, FLASH_RELOAD_EVENT
 export { DISABLED_REASON, attachDisabledReasons } from './js/reason.js';
 export { TILES_EXIT_EVENT, TILES_KEYS, TILES_MOVE_EVENT, TILES_SET, TILE_ROW_MIN, attachTileKeys, attachTileSets, evenTileSet, letterTile, nextTile, tileSets, tileStop } from './js/tiles.js';
 export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration, momentOf, setAgo } from './js/freshness.js';
-export { CHART, CHART_GROUP, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_SELECT_EVENT, CHART_TIME_ZONE, CHART_ZOOM_EVENT, TREND_CHART, attachCharts, attachTrendCharts, chartMedian, chartRuns, chartSelect, chartWords, chartZoom, detachChart, formatChartValue, numericTime, setChartData, setTrendData, timeTicks, trendAxis, } from './js/chart.js';
+export { CHART, CHART_GROUP, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_SELECT_EVENT, CHART_TIME_ZONE, CHART_ZOOM_EVENT, TREND_CHART, attachCharts, attachTrendCharts, chartInMilliseconds, chartMedian, chartRuns, chartSelect, chartWords, chartZoom, detachChart, formatChartValue, numericTime, setChartData, setTrendData, timeTicks, trendAxis, } from './js/chart.js';
 export type ChartData = import('./js/chart.js').ChartData;
 /** @typedef {import('./js/chart.js').ChartData} ChartData */
 export { MENU_BUTTON, MENU_CLOSE_EVENT, MENU_COUNT_PROPERTY, MENU_GUTTER, MENU_OPEN_EVENT, MENU_SELECT_EVENT, attachMenuButtons, closeMenu, menuKeyTarget, menuLineCount, menuPlacement, menuSignature, openMenu, setMenu, } from './js/menu-button.js';
