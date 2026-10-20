@@ -1,0 +1,1467 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="wishes-1120" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Homelab wishes built in the package</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>Homelab wishes built in the package</h1>
+                <p class="cat-intro">
+                    The homelab admin dashboard hit the edges of the package in 22 places. Each is now an option or a part of the package; this page
+                    shows all of them in formal only, one section per wish. Everything is opt-in: a component that is not given the option looks and
+                    behaves as you approved it. 22 sections, 22 pairs; all data is mock.
+                </p>
+                <p>Every section says under <b>Expected</b> what you should see and what each control does.</p>
+            </header>
+
+            <section
+                id="plain-card"
+                data-review-item="plain-card"
+                data-review-topic="progress"
+                data-review-topic-title="States and progress"
+                data-review-components="plain-card"
+                data-review-title="A state card without a frame of its own"
+                aria-labelledby="h-plain-card"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 90): A card that reads data (loading, empty, failed, ready) drew its own frame, so inside a
+                        section card it made a card in a card. Is the plain version, which sits in the section card with no frame of its own, what you
+                        want? It is an option (<code>data-kp-card="plain"</code>); the framed card stays the default everywhere else.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-plain-card">A card in a card, or just the section</h2>
+                    <p>
+                        The backups section holds a state card. Switch the inner card between its own frame (before) and plain (new) and walk its four
+                        states.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Own frame</b>: a bordered card inside the section card, with its own padding. <b>Plain</b>: no border, no shadow, no
+                            padding; the rows sit on the section card, and the section card is the only frame.
+                        </li>
+                        <li>
+                            The four states keep the same room in both: <b>Loading</b> has the busy card centred, <b>Empty</b> and <b>Failed</b> a
+                            large centred plate, <b>Failed</b> with a Retry. Nothing jumps when you switch.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a paper plate: one border weight. In plain there must be exactly one frame around the rows; in the other mode two
+                        nested ones.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="plain-card-component">
+                    <div role="group" aria-label="Inner card">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="frame" data-value="own" aria-pressed="false">
+                            Own frame (before)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="frame" data-value="plain" aria-pressed="true">
+                            Plain (new)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="ready" aria-pressed="true">Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="empty" aria-pressed="false">Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="state" data-value="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div id="plain-card-component" class="pg-component">
+                    <div class="kp-card pg-card" id="pg-plain-section">
+                        <div class="kp-card__header"><h3 class="kp-card__title">Backups</h3></div>
+                        <p class="kp-card__body">Last night&rsquo;s run and the coverage of the week.</p>
+                        <div class="kp-card" id="pg-plain" data-kp-state="ready" data-kp-card="plain">
+                            <div class="kp-card__stage">
+                                <div class="kp-card__data">
+                                    <ul class="pg-lines">
+                                        <li><b>media</b><span>backed up 03:12, 4.1 GB</span></li>
+                                        <li><b>sonarr</b><span>backed up 03:20, 310 MB</span></li>
+                                        <li><b>traefik</b><span>missed, the host was busy</span></li>
+                                        <li><b>vaultwarden</b><span>backed up 03:41, 52 MB</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="job-line"
+                data-review-item="job-line"
+                data-review-topic="progress"
+                data-review-components="job-line"
+                data-review-title="One progress line for a job with steps and data"
+                aria-labelledby="h-job-line"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 98): A backup is a list of steps and, in some of them, a copy of data. The dashboard printed two
+                        lines; the new job line says it in one: step, bytes and time left. Does it read at a glance, and is the
+                        list-plus-bar-plus-line the right amount?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-job-line">Step 3 of 8, 1.2 of 4 GB, about 2 min left</h2>
+                    <p>
+                        The step list and the transfer bar are the package&rsquo;s own; the job line under them joins what they know. Press a preset,
+                        or run the whole job.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Waiting</b> says <b>Waiting to start</b>. <b>Steps only</b> says <b>Step 3 of 8</b>. <b>Steps and data</b> says
+                            <b>Step 3 of 8 · 1.2 of 4 GB · about 2 min left</b> (the unit once). <b>Size unknown</b> says
+                            <b>Step 3 of 8 · 1.2 GB so far</b>: a part that is not known is left out, never shown as 0.
+                        </li>
+                        <li>
+                            <b>Run the job</b>: the steps tick on, the bar fills and the line follows both; the line is the same height at every
+                            moment.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check that the numbers do not shimmer (tabular figures), that the separator dots have room and that the line wraps rather than
+                        cuts on a phone.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="job-line-component">
+                    <div role="group" aria-label="Show">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="job" data-value="waiting" aria-pressed="true">Waiting</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="job" data-value="steps" aria-pressed="false">
+                            Steps only</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="job" data-value="both" aria-pressed="false">
+                            Steps and data</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="job" data-value="unknown" aria-pressed="false">
+                            Size unknown
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Run">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="job-run" data-value="run" aria-pressed="false">
+                            Run the job</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="job-run" data-value="stop" aria-pressed="false">Stop</button>
+                    </div>
+                </div>
+                <div id="job-line-component" class="pg-component">
+                    <div class="kp-card pg-card pg-job">
+                        <ol class="kp-steplist" id="pg-job-steps" aria-label="Backup progress"></ol>
+                        <div class="kp-progress-group kp-progress-group--transfer">
+                            <div class="kp-progress__wrap" data-kp-transfer data-kp-linger="0" id="pg-job-transfer"></div>
+                        </div>
+                        <p class="kp-jobline" id="pg-job-line" data-kp-jobline data-kp-jobline-for="#pg-job-steps"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="batch-progress"
+                data-review-item="batch-progress"
+                data-review-topic="progress"
+                data-review-components="batch-progress"
+                data-review-title="How far a batch is: 3 of 7 done"
+                aria-labelledby="h-batch-progress"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 112): A bar action on many rows used to go from busy straight to the final result. A batch of
+                        seven updates now says how far it is while it runs. Is the count beside the busy words what you want, and does it stay calm?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-batch-progress">Update seven stacks</h2>
+                    <p>Seven stacks are ticked. Press the bar&rsquo;s Update button to run the batch, or jump to a state.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Selected</b>: <b>7 selected</b> and the stack names. <b>Running</b>: the spinner, the busy words and
+                            <b>3 of 7 done</b>, buttons off. <b>Finished</b>: the result line <b>7 done</b>.
+                        </li>
+                        <li>The bar is as high in all three; the digits do not move the words around.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: a quiet bar. The count is muted beside the busy words; check its gap to the words and that it never touches the edge.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="batch-progress-component">
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="batch" data-value="selected" aria-pressed="true">
+                            Selected</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="batch" data-value="running" aria-pressed="false">
+                            Running 3 of 7</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="batch" data-value="done" aria-pressed="false">
+                            Finished
+                        </button>
+                    </div>
+                </div>
+                <div id="batch-progress-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="kp-selection" id="pg-batch" data-kp-selection data-kp-placement="inline" aria-label="Stacks">
+                            <div class="kp-selection__actions">
+                                <button class="kp-button kp-button--primary" type="button" data-kp-selection-action="update">Update 7 stacks</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="clipboard-clear"
+                data-review-item="clipboard-clear"
+                data-review-topic="progress"
+                data-review-components="clipboard-clear"
+                data-review-title="A copied secret leaves the clipboard again"
+                aria-labelledby="h-clipboard-clear"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 108): A secret field&rsquo;s Copy puts the token on the clipboard and leaves it there. With the
+                        option, the clipboard is emptied some seconds later, and only if it still holds the token; the field says so politely. Is that
+                        the right behaviour, and are the default times right (the dashboard used 30 s)?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-clipboard-clear">Copy, then wait</h2>
+                    <p>Press Copy (the clock here is 5 s so you need not wait), then paste into the box below at once and again after the time.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Right after Copy the box below pastes the token; after the time it pastes nothing, and the line under the field says
+                            <b>Clipboard cleared</b>.
+                        </li>
+                        <li>
+                            Copy something else in the meantime: the line says the clipboard was left alone, because it no longer held the token. If
+                            your browser refuses the page to read the clipboard it still clears it, and says so.
+                        </li>
+                        <li>The value never appears in the line or in an event.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the field is a quiet row of value and two buttons. The log line is plain muted text in a fixed place, so nothing moves
+                        when it changes.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="clipboard-clear-component">
+                    <div role="group" aria-label="Clear after">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="clear" data-value="0" aria-pressed="false">
+                            Never (before)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="clear" data-value="5" aria-pressed="true">5 seconds</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="clear" data-value="10" aria-pressed="false">
+                            10 seconds
+                        </button>
+                    </div>
+                </div>
+                <div id="clipboard-clear-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div
+                            class="kp-secret"
+                            id="pg-secret"
+                            data-kp-secret
+                            data-kp-secret-label="API token"
+                            data-kp-secret-value="kp_live_9f2c1a77e0b34d"
+                            data-kp-secret-clear="5"
+                        ></div>
+                        <p class="pg-log" id="pg-secret-log" role="status">Nothing copied yet.</p>
+                        <label class="kp-field__label" for="pg-secret-paste">Paste here to see what the clipboard holds</label>
+                        <textarea class="kp-field__input kp-field__input--multiline" id="pg-secret-paste" rows="2"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="countdown-days"
+                data-review-item="countdown-days"
+                data-review-topic="progress"
+                data-review-components="countdown-days"
+                data-review-title="A countdown of days reads in days"
+                aria-labelledby="h-countdown-days"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 124): The undo window of an update lasts seven days, which the countdown printed as 167:59:59.
+                        From 24 hours up it now reads <b>6 d 22 h</b>; under a day nothing changes. Is that the right way to write a long wait, and
+                        should the digits stay available (an option)?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-countdown-days">The undo window</h2>
+                    <p>A display-only countdown to a moment: seven days, a day, and seven days with the digits kept.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>7-day window</b>: <b>6 d 22 h</b> (the unit letters are in muted cells, the digits do not jump). <b>Under a day</b>:
+                            <b>23:59:00</b> and ticking down, as before. <b>Digits kept</b>: <b>166:00:00</b>, the old reading, through an option.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: big quiet digits in the display face. Check that "6 d 22 h" is as steady as the digits are and has the same weight.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="countdown-days-component">
+                    <div role="group" aria-label="Length">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="days" data-value="week" aria-pressed="true">
+                            7-day window</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="days" data-value="day" aria-pressed="false">
+                            Under a day</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="days" data-value="digits" aria-pressed="false">
+                            Digits kept
+                        </button>
+                    </div>
+                </div>
+                <div id="countdown-days-component" class="pg-component">
+                    <div
+                        class="kp-countdown"
+                        id="pg-days"
+                        data-kp-countdown-until=""
+                        data-kp-countdown-name="Undo window"
+                        data-kp-countdown-controls="none"
+                    ></div>
+                </div>
+            </section>
+
+            <section
+                id="dated-meta"
+                data-review-item="dated-meta"
+                data-review-topic="lists"
+                data-review-topic-title="Lists, tables and grids"
+                data-review-components="dated-meta"
+                data-review-title="A dated option without a date, and two details"
+                aria-labelledby="h-dated-meta"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 101): The snapshot picker needed a date for every option. A &ldquo;Latest&rdquo; entry has none,
+                        and a snapshot may carry more than one detail (a size and a count of files). Do the undated row and the two details look
+                        right?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-dated-meta">Which snapshot to restore</h2>
+                    <p>The first row is the files as they are now, with no date. The others are dated; each has a size and a count of files.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Mixed</b>: the undated row shows its name alone, centred in the row&rsquo;s height, with no empty line under it; the
+                            dated rows show <b>how long ago</b> and the date. All rows are as high, and the two details end each row in one column.
+                        </li>
+                        <li><b>All dated</b>: as before, one detail per row.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: tile rows with one border. Check that the undated name sits in the middle of its row and the details line up from row
+                        to row.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="dated-meta-component">
+                    <div role="group" aria-label="Options">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dated" data-value="mixed" aria-pressed="true">
+                            Undated entry, two details</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dated" data-value="dated" aria-pressed="false">
+                            All dated (before)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dated-state" data-value="ready" aria-pressed="true">
+                            Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dated-state" data-value="empty" aria-pressed="false">
+                            Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dated-state" data-value="loading" aria-pressed="false">
+                            Loading
+                        </button>
+                    </div>
+                </div>
+                <div id="dated-meta-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div
+                            class="kp-dated"
+                            id="pg-dated"
+                            data-kp-dated
+                            data-kp-order="given"
+                            data-kp-now="2026-10-20T12:00:00+02:00"
+                            aria-label="Snapshot to restore"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="table-reorder"
+                data-review-item="table-reorder"
+                data-review-topic="lists"
+                data-review-components="table-reorder"
+                data-review-title="Reorder the rows of a table"
+                aria-labelledby="h-table-reorder"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 93): The firewall rules of the dashboard run in order, and a data table could only sort. With
+                        the option the rows have a handle: drag it, or press Alt+Up and Alt+Down on it. Is the handle where and how you expect, and is
+                        turning it off while a sort is on right?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-table-reorder">Firewall rules, in the order they run</h2>
+                    <p>
+                        Drag a row by its handle, or focus a handle with Tab and press Alt+Up or Alt+Down. The line under the table lists the order
+                        the page would save.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A narrow first column of handles (six dots). Dragging moves the row under the pointer; Alt+Up and Alt+Down move it one
+                            place and keep the focus on its handle; the order line changes at once.
+                        </li>
+                        <li><b>Sorted by rule</b> turns the handles off (dimmed, a tooltip says why); <b>Original order</b> brings them back.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: a plain table. The handle column is as narrow as its button; check the dots read as a grip and the dragged row shows
+                        an outline.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="table-reorder-component">
+                    <div role="group" aria-label="Table">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="reorder" data-value="order" aria-pressed="true">
+                            Original order</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="reorder" data-value="sorted" aria-pressed="false">
+                            Sorted by rule
+                        </button>
+                    </div>
+                </div>
+                <div id="table-reorder-component" class="pg-component">
+                    <div class="kp-datatable" id="pg-rules" data-kp-datatable data-kp-rows-reorder data-kp-key="rules">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption>
+                                    Firewall rules
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Rule</th>
+                                        <th scope="col">Action</th>
+                                        <th scope="col">Applies to</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="allow-web">
+                                        <td>Allow web</td>
+                                        <td>Allow</td>
+                                        <td>traefik</td>
+                                    </tr>
+                                    <tr data-kp-row-key="allow-ssh">
+                                        <td>Allow ssh from the lan</td>
+                                        <td>Allow</td>
+                                        <td>every host</td>
+                                    </tr>
+                                    <tr data-kp-row-key="block-iot">
+                                        <td>Block IoT to the lan</td>
+                                        <td>Block</td>
+                                        <td>iot vlan</td>
+                                    </tr>
+                                    <tr data-kp-row-key="allow-dns">
+                                        <td>Allow dns</td>
+                                        <td>Allow</td>
+                                        <td>every host</td>
+                                    </tr>
+                                    <tr data-kp-row-key="log-rest">
+                                        <td>Log the rest</td>
+                                        <td>Log</td>
+                                        <td>every host</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="pg-log" id="pg-rules-order" role="status">Order: allow-web, allow-ssh, block-iot, allow-dns, log-rest</p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="tile-match"
+                data-review-item="tile-match"
+                data-review-topic="lists"
+                data-review-components="tile-match"
+                data-review-title="The typed part of an app name is marked"
+                aria-labelledby="h-tile-match"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 121): A launcher search filters the app tiles; the part of the name that matched used to lose
+                        its mark. Is the mark clear without being loud?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-tile-match">Find an app</h2>
+                    <p>Type in the search box, or press a preset. The first match in each name is marked; tiles that do not match leave.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>jel</b> marks <b>Jel</b> in Jellyfin; <b>ar</b> marks the first <b>ar</b> in Sonarr and Radarr and leaves out Jellyfin.
+                            The mark is a soft tint behind the letters, in any letter case, and the name does not shift.
+                        </li>
+                        <li>An empty search shows every tile with no mark.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: a quiet tint with a bolder weight. Check that the marked letters are still easy to read and the tile height does not
+                        change.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="tile-match-component">
+                    <div role="group" aria-label="Search">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="match" data-value="" aria-pressed="true">Nothing</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="match" data-value="jel" aria-pressed="false">jel</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="match" data-value="ar" aria-pressed="false">ar</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="match" data-value="TRA" aria-pressed="false">TRA</button>
+                    </div>
+                </div>
+                <div id="tile-match-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <label class="kp-field__label" for="pg-match-q">Search apps</label
+                        ><input class="kp-field__input" id="pg-match-q" type="search" autocomplete="off" />
+                        <div class="kp-entity-grid pg-tiles" id="pg-match-grid" data-kp-entity-grid data-kp-entity-kind="tile" role="list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="tile-keys"
+                data-review-item="tile-keys"
+                data-review-topic="lists"
+                data-review-components="tile-keys"
+                data-review-title="Arrow keys and letters over a board of app tiles"
+                aria-labelledby="h-tile-keys"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 120): The tiles of the Apps page are one place in the tab order moved with the arrow keys, and a
+                        letter jumps to the app whose name starts with it. Does it behave as you would expect, and is it fine that the star key
+                        becomes <b>.</b> while letters are on?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-tile-keys">Move with the keyboard</h2>
+                    <p>
+                        Tab into the board, then use the arrows, Home and End, or type a letter (<b>s</b> for Sonarr, <b>r</b> twice for the second
+                        R).
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            One tab stop for the whole board; arrows move by where the tiles are drawn; Home and End go to the ends; a letter goes to
+                            the next tile whose name starts with it, a second press of the same letter to the one after.
+                        </li>
+                        <li>The line under the board says where the focus went. With <b>Arrows only</b> the letters do nothing.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the focus ring on the moved tile must be clear. The star on a tile keeps working with the pointer and the key
+                        <b>.</b>.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="tile-keys-component">
+                    <div role="group" aria-label="Keys">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="keys" data-value="letters" aria-pressed="true">
+                            Arrows and letters</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="keys" data-value="arrows" aria-pressed="false">
+                            Arrows only
+                        </button>
+                    </div>
+                </div>
+                <div id="tile-keys-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="pg-board" id="pg-keys-board" data-kp-tiles-keys="letters">
+                            <div class="kp-entity-grid pg-tiles" id="pg-keys-grid" data-kp-entity-grid data-kp-entity-kind="tile" role="list"></div>
+                        </div>
+                        <p class="pg-log" id="pg-keys-log" role="status">Focus a tile to start.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="heat-paging"
+                data-review-item="heat-paging"
+                data-review-topic="lists"
+                data-review-components="heat-paging"
+                data-review-title="Earlier, Today and Later on the heat grid"
+                aria-labelledby="h-heat-paging"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 100): The backups grid shows a week; to see the weeks before, the page recomputed its own
+                        window. The grid now has the Earlier, Today and Later buttons, and Page Up and Page Down do the same. Do the buttons sit right
+                        and say enough?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-heat-paging">Backups, week by week</h2>
+                    <p>Press Earlier to go back a week, Later to come forward, Today to return. The words between the buttons name the week shown.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Earlier goes up to three weeks back and is then off; Later is off at this week; Today is off now. The words name the week
+                            (<b>13 to 19 October 2026</b>) and the columns change with them.
+                        </li>
+                        <li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> keep the bar and the grid&rsquo;s height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: three ghost buttons and a muted label on one line before the grid. Check the gap between the bar and the grid.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="heat-paging-component">
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="heat" data-value="ready" aria-pressed="true">Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="heat" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="heat" data-value="empty" aria-pressed="false">Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="heat" data-value="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div id="heat-paging-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="kp-heat" id="pg-heat" data-kp-heat data-kp-heat-latest="end" data-kp-key="backups"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="chart-seconds"
+                data-review-item="chart-seconds"
+                data-review-topic="charts"
+                data-review-topic-title="Charts and logs"
+                data-review-components="chart-seconds"
+                data-review-title="A chart whose times are in seconds"
+                aria-labelledby="h-chart-seconds"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 103): The host reports request times as Unix seconds and the chart wanted milliseconds, so every
+                        page converted. The chart now takes <code>timeUnit: &apos;s&apos;</code>. The two charts must be identical.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-chart-seconds">Requests per minute, times in seconds</h2>
+                    <p>
+                        The same readings, given once in seconds and once in milliseconds. The line under the chart shows the first point of what was
+                        handed over.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Both readings draw the same chart: the same axis labels (clock times), the same crosshair times, the same event mark.</li>
+                        <li>The first-point line changes between a ten-digit number and a thirteen-digit one; nothing else does.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: thin lines, quiet grid. The time axis must show dd/mm and clock times, never raw numbers.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="chart-seconds-component">
+                    <div role="group" aria-label="Times in the data">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="secs" data-value="s" aria-pressed="true">Seconds (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="secs" data-value="ms" aria-pressed="false">
+                            Milliseconds (before)
+                        </button>
+                    </div>
+                </div>
+                <div id="chart-seconds-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <figure class="kp-chart" id="pg-chart-s" data-kp-chart aria-label="Requests per minute" lang="en-GB"></figure>
+                        <p class="pg-log" id="pg-chart-s-first">First point: …</p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="chart-columns"
+                data-review-item="chart-columns"
+                data-review-topic="charts"
+                data-review-components="chart-columns"
+                data-review-title="Histogram columns and a second level"
+                aria-labelledby="h-chart-columns"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 104): The Metrics distribution wants columns instead of a line and two levels (warning and
+                        alarm). Do the columns read as a histogram and the two dotted lines as two different levels?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-chart-columns">Response time per hour</h2>
+                    <p>Switch the series between a line and columns, and between one level and two.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Columns</b>: one column per hour, 76 % of its slot wide, standing on the baseline, the series colour at a soft
+                            strength; the crosshair and tooltip still work.
+                        </li>
+                        <li>
+                            <b>Two levels</b>: the alarm stays the main dashed line, the warning is finer and dotted; the axis grows to keep both in
+                            view.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal: the columns must not be heavier than the grid; the two levels must be told apart without colour.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="chart-columns-component">
+                    <div role="group" aria-label="Shape">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="shape" data-value="columns" aria-pressed="true">Columns</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="shape" data-value="line" aria-pressed="false">Line</button>
+                    </div>
+                    <div role="group" aria-label="Levels">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="levels" data-value="two" aria-pressed="true">
+                            Warning and alarm</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="levels" data-value="one" aria-pressed="false">
+                            Alarm only
+                        </button>
+                    </div>
+                </div>
+                <div id="chart-columns-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <figure class="kp-chart" id="pg-chart-c" data-kp-chart aria-label="Response time per hour" lang="en-GB"></figure>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="logviewer"
+                data-review-item="logviewer"
+                data-review-topic="charts"
+                data-review-components="logviewer"
+                data-review-title="The log viewer fits its box, and says why it failed"
+                aria-labelledby="h-logviewer"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 117 (the width) and 115 (the reason)): A log viewer inside a box with a margin ran past the box;
+                        it now fits. And when the host could not be read, the failed plate can carry the host&rsquo;s own reason. Is the failed plate
+                        with the reason what you want to read?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-logviewer">The host log in a box with a margin</h2>
+                    <p>
+                        The dashed frame is the box; the viewer has a margin inside it. Switch the margin off and on, and the failed plate between the
+                        package&rsquo;s words and the host&rsquo;s.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>With a margin</b>: the viewer&rsquo;s right edge is inside the dashed frame, as far from it as the left one (before: it
+                            ran out of the frame).
+                        </li>
+                        <li>
+                            <b>Failed (the host&rsquo;s reason)</b>: the plate says <b>Loki did not answer: connection refused</b> under its heading;
+                            <b>Failed (package words)</b> says the package&rsquo;s sentence. Both fill the viewer and have a Retry.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look><p data-for="formal">Formal: a bordered viewer. Compare the right margin with the left one.</p></div>
+                <div data-review-controls data-review-controls-for="logviewer-component">
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="log" data-value="ready" aria-pressed="true">Lines</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="log" data-value="host" aria-pressed="false">
+                            Failed: the host’s reason</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="log" data-value="plain" aria-pressed="false">
+                            Failed: package words
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Box">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="log-margin" data-value="margin" aria-pressed="true">
+                            With a margin</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="log-margin" data-value="flush" aria-pressed="false">
+                            No margin
+                        </button>
+                    </div>
+                </div>
+                <div id="logviewer-component" class="pg-component">
+                    <div class="pg-fit" id="pg-log-fit">
+                        <div class="kp-logviewer" id="pg-log" data-kp-logviewer data-kp-log-tools="search,wrap,copy" aria-label="Host log"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="yaml-field"
+                data-review-item="yaml-field"
+                data-review-topic="forms"
+                data-review-topic-title="Forms and keys"
+                data-review-components="yaml-field"
+                data-review-title="A text box for a YAML file, with its line and column"
+                aria-labelledby="h-yaml-field"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 94): The Files editor was a bare text area. The code field numbers the lines, says where the
+                        caret is and marks the line a problem is on. The package brings no parser: the page or its server says what is wrong. Is this
+                        the right amount for editing a config file?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-yaml-field">Edit a compose file</h2>
+                    <p>
+                        Type in the box and watch the line and column. The buttons load a sample: clean, with a bad indent, with a tab, and one where
+                        the error comes from a server a moment later.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Under the box: <b>Line 3, column 12 · YAML</b>, following the caret. Line numbers on the left; the line with a problem has
+                            its number marked and the sentence <b>Line 4, column 4: …</b> stands under the box in the problem colour.
+                        </li>
+                        <li>The check here is a mock (tabs, odd indents); a real page puts its parser or its server there.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the same field as the JSON field. Check the readout and the problem sentence keep their place and do not push the box.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="yaml-field-component">
+                    <div role="group" aria-label="Sample">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="yaml" data-value="clean" aria-pressed="true">Clean file</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="yaml" data-value="indent" aria-pressed="false">
+                            Bad indent</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="yaml" data-value="tab" aria-pressed="false">
+                            Tab on line 3</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="yaml" data-value="server" aria-pressed="false">
+                            Error from the server
+                        </button>
+                    </div>
+                </div>
+                <div id="yaml-field-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="pg-yaml">Compose file</label
+                            ><textarea
+                                class="kp-field__input kp-field__input--multiline"
+                                id="pg-yaml"
+                                name="compose"
+                                data-kp-code-field="yaml"
+                                rows="8"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="quiet-hours"
+                data-review-item="quiet-hours"
+                data-review-topic="forms"
+                data-review-components="quiet-hours"
+                data-review-title="Quiet hours: from, until, days and what still comes through"
+                aria-labelledby="h-quiet-hours"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 96): The notification rules composed a switch, two time fields and the weekday picker by hand.
+                        The quiet-hours control joins them with one sentence in words. Is the control clear, and is the sentence right?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-quiet-hours">No push at night, except the critical</h2>
+                    <p>Change the times, the days and the ticks and read the sentence under them.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>On</b>: <b>Quiet from 22:00 to 07:00: Every weekday. Critical still comes through.</b>, and the sentence follows what
+                            you change. <b>Off</b>: the fields stay, dimmed and out of the tab order, and the sentence says
+                            <b>Quiet hours are off.</b>
+                        </li>
+                        <li>
+                            <b>Same time</b> shows <b>Pick two different times.</b> under the times. <b>Disabled</b> shows its reason;
+                            <b>Loading</b> shows the control&rsquo;s bars. The control is as high in every state.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: labels in one column, fields in the next, one rhythm between the rows. Check the labels line up with the middle of
+                        their fields.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="quiet-hours-component">
+                    <div role="group" aria-label="Value">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="quiet" data-value="on" aria-pressed="true">
+                            On, weeknights</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="quiet" data-value="off" aria-pressed="false">Off</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="quiet" data-value="same" aria-pressed="false">
+                            Same start and end
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="quiet-state" data-value="ready" aria-pressed="true">
+                            Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="quiet-state" data-value="disabled" aria-pressed="false">
+                            Disabled with a reason</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="quiet-state" data-value="loading" aria-pressed="false">
+                            Loading
+                        </button>
+                    </div>
+                </div>
+                <div id="quiet-hours-component" class="pg-component">
+                    <div class="kp-card pg-card"><div class="kp-quiet" id="pg-quiet" data-kp-quiet></div></div>
+                </div>
+            </section>
+
+            <section
+                id="snooze-words"
+                data-review-item="snooze-words"
+                data-review-topic="forms"
+                data-review-components="snooze-words"
+                data-review-title="The snooze picker says pause on one page and remind on another"
+                aria-labelledby="h-snooze-words"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 125): The picker used one set of words for the whole page, so a page that used it as a pause had
+                        to swap the words in and out. Each picker now chooses its own words. Are the pause words right?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-snooze-words">Remind me, and pause</h2>
+                    <p>Two pickers of the same component with different words, one above the other.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The upper picker is the reminder: <b>Remind me later</b>, <b>Not snoozed</b>, <b>Snoozed until …</b>, <b>End snooze</b>.
+                        </li>
+                        <li>
+                            The lower one is the pause: <b>Pause until…</b>, <b>Not paused</b>, <b>Paused until …</b>, <b>Resume now</b>. Pressing a
+                            choice in one never changes the words of the other.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: chips with the exact moment under each. Check that the pause words fit the chips and the status line without cutting.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="snooze-words-component">
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="snooze" data-value="idle" aria-pressed="true">
+                            Not snoozed</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="snooze" data-value="snoozed" aria-pressed="false">
+                            Snoozed until tomorrow
+                        </button>
+                    </div>
+                </div>
+                <div id="snooze-words-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <p class="pg-cap">Notifications &mdash; a reminder</p>
+                        <div
+                            class="kp-snooze"
+                            id="pg-snooze-a"
+                            data-kp-snooze
+                            data-kp-snooze-choices="1h 4h tomorrow"
+                            data-kp-now="2026-10-20T14:00:00+02:00"
+                        ></div>
+                        <p class="pg-cap">Schedules &mdash; a pause</p>
+                        <div
+                            class="kp-snooze"
+                            id="pg-snooze-b"
+                            data-kp-snooze
+                            data-kp-snooze-words="pause"
+                            data-kp-snooze-choices="1h 4h tomorrow"
+                            data-kp-now="2026-10-20T14:00:00+02:00"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="confirm-id"
+                data-review-item="confirm-id"
+                data-review-topic="forms"
+                data-review-components="confirm-id"
+                data-review-title="The typed confirmation takes the field&rsquo;s id"
+                aria-labelledby="h-confirm-id"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 123): A page whose steps address the confirmation field by a stable id had to rewrite the
+                        generated id after the fact. The block now takes the id (and the form name) up front. Nothing changes to look at; this shows
+                        the ids.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-confirm-id">Type the name to remove</h2>
+                    <p>The confirmation for removing a stack. The lines under it print the ids the field and its label really have.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Stable id</b>: the field&rsquo;s id is <b>act-confirm</b> and so is its label&rsquo;s <b>for</b>; its name is
+                            <b>confirm</b>. <b>Generated</b>: an id like <b>kp-type-confirm-3-input</b>, as before. Typing <b>jellyfin</b> still turns
+                            the match on.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look><p data-for="formal">Formal: the same block as always. Only the ids differ.</p></div>
+                <div data-review-controls data-review-controls-for="confirm-id-component">
+                    <div role="group" aria-label="Field id">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="confirm" data-value="stable" aria-pressed="true">
+                            Stable id (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="confirm" data-value="generated" aria-pressed="false">
+                            Generated (before)
+                        </button>
+                    </div>
+                </div>
+                <div id="confirm-id-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div id="pg-confirm-host"></div>
+                        <p class="pg-log" id="pg-confirm-ids">…</p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="space-key"
+                data-review-item="space-key"
+                data-review-topic="forms"
+                data-review-components="space-key"
+                data-review-title="The Space key and Esc inside a field, in the shortcut engine"
+                aria-labelledby="h-space-key"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 122): The engine could not register the Space key or a key that works while you type in a field,
+                        so the dashboard kept two hand-made key handlers. Both are now part of the engine and appear in the key sheet. Does the sheet
+                        read right?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-space-key">Schedules: Space turns one on or off</h2>
+                    <p>
+                        Focus a schedule (Tab, then the arrows are the browser&rsquo;s) and press Space. Open the change form and press Esc while you
+                        type in it.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Space</b> on a focused schedule turns it on or off, and the sheet lists the key as <b>Space</b>.</li>
+                        <li>
+                            <b>Esc</b> inside the change form&rsquo;s field closes the form (the sheet says so); in the schedules list without the
+                            field it does nothing.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the sheet under the list is the package&rsquo;s own. Check that the key caps and the words sit in columns.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="space-key-component">
+                    <div role="group" aria-label="Change form">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="space-form" data-value="open" aria-pressed="false">
+                            Open the change form</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="space-form" data-value="close" aria-pressed="false">
+                            Close it
+                        </button>
+                    </div>
+                </div>
+                <div id="space-key-component" class="pg-component">
+                    <div class="kp-card pg-card" id="pg-keys-scope">
+                        <ul class="pg-schedules" id="pg-schedules" aria-label="Schedules"></ul>
+                        <form class="pg-change" id="pg-change" hidden>
+                            <label class="kp-field__label" for="pg-change-at">Run at</label
+                            ><input class="kp-field__input" id="pg-change-at" value="03:00" />
+                        </form>
+                        <dialog
+                            class="kp-shortcuts pg-sheet"
+                            data-kp-shortcuts
+                            data-kp-shortcuts-live
+                            data-kp-hotkey="none"
+                            aria-label="Keys of this page"
+                            open
+                        ></dialog>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="page-contents"
+                data-review-item="page-contents"
+                data-review-topic="pages"
+                data-review-topic-title="Pages and notices"
+                data-review-components="page-contents"
+                data-review-title="&ldquo;On this page&rdquo; follows you as you scroll"
+                aria-labelledby="h-page-contents"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 95): The Settings page drew a list of its groups that marks the one you are in. It is now a
+                        component: built from the headings, or from items with a count. Does the marking follow your reading well, and is the list
+                        calm?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-page-contents">A long page of settings</h2>
+                    <p>Scroll the pane on the right, or press an entry in the list. The entry of the section you are in is marked.</p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A bar on the start edge and the heavier weight mark the current entry; it changes as the next heading passes the top of
+                            the pane, and the last entry marks when you reach the end.
+                        </li>
+                        <li>
+                            Pressing an entry scrolls there and moves the focus to the heading. <b>Items with counts</b> shows a number at the end of
+                            each entry; <b>Loading</b> shows three bars in the list&rsquo;s place.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: a muted list with one marked entry. Check the entries are whole (they wrap, never cut) and the marked bar is on the
+                        start edge.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="page-contents-component">
+                    <div role="group" aria-label="Entries">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="contents" data-value="headings" aria-pressed="true">
+                            From the headings</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="contents" data-value="items" aria-pressed="false">
+                            Items with counts
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="contents-state" data-value="ready" aria-pressed="true">
+                            Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="contents-state" data-value="loading" aria-pressed="false">
+                            Loading
+                        </button>
+                    </div>
+                </div>
+                <div id="page-contents-component" class="pg-component">
+                    <div class="pg-contents">
+                        <div class="pg-navbox">
+                            <nav
+                                class="kp-contents"
+                                id="pg-contents"
+                                data-kp-contents
+                                data-kp-contents-for="#pg-pane"
+                                data-kp-contents-scroller="#pg-pane"
+                                data-kp-contents-headings="h2, h3"
+                                data-kp-contents-offset="8"
+                            ></nav>
+                        </div>
+                        <div class="pg-pane" id="pg-pane" tabindex="0" role="region" aria-label="Settings">
+                            <h2>Working copy</h2>
+                            <p>
+                                Where the dashboard keeps the files it edits before it saves them to the host. A working copy is a git checkout; it is
+                                read when the page opens and again after every save.
+                            </p>
+                            <p>Nothing here is sent anywhere until you save.</p>
+                            <h2>Sign-in</h2>
+                            <p>Who may open the dashboard and how: passkeys, machine tokens and the session length.</p>
+                            <h3>Passkeys</h3>
+                            <p>The devices that can sign in without a password.</p>
+                            <h3>Machine tokens</h3>
+                            <p>Keys for scripts, each with a scope and an expiry.</p>
+                            <h2>This browser</h2>
+                            <p>
+                                What this browser remembers about the dashboard: the theme, the folded groups, the last tab. Clearing it affects only
+                                this browser.
+                            </p>
+                            <p>Remembered groups are kept by name, so two dashboards on one machine do not mix.</p>
+                            <h2>Notifications</h2>
+                            <p>Where the dashboard pushes what happens, and when it stays quiet.</p>
+                            <p>A critical notice can break the quiet; the rest waits in the inbox.</p>
+                            <h2>host.toml</h2>
+                            <p>The host&rsquo;s own settings file, group by group. Each key shows its default, its current value and what it does.</p>
+                            <p>An invalid key is marked and the save is held back until it is fixed.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="notes-gate"
+                data-review-item="notes-gate"
+                data-review-topic="pages"
+                data-review-components="notes-gate"
+                data-review-title="The release notes inside the acknowledge gate"
+                aria-labelledby="h-notes-gate"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 113): The gate only linked out to the release notes. The host fetches the notes now and the gate
+                        shows them in a fold, as markdown drawn safely (nothing in the text can run). Is the fold the right place, and does the text
+                        read well?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-notes-gate">jellyfin 10.11 &rarr; 12.1</h2>
+                    <p>
+                        Open the release notes, read them, tick the box and the Update button wakes up. The second text is hostile on purpose: a
+                        script tag and a javascript link.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The fold <b>Release notes</b> opens a scrolling box: headings, a list with a nested item, bold, code, a quote, a fenced
+                            block and a link (opens in a new tab).
+                        </li>
+                        <li>
+                            <b>Hostile text</b> shows the script tag as plain text and the javascript link as plain words. <b>Loading</b> and
+                            <b>Fetch failed</b> use the gate&rsquo;s own states; <b>No notes</b> removes the fold. Here the tick needs the notes
+                            opened first.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the alert warns, the fold is quiet, the box has one border. Check the notes box keeps its height and the buttons keep
+                        their places in every state.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="notes-gate-component">
+                    <div role="group" aria-label="Notes">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gate" data-value="ready" aria-pressed="true">
+                            Release notes</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gate" data-value="hostile" aria-pressed="false">
+                            Hostile text</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gate" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gate" data-value="error" aria-pressed="false">
+                            Fetch failed</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gate" data-value="none" aria-pressed="false">No notes</button>
+                    </div>
+                </div>
+                <div id="notes-gate-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div
+                            class="kp-alert kp-alert--warning"
+                            id="pg-gate"
+                            data-kp-ack
+                            data-kp-ack-for="#pg-gate-go"
+                            data-kp-ack-key="jellyfin"
+                            data-kp-ack-label="I read the release notes of 12.1"
+                            data-kp-ack-require-notes
+                            data-kp-ack-notes-label="Release notes of jellyfin 12.1"
+                            data-kp-ack-retry
+                        >
+                            <div class="kp-alert__body">
+                                <strong>jellyfin 10.11 &rarr; 12.1 is a major version.</strong> A major release can change its settings or move its
+                                data.
+                            </div>
+                        </div>
+                        <div class="pg-actions">
+                            <button class="kp-button kp-button--primary" type="button" id="pg-gate-go">Update jellyfin</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="alert-remember"
+                data-review-item="alert-remember"
+                data-review-topic="pages"
+                data-review-components="alert-remember"
+                data-review-title="A dismissed note stays dismissed"
+                aria-labelledby="h-alert-remember"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 119): An explanation you closed came back on every visit. With <code>data-kp-remember</code> the
+                        closed alert stays closed, in this browser. Is that what you expect from a note you dismissed?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-alert-remember">The Inbox note</h2>
+                    <p>
+                        Close the note with its cross, then reload the page (or come back to this step): it is still closed. Show it again brings it
+                        back.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Closing plays the alert&rsquo;s own leaving motion and keeps the choice. After a reload the alert is not there at all,
+                            with no flash of it first.
+                        </li>
+                        <li><b>Show it again</b> forgets the choice and shows the alert.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: an info alert with a close cross. Check the cross has room and the page below does not jump when it is gone beyond the
+                        alert&rsquo;s own fold.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="alert-remember-component">
+                    <div role="group" aria-label="Memory">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="alert" data-value="again" aria-pressed="false">
+                            Show it again
+                        </button>
+                    </div>
+                </div>
+                <div id="alert-remember-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="kp-alert kp-alert--info pg-alert" id="pg-alert" data-kp-remember="wishes-1120-inbox-note" role="note">
+                            <div class="kp-alert__body">
+                                <strong>What the Inbox is.</strong> It keeps what happened while you were away; nothing here needs you to act.
+                            </div>
+                            <button type="button" class="kp-alert__close" aria-label="Close this note">&times;</button>
+                        </div>
+                        <p class="pg-log">The rest of the Inbox would stand here.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="decorate-hook"
+                data-review-item="decorate-hook"
+                data-review-topic="pages"
+                data-review-components="decorate-hook"
+                data-review-title="The Live view can mark the package&rsquo;s own buttons"
+                aria-labelledby="h-decorate-hook"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 65, 66, 67 (the hook) and 114): The Live view marks the buttons it can press with a hook the
+                        components call, but the heat grid, the toolbar&rsquo;s active filters and the data table&rsquo;s own buttons had no such
+                        hook, so the dashboard searched the page after every draw. They have it now. Here the hook draws a dotted outline and the kind
+                        of control on every control it is handed.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-decorate-hook">Which buttons the page can drive</h2>
+                    <p>
+                        A toolbar with two active filters, a data table with its search, Add filter and Clear buttons, and a small heat grid. Every
+                        outlined control was handed to the page&rsquo;s <code>decorate</code> function as the package built it.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Outlined: the two tag crosses and <b>Clear all</b> in the toolbar, the table&rsquo;s search box, <b>Add filter</b> and
+                            <b>Clear the search and filters</b>, each row label and cell of the heat grid and its Earlier, Today and Later buttons.
+                        </li>
+                        <li><b>Marks hidden</b> removes the outlines; nothing else changes (the hook marks, it never restyles).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal: the outlines are the page&rsquo;s demo styling, not the package&rsquo;s. Check that every button the section shows is
+                        outlined, none missing.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="decorate-hook-component">
+                    <div role="group" aria-label="Marks">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="marks" data-value="on" aria-pressed="true">Marks shown</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="marks" data-value="off" aria-pressed="false">
+                            Marks hidden
+                        </button>
+                    </div>
+                </div>
+                <div id="decorate-hook-component" class="pg-component">
+                    <div class="kp-card pg-card" id="pg-decorate">
+                        <div class="kp-toolbar" id="pg-toolbar" data-kp-toolbar role="group" aria-label="Containers">
+                            <div class="kp-toolbar__search">
+                                <input
+                                    type="search"
+                                    class="kp-field__input kp-toolbar__input"
+                                    placeholder="Search containers"
+                                    aria-label="Search containers"
+                                />
+                            </div>
+                        </div>
+                        <div id="pg-dt-host"></div>
+                        <div class="kp-heat" id="pg-heat-mark" data-kp-heat data-kp-key="marks"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "wishes-1120-3f03e480-0bd2-4c7c-b33d-56b4fd7059d1", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

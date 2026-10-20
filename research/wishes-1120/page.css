@@ -1,0 +1,184 @@
+/* research/wishes-1120: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame. */
+
+.pg-page {
+    max-inline-size: 72rem;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* One frame for every component, so the sections have the same rhythm. */
+.pg-card {
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-component > .kp-card {
+    max-inline-size: 100%;
+}
+
+.pg-log,
+.pg-cap {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+}
+
+.pg-cap {
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.pg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* plain-card: label and value in two columns that run through every row. */
+.pg-lines {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: var(--kp-space-lg, 1.5rem);
+    row-gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pg-lines > li {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+}
+
+/* job-line */
+.pg-job .kp-steplist {
+    margin: 0;
+}
+
+/* tiles */
+.pg-tiles {
+    --kp-entity-min: 14rem;
+}
+
+/* logviewer: the dashed frame is the box the viewer must stay inside. */
+.pg-fit {
+    border: 1px dashed var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+    padding: 0;
+    overflow: visible;
+}
+
+/* page-contents: the list beside a pane that scrolls on its own. */
+.pg-contents {
+    display: grid;
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-pane {
+    box-sizing: border-box;
+    max-block-size: 20rem;
+    overflow: auto;
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.pg-pane :is(h2, h3) {
+    margin-block: 0 var(--kp-space-xs, 0.25rem);
+}
+
+.pg-pane p {
+    margin-block: 0 var(--kp-space-md, 0.75rem);
+}
+
+@media (max-width: 40rem) {
+    .pg-contents {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* space-key */
+.pg-schedules {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pg-schedules > li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 4rem;
+    align-items: center;
+    column-gap: var(--kp-space-md, 0.75rem);
+    min-block-size: var(--kp-control-height, 2.25rem);
+    padding-inline: var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.pg-schedules > li:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+.pg-change {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+/* The live sheet stands in the flow here, not over the page. */
+.pg-sheet {
+    position: static;
+    inline-size: auto;
+    max-inline-size: 100%;
+    margin: 0;
+    inset: auto;
+}
+
+/* decorate-hook: this page's own mark on every control the hook was handed. */
+[data-pg-marks='on'] [data-pg-driven] {
+    outline: 2px dotted var(--primary);
+    outline-offset: 2px;
+}
+
+/* page-contents: the list stands in a plate like the pane beside it, so the two start on one top edge. */
+.pg-navbox {
+    box-sizing: border-box;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+/* decorate-hook: a toolbar with only a search lets it fill the row. */
+.pg-card .kp-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+/* logviewer: the margin the viewer must fit inside the dashed frame with (narrower on a phone, where the viewer has little room to give). */
+.pg-fit .kp-logviewer[data-pg-margin='on'] {
+    margin: 1rem 2rem;
+}
+
+@media (max-width: 40rem) {
+    .pg-fit .kp-logviewer[data-pg-margin='on'] {
+        margin-inline: 0.5rem;
+    }
+}
