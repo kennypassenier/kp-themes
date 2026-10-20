@@ -100,3 +100,7 @@ the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; th
 - wish-1120, new page site/components/job-line.html: `[data-kp-jobline]`, `data-kp-jobline-for`, `data-kp-bytes-base`, `buildJobLine`, `setJobLine`, `jobLineText`, event `kp-jobline`; example beside a step list and a transfer.
 - wish-1120, site/components/dated-options.html: `when` is optional (no age line, no gap) and `meta` may be a list of texts; one example of each.
 - wish-1120, site/components/countdown.html: lengths of 24 hours or more read "6 d 22 h"; option `data-kp-countdown-days="off"`; one example of a 7-day window.
+- wish-1120, site/components/secret.html: option `data-kp-secret-clear` and the event `kp-secret-clipboard`, one example that copies and shows the clipboard clearing.
+- wish-1120, site/components/selection.html: `setSelectionProgress(bar, { done, total })`, the busy bar with "3 of 7 done".
+- wish-1120, site/components/entity-card.html: `match` on a tile (the marked part of the name) and the tile keys (`data-kp-tiles-keys` on an entity grid, `="letters"` for type-ahead, the star key default `.`).
+- wish-1120, site/components/tiles.html: `data-kp-tiles-keys="letters"` and `letterTile()`.

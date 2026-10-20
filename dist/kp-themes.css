@@ -11380,6 +11380,14 @@
         font-weight: 400;
     }
 
+    /* "3 of 7 done" beside the busy words [wish-1120, homelab 112]: the same muted weight, tabular so it does not shimmer. */
+    .kp-selection__progress {
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
     .kp-selection__names {
         grid-area: names;
         display: flex;
@@ -36075,6 +36083,19 @@
         display: inline-block;
         text-align: center;
         white-space: pre;
+    }
+}
+
+@layer kp.components {
+    /* --- The typed part of a tile's name [wish-1120, homelab 121] ---
+     * `EntityData.match` wraps the first occurrence in the name in a <mark>: the theme's primary at a low strength behind the
+     * letters, the text colour kept, so the name reads as before and the match is found at a glance. */
+    .kp-entity__match {
+        background: color-mix(in oklab, var(--primary) 24%, transparent);
+        color: inherit;
+        border-radius: 0.125em;
+        box-shadow: 0 0 0 0.08em color-mix(in oklab, var(--primary) 24%, transparent);
+        font-weight: 700;
     }
 }
 

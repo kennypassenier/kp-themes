@@ -316,6 +316,7 @@
  * @property {(total: number) => string} selectionMatchingOn  The bar's line once every match is selected [kpadopt5]
  * @property {(n: number) => string} selectionOnlyShown  The button that takes the offer back, "Select only the 40 shown" [kpadopt5]
  * @property {(words: string) => string} selectionBusy  Said when a bar action starts, "Backing up 3…" is the page's own words; this is the fallback [kpadopt5]
+ * @property {(done: number, total: number) => string} selectionProgress  How far a running bar action is, "3 of 7 done" (js/selection-bar.js setSelectionProgress) [wish-1120]
  * @property {(done: number, refused: number) => string} selectionResult  The bar's line after an action some rows refused, "2 done, 1 refused" [kpadopt5]
  * @property {(n: number) => string} selectionDropped  Said when selected rows are gone after a refresh [kpadopt5]
  * @property {(can: number, total: number) => string} selectionCan  The reason an action is off for some rows, "2 of 3 can be updated" with the page's verb after it [kpadopt5]
@@ -640,6 +641,7 @@
  * @property {string} secretHide  The same button while the secret is shown
  * @property {string} secretHold  The button of a secret shown only while it is held (`data-kp-secret-reveal-on="hold"`)
  * @property {string} secretCopy  The button that copies a secret without showing it
+ * @property {string} secretClipboardCleared  Said when a secret field emptied the clipboard again after its Copy (js/patterns.js) [wish-1120]
  * @property {string} secretReading  The words beside the spinner while a secret is fetched
  * @property {string} secretRetry  The reveal button's words after a secret could not be read
  * @property {(seconds: number) => string} secretHidesIn  The countdown under a shown secret, "Hides in 28 s"
@@ -1967,6 +1969,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     selectionMatchingOn: (total) => `All ${total} that match are selected`,
     selectionOnlyShown: (n) => `Select only the ${n} shown`,
     selectionBusy: (words) => words || 'Working…',
+    selectionProgress: (done, total) => `${done} of ${total} done`,
     selectionResult: (done, refused) => (refused === 0 ? `${done} done` : `${done} done, ${refused} refused`),
     selectionDropped: (n) => (n === 1 ? '1 selected row is no longer in the list' : `${n} selected rows are no longer in the list`),
     selectionCan: (can, total) => `${can} of ${total}`,
@@ -2382,6 +2385,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     secretHide: 'Hide',
     secretHold: 'Hold to reveal',
     secretCopy: 'Copy',
+    secretClipboardCleared: 'Clipboard cleared',
     secretReading: 'Reading…',
     secretRetry: 'Try again',
     secretHidesIn: (seconds) => `Hides in ${seconds} s`,

@@ -355,6 +355,7 @@ var init_strings = __esm({
       selectionMatchingOn: (total) => `All ${total} that match are selected`,
       selectionOnlyShown: (n) => `Select only the ${n} shown`,
       selectionBusy: (words) => words || "Working\u2026",
+      selectionProgress: (done, total) => `${done} of ${total} done`,
       selectionResult: (done, refused) => refused === 0 ? `${done} done` : `${done} done, ${refused} refused`,
       selectionDropped: (n) => n === 1 ? "1 selected row is no longer in the list" : `${n} selected rows are no longer in the list`,
       selectionCan: (can, total) => `${can} of ${total}`,
@@ -769,6 +770,7 @@ var init_strings = __esm({
       secretHide: "Hide",
       secretHold: "Hold to reveal",
       secretCopy: "Copy",
+      secretClipboardCleared: "Clipboard cleared",
       secretReading: "Reading\u2026",
       secretRetry: "Try again",
       secretHidesIn: (seconds2) => `Hides in ${seconds2} s`,
@@ -20774,6 +20776,7 @@ __export(patterns_exports, {
   COPY_EVENT: () => COPY_EVENT,
   COPY_FAILED_EVENT: () => COPY_FAILED_EVENT,
   SECRET: () => SECRET,
+  SECRET_CLIPBOARD_EVENT: () => SECRET_CLIPBOARD_EVENT,
   SECRET_EVENT: () => SECRET_EVENT,
   SECRET_MASK: () => SECRET_MASK,
   SECRET_REQUEST_EVENT: () => SECRET_REQUEST_EVENT,
@@ -21015,6 +21018,8 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
     let paused = false;
     let ticket = 0;
     let copiedTimer = 0;
+    let clearTimer = 0;
+    let dropClearFocus = null;
     const say19 = (text) => {
       spoken.textContent = "";
       window.setTimeout(() => spoken.textContent = text, 30);
@@ -21187,6 +21192,39 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
         copy3.textContent = idle;
         delete copy3.dataset.kpCopied;
       }, copiedMs);
+      scheduleClear(text);
+    };
+    const scheduleClear = (secret) => {
+      window.clearTimeout(clearTimer);
+      dropClearFocus?.();
+      const wait = Number.parseFloat(field.dataset.kpSecretClear ?? "");
+      if (!(wait > 0)) return;
+      const done = (cleared, reason) => {
+        if (cleared) say19(s2.secretClipboardCleared);
+        field.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
+      };
+      const clear = async () => {
+        let reason = "timer";
+        try {
+          const now = await navigator.clipboard.readText();
+          if (now !== secret) return done(false, "changed");
+        } catch {
+          reason = "unavailable";
+        }
+        try {
+          await navigator.clipboard.writeText("");
+          done(true, reason);
+        } catch {
+          const again2 = () => {
+            window.removeEventListener("focus", again2);
+            dropClearFocus = null;
+            void clear();
+          };
+          window.addEventListener("focus", again2);
+          dropClearFocus = () => window.removeEventListener("focus", again2);
+        }
+      };
+      clearTimer = window.setTimeout(() => void clear(), wait * 1e3);
     };
     const onFocusIn = (event) => {
       if (event.target === value) pause(true);
@@ -21276,7 +21314,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
     for (const c of cleanups.splice(0)) c();
   };
 }
-var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, COPY_EVENT, COPY_FAILED_EVENT, secrets;
+var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, COPY_EVENT, COPY_FAILED_EVENT, secrets;
 var init_patterns = __esm({
   "js/patterns.js"() {
     "use strict";
@@ -21288,6 +21326,7 @@ var init_patterns = __esm({
     SECRET = "[data-kp-secret]";
     SECRET_TTL = 30;
     SECRET_MASK = 12;
+    SECRET_CLIPBOARD_EVENT = "kp-secret-clipboard";
     SECRET_EVENT = "kp-secret";
     SECRET_REQUEST_EVENT = "kp-secret-request";
     UNDO_MS = 6e3;
@@ -23601,6 +23640,7 @@ __export(tiles_exports, {
   attachTileKeys: () => attachTileKeys,
   attachTileSets: () => attachTileSets,
   evenTileSet: () => evenTileSet,
+  letterTile: () => letterTile,
   nextTile: () => nextTile,
   tileSets: () => tileSets,
   tileStop: () => tileStop
@@ -23771,11 +23811,31 @@ function tileStop(tile) {
   return first instanceof HTMLElement ? first : null;
 }
 function keyTiles(board) {
-  const grids = [...board.matches(".kp-tiles") ? [board] : [], ...board.querySelectorAll(".kp-tiles")];
-  return grids.flatMap((grid2) => [...grid2.children]).filter((tile) => tile instanceof HTMLElement && visible(tile) && tileStop(tile) !== null).map((tile) => (
+  const GRIDS = ".kp-tiles, [data-kp-entity-grid]";
+  const grids = [...board.matches(GRIDS) ? [board] : [], ...board.querySelectorAll(GRIDS)];
+  return grids.flatMap((grid2) => [...grid2.children].filter((tile) => !grid2.matches("[data-kp-entity-grid]") || tile.matches("[data-kp-entity]"))).filter((tile) => tile instanceof HTMLElement && visible(tile) && tileStop(tile) !== null).map((tile) => (
     /** @type {HTMLElement} */
     tile
   ));
+}
+function tileName(tile) {
+  const named = tile.querySelector("[data-kp-tile-name], .kp-entity__name") ?? tileStop(tile) ?? tile;
+  const clone = (
+    /** @type {HTMLElement} */
+    named.cloneNode(true)
+  );
+  clone.querySelectorAll(".kp-sr-only").forEach((n) => n.remove());
+  return (clone.textContent ?? "").trim().toLowerCase();
+}
+function letterTile(names, from, typed) {
+  if (!typed || !names.length) return null;
+  const same = [...typed].every((c) => c === typed[0]);
+  const want = same ? typed[0] : typed;
+  for (let step = same ? 1 : 0; step <= names.length; step += 1) {
+    const i = (from + step + names.length) % names.length;
+    if (names[i].startsWith(want)) return i;
+  }
+  return null;
 }
 function nextTile(boxes, from, way) {
   const box = boxes[from];
@@ -23879,7 +23939,34 @@ function wireBoard(board, view) {
       sync4();
     }
   };
+  let typed = "";
+  let forget = 0;
+  const onLetter = (event) => {
+    if (!on() || board.getAttribute("data-kp-tiles-keys") !== "letters" || event.defaultPrevented) return;
+    if (event.key.length !== 1 || event.key === " " || event.altKey || event.ctrlKey || event.metaKey) return;
+    const target = (
+      /** @type {Element} */
+      event.target
+    );
+    if (target.closest('input:not([type="checkbox"]):not([type="radio"]):not([type="button"]), textarea, select, [contenteditable=""], [contenteditable="true"], [role="slider"], [role="menu"], [role="listbox"], [data-kp-tiles-keys-ignore]')) return;
+    const tiles = keyTiles(board);
+    const from = tiles.findIndex((tile) => tile.contains(target));
+    if (from < 0) return;
+    typed += event.key.toLowerCase();
+    view.clearTimeout(forget);
+    forget = view.setTimeout(() => typed = "", 700);
+    const to = letterTile(tiles.map(tileName), from, typed);
+    if (to === null) return;
+    event.preventDefault();
+    const el16 = tileStop(tiles[to]);
+    if (!el16) return;
+    stop = tiles[to];
+    sync4();
+    el16.focus();
+    board.dispatchEvent(new CustomEvent(TILES_MOVE_EVENT, { bubbles: true, detail: { from: tiles[from], to: tiles[to], key: event.key } }));
+  };
   const onKey3 = (event) => {
+    onLetter(event);
     if (!on() || !MOVES.has(event.key) || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
     const target = (
       /** @type {Element} */
@@ -23964,6 +24051,7 @@ function wireBoard(board, view) {
   sync4();
   return () => {
     board.removeEventListener("keydown", onKey3);
+    view.clearTimeout(forget);
     board.removeEventListener("focusin", onFocus);
     board.removeEventListener("toggle", queue, true);
     changes.disconnect();
@@ -31039,6 +31127,7 @@ __export(selection_bar_exports, {
   getSelection: () => getSelection,
   setSelection: () => setSelection,
   setSelectionBusy: () => setSelectionBusy,
+  setSelectionProgress: () => setSelectionProgress,
   setSelectionResult: () => setSelectionResult,
   setSelectionRules: () => setSelectionRules
 });
@@ -31157,6 +31246,11 @@ function draw4(bar, memory) {
     const words = make7(bar.ownerDocument, "kp-selection__busy", "span");
     words.textContent = strings.selectionBusy(memory.busy);
     p.count.append(wheel, words);
+    if (memory.progress) {
+      const far = make7(bar.ownerDocument, "kp-selection__progress", "span");
+      far.textContent = strings.selectionProgress(memory.progress.done, memory.progress.total);
+      p.count.append(far);
+    }
   } else {
     p.count.textContent = memory.matching ? strings.selectionMatchingOn(memory.matchingTotal) : strings.selectionCount(items.length);
   }
@@ -31331,6 +31425,7 @@ function attachOne3(bar, options) {
     matching: false,
     namesOpen: false,
     busy: "",
+    progress: null,
     rules: {},
     sayTimer: 0,
     refresh: () => sync(bar, memory)
@@ -31493,8 +31588,22 @@ function setSelectionBusy(bar, words = "") {
   const memory = MEMORY6.get(bar);
   if (!memory) return;
   memory.busy = words ? words : "";
+  memory.progress = null;
   const live4 = bar.querySelector(":scope > .kp-selection__live");
   if (live4 && memory.busy) live4.textContent = memory.busy;
+  draw4(bar, memory);
+}
+function setSelectionProgress(bar, progress) {
+  const memory = MEMORY6.get(bar);
+  if (!memory) return;
+  const total = Math.max(0, Math.floor(progress.total));
+  const done = Math.min(total, Math.max(0, Math.floor(progress.done)));
+  const before = memory.progress;
+  if (!memory.busy) memory.busy = getStrings().selectionBusy("");
+  memory.progress = { done, total };
+  const quarter = (n) => total > 0 ? Math.floor(n / total * 4) : 0;
+  const live4 = bar.querySelector(":scope > .kp-selection__live");
+  if (live4 && (!before || quarter(done) > quarter(before.done) || done === total)) live4.textContent = getStrings().selectionProgress(done, total);
   draw4(bar, memory);
 }
 function setSelectionResult(bar, result) {
@@ -31502,6 +31611,7 @@ function setSelectionResult(bar, result) {
   if (!memory) return;
   const strings = getStrings();
   memory.busy = "";
+  memory.progress = null;
   draw4(bar, memory);
   const p = parts(bar, memory);
   const why = [...new Set(result.refused.map((r) => r.reason))].join("; ");
@@ -50248,6 +50358,17 @@ __export(entity_card_exports, {
   setEntityGrid: () => setEntityGrid,
   setEntityGridState: () => setEntityGridState
 });
+function writeName(el16, name, match) {
+  const at = match ? name.toLowerCase().indexOf(match.toLowerCase()) : -1;
+  if (!match || at < 0) {
+    el16.textContent = name;
+    return;
+  }
+  const mark = el16.ownerDocument.createElement("mark");
+  mark.className = "kp-entity__match";
+  mark.textContent = name.slice(at, at + match.length);
+  el16.replaceChildren(name.slice(0, at), mark, name.slice(at + match.length));
+}
 function frame2(card) {
   const kind = kindOf(card);
   if (card.dataset.kpEntityFramed === kind) return kind;
@@ -50349,7 +50470,7 @@ function listenForStarKey(card) {
   if (KEYED.has(card)) return;
   KEYED.add(card);
   card.addEventListener("keydown", (event) => {
-    const wanted = (opt2(card, "data-kp-entity-star-key") ?? "s").toLowerCase();
+    const wanted = starKeyOf(card);
     if (wanted === "off" || event.key.toLowerCase() !== wanted || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
     const target = (
       /** @type {Element} */
@@ -50441,10 +50562,10 @@ function drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable,
   holdFootprint(card);
   const href = data.href ?? (link ? link.replace("{key}", encodeURIComponent(key)) : null);
   const external = data.external === true && href !== null;
-  slot("id", { n: data.name, href, external, selectable, markKind, status, starOn, starKey }, (el16) => {
+  slot("id", { n: data.name, m: data.match, href, external, selectable, markKind, status, starOn, starKey }, (el16) => {
     tickAndMark(card, el16, data, selectable, markKind);
     const name = href ? made5(doc, "a", "kp-entity__name") : made5(doc, "span", "kp-entity__name");
-    name.textContent = data.name;
+    writeName(name, data.name, data.match);
     if (name instanceof HTMLAnchorElement && href) {
       name.href = href;
       if (external) {
@@ -50567,7 +50688,7 @@ function setEntity(card, data) {
   const selectable = opt2(card, "data-kp-selectable") !== null;
   const markKind = opt2(card, "data-kp-entity-mark") ?? "idmark";
   const starOn = (opt2(card, "data-kp-entity-star") ?? (kind === "tile" ? "on" : "off")) !== "off";
-  const starKey = (opt2(card, "data-kp-entity-star-key") ?? "s").toLowerCase();
+  const starKey = starKeyOf(card);
   if (kind === "tile") {
     drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable, markKind, starOn, starKey, star });
     return;
@@ -50904,7 +51025,7 @@ function attachEntityCards(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN5, opt2, made5, sig, SLOTS, kindOf, slotOf, ACTIONS_QUEUED, KEYED, BUSY3;
+var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN5, opt2, starKeyOf, made5, sig, SLOTS, kindOf, slotOf, ACTIONS_QUEUED, KEYED, BUSY3;
 var init_entity_card = __esm({
   "js/entity-card.js"() {
     "use strict";
@@ -50927,6 +51048,7 @@ var init_entity_card = __esm({
     ENTITY_GRID_RETRY_EVENT = "kp-entity-grid-retry";
     DRAWN5 = /* @__PURE__ */ new WeakMap();
     opt2 = (el16, name) => el16.getAttribute(name) ?? el16.closest(ENTITY_GRID)?.getAttribute(name) ?? null;
+    starKeyOf = (card) => (opt2(card, "data-kp-entity-star-key") ?? (card.closest('[data-kp-tiles-keys="letters"]') ? "." : "s")).toLowerCase();
     made5 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -65261,6 +65383,7 @@ export {
   SCROLL_BOXES,
   SCROLL_OVERFLOW,
   SECRET,
+  SECRET_CLIPBOARD_EVENT,
   SECRET_EVENT,
   SECRET_HEADERS,
   SECRET_MASK,
@@ -65854,6 +65977,7 @@ export {
   leaveUsesMap,
   leavesState,
   lede_exports as ledeExports,
+  letterTile,
   lineHeightOf,
   listShortcuts,
   listbox_exports as listboxExports,
@@ -66141,6 +66265,7 @@ export {
   setSegmentedValues,
   setSelection,
   setSelectionBusy,
+  setSelectionProgress,
   setSelectionResult,
   setSelectionRules,
   setSentenceComputed,

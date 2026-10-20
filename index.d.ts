@@ -27,7 +27,7 @@ export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATA
 export { WRAP_SELECTOR as TABLE_WRAP_SELECTOR, attachTableRegions } from './js/tables.js';
 export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachForms, attachSwitches, attachFormgridStages } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
-export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, SECRET, SECRET_EVENT, SECRET_MASK, SECRET_REQUEST_EVENT, SECRET_TTL, attachPatterns, attachSecrets, hideSecret, revealSecret, } from './js/patterns.js';
+export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, SECRET, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_MASK, SECRET_REQUEST_EVENT, SECRET_TTL, attachPatterns, attachSecrets, hideSecret, revealSecret, } from './js/patterns.js';
 export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export { REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_HOLD_ATTRIBUTE, REMEMBER_PREFIX, attachRemembered, configureRemember, forgetClaims, forgetRememberedExcept, memoryFor, paintRemembered, restoreRemembered, } from './js/remember.js';
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
@@ -156,7 +156,7 @@ export { CHECKLIST, CHECKLIST_CLEAR_EVENT, CHECKLIST_EVENT, CHECKLIST_UNDO_EVENT
 export type ChecklistItem = import('./js/checklist.js').ChecklistItem;
 /** @typedef {import('./js/checklist.js').ChecklistItem} ChecklistItem */
 export { CURSOR_CLASS, LONG_PRESS_MS, ROW_SELECT, ROW_SELECT_AUTO, ROW_SELECT_EVENT, attachRowSelect, rowSelect, rowSelectKeys } from './js/row-select.js';
-export { SELECTION, SELECTION_ACTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_EVENT, SELECTION_MATCHING_EVENT, SELECTION_NAMES, attachSelectionBars, getSelection, setSelection, setSelectionBusy, setSelectionResult, setSelectionRules, } from './js/selection-bar.js';
+export { SELECTION, SELECTION_ACTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_EVENT, SELECTION_MATCHING_EVENT, SELECTION_NAMES, attachSelectionBars, getSelection, setSelection, setSelectionBusy, setSelectionProgress, setSelectionResult, setSelectionRules, } from './js/selection-bar.js';
 export type SelectionItem = import('./js/selection-bar.js').SelectionItem;
 /** @typedef {import('./js/selection-bar.js').SelectionItem} SelectionItem */
 export { UNDO_MAX, UNDO_RESTORED_MS, UNDO_TOAST, UNDO_TOAST_EVENT, undoToast } from './js/undo-toast.js';
@@ -177,7 +177,7 @@ export { FOOTPRINT_HOSTS, FOOTPRINT_MAX, attachFootprints, holdFootprint } from 
 export { PROBLEMS, PROBLEM_DISMISS_EVENT, PROBLEM_MODES, PROBLEM_SEVERITIES, attachProblems, setProblems } from './js/problems.js';
 export { FLASH_BUTTON, FLASH_ERROR_MS, FLASH_EVENT, FLASH_MS, FLASH_RELOAD_EVENT, attachFlashButtons, runFlashButton } from './js/flash.js';
 export { DISABLED_REASON, attachDisabledReasons } from './js/reason.js';
-export { TILES_EXIT_EVENT, TILES_KEYS, TILES_MOVE_EVENT, TILES_SET, TILE_ROW_MIN, attachTileKeys, attachTileSets, evenTileSet, nextTile, tileSets, tileStop } from './js/tiles.js';
+export { TILES_EXIT_EVENT, TILES_KEYS, TILES_MOVE_EVENT, TILES_SET, TILE_ROW_MIN, attachTileKeys, attachTileSets, evenTileSet, letterTile, nextTile, tileSets, tileStop } from './js/tiles.js';
 export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration, momentOf, setAgo } from './js/freshness.js';
 export { CHART, CHART_GROUP, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_SELECT_EVENT, CHART_TIME_ZONE, CHART_ZOOM_EVENT, TREND_CHART, attachCharts, attachTrendCharts, chartMedian, chartRuns, chartSelect, chartWords, chartZoom, detachChart, formatChartValue, numericTime, setChartData, setTrendData, timeTicks, trendAxis, } from './js/chart.js';
 export type ChartData = import('./js/chart.js').ChartData;

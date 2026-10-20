@@ -37,6 +37,13 @@ export type Memory = {
     matching: boolean;
     namesOpen: boolean;
     busy: string;
+    /**
+     * how far a running action is, "3 of 7 done" [wish-1120]
+     */
+    progress: {
+        done: number;
+        total: number;
+    } | null;
     rules: Record<string, (items: SelectionItem[]) => string | null>;
     sayTimer: number;
     refresh: () => void;
@@ -74,6 +81,18 @@ export declare function getSelection(bar: HTMLElement): {
  * @param {string | null} [words] `null` or an empty string ends it
  */
 export declare function setSelectionBusy(bar: HTMLElement, words?: string | null): void;
+/**
+ * Say how far a running action is, between its start and its end: "3 of 7 done" beside the busy words [wish-1120, homelab 112].
+ * Call it after setSelectionBusy(); on a bar that is not busy it starts the busy state with the package's own words. The end is
+ * still setSelectionBusy(bar, '') or setSelectionResult(), which take the progress away. A screen reader hears every quarter
+ * (and the last) from the polite region, not every row. `done` is clamped to 0..`total`.
+ * @param {HTMLElement} bar
+ * @param {{ done: number, total: number }} progress
+ */
+export declare function setSelectionProgress(bar: HTMLElement, progress: {
+    done: number;
+    total: number;
+}): void;
 /**
  * Say how an action ended when some rows refused it: "2 done, 1 refused: why", with a mark on each refused row.
  * @param {HTMLElement} bar

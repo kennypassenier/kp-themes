@@ -449,6 +449,7 @@ bar.addEventListener(<span class="kp-code__string">'kp-selection-action'</span>,
                             <tr><td><code>data-kp-placement</code></td><td>`sticky-top` (default), `inline` or `floating-bottom`.</td></tr>
                             <tr><td><code>data-kp-selection-names</code></td><td>`names` (default) or `count`.</td></tr>
                             <tr><td><code>data-kp-selection-max</code></td><td>How many names show before “+N more”; 6.</td></tr>
+                            <tr><td><code>setSelectionProgress</code></td><td>`setSelectionProgress(bar, { done, total })` between `setSelectionBusy` and the end: the busy words are followed by “3 of 7 done”; the end (`setSelectionBusy(bar, '')` or `setSelectionResult`) takes it away. A screen reader hears every quarter, not every row.</td></tr>
                             <tr><td><code>data-kp-select-matching</code></td><td>How many rows match in all: the bar offers “Select all 312 that match”.</td></tr>
                             <tr><td><code>data-kp-select-range</code></td><td>`shift` (default) or `off`: Shift-click ticks a range.</td></tr>
                             <tr><td><code>data-kp-select-arrows</code></td><td>The arrow keys walk the cursor too (on by default, `false` turns it off), never inside a grid.</td></tr>

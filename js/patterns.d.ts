@@ -4,6 +4,8 @@ export declare const SECRET = "[data-kp-secret]";
 export declare const SECRET_TTL = 30;
 /** The mask's length, in characters. Per element as `data-kp-secret-mask`. */
 export declare const SECRET_MASK = 12;
+/** Fired on the field, bubbling, when the clipboard was emptied after a copy (`data-kp-secret-clear`) or left alone: `{ cleared, reason }`. */
+export declare const SECRET_CLIPBOARD_EVENT = "kp-secret-clipboard";
 /** Fired on the field, bubbling, when a secret is shown or hidden: `{ shown, reason }`, reason `press` | `hold` | `timer` | `away` | `call`. */
 export declare const SECRET_EVENT = "kp-secret";
 /** Fired on the field, bubbling and cancelable, when it needs the value: `{ respond(value), fail(reason), purpose }`; call preventDefault() to answer. */

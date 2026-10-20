@@ -70,6 +70,7 @@ export {
     UNDO_EVENT as ACTION_UNDO_EVENT,
     UNDO_MS,
     SECRET,
+    SECRET_CLIPBOARD_EVENT,
     SECRET_EVENT,
     SECRET_MASK,
     SECRET_REQUEST_EVENT,
@@ -601,6 +602,7 @@ export {
     getSelection,
     setSelection,
     setSelectionBusy,
+    setSelectionProgress,
     setSelectionResult,
     setSelectionRules,
 } from './js/selection-bar.js';
@@ -671,7 +673,7 @@ export { FOOTPRINT_HOSTS, FOOTPRINT_MAX, attachFootprints, holdFootprint } from 
 export { PROBLEMS, PROBLEM_DISMISS_EVENT, PROBLEM_MODES, PROBLEM_SEVERITIES, attachProblems, setProblems } from './js/problems.js';
 export { FLASH_BUTTON, FLASH_ERROR_MS, FLASH_EVENT, FLASH_MS, FLASH_RELOAD_EVENT, attachFlashButtons, runFlashButton } from './js/flash.js';
 export { DISABLED_REASON, attachDisabledReasons } from './js/reason.js';
-export { TILES_EXIT_EVENT, TILES_KEYS, TILES_MOVE_EVENT, TILES_SET, TILE_ROW_MIN, attachTileKeys, attachTileSets, evenTileSet, nextTile, tileSets, tileStop } from './js/tiles.js';
+export { TILES_EXIT_EVENT, TILES_KEYS, TILES_MOVE_EVENT, TILES_SET, TILE_ROW_MIN, attachTileKeys, attachTileSets, evenTileSet, letterTile, nextTile, tileSets, tileStop } from './js/tiles.js';
 export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration, momentOf, setAgo } from './js/freshness.js';
 export {
     CHART,

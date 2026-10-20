@@ -34,6 +34,8 @@ export const SECRET = '[data-kp-secret]';
 export const SECRET_TTL = 30;
 /** The mask's length, in characters. Per element as `data-kp-secret-mask`. */
 export const SECRET_MASK = 12;
+/** Fired on the field, bubbling, when the clipboard was emptied after a copy (`data-kp-secret-clear`) or left alone: `{ cleared, reason }`. */
+export const SECRET_CLIPBOARD_EVENT = 'kp-secret-clipboard';
 /** Fired on the field, bubbling, when a secret is shown or hidden: `{ shown, reason }`, reason `press` | `hold` | `timer` | `away` | `call`. */
 export const SECRET_EVENT = 'kp-secret';
 /** Fired on the field, bubbling and cancelable, when it needs the value: `{ respond(value), fail(reason), purpose }`; call preventDefault() to answer. */
@@ -234,6 +236,13 @@ export function attachPatterns(
 //   data-kp-secret-mask="12"       the mask's length (`data-kp-secret-mask-char`, default •)
 //   data-kp-secret-reveal-on="hold" shown only while the button is held (pointer, or Space / Enter held)
 //   data-kp-secret-copy="false"    no Copy button
+//   data-kp-secret-clear="30"      seconds after a Copy when the clipboard is emptied again [wish-1120, homelab 108]; absent or 0:
+//                                  never. Where the browser lets the page read the clipboard (`readText`), it is emptied only if
+//                                  it still holds the copied secret (something copied since stays); where reading is refused it is
+//                                  emptied anyway, as soon as the page has focus (a write needs it). A polite "Clipboard cleared"
+//                                  is announced and `kp-secret-clipboard` fires on the field: `{ cleared, reason }`, reason
+//                                  `timer`, `changed` (the clipboard held something else) or `unavailable`. The value is
+//                                  never in the event
 //   data-kp-secret-wrap="wrap"     a long value wraps (the box keeps `data-kp-secret-lines`, 2, lines of room);
 //                                  by default it stays on one line and scrolls inside its box
 //   data-kp-secret-disabled="why"  both buttons off, and the sentence under them says why
@@ -372,6 +381,9 @@ export function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = 
         let paused = false;
         let ticket = 0;
         let copiedTimer = 0;
+        let clearTimer = 0;
+        /** @type {(() => void) | null} */
+        let dropClearFocus = null;
         /** @param {string} text */
         const say = (text) => {
             spoken.textContent = '';
@@ -562,6 +574,43 @@ export function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = 
                 copy.textContent = idle;
                 delete copy.dataset.kpCopied;
             }, copiedMs);
+            scheduleClear(text);
+        };
+        /** Empty the clipboard again some seconds after a copy [wish-1120, homelab 108]. @param {string} secret */
+        const scheduleClear = (secret) => {
+            window.clearTimeout(clearTimer);
+            dropClearFocus?.();
+            const wait = Number.parseFloat(field.dataset.kpSecretClear ?? '');
+            if (!(wait > 0)) return;
+            /** @param {boolean} cleared @param {string} reason */
+            const done = (cleared, reason) => {
+                if (cleared) say(s.secretClipboardCleared);
+                field.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
+            };
+            const clear = async () => {
+                let reason = 'timer';
+                try {
+                    // Only if the clipboard still holds what was copied; a refusal to read does not stop the clearing.
+                    const now = await navigator.clipboard.readText();
+                    if (now !== secret) return done(false, 'changed');
+                } catch {
+                    reason = 'unavailable';
+                }
+                try {
+                    await navigator.clipboard.writeText('');
+                    done(true, reason);
+                } catch {
+                    // A write needs the page in focus: try once more when the person comes back.
+                    const again = () => {
+                        window.removeEventListener('focus', again);
+                        dropClearFocus = null;
+                        void clear();
+                    };
+                    window.addEventListener('focus', again);
+                    dropClearFocus = () => window.removeEventListener('focus', again);
+                }
+            };
+            clearTimer = window.setTimeout(() => void clear(), wait * 1000);
         };
         const onFocusIn = (/** @type {FocusEvent} */ event) => {
             if (event.target === value) pause(true);
