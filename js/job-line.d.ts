@@ -37,7 +37,7 @@ export type JobReport = {
 export declare function jobLineText(report: JobReport, { base }?: {
     base?: 1000 | 1024;
 }): string;
-/** The step position of a list: the running (or current) step, else the first one still waiting, else all done. @param {Element} list @returns {{ step: number, steps: number }} */
+/** The step position of a list: the running (or current) step, else the first one still waiting, else the last; 0 while nothing has started. @param {Element} list @returns {{ step: number, steps: number }} */
 export declare function stepPosition(list: Element): {
     step: number;
     steps: number;

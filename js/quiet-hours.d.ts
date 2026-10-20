@@ -33,7 +33,7 @@ export type QuietValue = {
  */
 export declare function readQuiet(raw: unknown): QuietValue;
 /**
- * The value in words: "Quiet from 22:00 to 07:00 on every weekday. Critical still comes through." Pure.
+ * The value in words: "Quiet from 22:00 to 07:00: Every weekday. Critical still comes through." Pure.
  * @param {QuietValue} value
  * @param {{ severities?: readonly { key: string, label: string }[], firstDay?: number }} [options]
  * @returns {string}

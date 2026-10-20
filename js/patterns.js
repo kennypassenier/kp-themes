@@ -239,7 +239,8 @@ export function attachPatterns(
 //   data-kp-secret-clear="30"      seconds after a Copy when the clipboard is emptied again [wish-1120, homelab 108]; absent or 0:
 //                                  never. Where the browser lets the page read the clipboard (`readText`), it is emptied only if
 //                                  it still holds the copied secret (something copied since stays); where reading is refused it is
-//                                  emptied anyway, as soon as the page has focus (a write needs it). A polite "Clipboard cleared"
+//                                  emptied anyway, as soon as the page can write (it needs the focus and, in Firefox, a press or a key
+//                                  of the person's, so it may wait for the next one). A polite "Clipboard cleared"
 //                                  is announced and `kp-secret-clipboard` fires on the field: `{ cleared, reason }`, reason
 //                                  `timer`, `changed` (the clipboard held something else) or `unavailable`. The value is
 //                                  never in the event
@@ -600,14 +601,21 @@ export function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = 
                     await navigator.clipboard.writeText('');
                     done(true, reason);
                 } catch {
-                    // A write needs the page in focus: try once more when the person comes back.
+                    // A write needs the page in focus and, in some browsers, a press or a key of the person's (Firefox): try
+                    // again at the next one, or when the page gets the focus back.
+                    const events = ['pointerdown', 'keydown'];
                     const again = () => {
+                        for (const name of events) document.removeEventListener(name, again, true);
                         window.removeEventListener('focus', again);
                         dropClearFocus = null;
                         void clear();
                     };
+                    for (const name of events) document.addEventListener(name, again, true);
                     window.addEventListener('focus', again);
-                    dropClearFocus = () => window.removeEventListener('focus', again);
+                    dropClearFocus = () => {
+                        for (const name of events) document.removeEventListener(name, again, true);
+                        window.removeEventListener('focus', again);
+                    };
                 }
             };
             clearTimer = window.setTimeout(() => void clear(), wait * 1000);

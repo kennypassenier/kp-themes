@@ -371,8 +371,8 @@
  * @property {string} quietOk  Severity word [wish-1120]
  * @property {string} quietOff  The line when quiet hours are off [wish-1120]
  * @property {string} quietSame  The problem when the window starts and ends at the same time [wish-1120]
- * @property {(from: string, to: string, days: string) => string} quietWhen  The window in words, "Quiet from 22:00 to 07:00 on every weekday." [wish-1120]
- * @property {(names: string) => string} quietThrough  What still comes through, "Critical and Warning still come through." [wish-1120]
+ * @property {(from: string, to: string, days: string) => string} quietWhen  The window in words, "Quiet from 22:00 to 07:00 : Every weekday." [wish-1120]
+ * @property {(names: string, count: number) => string} quietThrough  What still comes through, "Critical still comes through." or "Critical and Warning still come through." [wish-1120]
  * @property {string} quietNothing  The line when nothing comes through the quiet [wish-1120]
  * @property {string} contentsLabel  The accessible name of an on-this-page list (js/page-contents.js) [wish-1120]
  * @property {string} contentsTitle  The heading over an on-this-page list [wish-1120]
@@ -2056,8 +2056,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     quietOk: 'Ok',
     quietOff: 'Quiet hours are off.',
     quietSame: 'Pick two different times.',
-    quietWhen: (from, to, days) => `Quiet from ${from} to ${to} on ${days}.`,
-    quietThrough: (names) => `${names} still come through.`,
+    quietWhen: (from, to, days) => `Quiet from ${from} to ${to}: ${days}.`,
+    quietThrough: (names, count) => `${names} still ${count === 1 ? 'comes' : 'come'} through.`,
     quietNothing: 'Nothing comes through while they last.',
     contentsLabel: 'On this page',
     contentsTitle: 'On this page',

@@ -486,6 +486,15 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
                 if (a.base == null && byBaseline(label) && byBaseline(c) && dc > tol) continue;
                 // Centred as blocks: a one-line cell on the centre of a label block of several lines is a composition too.
                 if (Math.abs((cr.top + cr.bottom) / 2 - (lr.top + lr.bottom) / 2) <= tol && cr.height <= controlH * 1.5) continue;
+                // The label block may be made of cells: a name with its second line (the age of a dated option) stands in the same
+                // column, under it. A one-line cell on the centre of that whole block is centred as a block too (wish-1120: the dated
+                // options' meta column, approved geometry, was reported 10 px off the name line).
+                const under = cells.slice(li + 1).filter((o) => o !== c && Math.abs(o.getBoundingClientRect().left - lr.left) <= tol && o.getBoundingClientRect().top >= lr.bottom - tol);
+                if (under.length) {
+                    const top = Math.min(lr.top, ...under.map((o) => o.getBoundingClientRect().top));
+                    const bottom = Math.max(lr.bottom, ...under.map((o) => o.getBoundingClientRect().bottom));
+                    if (Math.abs((cr.top + cr.bottom) / 2 - (top + bottom) / 2) <= tol && cr.height <= controlH * 1.5) continue;
+                }
                 if (dc > tol && db > tol)
                     res.push(
                         `${id}: ${gname} row ${ri + 1}: ${a.what} is ${px(Math.min(dc, db))} px off the label ${la.what} (centre ${px(a.centre - la.centre)} px${db !== Infinity ? `, baseline ${px((a.base ?? 0) - (la.base ?? 0))} px` : ''})`,

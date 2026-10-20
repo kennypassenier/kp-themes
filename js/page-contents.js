@@ -18,6 +18,8 @@
 //   data-kp-contents-min       the fewest entries that earn a list; with fewer it is hidden   2
 //   data-kp-contents-title     the heading over the list ("On this page"); `none` leaves it out
 //   data-kp-contents-hash      `off`: a press does not write the address's #fragment    on
+//   data-kp-contents-scroller  a selector for the box that scrolls the sections, when it is not the page (a pane with its own scroll); the
+//                              offset then counts from the box's top edge                the page
 //
 // A heading without an `id` gets one from its words. A press scrolls to the section (smoothly, unless the reader asked for less motion),
 // writes `#id` into the address without a new history entry, and gives the section's heading the focus, so a keyboard reader arrives where
@@ -126,6 +128,12 @@ function attachOne(nav) {
         const n = Number(nav.getAttribute('data-kp-contents-min'));
         return nav.hasAttribute('data-kp-contents-min') && Number.isFinite(n) ? n : 2;
     };
+    /** The box that scrolls, when the sections scroll inside one. @returns {HTMLElement | null} */
+    const scroller = () => {
+        const named = nav.getAttribute('data-kp-contents-scroller');
+        const found = named ? doc.querySelector(named) : null;
+        return found instanceof HTMLElement ? found : null;
+    };
     const motion = () => (view.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth');
 
     /** @returns {{ item: ContentsItem, target: HTMLElement }[]} */
@@ -178,12 +186,16 @@ function attachOne(nav) {
     const spy = () => {
         raf = 0;
         if (!entries.length) return;
-        const root = doc.scrollingElement ?? doc.documentElement;
-        const atEnd = root.scrollTop + view.innerHeight >= root.scrollHeight - 2 && root.scrollTop > 0;
+        const own = scroller();
+        const root = own ?? doc.scrollingElement ?? doc.documentElement;
+        const atEnd = own
+            ? own.scrollTop + own.clientHeight >= own.scrollHeight - 2 && own.scrollTop > 0
+            : root.scrollTop + view.innerHeight >= root.scrollHeight - 2 && root.scrollTop > 0;
+        const edge = own ? own.getBoundingClientRect().top : 0;
         const at = currentSection(
             entries.map((e) => {
                 const box = e.target.getBoundingClientRect();
-                return { top: box.top, bottom: box.bottom };
+                return { top: box.top - edge, bottom: box.bottom - edge };
             }),
             offset(),
             atEnd,
@@ -253,6 +265,9 @@ function attachOne(nav) {
     nav.addEventListener('click', onClick);
     view.addEventListener('scroll', queueSpy, { passive: true });
     view.addEventListener('resize', queueSpy);
+    // A pane with its own scroll: its scroll does not bubble to the window.
+    const pane = scroller();
+    pane?.addEventListener('scroll', queueSpy, { passive: true });
     const changes = new view.MutationObserver((records) => {
         if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw);
     });
@@ -277,6 +292,7 @@ function attachOne(nav) {
         nav.removeEventListener('click', onClick);
         view.removeEventListener('scroll', queueSpy);
         view.removeEventListener('resize', queueSpy);
+        pane?.removeEventListener('scroll', queueSpy);
         changes.disconnect();
         options.disconnect();
         nav.replaceChildren();

@@ -239,7 +239,11 @@ export function untilLabel(ms, nowMs, zone = null) {
 export function formatCountdown(ms, hours, days = false) {
     const total = Math.max(0, Math.ceil(ms / 1000 - 1e-9));
     // Past 24 hours a length is read in days, "6 d 22 h"; under 24 hours nothing changes [wish-1120, homelab 124].
-    if (days && total >= 86400) return getStrings().countdownDays(Math.floor(total / 86400), Math.floor((total % 86400) / 3600));
+    // Rounded up to the hour, as the digits are rounded up to the second: 6 d 21 h 59 min 59 s reads 6 d 22 h.
+    if (days && total >= 86400) {
+        const hoursUp = Math.ceil(total / 3600);
+        return getStrings().countdownDays(Math.floor(hoursUp / 24), hoursUp % 24);
+    }
     const h = Math.floor(total / 3600);
     const m = Math.floor((total % 3600) / 60);
     const s = total % 60;

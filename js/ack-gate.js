@@ -30,7 +30,7 @@
 //   data-kp-ack-locked       the tick is locked while the job runs
 //   data-kp-ack-notes-open   the release notes (below) stand open; default closed
 //   data-kp-ack-notes-label  the notes' accessible name, "Release notes of 12.1" (default "Release notes")
-//   data-kp-ack-notes-headings  the level a `#` heading in the notes is written at, 1 to 6 (default 4)
+//   data-kp-ack-notes-headings  the level a `#` heading in the notes is written at, 1 to 6 (default 3: a `##` is an h4)
 //   data-kp-ack-require-notes  the tick stays off until the notes were opened once
 //
 // The notes in the gate [wish-1120, homelab 113]: the host fetches the markdown (the gate never goes to the network) and hands it over,
@@ -354,7 +354,7 @@ function attachOne(gate) {
         const body = /** @type {HTMLElement} */ (notes.querySelector('.kp-ack__notes-body'));
         body.setAttribute('aria-label', gate.getAttribute('data-kp-ack-notes-label') ?? s.ackNotes);
         const levels = Number(gate.getAttribute('data-kp-ack-notes-headings'));
-        body.replaceChildren(markdownFragment(doc, text, levels >= 1 ? { headings: levels } : {}));
+        body.replaceChildren(markdownFragment(doc, text, { headings: levels >= 1 ? levels : 3 }));
         paint();
     };
     undo.push(() => {

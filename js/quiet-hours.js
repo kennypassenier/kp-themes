@@ -68,7 +68,7 @@ export function readQuiet(raw) {
 }
 
 /**
- * The value in words: "Quiet from 22:00 to 07:00 on every weekday. Critical still comes through." Pure.
+ * The value in words: "Quiet from 22:00 to 07:00: Every weekday. Critical still comes through." Pure.
  * @param {QuietValue} value
  * @param {{ severities?: readonly { key: string, label: string }[], firstDay?: number }} [options]
  * @returns {string}
@@ -80,8 +80,8 @@ export function quietSummary(value, { severities, firstDay = 1 } = {}) {
     const days = weekdaySummary(value.days, { firstDay, names: dayNames('short') });
     const known = severities ?? QUIET_SEVERITIES.map((key) => ({ key, label: severityWord(key) }));
     const names = known.filter((k) => value.through.includes(k.key)).map((k) => k.label);
-    const head = s.quietWhen(value.from, value.to, days.charAt(0).toLowerCase() + days.slice(1));
-    return names.length ? `${head} ${s.quietThrough(joinWords(names))}` : `${head} ${s.quietNothing}`;
+    const head = s.quietWhen(value.from, value.to, days);
+    return names.length ? `${head} ${s.quietThrough(joinWords(names), names.length)}` : `${head} ${s.quietNothing}`;
 }
 
 /** @param {string} key */

@@ -84,9 +84,10 @@ export function jobLineText(report, { base = 1000 } = {}) {
     return parts.length ? parts.join(s.jobLineSeparator) : s.jobLineIdle;
 }
 
-/** The step position of a list: the running (or current) step, else the first one still waiting, else all done. @param {Element} list @returns {{ step: number, steps: number }} */
+/** The step position of a list: the running (or current) step, else the first one still waiting, else the last; 0 while nothing has started. @param {Element} list @returns {{ step: number, steps: number }} */
 export function stepPosition(list) {
     const items = [...list.querySelectorAll(':scope > .kp-steplist__item')];
+    if (items.every((item) => (item.getAttribute('data-state') ?? 'pending') === 'pending')) return { step: 0, steps: items.length };
     const at = items.findIndex((item) => ['running', 'current'].includes(item.getAttribute('data-state') ?? ''));
     const waiting = items.findIndex((item) => (item.getAttribute('data-state') ?? 'pending') === 'pending');
     const index = at >= 0 ? at : waiting >= 0 ? waiting : items.length - 1;

@@ -410,8 +410,8 @@ var init_strings = __esm({
       quietOk: "Ok",
       quietOff: "Quiet hours are off.",
       quietSame: "Pick two different times.",
-      quietWhen: (from, to, days) => `Quiet from ${from} to ${to} on ${days}.`,
-      quietThrough: (names) => `${names} still come through.`,
+      quietWhen: (from, to, days) => `Quiet from ${from} to ${to}: ${days}.`,
+      quietThrough: (names, count2) => `${names} still ${count2 === 1 ? "comes" : "come"} through.`,
       quietNothing: "Nothing comes through while they last.",
       contentsLabel: "On this page",
       contentsTitle: "On this page",
@@ -5280,7 +5280,7 @@ function attachOne(gate) {
     );
     body.setAttribute("aria-label", gate.getAttribute("data-kp-ack-notes-label") ?? s2.ackNotes);
     const levels = Number(gate.getAttribute("data-kp-ack-notes-headings"));
-    body.replaceChildren(markdownFragment(doc, text, levels >= 1 ? { headings: levels } : {}));
+    body.replaceChildren(markdownFragment(doc, text, { headings: levels >= 1 ? levels : 3 }));
     paint14();
   };
   undo.push(() => {
@@ -21656,13 +21656,19 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
           await navigator.clipboard.writeText("");
           done(true, reason);
         } catch {
+          const events = ["pointerdown", "keydown"];
           const again2 = () => {
+            for (const name of events) document.removeEventListener(name, again2, true);
             window.removeEventListener("focus", again2);
             dropClearFocus = null;
             void clear();
           };
+          for (const name of events) document.addEventListener(name, again2, true);
           window.addEventListener("focus", again2);
-          dropClearFocus = () => window.removeEventListener("focus", again2);
+          dropClearFocus = () => {
+            for (const name of events) document.removeEventListener(name, again2, true);
+            window.removeEventListener("focus", again2);
+          };
         }
       };
       clearTimer = window.setTimeout(() => void clear(), wait * 1e3);
@@ -34204,7 +34210,10 @@ function untilLabel(ms, nowMs, zone = null) {
 }
 function formatCountdown(ms, hours, days = false) {
   const total = Math.max(0, Math.ceil(ms / 1e3 - 1e-9));
-  if (days && total >= 86400) return getStrings().countdownDays(Math.floor(total / 86400), Math.floor(total % 86400 / 3600));
+  if (days && total >= 86400) {
+    const hoursUp = Math.ceil(total / 3600);
+    return getStrings().countdownDays(Math.floor(hoursUp / 24), hoursUp % 24);
+  }
   const h2 = Math.floor(total / 3600);
   const m = Math.floor(total % 3600 / 60);
   const s2 = total % 60;
@@ -46408,6 +46417,7 @@ function jobLineText(report, { base = 1e3 } = {}) {
 }
 function stepPosition(list) {
   const items = [...list.querySelectorAll(":scope > .kp-steplist__item")];
+  if (items.every((item) => (item.getAttribute("data-state") ?? "pending") === "pending")) return { step: 0, steps: items.length };
   const at = items.findIndex((item) => ["running", "current"].includes(item.getAttribute("data-state") ?? ""));
   const waiting = items.findIndex((item) => (item.getAttribute("data-state") ?? "pending") === "pending");
   const index = at >= 0 ? at : waiting >= 0 ? waiting : items.length - 1;
@@ -46934,6 +46944,11 @@ function attachOne8(nav) {
     const n = Number(nav.getAttribute("data-kp-contents-min"));
     return nav.hasAttribute("data-kp-contents-min") && Number.isFinite(n) ? n : 2;
   };
+  const scroller = () => {
+    const named = nav.getAttribute("data-kp-contents-scroller");
+    const found = named ? doc.querySelector(named) : null;
+    return found instanceof HTMLElement ? found : null;
+  };
   const motion = () => view.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
   const read = () => {
     if (given2) {
@@ -46982,12 +46997,14 @@ function attachOne8(nav) {
   const spy = () => {
     raf = 0;
     if (!entries3.length) return;
-    const root = doc.scrollingElement ?? doc.documentElement;
-    const atEnd = root.scrollTop + view.innerHeight >= root.scrollHeight - 2 && root.scrollTop > 0;
+    const own = scroller();
+    const root = own ?? doc.scrollingElement ?? doc.documentElement;
+    const atEnd = own ? own.scrollTop + own.clientHeight >= own.scrollHeight - 2 && own.scrollTop > 0 : root.scrollTop + view.innerHeight >= root.scrollHeight - 2 && root.scrollTop > 0;
+    const edge = own ? own.getBoundingClientRect().top : 0;
     const at = currentSection(
       entries3.map((e) => {
         const box = e.target.getBoundingClientRect();
-        return { top: box.top, bottom: box.bottom };
+        return { top: box.top - edge, bottom: box.bottom - edge };
       }),
       offset(),
       atEnd
@@ -47057,6 +47074,8 @@ function attachOne8(nav) {
   nav.addEventListener("click", onClick);
   view.addEventListener("scroll", queueSpy, { passive: true });
   view.addEventListener("resize", queueSpy);
+  const pane = scroller();
+  pane?.addEventListener("scroll", queueSpy, { passive: true });
   const changes = new view.MutationObserver((records) => {
     if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw8);
   });
@@ -47080,6 +47099,7 @@ function attachOne8(nav) {
     nav.removeEventListener("click", onClick);
     view.removeEventListener("scroll", queueSpy);
     view.removeEventListener("resize", queueSpy);
+    pane?.removeEventListener("scroll", queueSpy);
     changes.disconnect();
     options.disconnect();
     nav.replaceChildren();
@@ -48104,8 +48124,8 @@ function quietSummary(value, { severities, firstDay = 1 } = {}) {
   const days = weekdaySummary(value.days, { firstDay, names: dayNames("short") });
   const known4 = severities ?? QUIET_SEVERITIES.map((key) => ({ key, label: severityWord2(key) }));
   const names = known4.filter((k) => value.through.includes(k.key)).map((k) => k.label);
-  const head = s2.quietWhen(value.from, value.to, days.charAt(0).toLowerCase() + days.slice(1));
-  return names.length ? `${head} ${s2.quietThrough(joinWords(names))}` : `${head} ${s2.quietNothing}`;
+  const head = s2.quietWhen(value.from, value.to, days);
+  return names.length ? `${head} ${s2.quietThrough(joinWords(names), names.length)}` : `${head} ${s2.quietNothing}`;
 }
 function severityWord2(key) {
   const s2 = getStrings();

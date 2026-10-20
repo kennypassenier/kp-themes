@@ -117,3 +117,4 @@ the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; th
 - wish-1120, site/components/code-field.html (generated from its descriptor): the code field, the YAML example with the page's own check, the server-answers-later call and the form held back.
 - wish-1120, site/components/page-contents.html (generated from its descriptor): the contents list from headings and from items with counts, the sticky modifier and the loading bars.
 - wish-1120, site/components/quiet-hours.html (generated from its descriptor): quiet hours on, off, refused and with a stored value set by `setQuiet`.
+- wish-1120, site/components/page-contents.html: option `data-kp-contents-scroller`.

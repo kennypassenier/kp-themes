@@ -36462,10 +36462,14 @@
     }
 
     .kp-quiet__label {
-        padding-block-start: var(--kp-space-xs, 0.25rem);
         min-block-size: var(--kp-control-height, 2.25rem);
         display: flex;
         align-items: center;
+    }
+
+    /* The chip row of the weekday picker is 2.5rem high: its label stands as high, so both centre on one line. */
+    .kp-quiet__field--days > .kp-quiet__label {
+        min-block-size: 2.5rem;
     }
 
     .kp-quiet__through {
