@@ -44156,7 +44156,8 @@ function paint10(container, items, options) {
       [...host.children]
     ) {
       const key = el16.getAttribute("data-kp-key");
-      if (el16.classList.contains("kp-problem") && key !== null && !el16.hasAttribute("data-kp-leaving")) shown4.set(key, el16);
+      const leaving = el16.hasAttribute("data-kp-leaving") && !el16.hasAttribute("data-kp-arriving");
+      if (el16.classList.contains("kp-problem") && key !== null && !leaving) shown4.set(key, el16);
     }
     const wanted = list.map((p) => paintAlert(shown4.get(p.key), p, doc, remedyLabel, host));
     for (const [key, el16] of shown4) if (!list.some((p) => p.key === key)) void leave(el16).then(() => el16.remove());

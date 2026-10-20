@@ -81,7 +81,7 @@
         "js/patterns.js": { "digest": "01898a6a0c18f3a0", "when": "[data-kp-copy], [data-kp-undo-action], [data-kp-secret]" },
         "js/pipeline.js": { "digest": "85650201f5174329", "when": "[data-kp-pipeline]" },
         "js/print.js": { "digest": "780f04282cc64ba5", "when": "[data-kp-print-action], [data-kp-checklist], [data-kp-print-sheet]" },
-        "js/problems.js": { "digest": "86dbbeef28bd151e", "when": "[data-kp-problems]" },
+        "js/problems.js": { "digest": "75b45ef055e9edd8", "when": "[data-kp-problems]" },
         "js/progressbar.js": { "digest": "caf64a556e471e75", "when": ".kp-progressbar" },
         "js/qr.js": { "digest": "2a0f36097d351626", "when": "[data-kp-qr]" },
         "js/quantity.js": { "digest": "b5940561d67cc6be", "when": "[data-kp-quantity]" },
