@@ -36182,6 +36182,117 @@
     }
 }
 
+@layer kp.components {
+    /* --- Release notes in an acknowledge gate, and the markdown they are built with [wish-1120, homelab 113] ---
+     * A fold under the alert's words (the frame keeps its two columns above it), the notes in a box that scrolls: one tab stop, a named
+     * region, never wider than the gate. `.kp-markdown` is the plain reading look of js/markdown.js's output: the page's ink, a rhythm of
+     * one line between blocks, code in the code face and lists that keep their markers. */
+    .kp-ack__notes {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-ack__notes-summary {
+        cursor: pointer;
+        min-block-size: var(--kp-control-height, 2.25rem);
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+    }
+
+    .kp-ack__notes-body {
+        box-sizing: border-box;
+        max-block-size: var(--kp-ack-notes-max, 16rem);
+        overflow: auto;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    .kp-ack__notes-body:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-ack[data-kp-state='loading'] > .kp-ack__notes {
+        visibility: hidden;
+    }
+
+    .kp-markdown {
+        overflow-wrap: anywhere;
+        line-height: 1.5;
+    }
+
+    .kp-markdown > :first-child {
+        margin-block-start: 0;
+    }
+
+    .kp-markdown > :last-child {
+        margin-block-end: 0;
+    }
+
+    .kp-markdown :is(h1, h2, h3, h4, h5, h6) {
+        margin-block: 1em 0.4em;
+        line-height: 1.25;
+    }
+
+    .kp-markdown :is(p, ul, ol, pre, blockquote) {
+        margin-block: 0 0.75em;
+    }
+
+    .kp-markdown :is(ul, ol) {
+        padding-inline-start: 1.5em;
+    }
+
+    .kp-markdown :is(ul, ol) :is(ul, ol) {
+        margin-block: 0.25em 0;
+    }
+
+    .kp-markdown code {
+        font-family: var(--theme-font-mono, ui-monospace, monospace);
+        font-size: 0.9em;
+        padding: 0.05em 0.3em;
+        border-radius: 0.25em;
+        background: var(--muted);
+    }
+
+    .kp-markdown pre {
+        overflow: auto;
+        padding: var(--kp-space-sm, 0.5rem);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+    }
+
+    .kp-markdown pre code {
+        padding: 0;
+        background: none;
+    }
+
+    .kp-markdown blockquote {
+        padding-inline-start: var(--kp-space-md, 0.75rem);
+        border-inline-start: 3px solid var(--border-strong, var(--border));
+        color: var(--muted-foreground);
+    }
+
+    .kp-markdown a {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-markdown hr {
+        border: 0;
+        border-block-start: 1px solid var(--border);
+        margin-block: 1em;
+    }
+
+    .kp-markdown__cut {
+        color: var(--muted-foreground);
+    }
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/cyberpunk-register.css
    The cyberpunk register, 5.0.0 [S39, S40, S41]: the signal-yellow

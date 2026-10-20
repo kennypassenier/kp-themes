@@ -36,6 +36,15 @@ export type LogViewerSpec = {
      */
     lines?: LogLine[];
     state?: 'ready' | 'loading' | 'error';
+    /**
+     * the failed plate's sentence: the host's own reason ("Loki did not answer: connection refused"), in place of the package's;
+     * an empty string takes it back (`data-kp-log-error`) [wish-1120, homelab 115]
+     */
+    message?: string;
+    /**
+     * the failed plate's heading, in place of "Could not read the log" (`data-kp-log-error-title`)
+     */
+    errorTitle?: string;
     max?: number;
     wrap?: boolean;
     time?: 'time' | 'datetime' | 'off';

@@ -172,6 +172,10 @@ export declare const DISMISS_OWNED = "[data-kp-dismiss-owner]";
  * leaves the theme's way (js/motion.js leave()) and the same event is
  * dispatched on its region once it is gone.
  *
+ * `data-kp-remember="name"` on an alert [wish-1120, homelab 119]: a dismissal is kept (js/remember.js, component `alert`, slot
+ * `dismissed`), and the alert is hidden again on the next visit, before the first paint where js/auto.js restores. showAlertAgain(alert)
+ * forgets it and shows the alert, for a note whose reason came back.
+ *
  * @param {ParentNode} root
  * @param {{ ownedBy?: string }} [options] `ownedBy: ''` wires even the buttons another channel marked
  * @returns {() => void} detach
@@ -179,6 +183,12 @@ export declare const DISMISS_OWNED = "[data-kp-dismiss-owner]";
 export declare function attachDismissals(root?: ParentNode, { ownedBy }?: {
     ownedBy?: string;
 }): () => void;
+/**
+ * Open a remembered alert again: forget that it was dismissed and show it. For a page that has a reason to say it once more (a new
+ * version of the note it explained).
+ * @param {HTMLElement} alert a `.kp-alert[data-kp-remember]`
+ */
+export declare function showAlertAgain(alert: HTMLElement): void;
 /** Dispatched on a tooltip anchor, bubbling, when its tooltip opens or closes: `{ open, tooltip }`. */
 export declare const TOOLTIP_EVENT = "kp-tooltip";
 /** Tooltip anchors another channel wires itself; the React Tooltip marks its own [AR29]. */

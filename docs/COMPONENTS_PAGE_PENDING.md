@@ -108,3 +108,9 @@ the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; th
 - wish-1120, site/components/heat.html: `paging` on `setHeat` / `setHeatPaging` (Earlier, Today, Later; `offset`, `min`, `max`, `label`) and the `offset` in `kp-heat-page`; `setHeat(el, spec, { decorate })`.
 - wish-1120, site/components/toolbar.html and datatable.html: the `decorate` option for `setToolbarActive` and the data table's new kinds (`add-filter`, `clear-filters`, `search`, `reorder-handle`).
 - wish-1120, site/components/chart.html: `timeUnit: 's'`, a list for `threshold`, and `shape: 'columns'` (a histogram, stacked too); one example of each.
+- wish-1120, site/components/logviewer.html: `message` and `errorTitle` of the failed plate (`data-kp-log-error`, `-error-title`).
+- wish-1120, site/components/alert.html: `data-kp-remember` on a dismissible alert and `showAlertAgain()`.
+- wish-1120, site/components/shortcut-sheet.html: the `Space` token and `inFields: true`.
+- wish-1120, site/components/type-confirm.html: `buildTypeConfirm` options `id` and `fieldName`.
+- wish-1120, site/components/snooze.html: `data-kp-snooze-words` (the built-in `pause` set, `registerSnoozeWords`) and the per-picker word attributes.
+- wish-1120, site/components/ack-gate.html: `setAckNotes`, the notes fold and its four attributes; a markdown page for js/markdown.js with a note example (the descriptor is written, the page is generated).

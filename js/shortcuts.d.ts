@@ -37,6 +37,11 @@ export type Shortcut = {
      * the sheet's sentence for why it is not available now
      */
     reason?: string;
+    /**
+     * true: the keys also fire while the focus is in a field (an input, a textarea, a select), where a plain key
+     * is the typing's own and does nothing by default; for a key that means the same there ("Esc closes the change form") [wish-1120, homelab 122]
+     */
+    inFields?: boolean;
 };
 export type EngineOptions = {
     /**
@@ -88,11 +93,6 @@ export type Step = {
      */
     key: string;
 };
-/**
- * @typedef {object} Step
- * @property {string[]} mods sorted modifier names: `alt`, `mod`, `shift`
- * @property {string} key the key, as `KeyboardEvent.key` spells it
- */
 /**
  * Read "g s" or "Mod K" into steps.
  * @param {string} keys

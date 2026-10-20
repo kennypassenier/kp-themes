@@ -316,6 +316,10 @@
             "types": "./js/job-line.d.ts",
             "default": "./js/job-line.js"
         },
+        "./js/markdown": {
+            "types": "./js/markdown.d.ts",
+            "default": "./js/markdown.js"
+        },
         "./js/transfer": {
             "types": "./js/transfer.d.ts",
             "default": "./js/transfer.js"

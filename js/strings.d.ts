@@ -144,6 +144,14 @@ export type Strings = {
      */
     ackLink: string;
     /**
+     * The fold of the release notes inside an acknowledge gate, and the notes' accessible name (js/ack-gate.js) [wish-1120]
+     */
+    ackNotes: string;
+    /**
+     * Why the tick is off until the release notes were opened (`data-kp-ack-require-notes`) [wish-1120]
+     */
+    ackOpenNotes: string;
+    /**
      * The tick's words when the page names none [kpadopt6-ops]
      */
     ackLabel: string;
@@ -1611,6 +1619,14 @@ export type Strings = {
      * What a screen reader hears at 25, 50, 75 and 100 % [kpadopt5-transfer]
      */
     transferAnnounce: (name: string, percent: number) => string;
+    /**
+     * Said after a link in rendered notes that opens in a new tab (js/markdown.js) [wish-1120]
+     */
+    markdownNewTab: string;
+    /**
+     * The line after release notes that were cut for length [wish-1120]
+     */
+    markdownCut: string;
     /**
      * A job line's step position, "Step 3 of 35" (js/job-line.js) [wish-1120]
      */
@@ -6190,6 +6206,8 @@ export type Strings = {
  * @property {(from: string, to: string) => string} versionSpokenDown  What it hears for a version that went back [kpadopt6-ops]
  * @property {(from: string, to: string) => string} versionSpokenChanged  What a screen reader hears for a change that has no size, "changed from latest to nightly" [kpadopt6-ops]
  * @property {string} ackLink  The release-notes link's words on an acknowledge gate [kpadopt6-ops]
+ * @property {string} ackNotes  The fold of the release notes inside an acknowledge gate, and the notes' accessible name (js/ack-gate.js) [wish-1120]
+ * @property {string} ackOpenNotes  Why the tick is off until the release notes were opened (`data-kp-ack-require-notes`) [wish-1120]
  * @property {string} ackLabel  The tick's words when the page names none [kpadopt6-ops]
  * @property {string} ackRetry  The Retry button of a gate whose notes could not be found [kpadopt6-ops]
  * @property {string} ackLooking  Why the tick is off while the notes are looked up [kpadopt6-ops]
@@ -6560,6 +6578,8 @@ export type Strings = {
  * @property {string} transferFailed  The first words of a failed transfer's note [kpadopt5-transfer]
  * @property {string} transferRetry  The Retry button of a failed transfer [kpadopt5-transfer]
  * @property {(name: string, percent: number) => string} transferAnnounce  What a screen reader hears at 25, 50, 75 and 100 % [kpadopt5-transfer]
+ * @property {string} markdownNewTab  Said after a link in rendered notes that opens in a new tab (js/markdown.js) [wish-1120]
+ * @property {string} markdownCut  The line after release notes that were cut for length [wish-1120]
  * @property {(step: number, steps: number) => string} jobLineStep  A job line's step position, "Step 3 of 35" (js/job-line.js) [wish-1120]
  * @property {(done: string, total: string) => string} jobLineBytes  A job line's bytes with the unit said once, done "1.2" and total "4 GB" make "1.2 of 4 GB" [wish-1120]
  * @property {string} jobLineSeparator  What joins the parts of a job line [wish-1120]

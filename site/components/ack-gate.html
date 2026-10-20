@@ -230,6 +230,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/lede.html">Lede</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/thread.html">Conversation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/markdown.html">Markdown notes</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/viewer.html">Viewer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/document-preview.html">Document preview</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gallery.html">Gallery</a></li>
@@ -333,7 +334,11 @@ batch.addEventListener(<span class="kp-code__string">'kp-ack-change'</span>, (ev
                             <tr><td><code>data-kp-ack-locked</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-ack-min-ms</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-ack-mode</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-ack-notes-headings</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-ack-notes-label</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-ack-notes-open</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-ack-require-link</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-ack-require-notes</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-ack-reset</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-ack-retry</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-ack-tone</code></td><td>read</td></tr>
@@ -362,6 +367,7 @@ batch.addEventListener(<span class="kp-code__string">'kp-ack-change'</span>, (ev
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
                             <tr><td><code>--kp-ack-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-ack-keep</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-ack-notes-max</code></td><td><code>16rem</code></td></tr>
                             <tr><td><code>--kp-ack-side</code></td><td><code>18rem</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-field-disabled-opacity</code></td><td><code>0.55</code></td></tr>

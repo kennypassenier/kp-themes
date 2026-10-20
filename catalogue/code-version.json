@@ -1,8 +1,8 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "f487dad6396c790e",
+    "base": "a16bc253fec8b767",
     "modules": {
-        "js/ack-gate.js": { "digest": "d439d32fb3fc1df7", "when": "[data-kp-ack]" },
+        "js/ack-gate.js": { "digest": "073bba4df7b2ae7f", "when": "[data-kp-ack]" },
         "js/action-tiles.js": { "digest": "8b991575d50cd0aa", "when": ".kp-action" },
         "js/actions.js": { "digest": "7254ebf2bbcb9da0", "when": ".kp-row-actions" },
         "js/alarm.js": { "digest": "647bf77baf844ec6", "when": "[data-kp-alarm]" },
@@ -26,7 +26,7 @@
         "js/command.js": { "digest": "ff9014001a7c3f9d", "when": "[data-kp-command]" },
         "js/compare.js": { "digest": "dcef5bea97a3e554", "when": "[data-kp-compare]" },
         "js/components.js": {
-            "digest": "cd5bc39fd9e3b5d4",
+            "digest": "6752dbdbc0afd6b8",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], [data-kp-type-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
         "js/connection.js": { "digest": "0f479260a75c16d2", "when": "[data-kp-connection]" },
@@ -66,7 +66,7 @@
             "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
         },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
-        "js/logviewer.js": { "digest": "c209f67ede3a2afd", "when": "[data-kp-logviewer]" },
+        "js/logviewer.js": { "digest": "e994e69962d4b237", "when": "[data-kp-logviewer]" },
         "js/master-detail.js": { "digest": "38ed43a48dd99c00", "when": "[data-kp-master-detail]" },
         "js/menu-button.js": { "digest": "6363f9aecedcbf05", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
@@ -97,10 +97,10 @@
         "js/segmented.js": { "digest": "6e3008e03db4a58f", "when": "[data-kp-segmented]" },
         "js/selection-bar.js": { "digest": "6f9045d70b5053ea", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "04a90c1635267fcf", "when": "[data-kp-sentence]" },
-        "js/shortcuts.js": { "digest": "3aa4ed93a4e45efc", "when": "[data-kp-shortcuts][data-kp-shortcuts-live]" },
+        "js/shortcuts.js": { "digest": "58496115a807b312", "when": "[data-kp-shortcuts][data-kp-shortcuts-live]" },
         "js/sidenav.js": { "digest": "5ea5b8b798833a5d", "when": ".kp-sidenav" },
         "js/slider.js": { "digest": "3f8907accddaac9a", "when": "[data-kp-slider]" },
-        "js/snooze.js": { "digest": "a4b2c4f1e60781af", "when": "[data-kp-snooze]" },
+        "js/snooze.js": { "digest": "aa4fa416a3cd323a", "when": "[data-kp-snooze]" },
         "js/stackbar.js": { "digest": "262f9782af3d2648", "when": "[data-kp-stackbar]" },
         "js/statusrow.js": { "digest": "c8421a8c5dced579", "when": ".kp-statuslist" },
         "js/steplist.js": { "digest": "755a25b21d821b06", "when": ".kp-steplist" },
@@ -7946,6 +7946,10 @@
         "||||.kp-ack__frame": "615ea78b36703232",
         "||||.kp-ack__label": "5da2c18a764b16ca",
         "||||.kp-ack__link": "ab06bca78281a07a",
+        "||||.kp-ack__notes": "7adc99efb4f2cff5",
+        "||||.kp-ack__notes-body": "948f2b80ad25da01",
+        "||||.kp-ack__notes-body-visible": "268e80734b4e34db",
+        "||||.kp-ack__notes-summary": "4f165887b6b884c6",
         "||||.kp-ack__problem": "fc1556e154eddcd9",
         "||||.kp-ack__problem)": "f74401dcd126a5f8",
         "||||.kp-ack__problem[hidden]": "9e08c46e1d6d5124",
@@ -9469,6 +9473,8 @@
         "||||.kp-m-sm": "4469b4e07f5b4276",
         "||||.kp-m-xl": "1f9989de8b63ee50",
         "||||.kp-m-xs": "290ba1102b4dd87a",
+        "||||.kp-markdown": "86b97cfacdbea192",
+        "||||.kp-markdown__cut": "645a0781407eaa96",
         "||||.kp-marquee": "406720ee47dfdd6e",
         "||||.kp-masked": "177dc7f225528519",
         "||||.kp-matrix": "481c4384bf502233",
@@ -10946,7 +10952,7 @@
         "||||[role='treeitem'][aria-expanded='true']": "61e09e80990f37cf",
         "||||[role='treeitem'][aria-expanded]": "8e3a54d3ee63e9a6",
         "||||[role='treeitem'][aria-selected='true']": "3af152648426b74b",
-        "||||a": "15865b6be2e7013b",
+        "||||a": "e11d2ebebb421a46",
         "||||a)": "d2c1183f9be28fff",
         "||||a.kp-entity__name": "cd6563e183140178",
         "||||a.kp-entity__name-visible": "7755dc8321681dbd",
@@ -10958,7 +10964,8 @@
         "||||a.kp-version__to": "b37903aa07e842a8",
         "||||a[aria-current='page']": "d2baba5ec1b9c276",
         "||||b": "d4afcc9f940e3984",
-        "||||blockquote": "83905642926b9cb5",
+        "||||blockquote": "cb7d867de7a97d7b",
+        "||||blockquote)": "7d9d564bb2a71b68",
         "||||body:has(.kp-shell)": "51cb0c262d8afab5",
         "||||body:has(.kp-tabbar--always:not(.kp-tabbar--static))": "c692f44ade38a08a",
         "||||body:has(.kp-tabbar:not(.kp-tabbar--static))": "ec144ffc963ee176",
@@ -10966,7 +10973,7 @@
         "||||button.kp-datepicker__title": "6dd1bbf1eab7a59f",
         "||||button.kp-idmark-group__more": "43e9f86420c599b2",
         "||||button.kp-idmark-group__more-visible": "5d0e5b4b0d059337",
-        "||||code": "774f23a09dd8926d",
+        "||||code": "6d694f4d58644213",
         "||||dd": "5fb3dce9e432d996",
         "||||dialog.kp-drawer": "3451c91b6dffbe80",
         "||||dialog.kp-drawer:modal": "3451c91b6dffbe80",
@@ -10985,8 +10992,8 @@
         "||||h4": "6c7067618c2984cf",
         "||||h5": "88721d59de4ac5aa",
         "||||h6": "a5d29ecc036c1bce",
-        "||||h6)": "1af88858b5fa5bda",
-        "||||hr": "154ee826ec38dfbc",
+        "||||h6)": "01e08cae36ec1a65",
+        "||||hr": "91f63597adaa2f73",
         "||||img": "714616654b2ae672",
         "||||img)": "d408a94fd620f1a2",
         "||||input": "804127a73c65c166",
@@ -11008,6 +11015,7 @@
         "||||line": "05125ab1d302062e",
         "||||mark": "8a2952efa8ae18c2",
         "||||ol": "fbd5e31d70bd1a19",
+        "||||ol)": "a6de719a1e434ea0",
         "||||ol)[data-kp-theme-picker]": "b4547e9058bccb8f",
         "||||optgroup": "2448fada55680bd7",
         "||||option": "2448fada55680bd7",
@@ -11020,7 +11028,7 @@
         "||||pattern[data-kp-tone='info']": "f71a99a3f6bf90b7",
         "||||pattern[data-kp-tone='warning']": "92a87cc9d910b24e",
         "||||picture": "22ff182ddcc9dce9",
-        "||||pre": "0ce7835952e449e7",
+        "||||pre": "efc5556306af242d",
         "||||samp": "64bc9c5449ef5e85",
         "||||select": "cd19acfcb1dea4d6",
         "||||select)": "841310236110c846",
@@ -11215,7 +11223,7 @@
             ]
         },
         "data": {
-            "modules": "5b9df6b61afb8fff",
+            "modules": "3fe166c86a1f5f33",
             "families": [
                 "data-kp-activation",
                 "data-kp-active",
@@ -11584,6 +11592,8 @@
                 "data-kp-loading-words",
                 "data-kp-locale",
                 "data-kp-log",
+                "data-kp-log-error",
+                "data-kp-log-error-title",
                 "data-kp-log-filename",
                 "data-kp-log-focus-key",
                 "data-kp-log-follow",
@@ -12054,7 +12064,7 @@
             ]
         },
         "datatable": {
-            "modules": "a153c0106f68f0ee",
+            "modules": "bb431ce90d318641",
             "families": [
                 "data-kp-align",
                 "data-kp-arrive",
@@ -12267,7 +12277,7 @@
             ]
         },
         "feedback": {
-            "modules": "9d95dfc90da3f334",
+            "modules": "292cae3f168fbcf2",
             "families": [
                 "data-kp-ack",
                 "data-kp-ack-focus",
@@ -12281,7 +12291,11 @@
                 "data-kp-ack-locked",
                 "data-kp-ack-min-ms",
                 "data-kp-ack-mode",
+                "data-kp-ack-notes-headings",
+                "data-kp-ack-notes-label",
+                "data-kp-ack-notes-open",
                 "data-kp-ack-require-link",
+                "data-kp-ack-require-notes",
                 "data-kp-ack-reset",
                 "data-kp-ack-retry",
                 "data-kp-ack-tone",
@@ -12598,6 +12612,7 @@
                 "kp-focus-steps-track-attention",
                 "kp-focus-steps-wake",
                 "kp-jobline",
+                "kp-markdown",
                 "kp-pieces",
                 "kp-problem",
                 "kp-problem-dismiss",
@@ -13328,7 +13343,7 @@
             ]
         },
         "navigation": {
-            "modules": "9b46df3f56ba801a",
+            "modules": "b1b026418d361c97",
             "families": [
                 "data-kp-activation",
                 "data-kp-against",
@@ -13530,7 +13545,7 @@
             ]
         },
         "overlays": {
-            "modules": "99ee632ccc318a5f",
+            "modules": "6167b8e14b7198a7",
             "families": [
                 "data-kp-activation",
                 "data-kp-ago",
@@ -13591,6 +13606,7 @@
                 "data-kp-popover-overflowing",
                 "data-kp-quiet",
                 "data-kp-read",
+                "data-kp-remember",
                 "data-kp-resizing",
                 "data-kp-reversing",
                 "data-kp-row-key",
@@ -14083,10 +14099,18 @@
                 "data-kp-segmented",
                 "data-kp-segmented-words",
                 "data-kp-snooze",
+                "data-kp-snooze-apply",
+                "data-kp-snooze-change",
                 "data-kp-snooze-choices",
+                "data-kp-snooze-end",
                 "data-kp-snooze-evening",
                 "data-kp-snooze-max",
                 "data-kp-snooze-morning",
+                "data-kp-snooze-none",
+                "data-kp-snooze-saving",
+                "data-kp-snooze-trigger",
+                "data-kp-snooze-until",
+                "data-kp-snooze-words",
                 "data-kp-snoozed-until",
                 "data-kp-state",
                 "data-kp-summary",
@@ -14145,7 +14169,7 @@
             ]
         },
         "structure": {
-            "modules": "7bb39871f3b48c1d",
+            "modules": "1dd652d2404406c4",
             "families": [
                 "data-kp-anchor",
                 "data-kp-anchor-copy",
@@ -14492,6 +14516,7 @@
         "kp-notices": ["@component:overlays"],
         "kp-question": ["@component:feedback"],
         "kp-transfer": ["@component:feedback"],
+        "kp-markdown": ["@component:feedback"],
         "kp-jobline": ["@component:feedback"],
         "kp-connection": ["@component:feedback"],
         "kp-refresh": ["@component:data"],

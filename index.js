@@ -42,7 +42,7 @@ export {
     Toasts,
     Tooltip,
 } from './components/overlays.jsx';
-export { TOAST_LINGER_MS, TOAST_MS, TOAST_PAUSE_EVENT, attachDialogs, attachDismissals, attachTabs, attachTooltips, toast } from './js/overlays.js';
+export { TOAST_LINGER_MS, TOAST_MS, TOAST_PAUSE_EVENT, attachDialogs, attachDismissals, attachTabs, attachTooltips, showAlertAgain, toast } from './js/overlays.js';
 export { Alarm, useAlarm } from './components/alarm.jsx';
 export { ALARM_CLOSE_EVENT, ALARM_OPEN_EVENT, ALARM_SECONDS, attachAlarms, showAlarm } from './js/alarm.js';
 export { PICK_EVENT as THEME_PICK_EVENT, THEME_MENU_ICON, attachThemePickers, themeMenuMarkup, themeOptionsMarkup } from './js/theme-picker.js';
@@ -190,7 +190,7 @@ export {
 export { ENTITY_ACTION_EVENT, ENTITY_CARD, ENTITY_FLAG_EVENT, ENTITY_GRID, ENTITY_GRID_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_RETRY_EVENT, ENTITY_STAR_EVENT, ENTITY_TICK_EVENT, attachEntityCards, setEntity, setEntityGrid, setEntityGridState } from './js/entity-card.js';
 export { TRACE, TRACE_RETRY_EVENT, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, attachTraces, setTrace, trace, traceStates, traceSummary, traceText } from './js/path-trace.js';
 export { DEPLIST, DEPLIST_COLLAPSE, DEPLIST_RETRY_EVENT, attachDeplists, depText, deplist, orderDependencies, setDeplist } from './js/deplist.js';
-export { ACK_EVENT, ACK_GATE, ACK_RETRY_EVENT, ackGate, attachAckGates } from './js/ack-gate.js';
+export { ACK_EVENT, ACK_GATE, ACK_RETRY_EVENT, ackGate, attachAckGates, setAckNotes } from './js/ack-gate.js';
 export { VERSION_COPY_EVENT, VERSION_DELTA, VERSION_LEVELS, VERSION_SORT, attachVersionDeltas, githubRepo, releaseUrl, setVersionDelta, summarizeDeltas, versionLevel, versionNumbers } from './js/version-delta.js';
 export { INTENT_MAX_SHOWN, intentRanges, intentScore, intentTokens, intentWords, matchIntent, noMatchText, queryWords, rankCommands, startsWord } from './js/intent.js';
 export { TOGGLE, TOGGLE_CHANGED_EVENT, TOGGLE_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, attachToggles, toggle, toggleGroup, toggleKey, togglePressedKeys } from './js/toggle.js';
@@ -353,10 +353,12 @@ export {
     attachSnoozes,
     dayAt,
     openSnoozePanel,
+    registerSnoozeWords,
     setSnoozeBusy,
     setSnoozedUntil,
     snooze,
     snoozeChoices,
+    snoozeWords,
 } from './js/snooze.js';
 export {
     RUNS,
@@ -391,6 +393,7 @@ export { NOTICES, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICES_READ_ALL
 export { QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_DISMISS_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_URGENT_AT, askQuestion, attachQuestions, questionOf } from './js/question-card.js';
 export { TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_RETRY_EVENT, attachTransfers, resetTransfer, setTransfer, transferEta, transferRate } from './js/transfer.js';
 export { JOBLINE, JOBLINE_EVENT, attachJobLines, buildJobLine, jobLineText, setJobLine, stepPosition } from './js/job-line.js';
+export { MARKDOWN_LIMIT, markdownFragment, safeHref } from './js/markdown.js';
 export { CONNECTION, CONNECTION_RETRY_EVENT, CONNECTION_STATES, CONNECTION_STATE_EVENT, attachConnection, connectionOf, setConnection } from './js/connection.js';
 export { REFRESH, REFRESH_CHOICES, REFRESH_DEFAULT, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, attachRefresh, refreshDone, refreshOf, setRefreshInterval } from './js/auto-refresh.js';
 export { MASTER_DETAIL, PANE_ASIDE_FOLD_AT, PANE_ASIDE_WIDTH, PANE_CLOSE_EVENT, PANE_FOLD_AT, PANE_OPEN_EVENT, PANE_RETRY_EVENT, PANE_SELECT_EVENT, PANE_WIDTHS, attachMasterDetails, closePane, masterDetail, openPane, selectPane, setPaneState } from './js/master-detail.js';
