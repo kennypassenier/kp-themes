@@ -1407,6 +1407,15 @@ var init_strings = __esm({
       graphKinds: "Kinds of link",
       graphLoading: "Reading the network\u2026",
       graphUnnamed: "Graph",
+      graphZoom: "Zoom",
+      graphZoomIn: "Zoom in",
+      graphZoomOut: "Zoom out",
+      graphZoomReset: "Reset view",
+      graphZoomResetTitle: "Put the picture back at its first size and place (0)",
+      graphZoomHint: "Scroll or pinch to zoom, drag the background to move; with the keys, + and - zoom, 0 resets and Shift with the arrows moves.",
+      graphDetailHint: "A picked node opens its details; Esc closes them first.",
+      graphDetailClose: "Close",
+      graphDetailCloseTitle: "Close the details (Esc)",
       breadcrumb: "Breadcrumb",
       pagination: "Pagination",
       themePicker: "Choose a theme",
@@ -58249,19 +58258,54 @@ var graph_exports = {};
 __export(graph_exports, {
   GRAPH: () => GRAPH,
   GRAPH_CHANGE_EVENT: () => GRAPH_CHANGE_EVENT,
+  GRAPH_DETAIL_EVENT: () => GRAPH_DETAIL_EVENT,
+  GRAPH_OPTION_ATTRIBUTES: () => GRAPH_OPTION_ATTRIBUTES,
   GRAPH_RETRY_EVENT: () => GRAPH_RETRY_EVENT,
   attachGraphs: () => attachGraphs,
   fitGraphLabels: () => fitGraphLabels,
+  graphArrow: () => graphArrow,
   graphBends: () => graphBends,
+  graphDetail: () => graphDetail,
   graphHideKind: () => graphHideKind,
   graphLabelText: () => graphLabelText,
   graphLayout: () => graphLayout,
+  graphOptionsOf: () => graphOptionsOf,
+  graphRoom: () => graphRoom,
   graphSelect: () => graphSelect,
+  graphZoom: () => graphZoom,
   hubOf: () => hubOf,
   ringOf: () => ringOf,
   setGraphData: () => setGraphData,
+  setGraphOptions: () => setGraphOptions,
   setGraphState: () => setGraphState
 });
+function graphOptionsOf(host) {
+  const num2 = (name, lo, hi) => {
+    const raw = host.getAttribute(name);
+    const v = raw == null || raw.trim() === "" ? NaN : Number(raw);
+    return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : null;
+  };
+  const flag = (name) => host.hasAttribute(name) && host.getAttribute(name) !== "off" && host.getAttribute(name) !== "false";
+  return {
+    labels: host.getAttribute("data-kp-labels") === "below" ? "below" : "beside",
+    chrome: host.getAttribute("data-kp-chrome") === "inside" ? "inside" : "outside",
+    colour: host.getAttribute("data-kp-colour") === "fixed" ? "fixed" : "theme",
+    direction: host.getAttribute("data-kp-direction") === "arrows" ? "arrows" : "none",
+    zoom: flag("data-kp-zoom"),
+    detail: flag("data-kp-detail"),
+    ring: num2("data-kp-ring-radius", 0.15, 0.48),
+    node: num2("data-kp-node-radius", 6, 40)
+  };
+}
+function setGraphOptions(el16, options) {
+  const names = { labels: "data-kp-labels", chrome: "data-kp-chrome", colour: "data-kp-colour", direction: "data-kp-direction", zoom: "data-kp-zoom", detail: "data-kp-detail", ring: "data-kp-ring-radius", node: "data-kp-node-radius" };
+  for (const [key, value] of Object.entries(options)) {
+    const name = names[key];
+    if (!name) continue;
+    if (value == null || value === false) el16.removeAttribute(name);
+    else el16.setAttribute(name, value === true ? "" : String(value));
+  }
+}
 function hubOf(data) {
   if (data.hub && data.nodes.some((n) => n.id === data.hub)) return data.hub;
   const degree = /* @__PURE__ */ new Map();
@@ -58280,18 +58324,24 @@ function hubOf(data) {
   }
   return best;
 }
-function graphLayout(data, W, H) {
-  const at = /* @__PURE__ */ new Map();
-  const hub = hubOf(data);
+function ringGeometry(W, H, { ring = 0.36, inset } = {}) {
+  const top = inset?.top ?? 0;
+  const bottom = inset?.bottom ?? 0;
+  const Hs = H - top - bottom;
   const cx = W / 2;
-  const cy = H / 2 - 10;
-  const R2 = Math.min(W, H) * 0.36;
+  const cy = top + Hs / 2 - 10;
+  const R2 = Math.min(W, Hs) * ring;
   let rx = R2 * (W > 600 ? 1.35 : 1);
   let ry = R2;
   if (W < 600) {
     rx = Math.min(rx, W * 0.24);
-    ry = Math.max(ry, H * 0.36);
+    ry = Math.max(ry, Hs * ring);
   }
+  return { cx, cy, rx, ry };
+}
+function placeRing(data, { cx, cy, rx, ry }) {
+  const at = /* @__PURE__ */ new Map();
+  const hub = hubOf(data);
   if (hub) at.set(hub, { x: cx, y: cy, angle: Math.PI / 2 });
   const ring = ringOf(data, hub);
   ring.forEach((n, i) => {
@@ -58299,6 +58349,79 @@ function graphLayout(data, W, H) {
     at.set(n.id, { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry, angle });
   });
   return at;
+}
+function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf(n), line = 18, maxHeight = 1400, ...layout3 } = {}) {
+  const pad2 = 8;
+  const gap = 8;
+  const hub = hubOf(data);
+  const nodes = [...hub ? data.nodes.filter((n) => n.id === hub) : [], ...ringOf(data, hub)];
+  const widths2 = new Map(nodes.map((n) => [n.id, widthOf(n)]));
+  let height = H;
+  let best = null;
+  for (let guard = 0; guard < 40; guard += 1) {
+    const geo = ringGeometry(W, height, layout3);
+    let rx = W > 600 ? geo.rx : Infinity;
+    const ring = ringOf(data, hub);
+    for (const [i, n] of ring.entries()) {
+      const cos = Math.cos(-Math.PI / 2 + i / Math.max(1, ring.length) * Math.PI * 2);
+      const half = Math.max((widths2.get(n.id) ?? 0) / 2, rOf(n)) + pad2;
+      if (cos > 1e-3) rx = Math.min(rx, (W - half - geo.cx) / cos);
+      else if (cos < -1e-3) rx = Math.min(rx, (geo.cx - half) / -cos);
+    }
+    geo.rx = Math.max(24, Number.isFinite(rx) ? rx : geo.rx);
+    const at = placeRing(data, geo);
+    const boxes = nodes.map((n) => {
+      const p = (
+        /** @type {{ x: number, y: number }} */
+        at.get(n.id)
+      );
+      const r = rOf(n) + (n.flag === "mismatch" ? 5 : 0);
+      const w = widths2.get(n.id) ?? 0;
+      return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line } };
+    });
+    const top = layout3.inset?.top ?? 0;
+    const bottom = layout3.inset?.bottom ?? 0;
+    const hits = (a, b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
+    let misses = 0;
+    for (const [i, a] of boxes.entries()) {
+      if (a.label.x < pad2 || a.label.x + a.label.width > W - pad2 || a.circle.y < top + pad2 || a.label.y + a.label.height > height - bottom - pad2) misses += 1;
+      for (const b of boxes.slice(i + 1)) if (hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
+    }
+    if (!best || misses < best.misses) best = { misses, at, H: height };
+    if (misses === 0 || height >= maxHeight) break;
+    height = Math.min(maxHeight, Math.round(height * 1.1));
+  }
+  const chosen = (
+    /** @type {NonNullable<typeof best>} */
+    best
+  );
+  return { at: chosen.at, H: chosen.H };
+}
+function graphArrow(from, bend, to, clear, size2 = 9) {
+  const at = (t2) => ({
+    x: (1 - t2) * (1 - t2) * from.x + 2 * (1 - t2) * t2 * bend.x + t2 * t2 * to.x,
+    y: (1 - t2) * (1 - t2) * from.y + 2 * (1 - t2) * t2 * bend.y + t2 * t2 * to.y
+  });
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 24; i += 1) {
+    const mid = (lo + hi) / 2;
+    const p = at(mid);
+    if (Math.hypot(p.x - to.x, p.y - to.y) > clear) lo = mid;
+    else hi = mid;
+  }
+  const t = lo;
+  const tip = at(t);
+  let dx = 2 * (1 - t) * (bend.x - from.x) + 2 * t * (to.x - bend.x);
+  let dy = 2 * (1 - t) * (bend.y - from.y) + 2 * t * (to.y - bend.y);
+  const len = Math.hypot(dx, dy) || 1;
+  dx /= len;
+  dy /= len;
+  const bx = tip.x - dx * size2;
+  const by = tip.y - dy * size2;
+  const w = size2 * 0.45;
+  const f = (n) => n.toFixed(1);
+  return `M${f(tip.x)},${f(tip.y)} L${f(bx - dy * w)},${f(by + dx * w)} L${f(bx + dy * w)},${f(by - dx * w)} Z`;
 }
 function graphBends(edges2) {
   const seen = /* @__PURE__ */ new Map();
@@ -58344,7 +58467,7 @@ function fitGraphLabels(labels, W, H, measure) {
 }
 function graphChanged(g) {
   g.el.dispatchEvent(
-    new CustomEvent(GRAPH_CHANGE_EVENT, { bubbles: true, detail: { selected: [...g.selected], hover: g.hover, hiddenKinds: [...g.hidden] } })
+    new CustomEvent(GRAPH_CHANGE_EVENT, { bubbles: true, detail: { selected: [...g.selected], hover: g.hover, hiddenKinds: [...g.hidden], detail: g.detail } })
   );
 }
 function restyleGraph(g) {
@@ -58352,7 +58475,7 @@ function restyleGraph(g) {
   if (g.hover) lit.add(g.hover);
   g.el.toggleAttribute("data-kp-focus", lit.size > 0);
   const on = new Set(lit);
-  for (const path of g.svg.querySelectorAll(".kp-graph__edge")) {
+  for (const path of g.svg.querySelectorAll(".kp-graph__edge, .kp-graph__arrow")) {
     const a = path.getAttribute("data-kp-from") ?? "";
     const b = path.getAttribute("data-kp-to") ?? "";
     const hidden = g.hidden.has(path.getAttribute("data-kp-kind") ?? "");
@@ -58365,7 +58488,7 @@ function restyleGraph(g) {
       on.add(b);
     }
   }
-  for (const node of g.svg.querySelectorAll(":scope > .kp-graph__node")) {
+  for (const node of g.svg.querySelectorAll(".kp-graph__node")) {
     const id = node.getAttribute("data-kp-id") ?? "";
     node.classList.toggle("is-on", on.has(id));
     node.classList.toggle("is-dim", lit.size > 0 && !on.has(id));
@@ -58374,7 +58497,7 @@ function restyleGraph(g) {
   }
   for (const button of g.legend.querySelectorAll("[data-kp-kind]"))
     button.setAttribute("aria-pressed", String(!g.hidden.has(button.getAttribute("data-kp-kind") ?? "")));
-  g.showAll.toggleAttribute("data-kp-idle", g.selected.size === 0 && g.hidden.size === 0);
+  g.showAll.toggleAttribute("data-kp-idle", g.selected.size === 0 && g.hidden.size === 0 && !g.detail);
 }
 function fitDrawnLabels(labels, W, H) {
   fitGraphLabels(labels, W, H, (l) => {
@@ -58383,14 +58506,15 @@ function fitDrawnLabels(labels, W, H) {
     return l.text.getBBox();
   });
 }
-function ghostOf(doc, last, W, H) {
+function ghostOf(doc, last, W, H, o) {
   const data = last?.nodes.length ? last : {
     nodes: ["hub", "a", "b", "c", "d", "e", "f"].map((id) => ({ id, label: id, description: "" })),
     edges: ["a", "b", "c", "d", "e", "f"].map((to) => ({ from: "hub", to, kind: "link" })),
     kinds: [],
     hub: "hub"
   };
-  const at = graphLayout(data, W, H);
+  const at = graphLayout(data, W, H, { ...o.ring != null ? { ring: o.ring } : {}, inset: insetOf(o, W) });
+  const base = o.node ?? 14;
   const hub = hubOf(data);
   const order2 = [...hub ? [hub] : [], ...ringOf(data, hub).map((n) => n.id)];
   const bends = graphBends(data.edges);
@@ -58422,7 +58546,7 @@ function ghostOf(doc, last, W, H) {
     const n = data.nodes.find((x) => x.id === id);
     const p = at.get(id);
     if (!n || !p) return;
-    const r = radiusOf(n);
+    const r = radiusOf(n, base);
     const hue = n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360);
     const node = svgEl(doc, "g", {
       class: `kp-graph__node${n.external ? " kp-graph__node--external" : ""}${id === hub ? " kp-graph__node--hub" : ""}`,
@@ -58437,25 +58561,156 @@ function ghostOf(doc, last, W, H) {
     root
   );
 }
+function applyView(g, eased = false) {
+  const { world, view } = g;
+  const identity = view.k === 1 && view.x === 0 && view.y === 0;
+  if (world) {
+    if (eased) {
+      world.classList.add("is-eased");
+      const done = () => world.classList.remove("is-eased");
+      world.addEventListener("transitionend", done, { once: true });
+      g.el.ownerDocument.defaultView?.setTimeout(done, 450);
+    }
+    world.style.transform = identity ? "" : `translate(${view.x.toFixed(2)}px, ${view.y.toFixed(2)}px) scale(${view.k.toFixed(4)})`;
+  }
+  g.zoomReset.setAttribute("aria-disabled", String(identity));
+  g.zoomIn.setAttribute("aria-disabled", String(view.k >= ZOOM_MAX));
+  g.zoomOut.setAttribute("aria-disabled", String(view.k <= ZOOM_MIN));
+  g.el.toggleAttribute("data-kp-zoomed", !identity);
+}
+function clampView(g) {
+  const [W, H] = g.size;
+  const keep = 60;
+  const { view } = g;
+  view.x = Math.min(W - keep, Math.max(keep - W * view.k, view.x));
+  view.y = Math.min(H - keep, Math.max(keep - H * view.k, view.y));
+}
+function zoomTo(g, k, px4, py, eased = false) {
+  const next2 = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, k));
+  const { view } = g;
+  const ratio = next2 / view.k;
+  view.x = px4 - (px4 - view.x) * ratio;
+  view.y = py - (py - view.y) * ratio;
+  view.k = next2;
+  clampView(g);
+  applyView(g, eased);
+}
+function pictureAt(g, clientX, clientY) {
+  const rect = g.svg.getBoundingClientRect();
+  const [W, H] = g.size;
+  return { x: (clientX - rect.left) * W / (rect.width || W), y: (clientY - rect.top) * H / (rect.height || H) };
+}
+function revealNode(g, id) {
+  const p = id ? g.at.get(id) : null;
+  if (!p || !g.options.zoom || g.view.k === 1 && g.view.x === 0 && g.view.y === 0) return;
+  const [W, H] = g.size;
+  const pad2 = 48;
+  const sx = p.x * g.view.k + g.view.x;
+  const sy = p.y * g.view.k + g.view.y;
+  if (sx < pad2) g.view.x += pad2 - sx;
+  else if (sx > W - pad2) g.view.x -= sx - (W - pad2);
+  if (sy < pad2 + 40) g.view.y += pad2 + 40 - sy;
+  else if (sy > H - pad2) g.view.y -= sy - (H - pad2);
+  clampView(g);
+  applyView(g, true);
+}
+function placeChrome(g) {
+  const inside = g.options.chrome === "inside";
+  const showParent = inside ? g.box : g.bar;
+  if (g.showAll.parentElement !== showParent) showParent.append(g.showAll);
+  if (inside) {
+    if (g.hint.parentElement !== g.box) g.box.append(g.hint);
+  } else if (g.hint.parentElement !== g.el) g.box.after(g.hint);
+}
+function sayHint(g) {
+  const { options: o, strings: s2 } = g;
+  const words = [s2.graphHint, ...o.zoom ? [s2.graphZoomHint] : [], ...o.detail ? [s2.graphDetailHint] : []].join(" ");
+  if (g.hint.textContent !== words) g.hint.textContent = words;
+  g.svg.setAttribute("aria-label", `${g.el.getAttribute("aria-label") ?? s2.graphUnnamed}. ${words}`);
+}
+function renderDetail(g) {
+  const { panel } = g;
+  const node = g.options.detail && g.state === "ready" && g.detail ? g.data?.nodes.find((n) => n.id === g.detail) : null;
+  if (!node) {
+    if (!panel.hidden || g.detailShown) panel.replaceChildren();
+    panel.hidden = true;
+    g.detailShown = null;
+    g.el.removeAttribute("data-kp-detail-open");
+    return;
+  }
+  if (g.detailShown === node.id && !panel.hidden) return;
+  const doc = g.el.ownerDocument;
+  detailCount += 1;
+  const title = make21(doc, "h3", "kp-graph__detail-title", node.label);
+  title.id = `kp-graph-detail-${detailCount}`;
+  const close = make21(doc, "button", "kp-button kp-button--sm kp-graph__detail-close", g.strings.graphDetailClose);
+  close.type = "button";
+  close.title = g.strings.graphDetailCloseTitle;
+  g.decorate?.(close, { kind: "detail-close", host: g.el, key: keyOf7(g.el), value: node.id, label: node.label });
+  const body = make21(doc, "div", "kp-graph__detail-body");
+  panel.replaceChildren(make21(doc, "div", "kp-graph__detail-head"), body);
+  panel.firstElementChild.append(title, close);
+  panel.setAttribute("aria-labelledby", title.id);
+  panel.hidden = false;
+  g.detailShown = node.id;
+  g.el.setAttribute("data-kp-detail-open", "");
+  const info = { id: node.id, node, slot: body, host: g.el, ...keyOf7(g.el) ? { key: keyOf7(g.el) } : {} };
+  g.el.dispatchEvent(new CustomEvent(GRAPH_DETAIL_EVENT, { bubbles: true, detail: info }));
+  const made6 = g.detailHook?.(info);
+  if (made6 != null && made6 !== void 0) body.append(made6 instanceof Node ? made6 : doc.createTextNode(String(made6)));
+  if (!body.childNodes.length) body.append(make21(doc, "p", "kp-graph__detail-text", node.description));
+}
 function drawGraph(g) {
   const doc = g.el.ownerDocument;
+  const o = graphOptionsOf(g.el);
+  g.options = o;
+  placeChrome(g);
+  sayHint(g);
+  g.zoomBox.hidden = !o.zoom;
+  if (!o.zoom && (g.view.k !== 1 || g.view.x !== 0 || g.view.y !== 0)) g.view = { k: 1, x: 0, y: 0 };
   const width = g.box.clientWidth;
   g.drawnWidth = width;
   const W = Math.max(280, width || 800);
-  const H = W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6)));
+  let H = W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6)));
+  const hadFocus = g.svg.contains(doc.activeElement) ? g.focus : null;
+  g.svg.replaceChildren();
+  g.world = null;
+  const data = g.data;
+  g.el.dataset.kpState = g.state;
+  const below = o.labels === "below";
+  const inset = insetOf(o, W);
+  const layoutOptions = { ...o.ring != null ? { ring: o.ring } : {}, inset };
+  const base = o.node ?? 14;
+  let at = null;
+  if (g.state === "ready" && data) {
+    if (below) {
+      const measure = (n) => {
+        const text = (
+          /** @type {SVGTextElement} */
+          svgEl(doc, "text", { class: "kp-graph__label" })
+        );
+        text.textContent = n.label;
+        g.svg.append(text);
+        const measured2 = isShown(g.svg) ? text.getComputedTextLength() : 0;
+        text.remove();
+        return (measured2 || n.label.length * 7.2) + 6;
+      };
+      const room = graphRoom(data, W, H, measure, { ...layoutOptions, radiusOf: (n) => radiusOf(n, base) });
+      at = room.at;
+      H = room.H;
+      g.readyHeight = H;
+      g.readyWidth = W;
+    } else at = graphLayout(data, W, H, layoutOptions);
+  } else if (below && g.readyWidth === W && g.readyHeight > H) H = g.readyHeight;
   g.box.style.setProperty("--kp-graph-h", `${H}px`);
   g.svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   g.svg.setAttribute("height", String(H));
-  const hadFocus = g.svg.contains(doc.activeElement) ? g.focus : null;
-  g.svg.replaceChildren();
-  const data = g.data;
-  g.el.dataset.kpState = g.state;
   const loading = g.state === "loading";
   g.note.textContent = loading ? g.words || g.strings.graphLoading : "";
   g.note.hidden = !loading;
   g.plate.replaceChildren();
   g.plate.hidden = loading || g.state === "ready";
-  if (loading) g.svg.append(ghostOf(doc, g.data, W, H));
+  if (loading) g.svg.append(ghostOf(doc, g.data, W, H, o));
   else if (!g.plate.hidden)
     g.plate.append(
       hostStatePlate(g.el, {
@@ -58467,17 +58722,27 @@ function drawGraph(g) {
       })
     );
   g.drawn = true;
-  if (g.state !== "ready" || !data) {
+  g.size = [W, H];
+  if (g.state !== "ready" || !data || !at) {
     g.legend.replaceChildren();
     g.legend.hidden = true;
     g.showAll.setAttribute("data-kp-idle", "");
+    g.at = /* @__PURE__ */ new Map();
+    renderDetail(g);
+    applyView(g);
     return;
   }
-  const at = graphLayout(data, W, H);
+  g.at = at;
   const hub = hubOf(data);
   const bends = graphBends(data.edges);
   const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
-  const name = (id) => data.nodes.find((n) => n.id === id)?.label ?? id;
+  const byId = new Map(data.nodes.map((n) => [n.id, n]));
+  const name = (id) => byId.get(id)?.label ?? id;
+  const world = (
+    /** @type {SVGGElement} */
+    svgEl(doc, "g", { class: "kp-graph__world" })
+  );
+  g.world = world;
   const edges2 = svgEl(doc, "g", { class: "kp-graph__edges" });
   data.edges.forEach((e, i) => {
     const a = at.get(e.from);
@@ -58500,8 +58765,31 @@ function drawGraph(g) {
     title.textContent = `${name(e.from)} \u2192 ${name(e.to)}: ${e.detail || kind?.label || e.kind}`;
     path.append(title);
     edges2.append(path);
+    const way = e.arrows ?? "to";
+    const ends = way === "both" ? ["to", "from"] : way === "none" ? [] : [way];
+    for (const end of ends) {
+      const toward = end === "to" ? e.to : e.from;
+      const near2 = end === "to" ? a : b;
+      const far = end === "to" ? b : a;
+      const r = radiusOf(
+        /** @type {GraphNode} */
+        byId.get(toward),
+        base
+      ) + (byId.get(toward)?.flag === "mismatch" ? 5 : 0);
+      const head = svgEl(doc, "path", {
+        d: graphArrow(near2, { x: mx, y: my }, far, r + 3),
+        class: "kp-graph__arrow",
+        "data-kp-from": e.from,
+        "data-kp-to": e.to,
+        "data-kp-kind": e.kind,
+        "data-kp-style": kind?.style ?? "solid",
+        "aria-hidden": "true"
+      });
+      if (kind?.colour) head.setAttribute("style", `--kp-graph-edge-colour: ${kind.colour}`);
+      edges2.append(head);
+    }
   });
-  g.svg.append(edges2);
+  world.append(edges2);
   const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
   const labels = [];
   const ring = ringOf(data, hub);
@@ -58510,11 +58798,11 @@ function drawGraph(g) {
   order2.forEach((id, index) => {
     const n = (
       /** @type {GraphNode} */
-      data.nodes.find((x) => x.id === id)
+      byId.get(id)
     );
     const p = at.get(id);
     if (!p) return;
-    const r = radiusOf(n);
+    const r = radiusOf(n, base);
     const node = svgEl(doc, "g", {
       class: `kp-graph__node${n.external ? " kp-graph__node--external" : ""}${id === hub ? " kp-graph__node--hub" : ""}`,
       "data-kp-id": id,
@@ -58524,17 +58812,18 @@ function drawGraph(g) {
       "aria-label": `${n.label}, ${n.description}`
     });
     if (!n.external) node.setAttribute("style", `--kp-graph-hue: ${n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360)}`);
+    if (n.colour) node.style.setProperty("--kp-graph-node-colour", n.colour);
     const title = svgEl(doc, "title");
     title.textContent = `${n.label}: ${n.description}`;
     node.append(title, svgEl(doc, "circle", { class: "kp-graph__ring", cx: p.x, cy: p.y, r }));
     if (!n.external) node.append(svgEl(doc, "circle", { class: "kp-graph__core", cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
     if (n.flag === "mismatch") node.append(svgEl(doc, "circle", { class: "kp-graph__flag", cx: p.x, cy: p.y, r: r + 5 }));
-    const dx = id === hub ? 0 : Math.cos(p.angle);
-    const dy = id === hub ? 1 : Math.sin(p.angle);
+    const dx = below || id === hub ? 0 : Math.cos(p.angle);
+    const dy = below || id === hub ? 1 : Math.sin(p.angle);
     const off = r + (n.flag === "mismatch" ? 10 : 6);
     const anchor = dx > 0.35 ? "start" : dx < -0.35 ? "end" : "middle";
     const lx = p.x + dx * off;
-    const ly = p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
+    const ly = below ? p.y + r + (n.flag === "mismatch" ? 5 : 0) + 16 : p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
     const text = (
       /** @type {SVGTextElement} */
       svgEl(doc, "text", { class: "kp-graph__label", x: lx.toFixed(1), y: ly.toFixed(1), "text-anchor": anchor })
@@ -58543,12 +58832,12 @@ function drawGraph(g) {
     text.setAttribute("aria-hidden", "true");
     node.append(text);
     labels.push({ text, full: n.label, length: n.label.length });
-    g.svg.append(node);
+    world.append(node);
     g.decorate?.(node, { kind: "node", host: g.el, key: keyOf7(g.el), index, value: id, label: n.label });
   });
+  g.svg.append(world);
   g.labels = labels;
-  g.size = [W, H];
-  if (isShown(g.svg)) fitDrawnLabels(labels, W, H);
+  if (isShown(g.svg) && !below) fitDrawnLabels(labels, W, H);
   const present = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
   g.legend.replaceChildren(
     ...present.map((k, index) => {
@@ -58570,6 +58859,8 @@ function drawGraph(g) {
   );
   g.legend.hidden = present.length === 0 || data.nodes.length < 2;
   restyleGraph(g);
+  renderDetail(g);
+  applyView(g);
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
 function setGraphData(el16, data) {
@@ -58579,10 +58870,12 @@ function setGraphData(el16, data) {
   g.state = data.nodes.length ? "ready" : "empty";
   const ids = new Set(data.nodes.map((n) => n.id));
   const before = g.selected.size;
+  const detailBefore = g.detail;
   for (const id of [...g.selected]) if (!ids.has(id)) g.selected.delete(id);
   if (g.hover && !ids.has(g.hover)) g.hover = null;
+  if (g.detail && !ids.has(g.detail)) g.detail = null;
   drawGraph(g);
-  if (g.selected.size !== before) graphChanged(g);
+  if (g.selected.size !== before || g.detail !== detailBefore) graphChanged(g);
 }
 function setGraphState(el16, state2, words = "", { text = "", art = null } = {}) {
   const g = graphs.get(el16);
@@ -58597,7 +58890,9 @@ function graphSelect(el16, ids) {
   const g = graphs.get(el16);
   if (!g) return;
   g.selected = new Set(ids);
+  g.detail = g.options.detail && ids.length ? ids[ids.length - 1] ?? null : null;
   restyleGraph(g);
+  renderDetail(g);
   graphChanged(g);
 }
 function graphHideKind(el16, kind, hide2) {
@@ -58608,6 +58903,23 @@ function graphHideKind(el16, kind, hide2) {
   restyleGraph(g);
   graphChanged(g);
 }
+function graphDetail(el16, id) {
+  const g = graphs.get(el16);
+  if (!g) return;
+  g.detail = id;
+  renderDetail(g);
+  restyleGraph(g);
+  graphChanged(g);
+}
+function graphZoom(el16, action) {
+  const g = graphs.get(el16);
+  if (!g || !g.options.zoom) return;
+  const [W, H] = g.size;
+  if (action === "reset") {
+    g.view = { k: 1, x: 0, y: 0 };
+    applyView(g, true);
+  } else zoomTo(g, g.view.k * (action === "in" ? ZOOM_STEP : 1 / ZOOM_STEP), W / 2, H / 2, true);
+}
 function dataChild(el16) {
   const script = el16.querySelector(":scope > script[data-kp-graph-data]");
   if (!script) return null;
@@ -58617,7 +58929,7 @@ function dataChild(el16) {
     return null;
   }
 }
-function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
+function attachGraphs(root = document, { decorate: decorate2, strings, detail } = {}) {
   const undo = [];
   const s2 = resolveStrings(strings);
   const hosts = (
@@ -58650,7 +58962,31 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
     note3.setAttribute("role", "status");
     const plate = make21(doc, "div", "kp-graph__state");
     plate.hidden = true;
-    box.append(svg2, note3, plate);
+    const zoomBox = make21(doc, "div", "kp-graph__zoom");
+    zoomBox.setAttribute("role", "group");
+    zoomBox.setAttribute("aria-label", s2.graphZoom);
+    zoomBox.hidden = true;
+    const zoomOut = make21(doc, "button", "kp-button kp-button--sm kp-graph__zoom-out", "\u2212");
+    const zoomIn = make21(doc, "button", "kp-button kp-button--sm kp-graph__zoom-in", "+");
+    const zoomReset = make21(doc, "button", "kp-button kp-button--sm kp-graph__zoom-reset", s2.graphZoomReset);
+    for (
+      const [button, label] of
+      /** @type {const} */
+      [
+        [zoomOut, s2.graphZoomOut],
+        [zoomIn, s2.graphZoomIn],
+        [zoomReset, s2.graphZoomResetTitle]
+      ]
+    ) {
+      button.type = "button";
+      button.title = label;
+      button.setAttribute("aria-label", label);
+    }
+    zoomBox.append(zoomOut, zoomIn, zoomReset);
+    const panel = make21(doc, "aside", "kp-graph__detail");
+    panel.setAttribute("role", "region");
+    panel.hidden = true;
+    box.append(svg2, note3, plate, zoomBox, panel);
     const hint2 = make21(doc, "p", "kp-graph__hint", s2.graphHint);
     el16.replaceChildren(bar, box, hint2, ...script ? [script] : []);
     const g = {
@@ -58677,10 +59013,27 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
       decorate: decorate2,
       strings: s2,
       labels: [],
-      size: [0, 0]
+      size: [0, 0],
+      options: graphOptionsOf(el16),
+      world: null,
+      at: /* @__PURE__ */ new Map(),
+      view: { k: 1, x: 0, y: 0 },
+      zoomBox,
+      zoomIn,
+      zoomOut,
+      zoomReset,
+      panel,
+      detail: null,
+      detailShown: null,
+      readyHeight: 0,
+      readyWidth: 0,
+      ...detail ? { detailHook: detail } : {}
     };
     graphs.set(el16, g);
     decorate2?.(showAll, { kind: "show-all", host: el16, key: keyOf7(el16) });
+    decorate2?.(zoomIn, { kind: "zoom-in", host: el16, key: keyOf7(el16) });
+    decorate2?.(zoomOut, { kind: "zoom-out", host: el16, key: keyOf7(el16) });
+    decorate2?.(zoomReset, { kind: "zoom-reset", host: el16, key: keyOf7(el16) });
     if (initial) setGraphData(el16, initial);
     else drawGraph(g);
     const nodeOf = (target) => (
@@ -58690,6 +59043,11 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
     const toggle2 = (id) => {
       if (g.selected.has(id)) g.selected.delete(id);
       else g.selected.add(id);
+      if (g.options.detail) {
+        if (g.selected.has(id)) g.detail = id;
+        else if (g.detail === id) g.detail = null;
+        renderDetail(g);
+      }
       restyleGraph(g);
       graphChanged(g);
     };
@@ -58700,21 +59058,34 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
       graphChanged(g);
     };
     const clear = () => {
-      if (g.selected.size === 0 && g.hidden.size === 0) return false;
+      if (g.selected.size === 0 && g.hidden.size === 0 && !g.detail) return false;
       g.selected.clear();
       g.hidden.clear();
+      g.detail = null;
+      renderDetail(g);
       restyleGraph(g);
       graphChanged(g);
       return true;
     };
+    const closeDetail = (refocus) => {
+      if (!g.detail) return false;
+      const id = g.detail;
+      g.detail = null;
+      renderDetail(g);
+      restyleGraph(g);
+      graphChanged(g);
+      if (refocus) svg2.querySelector(`[data-kp-id="${CSS.escape(id)}"]`)?.focus();
+      return true;
+    };
     const order2 = () => (
       /** @type {SVGGElement[]} */
-      [...svg2.querySelectorAll(":scope > .kp-graph__node")]
+      [...svg2.querySelectorAll(".kp-graph__node")]
     );
     const focusNode = (node) => {
       for (const other of order2()) other.setAttribute("tabindex", other === node ? "0" : "-1");
       g.focus = node.getAttribute("data-kp-id");
-      node.focus();
+      node.focus({ preventScroll: false });
+      revealNode(g, g.focus);
     };
     const onOver = (event) => {
       const node = nodeOf(event.target);
@@ -58748,12 +59119,112 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
       g.focus = id;
       toggle2(id);
     };
+    let dragged = false;
+    const pointers = /* @__PURE__ */ new Map();
+    let panFrom = null;
+    let pinch = null;
+    const pinchStart = () => {
+      const [a, b] = [...pointers.values()];
+      if (!a || !b) return;
+      const mid = pictureAt(g, (a.x + b.x) / 2, (a.y + b.y) / 2);
+      pinch = { dist: Math.hypot(a.x - b.x, a.y - b.y) || 1, k: g.view.k, wx: (mid.x - g.view.x) / g.view.k, wy: (mid.y - g.view.y) / g.view.k };
+      panFrom = null;
+    };
+    const onDown = (event) => {
+      if (!g.options.zoom || event.pointerType === "mouse" && event.button !== 0) return;
+      pointers.set(event.pointerId, { x: event.clientX, y: event.clientY, onNode: !!nodeOf(event.target) });
+      if (pointers.size === 2) pinchStart();
+      else if (pointers.size === 1 && !nodeOf(event.target)) {
+        panFrom = { x: event.clientX, y: event.clientY };
+        dragged = false;
+      }
+    };
+    const onMove = (event) => {
+      const known4 = pointers.get(event.pointerId);
+      if (!known4 || !g.options.zoom) return;
+      known4.x = event.clientX;
+      known4.y = event.clientY;
+      if (pinch && pointers.size >= 2) {
+        const [a, b] = [...pointers.values()];
+        if (!a || !b) return;
+        const mid = pictureAt(g, (a.x + b.x) / 2, (a.y + b.y) / 2);
+        const k = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, pinch.k * (Math.hypot(a.x - b.x, a.y - b.y) || 1) / pinch.dist));
+        g.view = { k, x: mid.x - pinch.wx * k, y: mid.y - pinch.wy * k };
+        clampView(g);
+        applyView(g);
+        dragged = true;
+      } else if (panFrom && pointers.size === 1) {
+        const rect = svg2.getBoundingClientRect();
+        const scale = g.size[0] / (rect.width || g.size[0]);
+        const dx = event.clientX - panFrom.x;
+        const dy = event.clientY - panFrom.y;
+        if (!dragged && Math.hypot(dx, dy) < 4) return;
+        if (!dragged) {
+          dragged = true;
+          g.el.setAttribute("data-kp-panning", "");
+          try {
+            svg2.setPointerCapture(event.pointerId);
+          } catch {
+          }
+        }
+        g.view.x += dx * scale;
+        g.view.y += dy * scale;
+        panFrom = { x: event.clientX, y: event.clientY };
+        clampView(g);
+        applyView(g);
+      }
+    };
+    const onUp = (event) => {
+      pointers.delete(event.pointerId);
+      if (pointers.size < 2) pinch = null;
+      if (pointers.size === 0) {
+        panFrom = null;
+        g.el.removeAttribute("data-kp-panning");
+      }
+    };
+    const onClickCapture = (event) => {
+      if (!dragged) return;
+      dragged = false;
+      event.stopPropagation();
+      event.preventDefault();
+    };
+    const onWheel = (event) => {
+      if (!g.options.zoom) return;
+      event.preventDefault();
+      const unit2 = event.deltaMode === 1 ? 0.05 : event.ctrlKey ? 0.01 : 15e-4;
+      const at = pictureAt(g, event.clientX, event.clientY);
+      zoomTo(g, g.view.k * Math.exp(-event.deltaY * unit2), at.x, at.y);
+    };
+    const zoomKey = (event) => {
+      if (!g.options.zoom || event.ctrlKey || event.metaKey || event.altKey) return false;
+      const [W, H] = g.size;
+      if (event.key === "+" || event.key === "=") zoomTo(g, g.view.k * ZOOM_STEP, W / 2, H / 2, true);
+      else if (event.key === "-" || event.key === "_") zoomTo(g, g.view.k / ZOOM_STEP, W / 2, H / 2, true);
+      else if (event.key === "0") {
+        g.view = { k: 1, x: 0, y: 0 };
+        applyView(g, true);
+      } else if (event.shiftKey && event.key.startsWith("Arrow")) {
+        const step = 56;
+        g.view.x += event.key === "ArrowLeft" ? step : event.key === "ArrowRight" ? -step : 0;
+        g.view.y += event.key === "ArrowUp" ? step : event.key === "ArrowDown" ? -step : 0;
+        clampView(g);
+        applyView(g, true);
+      } else return false;
+      event.preventDefault();
+      return true;
+    };
+    const onZoomBox = (event) => {
+      const button = event.target instanceof Element ? event.target.closest("button") : null;
+      if (!button || button.getAttribute("aria-disabled") === "true") return;
+      graphZoom(el16, button === zoomIn ? "in" : button === zoomOut ? "out" : "reset");
+    };
     const onKey3 = (event) => {
       const node = nodeOf(event.target);
       if (!node) return;
+      if (zoomKey(event)) return;
       const nodes = order2();
       const at = nodes.indexOf(node);
-      const hasHub = !!svg2.querySelector(":scope > .kp-graph__node--hub");
+      const hasHub = !!svg2.querySelector(".kp-graph__node--hub");
       const ringStart = hasHub ? 1 : 0;
       const ringCount = nodes.length - ringStart;
       let to = null;
@@ -58768,7 +59239,7 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
         toggle2(node.getAttribute("data-kp-id") ?? "");
         return;
       } else if (event.key === "Escape") {
-        if (clear()) {
+        if (closeDetail(false) || clear()) {
           event.preventDefault();
           event.stopPropagation();
         }
@@ -58788,20 +59259,39 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
       graphHideKind(el16, kind, !g.hidden.has(kind));
     };
     const onShowAll = () => clear();
+    const onPanel = (event) => {
+      if (event.target instanceof Element && event.target.closest(".kp-graph__detail-close")) closeDetail(true);
+    };
+    const onPanelKey = (event) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      if (closeDetail(true)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
     const onDocKey = (event) => {
       if (event.key !== "Escape" || event.defaultPrevented) return;
       if (
         /** @type {Element | null} */
         event.target?.closest?.('dialog, input, textarea, select, [role="menu"]')
       ) return;
-      clear();
+      if (!closeDetail(false)) clear();
     };
     svg2.addEventListener("pointerover", onOver);
     svg2.addEventListener("pointerout", onOut);
     svg2.addEventListener("focusin", onFocus);
     svg2.addEventListener("focusout", onBlur);
+    svg2.addEventListener("click", onClickCapture, true);
     svg2.addEventListener("click", onClick);
     svg2.addEventListener("keydown", onKey3);
+    svg2.addEventListener("pointerdown", onDown);
+    svg2.addEventListener("pointermove", onMove);
+    svg2.addEventListener("pointerup", onUp);
+    svg2.addEventListener("pointercancel", onUp);
+    svg2.addEventListener("wheel", onWheel, { passive: false });
+    zoomBox.addEventListener("click", onZoomBox);
+    panel.addEventListener("click", onPanel);
+    panel.addEventListener("keydown", onPanelKey);
     legend.addEventListener("click", onKind);
     showAll.addEventListener("click", onShowAll);
     doc.addEventListener("keydown", onDocKey);
@@ -58809,7 +59299,13 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
       if (box.clientWidth !== g.drawnWidth) drawGraph(g);
     }) : null;
     sizes?.observe(box);
+    const options = view ? new view.MutationObserver(() => drawGraph(g)) : null;
+    options?.observe(el16, { attributes: true, attributeFilter: GRAPH_OPTION_ATTRIBUTES });
     const onFonts = () => {
+      if (g.options.labels === "below") {
+        drawGraph(g);
+        return;
+      }
       for (const l of g.labels) {
         l.length = l.full.length;
         l.text.textContent = l.full;
@@ -58820,12 +59316,22 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
     undo.push(() => {
       doc.fonts?.removeEventListener("loadingdone", onFonts);
       sizes?.disconnect();
+      options?.disconnect();
       svg2.removeEventListener("pointerover", onOver);
       svg2.removeEventListener("pointerout", onOut);
       svg2.removeEventListener("focusin", onFocus);
       svg2.removeEventListener("focusout", onBlur);
+      svg2.removeEventListener("click", onClickCapture, true);
       svg2.removeEventListener("click", onClick);
       svg2.removeEventListener("keydown", onKey3);
+      svg2.removeEventListener("pointerdown", onDown);
+      svg2.removeEventListener("pointermove", onMove);
+      svg2.removeEventListener("pointerup", onUp);
+      svg2.removeEventListener("pointercancel", onUp);
+      svg2.removeEventListener("wheel", onWheel);
+      zoomBox.removeEventListener("click", onZoomBox);
+      panel.removeEventListener("click", onPanel);
+      panel.removeEventListener("keydown", onPanelKey);
       legend.removeEventListener("click", onKind);
       showAll.removeEventListener("click", onShowAll);
       doc.removeEventListener("keydown", onDocKey);
@@ -58834,7 +59340,7 @@ function attachGraphs(root = document, { decorate: decorate2, strings } = {}) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var GRAPH, GRAPH_CHANGE_EVENT, GRAPH_RETRY_EVENT, keyOf7, ringOf, graphLabelText, radiusOf, isShown, make21, SVG_NS3, svgEl, graphs;
+var GRAPH, GRAPH_CHANGE_EVENT, GRAPH_RETRY_EVENT, GRAPH_DETAIL_EVENT, GRAPH_OPTION_ATTRIBUTES, keyOf7, ringOf, graphLayout, graphLabelText, radiusOf, isShown, make21, SVG_NS3, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP, detailCount, insetOf;
 var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
@@ -58843,10 +59349,26 @@ var init_graph = __esm({
     GRAPH = "[data-kp-graph]";
     GRAPH_CHANGE_EVENT = "kp-graph-change";
     GRAPH_RETRY_EVENT = "kp-graph-retry";
+    GRAPH_DETAIL_EVENT = "kp-graph-detail";
+    GRAPH_OPTION_ATTRIBUTES = [
+      "data-kp-labels",
+      "data-kp-chrome",
+      "data-kp-colour",
+      "data-kp-direction",
+      "data-kp-zoom",
+      "data-kp-detail",
+      "data-kp-ring-radius",
+      "data-kp-node-radius"
+    ];
     keyOf7 = (host) => host.getAttribute("data-kp-key") ?? void 0;
     ringOf = (data, hub) => data.nodes.filter((n) => n.id !== hub).sort((a, b) => Number(!!a.external) - Number(!!b.external) || a.label.localeCompare(b.label) || a.id.localeCompare(b.id));
+    graphLayout = (data, W, H, options) => placeRing(data, ringGeometry(W, H, options));
     graphLabelText = (full, length) => length >= full.length ? full : `${full.slice(0, length).trimEnd()}\u2026`;
-    radiusOf = (n) => n.external ? 9 : n.weight != null ? 10 + 14 * Math.sqrt(Math.max(0, Math.min(1, n.weight))) : 14;
+    radiusOf = (n, base = 14) => {
+      if (n.radius != null && n.radius > 0) return n.radius;
+      const r = n.external ? 9 : n.weight != null ? 10 + 14 * Math.sqrt(Math.max(0, Math.min(1, n.weight))) : 14;
+      return base === 14 ? r : r * base / 14;
+    };
     isShown = (el16) => !!el16 && el16.isConnected && el16.getClientRects().length > 0;
     make21 = (doc, tag, className, text) => {
       const el16 = doc.createElement(tag);
@@ -58864,6 +59386,11 @@ var init_graph = __esm({
       return el16;
     };
     graphs = /* @__PURE__ */ new WeakMap();
+    ZOOM_MIN = 0.5;
+    ZOOM_MAX = 4;
+    ZOOM_STEP = 1.25;
+    detailCount = 0;
+    insetOf = (o, W) => ({ top: o.chrome === "inside" || o.zoom ? 44 : 0, bottom: o.chrome === "inside" ? W < 600 ? 56 : 34 : 0 });
   }
 });
 
@@ -66818,6 +67345,8 @@ export {
   GLYPHS,
   GRAPH,
   GRAPH_CHANGE_EVENT,
+  GRAPH_DETAIL_EVENT,
+  GRAPH_OPTION_ATTRIBUTES,
   GRAPH_RETRY_EVENT,
   GRID_PAGE_ROWS,
   GROUP_EVENT,
@@ -67598,12 +68127,17 @@ export {
   glideGroup,
   glyphCells,
   goToStep,
+  graphArrow,
   graphBends,
+  graphDetail,
   graph_exports as graphExports,
   graphHideKind,
   graphLabelText,
   graphLayout,
+  graphOptionsOf,
+  graphRoom,
   graphSelect,
+  graphZoom,
   grid,
   gridlayout_exports as gridlayoutExports,
   groupMessages,
@@ -67909,6 +68443,7 @@ export {
   setGanttWindow,
   setGanttZones,
   setGraphData,
+  setGraphOptions,
   setGraphState,
   setHeat,
   setHeatLegend,

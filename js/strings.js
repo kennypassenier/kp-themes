@@ -1138,6 +1138,15 @@
  * @property {string} graphKinds  The name of the list of kinds of link over the graph [scope-143]
  * @property {string} graphLoading  A loading graph's sentence when the page gives none (`setGraphState(el, 'loading')`) [scope-143]
  * @property {string} graphUnnamed  The picture's name when the graph has no `aria-label` [scope-143]
+ * @property {string} graphZoom  The name of the group of zoom controls inside the graph (`data-kp-zoom`) [graph-1020]
+ * @property {string} graphZoomIn  The zoom-in control's name [graph-1020]
+ * @property {string} graphZoomOut  The zoom-out control's name [graph-1020]
+ * @property {string} graphZoomReset  The words on the control that puts the view back [graph-1020]
+ * @property {string} graphZoomResetTitle  Its title and accessible name [graph-1020]
+ * @property {string} graphZoomHint  The sentence added to the hint while zoom is on: wheel or pinch, drag, the keys [graph-1020]
+ * @property {string} graphDetailHint  The sentence added to the hint while details are on: what a pick opens and what Esc does [graph-1020]
+ * @property {string} graphDetailClose  The words on the button that closes a node's details [graph-1020]
+ * @property {string} graphDetailCloseTitle  Its title [graph-1020]
 
  * @property {string} breadcrumb
  * @property {string} pagination
@@ -2998,6 +3007,15 @@ export const DEFAULT_STRINGS = Object.freeze({
     graphKinds: 'Kinds of link',
     graphLoading: 'Reading the network…',
     graphUnnamed: 'Graph',
+    graphZoom: 'Zoom',
+    graphZoomIn: 'Zoom in',
+    graphZoomOut: 'Zoom out',
+    graphZoomReset: 'Reset view',
+    graphZoomResetTitle: 'Put the picture back at its first size and place (0)',
+    graphZoomHint: 'Scroll or pinch to zoom, drag the background to move; with the keys, + and - zoom, 0 resets and Shift with the arrows moves.',
+    graphDetailHint: 'A picked node opens its details; Esc closes them first.',
+    graphDetailClose: 'Close',
+    graphDetailCloseTitle: 'Close the details (Esc)',
     breadcrumb: 'Breadcrumb',
     pagination: 'Pagination',
     themePicker: 'Choose a theme',

@@ -12,7 +12,7 @@
 // Run: node --test gates/
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { fitGraphLabels, graphBends, graphLabelText, graphLayout, hubOf, ringOf } from '../js/graph.js';
+import { fitGraphLabels, graphArrow, graphBends, graphLabelText, graphLayout, graphOptionsOf, graphRoom, hubOf, ringOf } from '../js/graph.js';
 
 /** @param {string} id @param {string} label @param {object} [more] */
 const node = (id, label, more = {}) => ({ id, label, description: label, ...more });
@@ -168,4 +168,66 @@ test('labels are shortened with an ellipsis until none leaves the box and no two
         fitGraphLabels(labels, 40, 40, measure);
         for (const l of labels) assert.ok(l.length >= 1);
     }
+});
+
+// The options [graph-1020]: every one is off, and a graph that sets none draws exactly what was approved.
+const STACKS = {
+    nodes: ['productivity', 'downloader', 'syncthing', 'traefik', 'vaultwarden', 'media', 'homeassistant-long-name'].map((l) => node(l, l)),
+    edges: ['downloader', 'syncthing', 'traefik', 'vaultwarden', 'media', 'homeassistant-long-name'].map((to) => ({ from: 'productivity', to, kind: 'proxy' })),
+    kinds: [],
+    hub: 'productivity',
+};
+const wide = (/** @type {{ label: string }} */ n) => n.label.length * 7 + 6;
+/** @param {Map<string, { x: number, y: number }>} m @param {string} id */
+const pos = (m, id) => /** @type {{ x: number, y: number }} */ (m.get(id));
+
+test('graphOptionsOf: no attribute is the approved look, and a bad number is no number', () => {
+    /** @type {Map<string, string>} */
+    const attrs = new Map();
+    const host = /** @type {Element} */ (/** @type {unknown} */ ({ getAttribute: (/** @type {string} */ n) => attrs.get(n) ?? null, hasAttribute: (/** @type {string} */ n) => attrs.has(n) }));
+    assert.deepEqual(graphOptionsOf(host), { labels: 'beside', chrome: 'outside', colour: 'theme', direction: 'none', zoom: false, detail: false, ring: null, node: null });
+    attrs.set('data-kp-labels', 'below').set('data-kp-zoom', '').set('data-kp-detail', 'off').set('data-kp-ring-radius', '9').set('data-kp-node-radius', 'abc');
+    const o = graphOptionsOf(host);
+    assert.equal(o.labels, 'below');
+    assert.equal(o.zoom, true, 'a bare attribute is on');
+    assert.equal(o.detail, false, '"off" is off');
+    assert.equal(o.ring, 0.48, 'a ring past the box is held at its largest');
+    assert.equal(o.node, null, 'text is no radius');
+});
+
+test('graphLayout: with no options it is the layout that was approved; a ring share and an inset move it', () => {
+    const plain = graphLayout(STACKS, 1000, 500);
+    const same = graphLayout(STACKS, 1000, 500, {});
+    for (const [id, p] of plain) assert.deepEqual(same.get(id), p);
+    const hub = pos(plain, 'productivity');
+    assert.deepEqual([hub.x, hub.y], [500, 240], 'the hub in the middle, 10 px up');
+    const small = graphLayout(STACKS, 1000, 500, { ring: 0.2 });
+    assert.ok(Math.abs(pos(small, 'downloader').y - 240) < Math.abs(pos(plain, 'downloader').y - 240), 'a smaller ring share is a smaller ring');
+    const inset = graphLayout(STACKS, 1000, 500, { inset: { top: 44, bottom: 34 } });
+    assert.ok(pos(inset, 'productivity').y > hub.y, 'the centre moves down with a strip kept clear at the top');
+});
+
+test('graphRoom: names stand whole inside the box, none touches another, and a narrow box grows taller', () => {
+    for (const W of [1200, 800, 390]) {
+        const { at, H } = graphRoom(STACKS, W, 480, wide, { inset: { top: 44, bottom: 34 } });
+        const boxes = STACKS.nodes.map((n) => {
+            const p = pos(at, n.id);
+            const w = wide(n);
+            return { x: p.x - w / 2, y: p.y + 18, width: w, height: 18 };
+        });
+        for (const b of boxes) assert.ok(b.x >= 8 && b.x + b.width <= W - 8, `at ${W}: a whole name lies inside the box sideways (${b.x}, ${b.width})`);
+        for (let i = 0; i < boxes.length; i += 1) for (let j = i + 1; j < boxes.length; j += 1) assert.ok(!touch(boxes[i], boxes[j]), `at ${W}: ${i} and ${j} touch`);
+        assert.ok(H >= 480, 'the box never shrinks');
+    }
+    const crowded = { ...STACKS, nodes: Array.from({ length: 16 }, (_, i) => node(`s${i}`, `stack-number-${i}`)), edges: [], hub: 's0' };
+    assert.ok(graphRoom(crowded, 390, 480, wide).H > 480, 'sixteen long names on a phone need a taller picture');
+});
+
+test('graphArrow: the head stands short of the node and turns with the curve', () => {
+    const d = graphArrow({ x: 0, y: 0 }, { x: 50, y: 0 }, { x: 100, y: 0 }, 20, 10);
+    const [tip, ...rest] = (d.match(/-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?/g) ?? []).map((p) => p.split(',').map(Number));
+    assert.ok(Math.abs(tip[0] - 80) < 0.1 && Math.abs(tip[1]) < 0.1, `the tip is 20 px from the end node: ${tip}`);
+    assert.ok(rest.every(([x]) => Math.abs(x - 70) < 0.1), 'the base is 10 px back along a straight link');
+    const bent = graphArrow({ x: 0, y: 0 }, { x: 50, y: 60 }, { x: 100, y: 0 }, 20, 10);
+    assert.notEqual(bent, d, 'a bent link turns its head');
 });

@@ -5911,7 +5911,8 @@
  * `var(--chart-2)`). Knobs: `--kp-graph-h` (480px; the script sets it to
  * the height it draws), `--kp-graph-label-size` (12px), `--kp-graph-dim`
  * (0.08, a link that is not lit while a node is), `--kp-graph-hue` (210, a
- * node's hue, set per node by the script). */
+ * node's hue, set per node by the script). Options on top of this look: see
+ * "Network graph options" below. */
     .kp-graph {
         display: grid;
         gap: var(--kp-space-sm, 0.5rem);
@@ -6297,6 +6298,171 @@
 
     .kp-graph__node.is-dim {
         opacity: 0.3;
+    }
+
+    /* --- Network graph options [graph-1020] ----------------------------------
+ * Each is an attribute on the graph and off by default, so the approved look is what a graph without them draws. Knobs: the fixed
+ * colour's lightness and chroma (`--kp-graph-fixed-l` 0.68, `--kp-graph-fixed-c` 0.15), the zoom's time and curve
+ * (`--kp-graph-zoom-time` 160ms, `--kp-graph-zoom-ease`; a theme sets its own curve) and the details panel's width
+ * (`--kp-graph-detail-width` 20rem).
+ *   data-kp-colour="fixed"      a node's colour is its hue at a fixed lightness, the same in every theme
+ *   data-kp-direction="arrows"  an arrowhead at the end of each link; solid for a solid kind, open for a dashed one
+ *   data-kp-chrome="inside"     Show all and the hint stand inside the picture (js/graph.js keeps their room clear)
+ *   data-kp-labels="below"      the names stand whole under their nodes (js/graph.js makes the room)
+ *   data-kp-zoom                wheel or pinch zoom, drag to pan, the zoom controls inside the picture
+ *   data-kp-detail              a picked node opens its details inside the picture
+ *   data-kp-ring-radius, data-kp-node-radius   the ring's and the nodes' size (js/graph.js) */
+    .kp-graph[data-kp-colour='fixed']:not([data-kp-state='loading']) .kp-graph__node {
+        --kp-graph-node-colour: oklch(var(--kp-graph-fixed-l, 0.68) var(--kp-graph-fixed-c, 0.15) var(--kp-graph-hue, 210));
+    }
+
+    /* The head follows the kind's colour; a dashed kind gets an open head. */
+    .kp-graph__arrow {
+        display: none;
+        fill: var(--kp-graph-edge-colour, var(--chart-3));
+        stroke: var(--kp-graph-edge-colour, var(--chart-3));
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        pointer-events: none;
+    }
+
+    .kp-graph[data-kp-direction='arrows'] .kp-graph__arrow {
+        display: block;
+    }
+
+    .kp-graph .kp-graph__arrow:is([data-kp-style='dash'], [data-kp-style='long-dash'], [data-kp-style='dot']) {
+        fill: var(--background);
+        stroke-dasharray: none;
+    }
+
+    .kp-graph__arrow.is-dim {
+        opacity: var(--kp-graph-dim, 0.08);
+    }
+
+    .kp-graph[data-kp-direction='arrows'] .kp-graph__arrow.is-hidden {
+        display: none;
+    }
+
+    /* Show all and the hint inside the picture: over its top-right and its foot, on the picture's own ground. */
+    .kp-graph[data-kp-chrome='inside'] .kp-graph__show-all {
+        position: absolute;
+        inset-block-start: var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        z-index: 3;
+        margin: 0;
+    }
+
+    .kp-graph[data-kp-chrome='inside'] .kp-graph__hint {
+        position: absolute;
+        inset-inline: var(--kp-space-sm, 0.5rem);
+        inset-block-end: var(--kp-space-xs, 0.25rem);
+        z-index: 1;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        background: color-mix(in oklch, var(--background) 86%, transparent);
+        pointer-events: none;
+    }
+
+    .kp-graph[data-kp-chrome='inside']:not([data-kp-state='ready']) .kp-graph__hint {
+        visibility: hidden;
+    }
+
+    /* The zoom controls, over the picture's top-left. */
+    .kp-graph__zoom {
+        position: absolute;
+        inset-block-start: var(--kp-space-sm, 0.5rem);
+        inset-inline-start: var(--kp-space-sm, 0.5rem);
+        z-index: 3;
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-graph__zoom[hidden] {
+        display: none;
+    }
+
+    .kp-graph:not([data-kp-state='ready']) .kp-graph__zoom {
+        display: none;
+    }
+
+    .kp-graph__zoom [aria-disabled='true'] {
+        opacity: 0.45;
+        cursor: default;
+    }
+
+    .kp-graph[data-kp-zoom]:not([data-kp-zoom='off'], [data-kp-zoom='false']) .kp-graph__svg {
+        cursor: grab;
+        overflow: hidden;
+        touch-action: none;
+    }
+
+    .kp-graph[data-kp-panning] .kp-graph__svg {
+        cursor: grabbing;
+    }
+
+    /* A view is one transform, clipped to the box; a button or key eases it on the theme's own curve. */
+    .kp-graph__world {
+        transform-origin: 0 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-graph__world.is-eased {
+            transition: transform var(--kp-graph-zoom-time, 160ms) var(--kp-graph-zoom-ease, ease-out);
+        }
+    }
+
+    /* The details of a picked node, inside the picture at its right: a plate of its own ground, scrolling inside itself. */
+    .kp-graph__detail {
+        position: absolute;
+        inset-block: calc(var(--kp-space-sm, 0.5rem) + var(--kp-control-height, 2.25rem) + var(--kp-space-sm, 0.5rem)) var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        z-index: 4;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: min(var(--kp-graph-detail-width, 20rem), calc(100% - 2 * var(--kp-space-sm, 0.5rem)));
+        max-block-size: max-content;
+        padding: var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        overflow: hidden;
+    }
+
+    .kp-graph__detail[hidden] {
+        display: none;
+    }
+
+    .kp-graph__detail-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-graph__detail-title {
+        margin: 0;
+        font-size: var(--kp-text-md, 1rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-graph__detail-body {
+        min-block-size: 0;
+        overflow: auto;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-graph__detail-text {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    @media (max-width: 40rem) {
+        .kp-graph__detail {
+            inset-block-start: auto;
+            max-block-size: 55%;
+        }
     }
     /* --- Freshness line [scope-143] ---------------------------------------- */
 

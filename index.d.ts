@@ -199,9 +199,13 @@ export type TrendData = import('./js/chart.js').TrendData;
 export { CALENDAR, CALENDAR_MONTH_EVENT, CALENDAR_PICK_EVENT, CALENDAR_RETRY_EVENT, attachCalendars, calendarMonth, calendarSelect, monthCells, setCalendarCaption, setCalendarDays, setCalendarLegend, setCalendarState, shiftDay, shiftMonth, } from './js/calendar.js';
 export type CalendarDay = import('./js/calendar.js').CalendarDay;
 /** @typedef {import('./js/calendar.js').CalendarDay} CalendarDay */
-export { GRAPH, GRAPH_CHANGE_EVENT, attachGraphs, fitGraphLabels, graphBends, graphHideKind, graphLabelText, graphLayout, graphSelect, hubOf, ringOf, setGraphData, setGraphState, } from './js/graph.js';
+export { GRAPH, GRAPH_CHANGE_EVENT, GRAPH_DETAIL_EVENT, GRAPH_OPTION_ATTRIBUTES, attachGraphs, fitGraphLabels, graphArrow, graphBends, graphDetail, graphHideKind, graphLabelText, graphLayout, graphOptionsOf, graphRoom, graphSelect, graphZoom, hubOf, ringOf, setGraphData, setGraphOptions, setGraphState, } from './js/graph.js';
 export type GraphData = import('./js/graph.js').GraphData;
+export type GraphOptions = import('./js/graph.js').GraphOptions;
+export type GraphDetailInfo = import('./js/graph.js').GraphDetailInfo;
 /** @typedef {import('./js/graph.js').GraphData} GraphData */
+/** @typedef {import('./js/graph.js').GraphOptions} GraphOptions */
+/** @typedef {import('./js/graph.js').GraphDetailInfo} GraphDetailInfo */
 export { Form, FormField } from './components/form.jsx';
 export { default as Switch } from './components/switch.jsx';
 export { Reorder, SplitPane, Tree } from './components/structure.jsx';

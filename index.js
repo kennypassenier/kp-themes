@@ -761,19 +761,29 @@ export {
 export {
     GRAPH,
     GRAPH_CHANGE_EVENT,
+    GRAPH_DETAIL_EVENT,
+    GRAPH_OPTION_ATTRIBUTES,
     attachGraphs,
     fitGraphLabels,
+    graphArrow,
     graphBends,
+    graphDetail,
     graphHideKind,
     graphLabelText,
     graphLayout,
+    graphOptionsOf,
+    graphRoom,
     graphSelect,
+    graphZoom,
     hubOf,
     ringOf,
     setGraphData,
+    setGraphOptions,
     setGraphState,
 } from './js/graph.js';
 /** @typedef {import('./js/graph.js').GraphData} GraphData */
+/** @typedef {import('./js/graph.js').GraphOptions} GraphOptions */
+/** @typedef {import('./js/graph.js').GraphDetailInfo} GraphDetailInfo */
 export { Form, FormField } from './components/form.jsx';
 export { default as Switch } from './components/switch.jsx';
 export { Reorder, SplitPane, Tree } from './components/structure.jsx';

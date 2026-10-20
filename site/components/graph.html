@@ -657,6 +657,7 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-colour</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-focus</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-focus-dismiss</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-focus-empty-action</code></td><td>read</td></tr>
@@ -671,11 +672,16 @@
                             <tr><td><code>data-kp-idle</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-key</code></td><td>read, written, selector</td></tr>
                             <tr><td><code>data-kp-kind</code></td><td>selector, read, written</td></tr>
+                            <tr><td><code>data-kp-labels</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-node-radius</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-panning</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-ring-radius</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>read, written, selector</td></tr>
                             <tr><td><code>data-kp-state-covered</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-state-wide</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-style</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-to</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-zoomed</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -691,6 +697,7 @@
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-graph-change</code></td><td>Fired on the graph, bubbling, when its selection, hover or hidden kinds change: `detail` `{ selected, hover, hiddenKinds }`.</td></tr>
                             <tr><td><code>kp-graph-retry</code></td><td>Fired on the graph, bubbling, when the Retry of its failed state is pressed [state-plates-1019].</td></tr>
+                            <tr><td><code>kp-graph-detail</code></td><td>Fired on the graph, bubbling, when a picked node's details open [graph-1020]: `detail` `{ id, node, slot, host }`; the page fills `slot`.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -718,11 +725,14 @@
                             <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
                             <tr><td><code>--kp-glyph-forward</code></td><td><code>'→'</code></td></tr>
                             <tr><td><code>--kp-glyph-to-top</code></td><td><code>'↑'</code></td></tr>
+                            <tr><td><code>--kp-graph-detail-width</code></td><td><code>20rem</code></td></tr>
                             <tr><td><code>--kp-graph-dim</code></td><td><code>0.08</code></td></tr>
                             <tr><td><code>--kp-graph-edge-anim</code></td><td><code>none</code></td></tr>
                             <tr><td><code>--kp-graph-edge-colour</code></td><td><code>var(--chart-3)</code></td></tr>
                             <tr><td><code>--kp-graph-edge-delay</code></td><td><code>0ms</code></td></tr>
                             <tr><td><code>--kp-graph-edge-stagger</code></td><td><code>0ms</code></td></tr>
+                            <tr><td><code>--kp-graph-fixed-c</code></td><td><code>0.15</code></td></tr>
+                            <tr><td><code>--kp-graph-fixed-l</code></td><td><code>0.68</code></td></tr>
                             <tr><td><code>--kp-graph-ghost</code></td><td><code>0.45</code></td></tr>
                             <tr><td><code>--kp-graph-ghost-anim</code></td><td><code>kp-pulse 1600ms ease-in-out infinite</code></td></tr>
                             <tr><td><code>--kp-graph-h</code></td><td><code>480px</code></td></tr>
@@ -772,6 +782,8 @@
                             <tr><td><code>--kp-graph-node-colour</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-graph-node-delay</code></td><td><code>0ms</code></td></tr>
                             <tr><td><code>--kp-graph-node-stagger</code></td><td><code>0ms</code></td></tr>
+                            <tr><td><code>--kp-graph-zoom-ease</code></td><td><code>ease-out</code></td></tr>
+                            <tr><td><code>--kp-graph-zoom-time</code></td><td><code>160ms</code></td></tr>
                             <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
                             <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
@@ -794,6 +806,7 @@
                         <li>Built in — a shortened label keeps the full name in the node’s title and accessible name; the labels are fitted again when a web font arrives.</li>
                         <li>Built in — a kind toggle is a real button with `aria-pressed` and the kind’s hint as its title; a kind turned off is crossed out as well as faded.</li>
                         <li>Built in — a live update keeps the focus and the picks by id; a hover or a pick changes classes only, so the node under the pointer is never rebuilt.</li>
+                        <li>Built in — with zoom on, the keys `+`, `-`, `0` and Shift with the arrows do what the wheel and a drag do, the three controls are real buttons, and a focus walk brings the node into view; with details on, the panel is a named region and Esc closes it before it shows all.</li>
                         <li>Yours — name the graph (`aria-label`), give every node a `description` worth hearing, and say in text near it what a reader must not miss; the picture is the overview.</li>
                     </ul>
                 </section>
@@ -811,6 +824,14 @@
                             <tr><td><code>.kp-graph__flag</code></td><td>A dotted ring around a node whose `flag` is `mismatch`: its settings differ from the plan.</td></tr>
                             <tr><td><code>lit, dim, picked</code></td><td>While a node is hovered, focused or picked, its links are `is-on`, the rest `is-dim`, and the nodes they do not reach fade; a picked node has a thicker ring. A kind turned off is `is-hidden`.</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>Written by the script: `loading` (the ring pulses; still under reduced motion), `empty` or `error` (a red dot before the page’s sentence), each at the picture’s full height; `ready` once it has nodes.</td></tr>
+                            <tr><td><code>data-kp-labels</code></td><td>Option `below`, off by default. The name stands whole and centred under its node and is never cut: the ring is as wide as the box allows and the picture grows taller (up to 1400 px) until no name touches another or leaves the box. `graphRoom()` is the pure half.</td></tr>
+                            <tr><td><code>data-kp-chrome</code></td><td>Option `inside`, off by default. Show all stands at the picture’s top right and the hint at its foot, inside the drawing instead of over and under it; the layout keeps a strip clear for them.</td></tr>
+                            <tr><td><code>data-kp-colour</code></td><td>Option `fixed`, off by default. A node keeps one colour in every theme: its hue at a fixed lightness and strength (see the knobs), so a stack has the colour it has on other pages. A node’s own `colour` (any CSS colour) wins in every mode.</td></tr>
+                            <tr><td><code>data-kp-direction</code></td><td>Option `arrows`, off by default. An arrowhead at the end of each link (`.kp-graph__arrow`), short of the node, turned with the curve and in the kind’s colour; a dashed kind gets an open head. A link may say `arrows: 'to' | 'from' | 'both' | 'none'` (default `to`).</td></tr>
+                            <tr><td><code>data-kp-zoom</code></td><td>Option, off by default. Wheel or pinch zooms about the pointer, a drag on the background moves the picture, `+`, `-`, `0` and Shift with the arrows work from a node, and Zoom in, Zoom out and Reset view stand inside the picture (`graphZoom(el, 'in' | 'out' | 'reset')`). `data-kp-zoomed` marks a view that is not the first one and `data-kp-panning` a drag; a button or key eases on the theme’s own time and curve (see the knobs), and not at all under reduced motion.</td></tr>
+                            <tr><td><code>data-kp-detail</code></td><td>Option, off by default. A picked node opens a details panel inside the picture (`.kp-graph__detail`). The page fills it through the `detail` option of `attachGraphs()` or the `kp-graph-detail` event (`detail.slot`), else it shows the node’s description. Esc closes it first and keeps the picks; `graphDetail(el, id)` opens or closes it from the page.</td></tr>
+                            <tr><td><code>data-kp-ring-radius</code></td><td>Option. The ring as a share of the picture (0.36 by default), from 0.15 to 0.48.</td></tr>
+                            <tr><td><code>data-kp-node-radius</code></td><td>Option. The base node radius in px (14 by default); a weight scales from it and a node’s own `radius` wins.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

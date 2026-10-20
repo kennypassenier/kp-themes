@@ -3078,7 +3078,7 @@ document.getElementById('doc-chart-failed').addEventListener('kp-chart-retry', (
         // (`data-kp-style`), a node's id, Show all at rest (`-idle`), a
         // graph with a node lit (`-focus`), its state, and the host's key
         // that `decorate` passes on.
-        aliases: ['key', 'style', 'from', 'to', 'kind', 'id', 'idle', 'state', 'focus'],
+        aliases: ['key', 'style', 'from', 'to', 'kind', 'id', 'idle', 'state', 'focus', 'panning', 'zoomed', 'colour', 'labels', 'ring-radius', 'node-radius'],
         intro: 'A picture of a network: one node in the middle, the rest on a ring around it from the top, clockwise, A to Z and then the nodes outside the network, the links drawn by kind (a colour and a dash each, listed above the picture with Show all). Hover or focus a node to see only its links; click it, or press Enter, to keep it picked, several at once; Esc or Show all clears. Each node takes its own hue at the theme’s chart lightness. A label points away from the middle and is shortened, with an ellipsis, where it would touch another or leave the picture; the full name stays in its title and its accessible name. js/graph.js builds it from the page’s data.',
         whenToUse:
             'For a network with one centre that everything reports to or is reached from: a control centre and its sites, a server and the services it talks to. Not for a network without a centre, not for a flow with a direction that matters more than the links, and not past a few dozen nodes, where the ring’s labels shrink to a letter.',
@@ -3105,6 +3105,14 @@ document.getElementById('doc-chart-failed').addEventListener('kp-chart-retry', (
             { name: '.kp-graph__flag', what: 'A dotted ring around a node whose `flag` is `mismatch`: its settings differ from the plan.' },
             { name: 'lit, dim, picked', what: 'While a node is hovered, focused or picked, its links are `is-on`, the rest `is-dim`, and the nodes they do not reach fade; a picked node has a thicker ring. A kind turned off is `is-hidden`.' },
             { name: 'data-kp-state', what: 'Written by the script: `loading` (the ring pulses; still under reduced motion), `empty` or `error` (a red dot before the page’s sentence), each at the picture’s full height; `ready` once it has nodes.' },
+            { name: 'data-kp-labels', what: 'Option `below`, off by default. The name stands whole and centred under its node and is never cut: the ring is as wide as the box allows and the picture grows taller (up to 1400 px) until no name touches another or leaves the box. `graphRoom()` is the pure half.' },
+            { name: 'data-kp-chrome', what: 'Option `inside`, off by default. Show all stands at the picture’s top right and the hint at its foot, inside the drawing instead of over and under it; the layout keeps a strip clear for them.' },
+            { name: 'data-kp-colour', what: 'Option `fixed`, off by default. A node keeps one colour in every theme: its hue at a fixed lightness and strength (see the knobs), so a stack has the colour it has on other pages. A node’s own `colour` (any CSS colour) wins in every mode.' },
+            { name: 'data-kp-direction', what: 'Option `arrows`, off by default. An arrowhead at the end of each link (`.kp-graph__arrow`), short of the node, turned with the curve and in the kind’s colour; a dashed kind gets an open head. A link may say `arrows: \'to\' | \'from\' | \'both\' | \'none\'` (default `to`).' },
+            { name: 'data-kp-zoom', what: 'Option, off by default. Wheel or pinch zooms about the pointer, a drag on the background moves the picture, `+`, `-`, `0` and Shift with the arrows work from a node, and Zoom in, Zoom out and Reset view stand inside the picture (`graphZoom(el, \'in\' | \'out\' | \'reset\')`). `data-kp-zoomed` marks a view that is not the first one and `data-kp-panning` a drag; a button or key eases on the theme’s own time and curve (see the knobs), and not at all under reduced motion.' },
+            { name: 'data-kp-detail', what: 'Option, off by default. A picked node opens a details panel inside the picture (`.kp-graph__detail`). The page fills it through the `detail` option of `attachGraphs()` or the `kp-graph-detail` event (`detail.slot`), else it shows the node’s description. Esc closes it first and keeps the picks; `graphDetail(el, id)` opens or closes it from the page.' },
+            { name: 'data-kp-ring-radius', what: 'Option. The ring as a share of the picture (0.36 by default), from 0.15 to 0.48.' },
+            { name: 'data-kp-node-radius', what: 'Option. The base node radius in px (14 by default); a weight scales from it and a node’s own `radius` wins.' },
         ],
         accessibility: [
             'Built in — the picture is one tab stop: Tab lands on the hub (or the node last focused), the arrow keys walk the ring, Home and End jump, Enter or Space picks, Esc shows all again.',
@@ -3112,6 +3120,7 @@ document.getElementById('doc-chart-failed').addEventListener('kp-chart-retry', (
             'Built in — a shortened label keeps the full name in the node’s title and accessible name; the labels are fitted again when a web font arrives.',
             'Built in — a kind toggle is a real button with `aria-pressed` and the kind’s hint as its title; a kind turned off is crossed out as well as faded.',
             'Built in — a live update keeps the focus and the picks by id; a hover or a pick changes classes only, so the node under the pointer is never rebuilt.',
+            'Built in — with zoom on, the keys `+`, `-`, `0` and Shift with the arrows do what the wheel and a drag do, the three controls are real buttons, and a focus walk brings the node into view; with details on, the panel is a named region and Esc closes it before it shows all.',
             'Yours — name the graph (`aria-label`), give every node a `description` worth hearing, and say in text near it what a reader must not miss; the picture is the overview.',
         ],
     },
