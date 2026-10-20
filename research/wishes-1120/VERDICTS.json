@@ -1,4 +1,118 @@
 {
     "demo": "wishes-1120",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "wishes-1120-3f03e480-0bd2-4c7c-b33d-56b4fd7059d1",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-20: 17 of 22 approved, 5 not approved. Fixed directly after the review (no second round): he judges the fixes in the real app. Each not-approved entry names the fixing commit.",
+            "approved": [
+                {
+                    "item": "alert-remember",
+                    "theme": "formal"
+                },
+                {
+                    "item": "batch-progress",
+                    "theme": "formal"
+                },
+                {
+                    "item": "chart-columns",
+                    "theme": "formal"
+                },
+                {
+                    "item": "confirm-id",
+                    "theme": "formal"
+                },
+                {
+                    "item": "countdown-days",
+                    "theme": "formal"
+                },
+                {
+                    "item": "dated-meta",
+                    "theme": "formal"
+                },
+                {
+                    "item": "decorate-hook",
+                    "theme": "formal"
+                },
+                {
+                    "item": "heat-paging",
+                    "theme": "formal"
+                },
+                {
+                    "item": "job-line",
+                    "theme": "formal"
+                },
+                {
+                    "item": "logviewer",
+                    "theme": "formal"
+                },
+                {
+                    "item": "plain-card",
+                    "theme": "formal"
+                },
+                {
+                    "item": "quiet-hours",
+                    "theme": "formal"
+                },
+                {
+                    "item": "snooze-words",
+                    "theme": "formal"
+                },
+                {
+                    "item": "space-key",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tile-keys",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tile-match",
+                    "theme": "formal"
+                },
+                {
+                    "item": "yaml-field",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "clipboard-clear",
+                    "theme": "formal",
+                    "note": "Approved, make sure that the timer is configurable, make the default 30 seconds",
+                    "fixedIn": "c649bfb5",
+                    "fix": "the clear delay is any duration (data-kp-secret-clear, option clearAfterMs), default 30 s, 0/off/never disables"
+                },
+                {
+                    "item": "table-reorder",
+                    "theme": "formal",
+                    "note": "when pressing rule, it sorts on rule, another press and it sorts backwards, when I click again it should remove the sort, now it goes back and sorts normal again. It's not possible to unsort.",
+                    "fixedIn": "c649bfb5",
+                    "fix": "a header press goes ascending, descending, unsorted (sortCycle 'three' is the default; Shift press drops the key on its third press)"
+                },
+                {
+                    "item": "chart-seconds",
+                    "theme": "formal",
+                    "note": "we should also be able to change to minutes and hours and days, weeks etc … I wanted my components configurable, with a component that deals with time, I obviously want all sorts of time options",
+                    "fixedIn": "c649bfb5",
+                    "fix": "timeUnit takes ms, s, min, h, d, w (months and years left out: their length varies)"
+                },
+                {
+                    "item": "page-contents",
+                    "theme": "formal",
+                    "note": "clicking a link in the left box doesn't scroll to the item in the right box yet",
+                    "fixedIn": "c649bfb5",
+                    "fix": "a press or Enter scrolls the pane that holds the sections (found by itself, own copy first), focus to the heading, scroll-spy follows the pane"
+                },
+                {
+                    "item": "notes-gate",
+                    "theme": "formal",
+                    "note": "this needs the same loading icon in the centre as we do for tables. The (skeleton?) lines are ugly in this element",
+                    "fixedIn": "c649bfb5",
+                    "fix": "the gate loads with the busy card of a loading table over its full footprint, skeleton lines removed"
+                }
+            ]
+        }
+    ]
 }

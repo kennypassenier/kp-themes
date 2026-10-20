@@ -1,5 +1,7 @@
 # research/wishes-1120: the homelab wishes built in the package
 
+**Decided (2026-10-20):** Kenny approved 17 of 22 pairs; the other five (clipboard-clear, table-reorder, chart-seconds, page-contents, notes-gate) were fixed directly in `c649bfb5` and he judges them in the real app. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `wishes-1120-3f03e480-0bd2-4c7c-b33d-56b4fd7059d1` (2026-10-20): 22 sections, 22 pairs, formal only (DEMO_RULES ch. 6: a new demo starts in formal;
 the other themes follow after the verdict). One page for all of them (at most 25 items, DEMO_RULES ch. 6 and the bundling rule of 2026-10-19).
 

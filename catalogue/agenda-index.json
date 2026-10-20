@@ -1,42 +1,6 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
-        "research/wishes-1120/demo.html": {
-            "facts": {
-                "id": "wishes-1120",
-                "themes": "formal",
-                "ask": null,
-                "askText": "The homelab admin dashboard hit the edges of the package in 22 places. Each is now an option or a part of the package; this page shows all of them in formal only, one section per wish. Everything is opt-in: a component that is not given the option looks and behaves as you approved it. 22 sections, 22 pairs; all data is mock.",
-                "sections": [
-                    { "item": "plain-card", "themes": null, "topic": "progress", "mode": null },
-                    { "item": "job-line", "themes": null, "topic": "progress", "mode": null },
-                    { "item": "batch-progress", "themes": null, "topic": "progress", "mode": null },
-                    { "item": "clipboard-clear", "themes": null, "topic": "progress", "mode": null },
-                    { "item": "countdown-days", "themes": null, "topic": "progress", "mode": null },
-                    { "item": "dated-meta", "themes": null, "topic": "lists", "mode": null },
-                    { "item": "table-reorder", "themes": null, "topic": "lists", "mode": null },
-                    { "item": "tile-match", "themes": null, "topic": "lists", "mode": null },
-                    { "item": "tile-keys", "themes": null, "topic": "lists", "mode": null },
-                    { "item": "heat-paging", "themes": null, "topic": "lists", "mode": null },
-                    { "item": "chart-seconds", "themes": null, "topic": "charts", "mode": null },
-                    { "item": "chart-columns", "themes": null, "topic": "charts", "mode": null },
-                    { "item": "logviewer", "themes": null, "topic": "charts", "mode": null },
-                    { "item": "yaml-field", "themes": null, "topic": "forms", "mode": null },
-                    { "item": "quiet-hours", "themes": null, "topic": "forms", "mode": null },
-                    { "item": "snooze-words", "themes": null, "topic": "forms", "mode": null },
-                    { "item": "confirm-id", "themes": null, "topic": "forms", "mode": null },
-                    { "item": "space-key", "themes": null, "topic": "forms", "mode": null },
-                    { "item": "page-contents", "themes": null, "topic": "pages", "mode": null },
-                    { "item": "notes-gate", "themes": null, "topic": "pages", "mode": null },
-                    { "item": "alert-remember", "themes": null, "topic": "pages", "mode": null },
-                    { "item": "decorate-hook", "themes": null, "topic": "pages", "mode": null }
-                ],
-                "extra": null,
-                "round": "\n            { \"round\": \"wishes-1120-3f03e480-0bd2-4c7c-b33d-56b4fd7059d1\", \"received\": [] }\n        "
-            },
-            "fingerprint": "8c5943ec006d5cdd",
-            "update": null
-        },
         "research/app-homelab-stacks/demo.html": {
             "facts": {
                 "id": "app-homelab-stacks",
@@ -429,6 +393,7 @@
         }
     },
     "decided": {
+        "research/wishes-1120/demo.html": "2026-10-20, Kenny: 17 of 22 approved; the other 5 fixed directly in c649bfb5 and judged in the real app (research/wishes-1120/VERDICTS.json)",
         "research/align-grid-1019/demo.html": "2026-10-19 18:55, Kenny: every pair approved (research/align-grid-1019/VERDICTS.json)",
         "research/state-plates-1019/demo.html": "2026-10-19 18:55, Kenny: the rounds are closed; the network graph's loading is fixed directly in the package as the twelve animations approved in research/character-graph (2026-10-06), no further round (research/state-plates-1019/VERDICTS.json)",
         "research/round-3-1019/demo.html": "2026-10-19 17:20, Kenny: every pair approved (research/round-3-1019/VERDICTS.json)",
