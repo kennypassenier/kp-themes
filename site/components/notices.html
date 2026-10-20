@@ -106,6 +106,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/code-field.html">Code field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quiet-hours.html">Quiet hours</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/autosize.html">Growing text box</a></li>
                         </ul>
                     </div>
@@ -218,6 +219,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-contents.html">On this page</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -406,7 +408,7 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>data-kp-notices-retry</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-order</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-panel-max</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-quiet</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-quiet</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-quiet-words</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-read</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-unread</code></td><td>written</td></tr>
@@ -430,15 +432,18 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>kp-notices-retry</code></td><td></td></tr>
                             <tr><td><code>kp-notices-end-quiet</code></td><td></td></tr>
                             <tr><td><code>kp-notices-open-inbox</code></td><td></td></tr>
+                            <tr><td><code>kp-quiet-change</code></td><td>Fired on the control when a person changes it: `{ value, summary, valid }`.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-notices-min</code></td><td><code>22rem</code></td></tr>
                             <tr><td><code>--kp-notices-read-col</code></td><td><code>max-content</code></td></tr>
                             <tr><td><code>--kp-notices-sizer</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-notices-width</code></td><td><code>min(26rem, calc(100vw - 2rem))</code></td></tr>
+                            <tr><td><code>--kp-quiet-label</code></td><td><code>9rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>

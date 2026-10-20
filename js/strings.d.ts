@@ -1276,6 +1276,70 @@ export type Strings = {
      */
     jsonTabHint: string;
     /**
+     * The quiet-hours control's name and its switch (js/quiet-hours.js) [wish-1120]
+     */
+    quietLabel: string;
+    /**
+     * The quiet window's start [wish-1120]
+     */
+    quietFrom: string;
+    /**
+     * The quiet window's end [wish-1120]
+     */
+    quietTo: string;
+    /**
+     * The days the quiet window applies on [wish-1120]
+     */
+    quietDays: string;
+    /**
+     * The ticks that let a severity break the quiet [wish-1120]
+     */
+    quietThroughLabel: string;
+    /**
+     * The severity words of the quiet-hours ticks [wish-1120]
+     */
+    quietCritical: string;
+    /**
+     * Severity word [wish-1120]
+     */
+    quietWarning: string;
+    /**
+     * Severity word [wish-1120]
+     */
+    quietInfo: string;
+    /**
+     * Severity word [wish-1120]
+     */
+    quietOk: string;
+    /**
+     * The line when quiet hours are off [wish-1120]
+     */
+    quietOff: string;
+    /**
+     * The problem when the window starts and ends at the same time [wish-1120]
+     */
+    quietSame: string;
+    /**
+     * The window in words, "Quiet from 22:00 to 07:00 on every weekday." [wish-1120]
+     */
+    quietWhen: (from: string, to: string, days: string) => string;
+    /**
+     * What still comes through, "Critical and Warning still come through." [wish-1120]
+     */
+    quietThrough: (names: string) => string;
+    /**
+     * The line when nothing comes through the quiet [wish-1120]
+     */
+    quietNothing: string;
+    /**
+     * The accessible name of an on-this-page list (js/page-contents.js) [wish-1120]
+     */
+    contentsLabel: string;
+    /**
+     * The heading over an on-this-page list [wish-1120]
+     */
+    contentsTitle: string;
+    /**
      * The caret's place under a code field, "Line 3, column 12" (js/code-field.js) [wish-1120]
      */
     codeFieldPosition: (line: number, column: number) => string;
@@ -6512,6 +6576,22 @@ export type Strings = {
  * @property {string} jsonWrap  The Wrap toggle [kpadopt5]
  * @property {string} jsonCopy  The Copy button [kpadopt5]
  * @property {string} jsonTabHint  The help line under the field: how to leave it with the keyboard [kpadopt5]
+ * @property {string} quietLabel  The quiet-hours control's name and its switch (js/quiet-hours.js) [wish-1120]
+ * @property {string} quietFrom  The quiet window's start [wish-1120]
+ * @property {string} quietTo  The quiet window's end [wish-1120]
+ * @property {string} quietDays  The days the quiet window applies on [wish-1120]
+ * @property {string} quietThroughLabel  The ticks that let a severity break the quiet [wish-1120]
+ * @property {string} quietCritical  The severity words of the quiet-hours ticks [wish-1120]
+ * @property {string} quietWarning  Severity word [wish-1120]
+ * @property {string} quietInfo  Severity word [wish-1120]
+ * @property {string} quietOk  Severity word [wish-1120]
+ * @property {string} quietOff  The line when quiet hours are off [wish-1120]
+ * @property {string} quietSame  The problem when the window starts and ends at the same time [wish-1120]
+ * @property {(from: string, to: string, days: string) => string} quietWhen  The window in words, "Quiet from 22:00 to 07:00 on every weekday." [wish-1120]
+ * @property {(names: string) => string} quietThrough  What still comes through, "Critical and Warning still come through." [wish-1120]
+ * @property {string} quietNothing  The line when nothing comes through the quiet [wish-1120]
+ * @property {string} contentsLabel  The accessible name of an on-this-page list (js/page-contents.js) [wish-1120]
+ * @property {string} contentsTitle  The heading over an on-this-page list [wish-1120]
  * @property {(line: number, column: number) => string} codeFieldPosition  The caret's place under a code field, "Line 3, column 12" (js/code-field.js) [wish-1120]
  * @property {(line: number, column: number, message: string) => string} codeFieldError  The problem the page found in a code field, with its place [wish-1120]
  * @property {(line: number, message: string) => string} codeFieldErrorLine  The same when only the line is known [wish-1120]

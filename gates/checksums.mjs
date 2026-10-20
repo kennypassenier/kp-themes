@@ -168,6 +168,8 @@ export const FILES = [
     'js/question-card.js',
     'js/transfer.js',
     'js/job-line.js',
+    'js/quiet-hours.js',
+    'js/page-contents.js',
     'js/code-field.js',
     'js/markdown.js',
     'js/connection.js',

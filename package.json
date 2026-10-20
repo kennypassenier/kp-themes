@@ -324,6 +324,14 @@
             "types": "./js/code-field.d.ts",
             "default": "./js/code-field.js"
         },
+        "./js/page-contents": {
+            "types": "./js/page-contents.d.ts",
+            "default": "./js/page-contents.js"
+        },
+        "./js/quiet-hours": {
+            "types": "./js/quiet-hours.d.ts",
+            "default": "./js/quiet-hours.js"
+        },
         "./js/transfer": {
             "types": "./js/transfer.d.ts",
             "default": "./js/transfer.js"

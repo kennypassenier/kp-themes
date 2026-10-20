@@ -212,6 +212,12 @@ export const REQUIRED = [
         why: 'The bar measures its own width and folds its names and its actions behind the Actions button when narrow; the query reaches only its own parts [kpadopt5].',
     },
     {
+        container: 'kp-quiet',
+        class: 'kp-quiet',
+        self: true,
+        why: 'The control measures its own width and puts each label over its field on a phone; the query reaches only its own parts [wish-1120].',
+    },
+    {
         container: 'kp-jsonfield',
         class: 'kp-jsonfield',
         self: true,

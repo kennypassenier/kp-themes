@@ -194,6 +194,8 @@ js/toggle.js               a button that stays pressed until it is pressed again
 js/toolbar.js              the bar above a list, log, board or chart
 js/transfer.js             a progress bar with a file name, speed and the time left
 js/job-line.js             one sentence for a job with steps and bytes: step 3 of 35, 1.2 of 4 GB, about 2 min left
+js/quiet-hours.js         quiet hours: from, to, days and the severities that break through, composed of the time field and the weekday picker
+js/page-contents.js        an on-this-page contents list with scroll-spy
 js/code-field.js          a text box that knows its line and column in a config file, with the page-found error on its line
 js/markdown.js             a small, safe markdown reader: release notes as DOM, never as HTML
 js/undo-toast.js           a toast with Undo and a visible clock

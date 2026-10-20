@@ -36304,6 +36304,225 @@
     }
 }
 
+@layer kp.components {
+    /* --- On this page: contents list with scroll-spy [wish-1120, homelab 95] (js/page-contents.js) ---
+     * A column of entries on one grid: the label takes the room, the count (when the page gives one) stands at the end in tabular
+     * figures. The entry the reader is in has a bar on its start edge and the heavier weight; the others are muted. Levels nest by
+     * indent. `kp-contents--sticky` keeps the list in view beside a long page (`--kp-contents-top`, 5rem). Knobs [KT6]:
+     * --kp-contents-top, --kp-contents-indent (1rem). */
+    .kp-contents {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        align-content: start;
+        min-inline-size: 0;
+    }
+
+    .kp-contents[hidden] {
+        display: none;
+    }
+
+    .kp-contents--sticky {
+        position: sticky;
+        inset-block-start: var(--kp-contents-top, 5rem);
+        max-block-size: calc(100vh - var(--kp-contents-top, 5rem) - 1rem);
+        overflow: auto;
+    }
+
+    .kp-contents__title {
+        margin: 0;
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        text-transform: none;
+    }
+
+    .kp-contents__list {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-contents__item {
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .kp-contents__link {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: baseline;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-control-height, 2.25rem);
+        padding-block: var(--kp-space-xs, 0.25rem);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        padding-inline-start: calc(var(--kp-space-sm, 0.5rem) + var(--kp-level, 0) * var(--kp-contents-indent, 1rem));
+        border-inline-start: 2px solid transparent;
+        color: var(--muted-foreground);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+        align-content: center;
+    }
+
+    .kp-contents__item[data-kp-level='1'] {
+        --kp-level: 1;
+    }
+
+    .kp-contents__item[data-kp-level='2'] {
+        --kp-level: 2;
+    }
+
+    .kp-contents__item[data-kp-level='3'] {
+        --kp-level: 3;
+    }
+
+    .kp-contents__link:hover {
+        color: var(--foreground);
+        background: var(--muted);
+    }
+
+    .kp-contents__link:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: -2px;
+    }
+
+    .kp-contents__link[data-kp-current] {
+        color: var(--foreground);
+        font-weight: 600;
+        border-inline-start-color: var(--primary);
+    }
+
+    .kp-contents__count {
+        font-variant-numeric: tabular-nums;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-contents__wait {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-contents__wait[hidden] {
+        display: none;
+    }
+
+    .kp-contents__bone {
+        block-size: 1rem;
+    }
+
+    .kp-contents[data-kp-state='loading'] > .kp-contents__list {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-contents__link {
+            transition:
+                color var(--fx-duration, 150ms) var(--fx-ease, ease-out),
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease-out);
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Quiet hours [wish-1120, homelab 96] (js/quiet-hours.js) ---
+     * The switch on top; below it the body is ONE grid, a label column and a control column, so From, Until, On and Still comes
+     * through share their label edge and their control edge (a subgrid per row); under it the sentence in words. Off, the body keeps
+     * its place, dimmed and out of the tab order, so the control is as high on as off. On a phone the labels go over their controls.
+     * Knobs [KT6]: --kp-quiet-label (the label column, 9rem). */
+    .kp-quiet {
+        container: kp-quiet / inline-size;
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+        position: relative;
+    }
+
+    .kp-quiet__body {
+        display: grid;
+        grid-template-columns: minmax(auto, var(--kp-quiet-label, 9rem)) minmax(0, 1fr);
+        column-gap: var(--kp-space-md, 0.75rem);
+        row-gap: var(--kp-space-sm, 0.5rem);
+        align-items: start;
+    }
+
+    .kp-quiet__body[inert] {
+        opacity: 0.5;
+    }
+
+    .kp-quiet__field {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        align-items: start;
+        min-inline-size: 0;
+    }
+
+    .kp-quiet__label {
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-control-height, 2.25rem);
+        display: flex;
+        align-items: center;
+    }
+
+    .kp-quiet__through {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-control-height, 2.25rem);
+        align-items: center;
+    }
+
+    .kp-quiet__problem {
+        grid-column: 2;
+        margin: 0;
+    }
+
+    .kp-quiet__summary {
+        margin: 0;
+        min-block-size: 2lh;
+        color: var(--muted-foreground);
+    }
+
+    .kp-quiet__reason {
+        margin: 0;
+    }
+
+    .kp-quiet__wait {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-md, 0.75rem);
+        background: var(--card, var(--background));
+    }
+
+    .kp-quiet__wait[hidden] {
+        display: none;
+    }
+
+    .kp-quiet__bone {
+        block-size: var(--kp-control-height, 2.25rem);
+    }
+
+    .kp-quiet[data-kp-state='loading'] > :not(.kp-quiet__wait) {
+        visibility: hidden;
+    }
+
+    @container kp-quiet (max-width: 30rem) {
+        .kp-quiet__body {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-quiet__problem {
+            grid-column: 1;
+        }
+    }
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/cyberpunk-register.css
    The cyberpunk register, 5.0.0 [S39, S40, S41]: the signal-yellow

@@ -12001,6 +12001,105 @@ area.addEventListener('kp-code-field-check', (event) => {
         ],
     },
     {
+        id: 'page-contents',
+        title: 'On this page',
+        group: 'Navigation',
+        classes: ['kp-contents'],
+        exports: [],
+        aliases: ['contents', 'contents-for', 'contents-headings', 'contents-offset', 'contents-min', 'contents-title', 'contents-hash', 'contents-sig', 'level'],
+        intro: 'A contents list that follows the reader: built from the page’s own headings (or from items the page gives), with the section the reader is in marked as they scroll, and a press that scrolls there, writes the address and moves the focus to the heading.',
+        whenToUse: 'A long page of sections (settings, a reference, an article). For moving between pages use the side navigation; for a handful of in-page links write them by hand.',
+        examples: [
+            {
+                title: 'From the headings',
+                why: '`data-kp-contents-for` names where the headings are (the nearest `main` by default), `data-kp-contents-headings` which ones count (`h2`; `h2, h3` nests the second under the first), `data-kp-contents-offset` the height of a sticky header in px (80), `data-kp-contents-min` the fewest entries that earn a list (2). A heading without an `id` gets one from its words. `kp-contents--sticky` keeps the list in view.',
+                markup: `
+<nav class="kp-contents" id="doc-contents" data-kp-contents data-kp-contents-for="#doc-contents-page" data-kp-contents-headings="h2, h3"></nav>
+<div id="doc-contents-page">
+<h2>Sign-in</h2>
+<p>Who may open the dashboard.</p>
+<h3>Passkeys</h3>
+<p>The devices that can sign in.</p>
+<h2>This browser</h2>
+<p>What this browser remembers.</p>
+</div>
+`,
+                script: `
+import { attachContents } from '@kp-soft/themes/js/page-contents';
+
+attachContents(document.getElementById('doc-contents').parentElement);
+`,
+            },
+            {
+                title: 'From items, with a count',
+                why: 'Sections that are cards with no heading of their own, or that want a number beside the name: `setContents(nav, [{ id, label, level?, count? }])`. `setContents(nav, null)` goes back to the headings; `data-kp-state="loading"` shows three bars until the items arrive.',
+                markup: `
+<nav class="kp-contents" id="doc-contents-items" data-kp-contents data-kp-contents-min="1"></nav>
+<section id="doc-card-a"><p>Working copy</p></section>
+<section id="doc-card-b"><p>Keys</p></section>
+`,
+                script: `
+import { attachContents, setContents } from '@kp-soft/themes/js/page-contents';
+
+const nav = document.getElementById('doc-contents-items');
+attachContents(nav.parentElement);
+setContents(nav, [{ id: 'doc-card-a', label: 'Working copy' }, { id: 'doc-card-b', label: 'Keys', count: 3 }]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'the script', what: '`attachContents(root)` builds every `[data-kp-contents]` and returns a detach; `setContents(nav, items)` gives it entries; `contents(nav)` is the handle (`current()`, `refresh()`, `setItems()`); `contentsSlug(text)` and `currentSection(boxes, offset, atEnd)` are the two calculations. `CONTENTS` is the selector.' },
+            { name: 'kp-contents-change', what: 'Fired on the list, bubbling, when the current entry changes: `{ id, label, previous }` (`CONTENTS_EVENT`).' },
+            { name: 'data-kp-contents-title', what: 'The heading over the list (“On this page”); `none` leaves it out.' },
+            { name: 'data-kp-contents-hash', what: '`off`: a press does not write `#id` into the address.' },
+            { name: 'kp-contents--sticky', what: 'Keeps the list in view beside a long page, a little under the top of the window.' },
+            { name: 'states', what: 'Ready (the entries), loading (three bars in the list’s own place), and hidden when fewer than `data-kp-contents-min` entries exist.' },
+        ],
+        accessibility: [
+            'Built in — a `nav` with a name and real links; the current entry has `aria-current="location"`; a press moves the focus to the heading; smooth scrolling is off under reduced motion.',
+            'Yours — give the sections real headings (or ids), and an offset equal to a sticky header’s height.',
+        ],
+    },
+    {
+        id: 'quiet-hours',
+        title: 'Quiet hours',
+        group: 'Forms',
+        classes: ['kp-quiet'],
+        exports: [],
+        aliases: ['quiet', 'quiet-severities', 'quiet-step', 'quiet-label', 'quiet-on'],
+        intro: 'One control for “do not push me between 22:00 and 07:00 on these days, except a critical notice”: a switch, a from and an until time, the weekday picker and one tick per severity that may break the quiet, with a sentence in words under them. It is built from the package’s own time field and weekday picker.',
+        whenToUse: 'A notification rule with a window of time. For a single moment to put something off use the snooze picker; for one time of day use the time field.',
+        examples: [
+            {
+                title: 'Weeknights, critical still comes through',
+                why: 'The value is `{ on, from, to, days, through }`: `days` as `Date#getDay` counts them (0 is Sunday), `through` the severities that still come through. A window across midnight belongs to the day it starts on. Off, the fields keep their place, dimmed and out of the tab order; a window that starts and ends at the same time is refused with a line under the times. The page stores the value from `kp-quiet-change` and tells the control back with `setQuiet`.',
+                markup: `
+<div class="kp-quiet" id="doc-quiet" data-kp-quiet data-kp-value='{"on":true,"from":"22:00","to":"07:00","days":[0,1,2,3,4],"through":["critical"]}'></div>
+`,
+                script: `
+import { attachQuietHours } from '@kp-soft/themes/js/quiet-hours';
+
+const quiet = document.getElementById('doc-quiet');
+attachQuietHours(quiet.parentElement);
+quiet.addEventListener('kp-quiet-change', (event) => console.log(event.detail.value, event.detail.summary));
+`,
+            },
+        ],
+        variants: [
+            { name: 'the script', what: '`attachQuietHours(root)` builds every `[data-kp-quiet]` and returns a detach; `setQuiet(el, value)` and `quietValue(el)` set and read it; `quietSummary(value)` is the sentence on its own; `readQuiet(raw)` reads the page’s stored text with the defaults for what is missing. `QUIET` is the selector.' },
+            { name: 'kp-quiet-change', what: 'Fired on the control, bubbling, when a person changes it: `{ value, summary, valid }` (`QUIET_EVENT`).' },
+            { name: 'data-kp-quiet-severities', what: '`critical,warning,info,ok` (default), each also `key=Words` for the page’s own words.' },
+            { name: 'data-kp-quiet-step', what: 'Minutes for the time fields (15).' },
+            { name: 'data-kp-quiet-label', what: 'The control’s accessible name and the switch’s words.' },
+            { name: 'data-kp-disabled', what: 'The sentence that says why it cannot be changed now; the control is out of the tab order and the sentence stands under it.' },
+            { name: 'states', what: 'On, off (dimmed, same size), refused (same start and end), disabled with its reason, and loading (the control’s own bars in its place).' },
+        ],
+        accessibility: [
+            'Built in — a group with a name; the switch is a real `role="switch"`; the times and days are the package’s own fields with their own keys; the sentence is a polite status; off, the fields are `inert` and leave the tab order.',
+            'Yours — store the value as the page decides, and apply a window across midnight to the day it starts on.',
+        ],
+    },
+    {
         id: 'calm',
         title: 'Calm mode',
         group: 'Theming',
