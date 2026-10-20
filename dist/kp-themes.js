@@ -58324,7 +58324,7 @@ function hubOf(data) {
   }
   return best;
 }
-function ringGeometry(W, H, { ring = 0.36, inset } = {}) {
+function ringGeometry(W, H, { ring = 0.36, inset, stretch = 1 } = {}) {
   const top = inset?.top ?? 0;
   const bottom = inset?.bottom ?? 0;
   const Hs = H - top - bottom;
@@ -58337,69 +58337,106 @@ function ringGeometry(W, H, { ring = 0.36, inset } = {}) {
     rx = Math.min(rx, W * 0.24);
     ry = Math.max(ry, Hs * ring);
   }
-  return { cx, cy, rx, ry };
+  return { cx, cy, rx: rx * stretch, ry };
 }
-function placeRing(data, { cx, cy, rx, ry }, phase = 0) {
+function placeRing(data, { cx, cy, rx, ry }, phase = 0, inner = 1, first = 0) {
   const at = /* @__PURE__ */ new Map();
   const hub = hubOf(data);
   if (hub) at.set(hub, { x: cx, y: cy, angle: Math.PI / 2 });
   const ring = ringOf(data, hub);
   ring.forEach((n, i) => {
     const angle = -Math.PI / 2 + (i + phase) / Math.max(1, ring.length) * Math.PI * 2;
-    at.set(n.id, { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry, angle });
+    const k = (i - first + ring.length) % ring.length % 2 === 1 ? inner : 1;
+    at.set(n.id, { x: cx + Math.cos(angle) * rx * k, y: cy + Math.sin(angle) * ry * k, angle });
   });
   return at;
 }
-function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf(n), line = 18, maxHeight = 1400, ...layout3 } = {}) {
+function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf(n), line = 18, maxHeight = 1400, wrapOf, ...layout3 } = {}) {
   const pad2 = 8;
   const gap = 8;
   const hub = hubOf(data);
-  const nodes = [...hub ? data.nodes.filter((n) => n.id === hub) : [], ...ringOf(data, hub)];
-  const widths2 = new Map(nodes.map((n) => [n.id, widthOf(n)]));
-  let height = H;
-  let best = null;
-  for (let guard = 0; guard < 40; guard += 1) {
-    const geo = ringGeometry(W, height, layout3);
-    const ring = ringOf(data, hub);
-    for (const phase of [0, 0.25, 0.5, 0.75]) {
-      const sized = { ...geo };
-      let rx = W > 600 ? sized.rx : Infinity;
-      for (const [i, n] of ring.entries()) {
-        const cos = Math.cos(-Math.PI / 2 + (i + phase) / Math.max(1, ring.length) * Math.PI * 2);
-        const half = Math.max((widths2.get(n.id) ?? 0) / 2, rOf(n)) + pad2;
-        if (cos > 1e-3) rx = Math.min(rx, (W - half - sized.cx) / cos);
-        else if (cos < -1e-3) rx = Math.min(rx, (sized.cx - half) / -cos);
+  const ring = ringOf(data, hub);
+  const nodes = [...hub ? data.nodes.filter((n) => n.id === hub) : [], ...ring];
+  const top = layout3.inset?.top ?? 0;
+  const bottom = layout3.inset?.bottom ?? 0;
+  const hits = (a, b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
+  const union = ({ circle, label }) => {
+    const x = Math.min(circle.x, label.x);
+    const y = Math.min(circle.y, label.y);
+    return { x, y, width: Math.max(circle.x + circle.width, label.x + label.width) - x, height: Math.max(circle.y + circle.height, label.y + label.height) - y };
+  };
+  const search = (widths2, rows, rings2 = [[1, 0]], turns2 = [0, 0.25, 0.5, 0.75], grow = 1.1, whole = false) => {
+    let height = H;
+    let best = null;
+    for (let guard = 0; guard < 40; guard += 1) {
+      const geo = ringGeometry(W, height, layout3);
+      for (const [phase, [inner, first]] of turns2.flatMap((turn2) => rings2.map((pair) => (
+        /** @type {[number, [number, number]]} */
+        [turn2, pair]
+      )))) {
+        const sized = { ...geo };
+        let rx = W > 600 ? sized.rx : Infinity;
+        for (const [i, n] of ring.entries()) {
+          const cos = Math.cos(-Math.PI / 2 + (i + phase) / Math.max(1, ring.length) * Math.PI * 2);
+          const half = Math.max((widths2.get(n.id) ?? 0) / 2, rOf(n)) + pad2;
+          if (cos > 1e-3) rx = Math.min(rx, (W - half - sized.cx) / cos);
+          else if (cos < -1e-3) rx = Math.min(rx, (sized.cx - half) / -cos);
+        }
+        sized.rx = Math.max(24, Number.isFinite(rx) ? rx : sized.rx);
+        const at = placeRing(data, sized, phase, inner, first);
+        const boxes = nodes.map((n) => {
+          const p = (
+            /** @type {{ x: number, y: number }} */
+            at.get(n.id)
+          );
+          const r = rOf(n) + (n.flag === "mismatch" ? 5 : 0);
+          const w = widths2.get(n.id) ?? 0;
+          return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line * (rows.get(n.id) ?? 1) } };
+        });
+        let misses = 0;
+        for (const [i, a] of boxes.entries()) {
+          if (a.label.x < pad2 || a.label.x + a.label.width > W - pad2 || a.circle.y < top + pad2 || a.label.y + a.label.height > height - bottom - pad2) misses += 1;
+          for (const b of boxes.slice(i + 1)) if (whole ? hits(union(a), union(b)) : hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
+        }
+        if (!best || misses < best.misses) best = { misses, at, H: height };
+        if (misses === 0) break;
       }
-      sized.rx = Math.max(24, Number.isFinite(rx) ? rx : sized.rx);
-      const at = placeRing(data, sized, phase);
-      const boxes = nodes.map((n) => {
-        const p = (
-          /** @type {{ x: number, y: number }} */
-          at.get(n.id)
-        );
-        const r = rOf(n) + (n.flag === "mismatch" ? 5 : 0);
-        const w = widths2.get(n.id) ?? 0;
-        return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line } };
-      });
-      const top = layout3.inset?.top ?? 0;
-      const bottom = layout3.inset?.bottom ?? 0;
-      const hits = (a, b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
-      let misses = 0;
-      for (const [i, a] of boxes.entries()) {
-        if (a.label.x < pad2 || a.label.x + a.label.width > W - pad2 || a.circle.y < top + pad2 || a.label.y + a.label.height > height - bottom - pad2) misses += 1;
-        for (const b of boxes.slice(i + 1)) if (hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
-      }
-      if (!best || misses < best.misses) best = { misses, at, H: height };
-      if (misses === 0) break;
+      if (best?.misses === 0 || height >= maxHeight) break;
+      height = Math.min(maxHeight, Math.round(height * grow));
     }
-    if (best?.misses === 0 || height >= maxHeight) break;
-    height = Math.min(maxHeight, Math.round(height * 1.1));
+    return (
+      /** @type {NonNullable<typeof best>} */
+      best
+    );
+  };
+  const one = search(new Map(nodes.map((n) => [n.id, widthOf(n)])), /* @__PURE__ */ new Map());
+  const wraps = /* @__PURE__ */ new Map();
+  if (one.misses === 0 || !wrapOf) return { at: one.at, H: one.H, wraps };
+  const rings = [[1, 0], ...[0.8, 0.65, 0.5].flatMap((share) => ring.map((_, first) => (
+    /** @type {[number, number]} */
+    [share, first]
+  )))];
+  const turns = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875];
+  let wrapped = null;
+  for (const target of [104, 88, 72]) {
+    const widths2 = new Map(nodes.map((n) => [n.id, widthOf(n)]));
+    const rows = /* @__PURE__ */ new Map();
+    const lines = /* @__PURE__ */ new Map();
+    for (const n of nodes) {
+      const w = wrapOf(n, target);
+      if (!w || w.lines.length < 2) continue;
+      widths2.set(n.id, w.width);
+      rows.set(n.id, w.lines.length);
+      lines.set(n.id, w.lines);
+    }
+    const found = search(widths2, rows, rings, turns, 1.05, true);
+    if (!wrapped || found.misses < wrapped.misses || found.misses === wrapped.misses && found.H < wrapped.H) wrapped = { ...found, wraps: lines };
   }
-  const chosen = (
-    /** @type {NonNullable<typeof best>} */
-    best
+  const two9 = (
+    /** @type {NonNullable<typeof wrapped>} */
+    wrapped
   );
-  return { at: chosen.at, H: chosen.H };
+  return two9.misses < one.misses || two9.misses === one.misses && two9.H < one.H ? { at: two9.at, H: two9.H, wraps: two9.wraps } : { at: one.at, H: one.H, wraps: /* @__PURE__ */ new Map() };
 }
 function graphArrow(from, bend, to, clear, size2 = 9) {
   const at = (t2) => ({
@@ -58663,7 +58700,46 @@ function renderDetail(g) {
   if (made6 != null && made6 !== void 0) body.append(made6 instanceof Node ? made6 : doc.createTextNode(String(made6)));
   if (!body.childNodes.length) body.append(make21(doc, "p", "kp-graph__detail-text", node.description));
 }
-function drawGraph(g) {
+function groupsTouching(world) {
+  const boxes = [...world.querySelectorAll(".kp-graph__node")].map((n) => (
+    /** @type {SVGGraphicsElement} */
+    n.getBBox()
+  ));
+  const gap = 3;
+  let pairs = 0;
+  for (const [i, a] of boxes.entries())
+    for (const b of boxes.slice(i + 1)) if (a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap) pairs += 1;
+  return pairs;
+}
+function graphLabelLines(label, target, widthOf) {
+  if (widthOf(label) <= target) return [label];
+  const pieces = label.split(/(?<=[-_/ ])/);
+  if (pieces.length < 2) return [label];
+  const join = (from, to) => pieces.slice(from, to).join("").trimEnd();
+  const width = (from, to) => widthOf(join(from, to));
+  let rows = 1;
+  for (let from = 0, to = 1; to <= pieces.length; to += 1) {
+    if (to - from > 1 && width(from, to) > target) {
+      rows += 1;
+      from = to - 1;
+    }
+  }
+  rows = Math.min(rows, pieces.length);
+  const cut = (from, left) => {
+    if (left === 1) return { widest: width(from, pieces.length), cuts: [] };
+    let best = { widest: Infinity, cuts: [] };
+    for (let to = from + 1; to <= pieces.length - (left - 1); to += 1) {
+      const rest = cut(to, left - 1);
+      const widest2 = Math.max(width(from, to), rest.widest);
+      if (widest2 < best.widest) best = { widest: widest2, cuts: [to, ...rest.cuts] };
+    }
+    return best;
+  };
+  const { cuts } = cut(0, rows);
+  const edges2 = [0, ...cuts, pieces.length];
+  return edges2.slice(1).map((to, i) => join(edges2[i], to));
+}
+function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: false }) {
   const doc = g.el.ownerDocument;
   const o = graphOptionsOf(g.el);
   g.options = o;
@@ -58675,6 +58751,8 @@ function drawGraph(g) {
   g.drawnWidth = width;
   const W = Math.max(280, width || 800);
   let H = W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6)));
+  const roomy = SIDE_ROOM[attempt] ?? SIDE_ROOM[SIDE_ROOM.length - 1];
+  if (o.labels !== "below" && W < 600) H = Math.round(H * roomy.height);
   const hadFocus = g.svg.contains(doc.activeElement) ? g.focus : null;
   g.svg.replaceChildren();
   g.world = null;
@@ -58682,9 +58760,10 @@ function drawGraph(g) {
   g.el.dataset.kpState = g.state;
   const below = o.labels === "below";
   const inset = insetOf(o, o.chrome === "inside" && isShown(g.hint) ? g.hint.getBoundingClientRect().height : 0);
-  const layoutOptions = { ...o.ring != null ? { ring: o.ring } : {}, inset };
+  const layoutOptions = { ...o.ring != null ? { ring: o.ring } : {}, inset, ...!below && W < 600 && roomy.phase || roomy.stretch !== 1 ? { phase: roomy.phase, stretch: roomy.stretch } : {} };
   const base = o.node ?? 14;
   let at = null;
+  let wraps = /* @__PURE__ */ new Map();
   if (g.state === "ready" && data) {
     if (below) {
       const measure = (n) => {
@@ -58698,13 +58777,37 @@ function drawGraph(g) {
         text.remove();
         return (measured2 || n.label.length * 7.2) + 6;
       };
-      const room = graphRoom(data, W, H, measure, { ...layoutOptions, radiusOf: (n) => radiusOf(n, base) });
+      const widths2 = /* @__PURE__ */ new Map();
+      const measureText = (label) => {
+        const known4 = widths2.get(label);
+        if (known4 != null) return known4;
+        const text = (
+          /** @type {SVGTextElement} */
+          svgEl(doc, "text", { class: "kp-graph__label" })
+        );
+        text.textContent = label;
+        g.svg.append(text);
+        const measured2 = isShown(g.svg) ? text.getComputedTextLength() : 0;
+        text.remove();
+        widths2.set(label, measured2 || label.length * 7.2);
+        return widths2.get(label) ?? 0;
+      };
+      const wrapOf = (n, target) => {
+        const lines = graphLabelLines(n.label, target, measureText);
+        return lines.length < 2 ? null : { width: Math.max(...lines.map(measureText)) + 6, lines };
+      };
+      const room = graphRoom(data, W, H, measure, { ...layoutOptions, radiusOf: (n) => radiusOf(n, base), wrapOf });
       at = room.at;
       H = room.H;
+      wraps = room.wraps;
       g.readyHeight = H;
       g.readyWidth = W;
-    } else at = graphLayout(data, W, H, layoutOptions);
-  } else if (below && g.readyWidth === W && g.readyHeight > H) H = g.readyHeight;
+    } else {
+      at = graphLayout(data, W, H, layoutOptions);
+      g.readyHeight = H;
+      g.readyWidth = W;
+    }
+  } else if (g.readyWidth === W && g.readyHeight > H) H = g.readyHeight;
   g.box.style.setProperty("--kp-graph-h", `${H}px`);
   g.svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   g.svg.setAttribute("height", String(H));
@@ -58831,7 +58934,15 @@ function drawGraph(g) {
       /** @type {SVGTextElement} */
       svgEl(doc, "text", { class: "kp-graph__label", x: lx.toFixed(1), y: ly.toFixed(1), "text-anchor": anchor })
     );
-    text.textContent = n.label;
+    const wrapped = below ? wraps.get(id) : void 0;
+    if (wrapped) {
+      for (const [row, words] of wrapped.entries()) {
+        const tspan = svgEl(doc, "tspan", { x: lx.toFixed(1) });
+        if (row > 0) tspan.setAttribute("dy", "16");
+        tspan.textContent = words;
+        text.append(tspan);
+      }
+    } else text.textContent = n.label;
     text.setAttribute("aria-hidden", "true");
     node.append(text);
     labels.push({ text, full: n.label, length: n.label.length });
@@ -58841,6 +58952,17 @@ function drawGraph(g) {
   g.svg.append(world);
   g.labels = labels;
   if (isShown(g.svg) && !below) fitDrawnLabels(labels, W, H);
+  if (!below && W < 600 && isShown(g.svg) && !tried.locked) {
+    const touching = groupsTouching(world);
+    if (touching < tried.count) {
+      tried.best = attempt;
+      tried.count = touching;
+    }
+    if (touching > 0) {
+      if (attempt < SIDE_ROOM.length - 1) return drawGraph(g, attempt + 1, tried);
+      if (tried.best !== attempt) return drawGraph(g, tried.best, { ...tried, locked: true });
+    }
+  }
   const present = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
   g.legend.replaceChildren(
     ...present.map((k, index) => {
@@ -59343,7 +59465,7 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var GRAPH, GRAPH_CHANGE_EVENT, GRAPH_RETRY_EVENT, GRAPH_DETAIL_EVENT, GRAPH_OPTION_ATTRIBUTES, keyOf7, ringOf, graphLayout, graphLabelText, radiusOf, isShown, make21, SVG_NS3, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP, detailCount, insetOf;
+var GRAPH, GRAPH_CHANGE_EVENT, GRAPH_RETRY_EVENT, GRAPH_DETAIL_EVENT, GRAPH_OPTION_ATTRIBUTES, keyOf7, ringOf, graphLayout, graphLabelText, radiusOf, isShown, make21, SVG_NS3, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP, detailCount, insetOf, SIDE_ROOM;
 var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
@@ -59365,7 +59487,7 @@ var init_graph = __esm({
     ];
     keyOf7 = (host) => host.getAttribute("data-kp-key") ?? void 0;
     ringOf = (data, hub) => data.nodes.filter((n) => n.id !== hub).sort((a, b) => Number(!!a.external) - Number(!!b.external) || a.label.localeCompare(b.label) || a.id.localeCompare(b.id));
-    graphLayout = (data, W, H, options) => placeRing(data, ringGeometry(W, H, options));
+    graphLayout = (data, W, H, options) => placeRing(data, ringGeometry(W, H, options), options?.phase ?? 0);
     graphLabelText = (full, length) => length >= full.length ? full : `${full.slice(0, length).trimEnd()}\u2026`;
     radiusOf = (n, base = 14) => {
       if (n.radius != null && n.radius > 0) return n.radius;
@@ -59394,6 +59516,7 @@ var init_graph = __esm({
     ZOOM_STEP = 1.25;
     detailCount = 0;
     insetOf = (o, hintHeight) => ({ top: o.chrome === "inside" || o.zoom ? 44 : 0, bottom: o.chrome === "inside" ? Math.max(34, Math.ceil(hintHeight) + 12) : 0 });
+    SIDE_ROOM = [1, 1.1, 1.2, 1.3, 1.4].flatMap((height) => [1, 0.9, 1.1, 0.8, 1.2].flatMap((stretch) => [0, 0.25, 0.5, 0.75].map((phase) => ({ height, stretch, phase }))));
   }
 });
 

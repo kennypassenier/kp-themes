@@ -173,7 +173,7 @@ export const ringOf = (data, hub) =>
         .sort((a, b) => Number(!!a.external) - Number(!!b.external) || a.label.localeCompare(b.label) || a.id.localeCompare(b.id));
 
 /**
- * @typedef {{ ring?: number, inset?: { top?: number, bottom?: number } }} GraphLayoutOptions
+ * @typedef {{ ring?: number, inset?: { top?: number, bottom?: number }, phase?: number, stretch?: number }} GraphLayoutOptions
  * @typedef {{ cx: number, cy: number, rx: number, ry: number }} GraphRing
  */
 
@@ -185,7 +185,7 @@ export const ringOf = (data, hub) =>
  * @param {GraphLayoutOptions} [options]
  * @returns {GraphRing}
  */
-function ringGeometry(W, H, { ring = 0.36, inset } = {}) {
+function ringGeometry(W, H, { ring = 0.36, inset, stretch = 1 } = {}) {
     const top = inset?.top ?? 0;
     const bottom = inset?.bottom ?? 0;
     const Hs = H - top - bottom;
@@ -198,7 +198,7 @@ function ringGeometry(W, H, { ring = 0.36, inset } = {}) {
         rx = Math.min(rx, W * 0.24);
         ry = Math.max(ry, Hs * ring);
     }
-    return { cx, cy, rx, ry };
+    return { cx, cy, rx: rx * stretch, ry };
 }
 
 /**
@@ -206,9 +206,11 @@ function ringGeometry(W, H, { ring = 0.36, inset } = {}) {
  * @param {GraphData} data
  * @param {GraphRing} geo
  * @param {number} [phase]  a turn of the ring in nodes (0.25 = a quarter of the step between two nodes); 0 is the approved look
+ * @param {number} [inner]  the share of the radii every second node stands at (two rings alternating); 1 is one ring, the approved look
+ * @param {number} [first]  the node that stands on the outer ring where an odd ring has two neighbours on one ring (0 is the first node)
  * @returns {Map<string, { x: number, y: number, angle: number }>}
  */
-function placeRing(data, { cx, cy, rx, ry }, phase = 0) {
+function placeRing(data, { cx, cy, rx, ry }, phase = 0, inner = 1, first = 0) {
     /** @type {Map<string, { x: number, y: number, angle: number }>} */
     const at = new Map();
     const hub = hubOf(data);
@@ -216,7 +218,8 @@ function placeRing(data, { cx, cy, rx, ry }, phase = 0) {
     const ring = ringOf(data, hub);
     ring.forEach((n, i) => {
         const angle = -Math.PI / 2 + ((i + phase) / Math.max(1, ring.length)) * Math.PI * 2;
-        at.set(n.id, { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry, angle });
+        const k = (i - first + ring.length) % ring.length % 2 === 1 ? inner : 1;
+        at.set(n.id, { x: cx + Math.cos(angle) * rx * k, y: cy + Math.sin(angle) * ry * k, angle });
     });
     return at;
 }
@@ -226,76 +229,124 @@ function placeRing(data, { cx, cy, rx, ry }, phase = 0) {
  * ellipse around it (stretched sideways on a wide box). On a narrow box the
  * ellipse gives up width for height, so the labels beside the ring keep room.
  * `options.ring` sizes the ring (a share of the box, 0.36) and `options.inset`
- * keeps a strip at the top or the bottom clear [graph-1020].
+ * keeps a strip at the top or the bottom clear and `options.phase` turns the ring by a share of the step between two nodes
+ * (0, the approved look, unless a page asks) [graph-1020].
  * @param {GraphData} data
  * @param {number} W
  * @param {number} H
  * @param {GraphLayoutOptions} [options]
  * @returns {Map<string, { x: number, y: number, angle: number }>}
  */
-export const graphLayout = (data, W, H, options) => placeRing(data, ringGeometry(W, H, options));
+export const graphLayout = (data, W, H, options) => placeRing(data, ringGeometry(W, H, options), options?.phase ?? 0);
 
 /**
  * The layout for names that stand whole under their nodes [graph-1020]: the ring is narrowed until every name lies inside the
  * box, and the box grows taller (up to `maxHeight`) until no name touches another or a node. Nothing is cut: the picture gets the
  * room the names need. `widthOf(node)` is the width of the node's name as drawn.
+ *
+ * When names so long that even the tallest picture cannot hold them on one line are given a `wrapOf(node, target)`, the same search runs
+ * again with every name wider than `target` on several centred lines (`{ width, lines }`, the widest line's width) and the
+ * best of the tries wins; the lines come back in `wraps` by node id. Names that fit stay on one line, so a set that cleared before
+ * is drawn as it was.
  * @param {GraphData} data
  * @param {number} W
  * @param {number} H
  * @param {(node: GraphNode) => number} widthOf
- * @param {GraphLayoutOptions & { radiusOf?: (node: GraphNode) => number, line?: number, maxHeight?: number }} [options]
- * @returns {{ at: Map<string, { x: number, y: number, angle: number }>, H: number }}
+ * @param {GraphLayoutOptions & { radiusOf?: (node: GraphNode) => number, line?: number, maxHeight?: number, wrapOf?: (node: GraphNode, target: number) => { width: number, lines: string[] } | null }} [options]
+ * @returns {{ at: Map<string, { x: number, y: number, angle: number }>, H: number, wraps: Map<string, string[]> }}
  */
-export function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf(n), line = 18, maxHeight = 1400, ...layout } = {}) {
+export function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf(n), line = 18, maxHeight = 1400, wrapOf, ...layout } = {}) {
     const pad = 8;
     const gap = 8;
     const hub = hubOf(data);
-    const nodes = [...(hub ? data.nodes.filter((n) => n.id === hub) : []), ...ringOf(data, hub)];
-    const widths = new Map(nodes.map((n) => [n.id, widthOf(n)]));
-    let height = H;
-    /** @type {{ misses: number, at: Map<string, { x: number, y: number, angle: number }>, H: number } | null} */
-    let best = null;
-    for (let guard = 0; guard < 40; guard += 1) {
-        const geo = ringGeometry(W, height, layout);
-        const ring = ringOf(data, hub);
-        // The ring may be turned a quarter step at a time: two neighbours at the top or the bottom of a narrow ring stand side by side
-        // on one line, and a turn lets one stand lower than the other, so the names are not on one line. The first turn that clears
-        // every name wins, and 0 (the ring as it is everywhere else) is tried first.
-        for (const phase of [0, 0.25, 0.5, 0.75]) {
-            const sized = { ...geo };
-            // The ring's width: as wide as the box allows (a narrow box gives up the sides' room for labels, since the names are
-            // under the nodes now), and every name stays inside the box, whatever its place on the ring.
-            let rx = W > 600 ? sized.rx : Infinity;
-            for (const [i, n] of ring.entries()) {
-                const cos = Math.cos(-Math.PI / 2 + ((i + phase) / Math.max(1, ring.length)) * Math.PI * 2);
-                const half = Math.max((widths.get(n.id) ?? 0) / 2, rOf(n)) + pad;
-                if (cos > 0.001) rx = Math.min(rx, (W - half - sized.cx) / cos);
-                else if (cos < -0.001) rx = Math.min(rx, (sized.cx - half) / -cos);
+    const ring = ringOf(data, hub);
+    const nodes = [...(hub ? data.nodes.filter((n) => n.id === hub) : []), ...ring];
+    const top = layout.inset?.top ?? 0;
+    const bottom = layout.inset?.bottom ?? 0;
+    const hits = (/** @type {GraphBox} */ a, /** @type {GraphBox} */ b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
+    const union = (/** @type {{ circle: GraphBox, label: GraphBox }} */ { circle, label }) => {
+        const x = Math.min(circle.x, label.x);
+        const y = Math.min(circle.y, label.y);
+        return { x, y, width: Math.max(circle.x + circle.width, label.x + label.width) - x, height: Math.max(circle.y + circle.height, label.y + label.height) - y };
+    };
+    /**
+     * One search: the widths and line counts of the names are fixed, the height and the turn of the ring are searched.
+     * @param {Map<string, number>} widths
+     * @param {Map<string, number>} rows
+     */
+    const search = (widths, rows, rings = [[1, 0]], turns = [0, 0.25, 0.5, 0.75], grow = 1.1, whole = false) => {
+        let height = H;
+        /** @type {{ misses: number, at: Map<string, { x: number, y: number, angle: number }>, H: number } | null} */
+        let best = null;
+        for (let guard = 0; guard < 40; guard += 1) {
+            const geo = ringGeometry(W, height, layout);
+            // The ring may be turned a quarter step at a time: two neighbours at the top or the bottom of a narrow ring stand side by side
+            // on one line, and a turn lets one stand lower than the other, so the names are not on one line. The first turn that clears
+            // every name wins, and 0 (the ring as it is everywhere else) is tried first.
+            for (const [phase, [inner, first]] of turns.flatMap((turn) => rings.map((pair) => /** @type {[number, [number, number]]} */ ([turn, pair])))) {
+                const sized = { ...geo };
+                // The ring's width: as wide as the box allows (a narrow box gives up the sides' room for labels, since the names are
+                // under the nodes now), and every name stays inside the box, whatever its place on the ring.
+                let rx = W > 600 ? sized.rx : Infinity;
+                for (const [i, n] of ring.entries()) {
+                    const cos = Math.cos(-Math.PI / 2 + ((i + phase) / Math.max(1, ring.length)) * Math.PI * 2);
+                    const half = Math.max((widths.get(n.id) ?? 0) / 2, rOf(n)) + pad;
+                    if (cos > 0.001) rx = Math.min(rx, (W - half - sized.cx) / cos);
+                    else if (cos < -0.001) rx = Math.min(rx, (sized.cx - half) / -cos);
+                }
+                sized.rx = Math.max(24, Number.isFinite(rx) ? rx : sized.rx);
+                const at = placeRing(data, sized, phase, inner, first);
+                const boxes = nodes.map((n) => {
+                    const p = /** @type {{ x: number, y: number }} */ (at.get(n.id));
+                    const r = rOf(n) + (n.flag === 'mismatch' ? 5 : 0);
+                    const w = widths.get(n.id) ?? 0;
+                    return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line * (rows.get(n.id) ?? 1) } };
+                });
+                let misses = 0;
+                for (const [i, a] of boxes.entries()) {
+                    if (a.label.x < pad || a.label.x + a.label.width > W - pad || a.circle.y < top + pad || a.label.y + a.label.height > height - bottom - pad) misses += 1;
+                    // `whole`: a node and its name are one box (the union of the two), as they are measured on the page.
+                    for (const b of boxes.slice(i + 1)) if (whole ? hits(union(a), union(b)) : hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
+                }
+                if (!best || misses < best.misses) best = { misses, at, H: height };
+                if (misses === 0) break;
             }
-            sized.rx = Math.max(24, Number.isFinite(rx) ? rx : sized.rx);
-            const at = placeRing(data, sized, phase);
-            const boxes = nodes.map((n) => {
-                const p = /** @type {{ x: number, y: number }} */ (at.get(n.id));
-                const r = rOf(n) + (n.flag === 'mismatch' ? 5 : 0);
-                const w = widths.get(n.id) ?? 0;
-                return { circle: { x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r }, label: { x: p.x - w / 2, y: p.y + r + 4, width: w, height: line } };
-            });
-            const top = layout.inset?.top ?? 0;
-            const bottom = layout.inset?.bottom ?? 0;
-            const hits = (/** @type {GraphBox} */ a, /** @type {GraphBox} */ b) => a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap;
-            let misses = 0;
-            for (const [i, a] of boxes.entries()) {
-                if (a.label.x < pad || a.label.x + a.label.width > W - pad || a.circle.y < top + pad || a.label.y + a.label.height > height - bottom - pad) misses += 1;
-                for (const b of boxes.slice(i + 1)) if (hits(a.label, b.label) || hits(a.label, b.circle) || hits(b.label, a.circle)) misses += 1;
-            }
-            if (!best || misses < best.misses) best = { misses, at, H: height };
-            if (misses === 0) break;
+            if (best?.misses === 0 || height >= maxHeight) break;
+            height = Math.min(maxHeight, Math.round(height * grow));
         }
-        if (best?.misses === 0 || height >= maxHeight) break;
-        height = Math.min(maxHeight, Math.round(height * 1.1));
+        return /** @type {NonNullable<typeof best>} */ (best);
+    };
+    const one = search(new Map(nodes.map((n) => [n.id, widthOf(n)])), new Map());
+    /** @type {Map<string, string[]>} */
+    const wraps = new Map();
+    if (one.misses === 0 || !wrapOf) return { at: one.at, H: one.H, wraps };
+    // Each name wider than the target goes on as many centred lines as it needs, broken after its hyphens or at its spaces; the
+    // narrower the lines, the shorter the picture, until the lines are too many to stand side by side. Of the targets tried the
+    // picture with the fewest touching names wins, then the shortest.
+    // Two rings alternating: where the ring is narrow the neighbours at its top and bottom stand side by side, and every second one
+    // moves toward the hub so that the names are not on one line. An odd ring has one pair of neighbours on the same ring; which pair
+    // is searched too, so that it stands where the ring is tall.
+    const rings = [[1, 0], ...[0.8, 0.65, 0.5].flatMap((share) => ring.map((_, first) => /** @type {[number, number]} */ ([share, first])))];
+    const turns = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875];
+    /** @type {{ misses: number, at: Map<string, { x: number, y: number, angle: number }>, H: number, wraps: Map<string, string[]> } | null} */
+    let wrapped = null;
+    for (const target of [104, 88, 72]) {
+        const widths = new Map(nodes.map((n) => [n.id, widthOf(n)]));
+        const rows = new Map();
+        /** @type {Map<string, string[]>} */
+        const lines = new Map();
+        for (const n of nodes) {
+            const w = wrapOf(n, target);
+            if (!w || w.lines.length < 2) continue;
+            widths.set(n.id, w.width);
+            rows.set(n.id, w.lines.length);
+            lines.set(n.id, w.lines);
+        }
+        const found = search(widths, rows, rings, turns, 1.05, true);
+        if (!wrapped || found.misses < wrapped.misses || (found.misses === wrapped.misses && found.H < wrapped.H)) wrapped = { ...found, wraps: lines };
     }
-    const chosen = /** @type {NonNullable<typeof best>} */ (best);
-    return { at: chosen.at, H: chosen.H };
+    const two = /** @type {NonNullable<typeof wrapped>} */ (wrapped);
+    return two.misses < one.misses || (two.misses === one.misses && two.H < one.H) ? { at: two.at, H: two.H, wraps: two.wraps } : { at: one.at, H: one.H, wraps: new Map() };
 }
 
 /**
@@ -719,8 +770,66 @@ function renderDetail(g) {
     if (!body.childNodes.length) body.append(make(doc, 'p', 'kp-graph__detail-text', node.description));
 }
 
+/**
+ * The room tried, in order, for names beside the ring at a phone width [graph-1020]: the picture as tall as ever, then taller; on each
+ * height the ring as wide as ever, then a little narrower or wider; on each width the ring unturned, then turned a quarter step at a time.
+ */
+const SIDE_ROOM = [1, 1.1, 1.2, 1.3, 1.4].flatMap((height) => [1, 0.9, 1.1, 0.8, 1.2].flatMap((stretch) => [0, 0.25, 0.5, 0.75].map((phase) => ({ height, stretch, phase }))));
+
+/** How many pairs of node groups (a node and its name) of a drawn world come closer than 3 px? @param {SVGGElement} world */
+function groupsTouching(world) {
+    const boxes = [...world.querySelectorAll('.kp-graph__node')].map((n) => /** @type {SVGGraphicsElement} */ (n).getBBox());
+    const gap = 3;
+    let pairs = 0;
+    for (const [i, a] of boxes.entries())
+        for (const b of boxes.slice(i + 1)) if (a.x < b.x + b.width + gap && b.x < a.x + a.width + gap && a.y < b.y + b.height + gap && b.y < a.y + a.height + gap) pairs += 1;
+    return pairs;
+}
+
+/**
+ * A name on as few centred lines as keep each within `target` [graph-1020]: broken after a hyphen or at a space, and of all the ways
+ * to break it into that many lines the one whose widest line is narrowest, so the lines are as even as the name allows. A name that
+ * fits, or has no break point, is one line. `widthOf(text)` is the width of a piece as drawn.
+ * @param {string} label
+ * @param {number} target
+ * @param {(text: string) => number} widthOf
+ * @returns {string[]}
+ */
+function graphLabelLines(label, target, widthOf) {
+    if (widthOf(label) <= target) return [label];
+    const pieces = label.split(/(?<=[-_/ ])/);
+    if (pieces.length < 2) return [label];
+    const join = (/** @type {number} */ from, /** @type {number} */ to) => pieces.slice(from, to).join('').trimEnd();
+    const width = (/** @type {number} */ from, /** @type {number} */ to) => widthOf(join(from, to));
+    // The fewest lines: take pieces while they fit.
+    let rows = 1;
+    for (let from = 0, to = 1; to <= pieces.length; to += 1) {
+        if (to - from > 1 && width(from, to) > target) {
+            rows += 1;
+            from = to - 1;
+        }
+    }
+    rows = Math.min(rows, pieces.length);
+    // Of the ways to cut `pieces` into `rows` lines, the one with the narrowest widest line (pieces are few, so every way is tried).
+    /** @type {(from: number, left: number) => { widest: number, cuts: number[] }} */
+    const cut = (from, left) => {
+        if (left === 1) return { widest: width(from, pieces.length), cuts: [] };
+        /** @type {{ widest: number, cuts: number[] }} */
+        let best = { widest: Infinity, cuts: [] };
+        for (let to = from + 1; to <= pieces.length - (left - 1); to += 1) {
+            const rest = cut(to, left - 1);
+            const widest = Math.max(width(from, to), rest.widest);
+            if (widest < best.widest) best = { widest, cuts: [to, ...rest.cuts] };
+        }
+        return best;
+    };
+    const { cuts } = cut(0, rows);
+    const edges = [0, ...cuts, pieces.length];
+    return edges.slice(1).map((to, i) => join(edges[i], to));
+}
+
 /** Draw the whole graph for the box's width. @param {GraphModel} g */
-function drawGraph(g) {
+function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: false }) {
     const doc = g.el.ownerDocument;
     const o = graphOptionsOf(g.el);
     g.options = o;
@@ -732,6 +841,10 @@ function drawGraph(g) {
     g.drawnWidth = width;
     const W = Math.max(280, width || 800);
     let H = W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6)));
+    // Names beside the ring at a phone width [graph-1020]: the placement by angle is the approved look, and when two groups (a node and
+    // its name) touch, the picture is drawn again with more room: taller first, then the ring turned a quarter step at a time.
+    const roomy = SIDE_ROOM[attempt] ?? SIDE_ROOM[SIDE_ROOM.length - 1];
+    if (o.labels !== 'below' && W < 600) H = Math.round(H * roomy.height);
     const hadFocus = g.svg.contains(doc.activeElement) ? g.focus : null;
     g.svg.replaceChildren();
     g.world = null;
@@ -740,12 +853,14 @@ function drawGraph(g) {
     const below = o.labels === 'below';
     const inset = insetOf(o, o.chrome === 'inside' && isShown(g.hint) ? g.hint.getBoundingClientRect().height : 0);
     /** @type {GraphLayoutOptions} */
-    const layoutOptions = { ...(o.ring != null ? { ring: o.ring } : {}), inset };
+    const layoutOptions = { ...(o.ring != null ? { ring: o.ring } : {}), inset, ...(!below && W < 600 && roomy.phase || roomy.stretch !== 1 ? { phase: roomy.phase, stretch: roomy.stretch } : {}) };
     const base = o.node ?? 14;
     // The names stand whole under their nodes: the layout makes room, so a picture that is loading, empty or failed keeps the
     // height of the last one drawn and nothing jumps [graph-1020].
     /** @type {Map<string, { x: number, y: number, angle: number }> | null} */
     let at = null;
+    /** @type {Map<string, string[]>} */
+    let wraps = new Map();
     if (g.state === 'ready' && data) {
         if (below) {
             const measure = (/** @type {GraphNode} */ n) => {
@@ -756,13 +871,36 @@ function drawGraph(g) {
                 text.remove();
                 return (measured || n.label.length * 7.2) + 6;
             };
-            const room = graphRoom(data, W, H, measure, { ...layoutOptions, radiusOf: (n) => radiusOf(n, base) });
+            // A name that cannot stand on one line in the tallest picture goes on two centred lines, broken at its best hyphen or space.
+            /** @type {Map<string, number>} */
+            const widths = new Map();
+            const measureText = (/** @type {string} */ label) => {
+                const known = widths.get(label);
+                if (known != null) return known;
+                const text = /** @type {SVGTextElement} */ (svgEl(doc, 'text', { class: 'kp-graph__label' }));
+                text.textContent = label;
+                g.svg.append(text);
+                const measured = isShown(g.svg) ? text.getComputedTextLength() : 0;
+                text.remove();
+                widths.set(label, measured || label.length * 7.2);
+                return widths.get(label) ?? 0;
+            };
+            const wrapOf = (/** @type {GraphNode} */ n, /** @type {number} */ target) => {
+                const lines = graphLabelLines(n.label, target, measureText);
+                return lines.length < 2 ? null : { width: Math.max(...lines.map(measureText)) + 6, lines };
+            };
+            const room = graphRoom(data, W, H, measure, { ...layoutOptions, radiusOf: (n) => radiusOf(n, base), wrapOf });
             at = room.at;
             H = room.H;
+            wraps = room.wraps;
             g.readyHeight = H;
             g.readyWidth = W;
-        } else at = graphLayout(data, W, H, layoutOptions);
-    } else if (below && g.readyWidth === W && g.readyHeight > H) H = g.readyHeight;
+        } else {
+            at = graphLayout(data, W, H, layoutOptions);
+            g.readyHeight = H;
+            g.readyWidth = W;
+        }
+    } else if (g.readyWidth === W && g.readyHeight > H) H = g.readyHeight;
     g.box.style.setProperty('--kp-graph-h', `${H}px`);
     g.svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     g.svg.setAttribute('height', String(H));
@@ -888,7 +1026,15 @@ function drawGraph(g) {
         const text = /** @type {SVGTextElement} */ (
             svgEl(doc, 'text', { class: 'kp-graph__label', x: lx.toFixed(1), y: ly.toFixed(1), 'text-anchor': anchor })
         );
-        text.textContent = n.label;
+        const wrapped = below ? wraps.get(id) : undefined;
+        if (wrapped) {
+            for (const [row, words] of wrapped.entries()) {
+                const tspan = svgEl(doc, 'tspan', { x: lx.toFixed(1) });
+                if (row > 0) tspan.setAttribute('dy', '16');
+                tspan.textContent = words;
+                text.append(tspan);
+            }
+        } else text.textContent = n.label;
         text.setAttribute('aria-hidden', 'true');
         node.append(text);
         labels.push({ text, full: n.label, length: n.label.length });
@@ -898,6 +1044,18 @@ function drawGraph(g) {
     g.svg.append(world);
     g.labels = labels;
     if (isShown(g.svg) && !below) fitDrawnLabels(labels, W, H);
+    if (!below && W < 600 && isShown(g.svg) && !tried.locked) {
+        const touching = groupsTouching(world);
+        if (touching < tried.count) {
+            tried.best = attempt;
+            tried.count = touching;
+        }
+        // Nothing touches: this is the picture. Everything tried and something still touches: the try with the fewest is drawn.
+        if (touching > 0) {
+            if (attempt < SIDE_ROOM.length - 1) return drawGraph(g, attempt + 1, tried);
+            if (tried.best !== attempt) return drawGraph(g, tried.best, { ...tried, locked: true });
+        }
+    }
     // The kinds: one toggle per kind the edges use, none when nothing links.
     const present = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
     g.legend.replaceChildren(
