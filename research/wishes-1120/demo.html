@@ -175,7 +175,7 @@
                     <div role="group" aria-label="Run">
                         <button type="button" class="kp-button kp-button--sm" data-pg="job-run" data-value="run" aria-pressed="false">
                             Run the job</button
-                        ><button type="button" class="kp-button kp-button--sm" data-pg="job-run" data-value="stop" aria-pressed="false">Stop</button>
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="job-run" data-value="stop" aria-pressed="true">Stop</button>
                     </div>
                 </div>
                 <div id="job-line-component" class="pg-component">
@@ -1350,8 +1350,8 @@
                 <div class="pg-intro">
                     <h2 id="h-alert-remember">The Inbox note</h2>
                     <p>
-                        Close the note with its cross, then reload the page (or come back to this step): it is still closed. Show it again brings it
-                        back.
+                        Close the note with its cross, then reload the page (or come back to this step): it is still closed. Close it does the same as
+                        the cross; Show it again brings it back.
                     </p>
                 </div>
                 <div class="pg-expected">
@@ -1372,7 +1372,8 @@
                 </div>
                 <div data-review-controls data-review-controls-for="alert-remember-component">
                     <div role="group" aria-label="Memory">
-                        <button type="button" class="kp-button kp-button--sm" data-pg="alert" data-value="again" aria-pressed="false">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="alert" data-value="close" aria-pressed="false">Close it</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="alert" data-value="again" aria-pressed="true">
                             Show it again
                         </button>
                     </div>

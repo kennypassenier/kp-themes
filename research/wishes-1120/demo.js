@@ -129,7 +129,13 @@ on('job', (value) => {
 });
 on('job-run', (value) => {
     stopJob();
-    if (value !== 'run') return;
+    if (value !== 'run') {
+        // Stop cancels the run: the line goes back to waiting, as the job panel does after a cancel.
+        resetTransfer($('pg-job-transfer'));
+        drawSteps(0, false);
+        setJobLine($('pg-job-line'), { done: null, total: null, etaSeconds: null });
+        return;
+    }
     let tick = 0;
     resetTransfer($('pg-job-transfer'));
     jobTimer = window.setInterval(() => {
@@ -607,7 +613,11 @@ on('gate', (value) => {
 ready.then(() => setAckNotes($('pg-gate'), NOTES));
 
 // ---------------------------------------------------------------- alert-remember
-on('alert', () => showAlertAgain($('pg-alert')));
+on('alert', (value) => {
+    const alert = $('pg-alert');
+    if (value === 'close') /** @type {HTMLElement | null} */ (alert.querySelector('.kp-alert__close'))?.click();
+    else showAlertAgain(alert);
+});
 
 // ---------------------------------------------------------------- decorate-hook
 {

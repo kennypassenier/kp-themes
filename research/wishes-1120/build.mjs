@@ -61,7 +61,7 @@ const SECTIONS = [
             '<b>Run the job</b>: the steps tick on, the bar fills and the line follows both; the line is the same height at every moment.',
         ],
         look: 'Check that the numbers do not shimmer (tabular figures), that the separator dots have room and that the line wraps rather than cuts on a phone.',
-        controls: group('Show', 'job', [['waiting', 'Waiting', true], ['steps', 'Steps only'], ['both', 'Steps and data'], ['unknown', 'Size unknown']]) + group('Run', 'job-run', [['run', 'Run the job'], ['stop', 'Stop']]),
+        controls: group('Show', 'job', [['waiting', 'Waiting', true], ['steps', 'Steps only'], ['both', 'Steps and data'], ['unknown', 'Size unknown']]) + group('Run', 'job-run', [['run', 'Run the job'], ['stop', 'Stop', true]]),
         component: `<div class="kp-card pg-card pg-job">
             <ol class="kp-steplist" id="pg-job-steps" aria-label="Backup progress"></ol>
             <div class="kp-progress-group kp-progress-group--transfer"><div class="kp-progress__wrap" data-kp-transfer data-kp-linger="0" id="pg-job-transfer"></div></div>
@@ -365,10 +365,10 @@ const SECTIONS = [
         wish: 'homelab 119',
         asked: 'An explanation you closed came back on every visit. With <code>data-kp-remember</code> the closed alert stays closed, in this browser. Is that what you expect from a note you dismissed?',
         h2: 'The Inbox note',
-        intro: 'Close the note with its cross, then reload the page (or come back to this step): it is still closed. Show it again brings it back.',
+        intro: 'Close the note with its cross, then reload the page (or come back to this step): it is still closed. Close it does the same as the cross; Show it again brings it back.',
         expected: ['Closing plays the alert&rsquo;s own leaving motion and keeps the choice. After a reload the alert is not there at all, with no flash of it first.', '<b>Show it again</b> forgets the choice and shows the alert.'],
         look: 'Formal: an info alert with a close cross. Check the cross has room and the page below does not jump when it is gone beyond the alert&rsquo;s own fold.',
-        controls: group('Memory', 'alert', [['again', 'Show it again']]),
+        controls: group('Memory', 'alert', [['close', 'Close it'], ['again', 'Show it again', true]]),
         component: `<div class="kp-card pg-card"><div class="kp-alert kp-alert--info pg-alert" id="pg-alert" data-kp-remember="wishes-1120-inbox-note" role="note"><div class="kp-alert__body"><strong>What the Inbox is.</strong> It keeps what happened while you were away; nothing here needs you to act.</div><button type="button" class="kp-alert__close" aria-label="Close this note">&times;</button></div>
             <p class="pg-log">The rest of the Inbox would stand here.</p></div>`,
     },
