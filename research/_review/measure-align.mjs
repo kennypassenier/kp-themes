@@ -563,7 +563,7 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
             // A cell's own buttons (a row's expander, its action, a strip of nights) belong to the table: a datatable that scrolls
             // inside a max height has a box shorter than its rows, so rows scrolled out of it read as "under" the table.
             !el.closest('table, [role="grid"], .kp-table-wrap') &&
-            !el.closest('.kp-code__head, .kp-command__head, .kp-secret, [role="toolbar"], .kp-console, .kp-statuslist') &&
+            !el.closest('.kp-code__head, .kp-command__head, .kp-secret, [role="toolbar"], .kp-console, .kp-statuslist, .kp-chart__legend, .kp-chart__annkey') &&
             kids(el).every(onScreen)
         );
     });
@@ -585,8 +585,14 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
             // A frame of its own (a phone-width mock stacked under a full-width band) is another column, not a row of the band:
             // when the buttons stand in a box that is narrower than the group and does not contain it, the band's edges are not theirs.
             let framed = false;
-            for (let a = bg.parentElement; a && a !== section.parentElement && !a.contains(gr.el); a = a.parentElement)
+            // The same when they stand in a box of its own that does not hold the group: a card's border and padding put its
+            // buttons on the card's edge, never on the edge of a grid outside it (the legend of a chart in a card under a
+            // toolbar's form grid) [homelab 92].
+            for (let a = bg.parentElement; a && a !== section.parentElement && !a.contains(gr.el); a = a.parentElement) {
                 if (a.getBoundingClientRect().width < r.width - tol) framed = true;
+                const box = getComputedStyle(a);
+                if (a.classList.contains('kp-card') || parseFloat(box.borderTopWidth) > 0 || box.backgroundColor !== 'rgba(0, 0, 0, 0)') framed = true;
+            }
             if (framed) continue;
             if (!best || r.bottom > best.r.bottom) best = { gr, r };
         }

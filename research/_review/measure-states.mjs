@@ -1190,10 +1190,24 @@ export async function measureStatesAt(browser, url, { width, drive = true, netwo
                             if (r.width < 1 || r.height < 1) continue;
                             // A calendar's own busy card (.kp-calendar--busy-whole) and a chart's own state are the approved pictures, as in the wiring half.
                             // A plate parked in a hidden slot (the empty slot of a table) is not shown: only a visible one counts.
-                            const has = [...host.querySelectorAll(w === 'loading' ? `${busySel}, ${ownSel}` : plateSel)].some((e) => {
+                            const shown = (/** @type {Element} */ e) => {
                                 const b = e.getBoundingClientRect();
                                 return b.width > 1 && b.height > 1 && getComputedStyle(e).visibility !== 'hidden';
-                            });
+                            };
+                            // A group of uptime strips is covered by ONE busy card that stands on the group, over every strip
+                            // (js/uptime.js groupHost), as the wiring half accepts it: a visible card over half of the host is its card
+                            // [homelab 128, http-switchboard 40].
+                            const over = (/** @type {string} */ sel) =>
+                                [...(section?.querySelectorAll(sel) ?? [])].some((e) => {
+                                    if (!shown(e)) return false;
+                                    const b = e.getBoundingClientRect();
+                                    const wd = Math.min(b.right, r.right) - Math.max(b.left, r.left);
+                                    const ht = Math.min(b.bottom, r.bottom) - Math.max(b.top, r.top);
+                                    return wd > 0 && ht > 0 && wd * ht >= r.width * r.height * 0.5;
+                                });
+                            const has =
+                                [...host.querySelectorAll(w === 'loading' ? `${busySel}, ${ownSel}` : plateSel)].some(shown) ||
+                                (w === 'loading' && over(busySel));
                             if (!has)
                                 res.push(
                                     `${sid}: ${c.name} shows no ${w === 'loading' ? 'busy card while its data is held back' : 'failed plate while its data fails'}; wire it: ${c.wire}`,
