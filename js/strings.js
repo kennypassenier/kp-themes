@@ -443,6 +443,10 @@
  * @property {string} transferFailed  The first words of a failed transfer's note [kpadopt5-transfer]
  * @property {string} transferRetry  The Retry button of a failed transfer [kpadopt5-transfer]
  * @property {(name: string, percent: number) => string} transferAnnounce  What a screen reader hears at 25, 50, 75 and 100 % [kpadopt5-transfer]
+ * @property {(step: number, steps: number) => string} jobLineStep  A job line's step position, "Step 3 of 35" (js/job-line.js) [wish-1120]
+ * @property {(done: string, total: string) => string} jobLineBytes  A job line's bytes with the unit said once, done "1.2" and total "4 GB" make "1.2 of 4 GB" [wish-1120]
+ * @property {string} jobLineSeparator  What joins the parts of a job line [wish-1120]
+ * @property {string} jobLineIdle  A job line before anything was reported [wish-1120]
  * @property {string} connOffline  The banner's first line when the connection is gone (js/connection.js) [kpadopt5-connection]
  * @property {string} connOfflineWhy  What is true meanwhile and what happens next [kpadopt5-connection]
  * @property {string} connReconnecting  The first line while a try is under way [kpadopt5-connection]
@@ -839,6 +843,7 @@
  * @property {string} timerUnderMinute  The time left on the face in its last minute [kpadopt4-ideas]
  * @property {(name: string, duration: string) => string} timerDiscCaption  The still line under the disc: "Focus · 25 min" [kpadopt4-ideas]
  * @property {(when: string) => string} timerUntil  The still line of a timer that counts down to a moment: "until 14:30" [gaps-time-1019]
+ * @property {(days: number, hours: number) => string} countdownDays  A countdown of 24 hours or more, "6 d 22 h" (js/countdown.js) [wish-1120]
  * @property {string} rangePresets  The range picker's preset group, for a screen reader (js/range.js) [kpadopt4-ideas]
  * @property {(key: string) => string} rangePresetName  A preset in words: "Last 24 hours" [kpadopt4-ideas]
  * @property {(key: string) => string} rangePresetShort  A preset on its segment: "24h" [kpadopt4-ideas]
@@ -2097,6 +2102,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     transferFailed: 'The transfer failed',
     transferRetry: 'Retry',
     transferAnnounce: (name, percent) => `${name}: ${percent} %`,
+    jobLineStep: (step, steps) => `Step ${step} of ${steps}`,
+    jobLineBytes: (done, total) => `${done} of ${total}`,
+    jobLineSeparator: ' · ',
+    jobLineIdle: 'Waiting to start',
     // kpadopt5-ops:transfer:end
     // kpadopt5-ops:connection:start
     // The connection banner (js/connection.js) [kpadopt5-ops].
@@ -2611,6 +2620,11 @@ export const DEFAULT_STRINGS = Object.freeze({
     timerLeft: (duration) => `${duration} left`,
     timerDuration: (seconds) => {
         if (seconds < 60) return `${seconds} s`;
+        if (seconds >= 86400) {
+            const d = Math.floor(seconds / 86400);
+            const dh = Math.floor((seconds % 86400) / 3600);
+            return dh ? `${d} d ${dh} h` : `${d} d`;
+        }
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
         const s = seconds % 60;
@@ -2620,6 +2634,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     timerUnderMinute: 'under a minute',
     timerDiscCaption: (name, duration) => `${name} · ${duration}`,
     timerUntil: (when) => `until ${when}`,
+    countdownDays: (days, hours) => `${days} d ${hours} h`,
     // The range picker [kpadopt4-ideas].
     rangePresets: 'Ranges',
     rangePresetName: (key) => {

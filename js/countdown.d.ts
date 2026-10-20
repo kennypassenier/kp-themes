@@ -48,8 +48,9 @@ export declare function untilLabel(ms: number, nowMs: number, zone?: UntilZone):
  * The digits of a time left, rounded up to the second: "25:00", "0:08", "1:02:03".
  * @param {number} ms the time left
  * @param {boolean} hours whether the timer shows hours (it holds an hour or more)
+ * @param {boolean} [days] whether 24 hours or more is written with a days unit ("6 d 22 h"); off, it reads "167:59:59"
  */
-export declare function formatCountdown(ms: number, hours: boolean): string;
+export declare function formatCountdown(ms: number, hours: boolean, days?: boolean): string;
 export type CountdownState = 'idle' | 'running' | 'paused' | 'ended';
 export type CountdownClock = {
     state: () => CountdownState;

@@ -35433,7 +35433,11 @@
         container: kp-logviewer / inline-size;
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        inline-size: 100%;
+        /* Auto, not 100% [wish-1120, homelab 117]: a block fills its container minus its own margin, where 100% plus a
+         * margin ran past the box; stretch keeps it full width in a grid or a flex column too. */
+        inline-size: auto;
+        align-self: stretch;
+        justify-self: stretch;
         min-inline-size: 0;
         overflow: clip;
         border: 1px solid var(--border);
@@ -36334,6 +36338,92 @@
             inline-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
             block-size: max(2.25rem, var(--kp-touch-target, 2.75rem));
         }
+    }
+}
+
+@layer kp.layout {
+    /* --- Plain card: a state host without its own frame [wish-1120, homelab 90] ---
+     * A `.kp-card[data-kp-state]` is a framed card, so one inside a section card drew a card in a card. With
+     * `data-kp-card="plain"` the host draws no border, shadow, plate, padding or decoration (the register's corner cut,
+     * glow, ::before / ::after marks) and the section around it is the only frame; the stage, the busy card and the
+     * empty / failed plates inside it are unchanged. In the layout layer so it wins over every register and signature
+     * without a specificity race. */
+    .kp-card[data-kp-card='plain'] {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+        clip-path: none;
+        backdrop-filter: none;
+    }
+
+    .kp-card[data-kp-card='plain']::before,
+    .kp-card[data-kp-card='plain']::after {
+        display: none;
+    }
+}
+
+@layer kp.components {
+    /* --- Job line [wish-1120, homelab 98] (js/job-line.js) ---
+     * "Step 3 of 35 · 1.2 of 4 GB · about 2 min left": one muted sentence, digits that do not shimmer, words that wrap. */
+    .kp-jobline {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    /* --- Dated options without a date, and several meta texts [wish-1120, homelab 101] ---
+     * An option with no `when` draws its name alone: no age line, no empty row (and no row gap) where the line would be,
+     * the name centred in the row's held height so its neighbours keep their height. Several meta texts sit side by side
+     * in the meta column, right-aligned like one. */
+    .kp-dated__option[data-kp-no-hint] {
+        grid-template-rows: auto;
+        row-gap: 0;
+        align-items: center;
+    }
+
+    .kp-dated__option[data-kp-no-hint] > .kp-field__check,
+    .kp-dated__option[data-kp-no-hint] > .kp-dated__meta {
+        grid-row: 1;
+    }
+
+    .kp-dated__item[data-kp-no-hint] {
+        row-gap: 0;
+        align-items: center;
+    }
+
+    .kp-dated__item[data-kp-no-hint] > .kp-dated__meta {
+        grid-row: 1;
+    }
+
+    .kp-dated__metas {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-dated (max-width: 26rem) {
+        .kp-dated__option[data-kp-no-hint] {
+            grid-template-rows: auto auto;
+        }
+
+        .kp-dated__option[data-kp-no-hint] > .kp-field__check {
+            grid-row: 1 / span 2;
+        }
+
+        .kp-dated__option[data-kp-no-hint] > .kp-dated__meta {
+            grid-row: 2;
+        }
+    }
+
+    /* A countdown of 24 hours or more is read in days, "6 d 22 h": the unit letters take their own width [wish-1120, homelab 124] */
+    .kp-countdown__unit {
+        display: inline-block;
+        text-align: center;
+        white-space: pre;
     }
 }
 

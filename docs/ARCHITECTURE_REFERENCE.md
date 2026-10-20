@@ -193,6 +193,7 @@ js/timer.js                kitchen timers: named countdowns that keep running
 js/toggle.js               a button that stays pressed until it is pressed again
 js/toolbar.js              the bar above a list, log, board or chart
 js/transfer.js             a progress bar with a file name, speed and the time left
+js/job-line.js             one sentence for a job with steps and bytes: step 3 of 35, 1.2 of 4 GB, about 2 min left
 js/undo-toast.js           a toast with Undo and a visible clock
 js/unsaved.js              the unsaved-changes bar, with Save and Discard
 js/uptime.js               one thin strip of cells, one per period, toned by how the service did

@@ -312,6 +312,10 @@
             "types": "./js/question-card.d.ts",
             "default": "./js/question-card.js"
         },
+        "./js/job-line": {
+            "types": "./js/job-line.d.ts",
+            "default": "./js/job-line.js"
+        },
         "./js/transfer": {
             "types": "./js/transfer.d.ts",
             "default": "./js/transfer.js"

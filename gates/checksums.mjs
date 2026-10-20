@@ -167,6 +167,7 @@ export const FILES = [
     'js/notices.js',
     'js/question-card.js',
     'js/transfer.js',
+    'js/job-line.js',
     'js/connection.js',
     'js/auto-refresh.js',
     'js/master-detail.js',

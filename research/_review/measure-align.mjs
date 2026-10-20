@@ -727,6 +727,12 @@ export function measureAlign([tol, only, dialogsOnly = false]) {
                 )
             )
                 continue;
+            // A master-detail with nothing picked draws its empty plate centred in the detail pane, by design (Kenny's rule:
+            // empty states are centred); the list pane beside it starts at its top, and the two are not compared
+            // (homelab gap 131, wish-1120).
+            const emptyPlate = (/** @type {Element} */ k) =>
+                k.matches('[data-kp-pane]:not([data-kp-pane="list"])') && !!k.closest('[data-kp-master-detail][data-kp-state="empty"]');
+            if (emptyPlate(a) || emptyPlate(b)) continue;
             // A plate beside open text: the plate's top on the text's first line top is a composition too.
             const fa = firstLine(a);
             const fb = firstLine(b);

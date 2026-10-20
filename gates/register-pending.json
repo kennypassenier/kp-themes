@@ -90,5 +90,6 @@
     "deplist": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-ops), demoed in formal only; each register answers it once it is judged in that theme",
     "trace": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-ops), demoed in formal only; each register answers it once it is judged in that theme",
     "entity-grid": "a new component built for Kenny's review on 2026-10-17 (research/kpadopt6-ops), demoed in formal only; each register answers it once it is judged in that theme",
-    "feed": "a new component from the admin dashboard's gap list [gap-activity-feed-1019], built from the package's parts and judged in formal only first (research/gap-activity-feed); each register answers it once it is judged in that theme"
+    "feed": "a new component from the admin dashboard's gap list [gap-activity-feed-1019], built from the package's parts and judged in formal only first (research/gap-activity-feed); each register answers it once it is judged in that theme",
+    "jobline": "a new component from the homelab wishes [wish-1120], built from the package's parts and judged in formal only first (research/wishes-1120); each register answers it once it is judged in that theme"
 }
