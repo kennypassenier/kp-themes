@@ -323,7 +323,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-19 [graphapproved-1019]: the loading network graph's `--kp-graph-load-*` and ghost knobs (48 new): 1038 + 48 = 1086.
     // Re-pinned 2026-10-19 [hlcomp-1019]: the chart legend's columns knob (--kp-chart-legend-columns): 1086 + 1 = 1087.
     // Re-pinned 2026-10-20 [kyufive-1020]: the palette's label track cap (--kp-palette-label-max): 1087 + 1 = 1088.
-    assert.equal(result.expected, 1088, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-20 [cycle-1020]: two knobs from the cycle-1020 fixes (tooltip width cap and its fallback room): 1088 + 2 = 1090.
+    assert.equal(result.expected, 1090, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -413,6 +414,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // (what the floating variant leaves beside the panel).
     // The four that no rule and no script reads yet stay listed: --kp-busy-opacity, --kp-inspector-min, --kp-week-mode and
     // --kp-wheel-ease; --kp-steps is declared on the progress stripe (css/components.css) and not read through var() there.
+    // 2026-10-20 [cycle-1020]: --kp-tooltip-above and --kp-tooltip-below are @position-try rule names
+    // (the reason tooltip's fallback places), not knobs, so nothing reads them through var().
     assert.deepEqual(result.unread, [
         '--kp-busy-opacity',
         '--kp-chart-height',
@@ -420,6 +423,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
         '--kp-sidenav-lead',
         '--kp-sidenav-room',
         '--kp-steps',
+        '--kp-tooltip-above',
+        '--kp-tooltip-below',
         '--kp-week-mode',
         '--kp-wheel-ease',
     ]);
