@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 11.2.0 — 2026-10-21
+
+Released on Kenny's go (2026-10-21 01:27, release form: "release-go: Go", "release-shots: Zonder afdrukken"): the 17 package faults the end products found on 11.1.1, the 22 homelab wishes Kenny chose (17 approved in research/wishes-1120, 5 fixed directly after his review), and the network graph options he chose in full (research/graph-1020, 8 of 8 approved). Known limitation, accepted: fourteen long names beside the ring do not all stand clear at 390 px; `data-kp-labels="below"` is the way out. Screenshot check skipped as for 11.1.0.
+
 - **Added: eight options on the network graph, so a page can draw what a hand-made Map draws** [graph-1020, homelab 102]. Every one is an attribute on the graph, off by default (a graph without them draws what was approved), and switchable at runtime (an attribute change redraws; `setGraphOptions(el, { … })` sets them, `graphOptionsOf(el)` reads them, `GRAPH_OPTION_ATTRIBUTES`, types `GraphOptions` and `GraphDetailInfo`).
 - **Added: `data-kp-labels="below"`** [graph-1020, homelab 102]. The name stands whole and centred under its node and is never cut: the layout makes room instead of shortening (`graphRoom()`, a pure function: the ring is as wide as the box allows, then the picture grows taller, up to 1400 px, until no name touches another or leaves the box). A loading, empty or failed picture keeps the height of the last one drawn.
 - **Added: `data-kp-chrome="inside"`** [graph-1020, homelab 102]. Show all and the hint stand inside the picture (top right, and at the foot) instead of in the bar and under it; the layout keeps a strip clear for them.
