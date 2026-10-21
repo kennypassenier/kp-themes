@@ -1,5 +1,7 @@
 # research/chassis-storage: the chassis-rs kit page "Storage" on kp-themes 11.2.0
 
+**Decided (Kenny, 21/10/2026 07:42): every section approved in formal**, defaults kept. chassis-rs builds the Storage page as approved (3.11.0).
+
 Formal only, four sections, one bundled review. Design: chassis-rs `docs/STORAGE_DESIGN.md` section 8. All figures are sample data in the shape of the
 admin dashboard's storage (the figures Kenny gave, 2026-10-21); nothing reads a real service or the real clock.
 
