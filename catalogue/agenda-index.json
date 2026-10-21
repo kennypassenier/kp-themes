@@ -1,6 +1,24 @@
 {
     "$comment": "What the Agenda (catalogue/agenda.html) reads on its first view, in one file: per demo its facts, fingerprint and update, per archived demo its decision, the pixel checks that reopen, and every catalogue block with its hash. Written by node gates/generate-agenda-index.mjs; the gate refuses a commit that leaves it stale. Anything missing here is read live.",
     "demos": {
+        "research/chassis-storage/demo.html": {
+            "facts": {
+                "id": "chassis-storage",
+                "themes": "formal",
+                "ask": null,
+                "askText": "The new kit page for the sqlite storage of chassis-rs 3.11.0 (docs/STORAGE_DESIGN.md, section 8), formal only, built from kp-themes parts and the form grid. It shows what is used against the 50 MB budget (with the sign-in data marked read-only), one row per kind of data the application keeps, a targeted delete in two steps (a read-only preview, then a typed confirmation), and compacting the application file on demand. 4 sections, 4 pairs, two choices (each only asks for its default). All figures are sample data in the shape of the admin dashboard’s storage, and the page says so; the budget only warns and nothing is ever deleted for you.",
+                "sections": [
+                    { "item": "storage-page", "themes": null, "topic": "storage", "mode": null },
+                    { "item": "storage-states", "themes": null, "topic": "storage", "mode": null },
+                    { "item": "storage-delete", "themes": null, "topic": "storage", "mode": null },
+                    { "item": "storage-compact", "themes": null, "topic": "storage", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"chassis-storage-fdaa3bc3-7c2a-4d3a-b781-c2c6072c43e6\", \"received\": [] }\n        "
+            },
+            "fingerprint": "7e5d3c7171defbaf",
+            "update": null
+        },
         "research/graph-1020/demo.html": {
             "facts": {
                 "id": "graph-1020",

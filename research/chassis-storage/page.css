@@ -1,0 +1,386 @@
+/* research/chassis-storage: the frame of the Storage kit page demo.
+   Every kp- class is the package's. These st- rules lay out what only this page adds: the budget card's grid, the kinds' cells, and the
+   compositions of the clean-up and the compact dialogs on the 12-column grid. Tokens only. The shell, the section frame and the dialog
+   frame (.ck-*) come from research/chassis-kit-pages/page.css. */
+
+.st-sample {
+    order: 9;
+    margin-block: var(--kp-space-md, 1rem) 0;
+}
+
+/* The page's own composition: the space used (8) against what can be given back (4) from a small tablet up. The package folds 8 and 4 to
+   12 and 6 under 64rem; this page keeps its pair on one row until the phone rule (48rem) takes over. */
+.ck-ops .kp-ops__body > [data-kp-span='8'] {
+    grid-column: span 8;
+}
+
+.ck-ops .kp-ops__body > [data-kp-span='4'] {
+    grid-column: span 4;
+}
+
+.st-files {
+    display: grid;
+    grid-template-columns: max-content max-content minmax(0, 1fr) max-content;
+    column-gap: var(--kp-space-lg, 1.5rem);
+}
+
+.st-files__row {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    align-items: baseline;
+    padding-block: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.st-files__row p {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.st-files__size {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+
+@container stc (max-width: 34rem) {
+    .st-files__row {
+        grid-template-columns: minmax(0, 1fr) max-content;
+        row-gap: var(--kp-space-2xs, 0.125rem);
+    }
+
+    .st-files__note {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .st-files__tag {
+        grid-column: 2;
+        grid-row: 2;
+    }
+}
+
+.st-kinds td.kp-numeric,
+.st-share__n {
+    white-space: nowrap;
+}
+
+/* --- the cards of the page: their stage is the container the arrangements answer to --- */
+.st-card .kp-card__data {
+    container: stc / inline-size;
+}
+
+/* Space used: the figure (1 of 3 columns) against the share bar (2 of 3), the three parts across both on the form grid. */
+.st-budget {
+    display: grid;
+    grid-template-columns: minmax(11rem, 1fr) minmax(0, 2.2fr);
+    column-gap: var(--kp-space-lg, 1.5rem);
+    row-gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+.st-budget__figure {
+    grid-column: 1;
+    margin: 0;
+}
+
+.st-budget__bar {
+    grid-column: 2;
+    margin: 0;
+    align-self: center;
+}
+
+.st-budget .st-files {
+    grid-column: 1 / -1;
+}
+
+@container stc (max-width: 34rem) {
+    .st-budget {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .st-budget__figure,
+    .st-budget__bar {
+        grid-column: 1;
+    }
+}
+
+/* Give back empty space: the figure above, the button and its sentence on the card's own bottom edge. */
+.st-compact-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--kp-space-md, 1rem);
+    block-size: 100%;
+}
+
+.st-compact-card .kp-kpis {
+    margin: 0;
+}
+
+.st-compact-card__act {
+    display: grid;
+    align-content: end;
+    justify-items: start;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.st-compact-card__act p {
+    margin: 0;
+}
+
+/* The kinds: the name, what it is, and the note that it cleans itself, in one cell of its own. */
+.st-kind {
+    display: grid;
+    gap: var(--kp-space-2xs, 0.125rem);
+    max-inline-size: 18rem;
+}
+
+.st-kind__about,
+.st-kind__self {
+    color: var(--muted-foreground);
+}
+
+.st-kind__self {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+/* The share of the budget: a meter and its number, the number in a column of its own so every row's bar starts on one edge. */
+.st-share {
+    display: grid;
+    grid-template-columns: minmax(3rem, 1fr) 5ch;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 6.5rem;
+}
+
+.st-share__n {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+
+.st-when {
+    font-size: var(--kp-text-md, 1rem);
+}
+
+/* --- the clean-up dialog: the title and the steps across; the choices (1-5) against the preview (6-12); the confirm band across --- */
+.st-clean {
+    --kp-dialog-wide: 70rem;
+}
+
+.st-clean__grid {
+    grid-template-areas:
+        'head head head head head head head head head head head head'
+        'steps steps steps steps steps steps steps steps steps steps steps steps'
+        'filters filters filters filters filters preview preview preview preview preview preview preview'
+        'confirm confirm confirm confirm confirm confirm confirm confirm confirm confirm confirm confirm';
+}
+
+.st-clean__head {
+    grid-area: head;
+}
+
+.st-clean__steps {
+    grid-area: steps;
+}
+
+.st-clean__filters {
+    grid-area: filters;
+}
+
+.st-clean__preview {
+    grid-area: preview;
+    --kp-card-stage-min: 21rem;
+}
+
+.st-clean__confirm {
+    grid-area: confirm;
+}
+
+.st-clean__filters,
+.st-clean__preview {
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.st-form {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-inline-size: 0;
+}
+
+.st-nofilters {
+    margin: 0;
+}
+
+.st-prev__kpis {
+    margin-block-end: var(--kp-space-md, 1rem);
+}
+
+.st-prev__note {
+    margin: 0;
+}
+
+/* The confirm band: words | what to type | the actions, the same three tracks in every step. */
+.st-clean__confirm {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(max-content, 3fr);
+    column-gap: var(--kp-space-lg, 1.5rem);
+    row-gap: var(--kp-space-sm, 0.5rem);
+    align-items: start;
+    min-block-size: 9rem;
+    padding: var(--kp-space-md, 1rem) var(--kp-space-md, 1rem) 0;
+    border-block-start: 1px solid var(--border);
+}
+
+.st-clean__confirm :is(h3, p) {
+    margin: 0;
+}
+
+.st-clean__confirm-words {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.st-clean__confirm-body {
+    min-inline-size: 0;
+}
+
+.st-clean__confirm-acts,
+.st-compact__acts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: start;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.st-clean__confirm-acts .kp-button,
+.st-compact__acts .kp-button {
+    min-inline-size: 7.5rem;
+}
+
+@container ckd (max-width: 56rem) {
+    .st-clean__grid {
+        grid-template-areas:
+            'head head head head head head head head head head head head'
+            'steps steps steps steps steps steps steps steps steps steps steps steps'
+            'filters filters filters filters filters filters filters filters filters filters filters filters'
+            'preview preview preview preview preview preview preview preview preview preview preview preview'
+            'confirm confirm confirm confirm confirm confirm confirm confirm confirm confirm confirm confirm';
+    }
+
+    .st-clean__confirm {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .st-clean__confirm-acts {
+        justify-content: stretch;
+    }
+
+    .st-clean__confirm-acts .kp-button {
+        flex: 1 1 0;
+    }
+}
+
+/* --- the compact dialog: the title; three figures; the steps (1-7) against the budget bars (8-12); the foot --- */
+.st-compact {
+    --kp-dialog-wide: 60rem;
+}
+
+.st-compact__grid {
+    grid-template-areas:
+        'head head head head head head head head head head head head'
+        'kpis kpis kpis kpis kpis kpis kpis kpis kpis kpis kpis kpis'
+        'steps steps steps steps steps steps steps meters meters meters meters meters'
+        'foot foot foot foot foot foot foot foot foot foot foot foot';
+}
+
+.st-compact__head {
+    grid-area: head;
+}
+
+.st-compact__kpis {
+    grid-area: kpis;
+    margin: 0;
+}
+
+.st-compact__steps {
+    grid-area: steps;
+    --kp-card-stage-min: 12rem;
+}
+
+.st-compact__meters {
+    grid-area: meters;
+    align-content: start;
+}
+
+.st-compact__foot {
+    grid-area: foot;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--kp-space-lg, 1.5rem);
+    align-items: center;
+    padding: var(--kp-space-md, 1rem) var(--kp-space-sm, 0.5rem) 0;
+    border-block-start: 1px solid var(--border);
+}
+
+.st-compact__foot p {
+    margin: 0;
+}
+
+.st-meters .kp-meter {
+    display: block;
+    inline-size: 100%;
+}
+
+.st-meters {
+    --kp-formgrid-control: 4fr;
+}
+
+@container ckd (max-width: 44rem) {
+    .st-compact__grid {
+        grid-template-areas:
+            'head head head head head head head head head head head head'
+            'kpis kpis kpis kpis kpis kpis kpis kpis kpis kpis kpis kpis'
+            'steps steps steps steps steps steps steps steps steps steps steps steps'
+            'meters meters meters meters meters meters meters meters meters meters meters meters'
+            'foot foot foot foot foot foot foot foot foot foot foot foot';
+    }
+
+    .st-compact__foot {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .st-compact__acts {
+        justify-content: stretch;
+    }
+
+    .st-compact__acts .kp-button {
+        flex: 1 1 0;
+    }
+}
+
+/* The attention band's three sentences are three lines, each on its own. */
+[data-st-band] .kp-attention__text > span {
+    display: block;
+}
+
+[data-st-band] .kp-attention__text > span + span {
+    margin-block-start: var(--kp-space-2xs, 0.125rem);
+}
+
+/* A dialog shown in place is as tall as its content: the page scrolls, the dialog does not. */
+.ck-stage > dialog.ck-dlg[open] {
+    max-block-size: none;
+    overflow: visible;
+}
+
+.ck-stage > dialog.ck-dlg[open] .kp-dialog__body {
+    max-block-size: none;
+    overflow: visible;
+}

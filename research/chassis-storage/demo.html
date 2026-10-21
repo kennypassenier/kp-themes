@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="chassis-storage" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>chassis-rs kit page Storage: the budget, the kinds of data, a targeted delete and compacting</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../chassis-kit-pages/page.css" />
+        <link rel="stylesheet" href="../chassis-storage/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ck-page">
+            <header class="ck-intro">
+                <h1>chassis-rs kit page Storage: the budget, the kinds of data, a targeted delete and compacting</h1>
+                <p class="cat-intro">
+                    The new kit page for the sqlite storage of chassis-rs 3.11.0 (docs/STORAGE_DESIGN.md, section 8), formal only, built from
+                    kp-themes parts and the form grid. It shows what is used against the 50 MB budget (with the sign-in data marked read-only), one
+                    row per kind of data the application keeps, a targeted delete in two steps (a read-only preview, then a typed confirmation), and
+                    compacting the application file on demand. 4 sections, 4 pairs, two choices (each only asks for its default). All figures are
+                    sample data in the shape of the admin dashboard’s storage, and the page says so; the budget only warns and nothing is ever deleted
+                    for you.
+                </p>
+            </header>
+            <section
+                class="ck-sec"
+                id="storage-page"
+                data-review-item="storage-page"
+                data-review-topic="storage"
+                data-review-topic-title="Storage"
+                data-review-components="card stackbar formgrid datatable"
+                data-review-title="The Storage page: what is used, what it is made of, and where to clean up"
+                data-review-choices='[{"id":"list-look","label":"How the kinds are listed","default":"table","options":[{"value":"table","label":"A table","hint":"Columns for amount, size, share, oldest and newest; sortable."},{"value":"cards","label":"Cards","hint":"One card per kind, as on a phone."}]}]'
+                aria-labelledby="h-storage-page"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-storage-page">The Storage page: what is used, what it is made of, and where to clean up</h2>
+                    <p>
+                        One page on a 12-column grid. The space used (columns 1 to 8) stands against the empty space that can be given back (9 to 12),
+                        and the kinds of data stand across all 12 columns below, so the biggest kind and its Clean up button are the first thing under
+                        the figures.
+                    </p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Budget</b> (the buttons above): <b>Warning</b> is the sample the admin dashboard would show (47.9 of 50 MB, past the 40
+                            MB warning tick), with one amber band that says what, why and what now, and a button for the biggest kind.
+                            <b>Over budget</b> turns the band red and says nothing was deleted and the service keeps saving. <b>Within budget</b> has
+                            no band.
+                        </li>
+                        <li>
+                            <b>Space used:</b> the share bar splits the three parts (application data, sign-in data marked <b>Read-only</b> and never
+                            cleaned up here, pending writes) with exact sizes and a tick at 40 MB; the three rows under it keep one label column, one
+                            size column and one note column.
+                        </li>
+                        <li>
+                            <b>What is stored:</b> a datatable, one row per kind with its amount, size, share of the budget, oldest and newest, and
+                            <b>Clean up…</b> in one fixed column. Inbox snoozes says it cleans itself. Dates are dd/mm/yyyy HH:mm, counts keep every
+                            digit, sizes are KB or MB.
+                        </li>
+                        <li>
+                            <b>Phone</b>: every card is one column and the kinds become cards; the page says on screen that all figures are sample
+                            data.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The two top cards share one height, the kinds table starts on the same left edge as the cards above it, and every Clean up
+                        button stands in one column; at Phone nothing scrolls sideways and the amber band keeps its three parts.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="storage-page-component">
+                    <div role="group" aria-label="Budget">
+                        <b>Budget:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="budget" data-ck-value="warn" aria-pressed="true">
+                            Warning (the sample)
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="budget" data-ck-value="ok" aria-pressed="false">
+                            Within budget
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="budget" data-ck-value="over" aria-pressed="false">
+                            Over budget
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">
+                            Full
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">
+                            Phone
+                        </button>
+                    </div>
+                </div>
+                <div id="storage-page-component" class="ck-stage" data-ck-view="storage-page" data-ck-budget="warn" data-ck-width="full"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="storage-states"
+                data-review-item="storage-states"
+                data-review-topic="storage"
+                data-review-components="card stackbar datatable"
+                data-review-title="The Storage cards while they load, when there is nothing and when they fail"
+                aria-labelledby="h-storage-states"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-storage-states">The Storage cards while they load, when there is nothing and when they fail</h2>
+                    <p>
+                        Every card uses the package’s own states: the busy card while the storage is read, the empty plate when the application stores
+                        nothing of its own yet, the failed plate with Try again. Each fills the footprint of the loaded card.
+                    </p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading:</b> the busy card sits centred over each card and the table, at the loaded height. <b>Empty:</b> the kinds
+                            card says the application stores nothing of its own yet; the figures above show only the small sign-in data.
+                            <b>Failed:</b> each card shows one plate at heading size with a normal-size Try again, which returns every card to Ready.
+                        </li>
+                        <li>Nothing jumps: press Ready, Loading, Failed in turn and the cards keep their place.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The three cards keep the same grid in every state; the busy card is the theme’s own spinner, centred; the empty and failed
+                        plates are centred at heading size.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="storage-states-component">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="ready" aria-pressed="true">
+                            Ready
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="loading" aria-pressed="false">
+                            Loading
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="empty" aria-pressed="false">
+                            Empty
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="failed" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">
+                            Full
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">
+                            Phone
+                        </button>
+                    </div>
+                </div>
+                <div id="storage-states-component" class="ck-stage" data-ck-view="storage-states" data-ck-state="ready" data-ck-width="full"></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="storage-delete"
+                data-review-item="storage-delete"
+                data-review-topic="storage"
+                data-review-components="dialog formgrid datepicker segmented datatable card steplist type-confirm flash"
+                data-review-title="Clean up one kind: choose, preview, then type to confirm"
+                data-review-choices='[{"id":"confirm-text","label":"What you type to confirm","default":"name","options":[{"value":"name","label":"The kind’s name","hint":"Type Notifications."},{"value":"count","label":"The number of rows","hint":"Type 1 206: it makes you read the count."}]}]'
+                aria-labelledby="h-storage-delete"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-storage-delete">Clean up one kind: choose, preview, then type to confirm</h2>
+                    <p>
+                        A targeted delete in three steps on one composition. The choices (columns 1 to 5) and what would go (6 to 12) stand side by
+                        side; the confirm band under them keeps the same three tracks in every step, so the dialog never changes size.
+                    </p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Step 1:</b> <b>Older than</b> (a date picker, dd/mm/yyyy) and the kind’s own declared filters: Notifications has level
+                            (chips), read state and stack; Update flows a result and part of a stack name; Inbox snoozes a switch and says expired
+                            rows go by themselves; Fleet trend only the date. <b>Preview</b> counts without deleting: how many rows, the space they
+                            free, the oldest and newest, and the five oldest rows.
+                        </li>
+                        <li>
+                            <b>Preview states</b> (the buttons above): not run, counting (busy card), ready, nothing matches and failed, each filling
+                            the same card. Changing any choice makes the old preview stale on purpose.
+                        </li>
+                        <li>
+                            <b>Step 2:</b> <b>Continue to confirm</b> shows what will be lost and asks you to type the kind’s name; Delete for good
+                            stays off until it matches exactly, and the server recounts and refuses if the data changed or the words differ.
+                            <b>Deleted</b> says the file keeps its size until it is compacted and offers Compact.
+                        </li>
+                        <li>Press <b>Phone</b>: the two cards stack, the steps become a column and the buttons share the width.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The date picker, the chips, the select and the buttons stand on the form grid’s tracks; the preview’s four figures sit on one
+                        row at the wide width; the sample rows are a table with a fixed header; the dialog is the same height in Choose and Confirm.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="storage-delete-component">
+                    <div role="group" aria-label="Kind">
+                        <b>Kind:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="kind" data-ck-value="notifications" aria-pressed="true">
+                            Notifications
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="kind" data-ck-value="flows" aria-pressed="false">
+                            Update flows
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="kind" data-ck-value="snoozes" aria-pressed="false">
+                            Inbox snoozes
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="kind" data-ck-value="fleet" aria-pressed="false">
+                            Fleet trend
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Step">
+                        <b>Step:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="choose" aria-pressed="true">
+                            Choose
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="confirm" aria-pressed="false">
+                            Confirm
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="step" data-ck-value="done" aria-pressed="false">
+                            Deleted
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Preview">
+                        <b>Preview:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="preview" data-ck-value="ready" aria-pressed="true">
+                            Ready
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="preview" data-ck-value="idle" aria-pressed="false">
+                            Not run
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="preview" data-ck-value="loading" aria-pressed="false">
+                            Counting
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="preview" data-ck-value="empty" aria-pressed="false">
+                            Nothing matches
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="preview" data-ck-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">
+                            Full
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">
+                            Phone
+                        </button>
+                    </div>
+                </div>
+                <div
+                    id="storage-delete-component"
+                    class="ck-stage"
+                    data-ck-view="storage-delete"
+                    data-ck-kind="notifications"
+                    data-ck-step="choose"
+                    data-ck-preview="ready"
+                    data-ck-width="full"
+                ></div>
+            </section>
+            <section
+                class="ck-sec"
+                id="storage-compact"
+                data-review-item="storage-compact"
+                data-review-topic="storage"
+                data-review-components="dialog steplist formgrid card flash"
+                data-review-title="Compact the application data: see what is given back first"
+                aria-labelledby="h-storage-compact"
+            >
+                <div class="ck-sec__head">
+                    <h2 id="h-storage-compact">Compact the application data: see what is given back first</h2>
+                    <p>
+                        Compacting rewrites the file without the empty space deleted rows leave. It shows the reclaimable size before anything
+                        happens, never runs by itself, and touches only the application data.
+                    </p>
+                </div>
+                <div class="ck-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Ready:</b> three figures (now, can be given back, after), the three steps of what happens, and the budget bar before
+                            and after with the 40 MB tick. <b>Nothing to reclaim:</b> Compact now is off and says why. <b>Running:</b> the steps move
+                            on; <b>Done</b> says how much was given back; <b>Failed</b> is one plate with Try again, and nothing was changed.
+                        </li>
+                        <li><b>Phone:</b> the figures stack and the buttons share the width.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The three figures share one row, the steps and the budget bars stand in two cards of one height, and the buttons stand on the
+                        right edge of the foot; a state never changes the dialog’s size.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="storage-compact-component">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="ready" aria-pressed="true">
+                            Ready
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="none" aria-pressed="false">
+                            Nothing to reclaim
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="running" aria-pressed="false">
+                            Running
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="done" aria-pressed="false">
+                            Done
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="state" data-ck-value="failed" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="full" aria-pressed="true">
+                            Full
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ck-set="width" data-ck-value="phone" aria-pressed="false">
+                            Phone
+                        </button>
+                    </div>
+                </div>
+                <div id="storage-compact-component" class="ck-stage" data-ck-view="storage-compact" data-ck-state="ready" data-ck-width="full"></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "chassis-storage-fdaa3bc3-7c2a-4d3a-b781-c2c6072c43e6", "received": [] }
+        </script>
+        <script type="module" src="../chassis-storage/demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
