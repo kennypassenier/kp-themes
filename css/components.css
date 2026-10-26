@@ -21274,10 +21274,10 @@
     /* --- The lede [kpadopt5] ---
  * The short muted paragraph under a section or card title that says what this part does, and `.kp-field__why`, the
  * reason line under a field. Seen from a screen reader as the heading's description (js/lede.js). Knobs [KT6]:
- * `--kp-lede-measure` (70ch; `data-kp-lede-measure` narrow 48ch, full), `--kp-lede-size` (0.9375rem), `data-kp-lede-collapsible`
+ * `--kp-lede-measure` (none: the lede fills its column, Kenny's full-width rule [width-fill-1]; `data-kp-lede-measure` narrow 48ch, full), `--kp-lede-size` (0.9375rem), `data-kp-lede-collapsible`
  * folds a long text after its first sentences. */
     .kp-lede {
-        max-inline-size: var(--kp-lede-measure, 70ch);
+        max-inline-size: var(--kp-lede-measure, none);
         margin: var(--kp-space-xs, 0.25rem) 0 0;
         color: var(--muted-foreground);
         font-size: var(--kp-lede-size, 0.9375rem);

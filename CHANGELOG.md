@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- **Fixed: the form grid and the page header's description fill the page column** [width-fill-1026, homelab width-fill-1]. Kenny's rule of 2026-10-25 ("pages use full width"): `--kp-formgrid-max` defaults to `none` (was 60rem) and the description has the new knob `--kp-page-header-measure` (none, was 70ch), so a page that wants a cap sets it. The `.kp-lede` keeps its 70ch measure (`data-kp-lede-measure="full"` fills).
+- **Fixed: the form grid and the page header's description fill the page column** [width-fill-1026, homelab width-fill-1]. Kenny's rule of 2026-10-25 ("pages use full width"): `--kp-formgrid-max` defaults to `none` (was 60rem) and the description has the new knob `--kp-page-header-measure` (none, was 70ch), so a page that wants a cap sets it. The `.kp-lede` fills its column too (`--kp-lede-measure` defaults to `none`, was 70ch; `data-kp-lede-measure="narrow"` keeps 48ch).
 - **Fixed: `JobReport` keys may be `null` in `setJobLine`** [HL 137]. New type `JobReportUpdate` (`number | null` per key) for the argument; `JobReport` stays what a line holds.
 - **Fixed: the graph's detail title carries no heading anchor** [HL 138]. It gets `data-kp-anchors="off"`, so page-wide heading anchors (js/anchors.js) add no copy-link to a panel that exists only while a node is picked.
 - **Fixed: a data table that starts loading or failed hides an authored empty slot at once** [HL 145]. The first render withered the visible slot with `leave()`, about a second of a false "nothing". Detach restores it.
