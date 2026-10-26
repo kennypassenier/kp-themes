@@ -10283,8 +10283,9 @@
  * asks for its full width and gives way on a narrow screen, rather than
  * collapsing to nothing. */
     .kp-progress__wrap > .kp-progressbar {
-        flex: 0 1 auto;
-        inline-size: var(--kp-progressbar-max-width, 32rem);
+        /* It takes the rest of the row beside its reading; --kp-progressbar-max-width caps it [width-fill-1026]. */
+        flex: 1 1 auto;
+        min-inline-size: 0;
     }
 
     /* A group of bars reads as a group [fix-64]. Kenny, 2026-09-20:
@@ -10387,7 +10388,7 @@
  * the fill moves inside it.
  *
  * Knobs: --kp-progressbar-height (0.75rem), --kp-progressbar-max-width
- * (32rem; none inside a group), --kp-progressbar-duration (240ms) and
+ * (none: the bar fills its column [width-fill-1026]), --kp-progressbar-duration (240ms) and
  * --kp-progressbar-ease (ease-out), the values the approved research round
  * used (research/progress-signature/base.css).
  *
@@ -10411,7 +10412,7 @@
         position: relative;
         display: block;
         inline-size: 100%;
-        max-inline-size: var(--kp-progressbar-max-width, 32rem);
+        max-inline-size: var(--kp-progressbar-max-width, none); /* fills its column; a page caps it with the knob [width-fill-1026] */
         block-size: var(--kp-progressbar-height);
         contain: layout paint;
     }
