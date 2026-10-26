@@ -756,8 +756,9 @@ function paint(c) {
               : c.stateLine.dataset.kpWords || s.heatFailed;
     // A timeline of moments with nothing to show has no line for now running through its sentence [kpadopt4].
     c.nowLine.hidden = c.el.hasAttribute('data-kp-gantt-points') && (c.state === 'error' || c.state === 'empty' || empty);
-    // An empty or failed sentence waits, as the runs do, until the card has gone.
-    const plateKind = c.leaving === null && (c.state === 'error' || c.state === 'empty' || (c.state === 'ready' && empty)) ? c.state : null;
+    // An empty or failed plate is drawn at once, as a data table draws its own while its card leaves: there are no runs under the card
+    // to hide, and waiting for the card's leave put a failed timeline's plate about 1.5 s behind its state [KIT22 16]. The runs still wait.
+    const plateKind = c.state === 'error' || c.state === 'empty' || (c.state === 'ready' && empty) ? c.state : null;
     c.stateLine.textContent = c.state === 'loading' && c.leaving === null ? words : '';
     c.stateLine.dataset.kpState = empty && c.state === 'ready' ? 'empty' : c.state;
     // Rebuilt only when what it says changes, so the focus on its Retry survives a repaint.

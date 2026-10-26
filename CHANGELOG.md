@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **Fixed: the form grid and the page header's description fill the page column** [width-fill-1026, homelab width-fill-1]. Kenny's rule of 2026-10-25 ("pages use full width"): `--kp-formgrid-max` defaults to `none` (was 60rem) and the description has the new knob `--kp-page-header-measure` (none, was 70ch), so a page that wants a cap sets it. The `.kp-lede` keeps its 70ch measure (`data-kp-lede-measure="full"` fills).
+- **Fixed: `JobReport` keys may be `null` in `setJobLine`** [HL 137]. New type `JobReportUpdate` (`number | null` per key) for the argument; `JobReport` stays what a line holds.
+- **Fixed: the graph's detail title carries no heading anchor** [HL 138]. It gets `data-kp-anchors="off"`, so page-wide heading anchors (js/anchors.js) add no copy-link to a panel that exists only while a node is picked.
+- **Fixed: a data table that starts loading or failed hides an authored empty slot at once** [HL 145]. The first render withered the visible slot with `leave()`, about a second of a false "nothing". Detach restores it.
+- **Fixed: a lazily built detail row is placed in a grouped data table** [HL 143]. `placeGroups()` appended only rows already in the body, so a detail built by `detail:` on the first open was never inserted.
+- **Fixed: `data-kp-json-wrap` is observed** [ALM 18]. Switching the attribute on the textarea at run time wraps (or unwraps) the field and presses the Wrap tool.
+- **Fixed: a master-detail gives way to a component's own failed plate drawn after `setPaneState('error')`** [KYU 54]. While the state reads `error` and no own plate stands, the body is watched; when the plate appears (js/code.js draws it once its busy card has closed) the state is applied again and the master-detail's plate leaves.
+- **Fixed: a long answer in `data-kp-wheel-empty` no longer widens the wheel** [KIT22 14]. `.kp-wheel` has one `minmax(0, 1fr)` track.
+- **Fixed: a turned wheel no longer widens the page** [KIT22 17]. The stage clips the disc's turned square (`overflow: clip`, 0.5rem left for the pointer). Measured at 390 px: the disc's box was up to 531 px in a 374 px wheel and the page scrolled sideways.
+- **Fixed: wheel labels on the left half read upright after a spin** [KIT 7]. The flip follows the slice's place on the screen (slice angle plus the disc's turn), not the unturned slice; measured at 390 px, 2 to 6 of 6 labels were upside down after a spin, 0 now.
+- **Fixed: a failed or empty timeline draws its plate at once** [KIT22 16]. The plate waited for the loading card to leave; it now stands with the card's leave (the runs still wait), as a data table's does.
+- **Fixed: `.kp-ops__body` keeps 8 / 4 on a stage of about 1000 px** [CHA 11]. The tablet fold (6 / 12) starts under 56rem of the ops container (was 64rem).
+- **Fixed: parts written straight in a `.kp-alert` stack** [CHA 12]. `__what`, `__why` and `__remedy` without a `__body` were flex children side by side (81 px wide, three lines each at 340 px); each takes a line now.
+- **Fixed: the attention band's text spans are lines** [CHA 13]. A direct `span` of `.kp-attention__text` is a block, so two spans no longer run together.
+- **Fixed: a `.kp-meter` in a form grid's control track has a width** [CHA 18]. It held no content and got 0 px; it fills the track with the field's minimum width.
+- **Fixed: a form grid holding a `.kp-refresh` gives the chooser its width** [HL 144]. `--kp-formgrid-control` is `max-content` there (zero specificity, a page's own value wins): the six choices need 579 px and got 474 of a 1011 px grid.
+- **Fixed: the menu look of `data-kp-refresh` takes a click and the keys** [CHA 21]. js/menu-button.js treats `menuitemradio` and `menuitemcheckbox` as items beside `menuitem`: a choice is taken over and the menu closes.
+- Checked, not a fault: ALM 32 (a data table driven empty or failed after it loaded holds its loaded height: 363 px loaded, 363 px empty and failed at 1280 and 390; with cards at 390 the hold stops at the 48rem cap by design) and CHA 15 (`data-kp-cards` shows a table at 1280 and cards at 390; it follows the table's container).
+
 ## 11.2.0 — 2026-10-21
 
 Released on Kenny's go (2026-10-21 01:27, release form: "release-go: Go", "release-shots: Zonder afdrukken"): the 17 package faults the end products found on 11.1.1, the 22 homelab wishes Kenny chose (17 approved in research/wishes-1120, 5 fixed directly after his review), and the network graph options he chose in full (research/graph-1020, 8 of 8 approved). Known limitation, accepted: fourteen long names beside the ring do not all stand clear at 390 px; `data-kp-labels="below"` is the way out. Screenshot check skipped as for 11.1.0.

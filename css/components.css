@@ -330,7 +330,8 @@
     }
 
     .kp-page-header__description {
-        max-inline-size: 70ch;
+        /* Fills the page column; a page that wants a reading measure sets --kp-page-header-measure (70ch, say) [width-fill-1026]. */
+        max-inline-size: var(--kp-page-header-measure, none);
         margin: var(--kp-space-xs, 0.25rem) 0 0;
         color: var(--muted-foreground);
     }
@@ -3600,6 +3601,8 @@
     }
 
     .kp-attention__text > span {
+        /* Each span is a line of its own: two spans run together as one sentence otherwise [CHA 13]. */
+        display: block;
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
@@ -18236,6 +18239,8 @@
  * overshoot. The chosen segment is filled deeper and the others step back. */
     .kp-wheel {
         display: grid;
+        /* One track that may shrink: an implicit auto track took the min-content of a long answer and widened the wheel [KIT22 14]. */
+        grid-template-columns: minmax(0, 1fr);
         justify-items: center;
         gap: var(--kp-space-md, 0.75rem);
         box-sizing: border-box;
@@ -18247,6 +18252,10 @@
         position: relative;
         inline-size: 100%;
         aspect-ratio: 1;
+        /* The disc turns as a square: its corners, turned, are outside the circle and widened the page (394 px box on a 390 px phone,
+           up to 90 px measured). Clipped at the stage with room left for the pointer above it [KIT22 17]. */
+        overflow: clip;
+        overflow-clip-margin: 0.5rem;
     }
 
     /* The disc turns as a square: round and out of the pointer's way, so its corners never cover what stands beside it. */
@@ -21332,6 +21341,19 @@
         display: none;
     }
 
+    /* The parts written straight in the alert (no `__body`) are the lines of one message: each takes a line of its own, as in the body.
+       As flex children of the row they stood side by side, each as wide as its words allowed, and broke per letter in a narrow
+       column [CHA 12]. */
+    .kp-alert:has(> :is(.kp-alert__what, .kp-alert__why, .kp-alert__remedy)) {
+        flex-wrap: wrap;
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-alert > :is(.kp-alert__what, .kp-alert__why, .kp-alert__remedy) {
+        flex: 1 1 100%;
+        min-inline-size: 0;
+    }
+
     .kp-alert__body {
         display: grid;
         gap: var(--kp-space-xs, 0.25rem);
@@ -22339,8 +22361,9 @@
         display: none;
     }
 
-    /* A tablet: 6 / 12. */
-    @container kp-ops (max-width: 64rem) {
+    /* A tablet: 6 / 12. It starts under 56rem (was 64rem): on a stage of about 1000 px an 8 + 4 pair stacked into 12 / 6, a desktop
+       row folded for room it had [CHA 11]. */
+    @container kp-ops (max-width: 56rem) {
         .kp-ops__body > * {
             grid-column: span 6;
         }
@@ -25444,11 +25467,18 @@
         margin: 0;
         padding: 0;
         min-inline-size: 0;
-        /* The grid does not stretch across a wide panel: past --kp-formgrid-max (60rem) its tracks stop growing, so a hint
-           stays beside its control and an action beside its row, not flung to the panel's far edge (Kenny, 2026-10-19
-           17:20, facts: "Zo veel verspilling van plek"; hints at x 1120 and an action at x 1945 on a 2000 px panel). The
-           room that is left is for a second column of groups (below) or stays empty on purpose. */
-        max-inline-size: var(--kp-formgrid-max, 60rem);
+        /* The grid fills the page column (Kenny, 2026-10-25, "pages use full width" [width-fill-1026]; it was capped at 60rem
+           after 2026-10-19 17:20, facts: "Zo veel verspilling van plek"). The grid with nothing that needs the width is
+           compact (below) and keeps hints and actions beside their rows; a page that wants the old cap sets
+           --kp-formgrid-max: 60rem. */
+        max-inline-size: var(--kp-formgrid-max, none);
+    }
+
+    /* A grid that holds a refresh bar gives its control track the chooser's width: at 3fr the segments (509 px for six choices) got
+       474 px of a 1011 px grid and "Other…" stood cut off under the read line [HL 144]. Zero specificity, so a page's own
+       --kp-formgrid-control still wins. */
+    :where(.kp-formgrid:has(.kp-refresh)) {
+        --kp-formgrid-control: max-content;
     }
 
     /* A grid with nothing that needs the width (no wide block: a code block, a JSON field, a text area, a refresh bar, a cell
@@ -25480,6 +25510,12 @@
     .kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill))
         :is(.kp-formgrid__control, .kp-formrow__control)
         > :is(.kp-field__input:not(.kp-field__input--short, [type='number'], [type='time'], [type='date']), select:not(.kp-field__input--short), .kp-secret, .kp-combobox, .kp-type-confirm) {
+        min-inline-size: min(var(--kp-formgrid-field, 18rem), 38cqi);
+    }
+
+    /* A meter in a control track has a width of its own: it holds no content, so the track gave it 0 px [CHA 18]. */
+    :is(.kp-formgrid__control, .kp-formrow__control) > .kp-meter:not(.kp-meter--inline) {
+        inline-size: 100%;
         min-inline-size: min(var(--kp-formgrid-field, 18rem), 38cqi);
     }
 

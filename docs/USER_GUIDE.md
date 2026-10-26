@@ -1211,6 +1211,8 @@ the trends under `root`. The words are the dictionary's `chartNow`,
 </header>
 ```
 
+The description fills the page column; `--kp-page-header-measure` (none) caps it for a page that wants a reading measure (`70ch`, say) [width-fill-1026].
+
 The title and its one-sentence description on the left, the page's actions
 against the right edge, level with the title: secondary buttons, one
 primary, and an overflow button that says "More ▾" for the rare things; its
@@ -1942,8 +1944,8 @@ What it does for you, without hand work:
   control up to `--kp-formgrid-control-max` 28rem, the hint up to `--kp-formgrid-value-max` 20rem, the widest action) and what is left over is
   one empty filler track at the end. A hint therefore follows its control at the column gap and an action follows its row, instead of
   being flung to the panel's far edge (Kenny, 2026-10-19 17:20: hints at x 1120 and an action at x 1945 on a 2000 px panel). A
-  field is `--kp-formgrid-field` (18rem, at most 38 % of the grid) wide. A grid with a wide block keeps the stretching tracks, held at
-  `--kp-formgrid-max` (60rem).
+  field is `--kp-formgrid-field` (18rem, at most 38 % of the grid) wide. A grid with a wide block keeps the stretching tracks and fills
+  the page column; `--kp-formgrid-max` (none) caps it, `--kp-formgrid-max: 60rem` restores the old cap [width-fill-1026].
 - **Groups side by side.** A grid whose children are all `.kp-formgrid__group` (facts and settings, say) stands them in a row when the panel
   holds all of them, each group as wide as its own tracks, `--kp-formgrid-group-gap` (2rem) apart, all starting at the top:
   `attachFormgridColumns` (`js/forms.js`, run by `auto.js`) measures what the groups need and writes `data-kp-formgrid-wide` on the grid
@@ -1995,7 +1997,7 @@ Options, all attributes on `.kp-formgrid`, read by CSS alone, so changing one at
 | `data-kp-formgrid-columns` | `auto` (groups side by side when wide), `never` | `auto` |
 
 Knobs: `--kp-formgrid-gap` (between rows, the md step), `--kp-formgrid-column-gap` (the lg step), `--kp-formgrid-label-min`,
-`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`, `--kp-formgrid-max` (60rem, grids with a wide block), `--kp-formgrid-control-max` (28rem), `--kp-formgrid-value-max` (20rem), `--kp-formgrid-field` (18rem), `--kp-formgrid-group-gap` (2rem); on a stage
+`--kp-formgrid-label-max`, `--kp-formgrid-control`, `--kp-formgrid-value`, `--kp-formgrid-short`, `--kp-formgrid-line-pad`, `--kp-formgrid-max` (none: the grid fills the page column; 60rem was the cap before 2026-10-26), `--kp-formgrid-control-max` (28rem), `--kp-formgrid-value-max` (20rem), `--kp-formgrid-field` (18rem), `--kp-formgrid-group-gap` (2rem); on a stage
 `--kp-formgrid-stage-min` (24rem), `--kp-formgrid-stage-gap` (the lg step) and `--kp-formgrid-rows`. A row takes
 `data-kp-changed` and `data-kp-state="error"` like a form row.
 

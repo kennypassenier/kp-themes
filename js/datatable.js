@@ -1793,6 +1793,12 @@ export function attachDataTables(
             authored.classList.add('kp-stateplate', 'kp-stateplate--empty');
             undo.push(() => authored.classList.remove('kp-stateplate', 'kp-stateplate--empty'));
         }
+        if (empty !== null && state !== 'ready') {
+            // A table that starts loading (or failed) has not found "nothing": an authored, visible empty slot is hidden at once.
+            // Left visible, the first render withered it with leave(), about a second of a false claim [HL 145]. Detach restores it.
+            empty.hidden = true;
+            emptyHidden = true;
+        }
         if (empty !== null && empty.querySelector('.kp-empty__title, .kp-stateplate__title') === null) {
             // A slot with words but no title gets the plate's heading (the dictionary's "Nothing found."), the words below it.
             const authored = empty;
@@ -2208,7 +2214,9 @@ export function attachDataTables(
             const held = active instanceof HTMLElement && body.contains(active) ? active : null;
             // Only rows still in the body are placed: one the page took out (replaced tbody content, then a sort before refresh())
             // stays out, and is never put back beside its replacement [states-check-1019].
-            for (const row of sequence) if (row.parentElement === body) body.append(row);
+            // A detail row built on demand (detailFn) is not in the body yet: it is placed here with the rows, or a grouped table never
+            // showed it [HL 143].
+            for (const row of sequence) if (row.parentElement === body || (builtDetails.has(row) && row.parentElement === null)) body.append(row);
             if (held !== null && held.isConnected && document.activeElement !== held) held.focus({ preventScroll: true });
         };
         /** Name each heading's toggle, count its rows and show it where its rows are. @param {ReturnType<typeof getStrings>} s */

@@ -10848,7 +10848,7 @@ function attachMenuButtons(root = document, { decorate: decorate2, strings } = {
     const onPick = (event) => {
       const item = (
         /** @type {HTMLElement | null} */
-        event.target instanceof Element ? event.target.closest('[role="menuitem"]') : null
+        event.target instanceof Element ? event.target.closest(ITEM_ROLES) : null
       );
       if (!item || !state2.menu.contains(item)) return;
       if (item.getAttribute("aria-disabled") === "true") {
@@ -10908,7 +10908,7 @@ function attachMenuButtons(root = document, { decorate: decorate2, strings } = {
   ) countMenu(menu);
   return () => undo.splice(0).forEach((off) => off());
 }
-var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, menus, idSeq, nextId, keyOf, menuSignature, menuItems, labelOf, decorateItem, make, MENU_GUTTER, PLACED, ANCHOR_EDGE, decorateButton, attached;
+var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, menus, idSeq, nextId, keyOf, menuSignature, ITEM_ROLES, menuItems, labelOf, decorateItem, make, MENU_GUTTER, PLACED, ANCHOR_EDGE, decorateButton, attached;
 var init_menu_button = __esm({
   "js/menu-button.js"() {
     "use strict";
@@ -10939,9 +10939,10 @@ var init_menu_button = __esm({
         ])
       ])
     );
+    ITEM_ROLES = '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]';
     menuItems = (s2) => (
       /** @type {HTMLElement[]} */
-      [...s2.menu.querySelectorAll('[role="menuitem"]')]
+      [...s2.menu.querySelectorAll(ITEM_ROLES)]
     );
     labelOf = (item) => item.querySelector(".kp-menu__label")?.textContent ?? item.textContent ?? "";
     decorateItem = (s2, item, index) => {
@@ -18382,6 +18383,10 @@ function attachDataTables(root = document, {
       authored.classList.add("kp-stateplate", "kp-stateplate--empty");
       undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--empty"));
     }
+    if (empty !== null && state2 !== "ready") {
+      empty.hidden = true;
+      emptyHidden = true;
+    }
     if (empty !== null && empty.querySelector(".kp-empty__title, .kp-stateplate__title") === null) {
       const authored = empty;
       const heading = make23("strong", "kp-empty__title");
@@ -18752,7 +18757,7 @@ function attachDataTables(root = document, {
       if (current2.length === sequence.length && current2.every((row, at) => row === sequence[at])) return;
       const active = document.activeElement;
       const held2 = active instanceof HTMLElement && body.contains(active) ? active : null;
-      for (const row of sequence) if (row.parentElement === body) body.append(row);
+      for (const row of sequence) if (row.parentElement === body || builtDetails.has(row) && row.parentElement === null) body.append(row);
       if (held2 !== null && held2.isConnected && document.activeElement !== held2) held2.focus({ preventScroll: true });
     };
     const syncGroups = (s2) => {
@@ -32838,9 +32843,19 @@ function attachOne5(area, options) {
     check();
     grow();
   };
+  const syncWrap = () => {
+    const want = options.wrap ?? (area.hasAttribute("data-kp-json-wrap") && area.getAttribute("data-kp-json-wrap") !== "false");
+    if (want === wrap) return;
+    wrap = want;
+    root.setAttribute("data-kp-json-wrap", String(wrap));
+    toolWrap.setAttribute("aria-pressed", String(wrap));
+    drawGutter();
+    grow();
+  };
   const attrs = view && "MutationObserver" in view ? new view.MutationObserver((records) => {
     if (records.some((r) => r.attributeName === "disabled" || r.attributeName === "readonly")) lock();
     if (records.some((r) => r.attributeName?.startsWith("data-kp-json"))) syncOptions2();
+    if (records.some((r) => r.attributeName === "data-kp-json-wrap")) syncWrap();
   }) : null;
   attrs?.observe(area, {
     attributes: true,
@@ -32851,7 +32866,8 @@ function attachOne5(area, options) {
       "data-kp-json-check",
       "data-kp-json-format",
       "data-kp-json-indent",
-      "data-kp-json-gutter"
+      "data-kp-json-gutter",
+      "data-kp-json-wrap"
     ]
   });
   const resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => drawGutter()) : null;
@@ -33742,7 +33758,7 @@ function drawDisc(root, measure) {
     name.textContent = [item?.label ?? "", item?.tag ?? "", resting ? getStrings().wheelResting : ""].filter(Boolean).join(" \xB7 ");
     shape.append(name);
     if (!plan) return;
-    const left = mid > 180;
+    const left = ((mid + state2.angle) % 360 + 360) % 360 > 180;
     const text = svg("text", {
       class: "kp-wheel__label",
       transform: `rotate(${(left ? mid + 90 : mid - 90).toFixed(3)})`,
@@ -41400,7 +41416,7 @@ function paint8(c) {
   const empty = c.state === "ready" && c.runs.length === 0 && c.points.length === 0 && lanes.length === 0;
   const words = c.state === "loading" ? s2.ganttLoading : c.state === "empty" || empty ? c.stateLine.dataset.kpWords || s2.ganttEmpty : c.stateLine.dataset.kpWords || s2.heatFailed;
   c.nowLine.hidden = c.el.hasAttribute("data-kp-gantt-points") && (c.state === "error" || c.state === "empty" || empty);
-  const plateKind = c.leaving === null && (c.state === "error" || c.state === "empty" || c.state === "ready" && empty) ? c.state : null;
+  const plateKind = c.state === "error" || c.state === "empty" || c.state === "ready" && empty ? c.state : null;
   c.stateLine.textContent = c.state === "loading" && c.leaving === null ? words : "";
   c.stateLine.dataset.kpState = empty && c.state === "ready" ? "empty" : c.state;
   const plateKey = plateKind ? `${plateKind}|${words}|${c.plateText}` : "";
@@ -45567,10 +45583,28 @@ function wire9(rootEl, historyOption) {
     busy.remove();
     busy = layBusy(false);
   };
+  let stopOwnWatch = () => {
+  };
+  const watchOwn = (options) => {
+    stopOwnWatch();
+    if (typeof MutationObserver !== "function") return;
+    const seen = new MutationObserver(() => {
+      if (state2 === "error" && !rootEl.hasAttribute("data-kp-error-own") && ownFailure()) setState2("error", options);
+    });
+    seen.observe(bodyEl, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-kp-state", "class", "hidden"] });
+    stopOwnWatch = () => {
+      seen.disconnect();
+      stopOwnWatch = () => {
+      };
+    };
+  };
+  const ownFailure = () => [...bodyEl.querySelectorAll(":is([data-kp-state='error'], .kp-stateplate--error)")].some((el16) => el16.getBoundingClientRect().width > 0);
   const setState2 = (next2, options = {}) => {
     state2 = next2;
     rootEl.setAttribute("data-kp-state", next2);
-    const own = next2 === "error" && [...bodyEl.querySelectorAll(":is([data-kp-state='error'], .kp-stateplate--error)")].some((el16) => el16.getBoundingClientRect().width > 0);
+    const own = next2 === "error" && ownFailure();
+    if (next2 === "error" && !own) watchOwn(options);
+    else stopOwnWatch();
     rootEl.toggleAttribute("data-kp-error-own", own);
     const wide = next2 === "error" && !own || next2 === "empty" && !rootEl.querySelector('[data-kp-pane="list"] [data-kp-pane-key]');
     rootEl.toggleAttribute("data-kp-state-wide", wide);
@@ -45762,6 +45796,7 @@ function wire9(rootEl, historyOption) {
     attributes.disconnect();
     busy?.remove();
     unwatchList();
+    stopOwnWatch();
     handles14.delete(rootEl);
     rootEl.removeAttribute("data-kp-pane-shown");
     rootEl.removeAttribute("data-kp-narrow-on");
@@ -58683,6 +58718,7 @@ function renderDetail(g) {
   detailCount += 1;
   const title = make21(doc, "h3", "kp-graph__detail-title", node.label);
   title.id = `kp-graph-detail-${detailCount}`;
+  title.setAttribute("data-kp-anchors", "off");
   const close = make21(doc, "button", "kp-button kp-button--sm kp-graph__detail-close", g.strings.graphDetailClose);
   close.type = "button";
   close.title = g.strings.graphDetailCloseTitle;

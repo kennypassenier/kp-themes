@@ -331,7 +331,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-20 [wish-1120, round 2]: the acknowledge gate's loading room (--kp-ack-loading-min): 1096 + 1 = 1097.
     // Re-pinned 2026-10-20 [hsbwish-1020]: --kp-subgrid-rows and --kp-subgrid-count of data-kp-subgrid="rows": 1097 + 2 = 1099.
     // Re-pinned 2026-10-21 [graph-1020]: the network graph options' knobs (--kp-graph-fixed-l, -fixed-c, -zoom-time, -zoom-ease, -detail-width), all read through var(): 1099 + 5 = 1104.
-    assert.equal(result.expected, 1104, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-26 [fix-1026]: the page header description's measure (--kp-page-header-measure), read through var(): 1104 + 1 = 1105.
+    assert.equal(result.expected, 1105, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -418,7 +419,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-20 [wish-1120, round 2]: --kp-ack-loading-min is read through var(): 1086 + 1 = 1087.
     // Re-pinned 2026-10-20 [hsbwish-1020]: --kp-subgrid-rows and --kp-subgrid-count are read through var(): 1087 + 2 = 1089.
     // Re-pinned 2026-10-21 [graph-1020]: the five graph option knobs are read through var(): 1089 + 5 = 1094.
-    assert.equal(result.readCount, 1094);
+    // Re-pinned 2026-10-26 [fix-1026]: --kp-page-header-measure is read through var(): 1094 + 1 = 1095.
+    assert.equal(result.readCount, 1095);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

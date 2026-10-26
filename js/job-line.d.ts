@@ -28,6 +28,9 @@ export type JobReport = {
      */
     rate?: number;
 };
+export type JobReportUpdate = {
+    [K in keyof JobReport]?: JobReport[K] | null;
+};
 /**
  * The sentence for a report, parts left out when unknown.
  * @param {JobReport} report
@@ -45,9 +48,9 @@ export declare function stepPosition(list: Element): {
 /**
  * Report to a job line: only what is given changes; `null` for a key takes it back out.
  * @param {HTMLElement} line a `[data-kp-jobline]`
- * @param {JobReport} report
+ * @param {JobReportUpdate} report
  */
-export declare function setJobLine(line: HTMLElement, report: JobReport): void;
+export declare function setJobLine(line: HTMLElement, report: JobReportUpdate): void;
 /**
  * Build a job line.
  * @param {{ label?: string, steplist?: string }} [options] `label`: its accessible name; `steplist`: a selector for the list it follows
