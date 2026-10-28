@@ -154,6 +154,7 @@ const SECTIONS = [
                 <thead><tr><th scope="col" data-kp-field="stack" data-kp-sort="text">Stack</th><th scope="col" data-kp-field="containers" data-kp-sort="number" data-kp-filter="range">Containers</th><th scope="col" data-kp-field="status" data-kp-filter="choice">Status</th><th scope="col" data-kp-field="backup">Last backup</th></tr></thead>
                 <tbody>${STACK_ROWS}
                 </tbody></table></div>
+                <div class="kp-empty" data-kp-datatable-empty hidden><strong class="kp-empty__title">No stack matches this filter.</strong><span class="kp-stateplate__text">Every stack the host knows is filtered out. Clear the filter to see them all again.</span><button type="button" class="kp-button kp-button--sm" data-kp-datatable-clear>Clear the filter</button></div>
             </div>
             <p class="pg-log" id="pg-stacks-log" role="status" aria-live="polite"></p>
             <dl class="pg-readout">

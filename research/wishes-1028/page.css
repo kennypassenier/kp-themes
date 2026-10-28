@@ -206,7 +206,3 @@
     font-variant-numeric: tabular-nums;
 }
 
-/* filter-field: the table keeps the height of all its rows, so a filter that narrows it, an empty answer and a failed read all stand in the same room. */
-.pg-stacks {
-    min-block-size: 28rem;
-}
