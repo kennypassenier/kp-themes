@@ -20701,14 +20701,10 @@ function attachDataTables(root = document, {
       for (const row of body.querySelectorAll(`:scope > ${SKELETON_ROW}`)) row.remove();
       for (const detail of builtDetails) detail.remove();
       for (const row of prepared) unprepareRow(row);
+      for (const row of rendered) row.hidden = false;
       for (const row of rendered) {
-        row.hidden = false;
-        body.append(row);
         const detail = details.get(row);
-        if (detail !== void 0 && !builtDetails.has(detail)) {
-          detail.hidden = detailsWereHidden.get(detail) ?? detail.hidden;
-          body.append(detail);
-        }
+        if (detail !== void 0 && !builtDetails.has(detail)) detail.hidden = detailsWereHidden.get(detail) ?? detail.hidden;
       }
       for (const [heading, was] of preparedGroups) {
         heading.querySelector(GROUP_TOGGLE)?.remove();
@@ -20718,15 +20714,32 @@ function attachDataTables(root = document, {
         heading.hidden = was.hidden;
       }
       for (const row of givenIds) row.removeAttribute("id");
-      if (layoutAtAttach !== null) {
-        const placed = new Set(layoutAtAttach);
-        for (const row of layoutAtAttach) if (row.parentElement === body) body.append(row);
+      {
+        const stand = /* @__PURE__ */ new Map();
+        let next2 = 0;
+        for (const child of body.children) stand.set(child, next2++);
+        const append = (node) => void stand.set(node, next2++);
         for (const row of rendered) {
-          if (placed.has(row) || row.parentElement !== body) continue;
-          body.append(row);
+          append(row);
           const detail = details.get(row);
-          if (detail !== void 0 && detail.parentElement === body) body.append(detail);
+          if (detail !== void 0 && !builtDetails.has(detail)) append(detail);
         }
+        if (layoutAtAttach !== null) {
+          const placed = new Set(layoutAtAttach);
+          for (const row of layoutAtAttach) if (stand.has(row)) append(row);
+          for (const row of rendered) {
+            if (placed.has(row) || !stand.has(row)) continue;
+            append(row);
+            const detail = details.get(row);
+            if (detail !== void 0 && stand.has(detail)) append(detail);
+          }
+        }
+        const order2 = [...stand.keys()].sort((a, b) => (
+          /** @type {number} */
+          stand.get(a) - /** @type {number} */
+          stand.get(b)
+        ));
+        body.replaceChildren(...order2);
       }
       syncFixedColumns(table, 0);
       headers.forEach((header, i) => {

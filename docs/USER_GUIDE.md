@@ -2287,6 +2287,12 @@ Seven things Kenny's apps kept drawing by hand, approved as components on 2026-1
 theme draws them from its tokens and its own buttons, segmented control, date picker, hover card and busy card.
 `js/auto.js` fetches each module only on a page that carries its markup; each attach function returns a detach.
 
+Leaving a page in a single-page app: take its section out of the document first, then call the detaches. A detach
+puts the markup back as it was (a data table restores its rows' order); done on a section still on screen, every
+observer and layout on the page reacts to it. On the homelab dashboard's history table (175 rows) leaving the tab
+cost about 2.2 s before the batched restore and about 0.5 s after it; removing the section first takes the
+rest away [perf-1026].
+
 ### An uptime strip
 
 One thin strip of cells, one per period (90 days, 48 hours), each toned up, degraded, down or no data, with the window's
