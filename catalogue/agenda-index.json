@@ -412,6 +412,31 @@
             },
             "fingerprint": "7845d9086d8f32aa",
             "update": null
+        },
+        "research/wishes-1028/demo.html": {
+            "facts": {
+                "id": "wishes-1028",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Almanac, homelab, chassis-rs and Kitchen hit the edges of the package in 11 places and you chose to build them. Each is now an option or a part of the package; this page shows all of them in formal only, one section per wish, on the apps’ own data (Kitchen’s dishes and steps, Almanac’s calendars, homelab’s stacks; the times and counts are mock). Everything is opt-in except two, which say so: a valid form is no longer sent by the browser, and a narrow run timeline scrolls inside its frame. 11 sections, 11 pairs.",
+                "sections": [
+                    { "item": "pill-tbody", "themes": null, "topic": "tables", "mode": null },
+                    { "item": "filter-field", "themes": null, "topic": "tables", "mode": null },
+                    { "item": "code-toml", "themes": null, "topic": "code", "mode": null },
+                    { "item": "refresh-title", "themes": null, "topic": "refresh", "mode": null },
+                    { "item": "secret-input", "themes": null, "topic": "forms", "mode": null },
+                    { "item": "unsaved-storage", "themes": null, "topic": "forms", "mode": null },
+                    { "item": "form-submit", "themes": null, "topic": "forms", "mode": null },
+                    { "item": "gantt-legend", "themes": null, "topic": "gantt", "mode": null },
+                    { "item": "gantt-rest", "themes": null, "topic": "gantt", "mode": null },
+                    { "item": "gantt-phone", "themes": null, "topic": "gantt", "mode": null },
+                    { "item": "steps-getter", "themes": null, "topic": "steps", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"wishes-1028-9e4dacdf-6533-4420-9408-50812b09704c\", \"received\": [] }\n        "
+            },
+            "fingerprint": "35f656f5091ed495",
+            "update": null
         }
     },
     "decided": {

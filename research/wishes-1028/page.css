@@ -1,0 +1,212 @@
+/* research/wishes-1028: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column, a card fills it, a component fills the card. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+/* One frame for every component, so the sections have the same rhythm. */
+.pg-card {
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.pg-component > .kp-card {
+    max-inline-size: 100%;
+}
+
+.pg-log {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+    min-block-size: 1lh;
+}
+
+.pg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* pill-tbody: the box the table scrolls in; its parent is the host the pill is drawn on. */
+.pg-host {
+    position: relative;
+    min-inline-size: 0;
+}
+
+.pg-scroller {
+    box-sizing: border-box;
+    max-block-size: 16rem;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.pg-scroller .kp-table-wrap {
+    overflow: visible;
+}
+
+/* filter-field and unsaved-storage: what the call looked like and what the component reports, in two columns that run through every row. */
+.pg-readout {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-lg, 1.5rem);
+    margin: 0;
+}
+
+.pg-readout > div {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+}
+
+.pg-readout dt {
+    color: var(--muted-foreground);
+}
+
+.pg-readout dd {
+    margin: 0;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+/* unsaved-storage: the header of the settings card, the bar on the right. */
+.pg-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.pg-bar .kp-page-header__title {
+    margin: 0;
+}
+
+.pg-unsaved-slot {
+    min-inline-size: 0;
+}
+
+@media (max-width: 40rem) {
+    .pg-bar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* form-submit: two fields side by side, one column on a phone; the log of what happened. */
+.pg-twocol {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+@media (max-width: 40rem) {
+    .pg-twocol {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.pg-events {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-block-size: calc(6 * 1.5em + 5 * var(--kp-space-xs, 0.25rem));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    align-content: start;
+}
+
+/* gantt-phone: a box whose width the review can narrow to a tablet or a phone; the gantt inside fills it. */
+.pg-box {
+    min-inline-size: 0;
+}
+
+.pg-box[data-pg-width='tablet'] {
+    max-inline-size: 34rem;
+}
+
+.pg-box[data-pg-width='phone'] {
+    max-inline-size: 22rem;
+}
+
+/* steps-getter: cook mode on the left, the list of what is passed on the right, one column on a phone. */
+.pg-steps {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 48rem) {
+    .pg-steps {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.pg-passed {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.pg-passed__title {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.pg-passed__list {
+    display: grid;
+    grid-template-columns: 1.75rem minmax(0, 1fr) max-content;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pg-passed__list > li {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    align-items: baseline;
+    padding-block: var(--kp-space-xs, 0.25rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.pg-passed__list > li[data-state='waiting'] {
+    color: var(--muted-foreground);
+}
+
+.pg-passed__list > li[data-state='current'] {
+    font-weight: 600;
+}
+
+.pg-passed__mark {
+    justify-self: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.pg-passed__time {
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+/* filter-field: the table keeps the height of all its rows, so a filter that narrows it, an empty answer and a failed read all stand in the same room. */
+.pg-stacks {
+    min-block-size: 28rem;
+}

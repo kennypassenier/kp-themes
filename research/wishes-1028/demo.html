@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="wishes-1028" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Eleven wishes built in the package</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>Eleven wishes built in the package</h1>
+                <p class="cat-intro">
+                    Almanac, homelab, chassis-rs and Kitchen hit the edges of the package in 11 places and you chose to build them. Each is now an
+                    option or a part of the package; this page shows all of them in formal only, one section per wish, on the apps&rsquo; own data
+                    (Kitchen&rsquo;s dishes and steps, Almanac&rsquo;s calendars, homelab&rsquo;s stacks; the times and counts are mock). Everything
+                    is opt-in except two, which say so: a valid form is no longer sent by the browser, and a narrow run timeline scrolls inside its
+                    frame. 11 sections, 11 pairs.
+                </p>
+                <p>Every section says under <b>Expected</b> what you should see and what each control does.</p>
+            </header>
+
+            <section
+                id="pill-tbody"
+                data-review-item="pill-tbody"
+                data-review-topic="tables"
+                data-review-topic-title="Data tables"
+                data-review-components="pill-tbody"
+                data-review-title="The new-rows pill counts rows that arrive in a table"
+                aria-labelledby="h-pill-tbody"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (almanac 9): The "N new" pill (<code>data-kp-follow</code>) only watched the direct children of its
+                        scroller, so a data table inside it never counted. With <code>data-kp-follow-rows="tbody"</code> it counts the rows that
+                        arrive in the table body. Is that what the Deliveries page of Almanac needs, and is "a row counts once" the right rule when a
+                        sort brings rows back?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-pill-tbody">Deliveries arriving while you read older ones</h2>
+                    <p>
+                        Almanac&rsquo;s Deliveries table in a box that scrolls. Scroll away from the newest row, add deliveries, and the pill counts
+                        them. Sorting puts the same rows back in a new order: that is not new.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>At the newest row</b>: add a delivery and it appears, the box follows it, there is no pill.
+                            <b>Read older rows</b> scrolls up; add three deliveries and the pill says <b>3 new deliveries</b> with the way back.
+                        </li>
+                        <li>
+                            <b>Sort by source</b> redraws every row in a new order and the count stays the same. Pressing the pill (or
+                            <b>Back to the newest</b>) scrolls to the end and the pill leaves.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a paper plate. The pill sits on the box, over the rows, in the page&rsquo;s button look; the count is the exact
+                        number. The table header must not hide it.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="pill-tbody-component">
+                    <div role="group" aria-label="Deliveries">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="feed-add" data-value="one" aria-pressed="false">
+                            Add one delivery</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="feed-add" data-value="three" aria-pressed="false">
+                            Add three deliveries
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Reader">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="feed-read" data-value="older" aria-pressed="false">
+                            Read older rows</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="feed-read" data-value="newest" aria-pressed="false">
+                            Back to the newest
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Order">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="feed-sort" data-value="none" aria-pressed="true">
+                            In arrival order</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="feed-sort" data-value="source" aria-pressed="false">
+                            Sort by source
+                        </button>
+                    </div>
+                </div>
+                <div id="pill-tbody-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="pg-host" id="pg-feed-host">
+                            <div
+                                class="pg-scroller"
+                                id="pg-feed"
+                                data-kp-follow="tail"
+                                data-kp-follow-rows="tbody"
+                                data-kp-pill-unit="delivery,deliveries"
+                                data-kp-since-left="off"
+                                tabindex="0"
+                                aria-label="Deliveries, newest last"
+                            >
+                                <div class="kp-datatable" id="pg-feed-table" data-kp-datatable data-kp-page-size="500" data-kp-page-sizes="none">
+                                    <div class="kp-table-wrap">
+                                        <table class="kp-table">
+                                            <caption>
+                                                Deliveries to Almanac
+                                            </caption>
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" data-kp-field="time">Time</th>
+                                                    <th scope="col" data-kp-field="source" data-kp-sort="text">Source</th>
+                                                    <th scope="col" data-kp-field="calendar">Calendar</th>
+                                                    <th scope="col" data-kp-field="event">Event</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="pg-feed-body">
+                                                <tr data-kp-row-key="d1">
+                                                    <td>09:02</td>
+                                                    <td>home-assistant</td>
+                                                    <td>Almanac · Huishouden</td>
+                                                    <td>Dishwasher finished</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d2">
+                                                    <td>09:14</td>
+                                                    <td>grafana</td>
+                                                    <td>Almanac · Infra</td>
+                                                    <td>Disk space low on the media stack</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d3">
+                                                    <td>09:31</td>
+                                                    <td>energy-prices</td>
+                                                    <td>Almanac · Energie</td>
+                                                    <td>Cheap power 13:00 to 16:00</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d4">
+                                                    <td>09:48</td>
+                                                    <td>uptime-kuma</td>
+                                                    <td>Almanac · Infra</td>
+                                                    <td>Jellyfin did not answer for 2 min</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d5">
+                                                    <td>10:05</td>
+                                                    <td>home-assistant</td>
+                                                    <td>Almanac · Huishouden</td>
+                                                    <td>Washing machine finished</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d6">
+                                                    <td>10:20</td>
+                                                    <td>grafana</td>
+                                                    <td>Almanac · Infra</td>
+                                                    <td>Backup of the kyu stack took 14 min</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d7">
+                                                    <td>10:36</td>
+                                                    <td>uptime-kuma</td>
+                                                    <td>Almanac · Infra</td>
+                                                    <td>Jellyfin is back</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d8">
+                                                    <td>10:52</td>
+                                                    <td>home-assistant</td>
+                                                    <td>Almanac · Huishouden</td>
+                                                    <td>Front door left open</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d9">
+                                                    <td>11:10</td>
+                                                    <td>energy-prices</td>
+                                                    <td>Almanac · Energie</td>
+                                                    <td>Expensive power 17:00 to 20:00</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d10">
+                                                    <td>11:27</td>
+                                                    <td>grafana</td>
+                                                    <td>Almanac · Infra</td>
+                                                    <td>Certificate for kp-soft.dev renews in 14 days</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d11">
+                                                    <td>11:44</td>
+                                                    <td>home-assistant</td>
+                                                    <td>Almanac · Huishouden</td>
+                                                    <td>Plants need water</td>
+                                                </tr>
+                                                <tr data-kp-row-key="d12">
+                                                    <td>12:03</td>
+                                                    <td>uptime-kuma</td>
+                                                    <td>Almanac · Infra</td>
+                                                    <td>Traefik answers slowly</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="pg-log" id="pg-feed-log" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="filter-field"
+                data-review-item="filter-field"
+                data-review-topic="tables"
+                data-review-components="filter-field"
+                data-review-title="Filter a data table by column id, not by a number that counts the control column"
+                aria-labelledby="h-filter-field"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (homelab 136): <code>filter(column, value)</code> and <code>view().filters</code> counted the toggle
+                        column an expandable table adds, so the first data column was 1 and homelab looked the number up by header text. Now the
+                        column can be named by its <code>data-kp-field</code> (else its text): <code>filter("status", …)</code>, with
+                        <code>columnIndex(id)</code> and <code>view().filtersByField</code>. The numbers still work. Is naming the column the way you
+                        want it?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-filter-field">homelab&rsquo;s stacks, filtered by name</h2>
+                    <p>
+                        An expandable table of stacks. Choose how the call is written (the old number, which counts the toggle column, or the new id)
+                        and what to show; both end in the same filter and the readout under the table shows what the call looked like and what the
+                        table reports.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Running</b>, <b>Stopped</b> and <b>Six or more containers</b> narrow the table; <b>All stacks</b> clears it. With
+                            <b>Field id</b> the readout reads <code>filter("status", …)</code>, with <b>Number</b> <code>filter(3, …)</code> (the
+                            toggle column is 0).
+                        </li>
+                        <li>
+                            Under both, <code>view().filtersByField</code> names the column (<code>status</code>); <code>view().filters</code> keeps
+                            the number. <b>Loading</b> lays the busy card over the rows, <b>Failed</b> the failed plate with Try again,
+                            <b>Nothing matches</b> the empty plate at the loaded height.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The table keeps one height in every state; the plates are centred in the rows&rsquo; place. Expand a row: its detail lists the
+                        containers of the stack.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="filter-field-component">
+                    <div role="group" aria-label="Write the call as">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="stack-mode" data-value="id" aria-pressed="true">
+                            Field id (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-mode" data-value="number" aria-pressed="false">
+                            Number (old)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Show">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="all" aria-pressed="true">
+                            All stacks</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="running" aria-pressed="false">
+                            Running</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="stopped" aria-pressed="false">
+                            Stopped</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="six" aria-pressed="false">
+                            Six or more containers</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="none" aria-pressed="false">
+                            Nothing matches
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="stack-state" data-value="ready" aria-pressed="true">
+                            Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-state" data-value="failed" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div id="filter-field-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div
+                            class="kp-datatable pg-stacks"
+                            id="pg-stacks"
+                            data-kp-datatable
+                            data-kp-expandable
+                            data-kp-filter-ui="none"
+                            data-kp-page-size="25"
+                            data-kp-page-sizes="none"
+                        >
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption>
+                                        Stacks
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-field="stack" data-kp-sort="text">Stack</th>
+                                            <th scope="col" data-kp-field="containers" data-kp-sort="number" data-kp-filter="range">Containers</th>
+                                            <th scope="col" data-kp-field="status" data-kp-filter="choice">Status</th>
+                                            <th scope="col" data-kp-field="backup">Last backup</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="media">
+                                            <td>media</td>
+                                            <td>7</td>
+                                            <td>running</td>
+                                            <td>03:12</td>
+                                        </tr>
+                                        <tr data-kp-row-detail hidden>
+                                            <td colspan="5">
+                                                <b>Containers in media:</b> jellyfin, sonarr, radarr, prowlarr, bazarr, seerr, recyclarr.
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="metrics">
+                                            <td>metrics</td>
+                                            <td>6</td>
+                                            <td>running</td>
+                                            <td>03:20</td>
+                                        </tr>
+                                        <tr data-kp-row-detail hidden>
+                                            <td colspan="5">
+                                                <b>Containers in metrics:</b> prometheus, loki, alertmanager, loki-push, pve-exporter, grafana.
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="almanac">
+                                            <td>almanac</td>
+                                            <td>2</td>
+                                            <td>running</td>
+                                            <td>03:25</td>
+                                        </tr>
+                                        <tr data-kp-row-detail hidden>
+                                            <td colspan="5"><b>Containers in almanac:</b> almanac, almanac-latch.</td>
+                                        </tr>
+                                        <tr data-kp-row-key="kyu">
+                                            <td>kyu</td>
+                                            <td>4</td>
+                                            <td>running</td>
+                                            <td>03:31</td>
+                                        </tr>
+                                        <tr data-kp-row-detail hidden>
+                                            <td colspan="5"><b>Containers in kyu:</b> kyu, kyu-runner, http-switchboard, kitchen.</td>
+                                        </tr>
+                                        <tr data-kp-row-key="gateway">
+                                            <td>gateway</td>
+                                            <td>3</td>
+                                            <td>running</td>
+                                            <td>03:38</td>
+                                        </tr>
+                                        <tr data-kp-row-detail hidden>
+                                            <td colspan="5"><b>Containers in gateway:</b> traefik, authelia, dns.</td>
+                                        </tr>
+                                        <tr data-kp-row-key="downloader">
+                                            <td>downloader</td>
+                                            <td>5</td>
+                                            <td>stopped</td>
+                                            <td>missed</td>
+                                        </tr>
+                                        <tr data-kp-row-detail hidden>
+                                            <td colspan="5">
+                                                <b>Containers in downloader:</b> qbittorrent, gluetun, flaresolverr, sabnzbd, cross-seed.
+                                            </td>
+                                        </tr>
+                                        <tr data-kp-row-key="syncthing">
+                                            <td>syncthing</td>
+                                            <td>1</td>
+                                            <td>stopped</td>
+                                            <td>02:55</td>
+                                        </tr>
+                                        <tr data-kp-row-detail hidden>
+                                            <td colspan="5"><b>Containers in syncthing:</b> syncthing.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <p class="pg-log" id="pg-stacks-log" role="status" aria-live="polite"></p>
+                        <dl class="pg-readout">
+                            <div>
+                                <dt>The call</dt>
+                                <dd><code id="pg-stacks-call">nothing yet</code></dd>
+                            </div>
+                            <div>
+                                <dt><code>view().filters</code></dt>
+                                <dd><code id="pg-stacks-filters">{}</code></dd>
+                            </div>
+                            <div>
+                                <dt><code>view().filtersByField</code></dt>
+                                <dd><code id="pg-stacks-fields">{}</code></dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="code-toml"
+                data-review-item="code-toml"
+                data-review-topic="code"
+                data-review-topic-title="Code block"
+                data-review-components="code-toml"
+                data-review-title="TOML and shell text are coloured in a code block"
+                aria-labelledby="h-code-toml"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (almanac 17): A <code>.kp-code</code> block took a language label but coloured only JSON. Naming the
+                        language <code>TOML</code> or <code>bash</code> (also sh, shell, zsh) now colours keys, tables, strings, numbers, comments,
+                        commands, flags and variables with the block&rsquo;s own tones; <code>data-kp-code-highlight="off"</code> leaves it plain. Is
+                        the colouring quiet enough for a config file?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-code-toml">A mapping profile and a deploy script</h2>
+                    <p>
+                        Almanac&rsquo;s mapping profile (TOML) and its version check (bash) in the package&rsquo;s code block. Switch the text, take
+                        the colour away, and walk the block&rsquo;s own states.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>TOML</b>: keys in the primary ink, <code>[[calendar]]</code> tables bold, strings plain, numbers and booleans in the
+                            info ink, comments muted and italic, a multi-line string whole. <b>bash</b>: commands in the primary ink, flags and
+                            variables in the info ink, quoted text plain, the shebang a comment.
+                        </li>
+                        <li>
+                            <b>Colour off</b> is the plain block that was approved. <b>Loading</b> is the busy card at the block&rsquo;s height,
+                            <b>Empty</b> and <b>Failed</b> the package plate (Failed with Try again).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The text stays readable first: nothing is brighter than the keys, comments are quieter than the code, the line numbers and
+                        Copy are unchanged.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="code-toml-component">
+                    <div role="group" aria-label="Text">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="code-text" data-value="toml" aria-pressed="true">
+                            Mapping profile (TOML)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="code-text" data-value="bash" aria-pressed="false">
+                            Version check (bash)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Colour">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="code-colour" data-value="on" aria-pressed="true">
+                            Coloured (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="code-colour" data-value="off" aria-pressed="false">
+                            Plain
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="code-state" data-value="ready" aria-pressed="true">
+                            Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="code-state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="code-state" data-value="empty" aria-pressed="false">
+                            Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="code-state" data-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div id="code-toml-component" class="pg-component">
+                    <div class="kp-card pg-card"><figure class="kp-code" id="pg-code" data-kp-code></figure></div>
+                </div>
+            </section>
+
+            <section
+                id="refresh-title"
+                data-review-item="refresh-title"
+                data-review-topic="refresh"
+                data-review-topic-title="Refresh"
+                data-review-components="refresh-title"
+                data-review-title="A title in the refresh bar"
+                aria-labelledby="h-refresh-title"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (almanac 21): Almanac draws "Almanac · Huishouden | Every 30 s | updated 12 s ago | Refresh now" with
+                        page CSS. <code>data-kp-refresh-title</code> (or a slot element) is now the first cell of the bar&rsquo;s own grid, and a form
+                        grid puts it in the label track. Does the bar read as one row, and is a title over a label right when both are set?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-refresh-title">One refresh bar per calendar</h2>
+                    <p>
+                        Three bars: a title in a card, a title with a label (the title becomes the heading line), and a title slot that holds more
+                        than words, in a form grid. The first two take the controls.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Title on</b>: the title, the chooser, the freshness line and Refresh now stand on one row, the title in the first
+                            track. <b>Title off</b>: the bar is what it was. <b>Label on</b>: the title becomes the line over the bar and the label
+                            stands in the first cell.
+                        </li>
+                        <li>
+                            <b>Refresh fails</b>: the next refresh says it failed, keeps the data and offers Retry now; <b>Succeeds</b> brings the
+                            freshness line back. The form grid bar shows its slot (words and a badge) in the label track; nothing is cut at 390 px.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The title is the quietest bold text on the bar; it never pushes the chooser off the row except under 40rem, where the bar
+                        folds to one column in reading order.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="refresh-title-component">
+                    <div role="group" aria-label="Title">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="rt-title" data-value="on" aria-pressed="true">Title on</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rt-title" data-value="off" aria-pressed="false">
+                            Title off
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Label">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="rt-label" data-value="off" aria-pressed="true">No label</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rt-label" data-value="on" aria-pressed="false">
+                            Label “Auto-refresh”
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Next refresh">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="rt-outcome" data-value="ok" aria-pressed="true">
+                            Succeeds</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="rt-outcome" data-value="fail" aria-pressed="false">
+                            Fails
+                        </button>
+                    </div>
+                </div>
+                <div id="refresh-title-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="kp-refresh" id="pg-rt-one" data-kp-refresh="30" data-kp-refresh-title="Almanac · Huishouden"></div>
+                        <div class="kp-refresh" id="pg-rt-two" data-kp-refresh="60" data-kp-refresh-title="Almanac · Infra"></div>
+                        <div class="kp-formgrid">
+                            <div class="kp-refresh" id="pg-rt-grid" data-kp-refresh="300">
+                                <span data-kp-refresh-slot="title"><b>Almanac · Energie</b> <span class="kp-badge">1 source</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="secret-input"
+                data-review-item="secret-input"
+                data-review-topic="forms"
+                data-review-topic-title="Forms and keeping changes"
+                data-review-components="secret-input"
+                data-review-title="A secret you type: hidden typing, Show, Paste and Copy"
+                aria-labelledby="h-secret-input"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (chassis-rs 1): The secret component only displayed a value. <code>data-kp-secret-mode="input"</code> is
+                        the same field turned round: you type or paste, the typing is hidden, Show reveals it for a few seconds and hides it again
+                        when you leave, Copy empties the clipboard again after 30 s. Built from the input, buttons and the line of the display field.
+                        Is this the entry field the kit needs?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-secret-input">Paste the Cloudflare token</h2>
+                    <p>
+                        The field fills its row; its buttons are the display field&rsquo;s. Type or paste a token, show it, copy it. The controls fill
+                        it, mark it invalid or take it away.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Empty</b>: the line says <b>Typing is hidden</b>, Show and Copy are off. <b>A token typed</b>: dots in the box, the
+                            line says <b>40 characters, hidden</b>. <b>Show</b> turns the box to the mono text with a dashed edge and the line counts
+                            down (<b>Hides in 28 s</b>); leaving the box, or the countdown, hides it again.
+                        </li>
+                        <li>
+                            <b>Invalid</b> marks the box with the failed rule and says why under it; <b>Disabled</b> turns the box and every button
+                            off with the reason; <b>Hides after</b> takes seconds, minutes or hours (<code>5s</code>, <code>1min</code>) or
+                            <b>never</b>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The box has the control height and fills the row at every width; the line under it keeps its height whatever it says, so
+                        nothing below moves.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="secret-input-component">
+                    <div role="group" aria-label="Value">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="sec-value" data-value="empty" aria-pressed="true">Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="sec-value" data-value="token" aria-pressed="false">
+                            A token typed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Problem">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="sec-problem" data-value="none" aria-pressed="true">None</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="sec-problem" data-value="invalid" aria-pressed="false">
+                            Invalid</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="sec-problem" data-value="disabled" aria-pressed="false">
+                            Disabled
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Hides after">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="sec-ttl" data-value="5s" aria-pressed="false">5 s</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="sec-ttl" data-value="30s" aria-pressed="true">30 s</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="sec-ttl" data-value="1min" aria-pressed="false">1 min</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="sec-ttl" data-value="0" aria-pressed="false">Never</button>
+                    </div>
+                </div>
+                <div id="secret-input-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <p class="kp-field__label" id="pg-sec-label">Cloudflare API token</p>
+                        <div
+                            class="kp-secret"
+                            id="pg-secret"
+                            data-kp-secret
+                            data-kp-secret-mode="input"
+                            data-kp-secret-ttl="30s"
+                            data-kp-secret-clear="30s"
+                            data-kp-secret-label="Cloudflare API token"
+                            data-kp-secret-name="cloudflare_token"
+                            data-kp-secret-placeholder="Paste or type the token"
+                        ></div>
+                        <p class="pg-log" id="pg-sec-log" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="unsaved-storage"
+                data-review-item="unsaved-storage"
+                data-review-topic="forms"
+                data-review-components="unsaved-storage"
+                data-review-title="Where the unsaved bar keeps a draft"
+                aria-labelledby="h-unsaved-storage"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (chassis-rs 20): The unsaved bar kept a changed form in <code>sessionStorage</code> and nothing else. It
+                        now takes a storage the way <code>configureRemember</code> does: <code>data-kp-keep="local"</code>,
+                        <code>attachUnsaved(root, { storage })</code> or <code>configureUnsaved({ storage })</code>. Browser storage only. Is that the
+                        option chassis-rs needs to keep its drafts in its own store?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-unsaved-storage">Change the backup window, reload, find it again</h2>
+                    <p>
+                        homelab&rsquo;s backup settings. Change a value, then <b>Reload the form</b>: the bar comes back with the changes from the
+                        storage you chose, and the readout says which store holds them.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Session</b> (the default) and <b>Local</b> keep the draft in the browser&rsquo;s own stores;
+                            <b>The page&rsquo;s own store</b> is a Storage-shaped object this page hands in. After a change the readout lists the key
+                            in the chosen store only.
+                        </li>
+                        <li>
+                            <b>Reload the form</b> puts the settings back to what was saved, attaches the bar again and the draft returns with the
+                            toast <b>2 changes kept from before you left</b>; <b>Discard</b> empties the store. <b>Nowhere</b> keeps nothing: Reload
+                            brings the saved values.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The bar and its chip are the unchanged approved look; the readout is the page&rsquo;s own. Check that nothing is written to a
+                        store you did not choose.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="unsaved-storage-component">
+                    <div role="group" aria-label="Keep the draft in">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="uns-store" data-value="session" aria-pressed="true">
+                            Session (default)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="uns-store" data-value="local" aria-pressed="false">
+                            Local</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="uns-store" data-value="own" aria-pressed="false">
+                            The page’s own store</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="uns-store" data-value="none" aria-pressed="false">
+                            Nowhere
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Form">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="uns-act" data-value="change" aria-pressed="false">
+                            Change two values</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="uns-act" data-value="reload" aria-pressed="false">
+                            Reload the form
+                        </button>
+                    </div>
+                </div>
+                <div id="unsaved-storage-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <header class="pg-bar">
+                            <div>
+                                <h3 class="kp-page-header__title">Backup settings</h3>
+                                <p class="pg-log">Written to host.toml only when you save.</p>
+                            </div>
+                            <div id="pg-unsaved-slot" class="pg-unsaved-slot"></div>
+                        </header>
+                        <form class="kp-formrows kp-formrows--lines" id="pg-settings" action="#">
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">Backup window<small>When the nightly run starts</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="time" name="pg-window" value="03:00" aria-label="Backup window" />
+                                </div>
+                                <div class="kp-formrow__aside">default 03:00</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">Keep snapshots<small>How many nights stay</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="pg-keep" value="14" aria-label="Keep snapshots" />
+                                </div>
+                                <div class="kp-formrow__aside">default 14</div>
+                            </div>
+                        </form>
+                        <dl class="pg-readout">
+                            <div>
+                                <dt>In the session store</dt>
+                                <dd><code id="pg-uns-session">nothing</code></dd>
+                            </div>
+                            <div>
+                                <dt>In the local store</dt>
+                                <dd><code id="pg-uns-local">nothing</code></dd>
+                            </div>
+                            <div>
+                                <dt>In the page&rsquo;s own store</dt>
+                                <dd><code id="pg-uns-own">nothing</code></dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="form-submit"
+                data-review-item="form-submit"
+                data-review-topic="forms"
+                data-review-components="form-submit"
+                data-review-title="A valid form is not sent a second time by the browser"
+                aria-labelledby="h-form-submit"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen 5): <code>attachForms</code> fired <code>kp-form-valid</code> but left the browser to submit the
+                        form as well, so a save by <code>fetch</code> was followed by a reload. It now calls <code>preventDefault()</code> on a valid
+                        form; <code>data-kp-form-native-submit</code> brings the browser&rsquo;s submit back.
+                        <b>This changes behaviour for every consumer</b> and is in the CHANGELOG. Is prevented the right default?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-form-submit">Log a bad day</h2>
+                    <p>
+                        Kitchen&rsquo;s bad-day form. Send a valid or an empty form; the log says whether the page&rsquo;s handler ran and whether the
+                        browser would have submitted (the page stops it either way, so the demo never reloads).
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Prevented (new default)</b>: a valid form logs <b>kp-form-valid, the browser submit was stopped</b>. <b>Allowed</b>:
+                            <b>the browser would also have submitted: yes</b>. An empty form shows the summary with its links and logs
+                            <b>invalid</b> in both.
+                        </li>
+                        <li>
+                            <b>Server refuses</b> shows the server&rsquo;s message on the field and the summary; <b>accepts</b> ends the busy Save
+                            after a moment.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The summary, the field messages and the busy button are the approved form look; the log under the form is the page&rsquo;s
+                        own.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="form-submit-component">
+                    <div role="group" aria-label="Browser submit">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="fs-native" data-value="prevented" aria-pressed="true">
+                            Prevented (new default)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="fs-native" data-value="allowed" aria-pressed="false">
+                            Allowed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Server">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="fs-server" data-value="accepts" aria-pressed="true">
+                            Accepts</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="fs-server" data-value="refuses" aria-pressed="false">
+                            Refuses
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Send">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="fs-send" data-value="valid" aria-pressed="false">
+                            A valid form</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="fs-send" data-value="empty" aria-pressed="false">
+                            An empty form
+                        </button>
+                    </div>
+                </div>
+                <div id="form-submit-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <form class="kp-form" id="pg-badday" data-kp-form action="#" novalidate>
+                            <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                            <div class="pg-twocol">
+                                <div class="kp-field">
+                                    <label class="kp-field__label" for="pg-bd-dish">Dish <span class="kp-field__required">required</span></label
+                                    ><input class="kp-field__input" id="pg-bd-dish" name="dish" required value="Shakshuka" /><span
+                                        class="kp-field__error"
+                                        data-kp-field-error
+                                        hidden
+                                    ></span>
+                                </div>
+                                <div class="kp-field">
+                                    <label class="kp-field__label" for="pg-bd-portions"
+                                        >Portions <span class="kp-field__required">required</span></label
+                                    ><input
+                                        class="kp-field__input"
+                                        id="pg-bd-portions"
+                                        name="portions"
+                                        type="number"
+                                        min="1"
+                                        required
+                                        value="2"
+                                    /><span class="kp-field__error" data-kp-field-error hidden></span>
+                                </div>
+                            </div>
+                            <div class="pg-actions"><button type="submit" class="kp-button kp-button--primary" data-kp-submit>Save</button></div>
+                        </form>
+                        <ul class="pg-events" id="pg-bd-log" aria-live="polite" aria-label="What happened"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="gantt-legend"
+                data-review-item="gantt-legend"
+                data-review-topic="gantt"
+                data-review-topic-title="Run timeline"
+                data-review-components="gantt-legend"
+                data-review-title="The gantt legend names only the states a plan uses"
+                aria-labelledby="h-gantt-legend"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen 1): The legend of the run timeline always listed ok, failed, running and queued. A cooking plan
+                        has only done, now and still to do. <code>data-kp-gantt-legend</code> now takes <code>auto</code> (the states the runs use) or
+                        a list (<code>"ok running planned"</code>); <code>all</code> is the default and <code>off</code> as before. Do the names read
+                        right for a plan?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-gantt-legend">Spaghetti bolognese, two tracks</h2>
+                    <p>
+                        Kitchen&rsquo;s cook plan as a timeline: the sauce and the pasta, what is done, what is cooking and what is still to do.
+                        Change what the legend names.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>All states</b> (the default) names succeeded, failed, running, queued and planned. <b>Only the states used</b> names
+                            succeeded, running and planned. <b>A list</b> names exactly succeeded, running and planned, whether a bar uses them or
+                            not; <b>No legend</b> takes it away.
+                        </li>
+                        <li>
+                            <b>Loading</b> is the busy card over the lanes, <b>Empty</b> and <b>Failed</b> the package plate; the legend follows
+                            whatever the lanes hold.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The swatches are the bars&rsquo; own looks (solid, striped, outlined); the legend row keeps its place and height when states
+                        leave.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="gantt-legend-component">
+                    <div role="group" aria-label="Legend">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gl-legend" data-value="all" aria-pressed="true">
+                            All states</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gl-legend" data-value="auto" aria-pressed="false">
+                            Only the states used</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gl-legend" data-value="list" aria-pressed="false">
+                            A list of three</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gl-legend" data-value="off" aria-pressed="false">
+                            No legend
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gl-state" data-value="ready" aria-pressed="true">Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gl-state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gl-state" data-value="empty" aria-pressed="false">
+                            Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gl-state" data-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div id="gantt-legend-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt"
+                            id="pg-gl"
+                            data-kp-gantt
+                            data-kp-gantt-toolbar="off"
+                            data-kp-gantt-hint="off"
+                            aria-label="Spaghetti bolognese, cooking plan"
+                        ></section>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="gantt-rest"
+                data-review-item="gantt-rest"
+                data-review-topic="gantt"
+                data-review-components="gantt-rest"
+                data-review-title="A running bar shows the time it still has"
+                aria-labelledby="h-gantt-rest"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen 2): A running bar ended at now, so the time a step still had left was not drawn (Kitchen laid a
+                        lane stretch under it by hand). A run with <code>plannedEnd</code> now draws its remainder after the line for now, in the
+                        planned look, shrinking as the clock runs. <code>data-kp-gantt-rest="off"</code> leaves it out. Does the remainder read as
+                        time still to come?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-gantt-rest">Simmer the ragù for 45 minutes</h2>
+                    <p>
+                        The ragù has simmered for 20 minutes and has 25 left. Switch the remainder on and off, move the planned end, or let the plan
+                        run late.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Remainder on</b>: a hatched, outlined stretch continues the striped bar from the line for now to the planned end, on
+                            the same row; hover the bar: <b>planned until</b> the time. <b>Off</b>: the bar ends at now as before.
+                        </li>
+                        <li>
+                            <b>Plan overrun</b> puts the planned end in the past: the stretch is gone and the bar keeps growing.
+                            <b>Planned end later</b> moves it out; a live window reaches far enough to hold it. Loading, Empty and Failed are the lane
+                            plates.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The remainder joins the bar&rsquo;s leading edge without a seam and is never mistaken for a planned step of its own: it has no
+                        label and is not a stop of the keyboard.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="gantt-rest-component">
+                    <div role="group" aria-label="Remainder">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gr-rest" data-value="on" aria-pressed="true">
+                            Remainder on (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gr-rest" data-value="off" aria-pressed="false">Off</button>
+                    </div>
+                    <div role="group" aria-label="Planned end">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gr-plan" data-value="soon" aria-pressed="true">
+                            In 25 min</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gr-plan" data-value="later" aria-pressed="false">
+                            In 40 min</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gr-plan" data-value="over" aria-pressed="false">
+                            Plan overrun
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gr-state" data-value="ready" aria-pressed="true">Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gr-state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gr-state" data-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div id="gantt-rest-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt"
+                            id="pg-gr"
+                            data-kp-gantt
+                            data-kp-gantt-ranges="1h 6h"
+                            data-kp-gantt-range="1h"
+                            data-kp-gantt-hint="off"
+                            aria-label="Ragù, cooking plan"
+                        ></section>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="gantt-phone"
+                data-review-item="gantt-phone"
+                data-review-topic="gantt"
+                data-review-components="gantt-phone"
+                data-review-title="At phone width the gantt scrolls inside its own frame"
+                aria-labelledby="h-gantt-phone"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen 3): At 390 px the lanes of the run timeline squeezed together. A timeline under 32rem now keeps
+                        a plot of <code>--kp-gantt-min-width</code> (30rem) and scrolls sideways in its own frame, the lane names held at the start.
+                        <code>data-kp-gantt-scroll="off"</code> keeps the old squeeze. Is 30rem the right minimum, and should the frame open at the
+                        live end?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-gantt-phone">The cook plan on a phone</h2>
+                    <p>
+                        The same plan in a box you can narrow. At this page&rsquo;s own phone width it behaves the same; the width control narrows the
+                        box so you can judge it on a desktop.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Column</b> (the full width) shows the plan as before. <b>Tablet</b> and <b>Phone</b> narrow the box: the plot stays
+                            30rem wide, the frame scrolls sideways, the lane names stay in view, the window opens at its right end where now is.
+                        </li>
+                        <li>
+                            <b>Squeezed (old)</b> turns the scrolling off: the lanes squeeze and the bars crowd. <b>Wider minimum</b> and
+                            <b>No minimum</b> set the knob. The toolbar, the legend and the foot stay in the box&rsquo;s width.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The names column does not scroll away; the axis stays on top; a bar is never narrower than its minimum; no page-level sideways
+                        scroll.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="gantt-phone-component">
+                    <div role="group" aria-label="Box">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gp-width" data-value="column" aria-pressed="true">
+                            Column</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gp-width" data-value="tablet" aria-pressed="false">
+                            Tablet (34rem)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gp-width" data-value="phone" aria-pressed="false">
+                            Phone (22rem)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Scroll">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gp-scroll" data-value="auto" aria-pressed="true">
+                            Scrolls (new)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gp-scroll" data-value="off" aria-pressed="false">
+                            Squeezed (old)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gp-scroll" data-value="always" aria-pressed="false">
+                            Always
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Minimum">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="gp-min" data-value="30rem" aria-pressed="true">30rem</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gp-min" data-value="44rem" aria-pressed="false">44rem</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="gp-min" data-value="0" aria-pressed="false">
+                            No minimum
+                        </button>
+                    </div>
+                </div>
+                <div id="gantt-phone-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="pg-box" id="pg-gp-box">
+                            <section
+                                class="kp-gantt"
+                                id="pg-gp"
+                                data-kp-gantt
+                                data-kp-gantt-ranges="1h 6h"
+                                data-kp-gantt-range="6h"
+                                aria-label="Spaghetti bolognese, cooking plan on a phone"
+                            ></section>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="steps-getter"
+                data-review-item="steps-getter"
+                data-review-topic="steps"
+                data-review-topic-title="Cook mode"
+                data-review-components="steps-getter"
+                data-review-title="Read the steps a person has passed"
+                aria-labelledby="h-steps-getter"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen 4): A page that mirrors the progress of cook mode (a checklist beside it, "3 of 8 done") had to
+                        read the remembered progress. <code>getStepsPassed(root)</code> returns the passed steps (<code>count</code>,
+                        <code>indexes</code>, <code>ids</code>, <code>steps</code>) and <code>getSteps(root)</code> the steps the flow was given. Is
+                        that the getter Kitchen meant by "the steps passed"?
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-steps-getter">Stoofvlees, step by step</h2>
+                    <p>
+                        Flemish beef stew in cook mode. The list beside it is drawn from <code>getStepsPassed()</code> after every move; nothing in it
+                        is remembered by the page.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Next</b> and <b>Back</b> in the component (or Jump) change the list: passed steps are ticked with their time, the step
+                            in hand is marked, the rest wait. The count reads <b>3 of 7 done</b> from the same call.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the step and <b>Failed</b> says why with Try again; the list keeps the last answer
+                            and does not jump.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The list lines up with the step&rsquo;s own count; tick, name and time sit in three tracks that run through every row.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="steps-getter-component">
+                    <div role="group" aria-label="Jump to">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ss-jump" data-value="start" aria-pressed="true">
+                            The first step</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ss-jump" data-value="middle" aria-pressed="false">
+                            Step 4</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ss-jump" data-value="end" aria-pressed="false">
+                            The last step
+                        </button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ss-state" data-value="ready" aria-pressed="true">Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ss-state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ss-state" data-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div id="steps-getter-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="pg-steps">
+                            <div
+                                class="kp-focus-steps"
+                                id="pg-fs"
+                                data-kp-focus-steps
+                                data-kp-focus-steps-wake="false"
+                                aria-label="Flemish beef stew"
+                            ></div>
+                            <div class="pg-passed">
+                                <h3 class="pg-passed__title" id="pg-ss-count">0 of 7 done</h3>
+                                <ol class="pg-passed__list" id="pg-ss-list" aria-label="Steps passed"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" id="pg-samples">
+            {
+                "toml": "# Where the events of one source land.\nschema_version = 2\nsource_id = \"home-assistant\"\ntarget_calendar_id = \"primary\"\ntimezone = \"Europe/Brussels\"\ndefault_duration_minutes = 60\n\n[[calendar]]\nname = \"Almanac · Huishouden\"\nsources = [\"home-assistant\"]\nshared_with = [\"kenny\"]\n\n[[calendar]]\nname = \"Almanac · Infra\"\nsources = [\"grafana\", \"uptime-kuma\"]\nreminders = { popup = 10, email = false }\n\n[notes]\ntext = \"\"\"\nEnergy prices get their own calendar:\na cheap-power window can span an afternoon.\n\"\"\"",
+                "bash": "#!/usr/bin/env bash\n# One version, not three: Cargo.toml is the single source.\nset -euo pipefail\ncd \"$(git rev-parse --show-toplevel)\"\n\ncargo_version=$(grep -m1 '^version = ' Cargo.toml | sed 's/version = \"\\(.*\\)\"/\\1/')\n\nif tag=$(git describe --exact-match --tags 2>/dev/null); then\n    if [ \"$tag\" != \"v$cargo_version\" ]; then\n        echo \"VERSION MISMATCH: $tag and $cargo_version\" >&2\n        exit 1\n    fi\n    echo \"version ok: $tag matches Cargo.toml\"\nfi"
+            }
+        </script>
+        <script type="application/json" data-review-round>
+            { "round": "wishes-1028-9e4dacdf-6533-4420-9408-50812b09704c", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
