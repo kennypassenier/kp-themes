@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Fixed: detaching a data table puts its rows back in one write** [perf-1026, homelab]. The detach appended every row (and its detail row) to the body one by one, and on homelab's history table (175+ rows) that cost 1.8 of 2 s when leaving a tab. The order the body came in with is now worked out on a list and set with one `replaceChildren`; the markup after detach is the same as before (checked against the old code for plain, sorted, grouped, detail-row and reorderable tables, connected and removed).
 - **Fixed: the progress bar fills its column** [width-fill-1026]. `--kp-progressbar-max-width` defaults to `none` (was 32rem), per Kenny's full-width rule.
 - **Fixed: the form grid and the page header's description fill the page column** [width-fill-1026, homelab width-fill-1]. Kenny's rule of 2026-10-25 ("pages use full width"): `--kp-formgrid-max` defaults to `none` (was 60rem) and the description has the new knob `--kp-page-header-measure` (none, was 70ch), so a page that wants a cap sets it. The `.kp-lede` fills its column too (`--kp-lede-measure` defaults to `none`, was 70ch; `data-kp-lede-measure="narrow"` keeps 48ch).
 - **Fixed: `JobReport` keys may be `null` in `setJobLine`** [HL 137]. New type `JobReportUpdate` (`number | null` per key) for the argument; `JobReport` stays what a line holds.

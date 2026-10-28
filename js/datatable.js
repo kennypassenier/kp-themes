@@ -4209,14 +4209,10 @@ export function attachDataTables(
             for (const row of body.querySelectorAll(`:scope > ${SKELETON_ROW}`)) row.remove();
             for (const detail of builtDetails) detail.remove();
             for (const row of prepared) unprepareRow(row);
+            for (const row of rendered) row.hidden = false;
             for (const row of rendered) {
-                row.hidden = false;
-                body.append(row);
                 const detail = details.get(row);
-                if (detail !== undefined && !builtDetails.has(detail)) {
-                    detail.hidden = detailsWereHidden.get(detail) ?? detail.hidden;
-                    body.append(detail);
-                }
+                if (detail !== undefined && !builtDetails.has(detail)) detail.hidden = detailsWereHidden.get(detail) ?? detail.hidden;
             }
             // Group rows [J2]: their toggles out, their span and visibility
             // back, the ids taken back, and the body in the order it came in.
@@ -4228,15 +4224,33 @@ export function attachDataTables(
                 heading.hidden = was.hidden;
             }
             for (const row of givenIds) row.removeAttribute('id');
-            if (layoutAtAttach !== null) {
-                const placed = new Set(layoutAtAttach);
-                for (const row of layoutAtAttach) if (row.parentElement === body) body.append(row);
+            // The body goes back to the order it came in with one write [perf-1026]: the order is worked out on a list, as the
+            // appends would have left it, and the rows go in together. A table the page took out of the document gets the same
+            // order: its markup after detach is what it was before attach.
+            {
+                /** Where each node would stand after the appends, in the order they would have been made. @type {Map<Node, number>} */
+                const stand = new Map();
+                let next = 0;
+                for (const child of body.children) stand.set(child, next++);
+                /** @param {Node} node */
+                const append = (node) => void stand.set(node, next++);
                 for (const row of rendered) {
-                    if (placed.has(row) || row.parentElement !== body) continue;
-                    body.append(row);
+                    append(row);
                     const detail = details.get(row);
-                    if (detail !== undefined && detail.parentElement === body) body.append(detail);
+                    if (detail !== undefined && !builtDetails.has(detail)) append(detail);
                 }
+                if (layoutAtAttach !== null) {
+                    const placed = new Set(layoutAtAttach);
+                    for (const row of layoutAtAttach) if (stand.has(row)) append(row);
+                    for (const row of rendered) {
+                        if (placed.has(row) || !stand.has(row)) continue;
+                        append(row);
+                        const detail = details.get(row);
+                        if (detail !== undefined && stand.has(detail)) append(detail);
+                    }
+                }
+                const order = [...stand.keys()].sort((a, b) => /** @type {number} */ (stand.get(a)) - /** @type {number} */ (stand.get(b)));
+                body.replaceChildren(...order);
             }
             syncFixedColumns(table, 0);
             headers.forEach((header, i) => {

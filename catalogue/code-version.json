@@ -33,7 +33,7 @@
         "js/connection.js": { "digest": "0f479260a75c16d2", "when": "[data-kp-connection]" },
         "js/console.js": { "digest": "12c879ad55ae3407", "when": "[data-kp-console]" },
         "js/countdown.js": { "digest": "8362430291eef675", "when": "[data-kp-countdown], [data-kp-countdown-until]" },
-        "js/datatable.js": { "digest": "9b8bd621ede7dd3c", "when": "[data-kp-datatable]" },
+        "js/datatable.js": { "digest": "e039356a39634f80", "when": "[data-kp-datatable]" },
         "js/dated-options.js": { "digest": "a74e45d8078ae103", "when": "[data-kp-dated]" },
         "js/datepicker.js": { "digest": "4b0d365b5923645d", "when": "[data-kp-datepicker]" },
         "js/deplist.js": { "digest": "333fc5061bfe72cd", "when": "[data-kp-deplist]" },
