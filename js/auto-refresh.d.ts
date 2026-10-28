@@ -39,6 +39,11 @@ export declare function refreshDone(element: Element, ok: boolean): void;
  */
 export declare function setRefreshInterval(element: Element, seconds: number): void;
 /**
+ * Set (or take away, with an empty string) the title in a control's bar [wish-1028].
+ * @param {Element} element @param {string} words
+ */
+export declare function setRefreshTitle(element: Element, words: string): void;
+/**
  * Wire every refresh control under `root`.
  * @param {ParentNode} [root]
  * @param {{ now?: () => number }} [options]

@@ -9855,6 +9855,34 @@
         overflow-wrap: anywhere;
     }
 
+    /* The input mode [wish-1028, chassis-rs 1]: the typed box takes the display field's value slot and fills it (no 448 px cap), its
+     * buttons are the same row of buttons. Hidden typing is the browser's password glyphs; shown typing is the mono face of the value. */
+    .kp-secret__entry {
+        box-sizing: border-box;
+        flex: 1 1 var(--kp-secret-min, 16rem);
+        min-inline-size: 0;
+    }
+
+    .kp-secret__input {
+        box-sizing: border-box;
+        inline-size: 100%;
+        max-inline-size: none;
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-secret__paste {
+        white-space: nowrap;
+    }
+
+    .kp-secret[data-kp-secret-mode='input'][data-kp-secret-state='error'] .kp-secret__input {
+        border-color: var(--destructive);
+    }
+
+    .kp-secret[data-kp-secret-mode='input'][data-kp-secret-state='shown'] .kp-secret__input {
+        border-style: dashed;
+    }
+
     .kp-secret__actions {
         display: flex;
         flex: none;
@@ -11356,7 +11384,8 @@
      * a filled bar (that is what happened). Every theme draws its own hatching on it (its register); a series colours the outline and
      * the hatching. The words stay in the page's ink. */
     .kp-gantt__run[data-kp-state='planned'],
-    .kp-gantt__swatch[data-kp-state='planned'] {
+    .kp-gantt__swatch[data-kp-state='planned'],
+    .kp-gantt__rest {
         --kp-gantt-fill: var(--primary);
         --kp-gantt-ink: var(--foreground);
         --kp-gantt-hatch: color-mix(in oklab, var(--kp-gantt-fill) 55%, transparent);
@@ -11364,24 +11393,47 @@
         background-image: repeating-linear-gradient(135deg, var(--kp-gantt-hatch) 0 1px, transparent 1px 0.4375rem);
     }
 
-    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series] {
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series] {
         --kp-gantt-fill: var(--chart-1);
     }
 
-    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series='2'] {
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series='2'] {
         --kp-gantt-fill: var(--chart-2);
     }
 
-    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series='3'] {
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series='3'] {
         --kp-gantt-fill: var(--chart-3);
     }
 
-    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series='4'] {
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series='4'] {
         --kp-gantt-fill: var(--chart-4);
     }
 
-    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'][data-kp-series='5'] {
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series='5'] {
         --kp-gantt-fill: var(--chart-5);
+    }
+
+    /* A running bar's planned remainder [wish-1028, Kitchen 2]: from the line for now to the planned end, on the bar's row, in the
+     * planned look (outlined on the card's ground, hatched) so it reads as time still to come. It joins the bar's leading edge (no
+     * border there) and shrinks as the clock runs. */
+    .kp-gantt__rest {
+        box-sizing: border-box;
+        position: absolute;
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        inset-inline-start: calc((var(--kp-g-now, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: max(0px, calc((var(--kp-g-e, 0) - var(--kp-g-now, 0)) / var(--kp-g-span, 21600) * 100%));
+        block-size: var(--kp-gantt-bar, 1.125rem);
+        border: 1px solid var(--kp-gantt-fill);
+        border-inline-start: 0;
+        border-radius: 0 var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2))) var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2))) 0;
+        pointer-events: none;
+    }
+
+    .kp-gantt__rest[hidden] {
+        display: none;
     }
 
     .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label::before {
@@ -11614,6 +11666,50 @@
         .kp-gantt__lane {
             font-size: var(--kp-text-xs, 0.75rem);
         }
+    }
+
+    /* A narrow timeline keeps a readable plot and scrolls inside its own frame [wish-1028, Kitchen 3]: under 32rem the body is at
+     * least --kp-gantt-min-width wide (30rem; 0 turns it off) and the frame scrolls sideways, with the lane names held at the start
+     * edge. data-kp-gantt-scroll="off" never scrolls, "always" keeps the minimum at every width. A mouse still brushes a range; a
+     * finger pans (touch-action). */
+    @container kp-gantt (max-width: 32rem) {
+        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__scroll {
+            overflow-x: auto;
+            touch-action: pan-x pan-y;
+        }
+
+        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__body {
+            min-inline-size: var(--kp-gantt-min-width, 30rem);
+        }
+
+        .kp-gantt:not([data-kp-gantt-scroll='off']) :is(.kp-gantt__lane, .kp-gantt__corner) {
+            position: sticky;
+            inset-inline-start: 0;
+        }
+
+        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__lane {
+            z-index: 2;
+            background: var(--card);
+        }
+    }
+
+    .kp-gantt[data-kp-gantt-scroll='always'] .kp-gantt__scroll {
+        overflow-x: auto;
+        touch-action: pan-x pan-y;
+    }
+
+    .kp-gantt[data-kp-gantt-scroll='always'] .kp-gantt__body {
+        min-inline-size: var(--kp-gantt-min-width, 30rem);
+    }
+
+    .kp-gantt[data-kp-gantt-scroll='always'] :is(.kp-gantt__lane, .kp-gantt__corner) {
+        position: sticky;
+        inset-inline-start: 0;
+    }
+
+    .kp-gantt[data-kp-gantt-scroll='always'] .kp-gantt__lane {
+        z-index: 2;
+        background: var(--card);
     }
 
     /* Point events on the run timeline [kpadopt4] (setGanttPoints, setGanttKinds, setGanttZones in js/gantt.js): a moment is a
@@ -22466,6 +22562,42 @@
         overflow-wrap: break-word;
     }
 
+    /* A title in the bar's grid [wish-1028; almanac 21]: data-kp-refresh-title (or a slot) is the bar's first cell, so the title, the chooser,
+       the freshness line and Refresh now stand on one row in four tracks. With a label as well, the title is the heading line over
+       the whole bar. In a form grid it takes the label track. --kp-refresh-title-width sizes the track (max-content). */
+    .kp-refresh__title {
+        min-inline-size: 0;
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+    }
+
+    .kp-refresh__title > [data-kp-refresh-slot='title'][hidden] {
+        display: none;
+    }
+
+    .kp-refresh:where(:not(.kp-formgrid .kp-refresh)) > .kp-refresh__bar:where(:has(> .kp-refresh__title):not(:has(> .kp-refresh__label))) {
+        grid-template-columns: minmax(0, var(--kp-refresh-title-width, max-content)) minmax(0, auto) minmax(min-content, 1fr) auto;
+    }
+
+    .kp-refresh__bar > .kp-refresh__title:has(~ .kp-refresh__label) {
+        grid-column: 1 / -1;
+    }
+
+    .kp-formgrid .kp-refresh__bar:has(> .kp-refresh__title) {
+        align-items: first baseline;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__title {
+        grid-column: label;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__title:has(~ .kp-refresh__label) {
+        grid-column: label-start / actions-end;
+    }
+
     .kp-formgrid .kp-refresh__bar:has(> .kp-refresh__label) {
         align-items: first baseline;
     }
@@ -26508,6 +26640,30 @@
 
     .kp-code__punct {
         color: var(--muted-foreground);
+    }
+
+    /* TOML and shell text [wish-1028]: tables and keywords, quoted text, numbers and flags, comments, variables. */
+    .kp-code__section {
+        color: var(--kp-code-key, var(--primary));
+        font-weight: 700;
+    }
+
+    .kp-code__string {
+        color: inherit;
+    }
+
+    .kp-code__value,
+    .kp-code__var {
+        color: var(--kp-code-value, var(--info-foreground));
+    }
+
+    .kp-code__var {
+        font-style: italic;
+    }
+
+    .kp-code__comment {
+        color: var(--muted-foreground);
+        font-style: italic;
     }
 
     .kp-code__foot {

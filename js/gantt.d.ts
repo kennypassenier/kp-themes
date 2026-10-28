@@ -40,6 +40,10 @@ export type GanttRun = {
      */
     detail?: string;
     /**
+     * a running run's planned end (epoch ms or an ISO string): the time it still has is drawn after now [wish-1028]
+     */
+    plannedEnd?: number | string | null;
+    /**
      * a finished run's colour, `--chart-1` … `--chart-5`, in place of the success colour [kpadopt3]
      */
     series?: 1 | 2 | 3 | 4 | 5;

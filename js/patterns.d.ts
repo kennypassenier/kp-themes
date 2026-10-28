@@ -66,6 +66,16 @@ export declare function revealSecret(field: Element): void;
  */
 export declare function hideSecret(field: Element): void;
 /**
+ * What has been typed into a secret input field (empty for a field that is not one).
+ * @param {Element} field
+ */
+export declare function secretInputValue(field: Element): string;
+/**
+ * Put a value into a secret input field, or empty it with an empty string; the field hides it again.
+ * @param {Element} field @param {string} value
+ */
+export declare function setSecretInputValue(field: Element, value: string): void;
+/**
  * Attach every secret field under `root`.
  * @param {ParentNode} [root]
  * @param {{ load?: SecretLoad, copiedMs?: number, clearAfterMs?: number | false }} [options]

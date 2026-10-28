@@ -2084,7 +2084,10 @@ heading size, a normal-size Retry that fires `kp-<component>-retry` on the host.
   "Could not load" line, a spinner of your own, a row spanning the columns or a bare `.kp-empty` is never the state;
 - an empty result is the component's empty state, a failure its failed state, and the page listens to the retry event;
 - a form with a submit is `<form data-kp-form>` with `data-kp-submit` (busy while it sends, `form(el).done()`) and
-  `data-kp-form-summary` (what failed: `form(el).errors({ name: message })`).
+  `data-kp-form-summary` (what failed: `form(el).errors({ name: message })`). A valid submit is **not** sent by the browser: the
+  form calls `preventDefault()`, fires `kp-form-valid` and your handler sends the data (so a `fetch` save is never followed by a
+  reload of the page). A form whose `action` should do the work as well sets `data-kp-form-native-submit` (or `attachForms(root, { nativeSubmit: true })`)
+  [wish-1028].
 
 | Component | Kind: its loading look | Host | Loading | Empty | Failed (Retry event) |
 | --- | --- | --- | --- | --- | --- |

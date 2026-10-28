@@ -683,6 +683,11 @@
  * @property {string} secretHidden  What it hears when the secret is hidden again
  * @property {(reason: string) => string} secretFailed  The line under a secret that could not be read
  * @property {string} secretNoSource  The reason when a secret has no value, loader or listener to read it from
+ * @property {string} secretPaste  The secret input's button that pastes the clipboard into the box [wish-1028]
+ * @property {(count: number) => string} secretPasted  What a screen reader hears after Paste, "Pasted, 24 characters" [wish-1028]
+ * @property {string} secretPasteBlocked  The line under a secret input when the browser refused to let the page read the clipboard [wish-1028]
+ * @property {string} secretInputHint  The line under an empty secret input, "Typing is hidden" [wish-1028]
+ * @property {(count: number) => string} secretInputCount  The line under a secret input that holds something, "24 characters, hidden" [wish-1028]
  * @property {string} splitLabel
  * @property {(name: string) => string} reorderHandle
  * @property {(name: string, at: number, of: number) => string} reorderMoved
@@ -809,6 +814,7 @@
  * @property {string} ganttLoading  The sentence of a timeline being read
  * @property {string} ganttQueued  A queued run's state word
  * @property {string} ganttRunning  A running run's state word
+ * @property {(time: string) => string} ganttPlannedUntil  A running run's card line when it has a planned end, "planned until 14:30" [wish-1028]
  * @property {string} ganttOk  A finished run's state word
  * @property {string} ganttFailed  A failed run's state word
  * @property {(label: string, state: string) => string} ganttAnnounce  What the timeline's status region says when a run changes state, "Backup: failed"
@@ -2468,6 +2474,11 @@ export const DEFAULT_STRINGS = Object.freeze({
     secretHidden: 'Hidden again',
     secretFailed: (reason) => `Could not read it: ${reason}`,
     secretNoSource: 'there is nothing to read it from',
+    secretPaste: 'Paste',
+    secretPasted: (count) => `Pasted, ${count} ${count === 1 ? 'character' : 'characters'}`,
+    secretPasteBlocked: 'The browser blocked Paste here. Click in the box and press Ctrl+V.',
+    secretInputHint: 'Typing is hidden',
+    secretInputCount: (count) => `${count} ${count === 1 ? 'character' : 'characters'}, hidden`,
     splitLabel: 'Resize the panes',
     reorderHandle: (name) => `Move ${name}`,
     /** Announced after a keyboard or pointer move. @param {string} name @param {number} at @param {number} of */
@@ -2610,6 +2621,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     ganttLoading: 'Reading the history',
     ganttQueued: 'queued',
     ganttRunning: 'running',
+    ganttPlannedUntil: (time) => `planned until ${time}`,
     ganttOk: 'succeeded',
     ganttFailed: 'failed',
     ganttAnnounce: (label, state) => `${label}: ${state}`,

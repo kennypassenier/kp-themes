@@ -1,3 +1,12 @@
+export type UnsavedConfig = {
+    storage?: Storage | null;
+};
+/**
+ * Set where every bar keeps its changes, once: a browser `Storage`, or `null` to keep nothing. Without it a bar uses
+ * `sessionStorage` (`localStorage` with `data-kp-keep="local"`). A bar attached with its own `storage` option keeps that one [wish-1028].
+ * @param {UnsavedConfig} next
+ */
+export declare function configureUnsaved(next: UnsavedConfig): void;
 /** An unsaved-changes bar. */
 export declare const UNSAVED = "[data-kp-unsaved]";
 /** Fired on the bar when the count changes: `{ count, changes }`. */
@@ -81,6 +90,7 @@ export declare function setUnsavedSaving(element: Element, saving: boolean): voi
 /**
  * Wire every unsaved-changes bar under `root`.
  * @param {ParentNode} [root]
+ * @param {UnsavedConfig} [options] `storage`: where this call's bars keep their changes (a browser Storage, or null for nowhere)
  * @returns {() => void} detach
  */
-export declare function attachUnsaved(root?: ParentNode): () => void;
+export declare function attachUnsaved(root?: ParentNode, options?: UnsavedConfig): () => void;

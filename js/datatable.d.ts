@@ -35,6 +35,7 @@ export type View = {
     query: string;
     scope: number | null;
     filters: Record<number, FilterValue>;
+    filtersByField: Record<string, FilterValue>;
     sort: Sort;
     sorts: SortKey[];
     hidden: number[];
@@ -52,6 +53,7 @@ export type DataRequest = {
     sort: SortKey | null;
     sorts: SortKey[];
     filters: Record<number, FilterValue>;
+    filtersByField: Record<string, FilterValue>;
     page: number;
     pageSize: number;
     signal: AbortSignal;
@@ -82,12 +84,13 @@ export type EditDetail = {
 /** @typedef {'text' | 'number' | 'select' | 'date'} EditKind */
 /**
  * @typedef {{ shown: number, total: number, page: number, pageNumber: number, pages: number, pageSize: number, query: string, scope: number | null,
- *   filters: Record<number, FilterValue>, sort: Sort, sorts: SortKey[], hidden: number[], expanded: string[], density: Density, state: State,
+ *   filters: Record<number, FilterValue>, filtersByField: Record<string, FilterValue>, sort: Sort, sorts: SortKey[], hidden: number[], expanded: string[], density: Density, state: State,
  *   keys: string[], pageKeys: string[], folded: string[] }} View
  */
 /**
  * What a server-backed table asks its `load` for [Kenny, 2026-09-13].
  * @typedef {{ id: number, query: string, scope: number | null, sort: SortKey | null, sorts: SortKey[], filters: Record<number, FilterValue>,
+ *   filtersByField: Record<string, FilterValue>,
  *   page: number, pageSize: number, signal: AbortSignal }} DataRequest
  */
 /**
@@ -356,18 +359,22 @@ export type DataTableHandle = {
     pageSize: (size: number) => void;
     query: (query: string) => void;
     /**
-     * limit the search to one column, or null for all
+     * limit the search to one column, or null for all; a column by number or by its id (`data-kp-field`, else its text) [wish-1028]
      */
-    scope: (column: number | null) => void;
+    scope: (column: number | string | null) => void;
     /**
-     * set one column's filter; null clears it
+     * the number of the column with this id (`data-kp-field`, else its text), counting the control column; -1 when none [wish-1028, homelab 136]
      */
-    filter: (column: number, value: FilterValue | null) => void;
+    columnIndex: (id: string) => number;
+    /**
+     * set one column's filter; null clears it; the column by number or by its id [wish-1028]
+     */
+    filter: (column: number | string, value: FilterValue | null) => void;
     clearFilters: () => void;
     /**
      * open a column's filter editor, or close it with null; in the panel mode, open or close the panel
      */
-    editFilter: (column: number | null) => void;
+    editFilter: (column: number | string | null) => void;
     /**
      * the columns to hide; a locked column stays
      */

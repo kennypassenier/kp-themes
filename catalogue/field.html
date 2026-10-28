@@ -299,7 +299,8 @@ Closed by the day shift after the gauge was replaced.</textarea>
                     <code>data-kp-revalidate-on="blur"</code> and <code>data-kp-focus-summary="false"</code>: nothing is said while you type or leave
                     a field; press <b>Report</b> empty and the summary appears but focus stays on the button; then fix a field and its message clears
                     only when you leave it, not while you type. The defaults (blur, then input, then focus the summary) are the live form in
-                    <b>Error summary</b>.
+                    <b>Error summary</b>. A valid form is not sent by the browser: <code>js/forms.js</code> calls <code>preventDefault()</code> and fires
+                    <code>kp-form-valid</code> for your handler; <code>data-kp-form-native-submit</code> on the form lets the browser submit it as well.
                 </div>
                 <div class="cat-stage">
                     <form class="kp-form" data-kp-form data-kp-validate-on="input" novalidate aria-label="Checked while typing">

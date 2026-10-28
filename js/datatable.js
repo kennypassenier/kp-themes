@@ -84,6 +84,10 @@
 //                            column of an expandable table is 1, not 0 [b3b4-1019].
 //   data-kp-fixed-columns    the key column stays while the box scrolls sideways
 //   data-kp-fixed-end="n"    the last n columns stay at the end while the box scrolls sideways (an action column) [datatable-r5-1019, O22]
+//                            A column can be named by its id instead, so a page never counts the control column [wish-1028, homelab 136]:
+//                            the header's `data-kp-field`, else its text. `filter("status", …)`, `scope("status")`, `editFilter("status")`
+//                            take the id as well as the number, `columnIndex("status")` gives the number, and `view().filtersByField`
+//                            (and a server `load` request's) holds the filters under the ids. The numbers keep working.
 //   data-kp-filter-ui="none" the header filters stay (handle.filter, the view, events) but the table draws no Filters button,
 //                            panel, "+ Add filter" or pills: the page draws its own (chips) [datatable-r5-1019, O22]
 //   data-kp-cards            on a phone the rows become cards: a label track and a value track that every line of a card shares;
@@ -198,12 +202,13 @@ const CHECK_CLASS = 'kp-field__check';
 /** @typedef {'text' | 'number' | 'select' | 'date'} EditKind */
 /**
  * @typedef {{ shown: number, total: number, page: number, pageNumber: number, pages: number, pageSize: number, query: string, scope: number | null,
- *   filters: Record<number, FilterValue>, sort: Sort, sorts: SortKey[], hidden: number[], expanded: string[], density: Density, state: State,
+ *   filters: Record<number, FilterValue>, filtersByField: Record<string, FilterValue>, sort: Sort, sorts: SortKey[], hidden: number[], expanded: string[], density: Density, state: State,
  *   keys: string[], pageKeys: string[], folded: string[] }} View
  */
 /**
  * What a server-backed table asks its `load` for [Kenny, 2026-09-13].
  * @typedef {{ id: number, query: string, scope: number | null, sort: SortKey | null, sorts: SortKey[], filters: Record<number, FilterValue>,
+ *   filtersByField: Record<string, FilterValue>,
  *   page: number, pageSize: number, signal: AbortSignal }} DataRequest
  */
 /**
@@ -749,10 +754,11 @@ const defaultFilter = (row, query) => (row.textContent ?? '').toLowerCase().incl
  * @property {(page: number) => void} page  show a page, counted from 0 as `view().page` is (the pager prints it from 1: `view().pageNumber`); past the last page it stops at the last [b3b4-1019]
  * @property {(size: number) => void} pageSize
  * @property {(query: string) => void} query
- * @property {(column: number | null) => void} scope  limit the search to one column, or null for all
- * @property {(column: number, value: FilterValue | null) => void} filter  set one column's filter; null clears it
+ * @property {(column: number | string | null) => void} scope  limit the search to one column, or null for all; a column by number or by its id (`data-kp-field`, else its text) [wish-1028]
+ * @property {(id: string) => number} columnIndex  the number of the column with this id (`data-kp-field`, else its text), counting the control column; -1 when none [wish-1028, homelab 136]
+ * @property {(column: number | string, value: FilterValue | null) => void} filter  set one column's filter; null clears it; the column by number or by its id [wish-1028]
  * @property {() => void} clearFilters
- * @property {(column: number | null) => void} editFilter  open a column's filter editor, or close it with null; in the panel mode, open or close the panel
+ * @property {(column: number | string | null) => void} editFilter  open a column's filter editor, or close it with null; in the panel mode, open or close the panel
  * @property {(columns: readonly number[]) => void} hideColumns  the columns to hide; a locked column stays
  * @property {(keys: readonly string[]) => void} expand  the rows to open, by key; in a `data-kp-expand-single` table only the last key opens
  * @property {(keys: readonly string[]) => void} fold  the group rows to fold, by group key; every other group unfolds [J2]
@@ -2297,6 +2303,13 @@ export function attachDataTables(
             return detail;
         };
 
+        /** The filters under the column ids instead of the numbers [wish-1028]. @returns {Record<string, FilterValue>} */
+        const byField = () => Object.fromEntries([...filters].map(([at, value]) => [columnIds[at], value]));
+        /**
+         * A column asked for by number, or by its id (`data-kp-field`, else its text); -1 when the id names none [wish-1028].
+         * @param {number | string} column
+         */
+        const columnAt = (column) => (typeof column === 'string' ? columnIds.indexOf(column) : column);
         /** @returns {View} */
         const view = () => ({
             shown: serverMode ? total || 0 : shownRows.length,
@@ -2308,6 +2321,7 @@ export function attachDataTables(
             query,
             scope,
             filters: Object.fromEntries(filters),
+            filtersByField: byField(),
             sort: sorts[0] ?? null,
             sorts: sorts.map((key) => ({ ...key })),
             hidden: [...hiddenColumns].sort((a, b) => a - b),
@@ -3166,6 +3180,7 @@ export function attachDataTables(
                 sort: sorts[0] ? { ...sorts[0] } : null,
                 sorts: sorts.map((key) => ({ ...key })),
                 filters: Object.fromEntries(filters),
+                filtersByField: byField(),
                 page,
                 pageSize: size,
                 signal: controller.signal,
@@ -3236,8 +3251,9 @@ export function attachDataTables(
             panel.hidden = !panel.hidden;
             toggle.setAttribute('aria-expanded', String(!panel.hidden));
         };
-        /** @param {number} at @param {FilterValue | null} value */
-        const setFilter = (at, value) => {
+        /** @param {number | string} column @param {FilterValue | null} value */
+        const setFilter = (column, value) => {
+            const at = columnAt(column);
             const kind = filterKinds[at];
             if (!kind) return;
             if (value === null || !filterActive(kind, value)) filters.delete(at);
@@ -4001,14 +4017,18 @@ export function attachDataTables(
                 if (search !== null) search.value = next;
                 applyFilter();
             },
-            scope: (column) => {
-                scope = column;
-                if (scopeSelect !== null) scopeSelect.value = column === null ? '' : String(column);
+            scope: (given) => {
+                const column = given === null ? null : columnAt(given);
+                scope = column === null || column < 0 ? null : column;
+                if (scopeSelect !== null) scopeSelect.value = scope === null ? '' : String(scope);
                 applyFilter();
             },
+            columnIndex: (id) => columnAt(id),
             filter: setFilter,
             clearFilters,
-            editFilter: (column) => {
+            editFilter: (given) => {
+                const column = given === null ? null : columnAt(given);
+                if (column !== null && column < 0) return;
                 if (addMode) {
                     if (column === null) closeFilterEditor(false);
                     else openFilterEditor(column, filters.has(column) ? column : null);

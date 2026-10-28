@@ -872,6 +872,11 @@ var init_strings = __esm({
       secretHidden: "Hidden again",
       secretFailed: (reason) => `Could not read it: ${reason}`,
       secretNoSource: "there is nothing to read it from",
+      secretPaste: "Paste",
+      secretPasted: (count2) => `Pasted, ${count2} ${count2 === 1 ? "character" : "characters"}`,
+      secretPasteBlocked: "The browser blocked Paste here. Click in the box and press Ctrl+V.",
+      secretInputHint: "Typing is hidden",
+      secretInputCount: (count2) => `${count2} ${count2 === 1 ? "character" : "characters"}, hidden`,
       splitLabel: "Resize the panes",
       reorderHandle: (name) => `Move ${name}`,
       /** Announced after a keyboard or pointer move. @param {string} name @param {number} at @param {number} of */
@@ -939,7 +944,7 @@ var init_strings = __esm({
       chartOpen: "Open",
       chartMark: (label, time) => `${label} \xB7 ${time}; click to pin`,
       chartZoomed: (from, to) => `Zoomed: ${from}\u2013${to} \xB7 `,
-      chartZoomedSpan: (span3) => `Zoomed: ${span3} \xB7 `,
+      chartZoomedSpan: (span4) => `Zoomed: ${span4} \xB7 `,
       chartReset: "Reset",
       chartResetTitle: "Show the whole range again (double-click or Esc)",
       chartUp: "up",
@@ -1014,6 +1019,7 @@ var init_strings = __esm({
       ganttLoading: "Reading the history",
       ganttQueued: "queued",
       ganttRunning: "running",
+      ganttPlannedUntil: (time) => `planned until ${time}`,
       ganttOk: "succeeded",
       ganttFailed: "failed",
       ganttAnnounce: (label, state2) => `${label}: ${state2}`,
@@ -2268,12 +2274,12 @@ function lineOf(effect) {
   };
 }
 function turnLines(lines, total) {
-  const span3 = Math.max(0, ...lines.map((line) => line.end));
-  const scale = span3 > 0 ? total / span3 : 1;
+  const span4 = Math.max(0, ...lines.map((line) => line.end));
+  const scale = span4 > 0 ? total / span4 : 1;
   return lines.map((line) => ({
     duration: line.duration * scale,
     openDelay: line.delay * scale,
-    closeDelay: (span3 - line.end) * scale
+    closeDelay: (span4 - line.end) * scale
   }));
 }
 function turnEntrances(kept, total) {
@@ -6252,12 +6258,12 @@ function install(ctx) {
       const nodes = parts2.map((part7) => {
         if (part7 === "") return null;
         if (/^\s+$/.test(part7)) return doc.createTextNode(part7);
-        const span3 = doc.createElement("span");
-        span3.setAttribute("data-word", "");
-        span3.setAttribute("aria-hidden", "true");
-        span3.style.setProperty("--kp-i", String(index++));
-        span3.textContent = part7;
-        return span3;
+        const span4 = doc.createElement("span");
+        span4.setAttribute("data-word", "");
+        span4.setAttribute("aria-hidden", "true");
+        span4.style.setProperty("--kp-i", String(index++));
+        span4.textContent = part7;
+        return span4;
       });
       el16.replaceChildren(...nodes.filter((n) => n !== null));
       el16.classList.add(STATE.words);
@@ -6336,15 +6342,15 @@ function install(ctx) {
     state2.pending++;
     const chars = [...text];
     const spans = chars.map((ch) => {
-      const span3 = doc.createElement("span");
-      span3.setAttribute("data-glyph", "");
-      span3.setAttribute("aria-hidden", "true");
-      if (/\s/.test(ch)) span3.textContent = ch;
+      const span4 = doc.createElement("span");
+      span4.setAttribute("data-glyph", "");
+      span4.setAttribute("aria-hidden", "true");
+      if (/\s/.test(ch)) span4.textContent = ch;
       else {
-        span3.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        span3.classList.add(STATE.noise);
+        span4.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        span4.classList.add(STATE.noise);
       }
-      return span3;
+      return span4;
     });
     el16.replaceChildren(...spans);
     const perChar = 1e3 / Math.max(1, cfg.cps);
@@ -6368,17 +6374,17 @@ function install(ctx) {
       if (start === 0) start = now;
       const t = now - start;
       let all = true;
-      spans.forEach((span3, i) => {
+      spans.forEach((span4, i) => {
         const ch = chars[i] ?? "";
         if (/\s/.test(ch)) return;
         if (t > cfg.lead + i * perChar) {
-          if (span3.classList.contains(STATE.noise)) {
-            span3.textContent = ch;
-            span3.classList.remove(STATE.noise);
+          if (span4.classList.contains(STATE.noise)) {
+            span4.textContent = ch;
+            span4.classList.remove(STATE.noise);
           }
         } else {
           all = false;
-          if (Math.random() < cfg.swap) span3.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+          if (Math.random() < cfg.swap) span4.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
         }
       });
       if (all) finish2();
@@ -11795,13 +11801,18 @@ __export(auto_refresh_exports, {
   attachRefresh: () => attachRefresh,
   refreshDone: () => refreshDone,
   refreshOf: () => refreshOf,
-  setRefreshInterval: () => setRefreshInterval
+  setRefreshInterval: () => setRefreshInterval,
+  setRefreshTitle: () => setRefreshTitle
 });
 function refreshDone(element, ok) {
   handles2.get(element)?.done(ok);
 }
 function setRefreshInterval(element, seconds2) {
   handles2.get(element)?.setInterval(seconds2, "script");
+}
+function setRefreshTitle(element, words) {
+  if (words) element.setAttribute("data-kp-refresh-title", words);
+  else element.removeAttribute("data-kp-refresh-title");
 }
 function attachRefresh(root = document, { now = () => Date.now() } = {}) {
   const found = (
@@ -11930,6 +11941,32 @@ function wire(el16, clock4) {
   failure.append(note3, retry);
   const bar = make23("div", "kp-refresh__bar");
   bar.append(chooser, line, now);
+  const slotted = (
+    /** @type {HTMLElement | null} */
+    el16.querySelector(':scope > [data-kp-refresh-slot="title"]')
+  );
+  let titleCell = null;
+  const paintTitle2 = () => {
+    const words = (el16.getAttribute("data-kp-refresh-title") ?? "").trim();
+    if (!words && !slotted) {
+      titleCell?.remove();
+      titleCell = null;
+      return;
+    }
+    if (!titleCell) {
+      titleCell = make23("span", "kp-refresh__title kp-formgrid__label");
+      bar.prepend(titleCell);
+      if (labelCell) titleCell.after(labelCell);
+      if (slotted) titleCell.append(slotted);
+    }
+    if (words) {
+      if (slotted?.parentElement === titleCell) slotted.hidden = true;
+      titleCell.querySelector(":scope > .kp-refresh__title-words")?.remove();
+      const text = make23("span", "kp-refresh__title-words");
+      text.textContent = words;
+      titleCell.append(text);
+    } else if (slotted) slotted.hidden = false;
+  };
   let labelCell = null;
   const paintLabel = () => {
     const words = (el16.getAttribute("data-kp-refresh-label") ?? "").trim();
@@ -11940,11 +11977,12 @@ function wire(el16, clock4) {
     }
     if (!labelCell) {
       labelCell = make23("span", "kp-refresh__label kp-formgrid__label");
-      bar.prepend(labelCell);
+      bar.insertBefore(labelCell, titleCell ? titleCell.nextSibling : bar.firstChild);
     }
     labelCell.textContent = words;
   };
   paintLabel();
+  paintTitle2();
   el16.replaceChildren(bar, count2, custom, failure);
   let unwireChooser = null;
   const wireChooser = () => {
@@ -12190,8 +12228,9 @@ function wire(el16, clock4) {
   doc.addEventListener("visibilitychange", onVisible);
   const stopWatching = watchOptions(
     el16,
-    ["data-kp-look", "data-kp-refresh", "data-kp-refresh-choices", "data-kp-stale-after", "data-kp-announce", "data-kp-refresh-label"],
+    ["data-kp-look", "data-kp-refresh", "data-kp-refresh-choices", "data-kp-stale-after", "data-kp-announce", "data-kp-refresh-label", "data-kp-refresh-title"],
     (names) => {
+      if (names.includes("data-kp-refresh-title")) paintTitle2();
       if (names.includes("data-kp-refresh-label")) paintLabel();
       if (names.includes("data-kp-look") && look() !== drawnLook) {
         const hadFocus = chooser.contains(doc.activeElement);
@@ -15802,11 +15841,11 @@ function createIntentFilter(dialog, list, status) {
     if (run2.length > 0) runs2.push(run2);
     for (const nodes of runs2) {
       if (!nodes.some((n) => (n.data ?? "").trim() !== "")) continue;
-      const span3 = doc.createElement("span");
-      span3.className = "kp-palette__label";
-      span3.setAttribute("data-kp-generated", "");
-      nodes[0].before(span3);
-      span3.append(...nodes);
+      const span4 = doc.createElement("span");
+      span4.className = "kp-palette__label";
+      span4.setAttribute("data-kp-generated", "");
+      nodes[0].before(span4);
+      span4.append(...nodes);
     }
   };
   const markWords = (option, want, mode2) => {
@@ -18832,6 +18871,8 @@ function attachDataTables(root = document, {
       if (cell !== void 0) cell.colSpan = visibleColumns();
       return detail;
     };
+    const byField = () => Object.fromEntries([...filters].map(([at, value]) => [columnIds[at], value]));
+    const columnAt = (column) => typeof column === "string" ? columnIds.indexOf(column) : column;
     const view = () => ({
       shown: serverMode ? total || 0 : shownRows.length,
       total: serverMode ? total || 0 : all.length,
@@ -18842,6 +18883,7 @@ function attachDataTables(root = document, {
       query,
       scope,
       filters: Object.fromEntries(filters),
+      filtersByField: byField(),
       sort: sorts[0] ?? null,
       sorts: sorts.map((key) => ({ ...key })),
       hidden: [...hiddenColumns].sort((a, b) => a - b),
@@ -19723,6 +19765,7 @@ function attachDataTables(root = document, {
         sort: sorts[0] ? { ...sorts[0] } : null,
         sorts: sorts.map((key) => ({ ...key })),
         filters: Object.fromEntries(filters),
+        filtersByField: byField(),
         page,
         pageSize: size2,
         signal: controller.signal
@@ -19784,7 +19827,8 @@ function attachDataTables(root = document, {
       panel.hidden = !panel.hidden;
       toggle2.setAttribute("aria-expanded", String(!panel.hidden));
     };
-    const setFilter = (at, value) => {
+    const setFilter = (column, value) => {
+      const at = columnAt(column);
       const kind = filterKinds[at];
       if (!kind) return;
       if (value === null || !filterActive(kind, value)) filters.delete(at);
@@ -20512,14 +20556,18 @@ function attachDataTables(root = document, {
         if (search !== null) search.value = next2;
         applyFilter();
       },
-      scope: (column) => {
-        scope = column;
-        if (scopeSelect !== null) scopeSelect.value = column === null ? "" : String(column);
+      scope: (given2) => {
+        const column = given2 === null ? null : columnAt(given2);
+        scope = column === null || column < 0 ? null : column;
+        if (scopeSelect !== null) scopeSelect.value = scope === null ? "" : String(scope);
         applyFilter();
       },
+      columnIndex: (id2) => columnAt(id2),
       filter: setFilter,
       clearFilters,
-      editFilter: (column) => {
+      editFilter: (given2) => {
+        const column = given2 === null ? null : columnAt(given2);
+        if (column !== null && column < 0) return;
         if (addMode) {
           if (column === null) closeFilterEditor(false);
           else openFilterEditor(column, filters.has(column) ? column : null);
@@ -20932,7 +20980,8 @@ function attachForms(root = document, {
   wrapper = ".kp-field",
   invalidClass = "kp-field--invalid",
   summaryHeading = "p",
-  summaryHeadingClass = "kp-form__summary-title"
+  summaryHeadingClass = "kp-form__summary-title",
+  nativeSubmit = false
 } = {}) {
   const cleanups = [];
   const created = [];
@@ -20956,6 +21005,7 @@ function attachForms(root = document, {
       /** @type {HTMLElement | null} */
       form2.querySelector(SUMMARY)
     );
+    const native = () => form2.dataset.kpFormNativeSubmit === void 0 ? nativeSubmit : form2.dataset.kpFormNativeSubmit !== "false";
     const fields = () => (
       /** @type {HTMLElement[]} */
       [...form2.elements].filter((el16) => el16 instanceof HTMLElement && "checkValidity" in el16 && el16.getAttribute("type") !== "submit")
@@ -21040,6 +21090,7 @@ function attachForms(root = document, {
     const done = () => form2.dispatchEvent(new CustomEvent(DONE_EVENT, { bubbles: true }));
     const onSubmit = (event) => {
       if (validateAll()) {
+        if (!native()) event.preventDefault();
         form2.dispatchEvent(new CustomEvent(VALID_EVENT, { bubbles: true, detail: { data: new FormData(form2), done } }));
         return;
       }
@@ -21260,7 +21311,9 @@ __export(patterns_exports, {
   attachPatterns: () => attachPatterns,
   attachSecrets: () => attachSecrets,
   hideSecret: () => hideSecret,
-  revealSecret: () => revealSecret
+  revealSecret: () => revealSecret,
+  secretInputValue: () => secretInputValue,
+  setSecretInputValue: () => setSecretInputValue
 });
 function clearDelay(attribute, fallback2) {
   const text = (attribute ?? "").trim().toLowerCase();
@@ -21385,11 +21438,329 @@ function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_M
     for (const c of cleanups) c();
   };
 }
+function clearClipboardLater(field, secret, wait, say19) {
+  const s2 = getStrings();
+  let dropFocus = null;
+  const done = (cleared, reason) => {
+    if (cleared) say19(s2.secretClipboardCleared);
+    field.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
+  };
+  const clear = async () => {
+    let reason = "timer";
+    try {
+      const now = await navigator.clipboard.readText();
+      if (now !== secret) return done(false, "changed");
+    } catch {
+      reason = "unavailable";
+    }
+    try {
+      await navigator.clipboard.writeText("");
+      done(true, reason);
+    } catch {
+      const events = ["pointerdown", "keydown"];
+      const again2 = () => {
+        for (const name of events) document.removeEventListener(name, again2, true);
+        window.removeEventListener("focus", again2);
+        dropFocus = null;
+        void clear();
+      };
+      for (const name of events) document.addEventListener(name, again2, true);
+      window.addEventListener("focus", again2);
+      dropFocus = () => {
+        for (const name of events) document.removeEventListener(name, again2, true);
+        window.removeEventListener("focus", again2);
+      };
+    }
+  };
+  const timer2 = window.setTimeout(() => void clear(), wait);
+  return () => {
+    window.clearTimeout(timer2);
+    dropFocus?.();
+  };
+}
 function revealSecret(field) {
   secrets.get(field)?.reveal("call");
 }
 function hideSecret(field) {
   secrets.get(field)?.hide("call");
+}
+function secretInputValue(field) {
+  return secretInputs.get(field)?.value ?? "";
+}
+function setSecretInputValue(field, value) {
+  const input = secretInputs.get(field);
+  if (!input) return;
+  input.value = value;
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+}
+function wireSecretInput(field, { copiedMs, clearAfterMs }) {
+  const doc = field.ownerDocument;
+  const s2 = getStrings();
+  const make23 = (tag, className) => {
+    const el16 = doc.createElement(tag);
+    el16.className = className;
+    return el16;
+  };
+  field.classList.add("kp-secret");
+  if (!field.hasAttribute("role")) field.setAttribute("role", "group");
+  const name = field.getAttribute("aria-label") ?? field.dataset.kpSecretLabel ?? s2.secretLabel;
+  if (!field.hasAttribute("aria-label") && !field.hasAttribute("aria-labelledby")) field.setAttribute("aria-label", name);
+  const built = (
+    /** @type {Element[]} */
+    []
+  );
+  let entry = (
+    /** @type {HTMLElement | null} */
+    field.querySelector(":scope > .kp-secret__entry")
+  );
+  if (!entry) {
+    entry = make23("div", "kp-secret__entry");
+    field.prepend(entry);
+    built.push(entry);
+  }
+  let input = (
+    /** @type {HTMLInputElement | null} */
+    entry.querySelector("input")
+  );
+  const authored = input !== null;
+  if (!input) {
+    input = /** @type {HTMLInputElement} */
+    make23("input", "kp-field__input kp-secret__input");
+    entry.append(input);
+  }
+  input.classList.add("kp-secret__input");
+  input.type = "password";
+  input.spellcheck = false;
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("autocorrect", "off");
+  if (!input.hasAttribute("autocomplete")) input.setAttribute("autocomplete", field.dataset.kpSecretAutocomplete ?? "off");
+  if (!input.name && field.dataset.kpSecretName) input.name = field.dataset.kpSecretName;
+  if (!input.placeholder && field.dataset.kpSecretPlaceholder) input.placeholder = field.dataset.kpSecretPlaceholder;
+  if (!input.hasAttribute("aria-label") && !input.id) input.setAttribute("aria-label", name);
+  secretInputs.set(field, input);
+  let actions = (
+    /** @type {HTMLElement | null} */
+    field.querySelector(":scope > .kp-secret__actions")
+  );
+  if (!actions) {
+    actions = make23("div", "kp-secret__actions");
+    entry.after(actions);
+    built.push(actions);
+  }
+  const button = (className, marker) => {
+    const el16 = (
+      /** @type {HTMLButtonElement} */
+      make23("button", className)
+    );
+    el16.type = "button";
+    el16.setAttribute(marker, "");
+    actions.append(el16);
+    return el16;
+  };
+  const reveal = button("kp-button kp-secret__reveal", "data-kp-secret-reveal");
+  const paste = field.dataset.kpSecretPaste === "false" ? null : button("kp-button kp-secret__paste", "data-kp-secret-paste-button");
+  const copy3 = field.dataset.kpSecretCopy === "false" ? null : button("kp-button kp-copyable__button kp-secret__copy", "data-kp-secret-copy");
+  for (const part7 of [reveal, paste, copy3]) if (part7) built.push(part7);
+  let line = (
+    /** @type {HTMLElement | null} */
+    field.querySelector(":scope > .kp-secret__line")
+  );
+  if (!line) {
+    line = make23("p", "kp-secret__line");
+    field.append(line);
+    built.push(line);
+  }
+  const words = make23("span", "kp-secret__words");
+  const drain = make23("span", "kp-secret__drain");
+  drain.setAttribute("aria-hidden", "true");
+  line.replaceChildren(words, drain);
+  const spoken = make23("span", "kp-sr-only kp-secret__live");
+  spoken.setAttribute("role", "status");
+  spoken.setAttribute("aria-live", "polite");
+  field.append(spoken);
+  built.push(spoken);
+  const lineId = line.id || `kp-secret-line-${Math.random().toString(36).slice(2, 9)}`;
+  line.id = lineId;
+  input.setAttribute("aria-describedby", [input.getAttribute("aria-describedby"), lineId].filter(Boolean).join(" "));
+  if (!input.id) input.id = `kp-secret-input-${Math.random().toString(36).slice(2, 9)}`;
+  reveal.setAttribute("aria-controls", input.id);
+  let shown4 = false;
+  let seconds2 = SECRET_TTL;
+  let left = 0;
+  let timer2 = 0;
+  let copiedTimer = 0;
+  let cancelClear = () => {
+  };
+  let pasteProblem = "";
+  const readOptions2 = () => {
+    const ms = clearDelay(field.dataset.kpSecretTtl, SECRET_TTL * 1e3);
+    seconds2 = Math.round(ms / 1e3);
+  };
+  readOptions2();
+  const hidesOnBlur = () => !["false", "off"].includes(field.dataset.kpSecretHideOnBlur ?? "");
+  const disabledWhy = () => field.dataset.kpSecretDisabled;
+  const invalidWhy = () => field.dataset.kpSecretInvalid;
+  const say19 = (text) => {
+    spoken.textContent = "";
+    window.setTimeout(() => spoken.textContent = text, 30);
+  };
+  const stop = () => {
+    window.clearInterval(timer2);
+    timer2 = 0;
+  };
+  const paint14 = () => {
+    const why = disabledWhy();
+    const bad = invalidWhy();
+    const empty = input.value === "";
+    field.dataset.kpSecretState = why !== void 0 ? "disabled" : bad !== void 0 || pasteProblem ? "error" : shown4 ? "shown" : "hidden";
+    input.type = shown4 ? "text" : "password";
+    input.disabled = why !== void 0;
+    if (bad !== void 0) input.setAttribute("aria-invalid", "true");
+    else input.removeAttribute("aria-invalid");
+    reveal.textContent = shown4 ? s2.secretHide : s2.secretReveal;
+    reveal.setAttribute("aria-pressed", String(shown4));
+    reveal.disabled = why !== void 0 || empty;
+    if (paste) {
+      paste.textContent = s2.secretPaste;
+      paste.disabled = why !== void 0;
+    }
+    if (copy3 && !copy3.hasAttribute("data-kp-copied")) copy3.textContent = s2.secretCopy;
+    if (copy3) copy3.disabled = why !== void 0 || empty;
+    const text = why !== void 0 ? why : bad !== void 0 ? bad : pasteProblem || (shown4 ? seconds2 === 0 ? s2.secretStaysShown : s2.secretHidesIn(left) : empty ? s2.secretInputHint : s2.secretInputCount(input.value.length));
+    words.textContent = text;
+  };
+  const hide2 = (reason = "press") => {
+    if (!shown4) return;
+    shown4 = false;
+    stop();
+    paint14();
+    say19(s2.secretHidden);
+    field.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
+  };
+  const tick6 = () => {
+    left -= 1;
+    if (left === 10 && seconds2 > 10) say19(s2.secretHidesIn(10));
+    if (left <= 0) hide2("timer");
+    else paint14();
+  };
+  const show = (reason = "press") => {
+    if (shown4 || disabledWhy() !== void 0 || input.value === "") return;
+    shown4 = true;
+    left = seconds2;
+    drain.style.animation = "none";
+    void drain.offsetWidth;
+    drain.style.removeProperty("animation");
+    paint14();
+    say19(s2.secretShown(seconds2));
+    field.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
+    if (seconds2 > 0) timer2 = window.setInterval(tick6, 1e3);
+  };
+  const onReveal = () => {
+    if (shown4) hide2("press");
+    else show("press");
+    input.focus();
+  };
+  const onInput = () => {
+    pasteProblem = "";
+    if (input.value === "" && shown4) hide2("call");
+    else paint14();
+  };
+  const onPaste = async () => {
+    if (!paste) return;
+    let text = "";
+    try {
+      text = await navigator.clipboard.readText();
+    } catch {
+      pasteProblem = s2.secretPasteBlocked;
+      paint14();
+      say19(pasteProblem);
+      input.focus();
+      return;
+    }
+    pasteProblem = "";
+    const from = input.selectionStart ?? input.value.length;
+    const to = input.selectionEnd ?? from;
+    input.setRangeText(text, from, to, "end");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    say19(s2.secretPasted(text.length));
+    input.focus();
+  };
+  const onCopy = async () => {
+    if (!copy3 || input.value === "") return;
+    const text = input.value;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      copy3.dataset.kpCopyFailed = "";
+      copy3.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text: "", error } }));
+      say19(s2.copyBlockedAnnouncement);
+      return;
+    }
+    delete copy3.dataset.kpCopyFailed;
+    copy3.textContent = s2.copied;
+    copy3.dataset.kpCopied = "";
+    copy3.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text: "" } }));
+    say19(s2.copiedAnnouncement(name));
+    window.clearTimeout(copiedTimer);
+    copiedTimer = window.setTimeout(() => {
+      delete copy3.dataset.kpCopied;
+      paint14();
+    }, copiedMs);
+    cancelClear();
+    const wait = clearDelay(field.dataset.kpSecretClear, clearAfterMs);
+    if (wait > 0) cancelClear = clearClipboardLater(field, text, wait, say19);
+  };
+  const onFocusOut = (event) => {
+    if (!shown4 || !hidesOnBlur()) return;
+    const next2 = event.relatedTarget;
+    if (next2 instanceof Node && field.contains(next2)) return;
+    hide2("away");
+  };
+  const onAway = () => {
+    if (doc.visibilityState === "hidden" && hidesOnBlur()) hide2("away");
+  };
+  input.addEventListener("input", onInput);
+  reveal.addEventListener("click", onReveal);
+  paste?.addEventListener("click", onPaste);
+  copy3?.addEventListener("click", onCopy);
+  field.addEventListener("focusout", onFocusOut);
+  doc.addEventListener("visibilitychange", onAway);
+  paint14();
+  const watch2 = new MutationObserver(() => {
+    if (disabledWhy() !== void 0) hide2("call");
+    paint14();
+  });
+  watch2.observe(field, { attributes: true, attributeFilter: ["data-kp-secret-disabled", "data-kp-secret-invalid"] });
+  const stopOptions = watchOptions(field, ["data-kp-secret-ttl"], () => {
+    readOptions2();
+    if (shown4) {
+      stop();
+      left = seconds2;
+      if (seconds2 > 0) timer2 = window.setInterval(tick6, 1e3);
+    }
+    paint14();
+  });
+  secrets.set(field, { reveal: (reason) => show(reason), hide: (reason) => hide2(reason) });
+  return () => {
+    watch2.disconnect();
+    stopOptions();
+    stop();
+    window.clearTimeout(copiedTimer);
+    input.removeEventListener("input", onInput);
+    reveal.removeEventListener("click", onReveal);
+    paste?.removeEventListener("click", onPaste);
+    copy3?.removeEventListener("click", onCopy);
+    field.removeEventListener("focusout", onFocusOut);
+    doc.removeEventListener("visibilitychange", onAway);
+    shown4 = false;
+    input.value = "";
+    input.type = "password";
+    for (const part7 of built) part7.remove();
+    if (authored) input.classList.remove("kp-secret__input");
+    delete field.dataset.kpSecretState;
+    secrets.delete(field);
+    secretInputs.delete(field);
+  };
 }
 function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfterMs = CLEAR_AFTER_MS } = {}) {
   const cleanups = [];
@@ -21402,6 +21773,10 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
   );
   for (const field of fields) {
     if (secrets.has(field)) continue;
+    if (field.dataset.kpSecretMode === "input") {
+      cleanups.push(wireSecretInput(field, { copiedMs, clearAfterMs }));
+      continue;
+    }
     const doc = field.ownerDocument;
     const s2 = getStrings();
     const make23 = (tag, className) => {
@@ -21503,8 +21878,8 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     let paused = false;
     let ticket = 0;
     let copiedTimer = 0;
-    let clearTimer = 0;
-    let dropClearFocus = null;
+    let cancelClear = () => {
+    };
     const say19 = (text) => {
       spoken.textContent = "";
       window.setTimeout(() => spoken.textContent = text, 30);
@@ -21680,42 +22055,10 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       scheduleClear(text);
     };
     const scheduleClear = (secret) => {
-      window.clearTimeout(clearTimer);
-      dropClearFocus?.();
+      cancelClear();
       const wait = clearDelay(field.dataset.kpSecretClear, clearAfterMs);
       if (!(wait > 0)) return;
-      const done = (cleared, reason) => {
-        if (cleared) say19(s2.secretClipboardCleared);
-        field.dispatchEvent(new CustomEvent(SECRET_CLIPBOARD_EVENT, { bubbles: true, detail: { cleared, reason } }));
-      };
-      const clear = async () => {
-        let reason = "timer";
-        try {
-          const now = await navigator.clipboard.readText();
-          if (now !== secret) return done(false, "changed");
-        } catch {
-          reason = "unavailable";
-        }
-        try {
-          await navigator.clipboard.writeText("");
-          done(true, reason);
-        } catch {
-          const events = ["pointerdown", "keydown"];
-          const again2 = () => {
-            for (const name of events) document.removeEventListener(name, again2, true);
-            window.removeEventListener("focus", again2);
-            dropClearFocus = null;
-            void clear();
-          };
-          for (const name of events) document.addEventListener(name, again2, true);
-          window.addEventListener("focus", again2);
-          dropClearFocus = () => {
-            for (const name of events) document.removeEventListener(name, again2, true);
-            window.removeEventListener("focus", again2);
-          };
-        }
-      };
-      clearTimer = window.setTimeout(() => void clear(), wait);
+      cancelClear = clearClipboardLater(field, secret, wait, say19);
     };
     const onFocusIn = (event) => {
       if (event.target === value) pause(true);
@@ -21805,7 +22148,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     for (const c of cleanups.splice(0)) c();
   };
 }
-var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, CLEAR_AFTER_MS, CLEAR_UNITS, COPY_EVENT, COPY_FAILED_EVENT, secrets;
+var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, CLEAR_AFTER_MS, CLEAR_UNITS, COPY_EVENT, COPY_FAILED_EVENT, secrets, secretInputs;
 var init_patterns = __esm({
   "js/patterns.js"() {
     "use strict";
@@ -21830,6 +22173,7 @@ var init_patterns = __esm({
     COPY_EVENT = "kp-copy";
     COPY_FAILED_EVENT = "kp-copy-failed";
     secrets = /* @__PURE__ */ new WeakMap();
+    secretInputs = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -23220,9 +23564,9 @@ function buildProgressbar(el16) {
   track.className = "kp-progressbar__track";
   track.setAttribute("aria-hidden", "true");
   for (const part7 of ["fill", "head"]) {
-    const span3 = document.createElement("span");
-    span3.className = `kp-progressbar__${part7}`;
-    track.append(span3);
+    const span4 = document.createElement("span");
+    span4.className = `kp-progressbar__${part7}`;
+    track.append(span4);
   }
   el16.append(track);
   return el16;
@@ -24858,13 +25202,13 @@ function trendAxis(points, { now, step = 6e5, timeZone = CHART_TIME_ZONE, time, 
   const right = now - last <= 2 * step ? say19.now : dayKeyOf(wallTime(last, timeZone)) === today ? print(last, "clock", {}) : `${print(last, "clock", {})} ${dayWord(last)}`;
   return [left, right];
 }
-function tickStride(span3, most) {
+function tickStride(span4, most) {
   const fit2 = Math.max(1, most);
-  const least = span3 <= 2 * HOUR ? 15 * MINUTE : span3 <= 4 * HOUR ? 30 * MINUTE : span3 <= 8 * HOUR ? HOUR : span3 <= 16 * HOUR ? 3 * HOUR : span3 <= 28.8 * HOUR ? 6 * HOUR : DAY;
-  for (const stride of SUB_DAY_STRIDES) if (stride >= least && span3 / stride <= fit2) return stride;
-  for (const days2 of DAY_STRIDES) if (days2 * DAY >= least && span3 / (days2 * DAY) <= fit2) return days2 * DAY;
+  const least = span4 <= 2 * HOUR ? 15 * MINUTE : span4 <= 4 * HOUR ? 30 * MINUTE : span4 <= 8 * HOUR ? HOUR : span4 <= 16 * HOUR ? 3 * HOUR : span4 <= 28.8 * HOUR ? 6 * HOUR : DAY;
+  for (const stride of SUB_DAY_STRIDES) if (stride >= least && span4 / stride <= fit2) return stride;
+  for (const days2 of DAY_STRIDES) if (days2 * DAY >= least && span4 / (days2 * DAY) <= fit2) return days2 * DAY;
   let days = DAY_STRIDES[DAY_STRIDES.length - 1] * 2;
-  while (span3 / (days * DAY) > fit2) days *= 2;
+  while (span4 / (days * DAY) > fit2) days *= 2;
   return days * DAY;
 }
 function timeTicks(from, to, most, timeZone = CHART_TIME_ZONE) {
@@ -26466,13 +26810,13 @@ var init_chart = __esm({
             event.currentTarget
           );
           const range = button.dataset.kpChartRange ?? "";
-          const span3 = parseSpan(range);
-          if (span3 == null) return;
+          const span4 = parseSpan(range);
+          if (span4 == null) return;
           el16.dataset.kpChartSpan = range;
-          this.span = span3;
+          this.span = span4;
           paint14();
           this.zoom = null;
-          el16.dispatchEvent(new CustomEvent(CHART_RANGE_EVENT, { bubbles: true, detail: { range, span: span3 } }));
+          el16.dispatchEvent(new CustomEvent(CHART_RANGE_EVENT, { bubbles: true, detail: { range, span: span4 } }));
           this.setZoom(null);
         };
         for (const b of buttons) {
@@ -26994,13 +27338,13 @@ function drawTabCount(tab) {
   part7.removeAttribute("title");
   if (state2 === "ready" && count2 !== null) part7.style.setProperty("--kp-tab-count-digits", String(Math.max(2, String(count2).length)));
   else if (!part7.style.getPropertyValue("--kp-tab-count-digits")) part7.style.setProperty("--kp-tab-count-digits", "2");
-  const span3 = (text, className) => {
+  const span4 = (text, className) => {
     const node = doc.createElement("span");
     if (className) node.className = className;
     node.textContent = text;
     return node;
   };
-  const lead = span3(", ", "kp-sr-only");
+  const lead = span4(", ", "kp-sr-only");
   if (state2 === "loading") {
     const bone = doc.createElement("span");
     bone.className = "kp-skeleton kp-tab__bone";
@@ -27008,13 +27352,13 @@ function drawTabCount(tab) {
     bone.setAttribute("aria-label", s2.tabCountCounting);
     part7.replaceChildren(lead, bone);
   } else if (state2 === "error") {
-    const dash = span3("\u2013");
+    const dash = span4("\u2013");
     dash.setAttribute("aria-hidden", "true");
-    part7.replaceChildren(lead, dash, span3(s2.tabCountFailed, "kp-sr-only"));
+    part7.replaceChildren(lead, dash, span4(s2.tabCountFailed, "kp-sr-only"));
     part7.title = s2.tabCountFailed;
   } else {
-    const nodes = [lead, span3(String(count2))];
-    if (word) nodes.push(showUnit ? span3(` ${word}`, "kp-tab__unit") : span3(` ${word}`, "kp-sr-only"));
+    const nodes = [lead, span4(String(count2))];
+    if (word) nodes.push(showUnit ? span4(` ${word}`, "kp-tab__unit") : span4(` ${word}`, "kp-sr-only"));
     part7.replaceChildren(...nodes);
   }
   tab.dispatchEvent(new CustomEvent(TAB_COUNT_EVENT, { bubbles: true, detail: { tab, count: state2 === "ready" ? count2 : null, state: state2, tone } }));
@@ -30731,6 +31075,101 @@ function jsonLine(doc, line) {
   if (last < line.length) out.push(doc.createTextNode(line.slice(last)));
   return out;
 }
+function tomlLine(doc, line, state2) {
+  const out = [];
+  let rest = line;
+  if (state2.open) {
+    const end = rest.indexOf(state2.open);
+    if (end === -1) return [span3(doc, "kp-code__string", rest)];
+    out.push(span3(doc, "kp-code__string", rest.slice(0, end + 3)));
+    rest = rest.slice(end + 3);
+    state2.open = "";
+  } else {
+    const header = /^(\s*)(\[\[?[^\]]*\]\]?)(.*)$/.exec(rest);
+    if (header) {
+      out.push(doc.createTextNode(header[1]), span3(doc, "kp-code__section", header[2]));
+      rest = header[3];
+    }
+  }
+  const pattern = /(#.*)|("""|''')|("(?:[^"\\]|\\.)*"|'[^']*')|([A-Za-z0-9_-]+(?=\s*(?:\.\s*[A-Za-z0-9_"'-]+\s*)*=))|(\b(?:true|false|inf|nan)\b|[+-]?\d[\w:.+-]*)|([{}[\],=])/g;
+  let last = 0;
+  for (const match of rest.matchAll(pattern)) {
+    const at = match.index ?? 0;
+    if (at < last) continue;
+    if (at > last) out.push(doc.createTextNode(rest.slice(last, at)));
+    let length = match[0].length;
+    if (match[1] !== void 0) out.push(span3(doc, "kp-code__comment", match[1]));
+    else if (match[2] !== void 0) {
+      const end = rest.indexOf(match[2], at + 3);
+      if (end === -1) {
+        state2.open = match[2];
+        length = rest.length - at;
+        out.push(span3(doc, "kp-code__string", rest.slice(at)));
+      } else {
+        length = end + 3 - at;
+        out.push(span3(doc, "kp-code__string", rest.slice(at, end + 3)));
+      }
+    } else if (match[3] !== void 0) {
+      const asKey = /^\s*=/.test(rest.slice(at + length)) && !rest.slice(0, at).includes("=");
+      out.push(span3(doc, asKey ? "kp-code__key" : "kp-code__string", match[3]));
+    } else if (match[4] !== void 0) out.push(span3(doc, "kp-code__key", match[4]));
+    else if (match[5] !== void 0) out.push(span3(doc, "kp-code__value", match[5]));
+    else out.push(span3(doc, "kp-code__punct", match[6]));
+    last = at + length;
+  }
+  if (last < rest.length) out.push(doc.createTextNode(rest.slice(last)));
+  return out;
+}
+function shellLine(doc, line) {
+  const out = [];
+  const pattern = /(^\s*\$(?=\s))|(^|\s)(#.*)|("(?:[^"\\]|\\.)*"|'[^']*')|(\$\{[^}]*\}|\$\(|\$[A-Za-z_][A-Za-z0-9_]*|\$[0-9?@#*!$])|(&&|\|\|?|;|>>?|<<?|\d?>&\d|\(|\)|`)|(\s--?[A-Za-z0-9][\w-]*)|([A-Za-z_][A-Za-z0-9_]*)(?==)|([^\s"'$|&;<>()`#=]+)/g;
+  let expectCommand = true;
+  let assigned = false;
+  let commandAfter = true;
+  let last = 0;
+  for (const match of line.matchAll(pattern)) {
+    const at = match.index ?? 0;
+    if (at < last) continue;
+    if (at > last) out.push(doc.createTextNode(line.slice(last, at)));
+    const before = expectCommand;
+    if (match[1] !== void 0) out.push(span3(doc, "kp-code__punct", match[1]));
+    else if (match[3] !== void 0) {
+      if (match[2]) out.push(doc.createTextNode(match[2]));
+      out.push(span3(doc, "kp-code__comment", match[3]));
+    } else if (match[4] !== void 0) {
+      out.push(span3(doc, "kp-code__string", match[4]));
+      expectCommand = false;
+    } else if (match[5] !== void 0) {
+      out.push(span3(doc, "kp-code__var", match[5]));
+      expectCommand = match[5] === "$(";
+    } else if (match[6] !== void 0) {
+      out.push(span3(doc, "kp-code__punct", match[6]));
+      expectCommand = ["&&", "||", "|", ";", "(", "`"].includes(match[6]);
+    } else if (match[7] !== void 0) {
+      out.push(doc.createTextNode(match[7][0]), span3(doc, "kp-code__value", match[7].slice(1)));
+      expectCommand = false;
+    } else if (match[8] !== void 0) {
+      out.push(span3(doc, "kp-code__var", match[8]));
+      if (before) {
+        assigned = true;
+        commandAfter = true;
+      }
+      expectCommand = false;
+    } else {
+      const word = match[9];
+      const keyword = expectCommand && SHELL_KEYWORDS.has(word);
+      out.push(keyword ? span3(doc, "kp-code__section", word) : expectCommand && !assigned ? span3(doc, "kp-code__key", word) : doc.createTextNode(word));
+      expectCommand = keyword && SHELL_OPENS.has(word);
+    }
+    if (assigned && match[8] === void 0) {
+      assigned = false;
+      expectCommand = commandAfter;
+    }
+    last = at + match[0].length;
+  }
+  if (last < line.length) out.push(doc.createTextNode(line.slice(last)));
+  return out;
+}
 function withLanguage(spec) {
   const asked = (spec.language ?? "").trim().toLowerCase();
   if (asked !== "auto" && !(asked === "" && spec.cell)) return spec;
@@ -31020,6 +31459,8 @@ function drawBody(el16, memory) {
   memory.shown = shown4;
   const lines = shown4.split("\n");
   memory.lines = lines.length;
+  const colour = highlightKind(spec);
+  const tomlState = { open: "" };
   const body = make6(doc, "kp-code__body", "pre");
   body.id ||= `kp-code-${serial3 += 1}`;
   const code = make6(doc, "", "code");
@@ -31031,6 +31472,8 @@ function drawBody(el16, memory) {
     const words = make6(doc, "kp-code__text");
     if (line === "") words.textContent = " ";
     else if (json) words.append(...jsonLine(doc, line));
+    else if (colour === "toml") words.append(...tomlLine(doc, line, tomlState));
+    else if (colour === "shell") words.append(...shellLine(doc, line));
     else words.textContent = line;
     row.append(words);
     code.append(row);
@@ -31194,13 +31637,14 @@ function attachCodes(root = document) {
       open: open4 === "dialog" ? "dialog" : void 0,
       downloadUrl: el16.getAttribute("data-kp-download") ?? void 0,
       copy: el16.getAttribute("data-kp-copy") === "false" ? false : void 0,
+      highlight: ["off", "false"].includes(read("highlight") ?? "") ? false : void 0,
       truncated: cut.length === 2 && cut.every((n) => Number.isFinite(n) && n > 0) ? { shown: formatBytes(cut[0]), total: formatBytes(cut[1]) } : void 0
     });
   }
   return () => {
   };
 }
-var CODE, CODE_COPIED_MS, MEMORY5, SEGMENTED_ON, serial3, make6, isJson;
+var CODE, CODE_COPIED_MS, MEMORY5, SEGMENTED_ON, serial3, make6, isJson, isToml, isShell, highlightKind, span3, SHELL_KEYWORDS, SHELL_OPENS;
 var init_code = __esm({
   "js/code.js"() {
     "use strict";
@@ -31221,6 +31665,16 @@ var init_code = __esm({
       return node;
     };
     isJson = (language) => (language ?? "").trim().toLowerCase() === "json";
+    isToml = (language) => (language ?? "").trim().toLowerCase() === "toml";
+    isShell = (language) => ["bash", "sh", "shell", "zsh"].includes((language ?? "").trim().toLowerCase());
+    highlightKind = (spec) => spec.highlight === false ? null : isToml(spec.language) ? "toml" : isShell(spec.language) ? "shell" : null;
+    span3 = (doc, className, text) => {
+      const node = make6(doc, className);
+      node.textContent = text;
+      return node;
+    };
+    SHELL_KEYWORDS = /* @__PURE__ */ new Set(["if", "then", "else", "elif", "fi", "for", "while", "until", "do", "done", "case", "esac", "in", "function", "select"]);
+    SHELL_OPENS = /* @__PURE__ */ new Set(["if", "then", "else", "elif", "do", "while", "until"]);
   }
 });
 
@@ -32265,6 +32719,7 @@ function attachOne4(el16, options) {
   const sinceLeft = () => options.sinceLeft ?? !["off", "false"].includes(el16.getAttribute("data-kp-since-left") ?? "");
   const keyName2 = options.key ?? el16.getAttribute("data-kp-follow-key") ?? (head ? "Home" : "End");
   const space = options.space ?? el16.hasAttribute("data-kp-follow-space");
+  const inTbody = (options.rows ?? el16.getAttribute("data-kp-follow-rows")) === "tbody";
   const host = el16.parentElement;
   host?.setAttribute("data-kp-newpill-host", "");
   const pill = (
@@ -32290,6 +32745,10 @@ function attachOne4(el16, options) {
   let paused = false;
   const unseen = /* @__PURE__ */ new Set();
   let programmatic = false;
+  const known4 = /* @__PURE__ */ new Set();
+  if (inTbody) {
+    for (const row of el16.querySelectorAll("tbody > tr")) if (isTableRow(row) && rowKeyOf(row)) known4.add(rowKeyOf(row));
+  }
   let lastSaid = 0;
   let sayLater;
   const count2 = () => [...unseen].filter((row) => row.isConnected && !/** @type {HTMLElement} */
@@ -32375,7 +32834,13 @@ function attachOne4(el16, options) {
     let added = false;
     for (const record of records) {
       for (const node of record.addedNodes) {
-        if (!(node instanceof Element) || !isRow(node)) continue;
+        if (!(node instanceof Element)) continue;
+        if (inTbody) {
+          if (!(record.target instanceof Element) || record.target.tagName !== "TBODY" || !isTableRow(node)) continue;
+          const key = rowKeyOf(node);
+          if (key && known4.has(key)) continue;
+          if (key) known4.add(key);
+        } else if (!isRow(node)) continue;
         added = true;
         if (hiddenAt && !firstAway) firstAway = node;
         if (!(following && !paused)) unseen.add(node);
@@ -32385,7 +32850,7 @@ function attachOne4(el16, options) {
     if (following && !paused) toEnd();
     draw8();
   }) : null;
-  observer?.observe(el16, { childList: true });
+  observer?.observe(el16, inTbody ? { childList: true, subtree: true } : { childList: true });
   const onScroll = () => {
     if (programmatic) return;
     if (atEnd()) {
@@ -32431,9 +32896,9 @@ function attachOne4(el16, options) {
     const left = new Date(hiddenAt);
     hiddenAt = 0;
     firstAway = null;
-    for (const old of el16.querySelectorAll(":scope > .kp-newpill__since")) old.remove();
+    for (const old of el16.querySelectorAll(inTbody ? ".kp-newpill__since" : ":scope > .kp-newpill__since")) old.remove();
     if (!row || !row.isConnected) return;
-    const tag = el16.tagName === "UL" || el16.tagName === "OL" ? "li" : el16.tagName === "TBODY" ? "tr" : "div";
+    const tag = row.tagName === "TR" ? "tr" : el16.tagName === "UL" || el16.tagName === "OL" ? "li" : el16.tagName === "TBODY" ? "tr" : "div";
     const line = doc.createElement(tag);
     line.className = "kp-newpill__since";
     line.setAttribute("role", "separator");
@@ -32479,7 +32944,7 @@ function attachNewPills(root = document, options = {}) {
   const undo = found.map((el16) => attachOne4(el16, options));
   return () => undo.forEach((u) => u());
 }
-var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, HANDLES3, isRow;
+var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, HANDLES3, isRow, isTableRow, rowKeyOf;
 var init_newpill = __esm({
   "js/newpill.js"() {
     "use strict";
@@ -32492,6 +32957,11 @@ var init_newpill = __esm({
     NEWPILL_SAY_MS = 1e4;
     HANDLES3 = /* @__PURE__ */ new WeakMap();
     isRow = (el16) => !el16.classList.contains("kp-newpill__since") && !el16.hasAttribute("data-kp-newpill-skip");
+    isTableRow = (el16) => el16.tagName === "TR" && isRow(el16) && !el16.matches("[data-kp-row-detail], [data-kp-row-group], [data-kp-row-hidden]");
+    rowKeyOf = (row) => (
+      /** @type {HTMLElement} */
+      row.dataset?.kpRowKey || row.id || ""
+    );
   }
 });
 
@@ -33700,12 +34170,12 @@ function wheelAngles(weights) {
   const total = weights.reduce((a, b) => a + Math.max(0, b), 0);
   let at = 0;
   return weights.map((w) => {
-    const span3 = total > 0 ? Math.max(0, w) / total * 360 : 0;
+    const span4 = total > 0 ? Math.max(0, w) / total * 360 : 0;
     const segment = (
       /** @type {[number, number]} */
-      [at, at + span3]
+      [at, at + span4]
     );
-    at += span3;
+    at += span4;
     return segment;
   });
 }
@@ -33751,10 +34221,10 @@ function drawDisc(root, measure) {
   }
   ids.forEach((id, i) => {
     const [a0, a1] = angles[i];
-    const span3 = a1 - a0;
+    const span4 = a1 - a0;
     let tone = i % 5 + 1;
     if (i === ids.length - 1 && i > 0 && tone === 1) tone = 3;
-    const shape = span3 >= 359.99 ? svg("circle", { r: String(R), cx: "0", cy: "0" }) : svg("path", { d: `M0 0L${point(a0, R)}A${R} ${R} 0 ${span3 > 180 ? 1 : 0} 1 ${point(a1, R)}Z` });
+    const shape = span4 >= 359.99 ? svg("circle", { r: String(R), cx: "0", cy: "0" }) : svg("path", { d: `M0 0L${point(a0, R)}A${R} ${R} 0 ${span4 > 180 ? 1 : 0} 1 ${point(a1, R)}Z` });
     shape.setAttribute("class", "kp-wheel__segment");
     shape.setAttribute("data-tone", String(tone));
     shape.setAttribute("data-id", id);
@@ -33764,7 +34234,7 @@ function drawDisc(root, measure) {
     if (resting) shape.setAttribute("data-kp-wheel-resting", "");
     group.append(shape);
     const mid = (a0 + a1) / 2;
-    const half = Math.min(Math.PI / 2, span3 / 2 * Math.PI / 180);
+    const half = Math.min(Math.PI / 2, span4 / 2 * Math.PI / 180);
     const item = items.get(id);
     const plan = fitLabel(group, [item?.label ?? "", item?.short ?? ""], half, measure);
     const name = svg("title");
@@ -33783,7 +34253,7 @@ function drawDisc(root, measure) {
     });
     if (won === id) text.setAttribute("data-kp-wheel-chosen", "");
     if (resting) text.setAttribute("data-kp-wheel-resting", "");
-    text.setAttribute("data-span", span3.toFixed(3));
+    text.setAttribute("data-span", span4.toFixed(3));
     if (plan.lines.length === 1) text.textContent = plan.lines[0];
     else
       plan.lines.forEach((line, n) => {
@@ -35271,6 +35741,8 @@ __export(focus_steps_exports, {
   SWIPE_DISTANCE: () => SWIPE_DISTANCE,
   attachFocusSteps: () => attachFocusSteps,
   getStepIndex: () => getStepIndex,
+  getSteps: () => getSteps,
+  getStepsPassed: () => getStepsPassed,
   goToStep: () => goToStep,
   setFocusSteps: () => setFocusSteps,
   setFocusStepsState: () => setFocusStepsState
@@ -36463,6 +36935,21 @@ function goToStep(root, index) {
   );
   return true;
 }
+function getStepsPassed(root) {
+  const state2 = stateOf3(root);
+  const total = state2.steps.length;
+  const indexes = state2.finished ? state2.steps.map((_, i) => i) : tracksOn(root) ? [...state2.done].filter((i) => i >= 0 && i < total).sort((a, b) => a - b) : state2.steps.map((_, i) => i).filter((i) => i < state2.index);
+  return {
+    count: indexes.length,
+    total,
+    indexes,
+    ids: indexes.map((i) => stepKeyOf(state2, i)),
+    steps: indexes.map((i) => (
+      /** @type {FocusStep} */
+      { ...state2.steps[i] }
+    ))
+  };
+}
 function setFocusSteps(root, steps, { start = 0 } = {}) {
   if (!(root instanceof HTMLElement)) return;
   build2(root);
@@ -36766,7 +37253,7 @@ function attachFocusSteps(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED3, serial6, el7, stateOf3, part3, timerModule, tracksOn, stepKeyOf, timerIdOf, trackOfStep, activeTrack, isOpen, stepDone, refsOf, blockerNames, clockOfTimer, suggestion, emptyAction, opt, summaryOn, lastIndex, onSummary, memoryOf, hasMoved, getStepIndex, typing3;
+var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED3, serial6, el7, stateOf3, part3, timerModule, tracksOn, stepKeyOf, timerIdOf, trackOfStep, activeTrack, isOpen, stepDone, refsOf, blockerNames, clockOfTimer, suggestion, emptyAction, opt, summaryOn, lastIndex, onSummary, memoryOf, hasMoved, getStepIndex, getSteps, typing3;
 var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
@@ -36852,6 +37339,7 @@ var init_focus_steps = __esm({
     memoryOf = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
     hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
     getStepIndex = (root) => stateOf3(root).index;
+    getSteps = (root) => stateOf3(root).steps.map((step) => ({ ...step }));
     typing3 = (target) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
   }
 });
@@ -40995,9 +41483,9 @@ function rangeSeconds(word) {
     m[2]
   ];
 }
-function axisStep(span3, room, gap = 72) {
+function axisStep(span4, room, gap = 72) {
   const most = Math.max(2, Math.floor(room / gap));
-  return GANTT_STEPS.find((step) => span3 / step <= most) ?? /** @type {number} */
+  return GANTT_STEPS.find((step) => span4 / step <= most) ?? /** @type {number} */
   GANTT_STEPS[GANTT_STEPS.length - 1];
 }
 function packRows(runs2, before = /* @__PURE__ */ new Map(), pad2 = 0, fixed = []) {
@@ -41047,16 +41535,47 @@ function fitWindow(c) {
   for (const zone of c.zones) for (const edge of [toMs2(zone.from), toMs2(zone.to)]) if (Number.isFinite(edge)) moments.push(edge);
   const lo = Math.min(...moments) / 1e3;
   const hi = Math.max(...moments) / 1e3;
-  const span3 = Math.max(c.el.hasAttribute("data-kp-gantt-points") ? 604800 : 3600, hi - lo);
-  const pad2 = span3 / 20;
-  c.span = span3 + 2 * pad2;
+  const span4 = Math.max(c.el.hasAttribute("data-kp-gantt-points") ? 604800 : 3600, hi - lo);
+  const pad2 = span4 / 20;
+  c.span = span4 + 2 * pad2;
   c.to = hi - c.base + pad2;
   c.live = false;
 }
 function windowOf(c) {
   const now = rel(c, c.now());
-  const end = c.live ? now + Math.max(30, c.span * 0.03) : c.to;
+  let lead = Math.max(30, c.span * 0.03);
+  if (c.live && restOn(c))
+    for (const run of c.runs) {
+      const planned = restEnd(c, run);
+      if (planned !== null) lead = Math.max(lead, Math.min(planned - now, c.span * 0.4));
+    }
+  const end = c.live ? now + lead : c.to;
   return { from: end - c.span, end, now };
+}
+function restEnd(c, run) {
+  if (run.state !== "running" || run.plannedEnd == null || !restOn(c)) return null;
+  const ms = toMs2(run.plannedEnd);
+  return Number.isFinite(ms) ? rel(c, ms) : null;
+}
+function syncRest(c, lane, b) {
+  const end = restEnd(c, b.run);
+  let rest = RESTS.get(b.bar);
+  if (end === null) {
+    rest?.remove();
+    RESTS.delete(b.bar);
+    return;
+  }
+  if (!rest) {
+    rest = make13(c.el.ownerDocument, "span", "kp-gantt__rest");
+    rest.setAttribute("aria-hidden", "true");
+    rest.dataset.kpState = "planned";
+    RESTS.set(b.bar, rest);
+  }
+  if (rest.parentElement !== lane.track) lane.track.append(rest);
+  if (b.run.series) rest.dataset.kpSeries = String(b.run.series);
+  else delete rest.dataset.kpSeries;
+  rest.style.setProperty("--kp-g-row", String(b.row));
+  rest.style.setProperty("--kp-g-e", end.toFixed(2));
 }
 function wordsOf3(c, b) {
   const { run } = b;
@@ -41066,7 +41585,9 @@ function wordsOf3(c, b) {
   const state2 = stateWord3(c, run.state);
   const length = duration(c, (endMs - startMs) / 1e3);
   const when = run.state === "queued" ? `${stamp(c, startMs)}, ${length}` : run.state === "running" ? `${stamp(c, startMs)}, ${length}` : `${stamp(c, startMs)} \u2013 ${clock(c, endMs)}, ${length}`;
-  return { name: c.strings.ganttBar(run.label, when, state2), card: [run.label, when, state2, run.detail ?? ""].filter(Boolean).join(" \xB7 ") };
+  const planned = restEnd(c, run);
+  const until = planned !== null && planned * 1e3 + c.base * 1e3 > nowMs ? c.strings.ganttPlannedUntil(clock(c, planned * 1e3 + c.base * 1e3)) : "";
+  return { name: c.strings.ganttBar(run.label, when, state2), card: [run.label, when, state2, until, run.detail ?? ""].filter(Boolean).join(" \xB7 ") };
 }
 function build5(c) {
   const doc = c.el.ownerDocument;
@@ -41330,6 +41851,8 @@ function paint8(c) {
   }
   for (const [id, bar] of c.bars)
     if (!live4.has(id)) {
+      RESTS.get(bar)?.remove();
+      RESTS.delete(bar);
       bar.remove();
       c.bars.delete(id);
       c.states.delete(id);
@@ -41412,6 +41935,7 @@ function paint8(c) {
         b.bar.firstElementChild
       );
       if (label.textContent !== b.run.label) label.textContent = b.run.label;
+      syncRest(c, lane, b);
     }
   });
   c.body.style.setProperty("--kp-g-lanes", String(Math.max(1, lanes.length)));
@@ -41743,18 +42267,26 @@ function syncLegend(c) {
   const runless = c.runs.length === 0 && (c.points.length > 0 || c.kinds.length > 0);
   const off = c.el.getAttribute("data-kp-gantt-legend") === "off";
   const planned = c.runs.some((run) => run.state === "planned");
+  const only = legendStates(c);
   for (
     const li of
     /** @type {NodeListOf<HTMLElement>} */
     c.legend.querySelectorAll(":scope > .kp-gantt__legend-state")
   ) {
-    const isPlanned = li.firstElementChild?.getAttribute("data-kp-state") === "planned";
-    li.hidden = runless || off || isPlanned && !planned;
+    const state2 = li.firstElementChild?.getAttribute("data-kp-state") ?? "";
+    li.hidden = runless || off || (only === null ? state2 === "planned" && !planned : !only.has(state2));
   }
   c.legend.hidden = [...c.legend.children].every((li) => (
     /** @type {HTMLElement} */
     li.hidden
   ));
+}
+function legendStates(c) {
+  const asked = (c.el.getAttribute("data-kp-gantt-legend") ?? "").trim().toLowerCase();
+  if (asked === "auto") return new Set(c.runs.map((run) => run.state));
+  if (asked === "" || asked === "off" || asked === "all") return null;
+  const names = asked.split(/[\s,]+/).filter((name) => ["ok", "failed", "running", "queued", "planned"].includes(name));
+  return names.length ? new Set(names) : null;
 }
 function paintChrome(c) {
   const bare = c.el.getAttribute("data-kp-gantt-toolbar") === "off";
@@ -41975,6 +42507,8 @@ function visible2(c) {
     for (const b of lane.bars) {
       const end = b.e ?? now;
       b.bar.hidden = c.state === "loading" || c.leaving !== null || end < w.from || b.s > w.end;
+      const rest = RESTS.get(b.bar);
+      if (rest) rest.hidden = b.bar.hidden || Number.parseFloat(rest.style.getPropertyValue("--kp-g-e")) <= now;
     }
     for (const point2 of lane.points) {
       const at = Number.parseFloat(point2.style.getPropertyValue("--kp-g-s"));
@@ -42043,6 +42577,10 @@ function announceWindow(c, why) {
 }
 function tick4(c) {
   const w = frame(c);
+  if (!OPENED.has(c.el) && c.scroll.scrollWidth > c.scroll.clientWidth + 1) {
+    OPENED.add(c.el);
+    if (c.live) c.scroll.scrollLeft = getComputedStyle(c.scroll).direction === "rtl" ? -(c.scroll.scrollWidth - c.scroll.clientWidth) : c.scroll.scrollWidth;
+  }
   syncTicks(c, w);
   edgeTicks(c, w);
   visible2(c);
@@ -42325,7 +42863,8 @@ function attachGantts(root = document, options = {}) {
     };
     fonts?.addEventListener?.("loadingdone", refit);
     void fonts?.ready?.then(refit);
-    const stopOptions = watchOptions(el16, ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint"], () => {
+    const stopOptions = watchOptions(el16, ["data-kp-gantt-toolbar", "data-kp-gantt-legend", "data-kp-gantt-hint", "data-kp-gantt-rest"], () => {
+      paint8(c);
       paintChrome(c);
       tick4(c);
     });
@@ -42473,7 +43012,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint8(c);
 }
-var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX, RUN_GAP_PX, NOW_GAP_PX;
+var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, OPENED, gantts, idSeq3, two4, make13, toMs2, keyOf6, stateWord3, rel, restOn, RESTS, MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX, RUN_GAP_PX, NOW_GAP_PX;
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
@@ -42493,6 +43032,7 @@ var init_gantt = __esm({
     MONDAY = 345600;
     CLUSTER_PX = 14;
     CLUSTER_PLATE_PX = 24;
+    OPENED = /* @__PURE__ */ new WeakSet();
     gantts = /* @__PURE__ */ new WeakMap();
     idSeq3 = 0;
     two4 = (n) => String(n).padStart(2, "0");
@@ -42506,6 +43046,8 @@ var init_gantt = __esm({
     keyOf6 = (host) => host.getAttribute("data-kp-key") ?? void 0;
     stateWord3 = (c, state2) => ({ queued: c.strings.ganttQueued, running: c.strings.ganttRunning, ok: c.strings.ganttOk, failed: c.strings.ganttFailed, planned: c.strings.ganttPlanned })[state2];
     rel = (c, ms) => ms / 1e3 - c.base;
+    restOn = (c) => c.el.getAttribute("data-kp-gantt-rest") !== "off";
+    RESTS = /* @__PURE__ */ new WeakMap();
     MEASURERS = /* @__PURE__ */ new WeakMap();
     OUTSIDE_GAP_PX = 6;
     MARK_GAP_PX = 2;
@@ -53681,12 +54223,16 @@ __export(unsaved_exports, {
   UNSAVED_SAVE_EVENT: () => UNSAVED_SAVE_EVENT,
   UNSAVED_UNDO_EVENT: () => UNSAVED_UNDO_EVENT,
   attachUnsaved: () => attachUnsaved,
+  configureUnsaved: () => configureUnsaved,
   discardUnsaved: () => discardUnsaved,
   markUnsavedClean: () => markUnsavedClean,
   setUnsavedSaving: () => setUnsavedSaving,
   unsaved: () => unsaved,
   unsavedSaved: () => unsavedSaved
 });
+function configureUnsaved(next2) {
+  if (next2.storage !== void 0) config4.storage = next2.storage;
+}
 function unsaved(element) {
   return HANDLES12.get(element) ?? null;
 }
@@ -53758,7 +54304,7 @@ function fire(c) {
   c.dispatchEvent(new Event("input", { bubbles: true }));
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
-function attachUnsaved(root = document) {
+function attachUnsaved(root = document, options = {}) {
   const cleanups = [];
   const found = (
     /** @type {HTMLElement[]} */
@@ -53783,7 +54329,17 @@ function attachUnsaved(root = document) {
     const scrollRoot = el16.dataset.kpScrollRoot ? doc.querySelector(el16.dataset.kpScrollRoot) : null;
     const auto = el16.dataset.kpTrack !== "app";
     const warn2 = ["browser", "app", "off"].includes(el16.dataset.kpWarnLeave ?? "") ? el16.dataset.kpWarnLeave : "both";
-    const keepOn = el16.dataset.kpKeep !== "off";
+    const keepAttribute = el16.dataset.kpKeep;
+    const store = () => {
+      if (options.storage !== void 0) return options.storage;
+      if (config4.storage !== void 0) return config4.storage;
+      try {
+        return keepAttribute === "local" ? win.localStorage : win.sessionStorage;
+      } catch {
+        return null;
+      }
+    };
+    const keepOn = keepAttribute !== "off" && store() !== null;
     const exclude = el16.dataset.kpKeepExclude ?? '[type="password"], [data-kp-secret]';
     const undoMs = el16.dataset.kpUndoMs === void 0 ? 6e3 : Math.max(0, Number(el16.dataset.kpUndoMs) || 0);
     const saveLabel = el16.dataset.kpSaveLabel;
@@ -54040,15 +54596,15 @@ function attachUnsaved(root = document) {
           );
           if (now !== was) kept[key] = now;
         }
-        if (Object.keys(kept).length) win.sessionStorage.setItem(storeKey3, JSON.stringify(kept));
-        else win.sessionStorage.removeItem(storeKey3);
+        if (Object.keys(kept).length) store()?.setItem(storeKey3, JSON.stringify(kept));
+        else store()?.removeItem(storeKey3);
       } catch {
       }
     };
     const restore2 = () => {
       if (!keepOn) return;
       try {
-        const raw = win.sessionStorage.getItem(storeKey3);
+        const raw = store()?.getItem(storeKey3);
         if (!raw) return;
         const kept = (
           /** @type {Record<string, string>} */
@@ -54410,7 +54966,7 @@ function attachUnsaved(root = document) {
     for (const c of cleanups) c();
   };
 }
-var UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, HANDLES12, seq5;
+var config4, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, HANDLES12, seq5;
 var init_unsaved = __esm({
   "js/unsaved.js"() {
     "use strict";
@@ -54420,6 +54976,7 @@ var init_unsaved = __esm({
     init_menu_button();
     init_top_layer();
     init_motion();
+    config4 = { storage: void 0 };
     UNSAVED = "[data-kp-unsaved]";
     UNSAVED_CHANGE_EVENT = "kp-unsaved-change";
     UNSAVED_SAVE_EVENT = "kp-unsaved-save";
@@ -57170,10 +57727,10 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       const texts = (Array.isArray(o.meta) ? o.meta : [o.meta]).filter((t) => typeof t === "string" && t !== "");
       if (!texts.length) return null;
       const one = (text) => {
-        const span3 = doc.createElement("span");
-        span3.className = "kp-dated__meta";
-        span3.textContent = text;
-        return span3;
+        const span4 = doc.createElement("span");
+        span4.className = "kp-dated__meta";
+        span4.textContent = text;
+        return span4;
       };
       if (texts.length === 1) return one(texts[0]);
       const box = doc.createElement("span");
@@ -68196,6 +68753,7 @@ export {
   configureRemember,
   configureShortcuts,
   configureTheme,
+  configureUnsaved,
   connection_exports as connectionExports,
   connectionOf,
   consoleBlocks,
@@ -68295,6 +68853,8 @@ export {
   getSegmentedValues,
   getSelection,
   getStepIndex,
+  getSteps,
+  getStepsPassed,
   getStrings,
   getTimers,
   getWheelResult,
@@ -68550,6 +69110,7 @@ export {
   scrollWithin,
   scrollersAround,
   searchLogViewer,
+  secretInputValue,
   seenAcross,
   segmented_exports as segmentedExports,
   selectPane,
@@ -68653,11 +69214,13 @@ export {
   setRating,
   setRatingState,
   setRefreshInterval,
+  setRefreshTitle,
   setRequests,
   setRequestsState,
   setRowBusy,
   setRuns,
   setRunsState,
+  setSecretInputValue,
   setSegmentedCounts,
   setSegmentedItems,
   setSegmentedTri,

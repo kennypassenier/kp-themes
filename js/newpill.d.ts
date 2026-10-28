@@ -19,6 +19,10 @@ export type NewPillOptions = {
     sinceLeft?: boolean;
     key?: string;
     space?: boolean;
+    /**
+     * where the rows arrive: the scroller's children (default) or the rows of a table body inside it
+     */
+    rows?: 'children' | 'tbody';
 };
 export type NewPillHandle = {
     /**

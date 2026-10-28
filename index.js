@@ -79,6 +79,8 @@ export {
     attachSecrets,
     hideSecret,
     revealSecret,
+    secretInputValue,
+    setSecretInputValue,
 } from './js/patterns.js';
 export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export {
@@ -181,6 +183,7 @@ export {
     UNSAVED_SAVE_EVENT,
     UNSAVED_UNDO_EVENT,
     attachUnsaved,
+    configureUnsaved,
     discardUnsaved,
     markUnsavedClean,
     setUnsavedSaving,
@@ -398,7 +401,7 @@ export { CODE_FIELD, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_EVENT, CODE_FIELD_
 export { JOBLINE, JOBLINE_EVENT, attachJobLines, buildJobLine, jobLineText, setJobLine, stepPosition } from './js/job-line.js';
 export { MARKDOWN_LIMIT, markdownFragment, safeHref } from './js/markdown.js';
 export { CONNECTION, CONNECTION_RETRY_EVENT, CONNECTION_STATES, CONNECTION_STATE_EVENT, attachConnection, connectionOf, setConnection } from './js/connection.js';
-export { REFRESH, REFRESH_CHOICES, REFRESH_DEFAULT, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, attachRefresh, refreshDone, refreshOf, setRefreshInterval } from './js/auto-refresh.js';
+export { REFRESH, REFRESH_CHOICES, REFRESH_DEFAULT, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, attachRefresh, refreshDone, refreshOf, setRefreshInterval, setRefreshTitle } from './js/auto-refresh.js';
 export { MASTER_DETAIL, PANE_ASIDE_FOLD_AT, PANE_ASIDE_WIDTH, PANE_CLOSE_EVENT, PANE_FOLD_AT, PANE_OPEN_EVENT, PANE_RETRY_EVENT, PANE_SELECT_EVENT, PANE_WIDTHS, attachMasterDetails, closePane, masterDetail, openPane, selectPane, setPaneState } from './js/master-detail.js';
 // The dashboard components [scope-143].
 export {
@@ -556,6 +559,8 @@ export {
     SWIPE_DISTANCE,
     attachFocusSteps,
     getStepIndex,
+    getSteps,
+    getStepsPassed,
     goToStep,
     setFocusSteps,
     setFocusStepsState,

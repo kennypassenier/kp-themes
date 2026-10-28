@@ -6,9 +6,13 @@ export type CodeSpec = {
     text?: string;
     title?: string;
     /**
-     * shown in the head; 'JSON' (any case) offers Pretty and Raw when the text parses
+     * shown in the head; 'JSON' (any case) offers Pretty and Raw when the text parses; 'TOML' and 'bash' (sh, shell, zsh) colour the text
      */
     language?: string;
+    /**
+     * colour TOML and shell text (default true); false leaves it plain [wish-1028]
+     */
+    highlight?: boolean;
     /**
      * shown in the head, and in the binary sentence
      */
@@ -89,7 +93,7 @@ export declare function setCode(el: HTMLElement, given: CodeSpec): void;
 /**
  * Fill every `[data-kp-code]` under `root` from its markup: the text of its
  * `code` (or `pre`), and `data-kp-code-title`, `-language`, `-size`,
- * `-lines`, `-wrap`, `-max`, `-layout`, `-state`.
+ * `-lines`, `-wrap`, `-max`, `-layout`, `-state`, `-highlight` (`off`).
  * @param {ParentNode} [root]
  * @returns {() => void} detach
  */

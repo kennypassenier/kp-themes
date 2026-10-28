@@ -27,7 +27,7 @@ export { PAGE_SIZE, REORDER_EVENT as DATATABLE_REORDER_EVENT, SELECT_EVENT as DA
 export { WRAP_SELECTOR as TABLE_WRAP_SELECTOR, attachTableRegions } from './js/tables.js';
 export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachForms, attachSwitches, attachFormgridStages } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
-export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, SECRET, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_MASK, SECRET_REQUEST_EVENT, SECRET_TTL, attachPatterns, attachSecrets, hideSecret, revealSecret, } from './js/patterns.js';
+export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, SECRET, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_MASK, SECRET_REQUEST_EVENT, SECRET_TTL, attachPatterns, attachSecrets, hideSecret, revealSecret, secretInputValue, setSecretInputValue, } from './js/patterns.js';
 export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export { REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_HOLD_ATTRIBUTE, REMEMBER_PREFIX, attachRemembered, configureRemember, forgetClaims, forgetRememberedExcept, memoryFor, paintRemembered, restoreRemembered, } from './js/remember.js';
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
@@ -47,7 +47,7 @@ export { COMMAND, COMMAND_SHELLS, attachCommands, commandLines } from './js/comm
 export { COUNTDOWN, COUNTDOWN_END_EVENT, COUNTDOWN_EVENT, COUNTDOWN_STEP, attachCountdowns, countdownClock, countdownOf, formatCountdown, parseDuration, timerButton, } from './js/countdown.js';
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
-export { UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_UNDO_EVENT, attachUnsaved, discardUnsaved, markUnsavedClean, setUnsavedSaving, unsaved, unsavedSaved, } from './js/unsaved.js';
+export { UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_UNDO_EVENT, attachUnsaved, configureUnsaved, discardUnsaved, markUnsavedClean, setUnsavedSaving, unsaved, unsavedSaved, } from './js/unsaved.js';
 export { ENTITY_ACTION_EVENT, ENTITY_CARD, ENTITY_FLAG_EVENT, ENTITY_GRID, ENTITY_GRID_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_RETRY_EVENT, ENTITY_STAR_EVENT, ENTITY_TICK_EVENT, attachEntityCards, setEntity, setEntityGrid, setEntityGridState } from './js/entity-card.js';
 export { TRACE, TRACE_RETRY_EVENT, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, attachTraces, setTrace, trace, traceStates, traceSummary, traceText } from './js/path-trace.js';
 export { DEPLIST, DEPLIST_COLLAPSE, DEPLIST_RETRY_EVENT, attachDeplists, depText, deplist, orderDependencies, setDeplist } from './js/deplist.js';
@@ -83,7 +83,7 @@ export { CODE_FIELD, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_EVENT, CODE_FIELD_
 export { JOBLINE, JOBLINE_EVENT, attachJobLines, buildJobLine, jobLineText, setJobLine, stepPosition } from './js/job-line.js';
 export { MARKDOWN_LIMIT, markdownFragment, safeHref } from './js/markdown.js';
 export { CONNECTION, CONNECTION_RETRY_EVENT, CONNECTION_STATES, CONNECTION_STATE_EVENT, attachConnection, connectionOf, setConnection } from './js/connection.js';
-export { REFRESH, REFRESH_CHOICES, REFRESH_DEFAULT, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, attachRefresh, refreshDone, refreshOf, setRefreshInterval } from './js/auto-refresh.js';
+export { REFRESH, REFRESH_CHOICES, REFRESH_DEFAULT, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, attachRefresh, refreshDone, refreshOf, setRefreshInterval, setRefreshTitle } from './js/auto-refresh.js';
 export { MASTER_DETAIL, PANE_ASIDE_FOLD_AT, PANE_ASIDE_WIDTH, PANE_CLOSE_EVENT, PANE_FOLD_AT, PANE_OPEN_EVENT, PANE_RETRY_EVENT, PANE_SELECT_EVENT, PANE_WIDTHS, attachMasterDetails, closePane, masterDetail, openPane, selectPane, setPaneState } from './js/master-detail.js';
 export { ACTION_LIST, ROW_ACTIONS, ROW_KEYS, ROW_OPEN_EVENT, attachActionColumns, attachRowKeys, fitActionColumns, mergeRoles, removeRow, rowRoles, setRowBusy, } from './js/actions.js';
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths, } from './js/kpi.js';
@@ -146,7 +146,7 @@ export { TICK, TICK_EVENT, TICK_KNOB, TICK_MS, attachTicks, parseTick, tickTo } 
 export { WHEEL, WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, getWheelResult, pickWeighted, setWheelItems, setWheelState, spinWheel, wheelAngles, } from './js/wheel.js';
 export type WheelItem = import('./js/wheel.js').WheelItem;
 /** @typedef {import('./js/wheel.js').WheelItem} WheelItem */
-export { FOCUS_STEPS, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_WAKE_EVENT, SWIPE_DISTANCE, attachFocusSteps, getStepIndex, goToStep, setFocusSteps, setFocusStepsState, } from './js/focus-steps.js';
+export { FOCUS_STEPS, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_WAKE_EVENT, SWIPE_DISTANCE, attachFocusSteps, getStepIndex, getSteps, getStepsPassed, goToStep, setFocusSteps, setFocusStepsState, } from './js/focus-steps.js';
 export type FocusStep = import('./js/focus-steps.js').FocusStep;
 export type FocusAnswer = import('./js/focus-steps.js').FocusAnswer;
 export type FocusIngredient = import('./js/focus-steps.js').FocusIngredient;

@@ -73,11 +73,14 @@ export declare function form(element: Element): FormHandle | null;
  * Attach every form under `root`.
  *
  * @param {ParentNode} root
- * @param {{ validateOn?: 'blur' | 'input' | 'submit', revalidateOn?: 'input' | 'blur' | 'none', focusSummary?: boolean, focusFirstInvalid?: boolean, wrapper?: string, invalidClass?: string, summaryHeading?: string, summaryHeadingClass?: string }} [options]
- *   Defaults, each also settable per form as `data-kp-validate-on`, `data-kp-revalidate-on`, `data-kp-focus-summary`.
+ * @param {{ validateOn?: 'blur' | 'input' | 'submit', revalidateOn?: 'input' | 'blur' | 'none', focusSummary?: boolean, focusFirstInvalid?: boolean, wrapper?: string, invalidClass?: string, summaryHeading?: string, summaryHeadingClass?: string, nativeSubmit?: boolean }} [options]
+ *   Defaults, each also settable per form as `data-kp-validate-on`, `data-kp-revalidate-on`, `data-kp-focus-summary`, `data-kp-form-native-submit`.
+ *   A valid submit is NOT sent by the browser: the form fires `kp-form-valid` and the page sends the data itself (`preventDefault()`),
+ *   so a handler that saves with `fetch` is not followed by a reload of the page [wish-1028, Kitchen 5]. `nativeSubmit: true` (or
+ *   `data-kp-form-native-submit` on the form) lets the browser submit a valid form as well, for a form whose `action` does the work.
  * @returns {(() => void) & { handles: FormHandle[] }} detach
  */
-export declare function attachForms(root?: ParentNode, { validateOn, revalidateOn, focusSummary, focusFirstInvalid, wrapper, invalidClass, summaryHeading, summaryHeadingClass, }?: {
+export declare function attachForms(root?: ParentNode, { validateOn, revalidateOn, focusSummary, focusFirstInvalid, wrapper, invalidClass, summaryHeading, summaryHeadingClass, nativeSubmit, }?: {
     validateOn?: 'blur' | 'input' | 'submit';
     revalidateOn?: 'input' | 'blur' | 'none';
     focusSummary?: boolean;
@@ -86,6 +89,7 @@ export declare function attachForms(root?: ParentNode, { validateOn, revalidateO
     invalidClass?: string;
     summaryHeading?: string;
     summaryHeadingClass?: string;
+    nativeSubmit?: boolean;
 }): (() => void) & {
     handles: FormHandle[];
 };

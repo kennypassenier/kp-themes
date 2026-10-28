@@ -391,7 +391,7 @@
                     </figure>
                     <figure class="sc-example" id="more-field-validate-timing">
                         <figcaption class="kp-fw-semibold">When a form checks</figcaption>
-                        <p class="kp-text-muted">Three attributes on the form that decide <i>when</i> <code>js/forms.js</code> speaks; the look of each message is the one above. The first form has <code>data-kp-validate-on="input"</code>: type one letter into <b>Reporter's email</b> and the error appears at once, and goes once the address is whole. The second has <code>data-kp-validate-on="submit"</code>, <code>data-kp-revalidate-on="blur"</code> and <code>data-kp-focus-summary="false"</code>: nothing is said while you type or leave a field; press <b>Report</b> empty and the summary appears but focus stays on the button; then fix a field and its message clears only when you leave it, not while you type. The defaults (blur, then input, then focus the summary) are the live form in <b>Error summary</b>.</p>
+                        <p class="kp-text-muted">Three attributes on the form that decide <i>when</i> <code>js/forms.js</code> speaks; the look of each message is the one above. The first form has <code>data-kp-validate-on="input"</code>: type one letter into <b>Reporter's email</b> and the error appears at once, and goes once the address is whole. The second has <code>data-kp-validate-on="submit"</code>, <code>data-kp-revalidate-on="blur"</code> and <code>data-kp-focus-summary="false"</code>: nothing is said while you type or leave a field; press <b>Report</b> empty and the summary appears but focus stays on the button; then fix a field and its message clears only when you leave it, not while you type. The defaults (blur, then input, then focus the summary) are the live form in <b>Error summary</b>. A valid form is not sent by the browser: <code>js/forms.js</code> calls <code>preventDefault()</code> and fires <code>kp-form-valid</code> for your handler; <code>data-kp-form-native-submit</code> on the form lets the browser submit it as well.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <div class="sc-example__stage sc-example__stage--row">
 <form class="kp-form" data-kp-form data-kp-validate-on="input" novalidate aria-label="Checked while typing">
@@ -673,6 +673,7 @@ aria-label="Checked on submit only"
                             <tr><td><code>data-kp-focus-summary</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-form</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-form-attached</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-form-native-submit</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-form-summary</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-revalidate-on</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-submit</code></td><td>selector</td></tr>

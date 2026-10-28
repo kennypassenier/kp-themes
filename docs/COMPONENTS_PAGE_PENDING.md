@@ -12,6 +12,15 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- wish-1028 (2026-10-28), site/components/new-pill.html: `data-kp-follow-rows="tbody"` (rows arriving in a data table's body; a row counts once by `data-kp-row-key`), with a datatable example.
+- wish-1028, site/components/code.html: TOML and bash/sh/shell/zsh colouring (`.kp-code__section`, `__string`, `__value`, `__comment`, `__var`), `data-kp-code-highlight="off"`, knob `--kp-code-value`.
+- wish-1028, site/components/refresh.html: `data-kp-refresh-title` / `data-kp-refresh-slot="title"` / `setRefreshTitle` (first cell of the bar's grid; label track in a form grid; heading line when a label is set), knob `--kp-refresh-title-width`.
+- wish-1028, site/components/datatable.html: `filter`, `scope`, `editFilter` by column id, `columnIndex(id)`, `view().filtersByField`, server request `filtersByField`.
+- wish-1028, site/components/secret.html: the input mode (`data-kp-secret-mode="input"`, Show/Hide, Paste, Copy, `secretInputValue`, `setSecretInputValue`, `data-kp-secret-invalid`, `-hide-on-blur`, `-paste`, `-name`, `-placeholder`, `-autocomplete`).
+- wish-1028, site/components/unsaved.html: `configureUnsaved({ storage })`, `attachUnsaved(root, { storage })`, `data-kp-keep="local"`.
+- wish-1028, site/components/gantt.html: `data-kp-gantt-legend="auto"` or a list of states, `plannedEnd` and `data-kp-gantt-rest="off"`, `--kp-gantt-min-width` with `data-kp-gantt-scroll` (off, always); the registers answer the rest stretch in the base planned look only (no theme pass yet).
+- wish-1028, site/components/focus-steps.html: `getStepsPassed(root)` and `getSteps(root)`.
+- wish-1028, site/components/form.html: a valid submit is prevented by default; `data-kp-form-native-submit` and `nativeSubmit` bring the browser's submit back (behaviour change for every consumer).
 - heat-deplist-1019 (2026-10-19), site/components/heat.html: the label column is `minmax(min-content, clamp(4.5rem, 26%, --kp-heat-label))` (a name never breaks inside a word); the axis rule: `every` counts the columns without `minor`, `minor: true` is never named and not counted, `minor: false` always named, the last named column wins over the one before it when adjacent, a minor header carries its name in `aria-label` and no text.
 - heat-deplist-1019, site/components/deplist.html: the state badges are one column of one width; knob `--kp-deplist-state` (6rem, the narrow layout's least badge width).
 - kpi-entity-1019 (2026-10-19), site/components/kpi.html: a pressable tile's name and hint never break inside a word (hint wraps in its own track); a trend tile's `.kp-kpi__label-note` shows its dot only beside the name; meter tones `success` and `neutral` (`setMeter`, `.kp-meter[data-kp-tone]`).

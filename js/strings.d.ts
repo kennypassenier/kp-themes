@@ -2339,6 +2339,26 @@ export type Strings = {
      * The reason when a secret has no value, loader or listener to read it from
      */
     secretNoSource: string;
+    /**
+     * The secret input's button that pastes the clipboard into the box [wish-1028]
+     */
+    secretPaste: string;
+    /**
+     * What a screen reader hears after Paste, "Pasted, 24 characters" [wish-1028]
+     */
+    secretPasted: (count: number) => string;
+    /**
+     * The line under a secret input when the browser refused to let the page read the clipboard [wish-1028]
+     */
+    secretPasteBlocked: string;
+    /**
+     * The line under an empty secret input, "Typing is hidden" [wish-1028]
+     */
+    secretInputHint: string;
+    /**
+     * The line under a secret input that holds something, "24 characters, hidden" [wish-1028]
+     */
+    secretInputCount: (count: number) => string;
     splitLabel: string;
     reorderHandle: (name: string) => string;
     reorderMoved: (name: string, at: number, of: number) => string;
@@ -2787,6 +2807,10 @@ export type Strings = {
      * A running run's state word
      */
     ganttRunning: string;
+    /**
+     * A running run's card line when it has a planned end, "planned until 14:30" [wish-1028]
+     */
+    ganttPlannedUntil: (time: string) => string;
     /**
      * A finished run's state word
      */
@@ -6935,6 +6959,11 @@ export type Strings = {
  * @property {string} secretHidden  What it hears when the secret is hidden again
  * @property {(reason: string) => string} secretFailed  The line under a secret that could not be read
  * @property {string} secretNoSource  The reason when a secret has no value, loader or listener to read it from
+ * @property {string} secretPaste  The secret input's button that pastes the clipboard into the box [wish-1028]
+ * @property {(count: number) => string} secretPasted  What a screen reader hears after Paste, "Pasted, 24 characters" [wish-1028]
+ * @property {string} secretPasteBlocked  The line under a secret input when the browser refused to let the page read the clipboard [wish-1028]
+ * @property {string} secretInputHint  The line under an empty secret input, "Typing is hidden" [wish-1028]
+ * @property {(count: number) => string} secretInputCount  The line under a secret input that holds something, "24 characters, hidden" [wish-1028]
  * @property {string} splitLabel
  * @property {(name: string) => string} reorderHandle
  * @property {(name: string, at: number, of: number) => string} reorderMoved
@@ -7061,6 +7090,7 @@ export type Strings = {
  * @property {string} ganttLoading  The sentence of a timeline being read
  * @property {string} ganttQueued  A queued run's state word
  * @property {string} ganttRunning  A running run's state word
+ * @property {(time: string) => string} ganttPlannedUntil  A running run's card line when it has a planned end, "planned until 14:30" [wish-1028]
  * @property {string} ganttOk  A finished run's state word
  * @property {string} ganttFailed  A failed run's state word
  * @property {(label: string, state: string) => string} ganttAnnounce  What the timeline's status region says when a run changes state, "Backup: failed"
