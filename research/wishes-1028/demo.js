@@ -119,12 +119,11 @@ const say = (id, text) => {
         const rows = dataTable(table)?.rows('view').length ?? 0;
         say('pg-stacks-log', `${rows === 1 ? '1 stack' : `${rows} stacks`} shown`);
     };
-    on('stack-mode', (value) => {
-        mode = value;
-    });
-    on('stack-show', (value) => {
+    let shown = 'running';
+    const apply = () => {
         const handle = dataTable(table);
         if (!handle) return;
+        const value = shown;
         handle.clearFilters();
         if (value === 'all') say('pg-stacks-call', 'clearFilters()');
         else {
@@ -134,10 +133,22 @@ const say = (id, text) => {
             say('pg-stacks-call', `filter(${JSON.stringify(column)}, ${JSON.stringify(set.value)})`);
         }
         readout();
+    };
+    // Both choices end in the same filter, but the call differs: switching the way it is written writes it again at once.
+    on('stack-mode', (value) => {
+        mode = value;
+        apply();
+    });
+    on('stack-show', (value) => {
+        shown = value;
+        apply();
     });
     on('stack-state', (value) => {
         const handle = dataTable(table);
-        if (value === 'loading') handle?.state('loading');
+        if (value === 'loading') {
+            handle?.busy({ overlay: true });
+            handle?.state('loading');
+        }
         else if (value === 'failed') handle?.fail('The host did not answer in time.');
         else handle?.state('ready');
     });
@@ -145,7 +156,7 @@ const say = (id, text) => {
         for (const b of document.querySelectorAll('button[data-pg="stack-state"]')) b.setAttribute('aria-pressed', String(/** @type {HTMLElement} */ (b).dataset.value === 'ready'));
         dataTable(table)?.state('ready');
     });
-    ready.then(readout);
+    ready.then(apply);
 }
 
 // ---------------------------------------------------------------- code-toml
@@ -513,16 +524,19 @@ const say = (id, text) => {
         if (value === 'allowed') el.setAttribute('data-kp-form-native-submit', '');
         else el.removeAttribute('data-kp-form-native-submit');
     });
-    on('fs-server', (value) => {
-        server = value;
-    });
-    on('fs-send', (value) => {
+    const send = (/** @type {string} */ value) => {
         const dish = /** @type {HTMLInputElement} */ (el.elements.namedItem('dish'));
         const portions = /** @type {HTMLInputElement} */ (el.elements.namedItem('portions'));
         dish.value = value === 'valid' ? 'Shakshuka' : '';
         portions.value = value === 'valid' ? '2' : '';
         el.requestSubmit(/** @type {HTMLElement} */ (el.querySelector('[data-kp-submit]')));
+    };
+    // Choosing how the server answers sends a valid form at once, so the choice shows its answer on the field and in the log.
+    on('fs-server', (value) => {
+        server = value;
+        send('valid');
     });
+    on('fs-send', send);
     el.addEventListener('kp-form-valid', (event) => {
         const detail = /** @type {CustomEvent<{ data: FormData, done: () => void }>} */ (event).detail;
         note(`kp-form-valid: the handler got ${[...detail.data.entries()].map(([k, v]) => `${k} = ${v}`).join(', ')}`);

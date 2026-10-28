@@ -31075,6 +31075,20 @@ function jsonLine(doc, line) {
   if (last < line.length) out.push(doc.createTextNode(line.slice(last)));
   return out;
 }
+function apart(nodes) {
+  const isSpan = (n) => n !== void 0 && n.nodeType === 1;
+  const isPunct = (n) => (
+    /** @type {Element} */
+    n.classList.contains("kp-code__punct")
+  );
+  for (let i = 1; i < nodes.length; i += 1) {
+    if (!isSpan(nodes[i - 1]) || !isSpan(nodes[i])) continue;
+    const drop = isPunct(nodes[i]) ? i : i - 1;
+    nodes[drop] = /** @type {Node} */
+    nodes[drop].ownerDocument?.createTextNode(nodes[drop].textContent ?? "");
+  }
+  return nodes;
+}
 function tomlLine(doc, line, state2) {
   const out = [];
   let rest = line;
@@ -31472,8 +31486,8 @@ function drawBody(el16, memory) {
     const words = make6(doc, "kp-code__text");
     if (line === "") words.textContent = " ";
     else if (json) words.append(...jsonLine(doc, line));
-    else if (colour === "toml") words.append(...tomlLine(doc, line, tomlState));
-    else if (colour === "shell") words.append(...shellLine(doc, line));
+    else if (colour === "toml") words.append(...apart(tomlLine(doc, line, tomlState)));
+    else if (colour === "shell") words.append(...apart(shellLine(doc, line)));
     else words.textContent = line;
     row.append(words);
     code.append(row);

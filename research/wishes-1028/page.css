@@ -89,7 +89,7 @@
 .pg-bar {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
+    align-items: first baseline;
     gap: var(--kp-space-md, 0.75rem);
 }
 
@@ -150,7 +150,7 @@
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     gap: var(--kp-space-lg, 1.5rem);
-    align-items: start;
+    align-items: first baseline;
 }
 
 @media (max-width: 48rem) {

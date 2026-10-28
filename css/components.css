@@ -22619,6 +22619,17 @@
         justify-self: stretch;
     }
 
+    /* A title with no label, in a form grid [wish-1028]: the form's value track is far narrower than "updated 12 s ago", so the bar keeps its
+       own four tracks (title | chooser | freshness | Refresh now) and the package's column gap, as it does outside a grid. */
+    .kp-formgrid .kp-refresh > .kp-refresh__bar:has(> .kp-refresh__title):not(:has(> .kp-refresh__label)) {
+        grid-template-columns: minmax(0, var(--kp-refresh-title-width, max-content)) minmax(0, auto) minmax(min-content, 1fr) auto;
+        column-gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-formgrid .kp-refresh > .kp-refresh__bar:has(> .kp-refresh__title):not(:has(> .kp-refresh__label)) > * {
+        grid-column: auto;
+    }
+
     @container kp-formgrid (max-width: 36rem) {
         .kp-formgrid:not([data-kp-formgrid-stack='never']) :is(.kp-refresh, .kp-refresh__bar) {
             grid-template-columns: minmax(0, 1fr);
@@ -22627,6 +22638,14 @@
         .kp-formgrid:not([data-kp-formgrid-stack='never']) :is(.kp-refresh, .kp-refresh__bar) > * {
             grid-column: 1;
             justify-self: start;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) .kp-refresh > .kp-refresh__bar:has(> .kp-refresh__title):not(:has(> .kp-refresh__label)) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) .kp-refresh > .kp-refresh__bar:has(> .kp-refresh__title):not(:has(> .kp-refresh__label)) > * {
+            grid-column: 1;
         }
     }
 

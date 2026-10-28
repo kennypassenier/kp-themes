@@ -146,10 +146,10 @@ const SECTIONS = [
         look: 'The table keeps one height in every state; the plates are centred in the rows&rsquo; place. Expand a row: its detail lists the containers of the stack.',
         controls:
             group('Write the call as', 'stack-mode', [['id', 'Field id (new)', true], ['number', 'Number (old)']]) +
-            group('Show', 'stack-show', [['all', 'All stacks', true], ['running', 'Running'], ['stopped', 'Stopped'], ['six', 'Six or more containers'], ['none', 'Nothing matches']]) +
+            group('Show', 'stack-show', [['all', 'All stacks'], ['running', 'Running', true], ['stopped', 'Stopped'], ['six', 'Six or more containers'], ['none', 'Nothing matches']]) +
             group('State', 'stack-state', [['ready', 'Ready', true], ['loading', 'Loading'], ['failed', 'Failed']]),
         component: `<div class="kp-card pg-card">
-            <div class="kp-datatable pg-stacks" id="pg-stacks" data-kp-datatable data-kp-expandable data-kp-filter-ui="none" data-kp-page-size="25" data-kp-page-sizes="none">
+            <div class="kp-datatable pg-stacks" id="pg-stacks" data-kp-datatable data-kp-expandable data-kp-filter-ui="none" data-kp-busy-overlay data-kp-page-size="25" data-kp-page-sizes="none">
                 <div class="kp-table-wrap"><table class="kp-table"><caption>Stacks</caption>
                 <thead><tr><th scope="col" data-kp-field="stack" data-kp-sort="text">Stack</th><th scope="col" data-kp-field="containers" data-kp-sort="number" data-kp-filter="range">Containers</th><th scope="col" data-kp-field="status" data-kp-filter="choice">Status</th><th scope="col" data-kp-field="backup">Last backup</th></tr></thead>
                 <tbody>${STACK_ROWS}

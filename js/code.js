@@ -175,6 +175,22 @@ const span = (doc, className, text) => {
 };
 
 /**
+ * Two coloured spans side by side sit 0 px from each other (`["kenny"]`, `10,`, `$(git`). The punctuation one becomes plain text of
+ * the line (as the JSON colon does); with no punctuation in the pair the first one does.
+ * @param {Node[]} nodes @returns {Node[]}
+ */
+function apart(nodes) {
+    const isSpan = (/** @type {Node | undefined} */ n) => n !== undefined && n.nodeType === 1;
+    const isPunct = (/** @type {Node} */ n) => /** @type {Element} */ (n).classList.contains('kp-code__punct');
+    for (let i = 1; i < nodes.length; i += 1) {
+        if (!isSpan(nodes[i - 1]) || !isSpan(nodes[i])) continue;
+        const drop = isPunct(nodes[i]) ? i : i - 1;
+        nodes[drop] = /** @type {Node} */ (nodes[drop].ownerDocument?.createTextNode(nodes[drop].textContent ?? ''));
+    }
+    return nodes;
+}
+
+/**
  * One line of TOML as nodes. `state.open` carries a multi-line string (triple quotes) from one line to the next.
  * @param {Document} doc @param {string} line @param {{ open: string }} state
  */
@@ -594,8 +610,8 @@ function drawBody(el, memory) {
         const words = make(doc, 'kp-code__text');
         if (line === '') words.textContent = ' ';
         else if (json) words.append(...jsonLine(doc, line));
-        else if (colour === 'toml') words.append(...tomlLine(doc, line, tomlState));
-        else if (colour === 'shell') words.append(...shellLine(doc, line));
+        else if (colour === 'toml') words.append(...apart(tomlLine(doc, line, tomlState)));
+        else if (colour === 'shell') words.append(...apart(shellLine(doc, line)));
         else words.textContent = line;
         row.append(words);
         code.append(row);

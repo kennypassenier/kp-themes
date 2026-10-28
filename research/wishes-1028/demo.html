@@ -275,9 +275,9 @@
                         </button>
                     </div>
                     <div role="group" aria-label="Show">
-                        <button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="all" aria-pressed="true">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="all" aria-pressed="false">
                             All stacks</button
-                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="running" aria-pressed="false">
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="running" aria-pressed="true">
                             Running</button
                         ><button type="button" class="kp-button kp-button--sm" data-pg="stack-show" data-value="stopped" aria-pressed="false">
                             Stopped</button
@@ -305,6 +305,7 @@
                             data-kp-datatable
                             data-kp-expandable
                             data-kp-filter-ui="none"
+                            data-kp-busy-overlay
                             data-kp-page-size="25"
                             data-kp-page-sizes="none"
                         >
