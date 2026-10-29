@@ -461,7 +461,10 @@ ${table(
                     .map((v) => `                            <tr><td><code>${escape(v.name)}</code></td><td>${escape(v.what)}</td></tr>`)
                     .join('\n'),
                 'This unit has one appearance and no states.',
-            ),
+            ) +
+                (ownAttributes.length === 0
+                    ? ''
+                    : '\n                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>'),
         ),
     ].join('\n');
 

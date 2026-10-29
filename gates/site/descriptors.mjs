@@ -74,7 +74,7 @@ export const DESCRIPTORS = [
         aliases: ['theme', 'register'],
         intro: 'The control that changes the page’s theme. Two shapes share one behaviour: a flat row of buttons, and an icon button whose dropdown groups the light themes above the dark ones. Both write the chosen name onto the document and remember it.',
         whenToUse:
-            'Put one in the page’s header when the reader picks their own theme. Do not reach for it to preview a theme in one corner of a page — every element can wear a theme by carrying the theme attribute, which is what the swatch beside each option does — and do not put it in a settings form behind a save button: the choice applies the moment it is made, so a form around it promises something it does not do.',
+            'Put one in the page’s header when the reader picks their own theme. To preview a theme in one corner of a page, use the preview option, or let an element wear a theme by carrying the theme attribute, which is what the swatch beside each option does — and do not put it in a settings form behind a save button: the choice applies the moment it is made, so a form around it promises something it does not do.',
         examples: [
             {
                 title: 'A flat picker',
@@ -109,6 +109,17 @@ export const DESCRIPTORS = [
 </span>
 `,
             },
+            {
+                title: 'A picker that previews on hover',
+                why: '`data-kp-theme-preview="hover"` shows each theme while the pointer is on its button; the real choice is still the press.',
+                markup: `
+<div data-kp-theme-picker data-kp-theme-preview="hover">
+<button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formal</button>
+<button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Dark</button>
+</div>
+<p data-kp-theme-status hidden></p>
+`,
+            },
         ],
         variants: [
             { name: '.kp-swatch', what: 'The two-colour disc beside an option. It wears the theme it names, so it shows that theme’s live colours rather than a copy.' },
@@ -123,6 +134,8 @@ export const DESCRIPTORS = [
             },
             { name: '--kp-sig-pa-* (pastel’s register)', what: 'The tokens pastel’s register keeps to itself, readable but not knobs: the soft landing (`land`, the same curve as the theme’s easing token), `land-size` (the landing held at its value, for widths and heights), `land-back` (the landing reversed); the clocks `window` 560 ms, `dialog` 840 ms, `tack` 360 ms, `wobble` 800 ms and `loop` 2400 ms; `off` (6 px, the pass’s offset), `pass-c`, `peel`, the radii `r-plate`, `r-ctl` and `r-chip`, `tape-bg`, `dir`, `corner` and `ground`; and two registered numbers, `pass` and `ink`, the two clocks every part that draws its own plate follows.' },
             { name: 'kp-sig-pastel-* (pastel’s keyframes)', what: 'The anchor: `stuck-in`/`-out`, `stuck-placed-in`/`-out`, `stuck-plate-in`/`-out`, `pass-in`/`-out`, `pass-host-in`/`-out`, `stuck-small-in` and `pass-small-in` (a tick, a dot); the tack: `tack-in`/`-out`; the meter’s share: `meter-stuck-o`/`-w`/`-d`; the wobble: `update-wobble`; the caterpillar: `bug-rise`, `bug-rise-bead`, `bug-step`, `bug-feel`, and the spinner’s `curl-orbit`, `curl-lift`, `curl-turn`; the tour’s `tour-ring`. Every close is its open played backwards.' },
+            { name: 'data-kp-theme-preview="hover"', what: 'The picker previews a theme while the pointer or focus is on its option and goes back when it leaves (also `attachThemePickers(root, { preview })`); `data-kp-theme-preview-target` names the element that wears the preview (default: the root). The event `kp-theme-preview` says which, and the root carries `data-theme-preview-from` while it lasts. `previewTheme`, `endPreview` and `previewedTheme` do it from code, and `currentTheme()` answers the real theme meanwhile. A preview inside a menu ends when the menu closes and the menu does not replay its entrance.' },
+            { name: 'in a form row', what: 'A theme button takes its baseline from its name; the grouped picker puts the themes at the start edge and the Light or Dark word at the line’s end.' },
         ],
         accessibility: [
             'Built in — each option is a real button with a pressed state, so a screen reader says which theme is current without seeing the border.',
@@ -458,6 +471,7 @@ export const DESCRIPTORS = [
             { name: 'tiles layout', what: '`data-kp-layout="tiles"` on a `.kp-fieldset`: every option a tile with a title and a hint. A tile that is checked takes the primary edge, an inner ring and a faint wash; hover lights the edge, focus puts the ring round the whole tile, disabled is dashed on the muted ground, and an invalid group outlines the fieldset.' },
             { name: '.kp-field__option-title, __option-hint', what: 'A tile’s name in the heavier weight, and one muted line under it that says more, or why the tile is disabled.' },
             { name: '.kp-field__required', what: 'The required marking: a star and the word, because a star alone is read as “star”.' },
+            { name: 'width', what: '`.kp-field` fills its place by default; its width knob is `none` (it was 28rem). Set the knob where a page wants a measure.' },
         ],
         accessibility: [
             'Built in — the label is a real label, the help and the error are pointed at by the control, and the invalid state is announced rather than only painted.',
@@ -562,6 +576,7 @@ export const DESCRIPTORS = [
             { name: '.kp-form__summary-title', what: 'The line that says what the summary is, in words, above the list of failing fields.' },
             { name: 'busy', what: 'While a save is in flight the form marks itself, so a consumer can disable what it wants to; the outcome is reported back through the callback the event hands over.' },
             { name: 'server errors', what: 'Errors a server found are handed in and shown in the same places as the browser’s own, rather than in a second mechanism beside them.' },
+            { name: 'data-kp-form-native-submit', what: 'A valid submit is prevented by default (a behaviour change for every consumer): the page answers `submit`. `data-kp-form-native-submit` on the form, or `nativeSubmit` in the options, brings the browser’s own submit back.' },
         ],
         accessibility: [
             'Built in — the browser’s own popups are turned off and its validation kept: the message is put in the page instead, where it can be styled, read and left standing.',
@@ -570,6 +585,7 @@ export const DESCRIPTORS = [
             'Yours — give each control a name and the constraint that describes it; that is what the browser validates.',
             'Yours — repeat the validation on the server. This is what the reader sees, not what protects the data.',
             'Yours — keep the submit a real submit button, or the form cannot be sent with the keyboard.',
+            'Yours — a valid submit is prevented by default; listen for the form’s submit and send it yourself, or choose the native submit.',
         ],
     },
     {
@@ -629,6 +645,7 @@ export const DESCRIPTORS = [
             { name: '.kp-tag__remove', what: 'The remove control on a tag. Its hover takes the destructive colour, and the tap target is widened by the tag rather than by growing the glyph.' },
             { name: '.kp-combobox__status', what: 'The live region that says how many options are left after each keystroke.' },
             { name: 'pastel', what: 'In pastel the list has its pass on its ::backdrop and lands on it, and closes as that backwards.' },
+            { name: 'in a form grid', what: 'In a `.kp-formgrid` row the status line moves into the row’s value track (the row stays one line high). It stays under the input outside a form-grid row, in a row with value text of its own, and for `data-kp-usual`.' },
         ],
         accessibility: [
             'Built in — virtual focus: the highlight travels the list while the cursor stays in the input, so typing keeps working and the current option is announced.',
@@ -942,6 +959,7 @@ export const DESCRIPTORS = [
             { name: '.kp-col-low', what: 'A column that disappears when the rows become cards. Header and cells together, because values with no column name are worse than no column.' },
             { name: 'cards', what: 'Opt-in on the table: below the threshold each row becomes a card and each cell carries its column name.' },
             { name: 'row hover', what: 'A quiet wash on the hovered row; it is not a selection, and nothing depends on it.' },
+            { name: 'failed and empty', what: 'A failed table and a table with nothing to show cover their rows and the plate fills the height the table had (`[data-kp-state-covered]`); the rows stay in the document.' },
         ],
         accessibility: [
             'Built in — the scroll region gets a tab stop, a role and a name from the caption, which is the repair for a wide table nobody without a mouse could scroll.',
@@ -1183,6 +1201,15 @@ wrap.addEventListener('kp-datatable-sort', (event) => {
             { name: 'empty', what: 'When a filter matches nothing the empty state takes the table’s place rather than leaving a header over nothing.' },
             { name: 'clickable rows', what: 'A row can be marked as a control, which gives it the pointer cursor and an activation of its own.' },
             { name: 'pastel: the busy panel', what: 'In pastel the busy panel draws its own plate and pass and lands on it as every part does, leaves as that backwards, and while it waits it becomes caterpillar (a head on its corner, stepping legs) with the round-trip spinner on it.' },
+            { name: 'filter, scope, editFilter by column id', what: '`filter(column, value)`, `scope(column)` and `editFilter(column)` take the column’s id (the header’s `data-kp-field`, else its text) as well as its number; `columnIndex(id)` gives the number (-1 when none), and `view().filtersByField` reads the filters back by id. A server request carries the same `filtersByField`.' },
+            { name: 'data-kp-row-hidden', what: 'On a `tr`: held out of the table for an Undo window. It is not counted, paged, searched or shown, and every redraw keeps it hidden.' },
+            { name: 'rows the page adds or removes', what: 'A client-side table re-reads rows the page adds or removes by itself (no `refresh()` needed) and keeps the page; `refresh({ keepPage })` keeps it when you call it yourself. `view().pageNumber` is the page the reader sees, while `page()` counts from 0.' },
+            { name: 'column numbers', what: 'The toggle column of an expandable table is column 0 in every column number. `data-kp-expand-single` is read again when it changes, and date pills and refusals write dates in the table’s locale.' },
+            { name: 'failed and empty', what: 'A failed table and a table with nothing to show cover their rows with the state plate and hold the height the table had (the rows stay in the document); the page’s own `data-kp-datatable-empty` and `data-kp-datatable-failed` slots become the same plate.' },
+            { name: 'live options', what: 'The row for `data-kp-sort-multi`, `data-kp-filter-mode` and the other attributes above is switchable at runtime: changing the attribute redraws the table, and the table keeps its view (sort, filters, page) while it switches.' },
+            { name: 'data-kp-cards="spread"', what: 'Cards derive `data-label` from the header; card lines sit on two tracks (label, value), and `spread` puts the label and the value at the opposite edges of the line.' },
+            { name: 'data-kp-filter-ui="none"', what: 'Leaves out the filter controls while the filters still apply (a page that sets them itself).' },
+            { name: 'data-kp-fixed-end', what: 'Pins the last column (the actions) at the end edge while the rest scrolls, on an opaque ground.' },
         ],
         accessibility: [
             'Built in — every sortable header is a real button inside the cell, so sorting is reachable without a pointer.',
@@ -1447,6 +1474,7 @@ setDiff(el, {
             { name: 'removed', what: 'A wash of the destructive colour, and a minus.' },
             { name: '.kp-diff__number', what: 'The line number, quiet, right-aligned, in same-width digits.' },
             { name: 'long lines', what: 'The block scrolls sideways inside its own boundary rather than widening the page.' },
+            { name: 'long tokens', what: 'The text track is `minmax(0, 1fr)`: a long token wraps instead of running past the plate.' },
         ],
         accessibility: [
             'Built in — the sign is text in its own column, which is the carrier that survives without colour.',
@@ -1492,6 +1520,7 @@ setDiff(el, {
             { name: 'copied', what: 'The button wears the success colour and says it copied, then goes back by itself.' },
             { name: 'refused', what: 'When the clipboard is unavailable the button says so instead of silently doing nothing.' },
             { name: 'with a toast', what: 'The confirmation can be a toast as well as the button’s own label, for a copy that happens far from where the reader is looking.' },
+            { name: 'the Copy button and kv', what: 'The Copy button never wraps or shrinks; inside `.kp-kv` the copyable fills its value cell with Copy at the cell’s end.' },
         ],
         accessibility: [
             'Built in — the confirmation is a change of text, and the button announces itself when its own label changes.',
@@ -1561,6 +1590,13 @@ for (const field of document.querySelectorAll('[data-doc-secret]')) {
 </div>
 `,
             },
+            {
+                title: 'The input mode: type or paste a secret',
+                why: '`data-kp-secret-mode="input"` is a field for entering a value: Show/Hide, Paste and Copy beside it. `data-kp-secret-hide-on-blur` hides it again when focus leaves; `data-kp-secret-invalid` marks it refused.',
+                markup: `
+<div class="kp-secret" data-kp-secret data-kp-secret-mode="input" data-kp-secret-label="API token" data-kp-secret-name="token" data-kp-secret-placeholder="Paste the token" data-kp-secret-hide-on-blur data-kp-secret-autocomplete="off"></div>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-secret', what: 'Marks the field; `attachPatterns` builds its parts.' },
@@ -1581,6 +1617,8 @@ for (const field of document.querySelectorAll('[data-doc-secret]')) {
             { name: 'data-kp-secret-reveal', what: 'On the Reveal button, when the markup brings its own.' },
             { name: 'kp-secret', what: 'Fired on the field when it is shown or hidden: `{ shown, reason }`, reason `press`, `hold`, `timer`, `away` (the tab went to the background) or `call`.' },
             { name: 'kp-secret-request', what: 'Fired, cancelable, when the field needs its value: call `preventDefault()` and answer with `detail.respond(value)` or `detail.fail(reason)`; `detail.purpose` is `reveal` or `copy`.' },
+            { name: 'data-kp-secret-mode="input"', what: 'The field takes a value instead of showing one: a password input with Show/Hide, Paste and Copy. `secretInputValue(el)` reads it, `setSecretInputValue(el, value)` writes it; `data-kp-secret-invalid` marks it refused, `-hide-on-blur` hides it when focus leaves, `-paste` (`false`) takes the Paste button away, and `-name`, `-placeholder` and `-autocomplete` go to the input.' },
+            { name: 'live options', what: '`data-kp-secret-ttl`, `-reveal-on` and `-mask` are switchable at runtime: changing the attribute redraws the component.' },
         ],
         accessibility: [
             'Built in — the field is a named group; Reveal says whether the value is shown (`aria-expanded`), and a polite region says “Shown. Hides in 30 s.”, “Hides in 10 s” and “Hidden again”, never every second.',
@@ -2234,6 +2272,7 @@ for (const button of document.querySelectorAll('[data-doc-toast]')) {
             { name: '.kp-progress-group', what: 'A set of bars in three columns — label, track, reading — so every track begins and ends in the same place [fix-64].' },
             { name: '.kp-progress__label', what: 'The word in front of a bar inside a group.' },
             { name: 'pastel: the caterpillar', what: 'In pastel a busy bar’s track becomes the pom-pom caterpillar: a row of pom-poms as round as the track is high, a head at its end, rising in turn on the theme’s loop (2.4 s). The pieces are js/loading-pieces.js’s, hidden from screen readers; without the script the track shows the same row standing still, and under reduced motion it stands still too.' },
+            { name: 'setProgressFailed(bar, { title, text?, art? })', what: 'The failed plate stands in the bar’s place (root export `setProgressbarFailed`), with Retry as `kp-progressbar-retry`. A bar is one line high, so this state grows.' },
         ],
         accessibility: [
             'Built in — `role="progressbar"` with `aria-valuenow` against `aria-valuemin` and `aria-valuemax`; js/progressbar.js keeps the paint in step with them, so the number read and the bar drawn cannot drift apart.',
@@ -2592,6 +2631,7 @@ list.addEventListener('click', async (event) => {
                 what: 'In a list narrower than 30rem the buttons go under the row’s text, side by side, spread over the full width in equal columns, so a role still lines up from row to row. In a narrow table they stack in the cell at one width.',
             },
             { name: 'data-kp-action-measuring', what: 'What the script writes on a table for the moment it measures, every button at its own size.' },
+            { name: 'a disabled action', what: 'A button with a reason keeps its column: the reason’s wrapper wears the button’s `data-kp-action`.' },
         ],
         accessibility: [
             'Built in — the buttons keep their order in the markup; the columns are layout only, so the tab order is the row’s own.',
@@ -2693,6 +2733,8 @@ list.addEventListener('click', async (event) => {
             { name: 'pastel: the thumbtack', what: 'In pastel every key figure is fixed to the page with a thumbtack at its top centre, the ones that act too. When a figure leaves, the tack comes out first, then it lifts off as its landing backwards and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.' },
             { name: 'pastel: tones and changes', what: 'A warning or failed figure’s label sits on its tone’s plate, and a change shows as a sticker on the figure; a value written with update() wobbles (the update page). A figure that acts (a link, a toggle) lifts and peels its top-end corner under the pointer and sticks down flat when pressed; its focus is the dashed line alone.' },
             { name: 'pastel: waiting', what: 'A key figure with `aria-busy="true"` becomes caterpillar while it waits: a head on its top-end corner and legs along its foot that step in turn (js/loading-pieces.js).' },
+            { name: 'a pressable tile', what: 'A pressable tile’s name and hint never break inside a word (the hint wraps in its own track); a trend tile’s `.kp-kpi__label-note` shows its dot only beside the name.' },
+            { name: 'meter tones', what: '`setMeter` and `.kp-meter[data-kp-tone]` take the tones `success` and `neutral` as well as the others.' },
         ],
         accessibility: [
             'Built in — a filter tile is a real button with `aria-pressed`, so a screen reader says whether the filter is on.',
@@ -2843,6 +2885,7 @@ list.addEventListener('click', async (event) => {
             { name: 'data-kp-stacked', what: 'Written on the chip when moment and value do not fit on one line: the value goes under the moment. When even that does not fit, the reading takes the axis row.' },
             { name: 'states', what: 'Loading (`setTrendData(figure, null)`, or no data yet): the trend empty at its height, the tile `aria-busy`. No points: no trend, no tab stop. One point: the same, with the axis kept.' },
             { name: 'trendAxis(points, { now, step })', what: 'The axis words on their own; `attachTrendCharts(root, options)` draws only the trends under `root` (attachCharts() draws them too).' },
+            { name: 'loading, empty and failed', what: '`setTrendData(figure, null)` is the theme’s busy card over the trend (not an empty line); `{ points: [] }` is the empty plate; `{ error, text?, art? }` is the failed plate with a Retry (`kp-chart-retry`).' },
         ],
         accessibility: [
             'Built in — no control sits inside the link: the tile’s link is one tab stop, the trend (`role="application"`, named by the figure’s `aria-label`) the next, and only while it has two points or more.',
@@ -3171,6 +3214,13 @@ document.getElementById('doc-chart-failed').addEventListener('kp-chart-retry', (
 <time class="kp-ago" datetime="2026-10-04T12:00:00Z" data-kp-ago data-kp-ago-verb="updated" data-kp-stale-after="180">updated 42 s ago</time>
 `,
             },
+            {
+                title: 'Calm when stale, counted in days',
+                why: '`data-kp-stale-tone="calm"` keeps a stale line quiet; `data-kp-ago-units="days"` counts in days.',
+                markup: `
+<time class="kp-ago" datetime="2026-10-01T12:00:00Z" data-kp-ago data-kp-stale-tone="calm" data-kp-ago-units="days" data-kp-ago-verb="updated" data-kp-stale-after="180">updated 3 days ago</time>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-ago', what: 'The line itself; the moment is the `datetime`, or this attribute’s value (ISO or ms).' },
@@ -3180,6 +3230,8 @@ document.getElementById('doc-chart-failed').addEventListener('kp-chart-retry', (
             { name: 'data-kp-ago-width', what: 'Written by the module: the held width, measured once per unit and cached by font.' },
             { name: 'data-kp-ago-announce', what: '`state` announces only the change to stale and back, through a polite region of its own; the ticking itself is never announced.' },
             { name: 'data-kp-ago-voice', what: 'Written by the module: the live region it announces through when `data-kp-ago-announce` is set.' },
+            { name: 'data-kp-stale-tone="calm"', what: 'A stale reading is quiet, not alarming: the calm plate instead of the warning one (the colours are knobs).' },
+            { name: 'data-kp-ago-units="days"', what: 'The line counts in days (“updated 3 days ago”) rather than seconds and minutes; `humanDuration` and `agoText` take `units`.' },
         ],
         accessibility: [
             'Built in — `aria-live="off"`, `aria-description` with the moment written out, a console warning when the line sits inside a live region.',
@@ -3315,6 +3367,7 @@ document.querySelector('[data-doc-calm-fill]').addEventListener('click', (event)
             { name: '.kp-calendar__plate and .kp-calendar__caption', what: 'The plate that stands over a calm month with nothing logged or one that could not be read (its sentence and, when failed, a normal-size Retry), and the page’s own sentence under the grid. Both are made by the module.' },
             { name: 'calmTone, calmWord, inPausedRange and CALM_TONES', what: 'js/calm-tones.js on its own, for a page that draws its own cells: `calmTone(tone, el)` maps a tone to the calm vocabulary (ok to logged, the rest to quiet, one console warning per foreign tone), `calmWord(tone)` is “logged”, “nothing logged” or “paused” and never “missed”, `inPausedRange(range, iso)` says whether a `YYYY-MM-DD` lies in a `from/to` pause, and `CALM_TONES` lists the six tones: logged, quiet, paused, future, before, loading.' },
             { name: 'marks the module writes', what: '`data-kp-plate` (which plate stands over the grid) and `data-kp-dim` (a failed month’s grid).' },
+            { name: 'empty and failed, every tone', what: 'Every tone gets the state plate for `empty` and `error`: the heading is the words given to `setCalendarState`, Retry fires `kp-calendar-retry`, and the grid is dimmed and inert under it.' },
         ],
         accessibility: [
             'Built in — one `table[role=grid]` named by the month’s title, seven column heads with the full weekday as their `abbr`, and one tab stop: arrows, Home/End, Page Up/Down (Shift: a year), Enter or Space to pick.',
@@ -3471,6 +3524,7 @@ setTimeout(() => {
             { name: 'setSegmentedValues / getSegmentedValues / resetSegmented', what: 'Read the values that are on (empty is All), set them without an event (the address changed), or turn every value off and fire the event if anything was on.' },
             { name: 'setSegmentedCounts / setSegmentedItems', what: 'Write the numbers beside the values (null empties one, a value not named keeps its number), or replace the items in place: the values still present stay on and the focus stays on its value.' },
             { name: 'aria-busy="true"', what: 'On the group: the counts show a placeholder while their numbers load. Pressing is not blocked.' },
+            { name: 'switchable at runtime', what: 'Switchable at runtime: changing `data-kp-segmented` redraws the control.' },
         ],
         accessibility: [
             'Built in — single is a `radiogroup` with `aria-checked`, multi is a group of toggle buttons with `aria-pressed`; one tab stop in, arrow keys within, Home and End jump.',
@@ -3609,6 +3663,10 @@ setHeat(document.getElementById('doc-heat-error'), { state: 'error', skeleton, m
             { name: 'data-kp-heat-latest', what: 'Opt-in: `end` (or `start`, for a grid whose newest column comes first) says which edge the newest column stands on. The key that goes to that edge (End, or Home) still moves to the end of the row, and also sends `kp-heat-page` with `direction: "latest"`; with Ctrl it goes to that corner and sends it too.' },
             { name: 'the busy card', what: 'While `loading`, the data table’s loading card (`js/busy-card.js`: the theme’s spinner and “Reading…”) stands centred over the cells (`.kp-heat__busy`), arriving and leaving as the table’s does; the cells are drawn once it has left.' },
             { name: 'setHeat / setHeatPick / setHeatRows', what: 'Write the grid (keeping its columns, row heights, picked column and a focused cell’s place), pick a column by its key, and set which row names are pressed. A grid marked `data-kp-heat-owned` leaves the picked column and the pressed names to the page. `heatLoading`, `heatEmpty` and `heatFailed` are the default words.' },
+            { name: 'the label column', what: 'The label column is as wide as its longest name, between a floor and a share of the grid (a name never breaks inside a word), and a long row name wraps: the row grows, the name is never cut.' },
+            { name: 'the axis rule', what: '`every` counts the columns without `minor`; `minor: true` is never named and not counted, `minor: false` is always named, and the last named column wins over the one before it when adjacent. A minor header carries its name in `aria-label` and no text.' },
+            { name: 'setHeatLegend and the calm legend', what: '`setHeatLegend(el, { entries, ramp, keys })` draws the legend (`legend` and `legendKeys` of `setHeat` do the same); the calm grid has its own legend, left out with `data-kp-legend="hide"`.' },
+            { name: 'failed and empty', what: '`setHeat` takes `message`, `text` and `art` for the state plate, and `.kp-heat` holds its loaded height while a state shows; Retry fires `kp-heat-retry`.' },
         ],
         accessibility: [
             'Built in — a `grid` with row and column headers, one tab stop, arrow keys, Home and End, Ctrl with them for the corners; Page Up and Page Down send `kp-heat-page`, Enter and Space press a cell (`kp-heat-pick`), a pressed name sends `kp-heat-row`.',
@@ -3716,6 +3774,8 @@ draw('ready');
             { name: 'the busy card', what: 'While `loading`, the data table’s loading card (`js/busy-card.js`) stands centred over the cells (`.kp-matrix__busy`), over the skeleton names and plates, and the matrix is drawn once it has left.' },
             { name: 'setMatrix / setMatrixLit / setMatrixPick', what: 'Write the matrix, light some headers (`kp-matrix-light` reports the change a person made) and pin a cell. `data-kp-matrix-owned` leaves the lit and pinned state to the page.' },
             { name: '.kp-heat__swatch--plate', what: 'A legend swatch drawn as a matrix plate, for a legend under a matrix.' },
+            { name: 'row labels', what: 'The row-label column is as wide as its longest name between a least and a most width (8rem under 36rem), names wrap, and a column is never narrower than its header’s longest word.' },
+            { name: 'the lines view', what: 'The busy card of the lines view is centred over the whole map (its least height), not over the waiting rows. `cell()` of the lines view returns `{ tone, label }`; the tones are `ok`, `warn`, `bad` and `muted`.' },
         ],
         accessibility: [
             'Built in — a `grid` with row and column headers and one tab stop; arrows move between the cells that can be pressed and wrap round; Escape turns the lit names off (`kp-matrix-light`); a pinned cell sends `kp-matrix-pick`.',
@@ -4049,11 +4109,116 @@ setGanttPoints(
             { name: 'all', what: 'A range word: the window fits everything on the timeline and now, and stays fitted while the data changes.' },
             { name: 'href / sub', what: 'A lane with `href` is a link (`.kp-gantt__lane-link`); `sub` is a second line under its name (`.kp-gantt__sub`), and the lanes grow to hold it. `data-kp-lane-key` on the name is what it was drawn from.' },
             { name: '.kp-gantt--line', what: 'One lane, no toolbar, no lane names, no hint and no brush, the axis under the line, fitted to its data: the dated line under a journey stepper.' },
+            { name: 'data-kp-gantt-legend', what: '`auto` (the states the runs use) or a list of states: a legend under the plot, one chip per state with its mark.' },
+            { name: 'plannedEnd and data-kp-gantt-rest="off"', what: 'A run may carry `plannedEnd`: the bar’s rest stretches from where it is to where it was expected to end. `data-kp-gantt-rest="off"` leaves the stretch out. The registers draw the stretch in the base planned look only; a theme pass has not been asked for.' },
+            { name: 'data-kp-gantt-scroll', what: '`off` or `always`: with the least plot width (a knob) the frame scrolls sideways instead of squeezing the bars.' },
+            { name: 'lane names and the frame', what: 'The name column is as wide as its longest name up to 40% of the box or 14rem and the least width is a knob; a lane name wraps and is never cut, and its first line stands level with the lane’s first row. A lane’s own stretch stands on the foot of the first row. The frame shows whole lanes under its height knob and a scroll rests on a lane; a queued bar is hollow on the card’s ground.' },
         ],
         accessibility: [
             'Built in — one tab stop: left and right move along a lane, up and down to the nearest bar of the neighbouring lane, Home and End to the lane’s first and last, Enter and Space open the run; range, Live, Zoom and Clear are buttons.',
             'Built in — every bar has an accessible name with its label, state and times; a run that changes state is announced in a polite status region.',
             'Yours — give the timeline a name (`aria-label`), name every run so it reads without its colour, and give the new runs when the window moves.',
+            'Built in — a lane name wraps and is never cut, so it can be read at any width and at any zoom.',
+        ],
+    },
+    {
+        id: 'sequencer',
+        title: 'Sequencer',
+        group: 'Data',
+        classes: ['kp-sequencer'],
+        aliases: ['editing', 'flip', 'grabbed', 'linked', 'locked', 'mode'],
+        exports: [],
+        intro: 'An editable multi-track timeline: bars in lanes, moved along the axis and between lanes, resized at either edge by pointer or keyboard, snapping to a step in any unit and to the edges of other items, with a live total and an optional line for now. It is the run timeline’s own look on a plan instead of the clock: the host is `section.kp-gantt.kp-sequencer`, so every register that dresses the run timeline dresses this. `attachSequencers(root)` in js/sequencer.js fills `[data-kp-sequencer]`; `setSequencerItems` hands it the plan.',
+        whenToUse:
+            'When a reader arranges steps in time and in parallel: the steps of a recipe, a deployment plan, a rota. Not for what already ran (use the run timeline), not for a list that only changes order (use reorder), and not for a calendar of dated events (use the week agenda).',
+        examples: [
+            {
+                title: 'A recipe, two lanes, one step that runs alongside',
+                why: 'The markup is the empty host with its options; the page hands over the lanes and the items. Values are minutes. “Brown the mince” runs alongside “Boil the water”, so dragging either moves both. The page saves what `kp-sequencer-change` carries.',
+                markup: `
+<section class="kp-gantt kp-sequencer" data-kp-sequencer data-kp-sequencer-unit="minute" data-kp-sequencer-snap="1" aria-label="Spaghetti bolognese"></section>
+<p class="kp-text-muted" data-doc-sequencer-total></p>
+`,
+                script: `
+import { attachSequencers, setSequencerItems, setSequencerNow } from '@kp-soft/themes/js/sequencer';
+
+const plan = document.querySelector('[data-kp-sequencer]:not([id])');
+attachSequencers(plan.parentElement);
+setSequencerItems(
+    plan,
+    [
+        { id: 'boil', lane: 'pasta', label: 'Boil the water', start: 20, duration: 8 },
+        { id: 'cook', lane: 'pasta', label: 'Cook the spaghetti', start: 28, duration: 10 },
+        { id: 'brown', lane: 'sauce', label: 'Brown the mince', start: 20, duration: 11, with: 'boil' },
+        { id: 'simmer', lane: 'sauce', label: 'Simmer the sauce', start: 31, duration: 7 },
+    ],
+    [
+        { id: 'sauce', label: 'Sauce' },
+        { id: 'pasta', label: 'Pasta' },
+    ],
+);
+setSequencerNow(plan, 12);
+plan.addEventListener('kp-sequencer-change', (e) => {
+    document.querySelector('[data-doc-sequencer-total]').textContent = 'Saved: ' + e.detail.items.length + ' steps, ' + e.detail.total + ' min in all.';
+});
+`,
+            },
+            {
+                title: 'Pushing, a locked step and the failed state',
+                why: '`data-kp-sequencer-overlap="push"` moves the items in the way later instead of refusing; `locked` pins one. The second host shows the failed plate with its Retry (`kp-sequencer-retry`), which keeps the footprint the sequencer had.',
+                markup: `
+<section class="kp-gantt kp-sequencer" id="doc-seq-push" data-kp-sequencer data-kp-sequencer-overlap="push" data-kp-sequencer-lanes="fixed" data-kp-sequencer-unit="hour" data-kp-sequencer-toolbar="off" aria-label="Release plan"></section>
+<section class="kp-gantt kp-sequencer" id="doc-seq-failed" data-kp-sequencer data-kp-sequencer-hint="off" aria-label="Release plan, failed to load"></section>
+`,
+                script: `
+import { attachSequencers, setSequencerItems, setSequencerState } from '@kp-soft/themes/js/sequencer';
+
+const plan = document.getElementById('doc-seq-push');
+const failed = document.getElementById('doc-seq-failed');
+attachSequencers(plan.parentElement);
+setSequencerItems(
+    plan,
+    [
+        { id: 'freeze', lane: 'build', label: 'Freeze', start: 0, duration: 2, locked: true },
+        { id: 'build', lane: 'build', label: 'Build', start: 2, duration: 3 },
+        { id: 'test', lane: 'build', label: 'Test', start: 5, duration: 3 },
+        { id: 'docs', lane: 'ship', label: 'Docs', start: 2, duration: 4 },
+    ],
+    [
+        { id: 'build', label: 'Build' },
+        { id: 'ship', label: 'Ship' },
+    ],
+);
+setSequencerState(failed, 'error', 'The plan did not load', { text: 'Try again in a moment.' });
+failed.addEventListener('kp-sequencer-retry', () => setSequencerState(failed, 'empty', 'Nothing planned yet'));
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-sequencer-unit', what: 'What `start` and `duration` are counted in: `second`, `minute` (default), `hour`, `day` or `week` (short forms `s`, `min`, `h`, `d`, `w` too). Read again when it changes.' },
+            { name: 'data-kp-sequencer-snap', what: 'The step, in the unit, that every move and resize snaps to (1). Edges of other items pull a dragged edge within 8 px as well.' },
+            { name: 'data-kp-sequencer-snap-items', what: '`off` leaves out the pull to other items’ edges and keeps the step alone.' },
+            { name: 'data-kp-sequencer-overlap', what: '`refuse` (default: an edit that would overlap in a lane does not happen, and `kp-sequencer-refuse` says why), `push` (the items in the way, with what runs alongside them, move later) or `allow` (items overlap and take rows of their lane).' },
+            { name: 'data-kp-sequencer-lanes', what: '`fixed` keeps every item in its lane; the default lets an item change lane, by pointer or with Alt and the up and down arrows.' },
+            { name: 'data-kp-sequencer-editable', what: '`off` shows the plan and edits nothing; the bars are still reachable by keyboard and still announce themselves.' },
+            { name: 'data-kp-sequencer-zoom', what: 'The zoom, 0.5 to 16; 1 fits the plot to its box. Under 26rem the plot (its knob is listed below) keeps that width and the frame scrolls sideways, with the lane names held at the start edge. Ctrl and the wheel, or a pinch, zoom too; `setSequencerZoom` sets it from code.' },
+            { name: 'data-kp-sequencer-span', what: 'The shortest window, in the unit (0, the default, fits the plan with a little room after the last item).' },
+            { name: 'data-kp-sequencer-toolbar', what: '`off` leaves out the zoom row and the live total in it.' },
+            { name: 'data-kp-sequencer-hint', what: '`off` leaves out the line that says how to move and resize.' },
+            { name: 'with', what: 'An item field naming another item it “runs alongside”: it starts together with it. Moving any member of a group moves the whole group by the same amount, and a join is drawn from the item to its partner. L chooses the partner for the focused item, U lets it run on its own.' },
+            { name: 'locked', what: 'An item field: the bar cannot be moved or resized (`data-kp-locked`); an attempt is refused with the reason `locked`.' },
+            { name: 'setSequencerItems(el, items, lanes)', what: 'Gives the sequencer its items and lanes. Items are kept by id, so a refresh keeps focus and selection; an edit in progress is not disturbed, the set is applied when it ends. `getSequencerItems` and `getSequencerTotal` read the plan back.' },
+            { name: 'setSequencerNow(el, at)', what: 'Puts the line for now at a point of the plan (null takes it away).' },
+            { name: 'setSequencerState(el, state, words, { text, art })', what: '`loading` (the busy card), `empty` or `error` (the state plate; Retry fires `kp-sequencer-retry`) or `ready`. The plate keeps the footprint the sequencer had.' },
+            { name: 'kp-sequencer-change', what: 'Fired when an edit is dropped, with `{ items, changed, source: "pointer" | "keyboard" | "link", total }`; save `items` (each `{ id, lane, start, duration, with }`).' },
+            { name: 'kp-sequencer-refuse', what: 'Fired when an edit did not happen, with the `reason` (`locked`, `overlap`, `edge`, `lane`, `cycle`, `unknown`) and the `blocker`; the bar shakes by a mark and the status line says it.' },
+            { name: 'pure logic', what: '`sequencerPlan`, `sequencerSnap`, `sequencerLink`, `sequencerRows` and the other functions exported next to `attachSequencers` need no DOM; a server or a test can run the same overlap rule the page does.' },
+        ],
+        accessibility: [
+            'Built in: every bar is a button in a list of lanes; arrows move between items, Enter or Space picks one up, the arrows then move it by the snap step (Ctrl: ten steps), Shift and the arrows resize the end, Ctrl and Shift the start, Alt and the up and down arrows change lane, Enter drops it and Escape puts it back.',
+            'Built in: every step is said in one polite status region (the bar picked up, its new start and length, the refusal and its reason); the pointer drag has the same refusals, and Escape during a drag puts the bar back.',
+            'Built in: a locked bar, a linked pair and a refused edit carry a mark and a word, not a colour alone; the live total and the line for now are text.',
+            'Yours: saving what `kp-sequencer-change` carries, and what an item means; the sequencer does not know what a minute is for.',
         ],
     },
     {
@@ -4168,6 +4333,8 @@ failed.addEventListener('kp-pipeline-retry', () => {
             { name: 'kp-pipeline-retry', what: 'Try again on a failed board was pressed.' },
             { name: 'kp-pipeline-more', what: 'A lane shows more or fewer: `{ lane, open }`.' },
             { name: 'setPipelineSelected', what: 'Marks the open card (`aria-current`), or none.' },
+            { name: 'empty and failed', what: 'The plate stands over the whole board (a footprint host, `data-kp-state="empty"`), and Retry fires `kp-pipeline-retry`.' },
+            { name: 'danger', what: 'A lane field: marks the lane as one that needs attention (`.kp-pipeline__flag`, string `pipelineDanger`). Lane names wrap and the lanes share rows (a subgrid).' },
         ],
         accessibility: [
             'Built in — the board is a list of lanes named by their plates, each a list of cards; a count is the exact number.',
@@ -4294,6 +4461,8 @@ setUptime(strip, { label: 'Watering', periods, from: '30 days ago', to: 'Today' 
             { name: 'data-kp-uptime-before', what: 'Set by the script on a scrolling strip with periods before the view: the start edge fades.' },
             { name: 'data-kp-uptime-after', what: 'Set by the script on a scrolling strip with periods after the view: the end edge fades.' },
             { name: 'data-kp-uptime-attached', what: 'Set by the script once the strip is wired.' },
+            { name: 'groups', what: 'Strips that load together are a group with one busy card over the group: `data-kp-uptime-group` on the box that holds them (`off` opts out), or two or more strips that are direct children of one parent (marked `data-kp-uptime-group="auto"`).' },
+            { name: 'empty and failed', what: 'The state plate over the strip’s footprint. A failure has a Retry (`kp-uptime-retry`); `error` or `message` is the heading, `text` and `art` are optional.' },
         ],
         accessibility: [
             'Built in — one tab stop: the arrow keys move through the cells that are shown, Home and End jump to the first and the latest, Enter and Space pick (`kp-uptime-pick`); the hover card opens at once on focus.',
@@ -4422,6 +4591,7 @@ attachCommands(document.getElementById('doc-command').parentElement.parentElemen
             'Built in — the block is a group named by its terminal; the copy button is described by it, says “Copied” on itself and announces it; a refused copy says so in a toast and on the button.',
             'Built in — the prompts are drawn, not written, so neither a screen reader nor a copy reads them; scrolling code is a focusable region a keyboard can scroll.',
             'Yours — say what the command does in the sentence before it, and name where it runs when that is not the obvious machine.',
+            'Built in — in a column too narrow for the head, the Copy button goes under the terminal’s name and the badge; neither breaks a word.',
         ],
     },
     {
@@ -4599,6 +4769,13 @@ document.getElementById('doc-range-week').addEventListener('click', () => {
 });
 `,
             },
+            {
+                title: 'Presets only',
+                why: '`data-kp-range-custom="off"` leaves out the Custom… button and its panel.',
+                markup: `
+<div class="kp-range" data-kp-range="24h" data-kp-range-custom="off" data-kp-range-presets="1h 6h 24h 7d 30d" aria-label="Metrics range"></div>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-range', what: 'The preset chosen at first (a key of the presets); empty for the third preset.' },
@@ -4610,6 +4787,7 @@ document.getElementById('doc-range-week').addEventListener('click', () => {
             { name: 'data-kp-range-disabled', what: 'The presets and Custom… are off; the line still names the window.' },
             { name: 'data-kp-range-value', what: 'Set by the script: the preset in force, or `custom`.' },
             { name: 'data-kp-time-zone', what: 'The zone the line and the custom times are read in; Europe/Brussels by default.' },
+            { name: 'data-kp-range-custom="off"', what: 'Presets only: no Custom… button, no panel in the page or the tab order, and the window’s name across the line.' },
         ],
         accessibility: [
             'Built in — the presets are a radio group with one tab stop and arrow keys; Custom… says it opens a dialog and is pressed while a custom window is in force; the line is the picker’s description and is read when it changes.',
@@ -4907,6 +5085,7 @@ attachSnoozes(document.getElementById('doc-snooze-menu').parentElement);
             { name: 'data-kp-look', what: '`chips` (default) or `menu`.' },
             { name: 'data-kp-snoozed-until', what: 'An ISO moment: shows “Snoozed until …” with End snooze.' },
             { name: 'data-kp-remember', what: 'A name: the last custom moment is kept across visits.' },
+            { name: 'width', what: 'The snooze picker takes the width of its cell, row or bar (it is no longer a size container); End snooze wraps under the button.' },
         ],
         accessibility: [
             'Built in — the menu is the package’s menu (arrow keys, Home, End, Esc); the status line is read when it changes; the panel takes the focus and gives it back and names what is wrong in a field.',
@@ -5067,6 +5246,7 @@ setSentenceFieldState(document.getElementById('doc-sentence-loading-field'), 'lo
             { name: 'data-kp-own-line-ratio', what: 'How much of the line a field may take before it goes on a line of its own; 0.7.' },
             { name: 'data-kp-show-when', what: 'On a phrase: `field=value`; the phrase shows only then.' },
             { name: 'data-kp-block', what: 'On a field: always a line of its own.' },
+            { name: 'the computed field', what: '`.kp-sentence__computed` (`data-kp-sentence-computed`) shows a value worked out from the other fields: `attachSentences(root, { computed })`, `sentence().compute()` and `setSentenceComputed()` fill it. It is not a control and is not submitted.' },
         ],
         accessibility: [
             'Built in — a status region says the whole sentence after a change; a hidden phrase is inert and its controls are disabled; an invalid control is marked and described by the line that names it.',
@@ -5413,6 +5593,7 @@ setDeplist(document.getElementById('doc-deplist-more'), [
             { name: 'data-kp-dep-states', what: 'A word and a tone beside each needed thing: running, stopped or unknown.' },
             { name: 'data-kp-dep-collapse', what: 'How many rows show before “Show all N”; 8 by default.' },
             { name: 'data-kp-state', what: '`loading` (the busy card over placeholder rows), `empty` and `error` (the package’s plates with Retry), each as high as the list was.' },
+            { name: 'state badges', what: 'The state badges are one column of one width, with a least width for the narrow layout.' },
         ],
         accessibility: [
             'Built in — an ordered list; each row reads as one sentence (“paperless needs postgres”), the arrow is hidden from a screen reader; the heading is a polite live region with the exact count.',
@@ -5482,6 +5663,7 @@ document.getElementById('doc-trace-all').addEventListener('kp-trace-swap', () =>
             { name: 'data-kp-trace-verdict', what: '`both` (default), `mark` or `word`; never colour alone.' },
             { name: 'data-kp-trace-rule', what: '`chip` (default, keyboard-reachable), `inline` or `off`.' },
             { name: 'data-kp-state', what: '`running` (the busy card over placeholder hops), `empty` (“Pick a source and a target”) or `error` (Retry), each as high as the trace was.' },
+            { name: 'the verdict column', what: 'In a column the verdict word has one column shared by every hop (a subgrid of the list’s tracks).' },
         ],
         accessibility: [
             'Built in — an ordered list; each hop reads “title, allowed” (or refused, not reached, not measured); the summary is a polite status, so a changed pin is announced; the rule chip is a button.',
@@ -5581,6 +5763,11 @@ draw('ready');
             { name: 'data-kp-entity-inline', what: 'The most actions that stand as buttons; the rest go in “More”. The buttons come only from the data: a card with no action has no row for them, and every card has as many columns as the grid’s busiest card. Under 30rem every action folds into “More”.' },
             { name: 'data-kp-selectable', what: 'A tick at the start of the card, a row of a selection with the keys j, k and x.' },
             { name: 'data-kp-state', what: 'On a card: `loading` (the same five rows as bones), `empty` (“not measured”) or `error` (a destructive state and Retry). On the grid: `loading` (skeleton cards under the busy card), `empty` or `error` (the package’s plates).' },
+            { name: 'equal action columns', what: 'The same action is one width on every card, a long label wraps, and More takes what cannot fit.' },
+            { name: 'meters[].tone', what: '`success` and `neutral` as well as the others.' },
+            { name: 'empty with an action', what: '`setEntityGridState(grid, "empty", { action: "none", actionLabel, onAction })`, `setEntityGrid(grid, [], empty)` and `data-kp-entity-empty-action="none"` say whether the empty plate has an action and what it is called.' },
+            { name: 'the trend row', what: '`trend`, `trendLabel` and `trendText` in the card data draw a sparkline; `data-kp-entity-trend` is `auto`, `on` or `off`. The parts are `.kp-entity__trend`, `__trend-line` and `__spark`.' },
+            { name: 'the app tile', what: '`data-kp-entity-kind="tile"` draws a link tile (card data `href`, `external`, `description`, `lines`, `starred`) with a health state, a description, lines and a favourite star (`data-kp-entity-star`, event `kp-entity-star` with `{ key, starred }`).' },
         ],
         accessibility: [
             'Built in — the name is the card’s one link and stretches over the card (one tab stop); every figure is an exact number; the “+2” and “More” are the package’s menu button with its keys; a ticked card is a checked box with its own name.',
@@ -5667,6 +5854,8 @@ input.dispatchEvent(new Event('input', { bubbles: true }));
             { name: 'data-kp-keep', what: '`session` (default) keeps the changes through a reload; `off`.' },
             { name: 'data-kp-undo-ms', what: 'How long Undo is offered after Discard; 6000, 0 for none.' },
             { name: 'data-kp-save-label', what: 'The Save words, `{n}` for the count.' },
+            { name: 'configureUnsaved({ storage }) / attachUnsaved(root, { storage })', what: 'Where the changes are kept: any object with `getItem`, `setItem` and `removeItem`, so a page that must not touch the browser’s session storage hands over its own.' },
+            { name: 'data-kp-keep="local"', what: '`local` keeps the changes through closing the browser as well as a reload (`session`, the default, keeps them through a reload only).' },
         ],
         accessibility: [
             'Built in — the count is announced politely, Save and Discard say why they are off, the list is a dialog with Esc, a refused save is an alert, Ctrl or Cmd+S saves.',
@@ -6429,6 +6618,7 @@ failed.addEventListener('kp-qr-retry', () => {
             { name: 'data-kp-qr-max', what: 'Bytes above which a warning shows (512).' },
             { name: 'data-kp-qr-narrow', what: '`code` (default) or `link`: the link and Copy first on a narrow screen.' },
             { name: 'data-kp-qr-retry', what: 'A code that could not be made offers Retry.' },
+            { name: 'switchable at runtime', what: 'Switchable at runtime: changing `data-kp-qr-retry` redraws the code.' },
         ],
         accessibility: [
             'Built in — the code is an image named by `data-kp-qr-label` and described by the link, focusable so a screen reader can read the link; Shift+C copies; the result of Copy is announced.',
@@ -6863,6 +7053,18 @@ document.getElementById('doc-tile-backup').addEventListener('click', (event) => 
 });
 `,
             },
+            {
+                title: 'Large tiles',
+                why: '`data-kp-action-size="large"` on the board makes every tile large; `compact` makes them small.',
+                markup: `
+<div class="kp-actions" data-kp-action-size="large" role="group" aria-label="System actions">
+<button type="button" class="kp-action"><strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></button>
+<a class="kp-action" href="#host"><strong class="kp-action__title">Host</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">CPU, memory and disks of the machine underneath.</span></a>
+<button type="button" class="kp-action kp-action--destructive"><strong class="kp-action__title">Delete all snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></button>
+<button type="button" class="kp-action" disabled><strong class="kp-action__title">Check for updates</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Not while a backup is running.</span></button>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-action--destructive', what: 'A start bar, a red-tinted edge and title. The edge goes fully red when pointed at.' },
@@ -6870,6 +7072,7 @@ document.getElementById('doc-tile-backup').addEventListener('click', (event) => 
             { name: 'aria-busy="true"', what: 'The spinner appears in the mark, a hidden “Working…” follows the title, and a press does nothing until it is cleared. `setActionBusy(tile, true)` sets it and fires `kp-action-busy`.' },
             { name: '.kp-action__meta', what: 'An optional small line under the sentence, for a live figure.' },
             { name: '--kp-actions-min', what: 'The least width of a column (15rem); the grid fills the width with as many as fit.' },
+            { name: 'data-kp-action-size', what: '`compact` or `large`, on the board, on a tile or on an element above; absent leaves the theme’s own size. `setActionSize(el, size)` writes it for a script.' },
         ],
         accessibility: [
             'Built in — a tile is a real button or link: Tab reaches it, Enter or Space presses a button, Enter follows a link, and the focus ring is whole in every theme.',
@@ -7316,6 +7519,7 @@ draw('ready');
             { name: 'data-kp-checklist-undo-ms', what: 'How long Undo is offered after Clear checked (6000).' },
             { name: 'data-kp-checklist-empty', what: 'The sentence of an empty list.' },
             { name: 'data-kp-checklist-heading', what: 'The level of the group headings (3).' },
+            { name: 'empty and failed', what: 'The empty line is the state plate (a `div`, no longer a `p`); a failed list has a Retry that fires `kp-checklist-retry` (also `kp-claim-retry` on a claim list).' },
         ],
         accessibility: [
             'Built in — real checkboxes in labels, named by the item and described by its amount; group headings with their counts.',
@@ -7376,6 +7580,7 @@ startTimer(ring, { name: 'Toast', seconds: 4 });
             { name: 'data-kp-timers-sound="off"', what: 'No chime.' },
             { name: 'data-kp-timers-notify="false"', what: 'No system notification even with the permission.' },
             { name: 'data-kp-timers-empty', what: 'The sentence of an empty list.' },
+            { name: 'setTimersState(list, state, message)', what: '`loading`, `error` or `ready`; Retry fires `kp-timers-retry`. `data-kp-timers-empty` is now on the empty plate, and the least height of a state is one card’s.' },
         ],
         accessibility: [
             'Built in — each card is named by its timer; the time is a `timer` region that is read on demand, never every second.',
@@ -7536,6 +7741,13 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () => (log.textContent = 'kp
             { name: 'data-kp-wake, data-kp-speak and data-kp-text-optional', what: 'The screen is not kept on and Read aloud is off in answer mode (`true` turns them on); a written answer can always be passed with Not today.' },
             { name: 'kp-focus-steps-answer and related events', what: '`kp-focus-steps-before-answer` (cancelable), `kp-focus-steps-answer` `{ index, id, value, source, same?, previous }`, `kp-focus-steps-resume`, `kp-focus-steps-retry`, `kp-focus-steps-save-retry`; Done carries `{ total, answers, startedAt, finishedAt }`. `setFocusStepsState(el, "save-error")` keeps the answers.' },
             { name: 'marks the module writes', what: '`data-kp-value` and `data-kp-chosen` on an answer, `data-kp-pinned`, `data-kp-layout` on the answers, `data-kp-done` and `data-kp-current` on a dot.' },
+            { name: 'getStepsPassed(root) / getSteps(root)', what: 'Read the steps back: `getSteps` gives the steps with their state, `getStepsPassed` the ones the reader has gone through.' },
+            { name: 'tracks: track, id, title, waitFor / after, timer.id', what: 'Step fields for a recipe that runs in parallel: `track` puts the step in a lane, `id` and `title` name it, `waitFor` or `after` says which step must be done first, and `timer.id` names the timer the step starts. The lanes sit in a band; a step that waits shows the waiting plate.' },
+            { name: 'data-kp-tracks / -lanes / -lane-detail', what: '`data-kp-tracks` turns the lanes on, `data-kp-lanes` chooses how they show, `data-kp-lane-detail` how much a lane says about its step.' },
+            { name: 'data-kp-track-follow / -attention / -shared', what: '`data-kp-track-follow` makes the view follow the lane that needs the reader, `-attention` says how a lane that needs them is called out, `-shared` how a step shared between lanes shows.' },
+            { name: 'keys T and Shift T', what: 'T goes to the next lane and Shift T to the one before; the events `kp-focus-steps-track` and `kp-focus-steps-track-attention` say which lane the view is on and which one wants attention.' },
+            { name: 'read mode', what: 'The empty and failed plates are the state plate (there is no more `kp-focus-steps__message`), and `data-kp-wake` is read live.' },
+            { name: 'narrow columns', what: 'In a column too narrow for the head, Back and Next stand one under the other when two do not fit side by side; neither breaks a word.' },
         ],
         accessibility: [
             'Built in — every change says “Step 3 of 8” and the step; the buttons are real buttons, a step boundary is `aria-disabled` and keeps the focus.',
@@ -7614,6 +7826,8 @@ setWheelState(document.getElementById('doc-wheel-failed'), 'error', 'The choices
             { name: 'data-kp-wheel-reduced-ms', what: 'The short turn under reduced motion, in ms (600; 0 places it at once).' },
             { name: 'data-kp-wheel-repeat="true"', what: 'Spin again may land on the same choice.' },
             { name: 'data-kp-wheel-empty', what: 'The sentence when nothing fits.' },
+            { name: 'short', what: 'An item field: a shorter name for the face of the wheel. A long name is no longer cut on its segment: it is set at the largest size, over two lines, then `short`, else not drawn, and the segment’s tooltip holds the whole name.' },
+            { name: 'data-kp-wheel-kiosk', what: 'No hub button: the wheel is the control, and it stays live. `data-kp-wheel-answer` shows the answer card. Items take `tag` and `resting`; the words are `wheelIdleKiosk`, `wheelSpinKiosk` and `wheelResting`.' },
         ],
         accessibility: [
             'Built in — Spin is a real button (Space, Enter); the outcome is a status region said once, after the turn.',
@@ -7812,6 +8026,7 @@ table.addEventListener('kp-hovercard', (event) => {
             { name: 'attachHoverCards options', what: '`{ selector, fill, openDelayMs, closeDelayMs, closeOnEscape, touch, cardClass }` (300 ms and 100 ms, Escape on, touch on). `touch: false` turns taps off for the root. Per anchor: `data-kp-open-delay`, `data-kp-close-delay`, `data-kp-close-on-escape="false"` and `data-kp-touch` (`off` leaves the anchor to touch alone; `tap` makes a link or button anchor open the card on the first tap and act on the second; a plain anchor opens on a tap by default). The attribute’s own text wins over `fill`.' },
             { name: 'hover card handle', what: '`attachHoverCards` returns the detach function with `{ card, open(anchor), hide(), refresh(), anchor() }` on it: `refresh()` fills the open card again when its data changed under the pointer. The card is `.kp-popover.kp-tooltip[data-kp-hovercard-card]` in the body, in the top layer, and its widest is a knob.' },
             { name: 'pastel', what: 'In pastel a tooltip hangs in its holder, whose ::after draws its pass by anchor positioning; it lands small on the pass and leaves as that backwards.' },
+            { name: 'the hover card on touch', what: 'On touch the hover card opens on a press, as text only; `data-kp-touch` on the host says it is used with touch.' },
         ],
         accessibility: [
             'Built in — focus opens it as well as hover, so it is reachable from the keyboard.',
@@ -8650,6 +8865,20 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 </div>
 `,
             },
+            {
+                title: 'Counts on tabs',
+                why: 'The count is the exact number, with the unit heard by a screen reader; `loading` is a skeleton, never a 0.',
+                markup: `
+<div class="kp-tabs">
+<div class="kp-tabs__list" role="tablist" aria-label="Application">
+<button type="button" class="kp-tab" role="tab" id="doc-b-tab-0" aria-controls="doc-b-panel-0" aria-selected="true" data-kp-tab-count="12" data-kp-tab-count-tone="error" data-kp-tab-count-unit="error,errors">Overview</button>
+<button type="button" class="kp-tab" role="tab" id="doc-b-tab-1" aria-controls="doc-b-panel-1" aria-selected="false" data-kp-tab-count-state="loading">History</button>
+</div>
+<div class="kp-tabs__panel" role="tabpanel" id="doc-b-panel-0" aria-labelledby="doc-b-tab-0">Sent on 4 September, interview on the eleventh.</div>
+<div class="kp-tabs__panel" role="tabpanel" id="doc-b-panel-1" aria-labelledby="doc-b-tab-1" hidden>Three earlier applications to this company.</div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-tabs__list', what: 'The row, with a rule under it that the selected tab’s own rule sits on.' },
@@ -8659,6 +8888,7 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: 'manual activation', what: 'The arrows move focus only; Enter or Space selects.' },
             { name: 'looping', what: 'The arrows wrap from the last tab to the first, unless the list says not to.' },
             { name: '.kp-tabs__panel', what: 'The panel. Exactly one is visible; the others are hidden, which also takes them out of the search and the tab order.' },
+            { name: 'the count on a tab', what: '`setTabCount` and `data-kp-tab-count` draw the exact number on a `.kp-tab` (never “9+”), with `-tone` (neutral, info, success, warning, error), `-unit` (“error,errors”, always heard, drawn with `-show-unit`), `-state` (`loading`: a skeleton, `error`: a dash) and `-zero` (`show`: a 0 is information).' },
         ],
         accessibility: [
             'Built in — a roving tab order, so Tab leaves the list rather than walking through every tab in it.',
@@ -9055,6 +9285,7 @@ document.querySelector('[data-doc-confirm="blocked"]').addEventListener('click',
             { name: 'blocked confirmation', what: '`blocked` or `data-kp-confirm-blocked`: the description becomes the sentence that says what to do first, and the only button is Close. A blocked removal shows no typed field and no Confirm.' },
             { name: 'backdrop', what: 'A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.' },
             { name: 'pastel', what: 'In pastel a dialog is printed twice and stuck on: its second pass, a flat silhouette in the second ink drawn by its ::backdrop and placed on it by anchor positioning, springs into its rest 6 px off register, then the dialog swings down onto it from its top-start corner on the soft landing (one 8 % overshoot, settled once); a strip of washi tape crosses its top-start corner, and the modal’s dim is the backdrop’s border, so a click outside still reaches it. The close is that opening played backwards. Without anchor positioning the pass rests as a flat shadow and the dialog opens with the swing alone; under reduced motion it is simply there.' },
+            { name: 'section inset', what: 'A section’s rule keeps a small room between the text and the ends of the rule (a knob).' },
         ],
         accessibility: [
             'Built in — focus trapping, Escape and focus return come from the element itself, so they work the way the platform’s do.',
@@ -9189,6 +9420,7 @@ setTimeout(() => {
             { name: 'data-kp-context / data-kp-context-of / data-kp-featured / data-kp-recent', what: 'The open subject’s commands rank higher and, with what is featured and the last few run, are all that shows before anything is typed; a palette with none of these shows every command.' },
             { name: 'data-kp-max-shown / data-kp-nomatch / data-kp-verb', what: 'At most 40 rows show and the status line says how many matched; a query nothing answers keeps the status line; `data-kp-nomatch="plate"` shows the empty plate instead, naming what a known verb works on.' },
             { name: 'pastel', what: 'In pastel the palette opens as pastel’s dialog: its pass on its ::backdrop, the landing onto it, a strip of washi tape across its corner; it closes as that opening backwards. An entry under the pointer or the keys is a sticker on its plate.' },
+            { name: 'switchable at runtime', what: 'Switchable at runtime: changing `data-kp-match` redraws the palette’s results.' },
         ],
         accessibility: [
             'Built in — the dialog gives focus trapping, Escape and focus return, so the palette cannot strand the keyboard.',
@@ -9471,6 +9703,7 @@ failed.addEventListener('kp-card-retry', () => setCardState(failed, 'ready'));
             { name: '.kp-card__retry', what: 'Try again, in an error note; a press fires `kp-card-retry` on the card. `retry: false` leaves it out of a read the page cannot repeat.' },
             { name: '.kp-card__busy', what: 'The data table’s loading card laid over the stage while loading; the first loading card is there from the first frame and does not arrive.' },
             { name: '[aria-busy="true"]', what: 'A card waiting for its content. In pastel it becomes caterpillar: a head on its top-end corner and legs along its foot that step in turn (js/loading-pieces.js). Other themes draw nothing extra.' },
+            { name: 'setCardState(card, "empty" | "error", { title, text, art })', what: '`art` is a node (an inline SVG) or a glyph. The empty note is the state plate with its title at the heading size and Try again is a normal-size button.' },
         ],
         accessibility: [
             'Built in — the card ground and its ink are a measured pair, so text on a card clears the contrast floor in every theme.',
@@ -9512,6 +9745,7 @@ failed.addEventListener('kp-card-retry', () => setCardState(failed, 'ready'));
             { name: '.kp-tiles', what: 'A list or a div of `.kp-card`s: as many columns as fit, every row as tall as the tallest tile. A tile’s title is a step under a page card’s.' },
             { name: 'the footer', what: 'A `.kp-card__footer` keeps to the tile’s bottom edge; the body never touches its rule.' },
             { name: 'pastel', what: 'In pastel every tile is fixed to the page with a thumbtack at its top centre, which comes out first when the tile leaves.' },
+            { name: 'data-kp-tiles-keys', what: 'One place in the tab order for a board of tiles (a roving tab stop); Left, Right, Up, Down, Home, End, PageUp and PageDown move between tiles. `data-kp-tiles-keys-exit` says how the board is left; the events are `kp-tiles-move` and `kp-tiles-exit`.' },
         ],
         accessibility: [
             'Built in — the grid is layout only; the cards keep their order in the markup, which is the reading order.',
@@ -9903,6 +10137,25 @@ failed.addEventListener('kp-stackbar-pick', (event) => {
 });
 `,
             },
+            {
+                title: 'Picking parts',
+                why: 'With `picked`, a part is a toggle button; the page keeps the state from `kp-stackbar-pick`.',
+                markup: `
+<figure class="kp-stackbar" id="doc-stack-pick" aria-label="Root volume"></figure>
+`,
+                script: `
+import { setStackbar } from '@kp-soft/themes/js/stackbar';
+
+const bar = document.getElementById('doc-stack-pick');
+const spec = { title: 'Root volume', total: 120, parts: [{ key: 'img', label: 'Docker images', value: 41 }, { key: 'vol', label: 'Volumes', value: 18.5 }, { key: 'log', label: 'Logs', value: 6.5 }] };
+let picked = ['vol'];
+setStackbar(bar, { ...spec, picked });
+bar.addEventListener('kp-stackbar-pick', (event) => {
+    picked = event.detail.picked ?? picked;
+    setStackbar(bar, { ...spec, picked });
+});
+`,
+            },
         ],
         variants: [
             { name: '.kp-stackbar--sm / --lg', what: 'An 8 px or a 20 px bar around the 12 px default.' },
@@ -9913,6 +10166,8 @@ failed.addEventListener('kp-stackbar-pick', (event) => {
             { name: 'state: loading', what: 'The bar is the meter’s loading picture, the theme’s own way a bar waits; the legend keeps its rows as waiting lines and the root is `aria-busy`.' },
             { name: 'state: empty / error', what: 'One calm note, `.kp-stackbar__note` with `.kp-stackbar__note-title`, over the whole footprint the bar and legend had; an error also has `.kp-stackbar__retry`, a normal-size button. A bar without a legend keeps its track and says the words in its name and hover card.' },
             { name: 'retry: false', what: 'A failed bar for a read the page cannot repeat: the words and no Retry.' },
+            { name: 'the legend', what: 'The legend keeps one value column for all rows (written by `setStackbar`) and a label wraps instead of being cut, with the swatch and the value on its first line.' },
+            { name: 'setStackbar(el, { picked: [keys] })', what: 'The parts become toggle buttons with `aria-pressed`; a part and its legend row take `data-kp-stackbar-picked`. The page owns the state through `kp-stackbar-pick` and calls `setStackbar` again with the new keys.' },
         ],
         accessibility: ['Built in — the bar is a group of parts, each named with its value and share; one tab stop, arrow keys within.', 'Built in — the legend holds every exact value.'],
     },
@@ -10065,10 +10320,72 @@ failed.addEventListener('kp-bullets-retry', () => draw('ready'));
         accessibility: ['Built in — a real description list.', 'Yours — give an unknown value its words for a screen reader.'],
     },
     {
+        id: 'formgrid',
+        title: 'Form grid',
+        group: 'Forms',
+        classes: ['kp-formgrid'],
+        exports: [],
+        intro: 'The one layout for forms, settings, key-value panels and button groups: four tracks, `label | control | value | actions`, shared by every row so labels, controls, the words about a value and its buttons each stand on one edge. Rows are `.kp-formgrid__row`; `.kp-formrows`, `.kp-kv`, `fieldset` and `form` placed inside it become subgrids of the same tracks. Under 36rem of the grid’s own width every row reads top to bottom.',
+        whenToUse: 'Any page that is a list of labelled things: a settings form, the facts of a job, a group of buttons under what they act on. Reach for form rows when the page is a single narrow column of independent values and needs no value or action track.',
+        examples: [
+            {
+                title: 'Label, control, value and actions in four tracks',
+                why: 'Each row is label, control, then the words about the value and its buttons. A row marked `data-kp-changed` gets the changed rule; `data-kp-formgrid-lines="lines"` draws a hairline between rows. A short control (a stepper, a time, a number, a date) takes the short width, and the cells stand on the first baseline.',
+                markup: `
+<div class="kp-formgrid" data-kp-formgrid-lines="lines" aria-label="Offsite backup settings">
+<section class="kp-formgrid__group" aria-labelledby="doc-fg-heading">
+<h3 class="kp-formgrid__heading" id="doc-fg-heading">Upload</h3>
+<div class="kp-formgrid__row">
+<label class="kp-formgrid__label" for="doc-fg-target">Upload target<small>Where the snapshots go.</small></label>
+<div class="kp-formgrid__control"><input class="kp-field__input" id="doc-fg-target" value="b2:family-photos/offsite" /></div>
+<p class="kp-formgrid__value">changed 12/10/2026 21:14</p>
+<div class="kp-formgrid__actions"><button type="button" class="kp-button kp-button--sm">Reset target</button></div>
+</div>
+<div class="kp-formgrid__row" data-kp-changed>
+<span class="kp-formgrid__label" id="doc-fg-par">Parallel uploads</span>
+<div class="kp-formgrid__control"><div class="kp-quantity" data-kp-quantity data-kp-quantity-min="1" data-kp-quantity-max="16" data-kp-quantity-unit="files" data-kp-quantity-unit-one="file" data-kp-quantity-label="Parallel uploads"><input class="kp-quantity__input" value="4" /></div></div>
+<p class="kp-formgrid__value">1 to 16; more is faster on fibre</p>
+<div class="kp-formgrid__actions"></div>
+</div>
+<div class="kp-formgrid__row kp-formgrid__row--buttons">
+<span class="kp-formgrid__label"></span>
+<div class="kp-formgrid__control"><div class="kp-formgrid__buttons"><button type="button" class="kp-button">Pause the schedule</button></div></div>
+<p class="kp-formgrid__value"></p>
+<div class="kp-formgrid__actions"></div>
+</div>
+</section>
+</div>
+`,
+                script: `
+import { attachQuantities } from '@kp-soft/themes/js/quantity';
+
+attachQuantities(document.querySelector('.kp-formgrid'));
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-formgrid__row / __row--buttons', what: 'One row of the four tracks; the buttons row holds a group of buttons under what they act on, on the control edge.' },
+            { name: '.kp-formgrid__label / __control / __value / __actions', what: 'The four cells: the label (a real `label` or a `span` named by the control), the control, the words about its value, and its buttons. A short control takes the short width; a field fills its track.' },
+            { name: '.kp-formgrid__buttons / __group / __heading / __note', what: 'A group of buttons, a labelled section of rows, its heading and a quiet note. `__fill` and `__short` set a control that fills its track or takes the short width.' },
+            { name: 'subgrids', what: '`.kp-formrows`, `.kp-kv`, `fieldset` and `form` inside the grid become subgrids of its tracks; a `form.kp-form` placed directly in the grid takes the grid’s gap in every theme. A `data-kp-subgrid` list (attention, problems) shares the tracks too.' },
+            { name: 'rows with a JSON field', what: 'In a row holding a `.kp-jsonfield` the actions cell is one tool row high (the button is centred on the tools) and the value text is centred on it too.' },
+            { name: 'data-kp-formgrid-label', what: '`fit` (default: the label track is as wide as the longest label) or `wide`.' },
+            { name: 'data-kp-formgrid-align', what: '`baseline` (default) or `center`: where the cells of a row stand.' },
+            { name: 'data-kp-formgrid-stack', what: '`auto` (fold under 36rem of the grid), `always` or `never`.' },
+            { name: 'data-kp-formgrid-lines', what: '`none` (default) or `lines`: a hairline between rows.' },
+            { name: 'data-kp-formgrid-span', what: 'On a cell: `control-value`, `wide` or `all`, the tracks it covers.' },
+            { name: 'other components in a row', what: 'The refresh bar inherits the grid’s column gap and its label takes the label track; the combobox’s status line moves into the value track; an anchor mark sits at the end of the label cell; the theme picker takes its baseline from its name.' },
+        ],
+        accessibility: [
+            'Built in — the grid is layout only: labels stay real labels, order in the markup is reading order, and a folded row keeps it.',
+            'Yours — name the grid (`aria-label`) when it is a landmark of the page, and tie hints and errors to the control with aria-describedby.',
+        ],
+    },
+    {
         id: 'formrows',
         title: 'Form rows',
         group: 'Forms',
-        classes: ['kp-formrows', 'kp-formrow', 'kp-formgrid'],
+        classes: ['kp-formrows', 'kp-formrow'],
         exports: [],
         intro: 'A settings form as rows: the label, the package’s own control with its help or error under it, and an aside for where the value comes from or an Edit button. The label column is as wide as the longest label; under 36rem each row reads top to bottom.',
         whenToUse: 'A settings page or a long form of independent values.',
@@ -10102,6 +10419,7 @@ failed.addEventListener('kp-bullets-retry', () => draw('ready'));
             { name: '.kp-formrow--top / --wide', what: 'The label at the top for a tall control; the control takes the aside’s column too.' },
             { name: 'data-kp-changed / data-kp-state="error" / data-kp-locked', what: 'On a `.kp-formrow`: a rule on the start edge for a value not saved; a destructive rule for a failed one; the label muted for a value the reader cannot change, with `.kp-formrow__lock` in the aside saying why.' },
             { name: '.kp-formrow__label small', what: 'The setting’s own key under its label, in the quiet face.' },
+            { name: '.kp-formgrid', what: 'The same rows on four tracks (label, control, value, actions) have their own page: the form grid. On a first baseline, a field fills the track and a short control takes its short width.' },
         ],
         accessibility: ['Built in — the label is a real label.', 'Yours — tie help and errors to the control with aria-describedby.'],
     },
@@ -10220,6 +10538,25 @@ for (const name of ['kp-code-copy', 'kp-code-copy-failed', 'kp-code-wrap', 'kp-c
 </div>
 `,
             },
+            {
+                title: 'TOML and a shell command, coloured',
+                why: 'The language names the colouring; `data-kp-code-highlight="off"` leaves one block plain. Colour is never the only carrier of meaning: nothing here depends on it.',
+                markup: `
+<div class="kp-stack kp-gap-md">
+<div class="kp-code" id="doc-code-toml" data-kp-code></div>
+<div class="kp-code" id="doc-code-sh" data-kp-code></div>
+<div class="kp-code" id="doc-code-off" data-kp-code data-kp-code-highlight="off"></div>
+</div>
+`,
+                script: `
+import { attachCodes, setCode } from '@kp-soft/themes/js/code';
+
+attachCodes(document.getElementById('doc-code-toml').parentElement);
+setCode(document.getElementById('doc-code-toml'), { title: 'host.toml', language: 'toml', text: '# the host\\n[firewall]\\nadmit = ["10.10.10.10"]\\nenabled = true\\nport = 8443\\nname = "edge"' });
+setCode(document.getElementById('doc-code-sh'), { title: 'Backup', language: 'bash', text: '# nightly copy\\nDEST="/mnt/nas/$HOST"\\nrsync -a --delete "$HOME/photos" "$DEST" && echo "done"' });
+setCode(document.getElementById('doc-code-off'), { title: 'Plain', language: 'toml', text: '[firewall]\\nenabled = true' });
+`,
+            },
         ],
         variants: [
             { name: '.kp-code--cell', what: 'The block as a table cell: no title, wrapped words, three lines shown. Copy copies the whole value, folded or not; `data-kp-copy="false"` takes it away. An empty payload is the muted line “empty payload”; a loading one is a skeleton line, because the table around it lays the busy card.' },
@@ -10235,8 +10572,13 @@ for (const name of ['kp-code-copy', 'kp-code-copy-failed', 'kp-code-wrap', 'kp-c
             { name: 'kp-code-copy, -copy-failed, -wrap, -layout and -fold', what: '`{ text }` (the whole value, folded or not), nothing, `{ wrap }`, `{ layout }` and `{ folded }`.' },
             { name: 'prettyJson and CODE_COPIED_MS', what: '`prettyJson(text)` is the JSON laid out with two-space indents, or `null` when it does not parse; `CODE_COPIED_MS` is how long “Copied” stays, 1500 ms.' },
             { name: 'codeLabel … codeCopiedAnnouncement strings', what: 'Every word of the block is in the dictionary: `codeLabel`, `codeWrap`, `codePretty`, `codeRaw`, `codeFormat`, `codeShowAll`, `codeShowLess`, `codeLines`, `codeEmpty`, `codeBinary`, `codeTruncated`, `codeLoading`, `codeError` and `codeCopiedAnnouncement`.' },
+            { name: 'TOML and shell colouring', what: 'A block whose language is `toml`, `bash`, `sh`, `shell` or `zsh` colours its parts: sections (`.kp-code__section`), strings, values (numbers and booleans), comments and, in a shell, variables (`__var`). The colour is a word-shape as well as a hue (bold section names, italic comments), so it reads without it.' },
+            { name: 'data-kp-code-highlight', what: '`off` turns the colouring off for a block that should read as plain text.' },
         ],
-        accessibility: ['Built in — the body is a named region that takes focus, so a keyboard can scroll it; a copy is announced.', 'Built in — line numbers are never copied or read.'],
+        accessibility: [
+            'Built in — the body is a named region that takes focus, so a keyboard can scroll it; a copy is announced.', 'Built in — line numbers are never copied or read.',
+            'Built in — a long line scrolls inside the plate’s padding, and the scroller that takes focus is the `code` element, so a keyboard can reach the end of a line.',
+        ],
     },
     {
         id: 'connection',
@@ -10354,6 +10696,24 @@ control.addEventListener('kp-refresh-interval', (event) => console.info('interva
 setRefreshInterval(control, 15);
 `,
             },
+            {
+                title: 'A labelled refresh in a form grid',
+                why: '`data-kp-refresh-label` puts the words in the label track of the row, the bar in the control track; outside a form grid the label is a line above the bar.',
+                markup: `
+<div class="kp-formgrid">
+<div class="kp-formgrid__row">
+<div class="kp-refresh" data-kp-refresh="60" data-kp-refresh-label="Refresh this page" data-kp-refresh-choices="0,30,60,300"></div>
+</div>
+</div>
+`,
+                script: `
+import { attachRefresh } from '@kp-soft/themes/js/auto-refresh';
+
+const control = document.querySelector('[data-kp-refresh-label]');
+attachRefresh(control.parentElement);
+control.addEventListener('kp-refresh', (event) => event.detail.done(true));
+`,
+            },
         ],
         variants: [
             { name: 'the script', what: '`attachRefresh(root, { now })` wires every `[data-kp-refresh]` and returns a detach; `refreshOf(el)` answers the handle; `refreshDone(el, ok)` is `detail.done(ok)` by element; `setRefreshInterval(el, seconds)` changes the interval from the page (`by: \'script\'` on the event). `REFRESH` is the selector, `REFRESH_DEFAULT` (30) and `REFRESH_CHOICES` the defaults behind the attributes; the events are `REFRESH_EVENT` and `REFRESH_INTERVAL_EVENT`.' },
@@ -10370,6 +10730,11 @@ setRefreshInterval(control, 15);
             { name: 'data-kp-remember', what: 'A name: the choice is kept per page and device.' },
             { name: 'data-kp-stale-after', what: 'Seconds after which the freshness line turns stale; three times the interval by default.' },
             { name: 'data-kp-refresh-hover', what: '`pause`: no refresh while the pointer is over a table being read.' },
+            { name: 'data-kp-refresh-title / data-kp-refresh-slot="title" / setRefreshTitle', what: 'A title for the bar: the first cell of the bar’s grid, a label track in a form grid, and a heading line above the bar when a label is set. `setRefreshTitle(control, text)` changes it; `data-kp-refresh-slot="title"` marks an element of your own to use instead.' },
+            { name: 'data-kp-refresh-label', what: 'The words of a label cell (`.kp-refresh__label`): the label track in a form grid, a line above the bar elsewhere. Switchable at run time. Inside a form grid the bar also inherits the grid’s column gap.' },
+            { name: 'live options', what: '`data-kp-look`, `data-kp-refresh-choices`, `data-kp-stale-after`, `data-kp-announce`, `data-kp-refresh` and `data-kp-refresh-key` are read again when the attribute changes; changing the look redraws the chooser.' },
+            { name: 'always refreshes', what: 'Refresh now, the R key and Retry now always refresh, paused or not. After a failure the line reads “Last refresh failed.” while the refresh is paused, and “Last refresh failed, retrying in 30 s” while it is not.' },
+            { name: 'the bar’s fold', what: 'Outside a form grid the bar is one column under 40rem of viewport (a form grid folds on its own width at 36rem), and its words always start at the start, whatever text-align the parent has. The bar is a grid of three tracks and stands on a form grid’s columns.' },
         ],
         accessibility: [
             'Built in — it never eats typing: a refresh waits while a dialog is open, a form field has the focus or the tab is hidden, and runs once on return. A failed refresh keeps the data and says when it retries, with Retry now; R refreshes at once outside a field.',
@@ -10481,6 +10846,7 @@ document.addEventListener('kp-flash-reload', (event) => {
             { name: 'data-kp-refusal', what: '`line` (default: the sentence under the button), `button` (the button grows to hold it) or `toast`.' },
             { name: 'data-kp-flash-line', what: 'A selector for the element that holds the line; one is made after the button by default.' },
             { name: 'data-kp-post', what: 'A URL: pressing the button POSTs there and shows the answer. With `data-kp-method`, `data-kp-post-body` and `data-kp-reload` (`none`, `page` or `region`, the region named by `data-kp-reload-target`).' },
+            { name: 'data-kp-width="grow"', what: 'Set by hand, `grow` makes the button as wide as what it says: its own words at rest and busy, the result’s width while the result stands. A width set by hand stays after a refusal on the button.' },
         ],
         accessibility: [
             'Built in — a second press while busy does nothing; the result is announced politely whatever its length; the busy state is `aria-disabled`, so the focus stays.',
@@ -10702,6 +11068,8 @@ document.getElementById('doc-lede-log').textContent =
             { name: 'data-kp-lede-link', what: 'A URL: a “Learn more” link at the end.' },
             { name: 'data-kp-lede-required', what: 'On a container: every heading inside it must have a lede, and `missingLedes` lists the ones that do not. Card titles are always checked.' },
             { name: 'data-kp-blocking', what: 'On a `.kp-field__why` line: the reason stops the form, so it is written in the destructive ink instead of the quiet one.' },
+            { name: 'collapsible with a link', what: 'A lede with `data-kp-lede-collapsible` and `data-kp-lede-link` folds, and Learn more stands at the end after the folded part.' },
+            { name: 'switchable at runtime', what: 'Switchable at runtime: changing `data-kp-lede-collapsible` or `data-kp-lede-link` redraws the lede.' },
         ],
         accessibility: [
             'Built in — the heading is described by its lede (`aria-describedby`), so it is read with the heading; a folded lede’s button says what it will do.',
@@ -10733,6 +11101,41 @@ document.getElementById('doc-lede-log').textContent =
 </div>
 `,
             },
+            {
+                title: 'Rows arriving in a data table',
+                why: '`data-kp-follow-rows="tbody"` on the scroller that holds the table: the pill counts rows arriving in the body, once each by `data-kp-row-key`. Add a row from the script and the count appears when the reader is not at the end.',
+                markup: `
+<div data-kp-newpill-host>
+<div data-kp-follow="tail" data-kp-follow-rows="tbody" data-kp-pill-unit="job,jobs" id="doc-pill-table" style="max-block-size: 8rem; overflow: auto">
+<table class="kp-table">
+<caption>Jobs</caption>
+<thead><tr><th scope="col">Job</th><th scope="col">Result</th></tr></thead>
+<tbody>
+<tr data-kp-row-key="j1"><td>Backup photos</td><td>Succeeded</td></tr>
+<tr data-kp-row-key="j2"><td>Prune snapshots</td><td>Succeeded</td></tr>
+<tr data-kp-row-key="j3"><td>Update images</td><td>Failed</td></tr>
+<tr data-kp-row-key="j4"><td>Verify backups</td><td>Succeeded</td></tr>
+<tr data-kp-row-key="j5"><td>Backup media</td><td>Succeeded</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<button type="button" class="kp-button" id="doc-pill-add">Add a job</button>
+`,
+                script: `
+import { attachNewPills } from '@kp-soft/themes/js/newpill';
+
+attachNewPills(document.getElementById('doc-pill-table').parentElement);
+let n = 5;
+document.getElementById('doc-pill-add').addEventListener('click', () => {
+    n += 1;
+    const row = document.createElement('tr');
+    row.setAttribute('data-kp-row-key', 'j' + n);
+    row.innerHTML = '<td>Job ' + n + '</td><td>Succeeded</td>';
+    document.querySelector('#doc-pill-table tbody').append(row);
+});
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-follow', what: '`tail` (default) or `head` for a newest-first list: where new rows arrive.' },
@@ -10743,6 +11146,8 @@ document.getElementById('doc-lede-log').textContent =
             { name: 'data-kp-follow-key', what: 'The key that jumps back and follows again; End, or Home for `head`.' },
             { name: 'data-kp-follow-space', what: 'Space pauses and resumes following, for a log.' },
             { name: 'data-kp-follow-toggle', what: 'On a button, naming the list: it pauses and resumes the following and says which it will do.' },
+            { name: 'data-kp-follow-rows', what: '`children` (default) or `tbody`: where the rows are. With `tbody` the scroller holds a data table and its body’s rows are counted; a row counts once by its `data-kp-row-key`, so a re-sort or a page change does not count it again.' },
+            { name: 'switchable at runtime', what: 'Switchable at runtime: changing `data-kp-pill-placement` redraws the pill.' },
         ],
         accessibility: [
             'Built in — a row counts only while it is shown, so a filter takes it out of the count, which is exact; the count is said to a screen reader at most every ten seconds.',
@@ -11035,10 +11440,69 @@ document.getElementById('doc-ops-keep').addEventListener('change', (event) => {
         ],
     },
     {
+        id: 'state-plate',
+        title: 'State plate',
+        group: 'Feedback',
+        classes: ['kp-stateplate'],
+        exports: [],
+        intro: 'How every data component draws an empty or failed area: one plate, the title at the heading size over an optional picture, a sentence, and a normal-size action. `statePlate(doc, options)` in js/state-plate.js builds one; `hostStatePlate(host, options)` is the data component’s version, which also fires the component’s own `kp-<component>-retry` on the host.',
+        whenToUse: 'When a component of your own shows nothing or has failed: use the plate instead of a sentence in a corner, so the area keeps its size and the reader gets a Retry. The packaged data components already use it; reach for it directly only for an area they do not own.',
+        examples: [
+            {
+                title: 'Empty and failed, with a drawing',
+                why: '`kind: "empty"` is the package’s empty plate, `kind: "error"` the destructive alert; both carry `.kp-stateplate`, which centres the words in the whole box it is given. `art` is a node (an inline SVG) or a glyph, aria-hidden either way, shown over the title. The action is a normal-size button, never a strip.',
+                markup: `
+<div class="kp-stack kp-gap-md">
+<div id="doc-sp-empty" style="display: grid; min-block-size: 10rem"></div>
+<div id="doc-sp-error" style="display: grid; min-block-size: 10rem"></div>
+</div>
+`,
+                script: `
+import { statePlate } from '@kp-soft/themes/js/state-plate';
+
+document.getElementById('doc-sp-empty').append(
+    statePlate(document, { kind: 'empty', title: 'No secrets yet', text: 'Add the first one and it appears here.', actionLabel: 'Add a secret', art: '∅' }),
+);
+document.getElementById('doc-sp-error').append(
+    statePlate(document, { kind: 'error', title: 'Could not read the secrets', text: 'The vault did not answer.', actionLabel: 'Retry', onAction: () => {}, art: '!' }),
+);
+`,
+            },
+            {
+                title: 'A data component’s host: Retry as an event',
+                why: '`hostStatePlate(host, { kind, title, text, art, retryEvent })` puts the plate where the data was and fires the event on the host, so a page listens to `kp-heat-retry`, `kp-matrix-retry`, `kp-gantt-retry`, `kp-week-retry` or `kp-graph-retry` as it does on every other component (the data table keeps `kp-datatable-retry`).',
+                markup: `
+<div id="doc-sp-host" style="display: grid; min-block-size: 10rem"></div>
+<p class="kp-text-muted" id="doc-sp-host-note" role="status"></p>
+`,
+                script: `
+import { hostStatePlate } from '@kp-soft/themes/js/state-plate';
+
+const host = document.getElementById('doc-sp-host');
+host.addEventListener('kp-doc-retry', () => {
+    document.getElementById('doc-sp-host-note').textContent = 'Retry pressed.';
+});
+host.replaceChildren(hostStatePlate(host, { kind: 'error', title: 'The grid did not load', text: 'Try again in a moment.', retryEvent: 'kp-doc-retry' }));
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-stateplate', what: 'The plate: the title at the heading size, a normal-size action, centred in the whole box it is given. A component with a loaded height holds it while a plate shows; one without one takes the plate’s least height.' },
+            { name: 'art', what: 'A node (an inline SVG) or a glyph over the title; hidden from a screen reader either way.' },
+            { name: 'covered tables and boards', what: 'A failed table and a table with nothing to show cover their rows and the plate fills the height the table had; the rows stay in the document. The heat grid, matrix, run timeline, week agenda, network graph, pipeline, uptime strip, checklist, timers and the sequencer draw their empty and failed areas with it.' },
+            { name: 'setHeat, setMatrix and the state setters', what: '`setHeat` and `setMatrix` take `message`, `text` and `art`; `setGraphState`, `setGanttState` and `setWeekState` take `{ text, art }` as a fourth argument.' },
+            { name: 'strings', what: 'The words are in the dictionary (Retry, the failed sentence, the graph’s empty and failed lines), so a locale changes them in one place.' },
+        ],
+        accessibility: [
+            'Built in — the title and sentence are real text in reading order, the action is a real button with the visible words as its name, the picture is hidden from a screen reader.',
+            'Yours — write a title that says what is missing or what failed, a sentence that says what to do, and answer the Retry event by loading again.',
+        ],
+    },
+    {
         id: 'master-detail',
         title: 'Master and detail panes',
         group: 'Structure',
-        classes: ['kp-pane', 'kp-stateplate'],
+        classes: ['kp-pane'],
         exports: [],
         aliases: ['master-detail', 'aside', 'narrow', 'fold-at', 'resizable', 'selected'],
         intro: 'A list and its detail side by side, folding to one pane on a phone. It extends the split with fixed columns: the list, the detail and an optional aside. The detail has four states, and an empty or failed area is drawn with the shared state plate: centred, at the heading size, filling the whole pane.',
@@ -11143,6 +11607,7 @@ document.getElementById('doc-plate-error').append(
             { name: 'data-kp-aside-closable', what: 'Esc in the aside closes it.' },
             { name: 'states of the detail', what: '`empty` (“Pick an item on the left”), `loading` (the busy card over the detail only; the list stays usable), `error` (the destructive plate with Retry, over the whole master-detail, unless a component in the detail already shows its own failed plate: the innermost plate wins, the root then reads `data-kp-error-own` and nothing is drawn over it) and `ready`.' },
             { name: '.kp-stateplate', what: 'The plate an empty or failed area is drawn with: the title at the heading size and a normal-size action, centred in the whole box it is given.' },
+            { name: '.kp-stateplate', what: 'Has a page of its own: the state plate.' },
         ],
         accessibility: [
             'Built in — the list is a listbox: arrows move the selection without the focus leaving, Home and End jump, Enter and Space open the detail when folded. Focus moves to the detail’s heading on open and back to the row on Back; Esc in the detail returns.',
@@ -11390,6 +11855,7 @@ document.addEventListener('kp-problem-dismiss', (event) => {
             { name: 'data-kp-remedy-label', what: 'The word before the remedy; “What now” by default.' },
             { name: 'data-kp-problem-layout', what: '`stacked` (default) or `inline`, which runs what, why and remedy into one paragraph.' },
             { name: 'per item', what: '`severity` (`critical`, `warning` default, `info`), `command` (set in code with a Copy button), `action`, `dismissible` (default off: a real problem is not closable until it is fixed).' },
+            { name: 'shared columns', what: 'Alerts of one `.kp-problems` share four columns (icon, text, fix, close) from 34rem, so every text ends and every fix starts on one edge. A `data-kp-subgrid` list shares the form grid’s columns and a list directly in a form grid spans its tracks.' },
         ],
         accessibility: [
             'Built in — an alert that is still true is not announced again, and the focus stays on its fix; a command has a Copy button that says it copied.',
@@ -11507,6 +11973,7 @@ askQuestion(container, { id: 'q-expired', question: 'Clean the cache?', deadline
             { name: '.kp-reason', what: 'The anchor the script wraps round the control: it takes the pointer a disabled button does not, and carries `data-kp-reason-off` while the reason shows. A disabled slider, weekday picker or sentence in it makes the anchor take the whole line.' },
             { name: 'follows the attribute', what: 'Change or remove the sentence and the tooltip changes or goes; a control that comes back to life loses it.' },
             { name: 'aria-disabled', what: 'A control disabled with `aria-disabled="true"` carries a reason the same way.' },
+            { name: 'in a row of actions', what: 'The wrapper wears the control’s `data-kp-action`, so an off button keeps its column in a `.kp-row-actions`.' },
         ],
         accessibility: [
             'Built in — the reason is the control’s `aria-describedby` while it is off, so a screen reader hears it with the control.',
@@ -12355,6 +12822,9 @@ button.addEventListener('click', () => {
             { name: 'data-kp-anchor-offset', what: 'A CSS length a sticky bar covers; the page header\'s own height by default.' },
             { name: 'data-kp-anchor-open', what: '`on` (default) opens a folded `details` first and asks the page to reveal a row on another page; `off`.' },
             { name: 'data-kp-flash-ms', what: 'How long "Copied" stays on the mark (1500).' },
+            { name: 'data-kp-anchor-wait', what: 'The longest wait, in ms, for a place not drawn yet (10000 by default; 0 says “no longer here” at once). Read from the first container, which says the notice. `attachAnchors` takes `wait`.' },
+            { name: 'the notice', what: 'The notice comes after about a second unless something in an anchored container is loading. The shortcut sheet lists `y l` once.' },
+            { name: 'in a form grid', what: 'The row mark stands at the end of the label cell (room for it is a knob); the heading mark at the grid’s end edge; `legend` and `.kp-formgrid__heading` count as headings.' },
         ],
         accessibility: [
             'Built in — the mark is a button with the target in its name, a tab stop after the row\'s own controls, always visible to keyboard focus; the copy is announced politely; with the shortcut engine `y` then `l` on a focused row copies its link.',
@@ -12811,6 +13281,7 @@ setMatrix(document.getElementById('doc-uses-failed'), { view: 'lines', state: 'e
             { name: 'data-kp-lines-count', what: '`on` (default) shows the exact number of uses on each source, `off`.' },
             { name: 'data-kp-lines-empty-sources', what: '`show` (default: "Not used") or `hide`.' },
             { name: 'data-kp-lines-collapse-below', what: 'The width in px under which the lines give way to the list (640).' },
+            { name: 'line tones and plates', what: '`cell()` returns `{ tone, label }`: `ok`, `warn`, `bad` or `muted`, each drawn as colour, pattern and a mark. The label’s plate sits in the gap; a plate with no free place shows while its line is lit. `usesRelation(...).lines` lists the lines, and the phone list marks each with `.kp-uses__chip-tag`. The twelve registers draw the plate in the base look (a theme pass has not been asked for).' },
         ],
         accessibility: [
             'Built in — the lines are hidden from assistive technology; every card says the relation in words ("CV Developer NL, used by 3: Deloitte, Takto"); one tab stop with arrow keys, Home and End, Space pins, Enter opens the link, Escape lets go.',
