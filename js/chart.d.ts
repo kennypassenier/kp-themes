@@ -246,6 +246,13 @@ export type ChartOptions = {
      */
     decorate?: ChartDecorate;
     /**
+     * draw the plots that are off screen only when they come into view, so a page of many
+     * charts feeds in one short task instead of one long one. A number is how many charts one call must attach before it starts
+     * (`12` by default); `true` always, `false` never. Each chart keeps its footprint (the loading plate) until it is drawn.
+     * Per chart, `data-kp-chart-lazy="off"` draws it at once. Needs `IntersectionObserver`; without it every chart draws at once
+     */
+    lazy?: boolean | number;
+    /**
      * the moment a trend's axis counts from (`now`, `today`, `yesterday`);
      * `Date.now()` by default
      */
@@ -341,6 +348,10 @@ export type Strings = import('./strings.js').Strings;
  *   string falls back to formatChartValue()
  * @property {ChartDecorate} [decorate] called with every control a chart builds, each time it builds it (a
  *   rebuilt legend included), so the page can mark it
+ * @property {boolean | number} [lazy] draw the plots that are off screen only when they come into view, so a page of many
+ *   charts feeds in one short task instead of one long one. A number is how many charts one call must attach before it starts
+ *   (`12` by default); `true` always, `false` never. Each chart keeps its footprint (the loading plate) until it is drawn.
+ *   Per chart, `data-kp-chart-lazy="off"` draws it at once. Needs `IntersectionObserver`; without it every chart draws at once
  * @property {() => number} [now] the moment a trend's axis counts from (`now`, `today`, `yesterday`);
  *   `Date.now()` by default
  * @typedef {ReturnType<typeof chartWords>} ChartStrings
@@ -583,6 +594,19 @@ export type ChartState = {
     spark: boolean;
     group: ChartGroup;
     draw: () => void;
+    /**
+     * set by attachCharts() under `lazy`: whether the plot is (nearly) on screen; it draws
+     * what it held back as it comes into view
+     */
+    view?: (inView: boolean) => void;
+    /**
+     * draws again when the box the plot was drawn in changed (the resize watch's call; a draw that would be the same is skipped)
+     */
+    resize?: () => void;
+    /**
+     * whether the last drawing of a plot no longer fits the group's window (a neighbour's new data moved it)
+     */
+    stale?: () => boolean;
     cursorAt: (t: number | null, own: boolean) => void;
     setData: (data: ChartData) => void;
     select: (i: number | null, on?: boolean) => boolean;
@@ -608,6 +632,10 @@ export type ChartTimeUnit = 'ms' | 's' | 'min' | 'h' | 'd' | 'w';
  * @property {boolean} spark
  * @property {ChartGroup} group
  * @property {() => void} draw
+ * @property {(inView: boolean) => void} [view] set by attachCharts() under `lazy`: whether the plot is (nearly) on screen; it draws
+ *   what it held back as it comes into view
+ * @property {() => void} [resize] draws again when the box the plot was drawn in changed (the resize watch's call; a draw that would be the same is skipped)
+ * @property {() => boolean} [stale] whether the last drawing of a plot no longer fits the group's window (a neighbour's new data moved it)
  * @property {(t: number | null, own: boolean) => void} cursorAt
  * @property {(data: ChartData) => void} setData
  * @property {(i: number | null, on?: boolean) => boolean} select

@@ -1242,6 +1242,14 @@ gives the axis words alone. `attachTrendCharts(root, options)` draws only
 the trends under `root`. The words are the dictionary's `chartNow`,
 `chartToday`, `chartYesterday` and `chartTrendKeys`. Knob:
 `--kp-kpi-spark-height` (2.75rem in a trend).
+
+A page of many charts draws them in a short task [perf-1029]: a feed to one
+chart draws that chart, and its neighbours only when the group's window moved;
+`attachCharts(root, { lazy })` holds back the plots that are off screen (200 px
+past the viewport) until they come into view. `lazy` is how many charts one
+call must attach before it starts (`12` by default), `true` for always, `false`
+for never; a held chart keeps its height as the loading plate, and
+`data-kp-chart-lazy="off"` on a chart draws it at once.
 ### The page header
 
 ```html

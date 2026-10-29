@@ -25403,15 +25403,25 @@ function s(doc, tag, attrs = {}) {
 }
 function keepEndsInside(labels, width, inset = 4) {
   if (labels.length === 0) return;
-  const first = labels[0];
-  const last = labels[labels.length - 1];
-  try {
-    const a = first.getBBox();
-    if (a.width > 0 && a.x < inset) first.setAttribute("text-anchor", "start");
-    const b = last.getBBox();
-    if (b.width > 0 && b.x + b.width > width - inset) last.setAttribute("text-anchor", "end");
-  } catch {
-  }
+  pendingEnds.push({ labels, width, inset });
+  if (pendingEnds.length > 1) return;
+  queueMicrotask(() => {
+    const batch2 = pendingEnds.splice(0);
+    const fixes = [];
+    for (const { labels: row, width: w, inset: gap } of batch2) {
+      const first = row[0];
+      const last = row[row.length - 1];
+      if (!first.isConnected) continue;
+      try {
+        const a = first.getBBox();
+        if (a.width > 0 && a.x < gap) fixes.push([first, "start"]);
+        const b = last.getBBox();
+        if (b.width > 0 && b.x + b.width > w - gap) fixes.push([last, "end"]);
+      } catch {
+      }
+    }
+    for (const [label, anchor] of fixes) label.setAttribute("text-anchor", anchor);
+  });
 }
 function decorateWith(decorate2, part7, info) {
   if (!decorate2) return;
@@ -25449,14 +25459,29 @@ function attachMatching(root, options, selector) {
   };
   const touched = /* @__PURE__ */ new Set();
   const states3 = [];
-  const resize = new view.ResizeObserver((entries3) => {
-    for (const entry of entries3) CHARTS.get(entry.target)?.draw();
-  });
-  for (
-    const host of
+  const lazy = options.lazy ?? 12;
+  const hosts = (
     /** @type {HTMLElement[]} */
-    [...root.querySelectorAll(selector)]
-  ) {
+    [...root.querySelectorAll(selector)].filter((host) => !CHARTS.has(host))
+  );
+  const watching2 = lazy !== false && typeof view.IntersectionObserver === "function" && hosts.length >= (lazy === true ? 1 : lazy);
+  const seen = watching2 ? new view.IntersectionObserver(
+    (entries3) => {
+      for (const entry of entries3) CHARTS.get(
+        /** @type {HTMLElement} */
+        entry.target
+      )?.view?.(entry.isIntersecting);
+    },
+    { rootMargin: "200px 0px" }
+  ) : null;
+  const resize = new view.ResizeObserver((entries3) => {
+    for (const entry of entries3) {
+      const state2 = CHARTS.get(entry.target);
+      if (state2?.resize) state2.resize();
+      else state2?.draw();
+    }
+  });
+  for (const host of hosts) {
     if (CHARTS.has(host)) continue;
     const groupEl = (
       /** @type {HTMLElement | null} */
@@ -25465,12 +25490,18 @@ function attachMatching(root, options, selector) {
     const group = (groupEl ? GROUPS.get(groupEl) : LOOSE.get(doc)) ?? new ChartGroup(groupEl, doc, ctx);
     const locale = resolveLocale(options.locale, groupEl ?? host);
     const state2 = host.dataset.kpChart === "spark" ? sparkChart(host, group, locale, ctx) : plotChart(host, group, locale, ctx);
-    state2.unobserve = () => resize.unobserve(host);
+    const hold = seen != null && state2.view != null && host.getAttribute("data-kp-chart-lazy") !== "off";
+    if (hold) state2.view?.(false);
+    state2.unobserve = () => {
+      resize.unobserve(host);
+      if (hold) seen?.unobserve(host);
+    };
     CHARTS.set(host, state2);
     group.charts.add(state2);
     touched.add(group);
     states3.push(state2);
     resize.observe(host);
+    if (hold) seen?.observe(host);
   }
   for (const group of touched) {
     group.bindChips();
@@ -25479,6 +25510,7 @@ function attachMatching(root, options, selector) {
   return () => {
     for (const state2 of states3) if (CHARTS.get(state2.host) === state2) detachChart(state2.host);
     resize.disconnect();
+    seen?.disconnect();
   };
 }
 function paintSeries(el16, series, i) {
@@ -25522,6 +25554,11 @@ function plotChart(host, group, locale, ctx) {
     []
   ) } };
   let shown4 = "";
+  let drawnWindow = "";
+  let drawnFor = "";
+  let held2 = false;
+  let behind = false;
+  const drawnKey = () => `${plot.clientWidth} ${chartHeight(host, data)} ${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
   host.classList.add("kp-chart");
   const plot = h(doc, "div", { class: "kp-chart__plot", tabindex: "0", role: "application" });
   const tipTime = h(doc, "b");
@@ -25771,6 +25808,8 @@ function plotChart(host, group, locale, ctx) {
   }
   function draw8() {
     const H = chartHeight(host, data);
+    drawnWindow = "";
+    drawnFor = drawnKey();
     const loading = host.hasAttribute("data-kp-chart-loading");
     plot.setAttribute("aria-busy", String(loading));
     if (loading) {
@@ -25789,10 +25828,17 @@ function plotChart(host, group, locale, ctx) {
       drawState("empty", H);
       return;
     }
+    if (held2) {
+      behind = true;
+      if (!geo && shown4 === "") drawState("loading", H);
+      return;
+    }
+    behind = false;
     shown4 = "";
     host.setAttribute("data-kp-state", "ready");
     hint2.hidden = data.series.length <= 1;
     const { from, to } = win;
+    drawnWindow = `${from} ${to}`;
     const W = Math.max(240, plot.clientWidth);
     const vis = visible3();
     const stacked = data.stacked ?? false;
@@ -25981,12 +26027,24 @@ function plotChart(host, group, locale, ctx) {
             inside.map((p) => p[1]),
             m.v
           );
+          const proto = s(doc, "g", { class: "kp-chart__series kp-chart__run-series" });
+          paintSeries(proto, data.series[m.si], m.si);
+          proto.append(s(doc, "circle", { class: "kp-chart__run", cx: 0, cy: 0, r: 4.25 }));
+          const rings = doc.createDocumentFragment();
           for (const i of marked) {
-            const ring = s(doc, "g", { class: "kp-chart__series kp-chart__run-series" });
-            paintSeries(ring, data.series[m.si], m.si);
-            ring.append(s(doc, "circle", { class: "kp-chart__run", cx: x(inside[i][0]), cy: y(inside[i][1]), r: 4.25 }));
-            g.append(ring);
+            const ring = (
+              /** @type {SVGGElement} */
+              proto.cloneNode(true)
+            );
+            const circle = (
+              /** @type {SVGCircleElement} */
+              ring.firstChild
+            );
+            circle.setAttribute("cx", String(x(inside[i][0])));
+            circle.setAttribute("cy", String(y(inside[i][1])));
+            rings.append(ring);
           }
+          g.append(rings);
         }
       }
       if (medians.length === 1) {
@@ -26315,7 +26373,10 @@ function plotChart(host, group, locale, ctx) {
       e.relatedTarget
     )) group.cursor(null, state2);
   });
-  const watch2 = new (doc.defaultView ?? globalThis).MutationObserver(() => draw8());
+  const watch2 = new (doc.defaultView ?? globalThis).MutationObserver(() => {
+    const asked = `${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
+    if (!drawnFor.endsWith(asked)) draw8();
+  });
   watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-chart-loading", "data-kp-chart-sources"] });
   const setData = (next2) => {
     const sameSources = next2.series.length === data.series.length && next2.series.every((sr, i) => sr.label === data.series[i].label);
@@ -26334,7 +26395,8 @@ function plotChart(host, group, locale, ctx) {
       plot.setAttribute("aria-label", strings.plot(label()));
     }
     if (key() !== keyBefore) decorateOwn();
-    for (const c of group.charts) c.draw();
+    draw8();
+    for (const c of group.charts) if (c !== state2 && (!c.stale || c.stale())) c.draw();
   };
   if (data.key != null) host.setAttribute("data-kp-key", data.key);
   points = data.series.map(pointsOf);
@@ -26345,6 +26407,18 @@ function plotChart(host, group, locale, ctx) {
     spark: false,
     group,
     draw: draw8,
+    view: (inView) => {
+      held2 = !inView;
+      if (inView && behind) draw8();
+    },
+    resize: () => {
+      if (drawnKey() !== drawnFor) draw8();
+    },
+    stale: () => {
+      if (!drawnWindow) return false;
+      const win = range();
+      return !win || `${win.from} ${win.to}` !== drawnWindow;
+    },
     setData,
     select: (i, on) => {
       const next2 = nextSelection(sel, i, data.series.length, on);
@@ -26731,7 +26805,7 @@ function trendChart(host, group, locale, ctx) {
   };
   return state2;
 }
-var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_TIME_ZONE, TREND_CHART, dashOf, BYTE_UNITS, isBytes, NUMBERS, MINUTE, HOUR, DAY, WALL, toMinute, two, BLANK, dayKeyOf, SUB_DAY_STRIDES, DAY_STRIDES, DATA, CHARTS, GROUPS, LOOSE, CHIPS, PAGES, CHART_TIME_UNITS, SVGNS, clipIds, ChartGroup;
+var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_TIME_ZONE, TREND_CHART, dashOf, BYTE_UNITS, isBytes, NUMBERS, MINUTE, HOUR, DAY, WALL, toMinute, two, BLANK, dayKeyOf, SUB_DAY_STRIDES, DAY_STRIDES, DATA, CHARTS, GROUPS, LOOSE, CHIPS, PAGES, CHART_TIME_UNITS, SVGNS, clipIds, pendingEnds, ChartGroup;
 var init_chart = __esm({
   "js/chart.js"() {
     "use strict";
@@ -26774,6 +26848,7 @@ var init_chart = __esm({
     CHART_TIME_UNITS = { ms: 1, s: 1e3, min: 6e4, h: 36e5, d: 864e5, w: 6048e5 };
     SVGNS = "http://www.w3.org/2000/svg";
     clipIds = 0;
+    pendingEnds = [];
     ChartGroup = class {
       /**
        * @param {HTMLElement | null} el the `[data-kp-chart-group]`, or none (the document's loose charts)
