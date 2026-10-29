@@ -534,7 +534,9 @@ function embed(aspect) {
     addEventListener(
         'keydown',
         (event) => {
-            if (parent === window) return;
+            // Only a key the reviewer pressed: a demo that plays its own keys on a component (the time chart pins its
+            // tooltip with End, 18 times ←, Enter) must not walk or pick in the dialog around it.
+            if (parent === window || !event.isTrusted) return;
             event.preventDefault();
             event.stopPropagation();
             const { key, code, shiftKey, altKey, ctrlKey, metaKey } = event;
