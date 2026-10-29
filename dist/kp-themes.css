@@ -10270,7 +10270,9 @@
     /* --- Progress, spinner, skeleton ------------------------------------- */
 
     .kp-progress__wrap {
-        display: inline-flex;
+        /* A row across its column, the bar taking what the reading leaves [width-fill-1026]: as an inline-flex box it
+         * sized to its content, and a bar with no content of its own then had no width at all. */
+        display: flex;
         align-items: center;
         gap: calc(var(--kp-space-sm) * var(--kp-progressbar-scale, 1));
         /* Never wider than its container: the bar inside gives way, so a
