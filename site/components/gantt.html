@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html" aria-current="page">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -666,6 +669,7 @@ setGanttPoints(
                         <li>Built in — one tab stop: left and right move along a lane, up and down to the nearest bar of the neighbouring lane, Home and End to the lane’s first and last, Enter and Space open the run; range, Live, Zoom and Clear are buttons.</li>
                         <li>Built in — every bar has an accessible name with its label, state and times; a run that changes state is announced in a polite status region.</li>
                         <li>Yours — give the timeline a name (`aria-label`), name every run so it reads without its colour, and give the new runs when the window moves.</li>
+                        <li>Built in — a lane name wraps and is never cut, so it can be read at any width and at any zoom.</li>
                     </ul>
                 </section>
                 <section class="kp-section" data-sc-section="variants" id="variants">
@@ -695,7 +699,12 @@ setGanttPoints(
                             <tr><td><code>all</code></td><td>A range word: the window fits everything on the timeline and now, and stays fitted while the data changes.</td></tr>
                             <tr><td><code>href / sub</code></td><td>A lane with `href` is a link (`.kp-gantt__lane-link`); `sub` is a second line under its name (`.kp-gantt__sub`), and the lanes grow to hold it. `data-kp-lane-key` on the name is what it was drawn from.</td></tr>
                             <tr><td><code>.kp-gantt--line</code></td><td>One lane, no toolbar, no lane names, no hint and no brush, the axis under the line, fitted to its data: the dated line under a journey stepper.</td></tr>
+                            <tr><td><code>data-kp-gantt-legend</code></td><td>`auto` (the states the runs use) or a list of states: a legend under the plot, one chip per state with its mark.</td></tr>
+                            <tr><td><code>plannedEnd and data-kp-gantt-rest=&quot;off&quot;</code></td><td>A run may carry `plannedEnd`: the bar’s rest stretches from where it is to where it was expected to end. `data-kp-gantt-rest=&quot;off&quot;` leaves the stretch out. The registers draw the stretch in the base planned look only; a theme pass has not been asked for.</td></tr>
+                            <tr><td><code>data-kp-gantt-scroll</code></td><td>`off` or `always`: with the least plot width (a knob) the frame scrolls sideways instead of squeezing the bars.</td></tr>
+                            <tr><td><code>lane names and the frame</code></td><td>The name column is as wide as its longest name up to 40% of the box or 14rem and the least width is a knob; a lane name wraps and is never cut, and its first line stands level with the lane’s first row. A lane’s own stretch stands on the foot of the first row. The frame shows whole lanes under its height knob and a scroll rests on a lane; a queued bar is hollow on the card’s ground.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

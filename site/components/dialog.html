@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -2069,7 +2072,9 @@ Delete incident
                             <tr><td><code>blocked confirmation</code></td><td>`blocked` or `data-kp-confirm-blocked`: the description becomes the sentence that says what to do first, and the only button is Close. A blocked removal shows no typed field and no Confirm.</td></tr>
                             <tr><td><code>backdrop</code></td><td>A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.</td></tr>
                             <tr><td><code>pastel</code></td><td>In pastel a dialog is printed twice and stuck on: its second pass, a flat silhouette in the second ink drawn by its ::backdrop and placed on it by anchor positioning, springs into its rest 6 px off register, then the dialog swings down onto it from its top-start corner on the soft landing (one 8 % overshoot, settled once); a strip of washi tape crosses its top-start corner, and the modal’s dim is the backdrop’s border, so a click outside still reaches it. The close is that opening played backwards. Without anchor positioning the pass rests as a flat shadow and the dialog opens with the swing alone; under reduced motion it is simply there.</td></tr>
+                            <tr><td><code>section inset</code></td><td>A section’s rule keeps a small room between the text and the ends of the rule (a knob).</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

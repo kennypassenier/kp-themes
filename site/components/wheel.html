@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -440,7 +443,10 @@ setWheelState(document.getElementById(<span class="kp-code__string">'doc-wheel-f
                             <tr><td><code>data-kp-wheel-reduced-ms</code></td><td>The short turn under reduced motion, in ms (600; 0 places it at once).</td></tr>
                             <tr><td><code>data-kp-wheel-repeat=&quot;true&quot;</code></td><td>Spin again may land on the same choice.</td></tr>
                             <tr><td><code>data-kp-wheel-empty</code></td><td>The sentence when nothing fits.</td></tr>
+                            <tr><td><code>short</code></td><td>An item field: a shorter name for the face of the wheel. A long name is no longer cut on its segment: it is set at the largest size, over two lines, then `short`, else not drawn, and the segment’s tooltip holds the whole name.</td></tr>
+                            <tr><td><code>data-kp-wheel-kiosk</code></td><td>No hub button: the wheel is the control, and it stays live. `data-kp-wheel-answer` shows the answer card. Items take `tag` and `resting`; the words are `wheelIdleKiosk`, `wheelSpinKiosk` and `wheelResting`.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

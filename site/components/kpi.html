@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -1575,7 +1578,10 @@
                             <tr><td><code>pastel: the thumbtack</code></td><td>In pastel every key figure is fixed to the page with a thumbtack at its top centre, the ones that act too. When a figure leaves, the tack comes out first, then it lifts off as its landing backwards and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.</td></tr>
                             <tr><td><code>pastel: tones and changes</code></td><td>A warning or failed figure’s label sits on its tone’s plate, and a change shows as a sticker on the figure; a value written with update() wobbles (the update page). A figure that acts (a link, a toggle) lifts and peels its top-end corner under the pointer and sticks down flat when pressed; its focus is the dashed line alone.</td></tr>
                             <tr><td><code>pastel: waiting</code></td><td>A key figure with `aria-busy=&quot;true&quot;` becomes caterpillar while it waits: a head on its top-end corner and legs along its foot that step in turn (js/loading-pieces.js).</td></tr>
+                            <tr><td><code>a pressable tile</code></td><td>A pressable tile’s name and hint never break inside a word (the hint wraps in its own track); a trend tile’s `.kp-kpi__label-note` shows its dot only beside the name.</td></tr>
+                            <tr><td><code>meter tones</code></td><td>`setMeter` and `.kp-meter[data-kp-tone]` take the tones `success` and `neutral` as well as the others.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

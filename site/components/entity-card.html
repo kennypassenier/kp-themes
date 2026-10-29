@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -474,7 +477,13 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>data-kp-entity-inline</code></td><td>The most actions that stand as buttons; the rest go in “More”. The buttons come only from the data: a card with no action has no row for them, and every card has as many columns as the grid’s busiest card. Under 30rem every action folds into “More”.</td></tr>
                             <tr><td><code>data-kp-selectable</code></td><td>A tick at the start of the card, a row of a selection with the keys j, k and x.</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>On a card: `loading` (the same five rows as bones), `empty` (“not measured”) or `error` (a destructive state and Retry). On the grid: `loading` (skeleton cards under the busy card), `empty` or `error` (the package’s plates).</td></tr>
+                            <tr><td><code>equal action columns</code></td><td>The same action is one width on every card, a long label wraps, and More takes what cannot fit.</td></tr>
+                            <tr><td><code>meters[].tone</code></td><td>`success` and `neutral` as well as the others.</td></tr>
+                            <tr><td><code>empty with an action</code></td><td>`setEntityGridState(grid, &quot;empty&quot;, { action: &quot;none&quot;, actionLabel, onAction })`, `setEntityGrid(grid, [], empty)` and `data-kp-entity-empty-action=&quot;none&quot;` say whether the empty plate has an action and what it is called.</td></tr>
+                            <tr><td><code>the trend row</code></td><td>`trend`, `trendLabel` and `trendText` in the card data draw a sparkline; `data-kp-entity-trend` is `auto`, `on` or `off`. The parts are `.kp-entity__trend`, `__trend-line` and `__spark`.</td></tr>
+                            <tr><td><code>the app tile</code></td><td>`data-kp-entity-kind=&quot;tile&quot;` draws a link tile (card data `href`, `external`, `description`, `lines`, `starred`) with a health state, a description, lines and a favourite star (`data-kp-entity-star`, event `kp-entity-star` with `{ key, starred }`).</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

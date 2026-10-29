@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -309,6 +312,28 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-panel-m0&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-tab-m0&quot;</span>&gt;Twelve applications this quarter.&lt;/<span class="kp-code__keyword">div</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-panel-m1&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-tab-m1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;Everything, as a table.&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Counts on tabs</figcaption>
+                        <p class="kp-text-muted">The count is the exact number, with the unit heard by a screen reader; `loading` is a skeleton, never a 0.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-tabs">
+    <div class="kp-tabs__list" role="tablist" aria-label="Application">
+        <button type="button" class="kp-tab" role="tab" id="doc-b-tab-0" aria-controls="doc-b-panel-0" aria-selected="true" data-kp-tab-count="12" data-kp-tab-count-tone="error" data-kp-tab-count-unit="error,errors">Overview</button>
+        <button type="button" class="kp-tab" role="tab" id="doc-b-tab-1" aria-controls="doc-b-panel-1" aria-selected="false" data-kp-tab-count-state="loading">History</button>
+    </div>
+    <div class="kp-tabs__panel" role="tabpanel" id="doc-b-panel-0" aria-labelledby="doc-b-tab-0">Sent on 4 September, interview on the eleventh.</div>
+    <div class="kp-tabs__panel" role="tabpanel" id="doc-b-panel-1" aria-labelledby="doc-b-tab-1" hidden>Three earlier applications to this company.</div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tablist&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Application&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-b-tab-0&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-b-panel-0&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-tab-count</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">data-kp-tab-count-tone</span><span class="kp-code__string">=&quot;error&quot;</span> <span class="kp-code__keyword">data-kp-tab-count-unit</span><span class="kp-code__string">=&quot;error,errors&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tab&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tab&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-b-tab-1&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-b-panel-1&quot;</span> <span class="kp-code__keyword">aria-selected</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-tab-count-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;History&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-b-panel-0&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-b-tab-0&quot;</span>&gt;Sent on 4 September, interview on the eleventh.&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabs__panel&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;tabpanel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-b-panel-1&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-b-tab-1&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;Three earlier applications to this company.&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
                 </section>
@@ -595,7 +620,9 @@
                             <tr><td><code>manual activation</code></td><td>The arrows move focus only; Enter or Space selects.</td></tr>
                             <tr><td><code>looping</code></td><td>The arrows wrap from the last tab to the first, unless the list says not to.</td></tr>
                             <tr><td><code>.kp-tabs__panel</code></td><td>The panel. Exactly one is visible; the others are hidden, which also takes them out of the search and the tab order.</td></tr>
+                            <tr><td><code>the count on a tab</code></td><td>`setTabCount` and `data-kp-tab-count` draw the exact number on a `.kp-tab` (never “9+”), with `-tone` (neutral, info, success, warning, error), `-unit` (“error,errors”, always heard, drawn with `-show-unit`), `-state` (`loading`: a skeleton, `error`: a dash) and `-zero` (`show`: a 0 is information).</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

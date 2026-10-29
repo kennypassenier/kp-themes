@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -802,6 +805,7 @@ aria-label="Checked on submit only"
                         <li>Yours — give each control a name and the constraint that describes it; that is what the browser validates.</li>
                         <li>Yours — repeat the validation on the server. This is what the reader sees, not what protects the data.</li>
                         <li>Yours — keep the submit a real submit button, or the form cannot be sent with the keyboard.</li>
+                        <li>Yours — a valid submit is prevented by default; listen for the form’s submit and send it yourself, or choose the native submit.</li>
                     </ul>
                 </section>
                 <section class="kp-section" data-sc-section="variants" id="variants">
@@ -812,7 +816,9 @@ aria-label="Checked on submit only"
                             <tr><td><code>.kp-form__summary-title</code></td><td>The line that says what the summary is, in words, above the list of failing fields.</td></tr>
                             <tr><td><code>busy</code></td><td>While a save is in flight the form marks itself, so a consumer can disable what it wants to; the outcome is reported back through the callback the event hands over.</td></tr>
                             <tr><td><code>server errors</code></td><td>Errors a server found are handed in and shown in the same places as the browser’s own, rather than in a second mechanism beside them.</td></tr>
+                            <tr><td><code>data-kp-form-native-submit</code></td><td>A valid submit is prevented by default (a behaviour change for every consumer): the page answers `submit`. `data-kp-form-native-submit` on the form, or `nativeSubmit` in the options, brings the browser’s own submit back.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

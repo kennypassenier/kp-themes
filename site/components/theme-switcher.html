@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -263,7 +266,7 @@
                 </header>
                 <section class="kp-section" data-sc-section="when" id="when">
                     <h2 class="kp-fw-semibold">When to use it</h2>
-                    <p class="kp-prose">Put one in the page’s header when the reader picks their own theme. Do not reach for it to preview a theme in one corner of a page — every element can wear a theme by carrying the theme attribute, which is what the swatch beside each option does — and do not put it in a settings form behind a save button: the choice applies the moment it is made, so a form around it promises something it does not do.</p>
+                    <p class="kp-prose">Put one in the page’s header when the reader picks their own theme. To preview a theme in one corner of a page, use the preview option, or let an element wear a theme by carrying the theme attribute, which is what the swatch beside each option does — and do not put it in a settings form behind a save button: the choice applies the moment it is made, so a form around it promises something it does not do.</p>
                 </section>
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
@@ -320,6 +323,22 @@
         &lt;/<span class="kp-code__keyword">ul</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A picker that previews on hover</figcaption>
+                        <p class="kp-text-muted">`data-kp-theme-preview=&quot;hover&quot;` shows each theme while the pointer is on its button; the real choice is still the press.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div data-kp-theme-picker data-kp-theme-preview="hover">
+    <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formal</button>
+    <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Dark</button>
+</div>
+<p data-kp-theme-status hidden></p>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-theme-picker</span> <span class="kp-code__keyword">data-kp-theme-preview</span><span class="kp-code__string">=&quot;hover&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-theme</span><span class="kp-code__string">=&quot;formal&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-swatch&quot;</span> <span class="kp-code__keyword">data-theme</span><span class="kp-code__string">=&quot;formal&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Formal&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-theme</span><span class="kp-code__string">=&quot;dark&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-swatch&quot;</span> <span class="kp-code__keyword">data-theme</span><span class="kp-code__string">=&quot;dark&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Dark&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-theme-status</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
@@ -1011,7 +1030,10 @@
                             <tr><td><code>registers loaded lazily</code></td><td>On a page that links only the active theme’s register, a choice waits until the new register has arrived: the page keeps the previous theme meanwhile, the choice is still the one remembered, and a register that fails to load leaves the theme as it was.</td></tr>
                             <tr><td><code>--kp-sig-pa-* (pastel’s register)</code></td><td>The tokens pastel’s register keeps to itself, readable but not knobs: the soft landing (`land`, the same curve as the theme’s easing token), `land-size` (the landing held at its value, for widths and heights), `land-back` (the landing reversed); the clocks `window` 560 ms, `dialog` 840 ms, `tack` 360 ms, `wobble` 800 ms and `loop` 2400 ms; `off` (6 px, the pass’s offset), `pass-c`, `peel`, the radii `r-plate`, `r-ctl` and `r-chip`, `tape-bg`, `dir`, `corner` and `ground`; and two registered numbers, `pass` and `ink`, the two clocks every part that draws its own plate follows.</td></tr>
                             <tr><td><code>kp-sig-pastel-* (pastel’s keyframes)</code></td><td>The anchor: `stuck-in`/`-out`, `stuck-placed-in`/`-out`, `stuck-plate-in`/`-out`, `pass-in`/`-out`, `pass-host-in`/`-out`, `stuck-small-in` and `pass-small-in` (a tick, a dot); the tack: `tack-in`/`-out`; the meter’s share: `meter-stuck-o`/`-w`/`-d`; the wobble: `update-wobble`; the caterpillar: `bug-rise`, `bug-rise-bead`, `bug-step`, `bug-feel`, and the spinner’s `curl-orbit`, `curl-lift`, `curl-turn`; the tour’s `tour-ring`. Every close is its open played backwards.</td></tr>
+                            <tr><td><code>data-kp-theme-preview=&quot;hover&quot;</code></td><td>The picker previews a theme while the pointer or focus is on its option and goes back when it leaves (also `attachThemePickers(root, { preview })`); `data-kp-theme-preview-target` names the element that wears the preview (default: the root). The event `kp-theme-preview` says which, and the root carries `data-theme-preview-from` while it lasts. `previewTheme`, `endPreview` and `previewedTheme` do it from code, and `currentTheme()` answers the real theme meanwhile. A preview inside a menu ends when the menu closes and the menu does not replay its entrance.</td></tr>
+                            <tr><td><code>in a form row</code></td><td>A theme button takes its baseline from its name; the grouped picker puts the themes at the start edge and the Light or Dark word at the line’s end.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

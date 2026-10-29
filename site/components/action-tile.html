@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html" aria-current="page">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -320,6 +323,24 @@ document.getElementById(<span class="kp-code__string">'doc-tile-backup'</span>).
     setTimeout(() =&gt; setActionBusy(tile, <span class="kp-code__keyword">false</span>), <span class="kp-code__string">3000</span>);
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Large tiles</figcaption>
+                        <p class="kp-text-muted">`data-kp-action-size=&quot;large&quot;` on the board makes every tile large; `compact` makes them small.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-actions" data-kp-action-size="large" role="group" aria-label="System actions">
+    <button type="button" class="kp-action"><strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></button>
+    <a class="kp-action" href="#host"><strong class="kp-action__title">Host</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">CPU, memory and disks of the machine underneath.</span></a>
+    <button type="button" class="kp-action kp-action--destructive"><strong class="kp-action__title">Delete all snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></button>
+    <button type="button" class="kp-action" disabled><strong class="kp-action__title">Check for updates</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Not while a backup is running.</span></button>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-actions&quot;</span> <span class="kp-code__keyword">data-kp-action-size</span><span class="kp-code__string">=&quot;large&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;System actions&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__title&quot;</span>&gt;Back up now&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__text&quot;</span>&gt;Copies every volume to the backup disk and checks the copy.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#host&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__title&quot;</span>&gt;Host&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__text&quot;</span>&gt;CPU, memory and disks of the machine underneath.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action kp-action--destructive&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__title&quot;</span>&gt;Delete all snapshots&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__text&quot;</span>&gt;Frees 48 GB. This cannot be undone.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action&quot;</span> <span class="kp-code__keyword">disabled</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__title&quot;</span>&gt;Check for updates&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__text&quot;</span>&gt;Not while a backup is running.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -408,6 +429,7 @@ document.getElementById(<span class="kp-code__string">'doc-tile-backup'</span>).
                             <tr><td><code>aria-busy=&quot;true&quot;</code></td><td>The spinner appears in the mark, a hidden “Working…” follows the title, and a press does nothing until it is cleared. `setActionBusy(tile, true)` sets it and fires `kp-action-busy`.</td></tr>
                             <tr><td><code>.kp-action__meta</code></td><td>An optional small line under the sentence, for a live figure.</td></tr>
                             <tr><td><code>--kp-actions-min</code></td><td>The least width of a column (15rem); the grid fills the width with as many as fit.</td></tr>
+                            <tr><td><code>data-kp-action-size</code></td><td>`compact` or `large`, on the board, on a tile or on an element above; absent leaves the theme’s own size. `setActionSize(el, size)` writes it for a script.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

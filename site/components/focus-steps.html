@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -632,7 +635,15 @@ root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = 
                             <tr><td><code>data-kp-wake, data-kp-speak and data-kp-text-optional</code></td><td>The screen is not kept on and Read aloud is off in answer mode (`true` turns them on); a written answer can always be passed with Not today.</td></tr>
                             <tr><td><code>kp-focus-steps-answer and related events</code></td><td>`kp-focus-steps-before-answer` (cancelable), `kp-focus-steps-answer` `{ index, id, value, source, same?, previous }`, `kp-focus-steps-resume`, `kp-focus-steps-retry`, `kp-focus-steps-save-retry`; Done carries `{ total, answers, startedAt, finishedAt }`. `setFocusStepsState(el, &quot;save-error&quot;)` keeps the answers.</td></tr>
                             <tr><td><code>marks the module writes</code></td><td>`data-kp-value` and `data-kp-chosen` on an answer, `data-kp-pinned`, `data-kp-layout` on the answers, `data-kp-done` and `data-kp-current` on a dot.</td></tr>
+                            <tr><td><code>getStepsPassed(root) / getSteps(root)</code></td><td>Read the steps back: `getSteps` gives the steps with their state, `getStepsPassed` the ones the reader has gone through.</td></tr>
+                            <tr><td><code>tracks: track, id, title, waitFor / after, timer.id</code></td><td>Step fields for a recipe that runs in parallel: `track` puts the step in a lane, `id` and `title` name it, `waitFor` or `after` says which step must be done first, and `timer.id` names the timer the step starts. The lanes sit in a band; a step that waits shows the waiting plate.</td></tr>
+                            <tr><td><code>data-kp-tracks / -lanes / -lane-detail</code></td><td>`data-kp-tracks` turns the lanes on, `data-kp-lanes` chooses how they show, `data-kp-lane-detail` how much a lane says about its step.</td></tr>
+                            <tr><td><code>data-kp-track-follow / -attention / -shared</code></td><td>`data-kp-track-follow` makes the view follow the lane that needs the reader, `-attention` says how a lane that needs them is called out, `-shared` how a step shared between lanes shows.</td></tr>
+                            <tr><td><code>keys T and Shift T</code></td><td>T goes to the next lane and Shift T to the one before; the events `kp-focus-steps-track` and `kp-focus-steps-track-attention` say which lane the view is on and which one wants attention.</td></tr>
+                            <tr><td><code>read mode</code></td><td>The empty and failed plates are the state plate (there is no more `kp-focus-steps__message`), and `data-kp-wake` is read live.</td></tr>
+                            <tr><td><code>narrow columns</code></td><td>In a column too narrow for the head, Back and Next stand one under the other when two do not fit side by side; neither breaks a word.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

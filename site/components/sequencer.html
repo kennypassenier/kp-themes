@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Sequencer — kp-themes</title>
+        <meta name="description" content="An editable multi-track timeline: bars in lanes, moved along the axis and between lanes, resized at either edge by pointer or keyboard, snapping to a step in any unit and to the edges of other items, with a live total and an optional line for now. It is the run timeline’s own look on a plan instead of the clock: the host is `section.kp-gantt.kp-sequencer`, so every register that dresses the run timeline dresses this. `attachSequencers(root)` in js/sequencer.js fills `[data-kp-sequencer]`; `setSequencerItems` hands it the plan." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/update.html">Information that updates in place</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calm.html">Calm mode</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Layout</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/ops-page.html">Operations page</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/segmented.html">Segmented control and filter chips</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/range.html">Range picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/weekdays.html">Weekday picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/snooze.html">Snooze picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dated-options.html">Dated option picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sentence.html">Sentence form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/slider.html">Slider</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toggle.html">Toggle button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/unsaved.html">Unsaved changes bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/rating.html">Star rating</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/usual-picker.html">Picker with the usual on top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/code-field.html">Code field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quiet-hours.html">Quiet hours</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/autosize.html">Growing text box</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/secret.html">Secret field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/heat.html">Heat grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/matrix.html">Matrix</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html" aria-current="page">Sequencer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/deplist.html">Dependency list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/entity-card.html">Entity card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/claim.html">Who brings it</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/availability.html">Who can come</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/logviewer.html">Log viewer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/stackbar.html">Share bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/bullets.html">Bullet rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kv.html">Key-value grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/code.html">Code block</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/request-inspector.html">Request inspector</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/feed.html">Activity feed</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/passkeys.html">Ways to sign in</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/selection.html">Selection bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/uses-map.html">Uses map</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/type-confirm.html">Typed confirmation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timer-disc.html">Visual timer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/countdown.html">Countdown</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/version-delta.html">Version jump chip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/ack-gate.html">Acknowledge gate</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/path-trace.html">Path of a connection</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/status-row.html">Status rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timer.html">Kitchen timers</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/connection.html">Connection banner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/transfer.html">Transfer progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/job-line.html">Job line</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/focus-steps.html">One step at a time</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-contents.html">On this page</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/command.html">Command block</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/compare.html">Compare slider</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quote.html">Quote card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/qr.html">QR code</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/keys.html">Key line and key cap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/lede.html">Lede</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/thread.html">Conversation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/markdown.html">Markdown notes</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/viewer.html">Viewer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/document-preview.html">Document preview</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/gallery.html">Gallery</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/print.html">Printing a list</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/master-detail.html">Master and detail panes</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/anchors.html">Link anchors</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">Sequencer</h1>
+                    <p class="kp-prose">An editable multi-track timeline: bars in lanes, moved along the axis and between lanes, resized at either edge by pointer or keyboard, snapping to a step in any unit and to the edges of other items, with a live total and an optional line for now. It is the run timeline’s own look on a plan instead of the clock: the host is `section.kp-gantt.kp-sequencer`, so every register that dresses the run timeline dresses this. `attachSequencers(root)` in js/sequencer.js fills `[data-kp-sequencer]`; `setSequencerItems` hands it the plan.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">When a reader arranges steps in time and in parallel: the steps of a recipe, a deployment plan, a rota. Not for what already ran (use the run timeline), not for a list that only changes order (use reorder), and not for a calendar of dated events (use the week agenda).</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A recipe, two lanes, one step that runs alongside</figcaption>
+                        <p class="kp-text-muted">The markup is the empty host with its options; the page hands over the lanes and the items. Values are minutes. “Brown the mince” runs alongside “Boil the water”, so dragging either moves both. The page saves what `kp-sequencer-change` carries.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-gantt kp-sequencer" data-kp-sequencer data-kp-sequencer-unit="minute" data-kp-sequencer-snap="1" aria-label="Spaghetti bolognese"></section>
+<p class="kp-text-muted" data-doc-sequencer-total></p>
+                            <script type="module">
+import { attachSequencers, setSequencerItems, setSequencerNow } from '../../js/sequencer.js';
+
+const plan = document.querySelector('[data-kp-sequencer]:not([id])');
+attachSequencers(plan.parentElement);
+setSequencerItems(
+    plan,
+    [
+        { id: 'boil', lane: 'pasta', label: 'Boil the water', start: 20, duration: 8 },
+        { id: 'cook', lane: 'pasta', label: 'Cook the spaghetti', start: 28, duration: 10 },
+        { id: 'brown', lane: 'sauce', label: 'Brown the mince', start: 20, duration: 11, with: 'boil' },
+        { id: 'simmer', lane: 'sauce', label: 'Simmer the sauce', start: 31, duration: 7 },
+    ],
+    [
+        { id: 'sauce', label: 'Sauce' },
+        { id: 'pasta', label: 'Pasta' },
+    ],
+);
+setSequencerNow(plan, 12);
+plan.addEventListener('kp-sequencer-change', (e) => {
+    document.querySelector('[data-doc-sequencer-total]').textContent = 'Saved: ' + e.detail.items.length + ' steps, ' + e.detail.total + ' min in all.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt kp-sequencer&quot;</span> <span class="kp-code__keyword">data-kp-sequencer</span> <span class="kp-code__keyword">data-kp-sequencer-unit</span><span class="kp-code__string">=&quot;minute&quot;</span> <span class="kp-code__keyword">data-kp-sequencer-snap</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Spaghetti bolognese&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">data-doc-sequencer-total</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSequencers, setSequencerItems, setSequencerNow } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/sequencer'</span>;
+
+<span class="kp-code__keyword">const</span> plan = document.querySelector(<span class="kp-code__string">'[data-kp-sequencer]:not([id])'</span>);
+attachSequencers(plan.parentElement);
+setSequencerItems(
+    plan,
+    [
+        { id: <span class="kp-code__string">'boil'</span>, lane: <span class="kp-code__string">'pasta'</span>, label: <span class="kp-code__string">'Boil the water'</span>, start: <span class="kp-code__string">20</span>, duration: <span class="kp-code__string">8</span> },
+        { id: <span class="kp-code__string">'cook'</span>, lane: <span class="kp-code__string">'pasta'</span>, label: <span class="kp-code__string">'Cook the spaghetti'</span>, start: <span class="kp-code__string">28</span>, duration: <span class="kp-code__string">10</span> },
+        { id: <span class="kp-code__string">'brown'</span>, lane: <span class="kp-code__string">'sauce'</span>, label: <span class="kp-code__string">'Brown the mince'</span>, start: <span class="kp-code__string">20</span>, duration: <span class="kp-code__string">11</span>, with: <span class="kp-code__string">'boil'</span> },
+        { id: <span class="kp-code__string">'simmer'</span>, lane: <span class="kp-code__string">'sauce'</span>, label: <span class="kp-code__string">'Simmer the sauce'</span>, start: <span class="kp-code__string">31</span>, duration: <span class="kp-code__string">7</span> },
+    ],
+    [
+        { id: <span class="kp-code__string">'sauce'</span>, label: <span class="kp-code__string">'Sauce'</span> },
+        { id: <span class="kp-code__string">'pasta'</span>, label: <span class="kp-code__string">'Pasta'</span> },
+    ],
+);
+setSequencerNow(plan, <span class="kp-code__string">12</span>);
+plan.addEventListener(<span class="kp-code__string">'kp-sequencer-change'</span>, (e) =&gt; {
+    document.querySelector(<span class="kp-code__string">'[data-doc-sequencer-total]'</span>).textContent = <span class="kp-code__string">'Saved: '</span> + e.detail.items.length + <span class="kp-code__string">' steps, '</span> + e.detail.total + <span class="kp-code__string">' min in all.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Pushing, a locked step and the failed state</figcaption>
+                        <p class="kp-text-muted">`data-kp-sequencer-overlap=&quot;push&quot;` moves the items in the way later instead of refusing; `locked` pins one. The second host shows the failed plate with its Retry (`kp-sequencer-retry`), which keeps the footprint the sequencer had.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-gantt kp-sequencer" id="doc-seq-push" data-kp-sequencer data-kp-sequencer-overlap="push" data-kp-sequencer-lanes="fixed" data-kp-sequencer-unit="hour" data-kp-sequencer-toolbar="off" aria-label="Release plan"></section>
+<section class="kp-gantt kp-sequencer" id="doc-seq-failed" data-kp-sequencer data-kp-sequencer-hint="off" aria-label="Release plan, failed to load"></section>
+                            <script type="module">
+import { attachSequencers, setSequencerItems, setSequencerState } from '../../js/sequencer.js';
+
+const plan = document.getElementById('doc-seq-push');
+const failed = document.getElementById('doc-seq-failed');
+attachSequencers(plan.parentElement);
+setSequencerItems(
+    plan,
+    [
+        { id: 'freeze', lane: 'build', label: 'Freeze', start: 0, duration: 2, locked: true },
+        { id: 'build', lane: 'build', label: 'Build', start: 2, duration: 3 },
+        { id: 'test', lane: 'build', label: 'Test', start: 5, duration: 3 },
+        { id: 'docs', lane: 'ship', label: 'Docs', start: 2, duration: 4 },
+    ],
+    [
+        { id: 'build', label: 'Build' },
+        { id: 'ship', label: 'Ship' },
+    ],
+);
+setSequencerState(failed, 'error', 'The plan did not load', { text: 'Try again in a moment.' });
+failed.addEventListener('kp-sequencer-retry', () => setSequencerState(failed, 'empty', 'Nothing planned yet'));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt kp-sequencer&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-seq-push&quot;</span> <span class="kp-code__keyword">data-kp-sequencer</span> <span class="kp-code__keyword">data-kp-sequencer-overlap</span><span class="kp-code__string">=&quot;push&quot;</span> <span class="kp-code__keyword">data-kp-sequencer-lanes</span><span class="kp-code__string">=&quot;fixed&quot;</span> <span class="kp-code__keyword">data-kp-sequencer-unit</span><span class="kp-code__string">=&quot;hour&quot;</span> <span class="kp-code__keyword">data-kp-sequencer-toolbar</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Release plan&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt kp-sequencer&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-seq-failed&quot;</span> <span class="kp-code__keyword">data-kp-sequencer</span> <span class="kp-code__keyword">data-kp-sequencer-hint</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Release plan, failed to load&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSequencers, setSequencerItems, setSequencerState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/sequencer'</span>;
+
+<span class="kp-code__keyword">const</span> plan = document.getElementById(<span class="kp-code__string">'doc-seq-push'</span>);
+<span class="kp-code__keyword">const</span> failed = document.getElementById(<span class="kp-code__string">'doc-seq-failed'</span>);
+attachSequencers(plan.parentElement);
+setSequencerItems(
+    plan,
+    [
+        { id: <span class="kp-code__string">'freeze'</span>, lane: <span class="kp-code__string">'build'</span>, label: <span class="kp-code__string">'Freeze'</span>, start: <span class="kp-code__string">0</span>, duration: <span class="kp-code__string">2</span>, locked: <span class="kp-code__keyword">true</span> },
+        { id: <span class="kp-code__string">'build'</span>, lane: <span class="kp-code__string">'build'</span>, label: <span class="kp-code__string">'Build'</span>, start: <span class="kp-code__string">2</span>, duration: <span class="kp-code__string">3</span> },
+        { id: <span class="kp-code__string">'test'</span>, lane: <span class="kp-code__string">'build'</span>, label: <span class="kp-code__string">'Test'</span>, start: <span class="kp-code__string">5</span>, duration: <span class="kp-code__string">3</span> },
+        { id: <span class="kp-code__string">'docs'</span>, lane: <span class="kp-code__string">'ship'</span>, label: <span class="kp-code__string">'Docs'</span>, start: <span class="kp-code__string">2</span>, duration: <span class="kp-code__string">4</span> },
+    ],
+    [
+        { id: <span class="kp-code__string">'build'</span>, label: <span class="kp-code__string">'Build'</span> },
+        { id: <span class="kp-code__string">'ship'</span>, label: <span class="kp-code__string">'Ship'</span> },
+    ],
+);
+setSequencerState(failed, <span class="kp-code__string">'error'</span>, <span class="kp-code__string">'The plan did not load'</span>, { text: <span class="kp-code__string">'Try again in a moment.'</span> });
+failed.addEventListener(<span class="kp-code__string">'kp-sequencer-retry'</span>, () =&gt; setSequencerState(failed, <span class="kp-code__string">'empty'</span>, <span class="kp-code__string">'Nothing planned yet'</span>));</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-editing</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-flip</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-grabbed</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-linked</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-locked</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-mode</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-sequencer-action</code></td><td>selector, written, read</td></tr>
+                            <tr><td><code>data-kp-sequencer-editable</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-ghosts</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-sequencer-hint</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-id</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-lanes</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-now</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-sequencer-overlap</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-snap</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-snap-items</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-span</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-toolbar</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-unit</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sequencer-zoom</code></td><td>selector, written, read</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-sequencer-change</code></td><td>Fired after an edit is dropped: `detail` `{ items, changed, source, total }`.</td></tr>
+                            <tr><td><code>kp-sequencer-select</code></td><td>Fired when the selected item changes: `detail` `{ id }` (null when none).</td></tr>
+                            <tr><td><code>kp-sequencer-refuse</code></td><td>Fired when an edit was refused: `detail` `{ id, reason, blocker }`.</td></tr>
+                            <tr><td><code>kp-sequencer-retry</code></td><td>Fired when the Retry of the failed plate is pressed.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-g-e</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-g-from</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-g-lanes</code></td><td><code>1</code></td></tr>
+                            <tr><td><code>--kp-g-s</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-g-span</code></td><td><code>21600</code></td></tr>
+                            <tr><td><code>--kp-g-t</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-gantt-bar</code></td><td><code>1.125rem</code></td></tr>
+                            <tr><td><code>--kp-gantt-bar-radius</code></td><td><code>var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2))</code></td></tr>
+                            <tr><td><code>--kp-gantt-pad</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-gantt-row</code></td><td><code>1.75rem</code></td></tr>
+                            <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-sequencer-floor</code></td><td><code>var(--kp-stateplate-floor, 12rem)</code></td></tr>
+                            <tr><td><code>--kp-sequencer-handle</code></td><td><code>0.625rem</code></td></tr>
+                            <tr><td><code>--kp-sequencer-label</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-sequencer-label-width</code></td><td><code>8rem</code></td></tr>
+                            <tr><td><code>--kp-sequencer-min-width</code></td><td><code>26rem</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-stateplate-floor</code></td><td><code>12rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-tl-height</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-tl-line</code></td><td><code>0</code></td></tr>
+                            <tr><td><code>--kp-tl-top</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-tl-zoom</code></td><td><code>1</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in: every bar is a button in a list of lanes; arrows move between items, Enter or Space picks one up, the arrows then move it by the snap step (Ctrl: ten steps), Shift and the arrows resize the end, Ctrl and Shift the start, Alt and the up and down arrows change lane, Enter drops it and Escape puts it back.</li>
+                        <li>Built in: every step is said in one polite status region (the bar picked up, its new start and length, the refusal and its reason); the pointer drag has the same refusals, and Escape during a drag puts the bar back.</li>
+                        <li>Built in: a locked bar, a linked pair and a refused edit carry a mark and a word, not a colour alone; the live total and the line for now are text.</li>
+                        <li>Yours: saving what `kp-sequencer-change` carries, and what an item means; the sequencer does not know what a minute is for.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-sequencer-unit</code></td><td>What `start` and `duration` are counted in: `second`, `minute` (default), `hour`, `day` or `week` (short forms `s`, `min`, `h`, `d`, `w` too). Read again when it changes.</td></tr>
+                            <tr><td><code>data-kp-sequencer-snap</code></td><td>The step, in the unit, that every move and resize snaps to (1). Edges of other items pull a dragged edge within 8 px as well.</td></tr>
+                            <tr><td><code>data-kp-sequencer-snap-items</code></td><td>`off` leaves out the pull to other items’ edges and keeps the step alone.</td></tr>
+                            <tr><td><code>data-kp-sequencer-overlap</code></td><td>`refuse` (default: an edit that would overlap in a lane does not happen, and `kp-sequencer-refuse` says why), `push` (the items in the way, with what runs alongside them, move later) or `allow` (items overlap and take rows of their lane).</td></tr>
+                            <tr><td><code>data-kp-sequencer-lanes</code></td><td>`fixed` keeps every item in its lane; the default lets an item change lane, by pointer or with Alt and the up and down arrows.</td></tr>
+                            <tr><td><code>data-kp-sequencer-editable</code></td><td>`off` shows the plan and edits nothing; the bars are still reachable by keyboard and still announce themselves.</td></tr>
+                            <tr><td><code>data-kp-sequencer-zoom</code></td><td>The zoom, 0.5 to 16; 1 fits the plot to its box. Under 26rem the plot (its knob is listed below) keeps that width and the frame scrolls sideways, with the lane names held at the start edge. Ctrl and the wheel, or a pinch, zoom too; `setSequencerZoom` sets it from code.</td></tr>
+                            <tr><td><code>data-kp-sequencer-span</code></td><td>The shortest window, in the unit (0, the default, fits the plan with a little room after the last item).</td></tr>
+                            <tr><td><code>data-kp-sequencer-toolbar</code></td><td>`off` leaves out the zoom row and the live total in it.</td></tr>
+                            <tr><td><code>data-kp-sequencer-hint</code></td><td>`off` leaves out the line that says how to move and resize.</td></tr>
+                            <tr><td><code>with</code></td><td>An item field naming another item it “runs alongside”: it starts together with it. Moving any member of a group moves the whole group by the same amount, and a join is drawn from the item to its partner. L chooses the partner for the focused item, U lets it run on its own.</td></tr>
+                            <tr><td><code>locked</code></td><td>An item field: the bar cannot be moved or resized (`data-kp-locked`); an attempt is refused with the reason `locked`.</td></tr>
+                            <tr><td><code>setSequencerItems(el, items, lanes)</code></td><td>Gives the sequencer its items and lanes. Items are kept by id, so a refresh keeps focus and selection; an edit in progress is not disturbed, the set is applied when it ends. `getSequencerItems` and `getSequencerTotal` read the plan back.</td></tr>
+                            <tr><td><code>setSequencerNow(el, at)</code></td><td>Puts the line for now at a point of the plan (null takes it away).</td></tr>
+                            <tr><td><code>setSequencerState(el, state, words, { text, art })</code></td><td>`loading` (the busy card), `empty` or `error` (the state plate; Retry fires `kp-sequencer-retry`) or `ready`. The plate keeps the footprint the sequencer had.</td></tr>
+                            <tr><td><code>kp-sequencer-change</code></td><td>Fired when an edit is dropped, with `{ items, changed, source: &quot;pointer&quot; | &quot;keyboard&quot; | &quot;link&quot;, total }`; save `items` (each `{ id, lane, start, duration, with }`).</td></tr>
+                            <tr><td><code>kp-sequencer-refuse</code></td><td>Fired when an edit did not happen, with the `reason` (`locked`, `overlap`, `edge`, `lane`, `cycle`, `unknown`) and the `blocker`; the bar shakes by a mark and the status line says it.</td></tr>
+                            <tr><td><code>pure logic</code></td><td>`sequencerPlan`, `sequencerSnap`, `sequencerLink`, `sequencerRows` and the other functions exported next to `attachSequencers` need no DOM; a server or a test can run the same overlap rule the page does.</td></tr>
+                    </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

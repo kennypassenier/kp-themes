@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -482,7 +485,10 @@ draw(<span class="kp-code__string">'ready'</span>);</code></pre>
                             <tr><td><code>the busy card</code></td><td>While `loading`, the data table’s loading card (`js/busy-card.js`) stands centred over the cells (`.kp-matrix__busy`), over the skeleton names and plates, and the matrix is drawn once it has left.</td></tr>
                             <tr><td><code>setMatrix / setMatrixLit / setMatrixPick</code></td><td>Write the matrix, light some headers (`kp-matrix-light` reports the change a person made) and pin a cell. `data-kp-matrix-owned` leaves the lit and pinned state to the page.</td></tr>
                             <tr><td><code>.kp-heat__swatch--plate</code></td><td>A legend swatch drawn as a matrix plate, for a legend under a matrix.</td></tr>
+                            <tr><td><code>row labels</code></td><td>The row-label column is as wide as its longest name between a least and a most width (8rem under 36rem), names wrap, and a column is never narrower than its header’s longest word.</td></tr>
+                            <tr><td><code>the lines view</code></td><td>The busy card of the lines view is centred over the whole map (its least height), not over the waiting rows. `cell()` of the lines view returns `{ tone, label }`; the tones are `ok`, `warn`, `bad` and `muted`.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

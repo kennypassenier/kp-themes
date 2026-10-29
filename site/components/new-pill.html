@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html" aria-current="page">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -291,6 +294,69 @@
     &lt;/<span class="kp-code__keyword">ul</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Rows arriving in a data table</figcaption>
+                        <p class="kp-text-muted">`data-kp-follow-rows=&quot;tbody&quot;` on the scroller that holds the table: the pill counts rows arriving in the body, once each by `data-kp-row-key`. Add a row from the script and the count appears when the reader is not at the end.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div data-kp-newpill-host>
+    <div data-kp-follow="tail" data-kp-follow-rows="tbody" data-kp-pill-unit="job,jobs" id="doc-pill-table" style="max-block-size: 8rem; overflow: auto">
+        <table class="kp-table">
+            <caption>Jobs</caption>
+            <thead><tr><th scope="col">Job</th><th scope="col">Result</th></tr></thead>
+            <tbody>
+                <tr data-kp-row-key="j1"><td>Backup photos</td><td>Succeeded</td></tr>
+                <tr data-kp-row-key="j2"><td>Prune snapshots</td><td>Succeeded</td></tr>
+                <tr data-kp-row-key="j3"><td>Update images</td><td>Failed</td></tr>
+                <tr data-kp-row-key="j4"><td>Verify backups</td><td>Succeeded</td></tr>
+                <tr data-kp-row-key="j5"><td>Backup media</td><td>Succeeded</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<button type="button" class="kp-button" id="doc-pill-add">Add a job</button>
+                            <script type="module">
+import { attachNewPills } from '../../js/newpill.js';
+
+attachNewPills(document.getElementById('doc-pill-table').parentElement);
+let n = 5;
+document.getElementById('doc-pill-add').addEventListener('click', () => {
+    n += 1;
+    const row = document.createElement('tr');
+    row.setAttribute('data-kp-row-key', 'j' + n);
+    row.innerHTML = '<td>Job ' + n + '</td><td>Succeeded</td>';
+    document.querySelector('#doc-pill-table tbody').append(row);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-newpill-host</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-follow</span><span class="kp-code__string">=&quot;tail&quot;</span> <span class="kp-code__keyword">data-kp-follow-rows</span><span class="kp-code__string">=&quot;tbody&quot;</span> <span class="kp-code__keyword">data-kp-pill-unit</span><span class="kp-code__string">=&quot;job,jobs&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-pill-table&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;max-block-size: 8rem; overflow: auto&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span>&gt;Jobs&lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Job&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Result&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;j1&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Backup photos&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Succeeded&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;j2&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Prune snapshots&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Succeeded&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;j3&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Update images&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Failed&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;j4&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Verify backups&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Succeeded&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;j5&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Backup media&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Succeeded&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-pill-add&quot;</span>&gt;Add a job&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachNewPills } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/newpill'</span>;
+
+attachNewPills(document.getElementById(<span class="kp-code__string">'doc-pill-table'</span>).parentElement);
+<span class="kp-code__keyword">let</span> n = <span class="kp-code__string">5</span>;
+document.getElementById(<span class="kp-code__string">'doc-pill-add'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    n += <span class="kp-code__string">1</span>;
+    <span class="kp-code__keyword">const</span> row = document.createElement(<span class="kp-code__string">'tr'</span>);
+    row.setAttribute(<span class="kp-code__string">'data-kp-row-key'</span>, <span class="kp-code__string">'j'</span> + n);
+    row.innerHTML = <span class="kp-code__string">'&lt;td&gt;Job '</span> + n + <span class="kp-code__string">'&lt;/td&gt;&lt;td&gt;Succeeded&lt;/td&gt;'</span>;
+    document.querySelector(<span class="kp-code__string">'#doc-pill-table tbody'</span>).append(row);
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -356,7 +422,10 @@
                             <tr><td><code>data-kp-follow-key</code></td><td>The key that jumps back and follows again; End, or Home for `head`.</td></tr>
                             <tr><td><code>data-kp-follow-space</code></td><td>Space pauses and resumes following, for a log.</td></tr>
                             <tr><td><code>data-kp-follow-toggle</code></td><td>On a button, naming the list: it pauses and resumes the following and says which it will do.</td></tr>
+                            <tr><td><code>data-kp-follow-rows</code></td><td>`children` (default) or `tbody`: where the rows are. With `tbody` the scroller holds a data table and its body’s rows are counted; a row counts once by its `data-kp-row-key`, so a re-sort or a page change does not count it again.</td></tr>
+                            <tr><td><code>switchable at runtime</code></td><td>Switchable at runtime: changing `data-kp-pill-placement` redraws the pill.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

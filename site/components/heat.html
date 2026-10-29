@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -550,7 +553,12 @@ setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</
                             <tr><td><code>data-kp-heat-latest</code></td><td>Opt-in: `end` (or `start`, for a grid whose newest column comes first) says which edge the newest column stands on. The key that goes to that edge (End, or Home) still moves to the end of the row, and also sends `kp-heat-page` with `direction: &quot;latest&quot;`; with Ctrl it goes to that corner and sends it too.</td></tr>
                             <tr><td><code>the busy card</code></td><td>While `loading`, the data table’s loading card (`js/busy-card.js`: the theme’s spinner and “Reading…”) stands centred over the cells (`.kp-heat__busy`), arriving and leaving as the table’s does; the cells are drawn once it has left.</td></tr>
                             <tr><td><code>setHeat / setHeatPick / setHeatRows</code></td><td>Write the grid (keeping its columns, row heights, picked column and a focused cell’s place), pick a column by its key, and set which row names are pressed. A grid marked `data-kp-heat-owned` leaves the picked column and the pressed names to the page. `heatLoading`, `heatEmpty` and `heatFailed` are the default words.</td></tr>
+                            <tr><td><code>the label column</code></td><td>The label column is as wide as its longest name, between a floor and a share of the grid (a name never breaks inside a word), and a long row name wraps: the row grows, the name is never cut.</td></tr>
+                            <tr><td><code>the axis rule</code></td><td>`every` counts the columns without `minor`; `minor: true` is never named and not counted, `minor: false` is always named, and the last named column wins over the one before it when adjacent. A minor header carries its name in `aria-label` and no text.</td></tr>
+                            <tr><td><code>setHeatLegend and the calm legend</code></td><td>`setHeatLegend(el, { entries, ramp, keys })` draws the legend (`legend` and `legendKeys` of `setHeat` do the same); the calm grid has its own legend, left out with `data-kp-legend=&quot;hide&quot;`.</td></tr>
+                            <tr><td><code>failed and empty</code></td><td>`setHeat` takes `message`, `text` and `art` for the state plate, and `.kp-heat` holds its loaded height while a state shows; Retry fires `kp-heat-retry`.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

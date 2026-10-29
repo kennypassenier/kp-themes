@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -433,6 +436,37 @@ failed.addEventListener(<span class="kp-code__string">'kp-stackbar-pick'</span>,
     said.textContent = <span class="kp-code__string">'Pressed: '</span> + event.detail.key;
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Picking parts</figcaption>
+                        <p class="kp-text-muted">With `picked`, a part is a toggle button; the page keeps the state from `kp-stackbar-pick`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<figure class="kp-stackbar" id="doc-stack-pick" aria-label="Root volume"></figure>
+                            <script type="module">
+import { setStackbar } from '../../js/stackbar.js';
+
+const bar = document.getElementById('doc-stack-pick');
+const spec = { title: 'Root volume', total: 120, parts: [{ key: 'img', label: 'Docker images', value: 41 }, { key: 'vol', label: 'Volumes', value: 18.5 }, { key: 'log', label: 'Logs', value: 6.5 }] };
+let picked = ['vol'];
+setStackbar(bar, { ...spec, picked });
+bar.addEventListener('kp-stackbar-pick', (event) => {
+    picked = event.detail.picked ?? picked;
+    setStackbar(bar, { ...spec, picked });
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stackbar&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-stack-pick&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Root volume&quot;</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setStackbar } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/stackbar'</span>;
+
+<span class="kp-code__keyword">const</span> bar = document.getElementById(<span class="kp-code__string">'doc-stack-pick'</span>);
+<span class="kp-code__keyword">const</span> spec = { title: <span class="kp-code__string">'Root volume'</span>, total: <span class="kp-code__string">120</span>, parts: [{ key: <span class="kp-code__string">'img'</span>, label: <span class="kp-code__string">'Docker images'</span>, value: <span class="kp-code__string">41</span> }, { key: <span class="kp-code__string">'vol'</span>, label: <span class="kp-code__string">'Volumes'</span>, value: <span class="kp-code__string">18.5</span> }, { key: <span class="kp-code__string">'log'</span>, label: <span class="kp-code__string">'Logs'</span>, value: <span class="kp-code__string">6.5</span> }] };
+<span class="kp-code__keyword">let</span> picked = [<span class="kp-code__string">'vol'</span>];
+setStackbar(bar, { ...spec, picked });
+bar.addEventListener(<span class="kp-code__string">'kp-stackbar-pick'</span>, (event) =&gt; {
+    picked = event.detail.picked ?? picked;
+    setStackbar(bar, { ...spec, picked });
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -502,7 +536,10 @@ failed.addEventListener(<span class="kp-code__string">'kp-stackbar-pick'</span>,
                             <tr><td><code>state: loading</code></td><td>The bar is the meter’s loading picture, the theme’s own way a bar waits; the legend keeps its rows as waiting lines and the root is `aria-busy`.</td></tr>
                             <tr><td><code>state: empty / error</code></td><td>One calm note, `.kp-stackbar__note` with `.kp-stackbar__note-title`, over the whole footprint the bar and legend had; an error also has `.kp-stackbar__retry`, a normal-size button. A bar without a legend keeps its track and says the words in its name and hover card.</td></tr>
                             <tr><td><code>retry: false</code></td><td>A failed bar for a read the page cannot repeat: the words and no Retry.</td></tr>
+                            <tr><td><code>the legend</code></td><td>The legend keeps one value column for all rows (written by `setStackbar`) and a label wraps instead of being cut, with the swatch and the value on its first line.</td></tr>
+                            <tr><td><code>setStackbar(el, { picked: [keys] })</code></td><td>The parts become toggle buttons with `aria-pressed`; a part and its legend row take `data-kp-stackbar-picked`. The page owns the state through `kp-stackbar-pick` and calls `setStackbar` again with the new keys.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

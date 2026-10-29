@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -7621,7 +7624,17 @@ data-cat-server
                             <tr><td><code>empty</code></td><td>When a filter matches nothing the empty state takes the table’s place rather than leaving a header over nothing.</td></tr>
                             <tr><td><code>clickable rows</code></td><td>A row can be marked as a control, which gives it the pointer cursor and an activation of its own.</td></tr>
                             <tr><td><code>pastel: the busy panel</code></td><td>In pastel the busy panel draws its own plate and pass and lands on it as every part does, leaves as that backwards, and while it waits it becomes caterpillar (a head on its corner, stepping legs) with the round-trip spinner on it.</td></tr>
+                            <tr><td><code>filter, scope, editFilter by column id</code></td><td>`filter(column, value)`, `scope(column)` and `editFilter(column)` take the column’s id (the header’s `data-kp-field`, else its text) as well as its number; `columnIndex(id)` gives the number (-1 when none), and `view().filtersByField` reads the filters back by id. A server request carries the same `filtersByField`.</td></tr>
+                            <tr><td><code>data-kp-row-hidden</code></td><td>On a `tr`: held out of the table for an Undo window. It is not counted, paged, searched or shown, and every redraw keeps it hidden.</td></tr>
+                            <tr><td><code>rows the page adds or removes</code></td><td>A client-side table re-reads rows the page adds or removes by itself (no `refresh()` needed) and keeps the page; `refresh({ keepPage })` keeps it when you call it yourself. `view().pageNumber` is the page the reader sees, while `page()` counts from 0.</td></tr>
+                            <tr><td><code>column numbers</code></td><td>The toggle column of an expandable table is column 0 in every column number. `data-kp-expand-single` is read again when it changes, and date pills and refusals write dates in the table’s locale.</td></tr>
+                            <tr><td><code>failed and empty</code></td><td>A failed table and a table with nothing to show cover their rows with the state plate and hold the height the table had (the rows stay in the document); the page’s own `data-kp-datatable-empty` and `data-kp-datatable-failed` slots become the same plate.</td></tr>
+                            <tr><td><code>live options</code></td><td>The row for `data-kp-sort-multi`, `data-kp-filter-mode` and the other attributes above is switchable at runtime: changing the attribute redraws the table, and the table keeps its view (sort, filters, page) while it switches.</td></tr>
+                            <tr><td><code>data-kp-cards=&quot;spread&quot;</code></td><td>Cards derive `data-label` from the header; card lines sit on two tracks (label, value), and `spread` puts the label and the value at the opposite edges of the line.</td></tr>
+                            <tr><td><code>data-kp-filter-ui=&quot;none&quot;</code></td><td>Leaves out the filter controls while the filters still apply (a page that sets them itself).</td></tr>
+                            <tr><td><code>data-kp-fixed-end</code></td><td>Pins the last column (the actions) at the end edge while the rest scrolls, on an opaque ground.</td></tr>
                     </tbody></table></div>
+                    <p class="kp-text-muted">Options written as attributes are read again when they change. A component of your own that reads options from attributes does the same with <code>watchOptions(element, attributes, onChange)</code> from <code>js/live-options.js</code>.</p>
                 </section>
                 </div>
             </main>

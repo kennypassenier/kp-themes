@@ -101,6 +101,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/action-tile.html">Action tile</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formgrid.html">Form grid</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html" aria-current="page">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/flash.html">Flash button</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
@@ -140,6 +141,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sequencer.html">Sequencer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
@@ -193,6 +195,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/refresh.html">Automatic refresh</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/new-pill.html">New-lines pill</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/notices.html">Notification centre</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-plate.html">State plate</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/problems.html">Problem alert</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/question.html">Question card</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/undo.html">Undo toast</a></li>
@@ -306,14 +309,7 @@
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
-                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-formgrid-columns</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-formgrid-rows</code></td><td>selector, read</td></tr>
-                            <tr><td><code>data-kp-formgrid-span</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-formgrid-stack</code></td><td>prose, read</td></tr>
-                            <tr><td><code>data-kp-formgrid-stage</code></td><td>selector</td></tr>
-                            <tr><td><code>data-kp-formgrid-wide</code></td><td>read, written</td></tr>
-                    </tbody></table></div>
+                    <p class="kp-text-muted">This unit reads no data attributes of its own.</p>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>
@@ -330,42 +326,17 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
-                            <tr><td><code>--kp-anchor-room</code></td><td><code>1.75rem</code></td></tr>
-                            <tr><td><code>--kp-button-height-sm</code></td><td><code>max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem)))</code></td></tr>
-                            <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
-                            <tr><td><code>--kp-formgrid-column-gap</code></td><td><code>var(--kp-space-lg, 1rem)</code></td></tr>
-                            <tr><td><code>--kp-formgrid-control</code></td><td><code>3fr</code></td></tr>
-                            <tr><td><code>--kp-formgrid-control-max</code></td><td><code>28rem</code></td></tr>
-                            <tr><td><code>--kp-formgrid-field</code></td><td><code>18rem</code></td></tr>
-                            <tr><td><code>--kp-formgrid-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
-                            <tr><td><code>--kp-formgrid-group-gap</code></td><td><code>var(--kp-space-2xl, 2rem)</code></td></tr>
-                            <tr><td><code>--kp-formgrid-label-max</code></td><td><code>40%</code></td></tr>
-                            <tr><td><code>--kp-formgrid-label-min</code></td><td><code>0</code></td></tr>
-                            <tr><td><code>--kp-formgrid-line-pad</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
-                            <tr><td><code>--kp-formgrid-max</code></td><td><code>none</code></td></tr>
-                            <tr><td><code>--kp-formgrid-rows</code></td><td><code>1</code></td></tr>
                             <tr><td><code>--kp-formgrid-short</code></td><td><code>14rem</code></td></tr>
-                            <tr><td><code>--kp-formgrid-stage-gap</code></td><td><code>var(--kp-space-lg, 1rem)</code></td></tr>
-                            <tr><td><code>--kp-formgrid-stage-min</code></td><td><code>24rem</code></td></tr>
-                            <tr><td><code>--kp-formgrid-tracks</code></td><td><code></code></td></tr>
-                            <tr><td><code>--kp-formgrid-tracks-bare</code></td><td><code>var(--kp-formgrid-tracks)</code></td></tr>
-                            <tr><td><code>--kp-formgrid-value</code></td><td><code>2fr</code></td></tr>
-                            <tr><td><code>--kp-formgrid-value-max</code></td><td><code>20rem</code></td></tr>
                             <tr><td><code>--kp-formrow-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-formrow-input-max</code></td><td><code>28rem</code></td></tr>
                             <tr><td><code>--kp-formrow-label-max</code></td><td><code>34%</code></td></tr>
                             <tr><td><code>--kp-formrow-line-pad</code></td><td><code>0.75rem</code></td></tr>
-                            <tr><td><code>--kp-kv-gap</code></td><td><code>0.375rem</code></td></tr>
-                            <tr><td><code>--kp-refresh-title-width</code></td><td><code>max-content</code></td></tr>
-                            <tr><td><code>--kp-space-2xl</code></td><td><code>2rem</code></td></tr>
                             <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
-                            <tr><td><code>--kp-text-base</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
-                            <tr><td><code>--kp-tools-height</code></td><td><code>var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))))</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
@@ -382,6 +353,7 @@
                             <tr><td><code>.kp-formrow--top / --wide</code></td><td>The label at the top for a tall control; the control takes the aside’s column too.</td></tr>
                             <tr><td><code>data-kp-changed / data-kp-state=&quot;error&quot; / data-kp-locked</code></td><td>On a `.kp-formrow`: a rule on the start edge for a value not saved; a destructive rule for a failed one; the label muted for a value the reader cannot change, with `.kp-formrow__lock` in the aside saying why.</td></tr>
                             <tr><td><code>.kp-formrow__label small</code></td><td>The setting’s own key under its label, in the quiet face.</td></tr>
+                            <tr><td><code>.kp-formgrid</code></td><td>The same rows on four tracks (label, control, value, actions) have their own page: the form grid. On a first baseline, a field fills the track and a short control takes its short width.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>
