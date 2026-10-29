@@ -210,8 +210,8 @@
                 <div class="pg-intro">
                     <h2 id="h-keyboard">Pick a step up, move it, drop it</h2>
                     <p>
-                        Tab into the sequencer, use the arrows to reach a step, press Enter to pick it up. The buttons press the keys for you; the line
-                        under the sequencer is what a screen reader hears.
+                        Tab into the sequencer, use the arrows to reach a step, press Enter to pick it up. The buttons press the keys for you; the
+                        line under the sequencer is what a screen reader hears.
                     </p>
                 </div>
                 <div class="pg-expected">
@@ -285,7 +285,9 @@
                             data-kp-sequencer-ghosts="2 2"
                             aria-label="Spaghetti bolognese, keyboard editing"
                         ></section>
-                        <p class="pg-log" id="tl-keys-log"><b>A screen reader hears:</b> <span id="tl-keys-heard">nothing yet</span></p>
+                        <p class="pg-log pg-log--heard" id="tl-keys-log">
+                            <b>A screen reader hears:</b> <span id="tl-keys-heard">Press Enter on a step to pick it up.</span>
+                        </p>
                     </div>
                 </div>
             </section>
@@ -536,8 +538,8 @@
                     <ul>
                         <li>
                             <b>Move a step</b> (a change with <code>changed</code> naming it), <b>Try an overlap</b> (a refusal naming what is in the
-                            way) and <b>Select a step</b> each add a line; dragging in the sequencer does too. A drag that is put back with Escape adds
-                            nothing.
+                            way) and <b>Select a step</b> each add a line; dragging in the sequencer does too. A drag that is put back with Escape
+                            adds nothing.
                         </li>
                         <li>
                             <b>Read it back</b> calls <code>getSequencerItems</code> and lists what the page would save; <b>Clear the log</b> empties
@@ -605,8 +607,8 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>Tablet</b> and <b>Phone</b> narrow the box: the sequencer scrolls sideways inside its frame, no page scroll appears, the
-                            lane names stay in view. <b>Column</b> is the full width.
+                            <b>Tablet</b> and <b>Phone</b> narrow the box: the sequencer scrolls sideways inside its frame, no page scroll appears,
+                            the lane names stay in view. <b>Column</b> is the full width.
                         </li>
                         <li>
                             <b>Zoom 200%</b> and <b>400%</b> widen the plot (the frame scrolls, the axis refines its labels); <b>Fit</b> returns;

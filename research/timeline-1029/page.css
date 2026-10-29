@@ -29,6 +29,17 @@
 .pg-log {
     margin: 0;
     min-block-size: 2lh;
+}
+
+/* The heard line: the label and what it says in two tracks, with the package gap between them. */
+.pg-log--heard {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--kp-space-sm, 0.5rem);
+    align-items: baseline;
+}
+
+.pg-log {
     color: var(--muted-foreground);
     font-variant-numeric: tabular-nums;
 }

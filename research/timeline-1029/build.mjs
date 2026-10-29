@@ -85,7 +85,7 @@ const SECTIONS = [
             group('Lane and finish', 'kb-end', [['alt+ArrowUp', 'Lane up (Alt ↑)'], ['alt+ArrowDown', 'Lane down (Alt ↓)'], ['Enter', 'Drop (Enter)'], ['Escape', 'Put back (Esc)']], true) +
             group('Overlap rule', 'kb-overlap', [['refuse', 'Refuse', true], ['push', 'Push']]),
         component: `<div class="kp-card pg-card">${host('tl-keys', 'Spaghetti bolognese, keyboard editing')}
-            <p class="pg-log" id="tl-keys-log"><b>A screen reader hears:</b> <span id="tl-keys-heard">nothing yet</span></p></div>`,
+            <p class="pg-log pg-log--heard" id="tl-keys-log"><b>A screen reader hears:</b> <span id="tl-keys-heard">Press Enter on a step to pick it up.</span></p></div>`,
     },
     {
         id: 'linked',
