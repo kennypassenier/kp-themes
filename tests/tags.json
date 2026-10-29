@@ -162,6 +162,7 @@
         { "path": "js/tour.js", "tags": ["@component:overlays"], "why": "the guided tour and its memory [scope-143]" },
         { "path": "js/week.js", "tags": ["@component:data"], "why": "the week agenda [kpadopt-time]" },
         { "path": "js/gantt.js", "tags": ["@component:data"], "why": "the run timeline [kpadopt-time]" },
+        { "path": "js/sequencer.js", "tags": ["@component:data"], "why": "the editable multi-track timeline [timeline-1029]" },
         { "path": "js/uptime.js", "tags": ["@component:data"], "why": "the uptime strip [kpadopt4-ideas]" },
         { "path": "js/command.js", "tags": ["@component:data"], "why": "the command block [kpadopt4-ideas]" },
         {
@@ -374,6 +375,7 @@
         "kp-calendar": ["@component:data"],
         "kp-week": ["@component:data"],
         "kp-gantt": ["@component:data"],
+        "kp-sequencer": ["@component:data"],
         "kp-compare": ["@component:media"],
         "kp-weekdays": ["@component:picker"],
         "kp-runs": ["@component:data"],

@@ -1094,6 +1094,60 @@ else cut with an ellipsis on the roomier side, and left to the bar's name and ca
 theme's clip cannot cut it). The rows are walked in time order, so two labels never meet, and a growing bar takes its label
 back in once it is wide enough.
 
+### An editable timeline: steps laid out like clips [timeline-1029]
+
+`js/sequencer.js` (`data-kp-sequencer`) is the run timeline's look on a plan that a person edits: lanes as rows, an item per
+bar with a `start` and a `duration`, moved along the axis and between lanes, resized at either edge, and linked ("runs
+alongside") to another item. It is its own module and not an `editable` mode of `js/gantt.js` because the gantt lives on the clock
+(epoch milliseconds, a window that follows now) and an editor lives on a plan (relative values, a window that fits the plan); what
+they share is the markup and the stylesheet: the host is `section.kp-gantt.kp-sequencer`, a bar is `.kp-gantt__run`, so every
+theme that dresses the gantt dresses this too.
+
+```js
+import { attachSequencers, setSequencerItems } from '@kp-soft/themes/js/sequencer';
+
+attachSequencers(document, { strings: { sequencerHint: 'Sleep een stap om hem te verplaatsen' } });   // any of the `timeline…` words
+setSequencerItems(el, [
+    { id: 'brown', lane: 'sauce', label: 'Brown the mince', start: 10, duration: 11 },
+    { id: 'boil', lane: 'pasta', label: 'Boil the water', start: 10, duration: 8, with: 'brown' },
+], [{ id: 'sauce', label: 'Sauce' }, { id: 'pasta', label: 'Pasta' }]);
+el.addEventListener('kp-sequencer-change', (e) => save(e.detail.items));   // [{ id, lane, start, duration, with }]
+```
+
+Every number the page gives and receives is in the timeline's unit, minutes by default. Every option is an attribute with a
+default, read again when it changes, so a page flips them at run time:
+
+| Attribute | Default | What it does |
+| --- | --- | --- |
+| `data-kp-sequencer-unit` | `minute` | `second`, `minute`, `hour`, `day` or `week` (and `s`, `min`, `h`, `d`, `w`): what `start`, `duration`, the snap step, the total and the events count in. |
+| `data-kp-sequencer-snap` | `1` | The step, in the unit, that starts, ends and lengths snap to. |
+| `data-kp-sequencer-snap-items` | on | A dragged edge snaps to another item's edge within 8 px, and a guide line shows it; `off` snaps to the grid only. |
+| `data-kp-sequencer-overlap` | `refuse` | An edit that would put two items on top of each other in one lane: `refuse` does not drop it (the bar goes back, `kp-sequencer-refuse` says why), `push` moves what is in the way later (with what runs alongside it), `allow` lets them overlap and stack in rows of the lane. |
+| `data-kp-sequencer-lanes` | `move` | `fixed` keeps every item in its lane. |
+| `data-kp-sequencer-editable` | on | `off` shows the plan; a selected step still says when it starts and how long it is. |
+| `data-kp-sequencer-zoom` | `1` | 1 fits the plot to its box (never narrower than `--kp-sequencer-min-width`, 26rem, so a phone scrolls sideways inside the frame with the lane names held at the start); 0.5 to 16. The zoom buttons, Ctrl and the wheel and a two-finger pinch change it. |
+| `data-kp-sequencer-span`, `-toolbar`, `-hint`, `-now`, `-ghosts` | | The shortest window; the zoom row and total; the hint line; the line for now at attach; the rows of the loading lanes. |
+
+The pointer: drag a bar to move it, drag either edge to resize it, Escape during a drag puts it back. The window never changes
+under a drag (it fits the plan again when the edit is dropped), and nothing the pointer is on is rebuilt: bars are kept by `id`
+and move by custom properties only, so a refresh through `setSequencerItems` keeps focus and selection (a set that arrives during
+an edit waits for it to end). The keyboard: arrows move between items; Enter or Space picks one up; then arrows move it by the snap
+step (Ctrl: ten), Shift and arrows resize the end, Ctrl+Shift and arrows the start, Alt and Up or Down change lane, Enter drops it
+and Escape puts it back; L chooses the item the focused one runs alongside, U lets it run on its own. Every step, refusal and drop
+is announced in a polite status region, in the dictionary's words.
+
+Linked items start together: moving, or resizing the start of, any item of a group moves the whole group by the same amount (a
+lane change is the item's own), a join is drawn between them, and a link that would close a circle is refused. The total in the
+zoom row is the end of the last item and the dashed line in the plot where it falls; `setSequencerNow(el, at)` draws the line for
+now at a point of the plan.
+
+States are the package's: `setSequencerState(el, 'loading')` lays the theme's busy card over the lanes (ghost lanes the first
+time), `'empty'` and `'error'` the state plate with `kp-sequencer-retry` on the host, and the loaded height is held by
+`js/footprint.js`. All words (labels, announcements, button words, the axis and the total) are `timeline…` entries of the
+dictionary, so a page in another language replaces them with `setStrings` or `attachSequencers(root, { strings })`; the plan's logic
+(`sequencerPlan`, `sequencerLink`, `sequencerApplyKey`, `sequencerSnap`) is exported pure, so an app can preview or check an edit
+without the page.
+
 ### Key figures on allowed column counts
 
 A strip whose number of tiles changes can leave one tile alone on its last

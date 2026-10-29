@@ -437,6 +437,29 @@
             },
             "fingerprint": "9f5e42e165f5b347",
             "update": null
+        },
+        "research/timeline-1029/demo.html": {
+            "facts": {
+                "id": "timeline-1029",
+                "themes": "formal",
+                "ask": null,
+                "askText": "Kitchen wants to lay out a recipe’s steps like clips in a video editor, so the package got a new part: lanes as rows, every step a bar that is moved, resized and linked by pointer or keyboard. It looks like the run timeline on purpose (same bars, same theme answers). The data is one real recipe in Kitchen’s own shape (track, minutes, start, runs alongside). Formal only; 9 sections, one per capability, 9 pairs.",
+                "sections": [
+                    { "item": "drag-resize", "themes": null, "topic": "sequencer", "mode": null },
+                    { "item": "lanes", "themes": null, "topic": "sequencer", "mode": null },
+                    { "item": "keyboard", "themes": null, "topic": "sequencer", "mode": null },
+                    { "item": "linked", "themes": null, "topic": "sequencer", "mode": null },
+                    { "item": "overlap", "themes": null, "topic": "sequencer", "mode": null },
+                    { "item": "total-now", "themes": null, "topic": "sequencer", "mode": null },
+                    { "item": "events", "themes": null, "topic": "sequencer", "mode": null },
+                    { "item": "phone", "themes": null, "topic": "sequencer", "mode": null },
+                    { "item": "states", "themes": null, "topic": "sequencer", "mode": null }
+                ],
+                "extra": null,
+                "round": "\n            { \"round\": \"timeline-1029-e1b7747a-0392-48d1-8711-e382a4f38d19\", \"received\": [] }\n        "
+            },
+            "fingerprint": "2cb0ae6014c317aa",
+            "update": null
         }
     },
     "decided": {

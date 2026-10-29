@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="timeline-1029" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>An editable sequencer for a recipe’s steps</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main pg-page">
+            <header class="pg-head">
+                <h1>An editable sequencer for a recipe’s steps</h1>
+                <p class="cat-intro">
+                    Kitchen wants to lay out a recipe’s steps like clips in a video editor, so the package got a new part: lanes as rows, every step a
+                    bar that is moved, resized and linked by pointer or keyboard. It looks like the run timeline on purpose (same bars, same theme
+                    answers). The data is one real recipe in Kitchen’s own shape (track, minutes, start, runs alongside). Formal only; 9 sections, one
+                    per capability, 9 pairs.
+                </p>
+                <p>Every section says under <b>Expected</b> what you should see and what each control does.</p>
+            </header>
+
+            <section
+                id="drag-resize"
+                data-review-item="drag-resize"
+                data-review-topic="sequencer"
+                data-review-topic-title="Editable sequencer"
+                data-review-components="drag-resize"
+                data-review-title="Drag a step and resize it, with snap"
+                aria-labelledby="h-drag-resize"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen): Kenny wants to lay out a recipe’s steps like clips in a video editor: drag a bar along the
+                        time axis, drag either edge to resize it, everything snapping to a step the app sets (1 minute by default) and to the edges of
+                        other steps.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-drag-resize">Spaghetti bolognese, steps in time</h2>
+                    <p>
+                        Kitchen’s recipe in two lanes. Drag a step, drag its left or right edge. A chip follows the drag and a line shows the edge it
+                        snaps to. Under the sequencer: what Kitchen would save.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Drag</b> a step sideways: it moves in whole steps (1 minute); drag near another step’s edge and a thin line appears
+                            where it snaps. Drag an <b>edge</b>: the step gets shorter or longer. <b>Escape</b> during a drag puts it back. The
+                            <b>Total</b> in the toolbar follows the end of the last step.
+                        </li>
+                        <li>
+                            <b>Snap</b> sets the step (1, 5 or 15 minutes). <b>Snap to edges off</b> leaves only the grid. <b>Unit</b> counts the same
+                            plan in seconds, minutes or hours: the axis, the chip and the total speak that unit, and the numbers Kitchen would save
+                            stay minutes.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The bars are the run timeline’s own: solid, a colour per lane, the label inside when it fits and beside the bar when it does
+                        not. The grips at the two edges show on hover. Nothing under the pointer is redrawn while dragging.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="drag-resize-component">
+                    <div role="group" aria-label="Snap step">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dr-snap" data-value="1" aria-pressed="true">1 min</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dr-snap" data-value="5" aria-pressed="false">5 min</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dr-snap" data-value="15" aria-pressed="false">15 min</button>
+                    </div>
+                    <div role="group" aria-label="Snap to other steps">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dr-edges" data-value="on" aria-pressed="true">Edges on</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dr-edges" data-value="off" aria-pressed="false">
+                            Edges off
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Unit">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dr-unit" data-value="minute" aria-pressed="true">
+                            Minutes</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dr-unit" data-value="hour" aria-pressed="false">Hours</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dr-unit" data-value="second" aria-pressed="false">
+                            Seconds
+                        </button>
+                    </div>
+                </div>
+                <div id="drag-resize-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt kp-sequencer"
+                            id="tl-drag"
+                            data-kp-sequencer
+                            data-kp-state="loading"
+                            data-kp-sequencer-ghosts="2 2"
+                            aria-label="Spaghetti bolognese, steps in time"
+                        ></section>
+                        <p class="pg-log" id="tl-drag-log" role="status"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="lanes"
+                data-review-item="lanes"
+                data-review-topic="sequencer"
+                data-review-components="lanes"
+                data-review-title="Move a step between lanes"
+                aria-labelledby="h-lanes"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen): A step can be dragged from one lane (track) to another, and the lanes are the app’s: a recipe
+                        has Sauce and Pasta, a bigger one an Oven too.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-lanes">Sauce, pasta and the oven</h2>
+                    <p>
+                        Drag a step up or down onto another lane; it keeps its place in time unless you move it sideways too. Where a lane is taken,
+                        the step goes back.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Items change lane</b> (the default): drag “Boil the water” up to Sauce, where there is room, and it lands there. Drop
+                            it on a step that is in the way and it goes back, with a chip saying so.
+                        </li>
+                        <li>
+                            <b>Items stay in their lane</b> pins every step to its row: only sideways moves work. <b>Three lanes</b> adds the Oven
+                            with “Warm the plates”, so a third row exists to drag to.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Lanes keep their height and their name column while a bar crosses them; the bar being dragged lies over the lanes, raised, and
+                        the lane it would land in is the one under the pointer.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="lanes-component">
+                    <div role="group" aria-label="Lanes">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ln-move" data-value="move" aria-pressed="true">
+                            Items change lane</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ln-move" data-value="fixed" aria-pressed="false">
+                            Items stay in their lane
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Lanes shown">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ln-count" data-value="two" aria-pressed="true">
+                            Two lanes</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ln-count" data-value="three" aria-pressed="false">
+                            Three lanes (Oven)
+                        </button>
+                    </div>
+                </div>
+                <div id="lanes-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt kp-sequencer"
+                            id="tl-lanes"
+                            data-kp-sequencer
+                            data-kp-state="loading"
+                            data-kp-sequencer-ghosts="2 2"
+                            aria-label="Lanes of a recipe"
+                        ></section>
+                        <p class="pg-log" id="tl-lanes-log" role="status"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="keyboard"
+                data-review-item="keyboard"
+                data-review-topic="sequencer"
+                data-review-components="keyboard"
+                data-review-title="Everything with the keyboard, announced"
+                aria-labelledby="h-keyboard"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen): Keyboard for all of it: arrows move by the step, Shift and arrows resize, Alt and Up or Down
+                        change lane, Enter drops, Escape puts back; announced to screen readers.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-keyboard">Pick a step up, move it, drop it</h2>
+                    <p>
+                        Tab into the sequencer, use the arrows to reach a step, press Enter to pick it up. The buttons press the keys for you; the line
+                        under the sequencer is what a screen reader hears.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Pick up</b> a step (Enter): its bar turns dashed. <b>Earlier</b> and <b>Later</b> (← →) move it by the step,
+                            <b>Shorter</b> and <b>Longer</b> (Shift and ← →) resize its end, <b>Lane up</b> and <b>Lane down</b> (Alt and ↑ ↓) change
+                            lane; the line says where it is after every press.
+                        </li>
+                        <li>
+                            Pushing into a neighbour says why it cannot (“cannot go there: it would overlap …”), <b>Drop</b> (Enter) keeps the change
+                            and says so, <b>Put back</b> (Escape) restores it. <b>Overlap push</b> lets the keys push neighbours later instead of
+                            refusing.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The picked-up bar is dashed (not a colour change), the focus ring is clear of its edge, and the line under the sequencer holds
+                        the announcement in a fixed place that does not move the page.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="keyboard-component">
+                    <div role="group" aria-label="Pick up">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="kb-pick" data-value="cook" aria-pressed="true">
+                            Cook the spaghetti</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-pick" data-value="plate" aria-pressed="false">
+                            Drain and plate</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-pick" data-value="chop" aria-pressed="false">
+                            Chop the vegetables
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Move and resize">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="kb-key" data-value="ArrowLeft" data-pg-momentary>
+                            Earlier (←)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-key" data-value="ArrowRight" data-pg-momentary>
+                            Later (→)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-key" data-value="shift+ArrowLeft" data-pg-momentary>
+                            Shorter (Shift ←)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-key" data-value="shift+ArrowRight" data-pg-momentary>
+                            Longer (Shift →)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Lane and finish">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="kb-end" data-value="alt+ArrowUp" data-pg-momentary>
+                            Lane up (Alt ↑)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-end" data-value="alt+ArrowDown" data-pg-momentary>
+                            Lane down (Alt ↓)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-end" data-value="Enter" data-pg-momentary>
+                            Drop (Enter)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-end" data-value="Escape" data-pg-momentary>
+                            Put back (Esc)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Overlap rule">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="kb-overlap" data-value="refuse" aria-pressed="true">
+                            Refuse</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="kb-overlap" data-value="push" aria-pressed="false">
+                            Push
+                        </button>
+                    </div>
+                </div>
+                <div id="keyboard-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt kp-sequencer"
+                            id="tl-keys"
+                            data-kp-sequencer
+                            data-kp-state="loading"
+                            data-kp-sequencer-ghosts="2 2"
+                            aria-label="Spaghetti bolognese, keyboard editing"
+                        ></section>
+                        <p class="pg-log" id="tl-keys-log"><b>A screen reader hears:</b> <span id="tl-keys-heard">nothing yet</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="linked"
+                data-review-item="linked"
+                data-review-topic="sequencer"
+                data-review-components="linked"
+                data-review-title="Steps that run alongside move together"
+                aria-labelledby="h-linked"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen): “Runs alongside”: a step can be linked to start with another (a visible join), and moving one
+                        moves the linked.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-linked">Boil the water while the mince browns</h2>
+                    <p>
+                        “Boil the water” runs alongside “Brown the mince”: a dotted line joins them. Move one and the other goes with it. This section
+                        pushes neighbours later, so the pair has room to move.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Browning 5 min later</b> (or <b>10</b>) moves the boiling too, and pushes “Simmer” and “Season” later in the Sauce
+                            lane. The join follows both bars; <b>Reset the plan</b> puts the steps back.
+                        </li>
+                        <li>
+                            <b>Cook alongside the simmer</b> links “Cook the spaghetti” to “Simmer with the tomatoes”: it jumps to the simmer’s start
+                            and a second join appears. <b>Cook on its own</b> cuts the link and leaves it where it is. Select a step and the buttons
+                            under the sequencer do the same (L and U on the keyboard).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The join is a dotted line with a dot at each end, drawn at the shared start from one bar’s middle to the other’s; it is never
+                        the only sign (the selection line says “runs alongside …” too).
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="linked-component">
+                    <div role="group" aria-label="Move browning">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="lk-move" data-value="5" data-pg-momentary>
+                            Browning 5 min later</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="lk-move" data-value="10" data-pg-momentary>
+                            Browning 10 min later
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Cook the spaghetti">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="lk-link" data-value="link" data-pg-momentary>
+                            Cook alongside the simmer</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="lk-link" data-value="unlink" data-pg-momentary>
+                            Cook on its own
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Plan">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="lk-reset" data-value="reset" data-pg-momentary>
+                            Reset the plan
+                        </button>
+                    </div>
+                </div>
+                <div id="linked-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt kp-sequencer"
+                            id="tl-linked"
+                            data-kp-sequencer
+                            data-kp-state="loading"
+                            data-kp-sequencer-ghosts="2 2"
+                            data-kp-sequencer-overlap="push"
+                            aria-label="Linked steps of a recipe"
+                        ></section>
+                        <p class="pg-log" id="tl-linked-log" role="status"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="overlap"
+                data-review-item="overlap"
+                data-review-topic="sequencer"
+                data-review-components="overlap"
+                data-review-title="The overlap rule: refuse, push or allow"
+                aria-labelledby="h-overlap"
+            >
+                <div class="pg-asked">
+                    <p><b>What is asked</b> (Kitchen): Items in one lane may overlap only where the app allows it; otherwise they push or refuse.</p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-overlap">Cook the spaghetti into the plating</h2>
+                    <p>
+                        Moving “Cook the spaghetti” 5 minutes later would put it on “Drain and plate”. What happens is the app’s rule, one attribute.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Refuse</b> (the default): the move does not happen and the line says what is in the way. <b>Push</b>: “Drain and plate”
+                            moves later by what it needs, and so does everything behind it. <b>Allow</b>: the two overlap and the lane grows a second
+                            row for the one underneath.
+                        </li>
+                        <li>
+                            <b>Move 5 minutes later</b> and <b>earlier</b> try it; <b>Reset the plan</b> puts Kitchen’s steps back as they were. The
+                            rule can change between moves.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Under Allow the lane gets exactly the rows it needs and the other lanes keep theirs; under Push the pushed bars glide to their
+                        new place and the total grows.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="overlap-component">
+                    <div role="group" aria-label="Overlap">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ov-rule" data-value="refuse" aria-pressed="true">
+                            Refuse (default)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ov-rule" data-value="push" aria-pressed="false">Push</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ov-rule" data-value="allow" aria-pressed="false">
+                            Allow
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Try it">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ov-try" data-value="later" data-pg-momentary>
+                            Move cook 5 min later</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ov-try" data-value="earlier" data-pg-momentary>
+                            Move cook 5 min earlier</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ov-try" data-value="reset" data-pg-momentary>
+                            Reset the plan
+                        </button>
+                    </div>
+                </div>
+                <div id="overlap-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt kp-sequencer"
+                            id="tl-overlap"
+                            data-kp-sequencer
+                            data-kp-state="loading"
+                            data-kp-sequencer-ghosts="2 2"
+                            aria-label="Overlap rule of a recipe"
+                        ></section>
+                        <p class="pg-log" id="tl-overlap-log" role="status"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="total-now"
+                data-review-item="total-now"
+                data-review-topic="sequencer"
+                data-review-components="total-now"
+                data-review-title="The total and the line for now"
+                aria-labelledby="h-total-now"
+            >
+                <div class="pg-asked">
+                    <p><b>What is asked</b> (Kitchen): A live total (the end of the last item) and a “now” line like the gantt.</p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-total-now">How long is dinner, and where are we</h2>
+                    <p>
+                        The total is the end of the last step and follows every edit; the line for now is where the cook is in the plan, set by the
+                        page.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Now at 15 minutes</b> or <b>at 40</b> puts the red line there; <b>Advance 5 minutes</b> moves it on; <b>Off</b> removes
+                            it. The plan does not move; only the line does.
+                        </li>
+                        <li>
+                            <b>Add “Let the sauce rest”</b> appends a 10-minute step: the total grows from 61 to 71 minutes and a dashed line marks
+                            where the plan ends. <b>Remove it</b> brings it back to 61.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The now line is the gantt’s: a 2 px line through every lane, with its time as its accessible name. The end of the plan is a
+                        dashed line; the total reads in the toolbar at the right.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="total-now-component">
+                    <div role="group" aria-label="Now">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="tn-now" data-value="off" aria-pressed="true">Off</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="tn-now" data-value="15" aria-pressed="false">
+                            Now at 15 min</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="tn-now" data-value="40" aria-pressed="false">
+                            Now at 40 min</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="tn-now" data-value="advance" aria-pressed="false">
+                            Advance 5 min
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Plan">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="tn-plan" data-value="add" data-pg-momentary>
+                            Add “Let the sauce rest”</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="tn-plan" data-value="remove" data-pg-momentary>
+                            Remove it
+                        </button>
+                    </div>
+                </div>
+                <div id="total-now-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt kp-sequencer"
+                            id="tl-total"
+                            data-kp-sequencer
+                            data-kp-state="loading"
+                            data-kp-sequencer-ghosts="2 2"
+                            aria-label="Total and now of a recipe"
+                        ></section>
+                        <p class="pg-log" id="tl-total-log" role="status"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="events"
+                data-review-item="events"
+                data-review-topic="sequencer"
+                data-review-components="events"
+                data-review-title="The events a page hears"
+                aria-labelledby="h-events"
+            >
+                <div class="pg-asked">
+                    <p>
+                        <b>What is asked</b> (Kitchen): Events kp-sequencer-change with, per item, {id, lane, start, duration, with} in minutes, and a
+                        programmatic set and get.
+                    </p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-events">What Kitchen is told</h2>
+                    <p>
+                        Every edit that is dropped fires <code>kp-sequencer-change</code> with the whole plan; a refused one fires
+                        <code>kp-sequencer-refuse</code>; selecting fires <code>kp-sequencer-select</code>. The log is what a page receives.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Move a step</b> (a change with <code>changed</code> naming it), <b>Try an overlap</b> (a refusal naming what is in the
+                            way) and <b>Select a step</b> each add a line; dragging in the sequencer does too. A drag that is put back with Escape adds
+                            nothing.
+                        </li>
+                        <li>
+                            <b>Read it back</b> calls <code>getSequencerItems</code> and lists what the page would save; <b>Clear the log</b> empties
+                            the list.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The log keeps a fixed height and its lines line up in the same columns; the component above it is as wide as the column.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="events-component">
+                    <div role="group" aria-label="Cause an event">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ev-cause" data-value="move" data-pg-momentary>
+                            Move a step</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ev-cause" data-value="refuse" data-pg-momentary>
+                            Try an overlap</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ev-cause" data-value="select" data-pg-momentary>
+                            Select a step</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ev-cause" data-value="read" data-pg-momentary>
+                            Read it back
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Log">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ev-log" data-value="clear" data-pg-momentary>
+                            Clear the log
+                        </button>
+                    </div>
+                </div>
+                <div id="events-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt kp-sequencer"
+                            id="tl-events"
+                            data-kp-sequencer
+                            data-kp-state="loading"
+                            data-kp-sequencer-ghosts="2 2"
+                            aria-label="Events of a recipe"
+                        ></section>
+                        <ol class="pg-events" id="tl-events-log" aria-label="Events received"></ol>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="phone"
+                data-review-item="phone"
+                data-review-topic="sequencer"
+                data-review-components="phone"
+                data-review-title="On a phone: scroll inside the box, and zoom"
+                aria-labelledby="h-phone"
+            >
+                <div class="pg-asked">
+                    <p><b>What is asked</b> (Kitchen): Phone width: horizontal scroll inside its own box, pinch or a zoom control.</p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-phone">The plan in a narrow box</h2>
+                    <p>
+                        A box you can narrow. The plot keeps a readable width and the frame scrolls sideways inside itself, the lane names held at the
+                        start. Zoom with the buttons, Ctrl and the wheel, or a pinch.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Tablet</b> and <b>Phone</b> narrow the box: the sequencer scrolls sideways inside its frame, no page scroll appears, the
+                            lane names stay in view. <b>Column</b> is the full width.
+                        </li>
+                        <li>
+                            <b>Zoom 200%</b> and <b>400%</b> widen the plot (the frame scrolls, the axis refines its labels); <b>Fit</b> returns;
+                            <b>50%</b> shows a whole long plan. <b>A long afternoon</b> triples the plan so there is something to scroll.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The axis stays on top, the name column does not scroll away, and a bar’s grips stay easy to hit (larger on a touch screen);
+                        nothing makes the page itself scroll sideways.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="phone-component">
+                    <div role="group" aria-label="Box">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ph-width" data-value="column" aria-pressed="true">
+                            Column</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ph-width" data-value="tablet" aria-pressed="false">
+                            Tablet (34rem)</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ph-width" data-value="phone" aria-pressed="false">
+                            Phone (22rem)
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Zoom">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ph-zoom" data-value="0.5" aria-pressed="false">50%</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ph-zoom" data-value="1" aria-pressed="true">Fit</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ph-zoom" data-value="2" aria-pressed="false">200%</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ph-zoom" data-value="4" aria-pressed="false">400%</button>
+                    </div>
+                    <div role="group" aria-label="Plan">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="ph-plan" data-value="short" aria-pressed="true">
+                            The recipe</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="ph-plan" data-value="long" aria-pressed="false">
+                            A long afternoon
+                        </button>
+                    </div>
+                </div>
+                <div id="phone-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <div class="pg-box" id="tl-phone-box">
+                            <section
+                                class="kp-gantt kp-sequencer"
+                                id="tl-phone"
+                                data-kp-sequencer
+                                data-kp-state="loading"
+                                data-kp-sequencer-ghosts="2 2"
+                                aria-label="Recipe plan on a phone"
+                            ></section>
+                        </div>
+                        <p class="pg-log" id="tl-phone-log" role="status"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="states"
+                data-review-item="states"
+                data-review-topic="sequencer"
+                data-review-components="states"
+                data-review-title="Loading, empty and failed"
+                aria-labelledby="h-states"
+            >
+                <div class="pg-asked">
+                    <p><b>What is asked</b> (Kitchen): The package’s loading, empty and failed states, filling the footprint.</p>
+                </div>
+                <div class="pg-intro">
+                    <h2 id="h-states">The sequencer while the recipe is read</h2>
+                    <p>
+                        Loading is the theme’s busy card over the lanes, empty and failed fill the same box with the package’s plate. The box keeps
+                        its height.
+                    </p>
+                </div>
+                <div class="pg-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b> lays the spinner and its words over the lanes, centred; <b>Empty</b> says there is nothing yet and
+                            <b>Failed</b> says why with <b>Retry</b>, which brings the plan back.
+                        </li>
+                        <li>Each state is as tall as the loaded sequencer: switch between them and the page under it does not move.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The state is centred in the whole frame, at heading size, with a normal-size Retry; the toolbar and the selection line keep
+                        their places.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="states-component">
+                    <div role="group" aria-label="State">
+                        <button type="button" class="kp-button kp-button--sm" data-pg="st-state" data-value="ready" aria-pressed="true">Ready</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="st-state" data-value="loading" aria-pressed="false">
+                            Loading</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="st-state" data-value="empty" aria-pressed="false">
+                            Empty</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="st-state" data-value="error" aria-pressed="false">
+                            Failed
+                        </button>
+                    </div>
+                </div>
+                <div id="states-component" class="pg-component">
+                    <div class="kp-card pg-card">
+                        <section
+                            class="kp-gantt kp-sequencer"
+                            id="tl-states"
+                            data-kp-sequencer
+                            data-kp-state="loading"
+                            data-kp-sequencer-ghosts="2 2"
+                            aria-label="Recipe plan states"
+                        ></section>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "timeline-1029-e1b7747a-0392-48d1-8711-e382a4f38d19", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

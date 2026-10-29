@@ -37,6 +37,7 @@ export { PROGRESSBAR_RETRY_EVENT, attachProgressbars, buildProgressbar, setIndet
 export { STEPLIST_EVENT, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from './js/steplist.js';
 export { WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, attachWeeks, pillCapacity, setWeekEvents, setWeekLegend, setWeekStart, setWeekState, stackPills, } from './js/week.js';
 export { GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_STEPS, GANTT_TICK_MS, GANTT_WINDOW_EVENT, attachGantts, axisStep, packRows, rangeSeconds, setGanttKinds, setGanttLegend, setGanttPoints, setGanttRuns, setGanttSelection, setGanttState, setGanttWindow, setGanttZones, } from './js/gantt.js';
+export { SEQUENCER, SEQUENCER_CHANGE_EVENT, SEQUENCER_OVERLAPS, SEQUENCER_REFUSE_EVENT, SEQUENCER_RETRY_EVENT, SEQUENCER_SELECT_EVENT, SEQUENCER_UNITS, SEQUENCER_ZOOM_MAX, SEQUENCER_ZOOM_MIN, attachSequencers, getSequencerItems, getSequencerTotal, getSequencerZoom, setSequencerItems, setSequencerNow, setSequencerSelection, setSequencerState, setSequencerZoom, sequencerApplyKey, sequencerClampZoom, sequencerClean, sequencerGroup, sequencerKey, sequencerLink, sequencerPlan, sequencerRows, sequencerSnap, sequencerTicks, sequencerTotalOf, sequencerUnit, sequencerUnlink, sequencerWindow, } from './js/sequencer.js';
 export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
 export type BusyCard = import('./js/busy-card.js').BusyCard;
 export type BusyCardOptions = import('./js/busy-card.js').BusyCardOptions;

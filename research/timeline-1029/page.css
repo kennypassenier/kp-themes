@@ -1,0 +1,82 @@
+/* research/timeline-1029: the frame of the page. Everything with a kp- class is the package; the pg- classes are this page's own frame.
+ * Every element fills its column (Kenny's full-width rule): the page holds the whole column, a card fills it, the sequencer fills the card. */
+
+.pg-page {
+    max-inline-size: none;
+    margin-inline: auto;
+}
+
+.pg-asked,
+.pg-intro,
+.pg-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.pg-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: var(--kp-space-lg, 1.5rem);
+}
+
+.pg-card {
+    box-sizing: border-box;
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+/* The line under a sequencer keeps its place whatever it says, so nothing moves when it changes. */
+.pg-log {
+    margin: 0;
+    min-block-size: 2lh;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+/* The events log: a fixed height of six lines, one grid whose columns (number, kind, words) run through every line. */
+.pg-events {
+    display: grid;
+    grid-template-columns: 2.5rem 5rem minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    align-content: start;
+    min-block-size: calc(6 * 1.5em + 5 * var(--kp-space-xs, 0.25rem));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.pg-events > li {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    align-items: baseline;
+}
+
+.pg-events__n {
+    font-variant-numeric: tabular-nums;
+}
+
+.pg-events__kind {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.pg-events__words {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+/* phone: a box whose width the review can narrow to a tablet or a phone; the sequencer inside fills it. */
+.pg-box {
+    min-inline-size: 0;
+}
+
+.pg-box[data-pg-width='tablet'] {
+    max-inline-size: 34rem;
+}
+
+.pg-box[data-pg-width='phone'] {
+    max-inline-size: 22rem;
+}

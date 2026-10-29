@@ -144,6 +144,10 @@
             "types": "./js/gantt.d.ts",
             "default": "./js/gantt.js"
         },
+        "./js/sequencer": {
+            "types": "./js/sequencer.d.ts",
+            "default": "./js/sequencer.js"
+        },
         "./js/busy-card": {
             "types": "./js/busy-card.d.ts",
             "default": "./js/busy-card.js"

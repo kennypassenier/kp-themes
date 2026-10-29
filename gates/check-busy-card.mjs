@@ -35,6 +35,7 @@ export const CARD = [
     'js/week.js',
     'js/heat.js',
     'js/gantt.js',
+    'js/sequencer.js',
     'js/bullets.js',
     'js/code.js',
     'js/card-state.js',

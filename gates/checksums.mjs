@@ -125,6 +125,7 @@ export const FILES = [
     'js/steplist.js',
     'js/week.js',
     'js/gantt.js',
+    'js/sequencer.js',
     'js/uptime.js',
     'js/command.js',
     'js/countdown.js',

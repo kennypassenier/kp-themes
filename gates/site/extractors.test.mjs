@@ -333,7 +333,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-21 [graph-1020]: the network graph options' knobs (--kp-graph-fixed-l, -fixed-c, -zoom-time, -zoom-ease, -detail-width), all read through var(): 1099 + 5 = 1104.
     // Re-pinned 2026-10-26 [fix-1026]: the page header description's measure (--kp-page-header-measure), read through var(): 1104 + 1 = 1105.
     // Re-pinned 2026-10-28 [wish-1028]: --kp-code-value (TOML and shell colour), --kp-refresh-title-width, --kp-gantt-min-width, all read through var(): 1105 + 3 = 1108.
-    assert.equal(result.expected, 1108, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-29 [timeline-1029]: the editable timeline reads --kp-sequencer-label, -label-width, -min-width, -handle, -floor and the placing properties --kp-tl-zoom, --kp-tl-top, --kp-tl-line, --kp-tl-height: 1108 + 9 = 1117.
+    assert.equal(result.expected, 1117, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -422,7 +423,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // Re-pinned 2026-10-21 [graph-1020]: the five graph option knobs are read through var(): 1089 + 5 = 1094.
     // Re-pinned 2026-10-26 [fix-1026]: --kp-page-header-measure is read through var(): 1094 + 1 = 1095.
     // Re-pinned 2026-10-28 [wish-1028]: --kp-code-value, --kp-refresh-title-width and --kp-gantt-min-width are read through var(): 1095 + 3 = 1098.
-    assert.equal(result.readCount, 1098);
+    // Re-pinned 2026-10-29 [timeline-1029]: the nine properties of the editable timeline are read through var(): 1098 + 9 = 1107.
+    assert.equal(result.readCount, 1107);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

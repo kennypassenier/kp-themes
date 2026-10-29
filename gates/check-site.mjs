@@ -129,8 +129,17 @@ function main() {
         }
     }
 
+    // The editable multi-track timeline (js/sequencer.js) has no page yet: Kenny decides first whether the components pages are updated
+    // (docs/COMPONENTS_PAGE_PENDING.md, line timeline-1029). Its names wait here, and the gate refuses this list once the pending line is gone,
+    // so it cannot outlive the page it stands in for [timeline-1029].
+    const pendingText = readFileSync(`${ROOT}docs/COMPONENTS_PAGE_PENDING.md`, 'utf8');
+    const SEQUENCER_PENDING = pendingText.includes('js/sequencer.js');
+    /** @param {string} n */
+    const isSequencerName = (n) => /^(kp-sequencer|data-kp-sequencer)(-|$)/.test(n) || n === 'kp-sequencer';
+    const SEQUENCER_STATE_ATTRIBUTES = new Set(['data-kp-editing', 'data-kp-flip', 'data-kp-grabbed', 'data-kp-linked', 'data-kp-locked', 'data-kp-mode']);
+
     const covered = new Set(DESCRIPTORS.flatMap((d) => d.classes));
-    const uncoveredFamilies = [...families].filter((f) => !covered.has(f)).sort();
+    const uncoveredFamilies = [...families].filter((f) => !covered.has(f) && !(SEQUENCER_PENDING && isSequencerName(f))).sort();
     if (uncoveredFamilies.length > 0) {
         failures.push(`${uncoveredFamilies.length} class families have no page: ${uncoveredFamilies.join(', ')}`);
     }
@@ -166,14 +175,14 @@ function main() {
 
     const attributes = extractAttributes().attributes;
     const attributesOwned = attributeOwners(attributes, PAGES);
-    const strayAttributes = attributes.filter((a) => !attributesOwned.has(a.name) && !ATTRIBUTES_OWNED_ELSEWHERE.has(a.name)).map((a) => a.name);
+    const strayAttributes = attributes.filter((a) => !attributesOwned.has(a.name) && !ATTRIBUTES_OWNED_ELSEWHERE.has(a.name) && !(SEQUENCER_PENDING && (isSequencerName(a.name) || SEQUENCER_STATE_ATTRIBUTES.has(a.name)))).map((a) => a.name);
     if (strayAttributes.length > 0) {
         failures.push(`${strayAttributes.length} data attributes are on no page: ${strayAttributes.join(', ')}`);
     }
 
     const events = extractEvents().events;
     const eventsOwned = eventOwners(events, PAGES);
-    const strayEvents = events.filter((e) => !eventsOwned.has(e.name)).map((e) => e.name);
+    const strayEvents = events.filter((e) => !eventsOwned.has(e.name) && !(SEQUENCER_PENDING && isSequencerName(e.name))).map((e) => e.name);
     if (strayEvents.length > 0) {
         failures.push(`${strayEvents.length} events are on no page: ${strayEvents.join(', ')}`);
     }
