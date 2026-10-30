@@ -20,7 +20,8 @@ document.addEventListener('click', (event) => {
     if (!button) return;
     const handler = HANDLERS[button.dataset.pg ?? ''];
     if (!handler) return;
-    for (const other of button.parentElement?.querySelectorAll('button[data-pg]') ?? []) other.setAttribute('aria-pressed', String(other === button));
+    // A button without aria-pressed is an action (it opens a dialog), not a toggle: nothing in its group is marked.
+    if (button.hasAttribute('aria-pressed')) for (const other of button.parentElement?.querySelectorAll('button[data-pg]') ?? []) other.setAttribute('aria-pressed', String(other === button));
     handler(button.dataset.value ?? '', button);
 });
 /** @param {string} name @param {(value: string, button: HTMLElement) => void} handler */
@@ -143,7 +144,10 @@ on('hdr-time', (value) => {
             for (const row of editorRowsOf(host)) removeEditorRow(host, row);
         }
     });
-    on('rows-min', (value) => host.setAttribute('data-kp-rows-min', value));
+    on('rows-min', (value) => {
+        host.setAttribute('data-kp-rows-min', value);
+        while (editorRowsOf(host).length < Number(value) && addEditorRow(host)) continue;
+    });
 }
 
 // ---------------------------------------------------------------- pills-none
@@ -174,7 +178,6 @@ on('hdr-time', (value) => {
     });
     for (const close of all('[data-pg-close]')) close.addEventListener('click', () => close.closest('dialog')?.close());
     on('dlg-open', (value, button) => {
-        press('dlg-open', '');
         if (value === 'stock') /** @type {HTMLDialogElement} */ ($('pg-stock')).showModal();
         else if (value === 'forms') /** @type {HTMLDialogElement} */ ($('pg-forms')).showModal();
         else {
@@ -242,5 +245,8 @@ on('hdr-time', (value) => {
 
 // ---------------------------------------------------------------- fix-switch-state
 on('sw-on', (value) => {
-    for (const input of all('#fix-switch-state-component .kp-switch__input')) /** @type {HTMLInputElement} */ (input).checked = value === 'on';
+    for (const input of all('#fix-switch-state-component .kp-switch__input')) {
+        /** @type {HTMLInputElement} */ (input).checked = value === 'on';
+        input.toggleAttribute('checked', value === 'on');
+    }
 });

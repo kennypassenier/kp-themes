@@ -25,6 +25,11 @@
         grid-template-columns: subgrid;
     }
 
+    /* With no row held the labels have no columns to stand over: the empty plate takes the room. */
+    .kp-rows[data-kp-rows-empty] > .kp-rows__head {
+        display: none;
+    }
+
     .kp-rows__list {
         margin: 0;
         padding: 0;
@@ -34,7 +39,7 @@
 
     .kp-rows__row {
         grid-column: 1 / -1;
-        align-items: start;
+        align-items: center;
     }
 
     .kp-rows__label {
@@ -48,7 +53,7 @@
     }
 
     .kp-rows__remove {
-        align-self: start;
+        align-self: center;
         min-inline-size: var(--kp-control-height, 2.25rem);
         justify-content: center;
     }

@@ -15,12 +15,12 @@ const ID = 'medicine-1030';
 const THEMES = ['formal'];
 const MAX_ITEMS = 25;
 
-/** A control group: `name` is the group's data-pg name, `buttons` are [value, words, pressed?]. */
-const group = (label, name, buttons, target = '') =>
+/** A control group: `name` is the group's data-pg name, `buttons` are [value, words, pressed?]; `toggle: false` makes plain action buttons (no aria-pressed). */
+const group = (label, name, buttons, target = '', toggle = true) =>
     `<div role="group" aria-label="${label}">${buttons
         .map(
             ([value, words, on]) =>
-                `<button type="button" class="kp-button kp-button--sm" data-pg="${name}" data-value="${value}"${target ? ` data-target="${target}"` : ''} aria-pressed="${on ? 'true' : 'false'}">${words}</button>`,
+                `<button type="button" class="kp-button kp-button--sm" data-pg="${name}" data-value="${value}"${target ? ` data-target="${target}"` : ''} ${toggle ? ` aria-pressed="${on ? 'true' : 'false'}"` : ''}>${words}</button>`,
         )
         .join('')}</div>`;
 
@@ -50,11 +50,11 @@ const listRow = ([name, meta, stock, unit, one, active, badges]) => `<li class="
 </li>`;
 
 /** A card with the package's own data states around whatever the data is. */
-const stateCard = (id, title, note, data) => `<section class="kp-card" id="${id}" data-kp-state="ready" aria-labelledby="${id}-t">
+const stateCard = (id, title, note, data) => `<div class="kp-card" role="region" id="${id}" data-kp-state="ready" aria-labelledby="${id}-t">
     <div class="kp-card__header"><h3 class="kp-card__title" id="${id}-t">${title}</h3></div>
     <p class="kp-card__body">${note}</p>
     <div class="kp-card__stage"><div class="kp-card__data">${data}</div></div>
-</section>`;
+</div>`;
 
 const STATES = group('State', 'state', [['ready', 'Ready', true], ['loading', 'Loading'], ['empty', 'Empty'], ['error', 'Failed']]);
 const stateFor = (id) => STATES.replaceAll('data-pg="state"', `data-pg="state" data-target="${id}"`);
@@ -82,7 +82,7 @@ const formsTable = (id, extra = '') => `<div class="kp-datatable" id="${id}" dat
 /** A form grid of the medicine form's text fields (gap 4). */
 const fieldGrid = (id, attributes = '') => `<div class="kp-formgrid" id="${id}" ${attributes}>
     <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="${id}-name">Name</label><div class="kp-formgrid__control"><input class="kp-field__input" id="${id}-name" value="Ibuprofen 400 mg" /></div><p class="kp-formgrid__value">as on the box</p></div>
-    <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="${id}-note">Note</label><div class="kp-formgrid__control"><input class="kp-field__input" id="${id}-note" placeholder="Take with food, not on an empty stomach" /></div><p class="kp-formgrid__value">optional</p></div>
+    <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="${id}-note">Note</label><div class="kp-formgrid__control"><input class="kp-field__input" id="${id}-note" placeholder="Take with food" /></div><p class="kp-formgrid__value">optional</p></div>
     <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="${id}-at">First dose</label><div class="kp-formgrid__control"><div class="kp-time" data-kp-time data-kp-value="08:00" data-kp-label="First dose" data-kp-time-id="${id}-at"></div></div><p class="kp-formgrid__value">24 hours</p></div>
     <div class="kp-formgrid__row"><label class="kp-formgrid__label" for="${id}-strength">Strength</label><div class="kp-formgrid__control"><select class="kp-field__input" id="${id}-strength"><option>200 mg</option><option selected>400 mg</option><option>600 mg</option></select></div><p class="kp-formgrid__value">per tablet</p></div>
 </div>`;
@@ -108,7 +108,7 @@ const SECTIONS = [
             'Each row: the medicine and what it is, its status badges, a stepper for the stock and a switch for whether it is in use. The list sits in the card&rsquo;s data area, so loading, empty and failed are the card&rsquo;s own.',
         expected: [
             '<b>Full width</b>: the names, the badges, the steppers and the switches stand on four edges that run down all six rows. A stepper is as wide as its column, so every stepper ends on one edge. The inactive medicine is quieter, its controls are not.',
-            '<b>Phone</b>: each row is a card: the name and what it is, the badges on their own line, the stepper filling the line beside the switch. <b>Loading</b>, <b>Empty</b> and <b>Failed</b> fill the list&rsquo;s whole footprint with the card&rsquo;s plate and a normal Retry.',
+            '<b>Phone</b>: each row is a card: the name and what it is, the badges on their own line, the stepper filling its line, the switch beside it when the line has room for both and under it when not. <b>Loading</b>, <b>Empty</b> and <b>Failed</b> fill the list&rsquo;s whole footprint with the card&rsquo;s plate and a normal Retry.',
         ],
         look: 'Formal is a paper plate: rows ruled by thin lines, nothing in a row drawn on a card of its own. Check the columns line up whatever a row holds, and that the badge column never pushes a stepper.',
         controls: stateFor('pg-cabinet') + widths('list-row'),
@@ -259,7 +259,7 @@ const SECTIONS = [
             'The width step control changes the first dialog live: Default is the width it had (its longest line), Narrow, Wide and Wider the steps.',
         ],
         look: 'Open each dialog for real: the title, the body and the actions keep their order; Escape and Cancel close; the primary accept is the page&rsquo;s primary look, not a destructive one.',
-        controls: group('Add-stock width', 'dlg-step', [['default', 'Default'], ['narrow', 'Narrow', true], ['wide', 'Wide'], ['wider', 'Wider']]) + group('Open for real', 'dlg-open', [['stock', 'Add stock'], ['guard', 'Take it anyway'], ['forms', 'Forms manager']]) + widths('dialogs'),
+        controls: group('Add-stock width', 'dlg-step', [['default', 'Default'], ['narrow', 'Narrow', true], ['wide', 'Wide'], ['wider', 'Wider']]) + group('Open for real', 'dlg-open', [['stock', 'Add stock'], ['guard', 'Take it anyway'], ['forms', 'Forms manager']], '', false) + widths('dialogs'),
         component: `<div class="kp-card pg-card pg-previews">
             <dialog class="kp-dialog kp-dialog--narrow pg-preview" id="pg-prev-stock" open aria-labelledby="pg-prev-stock-t"><h4 class="kp-dialog__title" id="pg-prev-stock-t">Add stock</h4><p class="kp-dialog__description">Ibuprofen 400 mg · 14 tablets now</p>
                 <div class="kp-field"><label class="kp-field__label" for="pg-prev-qty">How many did you buy?</label><div class="kp-quantity" data-kp-quantity data-kp-quantity-fill data-kp-quantity-min="1" data-kp-quantity-max="200" data-kp-quantity-unit="tablets" data-kp-quantity-unit-one="tablet" data-kp-quantity-label="Tablets to add"><input class="kp-quantity__input" id="pg-prev-qty" value="20" /></div></div>
@@ -371,9 +371,12 @@ const SECTIONS = [
             .map(
                 (label) =>
                     `<div class="${label === 'Before' ? 'pg-before ' : ''}pg-switches"><p class="pg-case__title">${label}</p>
-                    <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span><span>Active (empty word)</span></label>
-                    <label class="kp-switch" data-kp-switch-state="none"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span><span>Take as needed (none)</span></label>
-                    <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span><span>Reminders (On/Off)</span></label></div>`,
+                    <span class="pg-switch-name">Empty word</span>
+                    <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span><span>Active</span></label>
+                    <span class="pg-switch-name">No word</span>
+                    <label class="kp-switch" data-kp-switch-state="none"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span><span>Active</span></label>
+                    <span class="pg-switch-name">On / Off words</span>
+                    <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span><span>Active</span></label></div>`,
             )
             .join('')}</div>`,
     },

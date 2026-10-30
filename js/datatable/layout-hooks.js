@@ -25,6 +25,18 @@ export function thresholdPx(text, rem) {
     return Math.min(px, SHEET_THRESHOLD_REM * rem);
 }
 
+/**
+ * Makes the browser ask the container queries again after a container changed its name. Firefox keeps the answers it gave under the
+ * old name (the card rules of a table that was wide and became narrow stayed off) until the container is rebuilt; dropping its
+ * containment for one style flush does that without moving anything.
+ * @param {...HTMLElement} containers
+ */
+function askQueriesAgain(...containers) {
+    for (const container of containers) container.style.containerType = 'normal';
+    void containers[0]?.offsetHeight;
+    for (const container of containers) container.style.removeProperty('container-type');
+}
+
 /** Watches one table's width and says in `data-kp-cards-idle` when it is wide enough to stay a table. */
 export class CardsAt extends Controller {
     connect() {
@@ -35,7 +47,9 @@ export class CardsAt extends Controller {
         const read = () => {
             const rem = Number.parseFloat(view.getComputedStyle(host.ownerDocument.documentElement).fontSize) || 16;
             const wide = box.getBoundingClientRect().width >= thresholdPx(host.getAttribute('data-kp-cards-at'), rem);
-            if (host.hasAttribute(IDLE_ATTRIBUTE) !== wide) host.toggleAttribute(IDLE_ATTRIBUTE, wide);
+            if (host.hasAttribute(IDLE_ATTRIBUTE) === wide) return;
+            host.toggleAttribute(IDLE_ATTRIBUTE, wide);
+            askQueriesAgain(...new Set(/** @type {HTMLElement[]} */ ([host, box])));
         };
         this.observe(new ResizeObserver(read)).observe(box);
         // The width can be changed at runtime, like the other options.

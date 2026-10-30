@@ -3,7 +3,7 @@
     /* --- A quantity that fills its cell [mc-1030, Medicine Cabinet gap 2] ---
      * `data-kp-quantity-fill` on a `.kp-quantity` makes the number track `1fr`: the minus and plus keep their size, the field takes the rest of
      * the cell, so steppers in a column end on one edge whatever their numbers. The unit keeps the width of its longest form and never breaks
-     * inside a word (it used to wrap per letter in a narrow cell); the number gives way first, down to `--kp-quantity-min-chars` (3ch). */
+     * inside a word (it used to wrap per letter in a narrow cell); the number gives way first, down to `--kp-quantity-min-chars` (2ch). The field's own padding is the small step so a stepper fits a cell of about 12rem. */
     .kp-quantity[data-kp-quantity-fill]:not([data-kp-quantity-fill='false']) {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr) auto;
@@ -14,13 +14,15 @@
 
     .kp-quantity[data-kp-quantity-fill]:not([data-kp-quantity-fill='false']) .kp-quantity__field {
         display: grid;
-        grid-template-columns: minmax(var(--kp-quantity-min-chars, 3ch), 1fr) auto;
+        grid-template-columns: minmax(var(--kp-quantity-min-chars, 2ch), 1fr) auto;
         min-inline-size: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
     }
 
     .kp-quantity[data-kp-quantity-fill]:not([data-kp-quantity-fill='false']) .kp-quantity__input {
         inline-size: auto;
         min-inline-size: 0;
+        padding-inline: 0;
     }
 
     .kp-quantity[data-kp-quantity-fill]:not([data-kp-quantity-fill='false']) .kp-quantity__unit {

@@ -46842,6 +46842,11 @@ function thresholdPx(text, rem) {
   const px5 = unit2 === "px" ? size2 * PX_PER_UNIT.px : size2 * rem;
   return Math.min(px5, SHEET_THRESHOLD_REM * rem);
 }
+function askQueriesAgain(...containers) {
+  for (const container of containers) container.style.containerType = "normal";
+  void containers[0]?.offsetHeight;
+  for (const container of containers) container.style.removeProperty("container-type");
+}
 function attachCardsAt(root = document) {
   return attachAll(root, CARDS_AT, CardsAt);
 }
@@ -46866,7 +46871,12 @@ var init_layout_hooks = __esm({
         const read = () => {
           const rem = Number.parseFloat(view.getComputedStyle(host.ownerDocument.documentElement).fontSize) || 16;
           const wide = box.getBoundingClientRect().width >= thresholdPx(host.getAttribute("data-kp-cards-at"), rem);
-          if (host.hasAttribute(IDLE_ATTRIBUTE) !== wide) host.toggleAttribute(IDLE_ATTRIBUTE, wide);
+          if (host.hasAttribute(IDLE_ATTRIBUTE) === wide) return;
+          host.toggleAttribute(IDLE_ATTRIBUTE, wide);
+          askQueriesAgain(.../* @__PURE__ */ new Set(
+            /** @type {HTMLElement[]} */
+            [host, box]
+          ));
         };
         this.observe(new ResizeObserver(read)).observe(box);
         this.observe(new MutationObserver(read)).observe(host, { attributes: true, attributeFilter: ["data-kp-cards-at"] });

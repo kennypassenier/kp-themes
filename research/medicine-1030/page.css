@@ -64,9 +64,11 @@
 /* Cells of three widths, for the stepper and the badge run. */
 .pg-cells {
     display: grid;
-    grid-template-columns: minmax(0, 20rem) minmax(0, 13rem) minmax(0, 9rem);
+    grid-template-columns: minmax(0, 27rem) minmax(0, 16rem) minmax(0, 13rem);
     gap: var(--kp-space-lg, 1.5rem);
     align-items: start;
+    /* The before-run of the badges runs past its cell, but stays inside the card. */
+    overflow-x: clip;
 }
 
 .pg-cell {
@@ -82,6 +84,12 @@
     margin: 0;
     color: var(--muted-foreground);
     font-size: var(--kp-text-xs, 0.75rem);
+}
+
+@media (max-width: 40rem) {
+    .pg-cells {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 [data-pg-width='phone'] .pg-cells {
@@ -132,14 +140,19 @@
 }
 
 .pg-switches {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(7rem, max-content) minmax(0, 1fr);
     align-items: center;
     gap: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
 }
 
 .pg-switches > .pg-case__title {
-    flex: 1 0 100%;
+    grid-column: 1 / -1;
+}
+
+.pg-switch-name {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
 }
 
 /* The Before of the page header: the date and the time share one grey line. */

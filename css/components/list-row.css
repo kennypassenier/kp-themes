@@ -4,16 +4,16 @@
      * Not a table: one row holds an identity block, a status column, a stepper and a switch, and the status can hold several badges. The
      * list is ONE grid of named columns and every row is a subgrid of it, so the identity, the status, the stepper and the switch of all rows
      * stand on four edges that run down the list whatever each holds. A row that has no status simply leaves its column empty. Under 40rem of
-     * the list's own width a row is a card: the identity and the status on full lines, the stepper beside the switch. Loading, empty and
+     * the list's own width a row is a card: the identity and the status on full lines, the stepper beside the switch (the switch wraps below it when the line is too short for both). Loading, empty and
      * failed are the card's (`.kp-card[data-kp-state]`, js/card-state.js): put the list in the card's data and the states fill its footprint.
-     * Knobs [KT6]: `--kp-list-tracks` (the four column tracks), `--kp-list-stepper-min` (11rem, the room a stepper fills), `--kp-list-row-pad`
-     * (the row's block padding), `--kp-list-gap` (the room between columns). */
+     * Knobs [KT6]: `--kp-list-tracks` (the four column tracks), `--kp-list-stepper-min` (14rem, the room a stepper fills), `--kp-list-row-pad`
+     * (the row's block padding), `--kp-list-gap` (the room between columns), `--kp-list-stepper-card` (13rem, the room a card keeps for its stepper). */
     .kp-list {
         container: kp-list / inline-size;
         display: grid;
         grid-template-columns: var(
             --kp-list-tracks,
-            [identity] minmax(0, 2.2fr) [status] minmax(0, 1.4fr) [stepper] minmax(var(--kp-list-stepper-min, 11rem), 1fr) [switch] auto
+            [identity] minmax(0, 1.6fr) [status] minmax(0, 2fr) [stepper] minmax(var(--kp-list-stepper-min, 14rem), 1fr) [switch] auto
         );
         column-gap: var(--kp-list-gap, var(--kp-space-lg, 1.5rem));
         margin: 0;
@@ -79,21 +79,24 @@
     /* The phone card: the identity and the status each on a line, the stepper filling the line beside the switch. */
     @container kp-list (max-width: 40rem) {
         .kp-listrow {
-            grid-template-columns: minmax(0, 1fr) auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
             gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
         }
 
         .kp-listrow__identity,
         .kp-listrow__status {
-            grid-column: 1 / -1;
+            flex: 1 0 100%;
         }
 
         .kp-listrow__stepper {
-            grid-column: 1;
+            flex: 1 1 var(--kp-list-stepper-card, 13rem);
         }
 
         .kp-listrow__switch {
-            grid-column: 2;
+            flex: 0 0 auto;
+            margin-inline-start: auto;
         }
 
         .kp-listrow__status:empty {

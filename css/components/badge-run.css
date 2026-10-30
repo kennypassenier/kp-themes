@@ -2,12 +2,12 @@
 @layer kp.components {
     /* --- A run of badges [mc-1030, Medicine Cabinet gap 7] ---
      * Several `.kp-badge` in one cell that wrap when the cell is narrow, as a grid and not a flex run: the tracks are as wide as the widest
-     * badge in them (at least `--kp-badges-min`, 6rem), so the badges of a wrapped run stand in columns and a label is never cut. A badge's
+     * badge in them (at least `--kp-badges-min`, 8rem), so the badges of a wrapped run stand in columns and a label is never cut. A badge's
      * words wrap at spaces here, not between letters. */
     .kp-badges {
         --kp-badge-wrap: normal;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(var(--kp-badges-min, 6rem), 100%), max-content));
+        grid-template-columns: repeat(auto-fill, minmax(min(var(--kp-badges-min, 8rem), 100%), max-content));
         gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         justify-content: start;
         justify-items: start;

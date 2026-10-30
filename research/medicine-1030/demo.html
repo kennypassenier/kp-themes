@@ -81,9 +81,9 @@
                             not.
                         </li>
                         <li>
-                            <b>Phone</b>: each row is a card: the name and what it is, the badges on their own line, the stepper filling the line
-                            beside the switch. <b>Loading</b>, <b>Empty</b> and <b>Failed</b> fill the list&rsquo;s whole footprint with the
-                            card&rsquo;s plate and a normal Retry.
+                            <b>Phone</b>: each row is a card: the name and what it is, the badges on their own line, the stepper filling its line, the
+                            switch beside it when the line has room for both and under it when not. <b>Loading</b>, <b>Empty</b> and
+                            <b>Failed</b> fill the list&rsquo;s whole footprint with the card&rsquo;s plate and a normal Retry.
                         </li>
                     </ul>
                 </div>
@@ -156,7 +156,7 @@
                     </div>
                 </div>
                 <div id="list-row-component" class="pg-component" data-pg-width="full">
-                    <section class="kp-card" id="pg-cabinet" data-kp-state="ready" aria-labelledby="pg-cabinet-t">
+                    <div class="kp-card" role="region" id="pg-cabinet" data-kp-state="ready" aria-labelledby="pg-cabinet-t">
                         <div class="kp-card__header"><h3 class="kp-card__title" id="pg-cabinet-t">Cabinet</h3></div>
                         <p class="kp-card__body">Everything in the cabinet, with what is left of it.</p>
                         <div class="kp-card__stage">
@@ -379,7 +379,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </section>
+                    </div>
                 </div>
             </section>
 
@@ -873,7 +873,7 @@
                     </div>
                 </div>
                 <div id="row-editor-component" class="pg-component" data-pg-width="full">
-                    <section class="kp-card" id="pg-when" data-kp-state="ready" aria-labelledby="pg-when-t">
+                    <div class="kp-card" role="region" id="pg-when" data-kp-state="ready" aria-labelledby="pg-when-t">
                         <div class="kp-card__header"><h3 class="kp-card__title" id="pg-when-t">When to take it</h3></div>
                         <p class="kp-card__body">Each slot is a time, the days it runs on and how many to take.</p>
                         <div class="kp-card__stage">
@@ -1001,7 +1001,7 @@
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
                 </div>
             </section>
 
@@ -1270,13 +1270,9 @@
                         </button>
                     </div>
                     <div role="group" aria-label="Open for real">
-                        <button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="stock" aria-pressed="false">
-                            Add stock</button
-                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="guard" aria-pressed="false">
-                            Take it anyway</button
-                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="forms" aria-pressed="false">
-                            Forms manager
-                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="stock">Add stock</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="guard">Take it anyway</button
+                        ><button type="button" class="kp-button kp-button--sm" data-pg="dlg-open" data-value="forms">Forms manager</button>
                     </div>
                     <div role="group" aria-label="Width">
                         <button
@@ -1835,7 +1831,7 @@
                             <div class="kp-formgrid__row">
                                 <label class="kp-formgrid__label" for="pg-ta-before-note">Note</label>
                                 <div class="kp-formgrid__control">
-                                    <input class="kp-field__input" id="pg-ta-before-note" placeholder="Take with food, not on an empty stomach" />
+                                    <input class="kp-field__input" id="pg-ta-before-note" placeholder="Take with food" />
                                 </div>
                                 <p class="kp-formgrid__value">optional</p>
                             </div>
@@ -1876,7 +1872,7 @@
                             <div class="kp-formgrid__row">
                                 <label class="kp-formgrid__label" for="pg-ta-after-note">Note</label>
                                 <div class="kp-formgrid__control">
-                                    <input class="kp-field__input" id="pg-ta-after-note" placeholder="Take with food, not on an empty stomach" />
+                                    <input class="kp-field__input" id="pg-ta-after-note" placeholder="Take with food" />
                                 </div>
                                 <p class="kp-formgrid__value">optional</p>
                             </div>
@@ -1978,7 +1974,7 @@
                                 <div class="kp-formgrid__row">
                                     <label class="kp-formgrid__label" for="pg-cg-before-note">Note</label>
                                     <div class="kp-formgrid__control">
-                                        <input class="kp-field__input" id="pg-cg-before-note" placeholder="Take with food, not on an empty stomach" />
+                                        <input class="kp-field__input" id="pg-cg-before-note" placeholder="Take with food" />
                                     </div>
                                     <p class="kp-formgrid__value">optional</p>
                                 </div>
@@ -2023,7 +2019,7 @@
                                 <div class="kp-formgrid__row">
                                     <label class="kp-formgrid__label" for="pg-cg-after-note">Note</label>
                                     <div class="kp-formgrid__control">
-                                        <input class="kp-field__input" id="pg-cg-after-note" placeholder="Take with food, not on an empty stomach" />
+                                        <input class="kp-field__input" id="pg-cg-after-note" placeholder="Take with food" />
                                     </div>
                                     <p class="kp-formgrid__value">optional</p>
                                 </div>
@@ -2282,38 +2278,44 @@
                     <div class="kp-card pg-card">
                         <div class="pg-before pg-switches">
                             <p class="pg-case__title">Before</p>
+                            <span class="pg-switch-name">Empty word</span>
                             <label class="kp-switch"
                                 ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
                                     ><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span
-                                ><span>Active (empty word)</span></label
+                                ><span>Active</span></label
                             >
+                            <span class="pg-switch-name">No word</span>
                             <label class="kp-switch" data-kp-switch-state="none"
                                 ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
                                     ><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span
-                                ><span>Take as needed (none)</span></label
+                                ><span>Active</span></label
                             >
+                            <span class="pg-switch-name">On / Off words</span>
                             <label class="kp-switch"
                                 ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
                                     ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
-                                ><span>Reminders (On/Off)</span></label
+                                ><span>Active</span></label
                             >
                         </div>
                         <div class="pg-switches">
                             <p class="pg-case__title">After</p>
+                            <span class="pg-switch-name">Empty word</span>
                             <label class="kp-switch"
                                 ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
                                     ><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span
-                                ><span>Active (empty word)</span></label
+                                ><span>Active</span></label
                             >
+                            <span class="pg-switch-name">No word</span>
                             <label class="kp-switch" data-kp-switch-state="none"
                                 ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
                                     ><span class="kp-switch__on"></span><span class="kp-switch__off"></span></span
-                                ><span>Take as needed (none)</span></label
+                                ><span>Active</span></label
                             >
+                            <span class="pg-switch-name">On / Off words</span>
                             <label class="kp-switch"
                                 ><input class="kp-switch__input" type="checkbox" role="switch" /><span class="kp-switch__state" aria-hidden="true"
                                     ><span class="kp-switch__on">On</span><span class="kp-switch__off">Off</span></span
-                                ><span>Reminders (On/Off)</span></label
+                                ><span>Active</span></label
                             >
                         </div>
                     </div>
