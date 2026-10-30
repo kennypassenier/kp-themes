@@ -48279,10 +48279,10 @@ function formatHsl({ h: h2, s: s2, l }) {
   return `hsl(${r(h2)}, ${r(s2)}%, ${r(l)}%)`;
 }
 function hslToRgb({ h: h2, s: s2, l }) {
-  const S = s2 / 100;
-  const L = l / 100;
+  const S = s2 / PERCENT3;
+  const L = l / PERCENT3;
   const c = (1 - Math.abs(2 * L - 1)) * S;
-  const x = c * (1 - Math.abs(h2 / 60 % 2 - 1));
+  const x = c * (1 - Math.abs(h2 / HUE_SECTOR % 2 - 1));
   const m = L - c / 2;
   const [r, g, b] = [
     [c, x, 0],
@@ -48291,7 +48291,7 @@ function hslToRgb({ h: h2, s: s2, l }) {
     [0, x, c],
     [x, 0, c],
     [c, 0, x]
-  ][Math.floor(h2 / 60) % 6];
+  ][Math.floor(h2 / HUE_SECTOR) % HUE_SECTORS];
   return [r + m, g + m, b + m];
 }
 function rgbToHsl([r, g, b]) {
@@ -48299,21 +48299,21 @@ function rgbToHsl([r, g, b]) {
   const min = Math.min(r, g, b);
   const l = (max + min) / 2;
   const d = max - min;
-  if (d === 0) return { h: 0, s: 0, l: l * 100 };
+  if (d === 0) return { h: 0, s: 0, l: l * PERCENT3 };
   const s2 = d / (1 - Math.abs(2 * l - 1));
   let h2;
-  if (max === r) h2 = 60 * ((g - b) / d % 6);
-  else if (max === g) h2 = 60 * ((b - r) / d + 2);
-  else h2 = 60 * ((r - g) / d + 4);
-  return { h: (h2 + 360) % 360, s: s2 * 100, l: l * 100 };
+  if (max === r) h2 = HUE_SECTOR * ((g - b) / d % HUE_SECTORS);
+  else if (max === g) h2 = HUE_SECTOR * ((b - r) / d + 2);
+  else h2 = HUE_SECTOR * ((r - g) / d + 4);
+  return { h: (h2 + FULL_TURN) % FULL_TURN, s: s2 * PERCENT3, l: l * PERCENT3 };
 }
 function luminance([r, g, b]) {
-  const f = (u) => u <= 0.03928 ? u / 12.92 : ((u + 0.055) / 1.055) ** 2.4;
-  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+  const f = (u) => u <= WCAG_LINEAR_LIMIT ? u / SRGB_LINEAR_SLOPE : ((u + SRGB_GAMMA_OFFSET) / SRGB_GAMMA_DIVISOR) ** SRGB_GAMMA;
+  return LUMA_RED * f(r) + LUMA_GREEN * f(g) + LUMA_BLUE * f(b);
 }
 function contrast(a, b) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
+  return (hi + CONTRAST_FLARE) / (lo + CONTRAST_FLARE);
 }
 function tokenColour(token, from = document.documentElement) {
   const value = getComputedStyle(from).getPropertyValue(token).trim();
@@ -48325,12 +48325,27 @@ function tokenColour(token, from = document.documentElement) {
   }
 }
 function meets(ratio, kind = "text") {
-  return ratio >= (kind === "text" ? 4.5 : 3);
+  return ratio >= (kind === "text" ? RATIO_TEXT : RATIO_LARGE);
 }
-var hsl;
+var FULL_TURN, HUE_SECTOR, HUE_SECTORS, PERCENT3, WCAG_LINEAR_LIMIT, SRGB_LINEAR_SLOPE, SRGB_GAMMA_OFFSET, SRGB_GAMMA_DIVISOR, SRGB_GAMMA, LUMA_RED, LUMA_GREEN, LUMA_BLUE, CONTRAST_FLARE, RATIO_TEXT, RATIO_LARGE, hsl;
 var init_contrast = __esm({
   "js/contrast.js"() {
     "use strict";
+    FULL_TURN = 360;
+    HUE_SECTOR = 60;
+    HUE_SECTORS = 6;
+    PERCENT3 = 100;
+    WCAG_LINEAR_LIMIT = 0.03928;
+    SRGB_LINEAR_SLOPE = 12.92;
+    SRGB_GAMMA_OFFSET = 0.055;
+    SRGB_GAMMA_DIVISOR = 1.055;
+    SRGB_GAMMA = 2.4;
+    LUMA_RED = 0.2126;
+    LUMA_GREEN = 0.7152;
+    LUMA_BLUE = 0.0722;
+    CONTRAST_FLARE = 0.05;
+    RATIO_TEXT = 4.5;
+    RATIO_LARGE = 3;
     hsl = (text) => hslToRgb(parseHsl(text));
   }
 });
@@ -51727,7 +51742,7 @@ function setBarCell(el16, { value = null, text, tone, warnAt = WARN_AT, badAt = 
     ghost.className = "kp-skeleton kp-bar-cell__ghost";
     ghost.setAttribute("aria-hidden", "true");
     number.replaceChildren(ghost);
-  } else number.textContent = text ?? (measured2 === null ? "" : `${Math.round(measured2 * PERCENT3)}%`);
+  } else number.textContent = text ?? (measured2 === null ? "" : `${Math.round(measured2 * PERCENT4)}%`);
   el16.toggleAttribute("data-kp-loading", loading);
   const holder = el16.closest("td, th");
   if (holder) holder.setAttribute(SORT_VALUE_ATTRIBUTE, sortText(sortValue, measured2));
@@ -51754,7 +51769,7 @@ function attachBarCells(root = document) {
   controller.connect();
   return () => controller.destroy();
 }
-var BAR_CELL, SORT_VALUE_ATTRIBUTE, WARN_AT, BAD_AT, PERCENT3, SORT_SCALE, SORT_TENTHS, numberOf, BarCellsController;
+var BAR_CELL, SORT_VALUE_ATTRIBUTE, WARN_AT, BAD_AT, PERCENT4, SORT_SCALE, SORT_TENTHS, numberOf, BarCellsController;
 var init_barcell = __esm({
   "js/barcell.js"() {
     "use strict";
@@ -51764,7 +51779,7 @@ var init_barcell = __esm({
     SORT_VALUE_ATTRIBUTE = "data-kp-sort-value";
     WARN_AT = 0.75;
     BAD_AT = 0.9;
-    PERCENT3 = 100;
+    PERCENT4 = 100;
     SORT_SCALE = 1e3;
     SORT_TENTHS = 10;
     numberOf = (text) => text == null || text.trim() === "" || !Number.isFinite(Number(text)) ? null : Number(text);
@@ -56293,7 +56308,7 @@ var init_gantt = __esm({
 });
 
 // js/pipeline/values.js
-var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT4, make17;
+var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT5, make17;
 var init_values27 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
@@ -56303,7 +56318,7 @@ var init_values27 = __esm({
     PIPELINE_MORE_EVENT = "kp-pipeline-more";
     GHOST_CARDS = 2;
     GHOST_CARDS_CLOSED = 3;
-    PERCENT4 = 100;
+    PERCENT5 = 100;
     make17 = (doc, tag, className, text) => {
       const el16 = doc.createElement(tag);
       if (className) el16.className = className;
@@ -56518,7 +56533,7 @@ var init_lanes3 = __esm({
         node.append(this.laneHead(lane, cards.length, id));
         if (this.host.dataset.kpPipelineShare !== "false" && !lane.closed) {
           const share = make17(doc, "p", "kp-pipeline__share");
-          share.textContent = loading || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards.length / total * PERCENT4));
+          share.textContent = loading || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards.length / total * PERCENT5));
           node.append(share);
         }
         const list = make17(doc, "div", "kp-pipeline__cards");
