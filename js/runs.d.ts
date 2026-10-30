@@ -1,9 +1,5 @@
-/** A next-times list. */
-export declare const RUNS = "[data-kp-runs]";
-/** Fired on the list, bubbling, when Try again is pressed: `{ element }`. */
-export declare const RUNS_RETRY_EVENT = "kp-runs-retry";
-/** The states a list can be in. */
-export declare const RUNS_STATES: readonly ['ready', 'empty', 'loading', 'error'];
+export { RUNS, RUNS_RETRY_EVENT, RUNS_STATES } from './runs/values.js';
+export { runsRelative, zoneOffset, runMoment, clockShift } from './runs/time.js';
 export type RunInput = number | string | Date | {
     at: number | string | Date;
     conflict?: string;
@@ -30,6 +26,16 @@ export type RunsOptions = {
      */
     text?: string;
 };
+export type RunsHandle = {
+    element: HTMLElement;
+    /**
+     * the times; none is the empty state
+     */
+    set: (times: readonly RunInput[], options?: RunsOptions) => void;
+    setState: (state: RunsState, options?: RunsOptions) => void;
+    runs: () => Run[];
+    state: () => RunsState;
+};
 /**
  * @typedef {number | string | Date | { at: number | string | Date, conflict?: string }} RunInput
  * @typedef {object} Run
@@ -42,37 +48,13 @@ export type RunsOptions = {
  * @property {string} [text] an error's sentence
  */
 /**
- * A moment's distance from now in the coarsest honest words: "in 35 min", "in 3 h 20 min", "in 2 days". Pure.
- * @param {number} ms the moment
- * @param {number} now
- * @param {import('./strings.js').Strings} [strings]
+ * @typedef {object} RunsHandle
+ * @property {HTMLElement} element
+ * @property {(times: readonly RunInput[], options?: RunsOptions) => void} set the times; none is the empty state
+ * @property {(state: RunsState, options?: RunsOptions) => void} setState
+ * @property {() => Run[]} runs
+ * @property {() => RunsState} state
  */
-export declare function runsRelative(ms: number, now: number, strings?: import('./strings.js').Strings): string;
-/**
- * How far a zone's wall clock runs ahead of UTC at a moment, in minutes. Pure.
- * @param {number} ms @param {string} zone
- */
-export declare function zoneOffset(ms: number, zone?: string): number;
-/**
- * A run as rule 52 writes it with its weekday: "Mon 20/10/2026 03:00". Pure.
- * @param {number} ms @param {string} [zone] @param {string} [locale]
- */
-export declare function runMoment(ms: number, zone?: string, locale?: string): string;
-/**
- * The hours the clock was turned between two runs: positive when it went forward. 0 when it was not. Pure.
- * @param {number} before @param {number} after @param {string} [zone]
- */
-export declare function clockShift(before: number, after: number, zone?: string): number;
-export type RunsHandle = {
-    element: HTMLElement;
-    /**
-     * the times; none is the empty state
-     */
-    set: (times: readonly RunInput[], options?: RunsOptions) => void;
-    setState: (state: RunsState, options?: RunsOptions) => void;
-    runs: () => Run[];
-    state: () => RunsState;
-};
 /** The handle of an attached list. @param {Element} element */
 export declare function runs(element: Element): RunsHandle | null;
 /**
@@ -91,6 +73,6 @@ export declare function setRunsState(element: Element, state: RunsState, options
  * @param {{ now?: () => number }} [options]
  * @returns {() => void} detach
  */
-export declare function attachRuns(root?: ParentNode, { now: nowOption }?: {
+export declare function attachRuns(root?: ParentNode, options?: {
     now?: () => number;
 }): () => void;

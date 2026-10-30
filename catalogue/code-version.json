@@ -96,7 +96,7 @@
         "js/reason.js": { "digest": "e03846b46d464fbe", "when": "[data-kp-disabled-reason]" },
         "js/request-inspector.js": { "digest": "d79def1e0b5620d6", "when": "[data-kp-requests]" },
         "js/row-select.js": { "digest": "dba95f9a5c0c551b", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
-        "js/runs.js": { "digest": "cd531b566e90970e", "when": "[data-kp-runs]" },
+        "js/runs.js": { "digest": "be31cbbc5649795f", "when": "[data-kp-runs]" },
         "js/segmented.js": { "digest": "5c828afd0ada8091", "when": "[data-kp-segmented]" },
         "js/selection-bar.js": { "digest": "a31499eaaf2be336", "when": "[data-kp-selection]" },
         "js/sentence.js": { "digest": "0c9a0472084b1b72", "when": "[data-kp-sentence]" },

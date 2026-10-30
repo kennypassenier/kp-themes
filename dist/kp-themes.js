@@ -72683,6 +72683,382 @@ var init_dated_options = __esm({
   }
 });
 
+// js/runs/input.js
+function toRun(input) {
+  const raw = typeof input === "object" && input !== null && !(input instanceof Date) ? input : { at: input };
+  const at = raw.at instanceof Date ? raw.at.getTime() : typeof raw.at === "number" ? raw.at : Date.parse(String(raw.at));
+  if (!Number.isFinite(at)) return null;
+  return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
+}
+var init_input = __esm({
+  "js/runs/input.js"() {
+    "use strict";
+  }
+});
+
+// js/runs/values.js
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS2;
+var init_values24 = __esm({
+  "js/runs/values.js"() {
+    "use strict";
+    RUNS = "[data-kp-runs]";
+    RUNS_RETRY_EVENT = "kp-runs-retry";
+    RUNS_STATES = /** @type {const} */
+    ["ready", "empty", "loading", "error"];
+    DEFAULT_COUNT = 3;
+    REFRESH_MS = 6e4;
+    MINUTE_S4 = 60;
+    DAY_S3 = 86400;
+    NOW_S = 30;
+    MINUTE_MS2 = 6e4;
+  }
+});
+
+// js/runs/options.js
+function readRunsOptions(el16, nowOption) {
+  const fixed = Date.parse(el16.dataset.kpNow ?? "");
+  return {
+    zone: el16.dataset.kpTimeZone || CHART_TIME_ZONE,
+    count: Math.max(1, Number(el16.dataset.kpRunsCount) || DEFAULT_COUNT),
+    more: Math.max(0, Number(el16.dataset.kpRunsMore) || 0),
+    relative: el16.dataset.kpRunsRelative !== "false",
+    warn: el16.dataset.kpRunsWarn !== "false",
+    /** Whether the clock stands still, so the words need no refresh. */
+    fixed: Number.isFinite(fixed) || Boolean(nowOption),
+    now: nowOption ?? (Number.isFinite(fixed) ? () => fixed : () => Date.now())
+  };
+}
+var init_options6 = __esm({
+  "js/runs/options.js"() {
+    "use strict";
+    init_chart();
+    init_values24();
+  }
+});
+
+// js/runs/parts.js
+function buildRunsParts(el16, id, titleText) {
+  const doc = el16.ownerDocument;
+  const title = doc.createElement("p");
+  title.className = "kp-runs__title";
+  title.id = `${id}-title`;
+  title.textContent = titleText;
+  const stage = doc.createElement("div");
+  stage.className = "kp-runs__stage";
+  const list = doc.createElement("ol");
+  list.className = "kp-runs__list";
+  list.setAttribute("aria-labelledby", title.id);
+  const note2 = doc.createElement("div");
+  note2.className = "kp-runs__state";
+  note2.hidden = true;
+  stage.append(list, note2);
+  const button6 = doc.createElement("button");
+  button6.type = "button";
+  button6.className = "kp-button kp-button--ghost kp-button--sm kp-runs__more";
+  button6.hidden = true;
+  button6.setAttribute("aria-expanded", "false");
+  const live4 = doc.createElement("p");
+  live4.className = "kp-sr-only";
+  live4.setAttribute("role", "status");
+  live4.setAttribute("aria-live", "polite");
+  return { title, stage, list, note: note2, button: button6, live: live4 };
+}
+var init_parts11 = __esm({
+  "js/runs/parts.js"() {
+    "use strict";
+  }
+});
+
+// js/runs/time.js
+function runsRelative(ms, now, strings = getStrings()) {
+  const seconds = Math.round((ms - now) / 1e3);
+  if (seconds < NOW_S) return strings.runsNow;
+  if (seconds < MINUTE_S4) return strings.runsIn(strings.agoSeconds(seconds));
+  if (seconds >= DAY_S3) return strings.runsIn(strings.agoDays(Math.floor(seconds / DAY_S3)));
+  return strings.runsIn(humanDuration(seconds, strings));
+}
+function zoneOffset2(ms, zone = CHART_TIME_ZONE) {
+  const w = wallTime(ms, zone);
+  return (Date.UTC(w.year, w.month - 1, w.day, w.hour, w.minute) - Math.floor(ms / MINUTE_MS2) * MINUTE_MS2) / MINUTE_MS2;
+}
+function runMoment(ms, zone = CHART_TIME_ZONE, locale) {
+  const w = wallTime(ms, zone);
+  const day = dayNames("short", locale)[new Date(Date.UTC(w.year, w.month - 1, w.day)).getUTCDay()] ?? "";
+  return `${day} ${two6(w.day)}/${two6(w.month)}/${w.year} ${two6(w.hour)}:${two6(w.minute)}`;
+}
+function clockShift(before, after, zone = CHART_TIME_ZONE) {
+  return (zoneOffset2(after, zone) - zoneOffset2(before, zone)) / MINUTE_S4;
+}
+var two6;
+var init_time3 = __esm({
+  "js/runs/time.js"() {
+    "use strict";
+    init_strings();
+    init_weekdays();
+    init_freshness();
+    init_chart();
+    init_values24();
+    two6 = (n) => String(n).padStart(2, "0");
+  }
+});
+
+// js/runs/core.js
+var seq6, RunsCore;
+var init_core19 = __esm({
+  "js/runs/core.js"() {
+    "use strict";
+    init_controller();
+    init_busy_card();
+    init_strings();
+    init_input();
+    init_options6();
+    init_parts11();
+    init_time3();
+    seq6 = 0;
+    RunsCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ now?: () => number }} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        this.s = getStrings();
+        this.id = `kp-runs-${++seq6}`;
+        this.read = readRunsOptions(host, options.now);
+        this.parts = buildRunsParts(host, this.id, host.dataset.kpRunsTitle ?? this.s.runsTitle);
+        this.doc = host.ownerDocument;
+        this.all = [];
+        this.state = "ready";
+        this.given = {};
+        this.expanded = false;
+        this.busy = null;
+        this.lastFirst = NaN;
+        this.drawn = false;
+      }
+      /** The app gave the times (none is the empty state). @param {readonly import('../runs.js').RunInput[]} times @param {RunsOptions} options */
+      takeTimes(times, options) {
+        this.given = options;
+        this.all = times.map(toRun).filter((r) => r !== null);
+        this.expanded = this.expanded && this.all.length > this.read.count;
+        this.state = this.all.length === 0 ? "empty" : "ready";
+      }
+      /** @param {RunsState} next @param {RunsOptions} options */
+      takeState(next2, options) {
+        this.given = { ...this.given, ...options };
+        this.state = next2 === "ready" && this.all.length === 0 ? "empty" : next2;
+      }
+      toggleExpanded() {
+        this.expanded = !this.expanded;
+      }
+      /** The theme's busy card comes with the loading state and goes with it. */
+      followBusy() {
+        const { stage } = this.parts;
+        if (this.state === "loading" && !this.busy) {
+          this.busy = openBusyCard(stage, { words: this.s.runsLoading, area: () => [stage], className: "kp-runs__busy", arrive: this.drawn });
+        } else if (this.state !== "loading" && this.busy) {
+          const b = this.busy;
+          this.busy = null;
+          void b.close();
+        }
+        this.drawn = true;
+      }
+      /** The status region says the first run only when it changes. */
+      sayFirst() {
+        const first = this.state === "ready" ? this.all[0]?.at : void 0;
+        if (first !== void 0 && first !== this.lastFirst) {
+          if (Number.isFinite(this.lastFirst)) this.parts.live.textContent = this.s.runsNext(runMoment(first, this.read.zone, this.host.lang || void 0));
+          this.lastFirst = first;
+        } else if (first === void 0) this.lastFirst = NaN;
+      }
+    };
+  }
+});
+
+// js/runs/rows.js
+var RunsRows;
+var init_rows7 = __esm({
+  "js/runs/rows.js"() {
+    "use strict";
+    init_core19();
+    init_time3();
+    RunsRows = class extends RunsCore {
+      /** The marks of a run: the clock turning before it, and the app's own conflict. @param {import('./core.js').Run} run @param {number | undefined} before */
+      marksOf(run, before) {
+        const shift = clockShift(before ?? this.read.now(), run.at, this.read.zone);
+        const marks = [];
+        if (shift !== 0) marks.push(this.s.runsClockChange(shift));
+        if (run.conflict) marks.push(run.conflict);
+        return marks;
+      }
+      /** One row. @param {import('./core.js').Run} run @param {number} index @param {number | undefined} before */
+      row(run, index, before) {
+        const { doc, s: s2, read } = this;
+        const li = doc.createElement("li");
+        li.className = "kp-runs__row";
+        const time = doc.createElement("time");
+        time.className = "kp-runs__when";
+        time.dateTime = new Date(run.at).toISOString();
+        time.textContent = runMoment(run.at, read.zone, this.host.lang || void 0);
+        li.append(time);
+        if (read.relative) {
+          const rel2 = doc.createElement("span");
+          rel2.className = "kp-runs__rel";
+          rel2.textContent = runsRelative(run.at, read.now(), s2);
+          li.append(rel2);
+        }
+        const marks = read.warn ? this.marksOf(run, before) : [];
+        if (marks.length) {
+          const flag = doc.createElement("span");
+          flag.className = "kp-badge kp-badge--warning kp-runs__flag";
+          flag.textContent = marks.join(" \xB7 ");
+          li.append(flag);
+        }
+        if (index === 0) li.dataset.kpRunsNext = "";
+        return li;
+      }
+      /** The placeholder rows of the loading state. */
+      waitRows() {
+        return Array.from({ length: this.read.count }, () => {
+          const li = this.doc.createElement("li");
+          li.className = "kp-runs__row kp-runs__row--wait";
+          li.setAttribute("aria-hidden", "true");
+          const bar = this.doc.createElement("span");
+          bar.className = "kp-skeleton kp-runs__bar";
+          li.append(bar);
+          return li;
+        });
+      }
+      draw() {
+        const { list, button: button6 } = this.parts;
+        const { count: count2, more } = this.read;
+        const shown5 = this.expanded ? this.all : this.all.slice(0, count2);
+        const rows = this.state === "loading" && shown5.length === 0 ? this.waitRows() : shown5.map((run, i) => this.row(run, i, i === 0 ? void 0 : shown5[i - 1]?.at));
+        list.replaceChildren(...rows);
+        list.toggleAttribute("inert", this.state !== "ready");
+        if (this.state === "loading") list.setAttribute("aria-busy", "true");
+        else list.removeAttribute("aria-busy");
+        button6.hidden = !(more > 0 && this.state === "ready" && this.all.length > count2);
+        button6.textContent = this.expanded ? this.s.runsFewer : this.s.runsMore(Math.min(more, this.all.length - count2));
+        button6.setAttribute("aria-expanded", String(this.expanded));
+      }
+    };
+  }
+});
+
+// js/runs/note.js
+var RunsNote;
+var init_note2 = __esm({
+  "js/runs/note.js"() {
+    "use strict";
+    init_state_plate();
+    init_rows7();
+    RunsNote = class extends RunsRows {
+      paintNote() {
+        const { note: note2 } = this.parts;
+        const { state: state12, s: s2, given: given2 } = this;
+        note2.replaceChildren();
+        note2.hidden = state12 !== "empty" && state12 !== "error";
+        note2.removeAttribute("role");
+        if (state12 !== "empty" && state12 !== "error") return;
+        const failed = state12 === "error";
+        const plate = statePlate(this.doc, {
+          kind: failed ? "error" : "empty",
+          title: failed ? given2.title ?? s2.runsFailed : given2.reason ?? s2.runsEmpty,
+          ...failed ? { text: given2.text ?? s2.stateFailedText, actionLabel: s2.runsRetry, actionAttribute: "data-kp-runs-retry" } : {}
+        });
+        plate.classList.add(failed ? "kp-runs__failure" : "kp-runs__empty");
+        plate.querySelector(".kp-stateplate__title")?.classList.add(failed ? "kp-runs__failure-title" : "kp-runs__empty-title");
+        plate.querySelector(".kp-stateplate__text")?.classList.add("kp-runs__failure-text");
+        plate.querySelector(".kp-stateplate__action")?.classList.add("kp-runs__retry");
+        note2.append(plate);
+        note2.setAttribute("role", failed ? "alert" : "status");
+      }
+    };
+  }
+});
+
+// js/runs/controller.js
+var RunsList;
+var init_controller44 = __esm({
+  "js/runs/controller.js"() {
+    "use strict";
+    init_note2();
+    init_values24();
+    RunsList = class extends RunsNote {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ now?: () => number }} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.handle = {
+          element: host,
+          set: (times, given2 = {}) => {
+            this.takeTimes(times, given2);
+            this.sync();
+          },
+          setState: (next2, given2 = {}) => {
+            this.takeState(next2, given2);
+            this.sync();
+          },
+          runs: () => this.all.slice(),
+          state: () => this.state
+        };
+      }
+      connect() {
+        const el16 = this.host;
+        const { title, stage, button: button6, live: live4 } = this.parts;
+        el16.classList.add("kp-runs");
+        el16.style.setProperty("--kp-runs-count", String(this.read.count));
+        el16.dataset.kpRunsAttached = "";
+        el16.replaceChildren(title, stage, button6, live4);
+        this.own(() => {
+          el16.replaceChildren();
+          el16.style.removeProperty("--kp-runs-count");
+          delete el16.dataset.kpRunsAttached;
+        });
+        this.own(() => this.busy?.remove());
+        this.listenForRefresh();
+        this.listen(el16, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(button6, "click", () => this.onMore());
+        this.start();
+      }
+      /** The relative words are refreshed every minute unless the clock is fixed. */
+      listenForRefresh() {
+        if (this.read.fixed) return;
+        const tick6 = window.setInterval(() => this.state === "ready" && this.draw(), REFRESH_MS);
+        this.own(() => clearInterval(tick6));
+      }
+      /** The first state: a page that writes `data-kp-state` and `data-kp-runs-values` (ISO, comma separated) gets it at once. */
+      start() {
+        const el16 = this.host;
+        const initial = (el16.dataset.kpRunsValues ?? "").split(",").map((v) => v.trim()).filter(Boolean);
+        if (el16.dataset.kpState === "loading") this.handle.setState("loading");
+        else this.handle.set(initial);
+      }
+      sync() {
+        this.draw();
+        this.paintNote();
+        this.host.dataset.kpState = this.state;
+        this.followBusy();
+        this.sayFirst();
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const target = event.target instanceof Element ? event.target : null;
+        if (target?.closest("[data-kp-runs-retry]")) this.host.dispatchEvent(new CustomEvent(RUNS_RETRY_EVENT, { bubbles: true, detail: { element: this.host } }));
+      }
+      onMore() {
+        this.toggleExpanded();
+        this.draw();
+      }
+    };
+  }
+});
+
 // js/runs.js
 var runs_exports = {};
 __export(runs_exports, {
@@ -72698,244 +73074,26 @@ __export(runs_exports, {
   setRunsState: () => setRunsState,
   zoneOffset: () => zoneOffset2
 });
-function runsRelative(ms, now, strings = getStrings()) {
-  const seconds = Math.round((ms - now) / 1e3);
-  if (seconds < 30) return strings.runsNow;
-  if (seconds < 60) return strings.runsIn(strings.agoSeconds(seconds));
-  if (seconds >= 86400) return strings.runsIn(strings.agoDays(Math.floor(seconds / 86400)));
-  return strings.runsIn(humanDuration(seconds, strings));
-}
-function zoneOffset2(ms, zone = CHART_TIME_ZONE) {
-  const w = wallTime(ms, zone);
-  return (Date.UTC(w.year, w.month - 1, w.day, w.hour, w.minute) - Math.floor(ms / 6e4) * 6e4) / 6e4;
-}
-function runMoment(ms, zone = CHART_TIME_ZONE, locale) {
-  const w = wallTime(ms, zone);
-  const day = dayNames("short", locale)[new Date(Date.UTC(w.year, w.month - 1, w.day)).getUTCDay()] ?? "";
-  return `${day} ${two6(w.day)}/${two6(w.month)}/${w.year} ${two6(w.hour)}:${two6(w.minute)}`;
-}
-function clockShift(before, after, zone = CHART_TIME_ZONE) {
-  return (zoneOffset2(after, zone) - zoneOffset2(before, zone)) / 60;
-}
-function toRun(input) {
-  const raw = typeof input === "object" && input !== null && !(input instanceof Date) ? input : { at: input };
-  const at = raw.at instanceof Date ? raw.at.getTime() : typeof raw.at === "number" ? raw.at : Date.parse(String(raw.at));
-  if (!Number.isFinite(at)) return null;
-  return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
-}
 function runs(element) {
-  return HANDLES5.get(element) ?? null;
+  return controllerOf(element, RunsList)?.handle ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES5.get(element)?.set(times, options);
+  runs(element)?.set(times, options);
 }
 function setRunsState(element, state12, options) {
-  HANDLES5.get(element)?.setState(state12, options);
+  runs(element)?.setState(state12, options);
 }
-function attachRuns(root = document, { now: nowOption } = {}) {
-  const cleanups = [];
-  const found = (
-    /** @type {HTMLElement[]} */
-    [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
-  );
-  for (const el16 of found) {
-    if (HANDLES5.has(el16)) continue;
-    const s2 = getStrings();
-    const doc = el16.ownerDocument;
-    const id = `kp-runs-${++seq6}`;
-    const zone = el16.dataset.kpTimeZone || CHART_TIME_ZONE;
-    const count2 = Math.max(1, Number(el16.dataset.kpRunsCount) || 3);
-    const more = Math.max(0, Number(el16.dataset.kpRunsMore) || 0);
-    const relative = el16.dataset.kpRunsRelative !== "false";
-    const warn = el16.dataset.kpRunsWarn !== "false";
-    const fixed = Date.parse(el16.dataset.kpNow ?? "");
-    const now = nowOption ?? (Number.isFinite(fixed) ? () => fixed : () => Date.now());
-    el16.classList.add("kp-runs");
-    el16.style.setProperty("--kp-runs-count", String(count2));
-    el16.dataset.kpRunsAttached = "";
-    const title = doc.createElement("p");
-    title.className = "kp-runs__title";
-    title.id = `${id}-title`;
-    title.textContent = el16.dataset.kpRunsTitle ?? s2.runsTitle;
-    const stage = doc.createElement("div");
-    stage.className = "kp-runs__stage";
-    const list = doc.createElement("ol");
-    list.className = "kp-runs__list";
-    list.setAttribute("aria-labelledby", title.id);
-    const note2 = doc.createElement("div");
-    note2.className = "kp-runs__state";
-    note2.hidden = true;
-    stage.append(list, note2);
-    const button6 = doc.createElement("button");
-    button6.type = "button";
-    button6.className = "kp-button kp-button--ghost kp-button--sm kp-runs__more";
-    button6.hidden = true;
-    button6.setAttribute("aria-expanded", "false");
-    const live4 = doc.createElement("p");
-    live4.className = "kp-sr-only";
-    live4.setAttribute("role", "status");
-    live4.setAttribute("aria-live", "polite");
-    el16.replaceChildren(title, stage, button6, live4);
-    let all = [];
-    let state12 = "ready";
-    let given2 = {};
-    let expanded = false;
-    let busy = null;
-    let lastFirst = NaN;
-    let drawn2 = false;
-    const row = (run, index, before) => {
-      const li = doc.createElement("li");
-      li.className = "kp-runs__row";
-      const time = doc.createElement("time");
-      time.className = "kp-runs__when";
-      time.dateTime = new Date(run.at).toISOString();
-      time.textContent = runMoment(run.at, zone, el16.lang || void 0);
-      li.append(time);
-      if (relative) {
-        const rel2 = doc.createElement("span");
-        rel2.className = "kp-runs__rel";
-        rel2.textContent = runsRelative(run.at, now(), s2);
-        li.append(rel2);
-      }
-      if (warn) {
-        const shift = clockShift(before ?? now(), run.at, zone);
-        const marks = [];
-        if (shift !== 0) marks.push(s2.runsClockChange(shift));
-        if (run.conflict) marks.push(run.conflict);
-        if (marks.length) {
-          const flag = doc.createElement("span");
-          flag.className = "kp-badge kp-badge--warning kp-runs__flag";
-          flag.textContent = marks.join(" \xB7 ");
-          li.append(flag);
-        }
-      }
-      if (index === 0) li.dataset.kpRunsNext = "";
-      return li;
-    };
-    const draw7 = () => {
-      const shown5 = expanded ? all : all.slice(0, count2);
-      let rows;
-      if (state12 === "loading" && shown5.length === 0) {
-        rows = Array.from({ length: count2 }, () => {
-          const li = doc.createElement("li");
-          li.className = "kp-runs__row kp-runs__row--wait";
-          li.setAttribute("aria-hidden", "true");
-          const bar = doc.createElement("span");
-          bar.className = "kp-skeleton kp-runs__bar";
-          li.append(bar);
-          return li;
-        });
-      } else rows = shown5.map((run, i) => row(run, i, i === 0 ? void 0 : shown5[i - 1]?.at));
-      list.replaceChildren(...rows);
-      list.toggleAttribute("inert", state12 !== "ready");
-      if (state12 === "loading") list.setAttribute("aria-busy", "true");
-      else list.removeAttribute("aria-busy");
-      button6.hidden = !(more > 0 && state12 === "ready" && all.length > count2);
-      button6.textContent = expanded ? s2.runsFewer : s2.runsMore(Math.min(more, all.length - count2));
-      button6.setAttribute("aria-expanded", String(expanded));
-    };
-    const paintNote2 = () => {
-      note2.replaceChildren();
-      note2.hidden = state12 !== "empty" && state12 !== "error";
-      note2.removeAttribute("role");
-      if (state12 === "empty" || state12 === "error") {
-        const failed = state12 === "error";
-        const plate = statePlate(doc, {
-          kind: failed ? "error" : "empty",
-          title: failed ? given2.title ?? s2.runsFailed : given2.reason ?? s2.runsEmpty,
-          ...failed ? { text: given2.text ?? s2.stateFailedText, actionLabel: s2.runsRetry, actionAttribute: "data-kp-runs-retry" } : {}
-        });
-        plate.classList.add(failed ? "kp-runs__failure" : "kp-runs__empty");
-        plate.querySelector(".kp-stateplate__title")?.classList.add(failed ? "kp-runs__failure-title" : "kp-runs__empty-title");
-        plate.querySelector(".kp-stateplate__text")?.classList.add("kp-runs__failure-text");
-        plate.querySelector(".kp-stateplate__action")?.classList.add("kp-runs__retry");
-        note2.append(plate);
-        note2.setAttribute("role", failed ? "alert" : "status");
-      }
-    };
-    const sync3 = () => {
-      draw7();
-      paintNote2();
-      el16.dataset.kpState = state12;
-      if (state12 === "loading" && !busy) {
-        busy = openBusyCard(stage, { words: s2.runsLoading, area: () => [stage], className: "kp-runs__busy", arrive: drawn2 });
-      } else if (state12 !== "loading" && busy) {
-        const b = busy;
-        busy = null;
-        void b.close();
-      }
-      drawn2 = true;
-      const first = state12 === "ready" ? all[0]?.at : void 0;
-      if (first !== void 0 && first !== lastFirst) {
-        if (Number.isFinite(lastFirst)) live4.textContent = s2.runsNext(runMoment(first, zone, el16.lang || void 0));
-        lastFirst = first;
-      } else if (first === void 0) lastFirst = NaN;
-    };
-    const handle = {
-      element: el16,
-      set(times, options = {}) {
-        given2 = options;
-        all = times.map(toRun).filter((r) => r !== null);
-        expanded = expanded && all.length > count2;
-        state12 = all.length === 0 ? "empty" : "ready";
-        sync3();
-      },
-      setState(next2, options = {}) {
-        given2 = { ...given2, ...options };
-        state12 = next2 === "ready" && all.length === 0 ? "empty" : next2;
-        sync3();
-      },
-      runs: () => all.slice(),
-      state: () => state12
-    };
-    HANDLES5.set(el16, handle);
-    const onClick = (event) => {
-      const target = event.target instanceof Element ? event.target : null;
-      if (target?.closest("[data-kp-runs-retry]"))
-        el16.dispatchEvent(new CustomEvent(RUNS_RETRY_EVENT, { bubbles: true, detail: { element: el16 } }));
-    };
-    const onMore = () => {
-      expanded = !expanded;
-      draw7();
-    };
-    el16.addEventListener("click", onClick);
-    button6.addEventListener("click", onMore);
-    const tick6 = Number.isFinite(fixed) || nowOption ? 0 : window.setInterval(() => state12 === "ready" && draw7(), 6e4);
-    const initial = (el16.dataset.kpRunsValues ?? "").split(",").map((v) => v.trim()).filter(Boolean);
-    if (el16.dataset.kpState === "loading") handle.setState("loading");
-    else handle.set(initial);
-    cleanups.push(() => {
-      el16.removeEventListener("click", onClick);
-      button6.removeEventListener("click", onMore);
-      if (tick6) clearInterval(tick6);
-      busy?.remove();
-      HANDLES5.delete(el16);
-      el16.replaceChildren();
-      el16.style.removeProperty("--kp-runs-count");
-      delete el16.dataset.kpRunsAttached;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
+function attachRuns(root = document, options = {}) {
+  return attachAll(root, RUNS, RunsList, options);
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES5, seq6;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
-    init_strings();
-    init_busy_card();
-    init_state_plate();
-    init_weekdays();
-    init_freshness();
-    init_chart();
-    RUNS = "[data-kp-runs]";
-    RUNS_RETRY_EVENT = "kp-runs-retry";
-    RUNS_STATES = /** @type {const} */
-    ["ready", "empty", "loading", "error"];
-    two6 = (n) => String(n).padStart(2, "0");
-    HANDLES5 = /* @__PURE__ */ new WeakMap();
-    seq6 = 0;
+    init_controller();
+    init_controller44();
+    init_values24();
+    init_values24();
+    init_time3();
   }
 });
 
@@ -73260,7 +73418,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -73519,7 +73677,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller44();
+    init_controller45();
     init_choices();
   }
 });
@@ -73583,7 +73741,7 @@ function setGraphOptions(el16, options) {
     else el16.setAttribute(name, value === true ? "" : String(value));
   }
 }
-var init_options6 = __esm({
+var init_options7 = __esm({
   "js/graph/options.js"() {
     "use strict";
   }
@@ -74371,7 +74529,7 @@ var init_draw11 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
-    init_options6();
+    init_options7();
     init_view5();
     init_instance3();
     init_layout3();
@@ -74883,7 +75041,7 @@ var init_attach20 = __esm({
     init_constants38();
     init_instance3();
     init_api26();
-    init_options6();
+    init_options7();
     init_layout3();
     init_draw11();
     init_view5();
@@ -74920,7 +75078,7 @@ var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
     init_constants38();
-    init_options6();
+    init_options7();
     init_layout3();
     init_labels3();
     init_api26();
@@ -75389,7 +75547,7 @@ function fillRow(list, row, item) {
   }
 }
 var mode, among;
-var init_rows7 = __esm({
+var init_rows8 = __esm({
   "js/claim/rows.js"() {
     "use strict";
     init_strings();
@@ -75615,7 +75773,7 @@ var init_decorate = __esm({
     init_state_plate();
     init_constants39();
     init_model8();
-    init_rows7();
+    init_rows8();
   }
 });
 
@@ -75838,7 +75996,7 @@ var init_request2 = __esm({
     init_constants39();
     init_decorate();
     init_model8();
-    init_rows7();
+    init_rows8();
   }
 });
 
@@ -76004,7 +76162,7 @@ var init_attach21 = __esm({
     init_decorate();
     init_model8();
     init_request2();
-    init_rows7();
+    init_rows8();
     init_state27();
   }
 });
@@ -78373,7 +78531,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -78477,7 +78635,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller45();
+    init_controller46();
     init_state28();
     init_state28();
     init_matrix2();
@@ -79854,7 +80012,7 @@ function applyTools(root) {
   search.hidden = !wanted.includes("search");
   bar.hidden = tools.hidden && search.hidden;
 }
-var init_parts11 = __esm({
+var init_parts12 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
@@ -79941,7 +80099,7 @@ function collect(root, reset = false) {
   for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
-var init_rows8 = __esm({
+var init_rows9 = __esm({
   "js/logviewer/rows.js"() {
     "use strict";
     init_strings();
@@ -80097,7 +80255,7 @@ var init_refresh = __esm({
     init_constants42();
     init_model10();
     init_reads();
-    init_rows8();
+    init_rows9();
   }
 });
 
@@ -80241,10 +80399,10 @@ var init_api30 = __esm({
     init_newpill();
     init_levels();
     init_model10();
-    init_parts11();
+    init_parts12();
     init_reads();
     init_refresh();
-    init_rows8();
+    init_rows9();
   }
 });
 
@@ -80450,9 +80608,9 @@ var init_attach24 = __esm({
     init_api30();
     init_constants42();
     init_model10();
-    init_parts11();
+    init_parts12();
     init_reads();
-    init_rows8();
+    init_rows9();
   }
 });
 
