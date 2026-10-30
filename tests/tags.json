@@ -343,6 +343,7 @@
         { "path": "js/markdown.js", "tags": ["@component:feedback"], "why": "a safe markdown reader for release notes [wish-1120]" },
         { "path": "js/job-line.js", "tags": ["@component:feedback"], "why": "one sentence for a job with steps and bytes [wish-1120]" },
         { "path": "js/connection.js", "tags": ["@component:feedback"], "why": "the offline and reconnecting banner [kpadopt5-ops]" },
+        { "path": "js/connection/*.js", "tags": ["@component:feedback"], "why": "the offline and reconnecting banner [kpadopt5-ops]" },
         { "path": "js/auto-refresh.js", "tags": ["@component:data"], "why": "the automatic refresh chooser [kpadopt5-ops]" },
         { "path": "js/auto-refresh/*.js", "tags": ["@component:data"] },
         { "path": "js/master-detail.js", "tags": ["@component:structure"], "why": "a list and its detail that folds on a phone [kpadopt5-ops]" },

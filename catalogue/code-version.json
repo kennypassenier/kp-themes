@@ -30,7 +30,7 @@
             "digest": "c49ba974ac2da58d",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], [data-kp-type-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
-        "js/connection.js": { "digest": "0f479260a75c16d2", "when": "[data-kp-connection]" },
+        "js/connection.js": { "digest": "49db3e413fdee56c", "when": "[data-kp-connection]" },
         "js/console.js": { "digest": "d8c1d38a200c8445", "when": "[data-kp-console]" },
         "js/countdown.js": { "digest": "905c710addaafda6", "when": "[data-kp-countdown], [data-kp-countdown-until]" },
         "js/datatable.js": { "digest": "1be3b502058229e5", "when": "[data-kp-datatable]" },

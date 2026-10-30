@@ -1,11 +1,4 @@
-/** A connection banner. */
-export declare const CONNECTION = "[data-kp-connection]";
-/** Fired when the shown state changed. */
-export declare const CONNECTION_STATE_EVENT = "kp-connection-state";
-/** Fired when a try should be made. */
-export declare const CONNECTION_RETRY_EVENT = "kp-connection-retry";
-/** The states. */
-export declare const CONNECTION_STATES: readonly ['online', 'offline', 'reconnecting', 'back', 'refused'];
+export { CONNECTION, CONNECTION_STATE_EVENT, CONNECTION_RETRY_EVENT, CONNECTION_STATES } from './connection/values.js';
 export type ConnectionState = 'online' | 'offline' | 'reconnecting' | 'back' | 'refused';
 export type ConnectionDetail = {
     /**
@@ -26,6 +19,17 @@ export type ConnectionHandle = {
     state: () => ConnectionState;
     set: (state: ConnectionState, detail?: ConnectionDetail) => void;
 };
+/**
+ * @typedef {'online' | 'offline' | 'reconnecting' | 'back' | 'refused'} ConnectionState
+ * @typedef {object} ConnectionDetail
+ * @property {number} [pending] changes waiting to be sent
+ * @property {string} [why] a sentence from the app, for `refused`
+ * @property {number} [attempt] the number of the try under way
+ * @typedef {object} ConnectionHandle
+ * @property {HTMLElement} element
+ * @property {() => ConnectionState} state
+ * @property {(state: ConnectionState, detail?: ConnectionDetail) => void} set
+ */
 /** The handle of an attached banner. @param {Element} element */
 export declare const connectionOf: (element: Element) => ConnectionHandle | null;
 /**
