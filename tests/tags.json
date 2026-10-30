@@ -128,6 +128,7 @@
             "why": "a changed rule maps to the component its selector names; a rule naming none maps to @sweep and every component in the file"
         },
         { "path": "css/README.md", "none": "the index of the CSS part files; no browser test reads it" },
+        { "path": "js/README.md", "none": "the index of the JavaScript modules and their part files; no browser test reads it" },
         { "path": "css/layout.css", "tags": ["@component:layout"] },
         { "path": "css/utilities.css", "tags": ["@component:utilities"] },
         { "path": "css/tailwind-bridge.css", "none": "no browser test loads it" },
@@ -135,11 +136,26 @@
         { "path": "fonts/**", "tags": ["@component:fonts"] },
 
         { "path": "js/datatable.js", "tags": ["@component:datatable"] },
+        { "path": "js/datatable/*.js", "tags": ["@component:datatable"] },
+        { "path": "js/datatable/attach/*.js", "tags": ["@component:datatable"] },
         { "path": "js/log.js", "tags": ["@component:data"] },
         { "path": "js/progressbar.js", "tags": ["@component:feedback"] },
         { "path": "js/loading-pieces.js", "tags": ["@component:feedback"] },
         {
             "path": "js/motion.js",
+            "tags": [
+                "@component:overlays",
+                "@component:structure",
+                "@component:navigation",
+                "@component:datatable",
+                "@component:feedback",
+                "@component:upload",
+                "@component:combobox",
+                "@component:field"
+            ]
+        },
+        {
+            "path": "js/motion/*.js",
             "tags": [
                 "@component:overlays",
                 "@component:structure",
@@ -178,11 +194,15 @@
         { "path": "js/tiles.js", "tags": ["@component:data"], "why": "tiles of one height across a board [scope-143]" },
         { "path": "js/freshness.js", "tags": ["@component:feedback"], "why": "the ticking freshness line [scope-143]" },
         { "path": "js/chart.js", "tags": ["@component:data"], "why": "the time chart, and a key figure's 24-hour trend [scope-143]" },
+        { "path": "js/chart/*.js", "tags": ["@component:data"], "why": "the time chart, and a key figure's 24-hour trend [scope-143]" },
+        { "path": "js/chart/plot/*.js", "tags": ["@component:data"], "why": "the time chart, and a key figure's 24-hour trend [scope-143]" },
         { "path": "js/menu-button.js", "tags": ["@component:overlays"], "why": "the menu button with its rich menu [scope-143]" },
         { "path": "js/tour.js", "tags": ["@component:overlays"], "why": "the guided tour and its memory [scope-143]" },
         { "path": "js/week.js", "tags": ["@component:data"], "why": "the week agenda [kpadopt-time]" },
         { "path": "js/gantt.js", "tags": ["@component:data"], "why": "the run timeline [kpadopt-time]" },
+        { "path": "js/gantt/*.js", "tags": ["@component:data"], "why": "the run timeline [kpadopt-time]" },
         { "path": "js/sequencer.js", "tags": ["@component:data"], "why": "the editable multi-track timeline [timeline-1029]" },
+        { "path": "js/sequencer/*.js", "tags": ["@component:data"], "why": "the editable multi-track timeline [timeline-1029]" },
         { "path": "js/uptime.js", "tags": ["@component:data"], "why": "the uptime strip [kpadopt4-ideas]" },
         { "path": "js/command.js", "tags": ["@component:data"], "why": "the command block [kpadopt4-ideas]" },
         {
@@ -272,6 +292,7 @@
         },
         { "path": "js/calendar.js", "tags": ["@component:data"], "why": "the month heatmap [scope-143]" },
         { "path": "js/graph.js", "tags": ["@component:data"], "why": "the network graph [scope-143]" },
+        { "path": "js/graph/*.js", "tags": ["@component:data"], "why": "the network graph [scope-143]" },
         { "path": "js/segmented.js", "tags": ["@component:data"], "why": "the segmented control and filter chips [kpadopt-controls]" },
         { "path": "js/toolbar.js", "tags": ["@component:data"], "why": "the list toolbar [kpadopt-controls]" },
         { "path": "js/heat.js", "tags": ["@component:data"], "why": "the heat grid and the matrix [kpadopt2-grids]" },
@@ -294,6 +315,7 @@
         { "path": "js/art.js", "tags": ["@component:data"], "why": "the drawings of an empty state [kpadopt4]" },
         { "path": "js/wheel.js", "tags": ["@component:data"], "why": "a wheel that picks by weight [kpadopt4]" },
         { "path": "js/focus-steps.js", "tags": ["@component:feedback"], "why": "one step at a time with the screen kept on, cook mode [kpadopt4]" },
+        { "path": "js/focus-steps/*.js", "tags": ["@component:feedback"], "why": "one step at a time with the screen kept on, cook mode [kpadopt4]" },
         { "path": "js/timer.js", "tags": ["@component:feedback"], "why": "kitchen timers, named countdowns that keep running [kpadopt4]" },
         { "path": "js/checklist.js", "tags": ["@component:data"], "why": "a checklist whose ticked items sink [kpadopt4]" },
         { "path": "js/row-select.js", "tags": ["@component:data"], "why": "rows ticked with the keyboard and with Shift-click [kpadopt5]" },
@@ -315,6 +337,8 @@
         { "path": "js/colorpicker.js", "tags": ["@component:colorpicker"] },
         { "path": "js/contrast.js", "tags": ["@component:colorpicker"] },
         { "path": "js/sidenav.js", "tags": ["@component:navigation"] },
+        { "path": "js/sidenav/*.js", "tags": ["@component:navigation"] },
+        { "path": "js/sidenav/attach/*.js", "tags": ["@component:navigation"] },
         {
             "path": "js/remember.js",
             "tags": ["@component:navigation", "@component:structure", "@component:datatable"],
@@ -324,6 +348,10 @@
         { "path": "js/overlays.js", "tags": ["@component:overlays", "@component:feedback", "@component:navigation", "@component:data"] },
         {
             "path": "js/components.js",
+            "tags": ["@component:button", "@component:overlays", "@component:feedback", "@component:navigation", "@component:page"]
+        },
+        {
+            "path": "js/components/*.js",
             "tags": ["@component:button", "@component:overlays", "@component:feedback", "@component:navigation", "@component:page"]
         },
         { "path": "js/effects.js", "tags": ["@component:page-effects", "@component:media"] },
@@ -339,6 +367,7 @@
         { "path": "js/diagnostics.js", "tags": ["@component:picker"] },
         { "path": "js/theme-registry.js", "tags": ["@sweep", "@component:picker"], "why": "generated from every theme's tokens" },
         { "path": "js/strings.js", "all": "the dictionary every component and many specs read" },
+        { "path": "js/strings/*.js", "all": "the dictionary every component and many specs read" },
         { "path": "js/auto.js", "all": "attaches every module on every fixture page" },
         { "path": "js/as-of.js", "all": "every late module and every effects hook attaches through it [scope-117]" },
         { "path": "index.js", "tags": ["@component:bundle", "@sweep"] },
