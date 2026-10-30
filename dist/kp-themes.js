@@ -13734,71 +13734,6 @@ function menuPlacement({ button: button6, menu, height, gap, room }) {
   const top = side === "below" ? button6.bottom + gap : button6.top - gap - tall;
   return { left, top, width: capWidth, height: capHeight, side };
 }
-function coveredEdges(view, wrapper, skip) {
-  const doc = view.document;
-  const html = doc.documentElement;
-  const width = html.clientWidth;
-  const height = html.clientHeight;
-  const pad2 = view.getComputedStyle(doc.scrollingElement ?? html);
-  const px5 = (v) => Number.isFinite(parseFloat(v)) ? parseFloat(v) : 0;
-  const box = wrapper.getBoundingClientRect();
-  const midX = Math.min(Math.max(box.left + box.width / 2, 1), width - 1);
-  const midY = Math.min(Math.max(box.top + box.height / 2, 1), height - 1);
-  const barAt = (x, y, along) => {
-    for (const hit of doc.elementsFromPoint(x, y)) {
-      if (skip?.contains(hit)) continue;
-      for (let el16 = (
-        /** @type {Element | null} */
-        hit
-      ); el16 && el16 !== html && el16 !== doc.body; el16 = el16.parentElement) {
-        const { position } = view.getComputedStyle(el16);
-        if (position !== "fixed" && position !== "sticky") continue;
-        if (el16.contains(wrapper) || wrapper.contains(el16)) return null;
-        const r = el16.getBoundingClientRect();
-        return r[along] >= (along === "width" ? width : height) / 2 ? r : null;
-      }
-      return null;
-    }
-    return null;
-  };
-  const stacked = (size2, at, reach3) => {
-    let inset = 0;
-    let first = null;
-    for (const start of [0.5, 8.5, 16.5, 32.5]) if (first = at(start)) break;
-    for (let bar = first, n = 0; bar && n < 4; n += 1) {
-      if (reach3(bar) <= inset + 0.5) break;
-      inset = reach3(bar);
-      bar = inset < size2 ? at(inset + 0.5) : null;
-    }
-    return inset;
-  };
-  const top = stacked(
-    height,
-    (d) => barAt(midX, d, "width"),
-    (bar) => bar.bottom
-  );
-  const bottom = stacked(
-    height,
-    (d) => barAt(midX, height - d, "width"),
-    (bar) => height - bar.top
-  );
-  const left = stacked(
-    width,
-    (d) => barAt(d, midY, "height"),
-    (bar) => bar.right
-  );
-  const right = stacked(
-    width,
-    (d) => barAt(width - d, midY, "height"),
-    (bar) => width - bar.left
-  );
-  return {
-    top: Math.max(top, px5(pad2.scrollPaddingTop)),
-    bottom: Math.max(bottom, px5(pad2.scrollPaddingBottom)),
-    left: Math.max(left, px5(pad2.scrollPaddingLeft)),
-    right: Math.max(right, px5(pad2.scrollPaddingRight))
-  };
-}
 function clipped(wrapper, view) {
   const top = view.document.body;
   for (let el16 = wrapper.parentElement; el16 && el16 !== top; el16 = el16.parentElement) {
@@ -14015,6 +13950,78 @@ var init_items = __esm({
   }
 });
 
+// js/menu-button/covered.js
+function coveredEdges(view, wrapper, skip) {
+  const doc = view.document;
+  const html = doc.documentElement;
+  const width = html.clientWidth;
+  const height = html.clientHeight;
+  const pad2 = view.getComputedStyle(doc.scrollingElement ?? html);
+  const px5 = (v) => Number.isFinite(parseFloat(v)) ? parseFloat(v) : 0;
+  const box = wrapper.getBoundingClientRect();
+  const midX = Math.min(Math.max(box.left + box.width / 2, 1), width - 1);
+  const midY = Math.min(Math.max(box.top + box.height / 2, 1), height - 1);
+  const barAt = (x, y, along) => {
+    for (const hit of doc.elementsFromPoint(x, y)) {
+      if (skip?.contains(hit)) continue;
+      for (let el16 = (
+        /** @type {Element | null} */
+        hit
+      ); el16 && el16 !== html && el16 !== doc.body; el16 = el16.parentElement) {
+        const { position } = view.getComputedStyle(el16);
+        if (position !== "fixed" && position !== "sticky") continue;
+        if (el16.contains(wrapper) || wrapper.contains(el16)) return null;
+        const r = el16.getBoundingClientRect();
+        return r[along] >= (along === "width" ? width : height) / 2 ? r : null;
+      }
+      return null;
+    }
+    return null;
+  };
+  const stacked = (size2, at, reach3) => {
+    let inset = 0;
+    let first = null;
+    for (const start of [0.5, 8.5, 16.5, 32.5]) if (first = at(start)) break;
+    for (let bar = first, n = 0; bar && n < 4; n += 1) {
+      if (reach3(bar) <= inset + 0.5) break;
+      inset = reach3(bar);
+      bar = inset < size2 ? at(inset + 0.5) : null;
+    }
+    return inset;
+  };
+  const top = stacked(
+    height,
+    (d) => barAt(midX, d, "width"),
+    (bar) => bar.bottom
+  );
+  const bottom = stacked(
+    height,
+    (d) => barAt(midX, height - d, "width"),
+    (bar) => height - bar.top
+  );
+  const left = stacked(
+    width,
+    (d) => barAt(d, midY, "height"),
+    (bar) => bar.right
+  );
+  const right = stacked(
+    width,
+    (d) => barAt(width - d, midY, "height"),
+    (bar) => width - bar.left
+  );
+  return {
+    top: Math.max(top, px5(pad2.scrollPaddingTop)),
+    bottom: Math.max(bottom, px5(pad2.scrollPaddingBottom)),
+    left: Math.max(left, px5(pad2.scrollPaddingLeft)),
+    right: Math.max(right, px5(pad2.scrollPaddingRight))
+  };
+}
+var init_covered = __esm({
+  "js/menu-button/covered.js"() {
+    "use strict";
+  }
+});
+
 // js/menu-button/open.js
 function openMenu(wrapper, { focus = "first" } = {}) {
   const s2 = menus.get(wrapper);
@@ -14150,6 +14157,7 @@ var init_open = __esm({
     init_count2();
     init_items();
     init_model();
+    init_covered();
     init_placement();
     decorateButton = (s2) => {
       if (!s2.decorate) return;
@@ -14161,117 +14169,153 @@ var init_open = __esm({
   }
 });
 
+// js/menu-button/controller.js
+var MenuButtonControl;
+var init_controller4 = __esm({
+  "js/menu-button/controller.js"() {
+    "use strict";
+    init_controller();
+    init_constants6();
+    init_items();
+    init_keys3();
+    init_model();
+    init_open();
+    MenuButtonControl = class extends Controller {
+      /** @param {HTMLElement} host @param {Record<string, unknown>} [options] */
+      constructor(host, options) {
+        super(host, options);
+        this.state = /** @type {MenuState} */
+        /** @type {unknown} */
+        null;
+      }
+      connect() {
+        const wrapper = this.host;
+        const { decorate: decorate2, strings } = (
+          /** @type {import('./types.js').MenuButtonOptions} */
+          this.options
+        );
+        const found = menus.get(wrapper);
+        let s2 = found;
+        if (s2) this.join(s2, { decorate: decorate2, strings });
+        else s2 = wireMenu(wrapper, { decorate: decorate2, strings }) ?? void 0;
+        if (!s2) {
+          this.destroy();
+          return;
+        }
+        this.state = s2;
+        this.own(() => menus.delete(wrapper));
+        this.listen(s2.button, "click", () => this.onClick());
+        this.listen(s2.button, "keydown", (event) => this.onButtonKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(s2.menu, "click", (event) => this.onPick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(s2.menu, "keydown", (event) => this.onMenuKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.own(() => closeMenu(wrapper));
+      }
+      /**
+       * Filled before it was attached: the options join now, and the controls already built are handed to `decorate`.
+       * @param {MenuState} s @param {import('./types.js').MenuButtonOptions} options
+       */
+      join(s2, { decorate: decorate2, strings }) {
+        if (decorate2) s2.decorate = decorate2;
+        if (strings) s2.strings = strings;
+        if (!decorate2) return;
+        decorateButton(s2);
+        menuItems(s2).forEach((item, index) => decorateItem(s2, item, index));
+      }
+      onClick() {
+        const { state: state12, host } = this;
+        if (state12.button.getAttribute("aria-disabled") === "true") return;
+        if (state12.open) closeMenu(host);
+        else openMenu(host, { focus: "first" });
+      }
+      /** @param {KeyboardEvent} event */
+      onButtonKey(event) {
+        if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+        event.preventDefault();
+        if (this.state.open) closeMenu(this.host);
+        openMenu(this.host, { focus: event.key === "ArrowUp" ? "last" : "first" });
+      }
+      /** A press on an entry: a disabled one does nothing; any other is announced, and the menu closes unless the page cancels. @param {MouseEvent} event */
+      onPick(event) {
+        const { state: state12, host } = this;
+        const item = (
+          /** @type {HTMLElement | null} */
+          event.target instanceof Element ? event.target.closest(ITEM_ROLES) : null
+        );
+        if (!item || !state12.menu.contains(item)) return;
+        if (item.getAttribute("aria-disabled") === "true") {
+          event.preventDefault();
+          return;
+        }
+        const value = item.dataset.kpValue ?? labelOf(item);
+        const go = host.dispatchEvent(new CustomEvent(MENU_SELECT_EVENT, { bubbles: true, cancelable: true, detail: { item, value } }));
+        if (!go) {
+          event.preventDefault();
+          return;
+        }
+        closeMenu(host, { focus: !item.matches("a[href]") });
+      }
+      /** @param {KeyboardEvent} event */
+      onMenuKey(event) {
+        const { state: state12, host } = this;
+        const items = menuItems(state12);
+        if (!items.length) return;
+        const active = (
+          /** @type {HTMLElement | null} */
+          state12.menu.ownerDocument.activeElement
+        );
+        if (event.key === "Tab") {
+          closeMenu(host, { focus: true });
+          return;
+        }
+        if (event.key === " " && active?.matches("a[href]")) {
+          event.preventDefault();
+          active.click();
+          return;
+        }
+        const to = menuKeyTarget(event, items.indexOf(
+          /** @type {HTMLElement} */
+          active
+        ), items.map(labelOf));
+        if (to == null) return;
+        event.preventDefault();
+        items[to].focus();
+      }
+    };
+  }
+});
+
 // js/menu-button/attach.js
 function attachMenuButtons(root = document, { decorate: decorate2, strings } = {}) {
-  const undo = [];
-  for (
-    const wrapper of
+  const wrappers = (
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(MENU_BUTTON)]
-  ) {
-    if (attached.has(wrapper)) continue;
-    let s2 = menus.get(wrapper);
-    if (s2) {
-      if (decorate2) s2.decorate = decorate2;
-      if (strings) s2.strings = strings;
-      if (decorate2) {
-        decorateButton(s2);
-        menuItems(s2).forEach((item, index) => decorateItem(
-          /** @type {MenuState} */
-          s2,
-          item,
-          index
-        ));
-      }
-    } else s2 = wireMenu(wrapper, { decorate: decorate2, strings }) ?? void 0;
-    if (!s2) continue;
-    const state12 = s2;
-    attached.add(wrapper);
-    const onClick = () => {
-      if (state12.button.getAttribute("aria-disabled") === "true") return;
-      if (state12.open) closeMenu(wrapper);
-      else openMenu(wrapper, { focus: "first" });
-    };
-    const onButtonKey = (event) => {
-      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
-      event.preventDefault();
-      if (state12.open) closeMenu(wrapper);
-      openMenu(wrapper, { focus: event.key === "ArrowUp" ? "last" : "first" });
-    };
-    const onPick = (event) => {
-      const item = (
-        /** @type {HTMLElement | null} */
-        event.target instanceof Element ? event.target.closest(ITEM_ROLES) : null
-      );
-      if (!item || !state12.menu.contains(item)) return;
-      if (item.getAttribute("aria-disabled") === "true") {
-        event.preventDefault();
-        return;
-      }
-      const value = item.dataset.kpValue ?? labelOf(item);
-      const go = wrapper.dispatchEvent(new CustomEvent(MENU_SELECT_EVENT, { bubbles: true, cancelable: true, detail: { item, value } }));
-      if (!go) {
-        event.preventDefault();
-        return;
-      }
-      closeMenu(wrapper, { focus: !item.matches("a[href]") });
-    };
-    const onMenuKey = (event) => {
-      const items = menuItems(state12);
-      if (!items.length) return;
-      const active = (
-        /** @type {HTMLElement | null} */
-        state12.menu.ownerDocument.activeElement
-      );
-      if (event.key === "Tab") {
-        closeMenu(wrapper, { focus: true });
-        return;
-      }
-      if (event.key === " " && active?.matches("a[href]")) {
-        event.preventDefault();
-        active.click();
-        return;
-      }
-      const to = menuKeyTarget(event, items.indexOf(
-        /** @type {HTMLElement} */
-        active
-      ), items.map(labelOf));
-      if (to == null) return;
-      event.preventDefault();
-      items[to].focus();
-    };
-    state12.button.addEventListener("click", onClick);
-    state12.button.addEventListener("keydown", onButtonKey);
-    state12.menu.addEventListener("click", onPick);
-    state12.menu.addEventListener("keydown", onMenuKey);
-    undo.push(() => {
-      closeMenu(wrapper);
-      state12.button.removeEventListener("click", onClick);
-      state12.button.removeEventListener("keydown", onButtonKey);
-      state12.menu.removeEventListener("click", onPick);
-      state12.menu.removeEventListener("keydown", onMenuKey);
-      attached.delete(wrapper);
-      menus.delete(wrapper);
-    });
-  }
+  );
+  const made6 = wrappers.filter((wrapper) => !controllerOf(wrapper, MenuButtonControl)).map((wrapper) => attachOne(wrapper, MenuButtonControl, { decorate: decorate2, strings }));
   for (
     const menu of
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(".kp-popover[popover] > .kp-menu")]
   ) countMenu(menu);
-  return () => undo.splice(0).forEach((off) => off());
+  return () => {
+    for (const control of made6) control?.destroy();
+  };
 }
-var attached;
 var init_attach3 = __esm({
   "js/menu-button/attach.js"() {
     "use strict";
+    init_controller();
     init_constants6();
     init_count2();
-    init_items();
-    init_keys3();
-    init_model();
-    init_open();
-    attached = /* @__PURE__ */ new WeakSet();
+    init_controller4();
   }
 });
 
@@ -15536,7 +15580,7 @@ var init_region = __esm({
 
 // js/auto-refresh/controller.js
 var RefreshController;
-var init_controller4 = __esm({
+var init_controller5 = __esm({
   "js/auto-refresh/controller.js"() {
     "use strict";
     init_controller();
@@ -15881,7 +15925,7 @@ var init_api2 = __esm({
     "use strict";
     init_controller();
     init_constants5();
-    init_controller4();
+    init_controller5();
     refreshOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -16409,7 +16453,7 @@ var init_preview2 = __esm({
 
 // js/theme-picker/controller.js
 var ThemePicker;
-var init_controller5 = __esm({
+var init_controller6 = __esm({
   "js/theme-picker/controller.js"() {
     "use strict";
     init_theme_core();
@@ -16566,7 +16610,7 @@ var init_theme_picker = __esm({
     init_controller();
     init_theme_core();
     init_marks2();
-    init_controller5();
+    init_controller6();
     init_values11();
     init_values11();
     init_markup();
@@ -16772,7 +16816,7 @@ var init_item2 = __esm({
 
 // js/steplist/controller.js
 var StepListController;
-var init_controller6 = __esm({
+var init_controller7 = __esm({
   "js/steplist/controller.js"() {
     "use strict";
     init_controller();
@@ -16858,7 +16902,7 @@ var init_steplist = __esm({
   "js/steplist.js"() {
     "use strict";
     init_controller();
-    init_controller6();
+    init_controller7();
     init_values12();
     init_values12();
     init_build3();
@@ -17597,7 +17641,7 @@ var init_touch = __esm({
 
 // js/hovercard/controller.js
 var HoverCard;
-var init_controller7 = __esm({
+var init_controller8 = __esm({
   "js/hovercard/controller.js"() {
     "use strict";
     init_motion();
@@ -17756,7 +17800,7 @@ var init_hovercard = __esm({
   "js/hovercard.js"() {
     "use strict";
     init_controller();
-    init_controller7();
+    init_controller8();
     init_values14();
   }
 });
@@ -21147,7 +21191,7 @@ var init_core3 = __esm({
 
 // js/nav-fold/controller.js
 var NavFold;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/nav-fold/controller.js"() {
     "use strict";
     init_menu_button();
@@ -21257,7 +21301,7 @@ var init_nav_fold = __esm({
   "js/nav-fold.js"() {
     "use strict";
     init_controller();
-    init_controller8();
+    init_controller9();
     init_read4();
     init_read4();
     init_plan();
@@ -21513,7 +21557,7 @@ var init_dialog = __esm({
 
 // js/tabbar/controller.js
 var TabbarController;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/tabbar/controller.js"() {
     "use strict";
     init_controller();
@@ -21637,7 +21681,7 @@ var init_tabbar = __esm({
   "js/tabbar.js"() {
     "use strict";
     init_controller();
-    init_controller9();
+    init_controller10();
     init_badge();
     init_badge();
     init_count3();
@@ -21887,7 +21931,7 @@ var init_sync2 = __esm({
 
 // js/card-state/controller.js
 var CardStateController;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/card-state/controller.js"() {
     "use strict";
     init_controller();
@@ -21935,7 +21979,7 @@ var init_card_state = __esm({
   "js/card-state.js"() {
     "use strict";
     init_controller();
-    init_controller10();
+    init_controller11();
     init_values15();
     init_values15();
     init_sync2();
@@ -23824,7 +23868,7 @@ var init_list = __esm({
 
 // js/statusrow/controller.js
 var CALM_OPTIONS, ROWS, StatusList;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/statusrow/controller.js"() {
     "use strict";
     init_controller();
@@ -23956,7 +24000,7 @@ var init_statusrow = __esm({
   "js/statusrow.js"() {
     "use strict";
     init_controller();
-    init_controller11();
+    init_controller12();
     init_state6();
     init_state6();
     init_list();
@@ -24207,7 +24251,7 @@ var init_values17 = __esm({
 
 // js/facets/controller.js
 var SAY_FIRST_MS, SAY_MS, FacetGroup;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/facets/controller.js"() {
     "use strict";
     init_controller();
@@ -24298,7 +24342,7 @@ var init_facets = __esm({
   "js/facets.js"() {
     "use strict";
     init_controller();
-    init_controller12();
+    init_controller13();
     init_values17();
     init_values17();
     init_pattern();
@@ -26225,7 +26269,7 @@ var init_paint3 = __esm({
 
 // js/passkeys/controller.js
 var reasonOf, PasskeysController;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/passkeys/controller.js"() {
     "use strict";
     init_controller();
@@ -26470,7 +26514,7 @@ var init_api6 = __esm({
     "use strict";
     init_controller();
     init_constants11();
-    init_controller13();
+    init_controller14();
   }
 });
 
@@ -27000,7 +27044,7 @@ async function copyText2(button6, text) {
   }, COPIED_MS2);
 }
 var COPIED_MS2, ThreadControl;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/thread/controller.js"() {
     "use strict";
     init_strings();
@@ -27137,7 +27181,7 @@ var init_thread = __esm({
   "js/thread.js"() {
     "use strict";
     init_controller();
-    init_controller14();
+    init_controller15();
     init_options2();
     init_options2();
   }
@@ -27470,7 +27514,7 @@ var init_parts2 = __esm({
 
 // js/stackbar/controller.js
 var Stackbar;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/stackbar/controller.js"() {
     "use strict";
     init_hovercard();
@@ -27608,7 +27652,7 @@ var init_stackbar = __esm({
   "js/stackbar.js"() {
     "use strict";
     init_controller();
-    init_controller15();
+    init_controller16();
     init_values18();
     init_values18();
     init_math2();
@@ -27786,7 +27830,7 @@ var init_values19 = __esm({
 
 // js/bullets/controller.js
 var BulletList;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/bullets/controller.js"() {
     "use strict";
     init_controller();
@@ -27964,7 +28008,7 @@ var init_bullets = __esm({
   "js/bullets.js"() {
     "use strict";
     init_controller();
-    init_controller16();
+    init_controller17();
     init_values19();
     init_values19();
     init_tone();
@@ -28874,7 +28918,7 @@ var init_loading = __esm({
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
@@ -29017,7 +29061,7 @@ var init_attach6 = __esm({
     init_controller();
     init_locale();
     init_constants12();
-    init_controller17();
+    init_controller18();
   }
 });
 
@@ -29296,7 +29340,7 @@ var init_core6 = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
     init_keys6();
@@ -29583,7 +29627,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller18();
+    init_controller19();
     init_rows2();
     init_rows2();
   }
@@ -29911,7 +29955,7 @@ var init_draw5 = __esm({
 
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS, SOURCE_EVENTS, SelectionBar;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/selection-bar/controller.js"() {
     "use strict";
     init_controller();
@@ -30159,7 +30203,7 @@ var init_api7 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_controller19();
+    init_controller20();
     init_draw5();
     init_model2();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
@@ -30191,7 +30235,7 @@ var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
     init_controller();
-    init_controller19();
+    init_controller20();
     init_model2();
     init_model2();
     init_api7();
@@ -30503,7 +30547,7 @@ var init_rows3 = __esm({
 
 // js/newpill/controller.js
 var NewPill;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/newpill/controller.js"() {
     "use strict";
     init_live_options();
@@ -30667,7 +30711,7 @@ var init_newpill = __esm({
   "js/newpill.js"() {
     "use strict";
     init_controller();
-    init_controller20();
+    init_controller21();
     init_values20();
     init_values20();
   }
@@ -31592,7 +31636,7 @@ var init_validation = __esm({
 
 // js/json-field/controller.js
 var JsonFieldController;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/json-field/controller.js"() {
     "use strict";
     init_controller();
@@ -31834,7 +31878,7 @@ var init_api9 = __esm({
     "use strict";
     init_controller();
     init_constants13();
-    init_controller21();
+    init_controller22();
   }
 });
 
@@ -32302,7 +32346,7 @@ var init_list2 = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS2, RequestInspector;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -32427,7 +32471,7 @@ var init_api10 = __esm({
     init_card_state();
     init_controller();
     init_strings();
-    init_controller22();
+    init_controller23();
     init_format2();
     init_list2();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
@@ -32459,7 +32503,7 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller22();
+    init_controller23();
     init_format2();
     init_format2();
     init_api10();
@@ -33204,7 +33248,7 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
@@ -33269,7 +33313,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller23();
+    init_controller24();
     init_state11();
     init_state11();
     init_spin();
@@ -33999,7 +34043,7 @@ var init_digits = __esm({
 
 // js/countdown/controller.js
 var CountdownController;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/countdown/controller.js"() {
     "use strict";
     init_controller();
@@ -34233,7 +34277,7 @@ var init_api11 = __esm({
     "use strict";
     init_controller();
     init_constants16();
-    init_controller24();
+    init_controller25();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -35977,7 +36021,7 @@ var init_run2 = __esm({
 
 // js/timer/controller.js
 var TimerList, TimerStarters;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/timer/controller.js"() {
     "use strict";
     init_controller();
@@ -36101,7 +36145,7 @@ var init_attach7 = __esm({
     "use strict";
     init_controller();
     init_constants17();
-    init_controller25();
+    init_controller26();
   }
 });
 
@@ -37028,7 +37072,7 @@ var init_api13 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
@@ -37175,7 +37219,7 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller26();
+    init_controller27();
     init_state14();
     init_state14();
     init_api13();
@@ -37339,7 +37383,7 @@ var init_paint5 = __esm({
 
 // js/quantity/controller.js
 var RELEASE_EVENTS, QuantityControl;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/quantity/controller.js"() {
     "use strict";
     init_controller();
@@ -37502,7 +37546,7 @@ var init_quantity = __esm({
     "use strict";
     init_controller();
     init_values();
-    init_controller27();
+    init_controller28();
     init_math();
     init_paint5();
     init_values();
@@ -37623,7 +37667,7 @@ function watchToolbars(root) {
   return () => watch2.destroy();
 }
 var HANDLED3, toolbarOf, ToolbarWatch;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/toolbar/controller.js"() {
     "use strict";
     init_controller();
@@ -37740,7 +37784,7 @@ function attachToolbars(root = document) {
 var init_toolbar = __esm({
   "js/toolbar.js"() {
     "use strict";
-    init_controller28();
+    init_controller29();
     init_values22();
     init_active();
   }
@@ -39832,7 +39876,7 @@ var init_core8 = __esm({
 
 // js/listbox/controller.js
 var ListboxController;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/listbox/controller.js"() {
     "use strict";
     init_core8();
@@ -40005,7 +40049,7 @@ function createListbox(options) {
 var init_listbox = __esm({
   "js/listbox.js"() {
     "use strict";
-    init_controller29();
+    init_controller30();
     init_scroll2();
     init_values9();
     init_match();
@@ -40365,7 +40409,7 @@ var init_tags = __esm({
 
 // js/combobox/controller.js
 var ComboboxControl;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/combobox/controller.js"() {
     "use strict";
     init_listbox();
@@ -40526,7 +40570,7 @@ var init_attach10 = __esm({
     "use strict";
     init_controller();
     init_constants8();
-    init_controller30();
+    init_controller31();
   }
 });
 
@@ -43602,7 +43646,7 @@ function partsOf4(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -43787,7 +43831,7 @@ var init_attach12 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller31();
+    init_controller32();
   }
 });
 
@@ -48308,7 +48352,7 @@ var init_core10 = __esm({
 
 // js/upload/controller.js
 var UploadZone;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/upload/controller.js"() {
     "use strict";
     init_motion();
@@ -48451,7 +48495,7 @@ var init_upload = __esm({
   "js/upload.js"() {
     "use strict";
     init_controller();
-    init_controller32();
+    init_controller33();
     init_values24();
     init_values24();
     init_accepts();
@@ -48660,7 +48704,7 @@ var init_view2 = __esm({
 
 // js/wizard/controller.js
 var WizardController;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/wizard/controller.js"() {
     "use strict";
     init_validate();
@@ -48760,7 +48804,7 @@ var init_attach14 = __esm({
   "js/wizard/attach.js"() {
     "use strict";
     init_controller();
-    init_controller33();
+    init_controller34();
     init_values25();
   }
 });
@@ -49152,7 +49196,7 @@ var init_layout2 = __esm({
 
 // js/gridlayout/controller.js
 var MovableGrid;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/gridlayout/controller.js"() {
     "use strict";
     init_controller();
@@ -49328,7 +49372,7 @@ var init_gridlayout = __esm({
   "js/gridlayout.js"() {
     "use strict";
     init_controller();
-    init_controller34();
+    init_controller35();
     init_values26();
     init_values26();
     init_layout2();
@@ -49936,7 +49980,7 @@ var init_paint6 = __esm({
 
 // js/calendar/controller.js
 var WATCHED7, CalendarController;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -50190,7 +50234,7 @@ var init_api15 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller35();
+    init_controller36();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -57202,7 +57246,7 @@ var init_view3 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view3();
@@ -57351,7 +57395,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller36();
+    init_controller37();
     init_values27();
     init_values27();
   }
@@ -57961,7 +58005,7 @@ var init_info = __esm({
 
 // js/uptime/controller.js
 var PIN_SLACK, TRACK, UptimeControl;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/uptime/controller.js"() {
     "use strict";
     init_constants27();
@@ -58146,7 +58190,7 @@ var init_attach18 = __esm({
     init_controller();
     init_hovercard();
     init_constants27();
-    init_controller37();
+    init_controller38();
   }
 });
 
@@ -58686,7 +58730,7 @@ var init_draw11 = __esm({
 
 // js/timer-disc/controller.js
 var TimerDisc;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/timer-disc/controller.js"() {
     "use strict";
     init_live_options();
@@ -58815,7 +58859,7 @@ var init_timer_disc = __esm({
     "use strict";
     init_controller();
     init_register3();
-    init_controller38();
+    init_controller39();
     init_values29();
     init_values29();
     init_share();
@@ -59247,7 +59291,7 @@ var init_panel2 = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -59328,7 +59372,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller39();
+    init_controller40();
     init_values30();
     init_values30();
   }
@@ -59550,7 +59594,7 @@ var init_keys12 = __esm({
 
 // js/compare/controller.js
 var Compare;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/compare/controller.js"() {
     "use strict";
     init_load();
@@ -59679,7 +59723,7 @@ var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_controller();
-    init_controller40();
+    init_controller41();
     init_values31();
     init_values31();
     init_keys12();
@@ -60683,7 +60727,7 @@ var init_post = __esm({
 
 // js/flash/controller.js
 var FlashButton;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/flash/controller.js"() {
     "use strict";
     init_run3();
@@ -60749,7 +60793,7 @@ var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
     init_controller();
-    init_controller41();
+    init_controller42();
     init_values33();
     init_values33();
   }
@@ -61075,7 +61119,7 @@ var init_parts8 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -61362,7 +61406,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller42();
+    init_controller43();
     init_parts8();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -61484,7 +61528,7 @@ var init_text3 = __esm({
 
 // js/connection/controller.js
 var ConnectionBanner;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/connection/controller.js"() {
     "use strict";
     init_controller();
@@ -61711,7 +61755,7 @@ var init_connection = __esm({
   "js/connection.js"() {
     "use strict";
     init_controller();
-    init_controller43();
+    init_controller44();
     init_values34();
     init_values34();
     connectionOf = (element) => controllerOf(element, ConnectionBanner)?.handle ?? null;
@@ -62703,7 +62747,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -62943,7 +62987,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller44();
+    init_controller45();
     init_values36();
     init_values36();
   }
@@ -63284,7 +63328,7 @@ var init_draw12 = __esm({
 
 // js/page-contents/controller.js
 var ContentsList;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
     init_values37();
@@ -63402,7 +63446,7 @@ var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
     init_controller();
-    init_controller45();
+    init_controller46();
     init_values37();
     init_values37();
     init_slug();
@@ -64089,7 +64133,7 @@ var init_keys13 = __esm({
 
 // js/timefield/controller.js
 var WATCHED8, TimeController;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -64296,7 +64340,7 @@ var init_api20 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller46();
+    init_controller47();
     init_field();
     init_state20();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -64597,7 +64641,7 @@ var init_core18 = __esm({
 
 // js/weekdays/controller.js
 var WeekdayPicker;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/weekdays/controller.js"() {
     "use strict";
     init_segmented();
@@ -64712,7 +64756,7 @@ var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
     init_controller();
-    init_controller47();
+    init_controller48();
     init_values38();
     init_values38();
     init_names();
@@ -64957,7 +65001,7 @@ var init_core19 = __esm({
 
 // js/quiet-hours/controller.js
 var QuietHours;
-var init_controller48 = __esm({
+var init_controller49 = __esm({
   "js/quiet-hours/controller.js"() {
     "use strict";
     init_timefield();
@@ -65062,7 +65106,7 @@ var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
     init_controller();
-    init_controller48();
+    init_controller49();
     init_values39();
     init_values39();
     init_value();
@@ -66064,7 +66108,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller49 = __esm({
+var init_controller50 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -66223,7 +66267,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller49();
+    init_controller50();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -66654,7 +66698,7 @@ var init_view4 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller50 = __esm({
+var init_controller51 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -66795,7 +66839,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller50();
+    init_controller51();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -67257,7 +67301,7 @@ var init_keys14 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED9, RatingController;
-var init_controller51 = __esm({
+var init_controller52 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -67527,7 +67571,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller51();
+    init_controller52();
     init_build14();
     init_commit();
     init_math4();
@@ -67815,7 +67859,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller52 = __esm({
+var init_controller53 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -68048,7 +68092,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller52();
+    init_controller53();
     init_list4();
     init_render4();
   }
@@ -69491,7 +69535,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller53 = __esm({
+var init_controller54 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -69682,7 +69726,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller53();
+    init_controller54();
     init_group6();
     init_group6();
   }
@@ -69971,7 +70015,7 @@ var init_view5 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller54 = __esm({
+var init_controller55 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
     init_values41();
@@ -70078,7 +70122,7 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller54();
+    init_controller55();
     init_values41();
     init_values41();
     init_level();
@@ -70373,7 +70417,7 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller55 = __esm({
+var init_controller56 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
@@ -70557,7 +70601,7 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller55();
+    init_controller56();
     init_values42();
     init_values42();
     init_order();
@@ -70822,7 +70866,7 @@ var init_draw13 = __esm({
 
 // js/path-trace/controller.js
 var Trace;
-var init_controller56 = __esm({
+var init_controller57 = __esm({
   "js/path-trace/controller.js"() {
     "use strict";
     init_shortcuts();
@@ -70909,7 +70953,7 @@ var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
     init_controller();
-    init_controller56();
+    init_controller57();
     init_values43();
     init_values43();
     init_states();
@@ -72563,7 +72607,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller57 = __esm({
+var init_controller58 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -72816,7 +72860,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller57();
+    init_controller58();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -73162,7 +73206,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller58 = __esm({
+var init_controller59 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -73467,7 +73511,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller58();
+    init_controller59();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -73916,7 +73960,7 @@ function launchViewer(options) {
   return viewer.handle;
 }
 var serial7, Viewer;
-var init_controller59 = __esm({
+var init_controller60 = __esm({
   "js/viewer/controller.js"() {
     "use strict";
     init_controller();
@@ -74050,7 +74094,7 @@ function openViewer(options) {
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
-    init_controller59();
+    init_controller60();
     init_values46();
   }
 });
@@ -75713,7 +75757,7 @@ var init_core25 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP2, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller60 = __esm({
+var init_controller61 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build15();
@@ -75943,7 +75987,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller60();
+    init_controller61();
     init_values47();
     init_values47();
   }
@@ -76111,7 +76155,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq4, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller61 = __esm({
+var init_controller62 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -76340,7 +76384,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller61();
+    init_controller62();
     init_fields();
     init_fields();
   }
@@ -76680,7 +76724,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller62 = __esm({
+var init_controller63 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -76931,7 +76975,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller62();
+    init_controller63();
   }
 });
 
@@ -77255,7 +77299,7 @@ var init_note4 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller63 = __esm({
+var init_controller64 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note4();
@@ -77366,7 +77410,7 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller63();
+    init_controller64();
     init_values48();
     init_values48();
     init_time3();
@@ -77694,7 +77738,7 @@ var init_panel4 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS6, SnoozePicker;
-var init_controller64 = __esm({
+var init_controller65 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -77953,7 +77997,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller64();
+    init_controller65();
     init_choices();
   }
 });
@@ -80689,7 +80733,7 @@ var init_state27 = __esm({
 
 // js/claim/controller.js
 var LIVE_OPTIONS, ClaimList;
-var init_controller65 = __esm({
+var init_controller66 = __esm({
   "js/claim/controller.js"() {
     "use strict";
     init_controller();
@@ -80859,7 +80903,7 @@ var init_attach23 = __esm({
     "use strict";
     init_controller();
     init_constants39();
-    init_controller65();
+    init_controller66();
   }
 });
 
@@ -83227,7 +83271,7 @@ var init_actions7 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS2, QrControl;
-var init_controller66 = __esm({
+var init_controller67 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -83331,7 +83375,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller66();
+    init_controller67();
     init_state28();
     init_state28();
     init_matrix2();
@@ -86618,8 +86662,8 @@ if (typeof document !== "undefined") {
     }
   }
   const start = () => {
-    const attached2 = attachAll2();
-    attached2.ready.then(() => document.documentElement.setAttribute(READY_ATTRIBUTE, attached2.modules.join(" ")));
+    const attached = attachAll2();
+    attached.ready.then(() => document.documentElement.setAttribute(READY_ATTRIBUTE, attached.modules.join(" ")));
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
   else start();
