@@ -1,0 +1,208 @@
+/* @part: bullet-rows: Bullet rows */
+    /* --- Bullet rows: a value against a threshold ----------------------- */
+
+    /* One row per item: a lead (a mark), the label and a detail line, the
+     * exact figure, and a meter whose tick is the threshold. The columns are
+     * shared by every row (fix-64): the figure column is as wide as the widest
+     * figure, so every bar begins and ends in the same place. Under 34rem the
+     * bar takes its own line. js/bullets.js builds it. Knobs:
+     * --kp-bullets-gap, --kp-bullets-bar-min (7rem). */
+    .kp-bullets {
+        container: kp-bullets / inline-size;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-bullets__list {
+        display: grid;
+        grid-template-columns: [lead] auto [what] minmax(0, 1fr) [bar] minmax(var(--kp-bullets-bar-min, 7rem), 1.2fr) [figure] auto;
+        row-gap: var(--kp-bullets-gap, var(--kp-space-sm, 0.5rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-bullets__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        column-gap: var(--kp-space-md, 0.75rem);
+        padding-block: 0.25rem;
+        padding-inline: 0.25rem;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        color: inherit;
+        text-decoration: none;
+    }
+
+    /* A row that leads somewhere: the label is the link (or button) and its
+     * press area is stretched over the whole row. */
+    .kp-bullets__row:has(.kp-bullets__link) {
+        position: relative;
+    }
+
+    .kp-bullets__link {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .kp-bullets__link::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+    }
+
+    .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: var(--muted);
+    }
+
+    .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-bullets__lead {
+        grid-column: lead;
+        display: inline-flex;
+    }
+
+    .kp-bullets__what {
+        grid-column: what;
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .kp-bullets__label {
+        overflow: hidden;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-bullets__detail {
+        overflow: hidden;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-bullets__bar {
+        grid-column: bar;
+        --kp-meter-height: var(--kp-bullets-bar-height, 0.5rem);
+    }
+
+    /* A row with nothing to measure keeps the bar's room, so every row has
+     * one rhythm and a waiting row is as tall as the row it stands for. */
+    .kp-bullets__bar-none {
+        grid-column: bar;
+        visibility: hidden;
+    }
+
+    .kp-bullets__figure {
+        grid-column: figure;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        padding-inline: 0.35em;
+        border-radius: 2px;
+    }
+
+    .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* A row with no figure to measure (no record): a dash, no bar. */
+    .kp-bullets__row[data-kp-bullets-unknown] .kp-bullets__figure {
+        color: var(--muted-foreground);
+        font-weight: 400;
+    }
+
+    .kp-bullets__wait--what {
+        grid-column: what;
+        display: grid;
+        inline-size: 70%;
+    }
+
+    .kp-bullets__wait--what > .kp-bullets__wait:first-child {
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-bullets__wait--what > .kp-bullets__wait:last-child {
+        inline-size: 60%;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-bullets__wait--figure {
+        grid-column: figure;
+        inline-size: 3rem;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-bullets__wait--lead {
+        grid-column: lead;
+    }
+
+    /* Nothing due, or failed: the package's empty state (each theme's own)
+     * over the list's whole footprint, the height it had with its rows (the
+     * script writes it; a list that never had rows takes
+     * --kp-bullets-state-min), the words and a normal-size Retry centred in
+     * it (Kenny, 2026-10-16: failed and empty fill the component's full
+     * normal size). The rows' grid never stretches the button. */
+    .kp-bullets__note {
+        box-sizing: border-box;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-bullets-state-min, 7.5rem);
+        margin: 0;
+        text-align: center;
+    }
+
+    .kp-bullets__note > :is(.kp-bullets__note-title, .kp-bullets__note-text) {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-bullets__note > .kp-bullets__retry {
+        align-self: center;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-bullets (max-width: 34rem) {
+        .kp-bullets__list {
+            grid-template-columns: [lead] auto [what] minmax(0, 1fr) [figure] auto;
+        }
+
+        .kp-bullets__bar,
+        .kp-bullets__bar-none {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            margin-block: 0.25rem 0.125rem;
+        }
+    }
+

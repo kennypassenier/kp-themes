@@ -1,0 +1,7 @@
+/* @part: ticking-number: A number that ticks to its new value */
+    /* --- A number that ticks to its new value [kpadopt4-data] ----------- */
+
+    [data-kp-tick] {
+        font-variant-numeric: tabular-nums;
+    }
+

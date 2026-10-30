@@ -1,0 +1,210 @@
+/* @part: base: opening comment, knobs and base */
+    /* @kp-soft/themes — css/synthwave-register.css
+   The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
+   register. Scoped to [data-theme='synthwave'] and inert elsewhere;
+   opt-in, imported after themes.css. The approved concept demo ("Outrun
+   Horizon", 2026-09-08) is the reference for every value here, and
+   docs/archive/RESEARCH_2026-09.md §25 is where each mechanism was measured.
+
+   Cyberpunk is diagonal and day; synthwave is horizontal and night. What
+   this file does, in order: the knobs and the texture; the type; the
+   hooks of S45 — the chrome headline with its tracking wipe and shine,
+   the neon tube that a <mark> switches on, the laser line under a
+   heading, the horizon as divider; the hero's sky, sun and floor; the
+   navbar; the buttons; the fields; and one answer per component root
+   (TH124). The reveals have their rest state here and their motion in
+   js/effects.js; without the script every one of them stands at rest.
+
+   Colour discipline (DI9): nothing here names a colour. Every paint is a
+   token or a relative colour of one. The neon rule of Synthwave '84 is
+   kept throughout: the core of a glowing element is near-white and the
+   colour lives in its shadow, so every core passes contrast on its own.
+
+   Nothing here flickers. The references' CRT flicker (133/s) and the sun
+   that snaps once a second were measured and refused (DI5); the floor
+   drifts one cell per six seconds and never changes luminance. */
+
+    [data-theme='synthwave'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 31.75rem;
+        /* The configuration surface [AR43], the demo's values as defaults. */
+        --kp-nav-enter: 520ms;
+        --kp-nav-enter-delay: 80ms;
+        --kp-reveal-threshold: 0.6;
+        --kp-reveal-stagger: 420ms;
+        --kp-redact-stagger: 160ms;
+        --kp-classified-delay: 900ms;
+        --kp-wipe: 720ms;
+        --kp-rule-draw: 900ms;
+        --kp-rule-weight: 2px;
+        --kp-tracking: 700ms;
+        --kp-shine: 1400ms;
+        --kp-tube-on: 1100ms;
+        --kp-sun-cut: 360ms;
+        --kp-floor-drift: 6s;
+        --kp-floor-cell: 7vw 6vw;
+        --kp-horizon-height: 56px;
+        --kp-sun-size: min(38vmin, 340px);
+        --kp-boot: 550ms;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+           and leaves a theme that declares none at rest. */
+        --kp-reveal-headline: tracking;
+        --kp-reveal-emphasis: tube;
+        --kp-reveal-rule: laser;
+        --kp-arrival: boot;
+        /* The OSD face for labels, identifiers and timestamps is the theme's
+           mono token (VT323); the data face is Share Tech Mono, under Q1's
+           name. */
+        --kp-osd: var(--theme-font-mono);
+        --kp-mono: 'KP Tech Mono', 'Share Tech Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+        /* The pink that reads as text: the hero's second ink, 8.9:1 on the
+           void and 6.9:1 on the tape (the reference pink fails at 4.34). */
+        --kp-pink-text: var(--surface-hero-fg-2);
+        --kp-hairline: hsl(from var(--kp-pink-text) h s l / 0.25);
+        /* The neon rest stacks (Synthwave '84): a near-white core, the
+           colour in the shadow. */
+        --kp-tube-pink:
+            0 0 2px var(--sidebar-background), 0 0 6px hsl(from var(--primary) h s l / 0.7), 0 0 14px hsl(from var(--primary) h s l / 0.55),
+            0 0 28px hsl(from var(--primary) h s l / 0.3);
+        --kp-tube-cyan:
+            0 0 2px var(--sidebar-background), 0 0 4px hsl(from var(--accent) h s l / 0.8), 0 0 10px hsl(from var(--accent) h s l / 0.5),
+            0 0 22px hsl(from var(--accent) h s l / 0.3);
+        --kp-tube-laser: 0 0 2px var(--sidebar-background), 0 0 8px hsl(from var(--warning-foreground) h s l / 0.6);
+        --kp-core: hsl(from var(--foreground) h 20% 98%);
+        /* The stripe of the '84 active tab: pink to cyan, 4px. */
+        --kp-stripe: linear-gradient(to right, var(--kp-stripe-from), var(--kp-stripe-to));
+        /* The sky, the sun and the chrome, derived from the tokens. Every
+           stop of the sky is dark enough for lavender text (4.5:1 and up),
+           because the hero's ground is measured on the rendered page. */
+        --kp-sky-1: hsl(from var(--surface-hero-bg) calc(h - 26) 69% 15%);
+        --kp-sky-2: hsl(from var(--surface-hero-bg) calc(h + 22) 68% 22%);
+        --kp-sky-3: hsl(from var(--primary) h 65% 32%);
+        --kp-sun-top: hsl(from var(--warning-foreground) calc(h - 5) s calc(l - 9));
+        --kp-sun-bottom: hsl(from var(--primary) calc(h - 34) s l);
+        --kp-sun-glow: hsl(from var(--destructive) h 95% 52%);
+        --kp-grid: hsl(from var(--kp-pink-text) h s l / 0.55);
+        --kp-chrome-1: hsl(from var(--accent) 205 65% 48%);
+        --kp-chrome-2: hsl(from var(--foreground) 205 40% 88%);
+        --kp-chrome-3: hsl(from var(--primary) 330 43% 24%);
+        --kp-chrome-4: hsl(from var(--primary) 330 38% 54%);
+
+        /* The texture [DI9, AR46]: a static VHS screen-door — a 2px row
+           raster and a 3px RGB stripe (nightride.fm's overlay) — at DI9's
+           ceiling and not a hair over. It never moves. */
+        --fx-texture:
+            linear-gradient(hsl(from var(--sidebar-background) h s l / 0) 50%, hsl(from var(--sidebar-background) h s l / 0.06) 50%),
+            linear-gradient(
+                90deg,
+                hsl(from var(--destructive) h s l / 0.03),
+                hsl(from var(--success-foreground) h s l / 0.01),
+                hsl(from var(--chart-4) h s l / 0.03)
+            );
+        --fx-texture-size: 100% 2px, 3px 100%;
+        --fx-texture-opacity: 1;
+
+        /* The decided grammar [Kenny, 2026-10-07, research/synthwave-character
+           and research/synthwave-anchor; themes/synthwave/CHARACTER.md §0].
+           Durations are beats of 225 ms: contact 1, an opening 2, a live
+           change 3, an arrival or a leave 4, the spinner 8. Bodies glide on
+           the sunrise curve (the tube leads, the bodies follow a beat behind);
+           light switches in hard steps. */
+        --kp-sw-beat: 225ms;
+        --kp-sw-sun: cubic-bezier(0.65, 0, 0.35, 1);
+        /* js/motion.js reads its caps from the root: a close of two beats and
+           a size glide of two beats are not cut short (its defaults, 600 and
+           480 ms, are other themes'). */
+        --kp-close-max: 450ms;
+        --kp-size-max: 450ms;
+        /* The page horizon [the anchor, 2026-10-07 21:21]: one tube for the
+           page on the header's foot, the floor under it; every plate carries
+           1 px of its light on its top edge and the sides run down from the
+           colours of the stripe they touch. */
+        --kp-sw-floor: 1.35rem;
+        --kp-sw-floor-page: 8.5rem;
+        --kp-sw-side: 3px;
+        --kp-sw-rail: 3px;
+        /* Focus is two tubes, top and foot, plus a hairline each side [G14,
+           DI2]: a near-white tube with a dark channel beside it above and
+           below (the light and the dark, never colour alone), the sides a
+           hairline of the ring's colour. `-in` lives inside the part (a
+           framed control, a row, a cell, which a scroller or a neighbour
+           could cut); `-out` stands outside it (a link, a plate, a mark small
+           enough that the rails would cover it). */
+        --kp-sw-rails-in:
+            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core), inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core), inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            inset 1px 0 0 0 var(--focus-ring), inset -1px 0 0 0 var(--focus-ring);
+        --kp-sw-rails-out:
+            0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core), 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast),
+            0 var(--kp-sw-rail) 0 0 var(--kp-core), 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast), -1px 0 0 0 var(--focus-ring),
+            1px 0 0 0 var(--focus-ring);
+        --kp-stripe-from: var(--primary);
+        --kp-stripe-to: var(--accent);
+        --kp-sw-tube: 0 0 2px var(--sidebar-background), 0 0 6px hsl(from var(--primary) h s l / 0.6), 0 0 14px hsl(from var(--primary) h s l / 0.3);
+        --kp-sw-tube-up:
+            0 0 2px var(--sidebar-background), 0 0 7px hsl(from var(--primary) h s l / 0.95), 0 0 18px hsl(from var(--primary) h s l / 0.65),
+            0 0 34px hsl(from var(--primary) h s l / 0.4);
+        --kp-sw-laser: 0 0 4px var(--primary), 0 0 10px hsl(from var(--primary) h s l / 0.8), 0 0 22px hsl(from var(--primary) h s l / 0.45);
+        /* The sun's ramp as the bar draws it, looping: pink, laser yellow, pink. */
+        --kp-sw-ramp-loop: linear-gradient(
+            90deg,
+            var(--kp-sun-bottom),
+            var(--primary) 25%,
+            var(--kp-sun-top) 50%,
+            var(--primary) 75%,
+            var(--kp-sun-bottom)
+        );
+        /* The sun's slab, its stripes bands in the void's colour. */
+        --kp-sw-void: var(--sidebar-background);
+        --kp-sw-sun-v: linear-gradient(
+            180deg,
+            var(--kp-sun-top),
+            color-mix(in oklab, var(--kp-sun-top) 45%, var(--kp-sun-bottom)),
+            var(--kp-sun-bottom)
+        );
+        --kp-sw-sun-cuts: linear-gradient(
+            to bottom,
+            transparent 0 52%,
+            var(--kp-sw-void) 52% 58%,
+            transparent 58% 68%,
+            var(--kp-sw-void) 68% 76%,
+            transparent 76% 84%,
+            var(--kp-sw-void) 84% 93%,
+            transparent 93%
+        );
+        /* The grid floor under a plate's horizon: lines closing toward the
+           horizon and lines converging on its centre (G7). */
+        --kp-sw-floor-lines:
+            linear-gradient(hsl(from var(--primary) h s l / 0.32) 0 0) 0 16% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 38% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.36) 0 0) 0 66% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
+    }
+
+    /* ── Type ──────────────────────────────────────────────────────────── */
+
+    [data-theme='synthwave'] h1,
+    [data-theme='synthwave'] h2,
+    [data-theme='synthwave'] h3 {
+        font-family: var(--theme-font-display);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    /* Microlabels: the OSD face, pink, with the tape prefix. */
+    [data-theme='synthwave'] .microlabel {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+        line-height: 1;
+    }
+
+    [data-theme='synthwave'] .microlabel::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+

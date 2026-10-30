@@ -1,0 +1,87 @@
+/* @part: version-jump: Version jump chip */
+@layer kp.components {
+    /* --- Version jump chip: "10.11 → 12.1" [kpadopt6-ops] ---
+ * `.kp-badge.kp-badge--version` (js/version-delta.js). The old version is struck and lighter, the new one strong and, when it
+ * has release notes, a link; a jump that needs care adds the word "major" with a "!" in a ring, so the risk is never colour
+ * alone, and takes the warning tone (a version that went back, the destructive one). A quiet chip stays plain on purpose.
+ * Long versions break after a dot, a hyphen or an underscore and the chip grows to hold them; on a phone it wraps under its
+ * name as one unit. Knobs [KT6]: --kp-version-gap (0.4em), --kp-version-from (how much lighter the old version is, 70%). */
+    .kp-badge--version {
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: var(--kp-version-gap, 0.4em);
+        row-gap: 0;
+        max-inline-size: 100%;
+        box-sizing: border-box;
+        font-variant-numeric: tabular-nums;
+        /* A version breaks only where it was given a place to (after a dot, a hyphen, an underscore or a colon), never in a number. */
+        overflow-wrap: normal;
+    }
+
+    .kp-badge--version[data-kp-size='md'] {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* A part wider than the chip breaks inside the word rather than past the chip's edge; a normal version never gets there. */
+    .kp-version__from,
+    .kp-version__to {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-version__from {
+        color: color-mix(in oklab, currentColor var(--kp-version-from, 70%), transparent);
+        font-weight: 400;
+        text-decoration: line-through;
+    }
+
+    .kp-version__from[data-kp-raw] {
+        text-decoration: none;
+    }
+
+    .kp-version__arrow {
+        flex: none;
+    }
+
+    .kp-version__to {
+        font-weight: 700;
+        color: inherit;
+    }
+
+    a.kp-version__to {
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-version__level {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+        font-weight: 700;
+    }
+
+    .kp-version__bang {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.25em;
+        block-size: 1.25em;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        font-size: 0.85em;
+        line-height: 1;
+    }
+
+    .kp-badge--version[data-kp-state='error'],
+    .kp-badge--version[data-kp-level='none'][data-kp-state='empty'] {
+        border: 1px dashed var(--border-strong);
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    .kp-version__bone {
+        display: block;
+        inline-size: 6rem;
+        block-size: 1em;
+    }
+}
+

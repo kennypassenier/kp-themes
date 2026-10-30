@@ -1,0 +1,208 @@
+/* @part: data: Data */
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-table {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-table th {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border-bottom: 1px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-table td {
+        border-color: var(--kp-hairline);
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows, the status line's
+       small spinner stays out, so it holds back no arrival of the layer (lesson 23). */
+    [data-theme='cyberpunk'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-datatable {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-diff {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        border-color: var(--kp-hairline);
+    }
+
+    /* The step list is HUD readout rows: square corners, a hairline frame,
+       and a hard 3px bar on the side of the step that is running or has
+       failed (the bar is in the plate's own colour, the shape carries it). */
+    [data-theme='cyberpunk'] .kp-steplist {
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__item {
+        border-radius: 0;
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__item:is([data-state='running'], [data-state='failed']) {
+        border-inline-start-width: 3px;
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__time {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline {
+        border-left: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline__marker {
+        border-radius: 0;
+        transform: rotate(45deg) scale(0.75);
+    }
+
+    [data-theme='cyberpunk'] .kp-timeline__when {
+        font-family: var(--kp-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-tree {
+        font-family: var(--kp-mono);
+    }
+
+    /* A branch's children glide open and shut like the accordion (js/motion.js glideGroup()):
+       shutting, the state is already `aria-expanded="false"` and the group is kept drawn until
+       the glide is over. */
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The accordion [gap-12]: mono capitals, spaced like its tabs, with the signal yellow for what is open. */
+    [data-theme='cyberpunk'] .kp-accordion__summary {
+        font-family: var(--kp-mono);
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-reorder {
+        border-radius: 0;
+    }
+
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-breadcrumb {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-breadcrumb li + li::before {
+        content: '//';
+        color: var(--accent);
+    }
+
+    [data-theme='cyberpunk'] .kp-pagination {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-pagination a,
+    [data-theme='cyberpunk'] .kp-pagination button {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-tab {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-tab[aria-selected='true'] {
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-wizard {
+        border-radius: 0;
+    }
+
+    /* The step labels; written for `.kp-wizard__step`, a class the package
+       never renders, so it matched nothing until 2026-10-03. */
+    [data-theme='cyberpunk'] .kp-wizard__steps li {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='cyberpunk'] .kp-combobox,
+    [data-theme='cyberpunk'] .kp-datepicker,
+    [data-theme='cyberpunk'] .kp-colorpicker,
+    [data-theme='cyberpunk'] .kp-palette {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-combobox__list,
+    [data-theme='cyberpunk'] .kp-palette__list {
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-datepicker__day[aria-selected='true'] {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+
+    /* The day grid keeps the height of a six-week month, so a month of four or five weeks does
+       not shorten the panel under the pointer [lesson 9]. */
+    [data-theme='cyberpunk'] .kp-datepicker__grid[data-kp-view='days'] {
+        min-block-size: 15.125rem;
+        align-content: start;
+    }
+
+    [data-theme='cyberpunk'] .kp-colorpicker__swatch {
+        border-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-palette {
+        font-family: var(--kp-mono);
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='cyberpunk'] ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    [data-theme='cyberpunk'] ::-webkit-scrollbar-track {
+        background: var(--background);
+    }
+
+    [data-theme='cyberpunk'] ::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border: 2px solid var(--background);
+    }
+
+    [data-theme='cyberpunk'] ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+    }
+

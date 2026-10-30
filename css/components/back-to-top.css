@@ -1,0 +1,45 @@
+/* @part: back-to-top: Back to top */
+    /* --- Back to top [feat-page-1] ---------------------------------------
+       The control that appears once the reader is a way down and takes them
+       back. It leans on the scroll offset built for the sticky bar: landing
+       at the top of a page whose bar covers the first line is not arriving.
+
+       Visibility is `visibility` rather than the hidden attribute, so the
+       button can fade rather than blink — and `visibility: hidden` keeps it
+       out of the tab order just as surely, which is the part that matters
+       for a control that is not there yet. */
+
+    .kp-to-top {
+        position: fixed;
+        inset-block-end: calc(var(--kp-to-top-offset, 1.5rem) + var(--kp-tabbar-height, 0px));
+        inset-inline-end: var(--kp-to-top-offset, 1.5rem);
+        z-index: var(--kp-to-top-layer, 50);
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .kp-to-top[data-kp-to-top-shown] {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* The glyph an empty control gets [gap-12]. Written the documented way —
+       a button with only a name — the control painted as an empty box in
+       every theme. js/components.js puts this element in a button that has
+       nothing of its own, and takes it out again on detach; the arrow is
+       drawn here rather than typed there, like the tree's twisty, so a theme
+       or a consumer changes it with one knob. Its own element rather than
+       the button's pseudo-elements, because those are the two surfaces a
+       register paints a button on [scope-16]. */
+    .kp-to-top__glyph::before {
+        content: var(--kp-glyph-to-top, '↑');
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-to-top {
+            transition:
+                opacity var(--fx-duration, 150ms) var(--fx-ease, ease),
+                visibility var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+

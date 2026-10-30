@@ -1,0 +1,151 @@
+/* @part: the-navbar: The navbar */
+    /* ── The navbar: a title strip, hairline-bounded ──────────────────── */
+
+    [data-theme='blueprint'] .kp-nav-wrap {
+        background: var(--background);
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='blueprint'] .kp-nav {
+        background: var(--background);
+        position: relative;
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
+    }
+
+    [data-theme='blueprint'] .kp-nav__brand {
+        font-family: var(--theme-font-mono);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--foreground);
+        font-size: 0.95rem;
+        text-decoration: none;
+    }
+
+    [data-theme='blueprint'] .kp-nav__brand::before {
+        content: '⌗ ';
+        color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-nav__link {
+        color: var(--muted-foreground);
+        text-decoration: none;
+        border-block-end: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+    }
+
+    [data-theme='blueprint'] .kp-nav__link:hover,
+    [data-theme='blueprint'] .kp-nav__link:focus-visible,
+    [data-theme='blueprint'] .kp-nav__link[aria-current],
+    [data-theme='blueprint'] .kp-nav__links > li:focus-within > .kp-nav__link {
+        color: var(--foreground);
+        border-block-end-color: var(--border-strong);
+        background: none;
+    }
+
+    [data-theme='blueprint'] .kp-nav__link[aria-haspopup]::after {
+        content: ' ▾';
+        font-size: 0.7em;
+        color: var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-nav__link--lang {
+        margin-inline-start: 0.5rem;
+        border-inline-start: 1px solid var(--border);
+        padding-inline-start: 0.7rem;
+    }
+
+    [data-theme='blueprint'] .kp-nav__link--cta {
+        margin-inline-start: auto;
+        color: var(--primary-foreground);
+        background: var(--primary);
+        border: 1px solid var(--primary);
+        border-radius: 2px;
+        padding-inline: 0.9rem;
+        font-weight: 600;
+    }
+
+    [data-theme='blueprint'] .kp-nav__link--cta:hover,
+    [data-theme='blueprint'] .kp-nav__link--cta:focus-visible {
+        color: var(--background);
+        background: var(--foreground);
+        border-color: var(--foreground);
+    }
+
+    /* The dropdown, redrawn as a title block [KT14]: no filled panel, no
+       chamfer, no shadow — it sits on the page's own ground inside one
+       hairline border, with a cyan rule across the top the way a drawing's
+       corner names the sheet. Items are separated by hairlines with mono
+       01/02/03 leaders (CSS counters); pointed at, a link takes the menu
+       entry's own hover (witness lines and a ruler, below), never a wash. */
+    [data-theme='blueprint'] .kp-nav__menu {
+        background: var(--background);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: none;
+        padding-block: 0.35rem;
+        min-width: 12rem;
+        counter-reset: kp-menu-item;
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    /* A menu with a caption (data-kp-menu-label) keeps the caption in this
+       place: the rule would otherwise paint the caption's box as a solid bar. */
+    [data-theme='blueprint'] .kp-nav__menu:not([data-kp-menu-label])::before {
+        content: '';
+        display: block;
+        block-size: 1px;
+        margin-block-end: 0.35rem;
+        background: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-nav__menu li {
+        margin: 0;
+        counter-increment: kp-menu-item;
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='blueprint'] .kp-nav__menu li:last-child {
+        border-block-end: none;
+    }
+
+    [data-theme='blueprint'] .kp-nav__menu a {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5em;
+        padding-inline: 0.6rem;
+        color: var(--foreground);
+        text-decoration: none;
+        border-radius: 0;
+    }
+
+    [data-theme='blueprint'] .kp-nav__menu a::before {
+        content: '0' counter(kp-menu-item);
+        flex: none;
+        font-family: var(--theme-font-mono);
+        font-size: 0.66rem;
+        color: var(--muted-foreground);
+    }
+
+    /* The link's ground never changes: hover and focus are the witness lines and
+       the ruler (see the menu entry's hover, shared below); the keyboard's ring
+       is the package's. */
+    [data-theme='blueprint'] .kp-nav__menu a:is(:hover, :focus-visible, :active) {
+        background: none;
+        color: var(--foreground);
+    }
+

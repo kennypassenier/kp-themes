@@ -1,0 +1,156 @@
+/* @part: activity-feed: Loading is the lintel hoisted */
+    /* ── Loading is the lintel hoisted [G10; Kenny, 2026-10-07 23:44,
+       "loading = hoist-lintel"]. While a part waits, the place its reading
+       will stand is a well in the ink line, and in it one beam as wide as
+       the well, on two cables, is hoisted in four hard lifts, held, let go
+       to fall free on the fall curve and left to rest: 12 units, 1200 ms.
+       The well is the skeleton itself, a loading meter's track, and a strip
+       at the foot of a busy panel, button, card, menu entry or calendar;
+       its words stand above it. The lintel is three gradient layers on a
+       picture twice the well's height, so a lift is one number: the
+       picture's vertical position, 100 % at rest (beam on the floor) to
+       161.6 % (the beam 61.6 % of the well up, as the demo's -280 % of a
+       22 % beam). Standing still it rests on the floor. ── */
+    [data-theme='brutalism'] .kp-skeleton,
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before,
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+    }
+
+    /* The skeleton lines: a well of one line's height on a 3 px footprint,
+       two units apart. */
+    [data-theme='brutalism'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        block-size: 1rem;
+        overflow: clip;
+    }
+
+    [data-theme='brutalism']
+        .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)
+        + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.75rem;
+    }
+
+    [data-theme='brutalism'] .kp-skeleton:is(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        overflow: clip;
+    }
+
+    /* A strip well at the foot of a busy part. */
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        ) {
+        --kp-sig-br-well: 1rem;
+        position: relative;
+    }
+
+    /* A small part takes a small well, so its words stay readable above it. */
+    [data-theme='brutalism'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+        --kp-sig-br-well: 0.75rem;
+    }
+
+    /* A button is one line high and its label fills it: its well is a strip
+       along the foot of its own box, inside the button's line, in the
+       padding under the capitals, so nothing hangs out of it, nothing
+       follows it differently and the button does not grow when it is busy;
+       the label stays uncovered. */
+    [data-theme='brutalism'] .kp-button.kp-button[aria-busy='true'][aria-busy='true'] {
+        --kp-sig-br-well: 0.5rem;
+    }
+
+    [data-theme='brutalism']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        block-size: var(--kp-sig-br-well);
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        border-block-end: 0;
+        pointer-events: none;
+    }
+
+    /* The two plates that carry a busy spinner are slabs [G7], with room at
+       the foot for the well. */
+    [data-theme='brutalism'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+        padding-block-end: calc(var(--kp-space-md, 1rem) + var(--kp-sig-br-well));
+    }
+
+    /* A loading meter is its own well: the track's blocks give way to it. */
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-meter-walls: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-skeleton,
+        [data-theme='brutalism']
+            :is(
+                .kp-datatable__busy-panel,
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-button[aria-busy='true'],
+                .kp-card[aria-busy='true'],
+                .kp-calendar--busy-whole > .kp-calendar__busy
+            )::before,
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+
+        /* The lines of a skeleton stand two units apart. */
+        [data-theme='brutalism'] .kp-skeleton:nth-child(2) {
+            animation-delay: 200ms;
+        }
+
+        [data-theme='brutalism'] .kp-skeleton:nth-child(3) {
+            animation-delay: 400ms;
+        }
+    }
+
+    /* Four hard lifts in half the loop (the first at once), a unit's hold,
+       then let go to fall free on the fall curve, and rest. */
+    @keyframes kp-sig-brutalism-hoist {
+        0% {
+            background-position-y: 100%;
+            animation-timing-function: steps(4, jump-start);
+        }
+
+        50%,
+        58.333% {
+            background-position-y: 161.6%;
+        }
+
+        58.333% {
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+
+        75%,
+        100% {
+            background-position-y: 100%;
+        }
+    }
+

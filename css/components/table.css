@@ -1,0 +1,106 @@
+/* @part: table: Table */
+    /* --- Table [TH3] ----------------------------------------------------- */
+
+    .kp-table-wrap {
+        /* The table scrolls inside its own box; the page does not scroll
+     * sideways because of it [DI11]. Reaching that scrollbar without a
+     * mouse is TH95's repair, and it is not written here: the attributes
+     * that make this box a named region come from components/table.jsx
+     * and js/tables.js, because a `tabindex` is markup, not style. */
+        overflow-x: auto;
+
+        /* The size everything below this reads [TH96, AR24]. A table that
+     * falls into cards because the WINDOW is narrow is wrong in every
+     * layout that is not the whole window — a 400 px column on a 1280 px
+     * page kept the table shape and scrolled. The query asks the box the
+     * table actually lives in instead.
+     *
+     * `container-type: inline-size` applies inline-axis containment, so
+     * the element no longer sizes to its contents. Measured before and
+     * after, in Chromium 141 and Firefox 145, at the build of R3:
+     * normal block flow 500 px -> 500 px, and inside `.kp-datatable`
+     * (a column flex container, the shipped shape) 500 px -> 500 px.
+     * A wrapper the consumer has put in a SHRINK-TO-FIT box does move:
+     * as a flex-row item 279/328 px -> 0, as an inline-block 207/244 px
+     * -> 0, in an auto grid track 389/414 px -> 250 px. The user guide
+     * says so, and `tests/tables.spec.mjs` holds the two shapes the
+     * package draws itself. */
+        container: kp-table / inline-size;
+        /* A floor for the consumer whose layout collapses the wrapper
+     * [R3-CQ, KT6]. Containment means this box no longer sizes to its
+     * contents, so in a shrink-to-fit parent — a flex row, an
+     * inline-block — it goes to zero. Measured while deciding this: no
+     * value restores the natural width, because the contents are
+     * precisely what stopped counting. `100%` gives the whole parent,
+     * `min-content` gives zero. So this is a floor and not a repair, and
+     * `auto` — the initial value in every context — makes the default a
+     * true no-op. */
+        min-inline-size: var(--kp-table-wrap-min, auto);
+    }
+
+    /* Two ways a cell can hold a value that does not fit [TH96].
+ *
+ * `.kp-cell-break` is for identifiers: a 70-character key with no space
+ * in it is one unbreakable word, and one such word in one row widens the
+ * whole table past its container. `.kp-cell-truncate` is for prose: one
+ * line, an ellipsis, and the value still whole in the cell — a screen
+ * reader reads it, find-in-page finds it, a copy takes it, and both
+ * channels put it in the `title` for the pointer.
+ *
+ * `--kp-cell-truncate-max` is a suggestion rather than a limit, and it
+ * is there for a measured reason: under the automatic table layout a
+ * `max-inline-size` on a `<td>` does not cap the cell — asked for 12rem
+ * it came out 416 px wide in a 500 px container — but it does stop a
+ * `white-space: nowrap` cell from making its column as wide as the whole
+ * sentence and pushing the table out of its wrapper. Without it the
+ * table simply grows and nothing is ever clipped, which is the first cut
+ * of this class, measured red. A hard cap needs `table-layout: fixed` or
+ * a width on the column. */
+    .kp-cell-break {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .kp-cell-truncate {
+        max-inline-size: var(--kp-cell-truncate-max, 12rem);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-table th,
+    .kp-table td {
+        /* The row height is the package's, in every theme [scope-80]: a cell's
+     * block size is a floor in a table (a taller value still grows the
+     * row), with one line height, so a face's own
+     * ascent and descent no longer decide how tall a row is.
+     * --kp-row-height is a step above --kp-control-height, so a field
+     * edited in its cell fits and the density mode brings rows down with
+     * the controls. The inline padding has no step equal to 0.625rem, so it
+     * keeps its literal and a knob of its own [TH94, TH105]. */
+        box-sizing: border-box;
+        block-size: var(--kp-row-height, calc(var(--kp-control-height, 2.25rem) + 0.25rem));
+        /* A quarter rem keeps a wrapped value off the row's rules and leaves
+     * a one-line row at its height (1.25 lines of text in 2.5rem). */
+        padding: var(--kp-table-cell-block, var(--kp-space-xs, 0.25rem)) var(--kp-table-cell-inline, 0.625rem);
+        line-height: var(--kp-control-line-height, 1.25);
+        text-align: start;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .kp-table thead th {
+        border-bottom: 1px solid var(--border-strong);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-table tbody tr:hover {
+        background: var(--muted);
+    }
+

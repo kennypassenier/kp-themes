@@ -1,0 +1,215 @@
+/* @part: the-anchors-keyframes-0a: 1 · The anchor's keyframes (§0a, G1-G4, G12) */
+    /* ── 1 · The anchor's keyframes (§0a, G1-G4, G12) ──────────────────── */
+
+    /* The part (A, A2): swung down from its top-start corner from 120 ms of
+       the 560 (21.43 %), out of nothing; the curve is the element's
+       (--kp-sig-pa-land), so each interval lands. `-out` is the same frames
+       under a second name, played `reverse` for a close (lessons 8, 44). */
+    @keyframes kp-sig-pastel-stuck-in {
+        0%,
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-pastel-stuck-out {
+        0%,
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            opacity: 0;
+        }
+    }
+
+    /* The same for a part placed by measuring it as it opens (the combobox's
+       list, a popover, a menu: js/top-layer.js, js/menu-button.js): its
+       first, unseen frame stands at rest, so the measurement reads it where
+       it rests. */
+    @keyframes kp-sig-pastel-stuck-placed-in {
+        0% {
+            opacity: 0;
+        }
+
+        0.1%,
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-pastel-stuck-placed-out {
+        0% {
+            opacity: 0;
+        }
+
+        0.1%,
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            opacity: 0;
+        }
+    }
+
+    /* The pass (A, A2): from 18 px further along the misregistration line
+       to its rest, out of nothing, in the first 440 of the 560 (78.57 %). */
+    @keyframes kp-sig-pastel-pass-in {
+        0% {
+            translate: calc(18px * var(--kp-sig-pa-dir, 1)) 16px;
+            opacity: 0;
+        }
+
+        78.5714%,
+        100% {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-pass-out {
+        0% {
+            translate: calc(18px * var(--kp-sig-pa-dir, 1)) 16px;
+            opacity: 0;
+        }
+
+        78.5714%,
+        100% {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+
+    /* A part that draws its own plate and pass (B): the swing without the
+       fade, and the two clocks as numbers its plate, its words and its pass
+       read. */
+    @keyframes kp-sig-pastel-stuck-plate-in {
+        0% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+            --kp-sig-pa-pass: 0;
+        }
+
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-stuck-plate-out {
+        0% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+            --kp-sig-pa-pass: 0;
+        }
+
+        21.4286% {
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    /* The side navigation lands in its own column (Kenny, 2026-10-14:
+       toggling it moves only the sidebar itself, nothing may cover the page
+       beside it): the two clocks and the 8 px drop of the stuck plate, no
+       turn, since a turn round its top corner swings its foot over the page.
+       `-out` is the same frames, played `reverse` for the close. */
+    @keyframes kp-sig-pastel-sidenav-in {
+        0%,
+        21.4286% {
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        0% {
+            --kp-sig-pa-pass: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-sidenav-out {
+        0%,
+        21.4286% {
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        0% {
+            --kp-sig-pa-pass: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    /* The clocks alone, on a holder whose parts read them (the alarm, the
+       busy table's layer): the holder itself does not move. */
+    @keyframes kp-sig-pastel-pass-host-in {
+        0% {
+            --kp-sig-pa-ink: 0;
+            --kp-sig-pa-pass: 0;
+        }
+
+        21.4286% {
+            --kp-sig-pa-ink: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-pass-host-out {
+        0% {
+            --kp-sig-pa-ink: 0;
+            --kp-sig-pa-pass: 0;
+        }
+
+        21.4286% {
+            --kp-sig-pa-ink: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    /* The thumbtack (G12, Kenny's leave of 2026-10-14): from above the page,
+       larger (nearer the eye), out of nothing, pushed in on the landing (its
+       overshoot is the small press), after the part has landed; it comes
+       out first. */
+    @keyframes kp-sig-pastel-tack-in {
+        from {
+            translate: -50% -16px;
+            scale: 1.75;
+            opacity: 0;
+            box-shadow: 8px 10px 0 transparent;
+        }
+    }
+
+    @keyframes kp-sig-pastel-tack-out {
+        from {
+            translate: -50% -16px;
+            scale: 1.75;
+            opacity: 0;
+            box-shadow: 8px 10px 0 transparent;
+        }
+    }
+

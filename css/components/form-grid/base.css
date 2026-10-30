@@ -1,0 +1,461 @@
+/* @part: form-grid: Form grid */
+    /* --- Form grid: one set of column tracks for every row ---------------
+
+    The way to lay out a form, a settings list, a key-value panel and the
+    buttons that act on them (Kenny, 2026-10-19 06:43: "Gebruik het grid en
+    align deftig verticaal!"; the second column of seven settings sections
+    was not uniform and "Send test" stood off the line of "Format",
+    "Minify"). Alignment is not left to each page: every row is a subgrid of
+    one grid, so label, control, value and actions are four columns that run
+    through every row and every block inside it.
+
+        label | control | value | actions
+
+    - label: as wide as the longest label (fit-content, at most
+      --kp-formgrid-label-max, 40 %); never narrower than
+      --kp-formgrid-label-min (0, 14rem with data-kp-formgrid-label="wide").
+    - control: --kp-formgrid-control (3fr of what the label and the
+      actions leave; a length caps it instead). A field, select,
+      combobox, textarea or secret fills the track; a short control
+      (stepper, time, number, date) takes one fixed step,
+      --kp-formgrid-short (14rem); a switch or a checkbox keeps its size.
+      So every control starts on one edge and ends on one of two.
+    - value: --kp-formgrid-value (2fr), for a hint, a default, a source.
+    - actions: as wide as its widest button group, buttons at its end.
+
+    Every row aligns its cells on the first baseline (the label's first
+    line, the text in a field, a button's word), or on the centre with
+    data-kp-formgrid-align="center". A row of buttons
+    (`.kp-formgrid__row--buttons`) is centred and puts its buttons on the
+    same tracks: buttons under the fields start where the fields start, the
+    row's own action stands in the actions column.
+
+    Inside a form grid, `.kp-formrows`, `.kp-kv` and `.kp-formgrid__group`
+    become subgrids of it, so a key-value panel, a form and a row of
+    buttons in one grid share their columns without hand work.
+
+    A row whose label has a note under it is centred on the label block.
+    Under 36rem of the grid's own width the rows stay on the tracks, laid
+    out for a phone: label and action on one line, the control under them,
+    the value under that, a fact beside its value; with
+    data-kp-formgrid-stack="always" every row reads top to bottom in one
+    column; "never" keeps the columns.
+    Options are attributes, read by CSS alone, so changing one re-lays the
+    grid at once: data-kp-formgrid-label (fit | wide), data-kp-formgrid-align
+    (baseline | center), data-kp-formgrid-stack (auto | always | never),
+    data-kp-formgrid-lines (none | lines). Knobs: --kp-formgrid-gap (the md
+    step, between rows), --kp-formgrid-column-gap (the lg step),
+    --kp-formgrid-label-min, --kp-formgrid-label-max, --kp-formgrid-control,
+    --kp-formgrid-value, --kp-formgrid-short, --kp-formgrid-line-pad. */
+    .kp-formgrid {
+        --kp-formgrid-tracks:
+            [label-start] fit-content(var(--kp-formgrid-label-max, 40%))
+            [label-end control-start] minmax(0, var(--kp-formgrid-control, 3fr))
+            [control-end value-start] minmax(0, var(--kp-formgrid-value, 2fr))
+            [value-end actions-start] auto
+            [actions-end];
+        container: kp-formgrid / inline-size;
+        display: grid;
+        grid-template-columns: var(--kp-formgrid-tracks);
+        row-gap: var(--kp-formgrid-gap, var(--kp-space-md, 0.75rem));
+        column-gap: var(--kp-formgrid-column-gap, var(--kp-space-lg, 1rem));
+        align-items: first baseline;
+        margin: 0;
+        padding: 0;
+        min-inline-size: 0;
+        /* The grid fills the page column (Kenny, 2026-10-25, "pages use full width" [width-fill-1026]; it was capped at 60rem
+           after 2026-10-19 17:20, facts: "Zo veel verspilling van plek"). The grid with nothing that needs the width is
+           compact (below) and keeps hints and actions beside their rows; a page that wants the old cap sets
+           --kp-formgrid-max: 60rem. */
+        max-inline-size: var(--kp-formgrid-max, none);
+    }
+
+    /* A grid that holds a refresh bar gives its control track the chooser's width: at 3fr the segments (509 px for six choices) got
+       474 px of a 1011 px grid and "Other…" stood cut off under the read line [HL 144]. Zero specificity, so a page's own
+       --kp-formgrid-control still wins. */
+    :where(.kp-formgrid:has(.kp-refresh)) {
+        --kp-formgrid-control: max-content;
+    }
+
+    /* A grid with nothing that needs the width (no wide block: a code block, a JSON field, a text area, a refresh bar, a cell
+       that spans) is compact [formgrid-compact-1019]: its tracks are as wide as what they hold, so a hint follows its control at the
+       column gap and an action follows its row, and the room left over is one filler track at the end that nothing stands in
+       (Kenny, 2026-10-19 17:20: the hint at x 544 beside a time field that ends at x 410; "Zo veel verspilling van plek").
+       A grid with a wide block keeps the stretching tracks above, held at --kp-formgrid-max. The fold under 36rem spans
+       every row to the last line (-1), so the filler is part of the row there. */
+    .kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill)) {
+        --kp-formgrid-tracks:
+            [label-start] fit-content(var(--kp-formgrid-label-max, 40%))
+            [label-end control-start] fit-content(var(--kp-formgrid-control-max, 28rem))
+            [control-end value-start] fit-content(var(--kp-formgrid-value-max, 20rem))
+            [value-end actions-start] auto
+            [actions-end filler-start] minmax(0, 1fr)
+            [filler-end];
+        /* The same without the filler: a group that stands beside another is as wide as its tracks. */
+        --kp-formgrid-tracks-bare:
+            [label-start] fit-content(var(--kp-formgrid-label-max, 40%))
+            [label-end control-start] fit-content(var(--kp-formgrid-control-max, 28rem))
+            [control-end value-start] fit-content(var(--kp-formgrid-value-max, 20rem))
+            [value-end actions-start] auto
+            [actions-end filler-start filler-end];
+        max-inline-size: none;
+    }
+
+    /* A field has a width of its own in a compact grid (the track is as wide as its widest cell): --kp-formgrid-field, at most
+       38 % of the grid's width, so a narrow grid is not forced wider than itself. */
+    .kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill))
+        :is(.kp-formgrid__control, .kp-formrow__control)
+        > :is(.kp-field__input:not(.kp-field__input--short, [type='number'], [type='time'], [type='date']), select:not(.kp-field__input--short), .kp-secret, .kp-combobox, .kp-type-confirm) {
+        min-inline-size: min(var(--kp-formgrid-field, 18rem), 38cqi);
+    }
+
+    /* A meter in a control track has a width of its own: it holds no content, so the track gave it 0 px [CHA 18]. */
+    :is(.kp-formgrid__control, .kp-formrow__control) > .kp-meter:not(.kp-meter--inline) {
+        inline-size: 100%;
+        min-inline-size: min(var(--kp-formgrid-field, 18rem), 38cqi);
+    }
+
+    /* A row of buttons in a compact grid stays on one line: a subgrid row measured at the control track's minimum width let the
+       buttons wrap, and the group kept the height of the wrapped line (58 px of empty card under "Run now") [formgrid-compact-1019]. */
+    @container kp-formgrid (min-width: 36rem) {
+        .kp-formgrid.kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill)) .kp-formgrid__buttons {
+            flex-wrap: nowrap;
+        }
+
+        .kp-formgrid:not(:has([data-kp-formgrid-span], .kp-jsonfield, .kp-code, textarea, .kp-refresh, .kp-formrow--wide, .kp-attention, .kp-problems, .kp-command, .kp-segmented--block, .kp-formgrid__fill)) .kp-formgrid__buttons > .kp-button {
+            white-space: nowrap;
+        }
+    }
+
+    /* Groups side by side [formgrid-columns-1019]. A grid whose children are all groups (`.kp-formgrid__group`: facts and
+       settings, say) stands them side by side when the panel is wide enough for all of them, sharing the width as equal columns (each at least as wide as its own tracks, which start at the column's start and never stretch): js/forms.js
+       (attachFormgridColumns) measures what each group needs on its own tracks and writes `data-kp-formgrid-wide` on the grid
+       while they fit. Each group is then a grid of its own with the grid's tracks, as wide as it needs, `--kp-formgrid-group-gap`
+       apart, all starting at the top. Without the attribute the groups stand under each other on the grid's shared tracks, so
+       every label, value and button starts on one edge. `data-kp-formgrid-columns="never"` keeps them under each other. */
+    .kp-formgrid[data-kp-formgrid-wide] {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(max-content, 1fr);
+        justify-content: stretch;
+        align-items: start;
+        column-gap: var(--kp-formgrid-group-gap, var(--kp-space-2xl, 2rem));
+        max-inline-size: none;
+    }
+
+    .kp-formgrid[data-kp-formgrid-wide] > .kp-formgrid__group {
+        grid-column: auto;
+        grid-template-columns: var(--kp-formgrid-tracks-bare, var(--kp-formgrid-tracks));
+        justify-content: start;
+        align-items: first baseline;
+        column-gap: var(--kp-formgrid-column-gap, var(--kp-space-lg, 1rem));
+    }
+
+    .kp-formgrid[data-kp-formgrid-label='wide'] {
+        --kp-formgrid-label-min: 14rem;
+    }
+
+    /* Form grids that share rows [gapform-1019; HTTPSwitchboard 31]. A form grid is a size container (its fold reads its
+       own width), and a size container is layout-contained, so it could never be a subgrid of a page grid: two settings
+       cards side by side could not put "Source" beside "Source", and the page carried the form grid's tracks by hand.
+       `data-kp-formgrid-stage` holds the container instead (the same name, kp-formgrid, so every rule of the grid folds on the
+       stage's width) and lays its cards side by side, each at least --kp-formgrid-stage-min (24rem) wide, one under the
+       other when they do not fit; then a card is the stage's width, and the fold is its own again. A form grid in it with `data-kp-formgrid-rows="subgrid"` is no
+       container: it spans --kp-formgrid-rows rows of the stage (attachFormgridStages in js/forms.js writes the count of
+       the longest card; a page may set it) and takes them as a subgrid, so row N of every card has one height. Its blocks
+       (.kp-kv, .kp-formrows, .kp-formgrid__group, form) give their rows to the grid itself. Knobs: --kp-formgrid-stage-min,
+       --kp-formgrid-stage-gap (the lg step, between the cards), --kp-formgrid-rows. */
+    [data-kp-formgrid-stage] {
+        container: kp-formgrid / inline-size;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-formgrid-stage-min, 24rem)), 1fr));
+        gap: var(--kp-formgrid-stage-gap, var(--kp-space-lg, 1rem));
+        align-items: stretch;
+        min-inline-size: 0;
+    }
+
+    [data-kp-formgrid-stage] > .kp-formgrid[data-kp-formgrid-rows='subgrid'] {
+        container-type: normal;
+        grid-row: span var(--kp-formgrid-rows, 1);
+        grid-template-rows: subgrid;
+        align-self: stretch;
+        box-sizing: border-box;
+    }
+
+    .kp-formgrid[data-kp-formgrid-rows='subgrid'] > :is(.kp-formgrid__group, .kp-formrows, .kp-kv, form),
+    .kp-formgrid[data-kp-formgrid-rows='subgrid'] > :is(.kp-formgrid__group, .kp-formrows, .kp-kv, form) > :is(.kp-formgrid__group, .kp-formrows, .kp-kv, form) {
+        display: contents;
+    }
+
+    /* A block inside the grid (a form, a key-value list, a fieldset, a group
+       of rows with its own heading) spans every column and passes the tracks
+       on, so its rows line up with the rows outside it. */
+    .kp-formgrid > :is(.kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form),
+    .kp-formgrid__group > :is(.kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form) {
+        display: grid;
+        grid-column: label-start / actions-end;
+        grid-template-columns: subgrid;
+        row-gap: inherit;
+        column-gap: inherit;
+        align-items: inherit;
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        /* A size container is layout-contained and a layout-contained grid cannot be a subgrid: a .kp-formrows in the
+           grid (a container of its own) fell back to one column and floated its rows in the middle of the panel
+           (facts, 2026-10-19 11:22). Inside the grid it is no container; the grid's own query lays it out. */
+        container-type: normal;
+        /* The block stands alone on its row of the outer grid, so it has no line to share. On the grid's first baseline
+           Chromium (151 measured; 153 is fixed) took the baseline of a subgrid of subgrids as -2^25 px and laid the whole
+           block at y = -33554328, so the facts vanished [gapform-1019; AuDHD 34]. Its own rows keep the first baseline. */
+        align-self: start;
+    }
+
+    /* A group is its heading and its rows: the heading sits close on its rows, the groups stand apart by the grid's
+       row gap. Facts are a compact list: their rows keep the key-value list's own gap, --kp-kv-gap (0.375rem), not the
+       gap between fields (Kenny, 2026-10-19 11:22, facts: "lelijke opmaak, alles staat zo ver van mekaar"). */
+    .kp-formgrid > .kp-formgrid__group,
+    .kp-formgrid__group > .kp-formgrid__group {
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-formgrid__group > :is(.kp-formrows, fieldset, form) {
+        row-gap: var(--kp-formgrid-gap, var(--kp-space-md, 0.75rem));
+    }
+
+    /* A group's own buttons close it: a little air above them. */
+    .kp-formgrid__group > .kp-formgrid__row--buttons {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-formgrid .kp-kv {
+        row-gap: var(--kp-kv-gap, 0.375rem);
+    }
+
+    .kp-formgrid[data-kp-formgrid-lines='lines'] :is(.kp-kv, .kp-formrows) {
+        row-gap: 0;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__group, fieldset) > :is(legend, .kp-formgrid__heading) {
+        grid-column: label-start / actions-end;
+        float: none;
+        margin: 0;
+        padding: 0;
+        font-size: var(--kp-text-base, 1rem);
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .kp-formgrid__row,
+    .kp-formgrid .kp-formrow,
+    .kp-formgrid .kp-kv__row {
+        position: relative;
+        display: grid;
+        grid-column: label-start / actions-end;
+        grid-template-columns: subgrid;
+        align-items: inherit;
+        column-gap: inherit;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-formgrid[data-kp-formgrid-align='center'],
+    .kp-formgrid__row--buttons {
+        align-items: center;
+    }
+
+    /* A row with a button on its line (the control is one button, or the row's action is) is centred on it: the button's text
+       is larger than the label's, so on the first baseline the label stood 1.5 px off the button's centre in every theme
+       [alignrest-1019]. A control of several lines keeps the first baseline (a text area, a code block, a tag field, the theme
+       picker): there the button joins the first line. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):is(
+            :has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-button:only-child),
+            :has(> .kp-formgrid__actions > .kp-button)
+        ):not(
+            :has(
+                > :is(.kp-formgrid__control, .kp-formrow__control)
+                    > :is(textarea, .kp-jsonfield, .kp-code, .kp-command, [data-kp-theme-picker], .kp-combobox[data-kp-tags], .kp-secret)
+            )
+        ),
+    .kp-formrow:has(> .kp-formrow__control > .kp-button:only-child):not(:has(> .kp-formrow__control > .kp-secret)),
+    .kp-formgrid .kp-kv__row:has(> dd .kp-button) {
+        align-items: center;
+    }
+
+    /* A label with a note under it is a block of two or three lines. On the first baseline the field, the value and
+       the action stood on its first line only, so the block hung 31 px under them and the row read as offset from its
+       own label (Kenny, 2026-10-19 11:22, settings: "de eerste input en de items daarachter op de eerste rij zijn niet
+       verticaal aligned met de eerste kolom"). Such a row centres every cell on the label block instead. */
+    .kp-formgrid :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__label, .kp-formrow__label) > :is(small, .kp-formgrid__note)),
+    .kp-formrow:has(> .kp-formrow__label > small) {
+        align-items: center;
+    }
+
+    /* A control that is taller than its label block (the theme picker: two lists of swatches) hung its label in the middle
+       of the row, 199 px under the control's first swatch. Such a row holds its cells on the first baseline: the label, the
+       first swatch's word and the group name beside it share one line [alignrest-1019; settings browser]. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > [data-kp-theme-picker]),
+    .kp-formrow:has(> .kp-formrow__control > [data-kp-theme-picker]) {
+        align-items: first baseline;
+    }
+
+    /* A secret's box holds its status line (the countdown, why it is off or failed) under the value and its buttons, so the row's
+       box was 66 px for a 36 px control and, centred on a label with a note, hung 19 px under the label's first line. The status
+       keeps its place in the box (it grows with its words, and showing, hiding or failing moves nothing); the row holds its cells
+       on the first baseline, so the label and the value box share a line whatever stands under them [hlcomp-1019 secret-row;
+       homelab 79; as the theme picker's row above]. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-secret),
+    .kp-formrow:has(> .kp-formrow__control > .kp-secret) {
+        align-items: start;
+    }
+
+    /* [hlthree-1019 secret-baseline] The value box is a scroll container, and a scroll container has no baseline of its own that
+       browsers agree on (Firefox hung the label 35 px under the box in a narrow control, homelab measured it 4 px off in a wide one),
+       so the row no longer asks for one. Every cell of such a row starts at the row's top and is as tall as the value box
+       (`--kp-control-height`), its words centred in that height: the label's first line, the note, the action and the value
+       text then stand on one line whatever the box holds under them or the label's own length. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-secret)
+        > :is(.kp-formgrid__value, .kp-formrow__aside, .kp-formgrid__actions),
+    .kp-formrow:has(> .kp-formrow__control > .kp-secret) > :is(.kp-formrow__aside, .kp-formgrid__actions) {
+        display: flex;
+        align-items: center;
+        min-block-size: var(--kp-control-height, 2.25rem);
+    }
+
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-secret)
+        > :is(.kp-formgrid__label, .kp-formrow__label),
+    .kp-formrow:has(> .kp-formrow__control > .kp-secret) > .kp-formrow__label {
+        padding-block-start: calc((var(--kp-control-height, 2.25rem) - 1lh) / 2);
+    }
+
+    .kp-formgrid[data-kp-formgrid-lines='lines'] {
+        row-gap: 0;
+    }
+
+    .kp-formgrid[data-kp-formgrid-lines='lines'] :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row) {
+        padding-block: var(--kp-formgrid-line-pad, var(--kp-space-sm, 0.5rem));
+        border-block-end: 1px solid var(--border);
+    }
+
+    /* The four cells. A cell without a class falls into the next free
+       column, in this order. */
+    .kp-formgrid :is(.kp-formgrid__label, .kp-formrow__label, .kp-kv__row > dt) {
+        grid-column: label;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.125rem;
+        min-inline-size: var(--kp-formgrid-label-min, 0);
+        margin: 0;
+        padding: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__label, .kp-formrow__label) > :is(small, .kp-formgrid__note) {
+        /* A description under a label wraps in the label column; it never widens the column, which is as wide as the
+           longest label itself. */
+        contain: inline-size;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 400;
+    }
+
+    .kp-formgrid .kp-kv__row > dt {
+        color: var(--muted-foreground);
+        font-weight: 400;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control) {
+        grid-column: control;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        /* A block fills the track (a code block, a JSON field, a list); what has a size of its own keeps it, on the
+           start edge (below). */
+        justify-items: stretch;
+        align-items: first baseline;
+        min-inline-size: 0;
+        margin: 0;
+    }
+
+    /* A key-value value starts on the control edge and may use the value
+       column too: facts line up with the fields above them. */
+    .kp-formgrid .kp-kv__row > dd {
+        grid-column: control-start / value-end;
+        margin: 0;
+        min-inline-size: 0;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__value, .kp-formrow__aside) {
+        grid-column: value;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: flex-start;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        min-block-size: 0;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.5;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__actions) {
+        grid-column: actions;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: inherit;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    /* One action in a row fills the actions column: one role, one width,
+       so every row's action starts and ends on the same edges. */
+    .kp-formgrid .kp-formgrid__actions > :only-child {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+
+    /* Spans: a cell that needs more than its own track says so. */
+    .kp-formgrid [data-kp-formgrid-span='control-value'] {
+        grid-column: control-start / value-end;
+    }
+
+    .kp-formgrid [data-kp-formgrid-span='wide'] {
+        grid-column: control-start / actions-end;
+    }
+
+    .kp-formgrid [data-kp-formgrid-span='all'] {
+        grid-column: label-start / actions-end;
+    }
+
+    .kp-formgrid .kp-formrow--wide .kp-formrow__control {
+        grid-column: control-start / value-end;
+    }
+
+    .kp-formgrid
+        :is(.kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span])
+        > :is(
+            .kp-switch,
+            .kp-button,
+            .kp-badge,
+            .kp-field__option,
+            .kp-segmented:not(.kp-segmented--block),
+            .kp-menu-button,
+            a,
+            span,
+            label:not(.kp-formgrid__label)
+        ) {
+        justify-self: start;
+    }
+

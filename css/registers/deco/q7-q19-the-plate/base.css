@@ -1,0 +1,473 @@
+/* @part: q7-q19-the-plate: Q6, Q7, Q19 · the plate */
+    /* ── Q6, Q7, Q19 · the plate: lacquer, the wallpaper behind it, the
+       inlay on it, its four corners coved. Every plate (a card, a key figure,
+       an alert, an empty state, a tile, a dialog, a menu, a popover, a toast,
+       a tour card, a drawer and the panels of the pickers) is blue lacquer
+       with the chevron wallpaper in gold at 8 % and a faint gold edge; each
+       corner is cut as a concave quarter circle (a cove, 10 px) and two
+       parallel gold hairlines follow the cove and the straight edges, 3 px
+       apart, with a tiny gold bead in each hollow. The cove is a mask on the
+       plate itself (the whole box and 24 px round it kept, the four quarter
+       circles taken out), so a focus ring or a notch outside its box is
+       never cut. The hairlines are the plate's ::after, drawn round from the
+       middle of the top edge both ways as far as --kp-sig-deco-draw; the
+       lacquer, wallpaper and words come up with --kp-sig-deco-up (both rest
+       at 1, the finished pose, and an arrival turns them: "Opening"). ── */
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip
+        ) {
+        --kp-sig-deco-r: 10px;
+        --kp-sig-deco-n: 3px;
+        --kp-sig-deco-c: calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1px);
+        --kp-sig-deco-bead: calc(var(--kp-sig-deco-r) * 0.26);
+        isolation: isolate;
+        border: 1px solid hsl(from var(--primary) h s l / calc(0.3 * var(--kp-sig-deco-up)));
+        border-radius: 0;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s l / var(--kp-sig-deco-up));
+        background-image:
+            repeating-linear-gradient(
+                135deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            ),
+            repeating-linear-gradient(
+                45deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            );
+        background-size: 24px 24px;
+        box-shadow: none;
+        color: var(--foreground);
+        mask-image:
+            linear-gradient(var(--foreground) 0 0),
+            radial-gradient(circle at 0 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 0 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px));
+        mask-size:
+            calc(100% + 48px) calc(100% + 48px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px);
+        mask-position:
+            -24px -24px,
+            0 0,
+            100% 0,
+            0 100%,
+            100% 100%;
+        mask-repeat: no-repeat;
+        mask-composite: subtract, add, add, add, add;
+        mask-clip: no-clip;
+    }
+
+    /* The static plates are the box their ::after and a stretched link lie
+       over. The overlays are positioned already (and must stay so). */
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-toast,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option
+        ) {
+        position: relative;
+    }
+
+    /* A small part is a plate in little: the cove 5 px, the hairlines 2 px
+       apart (Q6: a button, a tag and the tooltip take half the size). */
+    [data-theme='deco'] :where(.kp-tooltip, .kp-button, .kp-icon-button, .kp-tag, .kp-badge:not([data-kp-dot])) {
+        --kp-sig-deco-r: 5px;
+        --kp-sig-deco-n: 2px;
+        --kp-sig-deco-bead: 1.5px;
+    }
+
+    [data-theme='deco'] :where(.kp-button, .kp-icon-button, .kp-tag, .kp-badge:not([data-kp-dot])) {
+        --kp-sig-deco-c: calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1px);
+        mask-image:
+            linear-gradient(var(--foreground) 0 0),
+            radial-gradient(circle at 0 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 0 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px));
+        mask-size:
+            calc(100% + 48px) calc(100% + 48px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px);
+        mask-position:
+            -24px -24px,
+            0 0,
+            100% 0,
+            0 100%,
+            100% 100%;
+        mask-repeat: no-repeat;
+        mask-composite: subtract, add, add, add, add;
+        mask-clip: no-clip;
+        border-radius: 0;
+    }
+
+    /* The hairlines: the outer edge as strips between the coves, the inner
+       line 3 px in, an arc round each cove on both, a bead in each hollow.
+       The gold runs along a line as leaf does: a highlight, the gold, its
+       shade. Twenty layers (kept in --kp-sig-deco-hair, with their places and
+       sizes, so a plate's ::after and a button itself draw the same): on the
+       plate's ::after, which the arrival draws round with its conic mask; on
+       a button, its own background, because its ::after is the seal's ring. */
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip,
+            .kp-button,
+            .kp-icon-button
+        ) {
+        --kp-sig-deco-hair:
+            var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-x),
+            var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-y),
+            radial-gradient(
+                circle at 0 0,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 100% 0,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 0 100%,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 100% 100%,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at calc(-1 * var(--kp-sig-deco-n)) calc(-1 * var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(100% + var(--kp-sig-deco-n)) calc(-1 * var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(-1 * var(--kp-sig-deco-n)) calc(100% + var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(100% + var(--kp-sig-deco-n)) calc(100% + var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            );
+        --kp-sig-deco-hair-pos:
+            left var(--kp-sig-deco-r) top 0, left var(--kp-sig-deco-r) bottom 0, left 0 top var(--kp-sig-deco-r), right 0 top var(--kp-sig-deco-r),
+            left var(--kp-sig-deco-c) top var(--kp-sig-deco-n), left var(--kp-sig-deco-c) bottom var(--kp-sig-deco-n),
+            left var(--kp-sig-deco-n) top var(--kp-sig-deco-c), right var(--kp-sig-deco-n) top var(--kp-sig-deco-c), 0 0, 100% 0, 0 100%, 100% 100%,
+            left var(--kp-sig-deco-n) top var(--kp-sig-deco-n), right var(--kp-sig-deco-n) top var(--kp-sig-deco-n),
+            left var(--kp-sig-deco-n) bottom var(--kp-sig-deco-n), right var(--kp-sig-deco-n) bottom var(--kp-sig-deco-n),
+            left calc(var(--kp-sig-deco-bead) - 1.7px) top calc(var(--kp-sig-deco-bead) - 1.7px),
+            right calc(var(--kp-sig-deco-bead) - 1.7px) top calc(var(--kp-sig-deco-bead) - 1.7px),
+            left calc(var(--kp-sig-deco-bead) - 1.7px) bottom calc(var(--kp-sig-deco-bead) - 1.7px),
+            right calc(var(--kp-sig-deco-bead) - 1.7px) bottom calc(var(--kp-sig-deco-bead) - 1.7px);
+        --kp-sig-deco-hair-size:
+            calc(100% - 2 * var(--kp-sig-deco-r)) 1px, calc(100% - 2 * var(--kp-sig-deco-r)) 1px, 1px calc(100% - 2 * var(--kp-sig-deco-r)),
+            1px calc(100% - 2 * var(--kp-sig-deco-r)), calc(100% - 2 * var(--kp-sig-deco-c)) 1px, calc(100% - 2 * var(--kp-sig-deco-c)) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-c)), 1px calc(100% - 2 * var(--kp-sig-deco-c)),
+            calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px), calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px),
+            calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px), calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px), 3.4px 3.4px, 3.4px 3.4px,
+            3.4px 3.4px, 3.4px 3.4px;
+    }
+
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip
+        )::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: 2;
+        pointer-events: none;
+        background-image: var(--kp-sig-deco-hair);
+        background-repeat: no-repeat;
+        background-position: var(--kp-sig-deco-hair-pos);
+        background-size: var(--kp-sig-deco-hair-size);
+        mask-image: conic-gradient(
+            from calc(var(--kp-sig-deco-draw) * -180deg) at var(--kp-sig-deco-at, 50% 50%),
+            var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
+            transparent 0
+        );
+    }
+
+    /* A plate's words come up with the lacquer, in an overlay that arrives (a
+       disabled entry keeps the dimming of its own). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco']
+            :is(.kp-dialog, .kp-popover, .kp-menu-button > .kp-menu, .kp-toast, .kp-tour, dialog.kp-drawer, .kp-tooltip)
+            > :not(:disabled, [aria-disabled='true'], [hidden]) {
+            opacity: var(--kp-sig-deco-up);
+        }
+    }
+
+    /* The plates inside a plate: a menu in a popover, a card in a dialog are
+       the lacquer of the plate they stand on, not a second one. A menu that a
+       menu button opens is a plate of its own wherever the button stands (a
+       dialog's footer, a popover): it keeps its lacquer and inlay
+       (2026-10-15: the review dialog's menus showed bare words), the
+       :where() keeping the rule as light as it was. */
+    [data-theme='deco'] :is(.kp-popover, .kp-dialog) .kp-menu:not(:where(.kp-menu-button > .kp-menu)) {
+        border: 0;
+        background: none;
+        mask-image: none;
+    }
+
+    [data-theme='deco'] :is(.kp-popover, .kp-dialog) .kp-menu:not(:where(.kp-menu-button > .kp-menu))::after {
+        content: none;
+    }
+
+    /* Tone toasts and alerts. A toast of meaning keeps its plate and its ink
+       (the pairs the contrast gate holds), coved like the rest, its hairlines
+       in its own ink; every alert is lacquer, its tone said in its word. */
+    [data-theme='deco'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        --kp-sig-deco-arc: currentColor;
+        --kp-sig-deco-leaf-x: linear-gradient(currentColor, currentColor);
+        --kp-sig-deco-leaf-y: linear-gradient(currentColor, currentColor);
+        background-image: none;
+    }
+
+    [data-theme='deco'] .kp-toast--success {
+        background-color: var(--success);
+    }
+
+    [data-theme='deco'] .kp-toast--info {
+        background-color: var(--info);
+    }
+
+    [data-theme='deco'] .kp-toast--warning {
+        background-color: var(--warning);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--destructive, .kp-toast--error) {
+        background-color: var(--destructive);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        border-color: transparent;
+    }
+
+    /* The toast's own mark and padding: a lozenge in gold, set in the cove's
+       clear. */
+    [data-theme='deco'] .kp-toast {
+        padding-inline-start: 1.6rem;
+    }
+
+    [data-theme='deco'] .kp-toast::before {
+        z-index: 3;
+        background: var(--kp-sig-deco-gem);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        inset-block-start: calc(50% - 0.25rem);
+    }
+
+    [data-theme='deco'] .kp-toast--success::before {
+        background: var(--kp-sig-deco-gem-em);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)::before {
+        background: currentColor;
+    }
+
+    /* The alert: lacquer, ivory words, its label in the colour of what it
+       says (Q8: a warning is the figure in ruby over a gold rule; emerald
+       marks what is done). */
+    [data-theme='deco'] .kp-alert {
+        color: var(--foreground);
+        padding: 0.85rem 1.1rem;
+    }
+
+    [data-theme='deco'] .kp-alert__label {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-alert--success .kp-alert__label {
+        color: var(--kp-sig-deco-emerald);
+    }
+
+    [data-theme='deco'] .kp-alert--info .kp-alert__label {
+        color: var(--kp-sig-deco-champagne);
+    }
+
+    [data-theme='deco'] :is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__label {
+        /* The ruby four points lighter than --destructive (2026-10-13): the
+           plain ruby read 4.37:1 on the lacquer, under WCAG 2.2 AA's 4.5:1 for
+           a 600-weight label of this size; on a dark plate a step lighter is
+           the step that reads. */
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    /* A failed area says so in the ruby with the gold rule under it (G8), the same ruby as the alert's label: the lacquer
+       plate of a failure was otherwise indistinguishable from an empty one. */
+    [data-theme='deco'] .kp-alert--destructive:is(.kp-stateplate, .kp-card__failure) :is(.kp-stateplate__title, .kp-card__state-title),
+    [data-theme='deco'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+

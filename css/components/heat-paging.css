@@ -1,0 +1,26 @@
+/* @part: heat-paging: Heat paging bar */
+@layer kp.components {
+    /* --- Heat paging bar: Earlier / Today / Later [wish-1120, homelab 100] ---
+     * Three small buttons and the window's words on one line before the grid; the words take the rest and wrap, the buttons keep
+     * their width, so the bar is as high in every state. */
+    .kp-heat__pager {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-heat__pager > .kp-button {
+        flex: none;
+    }
+
+    .kp-heat__pager-label {
+        flex: 1 1 10rem;
+        min-inline-size: 0;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+}
+

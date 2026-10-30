@@ -1,0 +1,59 @@
+/* @part: state-plate: The plate an empty or failed area is drawn with */
+@layer kp.components {
+    /* kpadopt5-ops:stateplate:start */
+    /* --- The plate an empty or failed area is drawn with [kpadopt5-ops] -----
+     * js/state-plate.js. Kenny's rules of 2026-10-16 and 2026-10-17: failed and
+     * empty fill the component's whole normal footprint, set at the heading
+     * size in the middle of the theme's own empty plate (.kp-empty) or alert
+     * (.kp-alert--destructive), with a normal-size action and air on every side
+     * of the words. Give the plate the whole area (`block-size: 100%` in a grid
+     * cell). Knobs [KT6]: --kp-stateplate-text (the title's size),
+     * --kp-stateplate-pad (the air round the words). */
+    .kp-stateplate {
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        min-block-size: 0;
+        margin: 0;
+        padding: var(--kp-stateplate-pad, var(--kp-space-xl, 2rem) var(--kp-space-lg, 1.5rem));
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        /* Important: a register's empty plate or alert may set `text-align: start` in a later layer. */
+        text-align: center !important;
+        text-wrap: balance;
+    }
+
+    /* A paragraph a page puts in the plate (a failed slot's own label above the title) keeps no margin of its own: the words centre as one block
+     * [states-two-1019]. */
+    .kp-stateplate > :is(p, h1, h2, h3, h4, h5, h6) {
+        margin: 0;
+    }
+
+    .kp-stateplate__title {
+        font-weight: 600;
+    }
+
+    .kp-stateplate__text {
+        font-size: var(--kp-text-md, 1rem);
+        max-inline-size: 36ch;
+    }
+
+    .kp-stateplate--empty .kp-stateplate__title {
+        color: var(--foreground);
+    }
+
+    /* The action is a normal button: it took the plate's heading size (Retry was 23.7 px text in a 36 px button), so it reads at
+     * the control size and the title carries the heading. A register's own button size still wins [t56-statefix-1018]. */
+    .kp-stateplate__action {
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* kpadopt5-ops:stateplate:end */
+}
+

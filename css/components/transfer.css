@@ -1,0 +1,142 @@
+/* @part: transfer: A transfer with its speed and the time left */
+@layer kp.components {
+    /* kpadopt5-ops:transfer:start */
+    /* --- A transfer with its speed and the time left [kpadopt5-ops] ----------------
+     * js/transfer.js. Extends the progress group (fix-64): `.kp-progress-group--transfer`
+     * has five columns, the name, the bar, the reading ("1.2 GB of 4.1 GB · 29 %"), the
+     * rate ("12 MB/s") and the time left ("about 3 min left"); every row of the group
+     * shares them, and the three right-hand columns have a fixed width in tabular figures
+     * so the numbers never shimmer or push the bar. A stalled transfer's rate is the
+     * warning plate; a finished one's time is the success plate; a failed one adds a
+     * destructive note under its row with Retry. Under 46rem (the group's own width, set by the script as `data-kp-narrow`) a
+     * row is the name, the bar, then the numbers under it. Knobs [KT6]:
+     * --kp-transfer-reading (12rem), --kp-transfer-rate (6rem), --kp-transfer-eta (9rem), `data-kp-fold-at` on the group (46rem). */
+    .kp-progress-group--transfer {
+        grid-template-columns: minmax(8rem, 14rem) minmax(8rem, 1fr) var(--kp-transfer-reading, 12rem) var(--kp-transfer-rate, 6rem) var(
+                --kp-transfer-eta,
+                9rem
+            );
+    }
+
+    .kp-transfer > :is(.kp-progress__value, .kp-progress__rate, .kp-progress__eta) {
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-transfer > .kp-progress__label {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-transfer > .kp-progress__rate[data-kp-stalled],
+    .kp-transfer[data-kp-state='done'] > .kp-progress__eta {
+        justify-self: end;
+        padding: 0 var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-transfer > .kp-progress__rate[data-kp-stalled] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-transfer[data-kp-state='done'] > .kp-progress__eta {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-transfer__failure {
+        grid-column: 1 / -1;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-transfer__failure > .kp-alert__body {
+        flex: 1 1 14rem;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-progress-group--transfer[data-kp-narrow] {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-progress-group--transfer[data-kp-narrow] > .kp-transfer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-progress-group--transfer[data-kp-narrow] .kp-transfer > :is(.kp-progress__label, .kp-progressbar, .kp-progress__value) {
+        grid-column: 1 / -1;
+    }
+
+    .kp-progress-group--transfer[data-kp-narrow] .kp-transfer > .kp-progress__rate {
+        grid-column: 1;
+        justify-self: start;
+        text-align: start;
+    }
+
+    .kp-progress-group--transfer[data-kp-narrow] .kp-transfer > .kp-progress__eta {
+        grid-column: 2;
+    }
+
+    .kp-progress-group--transfer[data-kp-narrow] .kp-transfer > .kp-progress__value {
+        text-align: start;
+    }
+
+    /* A transfer of unknown size has no share to fill, so the bar says "busy, size unknown" instead: one full band of diagonal
+     * stripes that drifts at an even pace. The drift is one stripe period per loop on a linear pace, the same picture every
+     * period, so nothing restarts or jumps; the words in the row ("size unknown", the bytes so far, the speed) carry the
+     * progress [kpadopt5-r3]. When the size turns out, the band settles into the normal bar: it shrinks from full to the real
+     * share. A register that draws its own busy bar repeats these rules for its theme. */
+    .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        transform: none;
+        background-color: transparent;
+        background-image: linear-gradient(-45deg, var(--primary) 25%, transparent 25% 50%, var(--primary) 50% 75%, transparent 75%);
+        background-size: var(--kp-transfer-stripe, 0.75rem) var(--kp-transfer-stripe, 0.75rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation:
+                kp-transfer-enter 700ms ease-out,
+                kp-transfer-drift 1200ms linear infinite;
+        }
+
+        .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
+            animation: kp-transfer-settle 700ms ease-out;
+        }
+    }
+
+    @keyframes kp-transfer-enter {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes kp-transfer-drift {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: var(--kp-transfer-stripe, 0.75rem) 0;
+        }
+    }
+
+    /* No `to`: the bar ends on its own share. */
+    @keyframes kp-transfer-settle {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    /* kpadopt5-ops:transfer:end */
+}
+

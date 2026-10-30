@@ -1,0 +1,319 @@
+/* @part: navbar: A dropdown under a link */
+    /* A dropdown under a link [TH117]: a nested list the link announces
+     * with aria-haspopup. It opens on hover and on focus within, so the
+     * keyboard reaches every item by Tab; the register decides its look. */
+    .kp-nav__links > li {
+        position: relative;
+        /* The item is a column, so the link in it is a flex item, and a flex
+     * item is a block box whatever `display` a register gives the link
+     * [scope-80]. An inline link takes no room for its block padding: a
+     * register's plate under the current page, on a bar that wraps, painted
+     * 13px over the row above in dark (catalogue/navigation.html#bar-long,
+     * Kenny's note of 2026-09-14), and a label that wraps inside itself
+     * laid its second line's plate over its first. As a block, the plate
+     * holds its own room, the row gap sits between plates, and a text
+     * underline still follows each line. The column keeps a collapsed
+     * bar's nested menu under its link (tests/nav-wrap.spec.mjs). */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* A marquee [S45, M1 of 2026-09-08]: a row that runs, and the first
+       shared element whose content a consumer supplies. The quiet answer
+       is a row that does not move at all — every theme gets the items,
+       laid out — and a theme that wants them to run says how fast with
+       `--kp-marquee`. The module doubles the row so the pass is seamless
+       and marks the copy `aria-hidden`; without the module the row is
+       simply a row, which is the no-script answer [T17, AR34].
+
+       The knobs a stylesheet reads are declared here: how long one full
+       pass takes, and the gap between the items. The third — whether the
+       row rests while it is off screen — is read by js/effects.js alone
+       and so is not declared in this file (AR21); unset means it rests,
+       and a theme that wants it running on says so in its own register,
+       which is where the module looks. */
+    .kp-marquee,
+    [data-kp-marquee] {
+        --kp-marquee: 42000ms;
+        --kp-marquee-gap: var(--kp-space-lg);
+        display: block;
+        overflow: hidden;
+    }
+
+    [data-kp-marquee-track] {
+        display: flex;
+        inline-size: max-content;
+    }
+
+    [data-kp-marquee-run] {
+        display: flex;
+        flex: none;
+        align-items: center;
+        gap: var(--kp-marquee-gap);
+        padding-inline: calc(var(--kp-marquee-gap) / 2);
+        padding-block: var(--kp-space-xs);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kp-marquee-ready][data-kp-marquee-runs] [data-kp-marquee-track] {
+            animation: kp-marquee-pass var(--kp-marquee) linear infinite;
+        }
+
+        /* The module writes this attribute while the band sits outside the
+           viewport; the animation keeps its position and resumes from it. */
+        [data-kp-marquee-ready][data-kp-paused] [data-kp-marquee-track] {
+            animation-play-state: paused;
+        }
+    }
+
+    @keyframes kp-marquee-pass {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* The menu's own caption [M3 of 2026-09-08]: a line above the items
+       saying what this menu is — blueprint's title block reads "Detail ·
+       scale 4:1" there. The consumer supplies it (a `menuLabel` on the
+       NavBar's link, or the attribute by hand); a menu without one has no
+       line at all, so nothing appears where nothing was asked for. Every
+       register may draw it its own way. */
+    .kp-nav__menu[data-kp-menu-label]::before {
+        content: attr(data-kp-menu-label);
+        display: block;
+        padding: var(--kp-space-xs) 0.75rem;
+        margin-block-end: 0.25rem;
+        font-size: var(--kp-text-xs);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-nav__menu {
+        position: absolute;
+        top: 100%;
+        inset-inline-start: 0;
+        z-index: var(--kp-z-popover, 20);
+        /* How far the panel slides along the inline axis to stay inside the
+         * box that shows it [fix-39]. Changing edges is not always enough —
+         * a panel can be cut while both of its item's edges lie inside the
+         * window — so the module writes the pixels here after it has
+         * measured. Physical pixels, signed: negative moves it left, in a
+         * right-to-left page too, which is what "inside the window" means
+         * on either axis direction. Nothing but js/components.js writes it;
+         * unset, the panel sits exactly where the stylesheet put it. */
+        translate: var(--kp-nav-menu-shift, 0) 0;
+        /* As wide as its longest row, never narrower than the floor
+         * [nav-dropdown-M1]. Absolutely placed in a small item, the panel's
+         * width is otherwise shrink-to-fit against that item, so a link of
+         * 38 characters broke onto two lines while the panel stayed 192px
+         * (formal, deco, retro; Kenny: a label never wraps or is
+         * cut). A wider panel is still kept inside the window by the shift
+         * above, which measures the panel as it is laid out. The mega menu
+         * and the phone drawer set `width: auto` again. */
+        width: max-content;
+        min-width: 12rem;
+        margin: 0;
+        padding: 0.25rem 0;
+        list-style: none;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        /* Closed is `display: none`, not hidden-but-laid-out: a laid-out
+         * panel 12rem wide inside a 56px item is scrollable overflow, and
+         * the overflow gate read it as such at 320px (TH99). The keyboard
+         * still gets in — focus on the trigger opens the panel through
+         * :focus-within, and the next Tab lands on its first link. */
+        display: none;
+        opacity: 0;
+    }
+
+    /* `data-kp-nav-menu-open` on the item declares the panel open [gap-12]:
+     * for a page that shows it open (a catalogue, a screenshot, a guided
+     * tour) or a script that opens it on a press. Hover and focus still
+     * open it too; taking the attribute away is the way back [KT6]. */
+    .kp-nav__links > li:hover > .kp-nav__menu,
+    .kp-nav__links > li:focus-within > .kp-nav__menu,
+    .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
+        display: block;
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-nav__menu {
+            transition:
+                opacity var(--fx-duration, 150ms) var(--fx-ease, ease),
+                display var(--fx-duration, 150ms) allow-discrete;
+        }
+
+        @starting-style {
+            .kp-nav__links > li:hover > .kp-nav__menu,
+            .kp-nav__links > li:focus-within > .kp-nav__menu,
+            .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
+                opacity: 0;
+            }
+        }
+    }
+
+    /* A dropdown's and a mega menu's links: their size is the package's
+     * [scope-87], titanium's padding and its 0.92rem taken to 14px. */
+    .kp-nav__menu a {
+        display: block;
+        padding: var(--kp-nav-menu-link-padding-block, calc(var(--kp-space-sm, 0.5rem) * 0.9)) 0.875rem;
+        font-size: var(--kp-nav-menu-link-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    /* A dropdown with no room on its item's end side hangs from the other
+     * edge instead [fix-27]. Grotesk's catalogue bar showed the panel under
+     * the last item running past the window's right edge; measured on a bar
+     * whose links sit at the window's end, it lay 36 to 106px past it at
+     * 1400px in all 22 themes (tests/nav-menu.spec.mjs). A stylesheet cannot
+     * know where the window ends relative to an item, so the module that
+     * wires the bar (js/components.js, placeNavMenu) measures the panel as
+     * it opens and writes this attribute; the React NavBar calls the same
+     * function. Without script the panel keeps its start edge.
+     *
+     * The edge is chosen first and `--kp-nav-menu-shift` finishes the job
+     * [fix-39]: the box that shows a bar is not always the window. */
+    .kp-nav__menu[data-kp-nav-menu-end] {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+    }
+
+    /* The mega menu [scope-48, research/navbar "Mega menu"]: one bar item
+     * opens a wide panel of grouped links. It is a disclosure, not a hover
+     * dropdown — a panel this size cannot follow a pointer, and a touch or
+     * keyboard reader must be able to open it on purpose — so its item holds
+     * a `data-kp-nav-disclosure` button, and the panel is shown only while
+     * that button says `aria-expanded="true"` (or the item carries
+     * `data-kp-nav-menu-open`, the declared open state). The panel is a
+     * `.kp-nav__menu` too, so every register's dropdown voice dresses it, and
+     * each register answers `--wide` besides (KT14). Plain lists with
+     * headings inside, never `role="menu"`: this is site navigation.
+     *
+     * The button reads as one of the bar's links (give it `kp-nav__link`
+     * too) with a caret after its word that turns while open. */
+    .kp-nav__disclosure {
+        margin: 0;
+        /* The bar link's block padding and type size [scope-87], restated
+         * after `font: inherit`, which would reset them. */
+        padding: var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2)) 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+        cursor: pointer;
+    }
+
+    .kp-nav__disclosure::after {
+        content: '';
+        /* Inline-block, not a flex item: a register that makes its links
+         * blocks makes this button one, and an inline box has no size. */
+        display: inline-block;
+        vertical-align: middle;
+        margin-inline-start: 0.35em;
+        inline-size: 0.4em;
+        block-size: 0.4em;
+        border-inline-end: 1.5px solid currentColor;
+        border-block-end: 1.5px solid currentColor;
+        rotate: 45deg;
+        translate: 0 -0.15em;
+    }
+
+    .kp-nav__disclosure[aria-expanded='true']::after {
+        rotate: -135deg;
+        translate: 0 0.1em;
+    }
+
+    /* The panel spans the bar, so its item is no containing block. Whatever
+     * box is — the `.kp-nav-wrap` positioned in the base, a register's
+     * positioned bar, or cyberpunk's positioned strip of links — the module
+     * (js/components.js, placeNavPanel) measures the bar against it as the
+     * panel opens and writes the two offsets that line the panel up with
+     * the bar's edges; both default to 0, which is right for a bar whose
+     * own box is the containing block. */
+    .kp-nav__links > li:has(> .kp-nav__menu--wide) {
+        position: static;
+    }
+
+    .kp-nav__menu--wide {
+        inset-inline-start: var(--kp-nav-mega-start, 0);
+        inset-inline-end: var(--kp-nav-mega-end, 0);
+        width: auto;
+        min-width: 0;
+        /* Three to four columns (NN/g: beyond that, choice overload): never
+         * narrower than the knob, never more than four across. */
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(max(min(var(--kp-nav-mega-min, 11rem), 100%), calc((100% - 3 * var(--kp-nav-mega-gap, 1.5rem)) / 4)), 1fr)
+        );
+        gap: var(--kp-nav-mega-gap, 1.5rem);
+        padding: var(--kp-space-md, 1rem) var(--kp-nav-pad-inline, 1.5rem);
+    }
+
+    /* Hover and focus open a dropdown; they do not open this one. One that is
+     * closing stays until its close has played (js/components.js). */
+    .kp-nav__links
+        > li:not([data-kp-nav-menu-open], [data-kp-nav-closing], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+        > .kp-nav__menu--wide {
+        display: none;
+        opacity: 0;
+    }
+
+    .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu--wide,
+    .kp-nav__links > li[data-kp-nav-closing] > .kp-nav__menu--wide,
+    .kp-nav__links > li:has(> [data-kp-nav-disclosure][aria-expanded='true']) > .kp-nav__menu--wide {
+        display: grid;
+        opacity: 1;
+    }
+
+    .kp-nav__group {
+        min-inline-size: 0;
+    }
+
+    .kp-nav__group > ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* A group's heading takes the voice of the dropdown's own caption
+     * (`data-kp-menu-label`), which every register already draws. */
+    .kp-nav__menu-heading {
+        margin: 0 0 0.25rem;
+        padding: var(--kp-space-xs, 0.25rem) 0.75rem;
+        font-size: var(--kp-text-xs);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        border-block-end: 1px solid var(--border);
+    }
+
+    /* ====================================================================
+ * The eleven overlays and their neighbours [L8, TH35].
+ *
+ * The hard part of these is keyboard behaviour, and the browser now does
+ * most of it: <dialog> traps focus, closes on Escape and returns focus
+ * where it came from; popover="auto" light-dismisses and closes on
+ * Escape; <details> is a keyboard-operable disclosure. AR15's baseline is
+ * modern Chrome and Firefox only, which is what makes that affordable.
+ * We write the looks, and only the behaviour the platform does not give.
+ * ==================================================================== */
+
+    /* The brand as a link home keeps the brand's look; the underline is the
+ * page's ordinary link rule, which is what says it is one. */
+    a.kp-nav__brand {
+        color: inherit;
+    }
+

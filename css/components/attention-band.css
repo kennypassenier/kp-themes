@@ -1,0 +1,192 @@
+/* @part: attention-band: Attention band */
+    /* --- Attention band [scope-143] --------------------------------------- */
+
+    /* One alert per problem, worst first, each with its own fix. With no
+ * problem the band takes no room at all: never an "all is well" filler.
+ * attachAttention() keeps the items in severity order in the DOM, so a
+ * screen reader meets them in the order the eye does. */
+    .kp-attention {
+        container: kp-attention / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-attention:not(:has(> .kp-attention__item)) {
+        display: none;
+    }
+
+    .kp-attention__item {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: 0;
+    }
+
+    .kp-attention__icon {
+        display: grid;
+        place-items: center;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border-radius: 50%;
+        background: color-mix(in oklab, currentColor 14%, transparent);
+        font-weight: 700;
+    }
+
+    .kp-attention__text > strong {
+        display: block;
+    }
+
+    .kp-attention__text > span {
+        /* Each span is a line of its own: two spans run together as one sentence otherwise [CHA 13]. */
+        display: block;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-attention__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* data-kp-subgrid [align-grid-1019; HTTPSwitchboard gap 25]: an inline-size container is layout-contained, and a
+     * layout-contained grid cannot be a subgrid, so a band and its neighbours could not share rows. With the attribute
+     * the band (and .kp-problems) is no container: its rows may be subgrids of the page's grid, and the narrow fold
+     * follows the nearest size container around it (36rem; below) instead of its own width. */
+    .kp-attention[data-kp-subgrid],
+    .kp-problems[data-kp-subgrid] {
+        container-type: normal;
+    }
+
+    /* The band's own tracks [gapform-1019; HTTPSwitchboard 28, almanac 21]. With data-kp-subgrid the band is a grid of three
+       named tracks, icon | words | actions, and every item is a subgrid of them: the icons, the words and the fix buttons of
+       all items stand in three columns that run down the band, also outside a form grid (a page wrote the tracks, the item
+       subgrids and the fold itself). One fix fills the actions track, so every fix has one width. A page that lets the band
+       share rows with a neighbour (item N beside alert N) adds `grid-row: span N; grid-template-rows: subgrid` to the band. */
+    .kp-attention[data-kp-subgrid] {
+        grid-template-columns: [icon-start] auto [icon-end words-start] minmax(0, 1fr) [words-end actions-start] auto [actions-end];
+        column-gap: var(--kp-space-md, 1rem);
+    }
+
+    .kp-attention[data-kp-subgrid] > .kp-attention__item {
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        column-gap: inherit;
+    }
+
+    .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__icon {
+        grid-column: icon;
+    }
+
+    .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__text {
+        grid-column: words;
+        min-inline-size: 0;
+    }
+
+    .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__actions {
+        grid-column: actions;
+    }
+
+    .kp-attention[data-kp-subgrid] .kp-attention__actions > :only-child {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+
+    /* In a form grid the band takes the grid's tracks: the icon in the label track, the words from the control edge (where
+       every field starts) to the value track's end, the fix in the actions column of the rows around it. The names icon,
+       words and actions are given to the grid's own lines, so the items need no second set of rules. */
+    .kp-formgrid > .kp-attention[data-kp-subgrid],
+    .kp-formgrid__group > .kp-attention[data-kp-subgrid] {
+        grid-column: label-start / actions-end;
+        grid-template-columns: subgrid [icon-start] [icon-end words-start] [] [words-end actions-start] [actions-end];
+        column-gap: inherit;
+        align-self: start;
+    }
+
+    /* The narrow fold, inside a form grid or not: under 36rem of the nearest size container (the form grid, a card, the
+       page), or of the screen where there is none, each item is two tracks, the icon and the words, with its fix under
+       them on the full width. Written twice, once per query, as a container query cannot fall back to the viewport. */
+    @container (max-width: 36rem) {
+        :is(.kp-formgrid, .kp-formgrid__group, *) > .kp-attention[data-kp-subgrid] {
+            grid-template-columns: [icon-start] auto [icon-end words-start] minmax(0, 1fr) [words-end actions-start actions-end];
+        }
+
+        .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__actions {
+            grid-column: 1 / -1;
+            justify-content: flex-start;
+        }
+
+        .kp-problems[data-kp-subgrid] .kp-alert__item {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-problems[data-kp-subgrid] .kp-alert__item > .kp-alert__actions {
+            grid-column: 1;
+            grid-row: auto;
+        }
+    }
+
+    @media (max-width: 40rem) {
+        :is(.kp-formgrid, .kp-formgrid__group, *) > .kp-attention[data-kp-subgrid] {
+            grid-template-columns: [icon-start] auto [icon-end words-start] minmax(0, 1fr) [words-end actions-start actions-end];
+        }
+
+        .kp-attention[data-kp-subgrid] > .kp-attention__item > .kp-attention__actions {
+            grid-column: 1 / -1;
+            justify-content: flex-start;
+        }
+
+        .kp-problems[data-kp-subgrid] .kp-alert__item {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-problems[data-kp-subgrid] .kp-alert__item > .kp-alert__actions {
+            grid-column: 1;
+            grid-row: auto;
+        }
+    }
+
+    @container kp-attention (max-width: 34rem) {
+        .kp-attention__item {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-attention__actions {
+            grid-column: 1 / -1;
+            justify-content: flex-start;
+        }
+    }
+
+    /* A soft tint of the severity with an edge of it, in the page's own
+ * text colour, and a solid round icon: calm, still unmistakable.
+ * `--kp-attention-tint` is how much of the tone the plate takes, 8 % by
+ * default; a register lowers it for a severity whose tint pulls the page's
+ * text under 4.6:1 (Shade (dark)'s info, 4.49 at 8 %) [alert-contrast-M1]. */
+    .kp-attention > .kp-attention__item {
+        border-color: color-mix(in oklab, var(--kp-attention-tone) 45%, var(--border));
+        border-inline-start-width: 3px;
+        background: color-mix(in oklab, var(--kp-attention-tone) var(--kp-attention-tint, 8%), var(--card));
+        color: var(--foreground);
+    }
+
+    .kp-attention > .kp-attention__item > .kp-attention__icon {
+        background: var(--kp-attention-tone);
+        color: var(--kp-attention-on-tone);
+    }
+
+    .kp-attention__item[data-kp-severity='critical'] {
+        --kp-attention-tone: var(--destructive);
+        --kp-attention-on-tone: var(--destructive-foreground);
+    }
+
+    .kp-attention__item[data-kp-severity='warning'] {
+        --kp-attention-tone: var(--warning-foreground);
+        --kp-attention-on-tone: var(--warning);
+    }
+
+    .kp-attention__item[data-kp-severity='info'] {
+        --kp-attention-tone: var(--info-foreground);
+        --kp-attention-on-tone: var(--info);
+    }
+

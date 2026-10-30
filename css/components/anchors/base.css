@@ -1,0 +1,121 @@
+/* @part: anchors: Link anchors on headings and rows */
+@layer kp.components {
+    /* kpadopt6-media:anchors:start */
+    /* --- Link anchors on headings and rows [kpadopt6-media] ---------------------
+     * js/anchors.js. A small `#` that copies a link to its heading or row and says "Copied" on itself. It always takes its
+     * room (so a wrapped heading does not move when it shows), and shows when the pointer is over the heading or row or the
+     * keyboard is on it; on a touch screen it is always there, and a real 44 px target. `data-kp-anchor-show` on the
+     * container: hover (default), always, touch. Knobs [KT6]: --kp-anchor-offset (what a sticky bar covers; the header's own
+     * --kp-header-height by default), --kp-anchor-hit (the colour a landed-on place is marked with, the info plate). */
+    .kp-anchor {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        box-sizing: border-box;
+        min-inline-size: 1.5em;
+        margin: 0;
+        margin-inline-start: 0.4em;
+        padding: 0 0.25em;
+        border: 0;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        background: none;
+        color: var(--link, var(--primary));
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: 0.75em;
+        font-weight: 600;
+        line-height: 1.6;
+        vertical-align: baseline;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    .kp-anchor__hash,
+    .kp-anchor__done {
+        grid-area: 1 / 1;
+        white-space: nowrap;
+    }
+
+    .kp-anchor__done {
+        visibility: hidden;
+        font-family: var(--font-body, inherit);
+    }
+
+    .kp-anchor[data-kp-anchor-state] .kp-anchor__hash {
+        visibility: hidden;
+    }
+
+    .kp-anchor[data-kp-anchor-state] .kp-anchor__done {
+        visibility: visible;
+    }
+
+    .kp-anchor__hash::before,
+    .kp-anchor__done::before {
+        content: attr(data-kp-text);
+    }
+
+    [data-kp-anchored='row'] > .kp-anchor,
+    [data-kp-anchored='row'] .kp-anchor {
+        margin-inline: 0 var(--kp-space-sm, 0.5rem);
+    }
+
+    /* hover (default): over the heading or row, or the keyboard on it. */
+    .kp-anchors:not([data-kp-anchor-show='touch']) [data-kp-anchored]:hover .kp-anchor,
+    .kp-anchors:not([data-kp-anchor-show='touch']) [data-kp-anchored]:focus-within .kp-anchor,
+    .kp-anchor:focus-visible,
+    .kp-anchor[data-kp-anchor-state],
+    .kp-anchors[data-kp-anchor-show='always'] .kp-anchor {
+        opacity: 1;
+    }
+
+    /* A touch screen has no hover: the mark is always there, in `hover` and `touch` modes alike. */
+    @media (hover: none) {
+        .kp-anchors .kp-anchor {
+            opacity: 1;
+        }
+    }
+
+    /* A fingertip: the mark's hit area grows to 44 px without growing the heading's line. */
+    @media (pointer: coarse) {
+        .kp-anchor::before {
+            content: '';
+            position: absolute;
+            inset-block-start: 50%;
+            inset-inline-start: 50%;
+            inline-size: max(100%, 2.75rem);
+            block-size: max(100%, 2.75rem);
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    [data-kp-anchored] {
+        scroll-margin-block-start: calc(var(--kp-anchor-offset, var(--kp-header-height, 0px)) + var(--kp-space-md, 0.75rem));
+    }
+
+    /* The place a link landed on, for two seconds: an outline and a wash of the info colour. */
+    [data-kp-anchor-hit] {
+        outline: 2px solid var(--kp-anchor-hit, var(--info));
+        outline-offset: 2px;
+        background: color-mix(in srgb, var(--kp-anchor-hit, var(--info)) 16%, transparent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kp-anchored] {
+            transition:
+                background-color var(--fx-duration, 200ms) var(--fx-ease, ease-out),
+                outline-color var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+        }
+    }
+
+    .kp-anchors__notice {
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-md, 0.75rem);
+        margin-block-end: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-anchors__notice-text {
+        overflow-wrap: anywhere;
+    }
+    /* kpadopt6-media:anchors:end */
+}
+

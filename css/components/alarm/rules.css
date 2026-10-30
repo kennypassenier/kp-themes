@@ -1,0 +1,65 @@
+/* @part: alarm: rules */
+    @keyframes kp-alarm-slice {
+        0%,
+        94% {
+            clip-path: inset(50% 0 50% 0);
+        }
+        95% {
+            clip-path: inset(20% 0 66% 0);
+        }
+        97% {
+            clip-path: inset(58% 0 28% 0);
+        }
+        99% {
+            clip-path: inset(50% 0 50% 0);
+        }
+    }
+
+    @keyframes kp-alarm-decode-letter {
+        0% {
+            color: transparent;
+            text-shadow: none;
+        }
+    }
+
+    @keyframes kp-alarm-decode-noise {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-alarm-detail-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-alarm-caret {
+        0%,
+        49.9% {
+            opacity: 1;
+        }
+        50%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-alarm-march {
+        100% {
+            background-position-x: 2.8284rem;
+        }
+    }
+
+    @keyframes kp-alarm-sweep {
+        100% {
+            translate: 0 680%;
+        }
+    }
+

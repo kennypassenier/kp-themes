@@ -1,0 +1,48 @@
+/* @part: signature-base: opening of the signature block */
+    [data-theme='brutalism'] {
+        --kp-sig-br-drop: var(--kp-drop, 6px);
+        /* G1: gravity. What comes falls on the meter's own Thrown on curve
+           (it leaves at rest and lands at full speed); what goes is lifted
+           on the same curve played back (1 - f(1 - t), so a leave is its
+           arrival, frame for frame). */
+        --kp-sig-br-fall: cubic-bezier(0.6, 0, 0.9, 0.5);
+        --kp-sig-br-up: cubic-bezier(0.1, 0.5, 0.4, 1);
+        /* G4: durations count the register's 100 ms (--fx-duration). Contact
+           is 1 unit; a fall, an arrival and a leave 3; the dialog, the big
+           slab, 15; a loop 12; the progress bar's walk 8 and its loop 24.
+           Literals, because js/motion.js reads them as strings. */
+        --kp-sig-br-time: 300ms;
+        --kp-sig-br-dialog: 1500ms;
+        --kp-sig-br-loop: 1200ms;
+        --kp-sig-br-bar-time: 800ms;
+        --kp-sig-br-bar-loop: 2400ms;
+        /* js/motion.js: a close is its open turned around, so its time is the
+           dialog's; a box eases to a new size in a fall. */
+        --kp-close-max: var(--kp-sig-br-dialog);
+        --kp-size-max: var(--kp-sig-br-time);
+        /* A part a script removes or hides (the busy table's layer, a file
+           row, a tree's children, a re-shown alert) is lifted off as it
+           leaves and set down as it arrives: js/motion.js leavesState()
+           (lessons 19, 37). What takes no box arrives as nothing (lesson 23).
+           The space a leave folds shut takes the leave's own 3 units and
+           starts with it (lesson 24). */
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+        /* G3, G12: how far a part is held up-left off its footprint, by size:
+           a plate falls from 1.5 rem, the big slab from 2.5 rem, a small
+           part from 0.75 rem, a row or a card lifted off from 1 rem. */
+        --kp-sig-br-h-plate: 1.5rem;
+        --kp-sig-br-h-slab: 2.5rem;
+        --kp-sig-br-h-part: 0.75rem;
+        --kp-sig-br-h-leave: 1rem;
+        /* G10: the lintel, three gradient layers (the beam, two cables) on a
+           picture twice the well's height; position-x 50%, 21%, 79%. */
+        --kp-sig-br-cable: max(2px, 0.16rem);
+        --kp-sig-br-lintel:
+            linear-gradient(to bottom, transparent calc(100% - max(3px, 11%)), var(--border-strong) 0),
+            linear-gradient(var(--border-strong), var(--border-strong)), linear-gradient(var(--border-strong), var(--border-strong));
+        --kp-sig-br-lintel-size: 76% 200%, var(--kp-sig-br-cable) 200%, var(--kp-sig-br-cable) 200%;
+    }
+

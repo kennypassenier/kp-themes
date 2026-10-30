@@ -1,0 +1,106 @@
+{
+  "output": "css/pastel-register.css",
+  "items": [
+    {
+      "open": "/* The redaction plate's alpha, registered so it can be transitioned: an\n   unregistered custom property flips at the end of its transition instead\n   of passing through values, and the plate's background reads it through\n   color-mix(). 1 is the covered plate, 0 the cleared one [scope-94]. */\n@property --kp-redact-alpha {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n/* The bar's mega menu is held on screen while a transition on the panel plays (js/components.js\n   settleClosing()): this number, which pastel transitions over the sheet's time, is that transition\n   (review round 2, 2026-10-13; brutalism's --kp-sig-br-hold). */\n@property --kp-sig-pastel-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-hooks.css",
+        "the-navbar.css",
+        "the-sticker.css",
+        "card.css",
+        "windows.css",
+        "data.css",
+        "the-demos-own-pieces.css",
+        "the-alarm.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature: pastel's grammar [scope-141] ───────────────────────────── */\n/* Kenny approved pastel's character in full on 2026-10-14 03:23\n   (research/pastel-character/decided.json, themes/pastel/CHARACTER.md §1,\n   G1-G20): a risograph-printed sticker sheet in a planner. Everything that\n   happens here happens to paper: it is PRINTED TWICE AND STUCK ON. A part's\n   second pass (a flat silhouette in the second ink, --fx-overprint, no words)\n   springs from a wide misregistration into its rest 6 px off register, down\n   and toward the end, where it stays as the part's flat shadow; 120 ms later\n   the part itself swings down from its top-start corner onto it, on the soft\n   landing (one 8 % overshoot, settled once). One landing is 560 ms; a close\n   is that landing played backwards, frame for frame. A part fixed to the\n   page then has a thumbtack pushed in at its top centre, which comes out\n   first when it leaves. Hover peels the top-end corner into a fold, focus is\n   the dashed line alone, a press sticks the part down flat, a live change\n   wobbles, and loading is the pom-pom caterpillar: everything that waits\n   becomes caterpillar (js/loading-pieces.js adds its pom-poms, head and\n   legs; the spinner is the caterpillar going round a day sticker).\n\n   HOW THE TWO PASSES ARE TWO LAYERS. The demo draws the pass and the part as\n   two sibling boxes, so the part can be invisible while its pass is already\n   there. In the package a part is one element, and its opacity and its turn\n   carry everything inside it, pseudo-elements included; so the pass is\n   drawn OUTSIDE the part wherever the part can be faded as a whole:\n     A. a part in the top layer (a dialog, a popover, a menu, the date\n        picker's panel, the combobox's list): its own ::backdrop, placed on\n        the part by anchor positioning (`position-anchor: auto`, which reads\n        the part's layout box, never its turn). A modal's dim is that\n        backdrop's 200vmax border, so a click outside still reaches it;\n     A2. a part hanging in its holder (the bar's dropdown and mega menu, a\n        tooltip): the holder's ::after, anchored to the part\n        (`anchor-scope` keeps the name to the holder);\n   and where neither exists (a toast, an alert, the tour's card, the side\n   navigation, the busy panels), the part draws its own plate and pass:\n     B. the plate is its ::after and the pass its ::before, both under its\n        words; the part does not fade as a whole, its plate and its children\n        follow `--kp-sig-pa-ink`, and the pass counter-turns against the\n        part's swing, so on screen it only slides, as the demo's does.\n   Two registered numbers carry the clock (--kp-sig-pa-pass for the pass,\n   --kp-sig-pa-ink for the part), so anything that reads them follows the\n   one animation that runs; js/motion.js keeps and reverses that animation\n   (and a ::backdrop's) for every close, so a close stays the open backwards.\n\n   Without anchor positioning (`@supports not (anchor-name: --a)`) every\n   part shows its pass at rest as a flat box-shadow and opens with the swing\n   alone. Every motion sits under prefers-reduced-motion: no-preference; the\n   reduced pose is the finished picture (G19). Colours are tokens only. */\n\n@property --kp-sig-pa-ink {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-sig-pa-pass {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@layer kp.signature {\n",
+      "files": [
+        "the-grammar-as-tokens-g1.css",
+        "the-anchors-keyframes-0a.css",
+        "the-pass-outside-the-part.css",
+        "the-pass-in-the-holder-a2.css",
+        "a-part-that-draws-its-own.css",
+        "the-alarm-scope-94-scope.css",
+        "leaving-and-arriving-g12.css",
+        "paper-at-rest.css",
+        "pointing-focus-press-g13.css",
+        "tones-the-live-change-g8.css",
+        "loading.css",
+        "the-spinner.css",
+        "the-signature-elements.css",
+        "the-meter-with-a-mark-this.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "segmented-toolbar.css"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "file": "the-fourth-adoption-round.css"
+    },
+    {
+      "file": "rows-cards-and-choices.css"
+    },
+    {
+      "file": "time-and-flows.css"
+    },
+    {
+      "file": "the-calm-components.css"
+    },
+    {
+      "file": "the-kpadopt5-and-kpadopt6.css"
+    },
+    {
+      "file": "t56-q.css"
+    },
+    {
+      "file": "end-t56-q/base.css"
+    },
+    {
+      "file": "end-t56-q/end-t56-q.css"
+    },
+    {
+      "file": "end-t56-q2-people.css"
+    },
+    {
+      "file": "end-t56-q2-confirm.css"
+    },
+    {
+      "file": "end-t56-q2-calm.css"
+    },
+    {
+      "file": "end-t56-q2-updates.css"
+    },
+    {
+      "file": "end-t56-q2-choose.css"
+    },
+    {
+      "file": "end-t56-q2-schedule/base.css"
+    },
+    {
+      "file": "end-t56-q2-schedule/end-t56-q2-schedule.css"
+    },
+    {
+      "file": "graph-loading-r3-b-ps-load.css"
+    }
+  ]
+}

@@ -1,0 +1,305 @@
+/* @part: matrix: Matrix */
+    /* --- Matrix [kpadopt2-grids] -------------------------------------------- */
+
+    /* Source x destination: a cell per pair, each in words and a glyph as
+ * well as a tone (allowed, mismatch, blocked, unknown; `self` is the pair
+ * with itself, dashed and inert). The grid scrolls inside its own box when
+ * the cells cannot be narrower than --kp-matrix-cell-min; the column
+ * headers stay on the top and the row headers on the start side, and the
+ * corner holds the key ("from down to across"). A header is a button that
+ * lights its row and its column (`data-kp-lit` on the matrix dims the cells
+ * it does not touch); one cell can be pinned (`aria-pressed`); a rule
+ * being read marks the cells it touches (`data-kp-mark`).
+ * Knobs: --kp-matrix-cols (set by the script), --kp-matrix-head (6.5rem, 4.6rem
+ * in a box under 36rem: the row-label column's least width) and --kp-matrix-head-max (12rem, 8rem under 36rem: its
+ * most; between the two it is as wide as its longest label), --kp-matrix-cell-min (3.5rem), --kp-matrix-cell-height
+ * (44px), --kp-matrix-gap (4px), --kp-matrix-mark-gap and --kp-matrix-head-pad (--kp-space-sm: a header's
+ * name from its mark and from its edges), --kp-matrix-ground (the card colour: what the
+ * sticky headers are painted with), --kp-matrix-dim (0.4). */
+    .kp-matrix {
+        --kp-matrix-ground: var(--card);
+        container: kp-matrix / inline-size;
+        position: relative;
+        max-inline-size: 100%;
+        overflow: auto;
+        overscroll-behavior-x: contain;
+        scroll-padding-inline-start: var(--kp-matrix-head-max, 12rem);
+        scroll-padding-block-start: 2.5rem;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-matrix__grid {
+        display: grid;
+        /* The row-label column is as wide as its longest label (never under --kp-matrix-head, never over --kp-matrix-head-max,
+         * then the labels wrap), and a column is never narrower than its header's longest word [r3r5-1019 uses-labels]. */
+        grid-template-columns: fit-content(var(--kp-matrix-head-max, 12rem)) repeat(var(--kp-matrix-cols, 5), minmax(min-content, 1fr));
+        gap: var(--kp-matrix-gap, 4px);
+        inline-size: max-content;
+        min-inline-size: 100%;
+        align-content: start;
+    }
+
+    .kp-matrix__line {
+        display: contents;
+    }
+
+    @container kp-matrix (max-width: 36rem) {
+        .kp-matrix__grid {
+            --kp-matrix-head: 4.6rem;
+            --kp-matrix-head-max: 8rem;
+            --kp-matrix-gap: 3px;
+            --kp-matrix-head-pad: var(--kp-space-xs, 0.25rem);
+        }
+    }
+
+    .kp-matrix__corner {
+        position: sticky;
+        inset: 0 auto auto 0;
+        z-index: 3;
+        min-inline-size: var(--kp-matrix-head, 6.5rem);
+        display: flex;
+        align-items: flex-end;
+        padding: 4px var(--kp-matrix-head-pad, var(--kp-space-sm, 0.5rem));
+        background: var(--kp-matrix-ground);
+        color: var(--muted-foreground);
+        box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__col,
+    .kp-matrix__row {
+        appearance: none;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        margin: 0;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-matrix-ground);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* A header's name keeps the same room from its colour mark and from its edges, along the top as down the side
+     * (Kenny, 2026-10-16: the top row's text stuck to its mark while the side's did not). */
+    :is(.kp-matrix__col, .kp-matrix__row):has(> .kp-matrix__name) {
+        gap: var(--kp-matrix-mark-gap, var(--kp-space-sm, 0.5rem));
+        padding-inline: var(--kp-matrix-head-pad, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-matrix__col {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-block: 4px;
+        box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__row {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        padding-block: 0;
+        color: var(--foreground);
+        text-align: start;
+        box-shadow: var(--kp-matrix-gap, 4px) 0 0 var(--kp-matrix-ground);
+    }
+
+    /* A header's name is never cut with an ellipsis: it wraps onto more lines and the row (or the header row) grows to hold
+     * it; only a word longer than its column breaks, at the column's edge [r3r5-1019 uses-labels]. */
+    .kp-matrix__name {
+        min-inline-size: 0;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+
+    .kp-matrix__mark {
+        flex: none;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border-radius: 2px;
+        background: var(--kp-heat-mark, var(--primary));
+    }
+
+    @container kp-matrix (max-width: 36rem) {
+        .kp-matrix__row .kp-matrix__mark {
+            display: none;
+        }
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row):hover {
+        background: color-mix(in oklab, var(--muted) 70%, var(--kp-matrix-ground));
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row)[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row):focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-matrix__cell {
+        appearance: none;
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        min-inline-size: var(--kp-matrix-cell-min, 3.5rem);
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        margin: 0;
+        padding: 2px;
+        border: 2px solid transparent;
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+        text-align: center;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-matrix__cell[data-kp-glyph]::before {
+        content: attr(data-kp-glyph);
+        font-size: 1.25em;
+        font-weight: 700;
+    }
+
+    .kp-matrix__cell[data-kp-tone='ok'] {
+        background: var(--success);
+        color: var(--success-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='warn'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='muted'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-matrix__cell:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border);
+        background: transparent;
+        cursor: default;
+    }
+
+    .kp-matrix__cell[data-kp-tone='none'] {
+        border-color: var(--border-strong);
+    }
+
+    .kp-matrix__cell[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-matrix__cell[data-kp-mark] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix[data-kp-lit] .kp-matrix__cell:not([data-kp-hot], [data-kp-mark], [data-kp-inert]) {
+        opacity: var(--kp-matrix-dim, 0.4);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-matrix__cell {
+            transition:
+                transform var(--fx-duration, 110ms) var(--fx-ease, ease),
+                opacity var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true']) {
+            transform: var(--kp-matrix-cell-hover, scale(1.05));
+        }
+    }
+
+    /* As in the heat grid: no skeleton-to-skeleton gap, so a loading row is as tall as its ready row. */
+    .kp-matrix__cell.kp-skeleton {
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        block-size: auto;
+        margin-block: 0;
+        cursor: progress;
+    }
+
+    .kp-matrix__col--skeleton,
+    .kp-matrix__row--skeleton {
+        block-size: 1rem;
+        align-self: center;
+    }
+
+    .kp-matrix__state {
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The legend under a matrix is the heat grid's. A matrix swatch shows the
+ * cell's plate. */
+    .kp-heat__swatch--plate {
+        inline-size: 1rem;
+        block-size: 1rem;
+        border-width: 2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='ok'] {
+        background: var(--success);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='warn'] {
+        background: var(--warning);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='bad'] {
+        background: var(--destructive);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='muted'] {
+        background: var(--muted);
+    }
+
+    .kp-heat__swatch--plate:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        background: transparent;
+    }
+
+    .kp-heat__swatch--plate[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--card);
+    }
+

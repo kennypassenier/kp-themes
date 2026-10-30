@@ -1,0 +1,96 @@
+/* @part: motion-guarded: Motion, guarded */
+    /* ── Motion, guarded [DI7] ─────────────────────────────────────────── */
+
+    /* Every animation and transition this register runs lives here, so a
+   reader who asked for reduced motion never receives one: the rest
+   states above are what they get instead — full opacity, no clip, rules
+   drawn, marks either covered (never seen) or clear immediately. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The headline: js/effects.js's `popdown` routine toggles this
+       class (a new routine — the text never splits into glyphs or
+       words, unlike every other headline routine); without it the class
+       never appears and the element stays at its rest opacity/clip. Since
+       the raster grammar (Kenny, 2026-10-07 23:18) it is written from its
+       top edge down by the raster, a quarter per frame, 4 frames, with no
+       fade; the routine's own timer (TIMINGS['kp-popdown'], 340 ms) still
+       takes the class off after it. */
+        [data-theme='nostromo'][data-kp-effects] [data-kp-reveal='headline'].is-popping {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) both;
+        }
+
+        /* The dossier stamp: a ::before pseudo-element, which JS can never
+       select — gated on [data-kp-effects] presence directly, exactly as
+       the demo's own stylesheet gates it. Drawn by the raster as the
+       headline is. */
+        [data-theme='nostromo'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'][data-kp-label]::before {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) both;
+            animation-delay: var(--kp-stamp-delay);
+        }
+
+        /* The section rule is printed start to end in 4 frames [G2, G4]. */
+        [data-theme='nostromo'][data-kp-effects] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-rule-in var(--kp-sig-no-strike) steps(4, end) both;
+            animation-delay: var(--kp-rule-delay);
+        }
+
+        [data-theme='nostromo'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                background var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease);
+        }
+
+        /* The dialog's entrance is the raster's, in kp.signature below. */
+    }
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js); kp-rule-in
+   is the base layer's, shared with four other themes at their own
+   durations. kp-popdown and kp-dialog-in are new at this lift; nostromo no
+   longer plays them (the raster draws instead, 2026-10-07), but they stay
+   declared here: the names are global, and grotesk names kp-dialog-in, so
+   in the bundle taking them out would change another register. */
+    @keyframes kp-popdown {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            opacity: 0;
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-dialog-in {
+        0% {
+            opacity: 0;
+            transform: translateY(6px) scale(0.98);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a beige plate, small mono set very wide in caps. */
+    [data-theme='nostromo'] .kp-marquee {
+        background: var(--card);
+        border-block: 1px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8em;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        --kp-marquee: 42000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='nostromo'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='nostromo'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.2em;
+        color: var(--muted-foreground);
+        border-block-end: 1px solid var(--border-strong);
+    }
+

@@ -1,0 +1,54 @@
+/* @part: action-list-with-a-lead: Action list with a lead */
+    /* ── Action list with a lead ── */
+    [data-theme='titanium'] .kp-action-list--lead > li {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-action-list--lead > li[data-kp-state='new'] {
+        border-inline-start-color: var(--primary);
+    }
+    [data-theme='titanium'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        border-inline-start-color: var(--warning-foreground);
+    }
+    [data-theme='titanium'] .kp-action-list--lead > li[data-kp-state='next'] {
+        background: var(--muted);
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-action-list__title {
+        font-weight: 700;
+    }
+    [data-theme='titanium'] .kp-action-list__meta {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-action-list__when {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-action-list > li.kp-action-list__group {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-action-list__more > summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-action-list__payload {
+        border: 0;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.6);
+    }
+
+    /* ── Check lists: a gold reservation, the fix an instruction in bare metal's start bar ── */
+    [data-theme='titanium'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+        box-shadow: inset 0 3px 0 var(--warning-foreground);
+    }
+    [data-theme='titanium'] .kp-statusrow__fix {
+        padding-inline-start: 0.625rem;
+        box-shadow: inset 2px 0 0 var(--primary);
+        font-size: 0.8125rem;
+    }
+

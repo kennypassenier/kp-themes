@@ -1,0 +1,69 @@
+/* @part: alert: Alert */
+    /* --- Alert [TH4] ----------------------------------------------------- */
+
+    .kp-alert {
+        display: flex;
+        gap: 0.625rem;
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius, 0.5rem);
+        border: 1px solid var(--border-strong);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    /* An alert is a message, not a control: it has no hover or active state,
+ * which is why the generator derives none for these surfaces. */
+    .kp-alert--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    .kp-alert--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    .kp-alert--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    .kp-alert--destructive {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    /* A destructive action on a destructive plate (Stop on an urgent or a refused question, a failed plate's action) is an outlined key: its
+     * own destructive fill with the plate's ink as its edge and a hairline of the plate's colour outside that, so it is never red on red,
+     * and on a light or dark card the same edge still reads as the button's own [t56-shared3-1018]. */
+    .kp-alert--destructive .kp-button--destructive,
+    .kp-alert--destructive .kp-button--destructive:hover:not(:disabled),
+    .kp-alert--destructive .kp-button--destructive:active:not(:disabled),
+    .kp-alert--destructive .kp-button--destructive:disabled {
+        border-color: var(--destructive-foreground);
+        box-shadow: 0 0 0 1px var(--destructive);
+    }
+
+    /* The flavour is named in text as well as coloured [DI4]: four coloured
+ * plates are four colours to someone who sees them all as one. */
+    .kp-alert__label {
+        font-weight: 600;
+    }
+
+    .kp-alert__icon {
+        flex: none;
+    }
+
+    .kp-alert__body {
+        flex: 1;
+    }
+
+    .kp-alert__close {
+        margin-inline-start: auto;
+        flex: none;
+    }
+

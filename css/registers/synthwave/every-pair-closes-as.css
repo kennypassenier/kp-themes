@@ -1,0 +1,209 @@
+/* @part: every-pair-closes-as: Every pair closes as its open reversed */
+    /* ── Every pair closes as its open reversed [all-themes audit, 2026-10-13;
+       lessons 11, 22, 26, 36, 38] ──────────────────────────────────────────
+       The tree's branches, the tour, and the header's dropdown, mega menu and
+       phone panel: each opens by the theme's own motion and closes as that
+       motion played backwards, in the same two beats. */
+
+    /* A tree branch's children glide open and shut (js/motion.js glideGroup());
+       shutting, the state is already `aria-expanded="false"` and the group is
+       kept drawn until the glide is over. It appeared at once and only the box
+       glided. */
+    [data-theme='synthwave'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='synthwave'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The tour: the card climbs as the dialog does, in two beats; the page's dim
+       grows out of the target and the ring is drawn in over the same two beats,
+       and css/components.css takes both back on the same sunrise curve (it is
+       its own reverse) to no shadow at all. They came in 160, 250 and 350 ms
+       and went in 1000. */
+    [data-theme='synthwave'] {
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 450ms;
+        --kp-tour-dim-close-ease: cubic-bezier(0.65, 0, 0.35, 1);
+        /* The header's hover dropdown and its phone panel are held on screen for
+           their close (js/components.js); Firefox does not hold `display`. */
+        --kp-nav-close-time: 450ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='synthwave'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave'] .kp-tour[open]:not([data-kp-tour-stepping])::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow calc(2 * var(--kp-sw-beat)) linear backwards;
+        }
+
+        /* `backwards`, not `both`: a ring a finished animation holds cannot be
+           taken back by the close's transition (lesson 21). */
+        [data-theme='synthwave'] [data-kp-tour-target] {
+            animation: kp-sig-synthwave-tour-ring calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+            transition:
+                box-shadow calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                outline-color calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun);
+        }
+
+        /* A step is no arrival and no news: the card keeps its shape and walks to
+           the next target in two beats. */
+        [data-theme='synthwave'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+            transition:
+                left calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                top calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun);
+        }
+
+        [data-theme='synthwave'] .kp-tour:is([data-kp-tour-stepping], [data-kp-updating])::after {
+            animation: none;
+        }
+
+        /* The header's dropdown and mega menu climb as a menu does [G3: "a menu,
+           the header's menu, a popover ... open the same way"]: uncovered from
+           their foot behind the beam, two beats on the sunrise curve, and set
+           back behind it to close. A transition to the open state and back,
+           as the bar holds the panel through its close (js/components.js marks
+           the item `[data-kp-nav-closing]` for `--kp-nav-close-time`, and the
+           mega menu's for as long as this transition runs). The dropdown faded
+           in and vanished; the mega menu had nothing. */
+        [data-theme='synthwave'] .kp-nav__menu {
+            clip-path: inset(100% -4rem -4rem -4rem);
+            transition:
+                clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                display calc(2 * var(--kp-sw-beat)) allow-discrete;
+        }
+
+        [data-theme='synthwave'] .kp-nav__links > li > .kp-nav__menu::after {
+            inset-block-start: calc(100% - 2px);
+            opacity: 1;
+            transition:
+                inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0, 0, 0.15, 1);
+        }
+
+        [data-theme='synthwave']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+
+        [data-theme='synthwave']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            clip-path: inset(-4rem);
+        }
+
+        [data-theme='synthwave']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            )::after {
+            inset-block-start: 0;
+            opacity: 0;
+            transition:
+                inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0.85, 0, 1, 1);
+        }
+
+        @starting-style {
+            [data-theme='synthwave']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                ) {
+                clip-path: inset(100% -4rem -4rem -4rem);
+            }
+
+            [data-theme='synthwave']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                )::after {
+                inset-block-start: calc(100% - 2px);
+                opacity: 1;
+            }
+        }
+
+        /* The phone panel climbs the same way under the bar, and the bar's
+           page-load slide does not replay on it: one mechanism per part. It
+           slid down and faded in 600 ms and closed by the same slide forwards. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+                position: relative;
+                clip-path: inset(100% -1rem -1rem -1rem);
+                animation: none;
+                transition:
+                    clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                    display calc(2 * var(--kp-sw-beat)) allow-discrete;
+            }
+
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links::after {
+                content: '';
+                position: absolute;
+                inset: calc(100% - 2px) 0 auto;
+                z-index: 3;
+                block-size: 2px;
+                background: var(--kp-core);
+                box-shadow: var(--kp-sw-laser);
+                opacity: 1;
+                pointer-events: none;
+                transition:
+                    inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                    opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0, 0, 0.15, 1);
+            }
+
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                clip-path: inset(-1rem);
+            }
+
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links::after {
+                inset-block-start: 0;
+                opacity: 0;
+                transition:
+                    inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                    opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0.85, 0, 1, 1);
+            }
+
+            @starting-style {
+                [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                    clip-path: inset(100% -1rem -1rem -1rem);
+                }
+
+                [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links::after {
+                    inset-block-start: calc(100% - 2px);
+                    opacity: 1;
+                }
+            }
+
+            /* Inside the open panel the lists are its own rows: no climb of their own. */
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu {
+                clip-path: none;
+                transition: none;
+            }
+
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu::after {
+                content: none;
+            }
+        }
+    }
+
+    @keyframes kp-sig-synthwave-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+

@@ -1,0 +1,38 @@
+/* @part: the-dashboard-parts: The dashboard parts */
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='pastel'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='pastel'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='pastel'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='pastel'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='pastel'] .kp-matrix__corner {
+        text-wrap: balance;
+    }
+    /* A ghost bar stands where its run would, as in formal: absolute in its track, so a second ghost of one track never
+       drops under the first and out of the timeline onto the legend. */
+    [data-theme='pastel'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
+        position: absolute;
+    }
+}
+

@@ -1,0 +1,414 @@
+/* @part: console: An interactive console */
+@layer kp.components {
+    /* --- An interactive console [kpadopt6] --------------------------------
+ *
+ * A body of blocks, one per command (the command in the mono face, its status with a glyph and a word, its output in
+ * the package's code block, a refusal in the alert's what / why / what now), and under it the prompt bar: an optional
+ * select, the prompt glyph, the line and Run. The body never shrinks below `--kp-console-min` (about twelve lines), so
+ * empty, loading, failed and full all stand in one height. On a phone the select goes above the prompt, Run takes its
+ * own line and the bar sticks to the foot of the screen with the safe-area inset. */
+    .kp-console {
+        --kp-console-min: 18rem;
+        container: kp-console / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        inline-size: 100%;
+        min-inline-size: 0;
+        overflow: clip;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-console__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-console__body {
+        position: relative;
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-console-min);
+        block-size: var(--kp-console-height, 26rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        background: var(--muted);
+    }
+
+    .kp-console__body:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: -2px;
+    }
+
+    .kp-console__plate {
+        box-sizing: border-box;
+        min-block-size: calc(var(--kp-console-height, 26rem) - 2 * var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-console__block {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) / 1.5);
+        background: var(--card);
+    }
+
+    .kp-console__block-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-console__command {
+        grid-column: 1;
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+        background: none;
+        padding: 0;
+    }
+
+    .kp-console__command-prompt {
+        flex: none;
+        color: var(--muted-foreground);
+        user-select: none;
+    }
+
+    .kp-console__status {
+        grid-column: 2;
+        grid-row: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        white-space: nowrap;
+    }
+
+    .kp-console__glyph {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.125rem;
+        block-size: 1.125rem;
+    }
+
+    .kp-console__glyph > .kp-spinner {
+        --kp-spinner-size: 0.875rem;
+    }
+
+    .kp-console__status[data-kp-status='ok'] {
+        color: var(--success-foreground, var(--foreground));
+    }
+
+    .kp-console__status[data-kp-status='ok'] .kp-console__glyph::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-console__status[data-kp-status='fail'] {
+        color: var(--destructive);
+    }
+
+    .kp-console__status[data-kp-status='fail'] .kp-console__glyph::before {
+        content: '×';
+        font-weight: 700;
+    }
+
+    .kp-console__status[data-kp-status='stop'] {
+        color: var(--muted-foreground);
+    }
+
+    .kp-console__status[data-kp-status='stop'] .kp-console__glyph::before {
+        content: '■';
+        font-size: 0.7rem;
+    }
+
+    .kp-console__status[data-kp-status='lost'] {
+        color: var(--warning-foreground, var(--foreground));
+    }
+
+    .kp-console__status[data-kp-status='lost'] .kp-console__glyph::before {
+        content: var(--kp-glyph-alert, '?');
+        font-weight: 700;
+    }
+
+    /* Six fixed places: each tool has its own column in every block and state, so one that does not apply leaves a gap
+       instead of letting the others slide along. */
+    .kp-console__tools {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(6, max-content);
+        justify-content: start;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-console__tool[data-kp-console-off] {
+        visibility: hidden;
+    }
+
+    .kp-console__tool[data-kp-console-tool='copy-command'] {
+        grid-column: 1;
+    }
+    .kp-console__tool[data-kp-console-tool='copy-output'] {
+        grid-column: 2;
+    }
+    .kp-console__tool[data-kp-console-tool='again'] {
+        grid-column: 3;
+    }
+    .kp-console__tool[data-kp-console-tool='recheck'] {
+        grid-column: 4;
+    }
+    .kp-console__tool[data-kp-console-tool='cancel'] {
+        grid-column: 5;
+    }
+    .kp-console__tool[data-kp-console-tool='collapse'] {
+        grid-column: 6;
+    }
+
+    .kp-console__problem {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+    }
+
+    .kp-console__problem[hidden],
+    .kp-console__output[hidden] {
+        display: none;
+    }
+
+    .kp-console__nooutput {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) 0;
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-console__block[data-kp-collapsed] .kp-console__tools {
+        margin-block-end: 0;
+    }
+
+    .kp-console__earlier {
+        display: grid;
+        justify-items: start;
+    }
+
+    .kp-console__bar {
+        padding: var(--kp-space-sm, 0.5rem);
+        padding-block-end: max(var(--kp-space-sm, 0.5rem), env(safe-area-inset-bottom));
+        border-block-start: 1px solid var(--border);
+        background: var(--card);
+    }
+
+    /* One grid for the bar: the context's label on its own row, then the context select and the line (prompt, input, Run) on ONE row,
+       centred on the same line and the same height, so nothing sits half a label higher or lower than its neighbour [kpadopt6-r2]. */
+    .kp-console__form {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-console__context-wrap {
+        display: contents;
+    }
+
+    .kp-console__context-wrap[hidden] {
+        display: none;
+    }
+
+    .kp-console__context-label {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .kp-console__context {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: center;
+    }
+
+    .kp-console__context-wrap:not([hidden]) ~ .kp-console__line,
+    .kp-console__line {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .kp-console__context-wrap[hidden] ~ .kp-console__line {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+
+    .kp-console__context-label {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-console__context {
+        min-inline-size: 10rem;
+    }
+
+    .kp-console__line {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-console__prompt {
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-weight: 700;
+        color: var(--primary);
+        user-select: none;
+    }
+
+    .kp-console__input.kp-field__input {
+        font-family: var(--font-mono, ui-monospace, monospace);
+    }
+
+    .kp-console__run {
+        min-inline-size: 7.5rem;
+    }
+
+    .kp-console__input.kp-field__input,
+    .kp-console__context,
+    .kp-console__run {
+        min-block-size: 2.25rem;
+        box-sizing: border-box;
+    }
+
+    .kp-console__prompt {
+        line-height: 1;
+        align-self: center;
+    }
+
+    .kp-console__hint {
+        grid-column: 1 / -1;
+        margin: 0;
+        min-block-size: 1.25lh;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-console__hint[data-kp-console-why] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-console__complete {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-console__complete[hidden] {
+        display: none;
+    }
+
+    @container kp-console (max-width: 34rem) {
+        .kp-console {
+            --kp-console-height: min(26rem, 55svh);
+        }
+
+        .kp-console__form {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-console__form {
+            grid-template-rows: none;
+        }
+
+        .kp-console__context-wrap:not([hidden]) ~ .kp-console__line,
+        .kp-console__line {
+            grid-column: 1;
+            grid-row: auto;
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-console__context-wrap[hidden] ~ .kp-console__line {
+            grid-row: auto;
+        }
+
+        .kp-console__context {
+            grid-column: 1;
+            grid-row: auto;
+        }
+
+        .kp-console__context-label {
+            grid-row: auto;
+        }
+
+        .kp-console__run {
+            grid-column: 1 / -1;
+            min-block-size: 2.75rem;
+        }
+
+        .kp-console__input.kp-field__input,
+        .kp-console__context {
+            min-block-size: 2.75rem;
+        }
+
+        .kp-console__block-head {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-console__status {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .kp-console__tools {
+            grid-row: 3;
+            /* `1fr` has a min-content floor: tools whose words do not break (a nowrap button, a long translated word) were
+               wider than a third and ran past the block, "Collapse" cut [homelab 132]. A third is a third; the words wrap. */
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .kp-console__tool {
+            min-inline-size: 0;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        .kp-console__tool[data-kp-console-tool='copy-command'] {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='copy-output'] {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='again'] {
+            grid-column: 3;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='recheck'] {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .kp-console__tool[data-kp-console-tool='cancel'] {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .kp-console__tool[data-kp-console-tool='collapse'] {
+            grid-column: 3;
+            grid-row: 2;
+        }
+    }
+}
+

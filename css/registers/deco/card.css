@@ -1,0 +1,294 @@
+/* @part: card: Cards and the dossier */
+    /* ── Cards and the dossier ────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-card {
+        background: var(--popover);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    /* The stamp: a ruby plate, tilted, the demo's own literal offset. The
+   demo carries no `data-kp-label-open` colour change, so none is answered
+   here — the label stays "Classified" whether the file is open or not. */
+    [data-theme='deco'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        inset-block-start: -0.6rem;
+        inset-inline-end: 1rem;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.5rem;
+        rotate: 1.5deg;
+    }
+
+    /* The redactions: jewel plates (emerald) sitting over the words —
+   covered when the effects module is live, always readable without it
+   (AR34). Rest state here is cleared/readable; the trigger's marks start
+   covered only once [data-kp-effects] is set. Scoped to the dossier's own
+   marks, not every mark on the page (the lede's stay plain highlights). */
+    [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark {
+        display: inline-block;
+        background: transparent;
+        color: var(--foreground);
+        border-radius: 0;
+        padding: 0 0.3em;
+        box-shadow: inset 0 -2px 0 var(--accent);
+    }
+
+    [data-theme='deco'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        background: var(--accent);
+        color: var(--accent);
+        box-shadow: none;
+    }
+
+    /* Panels: one gold hairline, no shadow, nothing floats. */
+    [data-theme='deco'] .kp-dialog,
+    [data-theme='deco'] .kp-popover,
+    [data-theme='deco'] .kp-menu,
+    [data-theme='deco'] .kp-toast,
+    [data-theme='deco'] .kp-tooltip,
+    [data-theme='deco'] .kp-confirm,
+    [data-theme='deco'] .kp-datepicker__panel,
+    [data-theme='deco'] .kp-combobox__list,
+    [data-theme='deco'] .kp-palette,
+    [data-theme='deco'] .kp-theme-menu__list {
+        background: var(--popover);
+        color: var(--popover-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='deco'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+
+    /* The dialog backdrop: the demo's literal rewritten as a relative
+   colour of --sidebar-background (DI9). */
+    [data-theme='deco'] .kp-dialog::backdrop {
+        background: var(--kp-backdrop);
+    }
+
+    [data-theme='deco'] .kp-toast {
+        border-color: var(--border-strong);
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='deco'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    [data-theme='deco'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='deco'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='deco'] .kp-toast--destructive,
+    [data-theme='deco'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='deco']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='deco'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    [data-theme='deco'] .kp-toasts {
+        gap: 0.8rem;
+    }
+
+    [data-theme='deco'] .kp-menu__item:hover,
+    [data-theme='deco'] .kp-menu__item:focus-visible {
+        background: var(--secondary);
+        color: var(--primary);
+    }
+
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='deco'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-alert__label {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-grid__tile,
+    [data-theme='deco'] .kp-split__pane {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-split__separator {
+        background: var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-grid {
+        gap: 1.2rem;
+    }
+
+    [data-theme='deco'] .kp-split {
+        gap: 1rem;
+    }
+
+    /* The footer: blue-black, the gold wordmark. */
+    [data-theme='deco'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--sidebar-foreground);
+    }
+
+    [data-theme='deco'] .kp-footer h4 {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--sidebar-primary);
+    }
+
+    [data-theme='deco'] .kp-footer a {
+        color: var(--sidebar-foreground);
+        text-decoration: none;
+        font-size: 0.85rem;
+    }
+
+    [data-theme='deco'] .kp-footer a:hover,
+    [data-theme='deco'] .kp-footer a:focus-visible {
+        color: var(--sidebar-primary);
+    }
+
+    [data-theme='deco'] .kp-footer .microlabel {
+        color: var(--muted-foreground);
+    }
+
+    /* ── Badges, tags, status ──────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-badge,
+    [data-theme='deco'] .kp-tag {
+        border-radius: 0;
+        border: 1px solid var(--border-strong);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-health {
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-health__dot {
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-skeleton {
+        background: repeating-linear-gradient(135deg, var(--muted) 0 6px, var(--card) 6px 12px);
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    /* The track is --border (the quiet hairline, not the gold boundary):
+   --border-strong shares the gold hue with --primary and reads as one
+   ring turning, not a head against a track [KT8]. */
+    [data-theme='deco'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='deco'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes ──────────────────────────────────────────────────── */
+
+    [data-theme='deco'] .kp-id,
+    [data-theme='deco'] .kp-url,
+    [data-theme='deco'] .kp-numeric,
+    [data-theme='deco'] .kp-timestamp,
+    [data-theme='deco'] .kp-masked,
+    [data-theme='deco'] .kp-copyable,
+    [data-theme='deco'] .kp-truncate,
+    [data-theme='deco'] .kp-cell-break,
+    [data-theme='deco'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='deco'] .kp-timestamp,
+    [data-theme='deco'] .kp-id {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='deco'] .kp-copyable__button {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='deco'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='deco'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+

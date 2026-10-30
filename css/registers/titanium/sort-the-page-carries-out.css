@@ -1,0 +1,21 @@
+/* @part: sort-the-page-carries-out: A sort the page carries out */
+/* ── A sort the page carries out [kpadopt4]: the sorted header is edged in bare metal (G6) ──
+   What the person chose is bare metal: the sorted header carries the tool edge along its top in `--primary`, at once and
+   linear; pressing a header drops it 1 px; a column that cannot be sorted now is a plain header. */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-table th[data-kp-sort]:is([aria-sort='ascending'], [aria-sort='descending']) {
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-table th[data-kp-sort]:not([aria-disabled='true']):active {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-table th[data-kp-sort]:is([aria-sort='ascending'], [aria-sort='descending'])::after {
+        font-family: var(--theme-font-mono);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-table th[data-kp-sort] {
+            transition: box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }
+}
+

@@ -1,0 +1,154 @@
+/* @part: the-meter-with-a-mark-this: The meter with a mark, this theme's way */
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 1, how the share
+       arrives 1, the mark past the end 3; its tone is taped off and its
+       loading is the lintel since 2026-10-07 23:44]. The package's own
+       markup and states (setMeter(), js/kpi.js): the track on the meter,
+       the share on ::before, the sign past the end or the loading picture on
+       ::after, the mark `.kp-meter__mark`. Every animation and transition
+       under prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='brutalism']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='brutalism']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='brutalism']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='brutalism']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='brutalism']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='brutalism']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='brutalism']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='brutalism']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── brutalism · the stacked blocks ───────────────────────────── */
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.875rem;
+        --kp-sig-meter-room: 1.125rem;
+        --kp-meter-fill: var(--accent);
+        --kp-sig-meter-walls: linear-gradient(90deg, transparent calc(100% - 3px), var(--foreground) 0) 0 0 / 10% 100%;
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--kp-sig-meter-walls), var(--card);
+        box-shadow: 3px 3px 0 var(--foreground);
+        /* The share walks to its value on two copies, one on each mirror of
+           the curve; the lower of them is drawn (see the progress bar). */
+        --kp-sig-br-lag: var(--kp-value, 0);
+        --kp-sig-br-lead: var(--kp-value, 0);
+    }
+
+    [data-theme='brutalism'] .kp-meter--inline {
+        --kp-sig-meter-walls: linear-gradient(90deg, transparent calc(100% - 2px), var(--foreground) 0) 0 0 / 20% 100%;
+    }
+
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)::before {
+        border-radius: 0;
+        background: var(--kp-sig-meter-walls), var(--kp-meter-fill-colour);
+        inline-size: calc(clamp(0, min(var(--kp-sig-br-lag), var(--kp-sig-br-lead)), 1) * 100%);
+    }
+
+    /* A yellow peg with a tab sticking up. */
+    [data-theme='brutalism'] .kp-meter__mark {
+        --kp-sig-meter-mw: 7px;
+        inset-block: -9px 0;
+        border-radius: 0;
+        background: var(--secondary);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    /* One more block thrown on top, off the row. */
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        inset-block-start: -10px;
+        inline-size: 0.75rem;
+        block-size: 0.625rem;
+        background: var(--kp-meter-fill-colour);
+        box-shadow:
+            inset 0 0 0 3px var(--foreground),
+            3px 3px 0 var(--foreground);
+    }
+
+    /* ── while loading: the lintel (above), in the track's own well ── */
+
+    /* ── how the share arrives: option 1, Thrown on, onto its footprint
+       [G3]: the share falls into its groove from up-left on the fall curve,
+       3 units. A later change of the value walks there on the same curve
+       when it grows, and on its mirror when it shrinks. ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter) {
+            transition:
+                --kp-sig-br-lag var(--kp-sig-br-time) var(--kp-sig-br-fall),
+                --kp-sig-br-lead var(--kp-sig-br-time) var(--kp-sig-br-up);
+        }
+
+        [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-brutalism-meter-throw var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
+            transition: none;
+        }
+    }
+
+    /* ── when the tone changes: taped off [G13] ──
+       A warning or a failure is a band of 45 degree hazard stripes in the
+       tone's paint and the ink; it never swells or bumps. */
+
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading])::before {
+        background: var(--kp-sig-meter-walls), repeating-linear-gradient(45deg, var(--warning) 0 5px, var(--foreground) 5px 10px);
+    }
+
+    [data-theme='brutalism'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading])::before {
+        background: var(--kp-sig-meter-walls), repeating-linear-gradient(45deg, var(--destructive) 0 5px, var(--foreground) 5px 10px);
+    }
+

@@ -1,0 +1,161 @@
+/* @part: upload-wizard: Upload and wizard */
+    /* --- Upload and wizard [TH44, TH48] ---------------------------------- */
+
+    .kp-upload__zone {
+        display: block;
+        padding: 1.5rem;
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        text-align: center;
+        cursor: pointer;
+    }
+
+    /* The zone is the label of a visually hidden file input, so Tab lands on
+ * the input and the base focus ring draws round an element nobody can see
+ * [gap-11]. The zone wears the ring instead, the same two parts the base
+ * layer draws: the contrast outline and the inner ring. */
+    :focus-visible + .kp-upload__zone,
+    [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    .kp-upload__zone[data-kp-dragging] {
+        border-color: var(--primary);
+        color: var(--foreground);
+    }
+
+    .kp-upload__list {
+        margin: 0.75rem 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-upload__file {
+        display: grid;
+        /* minmax(0, …): a name with nowhere to break gives way first, and the
+     * size and the remove button stay whole [DI11]. */
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        margin-block-end: 0.375rem;
+    }
+
+    .kp-upload__name {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* The remove button on the line with the name and the size [gap-11]. The
+ * row has three columns and five children (name, size, bar, message,
+ * button) in that order, so the button was auto-placed onto a row of its
+ * own under the message. Placed, not moved in the markup: a screen reader
+ * still meets it after the message, where the module writes it. */
+    .kp-upload__file > [data-kp-upload-remove] {
+        grid-row: 1;
+        grid-column: -2;
+    }
+
+    .kp-upload__size {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* One element, filled by a gradient stop: a second element for the fill
+ * would need its own width kept in step with aria-valuenow. */
+    .kp-upload__bar {
+        grid-column: 1 / -1;
+        height: 0.25rem;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: linear-gradient(to right, var(--primary) var(--kp-progress, 0%), var(--muted) var(--kp-progress, 0%));
+    }
+
+    .kp-upload__message {
+        grid-column: 1 / -1;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-upload__file[data-state='error'] {
+        border-color: var(--destructive);
+    }
+
+    .kp-upload__file[data-state='error'] .kp-upload__message {
+        color: var(--destructive);
+    }
+
+    /* The frame a register draws around the wizard needs room inside it:
+ * without padding the step list, the step and the buttons touched the
+ * border in every theme [scope-60, held-60]. A knob, 1rem by default. */
+    .kp-wizard {
+        padding: var(--kp-wizard-padding, 1rem);
+    }
+
+    .kp-wizard__steps {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 0 0 1rem;
+        padding: 0;
+        list-style: none;
+        counter-reset: kp-step;
+    }
+
+    .kp-wizard__steps li {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        color: var(--muted-foreground);
+        counter-increment: kp-step;
+    }
+
+    .kp-wizard__steps li::before {
+        content: counter(kp-step);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-pill, 999px);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* The current step is marked by weight AND by the filled circle, and
+ * aria-current="step" carries it for everyone else [DI4]. */
+    .kp-wizard__steps li[data-state='current'] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+        border-color: var(--success);
+        color: var(--success);
+    }
+
+    .kp-wizard__actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-block-start: 1rem;
+    }
+
+    .kp-wizard [data-kp-step]:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+        outline-offset: 4px;
+    }
+

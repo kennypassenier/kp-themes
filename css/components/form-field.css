@@ -1,0 +1,265 @@
+/* @part: form-field: Form field */
+    /* --- Form field [TH5] ------------------------------------------------ */
+
+    .kp-field {
+        display: flex;
+        flex-direction: column;
+        /* --kp-space-xs is 0.25rem, which is what this was [TH94, TH105]. */
+        gap: var(--kp-field-gap, var(--kp-space-xs));
+        /* field-problems-1019 [field-fills]: a field fills the place it stands in (card, stack, dialog, grid
+         * column), as its label, help and neighbours do; it was capped at 28rem and ended 42 to 47 px short of
+         * the edge they ran to. `--kp-field-max-width` caps it again where a page wants a measure. */
+        max-width: var(--kp-field-max-width, none);
+        min-inline-size: 0;
+    }
+
+    .kp-field__label {
+        /* The label's and the help text's size are the package's [scope-87]:
+     * titanium's, on the running line height. */
+        font-size: var(--kp-field-label-size, 0.9rem);
+        line-height: var(--kp-line-height, 1.5);
+        font-weight: 600;
+    }
+
+    .kp-field__input {
+        /* The button's box [scope-80]: the floor, no block padding and one
+     * line height are the package's; a register keeps the rest. */
+        min-height: var(--kp-control-height, 2.25rem);
+        padding: 0 0.625rem;
+        line-height: var(--kp-control-line-height, 1.25);
+        border: 1px solid var(--input);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--foreground);
+        font: inherit;
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+        /* An input's intrinsic width comes from its `size` in the current
+     * face, and a wide face (woodblock's Zen Kaku Gothic New) pushed it past
+     * a 320px viewport — found by the DI11 reflow test in Firefox. The
+     * field, not the face, bounds it. */
+        inline-size: 100%;
+        min-inline-size: 0;
+        box-sizing: border-box;
+    }
+
+    /* The field's ring, composed with its offset shadow [fix-38, DI2]: the
+     * rule above sets box-shadow in kp.components, which beats the ring in
+     * kp.base, so a focused input kept only the outer half — the page's own
+     * ground, on a field grounded in the same colour. Tabbing to a field
+     * changed 0 pixels in formal, light, pastel, blueprint, solstice and
+     * Shade (light). Restated as .kp-button:focus-visible does. */
+    .kp-field__input:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
+    /* The native <select>'s open list is drawn by the browser in the
+ * platform's own highlight colour — purple on Kenny's desktop, in every
+ * theme, which is how the one control the package did not paint became
+ * the one that looked wrong [KT8]. Where the browser lets a page take the
+ * list over (Chromium 135+, `appearance: base-select`), it wears the
+ * theme: the popover surface, the ink wash on the hovered option, weight
+ * and a check on the chosen one. Elsewhere the native list stays. */
+    @supports (appearance: base-select) {
+        select.kp-field__input,
+        select.kp-field__input::picker(select) {
+            appearance: base-select;
+        }
+
+        select.kp-field__input::picker(select) {
+            margin-block-start: 0.25rem;
+            padding: 0.25rem;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--popover);
+            color: var(--popover-foreground);
+            max-block-size: var(--kp-popover-max-height, min(80vh, 40rem));
+            /* Without an inline limit the list is as wide as its longest
+               option, and a long one ran past the window's edge [fix-78]. */
+            max-inline-size: var(--kp-picker-max-width, min(40rem, calc(100vw - 2rem)));
+            overflow: auto;
+        }
+
+        select.kp-field__input option {
+            padding: var(--kp-menu-item-pad, 0.375rem 0.625rem);
+            border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        select.kp-field__input option:hover,
+        select.kp-field__input option:focus-visible {
+            background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        }
+
+        select.kp-field__input option:checked {
+            font-weight: 600;
+        }
+
+        /* The check mark is the option's first flex item, so an auto margin
+           alone pushed the label to the end with it [fix-78]; ordered last,
+           the label keeps the start edge and the mark sits at the end. */
+        select.kp-field__input option::checkmark {
+            content: var(--kp-glyph-check, '✓');
+            order: 1;
+            margin-inline-start: auto;
+        }
+    }
+
+    .kp-field__help {
+        font-size: var(--kp-field-help-size, 0.8rem);
+        line-height: var(--kp-line-height, 1.5);
+        color: var(--muted-foreground);
+    }
+
+    /* The error is text, and it names what is wrong. A red border alone is
+ * colour as the only carrier [DI4], and says nothing to a screen reader. */
+    .kp-field__error {
+        /* Its size is the package's [scope-88]: titanium's 13px, on the
+     * running line height; a register keeps its face and its ornaments. */
+        padding-block: 0;
+        font-size: var(--kp-field-error-size, 0.8125rem);
+        line-height: var(--kp-line-height, 1.5);
+        color: var(--destructive);
+    }
+
+    .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    /* A field is not always a text box. Before this the component rendered an
+ * input whatever it was told, so every real form grew a hand-written half
+ * beside it — without the label, the error and the describedby wiring
+ * that are the point of the component. */
+
+    /* Disabled and read-only are two promises and look like two [gap-11].
+ * Disabled cannot be used: it fades and refuses the pointer. Read-only can
+ * be focused, selected and copied but not changed: it keeps full ink, so
+ * the value stays a value, and loses the editable look — a dashed
+ * boundary on the muted ground, a record rather than a box to type in.
+ * All three painted the same, and a reviewer typed into the read-only
+ * field and thought the page had frozen. `[readonly]` rather than
+ * `:read-only`, which also matches every <select>. */
+    .kp-field__input:disabled {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    .kp-field__input--multiline {
+        min-height: 5.5rem;
+        /* Several lines, so a text box and not a one-line control: it keeps
+     * block padding and the running text's line height [scope-80]. */
+        padding-block: calc(var(--kp-space-sm, 0.5rem) * 0.75);
+        line-height: var(--kp-line-height, 1.5);
+        /* Vertical only: a textarea dragged wider than its column breaks the
+     * layout it sits in, and nobody needs it. */
+        resize: vertical;
+    }
+
+    /* The box comes before its label, because that is the order it is read in
+ * and the order it is clicked in. The label's words sit on the box's centre,
+ * not on its baseline [scope-92]: a checkbox's baseline is its bottom edge,
+ * so baseline alignment put the words at the height of the box's bottom in
+ * every theme; and a register that draws its own box (appearance: none, a
+ * grid whose only child is the ::before tick) has no baseline until the
+ * tick exists, so the words rose by 2 to 6px when the box was ticked
+ * (cyberpunk, dark, brutalism, retro, titanium). Centring reads no
+ * baseline, so the state cannot move the words. */
+    .kp-field--check {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .kp-field--check .kp-field__label {
+        font-weight: 400;
+        /* Beside the box, and wrapping there: at its max-content width a long
+     * label went down to a line of its own, under the box, in every theme
+     * whose face is wide (cyberpunk, brutalism, deco, nostromo) [scope-92]. */
+        flex: 1 1 0;
+        min-inline-size: 0;
+    }
+
+    .kp-field--check .kp-field__help,
+    .kp-field--check .kp-field__error {
+        /* Under both, not beside the label: an error squeezed into the gap
+     * next to a checkbox wraps to one word per line at 320 px [DI11]. */
+        flex-basis: 100%;
+    }
+
+    /* A radio group is a group: fieldset and legend, so the question is read
+ * before the answers rather than once per answer. */
+    .kp-fieldset {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        min-inline-size: 0;
+    }
+
+    .kp-fieldset > legend {
+        padding: 0;
+    }
+
+    /* The same centre as a checkbox field's, for the same two reasons
+ * [scope-92]. */
+    .kp-field__option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: var(--kp-field-option-size, 0.875rem);
+    }
+
+    .kp-field__check {
+        /* 1.15rem rather than the browser default 13 px: the box is the
+     * target, and a target under 24 px fails WCAG 2.5.8 for anyone whose
+     * hands are not steady. The label is clickable too, which is what
+     * actually makes the target big enough. */
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        /* A knob: the browser paints the check and the radio dot in this
+     * colour, and a theme whose primary is its ink (brutalism, mono) gets
+     * a check that looks like an unchecked box. Those themes set it in
+     * css/_rules.css [KT8]. */
+        accent-color: var(--kp-control-accent, var(--primary));
+        flex: none;
+    }
+
+    /* The browser's margin on a radio is 3px above and none below, so a
+ * centred radio's box sat 1.5px above its words [scope-92]. Beside its
+ * words the control carries no margin across the line; the gap holds the
+ * two apart. A register that sets its own margin still wins. */
+    .kp-field--check > .kp-field__check,
+    .kp-field__option > .kp-field__check {
+        margin-block: 0;
+    }
+
+    /* The error text carries the message [DI4]; this only makes the control
+ * itself findable when the summary sends someone to it. A checkbox has no
+ * border to colour, so it is an outline. The child combinator keeps it on
+ * the checkbox that IS the field: the radios inside an invalid group were
+ * framed one by one, a square frame around every round control, which
+ * read as several wrong answers rather than one [gap-11]. */
+    .kp-field--invalid > .kp-field__check {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: 2px;
+    }
+
+    /* An invalid radio group is one wrong answer, so it carries one mark:
+ * an outline around the whole group, legend and options together
+ * [gap-11]. An outline rather than a border, because a register that
+ * frames its fieldsets sets the border in a later layer and would
+ * silently take the mark away. Either spelling counts: the attribute on
+ * the group, or the group inside an invalid field. */
+    .kp-fieldset[aria-invalid='true'],
+    .kp-field--invalid > .kp-fieldset {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: var(--kp-fieldset-invalid-offset, 0.375rem);
+    }
+

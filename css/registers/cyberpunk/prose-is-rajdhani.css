@@ -1,0 +1,70 @@
+/* @part: prose-is-rajdhani: D. Prose is Rajdhani, the machine's names are mono */
+    /* ── D. Prose is Rajdhani, the machine's names are mono [G15, lesson 18] ────────────────
+       The register had put the mono face on whole parts; the words inside them are prose. */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-alarm__detail,
+            .kp-field__help,
+            .kp-field__error,
+            .kp-empty__body,
+            .kp-toast__body,
+            .kp-palette,
+            .kp-palette__option,
+            .kp-palette__description,
+            .kp-theme-menu__status,
+            .kp-cell-truncate,
+            .kp-truncate,
+            .kp-accordion__summary,
+            .kp-shortcuts__row dd,
+            .kp-error,
+            .kp-media-figure > figcaption
+        ) {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='cyberpunk'] .kp-media-figure > figcaption {
+        text-transform: none;
+        font-size: 0.8125rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-palette__keys {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__error::before {
+        font-family: var(--kp-mono);
+    }
+
+    /* The machine's prefixes [G15]: `//` before a badge, tag, table head, timestamp and a group
+       label, `!!` before a failure's badge; tracked as the labels are. */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-badge,
+            .kp-tag,
+            .kp-table th:not(:has(input)),
+            .kp-timestamp,
+            .kp-theme-group__label,
+            .kp-shortcuts__group-label,
+            .kp-alert__label
+        )::before {
+        content: '// ';
+        content: '// ' / '';
+        opacity: 0.7;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-badge--destructive, .kp-badge--warning, .kp-badge[data-status='rejected'])::before {
+        content: '!! ';
+        content: '!! ' / '';
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-theme-group__label, .kp-shortcuts__group-label, .kp-alert__label, .kp-progress__label) {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-timestamp {
+        letter-spacing: 0.12em;
+    }
+

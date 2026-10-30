@@ -1,0 +1,183 @@
+/* @part: the-ideas-in-this-theme: The ideas, in this theme */
+/* ── The ideas, in this theme [kpadopt4-ideas] ──
+   A time left is the sun's own day: the disc's sector is the sun still above the horizon, its hub a small sun, and when
+   the time is out the last light comes once, overbright, and cools (G3, G10, G16, never a breath that goes on). A command
+   is the terminal lit from its foot, the prompt the sun's amber. The compare slider's divider is the horizon and its
+   handle the sun on it (G16). A typed confirmation's loss list reddens its own sky (G13). The range's custom pick is the
+   halo (G16). */
+@layer kp.signature {
+    /* Typed confirmation. */
+    [data-theme='solstice'] .kp-type-confirm__loses {
+        border-inline-start-width: 1px;
+        border-radius: calc(var(--radius) * 0.7);
+        border-color: var(--border-strong);
+        background:
+            linear-gradient(var(--destructive), var(--destructive)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.22), transparent 85%),
+            var(--muted);
+    }
+    [data-theme='solstice'] .kp-type-confirm__loses-title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.0625rem;
+        font-weight: 400;
+        color: hsl(from var(--destructive) h s 72%);
+    }
+    [data-theme='solstice'] .kp-type-confirm__name {
+        background: linear-gradient(to top, hsl(from var(--primary) h s l / 0.3), transparent 80%), var(--muted);
+        box-shadow: inset 0 -1px 0 var(--primary);
+        font-weight: 500;
+    }
+    [data-theme='solstice'] .kp-type-confirm[data-kp-matched] .kp-type-confirm__input {
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    /* Command block. */
+    [data-theme='solstice'] .kp-command {
+        --kp-command-prompt-ink: var(--primary);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.12), transparent 50%), var(--card);
+        box-shadow: inset 0 -1px 0 hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='solstice'] .kp-command__head {
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.14), transparent);
+    }
+    [data-theme='solstice'] .kp-command__shell {
+        font-weight: 500;
+    }
+    [data-theme='solstice'] .kp-command__code {
+        background: var(--muted);
+    }
+    [data-theme='solstice'] .kp-command__where {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.875rem;
+    }
+
+    /* Visual timer and countdown. */
+    [data-theme='solstice'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--primary);
+        --kp-timer-disc-marks: var(--border-strong);
+        --kp-timer-disc-ring: hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='solstice'] .kp-timer-disc__face {
+        border-color: var(--border-strong);
+        background: radial-gradient(ellipse 80% 55% at 50% 100%, hsl(from var(--accent) h s l / 0.3), transparent 75%), var(--card);
+    }
+    [data-theme='solstice'] .kp-timer-disc__sector {
+        filter: drop-shadow(0 0 0.5rem hsl(from var(--primary) h s l / 0.45));
+    }
+    [data-theme='solstice'] .kp-timer-disc__hub {
+        inset: 45%;
+        border-color: var(--card);
+        background: var(--primary);
+        box-shadow: 0 0 0.6rem 0.1rem hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='solstice'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            0 0 0 4px var(--card),
+            0 0 0 6px var(--primary),
+            0 0 1.4rem 0.2rem hsl(from var(--primary) h s l / 0.4);
+    }
+    [data-theme='solstice'] :is(.kp-timer-disc__caption, .kp-countdown__name) {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.125rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }
+    [data-theme='solstice'] .kp-countdown {
+        --kp-countdown-ring: hsl(from var(--primary) h s l / 0.35);
+        border-color: var(--border-strong);
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.5), hsl(from var(--primary) h s l / 0.5)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--accent) h s l / 0.2), transparent 55%),
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-countdown__time {
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary),
+            0 0 1.2rem 0.1rem hsl(from var(--primary) h s l / 0.4);
+    }
+    [data-theme='solstice'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__time {
+        color: var(--primary);
+        text-shadow: 0 0 0.5em hsl(from var(--primary) h s l / 0.5);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        [data-theme='solstice'] .kp-countdown[data-kp-countdown-state='ended'] {
+            animation: kp-sig-solstice-last-light calc(var(--kp-sig-solstice-contact) * 3) var(--kp-sig-solstice-touch) 1;
+        }
+    }
+    @keyframes kp-sig-solstice-last-light {
+        from {
+            filter: brightness(1.45) saturate(1.3);
+        }
+        to {
+            filter: brightness(1) saturate(1);
+        }
+    }
+
+    /* Range picker. */
+    [data-theme='solstice'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary),
+            0 0 0.8rem hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='solstice'] .kp-range__label {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.9375rem;
+    }
+    [data-theme='solstice'] .kp-range__title {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 1.125rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: inset 0 -2px 0 var(--destructive);
+    }
+
+    /* Compare slider: the divider is the horizon, the handle the sun standing on it. */
+    [data-theme='solstice'] .kp-compare {
+        --kp-compare-ink: var(--primary);
+        border-color: var(--border-strong);
+        box-shadow: inset 0 -1px 0 hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='solstice'] .kp-compare__divider {
+        border-inline-start-color: var(--primary);
+        box-shadow: 0 0 0.6rem hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='solstice'] .kp-compare__handle {
+        border-color: var(--card);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow:
+            0 0 0 2px hsl(from var(--primary) h s l / 0.5),
+            0 0 1rem 0.15rem hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='solstice'] .kp-compare__handle:focus-visible {
+        box-shadow:
+            0 0 0 2px hsl(from var(--primary) h s l / 0.5),
+            0 0 1.2rem 0.3rem hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='solstice'] .kp-compare__label {
+        border-color: var(--border-strong);
+        border-radius: calc(var(--radius) * 0.6);
+        background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.25), transparent), var(--card);
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.875rem;
+        font-weight: 400;
+    }
+    [data-theme='solstice'] .kp-compare__failed {
+        background: linear-gradient(to top, hsl(from var(--destructive) h s l / 0.2), transparent 70%), var(--muted);
+        box-shadow: inset 0 -2px 0 var(--destructive);
+    }
+}
+

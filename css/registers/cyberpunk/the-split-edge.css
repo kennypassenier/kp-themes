@@ -1,0 +1,145 @@
+/* @part: the-split-edge: The split edge */
+    /* ── The split edge: hover [Kenny: hover = split] ─────────────────────────
+       The edge of the pointed part is doubled: cyan along the head and the end, red
+       along the foot, 5, 4, 3 px and then 2 px while the pointer rests, drawn on the part's
+       own cut (a ring between the cut and the cut moved in), open at the start edge.
+       A square part (a menu entry) takes the same two lines as inset shadows. */
+    [data-theme='cyberpunk']
+        :where(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])) {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-ct: 0px;
+        --kp-cp-cb: 0px;
+        --kp-cp-ring: polygon(
+            evenodd,
+            0 0,
+            calc(100% - var(--kp-cp-ct)) 0,
+            100% var(--kp-cp-ct),
+            100% calc(100% - var(--kp-cp-cb)),
+            calc(100% - var(--kp-cp-cb)) 100%,
+            0 100%,
+            0 0,
+            0 var(--kp-cp-d),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d))) var(--kp-cp-d),
+            calc(100% - var(--kp-cp-d)) max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d)),
+            calc(100% - var(--kp-cp-d)) calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))) calc(100% - var(--kp-cp-d)),
+            0 calc(100% - var(--kp-cp-d)),
+            0 var(--kp-cp-d)
+        );
+        isolation: isolate;
+    }
+
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-cb: var(--kp-button-notch);
+    }
+
+    [data-theme='cyberpunk'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])) {
+        --kp-cp-ct: var(--kp-cp-notch);
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
+    [data-theme='cyberpunk']
+        :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])):hover {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:focus-visible,
+    [data-theme='cyberpunk']
+        :is(
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']):not([data-kp-label])
+        ):focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    [data-theme='cyberpunk']
+        :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']))::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border: 0;
+        background: linear-gradient(0deg, var(--destructive) 0 var(--kp-cp-d), var(--accent) var(--kp-cp-d));
+        clip-path: var(--kp-cp-ring);
+        transform: none;
+        animation: none;
+        pointer-events: none;
+    }
+
+    /* A menu entry is square: the same edge as two inset shadows (red under cyan). */
+    [data-theme='cyberpunk'] .kp-menu__item {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        position: relative;
+        box-shadow:
+            inset 0 calc(-1 * var(--kp-cp-d)) 0 0 color-mix(in srgb, var(--destructive) calc(var(--kp-cp-p) * 100%), transparent),
+            inset calc(-1 * var(--kp-cp-d)) var(--kp-cp-d) 0 0 color-mix(in srgb, var(--accent) calc(var(--kp-cp-p) * 100%), transparent);
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item:hover:not(:is(:disabled, [aria-disabled='true'])) {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item:focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    /* ── Target brackets: focus [Kenny: focus = brackets] ─────────────────────
+       Four corners close on the part from 9 px in: the focus ring colour outside, the
+       contrast colour inside it (DI2's two channels), so the ring reads on any ground. */
+    [data-theme='cyberpunk']
+        :is(
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']):not([data-kp-label])
+        )::before,
+    [data-theme='cyberpunk'] .kp-menu__item::after {
+        content: '';
+        position: absolute;
+        inset: calc(var(--kp-cp-ft) * 3px);
+        z-index: 2;
+        border: calc(var(--kp-cp-fp) * 2px) solid var(--focus-ring);
+        background: none;
+        box-shadow: inset 0 0 0 calc(var(--kp-cp-fp) * 2px) var(--focus-ring-contrast);
+        mask: var(--kp-cp-corners);
+        transform: none;
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:focus-visible {
+        box-shadow: none;
+    }
+
+    /* The tag of a destructive entry: the word TARGET, boxed, in the place of its dash prefix. An
+       entry hugs its text and its `::after` is the focus brackets, so the tag is the entry's
+       `::before` (inline, before the label) and moves with the label whatever the entry's width. */
+    [data-theme='cyberpunk'] .kp-menu__item--destructive::before {
+        content: 'TARGET';
+        content: 'TARGET' / '';
+        margin-inline-end: 0.6em;
+        padding: 0 0.3rem;
+        border: 1px solid var(--destructive);
+        color: var(--destructive);
+        font-family: var(--kp-mono);
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1rem;
+        letter-spacing: 0.16em;
+        vertical-align: 0.1em;
+    }
+

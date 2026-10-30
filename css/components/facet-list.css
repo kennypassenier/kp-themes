@@ -1,0 +1,210 @@
+/* @part: facet-list: Facet list */
+    /* --- Facet list -----------------------------------------------------------
+ * Checkbox rows, each with its count and an "only" button that selects
+ * just that row. The row is a grid of two cells, the label (the checkbox,
+ * an optional swatch, the name, the count) and the button, which is never a
+ * child of the label: a control inside a label is a second, hidden target.
+ * The "only" button takes the space it needs in every row whether it is
+ * shown or not, so the counts never move; it is shown on hover and while
+ * focus is in the row, and always on a device that cannot hover. The count
+ * keeps a floor (`--kp-facet-count-min`) and tabular figures. Knobs [KT6]:
+ * `--kp-facet-pad`, `--kp-facet-radius`, `--kp-facet-gap`,
+ * `--kp-facet-count-min`, `--kp-facet-hover`, `--kp-facet-swatch`. */
+    .kp-facets {
+        display: grid;
+        gap: var(--kp-facet-list-gap, 0.125rem);
+        min-inline-size: 0;
+    }
+
+    .kp-facets__title {
+        margin: 0 0 var(--kp-space-xs, 0.375rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .kp-facets__list {
+        display: grid;
+        /* One pair of columns for every row (the rows are subgrids), so the counts line up whether a row has an
+         * "only" button or not (the Everything row has none). */
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--kp-facet-list-gap, 0.125rem) 0;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-facets__empty {
+        margin: 0;
+        padding: var(--kp-facet-pad, 0.25rem 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-facets__empty[hidden] {
+        display: none;
+    }
+
+    .kp-facet {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-inline-size: 0;
+        min-block-size: var(--kp-facet-height, 2rem);
+        padding-inline: var(--kp-facet-pad-inline, 0.5rem) var(--kp-facet-pad-end, 0.25rem);
+        border-radius: var(--kp-facet-radius, calc(var(--radius, 0.5rem) * 0.75));
+        font-size: var(--kp-text-sm, 0.875rem);
+    }
+
+    .kp-facet:hover {
+        background: var(--kp-facet-hover, hsl(from var(--foreground) h s l / 0.06));
+    }
+
+    .kp-facet__option {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-facet-gap, 0.5rem);
+        min-inline-size: 0;
+        min-block-size: var(--kp-facet-height, 2rem);
+        cursor: pointer;
+    }
+
+    .kp-facet__check {
+        margin: 0;
+    }
+
+    .kp-facet__swatch {
+        flex: none;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border-radius: var(--kp-facet-swatch, 3px);
+        background: var(--kp-facet-swatch-colour, var(--muted-foreground));
+    }
+
+    /* A swatch with an identity pattern [kpadopt3] (`pattern`, `data-kp-facet-pattern`; js/facets.js draws it): the hue as
+     * its ground and a 5 by 5 mirrored pattern of the seed in a pale ink of that hue over it, one cell in from its edge, so
+     * two close hues are still told apart. Larger than a plain swatch so a cell stays two pixels or more. Knobs:
+     * --kp-facet-pattern-size (1.125rem), --kp-facet-pattern-ink (the hue lifted nearly to white). */
+    .kp-facet__swatch[data-kp-facet-pattern] {
+        position: relative;
+        inline-size: var(--kp-facet-pattern-size, 1.125rem);
+        block-size: var(--kp-facet-pattern-size, 1.125rem);
+        overflow: hidden;
+    }
+
+    .kp-facet__pattern {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        fill: var(--kp-facet-pattern-ink, color-mix(in oklab, var(--kp-facet-swatch-colour, var(--muted-foreground)) 10%, white));
+    }
+
+    .kp-facet__name {
+        flex: 1 1 0;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-facet__count {
+        flex: none;
+        min-inline-size: var(--kp-facet-count-min, 2.5ch);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    /* A row that is off is quieter by ink, not by opacity. */
+    .kp-facet:has(.kp-facet__check:not(:checked, :indeterminate)) .kp-facet__name {
+        color: var(--muted-foreground);
+    }
+
+    .kp-facet:has(.kp-facet__check:disabled) .kp-facet__option {
+        cursor: not-allowed;
+    }
+
+    .kp-facet:has(.kp-facet__check:disabled) {
+        color: var(--muted-foreground);
+    }
+
+    .kp-facet__only {
+        justify-self: end;
+    }
+
+    .kp-facet:has(.kp-facet__check:disabled) .kp-facet__only {
+        visibility: hidden;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .kp-facet:not(:hover, :focus-within) > .kp-facet__only {
+            visibility: hidden;
+        }
+    }
+
+    @media (pointer: coarse) {
+        .kp-facet,
+        .kp-facet__option {
+            min-block-size: var(--kp-facet-height-touch, 2.75rem);
+        }
+    }
+
+    /* The counts are on their way: each keeps its place as a quiet bar. */
+    .kp-facets[aria-busy='true'] .kp-facet__count {
+        color: transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        user-select: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+    }
+
+    /* In a row: the facets as one line of bordered rows that scrolls sideways, for a phone or a bar above the
+     * list. The padding leaves room for the focus ring, which the scroll container would otherwise cut. */
+    .kp-facets--row .kp-facets__list {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content;
+        padding: 3px;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    .kp-facets--row .kp-facet {
+        grid-column: auto;
+        grid-template-columns: minmax(0, 1fr) auto;
+        border: 1px solid var(--border);
+        white-space: nowrap;
+    }
+
+    /* With a pointer that hovers, a chip does not keep a column for "only": the button takes the place of the count while the
+     * chip is hovered or has focus, so the chip ends right after its count and a bar of chips stays dense (Kenny, 2026-10-19 17:20,
+     * "waarom zo veel witruimte achter het cijfer?"). On a touch screen the button stays beside the count, as there is no hover. */
+    @media (hover: hover) and (pointer: fine) {
+        .kp-facets--row .kp-facet {
+            position: relative;
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-facets--row .kp-facet > .kp-facet__only {
+            position: absolute;
+            inset-block: 0;
+            inset-inline-end: 0;
+            margin: auto 0;
+            background: var(--kp-facet-only-ground, var(--background));
+        }
+
+        .kp-facets--row .kp-facet:is(:hover, :focus-within):not(:has(.kp-facet__check:disabled)) .kp-facet__count {
+            visibility: hidden;
+        }
+    }
+

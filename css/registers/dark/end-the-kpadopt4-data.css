@@ -1,0 +1,287 @@
+/* @part: end-the-kpadopt4-data: end the kpadopt4 data pieces */
+/* ── end the kpadopt4 data pieces ── */
+
+/* ── The kpadopt4 rows, records and flows in dark's own grammar [kpadopt4] ──
+   Rows rest the line at their start edge and are laid by the pass 60 ms apart (G2, G15); a state is the film gone to the
+   tone's colour along the edge (G8); a plate that stands alone is cut on two corners (G6); a drawing for an empty state is
+   the instrument's screen, laid by one pass left to right (G13, G19). */
+@layer kp.signature {
+    /* ── Rows with a lead (inbox, backlog, files, appointments) ── */
+    [data-theme='dark'] .kp-action-list--lead {
+        --kp-action-list-bar: 2px;
+        --kp-action-list-next-wash: 0%;
+    }
+    [data-theme='dark'] .kp-action-list--lead > li {
+        position: relative;
+    }
+    [data-theme='dark'] .kp-action-list--lead > li[data-kp-state='new'],
+    [data-theme='dark'] .kp-action-list--lead > li[data-kp-state='next'] {
+        border-image: var(--kp-sig-dk-line) 1;
+    }
+    [data-theme='dark'] .kp-action-list--lead > li[data-kp-state='warn'],
+    [data-theme='dark'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        box-shadow: inset 2px 0 0 transparent;
+    }
+    [data-theme='dark'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        border-image: linear-gradient(var(--destructive), var(--destructive)) 1;
+    }
+    [data-theme='dark'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        border-image: linear-gradient(var(--warning-foreground), var(--warning-foreground)) 1;
+    }
+    [data-theme='dark'] .kp-action-list--lead > li[data-kp-state='active'] {
+        border-image: linear-gradient(var(--chart-1), var(--chart-1)) 1;
+    }
+    [data-theme='dark'] .kp-action-list--lead > li:is(:hover, :focus-within)::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: -2px;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+        pointer-events: none;
+    }
+    [data-theme='dark'] .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead {
+        color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-action-list__when,
+    [data-theme='dark'] .kp-action-list__meta,
+    [data-theme='dark'] .kp-action-list__payload {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='dark'] .kp-action-list__payload {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-action-list > li.kp-action-list__group > :is(h2, h3, h4, h5, h6) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-action-list--lead > li {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+        [data-theme='dark'] .kp-action-list--lead > li:nth-child(2) {
+            animation-delay: 60ms;
+        }
+        [data-theme='dark'] .kp-action-list--lead > li:nth-child(3) {
+            animation-delay: 120ms;
+        }
+        [data-theme='dark'] .kp-action-list--lead > li:nth-child(4) {
+            animation-delay: 180ms;
+        }
+        [data-theme='dark'] .kp-action-list--lead > li:nth-child(n + 5) {
+            animation-delay: 240ms;
+        }
+    }
+
+    /* ── Status rows: the fix is a line of its own in the tone's film ── */
+    [data-theme='dark'] .kp-statusrow__fix {
+        padding-inline-start: 0.5rem;
+        box-shadow: inset 2px 0 0 var(--kp-statusrow-state-edge, var(--border-strong));
+    }
+    [data-theme='dark'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--warning-foreground);
+        --kp-statusrow-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+
+    /* ── Choices as tiles: a slot with the line resting at its start when pointed at; checked it takes the film
+       along its whole edge and the accent plate ── */
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 0;
+        --kp-field-tile-ground-checked: var(--accent);
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        position: relative;
+        clip-path: var(--kp-dk4-cut);
+        border-color: var(--border);
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:is(:hover, :has(> .kp-field__check:checked)):not(:has(> .kp-field__check:disabled))::before {
+        opacity: 1;
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border-strong);
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        border-color: transparent;
+        box-shadow: none;
+        background:
+            linear-gradient(var(--accent), var(--accent)) padding-box,
+            var(--kp-iris, var(--kp-sig-dk-line)) border-box;
+    }
+    [data-theme='dark'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        clip-path: none;
+        outline-offset: -2px;
+    }
+    [data-theme='dark'] .kp-field__option-hint {
+        font-family: var(--theme-font-body);
+    }
+
+    /* ── A card in four data states: the stage is laid by the pass when it fills; empty and failed keep the footprint ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+    [data-theme='dark'] .kp-card__failure {
+        clip-path: var(--kp-dk4-cut);
+    }
+
+    /* ── Drawings for an empty state: the spectrum, the instrument's screen. Laid by one pass, 660 ms, left to right
+       at one pace, then still. ── */
+    [data-theme='dark'] .kp-art {
+        display: block;
+    }
+    [data-theme='dark'] .kp-art > g[data-kp-art-set='spectrum'] {
+        display: inline;
+    }
+    [data-theme='dark'] .kp-art path {
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+    }
+    [data-theme='dark'] .kp-art__rule {
+        filter: drop-shadow(0 0 4px hsl(from var(--chart-1) h s l / 0.4));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-art {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+            --kp-sig-dk-cut: 0 100% 0 0;
+        }
+    }
+
+    /* ── The pipeline: a lane is a slot with its stage's film on the head; a card rests the line at its start; the
+       chosen card takes the film along its edge ── */
+    [data-theme='dark'] .kp-pipeline__lane {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-pipeline__head {
+        border-radius: 0;
+        border-color: transparent;
+        background:
+            linear-gradient(color-mix(in oklab, var(--kp-pipeline-tone) 16%, var(--card)), color-mix(in oklab, var(--kp-pipeline-tone) 16%, var(--card))) padding-box,
+            linear-gradient(var(--kp-pipeline-tone), var(--kp-pipeline-tone)) border-box;
+    }
+    [data-theme='dark'] .kp-pipeline__head::before,
+    [data-theme='dark'] .kp-pipeline__head::after {
+        font-family: var(--theme-font-mono);
+        color: var(--kp-pipeline-tone);
+    }
+    [data-theme='dark'] .kp-pipeline__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='dark'] .kp-pipeline__count,
+    [data-theme='dark'] .kp-pipeline__share,
+    [data-theme='dark'] .kp-pipeline__sub,
+    [data-theme='dark'] .kp-pipeline__meta {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-pipeline__card {
+        position: relative;
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-pipeline__card::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: var(--kp-dk4-rest);
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='dark'] .kp-pipeline__card:hover::before,
+    [data-theme='dark'] .kp-pipeline__card[aria-current='true']::before {
+        opacity: 1;
+    }
+    [data-theme='dark'] .kp-pipeline__card[aria-current='true'] {
+        outline: 0;
+        background:
+            linear-gradient(var(--accent), var(--accent)) padding-box,
+            var(--kp-iris, var(--kp-sig-dk-line)) border-box;
+        border-color: transparent;
+    }
+    [data-theme='dark'] .kp-pipeline__mark {
+        border-radius: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+        [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(2) {
+            animation-delay: 60ms;
+        }
+        [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(3) {
+            animation-delay: 120ms;
+        }
+        [data-theme='dark'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(n + 4) {
+            animation-delay: 180ms;
+        }
+    }
+
+    /* ── The journey: one path, the line laid between the steps reached in the film, the mark a slot, the current step
+       a mark with the film turning on its edge ── */
+    [data-theme='dark'] .kp-steplist--journey {
+        --kp-journey-rule: 2px;
+    }
+    [data-theme='dark'] .kp-steplist--journey .kp-steplist__mark {
+        border-radius: 0;
+        clip-path: var(--kp-dk4-cut-4);
+    }
+    [data-theme='dark'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: linear-gradient(90deg, var(--kp-step-tone, var(--chart-1)), var(--kp-step-tone, var(--chart-2)));
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item:not([data-state='done'], [data-state='current'])::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 6px);
+    }
+    [data-theme='dark'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='dark'] .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        box-shadow: 0 0 0 1px var(--chart-1), var(--kp-dk4-rest);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-steplist--journey > .kp-steplist__item::before {
+            animation: kp-sig-dark-lay 660ms linear backwards;
+        }
+    }
+
+    /* ── Moments on the run timeline and the dated line: a mark is a slot, pointing rests the line on it, a zone is a
+       band of film at 12 % with its start edge drawn ── */
+    [data-theme='dark'] .kp-gantt__point:hover::before,
+    [data-theme='dark'] .kp-gantt__point:focus-visible::before {
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-gantt__count {
+        font-family: var(--theme-font-mono);
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-gantt__zone {
+        border-inline-start: 1px solid var(--border-strong);
+    }
+    [data-theme='dark'] .kp-gantt__mark {
+        box-shadow: var(--kp-dk4-rest);
+    }
+    [data-theme='dark'] .kp-gantt--line .kp-gantt__track {
+        border-radius: 0;
+    }
+}

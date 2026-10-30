@@ -1,0 +1,67 @@
+/* @part: shortcut-engine: The shortcut engine's parts */
+    /* --- The shortcut engine's parts [kpadopt5] ---
+ * The pending chord ("g …") while the second key is awaited (js/shortcuts.js): in the middle of what is in view by
+ * default, or in the middle of its foot with `data-kp-shortcuts-place="bottom-centre"` (the engine's `hintPlace`, or the root's
+ * `data-kp-shortcuts-hint`), never at the top [toggles-r2-1018]. The sheet's dimmed row for a key that is not
+ * available now (with its reason), and the sheet's empty state at the sheet's own footprint.
+ * Knobs [KT6]: `--kp-shortcuts-state-min` (14rem); `--kp-shortcuts-view-top` (0px) and `--kp-shortcuts-view-height`
+ * (100dvh), the part of the page in view, for a page shown in a frame taller than its window. */
+    .kp-shortcuts-pending {
+        --kp-shortcuts-hint-view-top: var(--kp-shortcuts-view-top, 0px);
+        --kp-shortcuts-hint-view-height: var(--kp-shortcuts-view-height, 100dvh);
+        position: fixed;
+        inset-block-start: calc(var(--kp-shortcuts-hint-view-top) + var(--kp-shortcuts-hint-view-height) / 2);
+        translate: 0 -50%;
+        inset-inline: 0;
+        z-index: var(--kp-z-popover, 20);
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-lg, 1rem));
+        margin-inline: auto;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-shortcuts-pending[data-kp-shortcuts-place='bottom-centre'] {
+        inset-block-start: calc(
+            var(--kp-shortcuts-hint-view-top) + var(--kp-shortcuts-hint-view-height) - var(--kp-space-lg, 1rem) - var(--kp-tabbar-rise, 0px)
+        );
+        translate: 0 -100%;
+    }
+
+    .kp-shortcuts-pending[hidden] {
+        display: none;
+    }
+
+    .kp-shortcuts__row--off .kp-palette__keys {
+        opacity: 0.55;
+    }
+
+    .kp-shortcuts__reason {
+        display: block;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-shortcuts__empty {
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        min-block-size: var(--kp-shortcuts-state-min, 14rem);
+        margin: 0.75rem 0 0;
+    }
+
+    .kp-shortcuts__empty .kp-empty__title {
+        font-size: var(--kp-text-lg, 1.125rem);
+    }
+
+    .kp-shortcuts__empty .kp-empty__body {
+        max-inline-size: 32ch;
+        margin: 0;
+    }
+

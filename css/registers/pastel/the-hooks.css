@@ -1,0 +1,135 @@
+/* @part: the-hooks: The hooks */
+    /* ── The hooks [S45]: the headline, the mark, the rule, the divider ── */
+
+    /* The heading accent: the display step, balanced, on a surface. */
+    [data-theme='pastel'] [data-kp-surface] h1 {
+        position: relative;
+        letter-spacing: -0.01em;
+        margin-block: 0 1.1rem;
+        max-width: 22ch;
+        text-wrap: balance;
+    }
+
+    /* The headline reveal: the overprint duplicate — the second-pass ink,
+       always there as the theme's signature — springs from a wide
+       mis-registration into its 2px rest position once, on load. Scoped
+       to the reveal element only (the anatomy: never on running text). At
+       rest (no script, or reduced motion) the duplicate sits exactly
+       where it always sat: this is the theme's static signature with one
+       extra arrival on top of it, never instead of it. */
+    [data-theme='pastel'] [data-kp-reveal='headline']::before {
+        content: attr(data-kp-text);
+        position: absolute;
+        inset: 0;
+        color: var(--fx-overprint);
+        mix-blend-mode: multiply;
+        z-index: -1;
+        pointer-events: none;
+        transform: translate(2px, 2px);
+        opacity: 0.55;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered)::before {
+            transform: translate(14px, 10px);
+            opacity: 0;
+        }
+
+        [data-theme='pastel'] [data-kp-reveal='headline'].is-registering::before {
+            animation: kp-registration 440ms var(--fx-ease) both;
+        }
+    }
+
+    /* The mark: emphasis is a fill — the ink plate grows in behind the
+       word, mint by default. The lede's second mark is the violet pair,
+       matching the demo's two-tone lede (the shared markup carries no
+       modifier class between one mark and the next, so the second is
+       reached structurally). At rest (no script) the fill stands full. */
+    [data-theme='pastel'] mark {
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+        padding: 0.05em 0.25em;
+        border-radius: 0.25em;
+        box-decoration-break: clone;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-position: left center;
+    }
+
+    /* Three inks (G5, Kenny 2026-10-14): mint is the plate behind a marked
+       word, every one of them; violet is the info status only. */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'][data-kp-effects] mark:not(.is-cleared) {
+            background-size: 0% 100%;
+        }
+
+        [data-theme='pastel'] mark.is-cleared {
+            animation: kp-fill 440ms var(--fx-ease) both;
+        }
+    }
+
+    /* The rule: a plain plum bar that grows left to right once, when its
+       heading enters the viewport. */
+    [data-theme='pastel'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        block-size: 3px;
+        margin-block-start: 0.6rem;
+        background: var(--primary);
+        border-radius: 2px;
+        width: 100%;
+    }
+
+    [data-theme='pastel'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        width: 0%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-draw 440ms var(--fx-ease) both;
+        }
+    }
+
+    /* The divider: pearls [scope-93]. Kenny, 2026-09-15, on the torn tab
+       this rule drew before: "The sawtooth isn't really fitting with
+       'Pastel' which is fluffier and rounder", and his answer to the form,
+       "ik wil pearls". Beads on a thread with no bar, spread evenly so no
+       bead is ever cut: `space` repeats only whole beads and spreads the
+       room left over between them. The plain divider in plum,
+       the alt divider in the mint ink, so the two seams still read as two
+       sheets. Pastel's own drawing; no other theme and no page knob draws
+       it [scope-95]. Knob: --kp-divider-height (3rem), as dark and titanium
+       read it. */
+    [data-theme='pastel'] [data-kp-divider] {
+        display: block;
+        block-size: var(--kp-divider-height, 3rem);
+        background: var(--primary);
+        mask-image: linear-gradient(black 0 0), radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%);
+        mask-size:
+            100% 2px,
+            1.5rem 0.75rem;
+        mask-position: center;
+        mask-repeat:
+            no-repeat,
+            space no-repeat;
+    }
+
+    [data-theme='pastel'] [data-kp-divider='alt'] {
+        background: var(--accent-foreground);
+    }
+
+    /* ── The hero: the rounded outer clip [B, measured] ───────────────── */
+
+    [data-theme='pastel'] [data-kp-surface='hero'] {
+        position: relative;
+        padding-block: 3.2rem 3.6rem;
+        clip-path: inset(0 round 0 0 2.5rem 2.5rem);
+    }
+
+    [data-theme='pastel'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+        align-items: start;
+    }
+

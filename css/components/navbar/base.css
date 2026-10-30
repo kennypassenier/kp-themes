@@ -1,0 +1,465 @@
+/* @part: navbar: Navigation bar */
+    /* --- Navigation bar [TH7] -------------------------------------------- */
+
+    /* The box the nav bar measures itself against [TH104, AR24].
+ *
+ * A container query styles a container's CONTENTS, never the container
+ * itself, and the rule that has to change is the nav's own padding — so
+ * the query needs an element one level up. components/nav-bar.jsx
+ * renders this itself (`wrap`, default true); markup written by hand
+ * adds it, which is what MIGRATION.md's 4.0.0 section is for. */
+    .kp-nav-wrap {
+        container: kp-nav / inline-size;
+        /* The same floor as .kp-table-wrap, for the same reason: inline-size
+     * containment stops this box sizing to its contents, so in a
+     * shrink-to-fit parent — a flex row, an inline-block — it goes to
+     * zero. `auto` is the initial value in every context, so the default
+     * is a true no-op [R3-CQ, KT6]. */
+        min-inline-size: var(--kp-nav-wrap-min, auto);
+        /* The bar's layer, in the base so every theme gives the same answer
+     * [scope-48, research/navbar finding 3]. Two registers lifted the
+     * wrapper and nine the nav inside it; in six themes nothing did, and
+     * the next element on the popover layer painted over an open dropdown
+     * (tests/app-shell.spec.mjs). One layer for the whole bar: its dropdown rides on it, and
+     * a page stacks against one number. Knob: --kp-z-nav (30), between the
+     * popover layer (20) and back-to-top (50). */
+        position: relative;
+        z-index: var(--kp-z-nav, 30);
+    }
+
+    .kp-nav {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        /* Up to 3.2.0 the inline padding was `clamp(0.75rem, 3vw, 1.5rem)`:
+     * it read the WINDOW, so a nav in a 300px column on a 1280px page
+     * was given the padding of a 1280px page. The two ends of that ramp
+     * are now the wide default here and the narrow value in the
+     * @container block below [TH104]. Both are knobs [KT6]. */
+        padding: calc(var(--kp-nav-pad-block, 0.625rem) * var(--kp-nav-pad-scale, 1)) var(--kp-nav-pad-inline, 1.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    /* Narrow: the bar takes the smaller inset, the way it used to below a
+ * 400px window — except that the width which decides is now the width of
+ * the box the nav actually lives in [TH104, DI11]. */
+    @container kp-nav (max-width: 40rem) {
+        /* 40rem is a contract value [TH26]: a container query can no more
+     * read a custom property than a media query can, so this number is
+     * repeated in docs/USER_GUIDE.md rather than exposed as a knob. It is
+     * the same number the table's card query uses, so the package steps
+     * at one width rather than at two. */
+        .kp-nav {
+            padding-inline: var(--kp-nav-pad-inline-narrow, 0.75rem);
+        }
+    }
+
+    /* The shrinking header [scope-48 wave 2, research/navbar].
+ *
+ * Opt-in by the modifier on the wrapper: the bar sticks to the top of the
+ * box that scrolls it, on the bar's one layer (--kp-z-nav, above). Once the
+ * page has scrolled past a threshold, attachStickyNavs (js/components.js)
+ * or NavBar's `sticky` sets `data-kp-nav-compact`, and the compact state
+ * scales the bar's own block padding: every register reads
+ * --kp-nav-pad-block since research finding 2 was closed, and multiplies it,
+ * per side, by --kp-nav-pad-scale (1 at rest). The compact bar keeps half of
+ * whatever its theme or its page gave it [scope-85] — cyberpunk's 1.2rem top
+ * and 0.4rem bottom become 0.6rem and 0.2rem, retro's 3px becomes 1.5px — so
+ * it gets shorter in all 22 themes and is never taller than at rest. Knobs:
+ * --kp-nav-sticky-shrink (0.5), the factor the compact bar's block padding
+ * is multiplied by; --kp-nav-sticky-duration (the theme's --fx-duration),
+ * how long it glides. The factor is set on the nav itself, so a consumer's
+ * at-rest --kp-nav-pad-block on the nav is halved rather than replaced. The same module measures the bar and writes its height to
+ * --kp-nav-sticky-height on the scrolling box, which scroll-padding reads
+ * when --kp-scroll-offset is not set: an anchor or a focused element lands
+ * below the bar instead of under it. */
+    .kp-nav-wrap--sticky {
+        position: sticky;
+        inset-block-start: 0;
+    }
+
+    .kp-nav-wrap--sticky[data-kp-nav-compact] > .kp-nav {
+        --kp-nav-pad-scale: var(--kp-nav-sticky-shrink, 0.5);
+    }
+
+    [data-kp-nav-sticky-root]:has(.kp-nav-wrap--sticky) {
+        scroll-padding-block-start: var(--kp-scroll-offset, var(--kp-nav-sticky-height, 0px));
+    }
+
+    /* The shrink moves; a reader who asked for less motion gets the end state
+ * at once [DI7]. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-nav-wrap--sticky > .kp-nav {
+            transition: padding-block var(--kp-nav-sticky-duration, var(--fx-duration, 220ms)) var(--fx-ease, ease);
+        }
+    }
+
+    .kp-nav__brand {
+        font-weight: 700;
+    }
+
+    /* The file code beside the wordmark [S49, A3]: phantom's PH//15,
+       terminal's TTY//06. Quiet by default; a register gives it a voice. */
+    .kp-nav__brand-tag {
+        font-family: var(--kp-mono, var(--theme-font-mono));
+        font-size: 0.68em;
+        font-weight: 400;
+        letter-spacing: 0.16em;
+        color: var(--muted-foreground);
+    }
+
+    .kp-nav__links {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* The toggle a narrow bar collapses into [scope-10, stage 1.3].
+
+ * Measured before this existed: the package had no collapse of any kind,
+ * so a bar simply wrapped. On the round-seven demo at 462px that put the
+ * chrome at 229px tall before any of the page was visible.
+ *
+ * It is opt-in by the presence of the button, not by a width: a nav
+ * without a toggle behaves exactly as it did, which is what keeps this
+ * additive for every page already built. The width that decides is the
+ * 40rem container query the nav already steps at — the package steps at
+ * one width rather than at two [TH104].
+ *
+ * The three bars are drawn rather than fetched, because this package
+ * ships type and not icons; a consumer who puts their own glyph in the
+ * button gets theirs instead. The accessible name comes from the
+ * dictionary [KT5] and says which way the press goes. */
+    .kp-nav__toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        inline-size: var(--kp-nav-toggle-size, 2.25rem);
+        block-size: var(--kp-nav-toggle-size, 2.25rem);
+        margin-inline-start: auto;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .kp-nav__toggle::before {
+        content: '';
+        inline-size: 1.05rem;
+        block-size: 2px;
+        background: currentColor;
+        box-shadow:
+            0 -0.36rem 0 currentColor,
+            0 0.36rem 0 currentColor;
+    }
+
+    /* A consumer's own glyph wins over the drawn one. */
+    .kp-nav__toggle:has(*)::before {
+        content: none;
+    }
+
+    /* DI3: open is a state, and a state is visible as one. The plate is the
+ * theme's own accent rather than a shape change, because three bars
+ * folding into a cross is geometry that twenty-one registers would each
+ * have to keep working. */
+    .kp-nav[data-kp-nav-open] > .kp-nav__toggle {
+        background: var(--accent);
+        color: var(--accent-foreground);
+        border-color: var(--accent);
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        .kp-nav:has(> .kp-nav__toggle) > .kp-nav__toggle {
+            display: inline-flex;
+        }
+
+        .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            display: none;
+            flex-basis: 100%;
+        }
+
+        .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+
+        /* A 12rem panel floating over a 320px screen is the fault TH99
+     * already caught once. Collapsed, a dropdown is a nested list
+     * instead: in the flow, open, and indented. */
+        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            position: static;
+            display: block;
+            opacity: 1;
+            width: auto;
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            /* No frame, no ground, and no shadow either: a shadow under a
+             * list with no ground is a panel's ghost [gap-12]. Every register
+             * dresses the floating panel in kp.register, which beats this
+             * layer, so each register restates this reset for itself. */
+            box-shadow: none;
+        }
+
+        /* A mega menu's panel [scope-48] is that nested list too — one
+         * column, in the flow — and still opens only when its button is
+         * pressed. */
+        .kp-nav[data-kp-nav-open] li:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide {
+            display: none;
+        }
+
+        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu--wide {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* A bar that folds what does not fit behind a More menu [kpadopt-nav].
+ *
+ * Opt-in by `data-kp-nav-fold` on the nav (js/nav-fold.js). The list takes
+ * the room the brand and the end slots leave and never wraps: it is
+ * `flex: 1 1 0`, so what it holds cannot change how wide it is, nor the bar
+ * how tall. Before the script has fitted the bar the overflow is clipped, not
+ * wrapped, so the bar is one row before and after (no layout shift); after,
+ * the items that do not fit are `data-kp-nav-folded`: out of the flow, invisible,
+ * out of the focus order, but still laid out at their own width, so the next
+ * fit can measure them. The More item is a kp menu button whose button is a bar
+ * link, so every register that dresses a link dresses it; it is out of the
+ * flow in the same way while nothing is folded. The selectors lead with
+ * `:where()` so the bar's own phone toggle (its container query, above) wins
+ * where it is shown, and the script stands down there.
+ * Knob: --kp-nav-more-dot (0.5rem), the dot that tells a counter is behind
+ * the button. */
+    /* One row: a bar that folds never wraps its brand, list, job and search onto a second line; the list is what gives. */
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) {
+        flex-wrap: nowrap;
+    }
+
+    /* The list is the one that gives, but never below the More button while something is folded (the script writes
+     * --kp-nav-fold-more): the brand gives way first, to an ellipsis, so the folded links stay reachable. The job and the
+     * search keep their size. */
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links {
+        position: relative;
+        flex: 1 1 0;
+        min-inline-size: var(--kp-nav-fold-more, 0px);
+        flex-wrap: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__brand {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search {
+        flex: none;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search .kp-button {
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]):not([data-kp-nav-fold-ready]) > .kp-nav__links {
+        overflow-x: clip;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li {
+        flex: none;
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li[data-kp-nav-folded],
+    .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > [data-kp-nav-more][data-kp-nav-idle] {
+        /* !important: a register that dresses the list items (cyberpunk's `position: relative` on every one) sits in a
+         * later layer and would put a folded item, and the idle More, back in the flow; it would push the More button
+         * out of the bar. An important declaration of this layer beats every normal one of a later layer. */
+        position: absolute !important;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: max-content;
+        visibility: hidden !important;
+        pointer-events: none;
+    }
+
+    /* The More item is a list item like the others: its menu button hangs from
+     * the button, in the bar's own column. */
+    .kp-nav__more > .kp-menu-button {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* The menu hangs from the button's start edge, as a menu under a link of a bar does; the script moves it back in
+     * only where that would leave the window (menuPlacement). Not the menu button's default, its end edge. */
+    .kp-nav__more > .kp-menu-button > .kp-menu {
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+    }
+
+    .kp-nav__more-button {
+        position: relative;
+        margin: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        cursor: pointer;
+    }
+
+    .kp-nav__more-button[aria-current='true'] {
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+    }
+
+    .kp-nav__more-dot {
+        /* Inline-block, not a flex item: a register that makes its links blocks makes this button one. */
+        display: inline-block;
+        vertical-align: middle;
+        margin-inline-start: 0.4em;
+        inline-size: var(--kp-nav-more-dot, 0.5rem);
+        block-size: var(--kp-nav-more-dot, 0.5rem);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--destructive);
+        flex: none;
+    }
+
+    .kp-nav__more-dot[hidden] {
+        display: none;
+    }
+
+    /* A separator between two groups of links [kpadopt3]: `<li class="kp-nav__sep" aria-hidden="true">`, a hairline as
+     * tall as a link, in the list's own gap. Never a target and never focused. In a folding bar (js/nav-fold.js) it stands
+     * only between two shown links and becomes the More menu's own `.kp-menu__separator`; in the phone's open list it is
+     * a rule across the list. Knobs: --kp-nav-sep-colour (--border-strong), --kp-nav-sep-inset (the room above and below
+     * it, 0.25rem). */
+    .kp-nav__sep {
+        flex: none;
+        align-self: stretch;
+        box-sizing: border-box;
+        inline-size: 0;
+        min-block-size: 1em;
+        margin-block: var(--kp-nav-sep-inset, 0.25rem);
+        padding: 0;
+        border-inline-start: 1px solid var(--kp-nav-sep-colour, var(--border-strong));
+        list-style: none;
+        pointer-events: none;
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            min-block-size: 0;
+            block-size: 0;
+            margin-block: var(--kp-nav-sep-inset, 0.25rem);
+            border-inline-start: 0;
+            border-block-start: 1px solid var(--kp-nav-sep-colour, var(--border-strong));
+        }
+    }
+
+    /* The bar's own toggle shown: the bar collapses as it always did. */
+    @container kp-nav (max-width: 40rem) {
+        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links {
+            overflow: visible;
+            flex-wrap: wrap;
+        }
+
+        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links > li {
+            white-space: normal;
+        }
+
+        .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links > [data-kp-nav-more] {
+            display: none;
+        }
+    }
+
+    /* The command palette's trigger in the bar [scope-48]. A hotkey alone is
+ * a secret, so the bar keeps a visible door to the palette at its end:
+ * a slot that pushes itself to the far edge, holding a button that reads
+ * as a quiet search box — a word in the muted ink and the key beside it —
+ * rather than as one more loud action. The button is an ordinary
+ * `data-kp-palette-open` opener; js/palette.js fills its empty
+ * `<kbd data-kp-palette-keys>` with ⌘K or Ctrl K. Every register answers
+ * the slot (gates/check-register-coverage.mjs, REQUIRED_PARTS). */
+    .kp-nav__search {
+        display: flex;
+        align-items: center;
+        margin-inline-start: auto;
+    }
+
+    .kp-nav__search-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        /* Never wider than the bar it sits in: a narrow bar gives the
+     * row to the brand and the toggle rather than to an empty box. */
+        min-inline-size: min(var(--kp-nav-search-min, 10rem), 100%);
+        /* As tall as a bar link and in its type size [scope-87], whatever
+     * border the register draws: a border-box floor of one line and the
+     * link's two block paddings, the label centred in it. */
+        box-sizing: border-box;
+        min-block-size: calc(1lh + 2 * var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2)));
+        padding: 0 0.5rem 0 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+        /* One line: squeezed on grotesk's bar, the key hint broke into
+     * "Ctrl" over "K" inside its own chip [scope-80]. */
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-nav__search-trigger:hover {
+        color: var(--foreground);
+        border-color: var(--border-strong);
+    }
+
+    /* The key sits at the button's far end, the way it sits at a palette
+ * row's end. Empty until the module fills it, and then out of the way. */
+    .kp-nav__search-trigger .kp-palette__keys:empty {
+        display: none;
+    }
+
+    /* The current page is marked by more than colour: aria-current is what a
+ * screen reader announces, and the underline is what everyone else
+ * sees [DI4]. */
+    /* A bar link's size is the package's in every theme [scope-87, option B
+ * of research/uniform-size/]: its type size, line height and block
+ * padding are titanium's, the median theme's [scope-82]. A register keeps
+ * its inline padding, colour, border, face, case, letter spacing and
+ * ornaments; gates/box-metrics.test.mjs refuses the rest. The size is
+ * titanium's 0.94rem taken to 15px: at 15.04px the line box fell between
+ * two layout units, and the bar's measured height and the scroll offset
+ * written from it no longer read the same (tests/nav-sticky.spec.mjs). The call to
+ * action, `.kp-nav__link--cta`, is a bar link and takes the same [scope-88]. The links sit in
+ * a column item (below), so the padding holds its room even where a
+ * register leaves the link inline. */
+    /* The default block padding makes a one-line link exactly
+     * --kp-control-height tall, so a link and a button in one bar row
+     * share a height (chassis-rs: 38.5px links beside 36px buttons). */
+    .kp-nav__link {
+        padding-block: var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2));
+        font-size: var(--kp-nav-link-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    .kp-nav__link[aria-current='page'] {
+        font-weight: 600;
+        text-decoration-thickness: 2px;
+    }
+

@@ -1,0 +1,139 @@
+/* @part: popover: Dropdown and tooltip, on the popover layer */
+    /* --- Dropdown and tooltip, on the popover layer ----------------------- */
+
+    .kp-popover {
+        position: absolute;
+        margin: 0;
+        padding: 0.25rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        /* Twenty-four themes make the picker's menu taller than most
+     * viewports leave under a header: the popover scrolls inside itself
+     * rather than running off the bottom [R5]. A knob, like every other
+     * measure in this file. */
+        max-block-size: var(--kp-popover-max-height, min(80vh, 40rem));
+        overflow: auto;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        /* Anchor positioning: the popover sits under its trigger without
+     * either of them knowing where the other ended up. */
+        position-area: block-end span-inline-end;
+        margin-block-start: 0.25rem;
+    }
+
+    .kp-menu {
+        display: flex;
+        flex-direction: column;
+        /* nowrap, explicitly: the flat picker's rule above sets wrap, and a
+     * wrapping column with a maximum height starts a second column the
+     * moment the list is taller than the popover — the dark group moved
+     * beside the light one and the light one hung outside the box. Only
+     * CI's taller fonts made the list tall enough to see it [R5]. */
+        flex-wrap: nowrap;
+        min-width: var(--kp-menu-min-width, 10rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* And the items keep their size rather than shrinking to fit the height;
+ * the popover scrolls instead. */
+    .kp-menu > * {
+        flex-shrink: 0;
+    }
+
+    .kp-menu__item {
+        padding: 0.375rem 0.625rem;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        border: 0;
+        font: inherit;
+        color: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-menu__item:hover {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        color: inherit;
+    }
+
+    /* A destructive entry keeps its ink, at rest and under the pointer. It sits
+ * after `.kp-menu__item` and its hover on purpose: it used to come before
+ * them, and their `color: inherit` cancelled it, so in every theme whose
+ * register does not restate the ink (synthwave, pastel, ...) "Delete" read
+ * like every other entry. */
+    .kp-menu__item--destructive,
+    .kp-menu__item--destructive:hover {
+        color: var(--destructive);
+    }
+
+    /* A disabled item looks unavailable and does not answer the pointer
+ * [gap-11]. It painted like an enabled one and lit up under the pointer
+ * in every theme. `pointer-events: none` rather than a :not() on the
+ * hover rule, because nineteen registers write their own item hover in a
+ * later layer, and an item the pointer cannot reach matches none of them. */
+    .kp-menu__item:is(:disabled, [aria-disabled='true']) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        pointer-events: none;
+    }
+
+    .kp-tooltip {
+        max-width: var(--kp-tooltip-max-width, 18rem);
+        padding: 0.25rem 0.5rem;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* A tooltip is placed against the window, not against the nearest positioned ancestor [homelab 135]. The popover's
+       absolute box takes the area between its anchor and that ancestor: a button at the bottom of a positioned box
+       (a form grid's button row) has no height under it, so the reason was laid over the button, and a button at the end
+       of one has no width beside it, so the reason was squeezed into a 100 px column of ten lines. Fixed, the area runs to
+       the window's edges, as the add-filter menu does (below), and the reason falls back to the other side where it does not fit:
+       its own width is the one it wants (up to --kp-tooltip-max-width), so an area too narrow for it is a fallback, not a squeeze. */
+    .kp-tooltip.kp-popover:not([popover], [data-kp-hovercard-card]) {
+        position: fixed;
+        width: max-content;
+        max-width: min(var(--kp-tooltip-max-width, 18rem), calc(100vw - 1rem));
+        /* Last: the whole width of the window under or over the anchor, centred on it as far as the window allows, for the
+           button that has no room to either side (a phone). */
+        position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline, --kp-tooltip-below, --kp-tooltip-above;
+    }
+
+    @position-try --kp-tooltip-below {
+        position-area: block-end span-all;
+        justify-self: safe anchor-center;
+    }
+
+    @position-try --kp-tooltip-above {
+        position-area: block-start span-all;
+        justify-self: safe anchor-center;
+    }
+
+    /* The page's one hover card (js/hovercard.js): a tooltip that lives in
+     * <body>, not in an anchor, and is filled when it opens. In the top layer
+     * the script places it in window coordinates, so the popover's UA inset
+     * is put back; the margins stay the register's own, which is what keeps
+     * the gap a tooltip in its anchor has. It is wider than a one-line
+     * tooltip because it may hold rows, and it can be entered by the pointer
+     * (WCAG 1.4.13), so a long word wraps rather than widening it. */
+    /* A register may set a tooltip's words in capitals or small capitals, and everything a card is filled with inherits that:
+       a host, `application/json` or a template read in small caps, though they are case-sensitive [http-switchboard 21]. A
+       value (`.kp-tooltip__value`) keeps its case and its spacing, and so does whatever a hover card is filled with as
+       elements (that is the page's data, not the register's words); a string put in the card is text, and stays the register's. */
+    .kp-tooltip__value,
+    .kp-tooltip[data-kp-hovercard-card] > * {
+        text-transform: none;
+        font-variant-caps: normal;
+        letter-spacing: normal;
+    }
+
+    .kp-tooltip[data-kp-hovercard-card] {
+        position: fixed;
+        inset: auto;
+        /* Placed by the script in window coordinates: the popover's anchor area would pin it to the window's end edge. */
+        position-area: none;
+        max-width: var(--kp-hovercard-max-width, min(24rem, calc(100vw - 1rem)));
+        overflow-wrap: anywhere;
+        text-align: start;
+    }
+

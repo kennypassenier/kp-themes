@@ -1,0 +1,6 @@
+/* @part: signature: .kp-trace */
+@layer kp.signature {
+    [data-theme='formal'] .kp-trace .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1rem;
+    }
+}

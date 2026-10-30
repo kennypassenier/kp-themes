@@ -1,0 +1,23 @@
+/* @part: layout: The peek strip of a floating panel keeps the gap of the panel above an */
+/* The peek strip of a floating panel keeps the gap of the panel above and
+ * rounds its far corners with the panel's radius; the panel's own hide while
+ * it is open is the module's (data-kp-sidenav-peek-hushed). */
+@layer kp.layout {
+    .kp-sidenav__peek[data-kp-sidenav-peek-variant='floating'] {
+        margin-block: var(--kp-sidenav-float-inset, var(--kp-space-sm, 0.5rem));
+        border: var(--kp-sidenav-float-edge, 1px solid var(--border-strong));
+        border-inline-start: none;
+        border-start-end-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+        border-end-end-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-variant='floating'][data-kp-sidenav-peek-edge='end'] {
+        border-inline-start: var(--kp-sidenav-float-edge, 1px solid var(--border-strong));
+        border-inline-end: none;
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-start-start-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+        border-end-start-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+    }
+}
+

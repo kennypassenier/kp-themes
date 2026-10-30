@@ -1,0 +1,28 @@
+/* @part: state-word: A state word that keeps its width */
+    /* --- A state word that keeps its width [scope-143] -------------------- */
+
+    /* A word that changes with its state ("Running", "Stopped", "in 3 min")
+ * is as wide as the widest word it can show, so nothing beside it moves
+ * when it changes. The words are listed in `data-kp-words`, one per line
+ * (`&#10;` between them in markup); an invisible line of no height holds
+ * the width. */
+    .kp-state-word {
+        display: inline-flex;
+        flex-direction: column;
+        font-variant-numeric: tabular-nums;
+        vertical-align: baseline;
+    }
+
+    .kp-state-word::after {
+        content: attr(data-kp-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-state-word--center {
+        align-items: center;
+        text-align: center;
+    }
+

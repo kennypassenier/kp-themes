@@ -1,0 +1,280 @@
+/* @part: signature-base: .kp-empty */
+    [data-theme='synthwave'] .kp-empty__title {
+        color: var(--foreground);
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='synthwave'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        padding-block-end: 2px;
+        text-decoration: none;
+        background: var(--kp-stripe) left bottom / 100% 2px no-repeat;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='synthwave']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        background-size: 100% 3px;
+        text-shadow: var(--kp-tube-pink);
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='synthwave'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+            text-decoration: underline;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-spinner::before {
+            animation: kp-sig-synthwave-sw-set var(--kp-sig-dur) var(--kp-sw-sun) infinite;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+            animation: kp-sig-synthwave-sw-sheen var(--kp-sig-dur) var(--kp-sig-sw-ease) infinite;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 220ms;
+        }
+
+        [data-theme='synthwave'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 440ms;
+        }
+
+        [data-theme='synthwave'] .kp-switch__input::before {
+            transition: transform var(--kp-sw-beat) var(--kp-sw-sun);
+        }
+
+        [data-theme='synthwave'] .kp-field__check:checked {
+            animation: kp-sig-synthwave-sw-tube var(--kp-sig-dur) steps(1, end) both;
+        }
+
+        /* A toast arrives as its leave played backwards: the sun rises behind
+           it and gives it back [G12]; its stripe is drawn from the centre once
+           it is there. */
+        [data-theme='synthwave'] .kp-toast {
+            animation: kp-sig-synthwave-sink var(--kp-sig-dur) var(--kp-sw-sun) reverse backwards;
+        }
+
+        [data-theme='synthwave'] .kp-toast::before {
+            animation: kp-sig-synthwave-sw-horizon calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) calc(2 * var(--kp-sw-beat)) both;
+        }
+
+        [data-theme='synthwave'] .kp-toast::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: var(--kp-sw-sun-cuts), var(--kp-sw-sun-v);
+            pointer-events: none;
+            translate: 0 101%;
+            visibility: hidden;
+            animation: kp-sig-synthwave-sun var(--kp-sig-dur) var(--kp-sw-sun) reverse backwards;
+        }
+
+        /* The beam climbs to the horizon [G3, opening = climb]. */
+        [data-theme='synthwave'] .kp-dialog {
+            animation: kp-sig-synthwave-climb var(--kp-sig-dur) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave'] .kp-dialog::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam var(--kp-sig-dur) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow var(--kp-sig-dur) linear backwards;
+        }
+
+        /* What drops from a button climbs the same way [G3]: the menu, a
+           popover, the combobox's list, the date picker's panel and the
+           tooltip are uncovered from their foot behind the beam, in two beats
+           on the sunrise curve, as the dialog is. The close is that climb
+           played backwards: js/motion.js turns the entrance around on
+           `[data-kp-closing]` / `[data-kp-reversing]` (a menu, the date
+           picker, the tooltip) or on its copy of a popover the browser hides
+           (the ghost). These were transitions to the open state and back,
+           which Firefox cannot hold for a popover leaving the top layer: the
+           close was gone in one frame (all-themes audit, 2026-10-13). */
+        [data-theme='synthwave']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-tooltip
+            ) {
+            animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-tooltip
+            )::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow calc(2 * var(--kp-sw-beat)) linear backwards;
+        }
+
+        /* The list climbs as its own entrance, not as the leave turned around. */
+        [data-theme='synthwave'] .kp-combobox__list {
+            --kp-open: own;
+        }
+
+        /* The command palette and the shortcuts sheet are dialogs: they climb as
+           the dialog does (three beats unopened, two once open, which js/motion.js
+           plays backwards to close them). They faded in the package's way. */
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: calc(3 * var(--kp-sw-beat));
+            animation: kp-sig-synthwave-climb var(--kp-sig-dur) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts)[open] {
+            --kp-sig-dur: calc(2 * var(--kp-sw-beat));
+        }
+
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts)::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam var(--kp-sig-dur) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow var(--kp-sig-dur) linear backwards;
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-set {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(45%);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-sheen {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        65%,
+        100% {
+            transform: translateX(260%);
+        }
+    }
+
+    /* At most two dips as it strikes (the anatomy's tube), each held. */
+    @keyframes kp-sig-synthwave-sw-tube {
+        0% {
+            opacity: 0.3;
+        }
+
+        25% {
+            opacity: 1;
+        }
+
+        45% {
+            opacity: 0.55;
+        }
+
+        70%,
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* The panel is uncovered from its foot upward, its lower edge the beam. */
+    @keyframes kp-sig-synthwave-climb {
+        from {
+            clip-path: inset(100% -4rem -4rem -4rem);
+        }
+
+        to {
+            clip-path: inset(-4rem);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-beam {
+        from {
+            inset-block-start: calc(100% - 2px);
+        }
+
+        to {
+            inset-block-start: 0;
+        }
+    }
+
+    /* The beam is struck from its centre, holds, and goes out as it arrives. */
+    @keyframes kp-sig-synthwave-glow {
+        0% {
+            opacity: 1;
+            transform: scaleX(0);
+        }
+
+        12%,
+        85% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-sw-horizon {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    @keyframes kp-sw-road {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(var(--kp-sw-road));
+        }
+    }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── synthwave: neon. The edge burns pink and cyan while the box glides;
+           new rows rise over the horizon (the sunrise curve, four beats, no
+           race and no skew: the world is horizontal, G2). ───────────────── */
+        [data-theme='synthwave'] [data-kp-resizing] {
+            outline: 1px solid var(--primary);
+            outline-offset: 3px;
+            filter: drop-shadow(0 0 8px var(--primary)) drop-shadow(0 0 18px var(--accent));
+        }
+
+        /* A part that arrives as its leave played backwards carries
+           `[data-kp-leaving]` too (js/motion.js arriveAsReversedLeave reads that
+           leave): it is not a row rising in a size change. */
+        [data-theme='synthwave'] [data-kp-arriving]:not(.kp-toast, [data-kp-leaving]) {
+            animation: kp-sig-synthwave-size-rise calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+        }
+
+        @keyframes kp-sig-synthwave-size-rise {
+            from {
+                translate: 0 0.5rem;
+                clip-path: inset(100% 0 0.5rem 0);
+            }
+
+            to {
+                translate: 0 0;
+                clip-path: inset(0);
+            }
+        }
+    }
+

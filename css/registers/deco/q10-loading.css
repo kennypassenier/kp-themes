@@ -1,0 +1,320 @@
+/* @part: q10-loading: Q10 · loading */
+    /* ── Q10 · loading: lift doors that part and close. Every waiting surface
+       the package has (a skeleton line, block or circle, a busy card, the
+       tiles of a busy grid, a key figure that loads, the table's busy panel,
+       a loading day, the loading meter, the loading entry of a menu, a busy
+       button, the chart's loading plot) is drawn the same way: two doors of
+       lacquer, each with its panel and a faceted gold lozenge for a handle,
+       meet at a gold double hairline down the middle of the part; they part
+       to the sides by a third and close again, slowly, like a lift's doors
+       waiting, 2400 ms, the wallpaper running on across both. The doors are
+       the part's ::before and ::after, one half of its width each, and the
+       part's own `overflow: clip` is what keeps them in it; one registered
+       number (--kp-sig-deco-p) is how far they have parted. They fill the
+       whole element and take its shape, so a line is a slim pair, a block a
+       pair of panels. Standing still (reduced motion) they stand parted by a
+       third, so the words under them read. ── */
+    [data-theme='deco'] [aria-busy='true'] {
+        --kp-busy-opacity: 1;
+    }
+
+    [data-theme='deco'] .kp-skeleton,
+    [data-theme='deco'] .kp-card[aria-busy='true'],
+    [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card,
+    [data-theme='deco'] .kp-kpi[aria-busy='true'],
+    [data-theme='deco'] .kp-datatable__busy-panel,
+    [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading'],
+    [data-theme='deco'] .kp-meter[data-kp-loading],
+    [data-theme='deco'] .kp-kpi__meter[data-kp-loading],
+    [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+    [data-theme='deco'] .kp-button[aria-busy='true'] {
+        --kp-sig-deco-p: 1;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        animation: none;
+    }
+
+    [data-theme='deco'] .kp-skeleton {
+        --kp-sig-deco-hs: 2px;
+        --kp-sig-deco-hx: 10px;
+        --kp-sig-deco-di: 4px;
+        --kp-sig-deco-frame: 0;
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        border-radius: 0;
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-deco-hs: 0px;
+        block-size: 0.9rem;
+    }
+
+    [data-theme='deco'] .kp-skeleton--circle {
+        --kp-sig-deco-hs: 0px;
+        --kp-sig-deco-frame: 0;
+        border-radius: 50%;
+    }
+
+    [data-theme='deco'] .kp-skeleton--block {
+        --kp-sig-deco-di: 6px;
+        --kp-sig-deco-frame: 1;
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='deco'] :is(.kp-menu__item[data-kp-loading], .kp-button[aria-busy='true'], .kp-calendar__day[data-kp-tone='loading']) {
+        --kp-sig-deco-hs: 2.5px;
+        --kp-sig-deco-hx: 10px;
+        --kp-sig-deco-di: 3px;
+    }
+
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-deco-hs: 0px;
+        --kp-sig-deco-frame: 0;
+        background-color: var(--kp-sig-deco-lac);
+    }
+
+    [data-theme='deco'] .kp-skeleton::before,
+    [data-theme='deco'] .kp-card[aria-busy='true']::before,
+    [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card::before,
+    [data-theme='deco'] .kp-kpi[aria-busy='true']::before,
+    [data-theme='deco'] .kp-datatable__busy-panel::before,
+    [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading']::before,
+    [data-theme='deco'] .kp-meter[data-kp-loading]::before,
+    [data-theme='deco'] .kp-kpi__meter[data-kp-loading]::before,
+    [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::before,
+    [data-theme='deco'] .kp-button[aria-busy='true']::before,
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+        inline-size: calc(50% + 0.5px);
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        pointer-events: none;
+        opacity: 1;
+        clip-path: none;
+        mask-image: none;
+        filter: none;
+        animation: none;
+        transform: none;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-hi) 50%),
+            linear-gradient(to bottom left, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+            linear-gradient(to bottom right, var(--kp-sig-deco-gold-lo) 50%, transparent 50%),
+            linear-gradient(to bottom left, var(--primary) 50%, transparent 50%),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0), linear-gradient(var(--primary) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0),
+            linear-gradient(90deg, transparent, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-position:
+            right calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            right var(--kp-sig-deco-hx, 14px) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            right var(--kp-sig-deco-hx, 14px) top 50%,
+            right calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top 50%,
+            var(--kp-sig-deco-di, 8px) var(--kp-sig-deco-di, 8px),
+            left var(--kp-sig-deco-di, 8px) bottom var(--kp-sig-deco-di, 8px),
+            left var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            right calc(var(--kp-sig-deco-di, 8px) + 1px) top var(--kp-sig-deco-di, 8px),
+            right 1px top 0,
+            right 4px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px 100%,
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        background-repeat:
+            no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+        box-shadow: inset -1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
+        translate: calc(var(--kp-sig-deco-p) * -33.4%) 0;
+    }
+
+    [data-theme='deco'] .kp-skeleton::after,
+    [data-theme='deco'] .kp-card[aria-busy='true']::after,
+    [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card::after,
+    [data-theme='deco'] .kp-kpi[aria-busy='true']::after,
+    [data-theme='deco'] .kp-datatable__busy-panel::after,
+    [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading']::after,
+    [data-theme='deco'] .kp-meter[data-kp-loading]::after,
+    [data-theme='deco'] .kp-kpi__meter[data-kp-loading]::after,
+    [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::after,
+    [data-theme='deco'] .kp-button[aria-busy='true']::after,
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inset-inline-start: auto;
+        inline-size: calc(50% + 0.5px);
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        pointer-events: none;
+        opacity: 1;
+        clip-path: none;
+        mask-image: none;
+        filter: none;
+        animation: none;
+        transform: none;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-hi) 50%),
+            linear-gradient(to bottom left, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+            linear-gradient(to bottom right, var(--kp-sig-deco-gold-lo) 50%, transparent 50%),
+            linear-gradient(to bottom left, var(--primary) 50%, transparent 50%),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0), linear-gradient(var(--primary) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0),
+            linear-gradient(90deg, transparent, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-position:
+            left var(--kp-sig-deco-hx, 14px) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            left calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            left calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top 50%,
+            left var(--kp-sig-deco-hx, 14px) top 50%,
+            right var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            right var(--kp-sig-deco-di, 8px) bottom var(--kp-sig-deco-di, 8px),
+            right var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            left calc(var(--kp-sig-deco-di, 8px) + 1px) top var(--kp-sig-deco-di, 8px),
+            left 1px top 0,
+            left 4px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px 100%,
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        background-repeat:
+            no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+        box-shadow: inset 1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
+        translate: calc(var(--kp-sig-deco-p) * 33.4%) 0;
+    }
+
+    /* The checklist's loading, two ways [cook-1017; Kenny 2026-10-17 17:48: "de loading animatie met de gordijnen werkt
+       enkel als het het hele element omvangt, dus maak een versie die dat doet, en een versie met gewoon de spinner"].
+       `data-kp-checklist-loading` on the list picks one, the curtains when it is absent:
+       - curtains: the busy card's own layer, which covers the whole body of the list, wears the two doors, so they close
+         over the entire checklist and open on it; the card's spinner and words stand under them and show in the gap.
+       - spinner: the busy card with deco's sunburst spinner and its words, centred, and no doors.
+       The card's panel never wears the doors itself here: a small pair over a long list is what was refused. */
+    [data-theme='deco'] .kp-checklist .kp-checklist__busy > .kp-datatable__busy-panel::before,
+    [data-theme='deco'] .kp-checklist .kp-checklist__busy > .kp-datatable__busy-panel::after {
+        content: none;
+    }
+
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy {
+        --kp-sig-deco-p: 1;
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
+    }
+
+    /* Standing still, a waiting button keeps its label readable: the other
+       parts stand with the doors parted by a third (G20), but a button is
+       mostly its words, and at one third the doors covered 43 % of a 128 px
+       button's label. Here they stand parted nearly the whole way (2.5 of
+       their 3 thirds), leaving only each door's outer edge, about 10 px of
+       lacquer at each end of the plate. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='deco'] .kp-button[aria-busy='true'] {
+            --kp-sig-deco-p: 2.5;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-skeleton,
+        [data-theme='deco'] .kp-card[aria-busy='true'],
+        [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card,
+        [data-theme='deco'] .kp-kpi[aria-busy='true'],
+        [data-theme='deco'] .kp-datatable__busy-panel,
+        [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading'],
+        [data-theme='deco'] .kp-meter[data-kp-loading],
+        [data-theme='deco'] .kp-kpi__meter[data-kp-loading],
+        [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+        [data-theme='deco'] .kp-button[aria-busy='true'] {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
+
+        [data-theme='deco'] .kp-skeleton:nth-child(2) {
+            animation-delay: calc(var(--kp-sig-deco-loop) / -12);
+        }
+
+        [data-theme='deco'] .kp-skeleton:nth-child(3) {
+            animation-delay: calc(var(--kp-sig-deco-loop) / -6);
+        }
+    }
+
+    @keyframes kp-sig-deco-doors {
+        0% {
+            --kp-sig-deco-p: 0;
+        }
+
+        12% {
+            --kp-sig-deco-p: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        50% {
+            --kp-sig-deco-p: 1;
+        }
+
+        62% {
+            --kp-sig-deco-p: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        100% {
+            --kp-sig-deco-p: 0;
+        }
+    }
+

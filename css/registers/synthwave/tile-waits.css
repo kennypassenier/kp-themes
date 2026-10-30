@@ -1,0 +1,456 @@
+/* @part: tile-waits: A tile waits */
+    /* ── A tile waits [G10, loading = the oncoming tube and floor, the bars as
+       they were; Kenny, 2026-10-07 23:54]. The page tube at the scale of a
+       tile: while a plate is busy (`aria-busy='true'` on the tile itself, or
+       on the `.kp-tiles` or `.kp-kpis` that holds it) its stripe is the tube
+       unlit, with the sun's ramp (pink, laser yellow, pink) flowing through it
+       from its start to its end, 8 beats (1800 ms) a period, and the lines of
+       its floor drive toward you, 4 beats (900 ms) a period: each line is born
+       at the horizon and spreads to the foot, one line a period. Nothing
+       flickers: every light glides on a line. The sides keep falling from the
+       stripe's own colours. Standing still, the stripe shows the ramp and the
+       floor its lines, which says "busy" and claims nothing. ─────────────── */
+    [data-theme='synthwave'] :is(:is(.kp-card, .kp-kpi)[aria-busy='true'], :is(.kp-tiles, .kp-kpis)[aria-busy='true'] > :is(.kp-card, .kp-kpi)) {
+        background:
+            var(--kp-sw-ramp-loop) 0 0 / 200% var(--kp-sw-side) repeat-x,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            var(--kp-sw-fall-l) 0 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--kp-sw-fall-r) 100% 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--card);
+        background-origin: border-box;
+        /* The tube is the sign that it waits, at full light: the package's
+           0.7 busy dim (`kp.layout`, knob `--kp-busy-opacity`) would dull it. */
+        --kp-busy-opacity: 1;
+        box-shadow:
+            inset 0 -2px 0 0 hsl(from var(--sidebar-background) h s l / 0.7),
+            0 -2px 10px 0 hsl(from var(--primary) h s l / 0.45),
+            0 0 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    [data-theme='synthwave'] :is(.kp-tiles, .kp-kpis)[aria-busy='true'] {
+        --kp-busy-opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] :is(:is(.kp-card, .kp-kpi)[aria-busy='true'], :is(.kp-tiles, .kp-kpis)[aria-busy='true'] > :is(.kp-card, .kp-kpi)) {
+            animation: kp-sw-tile-flow calc(8 * var(--kp-sw-beat)) linear infinite reverse;
+        }
+
+        [data-theme='synthwave']
+            :is(:is(.kp-card, .kp-kpi)[aria-busy='true'], :is(.kp-tiles, .kp-kpis)[aria-busy='true'] > :is(.kp-card, .kp-kpi))::after {
+            background:
+                linear-gradient(hsl(from var(--primary) h s l / 0.3) 0 0) 0 4% / 100% 1px no-repeat,
+                linear-gradient(hsl(from var(--primary) h s l / 0.32) 0 0) 0 16% / 100% 1px no-repeat,
+                linear-gradient(hsl(from var(--primary) h s l / 0.34) 0 0) 0 38% / 100% 1px no-repeat,
+                linear-gradient(hsl(from var(--primary) h s l / 0.36) 0 0) 0 66% / 100% 1px no-repeat,
+                linear-gradient(hsl(from var(--primary) h s l / 0.38) 0 0) 0 100% / 100% 1px no-repeat,
+                repeating-conic-gradient(from 180deg at 50% -25%, hsl(from var(--primary) h s l / 0.45) 0 0.7deg, transparent 0.7deg 9deg);
+            animation: kp-sw-tile-floor-drive calc(4 * var(--kp-sw-beat)) linear infinite;
+        }
+    }
+
+    @keyframes kp-sw-tile-flow {
+        from {
+            background-position:
+                0 0,
+                0 var(--kp-sw-side),
+                0 0,
+                100% 0;
+        }
+
+        to {
+            background-position:
+                200% 0,
+                0 var(--kp-sw-side),
+                0 0,
+                100% 0;
+        }
+    }
+
+    @keyframes kp-sw-tile-floor-drive {
+        from {
+            background-position:
+                0 4%,
+                0 16%,
+                0 38%,
+                0 66%,
+                0 100%,
+                0 0;
+        }
+
+        to {
+            background-position:
+                0 16%,
+                0 38%,
+                0 66%,
+                0 100%,
+                0 130%,
+                0 0;
+        }
+    }
+
+    [data-theme='synthwave'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-pink);
+    }
+
+    /* The key figure's number [G15, type = osd: "the OSD names, the chrome
+       counts"; Kenny, 2026-10-07 20:41]: figures are counted in the chrome
+       display face (`--theme-font-display`, KP Outrun Display), a near-white
+       core with the pink tube, as the card's title is. Its unit and note are
+       names, so they go back to the body face. A figure on a warning or
+       destructive plate keeps the plate's ink and no glow (the pair the
+       package guarantees, G13). */
+    [data-theme='synthwave'] .kp-kpi > .kp-kpi__value {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='synthwave'] .kp-kpi > .kp-kpi__value :is(small, .kp-kpi__note) {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: normal;
+        text-shadow: none;
+    }
+
+    [data-theme='synthwave'] .kp-kpi:not([data-kp-tone='warning'], [data-kp-tone='destructive']) > .kp-kpi__value {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-pink);
+    }
+
+    /* The dossier: a tape card; the label is the OSD's REC stamp; the
+       redactions are tracking noise that clears when the file is opened. */
+    [data-theme='synthwave'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    [data-theme='synthwave'] .kp-card[data-kp-label]::before {
+        content: '● ' attr(data-kp-label);
+        position: absolute;
+        top: 0.9rem;
+        right: 1.4rem;
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-card[data-kp-reveal='emphasis'] mark {
+        position: relative;
+    }
+
+    [data-theme='synthwave'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+        content: '';
+        position: absolute;
+        inset: -0.05em -0.15em;
+        background: repeating-linear-gradient(90deg, var(--primary) 0 2px, var(--card) 2px 3px, var(--accent) 3px 4px, var(--card) 4px 7px);
+        opacity: 0.9;
+        transform: scaleX(0);
+        transform-origin: right center;
+    }
+
+    [data-theme='synthwave'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
+        transform: scaleX(1);
+    }
+
+    [data-theme='synthwave'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        text-shadow: var(--kp-tube-cyan);
+    }
+
+    /* A panel that opens is the tape with the stripe, without the floor
+       [G7]: the same stripe, the lit line and the sides that fall as a plate's. */
+    [data-theme='synthwave'] .kp-dialog,
+    [data-theme='synthwave'] .kp-popover,
+    [data-theme='synthwave'] .kp-menu:not(.kp-popover .kp-menu),
+    [data-theme='synthwave'] .kp-confirm,
+    [data-theme='synthwave'] .kp-datepicker__panel,
+    [data-theme='synthwave'] .kp-combobox__list,
+    [data-theme='synthwave'] .kp-palette,
+    [data-theme='synthwave'] .kp-theme-menu__list {
+        background:
+            var(--kp-stripe) 0 0 / 100% var(--kp-sw-side) no-repeat,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            var(--kp-sw-fall-l) 0 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--kp-sw-fall-r) 100% 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--popover);
+        background-origin: border-box;
+        border: 1px solid transparent;
+        border-block-start: calc(var(--kp-sw-side) + 1px) solid transparent;
+        border-image: none;
+        border-radius: 0;
+        box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    /* The toast is a plate in its own tone and the tooltip a line of the OSD:
+       the toast's stripe is its own (below), the tooltip has none. */
+    [data-theme='synthwave'] .kp-toast,
+    [data-theme='synthwave'] .kp-tooltip {
+        background: var(--popover);
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+        box-shadow: 0 12px 40px hsl(from var(--sidebar-background) h s l / 0.6);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='synthwave'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        border-image: none;
+        box-shadow: none;
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='synthwave'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='synthwave'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='synthwave'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='synthwave'] .kp-toast--destructive,
+    [data-theme='synthwave'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='synthwave']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='synthwave'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    [data-theme='synthwave'] .kp-toasts {
+        gap: 0.6rem;
+    }
+
+    [data-theme='synthwave'] .kp-dialog__title {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-cyan);
+    }
+
+    /* The keyboard highlight is a wash of the ink, not a new colour (KT8). */
+    [data-theme='synthwave'] .kp-menu__item:hover,
+    [data-theme='synthwave'] .kp-combobox__option[aria-selected='true'],
+    [data-theme='synthwave'] .kp-palette__option[aria-selected='true'] {
+        background: hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='synthwave'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--card);
+        border: 1px solid var(--kp-hairline);
+        border-left: 4px solid var(--accent);
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-alert--destructive {
+        border-left-color: var(--destructive);
+    }
+
+    /* The data table's Try again takes the plate's own ink for its frame
+       [Kenny's synthwave note, 2026-09-15]. The frame is the primary pink,
+       and on the red plate of the failed state it measured 1.06:1 — "poorly
+       visible". The alert's label is `--destructive-foreground` on that
+       plate, 5.59:1, so the frame is drawn in it. Until scope-94 every
+       framed button on any destructive alert took it; Kenny narrowed it to
+       this one ("Alleen Try again"), so the retry control the data table
+       draws in its failed slot — js/datatable.js, `[data-kp-datatable-
+       retry]` inside `[data-kp-datatable-failed]`, whether the page wrote
+       the slot or the script did — is the only button it reaches. */
+    [data-theme='synthwave'] [data-kp-datatable-failed] .kp-button[data-kp-datatable-retry] {
+        --kp-frame: var(--destructive-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-alert--warning {
+        border-left-color: var(--warning-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-alert--success {
+        border-left-color: var(--success-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-alert__label {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-grid__tile,
+    [data-theme='synthwave'] .kp-split__pane {
+        background: var(--card);
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-grid {
+        gap: 1rem;
+    }
+
+    [data-theme='synthwave'] .kp-split__separator {
+        background: var(--kp-stripe);
+        width: 3px;
+    }
+
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='synthwave'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 3px;
+    }
+
+    [data-theme='synthwave'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='synthwave'] .kp-footer h4 {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-footer a {
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+
+    [data-theme='synthwave'] .kp-footer a:hover {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-cyan);
+    }
+
+    /* ── Badges, tags, status: small tubes ───────────────────────────── */
+
+    [data-theme='synthwave'] .kp-badge,
+    [data-theme='synthwave'] .kp-tag {
+        border-radius: var(--radius);
+        border: 1px solid currentColor;
+        font-family: var(--kp-osd);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.25);
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='synthwave'] .kp-tag {
+        font-size: 0.95rem;
+    }
+
+    [data-theme='synthwave'] .kp-health__dot {
+        box-shadow: 0 0 8px currentColor;
+    }
+
+    [data-theme='synthwave'] .kp-health {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.08em;
+    }
+
+    [data-theme='synthwave'] .kp-skeleton {
+        background: linear-gradient(90deg, var(--card), var(--popover), var(--card));
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-spinner {
+        border-color: hsl(from var(--accent) h s l / 0.25);
+        border-top-color: var(--accent);
+        filter: drop-shadow(0 0 4px var(--accent));
+    }
+
+    [data-theme='synthwave'] .kp-empty__title {
+        font-family: var(--kp-osd);
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-error {
+        font-family: var(--kp-osd);
+        color: var(--warning-foreground);
+        text-shadow: var(--kp-tube-laser);
+    }
+
+    /* ── Text shapes: identifiers in the OSD face ────────────────────── */
+
+    [data-theme='synthwave'] .kp-id,
+    [data-theme='synthwave'] .kp-url,
+    [data-theme='synthwave'] .kp-numeric,
+    [data-theme='synthwave'] .kp-timestamp,
+    [data-theme='synthwave'] .kp-masked,
+    [data-theme='synthwave'] .kp-copyable,
+    [data-theme='synthwave'] .kp-truncate,
+    [data-theme='synthwave'] .kp-cell-break,
+    [data-theme='synthwave'] .kp-cell-truncate {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='synthwave'] .kp-timestamp,
+    [data-theme='synthwave'] .kp-id {
+        color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-copyable__button {
+        border: 1px solid var(--kp-hairline);
+        border-radius: var(--radius);
+        color: var(--kp-pink-text);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='synthwave'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='synthwave'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+

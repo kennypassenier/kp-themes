@@ -1,0 +1,57 @@
+/* @part: kpadopt5-6-fit: kpadopt5/6 fit */
+/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* In this theme's wide mono capitals a track outgrows a phone, scrolled, and its last label was clipped at the track's
+       edge. Under 34rem the segments take less padding and tracking. A track of up to three also shares its width and a
+       long label wraps between words. A track of four or more takes rows instead of scrolling (the segments of a row share
+       it); the sliding plate cannot follow a second row, so the chosen segment carries its own plate there. A label is
+       never cut by an ellipsis. The inspector's filter does the same whenever its card is narrower than 34rem. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips) {
+            --kp-seg-item-pad-inline: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) {
+            grid-auto-columns: minmax(0, 1fr);
+            letter-spacing: 0.04em;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) > .kp-segmented__item {
+            white-space: normal;
+            overflow-wrap: normal;
+            line-height: 1.25;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='nostromo'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='nostromo'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+    }
+    @container kp-inspector (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+    }
+}
+

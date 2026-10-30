@@ -90,6 +90,25 @@
             "why": "formal is the default theme: most fixtures and every catalogue page wear it, so a changed rule reaches every test of its component, not only that component's sweeps"
         },
         {
+            "path": "css/registers/formal/**",
+            "tags": ["@theme:formal"],
+            "css": "selectors",
+            "fallback": ["@sweep"],
+            "why": "a part of css/formal-register.css (generated from these parts): the same selection as the generated file"
+        },
+        {
+            "path": "css/registers/{theme}/**",
+            "tags": ["@theme:{theme}"],
+            "css": "sweeps",
+            "why": "a part of css/{theme}-register.css (generated from these parts): the same selection as the generated file"
+        },
+        {
+            "path": "css/components/**",
+            "css": "selectors",
+            "fallback": ["@sweep", "*file"],
+            "why": "a part of css/components.css (generated from these parts): a changed rule maps to the component its selector names"
+        },
+        {
             "path": "css/{theme}-register.css",
             "tags": ["@theme:{theme}"],
             "css": "sweeps",
@@ -108,6 +127,7 @@
             "fallback": ["@sweep", "*file"],
             "why": "a changed rule maps to the component its selector names; a rule naming none maps to @sweep and every component in the file"
         },
+        { "path": "css/README.md", "none": "the index of the CSS part files; no browser test reads it" },
         { "path": "css/layout.css", "tags": ["@component:layout"] },
         { "path": "css/utilities.css", "tags": ["@component:utilities"] },
         { "path": "css/tailwind-bridge.css", "none": "no browser test loads it" },
@@ -195,18 +215,34 @@
         { "path": "js/entity-card.js", "tags": ["@component:data"], "why": "the entity card [kpadopt6-ops]" },
         { "path": "js/unsaved.js", "tags": ["@component:feedback"], "why": "the unsaved-changes bar [kpadopt5-time]" },
         { "path": "js/usual-picker.js", "tags": ["@component:picker"], "why": "the picker with the usual on top [kpadopt6]" },
-        { "path": "js/calm-tones.js", "tags": ["@component:data"], "why": "calm tones for the calendar, the heat grid and the uptime strip [kpadopt6]" },
+        {
+            "path": "js/calm-tones.js",
+            "tags": ["@component:data"],
+            "why": "calm tones for the calendar, the heat grid and the uptime strip [kpadopt6]"
+        },
         { "path": "js/quote.js", "tags": ["@component:feedback"], "why": "the quote card [kpadopt6]" },
         { "path": "js/rating.js", "tags": ["@component:field"], "why": "the star rating [kpadopt6]" },
         { "path": "js/calm.js", "tags": ["@component:foundations"], "why": "calm mode [kpadopt5]" },
         { "path": "js/shortcuts.js", "tags": ["@component:foundations"], "why": "the shortcut engine [kpadopt5]" },
         { "path": "js/lede.js", "tags": ["@component:foundations"], "why": "the lede [kpadopt5]" },
-        { "path": "js/live-options.js", "tags": ["@component:foundations"], "why": "attribute options that are read again when the attribute changes [live-options-1019]" },
-        { "path": "js/footprint.js", "tags": ["@component:data"], "why": "a data component holds its loaded height while a state shows [t56-statefix-1018]" },
+        {
+            "path": "js/live-options.js",
+            "tags": ["@component:foundations"],
+            "why": "attribute options that are read again when the attribute changes [live-options-1019]"
+        },
+        {
+            "path": "js/footprint.js",
+            "tags": ["@component:data"],
+            "why": "a data component holds its loaded height while a state shows [t56-statefix-1018]"
+        },
         { "path": "js/problems.js", "tags": ["@component:feedback"], "why": "the problem alert [kpadopt5]" },
         { "path": "js/console.js", "tags": ["@component:data"], "why": "the interactive console [kpadopt6]" },
         { "path": "js/logviewer.js", "tags": ["@component:data"], "why": "the live log viewer [gap-log-viewer]" },
-        { "path": "js/diff.js", "tags": ["@component:data"], "why": "the diff view with file headers, folded context and changed words [gap-diff-view]" },
+        {
+            "path": "js/diff.js",
+            "tags": ["@component:data"],
+            "why": "the diff view with file headers, folded context and changed words [gap-diff-view]"
+        },
         { "path": "js/timefield.js", "tags": ["@component:field"], "why": "the time of day field [kpadopt6]" },
         { "path": "js/qr.js", "tags": ["@component:media"], "why": "the QR code [kpadopt6]" },
         { "path": "js/vendor/qr-encode.js", "tags": ["@component:media"], "why": "the vendored QR encoder (Project Nayuki, MIT) [kpadopt6]" },
@@ -217,7 +253,11 @@
         { "path": "js/notices.js", "tags": ["@component:overlays"], "why": "the notification centre [kpadopt5-ops]" },
         { "path": "js/question-card.js", "tags": ["@component:feedback"], "why": "the question card [kpadopt5-ops]" },
         { "path": "js/transfer.js", "tags": ["@component:feedback"], "why": "a transfer with its speed and the time left [kpadopt5-ops]" },
-        { "path": "js/quiet-hours.js", "tags": ["@component:field"], "why": "quiet hours composed of the time field and the weekday picker [wish-1120]" },
+        {
+            "path": "js/quiet-hours.js",
+            "tags": ["@component:field"],
+            "why": "quiet hours composed of the time field and the weekday picker [wish-1120]"
+        },
         { "path": "js/page-contents.js", "tags": ["@component:navigation"], "why": "an on-this-page list with scroll-spy [wish-1120]" },
         { "path": "js/code-field.js", "tags": ["@component:field"], "why": "a config-file text box with line, column and an error line [wish-1120]" },
         { "path": "js/markdown.js", "tags": ["@component:feedback"], "why": "a safe markdown reader for release notes [wish-1120]" },
@@ -259,7 +299,11 @@
         { "path": "js/row-select.js", "tags": ["@component:data"], "why": "rows ticked with the keyboard and with Shift-click [kpadopt5]" },
         { "path": "js/selection-bar.js", "tags": ["@component:data"], "why": "the selection bar over a table or a list [kpadopt5]" },
         { "path": "js/undo-toast.js", "tags": ["@component:feedback"], "why": "a toast with Undo and a visible clock [kpadopt5]" },
-        { "path": "js/feed.js", "tags": ["@component:data"], "why": "the activity feed: rows by day with a state mark, an actor chip and the ticking time [gap-activity-feed-1019]" },
+        {
+            "path": "js/feed.js",
+            "tags": ["@component:data"],
+            "why": "the activity feed: rows by day with a state mark, an actor chip and the ticking time [gap-activity-feed-1019]"
+        },
         { "path": "js/newpill.js", "tags": ["@component:data"], "why": "the N new lines pill on a live list [kpadopt5]" },
         { "path": "js/json-field.js", "tags": ["@component:field"], "why": "a text box that checks JSON [kpadopt5]" },
         { "path": "js/request-inspector.js", "tags": ["@component:data"], "why": "the request inspector [kpadopt5]" },

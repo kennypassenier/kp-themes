@@ -1,0 +1,272 @@
+/* @part: data: Data */
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='synthwave'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* One stripe across the whole header, not one per cell [gap-3, Kenny
+       2026-09-10]. A `border-image` is painted per element by definition,
+       so every `<th>` restarted the ramp and the seam he saw was the
+       mechanism working exactly as written. The stripe now belongs to the
+       row and runs the table's full width.
+
+       `background-image` on the row rather than a border-image: a row is
+       not a box that takes a border in every table layout, but it always
+       has a background, and a 2px band pinned to its bottom edge is the
+       same two pixels the border was. Measured across the register on
+       2026-09-11: `.kp-table th` was the only place this declaration
+       repeats side by side — the nav menu, form summary, card, theme menu,
+       wizard and spec list carry it too and never sit in a row. */
+    [data-theme='synthwave'] .kp-table th {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+        border-bottom: 2px solid transparent;
+    }
+
+    [data-theme='synthwave'] .kp-table thead tr {
+        background-image: var(--kp-stripe);
+        background-size: 100% 2px;
+        background-position: 0 100%;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='synthwave'] .kp-table td {
+        border-bottom: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='synthwave'] .kp-table tbody tr:hover {
+        background: var(--card);
+    }
+
+    [data-theme='synthwave'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='synthwave'] .kp-datatable__sort[aria-sort] {
+        color: var(--accent);
+        text-shadow: var(--kp-tube-cyan);
+    }
+
+    [data-theme='synthwave'] .kp-datatable__status,
+    [data-theme='synthwave'] .kp-datatable__page {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.08em;
+    }
+
+    [data-theme='synthwave'] .kp-diff__line,
+    [data-theme='synthwave'] .kp-diff__hunk {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='synthwave'] .kp-diff__sign {
+        font-weight: 700;
+    }
+
+    [data-theme='synthwave'] .kp-timeline__marker {
+        background: var(--primary);
+        box-shadow: 0 0 10px var(--primary);
+        border-radius: 50%;
+    }
+
+    [data-theme='synthwave'] .kp-timeline__when {
+        font-family: var(--kp-osd);
+        color: var(--accent);
+        letter-spacing: 0.08em;
+    }
+
+    /* The step list is arcade rows with a neon edge; the running row glows. */
+    [data-theme='synthwave'] .kp-steplist {
+        --kp-steplist-gap: 0.625rem;
+    }
+
+    [data-theme='synthwave'] .kp-steplist__item {
+        border-color: hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-steplist__item[data-state='running'] {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='synthwave'] .kp-steplist__time {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='synthwave'] .kp-timeline {
+        border-left: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='synthwave'] .kp-tree {
+        font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: spaced capitals, and the hot core its selected tab burns with. */
+    [data-theme='synthwave'] .kp-accordion__summary {
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--kp-core);
+    }
+
+    [data-theme='synthwave'] .kp-reorder {
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+    }
+
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='synthwave'] .kp-tab {
+        border-radius: 0;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 600;
+        position: relative;
+    }
+
+    [data-theme='synthwave'] .kp-tab[aria-selected='true'] {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-cyan);
+        box-shadow: inset 0 -4px 0 0 var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-tabs__list {
+        border-bottom: 1px solid var(--kp-hairline);
+    }
+
+    [data-theme='synthwave'] .kp-breadcrumb,
+    [data-theme='synthwave'] .kp-pagination {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-pagination a[aria-current],
+    [data-theme='synthwave'] .kp-pagination [aria-current] {
+        color: var(--kp-core);
+        text-shadow: var(--kp-tube-pink);
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-wizard__steps {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='synthwave'] .kp-wizard {
+        border: 1px solid var(--kp-hairline);
+        border-top: 4px solid transparent;
+        border-image: var(--kp-stripe) 1;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='synthwave'] .kp-combobox__input,
+    [data-theme='synthwave'] .kp-palette__input,
+    [data-theme='synthwave'] .kp-datatable__search {
+        background: var(--sidebar-background);
+        border: 2px solid hsl(from var(--kp-pink-text) h s l / 0.35);
+        border-radius: var(--radius);
+        caret-color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.6);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='synthwave'] .kp-datepicker__weekday,
+    [data-theme='synthwave'] .kp-datepicker__title {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-colorpicker__swatch {
+        border: 2px solid var(--kp-hairline);
+        border-radius: var(--radius);
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.3);
+    }
+
+    [data-theme='synthwave'] .kp-colorpicker__value {
+        font-family: var(--kp-mono);
+        color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-shortcuts__row kbd {
+        font-family: var(--kp-osd);
+        border: 1px solid var(--kp-hairline);
+        border-radius: var(--radius);
+        color: var(--accent);
+    }
+
+    [data-theme='synthwave'] .kp-shortcuts__group-label,
+    [data-theme='synthwave'] .kp-palette__group-label {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+
+    [data-theme='synthwave'] .kp-theme-menu__status,
+    [data-theme='synthwave'] .kp-palette__status,
+    [data-theme='synthwave'] .kp-combobox__status {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.08em;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    /* A field, a form, a fieldset of data: the OSD rhythm between rows. */
+    [data-theme='synthwave'] .kp-field,
+    [data-theme='synthwave'] .kp-form {
+        gap: calc(var(--kp-space-xs) * 1.4);
+    }
+
+    [data-theme='synthwave'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    /* The data pickers and panels: a hairline frame, square. */
+    [data-theme='synthwave'] .kp-combobox,
+    [data-theme='synthwave'] .kp-datepicker,
+    [data-theme='synthwave'] .kp-colorpicker,
+    [data-theme='synthwave'] .kp-shortcuts {
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-datatable {
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-diff {
+        background: var(--sidebar-background);
+        border: 1px solid var(--kp-hairline);
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-split {
+        gap: 0;
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='synthwave'] {
+        scrollbar-color: var(--primary) var(--sidebar-background);
+    }
+

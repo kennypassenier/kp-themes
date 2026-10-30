@@ -1,0 +1,44 @@
+/* @part: disabled-reason: A disabled control says why */
+    /* --- A disabled control says why [kpadopt5] ---
+ * The wrapper js/reason.js puts round a control that carries `data-kp-disabled-reason`: it takes the pointer a disabled
+ * button does not, and its tooltip shows only while the control is off. */
+    .kp-reason {
+        display: inline-flex;
+    }
+
+    /* A control that fills its line (a slider, the weekday picker) is an inline-size container with no intrinsic width: in a
+     * shrink-wrapped anchor it collapsed to 0, and its reason broke one letter per line [kpadopt5-r2]. The anchor then takes
+     * the line, and the control the anchor's width. */
+    .kp-reason:has(> :is(.kp-slider, .kp-weekdays, .kp-sentence)) {
+        display: flex;
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-reason > :is(.kp-slider, .kp-sentence) {
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-reason:not([data-kp-reason-off]) > .kp-tooltip {
+        display: none !important;
+    }
+
+    .kp-reason[data-kp-reason-off] {
+        cursor: not-allowed;
+    }
+
+    /* --- A disabled control in a column of buttons [b3b4-1019; kyu gap 16] ---
+ * In a row's button box (`.kp-row-actions`, js/actions.js) the wrapper is the grid item that holds the column, so it
+ * fills the column and the control fills the wrapper: the same width and the same edge as the plain buttons of the
+ * rows above and below. The wrapper wears the control's `data-kp-action` (js/reason.js), so the role is the same. */
+    .kp-row-actions > .kp-reason {
+        display: flex;
+        min-inline-size: 0;
+    }
+
+    .kp-row-actions > .kp-reason > :is(.kp-button, button) {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+

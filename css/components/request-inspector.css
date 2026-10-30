@@ -1,0 +1,187 @@
+/* @part: request-inspector: The request inspector */
+    /* --- The request inspector [kpadopt5] ----------------------------------- */
+
+    /* js/request-inspector.js: a card whose list is one foldable block per request.
+     * The summary is one grid, so the method, the status, the path and the time
+     * stand in the same columns from row to row (the status in its tone and in
+     * words, never colour alone); on a narrow card the path takes a line of its
+     * own. The stage keeps the height of about three rows in every state.
+     * Knobs: --kp-inspector-min (22rem), --kp-inspector-method (5ch),
+     * --kp-inspector-status (9rem). */
+    .kp-inspector {
+        container: kp-inspector / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        /* The toolbar keeps its own height and the stage takes whatever the footprint hold (js/footprint.js) adds: with two
+         * auto rows the held minimum was shared between them and the toolbar floated in a tall band. */
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-inspector__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-inspector__filter {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-inspector__count {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-inspector__list {
+        display: grid;
+        border-block-start: 1px solid var(--border);
+        min-block-size: var(--kp-inspector-list-min, 9rem);
+    }
+
+    .kp-inspector:is([data-kp-state='empty'], [data-kp-state='error']) .kp-inspector__list {
+        min-block-size: 0;
+    }
+
+    .kp-inspector__item {
+        min-inline-size: 0;
+    }
+
+    .kp-inspector__row {
+        display: grid;
+        grid-template-columns: var(--kp-inspector-method, 5.5ch) var(--kp-inspector-status, 9.5rem) minmax(0, 1fr) auto auto;
+        grid-template-areas: 'method status path source time';
+        align-items: baseline;
+        column-gap: var(--kp-space-md, 0.75rem);
+        inline-size: calc(100% - 1.5rem);
+        min-inline-size: 0;
+        margin-inline-start: 0.25rem;
+        vertical-align: top;
+        display: inline-grid;
+    }
+
+    .kp-inspector__method {
+        grid-area: method;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 700;
+    }
+
+    .kp-inspector__status {
+        grid-area: status;
+        justify-self: start;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-inspector__path {
+        grid-area: path;
+        min-inline-size: 0;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 400;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-inspector__source {
+        grid-area: source;
+        justify-self: start;
+    }
+
+    .kp-inspector__time {
+        grid-area: time;
+        min-inline-size: 11ch;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    .kp-inspector__body {
+        padding-inline: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 0.75rem);
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        color: var(--foreground);
+    }
+
+    .kp-inspector__heading {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-inspector__headers {
+        --kp-kv-label: 11rem;
+    }
+
+    .kp-inspector__secret {
+        font-family: var(--font-mono, ui-monospace, monospace);
+        letter-spacing: 0.08em;
+    }
+
+    .kp-inspector__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-inspector__nomatch {
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-inspector-list-min, 9rem);
+        padding: var(--kp-space-lg, 1.5rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-inspector__nomatch-title {
+        font-size: var(--kp-text-lg, 1.125rem);
+    }
+
+    .kp-inspector__older {
+        justify-self: start;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-inspector (max-width: 40rem) {
+        .kp-inspector__row {
+            grid-template-columns: auto auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                'method status source time'
+                'path path path path';
+            row-gap: 0.125rem;
+        }
+
+        .kp-inspector__time {
+            min-inline-size: 0;
+        }
+    }
+
+    /* Narrower still, the row wraps whole items (a badge is never torn) and the path takes a line of its own. */
+    @container kp-inspector (max-width: 40rem) {
+        .kp-inspector__row {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        .kp-inspector__path {
+            order: 1;
+            flex: 1 0 100%;
+        }
+
+        .kp-inspector__time {
+            margin-inline-start: auto;
+        }
+    }
+

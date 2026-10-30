@@ -1,0 +1,189 @@
+/* @part: activity-feed: Loading is planting */
+    /* ── Loading is planting: the strip on every waiting surface [themes/forest/
+       CHARACTER.md G9, §6; Kenny, 2026-10-07 on research/forest-character:
+       "the planting strip on every waiting surface"]. The progress bar's busy
+       picture, at the foot of what waits: cleared ground with a seedling in
+       every planting slot, and a grove of whole trees that fills the row start
+       to end, holds, and leaves end to start (--kp-fo-breath, the bar's own
+       breath, 0 to 1). A slot is half the strip's height, so a tree keeps its
+       shape at any size, and the row holds whole slots only: an odd number,
+       centred, so the few pixels a surface leaves over are plain ground at
+       both ends and no tree or seedling is ever cut. Two pseudo-elements draw
+       it, the seedlings (the ground's ink) and the grove (the acting green);
+       the ground is the surface's own background at its foot. The skeleton's
+       lines are such strips, 400 ms apart; the meter's groove is one while it
+       measures. The part's words stand above it, dimmed by the package's
+       busy veil. ── */
+    [data-theme='forest']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-meter[data-kp-loading],
+            .kp-kpi__meter[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        ) {
+        --kp-fo-h: var(--kp-fo-size, 1rem);
+        --kp-fo-pitch: calc(var(--kp-fo-h) / 2);
+        --kp-fo-run: calc(round(down, 100% - var(--kp-fo-pitch), 2 * var(--kp-fo-pitch)) + var(--kp-fo-pitch));
+        --kp-fo-margin: calc((100% - var(--kp-fo-run)) / 2);
+        --kp-fo-edge: calc(
+            var(--kp-fo-margin) +
+                min(round(down, var(--kp-fo-breath) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), var(--kp-fo-run))
+        );
+        position: relative;
+        overflow: clip;
+        background-image: linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px), linear-gradient(var(--muted), var(--muted));
+        background-position:
+            0 100%,
+            0 100%;
+        background-size: 100% var(--kp-fo-h);
+        background-repeat: no-repeat;
+    }
+
+    /* A small surface takes a small strip, so its words stay readable above it. */
+    [data-theme='forest'] :is(.kp-button[aria-busy='true'], .kp-menu__item[data-kp-loading]) {
+        --kp-fo-size: 0.625rem;
+    }
+
+    [data-theme='forest'] :is(.kp-meter[data-kp-loading], .kp-kpi__meter[data-kp-loading]) {
+        --kp-fo-size: var(--kp-meter-height, 0.625rem);
+        box-shadow: none;
+    }
+
+    /* A skeleton line is the strip itself. */
+    [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: var(--kp-fo-h);
+        border-radius: calc(3px * var(--kp-progressbar-scale, 1));
+    }
+
+    [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='forest']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-meter[data-kp-loading],
+            .kp-kpi__meter[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before,
+    [data-theme='forest']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-meter[data-kp-loading],
+            .kp-kpi__meter[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::after {
+        content: '';
+        display: block;
+        position: absolute;
+        inset: auto 0 0;
+        inline-size: auto;
+        block-size: var(--kp-fo-h);
+        translate: none;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        pointer-events: none;
+        animation: none;
+    }
+
+    [data-theme='forest']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-meter[data-kp-loading],
+            .kp-kpi__meter[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before {
+        background: var(--border-strong);
+        mask: var(--kp-fo-seedling) 50% 0 / var(--kp-fo-pitch) 100% repeat-x;
+        clip-path: inset(0 var(--kp-fo-margin) 0 var(--kp-fo-margin));
+    }
+
+    [data-theme='forest']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-meter[data-kp-loading],
+            .kp-kpi__meter[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::after {
+        background: var(--primary);
+        mask: var(--kp-fo-trees) 50% 0 / calc(var(--kp-fo-pitch) * 7) 100% repeat-x;
+        clip-path: inset(0 calc(100% - var(--kp-fo-edge)) 0 var(--kp-fo-margin));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest']
+            :is(
+                .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+                .kp-meter[data-kp-loading],
+                .kp-kpi__meter[data-kp-loading],
+                .kp-datatable__busy-panel,
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-button[aria-busy='true'],
+                .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
+                .kp-calendar--busy-whole > .kp-calendar__busy
+            ) {
+            animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear var(--kp-sig-fo-head) infinite;
+        }
+
+        /* Lines of a skeleton stand 400 ms apart. */
+        [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
+            animation-delay: calc(var(--kp-sig-fo-head) - 5 * var(--kp-sig-fo-stagger));
+        }
+
+        [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
+            animation-delay: calc(var(--kp-sig-fo-head) - 10 * var(--kp-sig-fo-stagger));
+        }
+    }
+
+    /* Standing still, the strip is the bar's own reduced pose: half the row. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='forest']
+            :is(
+                .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+                .kp-meter[data-kp-loading],
+                .kp-kpi__meter[data-kp-loading],
+                .kp-datatable__busy-panel,
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-button[aria-busy='true'],
+                .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
+                .kp-calendar--busy-whole > .kp-calendar__busy
+            ) {
+            --kp-fo-breath: 0.5;
+        }
+    }
+

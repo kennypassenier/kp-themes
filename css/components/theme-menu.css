@@ -1,0 +1,175 @@
+/* @part: theme-menu: The theme menu */
+    /* --- The theme menu: an icon button with a dropdown [S2] -------------
+ *
+ * The shape the consuming projects already liked, now in both channels.
+ * It was React-only, which meant the two consumers that render HTML from
+ * a Rust binary — the ones it was praised in — could not have it.
+ *
+ * The dropdown is a popover, so Escape and light dismiss are the
+ * browser's, and anchor positioning puts it under its button without
+ * either measuring the other.
+ */
+
+    /* An icon button is the containing block of whatever a register hangs
+       off it, as `.kp-button` already is [fix-75]. At zero specificity, so a
+       part that places the button itself — the dialog's close in its
+       corner — still wins; retro's own rule beat it and put the close button
+       back in the title's line. */
+    :where(.kp-icon-button) {
+        position: relative;
+    }
+
+    .kp-icon-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        inline-size: 2.25rem;
+        block-size: 2.25rem;
+        padding: 0;
+        border: 1px solid transparent;
+        border-radius: var(--radius, 0.5rem);
+        background: none;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .kp-icon-button:hover {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        color: inherit;
+    }
+
+    .kp-icon-button svg {
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+    }
+
+    .kp-theme-menu {
+        display: inline-block;
+    }
+
+    /* Inside a menu the groups stack: the label sits as a small heading
+ * above its rows and the separator between the groups runs full width,
+ * inset by the row padding so it reads as part of the list [TH63]. */
+    .kp-menu .kp-theme-group {
+        display: block;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .kp-menu .kp-theme-group__list {
+        display: block;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .kp-menu .kp-theme-group__label {
+        padding: var(--kp-picker-group-pad, 0.375rem 0.625rem 0.125rem);
+    }
+
+    .kp-menu .kp-theme-group + .kp-theme-group {
+        margin-block-start: var(--kp-picker-gap, 0.25rem);
+        padding-block-start: var(--kp-picker-gap, 0.25rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* The React switcher renders its list itself rather than as a popover
+ * element, so it positions under the button here. Both channels share
+ * the option and group rules below. */
+    .kp-theme-menu {
+        position: relative;
+    }
+
+    .kp-theme-menu__list {
+        position: absolute;
+        inset-inline-end: 0;
+        inset-block-start: 100%;
+        margin-block-start: var(--kp-menu-offset, 0.25rem);
+        min-inline-size: var(--kp-menu-min-width, 11rem);
+        /* As wide as its longest row: placed against the button, the list
+           otherwise takes the button's width as the room it has, and the
+           selected row, set bold, broke onto two lines in high-contrast,
+           Shade (light) and Shade (dark) (JobTracker, 2026-10-03; fix-93). */
+        inline-size: max-content;
+        max-inline-size: calc(100vw - 2rem);
+        z-index: var(--kp-z-popover, 20);
+    }
+
+    /* The theme menu scrolls inside its rounded box, not as it [scope-60].
+ * The popover was itself the scroll box, so its scrollbar ran square into
+ * the rounded corners. Now the popover clips and the list inside it
+ * scrolls, in both shapes: the markup's `.kp-popover > .kp-menu` and the
+ * React switcher's `.kp-theme-menu__list > .kp-menu`. */
+    .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list):has(> .kp-menu) {
+        overflow: hidden;
+    }
+
+    .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        max-block-size: calc(var(--kp-popover-max-height, min(80vh, 40rem)) - 1rem);
+        overflow-y: auto;
+        border-radius: 0;
+    }
+
+    .kp-theme-menu__status {
+        padding: var(--kp-menu-item-pad, 0.375rem 0.625rem);
+        color: var(--destructive);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-theme-option__label {
+        flex: 1;
+    }
+
+    .kp-theme-option__check {
+        inline-size: 1rem;
+        block-size: 1rem;
+        margin-inline-start: auto;
+    }
+
+    /* The menu reuses .kp-popover and .kp-menu, so it inherits the overlay
+ * looks rather than inventing a second set. */
+    .kp-menu [data-kp-theme] {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        inline-size: 100%;
+        padding: 0.375rem 0.625rem;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+        /* A theme's name is one line in every theme, the bold selected one
+           too. */
+        white-space: nowrap;
+        cursor: pointer;
+        /* Border-box, or `100%` plus the padding overflows the popover by the
+     * padding — 20px wider than the menu on CI's scrollbar-bearing
+     * Chromium, where every option then lay outside the box [R5]. */
+        box-sizing: border-box;
+    }
+
+    .kp-menu [data-kp-theme]:hover {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        color: inherit;
+    }
+
+    /* In a menu the mark is a check at the end, not a border: a row does not
+ * have a boundary to colour, and the check is the second channel [DI4].
+ * The glyph is a knob; the React half renders an SVG child instead and
+ * suppresses this one. */
+    .kp-menu [data-kp-theme][data-selected='true']:not(:has(.kp-theme-option__check))::after {
+        content: var(--kp-glyph-check, '✓');
+        margin-inline-start: auto;
+    }
+
+    .kp-menu [data-kp-theme][data-selected='true'] {
+        font-weight: 600;
+    }
+
+    /* ====================================================================
+ * Round two: the components rated on 2026-09-04 [TH37-TH59].
+ * ==================================================================== */
+

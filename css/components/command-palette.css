@@ -1,0 +1,254 @@
+/* @part: command-palette: Command palette and shortcut sheet */
+    /* --- Command palette and shortcut sheet [TH40, TH49] ----------------- */
+
+    /* Commands grouped under a small heading; the group hides when every
+ * command in it is filtered out [KT6]. */
+    .kp-palette__group {
+        list-style: none;
+    }
+
+    .kp-palette__group > ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .kp-palette__group-label,
+    .kp-shortcuts__group-label {
+        display: block;
+        margin: var(--kp-space-sm) 0 var(--kp-space-xs);
+        font-size: var(--kp-shortcuts-label-size, 0.6875rem);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    .kp-palette__description {
+        margin-inline-start: var(--kp-space-md, 1rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The clear button shares the input's grid cell, so it is centred on the
+       input and not on the whole box with its label and status line. */
+    .kp-combobox:has(> .kp-combobox__clear) {
+        display: grid;
+        grid-template-areas: 'label' 'input';
+    }
+
+    .kp-combobox:has(> .kp-combobox__clear) > :where(label, .kp-field__label) {
+        grid-area: label;
+    }
+
+    .kp-combobox:has(> .kp-combobox__clear) > .kp-combobox__input {
+        grid-area: input;
+    }
+
+    /* Under a label the input carries the gap above it; so does the button,
+       or it would centre on the gap and the input together. */
+    .kp-combobox > :where(label, .kp-field__label) ~ .kp-combobox__clear {
+        margin-block-start: var(--kp-combobox-gap, 0.375rem);
+    }
+
+    .kp-combobox__clear {
+        grid-area: input;
+        font: inherit;
+        justify-self: end;
+        align-self: center;
+        margin-inline-end: var(--kp-space-sm);
+        border: 0;
+        background: none;
+        color: var(--muted-foreground);
+        cursor: pointer;
+    }
+
+    /* A dialog centred near the top rather than the middle: a palette that
+ * grows downwards should not push its own input off-centre while you
+ * type. */
+    .kp-palette {
+        width: var(--kp-palette-width, min(36rem, 92vw));
+        margin: 10vh auto auto;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-palette__input {
+        /* Border-box: content-box made the input 32px wider than its
+         * palette (391px in a 359px one), cut off by the overflow. */
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 0;
+        border-bottom: 1px solid var(--border);
+        background: none;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* The list is ONE grid and every row a subgrid of it, so the icon, the label, the hint and the key cap of every row start on
+     * one edge down the whole list, whichever group or wrapper a row sits in [kyugaps-1020, kyu gap 51]. The tracks are
+     * content-sized: the label's column is as wide as the longest label (at most 45% of the list, then labels wrap), the hint
+     * takes the rest, and an icon or key column nobody uses is 0 wide. Gaps are margins on the cells, so an empty track adds
+     * nothing. A label that is a bare text node is placed by the module, which wraps it in `.kp-palette__label`; write that
+     * span yourself in rows that stand beside an icon. */
+    .kp-palette__list {
+        display: grid;
+        grid-template-columns: [icon] auto [label] fit-content(var(--kp-palette-label-max, 45%)) [hint] minmax(0, 1fr) [keys] auto;
+        align-content: start;
+        max-height: var(--kp-palette-list-max-height, 50vh);
+        margin: 0;
+        padding: 0.25rem;
+        overflow-y: auto;
+        list-style: none;
+    }
+
+    /* Groups, their lists and the `<li role="presentation">` that wraps a link are passed through: the row is what sits on the tracks. */
+    .kp-palette__list > :is(.kp-palette__group, .kp-palette__nomatch),
+    .kp-palette__group > :is(ul, .kp-palette__group-label),
+    .kp-palette__option {
+        grid-column: 1 / -1;
+    }
+
+    .kp-palette__group:not([hidden]),
+    .kp-palette__group > ul {
+        display: grid;
+        grid-template-columns: subgrid;
+    }
+
+    .kp-palette__group[hidden] {
+        display: none;
+    }
+
+    .kp-palette__list li[role='presentation']:not(.kp-palette__group, [hidden]) {
+        display: contents;
+    }
+
+    .kp-palette__option {
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        cursor: pointer;
+    }
+
+    .kp-palette__option > * {
+        grid-row: 1;
+        min-inline-size: 0;
+    }
+
+    .kp-palette__option > .kp-palette__icon {
+        grid-column: icon;
+        margin-inline-end: 0.75rem;
+    }
+
+    .kp-palette__option > .kp-palette__label {
+        grid-column: label;
+    }
+
+    .kp-palette__option > .kp-palette__description {
+        grid-column: hint;
+    }
+
+    /* A command that is a link [scope-48] looks like every other command:
+ * the row is the affordance, not an underline. */
+    a.kp-palette__option {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .kp-palette__option.is-active {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        color: inherit;
+    }
+
+    .kp-palette__option[hidden] {
+        display: none;
+    }
+
+    /* The key hint sits at the end and never competes with the label. */
+    .kp-palette__keys {
+        margin-inline-start: auto;
+        font-size: var(--kp-text-xs, 0.75rem);
+        /* A chord (Ctrl K, Ctrl Shift P) is one unit: it keeps its width and its line, and the label gives way. */
+        flex: none;
+        white-space: nowrap;
+    }
+
+    /* In a row it stands on the last track, at its end, a gap away from what comes before. */
+    .kp-palette__option > .kp-palette__keys {
+        grid-column: keys;
+        justify-self: end;
+        margin-inline-start: var(--kp-space-md, 1rem);
+    }
+
+    .kp-palette__status {
+        margin: 0;
+        padding: 0.5rem 1rem;
+        border-top: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-shortcuts {
+        /* Border-box, and the default width raised by exactly what used to
+     * sit outside it — 40px of padding plus 2px of border on a 448px
+     * content box, so 30.625rem is the same 490px the sheet has always
+     * been on a wide screen. Content-box made it 373px on a 360px
+     * viewport and the page scrolled sideways [MR-R6-2, DI11]. The knob
+     * therefore means the total width now, which is what a width knob
+     * ought to mean. */
+        box-sizing: border-box;
+        width: var(--kp-shortcuts-width, min(30.625rem, 92vw));
+        padding: 1.25rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    /* A palette or a sheet shown in place (not modal, e.g. an example on
+     * a page) stays inside its box: 92vw is wider than a padded column on
+     * a phone, and the page scrolled sideways by 30px at 390px. A modal
+     * one keeps the browser's own limit against the window. */
+    .kp-palette:not(:modal),
+    .kp-shortcuts:not(:modal) {
+        box-sizing: border-box;
+        max-inline-size: 100%;
+    }
+
+    .kp-shortcuts__list {
+        margin: 0.75rem 0;
+    }
+
+    .kp-shortcuts__row {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        padding: 0.25rem 0;
+    }
+
+    .kp-shortcuts__row dt {
+        flex: 0 0 6rem;
+    }
+
+    .kp-shortcuts__row dd {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    /* align-pkg-1019:shortcuts:start
+     * The description cell fills the rest of the row, so every dd starts after the key column and ends on the sheet's
+     * content edge. It used to shrink to its text and ended wherever the words did (3 to 107 px apart over a sheet). */
+    .kp-shortcuts__row dd {
+        flex: 1 1 0;
+        min-inline-size: 0;
+    }
+    /* align-pkg-1019:shortcuts:end */
+

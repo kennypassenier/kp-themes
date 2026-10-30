@@ -1,0 +1,207 @@
+/* @part: question-card: The question card */
+@layer kp.components {
+    /* kpadopt5-ops:question-card:start */
+    /* --- The question card [kpadopt5-ops] -----------------------------------------
+     * js/question-card.js. The host waits for an answer: the question, one button per
+     * answer with what it sets in motion beside it (the buttons share one column, so
+     * the consequences start at one place), and how long it still waits, drawn as a
+     * rule that shrinks over the whole wait (`data-kp-measure="bar"`), a ring or just
+     * words. The card is the theme's alert: warning while it waits, destructive from
+     * the urgent time (`data-kp-state="urgent"`), success once answered, destructive
+     * again if the answer could not be sent, plain once the time ran out. A finished
+     * card stays with its outcome. Several stack in `[data-kp-questions]`, oldest
+     * first. On a phone the buttons are full width with their consequences under them.
+     * Knobs [KT6]: --kp-question-rule (3px, the bar), --kp-question-ring (2rem). */
+    [data-kp-questions] {
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-question {
+        container: kp-question / inline-size;
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+    }
+
+    .kp-question:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-question:is([data-kp-state='expired']) {
+        background: var(--muted);
+        color: var(--foreground);
+        border-color: var(--border-strong);
+    }
+
+    .kp-question__head {
+        display: grid;
+        gap: 2px;
+        min-inline-size: 0;
+    }
+
+    .kp-question__title,
+    .kp-question__text {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-question__time {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        row-gap: 2px;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-question__time > .kp-question__bar {
+        grid-column: 1 / -1;
+    }
+
+    .kp-question__left {
+        min-inline-size: 11ch;
+    }
+
+    .kp-question[data-kp-state='urgent'] .kp-question__left {
+        font-weight: 700;
+    }
+
+    .kp-question:is([data-kp-state='answered'], [data-kp-state='expired']) .kp-question__time {
+        visibility: hidden;
+    }
+
+    .kp-question__bar {
+        position: relative;
+        display: block;
+        block-size: var(--kp-question-rule, 3px);
+        background: color-mix(in oklab, currentColor 22%, transparent);
+        overflow: hidden;
+    }
+
+    .kp-question__fill {
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        transform-origin: left center;
+        animation: kp-question-run var(--kp-question-total, 60s) linear var(--kp-question-elapsed, 0s) forwards;
+    }
+
+    .kp-question__ring {
+        display: block;
+        inline-size: var(--kp-question-ring, 2rem);
+        block-size: var(--kp-question-ring, 2rem);
+        grid-row: 1 / span 2;
+    }
+
+    .kp-question__ring svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        transform: rotate(-90deg);
+        fill: none;
+        stroke-width: 3;
+    }
+
+    .kp-question__ring-track {
+        stroke: color-mix(in oklab, currentColor 22%, transparent);
+    }
+
+    .kp-question__ring-fill {
+        stroke: currentColor;
+        stroke-dasharray: 100;
+        animation: kp-question-ring var(--kp-question-total, 60s) linear var(--kp-question-elapsed, 0s) forwards;
+    }
+
+    .kp-question[data-kp-frozen] :is(.kp-question__fill, .kp-question__ring-fill),
+    .kp-question:is([data-kp-state='answered'], [data-kp-state='expired']) :is(.kp-question__fill, .kp-question__ring-fill) {
+        animation-play-state: paused;
+    }
+
+    @keyframes kp-question-run {
+        from {
+            transform: scaleX(1);
+        }
+
+        to {
+            transform: scaleX(0);
+        }
+    }
+
+    @keyframes kp-question-ring {
+        from {
+            stroke-dashoffset: 0;
+        }
+
+        to {
+            stroke-dashoffset: 100;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-question__bar,
+        .kp-question__ring {
+            display: none;
+        }
+    }
+
+    .kp-question__answers {
+        display: grid;
+        grid-template-columns: max-content minmax(0, 1fr);
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-question__answer {
+        display: contents;
+    }
+
+    .kp-question__button {
+        white-space: nowrap;
+        justify-self: stretch;
+    }
+
+    .kp-question__consequence {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-question__outcome {
+        margin: 0;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-question__outcome[hidden] {
+        display: none;
+    }
+
+    .kp-question__dismiss {
+        justify-self: start;
+    }
+
+    .kp-question__dismiss[hidden] {
+        display: none;
+    }
+
+    @container kp-question (max-width: 30rem) {
+        .kp-question__answers {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-question__answer {
+            display: grid;
+            gap: 2px;
+        }
+
+        .kp-question__button {
+            inline-size: 100%;
+        }
+    }
+
+    /* kpadopt5-ops:question-card:end */
+}
+

@@ -1,0 +1,112 @@
+/* @part: tabs: Tabs */
+    /* --- Tabs ------------------------------------------------------------ */
+
+    .kp-tabs__list {
+        display: flex;
+        /* The row is the containing block of what a tab positions: a scroller clips only what its own box contains, so the
+           `.kp-sr-only` comma in a tab's count (position: absolute) was laid against the page and widened it to 600 px
+           [homelab 134]. */
+        position: relative;
+        gap: 0.25rem;
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    /* A row longer than its box scrolls inside the box [gap-12]. It ran past
+     * a 384px pane by 344px and widened the page; wrapping was the other
+     * answer, and it was not taken because a wrapped row puts the selected
+     * tab's rule in the middle of the list rather than on its edge.
+     *
+     * Only a row that does not fit becomes a scroller: js/overlays.js (and
+     * the React Tabs) write `data-kp-tabs-overflow` while it does, and keep
+     * the selected tab in view. A scroller clips whatever paints outside
+     * it, and several registers draw their selected tab past the row — a
+     * rule above it, a raised tab two pixels up — so a row that fits keeps
+     * exactly the look it had. */
+    .kp-tabs__list[data-kp-tabs-overflow] {
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
+        /* Room above the tabs for what a register draws there, given back by
+         * a margin so nothing around the row moves. Upward only: a negative
+         * margin at the row's ends would widen the pane it sits in. */
+        padding-block-start: var(--kp-tabs-overhang, 0.5rem);
+        margin-block-start: calc(-1 * var(--kp-tabs-overhang, 0.5rem));
+    }
+
+    /* In a scroller the tabs keep their width rather than squeezing their
+     * labels onto two lines. */
+    .kp-tabs__list[data-kp-tabs-overflow] > .kp-tab {
+        flex: none;
+    }
+
+    /* The base focus ring paints outside the control, where the scroller
+     * clips it, so in a scrolling row the ring is drawn inside the tab: the
+     * same two parts, the contrast outline and the inner ring, turned
+     * inward [DI2]. */
+    .kp-tabs__list[data-kp-tabs-overflow] > .kp-tab:focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
+    }
+
+    .kp-tab {
+        /* The tab's block padding, type size and line height are the
+     * package's in every theme [scope-87], titanium's values; a register
+     * keeps its inline padding, border, face and case. */
+        padding: var(--kp-tab-padding-block, var(--kp-space-sm, 0.5rem)) 0.75rem;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background: none;
+        color: var(--muted-foreground);
+        font: inherit;
+        font-size: var(--kp-tab-size, var(--kp-text-md, 1rem));
+        line-height: var(--kp-line-height, 1.5);
+        cursor: pointer;
+    }
+
+    /* The selected tab is marked by weight and a rule as well as by colour,
+ * and aria-selected is what a screen reader hears [DI4]. */
+    .kp-tab[aria-selected='true'] {
+        color: var(--foreground);
+        border-bottom-color: var(--primary);
+        font-weight: 600;
+    }
+
+    /* The count on a tab [gap-tab-count; js/tabbar.js, setTabCount]: the exact number on a badge of the package's own plates
+ * (neutral, info, success, warning, destructive), after the label. The room of the digits is held (never fewer than two,
+ * more for a longer number) and a loading count is a skeleton of that same width, so a number that arrives, grows a digit or
+ * changes tone moves no tab beside it. A fixed weight: the selected tab turns bold, and its count must not widen with it. */
+    .kp-tab__count {
+        box-sizing: border-box;
+        justify-content: center;
+        min-inline-size: calc(var(--kp-tab-count-digits, 2) * 1ch + 1rem);
+        margin-inline-start: var(--kp-tab-count-gap, var(--kp-space-sm, 0.5rem));
+        font-size: var(--kp-tab-count-size, var(--kp-text-xs, 0.75rem));
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .kp-tab__count[data-kp-state='loading'] {
+        padding-inline: 0;
+        background: transparent;
+    }
+
+    .kp-tab__bone {
+        display: block;
+        inline-size: calc(var(--kp-tab-count-digits, 2) * 1ch + 1rem);
+        block-size: 1em;
+        border-radius: var(--kp-radius-pill, 999px);
+    }
+
+    .kp-tab__count[data-kp-state='error'] {
+        cursor: help;
+    }
+
+    .kp-tabs__panel {
+        padding-block: 0.75rem;
+    }
+

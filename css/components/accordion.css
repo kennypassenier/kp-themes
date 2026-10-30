@@ -1,0 +1,26 @@
+/* @part: accordion: Accordion */
+    /* --- Accordion ------------------------------------------------------- */
+
+    .kp-accordion__item {
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* A bare item [port spec J3]: the fold's motion and memory without the
+ * accordion's chrome, for a group whose title is the page's own (a quiet
+ * label above a board's tiles). Give its summary a class of your own, not
+ * `.kp-accordion__summary`, which every register paints. */
+    .kp-accordion__item--bare {
+        border-bottom: 0;
+    }
+
+    .kp-accordion__summary {
+        padding: 0.625rem 0;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .kp-accordion__body {
+        padding-bottom: 0.75rem;
+        color: var(--muted-foreground);
+    }
+

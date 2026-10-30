@@ -1,0 +1,321 @@
+/* @part: the-dashboard-parts: The dashboard parts */
+/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the
+   week agenda and the run timeline [kpadopt2] ──
+   Brutalism's own (themes/brutalism/CHARACTER.md): a tile is the slab, white in the 3 px ink line on its 6 px hard
+   shadow, square (G6, G7); pointed at it is inverted, ink ground and yellow words, and nothing moves (the tiles' own
+   hover pick); a press drives it onto its footprint, the shadow gone (G14); a failure is taped off, hazard stripes along
+   its foot (G13); waiting is the lintel hoisted in its well (G10): a heat grid's row of cells is ONE well with one beam,
+   not a well in every cell; the voice is Archivo Black shouting, Space Grotesk in bold capitals (G15). */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-actions {
+        --kp-actions-gap: 1rem;
+    }
+    [data-theme='brutalism'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-line: var(--kp-line);
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-ground: var(--card);
+        --kp-action-ground-hover: var(--foreground);
+        --kp-action-ground-active: var(--secondary-active, var(--secondary));
+        --kp-action-shadow: var(--kp-shadow);
+        --kp-action-shadow-hover: var(--kp-shadow);
+        --kp-action-shadow-active: 0 0 0 0 transparent;
+        --kp-action-press: var(--kp-drop) var(--kp-drop);
+        --kp-action-title-font: var(--theme-font-display);
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: -0.01em;
+        --kp-action-title-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-action__meta {
+        font-family: var(--theme-font-mono);
+    }
+    /* Pointed at: inverted; the words and the chevron go yellow on the ink. */
+    [data-theme='brutalism'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'], :active)) {
+        color: var(--secondary);
+    }
+    [data-theme='brutalism']
+        .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'], :active))
+        :is(.kp-action__title, .kp-action__text, .kp-action__meta, .kp-action__mark) {
+        color: var(--secondary);
+    }
+    [data-theme='brutalism'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        color: var(--kp-plate-ink, var(--secondary-foreground));
+    }
+    /* Focus: the two-channel ring, the slab lifted off its footprint as under the hand. */
+    [data-theme='brutalism'] .kp-action:focus-visible:not(:active) {
+        outline: 3px solid var(--focus-ring);
+        outline-offset: 3px;
+        translate: -2px -2px;
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
+            calc(var(--kp-drop) + 2px) calc(var(--kp-drop) + 2px) 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        border-color: var(--border-strong);
+        box-shadow: none;
+    }
+    /* Destructive: taped off, the hazard stripes along its foot in the red and the ink; the title in the red. */
+    [data-theme='brutalism'] .kp-action--destructive {
+        --kp-action-tone-edge: var(--border-strong);
+        --kp-action-tone-edge-hover: var(--border-strong);
+        padding-block-end: calc(0.625rem + 0.5rem);
+    }
+    [data-theme='brutalism'] .kp-action--destructive::after {
+        inset: auto 0 0;
+        inline-size: auto;
+        block-size: 0.5rem;
+        border-radius: 0;
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px);
+    }
+    [data-theme='brutalism'] .kp-action--destructive:is(:disabled, [aria-disabled='true'])::after {
+        background: repeating-linear-gradient(45deg, var(--muted) 0 6px, var(--border-strong) 6px 12px);
+    }
+    [data-theme='brutalism'] .kp-action--destructive:not(:hover, :disabled, [aria-disabled='true']) > .kp-action__title {
+        color: var(--destructive);
+    }
+
+    /* Status rows: slabs on their hard shadow, square marks with a heavy ring; a failed row is taped off along its foot;
+       a loading row takes the muted ground. */
+    [data-theme='brutalism'] .kp-statuslist {
+        --kp-statuslist-gap: 0.75rem;
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-statusrow {
+        --kp-statusrow-line: var(--kp-line);
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-statusrow__mark {
+        border-width: var(--kp-line);
+    }
+    [data-theme='brutalism'] .kp-statusrow__label {
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='loading'] {
+        --kp-statusrow-ground: var(--muted);
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+        padding-block-end: calc(0.5rem + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='empty'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+
+    /* Facets: square rows; a row under the hand is the yellow plate in the ink; the title shouts. The counts on their
+       way are wells in the ink line, the lintel hoisted in each. */
+    [data-theme='brutalism'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-facet {
+        --kp-facet-hover: var(--secondary);
+    }
+    [data-theme='brutalism'] .kp-facet:hover {
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-facets__title {
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        border-block-end: 0;
+        border-radius: 0;
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+        animation: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+        [data-theme='brutalism'] .kp-facets[aria-busy='true'] li:nth-child(2n) .kp-facet__count {
+            animation-delay: 200ms;
+        }
+    }
+
+    /* Heat grid and matrix: small slabs framed in ink on a hard shadow; pointing lifts a cell up-left off its
+       footprint (the shadow stays on the ground), a press drives it onto it; the pick is the fat frame. Waiting, a heat
+       row is one well and one beam hoisted in it; a matrix cell is its own well. */
+    [data-theme='brutalism'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-edge: 2px;
+        --kp-heat-cell-ink: var(--foreground);
+        --kp-heat-cell-gap: 4px;
+        --kp-heat-cell-lift: 2px 2px 0 var(--foreground);
+        --kp-heat-cell-hover: translate(-1px, -1px);
+        --kp-matrix-cell-hover: translate(-2px, -2px);
+    }
+    [data-theme='brutalism'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='brutalism'] .kp-matrix {
+        --kp-matrix-gap: 6px;
+    }
+    @media (max-width: 40rem) {
+        [data-theme='brutalism'] .kp-heat {
+            --kp-heat-cell-edge: 1px;
+            --kp-heat-cell-gap: 2px;
+            --kp-heat-cell-lift: 1px 1px 0 var(--foreground);
+        }
+    }
+    [data-theme='brutalism'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']) {
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-heat__cell:active:not(.kp-skeleton, [aria-disabled='true']) {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-heat__cell:is([data-kp-tone='future'], [data-kp-tone='none'], [data-kp-tone='before']) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-heat__cell[data-kp-picked],
+    [data-theme='brutalism'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 4px solid var(--foreground);
+        outline-offset: 0;
+        z-index: 1;
+    }
+    [data-theme='brutalism'] :is(.kp-heat__label, .kp-matrix__name) {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='brutalism'] .kp-matrix__cell {
+        border: 2px solid var(--foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+        color: var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow: 5px 5px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-matrix__cell:is([data-kp-tone='self'], [data-kp-tone='none'], [data-kp-inert]) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-heat__cell.kp-skeleton {
+        visibility: hidden;
+    }
+    [data-theme='brutalism'] .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton) {
+        box-shadow:
+            inset 0 0 0 2px var(--border-strong),
+            3px 3px 0 var(--border-strong);
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton) {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+        [data-theme='brutalism'] .kp-heat__row:nth-child(2n) .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton) {
+            animation-delay: 200ms;
+        }
+    }
+    /* A phone's timeline keeps its toolbar on one row: the range steps close in, in these wide capitals. */
+    @container kp-gantt (max-width: 22rem) {
+        [data-theme='brutalism'] .kp-gantt__ranges {
+            --kp-seg-item-pad-inline: 0.375rem;
+        }
+    }
+    [data-theme='brutalism'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: black boxes, a 2 px ink frame on a hard shadow, no radius; pointing lifts a pill
+       up-left off its footprint, a press drives it in; heavy capitals for the days and the axis. A running run is the
+       lavender plate with the yellow tip at its growing head; nothing glides. */
+    [data-theme='brutalism'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--foreground);
+    }
+    /* A planned run [gaps-time-1019]: hard wide stripes under a heavy outline. */
+    [data-theme='brutalism'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--kp-gantt-fill) 70%, transparent) 0 3px, transparent 3px 9px);
+        border-width: 2px;
+    }
+    [data-theme='brutalism'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-row: 2rem;
+        --kp-gantt-bar: 1.25rem;
+        --kp-gantt-bar-failed: 1.625rem;
+        --kp-gantt-now: var(--foreground);
+        --kp-gantt-state-ground: var(--card);
+    }
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run) {
+        border: 2px solid var(--foreground);
+        box-shadow: 2px 2px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run):is(button):hover {
+        translate: -1px -1px;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run):is(button):active {
+        translate: 2px 2px;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-week__pill[data-kp-state='next'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-week__pill:is([data-kp-state='reference'], [data-kp-state='off'], [data-kp-state='skipped']) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-week__now::before {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        --kp-gantt-fill: var(--accent);
+        --kp-gantt-ink: var(--accent-foreground);
+        background-image: none;
+        box-shadow:
+            inset -0.5rem 0 0 var(--secondary),
+            2px 2px 0 var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='running'] {
+        animation: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-start-color: var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__head, .kp-gantt__tick, .kp-gantt__lane) {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run, .kp-heat__cell, .kp-matrix__cell) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-fall),
+                transform var(--fx-duration) var(--kp-sig-br-fall),
+                box-shadow var(--fx-duration) var(--kp-sig-br-fall);
+        }
+    }
+}
+

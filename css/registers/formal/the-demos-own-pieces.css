@@ -1,0 +1,131 @@
+/* @part: the-demos-own-pieces: The demo's own pieces */
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    [data-theme='formal'] .kp-side-note {
+        font-family: var(--theme-font-body);
+        font-size: 0.875rem;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+        color: var(--muted-foreground);
+        border-inline-start: 1px solid var(--border);
+        padding-inline-start: 0.6rem;
+    }
+
+    [data-theme='formal'] .kp-laurels {
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] .kp-laurels svg,
+    [data-theme='formal'] .kp-laurels [data-kp-icon] {
+        color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-platforms {
+        font-size: 0.8125rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] .kp-platforms strong,
+    [data-theme='formal'] .kp-platforms b {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    /* The spec sheet: a specimen table, the palette and the two faces. */
+    [data-theme='formal'] .kp-spec {
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='formal'] .kp-log {
+        /* formal dresses `.kp-spec` with a rule and nothing else, which is
+     * the whole of its taste here: the package's own card, one hairline,
+     * no second edge. The log takes the same [gap-14]. */
+        border-block-start: 1px solid var(--border);
+    }
+
+    [data-theme='formal'] .kp-spec__swatch {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+    }
+
+    [data-theme='formal'] .kp-spec__font {
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='formal'] .kp-spec__font--body {
+        font-family: var(--theme-font-body);
+    }
+
+    /* ── Badges, tags, status ──────────────────────────────────────────── */
+
+    /* A tag or a badge is a small plate inside a rule: square (G6), its
+       words in small capitals (G18). */
+    [data-theme='formal'] .kp-badge,
+    [data-theme='formal'] .kp-tag {
+        border-radius: 0;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+    }
+
+    [data-theme='formal'] .kp-health__dot {
+        border-radius: 50%;
+    }
+
+    [data-theme='formal'] .kp-skeleton {
+        border-radius: 0;
+    }
+
+    [data-theme='formal'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes ──────────────────────────────────────────────────── */
+
+    [data-theme='formal'] .kp-id,
+    [data-theme='formal'] .kp-url,
+    [data-theme='formal'] .kp-numeric,
+    [data-theme='formal'] .kp-timestamp,
+    [data-theme='formal'] .kp-masked,
+    [data-theme='formal'] .kp-copyable,
+    [data-theme='formal'] .kp-truncate,
+    [data-theme='formal'] .kp-cell-break,
+    [data-theme='formal'] .kp-cell-truncate {
+        font-family: var(--theme-font-body);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-timestamp,
+    [data-theme='formal'] .kp-id {
+        color: var(--muted-foreground);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='formal'] .kp-copyable__button {
+        border-radius: calc(var(--radius) / 2);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='formal'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='formal'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+

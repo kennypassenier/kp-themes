@@ -1,0 +1,14 @@
+/* @part: end-t56-q2-schedule: end t56-q2 schedule */
+/* ── end t56-q2 schedule ── */
+
+/* ── t56-q2 schedule: the snooze tiles share one grid ── */
+@layer kp.signature {
+    /* The tiles of a row were centred in it: a shorter tile (one line of its words) sat offset beside a taller one (three lines).
+       A row is as tall as its tallest tile and every tile fills it. */
+    [data-theme='pastel'] .kp-snooze .kp-snooze__chips {
+        align-items: stretch;
+    }
+    [data-theme='pastel'] .kp-snooze .kp-snooze__chips > .kp-snooze__chip {
+        align-self: stretch;
+    }
+}

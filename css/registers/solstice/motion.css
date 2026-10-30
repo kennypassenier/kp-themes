@@ -1,0 +1,183 @@
+/* @part: motion: Motion */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* One monotonic wipe, never opposed: the three bands recede together
+       on a single timeline (js/effects.js adds is-calibrating for the
+       whole 740ms span; the demo's own three independently-staggered
+       transforms are approximated here as one clip-path sweep, left to
+       right, at the theme's own ease — the same triad, the same total
+       time, a different mechanism [S49 finding, recorded in
+       anatomy.md]). */
+    @keyframes kp-cal-slide {
+        0% {
+            clip-path: inset(0 0 0 0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    /* The rule: scaleX(0→1), one direction, one step. */
+    @keyframes kp-cal-rule {
+        from {
+            transform: scaleX(0);
+        }
+
+        to {
+            transform: scaleX(1);
+        }
+    }
+
+    /* The redaction: the bar lifts right to left, the demo's own
+       direction (`clip-path: inset(0 100% 0 0)` at rest-cleared). */
+    @keyframes kp-cal-redact {
+        from {
+            background-size: calc(100% - 2px) calc(100% - 2px);
+        }
+
+        to {
+            background-size: 0% calc(100% - 2px);
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — amber between two translucent amber rules. */
+    [data-theme='solstice'] .kp-marquee {
+        color: var(--primary);
+        border-block: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+        font-family: var(--theme-font-mono);
+        --kp-marquee: 44000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='solstice'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='solstice'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        font-family: var(--theme-font-mono);
+        border-block-end: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Kenny called this one too sober. The theme is a low sun, so the
+       column carries the light it already has: the row you are on is warm
+       at its leading edge and cools across, which is the one gradient
+       this theme is allowed. */
+    [data-theme='solstice'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0.2rem;
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-sidenav__link,
+    [data-theme='solstice'] .kp-sidenav__category-toggle {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--foreground);
+        background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.35), transparent 85%);
+        box-shadow: inset 0.18rem 0 0 var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Less sober, as Kenny asked: the low sun catches the top edge of
+       both, and the caption keeps the warm accent. */
+    [data-theme='solstice'] .kp-to-top {
+        box-shadow: inset 0 1px 0 hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='solstice'] .kp-media {
+        border: 1px solid var(--border);
+        box-shadow: inset 0 2px 0 hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='solstice'] .kp-media-figure > figcaption {
+        color: var(--primary);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='solstice'] .kp-media-figure {
+        color: var(--primary);
+    }
+
+    /* ── The low sun, pointed at and pressed [Kenny, 2026-10-07] ───────
+       Replaces the rake of scope-12 and the pressed faces restated for
+       fix-12: both are drawn in the signature layer below, on one pair of
+       numbers (see "Pointing and pressing"). Nothing in this layer paints a
+       hover or a pressed ground, so nothing here cancels the press. */
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): words at the bar's own size in the muted
+       ink, taking the primary ink when pointed at. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='solstice'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The last light: a warm near-black plate, the headline in its red, amber bars and an amber glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='solstice'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 5% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 5%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.3);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.45);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='solstice'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='solstice'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a dotted circle, a low sun. */
+    [data-theme='solstice'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◌';
+    }

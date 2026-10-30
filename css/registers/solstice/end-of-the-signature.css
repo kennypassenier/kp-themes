@@ -1,0 +1,44 @@
+/* @part: end-of-the-signature: End of the signature */
+/* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-segmented {
+        --kp-seg-radius: 0.75rem;
+        --kp-seg-thumb: linear-gradient(135deg, var(--primary), var(--accent));
+        --kp-seg-thumb-ink: var(--background);
+        --kp-seg-thumb-edge: 0 0 0 0 transparent;
+        --kp-seg-thumb-lift: 0 0 18px hsl(from var(--primary) h s l / 0.45);
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--background);
+    }
+    [data-theme='solstice'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='solstice'] .kp-toolbar__label {
+        letter-spacing: 0.08em;
+    }
+    [data-theme='solstice'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='solstice'] .kp-kbd {
+        --kp-kbd-radius: 0.4rem;
+        --kp-kbd-ground: var(--secondary);
+        --kp-kbd-foot: 2px;
+    }
+    [data-theme='solstice'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
+    }
+    /* A pressed toggle is the sun lit, as a pressed chip of the segmented set is: the amber plate in the dark ink, never the
+       cream face with cream words [t56-eye-1018]. */
+    [data-theme='solstice'] .kp-button[data-kp-toggle][aria-pressed='true'],
+    [data-theme='solstice'] .kp-button[data-kp-toggle][data-kp-look='chip'][aria-pressed='true'] {
+        --kp-toggle-on: var(--primary);
+        --kp-toggle-on-ink: var(--background);
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--background);
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
+    }
+}
+

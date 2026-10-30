@@ -1,0 +1,17 @@
+/* @part: kpadopt5-6-fit: kpadopt5/6 fit */
+/* ── kpadopt5/6 fit: the folded quote [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Titillium Web's line box is taller than a 1.5 line pitch, so the clamped fifth line's box reached into the Show all
+       button below it. At 1.6 every line box ends where the next begins and the fold cuts exactly under line four. */
+    [data-theme='nostromo'] .kp-quote__text {
+        line-height: 1.6;
+    }
+
+    /* The quote's loading stage keeps the room of the busy card (--kp-quote-min), and nostromo's tall busy panel (reel,
+       words and the LED window) needs all of it; the quote at rest was 26 px shorter, so loading pushed the page down.
+       The stage holds that room in every state. */
+    [data-theme='nostromo'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+}
+

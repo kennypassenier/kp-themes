@@ -1,0 +1,167 @@
+/* @part: the-navbar: The navbar */
+    /* ── The navbar [TH117] ───────────────────────────────────────────── */
+
+    /* The bar is yellow; the strip of links is a void panel with the cut
+       corner and the stepped notch read off the reference. The strip lives
+       on a pseudo-element, not on the list, because a clip-path clips
+       descendants and would clip every dropdown with it. */
+    /* The bar's own plate is drawn on `.kp-nav::before` (a holo plate with its 14 px notch,
+       below), so the box and its wrapper stand clear: a clip on the bar would cut every
+       dropdown with it. */
+    [data-theme='cyberpunk'] .kp-nav-wrap {
+        background: transparent;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav {
+        background: transparent;
+        color: var(--surface-hero-fg);
+        border-bottom: 0;
+        padding-block: calc(var(--kp-nav-pad-block, 1.2rem) * var(--kp-nav-pad-scale, 1))
+            calc(var(--kp-nav-pad-block, 0.4rem) * var(--kp-nav-pad-scale, 1));
+        position: relative;
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__brand {
+        font-family: var(--theme-font-display);
+        font-weight: 900;
+        font-size: 1.8rem;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__links {
+        position: relative;
+        isolation: isolate;
+        gap: 0;
+        padding-left: 0.4rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__links::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--background);
+        clip-path: polygon(var(--kp-nav-notch) 0, 100% 0, 100% 62%, calc(100% - 15px) 100%, 0 100%, 0 var(--kp-nav-notch));
+    }
+
+    /* The notch follows the navbar's side of the screen [TH117]. */
+
+    [data-theme='cyberpunk'] .kp-nav[data-kp-nav-side='end'] .kp-nav__links::before {
+        clip-path: polygon(0 0, calc(100% - var(--kp-nav-notch)) 0, 100% var(--kp-nav-notch), 100% 100%, 15px 100%, 0 62%);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__links > li {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link {
+        display: block;
+        padding-inline: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--primary);
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link:is([aria-current='page'], .kp-nav__more-button[aria-current='true']) {
+        text-decoration: underline;
+        text-underline-offset: 0.3em;
+    }
+
+    /* A folding bar [kpadopt-nav]: the void panel is as wide as the links the bar shows, not as the room the list is given. */
+    [data-theme='cyberpunk'] .kp-nav[data-kp-nav-fold] .kp-nav__links::before {
+        inset-inline-end: auto;
+        inline-size: var(--kp-nav-fold-used, 100%);
+    }
+
+    /* Pointing, focus and press on a link of the bar are the split edge, four closing brackets and
+       the closed circuit (css, end of this file); a link no longer washes. */
+
+    [data-theme='cyberpunk'] .kp-nav__link[aria-haspopup]::after {
+        content: '';
+        display: inline-block;
+        margin-left: 0.4rem;
+        border: 5px solid transparent;
+        border-top-color: currentColor;
+        vertical-align: 0.1em;
+    }
+
+    /* The hover glitch: two offset copies in the accent colours, once.
+       The copies read `data-kp-text`, which both channels write. */
+    [data-theme='cyberpunk'] .kp-nav__link[data-kp-text] > span,
+    [data-theme='cyberpunk'] .kp-nav__link[data-kp-text] {
+        position: relative;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link[data-kp-text]::before {
+        content: attr(data-kp-text);
+        position: absolute;
+        /* The copy lies over the word: the link's block padding is the
+           package's [scope-87], so the inset reads it rather than restating
+           the 0.7rem and 0.8rem this register used to pad with. */
+        inset: var(--kp-nav-link-padding-block, max(0px, (var(--kp-control-height, 2.25rem) - 1lh) / 2)) 1.1rem;
+        opacity: 0;
+        pointer-events: none;
+        color: var(--accent);
+    }
+
+    /* The dropdown: a void panel with a dash before every item. */
+    [data-theme='cyberpunk'] .kp-nav__menu {
+        min-width: 13rem;
+        background: var(--background);
+        color: var(--foreground);
+        border: 0;
+        border-radius: 0;
+        padding: 0.5rem 0;
+        /* Always drawn: it opens and goes by the channel split (below), not by a fade, and a
+           closing one keeps its display until the split is out. */
+        opacity: 1;
+        --kp-cp-clip: var(--kp-cp-clip-plate);
+        --kp-cp-wide: var(--kp-cp-wide-plate);
+        clip-path: var(--kp-cp-clip);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            clip-path: none;
+            translate: none;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__menu a {
+        display: block;
+        padding-left: 1.1rem;
+        padding-right: 1rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__menu a::before {
+        content: '— ';
+        color: var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__menu a:hover,
+    [data-theme='cyberpunk'] .kp-nav__menu a:focus-visible {
+        color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.08);
+    }
+

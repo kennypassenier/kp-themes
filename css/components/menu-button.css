@@ -1,0 +1,202 @@
+/* @part: menu-button: Menu button with a rich menu */
+    /* --- Menu button with a rich menu [scope-143] -------------------------- */
+
+    /* A button that opens a list of actions (js/menu-button.js), grouped
+ * under small muted capitals, each entry its label over a one-line hint.
+ * The list is a `.kp-menu` of `.kp-menu__item`s, the menu every register
+ * already paints; `.kp-menu--rich` gives it the groups, the hints and its
+ * width. An action that cannot be used now stays in the list (and in the
+ * keyboard's reach), keeps its hint, and says why under it, in italics. The
+ * menu hangs under its button at the button's end edge; in a page header
+ * on a phone it spans the header's buttons. Where that would leave part of
+ * it off the screen, the script moves it (js/menu-button.js,
+ * menuPlacement()): to the button's start edge, over the button, or
+ * scrolling inside itself, clear of a bar stuck over the screen's edge. Knobs: --kp-menu-rich-min
+ * (19rem) and --kp-menu-rich-max (min(26rem, 100vw - 2rem)), the menu's
+ * width; --kp-menu-max-height (calc(100dvh - 12rem)), past which it
+ * scrolls inside itself. */
+    /* The wrapper hugs its button, also as a grid or flex item that would stretch it: the menu is placed against the
+       wrapper's end, so a wrapper stretched over a whole grid column put the menu 1174 px from its button (Kenny,
+       2026-10-18 19:08: "menu opent niet aan de more knop"). */
+    .kp-menu-button {
+        position: relative;
+        display: inline-flex;
+        inline-size: fit-content;
+        max-inline-size: 100%;
+    }
+
+    .kp-menu-button[hidden] {
+        display: none;
+    }
+
+    .kp-menu-button > [aria-disabled='true'] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-menu-button > .kp-menu {
+        position: absolute;
+        z-index: 30;
+        inset-block-start: calc(100% + var(--kp-space-xs, 0.25rem));
+        inset-inline-end: 0;
+        box-sizing: border-box;
+        max-block-size: var(--kp-menu-max-height, calc(100dvh - 12rem));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-xs, 0.25rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    .kp-menu-button > .kp-menu[hidden] {
+        display: none;
+    }
+
+    /* Raised over a container that clips it (js/menu-button.js, the top
+ * layer): placed in window coordinates by the script, the popover's UA
+ * inset and margin put back to the menu's own. */
+    .kp-menu-button > .kp-menu:popover-open {
+        /* !important: the script writes window coordinates, so a register's own `position` on its menus (phantom's
+         * `relative`, in a later layer) must not turn them back into a box that follows the page's scroll. */
+        position: fixed !important;
+        inset: auto;
+        margin: 0;
+    }
+
+    /* A menu still loading is a whole plate with its one grey entry on it:
+     * the busy dim of layout.css ([aria-busy], 0.7) let the page under the
+     * open menu show through it (Kenny, Shade (light), 2026-10-05). The entry
+     * already reads as waiting; the cursor still says busy. The knob is set
+     * rather than the opacity, which a later layer owns. */
+    .kp-menu-button > .kp-menu[aria-busy='true'] {
+        --kp-busy-opacity: 1;
+    }
+
+    .kp-menu--rich {
+        inline-size: max-content;
+        min-inline-size: var(--kp-menu-rich-min, 19rem);
+        max-inline-size: var(--kp-menu-rich-max, min(26rem, 100vw - 2rem));
+    }
+
+    .kp-menu__group {
+        display: grid;
+    }
+
+    .kp-menu__group + .kp-menu__group {
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* A group's heading: small capitals, muted, with no line between the
+ * groups. It names its `role="group"`. */
+    .kp-menu__heading {
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* An entry: the label over the hint, on a one-column grid so every label
+ * and every hint start at one edge. */
+    .kp-menu--rich .kp-menu__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0.0625rem;
+        inline-size: 100%;
+        padding: 0.4375rem 0.625rem;
+        text-decoration: none;
+    }
+
+    .kp-menu__label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-menu__hint {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-menu__item--destructive .kp-menu__label {
+        color: var(--destructive);
+    }
+
+    .kp-menu--rich .kp-menu__item:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-menu--rich .kp-menu__item:focus {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    }
+
+    /* A disabled entry keeps its focus and its pointer (its reason shows on
+ * hover too), reads in the muted colour rather than faded (a faded reason
+ * fails AA in several themes), and does nothing. The plain menu's disabled
+ * item, faded and out of the pointer's reach, is undone here. */
+    .kp-menu--rich .kp-menu__item[aria-disabled='true'] {
+        opacity: 1;
+        pointer-events: auto;
+        cursor: not-allowed;
+    }
+
+    .kp-menu--rich .kp-menu__item[aria-disabled='true'] .kp-menu__label {
+        color: var(--muted-foreground);
+        font-weight: 500;
+    }
+
+    .kp-menu--rich .kp-menu__item[aria-disabled='true']:hover {
+        background: none;
+    }
+
+    /* Why a disabled entry cannot be used, under its hint. */
+    .kp-menu__reason {
+        font-style: italic;
+    }
+
+    .kp-menu__reason::before {
+        content: '— ';
+    }
+
+    /* In a page header on a phone the open menu spans the header's buttons,
+ * inside the screen. */
+    @container kp-page-header (max-width: 40rem) {
+        .kp-page-header__actions:has(> .kp-menu-button) {
+            position: relative;
+        }
+
+        /* The menu button fills its column of the actions grid like the buttons beside it [hlcomp-1019; homelab 84]: the wrapper
+           stretches and its button with it. The wrapper is `static` here, so its open menu is placed against the actions row
+           below (the whole row's width, inside the screen), and a stretched wrapper no longer moves the menu from its button. */
+        .kp-page-header__actions > .kp-menu-button {
+            position: static;
+            display: flex;
+            inline-size: auto;
+            max-inline-size: none;
+        }
+
+        .kp-page-header__actions > .kp-menu-button > :is(.kp-button, button):not(.kp-menu, [role='menu']) {
+            flex: 1 1 auto;
+            justify-content: center;
+            white-space: normal;
+        }
+
+        .kp-page-header__actions > .kp-menu-button > .kp-menu {
+            inset-inline: 0;
+            inline-size: auto;
+            min-inline-size: 0;
+            max-inline-size: none;
+        }
+    }
+
+    /* An open menu lifts its header over what follows. */
+    .kp-page-header:has(.kp-menu-button > [role='menu']:not([hidden])) {
+        position: relative;
+        z-index: 20;
+    }
+

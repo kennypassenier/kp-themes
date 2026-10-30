@@ -1,0 +1,121 @@
+/* @part: base: opening comment, knobs and base */
+    /* @kp-soft/themes — css/titanium-register.css
+   The titanium register, 6.0.0 [scope-17, scope-21]. Scoped to
+   [data-theme='titanium'] and inert elsewhere; opt-in, imported after
+   themes.css. The approved concept demo is the third world of the
+   hypertech page (2026-09-11): "Titanium wordt een nieuw thema op
+   zichzelf, het is heel mooi."
+
+   Not a place but a MATERIAL: anodised titanium over carbon weave. The
+   colour has a cause. Anodising does not add pigment — it grows an oxide
+   film whose thickness decides which wavelength survives — so the
+   blue-violet on every edge really is interference, and it really does
+   shift with the angle you look from. That is why the film's start angle
+   follows the pointer rather than sitting still.
+
+   Three things separate it from the spectral instrument, which is its
+   nearest neighbour in the set and shares its shape:
+
+     · the chamfer cuts the OTHER two corners, and carries a bright line
+       along the top where the tool left the surface;
+     · the ground is a carbon twill, two diagonals crossing, rather than
+       an instrument's square grid;
+     · motion slows as it lands and never passes its rest pose: one
+       curve, cubic-bezier(0.2, 0.8, 0.2, 1), sixty milliseconds for a
+       contact; loops keep a constant feed (themes/titanium/CHARACTER.md,
+       the grammar G1-G13, Kenny 2026-10-07).
+
+   Colour discipline (DI9): nothing here names a colour. Every stop is
+   `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
+
+    [data-theme='titanium'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 22rem;
+        /* A key-figure tile's frame in a strip with columns: --border-strong
+           reads 2.98:1 on the page and 2.58:1 on the card here (DI1, open), so
+           three twentieths of the ink go in it: 3.96:1 and 3.43:1 [fix-101]. */
+        --kp-kpi-border: color-mix(in oklab, var(--border-strong) 85%, var(--foreground));
+        /* The configuration surface [AR43], the demo's values as defaults. */
+        --kp-reveal-threshold: 0.6;
+        --kp-word-stagger: 28ms;
+        --kp-redact-stagger: 90ms;
+        --kp-sweep-range-start: entry 10%;
+        --kp-sweep-range-end: entry 85%;
+        --kp-ignite-range-start: entry 30%;
+        --kp-ignite-range-end: entry 80%;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+           and leaves a theme that declares none at rest. No arrival: the
+           demo has no boot sequence, the page is simply there. */
+        --kp-reveal-headline: resolve;
+        --kp-reveal-emphasis: ignite;
+        --kp-reveal-rule: sweep;
+        /* The theme's one curve (CHARACTER.md G1, Kenny 2026-10-07): it
+           slows as it lands, never past the rest pose. Dead North's
+           shout-in ease is retired here; a shared rule that reads
+           --kp-settle gets titanium's own curve. */
+        --kp-settle: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+        /* No starfield. The approved demo had one — 102 points on the
+           shared texture layer with ten shimmer stars above it — and
+           Kenny took it back out on 2026-09-11: "dark mag zijn sterren
+           weer kwijtspelen op de achtergrond". The ground is plain now.
+           The divider keeps its own dense local sample, which is a seam
+           between sections rather than the background he named. */
+
+        /* -- The oxide film [scope-17] ---------------------------------
+           Anodising grows a film whose thickness decides which wavelength
+           survives, so the colour shifts with the angle you look from. A
+           gradient cannot read a pointer; js/effects.js writes the angle
+           down when a theme asks for it.
+
+           A LINEAR sweep here where the spectral instrument uses a conic
+           one: an oxide on a flat machined face runs across the surface,
+           it does not turn about a point. The pointer tilts it by sixty
+           degrees either way, which is the range of angles you get by
+           moving your head in front of a real anodised part. */
+        --kp-pointer: track;
+        --kp-px: 0.5;
+        --kp-py: 0.5;
+        --kp-iris: linear-gradient(calc(70deg + var(--kp-px) * 60deg), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-1));
+        /* The milled corner, cut on the OTHER diagonal from the spectral
+           instrument's: leading-top and trailing-bottom, the way a part is
+           relieved to clear a fixture. */
+        --kp-chamfer: var(--fx-notch, 0.6rem);
+        --kp-chamfer-panel: 1.2rem;
+        /* The line the tool left along the top face. */
+        --kp-tool-edge: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    /* ── The chamfer [scope-16] ────────────────────────────────────────
+       Controls take the small cut and panels the large one. `clip-path`
+       rather than a border-radius, because the corner is a straight edge
+       at forty-five degrees and a radius is an arc. */
+    [data-theme='titanium'] .kp-button,
+    [data-theme='titanium'] .kp-field__input,
+    [data-theme='titanium'] .kp-badge {
+        clip-path: polygon(
+            var(--kp-chamfer) 0,
+            100% 0,
+            100% calc(100% - var(--kp-chamfer)),
+            calc(100% - var(--kp-chamfer)) 100%,
+            0 100%,
+            0 var(--kp-chamfer)
+        );
+        box-shadow: var(--kp-tool-edge);
+    }
+
+    [data-theme='titanium'] .kp-card,
+    [data-theme='titanium'] .kp-dialog,
+    [data-theme='titanium'] .kp-alert {
+        clip-path: polygon(
+            var(--kp-chamfer-panel) 0,
+            100% 0,
+            100% calc(100% - var(--kp-chamfer-panel)),
+            calc(100% - var(--kp-chamfer-panel)) 100%,
+            0 100%,
+            0 var(--kp-chamfer-panel)
+        );
+        box-shadow: var(--kp-tool-edge);
+    }
+

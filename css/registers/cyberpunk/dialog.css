@@ -1,0 +1,394 @@
+/* @part: dialog: Dialog in sections, confirmation, typed confirmation */
+    /* ── Dialog in sections, confirmation, typed confirmation ── */
+    [data-theme='cyberpunk'] .kp-dialog__heading {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-dialog__heading::before {
+        content: '// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-dialog__section:not(:first-child) {
+        border-block-start: 1px dashed var(--border-strong);
+    }
+    [data-theme='cyberpunk'] .kp-dialog__section--danger {
+        --kp-cp4-tone: var(--destructive);
+        border-inline-start: 0;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-dialog__section--danger > .kp-dialog__heading {
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-dialog__section--danger > .kp-dialog__heading::before {
+        content: '!! ';
+    }
+    [data-theme='cyberpunk'] .kp-confirm__dependents,
+    [data-theme='cyberpunk'] .kp-type-confirm__loses {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm__loses-title {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm__name {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        color: var(--primary);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm__list,
+    [data-theme='cyberpunk'] .kp-type-confirm__input {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm__status {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-type-confirm[data-kp-matched] .kp-type-confirm__input {
+        border-color: var(--accent);
+        box-shadow: inset 0 0 0 1px var(--accent);
+    }
+
+    /* ── Segmented tri-state chips: in is the circuit lit and a yellow rim, out is locked as a target in red ── */
+    [data-theme='cyberpunk'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: var(--primary);
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        --kp-cp4-tone: var(--destructive);
+        border-color: var(--border);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-segmented__mark {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-segmented__summary {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+
+    /* ── Quantity ── */
+    [data-theme='cyberpunk'] .kp-quantity__field {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-quantity__input,
+    [data-theme='cyberpunk'] .kp-quantity__unit {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        clip-path: none;
+    }
+
+    /* ── Checklist: a row lights its circuit; a ticked item is dimmed and struck; the head is a prefixed label ── */
+    [data-theme='cyberpunk'] .kp-checklist__row {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-checklist__row:hover {
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-checklist__title,
+    [data-theme='cyberpunk'] .kp-checklist__count,
+    [data-theme='cyberpunk'] .kp-checklist__status {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-checklist__title {
+        color: var(--accent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-checklist__item {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+
+    /* ── Kitchen timers: a holo card; a timer that has ended is locked as a target in red, with its state word ── */
+    [data-theme='cyberpunk'] .kp-timer {
+        --kp-timer-font: var(--theme-font-display);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-cp4-tone: var(--destructive);
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--border);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-timer__state,
+    [data-theme='cyberpunk'] .kp-timer__name {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-timer__time {
+        font-family: var(--theme-font-display);
+    }
+
+    /* ── Cook mode ── */
+    [data-theme='cyberpunk'] .kp-focus-steps__count,
+    [data-theme='cyberpunk'] .kp-focus-steps__amount,
+    [data-theme='cyberpunk'] .kp-focus-steps__needs-title {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.1em;
+    }
+    [data-theme='cyberpunk'] .kp-focus-steps__needs-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-focus-steps__needs {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image: var(--kp-cp4-scan);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-focus-steps__step {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+
+    /* ── Wheel: it turns in held ticks (a pose every 100 ms or so), never an ease; the rim is the yellow, the pointer the
+       reticle's tick in cyan ── */
+    [data-theme='cyberpunk'] .kp-wheel {
+        --kp-wheel-ease: steps(40, end);
+        --kp-wheel-pointer: var(--accent);
+        --kp-wheel-tint: 24%;
+    }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button::before,
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    /* No stripes of its own either: the button's two 3 px side bars and its cut-corner wedge (background layers) would
+       leave a rectangular nub on the disc's rim; the yellow stays as the colour. */
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button,
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        --kp-wheel-hub-shadow: none;
+        background-image: none !important;
+    }
+    [data-theme='cyberpunk'] .kp-wheel__rim {
+        stroke: var(--primary);
+        stroke-width: 1.2;
+    }
+    [data-theme='cyberpunk'] .kp-wheel__segment {
+        stroke: var(--background);
+    }
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button {
+        white-space: nowrap;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='cyberpunk'] .kp-wheel__label,
+    [data-theme='cyberpunk'] .kp-wheel__caption {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-wheel__outcome {
+        font-family: var(--theme-font-display);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-wheel[data-kp-wheel-won] .kp-wheel__outcome {
+            animation: kp-cp4-stutter calc(8 * var(--kp-cp4-tick)) steps(1, end);
+        }
+    }
+
+    /* ── Uptime ── */
+    [data-theme='cyberpunk'] .kp-uptime {
+        --kp-uptime-cell-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-uptime__title {
+        font-family: var(--kp-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-uptime__percent,
+    [data-theme='cyberpunk'] .kp-uptime__incidents,
+    [data-theme='cyberpunk'] .kp-uptime__axis,
+    [data-theme='cyberpunk'] .kp-uptime__info-figures {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+    }
+    [data-theme='cyberpunk'] .kp-uptime__percent {
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']) {
+        box-shadow: 0 0 0 1px var(--primary);
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-uptime__summary[data-kp-tone='error'] {
+        --kp-cp4-tone: var(--destructive);
+        border-radius: 0;
+        background: transparent;
+        color: var(--destructive);
+        box-shadow: inset 0 0 0 1px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='cyberpunk'] .kp-uptime__info {
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-uptime:not([data-kp-uptime-state]) .kp-uptime__track {
+            animation: kp-cp4-decode calc(6 * var(--kp-cp4-tick)) steps(10, end) backwards;
+        }
+    }
+
+    /* ── Visual timer: a notched face, a held sector, the reticle's core at the hub ── */
+    [data-theme='cyberpunk'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc__face {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc__hub {
+        border-radius: 0;
+        border-color: var(--card);
+        background: var(--accent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.7);
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        --kp-cp4-tone: var(--destructive);
+        box-shadow: none;
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc__caption,
+    [data-theme='cyberpunk'] .kp-timer-disc__status {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        color: var(--destructive);
+    }
+
+    /* ── Countdown: the digits are the condensed display; an ended countdown is locked as a target ── */
+    [data-theme='cyberpunk'] .kp-countdown__time,
+    [data-theme='cyberpunk'] .kp-countdown__digit {
+        font-family: var(--theme-font-display);
+    }
+    [data-theme='cyberpunk'] .kp-countdown__name,
+    [data-theme='cyberpunk'] .kp-countdown__status {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-countdown__colon {
+        inline-size: 0.6ch;
+        color: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-countdown[data-kp-countdown-state='ended'] {
+        --kp-cp4-tone: var(--destructive);
+        --kp-countdown-ring: transparent;
+        background-image: var(--kp-cp4-lock);
+        box-shadow: none;
+    }
+    [data-theme='cyberpunk'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status {
+        color: var(--destructive);
+    }
+
+    /* ── Range picker ── */
+    [data-theme='cyberpunk'] .kp-range__label,
+    [data-theme='cyberpunk'] .kp-range__bound,
+    [data-theme='cyberpunk'] .kp-range__title {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-range__error {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-range__error::before {
+        content: '!! ';
+    }
+
+    /* ── Command: a prefixed label over a notched plate; the prompt is yellow, the output cyan ── */
+    [data-theme='cyberpunk'] .kp-command {
+        --kp-command-prompt-ink: var(--primary);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-command__shell {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-command__shell::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-command__head {
+        border-block-end: 1px dashed var(--border-strong);
+    }
+    [data-theme='cyberpunk'] .kp-command__where {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-command__code {
+            animation: kp-cp4-decode calc(8 * var(--kp-cp4-tick)) steps(8, end) backwards;
+        }
+    }
+
+    /* ── Compare slider: the divider is the reticle's line in cyan with a notched grip; the labels are prefixed ── */
+    [data-theme='cyberpunk'] .kp-compare {
+        --kp-compare-line: 2px;
+    }
+    [data-theme='cyberpunk'] .kp-compare__divider {
+        background: var(--accent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.7);
+    }
+    [data-theme='cyberpunk'] .kp-compare__handle,
+    [data-theme='cyberpunk'] .kp-compare__grip {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-compare__label {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-compare__label--before::before {
+        content: '// ';
+    }
+    [data-theme='cyberpunk'] .kp-compare__label--after::before {
+        content: '// ';
+    }
+    [data-theme='cyberpunk'] .kp-compare__failed {
+        clip-path: var(--kp-cp-clip-ctl);
+    }

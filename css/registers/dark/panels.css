@@ -1,0 +1,275 @@
+/* @part: panels: Panels */
+    /* ── Panels: a quiet dark ground, the theme's own edge ─────────────── */
+
+    [data-theme='dark'] .kp-dialog,
+    [data-theme='dark'] .kp-popover,
+    [data-theme='dark'] .kp-menu,
+    [data-theme='dark'] .kp-toast,
+    [data-theme='dark'] .kp-tooltip,
+    [data-theme='dark'] .kp-confirm,
+    [data-theme='dark'] .kp-datepicker__panel,
+    [data-theme='dark'] .kp-combobox__list,
+    [data-theme='dark'] .kp-palette,
+    [data-theme='dark'] .kp-theme-menu__list {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+        /* The oxide halo [scope-102], where the shadow in the ground's own
+           colour used to be. A box-shadow rather than the blurred film,
+           because `.kp-popover` is `overflow: auto` and clips a
+           pseudo-element away — see --kp-halo. */
+        box-shadow: var(--kp-halo);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='dark'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='dark'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='dark'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='dark'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='dark'] .kp-toast--destructive,
+    [data-theme='dark'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='dark']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='dark'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    [data-theme='dark'] .kp-dialog__title {
+        font-weight: 700;
+    }
+
+    /* The panels are cut on the same two corners as the card and the dialog
+       [G6; Kenny, 2026-10-09: two opposite corners, the halo and the shadow
+       follow the cut]. The clip above carries the halo through the cut; the
+       cut's own edge is a 1 px diagonal in the panel's edge colour at each
+       cut corner, so the border does not stop short of the corner. The
+       diagonal of a square of side c lies c * 0.7071 from its corner. */
+    [data-theme='dark']
+        :is(
+            .kp-menu,
+            .kp-popover:not(.kp-tooltip),
+            .kp-toast,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-nav__menu
+        ) {
+        --kp-sig-dk-diag: var(--border-strong);
+        background-image:
+            linear-gradient(
+                225deg,
+                transparent calc(var(--kp-chamfer-panel) * 0.7071 - 1px),
+                var(--kp-sig-dk-diag) calc(var(--kp-chamfer-panel) * 0.7071 - 1px) calc(var(--kp-chamfer-panel) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                45deg,
+                transparent calc(var(--kp-chamfer-panel) * 0.7071 - 1px),
+                var(--kp-sig-dk-diag) calc(var(--kp-chamfer-panel) * 0.7071 - 1px) calc(var(--kp-chamfer-panel) * 0.7071),
+                transparent 0
+            );
+        background-repeat: no-repeat;
+        background-size: var(--kp-chamfer-panel) var(--kp-chamfer-panel);
+        background-position:
+            100% 0,
+            0 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        --kp-sig-dk-diag: transparent;
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            background-image: none;
+        }
+    }
+
+    /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
+       row menu painted nothing at all in this theme — measured `outside:
+       0 focused, 0 at rest`. The popover rounds its corners and the item
+       fills it, so a ring drawn outside the item has nowhere to land;
+       cyberpunk hit the same wall when its bevel came back and answered
+       it the same way. Both channels go INSIDE, where nothing can clip
+       them: the ring colour first, the contrast colour behind it. */
+    [data-theme='dark'] .kp-menu__item:focus-visible {
+        outline: none;
+        background: var(--accent);
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    [data-theme='dark'] .kp-menu__item:hover {
+        background: var(--accent);
+    }
+
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='dark'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-alert__label {
+        font-weight: 700;
+    }
+
+    [data-theme='dark'] .kp-grid__tile,
+    [data-theme='dark'] .kp-split__pane {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-split__separator {
+        background: var(--border);
+    }
+
+    /* ── The footer: one step darker than the ground ───────────────────── */
+
+    [data-theme='dark'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-footer h4 {
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-footer a {
+        color: var(--muted-foreground);
+        font-size: 0.92rem;
+    }
+
+    [data-theme='dark'] .kp-footer a:hover,
+    [data-theme='dark'] .kp-footer a:focus-visible {
+        color: var(--foreground);
+    }
+
+    /* ── Badges, tags, status ───────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-badge,
+    [data-theme='dark'] .kp-tag {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-skeleton {
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes ──────────────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-id,
+    [data-theme='dark'] .kp-url,
+    [data-theme='dark'] .kp-numeric,
+    [data-theme='dark'] .kp-timestamp,
+    [data-theme='dark'] .kp-masked,
+    [data-theme='dark'] .kp-copyable,
+    [data-theme='dark'] .kp-truncate,
+    [data-theme='dark'] .kp-cell-break,
+    [data-theme='dark'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='dark'] .kp-timestamp,
+    [data-theme='dark'] .kp-id {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-copyable__button {
+        border: 1px solid var(--border-strong);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-table th {
+        color: var(--muted-foreground);
+        border-bottom: 1px solid var(--border-strong);
+        font-weight: 600;
+    }
+
+    [data-theme='dark'] .kp-table td {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-table tbody tr:hover {
+        background: var(--card);
+    }
+

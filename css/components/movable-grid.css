@@ -1,0 +1,101 @@
+/* @part: movable-grid: Movable grid layout */
+    /* --- Movable grid layout [TH56] -------------------------------------- */
+
+    /* The box the grid measures itself against [TH104, AR24].
+ *
+ * A container query styles a container's CONTENTS, never the container
+ * itself, and the rule that has to change is `grid-template-columns` on
+ * the grid — so the query needs an element one level up.
+ * components/canvas.jsx renders this itself (`wrap`, default true);
+ * markup written by hand adds it, which is what MIGRATION.md's 4.0.0
+ * section is for. */
+    .kp-grid-wrap {
+        container: kp-grid / inline-size;
+        /* The same floor as .kp-table-wrap, for the same reason [R3-CQ, KT6]. */
+        min-inline-size: var(--kp-grid-wrap-min, auto);
+    }
+
+    .kp-grid {
+        display: grid;
+        grid-template-columns: repeat(var(--kp-grid-columns, 6), 1fr);
+        grid-auto-rows: 4rem;
+        gap: 0.5rem;
+    }
+
+    .kp-grid__tile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        overflow: hidden;
+
+        /* The tile's place on the grid, derived here from four numbers the
+     * module writes [AR31]. Up to 4.0.0 js/gridlayout.js and
+     * components/canvas.jsx wrote `grid-column` and `grid-row`
+     * themselves, as inline styles — which beat any rule in any layer,
+     * so the narrow rule below could never win once the grid was
+     * attached, and attaching is the only way the grid is used.
+     * Measured at 320px on 3.2.0: before attach the tile read
+     * `1 / -1` at 302px wide, after attach `1 / span 2` at 241px.
+     *
+     * A custom property is a VALUE, not a declaration: the module still
+     * says where the tile is, and the stylesheet still decides what
+     * that means. The defaults are the initial placement, so a tile
+     * nothing has attached to sits exactly where it did before. */
+        grid-column: var(--kp-tile-x, auto) / span var(--kp-tile-w, 1);
+        grid-row: var(--kp-tile-y, auto) / span var(--kp-tile-h, 1);
+    }
+
+    /* The tile is a tab stop, because moving it is a keyboard gesture first
+ * and a drag second. */
+    .kp-grid__tile:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    /* In a narrow BOX the arrangement stops being an arrangement: one
+ * column, source order. A six-column dashboard at 320px is six columns of
+ * nothing [DI11], and so is one in a 320px panel on a wide page — which
+ * is why the width that decides is the wrapper's rather than the
+ * window's since 4.0.0 [TH104]. The media query this replaced is gone
+ * rather than kept beside it: two mechanisms that can disagree are worse
+ * than either. */
+    @container kp-grid (max-width: 40rem) {
+        /* 40rem is a contract value [TH26], the same number the table's card
+     * query and the nav bar use. It is the number this block used as a
+     * media query up to 3.2.0, so no grid changes shape at a width it did
+     * not before. */
+        .kp-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .kp-grid__tile {
+            grid-column: 1 / -1;
+            /* Source order, so two tiles that shared a row do not land on
+         * top of each other in the single column. The height stays the
+         * tile's own. */
+            grid-row: auto / span var(--kp-tile-h, 1);
+        }
+    }
+
+    /* A surface keeps its content off its own edges [Kenny, 2026-09-15]. A
+     * surface paints a ground (css/_rules.css), and in every theme the
+     * heading, the prose and the first button stood on the ground's very
+     * edge: 0px between the text and the colour change, on the left where
+     * the eye starts a line. The room is the package's, in every theme, on
+     * the inline axis only — the block axis is the section rhythm's. The
+     * room gives way before the content does: a surface of 20rem or less (a
+     * 320px phone, where the concept page's 16rem grid already fills the
+     * surface to the pixel) keeps none, and from 22rem it keeps the whole lg
+     * step. Knob: --kp-surface-padding-inline (the lg step, from 22rem
+     * wide). Its companion,
+     * data-kp-surface-align="center", sits beside the ground in
+     * css/_rules.css, because it reaches the layout layer's row. */
+    [data-kp-surface] {
+        padding-inline: var(--kp-surface-padding-inline, max(0px, min(var(--kp-space-lg, 1rem), (100% - 20rem) / 2)));
+    }
+

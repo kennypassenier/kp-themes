@@ -1,0 +1,128 @@
+{
+  "output": "css/synthwave-register.css",
+  "items": [
+    {
+      "open": "@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-hooks.css",
+        "the-hero.css",
+        "the-navbar.css",
+        "button.css",
+        "fields.css",
+        "the-page-waits.css",
+        "card.css",
+        "tile-waits.css",
+        "data.css",
+        "the-demos-own-pieces.css",
+        "motion-guarded.css",
+        "motion.css",
+        "the-vcrs-symbols.css",
+        "focus-is-two-tubes.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* synthwave's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/synthwave.css and research/signature-elements/themes/synthwave.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base/base.css",
+        "signature-base/empty.css",
+        "signature-base/leaving-this-themes-way.css",
+        "every-pair-closes-as.css",
+        "live-change-draws.css",
+        "the-meter-with-a-mark-this.css",
+        "the-mark-past-the-end.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "segmented-toolbar.css"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "file": "the-kpadopt4-components.css"
+    },
+    {
+      "file": "end-the-kpadopt4-data.css"
+    },
+    {
+      "open": "/* ── end the kpadopt4 rows and flows ── */\n\n/* ── The kpadopt4 secrets, time, cooking and commands in synthwave's own grammar [kpadopt4] ──\n   A secret is a tube that strikes on (G1, G13); what runs out is a laser burning down (G9); a clock is the sun setting:\n   the share left is the striped sun, its stripes closing as it sinks, on the face's horizon ring (G11, G16); the wheel is\n   the arcade's: marquee bulbs round its rim, a turn on the sunrise curve (G1, G10); a thing that ends or fails has the\n   neon ring (G13); a command is the VCR's OSD over the tape (G15). Light switches in hard steps, bodies glide. */\n@layer kp.signature {\n",
+      "files": [
+        "secret-field.css",
+        "dialog.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "file": "end-the-kpadopt4-secrets.css"
+    },
+    {
+      "file": "end-t56/base.css"
+    },
+    {
+      "file": "end-t56/end-t56.css"
+    },
+    {
+      "file": "end-t56/end-t56-2.css"
+    },
+    {
+      "file": "end-t56/end-t56-3.css"
+    },
+    {
+      "file": "end-t56/end-t56-4.css"
+    },
+    {
+      "file": "end-t56/end-t56-5.css"
+    },
+    {
+      "file": "end-t56/end-t56-6.css"
+    },
+    {
+      "file": "end-t56/end-t56-7.css"
+    },
+    {
+      "file": "end-t56/end-t56-8.css"
+    },
+    {
+      "file": "end-t56/end-t56-9.css"
+    },
+    {
+      "file": "signature.css"
+    },
+    {
+      "file": "end-t56-q.css"
+    },
+    {
+      "file": "end-t56-q2-fields.css"
+    },
+    {
+      "file": "end-t56-q2-confirm.css"
+    },
+    {
+      "file": "end-t56-q2-updates.css"
+    },
+    {
+      "file": "end-t56-q2-choose.css"
+    },
+    {
+      "file": "end-t56-q2-schedule.css"
+    },
+    {
+      "file": "graph-loading-r3-b-sw-load.css"
+    }
+  ]
+}

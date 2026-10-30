@@ -1,0 +1,193 @@
+/* @part: forests-grammar-as-tokens: Forest's grammar, as tokens */
+    /* ── Forest's grammar, as tokens [themes/forest/CHARACTER.md §1, decided by
+       Kenny on research/forest-character, 2026-10-07 17:47]. One token per
+       rule: every rule below reads these and names no number of its own. ── */
+    [data-theme='forest'] {
+        /* G1: one growth curve, a tree's (the Gompertz curve of plant
+           growth): 3 % at a tenth of the time, half at 40 %, 90 % at 73 %.
+           It is the theme's --fx-ease (css/themes.css), so everything that
+           moves on --fx-ease grows on it, and a close, a shrink and a leave
+           run it turned around (js/motion.js reads it from the dialog). */
+        --kp-sig-fo-grow: var(--fx-ease);
+        /* The same curve turned around (the list from its other end, every
+           output as 1 − y): what a leave eases on, so that the arrival, which
+           js/motion.js plays as the leave backwards, grows on --kp-sig-fo-grow. */
+        --kp-sig-fo-wither: linear(
+            0 0%,
+            0.01 5%,
+            0.023 10%,
+            0.04 15%,
+            0.061 20%,
+            0.087 25%,
+            0.119 30%,
+            0.16 35%,
+            0.209 40%,
+            0.268 45%,
+            0.338 50%,
+            0.418 55%,
+            0.507 60%,
+            0.602 65%,
+            0.698 70%,
+            0.789 75%,
+            0.867 80%,
+            0.928 85%,
+            0.968 90%,
+            0.99 95%,
+            1 100%
+        );
+        /* G4: contact is --fx-duration (200 ms); a growth, an opening, an
+           arrival and a leave are one time; a loop is one period; parts of a
+           group stand one beat apart. */
+        --kp-sig-fo-time: 1000ms;
+        --kp-sig-fo-loop: 3200ms;
+        --kp-sig-fo-stagger: 80ms;
+        /* The one rhythm of everything that waits (Kenny, 2026-10-09 on
+           research/forest-uniformity, timing: "the bar's breath
+           everywhere"): the busy bar's breath, 3000 ms in, 600 ms full,
+           3000 ms out, for the bar, the planting strips, the skeleton lines,
+           the measuring meter, the busy panels and the treeline of a block
+           or a circle alike, so a page that loads breathes as one grove. The
+           spinner keeps its tree a half loop (1600 ms). */
+        --kp-sig-fo-breath: 6600ms;
+        /* Where in its breath a bar or a strip starts: 1000 ms in, whole trees already standing (breath about 0.3
+           when it appears), so the first frames show trees and not bare ground [cook-1017; Kenny: "Meteen bomen"]. The
+           breath itself stays 6600 ms; it is a negative delay, not another keyframe. */
+        --kp-sig-fo-head: -1000ms;
+        /* js/motion.js reads its caps from the root: a close or a size
+           glide of one growth time is not cut short (its defaults, 600 and
+           480 ms, are other themes'). */
+        --kp-close-max: var(--kp-sig-fo-time);
+        --kp-size-max: var(--kp-sig-fo-time);
+        /* The space a leave folds shut takes the growth time exactly and
+           starts with the leave (js/motion.js reads both; its defaults,
+           1.25 times the longer of the leave and the size glide, starting
+           a third into the exit, are other themes'): arriving and leaving
+           are one picture of one time, so a withered part is gone in 1000 ms
+           and an arrival is its mirror. */
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+        /* A part a script removes or hides (the busy table's layer, an empty
+           state, a file row, a tree's children, a re-shown alert) leaves
+           first, as it arrives: js/motion.js leavesState(). */
+        --kp-leave-state: leave;
+        /* The tour's dim goes back to no shadow at all (the base layer fades
+           it at its full spread), so it shrinks into the target as it grew
+           out of it. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        /* What arrives with no box (the busy table's hidden spinner) arrives
+           as nothing, so it holds back no visible part of its row. */
+        --kp-arrive-unseen: skip;
+        /* How far past a growing part's edge its own shadow may show. */
+        --kp-sig-fo-reach: 3rem;
+        /* G6: the leaf corner, one rule for every plate and every small part:
+           the top-right and bottom-left corners rounded, the other two
+           square. One token, the plate's size; a small part takes half of it
+           (a button, a tag, a field, the change on a tile, a tooltip). What is
+           round in a wood stays round (the radio, a ring, a dot), and the
+           instruments keep the routed 3 px of their wood (the meter, the bar). */
+        --kp-sig-fo-leaf: 1.25rem;
+        --kp-sig-fo-plate: 0 var(--kp-sig-fo-leaf);
+        --kp-sig-fo-part: 0 calc(var(--kp-sig-fo-leaf) / 2);
+        /* G7: light wood for what is held, routed in. */
+        --kp-sig-fo-wood: repeating-linear-gradient(177deg, transparent 0 2px, hsl(from var(--border-strong) h s l / 0.2) 2px 3px);
+        --kp-sig-fo-routed:
+            inset 0 1px 1px hsl(from var(--foreground) h s l / 0.3), inset 0 -1px 0 hsl(from var(--card) h s l / 0.8),
+            0 0 0 1px hsl(from var(--border-strong) h s l / 0.7);
+        /* The drawings: seven trees per tile (pines, spruces and two
+           broadleaves of seven heights, so the skyline does not read as a
+           pattern), the seedling, the three stages of one planted tree side
+           by side (seedling, sapling, tree) and its mound. */
+        --kp-fo-trees: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 20' preserveAspectRatio='none'%3E%3Cpolygon points='5.0,0.0 8.0,5.6 6.7,5.6 8.9,11.2 7.2,11.2 9.8,16.8 0.2,16.8 2.8,11.2 1.1,11.2 3.3,5.6 2.0,5.6'/%3E%3Crect x='4.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='15' cy='10.4' rx='4.5' ry='5.2'/%3E%3Crect x='14.3' y='10.4' width='1.4' height='9.6'/%3E%3Cpolygon points='25.0,4.4 27.5,8.5 26.4,8.5 28.3,12.7 26.8,12.7 29.0,16.8 21.0,16.8 23.2,12.7 21.7,12.7 23.6,8.5 22.5,8.5'/%3E%3Crect x='24.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='35.0,1.2 37.5,5.1 36.4,5.1 38.0,9.0 36.7,9.0 38.6,12.9 37.0,12.9 39.2,16.8 30.8,16.8 33.0,12.9 31.4,12.9 33.3,9.0 32.0,9.0 33.6,5.1 32.5,5.1'/%3E%3Crect x='34.3' y='16.4' width='1.4' height='3.6'/%3E%3Cpolygon points='45.0,2.6 48.1,7.3 46.7,7.3 49.0,12.1 47.2,12.1 49.9,16.8 40.1,16.8 42.8,12.1 41.0,12.1 43.3,7.3 41.9,7.3'/%3E%3Crect x='44.3' y='16.4' width='1.4' height='3.6'/%3E%3Cellipse cx='55' cy='11.1' rx='3.9' ry='4.5'/%3E%3Crect x='54.3' y='11.1' width='1.4' height='8.9'/%3E%3Cpolygon points='65.0,0.6 67.5,4.6 66.4,4.6 68.1,8.7 66.7,8.7 68.7,12.7 67.0,12.7 69.3,16.8 60.7,16.8 63.0,12.7 61.3,12.7 63.3,8.7 61.9,8.7 63.6,4.6 62.5,4.6'/%3E%3Crect x='64.3' y='16.4' width='1.4' height='3.6'/%3E%3C/svg%3E");
+        --kp-fo-seedling: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Crect x='4.6' y='15.8' width='0.8' height='4.2'/%3E%3Cellipse cx='3.3' cy='15.9' rx='1.7' ry='0.85' transform='rotate(-28 3.3 15.9)'/%3E%3Cellipse cx='6.7' cy='15.9' rx='1.7' ry='0.85' transform='rotate(28 6.7 15.9)'/%3E%3C/svg%3E");
+        --kp-fo-stages: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20' preserveAspectRatio='none'%3E%3Crect x='4.6' y='15.8' width='0.8' height='4.2'/%3E%3Cellipse cx='3.3' cy='15.9' rx='1.7' ry='0.85' transform='rotate(-28 3.3 15.9)'/%3E%3Cellipse cx='6.7' cy='15.9' rx='1.7' ry='0.85' transform='rotate(28 6.7 15.9)'/%3E%3Cg transform='translate(10 0)'%3E%3Cpolygon points='5,5.2 7.2,9.2 6.1,9.2 8.0,13.2 6.7,13.2 8.8,17.4 1.2,17.4 3.3,13.2 2.0,13.2 3.9,9.2 2.8,9.2'/%3E%3Crect x='4.45' y='17' width='1.1' height='3'/%3E%3C/g%3E%3Cg transform='translate(20 0)'%3E%3Cpolygon points='5.0,0.0 8.0,5.6 6.7,5.6 8.9,11.2 7.2,11.2 9.8,16.8 0.2,16.8 2.8,11.2 1.1,11.2 3.3,5.6 2.0,5.6'/%3E%3Crect x='4.3' y='16.4' width='1.4' height='3.6'/%3E%3C/g%3E%3C/svg%3E");
+        --kp-fo-mound: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cellipse cx='5' cy='20' rx='4.2' ry='1.7'/%3E%3C/svg%3E");
+    }
+
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    [data-theme='forest'] .kp-progressbar {
+        --kp-progressbar-height: calc(1.25rem * var(--kp-progressbar-scale, 1));
+        /* The package's own knobs, set to contact time on the register's curve,
+           so the head's transform moves with the fill (audit row 22). */
+        --kp-progressbar-duration: var(--fx-duration);
+        --kp-progressbar-ease: var(--fx-ease);
+        /* One planting slot: half the bar's height, so a tree keeps its shape
+           at any height the bar is given. */
+        --kp-fo-pitch: calc(var(--kp-progressbar-height) / 2);
+        /* The row holds whole slots only, centred: the few pixels a track's
+           width leaves over are a margin of plain ground on both ends, so no
+           tree or seedling is ever cut by the edge of the bar. */
+        --kp-fo-run: round(down, 100cqi, var(--kp-fo-pitch));
+        --kp-fo-margin: calc((100cqi - var(--kp-fo-run)) / 2);
+        /* Where the grown forest ends: on a slot boundary, so only whole trees
+           stand, and on the far edge at 100% (the extra slot in the product
+           lets the last one land there). */
+        --kp-fo-edge: min(var(--kp-fo-margin) + round(down, var(--kp-value) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), 100cqi);
+    }
+
+    [data-theme='forest'] .kp-progressbar__track {
+        border-radius: calc(3px * var(--kp-progressbar-scale, 1));
+        background: linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px) var(--muted);
+    }
+
+    [data-theme='forest'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline: var(--kp-fo-margin);
+        background: var(--border-strong);
+        mask: var(--kp-fo-seedling) 0 0 / var(--kp-fo-pitch) 100% repeat-x;
+    }
+
+    [data-theme='forest'] .kp-progressbar__fill {
+        background: linear-gradient(to top, var(--primary) 0 1.5px, transparent 1.5px) var(--muted);
+        clip-path: inset(0 calc(100% - var(--kp-fo-edge)) 0 0);
+        transition: clip-path var(--fx-duration) var(--fx-ease);
+    }
+
+    [data-theme='forest'] .kp-progressbar__fill::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline: var(--kp-fo-margin);
+        background: var(--primary);
+        mask: var(--kp-fo-trees) 0 0 / calc(var(--kp-fo-pitch) * 7) 100% repeat-x;
+    }
+
+    /* The sapling head is gone (Kenny, 2026-10-07): the planted row alone shows
+       the share, so the head never renders, determinate or busy. */
+    [data-theme='forest'] .kp-progressbar__head,
+    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: none;
+    }
+
+    /* Busy: the same planted row breathes. --kp-fo-breath (0 to 1) walks the
+       edge across whole slots exactly as --kp-value does, so only whole trees
+       ever stand; the bar fills in 3000 ms, holds full for 600 ms and empties
+       in 3000 ms with the same symmetric easing, which makes the leave the
+       arrival's frames reversed. Set on the bar, so an inline --kp-value
+       cannot interfere. */
+    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] {
+        --kp-fo-edge: min(
+            var(--kp-fo-margin) + round(down, var(--kp-fo-breath) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)),
+            100cqi
+        );
+        animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear var(--kp-sig-fo-head) infinite;
+    }
+
+    [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        transition: none;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        /* No motion: the finished pose at half breath, whole trees only. */
+        [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] {
+            --kp-fo-breath: 0.5;
+            animation: none;
+        }
+    }
+

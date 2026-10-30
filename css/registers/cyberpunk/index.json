@@ -1,0 +1,119 @@
+{
+  "output": "css/cyberpunk-register.css",
+  "items": [
+    {
+      "open": "@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-hooks.css",
+        "the-navbar/base.css",
+        "button.css",
+        "fields.css",
+        "card.css",
+        "data.css",
+        "the-demos-own-pieces.css",
+        "motion-guarded.css",
+        "motion.css",
+        "the-alarm.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* cyberpunk's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/cyberpunk.css and research/signature-elements/demo.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "the-approved-grammar.css",
+        "the-split-edge.css",
+        "the-closed-circuit.css",
+        "pointing-answers-for-every/base.css",
+        "pointing-answers-for-every/nav.css",
+        "pointing-answers-for-every/the-spinner-signal-bars-with.css",
+        "pointing-answers-for-every/rules.css",
+        "pointing-answers-for-every/collapsed-the-lists-nested-in.css",
+        "the-meter-with-a-mark-this.css",
+        "the-mark-past-the-end.css",
+        "the-tour-the-alarm.css",
+        "the-navbar/c-the-navbar.css",
+        "every-plate-is-cut.css",
+        "prose-is-rajdhani.css",
+        "leftovers-of-the-notch.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "segmented-toolbar.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "open": "/* ── The kpadopt4 components in cyberpunk's own grammar [kpadopt4] ──\n   Cyberpunk is the netrunner's HUD (themes/cyberpunk/CHARACTER.md): the void is the ground, the holo card what stands on\n   it, the HUD what the system draws over it. A signal is acquired, never eased: a part that is drawn is torn in sideways\n   and jitters home in six ticks of 60 ms, held poses with `steps(1)` (G1, G3, G12); pointing lights the 14 px circuit in\n   its own ink in one tick (G8); a press lights it full (G14); a warning is locked as a target, four corner brackets, 2 px,\n   in the tone's ink (G13); the machine talks in prefixed mono capitals, figures in the condensed display (G15); a\n   control is cut at its end corner, a plate at its dossier corner, never rounded (G6). Yellow acts, cyan reads, red\n   alarms. Waiting is the reticle's lock-on the register already lays; the data stream is only for what is transferred. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base.css",
+        "ticking-number.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "file": "end-the-kpadopt4-data.css"
+    },
+    {
+      "open": "/* ── end the kpadopt4 rows and flows ── */\n\n/* ── The kpadopt4 secrets, time, cooking and commands in cyberpunk's own grammar [kpadopt4] ──\n   A secret is decoded start to end in held steps (G2, G10); what runs out is a tripwire (G16); a thing that ends or\n   fails is locked as a target in red (G13); a clock is a notched face with a held sector (a loop advances in whole ticks,\n   G1); the wheel turns in ticks, never an ease (G1); a command is a prefixed label over a notched plate (G15). */\n@layer kp.signature {\n",
+      "files": [
+        "secret-field.css",
+        "dialog.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "file": "end-the-kpadopt4-secrets.css"
+    },
+    {
+      "file": "end-t56/base.css"
+    },
+    {
+      "file": "end-t56/end-t56.css"
+    },
+    {
+      "file": "end-t56/end-t56-2.css"
+    },
+    {
+      "file": "end-t56/end-t56-3.css"
+    },
+    {
+      "file": "end-t56/end-t56-4.css"
+    },
+    {
+      "file": "end-t56/end-t56-5.css"
+    },
+    {
+      "file": "end-t56-q.css"
+    },
+    {
+      "file": "end-t56-q2-fields.css"
+    },
+    {
+      "file": "end-t56-q2-choose.css"
+    },
+    {
+      "file": "end-t56-q2-schedule/base.css"
+    },
+    {
+      "file": "end-t56-q2-schedule/end-t56-q2-schedule.css"
+    },
+    {
+      "file": "graph-loading-r3-b-cp-load.css"
+    }
+  ]
+}

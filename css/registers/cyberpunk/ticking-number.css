@@ -1,0 +1,69 @@
+/* @part: ticking-number: A number that ticks */
+    /* ── A number that ticks: two neon copies stutter home, 6, 4, 2, 1 px, in four ticks of 120 ms; the figure stays
+       sharp on top and never moves ── */
+    [data-theme='cyberpunk'] [data-kp-tick] {
+        font-family: var(--theme-font-display);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] [data-kp-tick][data-kp-tick-state='running'] {
+            animation: kp-cp4-stutter calc(8 * var(--kp-cp4-tick)) steps(1, end);
+        }
+    }
+    @keyframes kp-cp4-stutter {
+        0% {
+            text-shadow:
+                6px -6px 0 var(--primary),
+                6px 6px 0 var(--accent);
+        }
+        25% {
+            text-shadow:
+                4px -4px 0 var(--primary),
+                4px 4px 0 var(--accent);
+        }
+        50% {
+            text-shadow:
+                2px -2px 0 var(--primary),
+                2px 2px 0 var(--accent);
+        }
+        75% {
+            text-shadow:
+                1px -1px 0 var(--primary),
+                1px 1px 0 var(--accent);
+        }
+        100% {
+            text-shadow: none;
+        }
+    }
+
+    /* The tear: a part is displaced sideways and jitters home, each pose held one tick, each offset smaller than the
+       last and on the other side. */
+    @keyframes kp-cp4-tear {
+        0% {
+            translate: -12px 0;
+        }
+        16.667% {
+            translate: 8px 0;
+        }
+        33.333% {
+            translate: -5px 0;
+        }
+        50% {
+            translate: 3px 0;
+        }
+        66.667% {
+            translate: -1px 0;
+        }
+        83.333%,
+        100% {
+            translate: 0 0;
+        }
+    }
+    /* A line of text is decoded start to end in eight held steps. */
+    @keyframes kp-cp4-decode {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }

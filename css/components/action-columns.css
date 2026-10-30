@@ -1,0 +1,439 @@
+/* @part: action-columns: Action columns */
+    /* --- Action columns [scope-143] --------------------------------------- */
+
+    /* A list's row buttons sit in columns the whole list shares, so a button
+ * of one role starts at one edge and has one width on every row, whatever
+ * its label, and a row that lacks a role leaves that column empty.
+ *
+ * A list (`ul`, `ol`) is a grid; each row is a subgrid of it, and the row's
+ * button box a subgrid of the row. The browser sizes every column to its
+ * widest button: no measuring, nothing to redo when a font arrives or the
+ * theme changes. By position from the end it needs no script at all (up to
+ * four buttons); with named roles (`data-kp-action` on a button)
+ * attachActionColumns() writes each button's column and the list's count.
+ *
+ * A table cannot be a subgrid, so there the script measures each role's
+ * widest button and writes the widths on the table. */
+    .kp-action-list {
+        --kp-action-count: 1;
+        container: kp-action-list / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) repeat(var(--kp-action-count), auto);
+        column-gap: var(--kp-action-gap, var(--kp-space-sm, 0.5rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(2)) {
+        --kp-action-count: 2;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(3)) {
+        --kp-action-count: 3;
+    }
+
+    .kp-action-list:has(> li > .kp-row-actions > :nth-child(4)) {
+        --kp-action-count: 4;
+    }
+
+    .kp-action-list > li {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        padding-block: var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-action-list > li > :first-child {
+        grid-column: 1;
+        min-inline-size: 0;
+    }
+
+    .kp-row-actions {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content;
+        grid-template-columns: var(--kp-action-widths, none);
+        justify-content: end;
+        align-items: center;
+        gap: var(--kp-action-gap, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-action-list .kp-row-actions {
+        grid-column: 2 / -1;
+        grid-template-columns: subgrid;
+    }
+
+    /* By position from the end, the primary last: CSS alone. */
+    .kp-action-list .kp-row-actions > :nth-last-child(1) {
+        --kp-action-col: -2 / -1;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(2) {
+        --kp-action-col: -3 / -2;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(3) {
+        --kp-action-col: -4 / -3;
+    }
+
+    .kp-action-list .kp-row-actions > :nth-last-child(4) {
+        --kp-action-col: -5 / -4;
+    }
+
+    /* A button fills its column, its label centred: one role, one width. */
+    .kp-row-actions > * {
+        grid-column: var(--kp-action-col, auto);
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .kp-row-actions:empty {
+        display: none;
+    }
+
+    /* While the script measures a table, every button at its own size. */
+    [data-kp-action-measuring] .kp-row-actions > * {
+        grid-column: auto;
+        justify-self: start;
+    }
+
+    /* On a narrow list (under 30rem) the row's text takes the whole line
+     * and its buttons stack under it, one per line, each centred under the
+     * row (Kenny, 2026-10-05: "the phone view can center the buttons, left
+     * alignment doesn't look nice"), each label on a single line: a label is
+     * never wrapped or cut (Kenny's UI rule; the equal columns of the wider
+     * list cut "Review and update all 4…" by 20 px on the dashboard's Inbox,
+     * action-columns-narrow-M1). The wider list keeps the equal columns
+     * Kenny approved (2026-10-04). */
+    @container kp-action-list (max-width: 30rem) {
+        .kp-action-list > li {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-action-list > li > :first-child,
+        .kp-action-list .kp-row-actions {
+            grid-column: 1;
+        }
+
+        .kp-action-list .kp-row-actions {
+            grid-template-columns: minmax(0, 1fr);
+            grid-auto-flow: row;
+            justify-content: stretch;
+            row-gap: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-action-list .kp-row-actions > * {
+            grid-column: 1;
+            justify-self: center;
+            inline-size: auto;
+            white-space: nowrap;
+        }
+    }
+
+    /* On a narrow table the row's buttons stack in one column, as wide as
+     * the widest (`--kp-action-stack`, measured by attachActionColumns()).
+     * Any table holding `.kp-row-actions`, not only `.kp-table`
+     * [action-columns-narrow-M1]: inside the package's table wrapper
+     * (`.kp-table-wrap`, the `kp-table` container) at its 30rem, and in a
+     * table outside it once the window is a phone's or a small tablet's
+     * (under 48rem, the width the homelab dashboard measured its own
+     * repository table squeezing its cells at). */
+    @container kp-table (max-width: 30rem) {
+        table .kp-row-actions {
+            grid-auto-flow: row;
+            grid-template-columns: var(--kp-action-stack, max-content);
+        }
+
+        table .kp-row-actions > * {
+            grid-column: 1;
+        }
+    }
+
+    @media (max-width: 48rem) {
+        table:not(.kp-table-wrap table, .kp-datatable table) .kp-row-actions {
+            grid-auto-flow: row;
+            grid-template-columns: var(--kp-action-stack, max-content);
+        }
+
+        table:not(.kp-table-wrap table, .kp-datatable table) .kp-row-actions > * {
+            grid-column: 1;
+        }
+    }
+
+    /* Rows with a lead [kpadopt4-rows; homelab's Inbox `nx-inbox`, JobTracker's
+ * queue, files and appointments, kyu's backlog]. `.kp-action-list--lead`
+ * gives every row a lead column before its words: a state badge or dot, a
+ * file's format, an appointment's day and hour. The column is as wide as
+ * the widest lead of the list and no wider (fix-64), so every title starts
+ * at one edge; the buttons keep their shared columns. The words are
+ * `.kp-action-list__main`: a title, a meta line whose parts are set apart
+ * by a dot, and an optional fold for a payload (the accordion's bare item,
+ * so it opens with the theme's fold motion). A row says its state on
+ * `data-kp-state` by a bar along its start edge that every row reserves,
+ * so a state moves nothing: `new` (unread), `active` (claimed, in flight),
+ * `warn`, `failed`, `next` (the next one up: the bar, a primary wash and
+ * the lead in the primary), `done` and `past` (quieter ink, not opacity).
+ * `.kp-action-list__group` is a heading row across the list (Upcoming,
+ * Past). Knobs [KT6]: `--kp-action-list-lead-gap`, `--kp-action-list-bar`
+ * (3px), `--kp-action-list-pad` (the row's inline padding),
+ * `--kp-action-list-next-wash` (6 %), `--kp-action-list-payload-max`. */
+    .kp-action-list--lead {
+        grid-template-columns: auto minmax(0, 1fr) repeat(var(--kp-action-count), auto);
+    }
+
+    .kp-action-list--lead > li {
+        padding-inline: var(--kp-action-list-pad, var(--kp-space-sm, 0.5rem));
+        border-inline-start: var(--kp-action-list-bar, 3px) solid transparent;
+    }
+
+    /* The lead sits on the title's first line: its box is one line of the
+     * title high, its content centred in it. */
+    .kp-action-list--lead > li > .kp-action-list__lead {
+        grid-column: 1;
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        align-self: start;
+        min-block-size: 1lh;
+        min-inline-size: 0;
+        margin-inline-end: var(--kp-action-list-lead-gap, var(--kp-space-xs, 0.25rem));
+    }
+
+    .kp-action-list--lead > li > .kp-action-list__main {
+        grid-column: 2;
+        min-inline-size: 0;
+    }
+
+    .kp-action-list--lead > li > .kp-row-actions {
+        grid-column: 3 / -1;
+    }
+
+    /* align-pkg-1019:action-lead:start
+     * The row's first line is one band as high as a control: the lead (a badge), the title's first line and the row's
+     * buttons all stand on that band's centre. The buttons were centred on the whole row, so beside a two-line row they sat
+     * 21 px below the badge (measure-align: audhd-recepten zero-prep, homelab inbox-list). A one-line row keeps its height:
+     * the band is the control height, which the buttons filled anyway. */
+    .kp-action-list--lead > li {
+        --kp-action-list-band: max(1lh, var(--kp-control-height, 2.25rem));
+        align-items: start;
+    }
+
+    .kp-action-list--lead > li > .kp-action-list__lead {
+        align-items: center;
+        min-block-size: var(--kp-action-list-band);
+    }
+
+    .kp-action-list--lead > li > .kp-action-list__main > .kp-action-list__title {
+        padding-block-start: calc((var(--kp-action-list-band) - 1lh) / 2);
+    }
+
+    .kp-action-list--lead > li > .kp-row-actions {
+        align-self: start;
+        min-block-size: var(--kp-action-list-band);
+    }
+    /* align-pkg-1019:action-lead:end */
+
+    .kp-action-list__main {
+        display: grid;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+    }
+
+    .kp-action-list__title {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-action-list__text {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-action-list__meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-action-list__meta > * {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* A dot after each part of the meta line that a plain part follows, kept
+     * with the part before it, so a line that wraps never starts with a dot;
+     * silent to a reader. Badges stand apart by their own plate. */
+    .kp-action-list__meta > :not(.kp-badge):has(+ :not(.kp-badge))::after {
+        content: '·' / '';
+        margin-inline-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The lead parts: an appointment's moment, the day over the hour. */
+    .kp-action-list__when {
+        display: grid;
+        justify-items: center;
+        line-height: 1.25;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-action-list__when > :first-child {
+        font-weight: 600;
+    }
+
+    .kp-action-list__when > :last-child:not(:first-child) {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* A payload under the row, folded: the bare accordion item. */
+    .kp-action-list__more > summary {
+        inline-size: fit-content;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        cursor: pointer;
+    }
+
+    .kp-action-list__more > summary:hover {
+        color: var(--foreground);
+    }
+
+    .kp-action-list__payload {
+        box-sizing: border-box;
+        max-block-size: var(--kp-action-list-payload-max, 16rem);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+        overflow: auto;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-xs, 0.75rem);
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    /* A heading row across the list. */
+    .kp-action-list > li.kp-action-list__group {
+        display: block;
+        padding-block: var(--kp-space-md, 1rem) var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .kp-action-list__group > :is(h2, h3, h4, h5, h6) {
+        margin: 0;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+    }
+
+    /* The row's state: a bar along the start edge (reserved by every row),
+     * a quieter ink for what is over. */
+    .kp-action-list--lead > li[data-kp-state='new'] {
+        border-inline-start-color: var(--primary);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='active'] {
+        border-inline-start-color: var(--info-foreground);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='warn'] {
+        border-inline-start-color: var(--warning-foreground);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='failed'] {
+        border-inline-start-color: var(--destructive);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='next'] {
+        border-inline-start-color: var(--primary);
+        background: color-mix(in oklab, var(--primary) var(--kp-action-list-next-wash, 6%), transparent);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead {
+        color: var(--primary);
+    }
+
+    .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead .kp-action-list__when > :last-child {
+        color: inherit;
+    }
+
+    .kp-action-list--lead > li:is([data-kp-state='done'], [data-kp-state='past']) :is(.kp-action-list__lead, .kp-action-list__title) {
+        color: var(--muted-foreground);
+    }
+
+    .kp-action-list--lead > li:is([data-kp-state='done'], [data-kp-state='past']) .kp-action-list__title {
+        font-weight: 500;
+    }
+
+    /* A row at work (setRowBusy, js/actions.js): its buttons say no to a
+     * press, and the pressed one shows the theme's spinner in place of its
+     * words, which keep their room, so no column moves. */
+    .kp-row-actions > [data-kp-busy] {
+        position: relative;
+    }
+
+    .kp-row-actions > [data-kp-busy] > :not(.kp-button__busy) {
+        flex: none;
+        visibility: hidden;
+    }
+
+    /* The spinner's own box, laid over the words; the spinner in it is the
+     * theme's, as the register draws it. */
+    .kp-button__busy {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+    }
+
+    .kp-button__busy > .kp-spinner {
+        --kp-spinner-size: 1em;
+    }
+
+    .kp-action-list > li[aria-busy='true'] .kp-row-actions > [aria-disabled='true'] {
+        cursor: progress;
+    }
+
+    /* Rows the keyboard moves through (attachRowKeys): the focused row
+     * wears the ring. */
+    [data-kp-row-keys] > li:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+    }
+
+    /* On a narrow list the rows stay subgrids of the list, so the lead column
+     * is still one width for every row; the words take the rest of the row
+     * and the buttons go under both. */
+    @container kp-action-list (max-width: 30rem) {
+        .kp-action-list--lead > li {
+            grid-template-columns: subgrid;
+        }
+
+        .kp-action-list--lead > li > .kp-action-list__lead {
+            grid-row: 1;
+        }
+
+        .kp-action-list--lead > li > .kp-action-list__main {
+            grid-column: 2 / -1;
+        }
+
+        .kp-action-list.kp-action-list--lead > li > .kp-row-actions {
+            grid-column: 1 / -1;
+        }
+    }
+

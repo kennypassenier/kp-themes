@@ -1,0 +1,226 @@
+/* @part: combobox: Combobox and tag input */
+    /* --- Combobox and tag input [TH39, TH41] ----------------------------- */
+
+    /* Block flow rather than a flex column [gap-11]. The list is positioned
+ * absolutely and used to hang from `top: 100%` of the whole box, so with
+ * the status line inside the box it opened a line below the input it
+ * belongs to. In block flow an absolutely positioned box with no `top`
+ * sits at its static position — directly after the input, whatever comes
+ * before it (a label, a row of tags) and whatever follows (the status).
+ * In a flex container that static position is the container's start, so
+ * the flex column had to go; the gap it gave is a margin now. */
+    .kp-combobox {
+        position: relative;
+        display: flow-root;
+    }
+
+    .kp-combobox > :where(label, .kp-field__label) {
+        display: block;
+    }
+
+    .kp-combobox > :not(:first-child, .kp-combobox__list, .kp-combobox__clear) {
+        margin-block-start: var(--kp-combobox-gap, 0.375rem);
+    }
+
+    /* The same ground, boundary, ink and size as .kp-field__input [gap-11]:
+ * the combobox read --card and --border where a field reads --background
+ * and --input, so a theme whose card and page differ showed two different
+ * boxes side by side in one form. */
+    .kp-combobox__input {
+        /* Border-box, or `width: 100%` plus padding and a border overflows the
+     * wrapper. Found by putting this on the showcase: at 320 px it pushed
+     * the page 10 px sideways and DI11 went red on all eleven themes. */
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        /* The field's box [scope-80]. */
+        min-height: var(--kp-control-height, 2.25rem);
+        padding: 0 0.625rem;
+        line-height: var(--kp-control-line-height, 1.25);
+        border: 1px solid var(--input);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--foreground);
+        font: inherit;
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
+    /* The theme's own timing, and only for someone who did not ask for less
+ * motion — the same guard every other transition in this file sits in. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-combobox__input {
+            transition:
+                border-color var(--fx-duration, 150ms) var(--fx-ease),
+                box-shadow var(--fx-duration, 150ms) var(--fx-ease);
+        }
+    }
+
+    .kp-combobox__input:focus-visible {
+        border-color: var(--border-strong);
+    }
+
+    /* The list floats over the page, so it needs a surface of its own and a
+ * boundary that survives against whatever is behind it. */
+    .kp-combobox__list {
+        position: absolute;
+        inset-inline: 0;
+        /* No top: the static position, directly under the input [gap-11]. */
+        z-index: var(--kp-z-popover, 20);
+        max-height: var(--kp-combobox-list-max-height, 15rem);
+        margin: 0.25rem 0 0;
+        padding: 0.25rem;
+        overflow-y: auto;
+        list-style: none;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        box-shadow: 0 8px 24px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    .kp-combobox__option {
+        padding: 0.375rem 0.625rem;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        cursor: pointer;
+    }
+
+    /* The highlight is the keyboard's position, not the mouse's: it is set by
+ * the arrow keys and mirrored on hover, so both agree about what Enter
+ * would take. `is-active` and aria-selected are written together. */
+    .kp-combobox__option.is-active {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        color: inherit;
+    }
+
+    .kp-combobox__option[hidden] {
+        display: none;
+    }
+
+    /* An option that cannot be chosen looks it [gap-11]: faded, and the
+ * pointer says no. The listbox already skips it for the arrows and the
+ * hover; it painted exactly like one that can be taken. */
+    .kp-combobox__option:is([aria-disabled='true'], [data-kp-disabled]) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* The "no results" row: in the list, where the eye already is, and not an
+ * option — nothing for Enter to take [gap-11]. */
+    .kp-combobox__empty {
+        padding: 0.375rem 0.625rem;
+        color: var(--muted-foreground);
+        cursor: default;
+    }
+
+    .kp-combobox__status {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* A combobox row in a form grid that has value text of its own [gapform-1019; homelab 55]: the value track is taken, so
+       attachComboboxes leaves the status under the input, and it made the row taller than its label. There it is read,
+       not shown: the live region stays in place for a screen reader ("11 results") and takes no room. A row without value
+       text of its own shows the status in its value track (js/combobox.js). */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__value, .kp-formrow__aside):not(.kp-combobox__status))
+        > :is(.kp-formgrid__control, .kp-formrow__control)
+        .kp-combobox__status {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    /* The drawn select [scope-54]: `select[data-kp-select]` gets a listbox in
+ * the combobox's own classes laid over it, so every register that answers
+ * the combobox list answers this one with the same rule. What is its own:
+ * js/combobox.js places it under the select (a flex column like .kp-field
+ * gives an absolute box no useful static position), and the value the box
+ * holds is marked the way the native picker marks it — weight and a check. */
+    [data-kp-select-list] {
+        box-sizing: border-box;
+        inset-inline: auto;
+    }
+
+    /* An open list lives in the top layer, where no container's clip-path or
+ * overflow reaches it (js/top-layer.js): a combobox's or a drawn select's
+ * options were out of reach inside a card in dark, cyberpunk, phantom and
+ * titanium. js/combobox.js places it in window coordinates under its field
+ * and as wide as the list was; the popover's UA inset, margin and ink are
+ * put back to the list's own. With no room below, it opens above the field
+ * at the same distance, with `data-kp-overlay-side="above"` written for a
+ * register that mirrors something [fix-30]. */
+    .kp-combobox__list:popover-open {
+        position: fixed;
+        inset: auto;
+        box-sizing: border-box;
+        margin: 0.25rem 0 0;
+        color: inherit;
+    }
+
+    [data-kp-select-list] > [data-kp-chosen] {
+        display: flex;
+        gap: var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    [data-kp-select-list] > [data-kp-chosen]::after {
+        content: var(--kp-glyph-check, '✓');
+        margin-inline-start: auto;
+    }
+
+    .kp-tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.375rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* A list toolbar's active filter is one line. A theme that folds the width of what arrives (formal rules a
+       part open from the start edge, js/motion.js animates its width from 0) would otherwise wrap its words to one
+       letter per line while it grows: a pill 279 px tall that pushed the page down until the arrival ended (Kenny,
+       kpadopt-controls toolbar · formal, 2026-10-16). Only there: a plain tag holding a sentence wraps inside its
+       pill, as approved (catalogue/feedback.html#tags). */
+    .kp-toolbar__active-list > .kp-tag {
+        white-space: nowrap;
+    }
+
+    .kp-tag__remove {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        /* 1.25rem is small, so the tap target is widened by padding on the tag
+     * rather than by growing the glyph. */
+        width: 1.25rem;
+        height: 1.25rem;
+        padding: 0;
+        border: 0;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: none;
+        color: inherit;
+        font: inherit;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .kp-tag__remove:hover {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+

@@ -1,0 +1,85 @@
+/* @part: anchors: Anchors under a form grid */
+@layer kp.components {
+    /* anchors-picker-1019:anchors-formgrid:start */
+    /* --- Anchors under a form grid [anchors-picker-1019; homelab 49] -------------------------------------------------
+     * A row of a `.kp-formgrid` is a subgrid with a cell per track, so the row's mark (js/anchors.js prepends it to the row, where
+     * a table puts it in its first cell) used to fall into the next free track and push the row's cells along. Now it stands in
+     * the label track, at the end of the label's own cell, on the label's first baseline, and the label keeps
+     * `--kp-anchor-room` free for it: every row's mark has one x. The mark of a group's heading stands in a column of its own
+     * at the heading's end edge, on the heading's first baseline: every heading's mark has one x too, whatever the heading says.
+     * Knob: --kp-anchor-room (the width the label cell keeps for the mark, 1.75rem). */
+    .kp-formgrid [data-kp-anchored='row'] > .kp-anchor {
+        grid-column: label;
+        grid-row: 1;
+        align-self: first baseline;
+        justify-self: end;
+        margin: 0;
+    }
+
+    .kp-formgrid [data-kp-anchored='row'] > :is(.kp-formgrid__label, .kp-formrow__label, dt) {
+        grid-row: 1;
+        padding-inline-end: var(--kp-anchor-room, 1.75rem);
+    }
+
+    .kp-formgrid [data-kp-anchored='heading'] {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: first baseline;
+        column-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-formgrid [data-kp-anchored='heading'] > .kp-anchor {
+        grid-column: 2;
+        margin: 0;
+    }
+
+    /* A narrow grid (the phone layout, align-grid-1019): the label spans the label track to the actions track on the
+       row's first line, so the mark stands at the end of that span; a fact's key keeps the label track. */
+    @container kp-formgrid (max-width: 36rem) {
+        /* To the last line, as the label does: a compact grid's named tracks are 0 px and its filler takes the width, so
+           `label-start / value-end` was a 0 px area and the mark stood at the row's start [homelab 133]. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) [data-kp-anchored='row'] > .kp-anchor {
+            grid-column: label-start / -1;
+            grid-row: 1;
+        }
+
+        /* A row with an action is a wrapping flex row on a phone, and its first child, the mark, took a line of its own above
+           the label (a "#" over the file name). The label goes first and takes what the mark leaves of the line; the mark ends
+           it, on the label's first baseline, at the row's end edge where the grid rows put it [homelab 133]. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)[data-kp-anchored='row']
+            > :is(.kp-formgrid__label, .kp-formrow__label) {
+            order: -2;
+            flex: 1 1 0;
+            min-inline-size: 0;
+            padding-inline-end: 0;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)[data-kp-anchored='row']
+            > .kp-anchor {
+            order: -1;
+            flex: 0 0 auto;
+            align-self: first baseline;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-kv__row[data-kp-anchored='row'] > .kp-anchor {
+            grid-column: label;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) [data-kp-anchored='row'] > :is(.kp-formgrid__label, .kp-formrow__label, dt) {
+            grid-row: 1;
+        }
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] [data-kp-anchored='row'] > .kp-anchor {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] [data-kp-anchored='row'] > :is(.kp-formgrid__label, .kp-formrow__label, dt) {
+        grid-row: 1;
+    }
+    /* anchors-picker-1019:anchors-formgrid:end */
+}
+

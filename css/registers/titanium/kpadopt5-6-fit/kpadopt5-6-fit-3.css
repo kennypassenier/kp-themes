@@ -1,0 +1,10 @@
+/* @part: kpadopt5-6-fit: kpadopt5/6 fit */
+/* ── kpadopt5/6 fit: the fold button of a code cell [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* "Show all 38 lines" sizes the button to its longest word; in a 200 px cell its wide capitals outgrew the button. */
+    [data-theme='titanium'] .kp-code--cell .kp-code__foot .kp-button {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+    }
+}
+

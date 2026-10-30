@@ -1,0 +1,73 @@
+/* @part: the-identity-mark: The identity mark */
+    /* ── The identity mark: a label plate; a pattern is a lit picture on a small screen ── */
+    [data-theme='nostromo'] .kp-idmark {
+        --kp-idmark-radius: var(--kp-sig-no-tape);
+        box-shadow: var(--kp-sig-no-raised);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-idmark--xs {
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-idmark--round {
+        border-radius: 50%;
+    }
+    [data-theme='nostromo'] .kp-idmark--pattern {
+        --kp-idmark-ink: hsl(from var(--kp-idmark-c) h s calc(l + 24));
+        border: 1px solid var(--secondary);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 0 6px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+    }
+    [data-theme='nostromo'] .kp-idmark--pattern .kp-idmark__pattern {
+        filter: drop-shadow(0 0 1.5px hsl(from var(--kp-idmark-c) h s calc(l + 24) / 0.8));
+    }
+    /* The corner glyph is a lamp on the plate's corner: it takes the plate's edge, not a paper halo. */
+    [data-theme='nostromo'] .kp-idmark--glyph::after {
+        box-shadow: 0 0 0 1.5px var(--card);
+    }
+    [data-theme='nostromo'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        background: var(--kp-sig-no-lens);
+    }
+    [data-theme='nostromo'] .kp-idmark[data-kp-idmark-empty] {
+        box-shadow: none;
+    }
+    /* The current mark is a key pushed in, ringed (G14). */
+    [data-theme='nostromo'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='nostromo'] .kp-idmark[data-kp-idmark-selected] {
+        box-shadow:
+            var(--kp-sig-no-well),
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary);
+    }
+    [data-theme='nostromo'] .kp-idmark-group > .kp-idmark,
+    [data-theme='nostromo'] .kp-idmark-group > .kp-idmark-group__more {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 1px 2px hsl(from var(--foreground) h s l / 0.25);
+    }
+    [data-theme='nostromo'] .kp-idmark-group__more {
+        --kp-idmark-radius: var(--kp-sig-no-tape);
+        font-family: var(--theme-font-mono);
+    }
+    /* Loading: a small glass, its lamp computing in the middle; no word in a plate this small. */
+    [data-theme='nostromo'] .kp-idmark.kp-skeleton {
+        border: 1px solid var(--secondary);
+        border-radius: var(--kp-sig-no-tape);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-idmark.kp-skeleton::after {
+        content: '' / '';
+        position: absolute;
+        inset: 32%;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+        filter: none;
+        -webkit-mask: none;
+        mask: none;
+    }
+

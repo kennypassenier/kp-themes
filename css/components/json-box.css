@@ -1,0 +1,149 @@
+/* @part: json-box: The JSON box */
+    /* --- The JSON box [kpadopt5] -------------------------------------------- */
+
+    /* js/json-field.js: a multiline field with line numbers, the tools beside it
+     * (Format, Minify, Wrap, Copy) and one status line under it that says what is
+     * wrong and where, or, quietly, that all is well. The textarea keeps the
+     * package's field look; only its face and its wrapping change. */
+    .kp-jsonfield {
+        container: kp-jsonfield / inline-size;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-jsonfield__tools {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-jsonfield__frame {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        min-inline-size: 0;
+    }
+
+    .kp-jsonfield__gutter {
+        flex: none;
+        box-sizing: border-box;
+        inline-size: calc(var(--kp-json-digits, 1) * 1ch + 1.5rem);
+        padding-block: calc(var(--kp-space-sm, 0.5rem) * 0.75);
+        padding-inline: 0 var(--kp-space-sm, 0.5rem);
+        overflow: hidden;
+        border: 1px solid var(--input);
+        border-inline-end: 0;
+        border-start-start-radius: var(--radius, 0.5rem);
+        border-end-start-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-code-size, var(--kp-text-sm, 0.8125rem));
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        user-select: none;
+    }
+
+    .kp-jsonfield:not([data-kp-json-gutter]) .kp-jsonfield__gutter {
+        display: none;
+    }
+
+    /* The numbers are laid over the gutter, not in it: a long text has more numbers than the box shows, and numbers that
+     * take part in the layout made the gutter (and so the whole frame) as tall as all of them. The gutter is exactly as tall
+     * as the text box and clips; the numbers move with the text's scroll [kpadopt5-r2]. */
+    .kp-jsonfield__gutter {
+        position: relative;
+    }
+
+    .kp-jsonfield__numbers {
+        position: absolute;
+        inset-block-start: calc(var(--kp-space-sm, 0.5rem) * 0.75);
+        inset-inline: 0 var(--kp-space-sm, 0.5rem);
+        will-change: transform;
+    }
+
+    .kp-jsonfield__number {
+        display: block;
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    .kp-jsonfield__number.is-error {
+        background: color-mix(in oklab, var(--destructive) 16%, transparent);
+        color: var(--destructive);
+        font-weight: 700;
+    }
+
+    .kp-jsonfield__input.kp-field__input {
+        flex: 1 1 auto;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-code-size, var(--kp-text-sm, 0.8125rem));
+        white-space: pre;
+        overflow-x: auto;
+        resize: none;
+        tab-size: 4;
+    }
+
+    .kp-jsonfield[data-kp-json-gutter] .kp-jsonfield__input.kp-field__input {
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+    }
+
+    .kp-jsonfield[data-kp-json-wrap='true'] .kp-jsonfield__input.kp-field__input {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        overflow-x: hidden;
+    }
+
+    .kp-jsonfield__mirror {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        visibility: hidden;
+        pointer-events: none;
+        box-sizing: border-box;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        line-height: var(--kp-line-height, 1.5);
+    }
+
+    .kp-jsonfield__status {
+        min-block-size: 1.5em;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-field-error-size, 0.8125rem);
+        line-height: var(--kp-line-height, 1.5);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-jsonfield[data-kp-json-state='invalid'] .kp-jsonfield__status {
+        color: var(--destructive);
+        font-weight: 600;
+    }
+
+    .kp-jsonfield[data-kp-json-state='invalid'] .kp-jsonfield__input.kp-field__input,
+    .kp-jsonfield[data-kp-json-state='invalid'] .kp-jsonfield__gutter {
+        border-color: var(--destructive);
+    }
+
+    .kp-jsonfield__help {
+        margin: 0;
+    }
+
+    @container kp-jsonfield (max-width: 30rem) {
+        .kp-jsonfield__gutter {
+            display: none;
+        }
+
+        .kp-jsonfield[data-kp-json-gutter] .kp-jsonfield__input.kp-field__input {
+            border-start-start-radius: var(--radius, 0.5rem);
+            border-end-start-radius: var(--radius, 0.5rem);
+        }
+
+        .kp-jsonfield__tools {
+            justify-content: flex-start;
+        }
+    }
+

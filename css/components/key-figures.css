@@ -1,0 +1,245 @@
+/* @part: key-figures: Key figures */
+    /* --- Key figures: the KPI strip and tile [scope-143] ------------------- */
+
+    /* A row of key figures. Every tile is as tall as the tallest, on every row
+ * the strip wraps to; inside a tile the label, the number and the trend sit
+ * on the same lines as the neighbours', and the sparkline or meter keeps to
+ * the bottom. */
+    .kp-kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-kpi-min, 9rem)), 1fr));
+        grid-auto-rows: 1fr;
+        gap: var(--kp-kpis-gap, var(--kp-space-md, 1rem));
+    }
+
+    .kp-kpi {
+        container: kp-kpi / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto 1fr auto;
+        gap: 0.125rem var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font: inherit;
+        text-align: start;
+        text-decoration: none;
+    }
+
+    .kp-kpi > * {
+        grid-column: 1 / -1;
+    }
+
+    /* A plain tile's label is never cut [kpi-label-cut-M1]: it wraps between
+ * words as wide as the tile is, and a word longer than the tile breaks.
+ * The tiles of a row stretch to the tallest, so a row stays one height;
+ * a trend tile and a strip with columns keep their one-line rule below. */
+    .kp-kpi__label {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        overflow-wrap: break-word;
+        text-transform: uppercase;
+        white-space: normal;
+    }
+
+    /* The number, its unit, and a note beside it ("avg 15 min"). */
+    .kp-kpi__value {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        font-size: var(--kp-kpi-value-size, 1.75rem);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.15;
+    }
+
+    .kp-kpi__value small {
+        margin-inline-start: -0.25rem;
+        color: var(--muted-foreground);
+        font-size: 0.55em;
+        font-weight: 500;
+    }
+
+    .kp-kpi__note {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 400;
+        letter-spacing: 0;
+        white-space: nowrap;
+    }
+
+    .kp-kpi__trend {
+        min-block-size: 1.4em;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: break-word;
+    }
+
+    .kp-kpi__delta {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* A change with a tone carries its status pair, the plate and its own
+ * ink, never one half on the card [fix-70, fix-99]: as an ink alone
+ * `--success-foreground` read 1.00:1 in high-contrast, Shade (light) and
+ * grotesk, `--destructive` 4.11:1 in solstice. Inline padding only, so the
+ * line keeps its height. */
+    .kp-kpi__delta[data-kp-tone] {
+        padding-inline: 0.3em;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-kpi__delta[data-kp-tone='good'] {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-kpi__delta[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-kpi__delta[data-kp-direction='up']::before {
+        content: '▲\00a0';
+    }
+
+    .kp-kpi__delta[data-kp-direction='down']::before {
+        content: '▼\00a0';
+    }
+
+    .kp-kpi__spark {
+        display: block;
+        inline-size: 100%;
+        block-size: var(--kp-kpi-spark-height, 1.75rem);
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        overflow: visible;
+        color: var(--chart-1);
+    }
+
+    .kp-kpi__spark-line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    /* The line over a soft area. */
+    .kp-kpi__spark-area {
+        fill: currentColor;
+        opacity: 0.12;
+    }
+
+    .kp-kpi[data-kp-tone='warning'] {
+        box-shadow: inset 3px 0 0 var(--warning-foreground);
+    }
+
+    /* The figure in a tone sits on that tone's status pair, the plate and
+ * its own ink, one rule for every tone [fix-70, fix-99]: as an ink alone on
+ * the card `--warning-foreground` read 1.00:1 in high-contrast and 1.04:1
+ * in Shade (light), `--destructive` 4.11:1 in solstice to 4.47:1 in
+ * synthwave. The plate hugs the figure (its unit and note take the plate's
+ * ink too); inline padding only, so the line keeps its height. */
+    .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        justify-self: start;
+        padding-inline: 0.25em;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value :is(small, .kp-kpi__note) {
+        color: inherit;
+    }
+
+    .kp-kpi[data-kp-tone='warning'] .kp-kpi__value {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-kpi[data-kp-tone='destructive'] .kp-kpi__value {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-kpi[data-kp-tone='warning'] {
+        --kp-kpi-meter-fill: var(--warning-foreground);
+    }
+
+    .kp-kpi[data-kp-tone='destructive'] {
+        --kp-kpi-meter-fill: var(--destructive);
+        /* Mixed with the frame that holds 3:1, not the hairline [fix-101]:
+         * with `--border` it read 2.07:1 (Lapis) to 2.94:1 on the page in
+         * eleven themes. */
+        border-color: color-mix(in oklab, var(--destructive) 55%, var(--border-strong));
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    /* A tile that is a link to its detail, or a filter toggle on this page. */
+    a.kp-kpi:hover,
+    .kp-kpi--toggle:hover {
+        border-color: var(--ring);
+    }
+
+    .kp-kpi--toggle {
+        cursor: pointer;
+    }
+
+    .kp-kpi--toggle:focus-visible,
+    a.kp-kpi:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    /* Pressed (a filter on): the primary edge over a primary wash, so the
+ * filters that are on read from across the room. */
+    .kp-kpi--toggle[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: color-mix(in oklab, var(--primary) 9%, var(--card));
+        box-shadow: none;
+    }
+
+    /* What a click does, beside the label: the consumer's words, one per
+ * state. The label gives way to it, never the other way round. */
+    .kp-kpi--toggle > .kp-kpi__label {
+        grid-column: 1;
+    }
+
+    /* [kpi-label-hint-1019] The label's track is never narrower than its
+ * longest word: the hint's `auto` track took what it asked for and left
+ * the label 29.5 px in a 148 px tile, so "Delivered" broke into "DEL / IVE
+ * / RED" (almanac 23). Short of room the hint's own words wrap in its
+ * track, and the hint's track is never narrower than its longest word
+ * either, so no word of either is ever cut. */
+    .kp-kpi--toggle:has(> .kp-kpi__hint) {
+        grid-template-columns: minmax(min-content, 1fr) minmax(min-content, auto);
+    }
+
+    .kp-kpi--toggle > .kp-kpi__hint {
+        text-align: end;
+    }
+
+    .kp-kpi > .kp-kpi__hint {
+        grid-row: 1;
+        grid-column: 2;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: inherit;
+    }
+
+    .kp-kpi__hint > [data-kp-when='on'],
+    .kp-kpi--toggle[aria-pressed='true'] .kp-kpi__hint > [data-kp-when='off'] {
+        display: none;
+    }
+
+    .kp-kpi--toggle[aria-pressed='true'] .kp-kpi__hint > [data-kp-when='on'] {
+        display: inline;
+        color: var(--primary);
+    }
+

@@ -1,0 +1,36 @@
+/* @part: end-of-the-signature: End of the signature */
+/* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='dark'] .kp-segmented {
+        --kp-seg-radius: 0;
+        --kp-seg-pad: 3px;
+        --kp-seg-size: 0.75rem;
+        --kp-seg-tracking: 0.06em;
+        --kp-seg-case: uppercase;
+        --kp-seg-thumb: var(--accent);
+        --kp-seg-thumb-ink: var(--primary);
+        --kp-seg-thumb-edge: inset 0 0 0 1px var(--border-strong);
+        --kp-seg-thumb-lift: inset 0 2px 0 var(--primary);
+        --kp-chip-radius: 0;
+        --kp-chip-on: var(--accent);
+        --kp-chip-on-ink: var(--primary);
+        --kp-chip-on-edge: var(--primary);
+    }
+    [data-theme='dark'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='dark'] .kp-toolbar__label {
+        letter-spacing: 0.1em;
+    }
+    [data-theme='dark'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='dark'] .kp-kbd {
+        --kp-kbd-radius: 0;
+        --kp-kbd-foot: 3px;
+        --kp-kbd-ground: var(--secondary);
+    }
+}
+

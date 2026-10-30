@@ -1,0 +1,118 @@
+/* @part: the-numbers-and-pictures: The numbers and pictures the grammar is made of */
+    /* ── The numbers and pictures the grammar is made of [Kenny, 2026-10-09;
+       themes/dark/CHARACTER.md §1] ────────────────────────────────────────
+       Dark passes a line. A pass is 660 ms at one pace (linear) and stops
+       dead; the film it lays turns, and settles 220 ms after the line has
+       stopped (880 ms in all, `--kp-sig-dk-time`); a loop is 2400 ms; a
+       group is crossed 60 ms apart. The line is a 2 px slice of the film
+       with the one glow the theme allows, 10 px of --chart-1 at 40 %. */
+    [data-theme='dark'] {
+        --kp-sig-dark-ease: var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+        --kp-sig-dark-c: 0.35rem;
+        --kp-sig-dk-time: 880ms;
+        --kp-sig-dk-loop: 2400ms;
+        --kp-sig-dk-r: 0px;
+        /* Which way the pass runs: from the start edge, so from the left on a
+           left-to-right page and from the right on a right-to-left one
+           [scope-143]. Five numbers say it for the mask (the edge it is laid
+           from), the line (its sign, and the side of its box the 2 px sits
+           on), the film behind a figure's letters and the clip of a small
+           part; `:dir(rtl)` below turns them. */
+        --kp-sig-dk-s: 1;
+        --kp-sig-dk-from: left;
+        --kp-sig-dk-end: 100%;
+        --kp-sig-dk-gdir: 90deg;
+        --kp-sig-dk-cut: 0 100% 0 0;
+        --kp-sig-dk-cw: 0.36;
+        --kp-sig-dk-line: linear-gradient(180deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4));
+        --kp-sig-dk-glow: drop-shadow(0 0 10px hsl(from var(--chart-1) h s l / 0.4));
+        /* A solid, for a mask: only its alpha is read. */
+        --kp-sig-dk-solid: linear-gradient(var(--foreground), var(--foreground));
+        /* A comet: the head is the line, the tail a third of the part long,
+           full film at the head and nothing at its end. */
+        --kp-sig-dk-tail: linear-gradient(
+            90deg,
+            transparent,
+            hsl(from var(--chart-4) h s l / 0.14) 38%,
+            hsl(from var(--chart-3) h s l / 0.3) 60%,
+            hsl(from var(--chart-2) h s l / 0.5) 80%,
+            hsl(from var(--chart-1) h s l / 0.8)
+        );
+        --kp-sig-dark-cut: polygon(
+            0 0,
+            calc(100% - var(--kp-sig-dark-c)) 0,
+            100% var(--kp-sig-dark-c),
+            100% 100%,
+            var(--kp-sig-dark-c) 100%,
+            0 calc(100% - var(--kp-sig-dark-c))
+        );
+        /* Four corner brackets in one ink, as background layers. */
+        --kp-sig-dark-bk: var(--border-strong);
+        --kp-sig-dark-arm: 0.6rem;
+        --kp-sig-dark-brackets:
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left top / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left top / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right top / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right top / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left bottom / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left bottom / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / 1px var(--kp-sig-dark-arm) no-repeat;
+    }
+
+    /* A right-to-left page is passed from its right edge, the line crossing
+       to the left, and the pass back is the same frames reversed as ever.
+       A left-to-right island inside it turns them back. */
+    [data-theme='dark']:dir(rtl),
+    [data-theme='dark'] [dir]:dir(rtl) {
+        --kp-sig-dk-s: -1;
+        --kp-sig-dk-from: right;
+        --kp-sig-dk-end: 0%;
+        --kp-sig-dk-gdir: 270deg;
+        --kp-sig-dk-cut: 0 0 0 100%;
+    }
+
+    [data-theme='dark'] [dir]:dir(ltr) {
+        --kp-sig-dk-s: 1;
+        --kp-sig-dk-from: left;
+        --kp-sig-dk-end: 100%;
+        --kp-sig-dk-gdir: 90deg;
+        --kp-sig-dk-cut: 0 100% 0 0;
+    }
+
+    /* The film turns on a pass: every part that is laid, taken off, pressed
+       or crossed writes the film on its own copy of the turn, so a turn of
+       one number turns every edge that wears it (and the parts inside it,
+       which inherit the number). At rest the turn is 0 and this is the
+       register's film. */
+    [data-theme='dark']
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-dialog,
+            dialog.kp-drawer,
+            .kp-menu,
+            .kp-popover,
+            .kp-toast,
+            .kp-tooltip,
+            .kp-card,
+            .kp-alert,
+            .kp-kpi,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-nav__menu,
+            [data-kp-leaving],
+            [data-kp-arriving]
+        ) {
+        --kp-iris: conic-gradient(
+            from calc(var(--kp-px) * 1turn + var(--kp-sig-dk-turn)),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+    }
+

@@ -1,0 +1,108 @@
+/* @part: the-grammar-as-tokens-g1: 0 · The grammar as tokens (G1, G4-G7) */
+    /* ── 0 · The grammar as tokens (G1, G4-G7) ─────────────────────────── */
+
+    [data-theme='pastel'] {
+        /* G1: the soft landing, passing its rest by 8 % at 75 % of the time
+           and settling once (half at 36 %, 90 % at 56 %). --fx-ease is the
+           same curve (themes/pastel/tokens.json). */
+        /* prettier-ignore */
+        --kp-sig-pa-land: linear(0 0%, 0.014 5%, 0.052 10%, 0.112 15%, 0.189 20%, 0.28 25%, 0.38 30%, 0.486 35%, 0.594 40%, 0.7 45%, 0.8 50%, 0.891 55%, 0.968 60%, 1.028 65%, 1.066 70%, 1.08 75%, 1.072 80%, 1.052 85%, 1.028 90%, 1.008 95%, 1 100%);
+        /* A size lands without passing its value (js/motion.js withoutOvershoot()
+           holds the landing the same way): the side navigation's width, a
+           group's rows, a chevron's turn. */
+        /* prettier-ignore */
+        --kp-sig-pa-land-size: linear(0 0%, 0.014 5%, 0.052 10%, 0.112 15%, 0.189 20%, 0.28 25%, 0.38 30%, 0.486 35%, 0.594 40%, 0.7 45%, 0.8 50%, 0.891 55%, 0.968 60%, 1 65%, 1 100%);
+        --kp-sidenav-ease: var(--kp-sig-pa-land-size);
+        /* The landing turned around, for a transition that takes back what
+           the landing brought (js/motion.js reversedEase() writes the same). */
+        /* prettier-ignore */
+        --kp-sig-pa-land-back: linear(0 0%, -0.008 5%, -0.028 10%, -0.052 15%, -0.072 20%, -0.08 25%, -0.066 30%, -0.028 35%, 0.032 40%, 0.109 45%, 0.2 50%, 0.3 55%, 0.406 60%, 0.514 65%, 0.62 70%, 0.72 75%, 0.811 80%, 0.888 85%, 0.948 90%, 0.986 95%, 1 100%);
+        /* G4: contact 220 (--fx-duration); one landing 560 (the pass 440
+           from 0, the part 440 from 120); a dialog's CSS entrance 840, which
+           js/motion.js plays in two thirds of it, 560; a group 60 apart; the
+           tack 360 after the landing; the wobble 800; a loop 2400. */
+        --kp-sig-pa-window: 560ms;
+        --kp-sig-pa-dialog: 840ms;
+        --kp-sig-pa-tack: 360ms;
+        --kp-sig-pa-wobble: 800ms;
+        --kp-sig-pa-loop: 2400ms;
+        /* G5: plum acts, sky is the second pass and nothing else, mint fills. */
+        --kp-sig-pa-pass-c: color-mix(in srgb, var(--fx-overprint) 85%, var(--background));
+        --kp-sig-pa-peel: hsl(from var(--primary) h s calc(l * 0.55));
+        --kp-sig-pastel-peel: var(--kp-sig-pa-peel);
+        /* G6: plates, controls, chips. */
+        --kp-sig-pa-r-plate: calc(var(--radius, 1rem) * 1.2);
+        --kp-sig-pa-r-ctl: 0.85rem;
+        --kp-sig-pa-r-chip: 999px;
+        /* G7: the pass's rest, off register, and the washi tape: mint bands
+           over the stripe colour (never a color-mix() stop inside the
+           repeating gradient, which Firefox 153 paints as hairlines). */
+        --kp-sig-pa-off: 6px;
+        --kp-sig-pa-tape-stripe: color-mix(in srgb, var(--accent-foreground) 25%, var(--accent));
+        --kp-sig-pa-tape-bg: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px), var(--kp-sig-pa-tape-stripe);
+        /* The pass's direction: toward the end of the line (RTL below). */
+        --kp-sig-pa-dir: 1;
+        --kp-sig-pa-corner: 0 0;
+        /* What a peeled corner shows: the ground the part lies on. */
+        --kp-sig-pa-ground: var(--background);
+        /* The package's knobs, set to the grammar (lessons 19, 23, 24, 37). */
+        --kp-open: reverse-close;
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+        /* G2: a group in reading order, 60 ms apart (a share of the 560 ms leave). */
+        --kp-leave-stagger: 0.1071;
+        --kp-size-max: 560ms;
+        /* The bar's hover dropdown and phone panel are held on screen for their close (lesson 36). */
+        --kp-nav-close-time: 560ms;
+        /* G9: a live change wobbles (js/update.js, `kp-sig-pastel-update-*`). */
+        --kp-update: wobble;
+        /* G10, G11: the caterpillar's pieces (js/loading-pieces.js). */
+        --kp-loading-pieces: caterpillar;
+        /* G15: the dashed line alone; the package's inner ring paints nothing. */
+        --kp-focus-ring-inner-width: 0px;
+    }
+
+    [data-theme='pastel']:dir(rtl),
+    [data-theme='pastel'] [dir='rtl'] {
+        --kp-sig-pa-dir: -1;
+        --kp-sig-pa-corner: 100% 0;
+    }
+
+    [data-theme='pastel'] [dir='ltr'] {
+        --kp-sig-pa-dir: 1;
+        --kp-sig-pa-corner: 0 0;
+    }
+
+    /* An edge part hangs from the corner at its edge (G3): the drawer and a
+       side navigation on the end edge swing from their top-end corner, the
+       other way round; their pass still goes toward the end. */
+    [data-theme='pastel'] :is(.kp-drawer, .kp-sidenav[data-kp-sidenav-side='end']) {
+        --kp-sig-pa-turn: calc(-1 * var(--kp-sig-pa-dir));
+        --kp-sig-pa-corner: calc(50% + 50% * var(--kp-sig-pa-dir)) 0;
+    }
+
+    /* A peeled corner on a plate shows the plate, not the page. */
+    [data-theme='pastel']
+        :is(
+            .kp-card,
+            .kp-dialog,
+            .kp-popover,
+            .kp-menu,
+            .kp-toast,
+            .kp-kpi,
+            .kp-grid__tile,
+            .kp-datatable,
+            .kp-sidenav,
+            .kp-nav,
+            .kp-calendar,
+            .kp-palette,
+            .kp-tour,
+            .kp-alarm__panel,
+            .kp-split__pane,
+            .kp-wizard
+        ) {
+        --kp-sig-pa-ground: var(--card);
+    }
+

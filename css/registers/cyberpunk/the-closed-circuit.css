@@ -1,0 +1,278 @@
+/* @part: the-closed-circuit: The closed circuit */
+    /* ── The closed circuit: press [Kenny: press = closed] ────────────────────
+       While the part is held down its circuit grid lights at 60 % and its ground takes the
+       pressed shade; the part does not move. */
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-grid-a: 0;
+        --kp-cp-grid-ink: hsl(from var(--kp-btn-fg) h s l / var(--kp-cp-grid-a));
+        background-image:
+            repeating-linear-gradient(to bottom, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(135deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-size:
+            calc(100% - 8px) calc(100% - 8px),
+            calc(100% - 8px) calc(100% - 8px),
+            100% var(--kp-button-slit),
+            var(--kp-button-notch) var(--kp-button-notch),
+            calc(100% - 4px) calc(100% - 4px);
+        background-position:
+            4px 4px,
+            4px 4px,
+            0 50%,
+            right bottom,
+            2px 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-button--mirror,
+    [data-theme='cyberpunk'] .kp-button[data-kp-direction='back'] {
+        background-image:
+            repeating-linear-gradient(to bottom, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, var(--kp-cp-grid-ink) 0 1px, transparent 1px 14px),
+            linear-gradient(to right, var(--kp-btn-ground) 0 3px, transparent 3px calc(100% - 3px), var(--kp-btn-ground) calc(100% - 3px)),
+            linear-gradient(225deg, transparent calc(50% - 2px), var(--kp-btn-frame) calc(50% - 2px)),
+            linear-gradient(var(--kp-btn-face), var(--kp-btn-face));
+        background-position:
+            4px 4px,
+            4px 4px,
+            0 50%,
+            left bottom,
+            2px 2px;
+    }
+
+    [data-theme='cyberpunk'] .kp-button:active:not(:disabled) {
+        --kp-cp-grid-a: 0.6;
+        --kp-btn-ground: var(--secondary);
+    }
+
+    [data-theme='cyberpunk']
+        :is(a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])):active {
+        --kp-cp-grid-a: 0.6;
+        --kp-cp-ground: var(--secondary);
+    }
+
+    [data-theme='cyberpunk'] .kp-menu__item:active:not(:is(:disabled, [aria-disabled='true'])) {
+        background:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px), var(--secondary);
+    }
+
+    /* A calendar day that is a button takes the same split edge and the same closed circuit as a
+       menu entry (square, so two inset shadows). The today ring stays under them; a day that
+       cannot be picked (disabled, loading) does not answer the pointer. */
+    [data-theme='cyberpunk'] .kp-calendar__day {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-day-low: var(--destructive);
+        --kp-cp-day-today: 0 0 transparent;
+        position: relative;
+        box-shadow:
+            inset 0 calc(-1 * var(--kp-cp-d)) 0 0 color-mix(in srgb, var(--kp-cp-day-low) calc(var(--kp-cp-p) * 100%), transparent),
+            inset calc(-1 * var(--kp-cp-d)) var(--kp-cp-d) 0 0 color-mix(in srgb, var(--accent) calc(var(--kp-cp-p) * 100%), transparent),
+            var(--kp-cp-day-today);
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day[data-kp-today] {
+        --kp-cp-day-today: inset 0 0 0 2px currentColor;
+    }
+
+    /* The neon variant of a status plate (calendar days, legend swatches, alerts): a void tinted
+       with the tone's hue, a neon edge, bright ink. The ink and the edge come from the theme's own
+       tokens (the status ink, red alarms in its hot tint); the tint is derived, never a colour of
+       its own. Every state is measured against its ground, AA 4.5:1. */
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate, .kp-alert) {
+        --kp-cp-neon-ground: hsl(from var(--kp-cp-neon-edge, transparent) h calc(s * 0.6) 8%);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='ok'],
+    [data-theme='cyberpunk'] .kp-alert--success {
+        --kp-cp-neon: var(--success-foreground);
+        --kp-cp-neon-edge: var(--success-foreground);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'],
+    [data-theme='cyberpunk'] .kp-alert--warning {
+        --kp-cp-neon: var(--warning-foreground);
+        --kp-cp-neon-edge: var(--warning-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-alert--info {
+        --kp-cp-neon: var(--info-foreground);
+        --kp-cp-neon-edge: var(--info-foreground);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'],
+    [data-theme='cyberpunk'] .kp-alert--destructive {
+        --kp-cp-neon: var(--fx-hot-alarm, var(--destructive));
+        --kp-cp-neon-edge: var(--destructive);
+    }
+
+    [data-theme='cyberpunk']
+        :is(
+            .kp-calendar__day[data-kp-tone='ok'],
+            .kp-calendar__day[data-kp-tone='warn'],
+            .kp-calendar__day[data-kp-tone='bad'],
+            .kp-calendar__swatch[data-kp-tone='ok'],
+            .kp-matrix__cell[data-kp-tone='ok'],
+            .kp-heat__swatch--plate[data-kp-tone='ok'],
+            .kp-calendar__swatch[data-kp-tone='warn'],
+            .kp-matrix__cell[data-kp-tone='warn'],
+            .kp-heat__swatch--plate[data-kp-tone='warn'],
+            .kp-calendar__swatch[data-kp-tone='bad'],
+            .kp-matrix__cell[data-kp-tone='bad'],
+            .kp-heat__swatch--plate[data-kp-tone='bad'],
+            .kp-alert--success,
+            .kp-alert--warning,
+            .kp-alert--info,
+            .kp-alert--destructive
+        ) {
+        background-color: var(--kp-cp-neon-ground);
+        color: var(--kp-cp-neon);
+        border-color: hsl(from var(--kp-cp-neon-edge) h s l / 0.85);
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+        box-shadow: inset 0 0 0 1px var(--kp-cp-neon-edge);
+    }
+
+    /* An alert's words are the tone's neon pulled toward white so a paragraph reads at a glance; its
+       label, icon bar and left edge keep the neon itself. */
+    [data-theme='cyberpunk'] .kp-alert:is(.kp-alert--success, .kp-alert--warning, .kp-alert--info, .kp-alert--destructive) {
+        color: hsl(from var(--kp-cp-neon) h calc(s * 0.6) 90%);
+        border-left-color: var(--kp-cp-neon-edge);
+    }
+
+    [data-theme='cyberpunk']
+        :is(.kp-alert--success, .kp-alert--warning, .kp-alert--info, .kp-alert--destructive)
+        :is(.kp-alert__label, .kp-alert__icon) {
+        color: var(--kp-cp-neon);
+    }
+
+    /* Days that have not happened yet, and the days of the neighbouring months, read in the cyan of
+       what is to be read, quietly; the neighbouring days keep their full ink instead of a veil. */
+    [data-theme='cyberpunk'] .kp-calendar__day:is([data-kp-tone='future'], [data-kp-tone='before']),
+    [data-theme='cyberpunk'] .kp-calendar__swatch:is([data-kp-tone='future'], [data-kp-tone='before']) {
+        border-color: hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__grid td[data-kp-pad] > .kp-calendar__pad {
+        opacity: 1;
+        color: hsl(from var(--muted-foreground) h s calc(l - 6));
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day[data-kp-tone='bad'] {
+        --kp-cp-day-low: var(--destructive);
+    }
+
+    /* The count under a day's number clears the plate's lower edge (a plate's words stand 4 px clear). */
+    [data-theme='cyberpunk'] .kp-calendar__day {
+        padding-block-end: 0.3125rem;
+    }
+
+    /* A log line the reader is pointed at washes each cell it is made of: the wash grows a quarter
+       rem past the words on both sides. The wash is the cell's own ground with two hard shadows
+       a quarter rem to either side, so no cell box moves or grows: a log's four columns stand at
+       the same x on a current line as on every other (padding with a negative margin put the
+       cell's box 4 px left of the column). */
+    [data-theme='cyberpunk'] .kp-log__line[data-kp-current] > * {
+        box-shadow:
+            -0.25rem 0 0 var(--muted),
+            0.25rem 0 0 var(--muted);
+    }
+
+    /* A switch's words end a half rem before the label's edge, where its brackets are drawn. */
+    [data-theme='cyberpunk'] .kp-switch {
+        padding-inline-end: 0.5rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day:active:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+        background-image:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* In: the pose arrives in four ticks (3, 2, 1, 0 left); out: the same four the
+           other way round, and only then does the part count as at rest. */
+        [data-theme='cyberpunk']
+            :is(
+                .kp-button,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
+        [data-theme='cyberpunk']
+            :is(
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):hover {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-button,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled):focus-visible,
+        [data-theme='cyberpunk']
+            :is(
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']),
+                .kp-menu__item
+            ):hover:focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+    }
+

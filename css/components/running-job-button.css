@@ -1,0 +1,54 @@
+/* @part: running-job-button: A running-job button */
+    /* --- A running-job button [kpadopt-nav] ------------------------------- */
+
+    /* The homelab dashboard's pill ("Updating gateway · step 3 of 35"): a button
+ * (the theme's own, any `.kp-button`) with the theme's own spinner in front
+ * and a label that gives way. `kp-button--live` makes it a row that never
+ * grows past --kp-live-max (30rem), cuts its long label with an ellipsis, and,
+ * in a container narrower than 40rem (the nav wrapper is one), swaps the long
+ * label for the short one: the box never empties. Markup:
+ *
+ *   <button class="kp-button kp-button--sm kp-button--live" hidden>
+ *     <span class="kp-spinner kp-button__spin" aria-hidden="true"></span>
+ *     <span class="kp-button__short">Running</span>
+ *     <span class="kp-button__long">Updating gateway · step 3 of 35</span>
+ *   </button>
+ *
+ * `hidden` takes it out of the bar without a gap. */
+    .kp-button--live {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        max-inline-size: min(100%, var(--kp-live-max, 30rem));
+        white-space: nowrap;
+    }
+
+    .kp-button--live[hidden] {
+        display: none;
+    }
+
+    .kp-button__spin {
+        --kp-spinner-size: 0.75rem;
+        flex: none;
+    }
+
+    .kp-button__long {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .kp-button__short {
+        display: none;
+    }
+
+    @container (max-width: 40rem) {
+        .kp-button--live .kp-button__long {
+            display: none;
+        }
+
+        .kp-button--live .kp-button__short {
+            display: inline;
+        }
+    }
+

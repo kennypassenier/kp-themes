@@ -1,0 +1,329 @@
+/* @part: progress-spinner-skeleton: Progress, spinner, skeleton */
+    /* --- Progress, spinner, skeleton ------------------------------------- */
+
+    .kp-progress__wrap {
+        /* A row across its column, the bar taking what the reading leaves [width-fill-1026]: as an inline-flex box it
+         * sized to its content, and a bar with no content of its own then had no width at all. */
+        display: flex;
+        align-items: center;
+        gap: calc(var(--kp-space-sm) * var(--kp-progressbar-scale, 1));
+        /* Never wider than its container: the bar inside gives way, so a
+         * phone does not scroll sideways (DI11). */
+        max-inline-size: 100%;
+    }
+
+    /* A lone bar beside its reading. The bar has no content of its own to
+ * size by (its parts are positioned), so inside a shrink-to-fit row it
+ * asks for its full width and gives way on a narrow screen, rather than
+ * collapsing to nothing. */
+    .kp-progress__wrap > .kp-progressbar {
+        /* It takes the rest of the row beside its reading; --kp-progressbar-max-width caps it [width-fill-1026]. */
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    /* A group of bars reads as a group [fix-64]. Kenny, 2026-09-20:
+ * "Elementen beginnen op vaste punten, niet afhankelijk van de lengte van
+ * andere elementen … of beginnen allemaal op hetzelfde punt als ze
+ * verschoven worden, dat punt wordt dan bepaald door het langste woord."
+ *
+ * One label column, one track column, one reading column, and every row
+ * gives its three parts to them: a bar behind "Memory" starts where the
+ * bar behind "CPU" starts, and the column is as wide as the longest label
+ * in the group and no wider. `display: contents` on the row is what puts
+ * its parts in the grid — the row itself paints nothing, so it has
+ * nothing to lose by not being a box.
+ *
+ * A single bar keeps `.kp-progress__wrap` on its own, where there is no
+ * group to line up with. */
+    .kp-progress-group {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-progress-group-gap, calc(var(--kp-space-xs) * var(--kp-progress-group-scale, 1)))
+            calc(var(--kp-space-sm) * var(--kp-progress-group-scale, 1));
+    }
+
+    /* A failed bar's row gives way to the failed plate (js/progressbar.js setProgressFailed) [kyu-plates-1019]; in a group the plate
+     * takes every column. */
+    .kp-progress__wrap[hidden],
+    .kp-progress-group .kp-progress__wrap[hidden] {
+        display: none;
+    }
+
+    .kp-progressbar__plate {
+        flex: none;
+    }
+
+    .kp-progress-group > .kp-progressbar__plate {
+        grid-column: 1 / -1;
+    }
+
+    .kp-progress-group .kp-progress__wrap {
+        display: contents;
+    }
+
+    .kp-progress-group .kp-progress__wrap > .kp-progressbar,
+    .kp-progress-group > .kp-progressbar {
+        /* In a group the track takes the column it was given, rather than
+     * the width a lone bar defaults to. */
+        inline-size: 100%;
+        max-inline-size: none;
+    }
+
+    .kp-progress__label {
+        font-size: var(--kp-progressbar-text, var(--kp-text-sm, 0.8125rem));
+        color: var(--muted-foreground);
+    }
+
+    .kp-progress-group .kp-progress__value {
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-progress__value {
+        font-size: var(--kp-progressbar-text, var(--kp-text-sm, 0.8125rem));
+        color: var(--muted-foreground);
+    }
+
+    /* A skeleton comes in the shape of what it stands in for, and its gap is
+ * a knob rather than an inline style nothing could beat [KT6]. */
+    .kp-skeleton--circle {
+        inline-size: var(--kp-skeleton-circle, 3rem);
+        border-radius: 50%;
+        aspect-ratio: 1;
+    }
+
+    .kp-skeleton + .kp-skeleton {
+        margin-block-start: var(--kp-skeleton-gap, 0.375rem);
+    }
+
+    /* The progress bar [scope-140]. It replaced `<progress class="kp-progress">`
+ * in 9.0.0, because a native <progress> has two pseudo-elements in one
+ * engine, one in the other, and nothing a theme can give a shape: every
+ * register drew the same rounded strip. This is one box with three parts
+ * every register may draw its own way — the track, the fill and the head on
+ * the fill's leading edge — and nothing outside the bar:
+ *
+ *   <div class="kp-progressbar" role="progressbar" aria-label="…"
+ *        aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"
+ *        style="--kp-value: 0.35">
+ *     <span class="kp-progressbar__track" aria-hidden="true">
+ *       <span class="kp-progressbar__fill"></span>
+ *       <span class="kp-progressbar__head"></span>
+ *     </span>
+ *   </div>
+ *
+ * --kp-value is the share done, 0 to 1; js/progressbar.js keeps it in step
+ * with aria-valuenow, so a consumer may set either. `data-kp-indeterminate`
+ * (and no aria-valuenow) is "busy, no idea how far". --kp-steps is how many
+ * segments a segmented register draws. The box is one line high whatever
+ * happens inside it, never wraps, and keeps its width from the first frame;
+ * the fill moves inside it.
+ *
+ * Knobs: --kp-progressbar-height (0.75rem), --kp-progressbar-max-width
+ * (none: the bar fills its column [width-fill-1026]), --kp-progressbar-duration (240ms) and
+ * --kp-progressbar-ease (ease-out), the values the approved research round
+ * used (research/progress-signature/base.css).
+ *
+ * Three sizes [Kenny, 2026-10-05: "zodat dit de kleine is, een midden en
+ * een grotere optie"]: the bar as it was is the small one, and
+ * `.kp-progressbar--md` and `.kp-progressbar--lg` are the other two. A size
+ * is one number, --kp-progressbar-scale (1, 1.5, 2), that every part of the
+ * drawing is multiplied by — the base track here and each register's own
+ * bar, its height and its glyphs, cells and pitches alike — so a theme's bar
+ * grows as one drawing rather than as a taller box around the same marks.
+ * 1.5 and 2 because every register's small height is a whole multiple of
+ * 2px (12 to 22px), so both steps land on whole pixels in every theme; the
+ * reading beside the bar steps up the type scale with it (13, 16, 18px)
+ * through --kp-progressbar-text. The size sits on the bar; the wrap and the
+ * group around it read it from there, so the label and the gaps follow. */
+    .kp-progressbar {
+        --kp-value: 0;
+        --kp-steps: 10;
+        --kp-progressbar-scale: 1;
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        position: relative;
+        display: block;
+        inline-size: 100%;
+        max-inline-size: var(--kp-progressbar-max-width, none); /* fills its column; a page caps it with the knob [width-fill-1026] */
+        block-size: var(--kp-progressbar-height);
+        contain: layout paint;
+    }
+
+    .kp-progressbar__track {
+        container-type: inline-size;
+        position: absolute;
+        inset: 0;
+        display: block;
+        overflow: hidden;
+        border-radius: calc(var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)) * var(--kp-progressbar-scale, 1));
+        background: var(--muted);
+    }
+
+    /* The sizes: one number each, set on the bar (which states its own, so
+ * an ancestor's never leaks into a small bar) and read by the row around
+ * it, so the reading and the gap grow with the track. A group takes the
+ * gaps of the largest size it holds and gives no size to its rows. */
+    .kp-progressbar--md,
+    .kp-progress__wrap:has(> .kp-progressbar--md) {
+        --kp-progressbar-scale: 1.5;
+        --kp-progressbar-text: var(--kp-text-md, 1rem);
+    }
+
+    .kp-progressbar--lg,
+    .kp-progress__wrap:has(> .kp-progressbar--lg) {
+        --kp-progressbar-scale: 2;
+        --kp-progressbar-text: calc(var(--kp-text-md, 1rem) * 1.125);
+    }
+
+    .kp-progress-group:has(.kp-progressbar--md) {
+        --kp-progress-group-scale: 1.5;
+    }
+
+    .kp-progress-group:has(.kp-progressbar--lg) {
+        --kp-progress-group-scale: 2;
+    }
+
+    /* The fill spans the track and is clipped to the value, so a pattern in
+ * it never stretches and nothing is laid out again as the value moves:
+ * only clip-path and transform change [compositor-only motion]. */
+    .kp-progressbar__fill {
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+    }
+
+    /* The head rides on the fill's leading edge; a register gives it a shape
+ * or leaves it empty. 100cqi is the track's width, the track being the
+ * inline-size container. */
+    .kp-progressbar__head {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        transform: translateX(calc(var(--kp-value) * 100cqi));
+    }
+
+    /* Busy, standing still: diagonal stripes in the accent across the whole
+ * track, so a reader who asked for less motion sees "working" and never a
+ * share that is not there [gap-11 — a still fill at 30% would read as 30%
+ * done]. Without that preference the guard below turns it into the sweep. */
+    .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        clip-path: none;
+        background-color: transparent;
+        background-image: linear-gradient(-45deg, var(--primary) 25%, transparent 25% 50%, var(--primary) 50% 75%, transparent 75%);
+        background-size: var(--kp-progressbar-height) var(--kp-progressbar-height);
+    }
+
+    .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-progressbar__fill {
+            transition: clip-path var(--kp-progressbar-duration, 240ms) var(--kp-progressbar-ease, ease-out);
+        }
+
+        .kp-progressbar__head {
+            transition: transform var(--kp-progressbar-duration, 240ms) var(--kp-progressbar-ease, ease-out);
+        }
+
+        /* A solid band a third of the track wide, sweeping across it: a
+     * transform only, so it runs on the compositor. */
+        .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline-end: auto;
+            inline-size: 30%;
+            background: var(--primary);
+            animation: kp-progressbar-sweep 1400ms ease-in-out infinite;
+        }
+    }
+
+    @keyframes kp-progressbar-sweep {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(340%);
+        }
+    }
+
+    /* A register draws its own motion inside the bar, and a reader who asked
+ * for less of it gets none, whichever register drew it: every animation
+ * inside the bar ends on its first frame and nothing transitions. The
+ * `!important` is what reaches into kp.register from this earlier layer
+ * (an important declaration in an earlier layer wins over every later
+ * one), and it is the research round's own rule, kept as approved. */
+    @media (prefers-reduced-motion: reduce) {
+        .kp-progressbar *,
+        .kp-progressbar *::before,
+        .kp-progressbar *::after {
+            animation-duration: 0s !important;
+            animation-iteration-count: 1 !important;
+            transition: none !important;
+        }
+    }
+
+    .kp-spinner {
+        display: inline-block;
+        inline-size: var(--kp-spinner-size, 1.25rem);
+        block-size: var(--kp-spinner-size, 1.25rem);
+        /* The track is the head at a quarter of its alpha, not --border-strong:
+     * in brutalism both were black and nothing visibly turned. Same hue,
+     * different weight, in every theme by construction [KT8]. */
+        border: 2px solid hsl(from var(--primary) h s l / 0.25);
+        border-block-start-color: var(--primary);
+        border-radius: 50%;
+    }
+
+    .kp-skeleton {
+        display: block;
+        block-size: var(--kp-skeleton-height, 1rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+    }
+
+    /* After the base rule, so the shape's own size wins at equal specificity:
+ * a block is as tall as it says and a circle is as tall as it is wide. */
+    .kp-skeleton--block {
+        block-size: var(--kp-skeleton-block, 6rem);
+    }
+
+    .kp-skeleton--circle {
+        block-size: auto;
+    }
+
+    /* Both of these move, so both are guarded: DI7 is not a preference to
+ * honour where convenient. A spinner that keeps spinning for someone who
+ * asked for stillness is the exact complaint the setting exists for.
+ * Neither animation opposes its own direction, so neither approaches the
+ * three-flashes threshold of DI5 — check-motion.mjs measures that. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-spinner {
+            animation: kp-spin var(--kp-spinner-duration, 900ms) linear infinite;
+        }
+
+        .kp-skeleton {
+            /* A literal, not a knob: the pulse changes luminance and DI5 pins it
+     * above the flash threshold [KT6]. */
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+    }
+
+    @keyframes kp-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-pulse {
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.6;
+        }
+    }
+

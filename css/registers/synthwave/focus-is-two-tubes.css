@@ -1,0 +1,147 @@
+/* @part: focus-is-two-tubes: Focus is two tubes on every part that takes it */
+    /* ── Focus is two tubes on every part that takes it [G14, focus = rails;
+       DI2; Kenny, 2026-10-07 23:00] ────────────────────────────────────────
+       One rule for the rest of the package's focusable parts, so no part is
+       left on the global ring (a contrast outline and an inner ring, which is
+       the other themes'). `:focus-visible` only: a click leaves nothing
+       behind. A part that sits inside a frame, a cell, a row or a scroller
+       takes the rails inside it; a link, a mark or a plate takes them outside.
+       Forced colours repaint an outline (below), since a box-shadow is not
+       drawn there. ──────────────────────────────────────────────────────── */
+    [data-theme='synthwave']
+        :is(
+            .kp-tab,
+            .kp-pagination a,
+            .kp-pagination button,
+            .kp-breadcrumb a,
+            .kp-accordion__summary,
+            .kp-tree [role='treeitem'],
+            .kp-table :is(th, td, button, a),
+            .kp-combobox__input,
+            .kp-combobox__list [role='option'],
+            .kp-combobox button,
+            .kp-calendar__day,
+            .kp-datepicker__day,
+            .kp-chart__source,
+            .kp-chart-zoom__reset,
+            .kp-chart__release,
+            .kp-chart__show-all,
+            .kp-chart__plot,
+            .kp-kpi__chart-plot,
+            .kp-kpi__link,
+            .kp-wizard [data-kp-step],
+            .kp-grid__tile,
+            .kp-sidenav__link,
+            .kp-nav__link,
+            .kp-nav__menu a,
+            .kp-nav__search-trigger,
+            .kp-nav__toggle,
+            .kp-tag__remove,
+            .kp-colorpicker__swatch,
+            .kp-split__separator,
+            .kp-form__summary,
+            .kp-theme-option,
+            .kp-palette__input,
+            .kp-palette [role='option'],
+            .kp-theme-menu__list :is(button, [role='option']),
+            .kp-datepicker button,
+            .kp-table-wrap,
+            .kp-sidenav__category-toggle,
+            .kp-nav__disclosure,
+            input[type='range'],
+            .kp-field__input,
+            textarea,
+            select,
+            summary
+        ):focus-visible {
+        outline: none;
+        box-shadow: var(--kp-sw-rails-in);
+    }
+
+    /* A slider paints no inset shadow (its track is the browser's), so its two tubes run outside it
+       (Firefox Tab audit, research/all-themes/_audit/tab-paint.mjs: 0 px changed with the inset ones).
+       The attribute twice outranks the list above, whose :is() takes its most specific entry. */
+    [data-theme='synthwave'] input[type='range'][type='range']:focus-visible {
+        box-shadow: var(--kp-sw-rails-out);
+    }
+
+    /* The option a list marks as the one the keyboard is on (`aria-activedescendant`
+       keeps the focus in the input) takes the same two tubes, while the input
+       has the keyboard. */
+    [data-theme='synthwave']
+        :is(
+            .kp-combobox:has(.kp-combobox__input:focus-visible) .kp-combobox__option.is-active,
+            .kp-palette:has(.kp-palette__input:focus-visible) .kp-palette__option.is-active
+        ) {
+        box-shadow: var(--kp-sw-rails-in);
+    }
+
+    /* A row that takes the focus rails across its cells, its two ends closing the
+       sides. */
+    [data-theme='synthwave'] .kp-table tr:focus-visible > :is(th, td) {
+        box-shadow:
+            inset 0 var(--kp-sw-rail) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * 2) 0 0 var(--focus-ring-contrast),
+            inset 0 calc(var(--kp-sw-rail) * -1) 0 0 var(--kp-core),
+            inset 0 calc(var(--kp-sw-rail) * -2) 0 0 var(--focus-ring-contrast);
+    }
+
+    [data-theme='synthwave'] .kp-table tr:focus-visible > :first-child {
+        box-shadow:
+            var(--kp-sw-rails-in),
+            inset 1px 0 0 0 var(--focus-ring);
+    }
+
+    [data-theme='synthwave'] .kp-table tr:focus-visible > :last-child {
+        box-shadow:
+            var(--kp-sw-rails-in),
+            inset -1px 0 0 0 var(--focus-ring);
+    }
+
+    [data-theme='synthwave'] .kp-table tr:focus-visible {
+        outline: none;
+    }
+
+    /* A link in running text and the small marks stand on their own: the rails
+       sit outside them, close, and their own glow stays. */
+    [data-theme='synthwave']
+        :is(
+            a:not(
+                .kp-button,
+                .kp-kpi,
+                .kp-nav__link,
+                .kp-nav__menu a,
+                .kp-sidenav__link,
+                .kp-breadcrumb a,
+                .kp-pagination a,
+                .kp-table a,
+                .kp-menu__item
+            ),
+            .kp-field__check,
+            .kp-switch__input,
+            .kp-radio
+        ):focus-visible {
+        outline: none;
+        box-shadow:
+            var(--kp-sw-rails-out),
+            0 0 12px 0 hsl(from var(--primary) h s l / 0.6);
+    }
+
+    /* Whatever else takes the keyboard (a handle, a theme swatch, a custom
+       widget with a role) is a part like any other: the same two tubes inside
+       it, at almost no specificity, so every rule above and any consumer's own
+       wins. The network graph is left as it is (it is no theme's target). */
+    :where([data-theme='synthwave'])
+        :where(button, [role='button'], [role='tab'], [role='menuitem'], [role='option'], [role='gridcell'], [tabindex]):not(
+            .kp-graph *
+        ):focus-visible {
+        outline: none;
+        box-shadow: var(--kp-sw-rails-in);
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='synthwave'] :focus-visible {
+            outline: 2px solid Highlight;
+            outline-offset: 2px;
+        }
+    }

@@ -1,0 +1,259 @@
+/* @part: card: Cards, windows and containers */
+    /* ── Cards, windows and containers ─────────────────────────────────── */
+
+    [data-theme='solstice'] .kp-card {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+
+    /* The dossier: the stamp rides a slight rotation the way a printed
+       tag would sit on a folder, and the redactions are the mark hook's
+       own emphasis reveal, styled below. */
+    [data-theme='solstice'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        rotate: -2deg;
+        background: var(--accent);
+        color: var(--accent-foreground);
+        font-weight: 700;
+        font-size: 0.6875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-radius: 4px;
+        padding: 0.35rem 0.6rem;
+    }
+
+    [data-theme='solstice'] .kp-card[data-kp-open]::before {
+        content: attr(data-kp-label-open);
+    }
+
+    /* The redactions: three marks inside the dossier, covered by a bar in
+       the theme's own boundary colour until the trigger opens the file,
+       then lifted one after another, right to left — the demo's own
+       clip-path direction. The bar is the phrase's own background, 1px
+       inside its padding and cloned onto every line the phrase takes, so a
+       phrase that wraps is covered line by line [fix-33, scope-93]; a bar
+       on an absolutely positioned ::after covered none of it. A background
+       paints under the words rather than over them, and the bar is not the
+       words' colour, so the words wear no ink while the bar is there and
+       take it back once their bar has gone. */
+    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark {
+        position: relative;
+        background: linear-gradient(var(--border-strong), var(--border-strong)) 1px center / calc(100% - 2px) calc(100% - 2px) no-repeat;
+        color: transparent;
+        padding: 0.05em 0.15em;
+        font-weight: 400;
+        border-radius: 3px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+    }
+
+    [data-theme='solstice'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        background-size: 0% calc(100% - 2px);
+        color: var(--card-foreground);
+    }
+
+    /* Windows: a plain popover panel with the demo's soft drop shadow —
+       no bevel, no ramp; the softest radius in the set doing the work
+       DI9's "no texture" leaves it to do. */
+    [data-theme='solstice'] .kp-dialog,
+    [data-theme='solstice'] .kp-popover,
+    [data-theme='solstice'] .kp-menu,
+    [data-theme='solstice'] .kp-toast,
+    [data-theme='solstice'] .kp-tooltip,
+    [data-theme='solstice'] .kp-confirm,
+    [data-theme='solstice'] .kp-datepicker__panel,
+    [data-theme='solstice'] .kp-combobox__list,
+    [data-theme='solstice'] .kp-palette,
+    [data-theme='solstice'] .kp-theme-menu__list {
+        box-shadow: 0 24px 56px var(--kp-shadow-deep);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='solstice'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='solstice'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='solstice'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='solstice'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='solstice'] .kp-toast--destructive,
+    [data-theme='solstice'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='solstice']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    [data-theme='solstice'] .kp-toasts {
+        gap: var(--kp-space-sm);
+    }
+
+    [data-theme='solstice'] .kp-alert {
+        border-radius: var(--radius);
+    }
+
+    /* A failed area is the red sky (G13, the busy failure decided as r2-so-failure-1): the dark card plate, the wash rising
+       from its foot, the foot edge and a 1 px ring in the red, the words in the lifted red ink. The package's flat
+       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light, so EVERY destructive
+       alert is the red sky, whichever part draws it (stateplate, runs, dated, card, transfer, rating) [t56-eye-1018]. */
+    [data-theme='solstice'] .kp-alert--destructive {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        color: var(--foreground);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure) :is(.kp-stateplate__title, strong),
+    [data-theme='solstice'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+
+    /* The failure sentence is set in the display serif at heading size, like the stateplate's, whichever part draws it. */
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-runs__failure, .kp-dated__failure, .kp-transfer__failure) strong {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        font-size: calc(var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)) * 1.15);
+        line-height: 1.25;
+    }
+
+    [data-theme='solstice'] .kp-grid {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='solstice'] .kp-grid__tile {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-split {
+        gap: 1px;
+    }
+
+    [data-theme='solstice'] .kp-split__pane {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-split__separator {
+        background: var(--border);
+    }
+
+    /* ── Footer ───────────────────────────────────────────────────────── */
+
+    [data-theme='solstice'] .kp-footer {
+        border-top: 1px solid var(--border);
+    }
+
+    [data-theme='solstice'] .kp-footer h4 {
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='solstice'] .kp-footer a {
+        color: var(--muted-foreground);
+        text-decoration: none;
+    }
+
+    [data-theme='solstice'] .kp-footer a:hover {
+        color: var(--primary);
+    }
+
+    /* ── Badges, tags, status ───────────────────────────────────────────── */
+
+    [data-theme='solstice'] .kp-badge,
+    [data-theme='solstice'] .kp-tag {
+        border-radius: var(--radius);
+        font-weight: 600;
+    }
+
+    [data-theme='solstice'] .kp-health {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='solstice'] .kp-health__dot {
+        border-radius: 50%;
+    }
+
+    [data-theme='solstice'] .kp-skeleton {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='solstice'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='solstice'] .kp-empty__title {
+        font-weight: 400;
+    }
+
+    [data-theme='solstice'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes: identifiers in the mono face, unornamented ───────── */
+
+    [data-theme='solstice'] .kp-id,
+    [data-theme='solstice'] .kp-url,
+    [data-theme='solstice'] .kp-numeric,
+    [data-theme='solstice'] .kp-timestamp,
+    [data-theme='solstice'] .kp-masked,
+    [data-theme='solstice'] .kp-copyable,
+    [data-theme='solstice'] .kp-truncate,
+    [data-theme='solstice'] .kp-cell-break,
+    [data-theme='solstice'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='solstice'] .kp-copyable__button {
+        border-radius: calc(var(--radius) - 3px);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='solstice'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='solstice'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+

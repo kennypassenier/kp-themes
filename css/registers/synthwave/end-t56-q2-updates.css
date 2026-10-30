@@ -1,0 +1,11 @@
+/* @part: end-t56-q2-updates: end t56-q2 updates */
+/* ── end t56-q2 updates ── */
+
+/* ── t56-q2 choose: the waiting picker's panel fits its room ── */
+@layer kp.signature {
+    /* The panel that stands for an open list (18 rem) reached 26 px past the 24 rem a picker's case keeps for it and covered the
+       next case's caption. 16 rem is still a list's height and ends inside the room. */
+    [data-theme='synthwave'] .kp-usual {
+        --kp-usual-panel-min: 16rem;
+    }
+}

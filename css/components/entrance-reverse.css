@@ -1,0 +1,23 @@
+/* @part: entrance-reverse: An entrance played backwards */
+    /* --- An entrance played backwards ------------------------------------ */
+
+    /* js/motion.js playEntranceBackwards(): what came in with a CSS
+       entrance (a tooltip, the tour's card) goes out as that entrance played
+       backwards, in its own time on its curve turned around. `reset` drops
+       the entrance for one style read, `play` starts it again reversed and
+       held at its first frame, so one that already played out turns around
+       too. Important, because the entrance is each register's, in later
+       layers. */
+    [data-kp-reversing='reset'],
+    [data-kp-reversing='reset']::before,
+    [data-kp-reversing='reset']::after {
+        animation-name: none !important;
+    }
+
+    [data-kp-reversing='play'],
+    [data-kp-reversing='play']::before,
+    [data-kp-reversing='play']::after {
+        animation-direction: reverse !important;
+        animation-fill-mode: both !important;
+    }
+

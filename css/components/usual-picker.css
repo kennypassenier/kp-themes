@@ -1,0 +1,219 @@
+/* @part: usual-picker: A picker with the usual on top */
+    /* --- A picker with the usual on top [kpadopt6] -------------------------------------
+ * `.kp-combobox[data-kp-usual]` (js/usual-picker.js): the combobox's own plate and options, with a band of the usual choices
+ * first under a group label, the rest under "All", a row that unfolds the full list ("Show all 38"), the guard's rows and
+ * plate, and a state panel for loading, empty and failed at the size of an open list. Options are 48 px high and their words
+ * wrap, never cut; nothing is hardcoded per theme (the group label is the combobox's own muted small text). Knobs [KT6]:
+ * --kp-usual-option-min (3rem), --kp-usual-panel-min (18rem). */
+    .kp-usual .kp-combobox__option {
+        min-block-size: var(--kp-usual-option-min, 3rem);
+        display: flex;
+        align-items: center;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__group {
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+
+    .kp-usual__group[hidden] {
+        display: none;
+    }
+
+    .kp-usual__pinned {
+        font-style: italic;
+    }
+
+    .kp-usual .kp-combobox__option[data-kp-reason] {
+        flex-wrap: wrap;
+        opacity: 0.75;
+    }
+
+    .kp-usual__reason {
+        flex-basis: 100%;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-usual .kp-usual__more {
+        justify-content: center;
+        border-block-start: 1px dashed var(--border-strong);
+        font-weight: 600;
+    }
+
+    .kp-usual .kp-usual__add {
+        border-block-start: 1px solid var(--border);
+        font-weight: 600;
+    }
+
+    .kp-usual__plate {
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-sm, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-usual__plate-title {
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__plate-text {
+        color: var(--muted-foreground);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual .kp-usual__empty {
+        display: none;
+    }
+
+    .kp-usual .kp-reason {
+        display: block;
+    }
+
+    .kp-usual__hint {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__hint[hidden],
+    .kp-usual__state[hidden] {
+        display: none;
+    }
+
+    .kp-usual {
+        position: relative;
+    }
+
+    .kp-usual__state {
+        position: absolute;
+        inset-inline: 0;
+        z-index: 2;
+        display: grid;
+        background: var(--card);
+        min-block-size: var(--kp-usual-panel-min, 18rem);
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-usual__state > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+    }
+
+    /* The answers to what was typed, where the eyes are [Kenny, 2026-10-18 21:37]. "Did you mean Fatigue?" stands first in
+     * the list and reads as a question (its name in the option's own weight); "Headache is already picked" is a quiet line
+     * over the list, never an option; after an add, the line under the field says so with its Undo. */
+    .kp-usual .kp-usual__near {
+        font-weight: 600;
+    }
+
+    .kp-usual__already {
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__note {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-usual__note[hidden] {
+        display: none;
+    }
+
+    .kp-usual__note-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* A tag answers a pick, an add, or a name typed that is already picked: a ring in the theme's focus colour, switched on
+     * and off twice, never eased (it is a signal, not a motion); held still under reduced motion. */
+    .kp-usual .kp-tag[data-kp-usual-flash] {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        animation: kp-usual-flash 1.2s steps(1, end) 1;
+    }
+
+    @keyframes kp-usual-flash {
+        0%,
+        50% {
+            outline-color: var(--ring);
+        }
+
+        25%,
+        75%,
+        100% {
+            outline-color: transparent;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-usual .kp-tag[data-kp-usual-flash] {
+            animation: none;
+            outline-color: var(--ring);
+        }
+    }
+
+    /* "Not today" [kpadopt6; redesigned 2026-10-18]: the usual choices' own check under the field, a heading and one line
+     * saying what Not today means, never a pill inside a tag. `rows`: one line per usual choice, the names in one column as
+     * wide as the longest, the package's segmented pair "Had it" / "Not today" beside each (neither pressed: not answered).
+     * `chips`: one row of the package's three-way chips (✓ had it, ✕ and struck through not today). Knob: --kp-usual-check-gap. */
+    .kp-usual__check {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-block-start: var(--kp-space-md, 0.75rem);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+        /* A rule over the check, not a plate around it: drawn as a line, so the names stand on the page as the field does. */
+        background: linear-gradient(var(--border), var(--border)) top / 100% 1px no-repeat;
+    }
+
+    .kp-usual__check-title {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-usual__check-what {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__check-rows {
+        display: grid;
+        grid-template-columns: minmax(0, max-content) max-content;
+        align-items: center;
+        justify-content: start;
+        gap: var(--kp-usual-check-gap, var(--kp-space-xs, 0.25rem)) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-usual__check-name {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__check-chips {
+        justify-content: start;
+    }
+
+    .kp-usual__check-chips > .kp-segmented__item {
+        gap: var(--kp-tri-gap, 0.4em);
+        padding-inline-start: var(--kp-tri-pad-start, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-usual__check :is(.kp-segmented__item):disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }

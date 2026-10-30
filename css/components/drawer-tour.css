@@ -1,0 +1,272 @@
+/* @part: drawer-tour: Drawer, help and the tour */
+    /* --- Drawer, help and the tour [scope-143] ----------------------------- */
+
+    /* A drawer: a head (the title, the close button, one sentence), a body
+ * that scrolls, and a foot that stays. `.kp-drawer` lays out any element;
+ * a `dialog.kp-drawer` slides in at the end edge, full height. Knob:
+ * --kp-drawer-width (min(28rem, 100vw)). */
+    .kp-drawer {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        box-sizing: border-box;
+        padding: 0;
+    }
+
+    dialog.kp-drawer:not([open]) {
+        display: none;
+    }
+
+    dialog.kp-drawer,
+    dialog.kp-drawer:modal {
+        position: fixed;
+        inset-block: 0;
+        inset-inline: auto 0;
+        inline-size: var(--kp-drawer-width, min(28rem, 100vw));
+        max-inline-size: 100vw;
+        block-size: 100dvh;
+        max-block-size: 100dvh;
+        margin: 0;
+        border-block: 0;
+        border-inline-end: 0;
+        border-radius: 0;
+    }
+
+    /* The drawer a tab bar's More tab opens (js/tabbar.js marks it). On a phone the plain drawer is the whole
+       window, which reads as another page with no way back (Kenny, kpadopt-nav, 2026-10-16); this one leaves a
+       strip of the page, dimmed, at the start edge: a press on it closes the drawer, and it says "this is on top
+       of the page". A side drawer, not a bottom sheet: see research/kpadopt-nav/README.md. */
+    dialog.kp-drawer[data-kp-tabbar-drawer],
+    dialog.kp-drawer[data-kp-tabbar-drawer]:modal {
+        inline-size: var(--kp-drawer-width, min(28rem, calc(100vw - 3.5rem)));
+        max-inline-size: calc(100vw - 3.5rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        dialog.kp-drawer[open] {
+            animation: kp-drawer-in 200ms ease-out;
+        }
+    }
+
+    @keyframes kp-drawer-in {
+        0% {
+            translate: 2rem 0;
+            opacity: 0;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+
+    .kp-drawer__head {
+        position: relative;
+        padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem) var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-drawer__head > .kp-dialog__title {
+        margin: 0;
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-drawer__desc {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-drawer__body {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-md, 1rem);
+        min-block-size: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-drawer__foot {
+        display: grid;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* A help card: a heading, a sentence, and a list of terms beside their
+ * meanings, the meanings starting at one edge across every card; in a card
+ * of 22rem or less the term goes over its meaning. Knob: --kp-help-term
+ * (8rem), the terms' column. */
+    .kp-help {
+        container: kp-help / inline-size;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-help > :is(h3, p) {
+        margin: 0;
+    }
+
+    .kp-help > p {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-help__list {
+        display: grid;
+        grid-template-columns: var(--kp-help-term, 8rem) minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-help__list > dt {
+        font-weight: 600;
+    }
+
+    .kp-help__list > dd {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    @container kp-help (max-width: 22rem) {
+        .kp-help__list {
+            grid-template-columns: minmax(0, 1fr);
+            row-gap: 0;
+        }
+
+        .kp-help__list > dd + dt {
+            margin-block-start: var(--kp-space-sm, 0.5rem);
+        }
+    }
+
+    .kp-help kbd {
+        display: inline-block;
+        min-inline-size: 1.5em;
+        padding: 0 0.3125rem;
+        border: 1px solid var(--border-strong);
+        border-block-end-width: 2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font: 600 var(--kp-text-xs, 0.75rem) / 1.5 var(--theme-font-mono, ui-monospace, monospace);
+        text-align: center;
+    }
+
+    /* The tour's card (js/tour.js): a non-modal dialog beside its target,
+ * 12px from it and 16px inside the window's edges. Knob: --kp-tour-width
+ * (min(22rem, 100vw - 2rem); on a phone the window's width less the two
+ * 16px gutters). */
+    .kp-tour {
+        /* `!important`: a register's update mark sets `position: relative` on what it rings (lesson 5), and on a step the
+         * card carries that mark, so it dropped into the flow of its host for the update's length, pushed the page down by
+         * its own height and jumped back (Kenny, 2026-10-13: a flash on the step to the last card, and a card that
+         * "suddenly teleports to another part of the screen"). The card is fixed in every state. */
+        position: fixed !important;
+        z-index: 60;
+        inset: auto;
+        box-sizing: border-box;
+        inline-size: var(--kp-tour-width, min(22rem, 100vw - 2rem));
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0.5rem 1.5rem hsl(from var(--foreground) h s l / 0.18);
+        transition:
+            left var(--fx-duration, 200ms) var(--fx-ease, ease),
+            top var(--fx-duration, 200ms) var(--fx-ease, ease);
+    }
+
+    /* On a phone the card takes the width, less the gutters. */
+    @media (max-width: 30rem) {
+        .kp-tour {
+            inline-size: var(--kp-tour-width, calc(100vw - 2rem));
+        }
+    }
+
+    .kp-tour__title {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-tour__text {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    .kp-tour__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-md, 1rem);
+    }
+
+    .kp-tour__count {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-tour__buttons {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-tour__buttons > [hidden] {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-tour[open] {
+            animation: kp-tour-in 160ms ease-out;
+        }
+    }
+
+    @keyframes kp-tour-in {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* The part the tour talks about: a ring in the focus colour, and the rest
+ * of the page dimmed around it, so the eye goes straight to it. */
+    /* `z-index` does nothing on a part that is not positioned (a plain block in
+ * normal flow), and the dim is the part's box-shadow: a later sibling with a
+ * ground painted over it, so the page was not dimmed below the target. A part
+ * with no position of its own is made `relative`. Zero specificity, so any rule
+ * that positions a part (a sticky header, an absolute drawer, every register)
+ * keeps what it says. */
+    :where([data-kp-tour-target]) {
+        position: relative;
+    }
+
+    [data-kp-tour-target] {
+        z-index: 55;
+        outline: 3px solid var(--ring);
+        outline-offset: 3px;
+        box-shadow: var(--kp-tour-dim, 0 0 0 100vmax hsl(from var(--background) h s l / 0.72));
+        transition:
+            outline 250ms ease,
+            box-shadow 350ms ease;
+    }
+
+    body:has(.kp-tour[data-kp-reversing]) [data-kp-tour-target] {
+        /* A theme whose dim grows out of the target (forest) takes it back
+         * the same way: `--kp-tour-dim-close` names the shadow it fades to. */
+        box-shadow: var(--kp-tour-dim-close, 0 0 0 100vmax transparent) !important;
+        outline-color: transparent !important;
+        transition:
+            box-shadow var(--kp-tour-dim-time, var(--kp-sig-fo-time, 1000ms))
+                var(--kp-tour-dim-close-ease, var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in))) var(--kp-tour-dim-close-delay, 0s),
+            outline-color var(--kp-tour-dim-time, var(--kp-sig-fo-time, 1000ms))
+                var(--kp-tour-dim-close-ease, var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in))) var(--kp-tour-dim-close-delay, 0s) !important;
+    }
+

@@ -1,0 +1,136 @@
+{
+  "output": "css/nostromo-register.css",
+  "items": [
+    {
+      "open": "@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "nav.css",
+        "the-hero-furniture.css",
+        "button.css",
+        "fields.css",
+        "the-dossier-card.css",
+        "the-confirm-dialog.css",
+        "alert.css",
+        "data.css",
+        "navigation-and-steps.css",
+        "motion-guarded.css",
+        "sidenav.css",
+        "the-dot-becomes-a-lamp.css",
+        "the-alarm.css",
+        "the-case-its-figures.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* nostromo's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/nostromo.css and research/signature-elements/themes/nostromo.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base/base.css",
+        "signature-base/wizard.css",
+        "the-waiting-screen.css",
+        "live-update.css",
+        "the-meter-with-a-mark-this.css",
+        "the-mark-past-the-end.css",
+        "pairs.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "open": "/* ── The kpadopt4 components in nostromo's grammar: data pieces, empty-state drawings [kpadopt4] ──\n   Nostromo's own (themes/nostromo/CHARACTER.md): the case is what you touch and the screen is what the ship reports\n   (G7). A mark is a label plate (tape, 2 px, G6) with a lamp-lit pattern when it is a picture; a share bar is a lit\n   window, its parts lit lenses and the free rest the unlit cells (G10's window); labels are tape, counts Michroma\n   (G15); a changed reading lights its lamp (G9); a failed carrier sounds the klaxon (G13); a block of code or a command\n   is a screen: amber phosphor on dark glass under scanlines, set in the plate's bezel (G7). Every drawing in an empty\n   state is a vector written on such a screen, the raster's order, frame by frame (G2, G4). */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base/opening-of-the-signature-block.css",
+        "the-identity-mark.css",
+        "the-share-bar.css",
+        "code-and-commands-are.css",
+        "drawings-in-an-empty-state.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "the-kpadopt4-components.css"
+    },
+    {
+      "open": "/* ── The kpadopt4 components in nostromo's grammar: pipeline, journey, moments, secret, dialog sections [kpadopt4] ──\n   The pipeline is a rack: a lane a moulded plate, its head label tape with the stage's lit strip, a card a key with its\n   lamp (G8): unlit at rest, lit under the hand, full when pressed, the LED orange on the open one; the board's words\n   are a plate, a failed read the klaxon (G13). A journey is the LED bargraph laid between its steps: the way travelled\n   lit in the step's own colour, the way to come unlit cells, a failed way alternate cells in red; the step it stands at\n   is a lamp lit in its key. A moment on the timeline is a lamp, a stretch a run of lit cells (G10's window). The secret\n   field is a screen: the value is written on it by the raster (G2) and the countdown is a bargraph that goes out cell by\n   cell (G9, G10); a dialog's sections are divided by the vent seam and its danger section is framed all round (G13). */\n@layer kp.signature {\n",
+      "files": [
+        "pipeline.css",
+        "journey.css",
+        "secret-field.css",
+        "dialog-in-sections.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── The kpadopt4 components in nostromo's grammar: time, cooking and comparison [kpadopt4] ──\n   Everything that reads a time out is the ship's screen: the digits of a countdown, a timer's remaining time and the\n   timer disc are amber phosphor on dark glass in the case's bezel (G7, G15); an ended timer sounds the klaxon, framed\n   all round and never flashing (G13); the uptime strip is a lit window whose cells light by state (G10's window); the\n   wheel turns in whole frames of the ship's clock and its outcome is written on the screen (G1, G4); a three-way chip\n   is a switch with its lamp, lit in ink, in red for out (G8, G13); the quantity's figure is Michroma in its well and\n   its unit label tape (G15); a checklist is the log with its dotted seams; cook mode's ingredients are a printout. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base/opening-of-the-signature-block-2.css",
+        "uptime-strip.css",
+        "the-wheel.css",
+        "checklist.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "kpadopt4-repairs-found.css"
+    },
+    {
+      "file": "sort-the-page-carries-out.css"
+    },
+    {
+      "file": "signature/base.css"
+    },
+    {
+      "file": "kpadopt5-6-fit/base.css"
+    },
+    {
+      "file": "kpadopt5-6-fit/kpadopt5-6-fit.css"
+    },
+    {
+      "file": "kpadopt5-6-fit/kpadopt5-6-fit-2.css"
+    },
+    {
+      "file": "kpadopt5-6-fit/kpadopt5-6-fit-3.css"
+    },
+    {
+      "file": "kpadopt5-6-fit/kpadopt5-6-fit-4.css"
+    },
+    {
+      "file": "kpadopt5-6-fit/kpadopt5-6-fit-5.css"
+    },
+    {
+      "file": "kpadopt5-6-fit/kpadopt5-6-fit-6.css"
+    },
+    {
+      "file": "kpadopt5-6-parts/base.css"
+    },
+    {
+      "file": "kpadopt5-6-parts/kpadopt5-6-parts.css"
+    },
+    {
+      "file": "signature/a-destructive-button-that.css"
+    },
+    {
+      "file": "failed-area-is-a-screen.css"
+    },
+    {
+      "file": "graph-loading-shape-1.css"
+    },
+    {
+      "file": "graph-loading-r3-no-load-2.css"
+    }
+  ]
+}

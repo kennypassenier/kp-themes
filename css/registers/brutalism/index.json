@@ -1,0 +1,86 @@
+{
+  "output": "css/brutalism-register.css",
+  "items": [
+    {
+      "open": "/* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on\n   two registered copies, one on each mirror of the motion, so that a rise is\n   the picture's fall and a fall is that fall turned around; registered so\n   the transitions interpolate them. At the top level because Firefox does\n   not register an @property inside a layer. */\n@property --kp-sig-br-lag {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-br-lead {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n/* A clock with nothing drawn on it: the bar's mega menu is held on screen\n   until a transition on its panel has played (js/components.js); this is\n   that transition, the length of the panel's lift. */\n@property --kp-sig-br-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n/* How far the side navigation still stands above its footprint while it is\n   dropped onto it (review round 2): the panel is held up-left by this much and\n   each slab's hard shadow stays on the ground, its offset grown by it. */\n@property --kp-sig-br-lift {\n    syntax: '<length>';\n    inherits: true;\n    initial-value: 0px;\n}\n\n@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-hooks.css",
+        "the-navbar.css",
+        "button.css",
+        "fields.css",
+        "card.css",
+        "data.css",
+        "the-demos-own-pieces.css",
+        "motion-guarded.css",
+        "sidenav.css",
+        "the-thing-names-itself.css",
+        "the-alarm.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* brutalism's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/brutalism.css and research/signature-elements/themes/brutalism.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector.\n\n   Since 2026-10-07 23:44 the layer speaks the grammar Kenny decided on\n   research/brutalism-character (themes/brutalism/CHARACTER.md, G1-G18):\n   everything that happens is something weight does. What arrives is dropped\n   onto its footprint from up-left and stops dead; what leaves is lifted off\n   it; what is pointed at is inverted; what waits is a lintel hoisted in\n   hard lifts; a new value is slammed onto its yellow offset; a warning is\n   taped off. The tokens below are the grammar's, once; every rule reads\n   them and names no number of its own. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base/base.css",
+        "the-progress-bar.css",
+        "activity-feed.css",
+        "the-switch-and-the-check.css",
+        "what-opens-is-dropped-onto.css",
+        "the-meter-with-a-mark-this.css",
+        "the-mark-past-the-end.css",
+        "key-figures.css",
+        "the-trend-tile.css",
+        "the-strip-of-key-figures.css",
+        "the-time-chart.css",
+        "the-month-heatmap.css",
+        "the-drawer-and-the-tour.css",
+        "every-part-that-opens.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "file": "the-kpadopt4-data-pieces.css"
+    },
+    {
+      "file": "the-uptime-strip-rows.css"
+    },
+    {
+      "file": "flows-and-records-in-this.css"
+    },
+    {
+      "open": "/* ── The ideas and the recipe components, in this theme [kpadopt4-ideas, kpadopt4-recipes] ──\n   Everything here is a slab or a part of one: a terminal is an ink plate with paper words and a yellow prompt; a time\n   left is a disc on its footprint and a digital time a row of blocks, and when the time is out the part is set down\n   again, once, on its footprint (G3, G12); a range's pick is the yellow plate; the compare slider's divider is the\n   six-pixel bar and its handle a block lifted off its footprint; a wheel turns at a constant speed and stops dead\n   (G1: no ease, no settle); an included chip is yellow with a stamped tick, an excluded one is ink with a red cross\n   (G5, G16); a step is set down on its footprint (G3). */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base/opening-of-the-signature-block.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "the-new-adoption-parts.css"
+    },
+    {
+      "file": "the-whole-grid-loading.css"
+    },
+    {
+      "file": "graph-loading-shape-2.css"
+    },
+    {
+      "file": "graph-loading-r5-br-load-3.css"
+    }
+  ]
+}

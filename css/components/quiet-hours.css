@@ -1,0 +1,101 @@
+/* @part: quiet-hours: Quiet hours */
+@layer kp.components {
+    /* --- Quiet hours [wish-1120, homelab 96] (js/quiet-hours.js) ---
+     * The switch on top; below it the body is ONE grid, a label column and a control column, so From, Until, On and Still comes
+     * through share their label edge and their control edge (a subgrid per row); under it the sentence in words. Off, the body keeps
+     * its place, dimmed and out of the tab order, so the control is as high on as off. On a phone the labels go over their controls.
+     * Knobs [KT6]: --kp-quiet-label (the label column, 9rem). */
+    .kp-quiet {
+        container: kp-quiet / inline-size;
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+        position: relative;
+    }
+
+    .kp-quiet__body {
+        display: grid;
+        grid-template-columns: minmax(auto, var(--kp-quiet-label, 9rem)) minmax(0, 1fr);
+        column-gap: var(--kp-space-md, 0.75rem);
+        row-gap: var(--kp-space-sm, 0.5rem);
+        align-items: start;
+    }
+
+    .kp-quiet__body[inert] {
+        opacity: 0.5;
+    }
+
+    .kp-quiet__field {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        align-items: start;
+        min-inline-size: 0;
+    }
+
+    .kp-quiet__label {
+        min-block-size: var(--kp-control-height, 2.25rem);
+        display: flex;
+        align-items: center;
+    }
+
+    /* The chip row of the weekday picker is 2.5rem high: its label stands as high, so both centre on one line. */
+    .kp-quiet__field--days > .kp-quiet__label {
+        min-block-size: 2.5rem;
+    }
+
+    .kp-quiet__through {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-control-height, 2.25rem);
+        align-items: center;
+    }
+
+    .kp-quiet__problem {
+        grid-column: 2;
+        margin: 0;
+    }
+
+    .kp-quiet__summary {
+        margin: 0;
+        min-block-size: 2lh;
+        color: var(--muted-foreground);
+    }
+
+    .kp-quiet__reason {
+        margin: 0;
+    }
+
+    .kp-quiet__wait {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-md, 0.75rem);
+        background: var(--card, var(--background));
+    }
+
+    .kp-quiet__wait[hidden] {
+        display: none;
+    }
+
+    .kp-quiet__bone {
+        block-size: var(--kp-control-height, 2.25rem);
+    }
+
+    .kp-quiet[data-kp-state='loading'] > :not(.kp-quiet__wait) {
+        visibility: hidden;
+    }
+
+    @container kp-quiet (max-width: 30rem) {
+        .kp-quiet__body {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-quiet__problem {
+            grid-column: 1;
+        }
+    }
+}
+

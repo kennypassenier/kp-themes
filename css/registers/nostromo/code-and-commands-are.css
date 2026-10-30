@@ -1,0 +1,102 @@
+/* @part: code-and-commands-are: Code and commands are screens */
+    /* ── Code and commands are screens: amber phosphor on dark glass under scanlines, in the plate's bezel (G7, G15) ── */
+    [data-theme='nostromo'] .kp-code,
+    [data-theme='nostromo'] .kp-command {
+        --kp-code-key: var(--kp-no-phosphor);
+        --kp-command-prompt-ink: var(--kp-no-phosphor);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-code__head,
+    [data-theme='nostromo'] .kp-command__head {
+        border-block-end: 0;
+    }
+    [data-theme='nostromo'] .kp-code__title,
+    [data-theme='nostromo'] .kp-command__shell {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-code__meta {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    /* The glass stands in the plate's bezel: the room round it is the plate's own padding (a margin on a paragraph is
+       the page's to reset), so a note and a body are the same height in every state. */
+    [data-theme='nostromo'] .kp-code {
+        padding: 0 0.5rem 0.5rem;
+    }
+    [data-theme='nostromo'] :is(.kp-code__head, .kp-code__foot) {
+        margin-inline: -0.5rem;
+    }
+    [data-theme='nostromo'] :is(.kp-code__body, .kp-code__note) {
+        margin: 0;
+    }
+    [data-theme='nostromo'] .kp-command__code {
+        margin: 0 0.5rem 0.5rem;
+    }
+    [data-theme='nostromo'] :is(.kp-code__body, .kp-code__note, .kp-command__code) {
+        border-radius: 0.5rem;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        color: var(--kp-no-cream);
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-no-glow);
+    }
+    [data-theme='nostromo'] :is(.kp-code__body, .kp-command__code) > code {
+        background: none;
+        color: var(--kp-no-cream);
+    }
+    [data-theme='nostromo'] .kp-command__code {
+        padding: 0.625rem 0.875rem;
+        margin-block-start: 0;
+    }
+    [data-theme='nostromo'] .kp-code__punct,
+    [data-theme='nostromo'] .kp-code[data-kp-code-lines] .kp-code__line::before {
+        color: var(--kp-no-dim);
+    }
+    [data-theme='nostromo'] .kp-code__note {
+        color: var(--kp-no-dim);
+    }
+    [data-theme='nostromo'] .kp-code[data-kp-state='error'] .kp-code__note {
+        color: hsl(from var(--destructive) h s calc(l + 24));
+    }
+    [data-theme='nostromo'] .kp-code[data-kp-state='error'] {
+        box-shadow:
+            var(--kp-sig-no-raised),
+            inset 0 0 0 3px var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-code__foot {
+        border-block-start: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-command__where {
+        border-block-start: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: 0;
+    }
+    [data-theme='nostromo'] .kp-code[data-kp-code-folded] .kp-code__body {
+        mask-image: linear-gradient(to bottom, black calc(100% - 2.5em), transparent);
+    }
+
+    /* ── The page header's line: its freshness reads as tape ── */
+    [data-theme='nostromo'] .kp-page-header__line .kp-ago {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+

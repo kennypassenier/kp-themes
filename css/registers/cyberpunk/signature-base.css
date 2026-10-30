@@ -1,0 +1,264 @@
+/* @part: signature-base: opening of the signature block */
+    [data-theme='cyberpunk'] {
+        --kp-cp4-tick: 60ms;
+        --kp-cp4-grid:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.3) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.3) 0 1px, transparent 1px 14px);
+        --kp-cp4-grid-press:
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 14px);
+        --kp-cp4-scan: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.06) 0 2px, transparent 2px 6px);
+        --kp-cp4-trip: repeating-linear-gradient(90deg, var(--primary) 0 6px, transparent 6px 10px);
+        --kp-cp4-n: 8px;
+        --kp-cp4-cut: polygon(0 0, 100% 0, 100% calc(100% - var(--kp-cp4-n)), calc(100% - var(--kp-cp4-n)) 100%, 0 100%);
+        --kp-cp4-cut-top: polygon(0 0, calc(100% - var(--kp-cp4-n)) 0, 100% var(--kp-cp4-n), 100% 100%, 0 100%);
+        --kp-cp4-cut-open: polygon(-12% -40%, 140% -40%, 140% calc(100% - var(--kp-cp4-n)), calc(100% - var(--kp-cp4-n)) 100%, -12% 100%);
+        --kp-art-rule: var(--primary);
+        --kp-art-line: var(--border-strong);
+        --kp-art-ink: var(--accent);
+        --kp-art-red: var(--destructive);
+        --kp-art-stroke: 1.5px;
+    }
+    /* Four 2 px corner brackets in the tone, as background layers (set --kp-cp4-tone on the part). */
+    [data-theme='cyberpunk'] :is(
+            .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure,
+            .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+            .kp-action-list--lead > li[data-kp-state='failed'],
+            .kp-action-list--lead > li[data-kp-state='warn'],
+            .kp-kv__row[data-kp-state='error'],
+            .kp-formrow[data-kp-state='error'],
+            .kp-statusrow[data-state='warn'],
+            .kp-timer[data-kp-timer-state='done'],
+            .kp-countdown[data-kp-countdown-state='ended'],
+            .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+            .kp-segmented__item[data-kp-segmented-tri='exclude'],
+            .kp-dialog__section--danger,
+            .kp-pipeline__card[aria-current='true'],
+            .kp-secret[data-kp-secret-state='error'] .kp-secret__value
+        ) {
+        --kp-cp4-b: 2px;
+        --kp-cp4-a: 9px;
+        --kp-cp4-o: 3px;
+        --kp-cp4-lock:
+            linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) var(--kp-cp4-o) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) var(--kp-cp4-o) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) var(--kp-cp4-o) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) var(--kp-cp4-o) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat;
+    }
+
+    /* ── Identity mark: the plate in the name's colour, cut at its end corner; the letters are the machine's mono ── */
+    [data-theme='cyberpunk'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        font-family: var(--kp-mono);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        clip-path: var(--kp-cp4-cut);
+    }
+    [data-theme='cyberpunk'] .kp-idmark--round {
+        border-radius: 0;
+        clip-path: polygon(
+            var(--kp-cp4-n) 0,
+            100% 0,
+            100% calc(100% - var(--kp-cp4-n)),
+            calc(100% - var(--kp-cp4-n)) 100%,
+            0 100%,
+            0 var(--kp-cp4-n)
+        );
+    }
+    [data-theme='cyberpunk'] .kp-idmark--glyph {
+        clip-path: var(--kp-cp4-cut-open);
+    }
+    [data-theme='cyberpunk'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        box-shadow: none;
+    }
+    [data-theme='cyberpunk'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='cyberpunk'] .kp-idmark[data-kp-idmark-selected] {
+        clip-path: none;
+        box-shadow: none;
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='cyberpunk'] .kp-idmark-group > .kp-idmark {
+        box-shadow: none;
+    }
+    [data-theme='cyberpunk'] .kp-idmark-group__more {
+        border-radius: 0;
+        font-family: var(--kp-mono);
+    }
+
+    /* ── Share bar: the parts are held bars with a 2 px gap; pointing lights the circuit on the part in one tick; the
+       threshold is the reticle's tick; the title and the readings are the machine's mono ── */
+    [data-theme='cyberpunk'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__title {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__title::before {
+        content: '/// ';
+        color: var(--accent);
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__total,
+    [data-theme='cyberpunk'] .kp-stackbar__value {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__bar {
+        background: var(--kp-cp4-scan), var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: var(--kp-cp4-cut);
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__seg {
+        border-radius: 0;
+        outline: 0;
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        background-image: var(--kp-cp4-grid-press);
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card);
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__mark {
+        inset-block: -2px;
+        background: var(--accent);
+        box-shadow: 0 0 6px hsl(from var(--accent) h s l / 0.7);
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__swatch {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-stackbar__note {
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+
+    /* ── Bullet rows: the figure is a read-out; a tone locks the figure as a target in its ink ── */
+    [data-theme='cyberpunk'] .kp-bullets__figure {
+        font-family: var(--kp-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.08em;
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='cyberpunk'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        padding: 0.125em 0.625em;
+        background: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        --kp-cp4-tone: var(--destructive);
+        color: var(--destructive);
+    }
+    [data-theme='cyberpunk'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        --kp-cp4-tone: var(--warning-foreground);
+        color: var(--warning-foreground);
+    }
+    [data-theme='cyberpunk'] .kp-bullets__detail {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-bullets__row:has(.kp-bullets__link:is(:hover, :focus-visible)) {
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-bullets__note {
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+        [data-theme='cyberpunk'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(2) {
+            animation-delay: var(--kp-cp4-tick);
+        }
+        [data-theme='cyberpunk'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-cp4-tick));
+        }
+        [data-theme='cyberpunk'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-cp4-tick));
+        }
+    }
+
+    /* ── Key-value grid and form rows: the key is a cyan prefixed label, the failed row is locked as a target ── */
+    [data-theme='cyberpunk'] .kp-kv__row > dt,
+    [data-theme='cyberpunk'] .kp-formrow__label {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-kv__row > dt::before {
+        content: '// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-formrow__label > small {
+        text-transform: none;
+        letter-spacing: 0.04em;
+        color: var(--muted-foreground);
+    }
+    [data-theme='cyberpunk'] .kp-kv__row[data-kp-state='error'],
+    [data-theme='cyberpunk'] .kp-formrow[data-kp-state='error'] {
+        --kp-cp4-tone: var(--destructive);
+        background: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='cyberpunk'] .kp-formrow[data-kp-state='error']::before {
+        display: none;
+    }
+    [data-theme='cyberpunk'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-formrows--lines > .kp-formrow,
+    [data-theme='cyberpunk'] .kp-kv--lines > .kp-kv__row {
+        border-image: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px) 1;
+    }
+
+    /* ── Code block: a holo plate, its title a cyan prefixed label, the gutter the machine's mono ── */
+    [data-theme='cyberpunk'] .kp-code {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-code__title,
+    [data-theme='cyberpunk'] .kp-code__meta {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-code__title::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-code__head {
+        border-block-end: 1px dashed var(--border-strong);
+    }
+
+    /* ── Page header line ── */
+    [data-theme='cyberpunk'] .kp-page-header__meta {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+

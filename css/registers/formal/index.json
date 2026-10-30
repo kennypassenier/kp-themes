@@ -1,0 +1,126 @@
+{
+  "output": "css/formal-register.css",
+  "items": [
+    {
+      "open": "/* The numbers formal's motion is made of, registered at the top level\n   because Firefox does not register an @property inside a cascade layer;\n   with no registration every keyframe below would flip between its two\n   poses instead of moving. --kp-fm-t is how far a ruled opening or a leave\n   has come (0 to 1, finished = 1), --kp-fm-l the loop of the ruled lines of\n   a waiting surface (0 to 1; at rest the three lines are ruled), --kp-fm-u\n   the live update's rules (0 to 1), --kp-fm-a0 and --kp-fm-a1 the two ends\n   of the spinner's arc (at rest the ring is closed). */\n@property --kp-fm-t {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-fm-l {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0.5;\n}\n\n@property --kp-fm-u {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-fm-a0 {\n    syntax: '<angle>';\n    inherits: false;\n    initial-value: 0deg;\n}\n\n@property --kp-fm-a1 {\n    syntax: '<angle>';\n    inherits: false;\n    initial-value: 360deg;\n}\n\n@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-navbar.css",
+        "button.css",
+        "card.css",
+        "panels.css",
+        "the-demos-own-pieces.css",
+        "data.css",
+        "pointing-focus.css",
+        "the-alarm.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* formal's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/formal.css and research/signature-elements/demo.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "formals-grammar-as-tokens.css",
+        "the-busy-bar-is-a-rule.css",
+        "the-spinner-rules-an-arc.css",
+        "activity-feed/base.css",
+        "ruled-open-ruled-off/base.css",
+        "ruled-open-ruled-off/a-part-a-script-removes-or.css",
+        "ruled-open-ruled-off/menu-button.css",
+        "live-update-is-ruled-again.css",
+        "activity-feed/loading-is-ruling-the-lines.css",
+        "keyframes.css",
+        "the-meter-with-a-mark-this.css",
+        "warning-is-a-red-ink-entry.css",
+        "what-matters-carries.css",
+        "every-part-that-opens/base.css",
+        "every-part-that-opens/the-tour-the-page-dims-round.css",
+        "every-part-that-opens/nav.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "register/base.css"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "register/week-agenda-and-run-timeline.css"
+    },
+    {
+      "file": "signature/base.css"
+    },
+    {
+      "file": "action-tiles.css"
+    },
+    {
+      "file": "signature/the-grids-gap-leaves-room-for.css"
+    },
+    {
+      "file": "heat-grid.css"
+    },
+    {
+      "file": "end-heat-grid-matrix-bar.css"
+    },
+    {
+      "file": "end-flows-and-records/base.css"
+    },
+    {
+      "file": "end-flows-and-records/end-flows-and-records.css"
+    },
+    {
+      "file": "end-flows-and-records/end-flows-and-records-2.css"
+    },
+    {
+      "file": "end-flows-and-records/end-flows-and-records-3.css"
+    },
+    {
+      "file": "end-flows-and-records/end-flows-and-records-4.css"
+    },
+    {
+      "file": "end-flows-and-records/end-flows-and-records-5.css"
+    },
+    {
+      "file": "end-kitchen-timers.css"
+    },
+    {
+      "file": "end-wheel.css"
+    },
+    {
+      "file": "signature/the-count-that-is-still-being.css"
+    },
+    {
+      "file": "end-toggle-button.css"
+    },
+    {
+      "file": "end-palette-that-finds.css"
+    },
+    {
+      "file": "signature/version.css"
+    },
+    {
+      "file": "end-version-jump-chip.css"
+    },
+    {
+      "file": "end-acknowledge-gate.css"
+    },
+    {
+      "file": "end-dependency-list.css"
+    },
+    {
+      "file": "signature/trace.css"
+    },
+    {
+      "file": "end-path-of-a-connection.css"
+    },
+    {
+      "file": "signature/entity.css"
+    },
+    {
+      "file": "end-entity-card.css"
+    },
+    {
+      "file": "graph-loading-r3-fm-load-3.css"
+    }
+  ]
+}

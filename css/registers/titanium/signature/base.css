@@ -1,0 +1,8 @@
+/* @part: signature: Martian Mono's wide cells: a freshness line in a value may break at it */
+@layer kp.signature {
+    /* Martian Mono's wide cells: a freshness line in a value may break at its spaces in a narrow list. */
+    [data-theme='titanium'] .kp-kv__row .kp-ago {
+        white-space: normal;
+    }
+}
+

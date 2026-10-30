@@ -1,0 +1,296 @@
+/* @part: the-fourth-adoption-round: The fourth adoption round in this theme */
+/* ── The fourth adoption round in this theme [kpadopt4]: data pieces ──
+   Blueprint's own (themes/blueprint/CHARACTER.md): a part that does not exist yet, drawn on a ruled sheet and measured.
+   A plate has no fill and no closed frame, the sheet shows through and a ruler runs along its start edge and its foot
+   (G7); a section is hatched (G16); pointing sets the amber witness lines at a part's two ends (G8); a press takes the
+   dimension (G14); a change is revised (G9); a warning is flagged with the triangle before its words, outlined for a
+   warning, filled for a failure (G13); the lettering names, the sans speaks (G15). Every stroke is on the plotter's
+   feed (G1) and under no-preference (G18). */
+@layer kp.signature {
+    /* Identity mark: a section drawn on the sheet: a square frame in the name's own ink with its hatch inside, the
+       letters in the lettering; a round one is the compass's circle; the current one in a list has the amber witness
+       lines at its ends and the pen's frame round it; the glyph is a small registration square. */
+    [data-theme='blueprint'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-idmark--round {
+        border-radius: 50%;
+    }
+    [data-theme='blueprint'] .kp-idmark:not(.kp-skeleton, [data-kp-idmark-empty], .kp-idmark--pattern) {
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-idmark-c) h s l / 0.5) 0 1px, transparent 1px 5px), transparent;
+    }
+    [data-theme='blueprint'] .kp-idmark:not(.kp-skeleton, [data-kp-idmark-empty], .kp-idmark--pattern) > .kp-idmark__letters {
+        padding: 0 0.15em;
+        background: var(--background);
+    }
+    [data-theme='blueprint'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='blueprint'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow:
+            -6px 0 0 -5px var(--accent),
+            6px 0 0 -5px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-idmark-group > :is(.kp-idmark, .kp-idmark-group__more) {
+        box-shadow: 0 0 0 2px var(--background);
+    }
+    [data-theme='blueprint'] .kp-idmark-group__more {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Share bar: a dimensioned measure: every part a hatched section in its own ink, framed square, the free rest an
+       empty frame; the threshold is the amber pointer on the scale; the part pointed at has the pen's frame and its
+       legend row the amber witness lines; the legend's names are lettering, its figures the readout. */
+    [data-theme='blueprint'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+        background: transparent;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg {
+        background:
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px),
+            color-mix(in oklab, var(--kp-stackbar-colour, var(--chart-1)) 22%, transparent);
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg[data-kp-stackbar-hatch] {
+        background-image:
+            repeating-linear-gradient(-45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px),
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px);
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__bar[data-kp-stackbar-full] .kp-stackbar__seg:last-of-type {
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__mark {
+        inline-size: 1px;
+        inset-block: -5px;
+        background: var(--accent);
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: -5px;
+        inset-inline-start: 50%;
+        inline-size: 9px;
+        block-size: 6px;
+        translate: -4.5px 0;
+        background: conic-gradient(from 135deg at 50% 0, var(--accent) 90deg, transparent 0);
+    }
+    [data-theme='blueprint'] .kp-stackbar__item {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-stackbar__swatch {
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 3px),
+            transparent;
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-stackbar__label {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-stackbar__value {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-stackbar__note {
+        border-radius: 0;
+    }
+
+    /* Bullet rows: a row that leads somewhere is read on a scale when pointed at, two witness lines at its ends and no
+       wash; the detail is lettering, the figure the readout; a warning is flagged △ before its figure, a failure ▲,
+       in the tone's ink, on no plate. */
+    [data-theme='blueprint'] .kp-bullets__row {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: none;
+    }
+    [data-theme='blueprint'] .kp-bullets__detail {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-bullets__figure {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-bullets__row:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-bullets__figure {
+        padding-inline: 0;
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        color: hsl(from var(--warning) h s 62%);
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        color: var(--destructive);
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure::before {
+        content: '\25B3\00a0';
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure::before {
+        content: '\25B2\00a0';
+        font-size: 0.8em;
+    }
+
+    /* Key-value grid and form rows: labels are lettering, values the sans (identifiers and readouts the mono); a ruled
+       line is a ruler with its ticks; a row changed and not saved carries the amber revision mark △ after its label,
+       one that could not be read the filled red flag ▲ before it. */
+    [data-theme='blueprint'] :is(.kp-kv__row > dt, .kp-formrow__aside) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-formrow__label {
+        font-weight: 600;
+    }
+    [data-theme='blueprint'] .kp-formrow__label > small {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] :is(.kp-kv--lines > .kp-kv__row, .kp-formrows--lines > .kp-formrow) {
+        border-block-end: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left bottom / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 8px) left bottom / 100% 4px no-repeat;
+    }
+    [data-theme='blueprint'] :is(.kp-kv--lines > .kp-kv__row:last-child, .kp-formrows--lines > .kp-formrow:last-child) {
+        background: none;
+    }
+    [data-theme='blueprint'] .kp-kv {
+        --kp-glyph-changed: '\00a0\25B3';
+    }
+    [data-theme='blueprint'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--accent);
+    }
+    [data-theme='blueprint'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='blueprint'] .kp-formrow[data-kp-state='error']::before {
+        content: '\25B2';
+        inset-block: auto;
+        inset-block-start: 0.1em;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 0.35rem);
+        inline-size: auto;
+        background: none;
+        color: var(--destructive);
+        font-size: 0.7em;
+        line-height: 1.5;
+    }
+    [data-theme='blueprint'] .kp-formrow[data-kp-changed]:not([data-kp-state='error'])::before {
+        content: '\25B3';
+        inset-block: auto;
+        inset-block-start: 0.35rem;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 0.35rem);
+        inline-size: auto;
+        background: none;
+        color: var(--accent);
+        font-size: 0.7em;
+        line-height: 1.5;
+    }
+    [data-theme='blueprint'] .kp-formrow__lock {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='blueprint'] .kp-formrow__lock::before {
+        border-radius: 0;
+    }
+
+    /* Code block: a plate on the sheet (a ruler along its start edge and its foot, no fill, no closed frame); the head
+       is lettered, the text sits on a faint field of its own, the keys are the pen's cyan. */
+    [data-theme='blueprint'] .kp-code {
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] :is(.kp-code__title, .kp-code__meta) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-code__body,
+    [data-theme='blueprint'] .kp-code__note {
+        background: hsl(from var(--foreground) h s l / 0.04);
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-code__foot {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* A live number is read again as it counts: a short ruler is set under it with an amber pointer that slides from the
+       old reading to the new on the feed (G9, as every live change here); the number itself never moves. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-kp-tick][data-kp-tick-state='running'] {
+            position: relative;
+            display: inline-block;
+        }
+        [data-theme='blueprint'] [data-kp-tick][data-kp-tick-state='running']::after {
+            content: '';
+            position: absolute;
+            inset-block-start: calc(100% + 2px);
+            inset-inline: 0;
+            block-size: 12px;
+            pointer-events: none;
+            --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+            background-repeat: no-repeat;
+            background-image:
+                conic-gradient(from 135deg at 50% 0, var(--kp-bp-n1) 90deg, transparent 0), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+                repeating-linear-gradient(90deg, var(--kp-bp-n1) 0 1px, transparent 1px 5px);
+            background-size:
+                9px 6px,
+                100% 1px,
+                100% 4px;
+            background-position:
+                calc(var(--kp-bp-p) * 100%) bottom,
+                left 5px,
+                left 1px;
+            animation: kp-sig-blueprint-update-read var(--kp-sig-bp-revision) linear both;
+        }
+    }
+}
+

@@ -1,0 +1,17 @@
+/* @part: end-t56: end t56 */
+/* ── end t56 ── */
+
+/* ── t56: the quote card keeps its room ── */
+@layer kp.signature {
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='synthwave'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+    /* The sun plate and the failure's wrapped words need a little more on a phone. */
+    @container kp-quote (max-width: 25rem) {
+        [data-theme='synthwave'] .kp-quote > .kp-card__stage {
+            min-block-size: max(var(--kp-quote-min, 9rem), 10.5rem);
+        }
+    }
+}

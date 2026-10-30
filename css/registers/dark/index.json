@@ -1,0 +1,105 @@
+{
+  "output": "css/dark-register.css",
+  "items": [
+    {
+      "open": "/* The numbers dark's motion is made of, registered at the top level because\n   Firefox does not register an @property inside a cascade layer; with no\n   registration every keyframe that moves one would flip between its two poses\n   instead of moving. --kp-sig-dk-turn is how far the film has turned on a\n   pass (0 at rest, a full turn is the same colour: cyan at the top);\n   --kp-sig-dk-at and --kp-sig-dk-ink are how far the line has come over a\n   changed figure and how much ink lies over the film in its letters (at\n   rest the figure is ink); --kp-sig-dk-ph is the spinner's loop, 0 to 1. */\n@property --kp-sig-dk-turn {\n    syntax: '<angle>';\n    inherits: true;\n    initial-value: 0deg;\n}\n\n@property --kp-sig-dk-at {\n    syntax: '<percentage>';\n    inherits: true;\n    initial-value: 100%;\n}\n\n@property --kp-sig-dk-ink {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-sig-dk-ph {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0.2;\n}\n\n/* --kp-sig-dk-hold carries no picture: a transition on it holds the mega\n   menu's panel on screen for the pass back (js/components.js settleClosing\n   waits for the panel's transitions), as Firefox holds no `display`. */\n@property --kp-sig-dk-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-halo-stops-where.css",
+        "the-instruments-own-button.css",
+        "the-hooks.css",
+        "the-navbar.css",
+        "button.css",
+        "fields.css",
+        "card.css",
+        "panels.css",
+        "the-keyboard-cursor.css",
+        "the-demos-own-pieces.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* dark's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/dark.css and research/signature-elements/themes/dark.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base.css",
+        "the-numbers-and-pictures.css",
+        "the-spinner.css",
+        "activity-feed.css",
+        "pointing-the-keyboard.css",
+        "the-opening-is-a-pass.css",
+        "key-figure-is-a-panel.css",
+        "the-meter-with-a-mark-this.css",
+        "dark-the-machined-channel.css",
+        "every-part-that-opens.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "file": "the-kpadopt4-components.css"
+    },
+    {
+      "file": "end-the-kpadopt4-data.css"
+    },
+    {
+      "open": "/* ── end the kpadopt4 rows and flows ── */\n\n/* ── The kpadopt4 secrets, time, cooking and commands in dark's own grammar [kpadopt4] ──\n   A secret is a slot with a readout; the line that runs a countdown is the line running its track (G11); a clock is the\n   film turning, the share left laid on a ticked face (G5, G19); a timer that ends is the film gone coral along its edge,\n   the plate stays near-black (G8); a step, a pick, a figure is laid by the pass (G13); words are Archivo, readings the\n   ticker mono (G18). Nothing blinks, nothing breathes. */\n@layer kp.signature {\n",
+      "files": [
+        "secret-field.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "file": "end-the-kpadopt4-secrets.css"
+    },
+    {
+      "file": "end-t56/base.css"
+    },
+    {
+      "file": "end-t56/end-t56.css"
+    },
+    {
+      "file": "end-t56/end-t56-2.css"
+    },
+    {
+      "file": "end-t56/end-t56-3.css"
+    },
+    {
+      "file": "end-t56/end-t56-4.css"
+    },
+    {
+      "file": "end-t56/end-t56-5.css"
+    },
+    {
+      "file": "t56-q.css"
+    },
+    {
+      "file": "end-t56-q.css"
+    },
+    {
+      "file": "end-t56-q2-choose.css"
+    },
+    {
+      "file": "end-t56-q2-schedule/base.css"
+    },
+    {
+      "file": "end-t56-q2-schedule/end-t56-q2-schedule.css"
+    },
+    {
+      "file": "graph-loading-r3-dk-load-3.css"
+    }
+  ]
+}

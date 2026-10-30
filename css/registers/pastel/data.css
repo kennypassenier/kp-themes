@@ -1,0 +1,176 @@
+/* @part: data: Data */
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    [data-theme='pastel'] .kp-table th {
+        border-bottom: 1px solid var(--border-strong);
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] .kp-table td {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-table tbody tr:hover {
+        background: var(--muted);
+    }
+
+    [data-theme='pastel'] .kp-datatable {
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    [data-theme='pastel'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-datatable__sort[aria-sort] {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-diff {
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    /* The added line's wash (Kenny, 2026-09-15, data#diff: "the plus colour
+       isn't distinct enough from the background"). This theme's --success is
+       a pale ground (85% lightness), so the shared 14% wash of it came out at
+       ΔE 0.89 from the diff's ground — invisible — while the removed line,
+       washed from the saturated --destructive, sat at ΔE 6.0. The added line
+       now washes from the saturated green ink instead, at the strength that
+       matches the removed line: ΔE 6.4, with the muted line numbers still
+       above 4.5:1 on it. */
+    [data-theme='pastel'] .kp-diff__line[data-kind='added'] {
+        background: hsl(from var(--success-foreground) h s l / 0.14);
+    }
+
+    /* The step list is a sticker sheet: round, thick-edged stickers; a done
+       sticker is stuck on a little crooked. */
+    [data-theme='pastel'] .kp-steplist {
+        --kp-steplist-gap: 0.625rem;
+    }
+
+    [data-theme='pastel'] .kp-steplist__item {
+        border-width: 2px;
+        border-radius: 1.1rem;
+    }
+
+    [data-theme='pastel'] .kp-steplist__item[data-state='done'] .kp-steplist__mark {
+        rotate: -8deg;
+    }
+
+    [data-theme='pastel'] .kp-timeline {
+        border-inline-start: 2px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-timeline__marker {
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-reorder {
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    [data-theme='pastel'] .kp-tree {
+        font-size: 0.92rem;
+    }
+
+    /* The accordion [gap-12]: the primary ink its selected tab takes, on the
+       marker and on what is open. */
+    [data-theme='pastel'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-tab[aria-selected='true'] {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-breadcrumb {
+        color: var(--muted-foreground);
+    }
+
+    /* The pagination's size is the package's [scope-87]; its numerals are
+       this register's: tabular, so the page numbers line up. */
+    [data-theme='pastel'] .kp-pagination {
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='pastel'] .kp-pagination a[aria-current],
+    [data-theme='pastel'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 999px;
+        padding-inline: 0.45em;
+    }
+
+    [data-theme='pastel'] .kp-wizard {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    /* A day is round (G6). */
+    [data-theme='pastel'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 50%;
+    }
+
+    [data-theme='pastel'] .kp-colorpicker__swatch {
+        border-radius: 0.85rem;
+    }
+
+    [data-theme='pastel'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.4rem;
+        background: var(--muted);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    [data-theme='pastel'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.4);
+    }
+
+    [data-theme='pastel'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    [data-theme='pastel'] .kp-combobox,
+    [data-theme='pastel'] .kp-datepicker,
+    [data-theme='pastel'] .kp-colorpicker,
+    [data-theme='pastel'] .kp-shortcuts,
+    [data-theme='pastel'] .kp-tabs {
+        border-radius: 1.2rem;
+    }
+
+    [data-theme='pastel'] .kp-split {
+        gap: 0.5rem;
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='pastel'] {
+        scrollbar-color: var(--border-strong) var(--muted);
+    }
+

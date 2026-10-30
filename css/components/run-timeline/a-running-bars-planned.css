@@ -1,0 +1,472 @@
+/* @part: run-timeline: A running bar's planned remainder */
+    /* A running bar's planned remainder [wish-1028, Kitchen 2]: from the line for now to the planned end, on the bar's row, in the
+     * planned look (outlined on the card's ground, hatched) so it reads as time still to come. It joins the bar's leading edge (no
+     * border there) and shrinks as the clock runs. */
+    .kp-gantt__rest {
+        box-sizing: border-box;
+        position: absolute;
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        inset-inline-start: calc((var(--kp-g-now, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: max(0px, calc((var(--kp-g-e, 0) - var(--kp-g-now, 0)) / var(--kp-g-span, 21600) * 100%));
+        block-size: var(--kp-gantt-bar, 1.125rem);
+        border: 1px solid var(--kp-gantt-fill);
+        border-inline-start: 0;
+        border-radius: 0 var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2))) var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2))) 0;
+        pointer-events: none;
+    }
+
+    .kp-gantt__rest[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label::before {
+        content: var(--kp-glyph-failed, '✕');
+        margin-inline-end: 0.25rem;
+        font-weight: 700;
+    }
+
+    /* A bar too narrow for any words keeps none inside it (a label is never cut with an ellipsis); js/gantt.js puts the label of a bar that has room around it outside [gaps-time-1019]. */
+    @container kp-gantt-run (max-width: 2rem) {
+        .kp-gantt__run:not([data-kp-label]) .kp-gantt__label {
+            display: none;
+        }
+    }
+
+    /* A label that does not fit its bar stands outside it [gaps-time-1019]: a sibling of the bar in its lane (js/gantt.js
+     * `data-kp-label` on the bar, `.kp-gantt__outside` beside it), so nothing a theme does to the bar (a clip, a notch) cuts it.
+     * It is placed by the bar's own custom properties, after the bar or (with no room there) before it, on the card's own ground
+     * so the rules under it do not cross the words. `none`: no room anywhere, the bar's name and card carry the words. */
+    .kp-gantt__run[data-kp-label='after'] > .kp-gantt__label,
+    .kp-gantt__run[data-kp-label='before'] > .kp-gantt__label,
+    .kp-gantt__run[data-kp-label='none'] > .kp-gantt__label {
+        display: none;
+    }
+
+    .kp-gantt__outside {
+        position: absolute;
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        box-sizing: border-box;
+        max-inline-size: var(--kp-g-label-room, none);
+        padding-inline: 0.25rem;
+        overflow: hidden;
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--card);
+        color: var(--foreground);
+        font-size: 0.6875rem;
+        line-height: var(--kp-gantt-bar, 1.125rem);
+        text-overflow: clip;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-gantt__outside[data-kp-state='failed'] {
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) +
+                (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar-failed, 1.5rem)) / 2
+        );
+        line-height: var(--kp-gantt-bar-failed, 1.5rem);
+    }
+
+    .kp-gantt__outside[data-kp-state='failed']::before {
+        content: var(--kp-glyph-failed, '✕');
+        margin-inline-end: 0.25rem;
+        font-weight: 700;
+    }
+
+    .kp-gantt__outside[data-kp-side='after'] {
+        inset-inline-start: calc(
+            (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% +
+                max(var(--kp-gantt-bar-min, 0.5rem), (var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%) + 0.25rem +
+                var(--kp-g-label-shift, 0px)
+        );
+    }
+
+    .kp-gantt__outside[data-kp-side='before'] {
+        inset-inline-end: calc(100% - (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% + 0.25rem + var(--kp-g-label-shift, 0px));
+        text-align: end;
+    }
+
+    /* A bar that is still open ends on the line for now: its label starts clear of the line. */
+    .kp-gantt__outside[data-kp-side='after'][data-kp-state='running'],
+    .kp-gantt__outside[data-kp-side='after'][data-kp-state='queued'] {
+        margin-inline-start: 0.25rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-gantt-march 1600ms linear infinite;
+        }
+    }
+
+    @keyframes kp-gantt-march {
+        to {
+            background-position: 1.0607rem 0;
+        }
+    }
+
+    .kp-gantt__ghost.kp-gantt__lane {
+        border-block-end-color: var(--border);
+    }
+
+    .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton {
+        inline-size: 70%;
+        block-size: 0.75rem;
+    }
+
+    .kp-gantt__ghost .kp-gantt__run {
+        inset-inline-start: calc(var(--kp-g-at, 0) * 100%);
+        inline-size: calc(var(--kp-g-width, 0.1) * 100%);
+        border: 0;
+        cursor: default;
+        background: var(--muted);
+    }
+
+    .kp-gantt__state {
+        position: absolute;
+        inset: var(--kp-gantt-axis, 1.75rem) 0 0;
+        z-index: 4;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .kp-gantt__state:empty {
+        display: none;
+    }
+
+    /* Loading is the data table's own loading card [Kenny, 2026-10-16: "zoals bij een table waar het icoon in het
+ * midden van de matrix staat en lijkt te laden"]: js/gantt.js lays js/busy-card.js's layer and panel centred over
+ * the lanes, so the sentence is read out but no longer drawn. */
+    .kp-gantt[data-kp-state='loading'] .kp-gantt__state {
+        inset: auto;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        clip-path: inset(50%);
+    }
+
+    .kp-gantt__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    /* A timeline with no lane, empty or failed, keeps a lane-sized room under its axis for the sentence, taller when its
+     * words need more lines (`--kp-gantt-words`, measured by js/gantt.js), so the sentence never runs out of the frame
+     * onto the legend under it. */
+    .kp-gantt:is([data-kp-state='ready'], [data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: max(5.25rem, calc(var(--kp-gantt-axis, 1.75rem) + var(--kp-gantt-words, 0px)));
+    }
+
+    /* An empty or failed timeline is the state plate over its plot, which needs the plate's own room [state-plates-1019]. */
+    .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body,
+    .kp-gantt[data-kp-state='ready']:has(> .kp-gantt__frame > .kp-gantt__plate:not([hidden])) .kp-gantt__body {
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
+    .kp-gantt__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-gantt__swatch {
+        --kp-gantt-fill: var(--success);
+        box-sizing: border-box;
+        inline-size: 1.25rem;
+        block-size: 0.625rem;
+        border: 1px solid var(--kp-gantt-fill);
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-gantt-fill);
+    }
+
+    .kp-gantt__swatch[data-kp-state='failed'] {
+        --kp-gantt-fill: var(--destructive);
+        block-size: 0.8125rem;
+        box-shadow: inset -3px 0 0 var(--destructive-foreground);
+    }
+
+    .kp-gantt__legend[hidden],
+    .kp-gantt__hint[hidden],
+    .kp-gantt__ranges[hidden],
+    .kp-gantt__live[hidden] {
+        display: none;
+    }
+
+    /* Without its toolbar (`data-kp-gantt-toolbar="off"`) the row is not laid out; it comes back only for a selection the page
+     * makes, which is shown in the toolbar's place. */
+    .kp-gantt[data-kp-gantt-bare] > .kp-gantt__bar:not(:has(> .kp-gantt__selection:not([hidden]))) {
+        display: none;
+    }
+
+    .kp-gantt[data-kp-gantt-bare] > .kp-gantt__bar {
+        min-block-size: 2rem;
+    }
+
+    .kp-gantt__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__announce {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    @container kp-gantt (max-width: 32rem) {
+        .kp-gantt__body {
+            --kp-gantt-label: 5.5rem;
+        }
+
+        .kp-gantt__lane {
+            font-size: var(--kp-text-xs, 0.75rem);
+        }
+    }
+
+    /* A narrow timeline keeps a readable plot and scrolls inside its own frame [wish-1028, Kitchen 3]: under 32rem the body is at
+     * least --kp-gantt-min-width wide (30rem; 0 turns it off) and the frame scrolls sideways, with the lane names held at the start
+     * edge. data-kp-gantt-scroll="off" never scrolls, "always" keeps the minimum at every width. A mouse still brushes a range; a
+     * finger pans (touch-action). */
+    @container kp-gantt (max-width: 32rem) {
+        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__scroll {
+            overflow-x: auto;
+            touch-action: pan-x pan-y;
+        }
+
+        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__body {
+            min-inline-size: var(--kp-gantt-min-width, 30rem);
+        }
+
+        .kp-gantt:not([data-kp-gantt-scroll='off']) :is(.kp-gantt__lane, .kp-gantt__corner) {
+            position: sticky;
+            inset-inline-start: 0;
+        }
+
+        .kp-gantt:not([data-kp-gantt-scroll='off']) .kp-gantt__lane {
+            z-index: 2;
+            background: var(--card);
+        }
+    }
+
+    .kp-gantt[data-kp-gantt-scroll='always'] .kp-gantt__scroll {
+        overflow-x: auto;
+        touch-action: pan-x pan-y;
+    }
+
+    .kp-gantt[data-kp-gantt-scroll='always'] .kp-gantt__body {
+        min-inline-size: var(--kp-gantt-min-width, 30rem);
+    }
+
+    .kp-gantt[data-kp-gantt-scroll='always'] :is(.kp-gantt__lane, .kp-gantt__corner) {
+        position: sticky;
+        inset-inline-start: 0;
+    }
+
+    .kp-gantt[data-kp-gantt-scroll='always'] .kp-gantt__lane {
+        z-index: 2;
+        background: var(--card);
+    }
+
+    /* Point events on the run timeline [kpadopt4] (setGanttPoints, setGanttKinds, setGanttZones in js/gantt.js): a moment is a
+ * small mark in its lane, in the colour and shape of its kind (the shape is the second carrier [DI4]); a planned one is
+ * hollow; marks too close to tell apart are one mark with a count on a small plate beside it. A stretch is a thin band in
+ * its lane, or a band behind every lane. The mark's button is larger than the mark, so it is easy to hit. Knobs [KT6]:
+ * `--kp-gantt-mark-size` (0.75rem), `--kp-gantt-hit` (1.375rem, the button), `--kp-gantt-zone` (0.25rem, a lane's band),
+ * `--kp-gantt-row-sub` (2.5rem, a lane's row when lanes carry a second line). */
+    .kp-gantt__point {
+        --kp-gantt-mark: var(--primary);
+        position: absolute;
+        z-index: 1;
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-hit, 1.375rem)) / 2);
+        inset-inline-start: calc(
+            (var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% - var(--kp-gantt-hit, 1.375rem) / 2 + var(--kp-g-dodge, 0px)
+        );
+        inline-size: var(--kp-gantt-hit, 1.375rem);
+        block-size: var(--kp-gantt-hit, 1.375rem);
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: transparent;
+        color: var(--foreground);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .kp-gantt__point[hidden],
+    .kp-gantt__point[data-kp-clustered] {
+        display: none;
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        content: '';
+        grid-area: 1 / 1;
+        box-sizing: border-box;
+        inline-size: var(--kp-gantt-mark-size, 0.75rem);
+        block-size: var(--kp-gantt-mark-size, 0.75rem);
+        border: 2px solid var(--kp-gantt-mark);
+        border-radius: 50%;
+        background: var(--kp-gantt-mark);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
+        border-radius: 1px;
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='diamond']::before {
+        border-radius: 1px;
+        rotate: 45deg;
+        scale: 0.85;
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='triangle']::before {
+        border: 0;
+        border-radius: 0;
+        clip-path: polygon(50% 4%, 100% 96%, 0 96%);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='ring']::before,
+    .kp-gantt__point[data-kp-planned]::before {
+        background: var(--card);
+    }
+
+    /* A planned triangle has no border to keep: its hollow is the card's ground inside an edge of its own colour. */
+    .kp-gantt__point[data-kp-planned][data-kp-shape='triangle']::before {
+        padding: 0.25rem 0.1875rem 0.125rem;
+        background:
+            linear-gradient(var(--card), var(--card)) content-box,
+            var(--kp-gantt-mark) border-box;
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series] {
+        --kp-gantt-mark: var(--chart-1);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series='2'] {
+        --kp-gantt-mark: var(--chart-2);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series='3'] {
+        --kp-gantt-mark: var(--chart-3);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series='4'] {
+        --kp-gantt-mark: var(--chart-4);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series='5'] {
+        --kp-gantt-mark: var(--chart-5);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark, .kp-gantt__zone, .kp-gantt__band)[data-kp-tone='success'] {
+        --kp-gantt-mark: var(--success);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark, .kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'] {
+        --kp-gantt-mark: var(--warning);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-tone='destructive'] {
+        --kp-gantt-mark: var(--destructive);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark, .kp-gantt__zone, .kp-gantt__band)[data-kp-tone='info'] {
+        --kp-gantt-mark: var(--info);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark, .kp-gantt__zone, .kp-gantt__band)[data-kp-tone='muted'] {
+        --kp-gantt-mark: var(--muted-foreground);
+    }
+
+    .kp-gantt__point:hover::before {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--foreground);
+    }
+
+    .kp-gantt__count {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(50% + var(--kp-gantt-mark-size, 0.75rem) / 2 + 0.125rem);
+        translate: 0 -50%;
+        padding: 0.0625rem 0.1875rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--foreground);
+        font-size: 0.625rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        line-height: 1;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-gantt__count:empty {
+        display: none;
+    }
+
+    .kp-gantt__zone {
+        --kp-gantt-mark: var(--warning);
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%);
+        border-inline: 1px dashed var(--kp-gantt-mark);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.14);
+        pointer-events: none;
+    }
+
+    /* A lane's own stretch stands on the foot of the lane's first row, under the marks and their count plates, not through
+     * their middle where it ran behind a "+2" [r3r5-1019 gantt-zone]. */
+    .kp-gantt__zone[data-kp-lane-zone] {
+        inset-block: auto;
+        inset-block-start: calc(var(--kp-gantt-pad) + var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-zone, 0.25rem));
+        block-size: var(--kp-gantt-zone, 0.25rem);
+        border: 0;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.55);
+    }
+
+    .kp-gantt__mark {
+        --kp-gantt-mark: var(--primary);
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1rem;
+        block-size: 1rem;
+    }
+

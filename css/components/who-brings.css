@@ -1,0 +1,238 @@
+/* @part: who-brings: Who brings it */
+@layer kp.components {
+    /* --- Who brings it: a claim on every row of a checklist [kpadopt6] -----
+ *
+ * The checklist row keeps its box, label and detail; one cell more stands at its end in a column of its own, so the
+ * names line up from row to row (`--kp-claim-col`). The cell holds the people who bring the item (their mark and
+ * name) or, when nobody does, the gap: a glyph and the words "Nobody yet", on the destructive edge when it is loud.
+ * One button follows; its three faces (take, held, working) share one grid cell so it never changes width. Narrow
+ * (the list's own width under 34rem) the cell goes under the label and the button takes the line. */
+    .kp-checklist[data-kp-checklist-claim] {
+        --kp-claim-col: minmax(13rem, 21rem);
+        container: kp-checklist / inline-size;
+        inline-size: 100%;
+    }
+
+    .kp-checklist[data-kp-checklist-claim] .kp-checklist__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--kp-claim-col);
+        align-items: center;
+        column-gap: var(--kp-space-md, 0.75rem);
+        position: relative;
+    }
+
+    .kp-checklist__item[hidden],
+    .kp-checklist__group[hidden] {
+        display: none;
+    }
+
+    .kp-claim__group-count {
+        flex: none;
+        margin-inline-start: auto;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-claim__group-count:not([hidden]) + .kp-checklist__count {
+        margin-inline-start: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-claim {
+        display: grid;
+        /* The people never get less than their longest unbroken piece ("Vandenbroucke-"): the control beside them takes what
+         * is left, so a name wraps at its spaces and hyphens and is not cut inside a word [t56-words-1018]. */
+        grid-template-columns: minmax(min-content, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: var(--kp-checklist-row, 2.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-claim__people,
+    .kp-claim__why {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-claim__people {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-claim__person {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-claim__name {
+        min-inline-size: 0;
+        /* break-word, not anywhere: anywhere makes the name's smallest size one letter, so it was squeezed first. A name of
+         * more than 24rem without a break still breaks, at that width. */
+        max-inline-size: 24rem;
+        overflow-wrap: break-word;
+    }
+
+    .kp-claim__gap {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-claim__glyph {
+        display: inline-grid;
+        place-content: center;
+        flex: none;
+        inline-size: 1.125rem;
+        block-size: 1.125rem;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-claim__glyph::before {
+        content: var(--kp-glyph-alert, '!');
+    }
+
+    /* Loud: the destructive edge on the row, the glyph and words in the destructive tone; never colour alone. */
+    .kp-checklist__item[data-kp-claim-loud] {
+        box-shadow: inset 3px 0 0 var(--destructive);
+        background: hsl(from var(--destructive) h s l / 0.07);
+    }
+
+    .kp-checklist__item[data-kp-claim-loud] .kp-claim__gap {
+        color: var(--destructive);
+        font-weight: 600;
+    }
+
+    .kp-claim__button {
+        display: inline-grid;
+        min-inline-size: 0;
+        white-space: nowrap;
+    }
+
+    .kp-claim__face {
+        grid-area: 1 / 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-claim__button[data-kp-claim-face='take'] > .kp-claim__face:not(.kp-claim__face--take),
+    .kp-claim__button[data-kp-claim-face='held'] > .kp-claim__face:not(.kp-claim__face--held),
+    .kp-claim__button[data-kp-claim-face='busy'] > .kp-claim__face:not(.kp-claim__face--busy) {
+        visibility: hidden;
+    }
+
+    .kp-claim__face--held::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-claim__face--busy > .kp-spinner {
+        --kp-spinner-size: 1em;
+    }
+
+    .kp-claim__button[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.12);
+    }
+
+    .kp-claim__button[aria-busy='true'] {
+        cursor: progress;
+    }
+
+    /* A refusal: the row's edge in the destructive tone and the reason where the people stood, for 3000 ms. */
+    .kp-checklist__item[data-kp-claim-refused] {
+        outline: 2px solid var(--destructive);
+        outline-offset: -2px;
+    }
+
+    .kp-checklist__item[data-kp-claim-refused] .kp-claim__people {
+        visibility: hidden;
+    }
+
+    .kp-claim__why {
+        display: flex;
+        align-items: center;
+        color: var(--destructive);
+        font-weight: 600;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    /* The bar: the count of items nobody brings and the filter chips, between the status and the actions. */
+    .kp-claim__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-claim__summary {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        color: var(--muted-foreground);
+        min-inline-size: 9rem;
+    }
+
+    .kp-claim__summary[data-kp-claim-gap] {
+        color: var(--destructive);
+        font-weight: 600;
+    }
+
+    .kp-claim__summary[data-kp-claim-gap]::before {
+        content: var(--kp-glyph-alert, '!') '\00a0';
+    }
+
+    .kp-claim__chips {
+        flex-wrap: wrap;
+    }
+
+    .kp-claim__none {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: var(--background);
+    }
+
+    @container kp-checklist (max-width: 34rem) {
+        .kp-checklist[data-kp-checklist-claim] .kp-checklist__item {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-claim {
+            grid-template-columns: minmax(0, 1fr);
+            padding-block-start: 0;
+        }
+
+        .kp-claim__control {
+            display: grid;
+        }
+
+        .kp-claim__button {
+            min-block-size: 2.75rem;
+        }
+
+        .kp-claim__people,
+        .kp-claim__why {
+            grid-area: auto;
+        }
+
+        .kp-checklist__item[data-kp-claim-refused] .kp-claim__people {
+            display: none;
+        }
+    }
+}
+

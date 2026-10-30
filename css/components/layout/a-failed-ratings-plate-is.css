@@ -1,0 +1,11 @@
+/* @part: layout: A failed rating's plate is laid over the rating's whole box */
+/* A failed rating's plate is laid over the rating's whole box [t56-statefix-1018]. A register gives `.kp-alert` its own `position`
+ * (pastel's is relative, for its printed pass) and beats the absolute placement in kp.components, which put the plate back in the
+ * flow, narrow and taller than the stars it was to cover; restated in the last layer. */
+@layer kp.layout {
+    .kp-rating[data-kp-state='error'] .kp-rating__failure:not([hidden]) {
+        position: absolute;
+        inset: 0;
+    }
+}
+

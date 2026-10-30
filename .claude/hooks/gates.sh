@@ -57,6 +57,7 @@ gate_tree_before=$(gate_tree_fingerprint)
 
 # generated files match their source (TH121) [scope-76, scope-96]
 gate gen-themes node gates/generate-themes.mjs --check || exit 1
+gate gen-css node gates/generate-css.mjs --check || exit 1
 
 # what a block is made of, as digests the hash reads [scope-114]
 gate code-version node gates/generate-code-version.mjs --check || exit 1
@@ -76,6 +77,7 @@ gate agenda-bundle node gates/generate-agenda-bundle.mjs --check || exit 1
 # longer claims to enforce what it does not.
 
 # theme colour stays in the token layer (DI9)
+gate file-size node gates/check-file-size.mjs || exit 1
 gate layers node gates/check-layers.mjs || exit 1
 
 # a relative colour that resolves to nothing [fix-11]

@@ -34,7 +34,10 @@ const files = execFileSync('git', ['ls-files', '--', ...SHIPPED.map((d) => `${d}
     encoding: 'utf8',
 })
     .split('\n')
-    .filter(Boolean);
+    .filter(Boolean)
+    // The part files under css/components/ and css/registers/ are slices of the generated stylesheets (a few end
+    // inside a nested @media block); the generated files they build are parsed instead.
+    .filter((f) => !f.startsWith('css/components/') && !f.startsWith('css/registers/'));
 
 /** @type {string[]} */
 const failures = [];

@@ -1,0 +1,95 @@
+/* @part: new-lines-pill: The "N new lines" pill */
+    /* --- The "N new lines" pill [kpadopt5] ---------------------------------- */
+
+    /* js/newpill.js: a pill on the end of a live list that says how many rows came
+     * out of sight, and jumps back. It sits in the list's parent (`data-kp-newpill-host`),
+     * so it never scrolls with the rows, ruled in along its start edge at the
+     * theme's rule time and taken out the way it came. The count is as wide as its
+     * words. */
+    [data-kp-newpill-host] {
+        position: relative;
+    }
+
+    .kp-newpill {
+        position: absolute;
+        inset-inline: 0;
+        z-index: 2;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        margin-inline: auto;
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0 var(--kp-space-sm, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--card-foreground));
+        border: 1px solid var(--primary);
+        font-weight: 600;
+        animation: kp-newpill-in var(--kp-rule-time, 400ms) var(--kp-rule-ease, linear) both;
+    }
+
+    .kp-newpill[hidden] {
+        display: none;
+    }
+
+    .kp-newpill[data-kp-pill-placement='bottom'] {
+        inset-block-end: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-newpill[data-kp-pill-placement='top'] {
+        inset-block-start: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-newpill[data-kp-leaving] {
+        animation-direction: reverse;
+    }
+
+    /* The count is as wide as its words: a reserved second digit left an empty space of a letter or two before a
+     * one-digit count, so the words sat off-centre in the pill. A digit more grows the pill, round its centre. */
+    .kp-newpill__count {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-newpill__back {
+        font-weight: 400;
+    }
+
+    .kp-newpill__back::before {
+        content: '\00b7\00a0';
+    }
+
+    .kp-newpill__since {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding-block: var(--kp-space-xs, 0.25rem);
+        color: var(--primary);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        list-style: none;
+    }
+
+    .kp-newpill__since::before,
+    .kp-newpill__since::after {
+        content: '';
+        flex: 1;
+        border-block-start: 1px solid currentColor;
+    }
+
+    @keyframes kp-newpill-in {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-newpill {
+            animation: none;
+        }
+    }
+

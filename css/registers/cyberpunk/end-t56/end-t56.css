@@ -1,0 +1,30 @@
+/* @part: end-t56: end t56 */
+/* ── end t56 ── */
+
+/* ── t56: the conversation bubble ── */
+@layer kp.signature {
+    /* A message is a packet: the plate's notch on the far corner (top right for theirs, top left for yours), the sender as a
+       tag and the time in the mono. */
+    [data-theme='cyberpunk'] .kp-thread__scroll {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-thread__bubble {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        clip-path: polygon(var(--kp-cp-notch) 0, 100% 0, 100% 100%, 0 100%, 0 var(--kp-cp-notch));
+    }
+    [data-theme='cyberpunk'] .kp-thread__sender {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-thread__sender::before {
+        content: '// ';
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-thread__time {
+        font-family: var(--theme-font-mono);
+    }
+}

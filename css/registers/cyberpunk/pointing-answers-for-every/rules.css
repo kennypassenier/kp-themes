@@ -1,0 +1,475 @@
+/* @part: pointing-answers-for-every: rules */
+    @keyframes kp-sig-cyberpunk-bars-2 {
+        0% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h2: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h2: 100%;
+        }
+
+        30% {
+            --kp-cp-h2: 100%;
+        }
+
+        40% {
+            --kp-cp-h2: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h2: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h2: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h2: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h2: 30.4%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-bars-3 {
+        0% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h3: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h3: 100%;
+        }
+
+        30% {
+            --kp-cp-h3: 100%;
+        }
+
+        40% {
+            --kp-cp-h3: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h3: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h3: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h3: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h3: 30.4%;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-bars-4 {
+        0% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        10% {
+            --kp-cp-h4: 82.6%;
+        }
+
+        20% {
+            --kp-cp-h4: 100%;
+        }
+
+        30% {
+            --kp-cp-h4: 100%;
+        }
+
+        40% {
+            --kp-cp-h4: 82.6%;
+        }
+
+        50% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        60% {
+            --kp-cp-h4: 30.4%;
+        }
+
+        70% {
+            --kp-cp-h4: 30.4%;
+        }
+
+        80% {
+            --kp-cp-h4: 56.5%;
+        }
+
+        90% {
+            --kp-cp-h4: 30.4%;
+        }
+    }
+
+    /* The tear: a cyan copy right and up, a red one right and down, 10 % of the spinner at the
+       first tear (1800 ms), 6 % at the second (2100 ms), and home. */
+    @keyframes kp-sig-cyberpunk-tear {
+        60% {
+            filter: drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.1) calc(var(--kp-spinner-size, 1.25rem) * -0.08) 0 var(--kp-cp-sp-c1))
+                drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.1) calc(var(--kp-spinner-size, 1.25rem) * 0.08) 0 var(--kp-cp-sp-c3));
+        }
+
+        64% {
+            filter: none;
+        }
+
+        70% {
+            filter: drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.06) calc(var(--kp-spinner-size, 1.25rem) * -0.05) 0 var(--kp-cp-sp-c1))
+                drop-shadow(calc(var(--kp-spinner-size, 1.25rem) * 0.06) calc(var(--kp-spinner-size, 1.25rem) * 0.05) 0 var(--kp-cp-sp-c3));
+        }
+
+        72% {
+            filter: none;
+        }
+    }
+
+    /* The word: deciphered start to end in seven ticks, held, gone at 90 % of the
+       loop. Each tick is a property js/strings.js writes (stringProperties()), so a
+       consumer's own word deciphers the same way; the English is the fallback. */
+    @keyframes kp-sig-cyberpunk-word {
+        0% {
+            content: var(--kp-loading-word-0, '#&$?%@/');
+        }
+
+        3.33% {
+            content: var(--kp-loading-word-1, 'L@/#&$?');
+        }
+
+        6.67% {
+            content: var(--kp-loading-word-2, 'LO?%@/#');
+        }
+
+        10% {
+            content: var(--kp-loading-word-3, 'LOA&$?%');
+        }
+
+        13.33% {
+            content: var(--kp-loading-word-4, 'LOAD/#&');
+        }
+
+        16.67% {
+            content: var(--kp-loading-word-5, 'LOADI%@');
+        }
+
+        20% {
+            content: var(--kp-loading-word-6, 'LOADIN$');
+        }
+
+        23.33% {
+            content: var(--kp-loading-word-7, 'LOADING');
+        }
+
+        90% {
+            content: '';
+        }
+    }
+
+    /* The tear before it goes: bands of the word jump sideways with a wider split. */
+    @keyframes kp-sig-cyberpunk-word-tear {
+        0% {
+            translate: 0 0;
+            clip-path: none;
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+
+        66.67% {
+            translate: -6px 0;
+            clip-path: inset(30% 0 40% 0);
+            text-shadow:
+                6px -2px 0 var(--accent),
+                6px 2px 0 var(--destructive);
+        }
+
+        70% {
+            translate: 6px 0;
+            clip-path: inset(0 0 60% 0);
+            text-shadow:
+                -5px -2px 0 var(--accent),
+                -5px 2px 0 var(--destructive);
+        }
+
+        73.33% {
+            translate: -3px 0;
+            clip-path: inset(55% 0 5% 0);
+            text-shadow:
+                4px -1px 0 var(--accent),
+                4px 1px 0 var(--destructive);
+        }
+
+        76.67% {
+            translate: 4px 0;
+            clip-path: inset(10% 0 50% 0);
+            text-shadow:
+                -3px -1px 0 var(--accent),
+                -3px 1px 0 var(--destructive);
+        }
+
+        80% {
+            translate: -2px 0;
+            clip-path: inset(40% 0 20% 0);
+            text-shadow:
+                3px -1px 0 var(--accent),
+                3px 1px 0 var(--destructive);
+        }
+
+        83.33% {
+            translate: 2px 0;
+            clip-path: inset(0);
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+
+        86.67% {
+            translate: 0 0;
+            clip-path: none;
+            text-shadow:
+                2px -1px 0 var(--accent),
+                2px 1px 0 var(--destructive);
+        }
+    }
+
+    /* The target lock: the brackets close twice, then hold. */
+    @keyframes kp-sig-cyberpunk-lock {
+        0% {
+            --kp-cp-lk: 8px;
+        }
+
+        16.67% {
+            --kp-cp-lk: 3px;
+        }
+
+        33.33% {
+            --kp-cp-lk: 6px;
+        }
+
+        50%,
+        100% {
+            --kp-cp-lk: 3px;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-pen {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-dot {
+        from {
+            transform: scale(0);
+        }
+    }
+
+    /* The channel split [Kenny: curve, opening and leave = split]. Four ticks of 120 ms: the part
+       stands with a yellow copy right and up and a cyan copy right and down, 6, 4, 2 and 1 px, then
+       it is the part itself (the implicit last pose: the element's own clip and shadows). The copies
+       are the silhouette (`--kp-cp-b0` to `-b3`, set on a plate; none elsewhere) and the text
+       (`text-shadow`, which the part's words inherit). The clip is the part's own cut, wide
+       around it while a copy plays outside the box (`--kp-cp-wide`), so the notch is cut at
+       every tick and no frame draws a square corner. Opening is this; closing is this played
+       backwards (js/motion.js), which is `kp-sig-cyberpunk-split-out` where a leave plays it. */
+    @keyframes kp-sig-cyberpunk-split {
+        0% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75%,
+        100% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+
+    /* The same four poses under a second name: a part that is shown by the split and closes by
+       playing it backwards (`animation-direction: reverse`) must restart, and an animation that
+       keeps its name does not. Frame for frame the close is the opening. */
+    @keyframes kp-sig-cyberpunk-split-back {
+        0% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75%,
+        100% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+
+    /* A leave: the entrance's four poses in the other order, and the last one held until the
+       part is gone, so nothing of it outlives the rest. */
+    @keyframes kp-sig-cyberpunk-split-out {
+        0% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        75%,
+        100% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+    }
+
+    /* The phone bar's links, as one picture: the strip's own cut and its words, so the copies are
+       drawn by `filter` on the list (a clip on the strip's pseudo-element cuts the notch, a filter
+       sees what is cut). Opening is this, closing the same four poses the other way, held until
+       the script hides the list (js/components.js). */
+    @keyframes kp-sig-cyberpunk-split-bar {
+        0% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-split-bar-back {
+        0% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+

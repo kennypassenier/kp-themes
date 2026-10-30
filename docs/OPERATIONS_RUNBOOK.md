@@ -172,7 +172,7 @@ Most of what this package ships is assembled, not authored. `npm run
 generate:all` runs fifteen steps in order (`package.json`, script
 `generate:all`):
 
-`generate` → `generate:code-version` → `generate:fonts-css` →
+`generate` → `generate:css` → `generate:code-version` → `generate:fonts-css` →
 `generate:utilities` → `generate:bundle` → `generate:min` →
 `generate:examples` → `generate:portraits` → `generate:showcase` →
 `generate:site` → `gates/generate-compare.mjs` → `generate:types` →
@@ -187,6 +187,7 @@ What that covers, by output:
 | Generator                        | Writes                                                                        |
 | -------------------------------- | ----------------------------------------------------------------------------- |
 | `gates/generate-themes.mjs`      | `css/themes.css` and `js/theme-registry.js` from `themes/<name>/tokens.json`  |
+| `gates/generate-css.mjs`         | `css/components.css` and the `css/<theme>-register.css` files from the part files |
 | `gates/generate-fonts-css.mjs`   | `css/fonts.css` from `fonts/families.json`                                    |
 | `gates/generate-utilities.mjs`   | `css/utilities.css`                                                           |
 | `gates/generate-bundle.mjs`      | `dist/kp-themes.css` and `dist/kp-themes.js`                                  |
@@ -199,6 +200,10 @@ What that covers, by output:
 | `gates/check-motion.mjs --report`| `reports/di5.md`                                                              |
 | `gates/check-types.mjs --write`  | the shipped `.d.ts` declarations                                              |
 | `gates/checksums.mjs --write`    | `SHA256SUMS`                                                                  |
+
+CSS source lives in `css/components/` and `css/registers/`; never edit the generated `css/components.css` or a
+`css/<theme>-register.css`. Change the part file, run `npm run generate:css`, and commit the part and the generated
+file together. `node gates/generate-css.mjs --check` (in `npm run gates`) refuses a hand edit.
 
 ### Procedure 2.1 — regenerate after changing a source
 

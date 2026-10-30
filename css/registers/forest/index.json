@@ -1,0 +1,97 @@
+{
+  "output": "css/forest-register.css",
+  "items": [
+    {
+      "open": "/* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),\n   registered so the keyframes interpolate it; at the top level because\n   Firefox does not register an @property inside a layer. */\n@property --kp-fo-breath {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n/* How far a growth ring is drawn round what changed, 0 (nothing) to 360 deg\n   (all the way round), registered so the keyframes interpolate it. */\n@property --kp-fo-arc {\n    syntax: '<angle>';\n    inherits: false;\n    initial-value: 360deg;\n}\n\n/* How far the treatment of a ticking number has gone, 0 (nothing) to 1 (all of it). */\n@property --kp-fo-grown {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n/* How much of the treatment is left in the colour of a ticking number: 1 (all of it) cooling to 0 (the plain ink). */\n@property --kp-fo-ember {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n/* The skeleton block's and circle's one clock, 0 (bare ground) to 1 (the\n   finished treeline), registered so the keyframes interpolate it; it stays 1\n   standing still. At the top level for the same Firefox reason. */\n@property --kp-fo-grow {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-hooks.css",
+        "the-hero.css",
+        "the-navbar.css",
+        "button.css",
+        "fields.css",
+        "card.css",
+        "data.css",
+        "motion-guarded.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* forest's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/forest.css and research/signature-elements/themes/forest.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "forests-grammar-as-tokens.css",
+        "the-spinner-plants-a-tree/base.css",
+        "the-spinner-plants-a-tree/growth.css",
+        "the-meter-with-a-mark-this.css",
+        "the-mark-past-the-end.css",
+        "activity-feed.css",
+        "skeleton-block-and-circle.css",
+        "live-change-lays-a-growth.css",
+        "the-leaf-corner.css",
+        "notes-are-italic.css",
+        "the-dashboard-port.css",
+        "forest-straightened/base.css",
+        "forest-straightened/tree.css",
+        "audit-round-research.css"
+      ],
+      "close": "}\n"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "segmented-toolbar.css"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "file": "the-fourth-adoption-round.css"
+    },
+    {
+      "file": "rows-cards-and-choices.css"
+    },
+    {
+      "file": "time-and-flows.css"
+    },
+    {
+      "file": "the-calm-components.css"
+    },
+    {
+      "file": "the-kpadopt5-and-kpadopt6.css"
+    },
+    {
+      "file": "t56-q.css"
+    },
+    {
+      "file": "end-t56-q/base.css"
+    },
+    {
+      "file": "end-t56-q/end-t56-q.css"
+    },
+    {
+      "file": "end-t56-q2-confirm.css"
+    },
+    {
+      "file": "end-t56-q2-choose.css"
+    },
+    {
+      "file": "end-t56-q2-schedule/base.css"
+    },
+    {
+      "file": "end-t56-q2-schedule/end-t56-q2-schedule.css"
+    },
+    {
+      "file": "graph-loading-r3-fr-load-3.css"
+    }
+  ]
+}

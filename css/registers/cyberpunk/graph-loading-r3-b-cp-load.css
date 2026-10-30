@@ -1,0 +1,17 @@
+/* @part: graph-loading-r3-b-cp-load: graph loading · r3-b-cp-load-4 · The packet race (research/character-graph/decided.json, K */
+/* ── graph loading · r3-b-cp-load-4 · The packet race (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='cyberpunk'] .kp-graph {
+        --kp-graph-ghost-anim: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-graph__ghost {
+        --kp-graph-ghost: 0.62;
+    }
+
+    [data-theme='cyberpunk'] .kp-graph__ghost .kp-graph__edge {
+        stroke-dasharray: 12 88;
+        --kp-graph-edge-anim: kp-graph-spark 900ms linear infinite;
+        --kp-graph-edge-stagger: -80ms;
+    }
+}

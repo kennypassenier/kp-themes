@@ -1,0 +1,78 @@
+/* @part: tones-the-live-change-g8: 9 · Tones, the live change (G8, G9) */
+    /* ── 9 · Tones, the live change (G8, G9) ───────────────────────────── */
+
+    /* A change is a small sticker on the tone's own plate and ink, with its
+       own flat peel. */
+    [data-theme='pastel'] .kp-kpi__delta[data-kp-tone] {
+        padding: 0.05rem 0.5rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        font-weight: 700;
+    }
+
+    [data-theme='pastel'] .kp-kpi__delta[data-kp-tone='good'] {
+        background: var(--success);
+        color: var(--success-foreground);
+        box-shadow: 0 2px 0 var(--success-foreground);
+    }
+
+    [data-theme='pastel'] .kp-kpi__delta[data-kp-tone='bad'] {
+        background: hsl(from var(--destructive) h s 94%);
+        color: var(--destructive);
+        box-shadow: 0 2px 0 var(--destructive);
+    }
+
+    /* A warning or failed figure carries the note in its label, on the
+       tone's plate; no edge, no bar (G5). */
+    [data-theme='pastel'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+
+    [data-theme='pastel'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: inherit;
+    }
+
+    [data-theme='pastel'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__label {
+        justify-self: start;
+        padding: 0.05rem 0.5rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+
+    [data-theme='pastel'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__label {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    [data-theme='pastel'] .kp-kpi[data-kp-tone='destructive'] {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='pastel'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__label {
+        background: hsl(from var(--destructive) h s 94%);
+        color: var(--destructive);
+    }
+
+    /* A live change wobbles once round its foot, like jelly; its pass stays
+       where it is (js/update.js marks it `[data-kp-updating='wobble']`). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kp-updating='wobble'] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out;
+        }
+    }
+
+    @keyframes kp-sig-pastel-update-wobble {
+        25% {
+            rotate: 10deg;
+        }
+
+        50% {
+            rotate: -7deg;
+        }
+
+        75% {
+            rotate: 3deg;
+        }
+    }
+

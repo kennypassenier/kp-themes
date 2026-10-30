@@ -1,0 +1,84 @@
+/* @part: card: Cards, the dossier */
+    /* ── Cards, the dossier: a quiet panel, the redact bar ─────────────── */
+
+    /* The plate is on the ::after since scope-102 (below); the card itself
+       keeps the border box it always had, so nothing moves, and carries
+       nothing but the halo.
+
+       `position: relative` makes the card the containing block of that
+       plate, and `isolation: isolate` the stacking context the plate's
+       negative z-index needs — without it a card standing on a panel with
+       a ground of its own would have its plate painted behind that ground.
+       Neither is a filter: the dialog needs one because its plate is
+       `position: fixed`, and a filter would also make every card the
+       containing block of any fixed descendant a consumer puts in one. */
+    [data-theme='dark'] .kp-card {
+        position: relative;
+        isolation: isolate;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: calc(var(--radius) * 1.5);
+        box-shadow: var(--kp-halo);
+    }
+
+    [data-theme='dark'] .kp-card__title {
+        font-weight: 700;
+    }
+
+    /* The stamp: attr(data-kp-label) content, the convention
+       css/cyberpunk-register.css already uses for the same slot. */
+    [data-theme='dark'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+    }
+
+    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    /* The dossier's own reading of the mark: not the ignite above, but a
+       redact bar in the theme's edge colour that lifts off, right to
+       left, on the trigger — the demo's own mechanism for this slot,
+       distinct from the lede's colour-only ignite the general rule above
+       answers. The bar sits on the mark's own ::after so what a reader
+       hears (the text itself) is never removed, only its paint. */
+    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark {
+        position: relative;
+        color: var(--foreground);
+        background: none;
+        text-decoration: none;
+        font-weight: 400;
+        white-space: nowrap;
+        border-radius: 0.2em;
+    }
+
+    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+        content: '';
+        position: absolute;
+        inset: -0.05em -0.15em;
+        background: var(--border-strong);
+        border-radius: 0.2em;
+        transform: scaleX(0);
+        transform-origin: right center;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        color: transparent;
+    }
+
+    [data-theme='dark'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
+        transform: scaleX(1);
+    }
+

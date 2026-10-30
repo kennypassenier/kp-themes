@@ -1,0 +1,51 @@
+/* @part: bar-cell: A value with a bar, in a table cell */
+    /* --- A value with a bar, in a table cell [kpadopt2-grids] ---------------- */
+
+    /* The meter and its number in one cell: the bar takes the room that is
+ * left, the number a column of its own on the end edge, so a column of
+ * these lines up its bars and its figures whatever the figures say. A data
+ * table sorts it by the cell's `data-kp-sort-value`. js/barcell.js writes
+ * it; `data-kp-bar="0.62"` on the span is enough. Knobs:
+ * --kp-bar-cell-bar (3rem, the least the bar takes), --kp-bar-cell-value
+ * (4ch, the number's column), --kp-bar-cell-gap (0.5rem). */
+    .kp-bar-cell {
+        display: grid;
+        grid-template-columns: minmax(var(--kp-bar-cell-bar, 3rem), 1fr) var(--kp-bar-cell-value, 4ch);
+        align-items: center;
+        gap: var(--kp-bar-cell-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+    }
+
+    /* The figure's column while it loads: one skeleton line, the column's width, held to the figure's own line height. A
+     * theme whose skeleton line is drawn taller than the text (formal's ledger line) overhangs that line, centred, and
+     * never grows the cell, so a row (a card at 390 px) is as tall loading as loaded. */
+    .kp-bar-cell[data-kp-loading] > .kp-bar-cell__value {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr);
+        align-items: unsafe center;
+        align-self: center;
+        block-size: 1lh;
+    }
+
+    .kp-bar-cell__ghost.kp-skeleton {
+        display: block;
+        inline-size: 100%;
+        min-inline-size: 2ch;
+        block-size: var(--kp-bar-cell-ghost-height, 0.625rem);
+    }
+
+    .kp-bar-cell--start {
+        grid-template-columns: var(--kp-bar-cell-value, 4ch) minmax(var(--kp-bar-cell-bar, 3rem), 1fr);
+    }
+
+    .kp-bar-cell--start > .kp-bar-cell__value {
+        order: -1;
+    }
+
+    .kp-bar-cell__value {
+        min-inline-size: 0;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+

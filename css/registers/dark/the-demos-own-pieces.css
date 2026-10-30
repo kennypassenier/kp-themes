@@ -1,0 +1,421 @@
+/* @part: the-demos-own-pieces: The demo's own pieces */
+    /* ── The demo's own pieces [S46] ───────────────────────────────────── */
+
+    [data-theme='dark'] .kp-laurels {
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-laurels li {
+        flex: 1 1 12rem;
+        padding: 0.5rem 0.7rem;
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-laurels b {
+        display: block;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--foreground);
+        margin-block-end: 0.15rem;
+    }
+
+    [data-theme='dark'] .kp-lede {
+        max-width: 38rem;
+        font-size: 1.08rem;
+    }
+
+    [data-theme='dark'] .kp-platforms {
+        margin-block-start: 1.6rem;
+        gap: 0.2rem 1.3rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-platforms span::before {
+        content: '· ';
+        color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-spec {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+        padding: 1.2rem 1.4rem;
+        font-size: 0.86rem;
+        line-height: 1.75;
+    }
+
+    [data-theme='dark'] .kp-spec dt {
+        color: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='dark'] .kp-log {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+    }
+
+    [data-theme='dark'] .kp-log__level {
+        --kp-log-level-ink: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
+    [data-theme='dark'] .kp-spec__swatch {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-spec__font {
+        font-family: var(--theme-font-display);
+    }
+
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one: the rest states above are what they get. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* A headline is laid word by word: the line crosses each word from its
+           start edge at one pace, 60 ms after the word before [G2, G19]. */
+        [data-theme='dark'] [data-kp-reveal='headline'].is-words [data-word] {
+            animation: kp-sig-dark-lay 660ms linear both;
+            animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
+        }
+
+        /* The redact bar: a size change, not a colour (KT8: no
+           mid-transition colour can be read); the ink turns visible in
+           the same instant the bar clears, staggered per redaction. */
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+            transition: transform 380ms var(--fx-ease);
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+            transition-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+            transition-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: color 0s linear 0s;
+        }
+    }
+
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js). A headline's
+       words are laid by the pass (kp-sig-dark-lay, below): a word's box is
+       revealed from the start edge at an even pace and stops dead at the end
+       (G1); nothing blurs, nothing splits into two wavelengths (G19). */
+    /* Scroll-bound, not time-based: the browser scrubs this by the
+       heading's own position, not a clock, so it cannot free-run and
+       cannot loop — see gates/check-motion.mjs's OUT_OF_SCOPE entry. */
+    @keyframes kp-ignite {
+        100% {
+            color: var(--primary);
+            text-decoration-color: var(--border-strong);
+        }
+    }
+
+    /* The rule draws itself from the leading edge [scope-16]. Scroll-bound
+       like the ignite above it: the browser scrubs this by the heading's
+       own position, so it cannot free-run and cannot loop. */
+    @keyframes kp-draw {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the row a step lighter than the page it sits on. */
+    [data-theme='dark'] .kp-marquee {
+        border-block: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+        background: color-mix(in srgb, var(--card) 60%, var(--background));
+        --kp-marquee: 50000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='dark'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='dark'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Quiet, the way this theme is quiet: the row you are on is a raised
+       plate rather than a colour, and the accent shows only at its
+       leading edge. */
+    [data-theme='dark'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-sidenav__link,
+    [data-theme='dark'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--accent);
+        color: var(--foreground);
+        border-inline-start-color: var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Quiet, like the rest of it. */
+    [data-theme='dark'] .kp-to-top {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='dark'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    /* Not `--primary-active` any more [scope-100]: with the hover on its own
+       token (86%), that token (78%) sat 6.2 in OKLab distance from it, under
+       the States block's floor of 10, so a press barely showed. Fourteen
+       points under the hover ground instead. */
+    [data-theme='dark'] .kp-button--primary:active:not(:disabled) {
+        background: hsl(from var(--primary-hover) h s calc(l - 14));
+        border-color: hsl(from var(--primary-hover) h s calc(l - 14));
+    }
+
+    [data-theme='dark'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* ── The ground [scope-16] ─────────────────────────────────────────
+       An instrument's grid, and a pool of light under the pointer. Both
+       are on the page's own texture layer, so nothing here paints over a
+       control. The light is the one thing on the page that moves without
+       being touched, and it moves only because a hand does. */
+    [data-theme='dark'] body {
+        background-image:
+            radial-gradient(
+                46rem 34rem at calc(var(--kp-px) * 100%) calc(var(--kp-py) * 100%),
+                hsl(from var(--chart-1) h s l / 0.13),
+                transparent 62%
+            ),
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px var(--kp-grid, 5.5rem)),
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px var(--kp-grid, 5.5rem));
+        background-attachment: fixed;
+    }
+
+    /* ── The panels' edge is the film itself [scope-16] ────────────────
+       A gradient border, drawn by painting the panel's own ground over
+       the oxide and letting only the border box show through. */
+    [data-theme='dark'] .kp-card::after,
+    [data-theme='dark'] .kp-dialog::before {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    /* ── The card's plate, and its halo [scope-102] ───────────────────────
+       The dialog's scope-100 restructure, applied to the card for the same
+       measured reason: its chamfer is a clip-path, a clip-path clips the
+       element's own box-shadow, and the card could therefore cast nothing
+       at all. The plate — the ground, the film edge and the cut — moves to
+       the ::after; the card keeps its own border box (`border: 1px solid
+       transparent`, so no box moves) and carries the halo.
+
+       `inset: -1px` is the border's width: the containing block is the
+       card's padding box, and the plate has to reach back over the 1px
+       border it paints the film into. The same inset the dialog's plate
+       carries, for the same reason. */
+    [data-theme='dark'] .kp-card::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border-radius: calc(var(--radius) * 1.5);
+        pointer-events: none;
+    }
+
+    /* ── The dialog's plate under its content, the shadow outside it [scope-100]
+       A clip-path clips everything the element paints, its box-shadow and
+       any filter included, so a chamfered dialog lay flat on its backdrop:
+       the 0 12px 28px shadow painted nothing (1406px of it came back with
+       the clip removed). The chamfer, the ground and the film edge move to
+       the dialog's ::before, and the dialog itself stays unclipped and casts
+       the same shadow as a drop-shadow, which follows the plate's cut shape.
+       The filter makes the dialog the containing block of a fixed
+       descendant, so the plate is fixed to the dialog's box and does not
+       scroll away with a dialog whose content scrolls; the popovers a
+       dialog can hold open in the top layer, which no containing block
+       reaches. The inset is the border's width, because that containing
+       block is the padding box.
+
+       Since scope-102 the shadow is the oxide halo, and a box-shadow
+       rather than a drop-shadow: a modal dialog is `overflow: auto` by
+       the UA stylesheet and clips its own pseudo-elements, so the
+       blurred film could not be worn here at all, and the four fixed
+       shadows are what the decision asks for on every one of the three
+       surfaces. The filter stays, emptied to a no-op: it is what makes
+       this dialog the containing block of its fixed plate, and losing it
+       would let the plate scroll away. A box-shadow is painted with the
+       element's own background and border, so the opaque plate on the
+       ::before covers nothing of it — an outer shadow lies outside the
+       border box by definition. */
+    [data-theme='dark'] .kp-dialog {
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: var(--kp-halo);
+        filter: drop-shadow(0 0 0 transparent);
+    }
+
+    [data-theme='dark'] .kp-dialog::before {
+        content: '';
+        position: fixed;
+        inset: -1px;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* ── The small parts that carry the film [scope-16] ───────────────── */
+    [data-theme='dark'] .kp-nav__marker,
+    [data-theme='dark'] .kp-boot__bar i {
+        background: var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-measure__bracket {
+        border-color: hsl(from var(--chart-1) h s l / 0.55);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='dark'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): quiet muted words on a rounded plate that
+       fills with the accent ground when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.8rem;
+        font-weight: 500;
+        border: 0;
+        border-radius: var(--radius);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--accent);
+        color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The dark plate of the prototype, split in the near-white of its primary, with a hairline frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='dark'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 60));
+        --kp-alarm-soft: hsl(from var(--destructive) h calc(s * 0.4) 86);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--destructive) h s 6%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s max(l, 45) / 0.5);
+        --kp-alarm-halo: hsl(from var(--destructive) h s max(l, 50) / 0.55);
+        --kp-alarm-scan: hsl(from var(--destructive) h s max(l, 50) / 0.09);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s 2% / 0.7);
+        --kp-alarm-frame: 1px solid;
+        --kp-alarm-title-tracking: 0.02em;
+    }
+
+    [data-theme='dark'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the same dash as light, its sibling. */
+    [data-theme='dark'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '–';
+    }

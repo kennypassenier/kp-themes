@@ -1,0 +1,140 @@
+/* @part: segmented-toolbar: The filters that are on: one removable tag each (the data table's own */
+    .kp-toolbar__state {
+        display: flex;
+        align-items: center;
+        justify-self: end;
+        gap: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* The filters that are on: one removable tag each (the data table's own
+ * `.kp-tag`), and Clear all. Absent when none is on; with
+ * `data-kp-toolbar-reserve` its row keeps its height so the list under the
+ * toolbar does not move when a filter is turned on. */
+    .kp-toolbar__active {
+        grid-column: 1 / -1;
+        display: flex;
+        min-block-size: var(--kp-toolbar-active-height, 1.75rem);
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-toolbar__active[hidden] {
+        display: none;
+    }
+
+    .kp-toolbar[data-kp-toolbar-reserve] > .kp-toolbar__active[hidden] {
+        display: flex;
+        visibility: hidden;
+    }
+
+    .kp-toolbar__active-label {
+        color: var(--muted-foreground);
+    }
+
+    @media (max-width: 48rem) {
+        .kp-toolbar,
+        .kp-toolbar:not(:has(> .kp-toolbar__search)) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        /* One scrolling line of filters instead of a wrapped block. */
+        .kp-toolbar__filters {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .kp-toolbar__group,
+        .kp-toolbar .kp-segmented--chips {
+            flex-wrap: nowrap;
+        }
+
+        .kp-toolbar__state {
+            justify-self: stretch;
+            justify-content: space-between;
+        }
+    }
+
+    /* The same one-column toolbar on demand, for a narrow card or a side column
+ * on a wide window, where the viewport query above cannot know the room. */
+    .kp-toolbar--stacked,
+    .kp-toolbar--stacked:not(:has(> .kp-toolbar__search)) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-toolbar--stacked > .kp-toolbar__filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .kp-toolbar--stacked .kp-toolbar__group,
+    .kp-toolbar--stacked .kp-segmented--chips {
+        flex-wrap: nowrap;
+    }
+
+    .kp-toolbar--stacked > .kp-toolbar__state {
+        justify-self: stretch;
+        justify-content: space-between;
+    }
+
+    /* A key cap. Free-standing: it works in a button, a hint, a sentence. */
+    .kp-kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-inline-size: 1.5em;
+        padding: 0 var(--kp-kbd-pad, 0.3125rem);
+        border: 1px solid var(--kp-kbd-edge, var(--border-strong));
+        border-block-end-width: var(--kp-kbd-foot, 2px);
+        border-radius: var(--kp-kbd-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-kbd-ground, var(--muted));
+        color: var(--kp-kbd-ink, var(--foreground));
+        font: 600 var(--kp-text-xs, 0.75rem) / 1.5 var(--theme-font-mono, ui-monospace, monospace);
+        letter-spacing: 0;
+        text-transform: none;
+        white-space: nowrap;
+    }
+
+    .kp-button > .kp-kbd {
+        margin-inline-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* A line of shortcuts: the caps, then what they do. One line while it
+ * fits, wrapping by whole shortcuts when it does not. */
+    .kp-keys {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-keys-gap, var(--kp-space-lg, 1rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-keys--end {
+        justify-content: flex-end;
+    }
+
+    .kp-keys__item {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* The caps of one action sit closer to each other than to its words. */
+    .kp-keys__caps {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-keys-caps-gap, 0.125rem);
+    }
+

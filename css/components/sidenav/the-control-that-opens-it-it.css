@@ -1,0 +1,349 @@
+/* @part: sidenav: The control that opens it. It draws nothing of its own: unlike the */
+    /* The control that opens it. It draws nothing of its own: unlike the
+       bar's toggle this one is usually placed in a header the consumer
+       already has, with their own glyph in it. */
+    .kp-sidenav__toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: var(--kp-sidenav-toggle-size, 2.25rem);
+        min-block-size: var(--kp-sidenav-toggle-size, 2.25rem);
+        /* Above the panel and above its backdrop. A control that opens
+           something and then disappears underneath it is the fault this
+           package already made once, in the bar's own drawer. A toggler
+           that does not take this class is the consumer's to place. */
+        position: relative;
+        z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+    }
+
+    /* The content a push panel moves [Kenny, 2026-10-13]. js/sidenav.js
+       copies the panel's own time, curve and delay for this change onto the
+       content (`--kp-sidenav-shift-duration`, `--kp-sidenav-shift-ease`,
+       `--kp-sidenav-shift-delay`), so the content travels with the
+       theme's slide and comes back on its reverse; a register that draws the
+       move itself (cyberpunk's ticks, nostromo's cut) wins from its layer.
+       Without the module, or in a mode that does not push, the time is 0s. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kp-sidenav-shift] {
+            transition-property: margin-inline-start, margin-inline-end, padding-inline-start, padding-inline-end;
+            transition-duration: var(--kp-sidenav-shift-duration, 0s);
+            transition-timing-function: var(--kp-sidenav-shift-ease, linear);
+            transition-delay: var(--kp-sidenav-shift-delay, 0s);
+        }
+    }
+
+    /* The launcher [Kenny, 2026-10-13, translated: "a button (e.g. a hamburger
+       icon) at the very top left of the page that is static"]. A box fixed at the window's
+       start corner, always in the same place and above the panel, holding
+       the panel's toggler, which is the theme's own `.kp-icon-button`: the
+       box places it, so no register's `position` on an icon button can move
+       it (docs/THEME_LESSONS.md 5 and 43). Its ground is the page's, so
+       content scrolled under it never shows through; lit (from the opening's
+       first frame to the closing's last, js/sidenav.js) it takes the accent
+       plate, as the bar's own toggle does when its panel is open: a state
+       change, not three bars folding into a cross, which every register
+       would have to keep working.
+       Knobs: --kp-sidenav-launcher-inset (the gap to the window's edges,
+       default --kp-space-sm), --kp-sidenav-launcher-size (2.25rem, the icon
+       button's). The room it takes, inset + size + inset, is what the
+       panel's header and a page element marked
+       `data-kp-sidenav-launcher-room` keep free. */
+    .kp-sidenav__launcher {
+        position: fixed;
+        inset-block-start: var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem));
+        inset-inline-start: var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem));
+        z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+        display: flex;
+        border-radius: var(--radius, 0.5rem);
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    .kp-sidenav__launcher > :is(button, .kp-icon-button) {
+        inline-size: var(--kp-sidenav-launcher-size, 2.25rem);
+        block-size: var(--kp-sidenav-launcher-size, 2.25rem);
+    }
+
+    .kp-sidenav__launcher[data-kp-sidenav-lit] {
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    /* The package's glyph: the three bars the bar's toggle draws, put in an
+       empty launcher toggler by js/sidenav.js. */
+    .kp-sidenav__bars {
+        display: block;
+        inline-size: 1.05rem;
+        block-size: 2px;
+        background: currentColor;
+        box-shadow:
+            0 -0.36rem 0 currentColor,
+            0 0.36rem 0 currentColor;
+    }
+
+    /* The panel the launcher drives starts its items clear of it: the header
+       row begins beside the launcher, or, without a header, the panel's
+       first row begins below it. */
+    .kp-sidenav[data-kp-sidenav-launched]:not([data-kp-sidenav-side='end']) > .kp-sidenav__header {
+        box-sizing: border-box;
+        min-block-size: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+        padding-inline-start: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+        align-items: center;
+    }
+
+    .kp-sidenav[data-kp-sidenav-launched]:not([data-kp-sidenav-side='end']):not(:has(> .kp-sidenav__header)) {
+        padding-block-start: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+    }
+
+    /* The edge tab: a small box on the panel's far edge holding a toggler
+       (the theme's `.kp-icon-button`), at the window's edge while the panel
+       is away. js/sidenav.js moves it with the panel (`data-kp-sidenav-shift`,
+       on the panel's own timing, so a register that draws the content's move
+       draws the tab's too) and says which edge (`data-kp-sidenav-tab-edge`).
+       The grip it draws in an empty toggler has no state to change. Edge
+       tabs belong to panels that slide (over, push). */
+    .kp-sidenav__tab {
+        position: fixed;
+        z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+        display: flex;
+        inset-block-start: 50%;
+        inset-inline-start: 0;
+        translate: 0 -50%;
+        border: var(--kp-sidenav-edge, 1px solid var(--border));
+        border-inline-start: none;
+        border-start-end-radius: var(--radius, 0.5rem);
+        border-end-end-radius: var(--radius, 0.5rem);
+        background-color: var(--kp-sidenav-surface, var(--card));
+        color: var(--foreground);
+    }
+
+    .kp-sidenav__tab > :is(button, .kp-icon-button) {
+        inline-size: var(--kp-sidenav-tab-thickness, 1.25rem);
+        block-size: var(--kp-sidenav-tab-length, 3rem);
+    }
+
+    .kp-sidenav__tab[data-kp-sidenav-tab-edge='end'] {
+        inset-inline: auto 0;
+        border-inline: var(--kp-sidenav-edge, 1px solid var(--border)) none;
+        border-radius: var(--radius, 0.5rem) 0 0 var(--radius, 0.5rem);
+    }
+
+    .kp-sidenav__grip {
+        display: block;
+        inline-size: 2px;
+        block-size: 1rem;
+        background: currentColor;
+        box-shadow: 0.3rem 0 0 currentColor;
+        translate: -0.15rem 0;
+    }
+
+    /* --- Side navigation: minor behaviour options ------------------------
+       Three opt-in additions [Kenny, 2026-10-13, from the libraries survey]:
+       the refusal a static backdrop plays, and the handle that resizes the
+       panel. Every rule hangs on an attribute that only js/sidenav.js writes
+       when the page asked for the option, so a panel without them is drawn
+       exactly as before. The look is the theme's through its own tokens:
+       the cue runs on the panel's duration and curve
+       (--kp-sidenav-duration, --kp-sidenav-ease), the handle in --ring and
+       --border-strong. */
+
+    /* The refused cue: a static backdrop was clicked and nothing closed.
+       js/sidenav.js pulls the panel toward the edge it came from and lets it
+       go (Web Animations on the panel's margin, run twice, the second time
+       backwards: the return is the exact reverse of the pull and as long),
+       on the theme's own time and curve, so a stepped theme jolts in steps.
+       It is scripted because every register owns the panel's `translate` and
+       `animation` for its opening and closing, and a CSS animation here would
+       lose to them or replace them. While it plays the panel carries
+       `data-kp-sidenav-refused`, and this ring, which stands without motion
+       too. Its knobs (travel, duration, ease) are read by the script and
+       named at `refuse` in js/sidenav.js. */
+    .kp-sidenav[data-kp-sidenav-refused] {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    /* The resize handle: inside the panel, on the edge that faces the content,
+       so it covers none of the page. A strip to grab with a short bar to show
+       it is there; the full-height line shows on pointing, focus and while it
+       is held. It rests in the border colour and is lit in the ring colour. */
+    .kp-sidenav:where([data-kp-sidenav-resizable]):not(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push'],
+            [data-kp-sidenav-position='absolute']
+        ) {
+        position: relative;
+    }
+
+    .kp-sidenav__resizer {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-sidenav-resizer-size, 0.75rem);
+        cursor: col-resize;
+        touch-action: none;
+        user-select: none;
+    }
+
+    .kp-sidenav[data-kp-sidenav-side='end'] > .kp-sidenav__resizer {
+        inset-inline: 0 auto;
+    }
+
+    .kp-sidenav[data-kp-sidenav-slim-collapsed] > .kp-sidenav__resizer {
+        display: none;
+    }
+
+    .kp-sidenav__resizer::before {
+        content: '';
+        inline-size: 0.25rem;
+        block-size: 2rem;
+        border-radius: var(--radius, 0.5rem);
+        background: var(--border-strong);
+    }
+
+    .kp-sidenav__resizer::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: 2px;
+        background: var(--ring);
+        opacity: 0;
+    }
+
+    .kp-sidenav[data-kp-sidenav-side='end'] > .kp-sidenav__resizer::after {
+        inset-inline: 0 auto;
+    }
+
+    .kp-sidenav__resizer:is(:hover, :focus-visible)::after,
+    .kp-sidenav[data-kp-sidenav-resizing] > .kp-sidenav__resizer::after {
+        opacity: 1;
+    }
+
+    .kp-sidenav__resizer:is(:hover, :focus-visible)::before,
+    .kp-sidenav[data-kp-sidenav-resizing] > .kp-sidenav__resizer::before {
+        background: var(--ring);
+    }
+
+    /* While it is held the text under the pointer is not selected. */
+    .kp-sidenav[data-kp-sidenav-resizing] {
+        user-select: none;
+    }
+
+    /* An action beside an item [Kenny, 2026-10-14, from the libraries survey:
+       shadcn's MenuAction]: a trailing icon button next to a link. The row is
+       the list item, `<li class="kp-sidenav__row">`, holding the link and the
+       button as siblings, so the button is never inside the link and pressing
+       it cannot follow it; both are in the tab order, in that order. Put
+       the theme's own `.kp-icon-button` on the button too
+       (`class="kp-icon-button kp-sidenav__action"`), and it wears the theme's
+       icon button with this component's size and place. The button is as tall
+       as its row (so it follows the density preset) and `--kp-sidenav-action-size`
+       wide (2rem); its focus ring is drawn inside it, where the panel's
+       scroll cannot cut it. In the collapsed rail the actions go with the
+       labels. */
+    .kp-sidenav__row {
+        display: flex;
+        align-items: stretch;
+        gap: var(--kp-sidenav-action-gap, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-sidenav__row > .kp-sidenav__link {
+        flex: 1 1 auto;
+        inline-size: auto;
+    }
+
+    .kp-sidenav__row > .kp-sidenav__action {
+        flex: 0 0 auto;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        inline-size: var(--kp-sidenav-action-size, 2rem);
+        block-size: auto;
+        min-block-size: 0;
+        padding: 0;
+        font: inherit;
+        font-size: var(--kp-sidenav-link-size, var(--kp-font-size-sm, 0.875rem));
+        line-height: 1;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .kp-sidenav__row > .kp-sidenav__action:hover {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-sidenav__row > .kp-sidenav__action:focus-visible {
+        outline-offset: calc(-2 * var(--kp-focus-ring-inner-width, 2px));
+        box-shadow: inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+        .kp-sidenav__action {
+        display: none;
+    }
+
+    /* Density presets [Kenny, 2026-10-14, from the libraries survey: Fluent's
+       `density`, Chakra's `size`]. `data-kp-sidenav-density` on the panel is
+       one attribute that only sets tokens this component already reads: a row's
+       block padding, its type size, the icon's width and the header and footer
+       padding. The default (no attribute) is what the panel always was, at
+       37px a row; `compact` is 29px, above the 28px floor the package keeps
+       under a control, and `comfortable` 45px. The gap between rows, the list's
+       padding and everything a register says about its own rows are the
+       theme's, and stay. This is the panel's own knob, apart from the page-wide
+       `data-density="compact"` in css/_density.css, which they may share. */
+    .kp-sidenav[data-kp-sidenav-density='compact'] {
+        --kp-sidenav-link-padding-block: var(--kp-space-xs, 0.25rem);
+        --kp-sidenav-icon-size: 1.1rem;
+        --kp-sidenav-pad: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-sidenav[data-kp-sidenav-density='comfortable'] {
+        --kp-sidenav-link-padding-block: var(--kp-space-md, 0.75rem);
+        --kp-sidenav-link-size: var(--kp-text-md, 1rem);
+        --kp-sidenav-icon-size: 1.4rem;
+        --kp-sidenav-pad: 1rem;
+    }
+
+    /* The peek strip [Kenny, 2026-10-14, from the libraries survey: a sliver of
+       the panel stays at the edge, so the panel is known to be there]. Set
+       `--kp-sidenav-peek` (0.75rem) on the panel or above it, and
+       js/sidenav.js makes this element beside the panel: a thin column at the
+       window's edge, in the theme's muted ground (--kp-sidenav-peek-surface) and
+       strong edge, under the panel and
+       always there, so a theme's own opening and closing (which run where the
+       panel stands, not from the edge) stay as they are and the strip stays
+       put while they play. A push panel keeps the strip's room in the content
+       while it is shut; an `over` panel's strip is the only part of it that
+       lies over the page. It takes no pointer and no focus. Without the token
+       there is no strip, and nothing here applies. */
+    .kp-sidenav__peek {
+        position: fixed;
+        inset-block: var(--kp-sidenav-inset-block, 0);
+        inset-inline-start: 0;
+        z-index: calc(var(--kp-sidenav-layer, 60) - 1);
+        box-sizing: border-box;
+        inline-size: var(--kp-sidenav-peek, 0px);
+        background: var(--kp-sidenav-peek-surface, var(--muted));
+        border-inline-end: var(--kp-sidenav-edge, 1px solid var(--border-strong));
+        pointer-events: none;
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-edge='end'] {
+        inset-inline: auto 0;
+        border-inline-end: none;
+        border-inline-start: var(--kp-sidenav-edge, 1px solid var(--border-strong));
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-hushed] {
+        display: none;
+    }
+

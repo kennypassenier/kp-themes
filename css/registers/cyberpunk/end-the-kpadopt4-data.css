@@ -1,0 +1,270 @@
+/* @part: end-the-kpadopt4-data: end the kpadopt4 data pieces */
+/* ── end the kpadopt4 data pieces ── */
+
+/* ── The kpadopt4 rows, records and flows in cyberpunk's own grammar [kpadopt4] ──
+   A row lights its circuit when pointed at (G8) and is torn in a tick after the row before it (G3, G12); a failed or
+   warned part is locked as a target in the tone's ink (G13); a card standing on the board is cut at its dossier corner
+   (G6, G7); the chosen card, the current step are held by the reticle in cyan (G16); a group's rule is the tripwire dashes
+   (G16); the drawings for an empty state are the system looking at a holo card (G10, G16). */
+@layer kp.signature {
+    /* ── Rows with a lead ── */
+    [data-theme='cyberpunk'] .kp-action-list--lead {
+        --kp-action-list-bar: 3px;
+        --kp-action-list-next-wash: 0%;
+    }
+    [data-theme='cyberpunk'] .kp-action-list--lead > li:is(:hover, :focus-within) {
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        --kp-cp4-tone: var(--destructive);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        --kp-cp4-tone: var(--warning-foreground);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead {
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-action-list__when,
+    [data-theme='cyberpunk'] .kp-action-list__meta {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+    }
+    [data-theme='cyberpunk'] .kp-action-list__payload {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-action-list > li.kp-action-list__group > :is(h2, h3, h4, h5, h6) {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-action-list--lead > li {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+        [data-theme='cyberpunk'] .kp-action-list--lead > li:nth-child(2) {
+            animation-delay: var(--kp-cp4-tick);
+        }
+        [data-theme='cyberpunk'] .kp-action-list--lead > li:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-cp4-tick));
+        }
+        [data-theme='cyberpunk'] .kp-action-list--lead > li:nth-child(4) {
+            animation-delay: calc(3 * var(--kp-cp4-tick));
+        }
+        [data-theme='cyberpunk'] .kp-action-list--lead > li:nth-child(n + 5) {
+            animation-delay: calc(4 * var(--kp-cp4-tick));
+        }
+    }
+
+    /* ── Status rows: the fix is a cyan read-out under the title; a warn row is locked as a target ── */
+    [data-theme='cyberpunk'] .kp-statusrow[data-state='warn'] {
+        --kp-cp4-tone: var(--warning-foreground);
+        --kp-statusrow-state-edge: hsl(from var(--warning-foreground) h s l / 0.5);
+        --kp-statusrow-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-statusrow__fix {
+        font-family: var(--kp-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='cyberpunk'] .kp-statusrow__fix::before {
+        content: '> ';
+        color: var(--primary);
+    }
+
+    /* ── Choices as tiles: a notched slot; pointing lights its circuit, checked it is the holo card (the rim, the glow),
+       a press lights the circuit full ── */
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 0;
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--primary) 9%, var(--card));
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image: none;
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        background-image: var(--kp-cp4-grid);
+        border-color: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        background-image: var(--kp-cp4-grid-press);
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        clip-path: none;
+        outline-offset: -2px;
+    }
+    [data-theme='cyberpunk'] .kp-field__option-hint {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+    }
+
+    /* ── A card in four data states ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+
+    /* ── Drawings for an empty state: the HUD. The strokes are torn in sideways and jitter home in six held ticks; the
+       reduced pose is the drawing standing locked. ── */
+    [data-theme='cyberpunk'] .kp-art {
+        display: block;
+    }
+    [data-theme='cyberpunk'] .kp-art > g[data-kp-art-set='hud'] {
+        display: inline;
+    }
+    [data-theme='cyberpunk'] .kp-art path {
+        stroke-linecap: square;
+    }
+    [data-theme='cyberpunk'] .kp-art__rule {
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.6));
+    }
+    [data-theme='cyberpunk'] .kp-art__red {
+        filter: drop-shadow(0 0 3px hsl(from var(--destructive) h s l / 0.6));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-art {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+    }
+
+    /* ── The pipeline: a lane is a plate cut at its dossier corner, its head a prefixed mono label; a card is cut at its
+       end corner and lights its circuit; the chosen card is held by the reticle ── */
+    [data-theme='cyberpunk'] .kp-pipeline__lane {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+        background-image: var(--kp-cp4-scan);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__head {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__name {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__name::before {
+        content: '/// ';
+        opacity: 0.7;
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__share,
+    [data-theme='cyberpunk'] .kp-pipeline__sub,
+    [data-theme='cyberpunk'] .kp-pipeline__meta {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__card {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__card:hover {
+        background-image: var(--kp-cp4-grid);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__card[aria-current='true'] {
+        --kp-cp4-tone: var(--accent);
+        outline: 0;
+        border-color: var(--border);
+        background-image: var(--kp-cp4-lock);
+    }
+    [data-theme='cyberpunk'] .kp-pipeline__mark {
+        border-radius: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+        [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(2) {
+            animation-delay: var(--kp-cp4-tick);
+        }
+        [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-cp4-tick));
+        }
+        [data-theme='cyberpunk'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-cp4-tick));
+        }
+    }
+
+    /* ── The journey: the path is tripwire dashes until a step is reached, then a solid line; the marks are notched
+       squares; the current step is held by the reticle ── */
+    [data-theme='cyberpunk'] .kp-steplist--journey {
+        --kp-journey-rule: 2px;
+    }
+    [data-theme='cyberpunk'] .kp-steplist--journey .kp-steplist__mark {
+        border-radius: 0;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+    }
+    [data-theme='cyberpunk'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item:not([data-state='done'], [data-state='current'], [data-state='failed'])::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px);
+    }
+    [data-theme='cyberpunk'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--primary));
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='cyberpunk'] .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        --kp-cp4-tone: var(--accent);
+        clip-path: none;
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+    }
+    [data-theme='cyberpunk'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-steplist--journey > .kp-steplist__item {
+            animation: kp-cp4-tear calc(6 * var(--kp-cp4-tick)) steps(1, end) backwards;
+        }
+        [data-theme='cyberpunk'] .kp-steplist--journey > .kp-steplist__item:nth-child(2) {
+            animation-delay: var(--kp-cp4-tick);
+        }
+        [data-theme='cyberpunk'] .kp-steplist--journey > .kp-steplist__item:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-cp4-tick));
+        }
+        [data-theme='cyberpunk'] .kp-steplist--journey > .kp-steplist__item:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-cp4-tick));
+        }
+    }
+
+    /* ── Moments on the run timeline and the dated line ── */
+    [data-theme='cyberpunk'] .kp-gantt__point:hover::before,
+    [data-theme='cyberpunk'] .kp-gantt__point:focus-visible::before {
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__count {
+        font-family: var(--kp-mono);
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__zone {
+        border-inline-start: 1px dashed var(--border-strong);
+    }
+    [data-theme='cyberpunk'] .kp-gantt--line .kp-gantt__track {
+        border-radius: 0;
+    }
+}

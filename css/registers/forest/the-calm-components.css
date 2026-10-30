@@ -1,0 +1,289 @@
+/* @part: the-calm-components: The calm components and the seven new ones */
+/* ── The calm components and the seven new ones [kpadopt4] ── */
+@layer kp.signature {
+    /* Three-way chips: the chip that is in is green on the leaf; the one that is out is a dashed outline with the word
+       struck through and a red node; pointing blazes any chip with the dashed green ring (no inner line). */
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-style: dashed;
+    }
+    @media (hover: hover) {
+        [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover:not(:focus-visible) {
+            box-shadow: none;
+            outline-color: var(--primary);
+            outline-offset: 2px;
+        }
+    }
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item:active:not(:focus-visible) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Quantity: the number lies in a routed slot of wood; the steps are forest's own buttons. */
+    [data-theme='forest'] .kp-quantity__field {
+        border-color: transparent;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-quantity__unit {
+        font-style: italic;
+    }
+
+    /* Checklist: a row is blazed inside when pointed at; a ticked item is struck through in clay and goes quiet; the
+       rules are trails of dashes; counts are notes. */
+    [data-theme='forest'] .kp-checklist__bar {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+    }
+    [data-theme='forest'] :is(.kp-checklist__list, .kp-checklist__item) {
+        border-color: hsl(from var(--accent-foreground) h s l / 0.35);
+        border-style: dashed;
+    }
+    [data-theme='forest'] .kp-checklist__row {
+        outline: 2px dashed transparent;
+        outline-offset: -2px;
+        border-radius: var(--kp-sig-fo-part);
+    }
+    @media (hover: hover) {
+        [data-theme='forest'] .kp-checklist__row:hover {
+            background: transparent;
+            outline-color: var(--primary);
+        }
+    }
+    [data-theme='forest'] .kp-checklist__row:active {
+        outline-style: solid;
+    }
+    [data-theme='forest'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--accent-foreground);
+    }
+    [data-theme='forest'] :is(.kp-checklist__count, .kp-checklist__detail, .kp-checklist__status) {
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-checklist__empty, .kp-timers__empty) {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-checklist__row {
+            transition: outline-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Kitchen timers: a card is kraft with the leaf corner, the time upright and its state a note; a finished timer, and
+       a finished disc or countdown, has a growth ring laid round it, drawn three times on the growth curve. */
+    [data-theme='forest'] .kp-timer {
+        position: relative;
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-timer__state {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-timer[data-kp-timer-state='done'] {
+        border-color: var(--border);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-timer[data-kp-timer-ringing]::after,
+        [data-theme='forest'] .kp-countdown[data-kp-countdown-state='ended']::after,
+        [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 1.5px solid var(--primary);
+            border-radius: 0 calc(var(--kp-sig-fo-leaf) + 5px);
+            mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-forest-update-ring var(--kp-sig-fo-time) linear 3 both;
+        }
+        [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face::after {
+            border-radius: 50%;
+        }
+    }
+
+    /* Cook mode: what the step needs is a kraft note with the leaf corner; its title and the screen line are notes;
+       the screen lamp is a green node. */
+    [data-theme='forest'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem) 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-sig-fo-plate);
+        background: var(--card);
+    }
+    [data-theme='forest'] :is(.kp-focus-steps__needs-title, .kp-focus-steps__wake, .kp-focus-steps__name) {
+        font-style: italic;
+    }
+
+    /* Wheel: a cross-section of a trunk. The hub is the heartwood with its tree rings, the pointer a clay trig
+       mark; the wheel spins up out of nothing and settles on the growth curve; the winner is named in the note voice. */
+    [data-theme='forest'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sig-fo-grow);
+        --kp-wheel-pointer: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-wheel__spin.kp-button {
+        background: repeating-radial-gradient(
+            circle closest-side,
+            var(--primary) 0 4px,
+            hsl(from var(--primary) h s calc(l * 1.4)) 4px 5px
+        );
+    }
+    [data-theme='forest'] .kp-wheel__rim {
+        stroke-width: 2.5;
+    }
+    [data-theme='forest'] .kp-wheel__segment {
+        stroke-width: 1.6;
+    }
+    [data-theme='forest'] .kp-wheel__label {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-wheel__caption {
+        font-style: italic;
+    }
+
+    /* Uptime: every period is a plank of the strip, the leaf corner on its small scale, up in the wood's grain; the
+       one pointed at is blazed; a failure to read is a field note. */
+    [data-theme='forest'] .kp-uptime {
+        --kp-uptime-cell-radius: 0 3px;
+        --kp-uptime-gap: 3px;
+    }
+    [data-theme='forest'] .kp-uptime__cell[data-kp-tone='up'] {
+        --kp-uptime-pattern: var(--kp-sig-fo-wood);
+    }
+    [data-theme='forest'] .kp-uptime__cell:is(:focus-visible, [aria-expanded='true']) {
+        outline-style: dashed;
+        outline-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: 0;
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-uptime__axis, .kp-uptime__info-figures) {
+        font-style: italic;
+    }
+
+    /* Command: a kraft plate with the leaf corner; the shell is a wooden tag, the prompt clay, the place a note. */
+    [data-theme='forest'] .kp-command {
+        --kp-command-prompt-ink: var(--accent-foreground);
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-command__head {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+    }
+    [data-theme='forest'] .kp-command__shell {
+        padding: 0.1rem 0.5rem;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-command__where {
+        border-block-start: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+        font-style: italic;
+    }
+
+    /* Visual timer and countdown: the timer is a cross-section of a trunk, its annual rings on the face and a knot for
+       the hub; the time left is the green wedge. The countdown is a kraft plate with the leaf corner. */
+    [data-theme='forest'] .kp-timer-disc__face {
+        border-width: 2px;
+        background: repeating-radial-gradient(circle closest-side, var(--card) 0 5px, hsl(from var(--border-strong) h s l / 0.35) 5px 6px);
+    }
+    [data-theme='forest'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--accent-foreground);
+        --kp-timer-disc-ring: transparent;
+    }
+    [data-theme='forest'] .kp-timer-disc__sector {
+        background: conic-gradient(
+            hsl(from var(--kp-timer-disc-fill, var(--primary)) h s l / 0.88) calc(var(--kp-timer-disc-left, 1) * 360deg),
+            transparent 0
+        );
+    }
+    [data-theme='forest'] .kp-timer-disc__hub {
+        background: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+    [data-theme='forest'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: none;
+        animation: none;
+    }
+    [data-theme='forest'] .kp-countdown {
+        --kp-countdown-ring: transparent;
+        position: relative;
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] :is(.kp-timer-disc__status, .kp-countdown__status, .kp-timer-disc__caption, .kp-countdown__name) {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-timer-disc__face {
+        position: relative;
+    }
+
+    /* Range picker: the custom window in force wears the solid green ring of a pick; an invalid time the red's dashed one. */
+    [data-theme='forest'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+    [data-theme='forest'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-range__label {
+        font-style: italic;
+    }
+
+    /* Compare slider: a kraft frame with the leaf corner; the divider is a trail of green dashes with a node for its
+       handle, which is blazed when pointed at; the two labels are field notes; the divider glides on the growth curve. */
+    [data-theme='forest'] .kp-compare {
+        --kp-compare-line: 2px;
+        --kp-compare-ink: var(--primary);
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-compare__divider {
+        border-inline-start: 0;
+        background: repeating-linear-gradient(to bottom, var(--primary) 0 8px, transparent 8px 13px);
+        inline-size: 2px;
+    }
+    [data-theme='forest'] .kp-compare__handle {
+        inset-inline-start: -1px;
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-compare__handle:hover {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-compare__handle:active {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-compare__handle:focus-visible {
+        outline-style: solid;
+        outline-color: var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-compare__label {
+        border-radius: 0;
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-compare__handle {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+        [data-theme='forest'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+    }
+}
+

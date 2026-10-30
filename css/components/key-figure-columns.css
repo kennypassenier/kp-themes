@@ -1,0 +1,32 @@
+/* @part: key-figure-columns: Key-figure strip on allowed column counts */
+    /* --- Key-figure strip on allowed column counts [scope-143] ------------ */
+
+    /* `data-kp-kpis-columns="all 3 2 1"`: the strip takes the first count in
+ * the list at which every tile is at least `--kp-kpi-min` wide, by its own
+ * width, and steps down a count when that would leave one tile alone on
+ * the last row; when no allowed count avoids it, the lone tile spans its
+ * row. attachKpiStrips() (js/kpi.js) writes the count
+ * (`--kp-kpis-columns`) and `data-kp-kpis-span-last`; before the script
+ * runs the strip keeps the package's auto-fit. */
+    .kp-kpis[data-kp-kpis-columns][style*='--kp-kpis-columns'] {
+        grid-template-columns: repeat(var(--kp-kpis-columns), minmax(0, 1fr));
+    }
+
+    .kp-kpis[data-kp-kpis-span-last] > :last-child {
+        grid-column: 1 / -1;
+    }
+
+    /* A tile of a strip with columns is framed in `--border-strong`, the
+ * boundary DI1 holds at 3:1 against the page, the card and the popover:
+ * its frame is what parts it from the next tile and from the page, and
+ * `--border` read 1.21:1 (synthwave, Shade (dark)) to 2.72:1 (retro) in 20
+ * of 22 themes [fix-101]. Knob `--kp-kpi-border`: dark and titanium, whose
+ * `--border-strong` stays under 3:1 (an open DI1 finding), set a share of
+ * `--foreground` in it. `:where()` keeps the
+ * strip out of the weight, so a tone, a hover and a pressed toggle still
+ * draw their own edge. Its label, figure and words keep one line box each
+ * whatever the state (the rules with the trend tile's, below). */
+    :where(.kp-kpis[data-kp-kpis-columns]) > .kp-kpi {
+        border-color: var(--kp-kpi-border, var(--border-strong));
+    }
+

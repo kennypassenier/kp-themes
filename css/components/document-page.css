@@ -1,0 +1,107 @@
+/* @part: document-page: The page that means "a document" */
+@layer kp.components {
+    /* kpadopt6-media:docglyph:start */
+    /* --- The page that means "a document" [kpadopt6-media] ----------------------
+     * `.kp-docglyph` with `data-kp-doc-kind` (pdf, doc, sheet, image, text, unknown), `data-kp-size` (sm, md, lg),
+     * `data-kp-state="missing"` and `data-kp-doc-lines` (3 to 7; js/docpreview.js writes --kp-doc-lines). Drawn in the theme's
+     * plate and border tokens, no colour per brand: a hairline page, a folded corner, a few text lines and the kind's letters.
+     * Knobs [KT6]: --kp-doc-width, --kp-doc-height, --kp-doc-fold, --kp-doc-step. */
+    .kp-docglyph {
+        --kp-doc-width: 1.75rem;
+        --kp-doc-height: 2.25rem;
+        --kp-doc-fold: 0.5rem;
+        --kp-doc-step: 0.25rem;
+        position: relative;
+        display: inline-block;
+        flex: none;
+        box-sizing: border-box;
+        inline-size: var(--kp-doc-width);
+        block-size: var(--kp-doc-height);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background:
+            linear-gradient(to bottom left, transparent 50%, var(--border-strong) 50%) top right / var(--kp-doc-fold) var(--kp-doc-fold) no-repeat,
+            var(--card);
+        clip-path: polygon(0 0, calc(100% - var(--kp-doc-fold)) 0, 100% var(--kp-doc-fold), 100% 100%, 0 100%);
+        vertical-align: middle;
+    }
+
+    .kp-docglyph::before {
+        content: '';
+        position: absolute;
+        inset-inline: 22%;
+        inset-block-start: calc(var(--kp-doc-fold) + 0.2rem);
+        block-size: calc(var(--kp-doc-lines, 4) * var(--kp-doc-step));
+        background: repeating-linear-gradient(to bottom, var(--muted-foreground) 0 1px, transparent 1px var(--kp-doc-step));
+        opacity: 0.55;
+    }
+
+    .kp-docglyph::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0.15rem;
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: 0.5rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-align: center;
+    }
+
+    .kp-docglyph[data-kp-doc-kind='pdf']::after {
+        content: 'PDF';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='doc']::after {
+        content: 'DOC';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='sheet']::after {
+        content: 'XLS';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='image']::after {
+        content: 'IMG';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='text']::after {
+        content: 'TXT';
+    }
+
+    .kp-docglyph[data-kp-size='sm'] {
+        --kp-doc-width: 1.25rem;
+        --kp-doc-height: 1.625rem;
+        --kp-doc-fold: 0.375rem;
+        --kp-doc-step: 0.1875rem;
+    }
+
+    .kp-docglyph[data-kp-size='sm']::after {
+        display: none;
+    }
+
+    .kp-docglyph[data-kp-size='lg'] {
+        --kp-doc-width: 3.5rem;
+        --kp-doc-height: 4.5rem;
+        --kp-doc-fold: 1rem;
+        --kp-doc-step: 0.4375rem;
+    }
+
+    .kp-docglyph[data-kp-size='lg']::after {
+        inset-block-end: 0.35rem;
+        font-size: 0.75rem;
+    }
+
+    .kp-docglyph[data-kp-state='missing'] {
+        border-style: dashed;
+        opacity: 0.4;
+    }
+
+    .kp-docglyph[data-kp-state='missing']::before,
+    .kp-docglyph[data-kp-state='missing']::after {
+        display: none;
+    }
+    /* kpadopt6-media:docglyph:end */
+}
+

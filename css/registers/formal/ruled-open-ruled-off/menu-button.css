@@ -1,0 +1,35 @@
+/* @part: ruled-open-ruled-off: .kp-menu-button */
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > * {
+            --kp-fm-f: clamp(0, (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(
+                0,
+                (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
+                1
+            );
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 100%;
+        }
+
+        @keyframes kp-sig-formal-ruling {
+            from {
+                --kp-fm-t: 0;
+            }
+
+            to {
+                --kp-fm-t: 1;
+            }
+        }
+    }
+

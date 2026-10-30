@@ -1,0 +1,84 @@
+/* @part: signature-base: rules */
+    @keyframes kp-sig-blueprint-blueprint-compass {
+        0% {
+            opacity: 1;
+            clip-path: polygon(50% 50%, 50% 0, 50% 0, 50% 0, 50% 0, 50% 0, 50% 0);
+        }
+
+        8% {
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 0);
+        }
+
+        24% {
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 100% 100%, 100% 100%, 100% 100%);
+        }
+
+        40% {
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 100%, 0 100%);
+        }
+
+        56% {
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 0 0);
+        }
+
+        64%,
+        82% {
+            opacity: 1;
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 0);
+        }
+
+        100% {
+            opacity: 0;
+            clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 0);
+        }
+    }
+
+    @keyframes kp-sig-blueprint-blueprint-draw {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-blueprint-blueprint-mark {
+        from {
+            opacity: 0;
+            transform: scale(0.4) rotate(-90deg);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* Growing and shrinking, and leaving, this theme's way [scope-142; the
+       drawing and the hatched leave Kenny picked on 2026-10-04 are replaced by
+       the character of 2026-10-07 23:41, below: a part that arrives and leaves
+       is read out on its own scales, a box that grows or shrinks glides on the
+       plotter's feed, which is the curve the entrance js/motion.js reads it
+       from]. A box that is measured anew keeps no frame round it any more: a
+       closed dashed frame round what is inside is the one thing this sheet
+       never draws.
+
+       Opening is closing turned around (Kenny's pick on research/open-reverse,
+       2026-10-05): js/motion.js opens the dialog as its close played
+       backwards, in the close's time, and lets what arrives play its leave
+       backwards. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] {
+            --kp-open: reverse-close;
+        }
+    }
+
+    /* A reader who asked for no motion gets no close of the bar's menus to wait
+       for (js/components.js otherwise waits its own 300 ms). */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='blueprint'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+

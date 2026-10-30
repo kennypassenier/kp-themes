@@ -1,0 +1,178 @@
+/* @part: dependency-list: Dependency list */
+@layer kp.components {
+    /* --- Dependency list: rows "A → B", numbered in the order things must go [kpadopt6-ops] ---
+ * `.kp-deplist[data-kp-deplist]` (js/deplist.js). Every row is one subgrid of the list: the number, the thing that needs
+ * (an identity mark and its name), the arrow, the thing needed, its state; the same columns in every row, so nothing sits
+ * under a neighbour's shorter name. A name wraps, never cut. Under 30rem of the list's own width each row stacks: the number
+ * at the start, the name over "→ the needed thing". Loading lays the busy card over three placeholder rows, empty and failed
+ * are the package's plates, each as high as the list was with its rows (at least `--kp-deplist-min-rows`, 3).
+ * Knobs [KT6]: --kp-deplist-row (the row's height, 2.5rem), --kp-deplist-min-rows (3), --kp-deplist-gap (--kp-space-md). */
+    .kp-deplist {
+        container: kp-deplist / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-deplist__heading {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-deplist__body {
+        position: relative;
+        min-block-size: calc(var(--kp-deplist-min-rows, 3) * var(--kp-deplist-row, 2.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-deplist__body > .kp-stateplate {
+        block-size: 100%;
+        min-block-size: calc(var(--kp-deplist-min-rows, 3) * var(--kp-deplist-row, 2.5rem));
+    }
+
+    .kp-deplist__list {
+        display: grid;
+        grid-template-columns: auto auto auto auto minmax(0, 1fr);
+        column-gap: var(--kp-deplist-gap, var(--kp-space-md, 0.75rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-deplist__list[data-kp-cols='plain'] {
+        grid-template-columns: auto auto auto minmax(0, 1fr);
+    }
+
+    .kp-deplist__list[hidden] {
+        display: none;
+    }
+
+    .kp-deplist__row,
+    .kp-deplist__group {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-block-size: var(--kp-deplist-row, 2.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-deplist__row[hidden] {
+        display: none;
+    }
+
+    .kp-deplist__group {
+        font-weight: 600;
+        color: var(--muted-foreground);
+    }
+
+    .kp-deplist__no {
+        min-inline-size: 1.5rem;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        text-align: end;
+    }
+
+    .kp-deplist__name {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.375rem);
+        min-inline-size: 0;
+        color: inherit;
+        overflow-wrap: anywhere;
+        text-decoration: none;
+    }
+
+    a.kp-deplist__name:hover .kp-deplist__text {
+        text-decoration: underline;
+    }
+
+    .kp-deplist__name .kp-idmark {
+        flex: none;
+    }
+
+    .kp-deplist__arrow {
+        color: var(--muted-foreground);
+    }
+
+    /* One status column [heat-deplist-1019]: every badge fills the column's width (the widest word's), its word centred,
+     * so Running, Stopped and Unknown start and end on the same two edges. */
+    .kp-deplist__state {
+        justify-self: stretch;
+        justify-content: center;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .kp-deplist__row--cycle {
+        display: block;
+        grid-template-columns: none;
+        padding-block: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-deplist__cycle {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-weight: 600;
+    }
+
+    .kp-deplist__foot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-deplist__foot:empty {
+        display: none;
+    }
+
+    .kp-deplist__bone {
+        grid-column: 1 / -1;
+        display: block;
+        inline-size: 60%;
+        block-size: 1rem;
+    }
+
+    @container kp-deplist (max-width: 30rem) {
+        .kp-deplist__list,
+        .kp-deplist__list[data-kp-cols='plain'] {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-deplist__list[data-kp-cols='plain'] {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-deplist__row {
+            grid-template-columns: subgrid;
+            row-gap: 0;
+            padding-block: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-deplist__arrow {
+            display: none;
+        }
+
+        .kp-deplist__row > .kp-deplist__no {
+            grid-row: span 3;
+            align-self: start;
+        }
+
+        .kp-deplist__row > .kp-deplist__name--to::before {
+            content: var(--kp-deplist-arrow, '→');
+            color: var(--muted-foreground);
+        }
+
+        /* One column of the narrow list's states: the same width for each, a word's own width at the least. */
+        .kp-deplist__row > .kp-deplist__state {
+            grid-column: 2;
+            justify-self: start;
+            min-inline-size: var(--kp-deplist-state, 6rem);
+        }
+    }
+}
+

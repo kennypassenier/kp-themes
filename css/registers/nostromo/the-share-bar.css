@@ -1,0 +1,199 @@
+/* @part: the-share-bar: The share bar */
+    /* ── The share bar: a lit window ── */
+    [data-theme='nostromo'] .kp-stackbar {
+        --kp-stackbar-radius: 0.15rem;
+        --kp-stackbar-gap: 2px;
+        /* The window's bezel stands 3 px past the bar: the room is the grid's gap, never a margin, so a note that keeps the
+           bar's and the legend's footprint is exactly as tall. */
+        row-gap: 0.5rem;
+    }
+    [data-theme='nostromo'] .kp-stackbar__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-stackbar__total {
+        font-family: var(--theme-font-display);
+        font-size: 0.75rem;
+    }
+    /* The window: the free rest is the unlit cells, a part is a run of lit lenses (its hot top, its seam a vent slot). */
+    [data-theme='nostromo'] .kp-stackbar__bar {
+        background: repeating-linear-gradient(90deg, var(--sidebar-accent) 0 3px, transparent 3px 5px), var(--sidebar-background);
+        box-shadow:
+            0 0 0 2px var(--secondary),
+            0 0 0 3px var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-stackbar[aria-busy='true'] .kp-stackbar__bar {
+        background: var(--sidebar-background);
+    }
+    [data-theme='nostromo'] .kp-stackbar__seg {
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--sidebar-background);
+    }
+    [data-theme='nostromo'] .kp-stackbar__seg:dir(rtl) {
+        box-shadow: inset var(--kp-stackbar-gap, 2px) 0 0 var(--sidebar-background);
+    }
+    [data-theme='nostromo'] .kp-stackbar__seg::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 65% 0;
+        background: hsl(from var(--kp-no-cream) h s 100% / 0.26);
+        pointer-events: none;
+    }
+    [data-theme='nostromo'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--sidebar-background),
+            0 0 0 2px var(--sidebar-background),
+            0 0 0 3px var(--sidebar-primary),
+            0 0 8px hsl(from var(--sidebar-primary) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-stackbar__bar[data-kp-stackbar-full] .kp-stackbar__seg:last-of-type {
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-stackbar__mark {
+        background: var(--sidebar-primary);
+        box-shadow:
+            0 0 0 1px var(--sidebar-background),
+            0 0 6px hsl(from var(--sidebar-primary) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-stackbar__bar[data-kp-over]::after {
+        color: hsl(from var(--destructive) h s calc(l + 10));
+        text-shadow: 0 0 5px hsl(from var(--destructive) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-stackbar__swatch {
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border-radius: 50%;
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--kp-no-cream) h s 100% / 0.45),
+            0 0 0 1px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: var(--sidebar-accent);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: var(--popover);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-stackbar__value {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    /* A note in the bar's place is the empty state's plate; a failed read sounds the klaxon (G13). */
+    [data-theme='nostromo'] .kp-stackbar__note {
+        border-style: solid;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-stackbar[data-kp-state='error'] .kp-stackbar__note {
+        border: 3px solid var(--destructive);
+        color: var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-stackbar__note-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /* ── Bullet rows: the LED meter is the bar; the figure is a Michroma count, a tone a framed tape ── */
+    [data-theme='nostromo'] .kp-bullets__figure {
+        font-family: var(--theme-font-display);
+        font-size: 0.75rem;
+        font-weight: 400;
+    }
+    [data-theme='nostromo'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='nostromo'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        padding-block: 0.1em;
+        border-radius: var(--kp-sig-no-tape);
+        box-shadow: inset 0 0 0 1px hsl(from var(--background) h s 100% / 0.25);
+    }
+    [data-theme='nostromo'] .kp-bullets__row {
+        border-radius: var(--kp-sig-no-key);
+    }
+    [data-theme='nostromo'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: var(--popover);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-bullets__row:has(.kp-bullets__link:active) {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration-color: var(--selected);
+        text-decoration-thickness: 2px;
+    }
+    [data-theme='nostromo'] .kp-bullets__row:has(.kp-bullets__link:focus-visible) {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-bullets__note-title,
+    [data-theme='nostromo'] .kp-stackbar__note-title {
+        margin: 0;
+    }
+
+    /* ── The key-value grid: labels on tape, a changed value lights its lamp, a failed one sounds the klaxon ── */
+    [data-theme='nostromo'] .kp-kv__row > dt {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-kv--lines > .kp-kv__row {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+    }
+    [data-theme='nostromo'] .kp-kv--lines > .kp-kv__row:last-child {
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-kv__row[data-kp-changed] > dt::after {
+        content: '';
+        display: inline-block;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-inline-start: 0.5rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 4px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+        vertical-align: 0.1em;
+    }
+    [data-theme='nostromo'] .kp-kv__row[data-kp-state='error']::before {
+        inline-size: 3px;
+    }
+
+    /* ── Form rows: the same tape labels; the changed row's lamp rule in ink, a failed row's klaxon rule ── */
+    [data-theme='nostromo'] .kp-formrow__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding-block-start: calc((var(--kp-control-height, 2.25rem) - 1.5em) / 2);
+    }
+    [data-theme='nostromo'] .kp-formrow__label > small {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+    [data-theme='nostromo'] .kp-formrows--lines > .kp-formrow {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+    }
+    [data-theme='nostromo'] .kp-formrows--lines > .kp-formrow:last-child {
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='nostromo'] .kp-formrow[data-kp-state='error']::before {
+        inline-size: 3px;
+    }
+    [data-theme='nostromo'] .kp-formrow__aside {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-formrow__lock::before {
+        border-radius: 2px;
+    }
+

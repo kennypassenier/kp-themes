@@ -1,0 +1,166 @@
+/* @part: tree-reorder-split: Tree, reorder and split pane */
+    /* --- Tree, reorder and split pane [TH45, TH46, TH55] ----------------- */
+
+    .kp-tree,
+    .kp-tree [role='group'] {
+        margin: 0;
+        padding-inline-start: 1rem;
+        list-style: none;
+    }
+
+    .kp-tree {
+        padding-inline-start: 0;
+    }
+
+    .kp-tree [role='treeitem'] {
+        padding: 0.25rem 0.375rem;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        cursor: pointer;
+        /* The indent per level is a knob; the React tree sets the depth and
+     * the framework-free markup may set aria-level [KT6]. */
+        padding-inline-start: calc(var(--kp-tree-inset, 0.375rem) + var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+        /* The start inset is the row's own 0.375rem padding, which this
+         * longhand used to overwrite with the depth alone: a root row's text
+         * touched the edge of its selected wash and its hover plate (forest
+         * and cyberpunk, Kenny 2026-10-12). A register with its own inset
+         * (forest: 0.5rem) sets it, or overrides this longhand. */
+        /* A file name with nowhere to break wraps inside its pane rather than
+         * pushing it wider: 64 characters made a 320px pane 632px wide
+         * [gap-12, DI11]. Inherited, so every level below has it too. */
+        overflow-wrap: anywhere;
+    }
+
+    .kp-tree [role='treeitem']:hover {
+        background: var(--muted);
+    }
+
+    /* The selected item is marked, and marked twice [gap-12, DI4]: a bar at
+     * its start edge and a wash of the primary colour, plus the weight. It
+     * painted exactly like its unselected sibling in all 22 themes.
+     *
+     * A branch holds its children inside its own element, so a background
+     * would paint the whole subtree as selected. Both marks are gradients
+     * sized to the item's own row instead — one line plus the row's block
+     * padding — and the weight is handed back to the group below. */
+    .kp-tree [role='treeitem'][aria-selected='true'] {
+        background:
+            linear-gradient(var(--kp-tree-selected-bar, var(--primary)) 0 0) no-repeat 0 0 / 3px calc(1lh + 0.5rem),
+            linear-gradient(var(--kp-tree-selected, hsl(from var(--primary) h s l / 0.14)) 0 0) no-repeat 0 0 / 100% calc(1lh + 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-tree [role='treeitem'][aria-selected='true'] [role='group'] {
+        font-weight: 400;
+    }
+
+    /* The twisty is a second carrier beside aria-expanded, and it points the
+ * way the branch will go rather than the way it is. */
+    .kp-tree [role='treeitem'][aria-expanded]::before {
+        content: var(--kp-glyph-closed, '▸');
+        display: inline-block;
+        width: 1em;
+        color: var(--muted-foreground);
+    }
+
+    .kp-tree [role='treeitem'][aria-expanded='true']::before {
+        content: var(--kp-glyph-open, '▾');
+    }
+
+    .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'],
+    .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'] {
+        display: none;
+    }
+
+    .kp-reorder {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-reorder [data-kp-item] {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        margin-block-end: 0.375rem;
+        background: var(--card);
+    }
+
+    /* A real button, not a decorative grip: it has to be reachable by Tab or
+ * the arrow keys have nothing to act on. */
+    .kp-reorder [data-kp-handle] {
+        padding: 0.125rem 0.375rem;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: var(--muted-foreground);
+        font: inherit;
+        cursor: grab;
+    }
+
+    /* The row under a held handle [gap-12]. js/structure.js writes
+     * data-kp-dragging for as long as the pointer holds it, and nothing
+     * answered it: in all 22 themes the row you held looked like the rows
+     * you did not. The frame turns primary and dashed (a colour and a shape)
+     * and the row lifts off the list; releasing takes all of it away. */
+    .kp-reorder [data-kp-item][data-kp-dragging] {
+        border-color: var(--primary);
+        border-style: dashed;
+        box-shadow: 0 6px 16px -8px hsl(from var(--foreground) h s l / 0.45);
+    }
+
+    .kp-reorder [data-kp-item][data-kp-dragging] [data-kp-handle] {
+        cursor: grabbing;
+    }
+
+    .kp-split {
+        display: grid;
+        /* One custom property drives the whole layout, so the keyboard and
+     * the pointer move the same thing. */
+        grid-template-columns: var(--kp-split, 50%) auto 1fr;
+        align-items: stretch;
+        min-height: 8rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        overflow: hidden;
+    }
+
+    .kp-split__pane {
+        padding: 0.75rem;
+        overflow: auto;
+    }
+
+    .kp-split__separator {
+        width: 0.5rem;
+        border: 0;
+        border-inline: 1px solid var(--border);
+        background: var(--muted);
+        cursor: col-resize;
+    }
+
+    .kp-split__separator:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+        outline-offset: -2px;
+    }
+
+    /* Top and bottom [gap-12]. js/structure.js has moved a horizontal split
+     * with Up and Down since 3.0.0, but this stylesheet only ever set
+     * columns, so data-kp-orientation="horizontal" drew a second left and
+     * right split. The same custom property drives the rows. A register that
+     * sets the separator's thickness as an inline size restates it here as
+     * a block size, in its own value. */
+    .kp-split[data-kp-orientation='horizontal'] {
+        grid-template-columns: none;
+        grid-template-rows: var(--kp-split, 50%) auto 1fr;
+    }
+
+    .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        width: auto;
+        block-size: 0.5rem;
+        border-inline: 0;
+        border-block: 1px solid var(--border);
+        cursor: row-resize;
+    }
+

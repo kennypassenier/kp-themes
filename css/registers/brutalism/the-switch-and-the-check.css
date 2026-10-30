@@ -1,0 +1,83 @@
+/* @part: the-switch-and-the-check: The switch and the check */
+    /* ── The switch and the check [G7]: small slabs, a 2 px line on a 3 px
+       shadow. ── */
+    [data-theme='brutalism'] .kp-switch {
+        --kp-switch-border: 2px;
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+        --kp-switch-inset: 3px;
+    }
+
+    [data-theme='brutalism'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:not(:focus-visible) {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input::before {
+        border: 2px solid var(--border-strong);
+        background: var(--muted);
+        box-sizing: border-box;
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked {
+        border-color: var(--border-strong);
+        background: var(--primary);
+    }
+
+    [data-theme='brutalism'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        border-color: var(--primary-foreground);
+        background: var(--primary-foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='brutalism'] .kp-field__check {
+        --kp-sig-dur: var(--kp-sig-br-time);
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+        margin: 0;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+    }
+
+    [data-theme='brutalism'] .kp-field__check:not(:focus-visible) {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-field__check:checked {
+        background: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.7rem;
+        block-size: 0.36rem;
+        border-inline-start: 3px solid var(--border-strong);
+        border-block-end: 3px solid var(--border-strong);
+        transform: translateY(-2px) rotate(-45deg);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio']:checked {
+        background: var(--accent);
+    }
+
+    [data-theme='brutalism'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--border-strong);
+    }
+

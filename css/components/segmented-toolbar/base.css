@@ -1,0 +1,479 @@
+/* @part: segmented-toolbar: Segmented control, filter chips, list toolbar, key line */
+    /* --- Segmented control, filter chips, list toolbar, key line [kpadopt-controls] ---
+ *
+ * Four small parts the dashboard drew for itself (its toggleGroup, segSwitch,
+ * toolbar, filterChip and keyRow) and every list page needs:
+ *
+ *   .kp-segmented            a group of buttons that choose among values, in
+ *                            a track with a plate under the chosen one
+ *   .kp-segmented--chips     the same buttons as separate pills
+ *   .kp-toolbar              search, labelled filter groups, view and state
+ *                            on one grid row, and the row of filters on
+ *   .kp-keys / .kp-kbd       a line of key caps, each with what it does
+ *
+ * Behaviour: js/segmented.js, js/toolbar.js, js/keys.js. Every look is a
+ * knob a register may turn (--kp-seg-*, --kp-toolbar-*, --kp-kbd-*): the
+ * track, the plate, the type, the edge. Nothing in a part changes size when
+ * its state does: the selected item keeps its weight (a bolder label would
+ * be wider and push its neighbours), a count that is not there yet keeps its
+ * place while the group is busy, and the plate is a layer of its own that
+ * moves by `translate`. */
+
+    /* The segmented control. The track is one control high, so it lines up
+ * with a search box or a button beside it. */
+    .kp-segmented {
+        --kp-seg-x: 0px;
+        --kp-seg-w: 0px;
+        --kp-seg-item-radius: calc(var(--kp-seg-radius, var(--radius, 0.5rem)) - var(--kp-seg-pad, 0.1875rem));
+        position: relative;
+        isolation: isolate;
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(max-content, 1fr);
+        align-items: stretch;
+        gap: var(--kp-seg-gap, 0.125rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-control-height, 2.25rem);
+        max-inline-size: 100%;
+        padding: var(--kp-seg-pad, 0.1875rem);
+        border: 1px solid var(--kp-seg-edge, var(--border-strong));
+        border-radius: var(--kp-seg-radius, var(--radius, 0.5rem));
+        background: var(--kp-seg-track, var(--muted));
+        color: var(--kp-seg-ink, var(--muted-foreground));
+        font-family: var(--kp-seg-font, inherit);
+        font-size: var(--kp-seg-size, var(--kp-text-sm, 0.8125rem));
+        letter-spacing: var(--kp-seg-tracking, normal);
+        text-transform: var(--kp-seg-case, none);
+        vertical-align: middle;
+    }
+
+    /* Wider than the room it has: it scrolls along its own line rather than
+ * pushing the page sideways; the focus ring goes inside, because a scroller
+ * clips what paints outside it. js/segmented.js writes the attribute. */
+    .kp-segmented[data-kp-segmented-overflow] {
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        /* It says it scrolls and never leaves a label hard against a cut edge [t56-scrolledge-1018]: a resting scroll
+         * lands on a whole segment (a snap, never an animation), the side that has more fades out over
+         * --kp-seg-fade (a mask: only its alpha counts; js/segmented.js writes data-kp-segmented-more), and a segment the keyboard or the snap
+         * brings in stands clear of that fade (scroll-padding). The side with nothing beyond it is not faded. */
+        --kp-seg-fade: 1.5rem;
+        --kp-seg-fade-start: 0px;
+        --kp-seg-fade-end: 0px;
+        scroll-snap-type: x proximity;
+        scroll-padding-inline: var(--kp-seg-fade);
+        mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            var(--foreground) var(--kp-seg-fade-start),
+            var(--foreground) calc(100% - var(--kp-seg-fade-end)),
+            transparent 100%
+        );
+    }
+
+    .kp-segmented[data-kp-segmented-overflow]:dir(rtl) {
+        mask-image: linear-gradient(
+            to left,
+            transparent 0,
+            var(--foreground) var(--kp-seg-fade-start),
+            var(--foreground) calc(100% - var(--kp-seg-fade-end)),
+            transparent 100%
+        );
+    }
+
+    .kp-segmented[data-kp-segmented-more~='start'] {
+        --kp-seg-fade-start: var(--kp-seg-fade);
+    }
+
+    .kp-segmented[data-kp-segmented-more~='end'] {
+        --kp-seg-fade-end: var(--kp-seg-fade);
+    }
+
+    .kp-segmented[data-kp-segmented-overflow] > .kp-segmented__item {
+        scroll-snap-align: start;
+    }
+
+    .kp-segmented[data-kp-segmented-overflow] > .kp-segmented__item:focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
+    }
+
+    /* Every segment the same width on a full-width control. */
+    .kp-segmented--block {
+        display: grid;
+        inline-size: 100%;
+        grid-auto-columns: minmax(0, 1fr);
+    }
+
+    .kp-segmented__item {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        margin: 0;
+        padding: var(--kp-seg-item-pad-block, var(--kp-space-xs, 0.25rem)) var(--kp-seg-item-pad-inline, var(--kp-space-md, 0.75rem));
+        border: 0;
+        border-radius: var(--kp-seg-item-radius);
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-weight: var(--kp-seg-weight, 500);
+        letter-spacing: inherit;
+        text-transform: inherit;
+        text-align: center;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .kp-segmented__item:focus-visible {
+        z-index: 2;
+    }
+
+    .kp-segmented__label {
+        min-inline-size: 0;
+        max-inline-size: var(--kp-seg-label-max, 16rem);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* The number beside a value. It takes the segment's own ink, so it reads
+ * on the plate and off it; empty, it takes no room. */
+    .kp-segmented__count {
+        flex: none;
+        min-inline-size: 1.5em;
+        padding: 0 var(--kp-space-xs, 0.25rem);
+        border-radius: var(--kp-seg-count-radius, 999px);
+        background: color-mix(in oklab, currentColor 14%, transparent);
+        font-size: 0.9em;
+        line-height: 1.5;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-segmented__count:empty {
+        display: none;
+    }
+
+    @media (hover: hover) {
+        .kp-segmented:not([aria-disabled='true']) > .kp-segmented__item:not(:disabled, [aria-checked='true'], [aria-pressed='true']):hover {
+            background: var(--kp-seg-hover, hsl(from var(--foreground) h s l / 0.08));
+            color: var(--kp-seg-ink-hover, var(--foreground));
+        }
+    }
+
+    /* The chosen item. Without the plate (a multi group, the chips, a page
+ * before the script) the item paints its own ground; with it, the plate does
+ * and the item only changes ink. */
+    .kp-segmented__item[aria-checked='true'],
+    .kp-segmented__item[aria-pressed='true'] {
+        color: var(--kp-seg-thumb-ink, var(--foreground));
+        background: var(--kp-seg-thumb, var(--card));
+        box-shadow:
+            var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 1px 2px hsl(from var(--foreground) h s l / 0.14));
+    }
+
+    .kp-segmented[data-kp-segmented-thumb] > .kp-segmented__item[aria-checked='true'] {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    /* The plate: one layer under the items, placed by `--kp-seg-x` and
+ * `--kp-seg-w` (physical pixels from the track's left edge, as measured by
+ * the script), moved by `translate` and `width` so nothing around it
+ * reflows. It glides only after its first placement. */
+    .kp-segmented[data-kp-segmented-thumb]::before {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        inset-block: var(--kp-seg-pad, 0.1875rem);
+        /* Physical on purpose: the script measures offsetLeft. */
+        left: 0;
+        inline-size: var(--kp-seg-w);
+        translate: var(--kp-seg-x) 0;
+        border-radius: var(--kp-seg-item-radius);
+        background: var(--kp-seg-thumb, var(--card));
+        box-shadow:
+            var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 1px 2px hsl(from var(--foreground) h s l / 0.14));
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-segmented[data-kp-segmented-glide]::before {
+            transition:
+                translate var(--kp-seg-duration, var(--fx-duration, 200ms)) var(--kp-seg-ease, var(--fx-ease, ease)),
+                inline-size var(--kp-seg-duration, var(--fx-duration, 200ms)) var(--kp-seg-ease, var(--fx-ease, ease));
+        }
+
+        .kp-segmented__item {
+            transition:
+                color var(--kp-seg-duration, var(--fx-duration, 200ms)) var(--kp-seg-ease, var(--fx-ease, ease)),
+                background-color var(--kp-seg-duration, var(--fx-duration, 200ms)) var(--kp-seg-ease, var(--fx-ease, ease));
+        }
+    }
+
+    /* The chip look: no track, no plate; each value is a pill that fills
+ * when it is on. They wrap rather than scroll. */
+    .kp-segmented--chips {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-chip-gap, 0.375rem);
+        min-block-size: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        overflow: visible;
+    }
+
+    .kp-segmented--chips > .kp-segmented__item {
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        padding-inline: var(--kp-chip-pad-inline, var(--kp-space-md, 0.75rem));
+        border: 1px solid var(--kp-chip-edge, var(--border-strong));
+        border-radius: var(--kp-chip-radius, var(--kp-radius-pill, 999px));
+        background: var(--kp-chip-ground, var(--card));
+        color: var(--kp-chip-ink, var(--foreground));
+    }
+
+    @media (hover: hover) {
+        .kp-segmented--chips:not([aria-disabled='true'])
+            > .kp-segmented__item:not(
+                :disabled,
+                [aria-pressed='true'],
+                [aria-checked='true'],
+                [data-kp-segmented-tri],
+                [aria-disabled='true']
+            ):hover {
+            border-color: var(--ring);
+            background: var(--kp-chip-hover, var(--card));
+            color: var(--kp-chip-ink, var(--foreground));
+        }
+    }
+
+    .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'],
+    .kp-segmented--chips > .kp-segmented__item[aria-checked='true'] {
+        border-color: var(--kp-chip-on-edge, var(--kp-chip-on, var(--foreground)));
+        background: var(--kp-chip-on, var(--foreground));
+        color: var(--kp-chip-on-ink, var(--background));
+        box-shadow: none;
+    }
+
+    /* The three-way chip [kpadopt4]: either way, must be in, must not be in.
+ * The mark is always there and always one size: a hollow ring (either way),
+ * the filled ring with the theme's check (in), the destructive pair with a
+ * cross (out), so the state is a shape and a word as well as a colour and
+ * the chip never changes width. Out also strikes the label through. */
+    .kp-segmented[data-kp-segmented='tri'] > .kp-segmented__item {
+        gap: var(--kp-tri-gap, 0.4em);
+        padding-inline-start: var(--kp-tri-pad-start, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-segmented[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-all] {
+        padding-inline-start: var(--kp-chip-pad-inline, var(--kp-space-md, 0.75rem));
+    }
+
+    .kp-segmented__mark {
+        display: inline-grid;
+        flex: none;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-tri-mark, 1.25em);
+        block-size: var(--kp-tri-mark, 1.25em);
+        border: 1.5px solid color-mix(in oklab, currentColor 55%, transparent);
+        border-radius: var(--kp-tri-mark-radius, 50%);
+        font-size: 0.85em;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-segmented__mark::before {
+        content: '';
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark {
+        border-color: currentColor;
+        background: currentColor;
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
+        content: var(--kp-glyph-check, '✓');
+        color: var(--kp-chip-on, var(--foreground));
+    }
+
+    .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: var(--kp-chip-on-edge, var(--kp-chip-on, var(--foreground)));
+        background: var(--kp-chip-on, var(--foreground));
+        color: var(--kp-chip-on-ink, var(--background));
+    }
+
+    .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-color: var(--kp-tri-out-edge, var(--destructive));
+        background: var(--kp-tri-out-ground, var(--kp-chip-ground, var(--card)));
+        color: var(--kp-tri-out-ink, var(--kp-chip-ink, var(--foreground)));
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration: line-through;
+        text-decoration-color: var(--kp-tri-out-edge, var(--destructive));
+        text-decoration-thickness: 2px;
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark::before {
+        content: var(--kp-glyph-cross, '✕');
+    }
+
+    @media (hover: hover) {
+        .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item:is([data-kp-segmented-tri]):hover {
+            box-shadow: inset 0 0 0 1px currentColor;
+        }
+    }
+
+    /* On a touch screen a three-way chip is a whole fingertip high. */
+    @media (pointer: coarse) {
+        .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+            min-block-size: var(--kp-tri-touch, 2.75rem);
+        }
+    }
+
+    /* The line after a three-way group: the hint, then what is chosen. One
+ * line, so nothing under it moves when it changes. */
+    .kp-segmented__summary {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        overflow: hidden;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.5;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .kp-segmented__summary[data-kp-chosen] {
+        color: var(--foreground);
+    }
+
+    /* Disabled, on an item or on the whole control: dimmed, unreachable,
+ * and still the width it had. */
+    .kp-segmented__item:disabled,
+    .kp-segmented__item[aria-disabled='true'],
+    .kp-segmented[aria-disabled='true'] > .kp-segmented__item {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .kp-segmented[aria-disabled='true'] {
+        pointer-events: none;
+    }
+
+    /* Busy: the numbers are on their way. An empty count keeps the width it
+ * will have, as a quiet bar, so they arrive without a shift. */
+    .kp-segmented[aria-busy='true'] > .kp-segmented__item {
+        cursor: progress;
+    }
+
+    .kp-segmented[aria-busy='true'] .kp-segmented__count:empty {
+        display: inline-block;
+        min-inline-size: 2em;
+        block-size: 1.125em;
+        opacity: 0.6;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-segmented[aria-busy='true'] .kp-segmented__count:empty {
+            animation: kp-segmented-wait 1.2s ease-in-out infinite alternate;
+        }
+    }
+
+    @keyframes kp-segmented-wait {
+        from {
+            opacity: 0.25;
+        }
+        to {
+            opacity: 0.7;
+        }
+    }
+
+    /* The list toolbar: search at its own width, the filter groups in the
+ * middle, view and state against the far edge, and under them the row of
+ * the filters that are on. Three tracks, so the search box never changes
+ * width with what the groups hold. */
+    .kp-toolbar {
+        display: grid;
+        grid-template-columns: minmax(min(100%, var(--kp-toolbar-search-min, 14rem)), var(--kp-toolbar-search-max, 22rem)) minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-toolbar-gap-block, var(--kp-space-sm, 0.5rem)) var(--kp-toolbar-gap-inline, var(--kp-space-lg, 1rem));
+        min-inline-size: 0;
+    }
+
+    .kp-toolbar:not(:has(> .kp-toolbar__search)) {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .kp-toolbar__search {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    /* The input is a `.kp-field__input`, so every register's field look is
+ * already on it; this only makes room inside it for the key hint. */
+    .kp-toolbar__input {
+        box-sizing: border-box;
+        inline-size: 100%;
+        padding-inline-end: var(--kp-toolbar-key-room, 2.5rem);
+    }
+
+    .kp-toolbar__key {
+        position: absolute;
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        pointer-events: none;
+    }
+
+    .kp-toolbar__search:focus-within .kp-toolbar__key,
+    .kp-toolbar__input:not(:placeholder-shown) ~ .kp-toolbar__key {
+        visibility: hidden;
+    }
+
+    .kp-toolbar__filters {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-toolbar-group-gap, 1.125rem);
+        min-inline-size: 0;
+    }
+
+    .kp-toolbar__group {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    .kp-toolbar__group + .kp-toolbar__group {
+        padding-inline-start: var(--kp-toolbar-group-gap, 1.125rem);
+        border-inline-start: 1px solid var(--border);
+    }
+
+    .kp-toolbar__label {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+

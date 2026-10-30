@@ -1,0 +1,189 @@
+/* @part: base: opening comment, knobs and base */
+    /* @kp-soft/themes — css/formal-register.css
+   The formal register, 5.0.0 [S48, LIFT_PLAN row 16]: paper and ink.
+   Scoped to [data-theme='formal'] and inert elsewhere; opt-in, imported
+   after themes.css. The approved concept demo ("Fair Copy", 2026-09-08,
+   scratchpad/formal-demo.html) is the reference for every value here.
+
+   What this file does, in order: the knobs; the type; the hooks of S45 —
+   the headline that fades and rises once (a demo's per-word underline
+   recolour could not be carried: examples.mjs's conceptBody() renders the
+   headline as one string with no sub-phrase mark, and giving it one would
+   break gates/gates.test.mjs's exact-headline-string assertion for every
+   theme, not only this one — a finding, not a silent substitution; see
+   the anatomy's closing section), the lede's two marks as an ink wash,
+   the section rule that draws itself in, the divider as a docket cut;
+   the navbar as a masthead; the buttons, the mirror's static letterpress
+   offset; the fields as ruled boxes; the dossier as a stamped file with
+   redactions that clear left to right; and one answer per component
+   root (56 of 64, TH124).
+
+   Colour discipline (DI9): nothing here names a colour. Navy is the one
+   hue that acts (anatomy.md: "one colour acts"); red ink marks what needs
+   the eye; gold is the meter's ribbon (and the laurels), never a rule and
+   never a control. No ornament, no glow, no rounded flourish beyond the
+   token radius — anatomy.md's own rule, carried into round six.
+
+   Applied 2026-10-08 (themes/formal/CHARACTER.md, "Applied 2026-10-08"):
+   formal's grammar, decided by Kenny on research/formal-character, is
+   that the clerk rules a ledger. This layer holds the quiet part of it:
+   the headline, the lede's marks, the section rule and the redactions
+   are ruled in on the ruling time (400 ms, linear, a dead stop), the
+   buttons, entries and links answer the pointer with a rule under the
+   label and a press that doubles the rule, a warning is a red-ink
+   entry; everything that opens, leaves, loads, spins or updates is in
+   kp.signature below, under the tokens `--kp-sig-fm-*`, every motion
+   under `@media (prefers-reduced-motion: no-preference)`. */
+
+    [data-theme='formal'] {
+        /* The month heatmap's nav goes on two rows below this width: September
+           in the small capitals of the voice (css below, 0.06em apart) and the
+           three buttons need 342 px, and the package's 20.5rem let a 334 px card
+           hold them on one row with the last button 7 px outside it [fix-98]. */
+        --kp-calendar-nav-fit: 21.5rem;
+        /* The configuration surface [AR43], the demo's own values as
+           defaults: 1.05s before the lede's first mark washes in, 90ms
+           between the two, a 0.4 viewport threshold for the section rule. */
+        --kp-reveal-threshold: 0.4;
+        --kp-classified-delay: 1050ms;
+        --kp-reveal-stagger: 90ms;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+           and leaves a theme that declares none at rest. No arrival — the
+           demo boots with nothing, and anatomy.md already answers DI5 "no
+           animation" for the shipped theme; these three one-shot reveals
+           are the round six addition on top of that baseline. */
+        --kp-reveal-headline: arrive;
+        --kp-reveal-emphasis: wash;
+        --kp-reveal-rule: draw;
+    }
+
+    /* ── Type: the display face on headings, the microlabel a masthead line ── */
+
+    [data-theme='formal'] h1,
+    [data-theme='formal'] h2,
+    [data-theme='formal'] h3 {
+        font-family: var(--theme-font-display);
+        font-optical-sizing: auto;
+        font-weight: 560;
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] [data-kp-surface] h1 {
+        font-variation-settings: 'opsz' 144;
+        letter-spacing: -0.03em;
+        margin-block: 0 1.25rem;
+    }
+
+    [data-theme='formal'] [data-kp-surface='app'] h2 {
+        font-variation-settings: 'opsz' 90;
+        letter-spacing: -0.02em;
+    }
+
+    /* The voice [G18; Kenny, 2026-10-08, question 18: Fraunces figures,
+       small-caps labels]: titles and large figures in Fraunces with tabular
+       numerals; labels, captions, menu headings and tags in all-small-caps
+       Instrument Sans tracked 0.06 em; prose in Instrument Sans; identifiers
+       and timestamps in small capitals too, no monospace. */
+    [data-theme='formal'] .microlabel {
+        display: inline-block;
+        font-family: var(--theme-font-body);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+        color: var(--primary);
+        margin-block-end: 0.75rem;
+    }
+
+    /* ── The headline hook [TH119, S45]: whole and untouched, the way an
+       editorial page commits to a line rather than glitching into it. It is
+       ruled in once, start to end, at an even pace and a dead stop (G1, G13;
+       Kenny, 2026-10-08: nothing fades, nothing rises); the underline the
+       demo drew under one word is a finding in the anatomy, not built here
+       (see the file header). ── */
+
+    [data-theme='formal'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered) {
+        clip-path: inset(-0.5em 100% -0.5em -0.5em);
+    }
+
+    [data-theme='formal'] [data-kp-reveal='headline'] {
+        opacity: 1;
+        transform: none;
+        clip-path: inset(-0.5em);
+    }
+
+    /* ── The mark hook [TH120]: an ink wash under the lede's two phrases,
+       left to right, the way a highlighter leaves a stroke. ── */
+
+    [data-theme='formal'] mark {
+        background: linear-gradient(var(--accent), var(--accent)) left / 100% 100% no-repeat;
+        color: var(--foreground);
+        padding: 0.02em 0.15em;
+        border-radius: 2px;
+    }
+
+    [data-theme='formal'][data-kp-effects] mark:not(.is-cleared) {
+        background-size: 0% 100%;
+    }
+
+    /* The dossier's own marks are covered in ink, not washed in bronze —
+       see the card rules below, which take precedence by order. */
+
+    /* ── The rule hook [TH122]: a line that draws itself under a heading
+       when it scrolls into view, the way a printed rule is set once and
+       stays. ── */
+
+    [data-theme='formal'] [data-kp-reveal='rule'] {
+        position: relative;
+        padding-block-end: 0.4rem;
+    }
+
+    [data-theme='formal'] [data-kp-reveal='rule']::after {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-end: 0;
+        block-size: 2px;
+        inline-size: 100%;
+        background: var(--primary);
+        transform: scaleX(1);
+        transform-origin: left center;
+    }
+
+    [data-theme='formal'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        transform: scaleX(0);
+    }
+
+    /* ── The divider hook [TH121]: a docket cut, not a tear — a hairline
+       and a short navy tick, the way a printed ledger marks a section
+       closed. The alt divider (before the footer) is a dashed rule,
+       quieter still. Static; anatomy.md licenses no ornament. ── */
+
+    [data-theme='formal'] [data-kp-divider] {
+        position: relative;
+        block-size: auto;
+        padding-block-start: 1px;
+    }
+
+    [data-theme='formal'] [data-kp-divider]::before {
+        content: '';
+        display: block;
+        block-size: 1px;
+        background: var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-kp-divider]:not([data-kp-divider='alt'])::after {
+        content: '';
+        display: block;
+        block-size: 4px;
+        margin-block-start: 3px;
+        inline-size: 3rem;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] [data-kp-divider='alt']::before {
+        border-block-start: 1px dashed var(--border-strong);
+        background: none;
+    }
+

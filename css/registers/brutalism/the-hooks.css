@@ -1,0 +1,90 @@
+/* @part: the-hooks: The hooks */
+    /* ── The hooks [S45]: the mark, the rule, the divider ─────────────── */
+
+    /* The mark: emphasis is a plate wiped in behind the word, closed by
+       the one line weight. At rest the plate is there; armed, the word
+       stands on the paper until the plate arrives — a size, not a colour
+       (KT8). */
+    [data-theme='brutalism'] mark {
+        background: linear-gradient(var(--secondary), var(--secondary)) left / 100% 100% no-repeat;
+        color: var(--secondary-foreground);
+        font-weight: 700;
+        padding-inline: 0.14em;
+        border-bottom: var(--kp-line) solid var(--border-strong);
+        white-space: nowrap;
+    }
+
+    [data-theme='brutalism'][data-kp-effects] mark:not(.is-cleared) {
+        background-size: 0 100%;
+        color: var(--foreground);
+        border-bottom-color: transparent;
+    }
+
+    /* The rule: a six-pixel bar that rules the heading off, left to right,
+       once, when the heading enters the viewport. */
+    [data-theme='brutalism'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        block-size: 6px;
+        margin-block-start: 0.7rem;
+        background: var(--border-strong);
+        transform: scaleX(1);
+        transform-origin: left center;
+    }
+
+    [data-theme='brutalism'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        transform: scaleX(0);
+    }
+
+    /* The divider: Future Pharmaceutical's marquee — a strip twice the
+       band's width translated -50%, seamless, one cycle in 42 seconds,
+       frozen under reduced motion. A hatch of the plate on the ink, the
+       second one the ink on the plate, running the other way. The tile is
+       one stripe period, never the band's own width (which is no multiple
+       of the period, and left a seam where one tile ended), and the strip's
+       half is rounded up to whole tiles so the -50% loop lands on one. */
+    [data-theme='brutalism'] [data-kp-divider] {
+        display: block;
+        position: relative;
+        block-size: 46px;
+        border-block: var(--kp-line) solid var(--border-strong);
+        background: var(--foreground);
+        overflow: hidden;
+    }
+
+    [data-theme='brutalism'] [data-kp-divider]::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: calc(2 * round(up, 100%, var(--kp-hatch-tile)));
+        background: var(--kp-hatch) 0 0 / var(--kp-hatch-tile) 100% repeat-x;
+    }
+
+    [data-theme='brutalism'] [data-kp-divider='alt'] {
+        background: var(--secondary);
+    }
+
+    [data-theme='brutalism'] [data-kp-divider='alt']::before {
+        background: var(--kp-hatch-alt) 0 0 / var(--kp-hatch-tile) 100% repeat-x;
+    }
+
+    /* ── The hero: paper, and the dot grid the base layer draws ───────── */
+
+    [data-theme='brutalism'] [data-kp-surface='hero'] {
+        position: relative;
+        padding-block: 2.2rem 3.4rem;
+    }
+
+    [data-theme='brutalism'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+        gap: 2.5rem;
+        align-items: end;
+    }
+
+    @container (max-width: 56rem) {
+        [data-theme='brutalism'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+            grid-template-columns: 1fr;
+        }
+    }
+

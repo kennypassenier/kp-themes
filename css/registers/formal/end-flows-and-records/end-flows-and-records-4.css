@@ -1,0 +1,38 @@
+/* @part: end-flows-and-records: end flows and records */
+/* ── end flows and records: pipeline ── */
+
+/* ── Flows and records [kpadopt4]: drawings for an empty state ── */
+@layer kp.register {
+    /* Formal draws the ledger set (js/art.js): a ruled page, an entry struck through in red ink, the account closed with the
+       double rule (G7, G8, G19). Every stroke is ruled in on arrival at the ruling pace, 400 ms each and 60 ms apart, top
+       down, linear with a dead stop (G1, G2, G4, G13); the reduced pose is the drawing ruled (G20). */
+    [data-theme='formal'] .kp-art {
+        display: block;
+    }
+
+    [data-theme='formal'] .kp-art > g[data-kp-art-set='ledger'] {
+        display: inline;
+    }
+
+    [data-theme='formal'] .kp-art path {
+        stroke-linecap: butt;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-art path {
+            stroke-dasharray: 1;
+            animation: kp-formal-art-ruled 400ms linear both;
+            animation-delay: calc(var(--kp-art-i, 0) * 60ms);
+        }
+    }
+
+    @keyframes kp-formal-art-ruled {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+}

@@ -1,0 +1,21 @@
+/* @part: end-t56-q: end t56-q */
+/* ── end t56-q ── */
+
+/* ── t56-q: the too-early plate stays off the axis ── */
+@layer kp.signature {
+    /* The note of a chart with too few readings filled the plot down to its date labels and covered them. The plot keeps the band of
+       its axis free and the plate is a compact one (a smaller picture, less air) so it fits above it. */
+    [data-theme='pastel'] .kp-chart__few {
+        padding-block-end: 2rem;
+    }
+    [data-theme='pastel'] .kp-chart__few .kp-chart__few-plate {
+        --kp-sig-pa-lip: 1.4rem;
+        max-block-size: 100%;
+        padding: 0.6rem 1.25rem 0.85rem;
+    }
+    [data-theme='pastel'] .kp-chart__few .kp-chart__few-plate::before {
+        inline-size: 2.5rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.35rem;
+    }
+}

@@ -1,0 +1,96 @@
+/* @part: sidenav: The side navigation */
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The dot. It is the example the whole round is built on — Kenny's own
+       answer to what a quirk is — and a column is where it belongs even
+       more than a bar: the gutter is always there, and the lit one tells
+       you which deck you are on [approved 2026-09-11]. */
+    [data-theme='nostromo'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        --kp-sidenav-gap: 0;
+        --kp-sidenav-list-pad: 0;
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__header {
+        background: var(--muted);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__title {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link,
+    [data-theme='nostromo'] .kp-sidenav__category-toggle {
+        /* The row is what the dot below is measured from [fix-73]. Without
+           this the dot fell back to the panel and stayed in the middle of it
+           while the list scrolled — Kenny, 2026-09-20: "hier staat een raar
+           bolletje vast als ik scroll in de balk zelf". */
+        position: relative;
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        border-radius: 0;
+        padding-left: 1.65rem;
+        padding-right: 0.75rem;
+        border-block-end: 1px solid var(--border);
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.7rem;
+        inset-block-start: 50%;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-block-start: -0.2rem;
+        border-radius: 50%;
+        background: var(--primary);
+        opacity: 0.25;
+    }
+
+    /* The lamp lights where it stands: it used to slide in 0.35rem from the
+       gutter, and a hover never moves anything in nostromo (G8, G14; Kenny,
+       2026-10-07 23:18, hover "lamp"). Unlit at rest, as every switch's. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-sidenav__link::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link:hover::before {
+        opacity: 0.7;
+    }
+
+    [data-theme='nostromo'] .kp-sidenav__link[aria-current='page']::before {
+        opacity: 1;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Ship fittings: the control is a plate with a bevel, and a picture is
+       a viewport with a caption stencilled under it. */
+    [data-theme='nostromo'] .kp-to-top {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-media {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+    }
+
+    [data-theme='nostromo'] .kp-media-figure > figcaption {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='nostromo'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+

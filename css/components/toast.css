@@ -1,0 +1,244 @@
+/* @part: toast: Toast */
+    /* --- Toast ----------------------------------------------------------- */
+
+    .kp-toasts {
+        position: fixed;
+        /* Above a bottom tab bar when the page has one (js/tabbar.js). */
+        inset-block-end: calc(1rem + var(--kp-tabbar-height, 0px));
+        inset-inline-end: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        /* Above the texture layer (80): a toast under a fixed overlay is a
+     * toast nobody can read [KT6]. Every layer reads the z-index scale. */
+        z-index: var(--kp-z-toast, 90);
+    }
+
+    /* A row: the words, then the buttons at the toast's end. As a block the
+ * buttons ran on after the text and stopped wherever it did — 163px short of
+ * the end on one toast, flush on the next — so no two toasts lined up
+ * (Kenny's second nostromo pass, 2026-09-13). The words go in
+ * .kp-toast__body, which both channels write; a toast without one still
+ * pushes its first button to the end. */
+    .kp-toast {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: 0.625rem 0.875rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    .kp-toast__body {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    .kp-toast > :is(button, .kp-button, .kp-icon-button) {
+        flex: none;
+        margin-inline-start: auto;
+    }
+
+    .kp-toast > :is(button, .kp-button, .kp-icon-button) ~ :is(button, .kp-button, .kp-icon-button) {
+        margin-inline-start: 0;
+    }
+
+    /* A button hovered on a toast takes a shade of that toast's own plate
+ * instead of the theme's standard hover, which is drawn for the page and not
+ * for a coloured plate (Kenny's second nostromo pass, 2026-09-13). The
+ * ground is a veil over the plate, so the plate need not be known:
+ *   - on a toast of meaning the veil is black under a light ink and white
+ *     under a dark one, so the plate deepens away from its ink and the words
+ *     read better on hover, never worse — the four plates sit close to 4.5:1
+ *     already, and a veil of the ink measured 3.5 to 4.4 on 39 of them;
+ *   - on the plain toast, whose plate is often the page's own white or
+ *     near-black and cannot deepen further, the veil is the ink itself.
+ * Every register restates the hover rule, because each repaints its buttons'
+ * hover in the later register layer. The knobs [KT6]: `--kp-toast-button-hover`
+ * is the whole veil; `--kp-toast-button-ink` is the colour a toast of
+ * meaning judges its veil from (default: the button's own ink). */
+    .kp-toast {
+        --kp-toast-button-hover: color-mix(in srgb, currentColor 10%, transparent);
+    }
+
+    :is(.kp-toast--success, .kp-toast--warning, .kp-toast--info, .kp-toast--destructive, .kp-toast--error) {
+        --kp-toast-button-hover: oklch(from var(--kp-toast-button-ink, currentColor) clamp(0, (0.6 - l) * 1000, 1) 0 0 / 0.2);
+    }
+
+    .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    /* A toast with a meaning wears its severity on the alert's four token
+ * pairs, as the severity badge does [scope-60]: a plate and the ink drawn
+ * for it, so a toast, a badge and an alert that mean one thing are one
+ * colour and the contrast gate already holds every pair. It says the
+ * meaning in words too: the variant class is never the only carrier
+ * [DI4]. `--error` is the name the React channel and 6.0 used for the
+ * destructive one, and paints the same. The leading rule stays, in the
+ * plate's own colour. Registers repaint the plain toast in a later layer,
+ * so every register restates these four [gap-1's shape]. Buttons on the
+ * plate take its ink. */
+    .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+        border-inline-start: 3px solid var(--success);
+    }
+
+    .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+        border-inline-start: 3px solid var(--warning);
+    }
+
+    .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+        border-inline-start: 3px solid var(--info);
+    }
+
+    .kp-toast--destructive,
+    .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    :is(.kp-toast--success, .kp-toast--warning, .kp-toast--info, .kp-toast--destructive, .kp-toast--error) :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    .kp-toast__close {
+        margin-inline-start: auto;
+        flex: none;
+    }
+
+    /* --- Toast with Undo and a clock [kpadopt5] ---------------------------- */
+
+    /* js/undo-toast.js: the words, the clock and, as the toast's own button, Undo.
+     * The clock is a ring that drains (`ring`, with the seconds in it), a rule
+     * along the toast's foot that is taken back (`bar`), or the seconds in words
+     * (`text`); it stops while the toast is held. Under reduced motion it steps once
+     * a second. Knobs: --kp-undo-ms (written by the module), --kp-undo-steps. */
+    .kp-toast--undo {
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+        max-inline-size: min(36rem, calc(100vw - 2rem));
+    }
+
+    .kp-undo {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-undo__text {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-undo__ringbox {
+        position: relative;
+        flex: none;
+        display: grid;
+        place-items: center;
+        inline-size: 2rem;
+        block-size: 2rem;
+    }
+
+    .kp-undo__ring {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        transform: rotate(-90deg);
+        fill: none;
+        stroke-width: 2.5;
+    }
+
+    .kp-undo__ring-track {
+        stroke: color-mix(in srgb, currentColor 25%, transparent);
+    }
+
+    .kp-undo__ring-fill {
+        stroke: currentColor;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 0;
+        animation: kp-undo-drain var(--kp-undo-ms, 6000ms) linear forwards;
+    }
+
+    .kp-undo__secs,
+    .kp-undo__clock {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+    }
+
+    .kp-undo__clock {
+        flex: none;
+        min-inline-size: 3ch;
+        color: color-mix(in srgb, currentColor 70%, transparent);
+    }
+
+    .kp-undo__bar {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 3px;
+        background: var(--primary);
+        transform-origin: inline-start center;
+        animation: kp-undo-rule var(--kp-undo-ms, 6000ms) linear forwards;
+    }
+
+    .kp-undo__spinner {
+        flex: none;
+    }
+
+    .kp-toast--undo[data-kp-paused] :is(.kp-undo__ring-fill, .kp-undo__bar) {
+        animation-play-state: paused;
+    }
+
+    .kp-toast--undo:not([data-kp-undo-state='counting']) :is(.kp-undo__ring-fill, .kp-undo__bar) {
+        animation-play-state: paused;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-undo__ring-fill,
+        .kp-undo__bar {
+            animation-timing-function: steps(var(--kp-undo-steps, 6), end);
+        }
+    }
+
+    @keyframes kp-undo-drain {
+        to {
+            stroke-dashoffset: 1;
+        }
+    }
+
+    @keyframes kp-undo-rule {
+        to {
+            transform: scaleX(0);
+        }
+    }
+
+    /* A phone: the whole width, Undo a normal button in its own column. */
+    @media (max-width: 30rem) {
+        .kp-toast--undo {
+            inline-size: calc(100vw - 2rem);
+            max-inline-size: none;
+        }
+
+        .kp-toast--undo > .kp-button {
+            min-block-size: var(--kp-control-height, 2.25rem);
+        }
+    }
+

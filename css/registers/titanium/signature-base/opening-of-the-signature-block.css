@@ -1,0 +1,12 @@
+/* @part: signature-base: opening of the signature block */
+    [data-theme='titanium'] {
+        /* A counted figure runs one cut: 240 ms (G4). */
+        --kp-tick: 240;
+        --kp-glyph-changed: '\00a0\25aa';
+        /* The milled groove between two rows: a dark cut over a bright lip (G8). */
+        --kp-ti-groove: linear-gradient(var(--background), var(--background)) 0 100% / 100% 1px no-repeat;
+        --kp-ti-engrave: 0 1px 0 hsl(from var(--foreground) h s l / 0.12);
+        /* A pocket milled into a plate: the ground one step down, the shadow inside its top edge. */
+        --kp-ti-pocket: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.55), inset 0 0 0 1px var(--border-strong);
+    }
+

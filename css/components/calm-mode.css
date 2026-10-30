@@ -1,0 +1,39 @@
+/* @part: calm-mode: Calm mode */
+    /* --- Calm mode [kpadopt5] ---
+ * `html[data-kp-calm]` (js/calm.js) turns movement and effects off even when the system does not ask for less. CSS cannot
+ * force a media query, so the page answers its own flag here, in the one place: the stylesheet declares its animations
+ * under `prefers-reduced-motion: no-preference` with the finished look as the base, so "no animation" is exactly the
+ * look a reader with the system setting sees. `!important` is what reaches into kp.register and kp.signature from this
+ * earlier layer (as the progress bar's reduced-motion rule does). Scope, on the root as `data-kp-calm-scope`: `motion`
+ * stops the transitions only; `effects` (the default) also stops every animation, so glow, flicker and glitch hold their
+ * still look; `all` also holds loading still. Loading is the exception that Kenny asked for (2026-10-05: loading is always
+ * animated; 2026-10-17: it keeps moving softly): a spinner or skeleton breathes as one slow pulse of its opacity, and the
+ * pieces inside it stand still. Knob: `--kp-calm-pulse` (2400ms). */
+    :root[data-kp-calm],
+    :root[data-kp-calm] body {
+        scroll-behavior: auto !important;
+    }
+
+    :root[data-kp-calm] *,
+    :root[data-kp-calm] *::before,
+    :root[data-kp-calm] *::after {
+        transition: none !important;
+    }
+
+    :root[data-kp-calm]:not([data-kp-calm-scope='motion']) *,
+    :root[data-kp-calm]:not([data-kp-calm-scope='motion']) *::before,
+    :root[data-kp-calm]:not([data-kp-calm-scope='motion']) *::after {
+        animation: none !important;
+    }
+
+    :root[data-kp-calm]:not([data-kp-calm-scope='motion'], [data-kp-calm-scope='all'], [data-kp-calm-loading='still'])
+        :is(.kp-spinner, .kp-skeleton) {
+        animation: kp-calm-pulse var(--kp-calm-pulse, 2400ms) ease-in-out infinite !important;
+    }
+
+    @keyframes kp-calm-pulse {
+        50% {
+            opacity: 0.45;
+        }
+    }
+

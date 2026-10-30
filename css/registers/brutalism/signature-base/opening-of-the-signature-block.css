@@ -1,0 +1,479 @@
+/* @part: signature-base: opening of the signature block */
+    /* Typed confirmation: the loss list is a slab taped off along its foot; the name is the yellow plate in its box. */
+    [data-theme='brutalism'] .kp-type-confirm__loses {
+        padding-block-end: calc(var(--kp-space-sm, 0.5rem) + 0.5rem);
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-type-confirm__loses-title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__list {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__name {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__input {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+
+    /* Command block: the terminal is ink with paper words, the prompt the yellow hand. */
+    [data-theme='brutalism'] .kp-command {
+        --kp-command-prompt-ink: var(--secondary);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-command__head {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-command__shell {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-command__code {
+        background: var(--foreground);
+        color: var(--background);
+    }
+    [data-theme='brutalism'] .kp-command__code > code {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-command__where {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+    }
+
+    /* Visual timer and countdown. */
+    [data-theme='brutalism'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--secondary);
+        --kp-timer-disc-marks: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-timer-disc__face {
+        border: var(--kp-line) solid var(--border-strong);
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+        transition: none;
+    }
+    [data-theme='brutalism'] .kp-timer-disc__sector {
+        box-shadow: 0 0 0 2px var(--border-strong);
+        transition: none;
+    }
+    [data-theme='brutalism'] .kp-timer-disc__marks {
+        inset: 2%;
+        background: repeating-conic-gradient(from -1.2deg, var(--border-strong) 0 2.4deg, transparent 2.4deg 30deg);
+    }
+    [data-theme='brutalism'] .kp-timer-disc__hub {
+        inset: 45%;
+        border: 3px solid var(--card);
+        border-radius: 0;
+        background: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-timer-disc[data-kp-timer-disc-state='paused'] .kp-timer-disc__sector {
+        opacity: 1;
+        --kp-timer-disc-fill: var(--accent);
+    }
+    [data-theme='brutalism'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        background: var(--secondary);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] :is(.kp-timer-disc__caption, .kp-countdown__name) {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-countdown {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+        transition: none;
+    }
+    [data-theme='brutalism'] .kp-countdown__time {
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-countdown__digit {
+        background: var(--secondary);
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__digit {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+    [data-theme='brutalism'] .kp-countdown[data-kp-countdown-state='ended'] {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status {
+        color: inherit;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism']
+            :is(.kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face, .kp-countdown[data-kp-countdown-state='ended']) {
+            --kp-sig-br-h: var(--kp-sig-br-h-part);
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) 1;
+        }
+    }
+
+    /* Range picker. */
+    [data-theme='brutalism'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-range__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 2px var(--destructive);
+    }
+
+    /* Compare slider. */
+    [data-theme='brutalism'] .kp-compare {
+        --kp-compare-line: 6px;
+        --kp-compare-ink: var(--border-strong);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-compare__handle {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-compare__handle:active {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-compare__label {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-compare__failed {
+        padding-block-end: calc(var(--kp-space-md, 1rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--muted);
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    /* Three-way chips. */
+    [data-theme='brutalism'] .kp-segmented[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 0;
+        --kp-tri-out-edge: var(--border-strong);
+        --kp-tri-out-ground: var(--foreground);
+        --kp-tri-out-ink: var(--background);
+    }
+    [data-theme='brutalism'] .kp-segmented__mark {
+        border: 2px solid currentColor;
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration-color: var(--background);
+        text-decoration-thickness: 3px;
+    }
+    [data-theme='brutalism'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        border-color: var(--background);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='brutalism'] .kp-segmented__summary {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    @media (hover: hover) {
+        [data-theme='brutalism'] .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri]:hover {
+            translate: -2px -2px;
+            box-shadow: 5px 5px 0 var(--border-strong);
+        }
+    }
+
+    /* Quantity. */
+    [data-theme='brutalism'] .kp-quantity__field {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        translate: -2px -2px;
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            6px 6px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        border-color: var(--border-strong);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.3rem no-repeat,
+            var(--card);
+    }
+    [data-theme='brutalism'] .kp-quantity__input {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-quantity__unit {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* Checklist: rows ruled in ink; the row under the hand is the yellow plate; a ticked item is struck through in ink. */
+    [data-theme='brutalism'] .kp-checklist__bar {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__status {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__head {
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-checklist__count {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        color: var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-checklist__list {
+        border-block-start: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__item {
+        border-block-end: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__label {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__detail {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__row:hover {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-checklist__row:hover .kp-checklist__detail {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        color: var(--foreground);
+        text-decoration-color: var(--border-strong);
+        text-decoration-thickness: 3px;
+    }
+    [data-theme='brutalism'] .kp-checklist__empty {
+        border: var(--kp-line) dashed var(--border-strong);
+        border-radius: 0;
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__empty[data-kp-checklist-failed] {
+        padding-block-end: calc(var(--kp-space-lg, 1.5rem) + 0.5rem);
+        border-style: solid;
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+
+    /* Timers: slabs; the one that has run out is set down again, yellow, taped off along its foot. */
+    [data-theme='brutalism'] .kp-timer {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-timer__name {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-timer__time {
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--warning);
+        --kp-timer-done-ink: var(--border-strong);
+        --kp-timer-done-edge: var(--border-strong);
+        padding-block-end: calc(var(--kp-space-md, 0.75rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--warning);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-timer[data-kp-timer-state='done'] {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) 1;
+        }
+    }
+
+    /* Cook mode: each step is set down on its footprint; the figures and the counter shout. */
+    [data-theme='brutalism'] .kp-focus-steps__count {
+        font-family: var(--theme-font-display);
+        font-size: 1.125rem;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__text {
+        font-weight: 600;
+        line-height: 1.35;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__needs {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-focus-steps__needs-title {
+        color: var(--foreground);
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__name {
+        font-weight: 600;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+        border-width: 2px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-focus-steps__step {
+            animation: kp-sig-brutalism-k4-fall var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+        }
+    }
+
+    /* The wheel: flat paint between ink lines, an ink rim; a constant speed and a dead stop. */
+    [data-theme='brutalism'] .kp-wheel {
+        --kp-wheel-ease: linear;
+        --kp-wheel-tint: 100%;
+        --kp-wheel-tint-chosen: 100%;
+        --kp-wheel-other: 0.35;
+        --kp-wheel-pointer: var(--secondary);
+        --kp-wheel-hub-ring: 4px;
+    }
+    [data-theme='brutalism'] .kp-wheel__segment {
+        stroke: var(--border-strong);
+        stroke-width: 2;
+    }
+    [data-theme='brutalism'] .kp-wheel__segment[data-kp-wheel-chosen] {
+        stroke-width: 3.5;
+    }
+    [data-theme='brutalism'] .kp-wheel__label {
+        fill: var(--border-strong);
+        stroke: var(--card);
+        stroke-width: 3px;
+        stroke-linejoin: round;
+        paint-order: stroke;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button::before,
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-wheel__rim {
+        stroke: var(--border-strong);
+        stroke-width: 4;
+    }
+    [data-theme='brutalism'] .kp-wheel__pointer {
+        stroke: var(--border-strong);
+        stroke-width: 2.5;
+        stroke-linejoin: miter;
+    }
+    [data-theme='brutalism'] .kp-wheel__stage::before {
+        background: var(--card);
+        box-shadow:
+            0 0 0 var(--kp-wheel-hub-ring) var(--border-strong),
+            5px 5px 0 var(--kp-wheel-hub-ring) var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-wheel__ghost {
+        stroke-width: 3;
+    }
+    [data-theme='brutalism'] .kp-wheel__outcome {
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        border: 3px solid var(--border-strong);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-wheel__caption {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
+            animation: kp-sig-brutalism-secret-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }

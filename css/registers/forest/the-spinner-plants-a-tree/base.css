@@ -1,0 +1,478 @@
+/* @part: the-spinner-plants-a-tree: The spinner plants a tree */
+    /* ── The spinner plants a tree [themes/forest/CHARACTER.md G9, §6.7;
+       Kenny, 2026-10-07: "a tree is planted"]. A seedling on its mound
+       grows through three whole stages (seedling, sapling, tree), the tree
+       stands, and the next is planted: one tree per half a loop (1600 ms),
+       square at every size. The three stages are one drawing in three
+       cells, shown one at a time by stepping the mask along it (a stage is
+       a step, never a tween); the tree's ink is the acting green. ── */
+    [data-theme='forest'] .kp-spinner {
+        --kp-fo-ink: var(--primary);
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='forest'] :is(.kp-button--primary, .kp-toast--info) .kp-spinner {
+        --kp-fo-ink: var(--primary-foreground);
+    }
+
+    [data-theme='forest'] .kp-button--destructive .kp-spinner {
+        --kp-fo-ink: var(--destructive-foreground);
+    }
+
+    [data-theme='forest'] .kp-spinner::before,
+    [data-theme='forest'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        background: var(--kp-fo-ink);
+    }
+
+    [data-theme='forest'] .kp-spinner::before {
+        inset: 0;
+        opacity: 0.6;
+        mask: var(--kp-fo-mound) 50% 100% / 100% 100% no-repeat;
+    }
+
+    [data-theme='forest'] .kp-spinner::after {
+        inset: 0 25% 4%;
+        /* Standing still (reduced motion) it is the grown tree. */
+        mask: var(--kp-fo-stages) 100% 100% / 300% 100% no-repeat;
+    }
+
+    [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        animation: none;
+    }
+
+    [data-theme='forest'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--accent-foreground) h s l / 0.5) 0 4px, transparent 4px 7px) 50% 50% / calc(100% - 12px)
+                2px no-repeat,
+            var(--background);
+    }
+
+    [data-theme='forest'] .kp-switch__input::before {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        box-sizing: border-box;
+    }
+
+    [data-theme='forest'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background:
+            linear-gradient(hsl(from var(--primary-foreground) h s l / 0.45), hsl(from var(--primary-foreground) h s l / 0.45)) 50% 50% /
+                calc(100% - 12px) 2px no-repeat,
+            var(--primary);
+    }
+
+    [data-theme='forest'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        border-color: var(--primary-foreground);
+        background: conic-gradient(from 150deg at 50% 28%, var(--primary) 0 60deg, transparent 0), var(--primary-foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='forest'] .kp-field__check {
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    /* The tick and the dot are always there, cleared by their clip: a set
+       check draws its tick start to end and a cleared one takes it back the
+       same way, end to start (Kenny, 2026-10-09 on research/forest-
+       uniformity, pairs: "every pair mirrored"). A cleared part is never
+       drawn: the clip leaves nothing of it. */
+    [data-theme='forest'] .kp-field__check[type='checkbox']::before {
+        content: '';
+        inline-size: 0.62rem;
+        block-size: 0.32rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        border-end-start-radius: 1px;
+        transform: translateY(-1px) rotate(-45deg);
+        clip-path: inset(0 100% 0 0);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='checkbox']:dir(rtl)::before {
+        clip-path: inset(0 0 0 100%);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='checkbox']:checked::before {
+        clip-path: inset(0);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='forest'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    /* The dot grows up out of its foot and sinks back into it, never scaled
+       (G3). */
+    [data-theme='forest'] .kp-field__check[type='radio']::before {
+        content: '';
+        clip-path: inset(100% 0 0);
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle closest-side,
+            var(--primary) 0 40%,
+            transparent 40% 72%,
+            hsl(from var(--primary) h s l / 0.6) 72% calc(72% + 1.25px),
+            transparent calc(72% + 1.25px)
+        );
+    }
+
+    [data-theme='forest'] .kp-field__check[type='radio']:checked::before {
+        clip-path: inset(0);
+    }
+
+    [data-theme='forest'] .kp-toast {
+        --kp-sig-dur: var(--kp-sig-fo-time);
+        position: relative;
+        padding-inline-start: 1.15rem;
+    }
+
+    /* The plain and success toasts as approved; info, warning and destructive keep
+       the register's own plates, which the approved demo never showed and whose
+       words read at 4.5:1 only on them [scope-60]. */
+    [data-theme='forest'] .kp-toast:not(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-block: 0.55rem;
+        inset-inline-start: 0.5rem;
+        inline-size: 3px;
+        border-radius: 2px;
+        background: var(--accent-foreground);
+        transform-origin: 50% 0;
+    }
+
+    [data-theme='forest'] .kp-toast--success::before {
+        background: var(--success-foreground);
+    }
+
+    [data-theme='forest'] .kp-dialog::backdrop {
+        background:
+            repeating-radial-gradient(ellipse 120% 90% at 30% 110%, transparent 0 22px, hsl(from var(--foreground) h s l / 0.07) 22px 23px),
+            color-mix(in oklab, var(--foreground) 18%, var(--background));
+    }
+
+    /* The unopened dialog is the one js/motion.js measures for the theme's
+       time (a probe it adds and takes off), and it reads close = two thirds
+       of that: so it runs one and a half growths, and the dialog that is open
+       runs one, which is also its close and its opening [see the motion
+       block below]. */
+    [data-theme='forest'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-fo-time);
+    }
+
+    [data-theme='forest'] .kp-dialog {
+        --kp-sig-dur: calc(var(--kp-sig-fo-time) * 1.5);
+        border-color: var(--border-strong);
+        /* The map's neat line: a hairline frame just inside the sheet edge. */
+        box-shadow:
+            inset 0 0 0 5px var(--popover),
+            inset 0 0 0 6px hsl(from var(--primary) h s l / 0.35),
+            0 16px 34px -22px hsl(from var(--foreground) h s l / 0.55);
+    }
+
+    [data-theme='forest'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-fo-time);
+        margin-block-start: 0.4rem;
+        margin-inline-start: 0.5rem;
+        padding: 0.3rem 0.75rem;
+        border: 0;
+        border-radius: 4px;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        /* The routed groove a carved trail sign has, one step inside its edge. */
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.5);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='forest'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 1rem;
+        inline-size: 10px;
+        block-size: 6px;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.4rem;
+        block-size: 2px;
+        margin-inline: 0.3rem;
+        background: repeating-linear-gradient(90deg, hsl(from var(--accent-foreground) h s l / 0.55) 0 4px, transparent 4px 7px);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li[data-state='done']::after {
+        background: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        box-sizing: border-box;
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li[data-state='current']::before {
+        margin-inline: 4px;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        font-weight: 700;
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px hsl(from var(--primary) h s l / 0.55);
+    }
+
+    [data-theme='forest'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    /* The empty state is a clearing on the map [G14; Kenny, 2026-10-07: the
+       rings "do not convince"]: a plot of ground with a dashed boundary (leaf
+       corners, the theme's own), one seedling just planted on its mound, and
+       the survey's trig point in clay at the plot's corner. One ink, one clay;
+       drawn at 1 px = 1/16 rem so the dashes stay crisp. The seedling grows
+       once, 1000 ms on the growth curve; reduced motion shows it grown. */
+    /* The clearing, its seedling and the trig point are ONE picture on the `::before` (three masks, three inks), so they stay
+       together wherever the plate puts it: in a plate that centres its words the clearing sits in the middle and the seedling
+       used to stay at the plate's top (absolute `::after`). The seedling's ink is a layer that rises from the foot of its
+       box (`--kp-fo-sprout-rise`, 1000 ms on the growth curve; reduced motion shows it grown). The checklist's "nothing
+       yet" box is the same plate. */
+    @property --kp-fo-sprout-rise {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+    }
+
+    [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed]))) {
+        --kp-fo-clearing: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 52'%3E%3Cpath d='M2 2H56A14 14 0 0 1 70 16V50H16A14 14 0 0 1 2 36Z' fill='none' stroke='%23000' stroke-width='1.25' stroke-dasharray='4 3'/%3E%3Cellipse cx='36' cy='43' rx='8' ry='2'/%3E%3C/svg%3E");
+        --kp-fo-sprout: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 52'%3E%3Crect x='35.4' y='27' width='1.2' height='16'/%3E%3Cellipse cx='31.8' cy='27.5' rx='5.2' ry='2.4' transform='rotate(-48 31.8 27.5)'/%3E%3Cellipse cx='40.2' cy='27.5' rx='5.2' ry='2.4' transform='rotate(48 40.2 27.5)'/%3E%3C/svg%3E");
+        --kp-fo-trig: radial-gradient(circle, var(--foreground) 0 1.5px, transparent 2px 4px, var(--foreground) 4px 5px, transparent 5.5px);
+        position: relative;
+        padding: 1.25rem 1rem 1.4rem;
+        border: 1px solid var(--border);
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-checklist__empty:not([data-kp-checklist-failed]) {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+
+    [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::before {
+        content: '';
+        display: block;
+        inline-size: 4.5rem;
+        block-size: 3.25rem;
+        margin: 0 auto 0.6rem;
+        pointer-events: none;
+        background:
+            linear-gradient(to top, var(--primary) var(--kp-fo-sprout-rise), transparent 0) 50% 70% / 30% 42% no-repeat,
+            linear-gradient(var(--accent-foreground), var(--accent-foreground)) 87% 0.125rem / 0.75rem 0.75rem no-repeat,
+            var(--border-strong);
+        mask-image: var(--kp-fo-clearing), var(--kp-fo-sprout), var(--kp-fo-trig);
+        mask-position: 50% 50%, 50% 50%, 87% 0.125rem;
+        mask-size: 100% 100%, 100% 100%, 0.75rem 0.75rem;
+        mask-repeat: no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::before {
+            animation: kp-sig-forest-sprout var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+    }
+
+    @keyframes kp-sig-forest-sprout {
+        from {
+            --kp-fo-sprout-rise: 0%;
+        }
+    }
+
+    /* The failed checklist box is the package's destructive alert plate (leaf corners, the destructive ground). */
+    [data-theme='forest'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-radius: var(--kp-sig-fo-plate);
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='forest'] .kp-empty__title {
+        margin: 0 0 0.25rem;
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    [data-theme='forest'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-line: underline;
+        text-decoration-style: dashed;
+        text-decoration-color: var(--accent-foreground);
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 0.24em;
+    }
+
+    [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        text-decoration-style: solid;
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* A link in running text answers in contact time, like the bar's
+           links (F-15); the dash turning solid is a step. */
+        [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+            transition:
+                text-decoration-color var(--fx-duration) var(--fx-ease),
+                text-decoration-thickness var(--fx-duration) var(--fx-ease);
+        }
+
+        /* The switch's thumb goes back on the curve turned around. */
+        [data-theme='forest'] .kp-switch__input:not(:checked)::before {
+            transition-timing-function: var(--kp-sig-fo-wither);
+        }
+
+        /* One tree is planted per half a loop. */
+        [data-theme='forest'] .kp-spinner::after {
+            animation: kp-sig-forest-plant calc(var(--kp-sig-fo-loop) / 2) step-end infinite;
+        }
+
+        [data-theme='forest'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+
+        /* A check is set in contact time on the growth curve and cleared as
+           that played backwards: the plate turns green at once and then the
+           tick is drawn; on clearing the tick is taken back on the curve
+           turned around and the plate turns kraft once it is gone. */
+        [data-theme='forest'] .kp-field__check {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color 0s linear var(--fx-duration),
+                border-color 0s linear var(--fx-duration);
+        }
+
+        [data-theme='forest'] .kp-field__check:checked {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color 0s linear,
+                border-color 0s linear;
+        }
+
+        [data-theme='forest'] .kp-field__check::before {
+            transition: clip-path var(--fx-duration) var(--kp-sig-fo-wither);
+        }
+
+        [data-theme='forest'] .kp-field__check:checked::before {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+
+        /* A toast arrives as its leave played backwards, so that its leave
+           (the theme's, on [data-kp-leaving], below) is its arrival turned
+           around frame for frame: it grows out of its own base line,
+           turning from autumn to green. The arrival is written forwards
+           (kp-sig-forest-arrive on the growth curve: the leave's frames and
+           curve, reversed) and not as the leave with `reverse`: a table row
+           borrows the toast's entrance, and js/motion.js turns an entrance
+           round by forcing `animation-direction: reverse` on it (css/components.css),
+           which on a `reverse` entrance changes nothing. Folding a group then
+           played the rows' growth again and hid them at its end, the text
+           rising out of the ground and vanishing (Kenny, kpadopt-tooltip-sort
+           groupalways · forest, 2026-10-16). */
+        [data-theme='forest'] .kp-toast {
+            animation: kp-sig-forest-arrive var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+
+        /* A dialog grows up out of its base line, its top edge first
+           (G3). The unopened one js/motion.js measures to learn the
+           theme's time runs one and a half growths, because it takes the
+           close as two thirds of what it reads: the opened one, which plays,
+           runs one growth, and so does its close. */
+        [data-theme='forest'] .kp-dialog {
+            animation: kp-sig-forest-grow var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+
+        /* A tooltip hangs from the part it names: it grows down out of that
+           part, its far end first, like a root (G3). */
+        [data-theme='forest'] .kp-tooltip {
+            animation: kp-sig-forest-root var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+    }
+
+    /* The planting, one tree: seedling, sapling, tree, the tree stands. Each
+       stage is a step along the three-cell drawing. */
+    @keyframes kp-sig-forest-plant {
+        0% {
+            mask-position: 0% 100%;
+            opacity: 0.7;
+        }
+
+        22% {
+            mask-position: 50% 100%;
+            opacity: 0.85;
+        }
+
+        45%,
+        100% {
+            mask-position: 100% 100%;
+            opacity: 1;
+        }
+    }
+

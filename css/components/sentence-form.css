@@ -1,0 +1,235 @@
+/* @part: sentence-form: Sentence form */
+    /* --- Sentence form: a form that reads as a sentence [kpadopt5-time] ---
+ * `.kp-sentence[data-kp-sentence]` (js/sentence.js). Words and fields run on as one paragraph, 1.125rem on a 2.4 line, the
+ * fields between the words: each `.kp-sentence__field` wraps one of the package's inputs (an input, a select, a combobox,
+ * the weekday picker) and draws it inline, by default an underline in the primary colour (`data-kp-look="boxed"` a small box).
+ * The sentence wraps like text; a field wider than most of the line goes on a line of its own, the full width
+ * (`data-kp-own-line`, written by the script). Invalid is a destructive underline and the line under the sentence; disabled
+ * is dashed and dimmed; a field that waits shows its own skeleton at the width it had.
+ * Knobs [KT6]: --kp-sentence-size (1.125rem), --kp-sentence-line (2.4), --kp-sentence-edge (the primary), --kp-sentence-edge-width (2px),
+ * --kp-sentence-gap. */
+    .kp-sentence {
+        --kp-sentence-size: 1.125rem;
+        --kp-sentence-line: 2.4;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-sentence-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    .kp-sentence[data-kp-sentence-size='md'] {
+        --kp-sentence-size: 1rem;
+        --kp-sentence-line: 2.2;
+    }
+
+    .kp-sentence__text {
+        margin: 0;
+        font-size: var(--kp-sentence-size);
+        line-height: var(--kp-sentence-line);
+        overflow-wrap: break-word;
+    }
+
+    .kp-sentence__when[hidden] {
+        display: none;
+    }
+
+    .kp-sentence__field {
+        position: relative;
+        display: inline-block;
+        vertical-align: baseline;
+        max-inline-size: 100%;
+        margin-inline: 0.125em;
+        line-height: 1.5;
+    }
+
+    .kp-sentence__field .kp-combobox {
+        display: inline-block;
+        vertical-align: baseline;
+        max-inline-size: 100%;
+    }
+
+    .kp-sentence__field > :is(input:where(:not([type='checkbox'], [type='radio'])), select, textarea),
+    .kp-sentence__field .kp-combobox__input {
+        box-sizing: border-box;
+        display: inline-block;
+        inline-size: auto;
+        max-inline-size: 100%;
+        min-block-size: 0;
+        block-size: auto;
+        margin: 0;
+        padding: 0 0.25em;
+        border: 0;
+        border-block-end: var(--kp-sentence-edge-width, 2px) solid var(--kp-sentence-edge, var(--primary));
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        line-height: inherit;
+        appearance: none;
+    }
+
+    .kp-sentence__field > select {
+        padding-inline-end: 1.25em;
+        text-overflow: clip;
+    }
+
+    /* The list a sentence's select opens is the platform's own, and it paints the select's background: the field is
+     * transparent (an underline), so the list came up almost black in formal [kpadopt5-r2]. It wears the popover's surface
+     * and ink, the same tokens the package's other opened lists use (`select.kp-field__input` below, the combobox). */
+    .kp-sentence__field > select:open,
+    .kp-sentence__field > select option,
+    .kp-sentence__field > select optgroup {
+        background-color: var(--popover, var(--background));
+        color: var(--popover-foreground, var(--foreground));
+    }
+
+    /* Its drawn list is as wide as its longest option, never narrower than the field: "every week" stays on one line. */
+    .kp-sentence__field [data-kp-select-list] {
+        min-inline-size: max-content;
+    }
+
+    .kp-sentence__field [data-kp-select-list] > [role='option'] {
+        white-space: nowrap;
+    }
+
+    .kp-sentence__field:has(> select)::after {
+        content: var(--kp-glyph-caret, '▾');
+        position: absolute;
+        inset-block-end: 0.15em;
+        inset-inline-end: 0.3em;
+        color: var(--muted-foreground);
+        font-size: 0.8em;
+        pointer-events: none;
+    }
+
+    @media (hover: hover) {
+        .kp-sentence__field > :is(input, select, textarea):hover:not(:disabled, :focus-visible),
+        .kp-sentence__field .kp-combobox__input:hover:not(:disabled, :focus-visible) {
+            background: hsl(from var(--primary) h s l / 0.06);
+        }
+    }
+
+    .kp-sentence__field > :is(input, select, textarea):focus-visible,
+    .kp-sentence__field .kp-combobox__input:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+        background: hsl(from var(--primary) h s l / 0.06);
+    }
+
+    .kp-sentence[data-kp-look='boxed'] .kp-sentence__field > :is(input:where(:not([type='checkbox'], [type='radio'])), select, textarea),
+    .kp-sentence[data-kp-look='boxed'] .kp-sentence__field .kp-combobox__input {
+        padding: 0 0.5em;
+        border: 1px solid var(--input);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+    }
+
+    .kp-sentence[data-kp-look='boxed'] .kp-sentence__field > select {
+        padding-inline-end: 1.5em;
+    }
+
+    .kp-sentence__field > [aria-invalid='true'],
+    .kp-sentence__field .kp-combobox__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+    }
+
+    .kp-sentence__field > :disabled {
+        border-block-end-style: dashed;
+        color: var(--muted-foreground);
+        cursor: not-allowed;
+    }
+
+    /* --- Sentence form: a read-only computed field [audhd-opts-1019; audhd-recepten 24] ---
+ * `<output class="kp-sentence__computed" data-kp-sentence-computed="ready">` inside a `.kp-sentence__field` (js/sentence.js): a word the
+ * sentence works out from its other fields. It is drawn apart from an editable one, a quiet plate and no underline in the primary
+ * colour, but on the same line box (the same transparent 2px under-edge an input has), so it sits on the words' baseline and
+ * is as tall as the fields beside it. Nothing to say yet (`data-kp-sentence-empty`) is a dash in the muted ink. Knobs [KT6]:
+ * --kp-sentence-computed-bg (the muted), --kp-sentence-computed-fg (the foreground). */
+    .kp-sentence__field > .kp-sentence__computed {
+        box-sizing: border-box;
+        display: inline-block;
+        max-inline-size: 100%;
+        margin: 0;
+        padding: 0 0.4em;
+        border: 0;
+        border-block-end: var(--kp-sentence-edge-width, 2px) solid transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-sentence-computed-bg, var(--muted));
+        color: var(--kp-sentence-computed-fg, var(--foreground));
+        font: inherit;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        line-height: inherit;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-sentence__field > .kp-sentence__computed[data-kp-sentence-empty] {
+        color: var(--muted-foreground);
+    }
+
+    .kp-sentence__field[data-kp-state='loading'] > :not(.kp-sentence__skeleton) {
+        visibility: hidden;
+    }
+
+    .kp-sentence__field[data-kp-state='loading']::after {
+        content: none;
+    }
+
+    .kp-sentence__skeleton {
+        position: absolute;
+        inset: 0;
+        display: block;
+    }
+
+    .kp-sentence__bar {
+        --kp-skeleton-block: 100%;
+        block-size: 100%;
+        min-block-size: 0;
+    }
+
+    /* A field too wide to share the line: a line of its own, the full width. */
+    .kp-sentence__field[data-kp-own-line] {
+        display: block;
+        inline-size: 100%;
+        margin-inline: 0;
+        margin-block: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-sentence__field[data-kp-own-line] > :is(input:where(:not([type='checkbox'], [type='radio'])), select, textarea),
+    .kp-sentence__field[data-kp-own-line] .kp-combobox__input {
+        inline-size: 100%;
+    }
+
+    .kp-sentence__field[data-kp-own-line] .kp-combobox {
+        display: block;
+    }
+
+    .kp-sentence__field > .kp-weekdays {
+        font-size: var(--kp-text-md, 1rem);
+        line-height: 1.5;
+    }
+
+    .kp-sentence__why {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-sentence__why[hidden] {
+        display: none;
+    }
+
+    .kp-sentence__reason {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-sentence[disabled] .kp-sentence__text {
+        color: var(--muted-foreground);
+    }
+

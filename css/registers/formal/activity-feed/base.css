@@ -1,0 +1,284 @@
+/* @part: activity-feed: Loading is ruling the lines */
+    /* ── Loading is ruling the lines [G10; Kenny, 2026-10-08, question 10;
+       the trend's pick, "The ledger is ruled", carried to every waiting
+       surface]. A skeleton line is one row of the ledger: a faint ledger line
+       at its foot and a 2 px navy rule ruled across it, held, lifted from the
+       start and ruled again, 2400 ms; the next line begins 300 ms later.
+       Standing still the rule is ruled and closed. Nothing is inked, nothing
+       shimmers (the words of the old ink picture are retired). ── */
+    [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        block-size: 1.5rem;
+        border-block-end: 1px solid var(--border);
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0;
+    }
+
+    [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -1px;
+        block-size: 2px;
+        background: var(--primary);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+            animation: kp-sig-formal-ledger var(--kp-sig-fm-loop) linear infinite backwards;
+        }
+
+        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before {
+            animation-delay: calc(var(--kp-sig-fm-loop) / 8);
+        }
+
+        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before {
+            animation-delay: calc(var(--kp-sig-fm-loop) / 4);
+        }
+
+        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(n + 4)::before {
+            animation-delay: calc(var(--kp-sig-fm-loop) * 3 / 8);
+        }
+    }
+
+    [data-theme='formal'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--background);
+    }
+
+    [data-theme='formal'] .kp-switch__input:not(:focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px var(--background),
+            inset 0 0 0 3px var(--border);
+    }
+
+    [data-theme='formal'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+    }
+
+    [data-theme='formal'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-switch__input:checked:not(:focus-visible) {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 3px hsl(from var(--primary-foreground) h s l / 0.45);
+    }
+
+    [data-theme='formal'] .kp-switch__input:checked::before {
+        background: radial-gradient(circle, var(--primary) 0 2px, transparent 2.5px), var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    [data-theme='formal'] .kp-field__check {
+        --kp-sig-dur: var(--fx-duration);
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+    }
+
+    [data-theme='formal'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.62rem;
+        block-size: 0.32rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='formal'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='formal'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-field__check[type='checkbox']:checked::before,
+        [data-theme='formal'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-formal-pen var(--kp-sig-dur) linear both;
+        }
+    }
+
+    /* The toast, the dialog and the tooltip are ruled open where they stand
+       (G3, G13: the engine below); this is how each looks at rest. */
+    [data-theme='formal'] .kp-toast {
+        position: relative;
+    }
+
+    [data-theme='formal'] .kp-toast::after {
+        content: '';
+        position: absolute;
+        inset-block-start: -1px;
+        inset-inline: var(--radius);
+        block-size: 2px;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-toast--success::after {
+        background: var(--success-foreground);
+        inset-block-start: 3px;
+        opacity: 0.6;
+    }
+
+    [data-theme='formal'] .kp-dialog::backdrop {
+        background: color-mix(in oklab, var(--foreground) 20%, var(--background));
+    }
+
+    /* The mat of a dialog is the double rule: a strong hairline and a thinner
+       one inside it (G7). */
+    [data-theme='formal'] .kp-dialog {
+        box-shadow:
+            0 0 0 4px var(--popover),
+            0 0 0 5px var(--border-strong),
+            0 18px 40px -24px hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    [data-theme='formal'] .kp-dialog__title {
+        font-family: var(--theme-font-display);
+    }
+
+    /* A tooltip is a small plate inside a rule: square (G6), its words in
+       small capitals (G18). */
+    [data-theme='formal'] .kp-tooltip {
+        margin-inline-start: 0.5rem;
+        padding: 0.3rem 0.65rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow: 0 6px 16px -10px hsl(from var(--foreground) h s l / 0.4);
+        font-size: 0.9375rem;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='formal'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -5px;
+        inset-inline-start: 1rem;
+        inline-size: 8px;
+        block-size: 8px;
+        border-block-start: 1px solid var(--border-strong);
+        border-inline-start: 1px solid var(--border-strong);
+        background: var(--popover);
+        transform: rotate(45deg);
+    }
+
+    [data-theme='formal'] .kp-wizard__steps {
+        gap: 0.5rem 0;
+    }
+
+    [data-theme='formal'] .kp-wizard__steps li {
+        gap: 0.5rem;
+    }
+
+    [data-theme='formal'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1rem;
+        block-size: 1px;
+        margin-inline: 0.25rem;
+        background: var(--border-strong);
+    }
+
+    [data-theme='formal'] .kp-wizard__steps li::before {
+        content: counter(kp-step, upper-roman);
+        inline-size: auto;
+        min-inline-size: 1.75rem;
+        block-size: 1.75rem;
+        padding-inline: 0.3rem;
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+    }
+
+    [data-theme='formal'] .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    [data-theme='formal'] .kp-empty {
+        padding: 1.25rem 1rem 4.25rem;
+        border: 0;
+        border-block-start: 3px double var(--border-strong);
+        border-radius: 0;
+        background: repeating-linear-gradient(to bottom, transparent 0 calc(1.2rem - 1px), var(--border) calc(1.2rem - 1px) 1.2rem) center bottom
+            1rem / calc(100% - 4rem) 3.6rem no-repeat;
+    }
+
+    /* Inside a card the empty state is the card's stage, which has its frame: the double rule along the top of the plate
+       would be two hairlines under the card's sentence that belong to nothing (the loading, failed and filled stages draw none), and the
+       ruled lines drawn at the foot of the plate would float, unrelated to the words centred above them. */
+    [data-theme='formal'] .kp-card__state > .kp-card__empty {
+        padding-block-end: 1.25rem;
+        border-block-start: 0;
+        background: none;
+    }
+
+    [data-theme='formal'] .kp-empty__title {
+        margin: 0 0 0.25rem;
+        font-family: var(--theme-font-display);
+        font-size: 1.2rem;
+        font-style: italic;
+    }
+
+    [data-theme='formal'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='formal'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-thickness: 1px;
+        text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+        text-underline-offset: 0.2em;
+    }
+
+    [data-theme='formal'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        text-decoration-style: double;
+        text-decoration-thickness: 1px;
+        text-decoration-color: currentColor;
+    }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]` (which
+       is ruled in below, as every arrival is). The frame is ruled in as the
+       box changes. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-kp-resizing] {
+            outline: 1px solid var(--border-strong);
+            outline-offset: 4px;
+        }
+    }
+

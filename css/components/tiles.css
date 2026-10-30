@@ -1,0 +1,64 @@
+/* @part: tiles: Tiles of one height */
+    /* --- Tiles of one height [scope-143] ---------------------------------- */
+
+    /* Cards in a grid are one height, and each card's footer keeps to its
+ * bottom edge, so the footers of a row form one line. The cards are the
+ * package's own `.kp-card`; this only lays them out. */
+    .kp-tiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-tile-min, 15rem)), 1fr));
+        /* Every row as tall as the tallest tile of the grid. */
+        grid-auto-rows: 1fr;
+        gap: var(--kp-tiles-gap, var(--kp-space-md, 1rem));
+        /* A tile is a small card: its title a step under a page card's. */
+        --kp-card-title-size: var(--kp-tile-title-size, 1.125rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-tiles > .kp-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-tiles > .kp-card > .kp-card__footer {
+        margin-block-start: auto;
+    }
+
+    /* The body never touches the footer's rule when the card is the tallest. */
+    .kp-tiles > .kp-card > :nth-last-child(2):not(.kp-card__footer) {
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* Tiles of one height across a board [port spec H]: the grids of one
+ * `data-kp-tiles-set` share the set's tallest tile as the floor of their
+ * rows, `--kp-tile-row-min`, which attachTileSets() (js/tiles.js) measures
+ * and writes. Unset, the floor is `auto`, so a grid outside a set is laid
+ * out exactly as before. While the script measures, a grid's rows size to
+ * their content and its tiles to their own height. */
+    :where([data-kp-tiles-set]) .kp-tiles,
+    .kp-tiles[data-kp-tiles-set] {
+        grid-auto-rows: minmax(var(--kp-tile-row-min, auto), 1fr);
+    }
+
+    .kp-tiles[data-kp-tiles-measuring] {
+        grid-auto-rows: auto;
+        align-items: start;
+    }
+
+    /* While the tiles of a set move to a new height (js/tiles.js eases each
+ * one at the theme's size motion), the rows follow the tiles rather than
+ * the floor, and a tile clips what it has not yet grown to show. */
+    .kp-tiles[data-kp-tiles-easing] {
+        grid-auto-rows: auto;
+        align-items: start;
+    }
+
+    .kp-tiles[data-kp-tiles-easing] > * {
+        overflow: clip;
+        box-sizing: border-box;
+    }
+

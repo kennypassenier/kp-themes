@@ -1,0 +1,203 @@
+/* @part: viewer: The viewer shell */
+@layer kp.components {
+    /* kpadopt6-media:viewer:start */
+    /* --- The viewer shell: one thing opened large [kpadopt6-media] --------------
+     * js/viewer.js. A modal `.kp-dialog.kp-viewer`: a head (title, how it is shown, facts, an exact position, close), a stage
+     * and a foot with the way out. Wide is about 70 % of the window and 90 % high; full is the whole window; a phone always
+     * gets the whole screen and its foot buttons share the width. The stage keeps its final size from the first frame: a
+     * loading file is the theme's busy card over the whole stage, a file that fails or cannot be shown is a plate that fills it.
+     * Knobs [KT6]: --kp-viewer-width (70vw, at most 64rem), --kp-viewer-height (90dvh). */
+    .kp-viewer {
+        display: none;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        box-sizing: border-box;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .kp-viewer[open] {
+        display: grid;
+    }
+
+    .kp-viewer[data-kp-viewer-size='wide'] {
+        inline-size: min(var(--kp-viewer-width, 70vw), 64rem);
+        max-inline-size: calc(100vw - 2rem);
+        block-size: var(--kp-viewer-height, 90dvh);
+        max-block-size: calc(100dvh - 1rem);
+    }
+
+    .kp-viewer[data-kp-viewer-size='full'] {
+        inline-size: 100vw;
+        max-inline-size: 100vw;
+        block-size: 100dvh;
+        max-block-size: 100dvh;
+        border-width: 0;
+        border-radius: 0;
+    }
+
+    @media (max-width: 40em) {
+        .kp-viewer[data-kp-viewer-size] {
+            inline-size: 100vw;
+            max-inline-size: 100vw;
+            block-size: 100dvh;
+            max-block-size: 100dvh;
+            border-width: 0;
+            border-radius: 0;
+        }
+    }
+
+    .kp-viewer__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: start;
+        gap: var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-lg, 1rem) var(--kp-space-xl, 1.5rem) var(--kp-space-md, 0.75rem) var(--kp-space-xl, 1.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-viewer__titles {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-viewer__title {
+        margin: 0;
+        font-size: var(--kp-dialog-title-size, 1.25rem);
+        line-height: var(--kp-heading-line-height, 1.2);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-viewer__desc,
+    .kp-viewer__facts {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-viewer__desc[hidden],
+    .kp-viewer__facts[hidden],
+    .kp-viewer__position[hidden],
+    .kp-viewer__foot[hidden],
+    .kp-viewer__plate[hidden] {
+        display: none;
+    }
+
+    .kp-viewer__position {
+        margin: 0;
+        padding-block-start: 0.35rem;
+        min-inline-size: 7ch;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    /* The stage and its content are one definite cell, so a picture's max-block-size: 100% resolves against the stage and the
+       whole picture shows; an auto row made the percentage cyclic and a tall picture was cut at the stage's foot
+       (Kenny, 2026-10-18 19:08: "het toont niet alle content"). */
+    .kp-viewer__stage {
+        position: relative;
+        display: grid;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+        min-block-size: 0;
+        min-inline-size: 0;
+        overflow: hidden;
+    }
+
+    .kp-viewer__content {
+        display: grid;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+        min-block-size: 0;
+        min-inline-size: 0;
+    }
+
+    .kp-viewer__stage[data-kp-state='loading'] > .kp-viewer__content,
+    .kp-viewer__stage[data-kp-state='error'] > .kp-viewer__content,
+    .kp-viewer__stage[data-kp-state='unsupported'] > .kp-viewer__content {
+        visibility: hidden;
+    }
+
+    .kp-viewer__plate {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        padding: var(--kp-space-lg, 1rem);
+    }
+
+    .kp-viewer__plate > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-viewer__close {
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    .kp-viewer__plate-actions .kp-button {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-viewer__plate-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-viewer__foot {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-xl, 1.5rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-viewer__action {
+        text-align: center;
+        text-decoration: none;
+        white-space: normal;
+        overflow-wrap: normal;
+    }
+
+    @media (max-width: 40em) {
+        .kp-viewer__head {
+            padding-inline: var(--kp-space-lg, 1rem);
+        }
+
+        .kp-viewer__foot {
+            padding-inline: var(--kp-space-lg, 1rem);
+        }
+
+        .kp-viewer__foot > * {
+            flex: 1 1 0;
+            min-inline-size: 0;
+        }
+
+        .kp-viewer__foot > * > .kp-viewer__action {
+            inline-size: 100%;
+        }
+    }
+
+    .kp-docpreview__frame {
+        inline-size: 100%;
+        block-size: 100%;
+        border: 0;
+        background: Canvas;
+        color-scheme: light;
+    }
+
+    .kp-docpreview__image {
+        justify-self: center;
+        align-self: center;
+        max-inline-size: 100%;
+        max-block-size: 100%;
+        object-fit: contain;
+    }
+    /* kpadopt6-media:viewer:end */
+}
+

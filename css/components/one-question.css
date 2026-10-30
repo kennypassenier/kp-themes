@@ -1,0 +1,163 @@
+/* @part: one-question: Answering one question per screen */
+    /* --- Answering one question per screen [kpadopt6] --------------------------------
+ * Answer mode of `.kp-focus-steps` (js/focus-steps.js): the question large, big answer buttons under it (56 px and more:
+ * `data-kp-choice-height="md"` is 44 px), "Same as yesterday: Matig", "Same as usual: Good" and Not today, with Back and Next at
+ * the foot. A chosen answer carries a mark and the primary plate, never colour alone. In a phone-wide box the answers are one
+ * stacked column, full width. Knobs [KT6]: --kp-focus-answer-min (3.5rem), --kp-focus-answer-gap (0.75rem). */
+    .kp-focus-steps__answer {
+        container: kp-focus-answer / inline-size;
+        display: grid;
+        gap: var(--kp-focus-answer-gap, var(--kp-space-md, 0.75rem));
+        min-inline-size: 0;
+    }
+
+    .kp-focus-steps__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-focus-steps__choices {
+        display: grid;
+        gap: var(--kp-focus-answer-gap, var(--kp-space-sm, 0.5rem));
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-focus-steps__choices[data-kp-layout='row'] {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+    }
+
+    @container kp-focus-answer (max-width: 26rem) {
+        .kp-focus-steps__choices[data-kp-layout='row'] {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .kp-focus-steps__choice.kp-button {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        justify-content: stretch;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-block-size: var(--kp-focus-answer-min, 3.5rem);
+        font-size: var(--kp-focus-steps-button-text, 1.125rem);
+        text-align: start;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps[data-kp-choice-height='md'] .kp-focus-steps__choice.kp-button {
+        min-block-size: 2.75rem;
+    }
+
+    .kp-focus-steps__mark {
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        border: 2px solid currentColor;
+        border-radius: var(--kp-radius-pill, 999px);
+        font-size: 0.875rem;
+        line-height: 1;
+    }
+
+    .kp-focus-steps__choice[aria-pressed='true'] .kp-focus-steps__mark::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-focus-steps__choice[aria-pressed='true'].kp-button {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--primary);
+    }
+
+    .kp-focus-steps__choice[aria-disabled='true'] {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .kp-focus-steps__reason {
+        grid-column: 2;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 400;
+    }
+
+    .kp-focus-steps__sames {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-focus-steps__same.kp-button,
+    .kp-focus-steps__skip.kp-button {
+        white-space: normal;
+        text-align: start;
+    }
+
+    .kp-focus-steps__skip.kp-button {
+        justify-self: start;
+    }
+
+    .kp-focus-steps__wake[hidden] {
+        display: none;
+    }
+
+    .kp-focus-steps__skip[aria-pressed='true'] {
+        text-decoration: underline;
+    }
+
+    .kp-focus-steps__input {
+        inline-size: 100%;
+        box-sizing: border-box;
+        min-block-size: 8rem;
+        font-size: var(--kp-focus-steps-button-text, 1.125rem);
+        resize: vertical;
+    }
+
+    .kp-focus-steps__bar[hidden],
+    .kp-focus-steps__count[hidden],
+    .kp-focus-steps__prev[hidden] {
+        display: none;
+    }
+
+    .kp-focus-steps__resume {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-focus-steps__resume-text {
+        flex: 1 1 12rem;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__summary {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+    }
+
+    .kp-focus-steps__summary-q {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__summary-a {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-size: 1.125rem;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__step[data-kp-focus-steps-kind] > .kp-stateplate {
+        min-block-size: 100%;
+    }
+

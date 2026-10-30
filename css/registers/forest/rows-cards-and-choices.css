@@ -1,0 +1,185 @@
+/* @part: rows-cards-and-choices: Rows, cards and choices */
+/* ── Rows, cards and choices [kpadopt4]: tiles, status rows, the action list, secrets, dialogs ── */
+@layer kp.signature {
+    /* Choice tiles: kraft cards with the leaf corner; pointing blazes a tile with the dashed green ring, a press closes
+       the blaze in, the chosen one has the solid green ring over its moss wash; the hint is a note. */
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: var(--kp-sig-fo-plate);
+        --kp-field-tiles-gap: 0.875rem;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border);
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--primary) 9%, var(--card));
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline-style: solid;
+        outline-color: var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+    }
+    [data-theme='forest'] .kp-field__option-hint {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'],
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'][data-kp-invalid] {
+        outline: 2px dashed var(--destructive);
+        outline-offset: 4px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* A check with a reservation is a field note on the warning pair, a square italic tag; the fix written out is a
+       note under a clay blaze. */
+    [data-theme='forest'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+    }
+    [data-theme='forest'] .kp-statusrow[data-state='warn'] .kp-statusrow__detail {
+        justify-self: start;
+        margin-block-start: 0.2rem;
+        padding: 0 0.4em;
+        border-radius: 0;
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-statusrow__fix {
+        padding-inline-start: 0.6rem;
+        border-inline-start: 3px solid var(--accent-foreground);
+        font-style: italic;
+    }
+
+    /* The action list with a lead: a row is a line on the kraft ground; its state is a short painted blaze on the start
+       edge, not a bar (clay marks the trail, so a plain new row takes the green that acts); the next one has the moss
+       wash and its date in the note voice; a group's heading is a note; the payload a kraft note with the leaf corner. */
+    [data-theme='forest'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='next']) {
+        --kp-fo-blaze: var(--primary);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='active'] {
+        --kp-fo-blaze: var(--info-foreground);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        --kp-fo-blaze: var(--warning-foreground);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        --kp-fo-blaze: var(--destructive);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='next'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed']) {
+        border-image: linear-gradient(to bottom, transparent 0.4rem, var(--kp-fo-blaze) 0.4rem 1.7rem, transparent 1.7rem) 1;
+    }
+    [data-theme='forest'] .kp-action-list__meta,
+    [data-theme='forest'] .kp-action-list__text {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-action-list > li.kp-action-list__group {
+        font-style: italic;
+        letter-spacing: 0;
+        text-transform: none;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+    [data-theme='forest'] .kp-action-list__payload {
+        border-radius: 0 var(--kp-sig-fo-leaf);
+    }
+
+    /* A secret: the value lies in a routed slot of wood; the time left is a grove planted along the line that withers
+       back from its end as the time runs out (whole trees go one by one); a failure is a field note. */
+    [data-theme='forest'] .kp-secret {
+        --kp-secret-drain-size: 0.625rem;
+    }
+    [data-theme='forest'] .kp-secret__value {
+        border-color: transparent;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-secret__value:not(.kp-masked) {
+        background: var(--muted);
+    }
+    [data-theme='forest'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: var(--muted);
+        box-shadow: none;
+        border-color: var(--border-strong);
+    }
+    [data-theme='forest'] .kp-secret__drain {
+        background: var(--primary);
+        mask: var(--kp-fo-trees) 0 0 / 2.1875rem 100% repeat-x;
+    }
+    [data-theme='forest'] .kp-secret__drain:dir(rtl) {
+        mask-position: 100% 0;
+    }
+    [data-theme='forest'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0 0.5rem;
+        border-inline-start: 0;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+            animation-name: kp-sig-forest-secret-drain;
+            animation-timing-function: linear;
+        }
+    }
+    @keyframes kp-sig-forest-secret-drain {
+        from {
+            inline-size: 100%;
+        }
+        to {
+            inline-size: 0;
+        }
+    }
+
+    /* A dialog in sections: a section's rule is a trail of dashes; a danger section carries the red's painted blaze on
+       its start edge; what still depends on the thing and what would be lost are kraft notes with the leaf corner; the
+       name to type is painted with a clay line under it. */
+    [data-theme='forest'] .kp-dialog__section {
+        border-block-start: 1px dashed hsl(from var(--accent-foreground) h s l / 0.5);
+    }
+    [data-theme='forest'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+    }
+    [data-theme='forest'] .kp-dialog__section--danger {
+        border-inline-start-width: 4px;
+        border-image: linear-gradient(to bottom, transparent 0.25rem, var(--destructive) 0.25rem 1.75rem, transparent 1.75rem) 1;
+    }
+    [data-theme='forest'] .kp-dialog__note {
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-confirm__dependents, .kp-type-confirm__loses) {
+        border-radius: 0 var(--kp-sig-fo-leaf);
+    }
+    [data-theme='forest'] .kp-type-confirm__loses {
+        border-inline-start-width: 1px;
+        border-inline-start-color: var(--border);
+    }
+    [data-theme='forest'] .kp-type-confirm__loses-title {
+        justify-self: start;
+        padding: 0 0.4em;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-type-confirm__name {
+        border-radius: 0;
+        background: var(--muted);
+        box-shadow: inset 0 -2px 0 var(--accent-foreground);
+    }
+}
+

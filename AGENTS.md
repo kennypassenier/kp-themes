@@ -79,6 +79,16 @@ never in the shared `~/Projects/kp-themes`, and runs gates, commits and pushes
 from there; before every push `git fetch && git rebase origin/main`, push to
 `main`, then remove your own leftovers from the shared folder.
 
+## CSS source lives in `css/components/` and `css/registers/`
+
+`css/components.css` and the twelve `css/<theme>-register.css` files are **generated**; never edit them by
+hand. The source is one folder of part files per component (`css/components/<component>/…`, or a single
+`<component>.css` when it is small) and the same names per theme (`css/registers/<theme>/…`). Edit a part, then
+run `npm run generate:css`; `node gates/generate-css.mjs --check` (inside `npm run gates`) fails on drift, which is
+how a hand edit of a generated file is refused. No hand-written `css/`, `js/` or `gates/` file may pass 500 lines
+(`npm run check:file-size`; the dated to-split list in `gates/file-size.json` may only shrink). Index and lookup
+rules: [css/README.md](css/README.md).
+
 ## Project documents
 
 | Doc                             | Purpose                                                                                                                                                |

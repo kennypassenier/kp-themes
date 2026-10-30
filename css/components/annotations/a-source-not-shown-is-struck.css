@@ -1,0 +1,179 @@
+/* @part: annotations: A source not shown is struck through, its label at full contrast: */
+    .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--border);
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: 0 0 0 1px var(--ring);
+    }
+
+    /* A source not shown is struck through, its label at full contrast:
+ * at opacity 0.45 it read 1.89:1 to 3.02:1 [scope-143]. */
+    .kp-chart__source[data-kp-off] {
+        text-decoration: line-through;
+    }
+
+    .kp-chart__source[data-kp-off] > .kp-chart__swatch {
+        background: var(--muted-foreground);
+    }
+
+    .kp-chart__show-all {
+        border: 1px dashed var(--border-strong, var(--border));
+        color: var(--foreground);
+    }
+
+    .kp-chart__show-all[hidden] {
+        display: none;
+    }
+
+    .kp-chart__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Words for a pointer, or for a finger: never both. */
+    .kp-chart__hint > [data-kp-when='touch'] {
+        display: none;
+    }
+
+    @media (hover: none) {
+        .kp-chart__hint > [data-kp-when='pointer'] {
+            display: none;
+        }
+
+        .kp-chart__hint > [data-kp-when='touch'] {
+            display: inline;
+        }
+    }
+
+    /* The spark variant: a tile's 24-hour line on the group's crosshair,
+ * drawn by drawSparkline(), its value at the crosshair (or now) beside
+ * its name: a line over a soft area, as the KPI tile's. */
+    .kp-chart--spark {
+        gap: 2px;
+    }
+
+    .kp-chart__spark-head {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0 var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-chart__spark-label {
+        overflow: hidden;
+        color: var(--muted-foreground);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-chart__spark {
+        display: block;
+        inline-size: 100%;
+        block-size: var(--kp-kpi-spark-height, 1.75rem);
+        overflow: visible;
+        color: var(--kp-chart-series);
+    }
+
+    .kp-chart__spark-line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-chart__spark-area {
+        fill: currentColor;
+        opacity: 0.12;
+    }
+
+    .kp-chart__spark .kp-chart__crosshair {
+        stroke-width: 1;
+    }
+
+    /* The chart's states [scope-143]: loading, no readings and an error keep
+ * the plot's final height (js/chart.js writes it, border-box, from
+ * `data.height`, else `--kp-chart-height`, else 168px), the sentence in the
+ * middle. Loading is also a `.kp-skeleton`, so it pulses only without
+ * reduced motion. */
+    .kp-chart__state {
+        display: grid;
+        place-items: center;
+        padding: var(--kp-space-md, 0.75rem);
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-chart__state-text {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-sm, 0.5rem);
+        max-inline-size: 48ch;
+        margin: 0;
+    }
+
+    /* A failed chart is the package's own failed plate (`.kp-stateplate`, js/state-plate.js: the destructive alert every other
+ * failed area uses) filling the plot's height, so each register dresses it [t56-chart-failed-1018]. The state box adds no tint,
+ * border or padding of its own. */
+    .kp-chart__state[data-kp-state='error'] {
+        display: grid;
+        padding: 0;
+        border-radius: 0;
+        color: var(--foreground);
+        text-align: start;
+    }
+
+    .kp-chart__state[data-kp-state='error'] > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-chart__state-text > .kp-chart__dot {
+        flex: none;
+    }
+
+    /* While loading, the legend row keeps its place for the sources to come:
+ * a stub the size of a source button. */
+    .kp-chart__source-stub {
+        padding: 3px var(--kp-space-sm, 0.5rem);
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: inherit;
+    }
+
+    /* Under a chart whose every source has one reading (`onePointNote`). */
+    .kp-chart__note {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* A long source name stops at 24 characters; the button's title says all of it. */
+    .kp-chart__source-label {
+        overflow: hidden;
+        min-inline-size: 0;
+        max-inline-size: 24ch;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* The tooltip's rows: after twelve they scroll (a pinned tooltip takes
+ * the pointer and the wheel). */
+    .kp-chart__tip-rows {
+        display: grid;
+        gap: 3px;
+        max-block-size: calc(12 * 1.5em + 11 * 3px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .kp-chart__tip-rows[hidden],
+    .kp-chart__tip-foot[hidden] {
+        display: none;
+    }
+

@@ -1,0 +1,475 @@
+/* @part: run-timeline: Run timeline */
+    /* --- Run timeline: one bar per run on a time axis ----------------------
+ * `section.kp-gantt[data-kp-gantt]` (js/gantt.js). A bar of range buttons, a
+ * Live button and the selected range; under it a frame with the axis on top
+ * (it stays while the lanes scroll), one lane per job with its label on the
+ * left, and the runs as bars. Every bar is placed by the stylesheet from
+ * three numbers the script keeps current (`--kp-g-from`, `--kp-g-span`,
+ * `--kp-g-now`, seconds from a base moment) and its own two (`--kp-g-s`,
+ * `--kp-g-e`), so a growing bar and a moving window repaint nothing else.
+ * A lane's height is its rows times --kp-gantt-row and never shrinks while
+ * the window stays: a run that finishes moves nothing. The viewport keeps
+ * the height it first had with data (js/gantt.js), so a start that needs a
+ * new row scrolls inside the frame and the page does not jump.
+ *
+ * The state is a shape as well as a colour [DI4]: ok is solid; failed is
+ * solid, taller, with a cap at its end and a cross where the bar is wide
+ * enough; running is striped with a bright leading edge; queued is hollow
+ * and dashed. Knobs [KT6]: `--kp-gantt-label` (9rem, the lanes' labels),
+ * `--kp-gantt-row` (1.75rem), `--kp-gantt-bar` (1.125rem),
+ * `--kp-gantt-bar-failed` (1.5rem), `--kp-gantt-bar-min` (0.5rem),
+ * `--kp-gantt-height` (22rem, past which the lanes scroll),
+ * `--kp-gantt-bar-radius`, `--kp-gantt-now` (the line for now),
+ * `--kp-gantt-axis` (1.75rem, the axis row). */
+    .kp-gantt {
+        container: kp-gantt / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-gantt__bar {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    /* The selected-range chip takes the toolbar row over (inset 0): while a range is selected it stands where the range
+ * buttons and Live are, so it lies on no lane and adds no height at any width; Clear gives the buttons back. */
+    .kp-gantt__selection {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border-strong, var(--border));
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-gantt__selection > .kp-button {
+        flex: none;
+    }
+
+    .kp-gantt__selection > .kp-gantt__selected {
+        flex: 1 1 0;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-gantt__selection[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__selected {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-gantt__live[aria-pressed='true']::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: 0.375rem;
+        border-radius: 50%;
+        background: var(--success);
+    }
+
+    .kp-gantt__frame {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    /* The viewport holds whole lanes (js/gantt.js sets its height to the last lane that fits under --kp-gantt-height) and a
+     * scroll comes to rest on a lane's top, so a lane is never cut at the frame's edge [r3r5-1019 gantt-frame]. */
+    .kp-gantt__scroll {
+        max-block-size: var(--kp-gantt-height, 22rem);
+        scroll-padding-block-start: var(--kp-gantt-axis, 1.75rem);
+        scroll-snap-type: y proximity;
+        overflow-x: hidden;
+        overflow-y: auto;
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-gantt__body {
+        --kp-gantt-pad: 0.25rem;
+        position: relative;
+        display: grid;
+        /* The lanes' name column is as wide as its longest name (never under --kp-gantt-label, never over
+         * --kp-gantt-label-max, then the names wrap) [r3r5-1019 gantt-names]. */
+        grid-template-columns: fit-content(var(--kp-gantt-label-max, min(40%, 14rem))) minmax(0, 1fr);
+        isolation: isolate;
+    }
+
+    .kp-gantt__corner,
+    .kp-gantt__axis {
+        grid-row: 1;
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 3;
+        box-sizing: border-box;
+        block-size: var(--kp-gantt-axis, 1.75rem);
+        border-block-end: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .kp-gantt__corner {
+        grid-column: 1;
+        min-inline-size: var(--kp-gantt-label, 9rem);
+    }
+
+    .kp-gantt__axis {
+        grid-column: 2;
+        overflow: hidden;
+    }
+
+    .kp-gantt__tick {
+        position: absolute;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inset-block-start: 0;
+        padding-inline-start: 0.3125rem;
+        color: var(--muted-foreground);
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: var(--kp-gantt-axis, 1.75rem);
+        white-space: nowrap;
+    }
+
+    /* Near the end edge js/gantt.js marks a label `data-kp-gantt-edge`: it stands before its rule, ending at it, so the
+     * edge never cuts it (--kp-gantt-tick-flip, 1 by default; 0 keeps the label after its rule). */
+    .kp-gantt__tick[data-kp-gantt-edge]:not(button) {
+        translate: calc(-100% * var(--kp-gantt-tick-flip, 1)) 0;
+        padding-inline: calc(0.3125rem * (1 - var(--kp-gantt-tick-flip, 1))) calc(0.3125rem * var(--kp-gantt-tick-flip, 1));
+    }
+
+    .kp-gantt__tick[data-kp-gantt-edge]:not(button):dir(rtl) {
+        translate: calc(100% * var(--kp-gantt-tick-flip, 1)) 0;
+    }
+
+    /* An end-edge label that would run into the label before it is not drawn [kpadopt4]. */
+    .kp-gantt__tick[data-kp-gantt-crowded]:not(button) {
+        visibility: hidden;
+    }
+
+    .kp-gantt__tick[data-kp-day] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    /* A day on the axis that can be pressed [kpadopt3] (`data-kp-gantt-days`, js/gantt.js): the same label, as a button as
+     * tall as the axis. Pointing underlines it; pressed (its day is the selection) it stands on the selection's tint with
+     * the selection's edge under it, so the label and the band in the plot read as one choice. Its focus ring is drawn
+     * inside, where the axis does not clip it. */
+    .kp-gantt__tick:is(button) {
+        box-sizing: border-box;
+        block-size: var(--kp-gantt-axis, 1.75rem);
+        margin: 0;
+        padding-block: 0;
+        padding-inline-end: 0.3125rem;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        font-family: inherit;
+        font-size: 0.6875rem;
+        letter-spacing: inherit;
+        cursor: pointer;
+        text-decoration: underline 1px transparent;
+        text-underline-offset: 0.25em;
+    }
+
+    .kp-gantt__tick:is(button):hover {
+        color: var(--primary);
+        text-decoration-color: currentColor;
+    }
+
+    .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 14%, transparent);
+        box-shadow: inset 0 -2px 0 var(--primary);
+        color: var(--foreground);
+    }
+
+    .kp-gantt__tick:is(button)[data-kp-gantt-edge] {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+    }
+
+    .kp-gantt__tick:is(button)[data-kp-gantt-crowded] {
+        visibility: hidden;
+    }
+
+    .kp-gantt__tick:is(button):focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    /* The layers that run down every lane (the rules, the line for now, the selection) are no taller than what the frame shows:
+     * they stand under the axis as the viewport scrolls (`--kp-g-view`, set by js/gantt.js) instead of running on, unseen, past
+     * the frame and the legend under it [r3r5-1019 gantt-frame]. */
+    .kp-gantt__lines {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: sticky;
+        inset-block-start: var(--kp-gantt-axis, 1.75rem);
+        align-self: start;
+        block-size: min(100%, var(--kp-g-view, 100%));
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .kp-gantt__rule {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: 0;
+        border-inline-start: 1px solid var(--border);
+    }
+
+    /* A lane's name is never cut with an ellipsis: it wraps and its row grows to hold it. Its first line stands on the
+     * middle of the lane's first row, where the bars and marks of that row stand [r3r5-1019 gantt-names]. */
+    .kp-gantt__lane {
+        grid-column: 1;
+        display: flex;
+        align-items: flex-start;
+        min-inline-size: 0;
+        box-sizing: border-box;
+        padding: var(--kp-gantt-pad) var(--kp-space-sm, 0.5rem) calc(var(--kp-gantt-pad) - 1px);
+        border-block-end: 1px solid var(--border);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        scroll-snap-align: start;
+    }
+
+    .kp-gantt__lane:not(.kp-gantt__ghost) > :is(span, a) {
+        display: grid;
+        align-content: center;
+        min-inline-size: 0;
+        min-block-size: var(--kp-gantt-row, 1.75rem);
+        overflow-wrap: break-word;
+    }
+
+    .kp-gantt__track {
+        grid-column: 2;
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+        min-block-size: calc(var(--kp-g-rows, 1) * var(--kp-gantt-row, 1.75rem) + 2 * var(--kp-gantt-pad));
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-gantt__plot {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: sticky;
+        inset-block-start: var(--kp-gantt-axis, 1.75rem);
+        align-self: start;
+        block-size: min(100%, var(--kp-g-view, 100%));
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .kp-gantt__now {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-now, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: 0;
+        border-inline-start: 2px solid var(--kp-gantt-now, var(--destructive));
+    }
+
+    .kp-gantt__now[data-kp-out] {
+        display: none;
+    }
+
+    .kp-gantt__select,
+    .kp-gantt__brush {
+        position: absolute;
+        inset-block: 0;
+        background: color-mix(in oklab, var(--primary) 14%, transparent);
+        border-inline: 1px solid var(--primary);
+    }
+
+    .kp-gantt__select {
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%);
+    }
+
+    .kp-gantt__brush {
+        inset-inline-start: var(--kp-g-x, 0);
+        inline-size: var(--kp-g-w, 0);
+        border-style: dashed;
+    }
+
+    .kp-gantt__select[hidden],
+    .kp-gantt__brush[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run {
+        --kp-gantt-fill: var(--success);
+        --kp-gantt-ink: var(--success-foreground);
+        container: kp-gantt-run / inline-size;
+        box-sizing: border-box;
+        position: absolute;
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: max(var(--kp-gantt-bar-min, 0.5rem), calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%));
+        min-inline-size: var(--kp-gantt-bar-min, 0.5rem);
+        block-size: var(--kp-gantt-bar, 1.125rem);
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid var(--kp-gantt-fill);
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-gantt-fill);
+        color: var(--kp-gantt-ink);
+        font: inherit;
+        font-size: 0.6875rem;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-gantt__run[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run:is(button):hover {
+        z-index: 1;
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__label {
+        display: block;
+        padding-inline: 0.375rem;
+        margin-inline-start: var(--kp-g-label-inset, 0px);
+        overflow: hidden;
+        line-height: calc(var(--kp-gantt-bar, 1.125rem) - 2px);
+        text-overflow: clip;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] {
+        --kp-gantt-fill: var(--destructive);
+        --kp-gantt-ink: var(--destructive-foreground);
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) +
+                (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar-failed, 1.5rem)) / 2
+        );
+        block-size: var(--kp-gantt-bar-failed, 1.5rem);
+        box-shadow: inset -3px 0 0 var(--kp-gantt-ink);
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label {
+        line-height: calc(var(--kp-gantt-bar-failed, 1.5rem) - 2px);
+    }
+
+    .kp-gantt__run[data-kp-state='failed']:hover {
+        box-shadow:
+            inset -3px 0 0 var(--kp-gantt-ink),
+            0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__run[data-kp-state='running'],
+    .kp-gantt__swatch[data-kp-state='running'] {
+        --kp-gantt-fill: var(--warning);
+        --kp-gantt-ink: var(--warning-foreground);
+        background-image: repeating-linear-gradient(
+            135deg,
+            transparent 0 0.375rem,
+            hsl(from var(--warning-foreground) h s l / 0.22) 0.375rem 0.75rem
+        );
+        background-size: 1.0607rem 1.0607rem;
+        box-shadow: inset -3px 0 0 var(--kp-gantt-ink);
+    }
+
+    .kp-gantt__run[data-kp-state='running']:hover {
+        box-shadow:
+            inset -3px 0 0 var(--kp-gantt-ink),
+            0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__run[data-kp-state='queued'],
+    .kp-gantt__swatch[data-kp-state='queued'] {
+        --kp-gantt-fill: var(--muted-foreground);
+        --kp-gantt-ink: var(--foreground);
+        /* Hollow, but on the card's own ground: the rules and bands under it do not cross its words [r3r5-1019 gantt-rules]. */
+        background: var(--card);
+        border-style: dashed;
+    }
+
+    /* A finished run of a series [kpadopt3] (`series` 1 to 5, js/gantt.js) is a category, not a state: a plate of its chart
+     * colour, tinted into the card with its edge in the full colour, the words in the page's ink so every series reads
+     * the same. Failed, running and queued keep their own look; the legend names the series after the states. */
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series] {
+        --kp-gantt-series: var(--chart-1);
+        --kp-gantt-fill: color-mix(in oklab, var(--kp-gantt-series) 34%, var(--card));
+        --kp-gantt-ink: var(--foreground);
+        border-color: var(--kp-gantt-series);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series='2'] {
+        --kp-gantt-series: var(--chart-2);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series='3'] {
+        --kp-gantt-series: var(--chart-3);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series='4'] {
+        --kp-gantt-series: var(--chart-4);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series='5'] {
+        --kp-gantt-series: var(--chart-5);
+    }
+
+    /* A planned run [gaps-time-1019]: still to come, so it is an outline on the card's own ground with hatching in its colour, never
+     * a filled bar (that is what happened). Every theme draws its own hatching on it (its register); a series colours the outline and
+     * the hatching. The words stay in the page's ink. */
+    .kp-gantt__run[data-kp-state='planned'],
+    .kp-gantt__swatch[data-kp-state='planned'],
+    .kp-gantt__rest {
+        --kp-gantt-fill: var(--primary);
+        --kp-gantt-ink: var(--foreground);
+        --kp-gantt-hatch: color-mix(in oklab, var(--kp-gantt-fill) 55%, transparent);
+        background-color: var(--card);
+        background-image: repeating-linear-gradient(135deg, var(--kp-gantt-hatch) 0 1px, transparent 1px 0.4375rem);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series] {
+        --kp-gantt-fill: var(--chart-1);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series='2'] {
+        --kp-gantt-fill: var(--chart-2);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series='3'] {
+        --kp-gantt-fill: var(--chart-3);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series='4'] {
+        --kp-gantt-fill: var(--chart-4);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch, .kp-gantt__rest)[data-kp-state='planned'][data-kp-series='5'] {
+        --kp-gantt-fill: var(--chart-5);
+    }
+

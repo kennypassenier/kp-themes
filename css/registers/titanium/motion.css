@@ -1,0 +1,272 @@
+/* @part: motion: Motion */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js). The
+       word resolve is one monotonic change (blur and translate settle
+       alongside the opacity move) [S49]. */
+    /* The word converges [scope-16]. It arrives split into two of the
+       oxide's own wavelengths, out of focus, and the two halves come
+       together as the blur clears — an instrument bringing a line into
+       register. The demo's own mechanism, values and all.
+
+       The split is a text-shadow rather than two copies of the word, so
+       there is nothing for a screen reader to read twice. */
+    /* The word is milled into place [scope-17]. It arrives a twelfth of an
+       em to the left and slides square — one short linear pass, the way a
+       tool finishes a face. No blur and no chromatic split: those belong to
+       the spectral instrument, which is bringing a line into register;
+       this is a part being cut.
+
+       Its own name rather than the shared `kp-resolve`, because a keyframe
+       name is global: two registers writing the same name would hand
+       whichever loaded last to BOTH themes. Five registers do share
+       `kp-dialog-in`, and that is correct — they share the shape. These
+       two do not. */
+    @keyframes kp-mill {
+        0% {
+            opacity: 0;
+            transform: translateX(-0.12em);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-ignite {
+        100% {
+            color: var(--primary);
+            text-decoration-color: var(--border-strong);
+        }
+    }
+
+    /* The rule draws itself from the leading edge [scope-16]. Scroll-bound
+       like the ignite above it: the browser scrubs this by the heading's
+       own position, so it cannot free-run and cannot loop. */
+    @keyframes kp-draw {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the row a step lighter than the page it sits on. */
+    [data-theme='titanium'] .kp-marquee {
+        border-block: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+        background: color-mix(in srgb, var(--card) 60%, var(--background));
+        --kp-marquee: 50000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='titanium'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='titanium'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Quiet, the way this theme is quiet: the row you are on is a raised
+       plate rather than a colour, and the accent shows only at its
+       leading edge. */
+    [data-theme='titanium'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='titanium'] .kp-sidenav__link,
+    [data-theme='titanium'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='titanium'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--accent);
+        color: var(--foreground);
+        border-inline-start-color: var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Quiet, like the rest of it. */
+    [data-theme='titanium'] .kp-to-top {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='titanium'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='titanium'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='titanium'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    /* Not `--secondary-active` any more: that token sits three RGB steps
+       from `--accent`, the hover ground, so the press never showed on the
+       bare, secondary, ghost and mirror buttons [Kenny's titanium note,
+       2026-09-15]. Eleven points under the hover ground, the metal in
+       shadow: ten measured 9.9 in OKLab distance, a hair under the States
+       block's floor of 10; eleven is 10.9. */
+    [data-theme='titanium'] .kp-button:active:not(:disabled) {
+        background: hsl(from var(--accent) h s calc(l - 11));
+    }
+
+    /* Not `--primary-active` any more: that token is 74%, three points
+       from the darker hover above, so the press would vanish into it
+       [scope-80]. */
+    [data-theme='titanium'] .kp-button--primary:active:not(:disabled) {
+        background: hsl(from var(--primary) h s calc(l - 27));
+        border-color: hsl(from var(--primary) h s calc(l - 27));
+    }
+
+    [data-theme='titanium'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* -- The ground [scope-17] ----------------------------------------
+       Carbon weave: two diagonals crossing at forty-five degrees, which is
+       the twill of real woven cloth and not a square grid. The light under
+       the pointer is the same idea as the spectral instrument's, warmer
+       and tighter, because a metal face reflects where an instrument
+       screen glows. */
+    [data-theme='titanium'] body {
+        background-image:
+            radial-gradient(
+                48rem 32rem at calc(var(--kp-px) * 100%) calc(var(--kp-py) * 100%),
+                hsl(from var(--chart-1) h s l / 0.1),
+                transparent 62%
+            ),
+            repeating-linear-gradient(45deg, hsl(from var(--foreground) h s l / 0.05) 0 2px, transparent 2px var(--kp-weave, 9px)),
+            repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.04) 0 2px, transparent 2px var(--kp-weave, 9px));
+        background-attachment: fixed;
+    }
+
+    /* ── The panels' edge is the film itself [scope-16] ────────────────
+       A gradient border, drawn by painting the panel's own ground over
+       the oxide and letting only the border box show through. */
+    [data-theme='titanium'] .kp-card,
+    [data-theme='titanium'] .kp-dialog {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    /* ── The small parts that carry the film [scope-16] ───────────────── */
+    [data-theme='titanium'] .kp-nav__marker,
+    [data-theme='titanium'] .kp-boot__bar i {
+        background: var(--kp-iris);
+    }
+
+    [data-theme='titanium'] .kp-measure__bracket {
+        border-color: hsl(from var(--chart-1) h s l / 0.55);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='titanium'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): quiet muted words on a rounded plate that
+       fills with the accent ground when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.8rem;
+        font-weight: 500;
+        border: 0;
+        border-radius: var(--radius);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='titanium'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--accent);
+        color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       An instrument fault: a graphite plate, the headline in its signal orange-red, a hairline frame and brushed silver bars. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='titanium'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 6% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 6%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.35);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.04);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: hsl(from var(--primary) h s l / 0.5);
+        --kp-alarm-frame: 1px solid;
+    }
+
+    [data-theme='titanium'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='titanium'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a machined hyphen, the shortest line it could take. */
+    [data-theme='titanium'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '‐';
+    }

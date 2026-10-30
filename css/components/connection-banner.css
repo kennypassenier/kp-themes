@@ -1,0 +1,103 @@
+/* @part: connection-banner: The connection banner */
+@layer kp.components {
+    /* kpadopt5-ops:connection:start */
+    /* --- The connection banner [kpadopt5-ops] -------------------------------------
+     * js/connection.js. A page band under the navigation bar that pushes the content
+     * down and takes no room while the connection is fine. The plate is the theme's own
+     * alert: warning (offline, reconnecting), success (back), destructive (refused). Its
+     * what / why / what now lines and the exact count of waiting changes sit in one
+     * block; Retry now stays at the end. The plate keeps one height in every state
+     * (--kp-connection-min), so a state change moves nothing under it. On a phone it is
+     * one line plus Retry now. The foot of the window is the default;
+     * `data-kp-placement="top"` puts it in the flow under the navigation bar. Knobs [KT6]: --kp-connection-min (6.25rem wide, 6rem on a phone). */
+    .kp-connection {
+        container: kp-connection / inline-size;
+        display: block;
+        min-inline-size: 0;
+    }
+
+    .kp-connection[hidden] {
+        display: none;
+    }
+
+    /* The foot is the default: fixed to the bottom edge of the window (of the nearest frame that contains fixed boxes), over
+     * the last lines until it goes. `top` puts it in the flow under the navigation bar. */
+    .kp-connection:not([data-kp-placement='top']) {
+        position: fixed;
+        inset-inline: 0;
+        inset-block-end: 0;
+        z-index: var(--kp-z-sticky, 10);
+    }
+
+    .kp-connection__band {
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-connection-min, 6.25rem);
+        box-sizing: border-box;
+    }
+
+    .kp-connection__mark {
+        display: grid;
+        place-items: center;
+        flex: none;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border-radius: 50%;
+        background: color-mix(in oklab, currentColor 14%, transparent);
+        font-weight: 700;
+    }
+
+    .kp-connection__body {
+        display: grid;
+        flex: 1 1 14rem;
+        gap: 2px;
+        min-inline-size: 0;
+    }
+
+    .kp-connection__why,
+    .kp-connection__meta {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-connection__meta:empty {
+        display: none;
+    }
+
+    .kp-connection__meta {
+        font-variant-numeric: tabular-nums;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-connection__retry {
+        flex: none;
+        white-space: nowrap;
+    }
+
+    .kp-connection__retry[hidden] {
+        display: none;
+    }
+
+    /* While a try is under way or the connection is back there is nothing to press, but the button keeps its place. */
+    .kp-connection__retry[data-kp-idle] {
+        visibility: hidden;
+    }
+
+    @container kp-connection (max-width: 36rem) {
+        .kp-connection__why {
+            display: none;
+        }
+
+        .kp-connection__band {
+            flex-wrap: nowrap;
+            min-block-size: var(--kp-connection-min, 6rem);
+        }
+
+        .kp-connection__body {
+            flex-basis: 0;
+        }
+    }
+
+    /* kpadopt5-ops:connection:end */
+}
+

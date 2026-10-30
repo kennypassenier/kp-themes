@@ -1,0 +1,87 @@
+{
+  "output": "css/blueprint-register.css",
+  "items": [
+    {
+      "open": "/* The pen's numbers [scope-143, Kenny 2026-10-07 23:41: the tracing pen is the\n   anchor of the theme]. Registered at the top level because Firefox does not\n   register an @property inside a cascade layer; with no registration every\n   keyframe below would flip between its two poses instead of moving.\n   --kp-bp-r is the route of a traced outline (0 to 4: a side per unit),\n   --kp-bp-rp the reading along a diagonal (0 to 1), --kp-bp-p one stroke\n   along a line (0 to 1); --kp-bp-nib is the pen down (1) or up (0),\n   --kp-bp-pv, --kp-bp-rv and --kp-bp-tv how much of the pen, of the reading\n   (witness lines and pointers) and of the construction line is on the sheet;\n   --kp-bp-hv, --kp-bp-dv and --kp-bp-sv how much of the scale, of the\n   dimension and of the pointer a hand has set on a control. */\n@property --kp-bp-r {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-rp {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-p {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-nib {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-pv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-rv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-tv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-hv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-dv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-bp-sv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n/* --kp-bp-ink is whether a traced panel's contents are inked (1) or not yet\n   (0): the trace hides the panel's own box by `visibility`, but its contents\n   stay visible to focus and are painted by this number, so a dialog, the\n   palette and the date picker take the focus they are opened with while the\n   pen still draws (all-themes, 2026-10-13: the focus fell to <body>). */\n/* --kp-bp-hold is a clock with nothing drawn on it: the bar's mega menu is\n   held on screen until a transition on its panel has played\n   (js/components.js), and this is that transition, the length of its\n   close. */\n@property --kp-bp-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@property --kp-bp-ink {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-measurement-frame.css",
+        "the-laurels-stand.css",
+        "the-navbar.css",
+        "button.css",
+        "card.css",
+        "data.css",
+        "the-roots-the-rules-above.css",
+        "motion-guarded.css",
+        "sidenav.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* blueprint's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/blueprint.css and research/signature-elements/themes/blueprint.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base/base.css",
+        "signature-base/rules.css",
+        "the-meter-with-a-mark-this.css",
+        "blueprint-3-the-dimension.css",
+        "the-character/base.css",
+        "the-character/what-opens-is-drawn-the-same.css",
+        "the-character/a-menu-entry-is-the-themes.css",
+        "the-character/progressbar.css",
+        "the-character/review-round-3-kenny-2026-10.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "file": "the-fourth-adoption-round.css"
+    },
+    {
+      "file": "rows-cards-and-choices.css"
+    },
+    {
+      "file": "time-and-flows.css"
+    },
+    {
+      "file": "the-calm-components.css"
+    },
+    {
+      "file": "the-kpadopt5-and-kpadopt6.css"
+    },
+    {
+      "file": "failed-area-is-flagged.css"
+    },
+    {
+      "file": "the-time-fields-waiting.css"
+    },
+    {
+      "file": "the-calendars-busy-card.css"
+    },
+    {
+      "file": "the-acknowledge-gate.css"
+    },
+    {
+      "file": "the-count-that-is-still.css"
+    },
+    {
+      "file": "graph-loading-shape-2.css"
+    },
+    {
+      "file": "graph-loading-r3-bp-load-3.css"
+    }
+  ]
+}

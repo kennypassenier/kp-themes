@@ -1,0 +1,33 @@
+/* @part: freshness-line: Freshness line */
+    /* --- Freshness line [scope-143] ---------------------------------------- */
+
+    /* "updated 12 s ago", ticking (js/freshness.js). Tabular digits, kept
+ * whole on one line (it wraps as a unit, never inside a number), and as
+ * wide as the widest text of its unit: the script reserves that width, so
+ * a neighbour never moves when "59 s" becomes "1 min". Turning stale
+ * (`data-kp-stale`, past `data-kp-stale-after` seconds) draws a warning
+ * plate whose edge is a shadow, so it changes no size either. */
+    :where(.kp-ago, [data-kp-ago]) {
+        display: inline-block;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    :where(.kp-ago, [data-kp-ago])[data-kp-stale] {
+        background: var(--kp-ago-stale-bg, var(--warning));
+        color: var(--kp-ago-stale-fg, var(--warning-foreground));
+        box-shadow: 0 0 0 var(--kp-ago-stale-edge, 0.25em) var(--kp-ago-stale-bg, var(--warning));
+    }
+
+    /* --- Freshness line: a calm stale tone [audhd-opts-1019; audhd-recepten 2] ---
+ * `data-kp-stale-tone="calm"` on the line: once stale it is a quiet plate (the muted ground, the ordinary ink) and not the
+ * amber warning, for data that is old on purpose. The same edge shadow as the warning plate, so turning
+ * stale still moves nothing. Knobs [KT6]: --kp-ago-calm-bg (the muted), --kp-ago-calm-fg (the foreground),
+ * --kp-ago-stale-edge (0.25em, shared). */
+    :where(.kp-ago, [data-kp-ago])[data-kp-stale][data-kp-stale-tone='calm'] {
+        background: var(--kp-ago-calm-bg, var(--muted));
+        color: var(--kp-ago-calm-fg, var(--foreground));
+        box-shadow: 0 0 0 var(--kp-ago-stale-edge, 0.25em) var(--kp-ago-calm-bg, var(--muted));
+    }
+

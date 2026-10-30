@@ -1,0 +1,412 @@
+/* @part: the-opening-is-a-pass: The opening is a pass */
+    /* ── The opening is a pass [G3, G13; Kenny, 2026-10-09, question 3:
+       "Swept in from its own left edge, left to right"]. A dialog, a menu, a
+       popover, a combobox list, a date picker, a palette, a toast, a tooltip
+       and a drawer open the same way: the line starts at the left edge of the
+       element that opens (never at its button) and crosses only that
+       element's own box at one pace, laying the panel behind it, the film
+       edge turning; it stops dead at the end and the turn settles 220 ms
+       later (880 ms in all). The close is the pass back, right to left,
+       taking the panel off behind it: js/motion.js plays this entrance
+       backwards (`--kp-open: reverse-close`), frame t of the close being
+       frame (T - t) of the open. The panel is revealed by a mask of three
+       layers (the box, and the reach of its halo on either side, which come
+       with the line's first and last 4 %), so the halo and the cut follow
+       what is laid instead of being cut square. The line is the panel's
+       ::after; the film turn is one number on the panel (the film's own
+       @property, kp-sig-dark-film). ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark']
+            :is(.kp-dialog, .kp-menu, .kp-popover, .kp-toast, .kp-combobox__list, .kp-datepicker__panel, .kp-palette, .kp-theme-menu__list) {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark']
+            :is(
+                .kp-dialog,
+                dialog.kp-drawer,
+                .kp-menu,
+                .kp-popover,
+                .kp-tooltip,
+                .kp-toast,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-palette,
+                .kp-theme-menu__list
+            ) {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark']
+            :is(
+                .kp-dialog,
+                dialog.kp-drawer,
+                .kp-menu,
+                .kp-popover,
+                .kp-tooltip,
+                .kp-toast,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-palette,
+                .kp-theme-menu__list,
+                .kp-nav__menu
+            )::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
+            clip-path: none;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+
+        /* A menu inside a popover is not swept twice: the popover is. */
+        [data-theme='dark'] .kp-popover :is(.kp-menu, .kp-popover) {
+            animation: none;
+        }
+
+        [data-theme='dark'] .kp-popover :is(.kp-menu, .kp-popover)::after {
+            content: none;
+        }
+
+        /* The drawer comes in from its own left edge too, over its own height
+           and width: it casts no halo, so there is no reach. */
+        [data-theme='dark'] dialog.kp-drawer {
+            --kp-sig-dk-r: 0px;
+        }
+
+        /* A dialog's backdrop is not swept; js/motion.js fades it with the
+           dialog. */
+
+        /* The nav dropdown opens by hovering or focusing its item, with no script
+           in between: the same pass, and the close is the pass back. While it
+           closes the item keeps the panel on screen for the whole pass back
+           (`display` is a discrete transition), and the closed style plays the
+           entrance reversed. */
+        @container kp-nav (width > 40rem) {
+            [data-theme='dark'] .kp-nav__menu {
+                --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+                opacity: 1;
+                transition: display var(--kp-sig-dk-time) allow-discrete;
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear reverse forwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__menu::after {
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__links > li:hover > .kp-nav__menu,
+            [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__menu,
+            [data-theme='dark'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+            }
+
+            [data-theme='dark'] .kp-nav__links > li:hover > .kp-nav__menu::after,
+            [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__menu::after,
+            [data-theme='dark'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu::after {
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+            }
+        }
+
+        /* The tooltip's halo is none: its reach is none. */
+        [data-theme='dark'] .kp-tooltip {
+            --kp-sig-dk-r: 0px;
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav__menu::after {
+            content: none;
+        }
+    }
+
+    /* The mask is only ever on while the pass plays: both ends of the keyframe
+       are the finished pose, so a still part carries no mask. The panel is the
+       box (layer one, which the line sweeps) and the reach of its halo on the
+       left (layer two, laid in the first 4 % of the pass) and on the right
+       (layer three, laid in the last 4 %). Written out once, 0 to 75 % of the
+       880 ms is the pass of 660 ms (G4); the rest holds while the turn
+       settles. */
+    @keyframes kp-sig-dark-sweep {
+        0% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                var(--kp-sig-dk-from) 0 top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(-1 * var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(100% + var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        3% {
+            mask-size:
+                4% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        72% {
+            mask-size:
+                96% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        75%,
+        100% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                var(--kp-sig-dk-from) 0 top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(-1 * var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(100% + var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                100% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+    }
+
+    /* The line crosses the panel's own box and goes in and out at its ends. */
+    @keyframes kp-sig-dark-pass-line {
+        0% {
+            translate: calc(-100% * var(--kp-sig-dk-s)) 0;
+            opacity: 0;
+        }
+
+        3% {
+            translate: calc(-96% * var(--kp-sig-dk-s)) 0;
+            opacity: 1;
+        }
+
+        69% {
+            translate: calc(-8% * var(--kp-sig-dk-s)) 0;
+            opacity: 1;
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* The film's turn, laid with the pass: the colour runs round the edge as
+       the line crosses (345 degrees at the pace of the line) and settles the
+       last 15 degrees on --kp-settle in the 220 ms after the line has stopped,
+       cyan at the top. */
+    @keyframes kp-sig-dark-film {
+        0% {
+            --kp-sig-dk-turn: 0deg;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-turn: 345deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-turn: 360deg;
+        }
+    }
+
+    /* The figure takes the film through its letters while the line crosses it
+       and settles back to ink once it has gone by. */
+    @keyframes kp-sig-dark-figure {
+        0% {
+            --kp-sig-dk-at: 0%;
+            --kp-sig-dk-ink: 0;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-at: 100%;
+            --kp-sig-dk-ink: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-at: 100%;
+            --kp-sig-dk-ink: 1;
+        }
+    }
+
+    /* A live pass: the line goes in at the start and out at the end of the
+       update's own time. */
+    @keyframes kp-sig-dark-pass-live {
+        0% {
+            translate: calc(-100% * var(--kp-sig-dk-s)) 0;
+            opacity: 0;
+        }
+
+        4% {
+            translate: calc(-96% * var(--kp-sig-dk-s)) 0;
+            opacity: 1;
+        }
+
+        92% {
+            translate: calc(-8% * var(--kp-sig-dk-s)) 0;
+            opacity: 1;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* The pass of a small part or of a word: its box, from the start edge, at
+       one pace, stopping dead. */
+    @keyframes kp-sig-dark-lay {
+        from {
+            clip-path: inset(var(--kp-sig-dk-cut));
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* A comet crosses a waiting surface. The head (the 2 px line) and the tail
+       (a third of the part, or the share the property --kp-sig-dk-cw says)
+       are two background layers moved together from just before the start to
+       just past the end in three quarters of the loop; the last quarter the
+       slot is dark. A percentage position is a share of the box less the
+       layer, so the head sits at (1 + cw) of the box less its own width and
+       the tail at 1 / (1 - cw). */
+    @keyframes kp-sig-dark-comet {
+        0% {
+            background-position:
+                calc(0% - 2px) 0,
+                calc(-100% * var(--kp-sig-dk-cw) / (1 - var(--kp-sig-dk-cw))) 0;
+        }
+
+        75%,
+        100% {
+            background-position:
+                calc(100% * (1 + var(--kp-sig-dk-cw)) - 2px) 0,
+                calc(100% / (1 - var(--kp-sig-dk-cw))) 0;
+        }
+    }
+
+    /* The spinner's loop: one number, 0 to 1. */
+    @keyframes kp-sig-dark-bars {
+        from {
+            --kp-sig-dk-ph: 0;
+        }
+
+        to {
+            --kp-sig-dk-ph: 1;
+        }
+    }
+
+    /* A press: the line crosses the face and stops at its end. */
+    @keyframes kp-sig-dark-tap {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 100% 0;
+        }
+    }
+
+    /* Growing and shrinking, this theme's way [scope-142; Kenny, 2026-10-09:
+       the darkroom is retired]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. The
+       box keeps the line's glow while it changes; what arrives is laid by the
+       pass (below), and nothing develops from a pale print. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-kp-resizing] {
+            filter: var(--kp-sig-dk-glow);
+        }
+    }
+
+    /* Leaving, this theme's way [G13; Kenny, 2026-10-09, question 13: "The
+       pass lays, the pass back takes off"]. js/motion.js marks what leaves
+       `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one a tenth into this one. The line crosses back
+       from the end and the part goes dark behind it, the film taken with it:
+       the opening played backwards, in the same time. Opening is closing
+       turned around (Kenny's pick on research/open-reverse, 2026-10-05): what
+       arrives plays this leave backwards (js/motion.js), so it is laid from
+       the start by the pass and the turn settles to cyan at the top, and
+       frame t of the arrival is frame (T - t) of the leave. The line is
+       drawn on the parts that can carry a pseudo-element: the alert, the key
+       figure and the card (on ::before, its ::after being the plate); a row
+       or any other part is taken off by the mask and the film alone. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] {
+            --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, a file
+               row, an empty state, a re-shown alert) is taken off by the pass
+               back first, as the pass lays it (js/motion.js leavesState(),
+               lessons 19, 23, 24); what takes no box arrives as nothing; the
+               space a leave folds shut takes the pass's own time and starts
+               with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+        }
+
+        [data-theme='dark'] :is(.kp-card, .kp-alert, .kp-kpi) {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark'] .kp-kpi {
+            --kp-sig-dk-r: 0px;
+        }
+
+        /* The leave plays the pass's frames under their second names (the
+           `-back` keyframes at the end of this layer), so a part whose
+           entrance is the pass itself (a toast) starts its leave afresh
+           instead of turning the finished entrance round in place (lesson 10;
+           all-themes pass, 2026-10-13). The attribute is named twice: the
+           entrance rule above names `dialog.kp-drawer` in its list, which
+           outranks a single attribute, so a leaving toast kept its entrance
+           and had no leave of its own to turn round into its arrival. */
+        [data-theme='dark'] [data-kp-leaving][data-kp-leaving] {
+            --kp-leave-stagger: 0.1;
+            animation:
+                kp-sig-dark-sweep-back var(--kp-sig-dk-time) linear reverse forwards,
+                kp-sig-dark-film-back var(--kp-sig-dk-time) linear reverse forwards;
+        }
+
+        [data-theme='dark'] [data-kp-leaving]:is(.kp-alert, .kp-kpi, .kp-card:not([data-kp-label])) {
+            position: relative;
+        }
+
+        [data-theme='dark'] [data-kp-leaving]:is(.kp-alert, .kp-kpi)::after,
+        [data-theme='dark'] [data-kp-leaving].kp-card:not([data-kp-label])::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line-back var(--kp-sig-dk-time) linear reverse forwards;
+        }
+    }
+

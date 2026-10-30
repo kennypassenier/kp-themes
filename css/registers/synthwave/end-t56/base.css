@@ -1,0 +1,17 @@
+/* @part: end-t56: end t56 */
+/* ── end t56 ── */
+
+/* ── t56: the small neon ring keeps its letters off the ring ── */
+@layer kp.signature {
+    /* The 24 px and 32 px rings leave too little inside their 2 px line for two chrome capitals: the small ring goes to 1 px (its
+       glow still draws the neon) and both sizes close their letters up, so the letters stand 4 px clear of the ring. */
+    [data-theme='synthwave'] .kp-idmark--sm.kp-idmark--round {
+        border-width: 1px;
+        font-size: calc(var(--kp-idmark-s) * 0.36);
+        letter-spacing: 0;
+    }
+    [data-theme='synthwave'] .kp-idmark--round:not(.kp-idmark--xs, .kp-idmark--sm, .kp-idmark--lg, .kp-idmark--xl) {
+        font-size: calc(var(--kp-idmark-s) * 0.37);
+        letter-spacing: 0;
+    }
+}

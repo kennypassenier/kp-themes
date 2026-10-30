@@ -1,0 +1,87 @@
+/* @part: the-hooks: The hooks */
+    /* ── The hooks [S45]: the headline, the mark, the rule, the divider ── */
+
+    /* The headline: the calibration wipe. Three flat bands in the demo's
+       triad sit over the text with mix-blend-mode: difference and slide
+       away to their own right edge; the text itself is solid var(--fg)
+       underneath from first paint, so a page without the module — or a
+       theme answering quietly — simply shows the headline (anatomy: the
+       hazard note on Moranta's blend mode, confined here to a one-shot
+       decorative overlay, never to anything that must stay legible after
+       it settles). */
+    [data-theme='solstice'] [data-kp-reveal='headline'] {
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+    [data-theme='solstice'] [data-kp-reveal='headline']::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: var(--kp-cal-bands);
+        mix-blend-mode: difference;
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    [data-theme='solstice'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered)::after {
+        opacity: 1;
+    }
+
+    /* The rule: a plain scaleX(0→1) draw, left to right, when the heading
+       enters the viewport — the demo's own mechanism, unornamented. */
+    [data-theme='solstice'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        block-size: 3px;
+        margin-block-start: 0.6rem;
+        background: var(--primary);
+        transform-origin: left center;
+        transform: scaleX(1);
+    }
+
+    [data-theme='solstice'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        transform: scaleX(0);
+    }
+
+    /* The lede's mark: the base layer's warning plate already matches the
+       demo (background var(--warning), color var(--warning-foreground));
+       this only adds the demo's own corner and box-decoration. */
+    [data-theme='solstice'] mark {
+        border-radius: 3px;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+    }
+
+    /* The divider: the demo's horizon seam, without the SVG the shared
+       markup has no room for (an empty [data-kp-divider] div — S49
+       finding, recorded in anatomy.md). A hairline plus one accent peak
+       carries the idea: a low sun just above or just below the line. */
+    [data-theme='solstice'] [data-kp-divider] {
+        display: block;
+        block-size: 28px;
+        background:
+            conic-gradient(from 225deg at 50% 100%, transparent 0deg 45deg, var(--accent) 45deg 90deg, transparent 90deg 135deg) center / 46px 22px
+                no-repeat,
+            linear-gradient(var(--border), var(--border)) center / 100% 1px no-repeat;
+    }
+
+    [data-theme='solstice'] [data-kp-divider='alt'] {
+        background:
+            conic-gradient(from 45deg at 50% 0%, transparent 0deg 45deg, var(--primary) 45deg 90deg, transparent 90deg 135deg) center / 46px 22px
+                no-repeat,
+            linear-gradient(var(--border), var(--border)) center / 100% 1px no-repeat;
+    }
+
+    /* ── The hero ─────────────────────────────────────────────────────── */
+
+    [data-theme='solstice'] [data-kp-surface='hero'] {
+        padding-block: clamp(3rem, 8vw, 6rem) clamp(2.5rem, 6vw, 4rem);
+    }
+
+    [data-theme='solstice'] [data-kp-surface='hero'] h1 {
+        letter-spacing: -0.04em;
+    }
+

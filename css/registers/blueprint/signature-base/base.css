@@ -1,0 +1,467 @@
+/* @part: signature-base: opening of the signature block */
+    [data-theme='blueprint'] .kp-spinner {
+        --kp-sig-dur: 1600ms;
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        /* The centre mark, where the compass point stands. */
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 50% 50% / 1px 40% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)) 50% 50% / 40% 1px no-repeat;
+        animation: none;
+    }
+
+    [data-theme='blueprint'] .kp-spinner::before,
+    [data-theme='blueprint'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        border-radius: 50%;
+    }
+
+    [data-theme='blueprint'] .kp-spinner::before {
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.3);
+    }
+
+    [data-theme='blueprint'] .kp-spinner::after {
+        border: 1.5px solid var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-switch {
+        --kp-switch-radius: 2px;
+        --kp-switch-thumb-radius: 1px;
+    }
+
+    [data-theme='blueprint'] .kp-switch__input {
+        border-color: hsl(from var(--foreground) h s l / 0.6);
+        background: var(--background);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input::before {
+        border: 1px solid var(--foreground);
+        background:
+            /* One upright tick, the witness line of a handle: the crossed square (a window pane) read as a checkbox
+               [t56-eye-1018]. */
+            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 60% no-repeat,
+            hsl(from var(--foreground) h s l / 0.12);
+        box-sizing: border-box;
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.45) 0 1px, transparent 1px 5px), var(--background);
+    }
+
+    [data-theme='blueprint'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        border-color: var(--primary);
+        background: var(--primary);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='blueprint'] .kp-field__check {
+        --kp-sig-dur: 300ms;
+        appearance: none;
+        position: relative;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        margin: 0;
+        border: 1px solid hsl(from var(--foreground) h s l / 0.7);
+        border-radius: 1px;
+        background: var(--background);
+    }
+
+    [data-theme='blueprint'] .kp-field__check:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='blueprint'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.62rem;
+        block-size: 0.3rem;
+        border-inline-start: 1.5px solid var(--primary);
+        border-block-end: 1.5px solid var(--primary);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='blueprint'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='blueprint'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        background:
+            radial-gradient(circle, var(--primary) 0 3px, transparent 3.5px),
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
+        mask: radial-gradient(circle, black 0 4px, transparent 4px 6.5px, black 6.5px);
+    }
+
+    [data-theme='blueprint'] .kp-toast {
+        --kp-sig-dur: var(--kp-sig-bp-panel);
+        position: relative;
+        margin-block-start: 0.5rem;
+        border: 1px solid hsl(from var(--foreground) h s l / 0.6);
+        border-radius: 2px;
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* The plain and success toasts as approved; info, warning and destructive keep
+       the register's own plates, which the approved demo never showed and whose
+       words read at 4.5:1 only on them [scope-60]. */
+    [data-theme='blueprint'] .kp-toast:not(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        background: var(--popover);
+    }
+
+    [data-theme='blueprint'] .kp-toast--success {
+        border-color: var(--success-foreground, var(--primary));
+    }
+
+    [data-theme='blueprint'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: calc(100% + 3px);
+        block-size: 7px;
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.8), hsl(from var(--primary) h s l / 0.8)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-dialog::backdrop {
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.07) 1px, transparent 1px) 0 0 / 16px 16px,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.07) 1px, transparent 1px) 0 0 / 16px 16px,
+            hsl(from var(--background) h s calc(l * 0.7));
+    }
+
+    /* The unopened dialog is the one js/motion.js measures for the theme's
+       time (a probe it adds and takes off), and it reads a close as two thirds
+       of that; so it runs one and a half openings, and the dialog that is open
+       runs one, which is also its close (5 units, 800 ms: the pen traces the
+       outline, the sheet is inked). */
+    [data-theme='blueprint'] .kp-dialog {
+        --kp-sig-dur: calc(1.5 * var(--kp-sig-bp-panel));
+        border: 1px solid var(--primary);
+        border-radius: 2px;
+        background: var(--popover);
+        box-shadow: none;
+    }
+
+    [data-theme='blueprint'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-bp-panel);
+    }
+
+    /* The registration crosses of an overlay sheet [G16]: at its start and
+       end corners, inside its edge (the dialog scrolls inside itself, so
+       nothing outside it is ever drawn); both on ::before, so ::after is the
+       pen's. */
+    [data-theme='blueprint'] .kp-dialog::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 6px 3px / 1px 7px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 3px 6px / 7px 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) calc(100% - 6px) calc(100% - 3px) / 1px 7px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) calc(100% - 3px) calc(100% - 6px) / 7px 1px no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-mono);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-tooltip {
+        --kp-sig-dur: 360ms;
+        margin-block-start: 0.75rem;
+        /* Within 12px under its trigger and never over it (Kenny's phantom note,
+           2026-09-15, tests/dark-themes-notes.spec.mjs). */
+        margin-inline-start: 1rem;
+        border: 1px solid var(--accent);
+        border-radius: 0;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 0.75rem;
+        inline-size: 1px;
+        block-size: 0.75rem;
+        background: var(--accent);
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='blueprint'] .kp-tooltip::after {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% + 1.05rem - 3px);
+        inset-inline-start: calc(0.75rem - 3px);
+        inline-size: 7px;
+        block-size: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li {
+        gap: 0.4rem;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.5rem;
+        block-size: 9px;
+        margin-inline: 0.35rem;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.55), hsl(from var(--foreground) h s l / 0.55)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li[data-state='done']::after {
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li::before {
+        content: counter(kp-step, decimal-leading-zero);
+        inline-size: 1.7rem;
+        block-size: 1.7rem;
+        border: 1px solid hsl(from var(--foreground) h s l / 0.6);
+        background: none;
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li[data-state='done']::before {
+        content: var(--kp-glyph-check, '✓');
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li[data-state='current']::before {
+        border: 1px solid var(--accent);
+        background: none;
+        color: var(--accent);
+        box-shadow:
+            0 0 0 3px var(--background),
+            0 0 0 4px hsl(from var(--accent) h s l / 0.6);
+    }
+
+    [data-theme='blueprint'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--accent);
+    }
+
+    [data-theme='blueprint'] .kp-empty {
+        padding: 1.25rem 1rem 1.4rem;
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.45);
+        border-radius: 2px;
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.05) 1px, transparent 1px) 0 0 / 12px 12px,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.05) 1px, transparent 1px) 0 0 / 12px 12px;
+    }
+
+    [data-theme='blueprint'] .kp-empty::before {
+        content: '';
+        display: block;
+        inline-size: 2.75rem;
+        block-size: 2.75rem;
+        margin: 0 auto 0.7rem;
+        background:
+            radial-gradient(circle closest-side, transparent calc(55% - 1px), var(--primary) calc(55% - 1px) 55%, transparent 55%),
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-empty__title {
+        margin: 0 0 0.3rem;
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-lg, 1.125rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-wrap: balance;
+    }
+
+    [data-theme='blueprint'] .kp-empty__body {
+        margin: 0;
+    }
+
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    [data-theme='blueprint'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.3em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='blueprint']
+        a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 1px 0.55em no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 100% 100% / 1px 0.55em no-repeat;
+        text-decoration-color: var(--primary);
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='blueprint'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+            background: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-spinner::after {
+            animation: kp-sig-blueprint-blueprint-compass var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='blueprint'] .kp-switch__input::before {
+            transition: transform 200ms linear;
+        }
+
+        [data-theme='blueprint'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-blueprint-blueprint-draw var(--kp-sig-dur) linear both;
+        }
+
+        [data-theme='blueprint'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-blueprint-blueprint-mark var(--kp-sig-dur) linear both;
+        }
+
+        /* A tooltip opens along its leader first [opening, G3]: the leader is
+           drawn from its node, then the pen traces the outline on the tooltip's
+           own ground, and at three quarters the words and the plate are inked.
+           Three units, the closing is this played backwards
+           (js/overlays.js, [data-kp-reversing]). */
+        [data-theme='blueprint'] .kp-tooltip {
+            animation: kp-sig-blueprint-callout var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-tooltip::before {
+            animation: kp-sig-blueprint-leader var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-tooltip::after {
+            animation: kp-sig-blueprint-node var(--kp-sig-dur) linear backwards;
+        }
+    }
+
+    [data-theme='blueprint'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-bp-tip);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        background-image:
+            linear-gradient(var(--primary), var(--primary)), linear-gradient(var(--primary), var(--primary)),
+            linear-gradient(var(--primary), var(--primary)), linear-gradient(var(--primary), var(--primary));
+        background-size:
+            calc(clamp(0, var(--kp-bp-r), 1) * 100%) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * 100%),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * 100%) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * 100%);
+        background-position:
+            left top,
+            right top,
+            right bottom,
+            left bottom;
+        background-color: var(--popover);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes kp-sig-blueprint-callout {
+            0%,
+            28% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 0;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            43% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            53% {
+                --kp-bp-r: 2;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            68% {
+                --kp-bp-r: 3;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            74.9% {
+                color: transparent;
+                border-color: transparent;
+                background-color: transparent;
+                --kp-bp-r: 4;
+            }
+
+            75%,
+            100% {
+                --kp-bp-r: 4;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-leader {
+            0% {
+                transform: scaleY(0);
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            28%,
+            100% {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes kp-sig-blueprint-node {
+            0%,
+            27.9% {
+                opacity: 0;
+            }
+
+            28%,
+            100% {
+                opacity: 1;
+            }
+        }
+    }
+

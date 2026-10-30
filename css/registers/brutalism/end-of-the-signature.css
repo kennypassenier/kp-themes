@@ -1,0 +1,55 @@
+/* @part: end-of-the-signature: End of the signature */
+/* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-segmented {
+        --kp-seg-radius: 0;
+        --kp-seg-pad: 3px;
+        --kp-seg-gap: 3px;
+        --kp-seg-font: var(--theme-font-body);
+        --kp-seg-weight: 700;
+        --kp-seg-size: 0.8rem;
+        --kp-seg-tracking: 0.1em;
+        --kp-seg-case: uppercase;
+        --kp-seg-edge: var(--border-strong);
+        --kp-seg-track: var(--card);
+        --kp-seg-thumb: var(--secondary);
+        --kp-seg-thumb-ink: var(--secondary-foreground);
+        --kp-seg-thumb-edge: inset 0 0 0 3px var(--border-strong);
+        --kp-seg-thumb-lift: 0 0 0 0 transparent;
+        --kp-chip-radius: 0;
+        --kp-chip-edge: var(--border-strong);
+        --kp-chip-on: var(--secondary);
+        --kp-chip-on-ink: var(--secondary-foreground);
+        --kp-chip-on-edge: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='brutalism'] .kp-toolbar__label {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.12em;
+    }
+    [data-theme='brutalism'] .kp-keys {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-kbd {
+        --kp-kbd-radius: 0;
+        --kp-kbd-edge: var(--border-strong);
+        --kp-kbd-ground: var(--card);
+        --kp-kbd-foot: 2px;
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-segmented:not(.kp-segmented--chips) {
+        border-width: 3px;
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item {
+        border-width: 3px;
+    }
+    [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: var(--kp-shadow);
+    }
+}
+

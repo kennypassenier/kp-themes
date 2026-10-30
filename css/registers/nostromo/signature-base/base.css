@@ -1,0 +1,477 @@
+/* @part: signature-base: opening of the signature block */
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
+    [data-theme='nostromo'] .kp-progressbar {
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
+        --kp-np-bezel: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-np-window: calc(2px * var(--kp-progressbar-scale, 1));
+        --kp-np-glow-r: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-np-glow-room: calc(-4px * var(--kp-progressbar-scale, 1));
+        --kp-np-lit: var(--sidebar-primary);
+        --kp-np-unlit: var(--sidebar-accent);
+        --kp-np-glow: hsl(from var(--sidebar-primary) h s l / 0.55);
+        /* One LED: a rounded-off lens inside its pitch, 2px of window between
+           neighbours and 2px above and below. */
+        --kp-np-led: linear-gradient(90deg, transparent 0 1px, var(--foreground) 1px calc(100% - 1px), transparent 0);
+        border-radius: calc(0.3rem * var(--kp-progressbar-scale, 1));
+        background: var(--secondary);
+        /* The moulded bezel: the 3:1 boundary, the lit top edge of the plastic. */
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 0 1px 0 1px hsl(from var(--popover) h s l / 0.7);
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__track {
+        inset: var(--kp-np-bezel);
+        border-radius: calc(0.15rem * var(--kp-progressbar-scale, 1));
+        background: var(--sidebar-background);
+        box-shadow: inset 0 1px 2px hsl(from var(--sidebar-background) h s 4% / 0.9);
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: var(--kp-np-window) 1px;
+        background: var(--kp-np-unlit);
+        mask: var(--kp-np-led) 0 0 / calc(100% / var(--kp-steps)) 100% repeat-x;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__fill {
+        inset: var(--kp-np-window) 1px;
+        background: none;
+        filter: drop-shadow(0 0 var(--kp-np-glow-r) var(--kp-np-glow));
+        clip-path: inset(
+            var(--kp-np-glow-room) calc((1 - round(down, var(--kp-value) * var(--kp-steps), 1) / var(--kp-steps)) * 100%) var(--kp-np-glow-room) 0
+        );
+        transition: none;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__fill::before,
+    [data-theme='nostromo'] .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, hsl(from var(--kp-np-lit) h s calc(l + 18)) 0 30%, var(--kp-np-lit) 30% 100%);
+        mask: var(--kp-np-led) 0 0 / calc(100% / var(--kp-steps)) 100% repeat-x;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__head {
+        inset-block: var(--kp-np-window);
+        inset-inline-start: 1px;
+        inline-size: calc((100cqi - 2px) / var(--kp-steps));
+        opacity: calc(mod(var(--kp-value) * var(--kp-steps), 1) * 0.9);
+        transform: translateX(calc(round(down, var(--kp-value) * var(--kp-steps), 1) * (100cqi - 2px) / var(--kp-steps)));
+        transition: opacity 160ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    [data-theme='nostromo'] .kp-progressbar__head::before {
+        mask-size: 100% 100%;
+    }
+
+    /* Busy, with no share known, the bar keeps its LED window in the moulded
+       bezel and its lamps compute (busy "led", Kenny 08/10/2026 01:02;
+       research/nostromo-character, update 3): the window's cells are the
+       meter's, 3 px on a 6 px pitch, and the lit ones, in the LED orange as
+       light with its glow (G5), switch in a fixed unordered pattern: a new
+       one every 4 frames, five patterns, 20 frames of 80 ms (below, under
+       the motion query). Nothing walks or sweeps; standing still (reduced
+       motion) the first pattern stands, which reads as busy, never as a
+       share. It replaces the COMPUTING glass of loading "raster" on this
+       bar (d81d9892): in a 1 rem bar the word was 0.5 rem in a 10 px window,
+       too small to read at a glance. A bar with a share keeps its LED
+       bargraph exactly as it was. Every length is multiplied by
+       --kp-progressbar-scale, so the cells grow with the three sizes. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] {
+        --kp-np-pitch: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-np-cells: linear-gradient(90deg, var(--foreground) 0 calc(3px * var(--kp-progressbar-scale, 1)), transparent 0) 0 0 / var(--kp-np-pitch)
+            100% repeat-x;
+        /* The pattern's tile: 37 cells with 11 lit at no regular spacing (a
+           16-cell tile visibly repeated every 96 px across a wide bar), in
+           37ths of its length so it scales with the bar; each lit cell is
+           drawn half its pitch wide in the tile itself, not through the
+           cells' mask (two repeating layers met on fractional device pixels
+           and a lit edge leaked into its neighbour). */
+        --kp-np-pattern: linear-gradient(
+            90deg,
+            transparent 0 2.7027%,
+            var(--kp-np-lit) 0 4.0541%,
+            transparent 0 10.8108%,
+            var(--kp-np-lit) 0 12.1622%,
+            transparent 0 13.5135%,
+            var(--kp-np-lit) 0 14.8649%,
+            transparent 0 24.3243%,
+            var(--kp-np-lit) 0 25.6757%,
+            transparent 0 37.8378%,
+            var(--kp-np-lit) 0 39.1892%,
+            transparent 0 45.9459%,
+            var(--kp-np-lit) 0 47.2973%,
+            transparent 0 48.6486%,
+            var(--kp-np-lit) 0 50%,
+            transparent 0 62.1622%,
+            var(--kp-np-lit) 0 63.5135%,
+            transparent 0 72.973%,
+            var(--kp-np-lit) 0 74.3243%,
+            transparent 0 83.7838%,
+            var(--kp-np-lit) 0 85.1351%,
+            transparent 0 91.8919%,
+            var(--kp-np-lit) 0 93.2432%,
+            transparent 0
+        );
+    }
+
+    /* The unlit cells: the window's dark lenses, as the bar with a share. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::before {
+        inset: var(--kp-np-window) 1px;
+        background: var(--kp-np-unlit);
+        mask: var(--kp-np-cells);
+        animation: none;
+    }
+
+    /* The lit cells: the tile in the LED orange, with the lit LEDs' glow. */
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: var(--kp-np-window) 1px;
+        inline-size: auto;
+        background: none;
+        filter: drop-shadow(0 0 var(--kp-np-glow-r) var(--kp-np-glow));
+        clip-path: none;
+        transform: none;
+        animation: none;
+    }
+
+    [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: '';
+        inset: 0;
+        background: var(--kp-np-pattern) 0 0 / calc(var(--kp-np-pitch) * 37) 100% repeat-x;
+        mask: none;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* A new pattern every 4 frames, held whole: five patterns, 20 frames
+           (--kp-sig-no-loop, 1600 ms). */
+        [data-theme='nostromo'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            animation: kp-sig-nostromo-compute var(--kp-sig-no-loop) steps(1, end) infinite;
+        }
+    }
+
+    /* The busy bar's lamps: five patterns of the tile, one every fifth of
+       the cycle, the shifts unordered (0, 14, 5, 25, 11 cells), so no lamp
+       walks. */
+    @keyframes kp-sig-nostromo-compute {
+        0% {
+            background-position-x: 0;
+        }
+
+        20% {
+            background-position-x: calc(var(--kp-np-pitch) * 14);
+        }
+
+        40% {
+            background-position-x: calc(var(--kp-np-pitch) * 5);
+        }
+
+        60% {
+            background-position-x: calc(var(--kp-np-pitch) * 25);
+        }
+
+        80%,
+        100% {
+            background-position-x: calc(var(--kp-np-pitch) * 11);
+        }
+    }
+
+    [data-theme='nostromo'] {
+        --kp-sig-no-led: var(--sidebar-primary);
+        /* The register's curve; it is shown in whole 80 ms frames
+           (--kp-sig-no-f2 … -f8, in kp.register above), never smooth. */
+        --kp-sig-no-ease: cubic-bezier(0.2, 0, 0, 1);
+        /* Moulded: a highlight along the top edge and a shadow under. */
+        --kp-sig-no-raised:
+            inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9), 0 1px 0 hsl(from var(--foreground) h s l / 0.28),
+            0 2px 3px hsl(from var(--foreground) h s l / 0.15);
+        /* Pressed in: a shadow inside the top edge, a highlight under. */
+        --kp-sig-no-well: inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3), 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.8);
+        /* A lit LED: a bright lens with a hot centre, in a dark bezel ring. */
+        --kp-sig-no-lens: radial-gradient(circle at 40% 35%, var(--primary-foreground) 0 12%, var(--kp-sig-no-led) 30%, var(--accent) 70%);
+    }
+
+    /* The tape reel (G11): one turn per loop, 1600 ms, in 20 frames of 80 ms
+       (it was 1800 ms, smooth). */
+    [data-theme='nostromo'] .kp-spinner {
+        --kp-sig-dur: var(--kp-sig-no-loop);
+        position: relative;
+        border: 0;
+        border-radius: 50%;
+        /* The tape pack: dark, with a faint wound ring. */
+        background: radial-gradient(circle, transparent 0 62%, hsl(from var(--card) h s l / 0.18) 63% 64%, transparent 65%), var(--foreground);
+        box-shadow: var(--kp-sig-no-well);
+        animation: none;
+    }
+
+    [data-theme='nostromo'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 18%;
+        border-radius: 50%;
+        background: repeating-conic-gradient(from -15deg, var(--card) 0 90deg, transparent 90deg 120deg);
+        box-shadow: inset 0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9);
+    }
+
+    [data-theme='nostromo'] .kp-spinner::after {
+        --kp-sig-dur: 260ms;
+        content: '';
+        position: absolute;
+        inset: 36%;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1.5px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+
+    /* The skeleton is the waiting screen too: see "The waiting screen"
+       below (loading "raster"). */
+
+    [data-theme='nostromo'] .kp-switch {
+        --kp-switch-radius: 0.3rem;
+        --kp-switch-thumb-radius: 0.2rem;
+    }
+
+    [data-theme='nostromo'] .kp-switch__input {
+        border: 1px solid var(--border-strong);
+        background:
+            radial-gradient(circle at calc(100% - 0.6rem) 50%, hsl(from var(--foreground) h s l / 0.35) 0 0.24rem, transparent 0.26rem),
+            hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:not(:focus-visible) {
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input::before {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px) center / 50% 55% no-repeat,
+            var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked {
+        border-color: var(--border-strong);
+        background:
+            radial-gradient(circle at 0.6rem 50%, var(--primary-foreground) 0 0.06rem, var(--kp-sig-no-led) 0.12rem 0.24rem, transparent 0.26rem),
+            hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    [data-theme='nostromo'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.22) 0 1px, transparent 1px 3px) center / 50% 55% no-repeat,
+            var(--card);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='nostromo'] .kp-field__check {
+        --kp-sig-dur: 160ms;
+        appearance: none;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+    }
+
+    [data-theme='nostromo'] .kp-field__check:not(:focus-visible) {
+        box-shadow: var(--kp-sig-no-well);
+    }
+
+    /* A tick is the person's pick, so it is ink (G5, colour "indicate"); it
+       was the signal orange. */
+    [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+        background: hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio']:checked {
+        border-color: var(--foreground);
+        background: var(--foreground);
+    }
+
+    [data-theme='nostromo'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+
+    /* What opens, arrives or leaves is drawn by the raster from its top edge
+       down in equal bands, one per 80 ms frame, and erased the same way
+       backwards (opening, leave "raster"; G2, G3, G12): a toast and a dialog
+       in 4 frames (320 ms, a panel), a tooltip in 2 (160 ms, a contact).
+       --kp-sig-no-n is the frame count of the part's draw. */
+    [data-theme='nostromo'] .kp-toast {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.1rem;
+        position: relative;
+        padding-inline-start: 2rem;
+        box-shadow: var(--kp-sig-no-raised);
+    }
+
+    [data-theme='nostromo'] .kp-toast::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0.75rem;
+        inset-block-start: calc(50% - 0.3rem);
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 2px var(--foreground),
+            0 0 6px 2px hsl(from var(--kp-sig-no-led) h s l / 0.45);
+    }
+
+    /* js/motion.js learns the theme's time from an unopened dialog (a probe
+       it adds and takes off) and closes in two thirds of it: so an unopened
+       dialog is drawn over 480 ms and the open one in 320 ms (4 frames),
+       which is also its close and, opening as its close reversed, its
+       opening. Both in 4 bands: the probe's curve is the one motion.js folds
+       a disclosure on, in the size time (320 ms), so 4 bands keep that fold
+       on the 80 ms clock too. */
+    [data-theme='nostromo'] .kp-dialog {
+        --kp-sig-dur: calc(var(--kp-sig-no-frame) * 6);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.2rem;
+        --kp-sig-no-screw: radial-gradient(
+            circle,
+            hsl(from var(--foreground) h s l / 0.45) 0 1.5px,
+            hsl(from var(--foreground) h s l / 0.2) 2px 3px,
+            transparent 3.5px
+        );
+        background:
+            var(--kp-sig-no-screw) 6px 6px / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) calc(100% - 6px) 6px / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) 6px calc(100% - 6px) / 8px 8px no-repeat,
+            var(--kp-sig-no-screw) calc(100% - 6px) calc(100% - 6px) / 8px 8px no-repeat,
+            var(--card);
+        box-shadow:
+            var(--kp-sig-no-raised),
+            0 12px 28px -14px hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    [data-theme='nostromo'] .kp-dialog[open] {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+    }
+
+    /* The beam rides the edge of what the raster has written: a bright line
+       with a fading phosphor tail. At rest it is away, so the reduced pose is
+       the finished dialog. A dialog in the page's flow (not a <dialog>, which
+       the browser places itself) holds it. */
+    [data-theme='nostromo'] .kp-dialog:not(dialog) {
+        position: relative;
+    }
+
+    /* A toast, a tile and a key figure carry the same beam, but not on a
+       pseudo-element: the toast's ::before is its lamp, a card's the stamp,
+       and a key figure is the box its trend link's ::after stretches over.
+       Theirs is one mechanism for all three, a background layer that exists
+       only while the raster draws or erases them (the beam-layer keyframes
+       below): at rest the part has no extra layer at all. The tail is the
+       research demo's for a tile and a leaving part (research/nostromo-
+       character, 1.1 rem). */
+    [data-theme='nostromo'] :is(.kp-card, .kp-kpi) {
+        --kp-sig-no-tail: 1.1rem;
+    }
+
+    [data-theme='nostromo'] .kp-dialog::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+        block-size: var(--kp-sig-no-tail);
+        background: var(--kp-sig-no-beam);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='nostromo'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-tooltip {
+        --kp-sig-dur: var(--kp-sig-no-contact);
+        --kp-sig-no-n: 2;
+        margin-inline-start: 0.5rem;
+        padding: 0.2rem 0.6rem;
+        border: 0;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.4);
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-shadow: 0 -1px 0 hsl(from var(--foreground) h s l / 0.9);
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps {
+        gap: 0.5rem 1rem;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li {
+        gap: 0.5rem;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li::before {
+        inline-size: 1.7rem;
+        block-size: 1.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--border-strong);
+        color: var(--selected);
+        font-weight: 700;
+    }
+
+    [data-theme='nostromo'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: var(--kp-sig-no-well);
+        color: var(--foreground);
+        transform: translateY(1px);
+    }
+

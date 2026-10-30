@@ -1,0 +1,14 @@
+/* @part: typed-tile-name: The typed part of a tile's name */
+@layer kp.components {
+    /* --- The typed part of a tile's name [wish-1120, homelab 121] ---
+     * `EntityData.match` wraps the first occurrence in the name in a <mark>: the theme's primary at a low strength behind the
+     * letters, the text colour kept, so the name reads as before and the match is found at a glance. */
+    .kp-entity__match {
+        background: color-mix(in oklab, var(--primary) 24%, transparent);
+        color: inherit;
+        border-radius: 0.125em;
+        box-shadow: 0 0 0 0.08em color-mix(in oklab, var(--primary) 24%, transparent);
+        font-weight: 700;
+    }
+}
+

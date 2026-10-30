@@ -1,0 +1,356 @@
+/* @part: the-character: .kp-progressbar */
+    [data-theme='blueprint'] .kp-progressbar__track {
+        border-radius: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left top / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) right top / 1px 100% no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px calc(100% / var(--kp-steps))) center / 100% 56% no-repeat,
+            repeating-linear-gradient(90deg, hsl(from var(--border-strong) h s l / 0.55) 0 1px, transparent 1px calc(100% / (var(--kp-steps) * 2)))
+                center / 100% 28% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) center / 100% 1px no-repeat,
+            transparent;
+        overflow: visible;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__fill,
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-block: calc(50% - 1px);
+        inset-inline: 0;
+        inline-size: auto;
+        background: hsl(from var(--primary) h s l / var(--kp-bp-tv));
+        animation: none;
+        clip-path: inset(0 calc((1 - var(--kp-bp-p)) * 100%) 0 0);
+        transform: none;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+        transform: translateX(calc(var(--kp-bp-p) * 100cqi));
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__head {
+        inline-size: 0;
+    }
+
+    [data-theme='blueprint'] .kp-progressbar__head::before {
+        --kp-bp-px: 0.5;
+        --kp-bp-py: 0.5;
+        inset-block-start: calc(50% - 8.5px);
+        inset-inline-start: -8.5px;
+        inline-size: 17px;
+        block-size: 17px;
+        background-image: var(--kp-bp-pen-img);
+        background-size: var(--kp-bp-pen-size);
+        background-position: var(--kp-bp-pen-pos);
+    }
+
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        --kp-bp-px: var(--kp-bp-p);
+        --kp-bp-py: 0.5;
+        inset: calc(50% - 8.5px) -8px;
+        block-size: 17px;
+        background-image: var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(var(--kp-bp-p) * (100% - 16px)) 2px;
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 50%;
+        animation: none;
+    }
+
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-bp-p: 1;
+        --kp-bp-tv: 1;
+        --kp-bp-pv: 0;
+        --kp-bp-nib: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-progressbar__fill {
+            transition: clip-path calc(2 * var(--fx-duration)) var(--fx-ease);
+        }
+
+        [data-theme='blueprint'] .kp-progressbar__head {
+            transition: transform calc(2 * var(--fx-duration)) var(--fx-ease);
+        }
+
+        [data-theme='blueprint'] .kp-progressbar[data-kp-indeterminate],
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+            animation: kp-sig-blueprint-stroke var(--kp-sig-bp-loop) linear infinite;
+        }
+
+        [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+            animation: kp-sig-blueprint-place var(--kp-sig-bp-loop) linear infinite backwards;
+            animation-delay: calc(var(--kp-bp-i, 0) * 2 * var(--kp-sig-bp-unit));
+        }
+
+        [data-theme='blueprint'] .kp-skeleton--block {
+            animation: kp-sig-blueprint-frame var(--kp-sig-bp-loop) linear infinite;
+        }
+
+        [data-theme='blueprint'] .kp-skeleton--circle {
+            animation: kp-sig-blueprint-ring var(--kp-sig-bp-loop) linear infinite;
+        }
+
+        [data-theme='blueprint'] .kp-skeleton:nth-child(2) {
+            --kp-bp-i: 1;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(3) {
+            --kp-bp-i: 2;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(4) {
+            --kp-bp-i: 3;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(5) {
+            --kp-bp-i: 4;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(6) {
+            --kp-bp-i: 5;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(7) {
+            --kp-bp-i: 6;
+        }
+        [data-theme='blueprint'] .kp-skeleton:nth-child(8) {
+            --kp-bp-i: 7;
+        }
+
+        @keyframes kp-sig-blueprint-stroke {
+            0% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            3% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            44% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            46% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            52% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            52.1% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 0;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            94% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 0;
+            }
+
+            100% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 0;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-place {
+            0% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            0.5% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            1.5% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            9.5% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            10% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            10.5%,
+            83% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 1;
+            }
+
+            88%,
+            100% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-frame {
+            0% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            0.5% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            1.5% {
+                --kp-bp-r: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            11% {
+                --kp-bp-r: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            20.5% {
+                --kp-bp-r: 2;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            30% {
+                --kp-bp-r: 3;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            39.5% {
+                --kp-bp-r: 4;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            40% {
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            40.5%,
+            83% {
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 1;
+            }
+
+            88%,
+            100% {
+                --kp-bp-r: 4;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-ring {
+            0% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+
+            0.5% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            1.5% {
+                --kp-bp-p: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            20% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            20.5% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-tv: 1;
+            }
+
+            21%,
+            83% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 1;
+            }
+
+            88%,
+            100% {
+                --kp-bp-p: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-tv: 0;
+            }
+        }
+    }
+    /* character>> */
+

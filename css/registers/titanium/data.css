@@ -1,0 +1,201 @@
+/* @part: data: Data */
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='titanium'] .kp-table th {
+        color: var(--muted-foreground);
+        border-bottom: 1px solid var(--border-strong);
+        font-weight: 600;
+    }
+
+    [data-theme='titanium'] .kp-table td {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='titanium'] .kp-table tbody tr:hover {
+        background: var(--card);
+    }
+
+    [data-theme='titanium'] .kp-datatable {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
+    }
+
+    [data-theme='titanium'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='titanium'] .kp-datatable__sort[aria-sort] {
+        color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-datatable__status,
+    [data-theme='titanium'] .kp-datatable__page {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-diff {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-diff__line,
+    [data-theme='titanium'] .kp-diff__hunk {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is a row of machined plates: a strong edge, the time in
+       the mono face; the state is cut into the mark, not animated. */
+    [data-theme='titanium'] .kp-steplist {
+        --kp-steplist-gap: 0.5rem;
+    }
+
+    [data-theme='titanium'] .kp-steplist__item {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='titanium'] .kp-timeline {
+        border-inline-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-timeline__marker {
+        background: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-timeline__when {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-tree {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The accordion [gap-12]: muted at rest and the full ink once open, as its tabs do. */
+    [data-theme='titanium'] .kp-accordion__summary {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-reorder {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* ── Navigation and steps ───────────────────────────────────────────── */
+
+    [data-theme='titanium'] .kp-tab {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-tab[aria-selected='true'] {
+        color: var(--foreground);
+        font-weight: 600;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='titanium'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-pagination a[aria-current],
+    [data-theme='titanium'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='titanium'] .kp-wizard {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='titanium'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='titanium'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    [data-theme='titanium'] .kp-shortcuts__group-label,
+    [data-theme='titanium'] .kp-palette__group-label {
+        font-weight: 700;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-theme-menu__status,
+    [data-theme='titanium'] .kp-palette__status,
+    [data-theme='titanium'] .kp-combobox__status {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The roots the rules above reach only by their parts ───────────── */
+
+    [data-theme='titanium'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.2);
+    }
+
+    [data-theme='titanium'] .kp-form {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='titanium'] .kp-breadcrumb,
+    [data-theme='titanium'] .kp-pagination {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-combobox,
+    [data-theme='titanium'] .kp-datepicker,
+    [data-theme='titanium'] .kp-colorpicker,
+    [data-theme='titanium'] .kp-shortcuts {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='titanium'] .kp-grid {
+        gap: 0.75rem;
+    }
+
+    [data-theme='titanium'] .kp-split {
+        gap: 0;
+    }
+
+    [data-theme='titanium'] .kp-toasts {
+        gap: 0.6rem;
+    }
+
+    [data-theme='titanium'] .kp-health {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='titanium'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* ── The scrollbar joins the theme ──────────────────────────────────── */
+
+    [data-theme='titanium'] {
+        scrollbar-color: var(--border-strong) var(--background);
+    }
+

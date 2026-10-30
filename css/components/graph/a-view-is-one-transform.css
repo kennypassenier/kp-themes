@@ -1,0 +1,89 @@
+/* @part: graph: A view is one transform, clipped to the box; a button or key eases it  */
+    .kp-graph__zoom[hidden] {
+        display: none;
+    }
+
+    .kp-graph:not([data-kp-state='ready']) .kp-graph__zoom {
+        display: none;
+    }
+
+    .kp-graph__zoom [aria-disabled='true'] {
+        opacity: 0.45;
+        cursor: default;
+    }
+
+    .kp-graph[data-kp-zoom]:not([data-kp-zoom='off'], [data-kp-zoom='false']) .kp-graph__svg {
+        cursor: grab;
+        overflow: hidden;
+        touch-action: none;
+    }
+
+    .kp-graph[data-kp-panning] .kp-graph__svg {
+        cursor: grabbing;
+    }
+
+    /* A view is one transform, clipped to the box; a button or key eases it on the theme's own curve. */
+    .kp-graph__world {
+        transform-origin: 0 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-graph__world.is-eased {
+            transition: transform var(--kp-graph-zoom-time, 160ms) var(--kp-graph-zoom-ease, ease-out);
+        }
+    }
+
+    /* The details of a picked node, inside the picture at its right: a plate of its own ground, scrolling inside itself. */
+    .kp-graph__detail {
+        position: absolute;
+        inset-block: calc(var(--kp-space-sm, 0.5rem) + var(--kp-control-height, 2.25rem) + var(--kp-space-sm, 0.5rem)) var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        z-index: 4;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: min(var(--kp-graph-detail-width, 20rem), calc(100% - 2 * var(--kp-space-sm, 0.5rem)));
+        max-block-size: max-content;
+        padding: var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        overflow: hidden;
+    }
+
+    .kp-graph__detail[hidden] {
+        display: none;
+    }
+
+    .kp-graph__detail-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-graph__detail-title {
+        margin: 0;
+        font-size: var(--kp-text-md, 1rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-graph__detail-body {
+        min-block-size: 0;
+        overflow: auto;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-graph__detail-text {
+        margin: 0;
+        color: var(--muted-foreground);
+    }
+
+    @media (max-width: 40rem) {
+        .kp-graph__detail {
+            inset-block-start: auto;
+            max-block-size: 55%;
+        }
+    }

@@ -1,0 +1,131 @@
+/* @part: key-value-grid: Key-value grid */
+    /* --- Key-value grid ------------------------------------------------- */
+
+    /* A read-only list of facts: a `dl` whose rows are `div.kp-kv__row` with a
+     * `dt` and a `dd`. The label column is as wide as the longest label and no
+     * wider (fix-64), up to --kp-kv-label-max (45 %); a longer label wraps.
+     * The value takes the rest and breaks rather than widening the page.
+     * `--lines` rules a line between rows, `--stack` puts each label over
+     * its value, `--columns` lays two lists of rows side by side where the
+     * box is wide. Values reuse the package: `.kp-id` (mono), `.kp-copyable`,
+     * `.kp-badge`, `.kp-ago`, `.kp-skeleton` while loading. */
+    .kp-kv {
+        display: grid;
+        grid-template-columns: minmax(auto, var(--kp-kv-label-max, 45%)) minmax(0, 1fr);
+        grid-template-columns: fit-content(var(--kp-kv-label-max, 45%)) minmax(0, 1fr);
+        gap: var(--kp-kv-gap, 0.375rem) var(--kp-space-lg, 1rem);
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.5;
+    }
+
+    .kp-kv__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: baseline;
+        min-inline-size: 0;
+    }
+
+    .kp-kv__row > :is(dt) {
+        margin: 0;
+        color: var(--muted-foreground);
+        overflow-wrap: break-word;
+    }
+
+    /* A label with a second part (the key's name in a `code`, a note in a `small`) wraps into a block of two or three lines in
+       a narrow box. On the first baseline a one-line value stood on the first line and the block hung under it; centring
+       the cells put a value of three lines off its label. The value's cell fills the row's height and its lines start at
+       the top: the value is on the label's first line, and the cell covers the label block, so nothing hangs
+       [alignrest-1019; settings groups at 390]. */
+    .kp-kv__row:has(> dt > :is(code, small)) {
+        align-items: start;
+    }
+
+    .kp-kv__row:has(> dt > :is(code, small)) > dd {
+        align-self: stretch;
+        align-content: start;
+    }
+
+    .kp-kv__row > :is(dd) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        margin: 0;
+        color: var(--foreground);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-kv--lines {
+        row-gap: 0;
+    }
+
+    .kp-kv--lines > .kp-kv__row {
+        padding-block: var(--kp-kv-line-pad, 0.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-kv--lines > .kp-kv__row:last-child {
+        border-block-end: 0;
+    }
+
+    .kp-kv--stack {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-kv--stack > .kp-kv__row {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0.125rem;
+    }
+
+    .kp-kv--stack > .kp-kv__row > :is(dt) {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Two or more lists of rows side by side where the box has room for
+     * them (each at least --kp-kv-column-min, 22rem): the label column is then
+     * a set width, --kp-kv-label (9rem), the same in every list. */
+    .kp-kv--columns {
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-kv-column-min, 22rem)), 1fr));
+        column-gap: var(--kp-space-xl, 2rem);
+    }
+
+    .kp-kv--columns > .kp-kv__row {
+        grid-column: auto;
+        grid-template-columns: min(var(--kp-kv-label, 9rem), 45%) minmax(0, 1fr);
+        column-gap: var(--kp-space-lg, 1rem);
+    }
+
+    /* A value not known: the dash in the quiet ink, its words for a reader
+     * in the markup (`<span class="kp-sr-only">not known</span>`). */
+    .kp-kv__none {
+        color: var(--muted-foreground);
+    }
+
+    .kp-kv__row > :is(dd) > .kp-kv__wait {
+        flex: 0 1 var(--kp-kv-skeleton, 10rem);
+    }
+
+    /* A row that could not be read: a red rule on its start edge (drawn in
+     * the gap, so nothing moves) and its sentence in the page's ink. */
+    .kp-kv__row[data-kp-state='error'] {
+        position: relative;
+    }
+
+    .kp-kv__row[data-kp-state='error']::before {
+        content: '';
+        position: absolute;
+        inset-block: 0.15em;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1);
+        inline-size: 2px;
+        background: var(--destructive);
+    }
+
+    .kp-kv__row[data-kp-changed] > :is(dt)::after {
+        content: var(--kp-glyph-changed, '\00a0\2022');
+        color: var(--primary);
+        font-weight: 700;
+    }
+

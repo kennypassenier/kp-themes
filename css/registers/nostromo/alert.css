@@ -1,0 +1,112 @@
+/* @part: alert: Alert, badges, tags, status */
+    /* ── Alert, badges, tags, status ──────────────────────────────────── */
+
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='nostromo'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='nostromo'] .kp-alert__label {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='nostromo'] .kp-badge,
+    [data-theme='nostromo'] .kp-tag {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-tape);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* The badge was a pill [scope-55, 2026-09-13]; since the moulded corners
+       (Kenny, 2026-10-07 23:18, G6) a badge is label tape like the tag, cut
+       square at 2 px. */
+
+    [data-theme='nostromo'] .kp-health {
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='nostromo'] .kp-health__dot {
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-skeleton {
+        background: repeating-linear-gradient(90deg, var(--border) 0 6px, transparent 6px 12px);
+        border-radius: 0.2rem;
+    }
+
+    /* --selected against --border-strong only reaches 1.17:1 (KT8's 1.5
+   floor for a visibly turning head): --foreground reaches 2.92. */
+    [data-theme='nostromo'] .kp-spinner {
+        border-color: var(--border-strong);
+        border-top-color: var(--foreground);
+    }
+
+    [data-theme='nostromo'] .kp-empty__title {
+        font-weight: 400;
+    }
+
+    [data-theme='nostromo'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes ───────────────────────────────────────────────────── */
+
+    [data-theme='nostromo'] .kp-id,
+    [data-theme='nostromo'] .kp-url,
+    [data-theme='nostromo'] .kp-numeric,
+    [data-theme='nostromo'] .kp-timestamp,
+    [data-theme='nostromo'] .kp-masked,
+    [data-theme='nostromo'] .kp-truncate,
+    [data-theme='nostromo'] .kp-cell-break,
+    [data-theme='nostromo'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.01em;
+    }
+
+    [data-theme='nostromo'] .kp-timestamp,
+    [data-theme='nostromo'] .kp-id {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='nostromo'] .kp-copyable {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='nostromo'] .kp-copyable__button {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: transparent;
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='nostromo'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='nostromo'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+

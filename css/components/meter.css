@@ -1,0 +1,204 @@
+/* @part: meter: Meter with a mark */
+    /* --- Meter with a mark [scope-143] ------------------------------------ */
+
+    /* A used-of-total bar anywhere: in a tile, at the start of a line of
+ * words, in a table cell. `--kp-value` is the share (0 to 1; above 1 the
+ * bar is full and `data-kp-over` puts a small ▸ at its end), `--kp-mark` an
+ * optional tick (a promise, a limit, a target) across the bar, sticking out
+ * above and below it without taking any room, so a meter is as tall with a
+ * mark as without one. `.kp-kpi__meter` is the same meter at the bottom of
+ * a key figure, whose tone (`data-kp-tone` on the tile) colours its fill.
+ * setMeter() (js/kpi.js) writes it all, with its ARIA, in one call.
+ * Knobs: `--kp-meter-height` (0.375rem), `--kp-meter-fill` (the primary
+ * colour), `--kp-meter-mark-colour` (the text colour),
+ * `--kp-meter-mark-overhang` (3px), `--kp-meter-halo` (the card colour: a
+ * 1px ring that keeps the mark apart from a dark fill),
+ * `--kp-meter-inline-size` (3rem). */
+    .kp-meter,
+    .kp-kpi__meter {
+        --kp-meter-fill-colour: var(--kp-meter-fill, var(--kp-kpi-meter-fill, var(--primary)));
+        position: relative;
+        display: block;
+        block-size: var(--kp-meter-height, 0.375rem);
+        overflow: visible;
+        border-radius: 999px;
+        background: var(--muted);
+    }
+
+    .kp-kpi__meter {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-meter::before,
+    .kp-kpi__meter::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * 100%);
+        border-radius: inherit;
+        background: var(--kp-meter-fill-colour);
+    }
+
+    /* The share itself past the end: a ▸ at the bar's end, unless a sign
+ * below is asked for. */
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-over]:not(.kp-meter--over-hatch, .kp-meter--over-spill, .kp-meter--over-break)::after {
+        content: '▸';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-end: -0.0625rem;
+        translate: 0 -50%;
+        color: var(--kp-meter-mark-colour, var(--foreground));
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow:
+            0 0 1px var(--kp-meter-halo, var(--card)),
+            0 0 2px var(--kp-meter-halo, var(--card));
+    }
+
+    /* Other signs for a share past the end, one modifier each [fault 2026-10-05]:
+ * `--over-hatch` cuts stripes of the surface colour into the fill's last
+ * rem; `--over-spill` puts a short piece in the destructive colour past the
+ * end, a 2px gap after the full bar; `--over-break` lets the fill itself
+ * run past the end, with a cut of the surface colour where the track ends.
+ * The two that reach past the end take `--kp-meter-over-overhang`
+ * (0.5rem) beyond the box, inside a cell's or a tile's padding; an inline
+ * meter keeps that room after it in every state, so the words never move. */
+    :is(.kp-meter, .kp-kpi__meter):is(.kp-meter--over-hatch, .kp-meter--over-spill, .kp-meter--over-break)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        pointer-events: none;
+    }
+
+    :is(.kp-meter, .kp-kpi__meter).kp-meter--over-hatch[data-kp-over]::after {
+        inset-inline-end: 0;
+        inline-size: min(1rem, 35%);
+        border-start-end-radius: 999px;
+        border-end-end-radius: 999px;
+        background: repeating-linear-gradient(-45deg, var(--kp-meter-halo, var(--card)) 0 1.5px, transparent 1.5px 4px);
+    }
+
+    /* The piece past the end is 2px taller above and below than the bar, as
+ * the mark is, so it reads as overflow, not as more bar; it takes no room. */
+    :is(.kp-meter, .kp-kpi__meter).kp-meter--over-spill[data-kp-over]::after {
+        inset-block: -2px;
+        inset-inline-start: calc(100% + 2px);
+        inline-size: var(--kp-meter-over-overhang, 0.5rem);
+        border-radius: 999px;
+        background: var(--destructive);
+    }
+
+    /* The fill's own colour runs on past the end, after a 2px cut of the
+ * surface colour where the track stops. */
+    :is(.kp-meter, .kp-kpi__meter).kp-meter--over-break[data-kp-over]::after {
+        inset-block: -2px;
+        inset-inline-start: calc(100% - 2px);
+        inline-size: calc(var(--kp-meter-over-overhang, 0.5rem) + 2px);
+        box-sizing: border-box;
+        border-inline-start: 2px solid var(--kp-meter-halo, var(--card));
+        border-start-end-radius: 999px;
+        border-end-end-radius: 999px;
+        background: var(--kp-meter-fill-colour);
+    }
+
+    .kp-meter--inline:is(.kp-meter--over-spill, .kp-meter--over-break) {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-meter-over-overhang, 0.5rem) + 2px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        :is(.kp-meter, .kp-kpi__meter):is(.kp-meter--over-hatch, .kp-meter--over-spill, .kp-meter--over-break)[data-kp-over]::after {
+            transition: opacity var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+
+        @starting-style {
+            :is(.kp-meter, .kp-kpi__meter):is(.kp-meter--over-hatch, .kp-meter--over-spill, .kp-meter--over-break)[data-kp-over]::after {
+                opacity: 0;
+            }
+        }
+    }
+
+    /* [entity-meter-tone-1019] A good share (free space, uptime) and a share
+ * that is neither: `success` and `neutral`, so a card need not wear the
+ * warning scale when a high reading is fine. */
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='success'] {
+        --kp-meter-fill-colour: var(--success-foreground);
+    }
+
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='neutral'] {
+        --kp-meter-fill-colour: var(--muted-foreground);
+    }
+
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
+        --kp-meter-fill-colour: var(--warning-foreground);
+    }
+
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive'] {
+        --kp-meter-fill-colour: var(--destructive);
+    }
+
+    /* The mark: a tick across the bar, sticking out above and below, with a
+ * halo of the surface colour so it reads on the fill and on the track. */
+    .kp-meter__mark {
+        position: absolute;
+        inset-block: calc(var(--kp-meter-mark-overhang, 3px) * -1);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - 1px);
+        inline-size: 2px;
+        border-radius: 1px;
+        background: var(--kp-meter-mark-colour, var(--foreground));
+        box-shadow: 0 0 0 1px var(--kp-meter-halo, var(--card));
+        pointer-events: none;
+    }
+
+    .kp-meter__mark[hidden] {
+        display: none;
+    }
+
+    /* A mark past the end: the tick stops short of the end and a small ▸
+ * fills the last bit, inside the bar's box. */
+    .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    .kp-meter__mark[data-kp-over]::after {
+        content: '▸';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 0.1875rem;
+        translate: 0 -50%;
+        color: var(--kp-meter-mark-colour, var(--foreground));
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow:
+            0 0 1px var(--kp-meter-halo, var(--card)),
+            0 0 2px var(--kp-meter-halo, var(--card));
+    }
+
+    /* Loading (`data-kp-loading`): the track pulses at full width and its
+ * height, with no fill and no mark; still under reduced motion. */
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] .kp-meter__mark,
+    :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+
+        .kp-meter::before {
+            transition:
+                inline-size 300ms ease,
+                background-color 300ms ease;
+        }
+    }
+
+    /* A small meter at the start of a line of words: three rem wide, its
+ * middle on the first line's middle. */
+    .kp-meter--inline {
+        display: inline-block;
+        inline-size: var(--kp-meter-inline-size, 3rem);
+        margin-inline-end: var(--kp-space-xs, 0.25rem);
+        vertical-align: middle;
+    }
+

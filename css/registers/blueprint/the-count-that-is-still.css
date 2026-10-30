@@ -1,0 +1,18 @@
+/* @part: the-count-that-is-still: The count that is still being counted is a hatched place */
+/* ── The count that is still being counted is a hatched place [G16, t56-eye-1018] ──
+   The line skeleton's two dimension ticks and baseline, drawn on the toggle's 2-character bone, read as an empty box with a
+   stray stroke. The hatch is a section waiting: the bone is a small hatched section between its two ticks. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-skeleton.kp-toggle__bone {
+        border: 1px solid hsl(from var(--primary) h s l / 0.8);
+        background: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.6) 0 1px, transparent 1px 4px);
+        margin: 0;
+        animation: none;
+    }
+
+    [data-theme='blueprint'] .kp-skeleton.kp-toggle__bone::before,
+    [data-theme='blueprint'] .kp-skeleton.kp-toggle__bone::after {
+        content: none;
+    }
+}
+

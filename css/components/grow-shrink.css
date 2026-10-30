@@ -1,0 +1,39 @@
+/* @part: grow-shrink: Growing and shrinking */
+    /* --- Growing and shrinking [scope-142] ------------------------------- */
+
+    /* js/motion.js glides a box to its new height and marks it
+       `[data-kp-resizing]` meanwhile; a register draws its character on that
+       mark (an outline, a glow, a shadow). The boxes carry the transition at
+       rest too, so the character fades out as well as in. A register's own
+       transition on one of these boxes wins, from its later layer. */
+    @media (prefers-reduced-motion: no-preference) {
+        :is(
+            .kp-dialog,
+            .kp-tabs,
+            .kp-card,
+            .kp-datatable,
+            .kp-toasts,
+            .kp-upload__list,
+            .kp-combobox__list,
+            .kp-tree,
+            .kp-wizard,
+            .kp-field,
+            [data-kp-size-motion]
+        ) {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out;
+            outline: 0 solid transparent;
+        }
+    }
+
+    /* While a column of flex items glides (`[data-kp-gliding='column']`, set
+       by js/motion.js), the box clips its items instead of squeezing them:
+       a squeezed data table scrolled inside itself and restarted its own
+       glide on every frame (Kenny, 2026-10-05). Over the moment the glide
+       lasts, an item keeps the size its content gives it. */
+    [data-kp-gliding='column'] > * {
+        flex: none !important;
+    }
+

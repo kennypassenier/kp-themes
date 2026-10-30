@@ -1,0 +1,380 @@
+/* @part: the-demos-own-pieces: The demo's own pieces */
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    [data-theme='deco'] .kp-side-note {
+        display: none;
+        position: absolute;
+        inset-block-start: 6rem;
+        inset-inline-end: 1rem;
+        writing-mode: vertical-rl;
+        letter-spacing: 0.3em;
+        font-size: 0.7rem;
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+    }
+
+    @container (min-width: 48rem) {
+        [data-theme='deco'] .kp-side-note {
+            display: block;
+        }
+    }
+
+    [data-theme='deco'] .kp-laurels {
+        gap: 0.5rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='deco'] .kp-laurels li {
+        border: 1px solid var(--border-strong);
+        padding: 0.35rem 0.6rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='deco'] .kp-laurels b {
+        color: var(--primary);
+        font-weight: 600;
+        margin-right: 0.3em;
+    }
+
+    [data-theme='deco'] .kp-lede {
+        max-width: 46ch;
+        color: var(--muted-foreground);
+        font-size: 1.05rem;
+    }
+
+    [data-theme='deco'] .kp-platforms {
+        margin-block-start: 1.6rem;
+        gap: 0.9rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='deco'] .kp-platforms span::before {
+        content: '◆ ';
+        color: var(--border-strong);
+    }
+
+    /* The spec sheet: a card with the demo's own literal spacing. */
+    [data-theme='deco'] .kp-spec {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        border-radius: 0;
+        padding: 1.2rem;
+    }
+
+    [data-theme='deco'] .kp-spec dt {
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='deco'] .kp-log {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-log__level {
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        --kp-log-level-ink: var(--muted-foreground);
+    }
+
+    [data-theme='deco'] .kp-spec__swatch {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-spec__font {
+        font-family: var(--theme-font-display);
+    }
+
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation of this register lives here, inside the
+   no-preference guard, so a reader who asked for reduced motion never
+   receives one: the rest states above are what they get — the cartouche
+   is simply visible at scale 1, the rule is simply drawn, the redactions
+   still respond to the click but with no easing. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The cartouche assembles once, on load: the frame (Bathyscaphe's
+       inset-shadow technique, measured) scales in with the headline,
+       0.94×0.7 to 1×1, over 520ms — the demo's own literal duration, not
+       derived from --fx-duration. */
+        [data-theme='deco'] [data-kp-surface] h1[data-kp-reveal='headline'] {
+            animation: kp-cartouche-in 520ms var(--fx-ease) both;
+        }
+
+        /* The rule draws itself, reusing the base layer's own kp-rule-in
+       keyframe at the demo's literal 600ms. */
+        [data-theme='deco'][data-kp-effects] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-rule-in 600ms var(--fx-ease) 1 both;
+        }
+
+        /* The redactions clear in three steps, 140ms apart, when the
+       dossier's trigger opens the file. */
+        [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+            animation: kp-redaction-clear 320ms var(--fx-ease) both;
+        }
+
+        [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2).is-cleared {
+            animation-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='deco'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3).is-cleared {
+            animation-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        /* What the demo moves on a hover: the border and ink stepping to
+       gold, one step, no colour transition mid-flight after a theme
+       switch (KT8, AR30). */
+        [data-theme='deco'] .kp-button,
+        [data-theme='deco'] .kp-nav__link {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js); kp-rule-in
+   is the base layer's, reused rather than redeclared. */
+    @keyframes kp-cartouche-in {
+        0% {
+            opacity: 0;
+            transform: scale(0.94, 0.7);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1, 1);
+        }
+    }
+
+    @keyframes kp-redaction-clear {
+        0% {
+            opacity: 0;
+            transform: translateY(2px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Stamped beside the wordmark, in gold [S49, A3]. */
+    [data-theme='deco'] .kp-nav__brand-tag {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.14em;
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — gold rules above and below, the display face set very wide. */
+    [data-theme='deco'] .kp-marquee {
+        border-block: 1px solid var(--primary);
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        --kp-marquee: 46000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='deco'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='deco'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.24em;
+        border-block-end: 1px solid var(--primary);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       A column reads as a fluted panel, so the row you are on is the one
+       whose flute is filled — a thicker rule at the edge and the letters
+       opened up, which is how this theme marks anything at all. */
+    [data-theme='deco'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 3px double var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-sidenav__title {
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-sidenav__link,
+    [data-theme='deco'] .kp-sidenav__category-toggle {
+        border-radius: 0;
+        border-inline-start: 3px solid transparent;
+    }
+
+    [data-theme='deco'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary);
+        background: none;
+        border-inline-start-color: var(--border-strong);
+        letter-spacing: 0.1em;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       A double rule, which is this theme's answer to every edge. */
+    [data-theme='deco'] .kp-to-top {
+        border: 3px double var(--border-strong);
+    }
+
+    [data-theme='deco'] .kp-media {
+        border: 3px double var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-media-figure > figcaption {
+        text-align: center;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='deco'] .kp-media-figure {
+        text-align: center;
+        color: var(--primary);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='deco'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    [data-theme='deco'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='deco'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* ── Pointing and pressing: see the grammar at the end of the signature layer
+       (the gold leaf and the seal replace the fan that opened behind the label). ── */
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='deco'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): small widely spaced capitals in the muted
+       ink, a gilt hairline under them and the primary ink when pointed at.
+       The link's typeface, case, spacing, shape and pointer answer are
+       restated here, because the trigger is a button beside the list rather
+       than a link in it. The underline a plain link carries is not: it says
+       "this is a link", and the trigger is not one. */
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border: 0;
+        border-bottom: 1px solid transparent;
+        border-radius: 0;
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='deco'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--primary);
+        border-bottom-color: var(--border-strong);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A marquee gone dark: the headline in its red with wide spacing, a gold double frame, gold bars and a gold glow. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='deco'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 5% / 0.96);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 5%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.25);
+        --kp-alarm-halo: hsl(from var(--destructive) h s 50 / 0.4);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 3px double var(--primary);
+        --kp-alarm-title-tracking: 0.12em;
+    }
+
+    [data-theme='deco'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-alarm .kp-button.kp-alarm__ack::before {
+        content: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: an open lozenge, the geometry this register is built on. */
+    [data-theme='deco'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '◇';
+    }

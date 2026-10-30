@@ -65,3 +65,10 @@ research/theme-portraits/*.html
 # the .vsix packs.
 research/vscode/all/
 
+
+# CSS part files: exact slices of css/components.css and the registers,
+# joined by gates/generate-css.mjs. Several are fragments of a layer block
+# (the manifest holds the opening and closing text) and keep the generated
+# file's indentation; a formatter would break the byte-identical join.
+css/components/
+css/registers/

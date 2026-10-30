@@ -1,0 +1,16 @@
+/* @part: signature-base: opening of the signature block */
+    [data-theme='nostromo'] {
+        /* A counted figure is printed in 8 frames (G4). */
+        --kp-tick: 640;
+        --kp-glyph-changed: '';
+        /* The vent seam under a ruled row: a line of dots, as the dividers' perforation. */
+        --kp-no-seam: radial-gradient(circle, var(--border-strong) 1px, transparent 1.4px) 0 100% / 10px 3px repeat-x;
+        /* A glass set into a plate: its own bezel in the case's moulding (G7). */
+        --kp-no-bezel:
+            0 0 0 2px var(--secondary), 0 0 0 3px var(--border-strong), inset 0 0 12px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        --kp-no-phosphor: var(--sidebar-primary);
+        --kp-no-cream: var(--sidebar-foreground);
+        --kp-no-dim: hsl(from var(--sidebar-foreground) h s l / 0.55);
+        --kp-no-glow: 0 0 4px hsl(from var(--sidebar-primary) h s l / 0.5);
+    }
+

@@ -1,0 +1,15 @@
+/* @part: layout: The tour's dim is the target's box-shadow, and a register that gives t */
+/* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
+ * kp.components, so on such a step the page was not dimmed at all and the dim flashed off and on between steps (Kenny,
+ * 2026-10-13: "an effect that flashes over the screen when going from the second window ... into the last"). Restated in the
+ * last layer; a theme draws its own dim by `--kp-tour-dim`, not by a box-shadow on the target. The close (above) stays
+ * `!important` and so still wins. */
+@layer kp.layout {
+    [data-kp-tour-target] {
+        box-shadow: var(--kp-tour-dim, 0 0 0 100vmax hsl(from var(--background) h s l / 0.72));
+        /* A cut corner (titanium's chamfer, a notch) is a clip-path, and a clip-path clips the part's own shadow: the dim
+         * vanished on a cut card. While the tour points at a part, the part is uncut. */
+        clip-path: none;
+    }
+}
+

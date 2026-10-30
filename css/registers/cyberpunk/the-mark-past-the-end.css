@@ -1,0 +1,69 @@
+/* @part: the-mark-past-the-end: the mark past the end */
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '!';
+    }
+
+    [data-theme='cyberpunk'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='cyberpunk'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-meter__mark {
+            transition:
+                inset-inline-start 180ms steps(3),
+                rotate 180ms steps(3);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-meter-slip-o {
+        0% {
+            translate: -10px 0;
+            filter: drop-shadow(3px 0 0 var(--accent)) drop-shadow(-3px 0 0 var(--destructive));
+        }
+
+        30% {
+            translate: 7px 0;
+            filter: drop-shadow(-2px 0 0 var(--accent)) drop-shadow(2px 0 0 var(--destructive));
+        }
+
+        60% {
+            translate: -3px 0;
+            filter: drop-shadow(1px 0 0 var(--accent));
+        }
+
+        85%,
+        100% {
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* A menu and a popover open by the channel split, as the toast does (G3), and close as
+       it played backwards (js/motion.js playClose). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-theme-menu__list
+            ) {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+
+        /* The list arrives as its own split, not as the leave turned around [forest's F-19]. */
+        [data-theme='cyberpunk'] .kp-combobox__list {
+            --kp-open: own;
+        }
+    }
+

@@ -1,0 +1,474 @@
+/* @part: datatable: DataTable */
+    /* --- DataTable [TH37] ------------------------------------------------ */
+
+    /* The sort control is a button inside the header, so it is reachable
+ * from the keyboard [KT6]; it wears the header's own text and nothing of
+ * a button's.
+ *
+ * Inline, and the header keeps its own padding [gap-13]. The first cut
+ * made the button a block that took the header's padding, and three
+ * things followed: the arrow the header draws after its content dropped
+ * to a line of its own (nostromo 65 px against 32 px), the button reset
+ * the case and the letter-spacing a register gives its headers, and the
+ * padding read a cell-pad knob that nothing else had. The whole
+ * cell still sorts: the React header listens for the click itself, and
+ * the button's own click reaches it. */
+    .kp-datatable__sort {
+        display: inline;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        text-align: inherit;
+        cursor: pointer;
+    }
+
+    .kp-datatable__page-size {
+        font: inherit;
+    }
+
+    /* A select in a bar — the "In" choice, the density, the page size, the
+ * card layout's sort — wears `.kp-field__input` for the theme and this
+ * for its width: a field fills its row, a choice in a toolbar does not. */
+    .kp-datatable__select {
+        flex: 0 0 auto;
+        inline-size: auto;
+    }
+
+    .kp-datatable__label {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The filter panel, the pills, the action bar, the loading slot and the
+ * card layout's sort control sit between the bars and the table, and take
+ * the bars' inset, so nothing touches the frame a register draws
+ * [gap-11]. */
+    .kp-datatable__filters,
+    .kp-datatable__pills,
+    .kp-datatable__actions,
+    .kp-datatable__loading,
+    .kp-datatable__card-sort {
+        padding-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem));
+        padding-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
+    }
+
+    .kp-datatable__filters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-datatable-filter-min, 12rem)), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter {
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-datatable__range {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-datatable__range > input {
+        flex: 1 1 7rem;
+        min-inline-size: 0;
+    }
+
+    /* A date bound is the package's date picker (scope-58): each takes a
+ * whole row of the range, so its calendar button stays beside its field. */
+    .kp-datatable__range > .kp-datepicker {
+        --kp-datepicker-input-min: 5rem;
+        flex: 1 1 100%;
+        min-inline-size: 0;
+    }
+
+    /* A date filter takes two columns where the panel has them [Kenny's note
+ * of 2026-09-13]. One column holds a number range or a list of choices,
+ * but a date field beside its calendar button did not hold the date: in a
+ * 238px column the date was cut in eighteen of the twenty-two themes with
+ * the old ghost button, and still 2px short in brutalism with the glyph
+ * (97px of room for 99px). From 40rem the panel always has two columns at its 12rem
+ * floor, so the span never makes a column the grid does not have. */
+    @container kp-table (min-width: 40rem) {
+        .kp-datatable__filter:has(.kp-datepicker) {
+            grid-column: span 2;
+        }
+    }
+
+    .kp-datatable__pills {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], as the
+ * approved mock of research/datatable/demo.html#filter-add draws it: a menu
+ * of columns under "+ Add filter", an editor between the bar and the
+ * pills, and one pill per filter whose words reopen its editor. */
+
+    /* Under its button, and above it where the window has no room below.
+ * Fixed, not the popover's absolute: in the top layer an absolute box is
+ * placed in the initial containing block, which a page scrolled down has
+ * left, so the fallback never found room and the menu opened below the
+ * window — where its focused first item then pulled the whole page up
+ * (measured 2026-09-14 at 720px, all 22 themes, both channels). A fixed
+ * box is tried against the window and still follows its anchor. */
+    .kp-datatable__add-menu {
+        position: fixed;
+        position-try-fallbacks: flip-block;
+    }
+
+    /* Block, not flex: a register may put a ::before on a menu item
+ * (cyberpunk's dash), and in a flex row it becomes an item. */
+    .kp-datatable__add-item {
+        display: block;
+        inline-size: 100%;
+        white-space: nowrap;
+        text-align: start;
+    }
+
+    .kp-datatable__add-item > .kp-badge {
+        margin-inline-start: var(--kp-datatable-add-mark-gap, 0.5rem);
+    }
+
+    /* Its own frame, not a .kp-card or a .kp-popover: both carry a clip-path
+ * in some registers, which cut off the calendar a date bound opens. The
+ * calendar goes to the top layer; the editor stays in the flow. */
+    .kp-datatable__filter-editor {
+        display: grid;
+        gap: var(--kp-datatable-filter-editor-gap, var(--kp-space-md, 0.75rem));
+        margin-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem)) 0;
+        margin-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
+        padding: var(--kp-datatable-filter-editor-padding, var(--kp-space-md, 0.75rem));
+        max-inline-size: var(--kp-datatable-filter-editor-max-width, 34rem);
+        border: var(--kp-datatable-filter-editor-border-width, 1px) solid var(--kp-datatable-filter-editor-border, var(--border-strong));
+        border-radius: var(--kp-datatable-filter-editor-radius, var(--radius, 0.5rem));
+        background: var(--kp-datatable-filter-editor-ground, var(--card));
+        color: var(--kp-datatable-filter-editor-ink, var(--card-foreground));
+    }
+
+    .kp-datatable__filter-editor-title {
+        margin: 0;
+        font-weight: var(--kp-datatable-filter-editor-title-weight, 600);
+    }
+
+    .kp-datatable__filter-editor-choices {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-datatable-filter-choice-min, 9rem)), 1fr));
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter-editor-pair {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-datatable-filter-bound-min, 12rem)), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-datatable__filter-editor-pair > .kp-datepicker {
+        --kp-datepicker-input-min: 6rem;
+        min-inline-size: 0;
+    }
+
+    .kp-datatable__filter-editor-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A pill's words are a button that reopens its editor; it reads as the
+ * pill's text, with a dotted underline to say it can be pressed. */
+    .kp-datatable__pill-edit {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        text-align: start;
+        cursor: pointer;
+        text-decoration: underline dotted;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-datatable__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    /* --- Rows ticked with the keyboard, and the selection bar [kpadopt5] ---- */
+
+    /* The cursor row of js/row-select.js is a ring on the row, not a fill, so a
+     * ticked row (the selected tint) and the cursor read apart. The ring shows
+     * once a key has been used, never for the mouse. A ticked row takes the
+     * theme's selected tint (`--kp-selected`). */
+    [data-kp-cursor-visible] .is-cursor,
+    [data-kp-roving]:focus-visible {
+        outline: 2px solid var(--ring, var(--primary));
+        outline-offset: -2px;
+    }
+
+    [data-kp-roving]:has([data-kp-select-row]:checked),
+    tr[data-kp-roving]:has([data-kp-select-row]:checked) > :is(td, th) {
+        background: var(--kp-selected, color-mix(in oklab, var(--primary) 9%, transparent));
+    }
+
+    /* A bar that is there as soon as rows are ticked: how many, which, the page's
+     * actions, and a way to untick all. It keeps its height whether or not
+     * anything is ticked, so the list under it never jumps; the panel is ruled
+     * open along its start edge, at the theme's rule time (`--kp-rule-time`,
+     * `--kp-rule-ease`), and closed the same way backwards. Knobs:
+     * --kp-selection-height (3.5rem), --kp-selection-top (0, where the bar
+     * sticks), --kp-selection-digits (written by the module). */
+    .kp-selection {
+        container: kp-selection / inline-size;
+        position: relative;
+        display: block;
+        box-sizing: border-box;
+        min-block-size: var(--kp-selection-height, 3.5rem);
+        min-inline-size: 0;
+        margin-block: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-selection[data-kp-placement='sticky-top'] {
+        position: sticky;
+        inset-block-start: var(--kp-selection-top, 0);
+        z-index: var(--kp-z-sticky, 20);
+    }
+
+    .kp-selection[data-kp-placement='floating-bottom'] {
+        position: fixed;
+        inset-inline: var(--kp-space-md, 0.75rem);
+        inset-block-end: calc(var(--kp-space-md, 1rem) + var(--kp-tabbar-height, 0px));
+        z-index: var(--kp-z-toast, 90);
+        display: flex;
+        justify-content: center;
+        min-block-size: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+
+    .kp-selection[data-kp-placement='floating-bottom'] > .kp-selection__panel {
+        inline-size: min(100%, var(--kp-selection-max, 64rem));
+        pointer-events: auto;
+    }
+
+    .kp-selection__panel {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto auto;
+        grid-template-areas:
+            'count names actions clear'
+            'offer offer offer offer'
+            'result result result result';
+        align-items: center;
+        column-gap: var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-selection-height, 3.5rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-inline-start: 3px solid var(--primary);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--card-foreground));
+        clip-path: inset(0 0 0 0);
+        visibility: visible;
+        transition:
+            clip-path var(--kp-rule-time, 400ms) var(--kp-rule-ease, linear),
+            visibility 0s;
+    }
+
+    .kp-selection[data-kp-selection-state='empty'] > .kp-selection__panel {
+        clip-path: inset(0 100% 0 0);
+        visibility: hidden;
+        transition:
+            clip-path var(--kp-rule-time, 400ms) var(--kp-rule-ease, linear),
+            visibility 0s linear var(--kp-rule-time, 400ms);
+    }
+
+    [dir='rtl'] .kp-selection[data-kp-selection-state='empty'] > .kp-selection__panel {
+        clip-path: inset(0 0 0 100%);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-selection__panel,
+        .kp-selection[data-kp-selection-state='empty'] > .kp-selection__panel {
+            transition: none;
+        }
+    }
+
+    .kp-selection__count {
+        grid-area: count;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        /* The room of the next digit: "99 selected" and "100 selected" take the same place. */
+        min-inline-size: calc(var(--kp-selection-digits, 2) * 1ch + 9ch);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-selection__busy {
+        font-weight: 400;
+    }
+
+    /* "3 of 7 done" beside the busy words [wish-1120, homelab 112]: the same muted weight, tabular so it does not shimmer. */
+    .kp-selection__progress {
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-selection__names {
+        grid-area: names;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 0.4em;
+        min-inline-size: 0;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-selection__names[hidden] {
+        display: none;
+    }
+
+    .kp-selection__more {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+        cursor: pointer;
+    }
+
+    .kp-selection__offer,
+    .kp-selection__result {
+        margin: 0;
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-selection__offer {
+        grid-area: offer;
+    }
+
+    .kp-selection__result {
+        grid-area: result;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-selection__offer[hidden],
+    .kp-selection__result[hidden] {
+        display: none;
+    }
+
+    .kp-selection__result[data-kp-selection-result='refused'] {
+        color: var(--destructive);
+    }
+
+    .kp-selection__actions {
+        grid-area: actions;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-selection__clear {
+        grid-area: clear;
+        white-space: nowrap;
+    }
+
+    .kp-selection__toggle {
+        display: none;
+        grid-area: actions;
+    }
+
+    .kp-selection [data-kp-selection-off] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* A row that refused an action: a rule on its start edge and the reason in words. */
+    [data-kp-refused] > :first-child,
+    tr[data-kp-refused] > :first-child {
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    .kp-selection__refusal {
+        display: block;
+        color: var(--destructive);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* A narrow bar: the count, "Actions" and untick; the names fold to the count. */
+    @container kp-selection (max-width: 40rem) {
+        .kp-selection__panel {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            grid-template-areas:
+                'count toggle clear'
+                'actions actions actions'
+                'offer offer offer'
+                'result result result';
+        }
+
+        .kp-selection__names {
+            display: none;
+        }
+
+        .kp-selection__toggle {
+            display: inline-flex;
+            grid-area: toggle;
+        }
+
+        .kp-selection__actions {
+            display: none;
+            padding-block-start: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-selection[data-kp-selection-open] .kp-selection__actions {
+            display: flex;
+        }
+    }
+
+    .kp-datatable__loading {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The card layout's sort control is for the card layout only: in the
+ * table shape the headers sort, and a second control would be a second
+ * way to say the same thing [gap-13]. */
+    .kp-datatable__card-sort {
+        display: none;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A refresh keeps the old rows, dimmed, so the page does not jump; a
+ * first load has no rows and shows the loading slot instead. */
+    .kp-datatable[aria-busy='true'] .kp-table tbody {
+        opacity: var(--kp-datatable-busy-opacity, 0.55);
+    }
+

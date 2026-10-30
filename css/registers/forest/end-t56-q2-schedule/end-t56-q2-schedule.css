@@ -1,0 +1,25 @@
+/* @part: end-t56-q2-schedule: end t56-q2 schedule */
+/* ── end t56-q2 schedule ── */
+
+/* ── graph loading · shape 3 · The mushroom ring: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='forest'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: color-mix(in oklch, var(--primary) 9%, var(--card));
+        --kp-graph-load-font: var(--theme-font-display);
+        --kp-graph-load-size: 13px;
+        --kp-graph-load-cap: round;
+        --kp-graph-load-edge-w: 1.6;
+        --kp-graph-load-edge-mix: 45%;
+        --kp-graph-load-dash: 3 4;
+        --kp-graph-load-ring: color-mix(in oklch, var(--foreground) 80%, var(--card));
+        --kp-graph-load-ring-w: 2;
+        --kp-graph-load-ring-fill: var(--card);
+        --kp-graph-load-core-op: 1;
+        --kp-graph-load-node-mix: 65%;
+    }
+
+    [data-theme='forest'] .kp-graph[data-kp-state='loading'] .kp-graph__core {
+        r: 7px;
+    }
+}
+

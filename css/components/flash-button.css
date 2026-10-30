@@ -1,0 +1,105 @@
+/* @part: flash-button: The flash button */
+    /* --- The flash button [kpadopt5] ---
+ * A button that shows busy, then its result for a moment, without its width moving (js/flash.js). The faces share one
+ * grid cell (rest, busy) plus an unseen copy of every word the button may say, so the widest holds the width; the
+ * result is a tone plate laid over the whole button, so it reads on any theme's button. A refusal's sentence stands in
+ * `.kp-flash__line` under the button until the next press. Knobs [KT6]: `--kp-flash-line-min` (1.5rem, the room a
+ * line keeps so nothing under it moves). */
+    .kp-flash {
+        position: relative;
+    }
+
+    .kp-flash__stack {
+        display: inline-grid;
+        justify-items: center;
+        align-items: center;
+        max-inline-size: 100%;
+    }
+
+    .kp-flash__stack > * {
+        grid-area: 1 / 1;
+    }
+
+    .kp-flash__face {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        text-align: center;
+        visibility: hidden;
+    }
+
+    .kp-flash__face--busy {
+        --kp-spinner-size: 1em;
+        white-space: nowrap;
+    }
+
+    .kp-flash[data-kp-flash-state='rest'] .kp-flash__face--rest,
+    .kp-flash[data-kp-flash-state='busy'] .kp-flash__face--busy {
+        visibility: visible;
+    }
+
+    .kp-flash__ghost {
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-flash__face--result {
+        position: absolute;
+        inset: 0;
+        grid-area: auto;
+        padding-inline: inherit;
+        border-radius: inherit;
+        white-space: nowrap;
+    }
+
+    .kp-flash[data-kp-flash-state='success'] .kp-flash__face--result {
+        visibility: visible;
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-flash[data-kp-flash-state='refused'] .kp-flash__face--result {
+        visibility: visible;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* `grow` (a refusal on the button sets it, or a page by hand): the button is as wide as what it says. At rest and busy
+       it is its own face, with no unseen words holding extra width; while the result stands, the result is the face and
+       takes the room its sentence needs. Before [findings-1019] the rest and busy faces were gone for good, so a hand-set
+       `grow` was an empty button. */
+    .kp-flash[data-kp-width='grow'] .kp-flash__ghost {
+        display: none;
+    }
+
+    .kp-flash[data-kp-width='grow']:is([data-kp-flash-state='success'], [data-kp-flash-state='refused'])
+        .kp-flash__stack
+        > :is(.kp-flash__face--rest, .kp-flash__face--busy) {
+        display: none;
+    }
+
+    .kp-flash[data-kp-width='grow']:is([data-kp-flash-state='success'], [data-kp-flash-state='refused']) .kp-flash__face--result {
+        position: static;
+        grid-area: 1 / 1;
+        white-space: normal;
+    }
+
+    .kp-flash[aria-busy='true'] {
+        cursor: progress;
+    }
+
+    .kp-flash__line {
+        min-block-size: var(--kp-flash-line-min, 1.5rem);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-flash__line[data-kp-tone='destructive'] {
+        color: var(--destructive);
+    }

@@ -1,0 +1,190 @@
+/* @part: pointing-answers-for-every: Collapsed, the lists nested in the open panel are its own rows and do  */
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open panel are its own rows and do not split again. */
+        [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-cyberpunk-split-bar 480ms steps(1, end) backwards;
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-cyberpunk-split-bar-back 480ms steps(1, end) reverse forwards;
+            }
+
+            /* The toggle is the part that changes state (its plate turns cyan): a signal changing
+               splits, so it plays the same four poses as the panel it opens, in step with it. */
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__toggle {
+                --kp-cp-wide: var(--kp-cp-wide-ctl);
+                --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+                --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+                --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+                --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__toggle {
+                animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__toggle {
+                animation: kp-sig-cyberpunk-split-back 480ms steps(1, end) reverse forwards;
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='cyberpunk'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    @keyframes kp-cp-charge {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(100cqi);
+        }
+    }
+
+    @keyframes kp-cp-stream-144 {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(144 * var(--kp-cp-px)));
+        }
+    }
+
+    @keyframes kp-cp-stream-216 {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(216 * var(--kp-cp-px)));
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; Kenny: leave = split, 2026-10-07]. js/motion.js
+       marks what leaves `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one halfway through this one. The leave is the channel split of an
+       arrival, played the other way round: the part stands with its two copies 1, 2, 4 and then
+       6 px out, four ticks of 120 ms, and is gone with the last (a part never outlives its own
+       leave: the last pose is held until it is removed). */
+    @media (prefers-reduced-motion: no-preference) {
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='cyberpunk'] {
+            --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, the empty state, a
+               file row, a tree branch's children, a swapped tab panel, a re-shown alert)
+               leaves first, as it arrives (js/motion.js leavesState(), lessons 19, 23-26);
+               what takes no box arrives as nothing; the space a leave folds shut takes the
+               leave's own four ticks and starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            /* ...and takes its turn only among its own siblings: an unrelated part drawn in the
+               same task must not hold the busy layer back one stagger (js/motion.js arriveInTurn()). */
+            --kp-arrive-turn: siblings;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+            /* ...in the split's four ticks (js/motion.js foldCurve()), so the space is never
+               held for a leave and dropped in one step at its end. */
+            --kp-leave-fold-ease: steps(4, end);
+            /* A tab swap: the new panel's fold is one tick behind the old one's (the old holds
+               48, 36, 24, 12; the new is 0, 12, 24, 36), so the two add up to one panel and the
+               box under them stays where it is (lesson 25). */
+            --kp-swap-fold-ease: steps(4, start);
+        }
+
+        [data-theme='cyberpunk'] [data-kp-leaving] {
+            animation: kp-sig-cyberpunk-split-out 480ms steps(1, end) forwards;
+        }
+    }
+
+    /* Information that updates in place, this theme's way [Kenny, 2026-10-07
+       02:49 on research/cyberpunk-live: "Count-down stutter", replacing the
+       glitch and settle of research/update-motion]. js/update.js writes the
+       new value at once and marks the element `[data-kp-updating]` with this
+       register's `--kp-update` while the keyframes play. Two neon copies of
+       the value, yellow right and up, cyan right and down, stand behind it
+       and come home in four ticks (6, 4, 2, 1 px, then gone) over 480 ms;
+       the value itself stays sharp on top and never moves. The copies are
+       the value's own text-shadow, unblurred: the same glyphs, painted under
+       the text, so a state word keeps its width-holding ::after and a cell
+       its alignment, and no copy of the text is written anywhere. ── */
+    [data-theme='cyberpunk'] {
+        --kp-update: stutter;
+    }
+
+    /* A chart takes its new point at once: the split is the value's
+       (update() reads the idea on the svg). */
+    [data-theme='cyberpunk'] svg {
+        --kp-update: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* 480 ms at --kp-motion-scale 1 (eight ticks of 60 ms), so a page's slow motion
+           slows it too. Not read from the dialog's entrance any more: that one is the
+           channel split's 720 ms, and the stutter is the same four ticks of 120 ms. Hard
+           ticks, as every cyberpunk frame motion. */
+        [data-theme='cyberpunk'] [data-kp-updating='stutter'] {
+            animation: kp-sig-cyberpunk-update-stutter 480ms steps(1, end) both;
+            animation-duration: calc(480ms * var(--kp-motion-scale, 1));
+        }
+
+        /* The cyan copy is listed first, so it lies over the yellow where the
+           two cross, as in the demo. */
+        @keyframes kp-sig-cyberpunk-update-stutter {
+            0% {
+                text-shadow:
+                    6px 4px 0 var(--accent),
+                    6px -4px 0 var(--primary);
+            }
+
+            25% {
+                text-shadow:
+                    4px 3px 0 var(--accent),
+                    4px -3px 0 var(--primary);
+            }
+
+            50% {
+                text-shadow:
+                    2px 2px 0 var(--accent),
+                    2px -2px 0 var(--primary);
+            }
+
+            75% {
+                text-shadow:
+                    1px 1px 0 var(--accent),
+                    1px -1px 0 var(--primary);
+            }
+
+            to {
+                text-shadow: none;
+            }
+        }
+    }
+
+    /* Reduced motion: nothing moves. The copies stand 2 px right and 1 px up
+       and down, in the same colours, for 1.2 s and go; the value never moves. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='cyberpunk'] [data-kp-updating='stutter'] {
+            animation: kp-sig-cyberpunk-update-still 1200ms steps(1, end);
+        }
+
+        @keyframes kp-sig-cyberpunk-update-still {
+            0%,
+            to {
+                text-shadow:
+                    2px 1px 0 var(--accent),
+                    2px -1px 0 var(--primary);
+            }
+        }
+    }
+

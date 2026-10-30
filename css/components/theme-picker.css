@@ -1,0 +1,189 @@
+/* @part: theme-picker: The theme picker */
+    /* --- The theme picker ---------------------------------------------- */
+
+    /* The swatch previews a theme without activating it, by wearing that
+ * theme's own token block. `data-theme` works on any element, not only on
+ * <html>, so the two custom properties below resolve to the previewed
+ * theme's colours — the live ones, not a copy [AR11]. */
+    .kp-swatch {
+        display: inline-block;
+        inline-size: 1rem;
+        block-size: 1rem;
+        flex: none;
+        border-radius: 50%;
+        border: 1px solid var(--border-strong);
+        background: linear-gradient(135deg, var(--background) 50%, var(--primary) 50%);
+    }
+
+    [data-kp-theme-picker] {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-picker-gap, 0.25rem);
+    }
+
+    /* A picker written as a list is a list of options, not a bulleted list
+       [gap-12]: the options lose the browser's 40px indent and its markers.
+       `:where` keeps this at one attribute's weight, so .kp-menu — which is
+       a list too, later in this file — still sets its own padding. */
+    :where(ul, ol)[data-kp-theme-picker] {
+        padding-inline-start: 0;
+        list-style: none;
+    }
+
+    /* Grouped light and dark [TH63]. A group is a list item that presents a
+ * small label and its own list, so a flat picker becomes two short rows
+ * with a title each, and a menu becomes two sections with a rule between
+ * them. The label is aria-hidden because the inner list carries it as
+ * its accessible name; a screen reader hears "Light, list, 6 items". */
+    [data-kp-theme-picker] .kp-theme-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-picker-gap, 0.25rem);
+        flex-basis: 100%;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .kp-theme-group__list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-picker-gap, 0.25rem);
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .kp-theme-group__label {
+        display: block;
+        font-size: var(--kp-picker-group-size, 0.6875rem);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    /* The second group starts with a rule: a separator, not a gap. */
+    .kp-theme-group + .kp-theme-group {
+        margin-block-start: var(--kp-picker-gap, 0.25rem);
+        padding-block-start: var(--kp-picker-gap, 0.25rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    [data-kp-theme-picker] [data-kp-theme] {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.625rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    /* Every transition in this file takes its timing from the theme, not from
+ * a number typed here [HA2]. --fx-duration and --fx-ease were declared by
+ * all eleven themes and used by nothing; the values differed and the
+ * behaviour did not. Terminal steps rather than eases, pastel overshoots,
+ * formal is brisk — that is the theme's handwriting, and
+ * it costs no extra CSS. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kp-theme-picker] [data-kp-theme] {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                border-color var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* Hover and the keyboard highlight are a WASH OF THE INK over whatever
+ * surface they sit on — --kp-highlight, default the foreground at 8% —
+ * not --accent. Seven rules read --accent for this until 3.1.0, and in
+ * every theme whose accent is a colour rather than a tint (brutalism's
+ * lavender, deco's emerald, woodblock's beni) a highlighted row turned that
+ * colour. Kenny saw it on the showcase [KT8]. A wash has no hue of its
+ * own, so it is quiet in all twenty-four by construction; a theme that
+ * wants more sets the knob. */
+    [data-kp-theme-picker] [data-kp-theme]:hover {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        color: inherit;
+    }
+
+    /* The selected option is marked twice over: the border carries it for
+ * everyone, and the check mark carries it for anyone who cannot see the
+ * border's colour [DI4]. Colour alone would be the only channel. */
+    /* --selected is a boundary colour, gated at 3:1 against the surfaces it
+ * is drawn on [DI1]. It is not a gated text background, so it stays a
+ * border here: filling the button with it would put --card-foreground on
+ * a pair nothing measures. */
+    [data-kp-theme-picker] [data-kp-theme][data-selected='true'],
+    [data-kp-theme-picker] [data-kp-theme].is-selected {
+        border-color: var(--selected);
+        box-shadow: inset 0 0 0 1px var(--selected);
+    }
+
+    [data-kp-theme-picker] [data-kp-theme][data-selected='true']::after,
+    [data-kp-theme-picker] [data-kp-theme].is-selected::after {
+        content: var(--kp-glyph-check, '✓');
+        font-size: 0.875em;
+    }
+
+    [data-kp-theme-status] {
+        margin: 0.5rem 0 0;
+        color: var(--destructive);
+        font-size: var(--kp-theme-status-size, 0.875rem);
+    }
+
+    /* anchors-picker-1019:picker-baseline:start */
+    /* --- The theme picker on a baseline [anchors-picker-1019; homelab 50] ------------------------------------------
+     * A theme button took its baseline from its swatch (an empty box, whose baseline is its bottom edge), so in a form row the
+     * button stood 9 px off its label. The button now takes the baseline of its own words and the swatch centres on them. A
+     * grouped picker drew its Light / Dark word above the first theme, which pushed that theme off the row's label line; now each
+     * group is one line, the themes from the control's start edge and the word at the line's end, in a column of its own (as wide
+     * as the widest word), on the baseline of the group's first theme. A picker inside a menu keeps its stacked sections. */
+    [data-kp-theme-picker]:not(.kp-menu) [data-kp-theme] {
+        align-items: baseline;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu) [data-kp-theme] > .kp-swatch {
+        align-self: center;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu):has(> .kp-theme-group) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: var(--kp-picker-label-gap, var(--kp-space-md, 0.75rem));
+        row-gap: var(--kp-picker-gap, 0.25rem);
+        align-items: first baseline;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu) > .kp-theme-group {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        flex-basis: auto;
+        align-items: first baseline;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu) > .kp-theme-group > .kp-theme-group__list {
+        grid-column: 1;
+        grid-row: 1;
+        min-inline-size: 0;
+    }
+
+    [data-kp-theme-picker]:not(.kp-menu) > .kp-theme-group > .kp-theme-group__label {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+    /* A theme menu does not replay its entrance while a theme is previewed [anchors-picker-1019]. A theme's menu enters with its own
+     * motion (synthwave's climbs in from below), and a preview changes the theme under the open menu: the menu would start again
+     * with the pointer on a button, the button would slide away from it, and the preview would end and start again. `!important`
+     * in this earlier layer beats the theme's register. */
+    [data-theme-preview-from] .kp-theme-menu :is(.kp-popover, .kp-menu, .kp-menu *) {
+        animation: none !important;
+        transition: none !important;
+    }
+    /* anchors-picker-1019:picker-baseline:end */
+

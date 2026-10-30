@@ -1,0 +1,24 @@
+/* @part: plain-card: Plain card */
+@layer kp.layout {
+    /* --- Plain card: a state host without its own frame [wish-1120, homelab 90] ---
+     * A `.kp-card[data-kp-state]` is a framed card, so one inside a section card drew a card in a card. With
+     * `data-kp-card="plain"` the host draws no border, shadow, plate, padding or decoration (the register's corner cut,
+     * glow, ::before / ::after marks) and the section around it is the only frame; the stage, the busy card and the
+     * empty / failed plates inside it are unchanged. In the layout layer so it wins over every register and signature
+     * without a specificity race. */
+    .kp-card[data-kp-card='plain'] {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+        clip-path: none;
+        backdrop-filter: none;
+    }
+
+    .kp-card[data-kp-card='plain']::before,
+    .kp-card[data-kp-card='plain']::after {
+        display: none;
+    }
+}
+

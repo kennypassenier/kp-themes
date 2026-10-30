@@ -1,0 +1,360 @@
+/* @part: used-by: "Used by" */
+@layer kp.components {
+    /* kpadopt6-media:uses:start */
+    /* --- "Used by": two columns joined by lines [kpadopt6-media] ---------------
+     * js/uses-map.js, the lines view of `kp-matrix` (`data-kp-view="lines"`). Sources on one side, the things that use them
+     * on the other; the lines are an SVG under the cards. A node lights its lines and dims the rest on hover or focus, a press
+     * pins it. Under `data-kp-lines-collapse-below` (640 px) the lines go and each source is a card listing its users.
+     * Knobs [KT6]: --kp-uses-gap (the room the lines cross, 16 %), --kp-uses-row-gap, --kp-uses-min (the map's least height,
+     * 18rem), --kp-uses-line (the line's width). */
+    .kp-matrix--lines {
+        overflow: visible;
+        min-block-size: var(--kp-uses-min, 18rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-uses {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(3rem, var(--kp-uses-gap, 16%)) minmax(0, 1fr);
+        grid-template-areas: 'sources . users';
+        align-items: start;
+    }
+
+    .kp-uses[hidden],
+    .kp-uses__list[hidden] {
+        display: none;
+    }
+
+    .kp-uses[data-kp-lines-side='sources-right'] {
+        grid-template-areas: 'users . sources';
+    }
+
+    .kp-uses__col {
+        display: grid;
+        gap: var(--kp-uses-row-gap, var(--kp-space-md, 0.75rem));
+        align-content: start;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-matrix--lines[data-kp-density='compact'] .kp-uses__col {
+        --kp-uses-row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-uses__col--sources {
+        grid-area: sources;
+    }
+
+    .kp-uses__col--users {
+        grid-area: users;
+    }
+
+    .kp-uses__lines {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+        pointer-events: none;
+    }
+
+    .kp-uses__line {
+        fill: none;
+        stroke: var(--border-strong);
+        stroke-width: var(--kp-uses-line, 1.5);
+    }
+
+    .kp-uses__line[data-kp-dashed] {
+        stroke-dasharray: 5 4;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__line {
+        opacity: 0.2;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__line[data-kp-hot] {
+        opacity: 1;
+        stroke-width: calc(var(--kp-uses-line, 1.5) * 1.5);
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__line[data-kp-hot]:not([data-kp-tone]) {
+        stroke: var(--primary);
+    }
+
+    /* A line with a tone [r3r5-1019 line-tone] (`cell()` returns `{ tone, label }`): the colour is never alone, each tone has
+     * its own pattern as well (ok solid, warn dashed, bad dotted and heavier, muted thin) and the label's plate carries the
+     * tone's mark. A lit line keeps its tone's colour. */
+    .kp-uses__line[data-kp-tone='ok'] {
+        stroke: var(--success-foreground);
+    }
+
+    .kp-uses__line[data-kp-tone='warn'] {
+        stroke: var(--warning-foreground);
+        stroke-dasharray: 8 4;
+    }
+
+    .kp-uses__line[data-kp-tone='bad'] {
+        stroke: var(--destructive);
+        stroke-width: calc(var(--kp-uses-line, 1.5) * 1.5);
+        stroke-dasharray: 1 5;
+        stroke-linecap: round;
+    }
+
+    .kp-uses__line[data-kp-tone='muted'] {
+        stroke: var(--muted-foreground);
+        stroke-width: calc(var(--kp-uses-line, 1.5) * 0.7);
+    }
+
+    /* The words on a line: a plate in the gap between the columns, as wide as the gap allows (`--kp-uses-tag-max`, set by
+     * js/uses-map.js) with its words wrapping, so it never covers a card. One that found no free place on its line shows
+     * while its line is lit. */
+    .kp-uses__tag {
+        --kp-uses-tag-tone: var(--border-strong);
+        position: absolute;
+        z-index: 1;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-inline-size: var(--kp-uses-tag-max, 6rem);
+        translate: -50% -50%;
+        padding: 0.125rem 0.375rem;
+        border: 1px solid var(--kp-uses-tag-tone);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.25;
+        overflow-wrap: break-word;
+        pointer-events: none;
+    }
+
+    :is(.kp-uses__tag, .kp-uses__chip)[data-kp-tone='ok'] {
+        --kp-uses-tag-tone: var(--success-foreground);
+    }
+
+    :is(.kp-uses__tag, .kp-uses__chip)[data-kp-tone='warn'] {
+        --kp-uses-tag-tone: var(--warning-foreground);
+    }
+
+    :is(.kp-uses__tag, .kp-uses__chip)[data-kp-tone='bad'] {
+        --kp-uses-tag-tone: var(--destructive);
+    }
+
+    :is(.kp-uses__tag, .kp-uses__chip)[data-kp-tone='muted'] {
+        --kp-uses-tag-tone: var(--muted-foreground);
+    }
+
+    .kp-uses__tag-mark {
+        flex: none;
+        font-weight: 700;
+    }
+
+    .kp-uses__tag-text {
+        min-inline-size: 0;
+    }
+
+    .kp-uses__tag[data-kp-uses-unplaced]:not([data-kp-hot]) {
+        visibility: hidden;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__tag:not([data-kp-hot]) {
+        opacity: 0.2;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__tag[data-kp-hot] {
+        z-index: 2;
+    }
+
+    .kp-uses__node {
+        position: relative;
+        z-index: 1;
+        display: flex;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__node:not([data-kp-hot]) {
+        opacity: 0.45;
+    }
+
+    .kp-uses__card {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: flex-start;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: 3.5rem;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-matrix--lines[data-kp-density='compact'] .kp-uses__card {
+        min-block-size: 2.5rem;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-uses__card:hover {
+        border-color: var(--border-strong);
+    }
+
+    .kp-uses__card[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    .kp-uses__card.kp-skeleton {
+        block-size: 4.25rem;
+        border-color: transparent;
+    }
+
+    .kp-uses__node:has(> .kp-uses__open) .kp-uses__card {
+        padding-inline-end: 2.75rem;
+    }
+
+    .kp-uses__text {
+        display: grid;
+        gap: 2px;
+        min-inline-size: 0;
+    }
+
+    .kp-uses__label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__sub,
+    .kp-uses__count {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__count {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-uses__open {
+        position: absolute;
+        inset-block-start: var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        display: grid;
+        place-items: center;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        color: var(--link, var(--primary));
+        text-decoration: none;
+        opacity: 0.6;
+    }
+
+    .kp-uses__node:hover .kp-uses__open,
+    .kp-uses__node:focus-within .kp-uses__open {
+        opacity: 1;
+    }
+
+    .kp-uses__node[data-kp-ghost] .kp-uses__card,
+    .kp-uses__group[data-kp-ghost] {
+        border-style: dashed;
+        background: transparent;
+        opacity: 0.75;
+    }
+
+    .kp-uses__node[data-kp-tone='bad'] .kp-uses__card {
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    .kp-uses__node[data-kp-tone='warn'] .kp-uses__card {
+        border-inline-start: 3px solid var(--warning);
+    }
+
+    .kp-uses__node[data-kp-tone='ok'] .kp-uses__card {
+        border-inline-start: 3px solid var(--success);
+    }
+
+    .kp-uses__state {
+        display: grid;
+        min-block-size: var(--kp-uses-min, 18rem);
+    }
+
+    .kp-uses__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* The phone's list: every source a card, its users as chips (links when they have one). */
+    .kp-uses__list {
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-uses__group {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-uses__group-head {
+        display: grid;
+        gap: 2px;
+        margin: 0;
+    }
+
+    .kp-uses__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-uses__chip {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 2.25rem;
+        padding: 0 var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__chip[data-kp-tone] {
+        border-color: var(--kp-uses-tag-tone);
+    }
+
+    .kp-uses__chip-tag {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-uses__chip-link {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 2.25rem;
+        margin-inline: calc(-1 * var(--kp-space-md, 0.75rem));
+        padding-inline: var(--kp-space-md, 0.75rem);
+        color: var(--link, var(--primary));
+        text-decoration: none;
+    }
+    /* kpadopt6-media:uses:end */
+}
+

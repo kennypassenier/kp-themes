@@ -1,0 +1,144 @@
+/* @part: identity-mark: Identity mark */
+    /* --- Identity mark ------------------------------------------------- */
+
+    /* Two letters on a plate tinted from the chart palette, its edge in the
+     * same colour; or (`--pattern`) the palette colour as ground with a 5 by 5
+     * mirrored pattern of the name in the card colour. js/mark.js picks the
+     * colour, letters and pattern from the name, so a name looks the same on
+     * every page. Decorative: the name always stands beside it. Knobs:
+     * --kp-idmark-size, --kp-idmark-radius, --kp-idmark-tint (18 %),
+     * --kp-idmark-colour (written per mark), --kp-idmark-overlap. */
+    .kp-idmark {
+        --kp-idmark-s: var(--kp-idmark-size, 2rem);
+        --kp-idmark-c: var(--kp-idmark-colour, var(--muted-foreground));
+        position: relative;
+        flex: none;
+        display: inline-grid;
+        place-items: center;
+        inline-size: var(--kp-idmark-s);
+        block-size: var(--kp-idmark-s);
+        box-sizing: border-box;
+        overflow: visible;
+        border: 1px solid var(--kp-idmark-c);
+        border-radius: var(--kp-idmark-radius, min(var(--radius, 0.5rem), calc(var(--kp-idmark-s) * 0.28)));
+        background: color-mix(in oklab, var(--kp-idmark-c) var(--kp-idmark-tint, 18%), var(--card));
+        color: var(--card-foreground);
+        font-family: var(--font-sans, inherit);
+        font-size: calc(var(--kp-idmark-s) * 0.4);
+        font-weight: 650;
+        font-variant-numeric: normal;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        text-transform: none;
+        vertical-align: middle;
+        user-select: none;
+        print-color-adjust: exact;
+    }
+
+    .kp-idmark--xs {
+        --kp-idmark-s: var(--kp-idmark-size, 1.25rem);
+    }
+
+    .kp-idmark--sm {
+        --kp-idmark-s: var(--kp-idmark-size, 1.5rem);
+    }
+
+    .kp-idmark--lg {
+        --kp-idmark-s: var(--kp-idmark-size, 2.75rem);
+    }
+
+    .kp-idmark--xl {
+        --kp-idmark-s: var(--kp-idmark-size, 3.5rem);
+    }
+
+    .kp-idmark--round {
+        border-radius: 50%;
+    }
+
+    .kp-idmark__letters {
+        display: block;
+        pointer-events: none;
+    }
+
+    /* The pattern: the colour as ground, the cells in the card colour. */
+    .kp-idmark--pattern {
+        overflow: hidden;
+        background: var(--kp-idmark-c);
+    }
+
+    .kp-idmark--pattern .kp-idmark__letters {
+        display: none;
+    }
+
+    .kp-idmark__pattern {
+        display: none;
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        fill: var(--kp-idmark-ink, var(--card));
+    }
+
+    .kp-idmark--pattern .kp-idmark__pattern {
+        display: block;
+    }
+
+    /* The corner glyph (`--glyph`): a small shape in the mark's colour on its
+     * top end corner, one of four by the name, so two marks of one colour
+     * still differ. Not on the extra-small mark. */
+    .kp-idmark--glyph::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(var(--kp-idmark-s) * -0.09);
+        inset-inline-end: calc(var(--kp-idmark-s) * -0.09);
+        inline-size: calc(var(--kp-idmark-s) * 0.24);
+        block-size: calc(var(--kp-idmark-s) * 0.24);
+        background: var(--kp-idmark-c);
+        box-shadow: 0 0 0 1.5px var(--card);
+    }
+
+    .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        border-radius: 50%;
+    }
+
+    .kp-idmark--glyph[data-kp-idmark-glyph='triangle']::after {
+        box-shadow: none;
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .kp-idmark--glyph[data-kp-idmark-glyph='diamond']::after {
+        rotate: 45deg;
+        scale: 0.8;
+    }
+
+    .kp-idmark--xs.kp-idmark--glyph::after {
+        content: none;
+    }
+
+    /* No name: a quiet plate with a question mark, never a made-up colour. */
+    .kp-idmark[data-kp-idmark-empty] {
+        border-style: dashed;
+        border-color: var(--border-strong, var(--border));
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    /* The current one in a list: a ring outside the plate, kept off the
+     * neighbours by the halo of the card colour. */
+    .kp-idmark[aria-current]:not([aria-current='false']),
+    .kp-idmark[data-kp-idmark-selected] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary);
+    }
+
+    /* Loading: the plate's own size and corner, pulsing (`.kp-skeleton`). */
+    .kp-idmark.kp-skeleton {
+        border-color: transparent;
+        background: var(--muted);
+    }
+
+    .kp-idmark.kp-skeleton > * {
+        visibility: hidden;
+    }
+

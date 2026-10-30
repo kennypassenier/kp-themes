@@ -1,0 +1,56 @@
+/* @part: layout: The side navigation chooses its opener */
+/* The side navigation chooses its opener [sidenav-opener-M1]: the fixed
+   launcher, the edge tab, or both (data-kp-sidenav-opener on the panel, over
+   and push only). js/sidenav.js marks the box the choice turns off
+   (`-opener-off`) and the box it keeps (`-opener-on`), and writes the panel's
+   `data-kp-sidenav-launched` only while a launcher is drawn, so the header
+   gets the launcher's room back with a tab. The boxes are not drawn, which
+   takes them out of the tab order and the accessibility tree as well. The
+   rule sits in the layout layer so no register's `display` can bring a
+   turned-off box back. The default is the tab (Kenny, 2026-10-14): a panel
+   without the attribute counts as `tab` where the page has a
+   `.kp-sidenav__tab`, and keeps its launcher where it has none. Before the
+   module has run (the first paint) the markup alone decides: a page whose
+   panel asks for one opener, or takes the default, starts without the other,
+   so nothing flashes and then goes. Panels in side mode
+   and the collapsed rail are left as they are. */
+@layer kp.layout {
+    [data-kp-sidenav-opener-off] {
+        display: none;
+    }
+
+    :root:has(
+            .kp-sidenav:not([data-kp-sidenav-opener='launcher'], [data-kp-sidenav-opener='both']):is(
+                    [data-kp-sidenav-mode='over'],
+                    [data-kp-sidenav-mode='push'],
+                    [data-kp-sidenav-over-below]
+                ):not([data-kp-sidenav-slim-collapsed])
+        ):has(.kp-sidenav__tab)
+        .kp-sidenav__launcher:not([data-kp-sidenav-opener-on]),
+    :root:has(
+            .kp-sidenav[data-kp-sidenav-opener='launcher']:is(
+                    [data-kp-sidenav-mode='over'],
+                    [data-kp-sidenav-mode='push'],
+                    [data-kp-sidenav-over-below]
+                ):not([data-kp-sidenav-slim-collapsed])
+        )
+        .kp-sidenav__tab:not([data-kp-sidenav-opener-on]) {
+        display: none;
+    }
+
+    /* The page element that keeps the launcher's room gives it back when no
+       launcher is drawn: only the tab is (the module marks a kept launcher
+       `-opener-on`; before it has run, the markup's `tab` says so). The room
+       was the launcher's, and without one it is only a gap beside the title. */
+    :root:has(
+            .kp-sidenav:not([data-kp-sidenav-opener='launcher'], [data-kp-sidenav-opener='both']):is(
+                    [data-kp-sidenav-mode='over'],
+                    [data-kp-sidenav-mode='push'],
+                    [data-kp-sidenav-over-below]
+                ):not([data-kp-sidenav-slim-collapsed])
+        ):has(.kp-sidenav__tab):not(:has(.kp-sidenav__launcher[data-kp-sidenav-opener-on]))
+        [data-kp-sidenav-launcher-room] {
+        padding-inline-start: revert-layer;
+    }
+}
+

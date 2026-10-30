@@ -1,0 +1,82 @@
+/* @part: the-hooks: The hooks */
+    /* ── The hooks [S45]: the mark, the rule, the divider ─────────────── */
+
+    /* Plain prose emphasis (the lede's marks): a gold underline, always
+   visible — this is not the reveal mechanism, only the dossier's jewel
+   redactions are. No covering rule exists for a bare mark, so the effects
+   module's loose-mark stagger has nothing to hide (anatomy.md). */
+    [data-theme='deco'] .kp-lede mark {
+        background: transparent;
+        color: var(--primary);
+        font-weight: 600;
+        font-style: normal;
+        box-shadow: inset 0 -2px 0 var(--border-strong);
+        padding: 0 0.1em;
+    }
+
+    /* The rule: a double gold line drawn left to right under a heading,
+   once, when it enters the viewport — reused from css/_rules.css's own
+   @keyframes kp-rule-in (the base layer's "draw" answer), at the demo's
+   own literal 600ms rather than the base's calc(--fx-duration * 4). */
+    [data-theme='deco'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        block-size: 2px;
+        margin-block-start: 0.4rem;
+        background: linear-gradient(to right, var(--primary), transparent 85%);
+        transform-origin: left center;
+        transform: scaleX(1);
+    }
+
+    [data-theme='deco'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        transform: scaleX(0);
+    }
+
+    /* The divider: the double rule (CSS `border-style: double`) with a
+   lozenge at its centre — the razor tear, this theme's answer. */
+    [data-theme='deco'] [data-kp-divider] {
+        position: relative;
+        display: block;
+        block-size: 2.4rem;
+        margin-block: 0;
+        border-block: 3px double var(--border-strong);
+    }
+
+    [data-theme='deco'] [data-kp-divider]::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 0.9rem;
+        height: 0.9rem;
+        background: var(--background);
+        border: 1px solid var(--primary);
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    [data-theme='deco'] [data-kp-divider='alt']::before {
+        background: var(--card);
+        border-color: var(--accent);
+        width: 0.7rem;
+        height: 0.7rem;
+    }
+
+    /* ── The hero ──────────────────────────────────────────────────────── */
+
+    [data-theme='deco'] [data-kp-surface='hero'] {
+        position: relative;
+        padding-block: 2.2rem 3.4rem;
+    }
+
+    [data-theme='deco'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+        gap: clamp(2rem, 5vw, 3.5rem);
+        align-items: start;
+    }
+
+    @container (max-width: 62rem) {
+        [data-theme='deco'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+            grid-template-columns: 1fr;
+        }
+    }
+

@@ -1,0 +1,124 @@
+/* @part: on-this-page: On this page */
+@layer kp.components {
+    /* --- On this page: contents list with scroll-spy [wish-1120, homelab 95] (js/page-contents.js) ---
+     * A column of entries on one grid: the label takes the room, the count (when the page gives one) stands at the end in tabular
+     * figures. The entry the reader is in has a bar on its start edge and the heavier weight; the others are muted. Levels nest by
+     * indent. `kp-contents--sticky` keeps the list in view beside a long page (`--kp-contents-top`, 5rem). Knobs [KT6]:
+     * --kp-contents-top, --kp-contents-indent (1rem). */
+    .kp-contents {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        align-content: start;
+        min-inline-size: 0;
+    }
+
+    .kp-contents[hidden] {
+        display: none;
+    }
+
+    .kp-contents--sticky {
+        position: sticky;
+        inset-block-start: var(--kp-contents-top, 5rem);
+        max-block-size: calc(100vh - var(--kp-contents-top, 5rem) - 1rem);
+        overflow: auto;
+    }
+
+    .kp-contents__title {
+        margin: 0;
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        text-transform: none;
+    }
+
+    .kp-contents__list {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-contents__item {
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .kp-contents__link {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: baseline;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-control-height, 2.25rem);
+        padding-block: var(--kp-space-xs, 0.25rem);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        padding-inline-start: calc(var(--kp-space-sm, 0.5rem) + var(--kp-level, 0) * var(--kp-contents-indent, 1rem));
+        border-inline-start: 2px solid transparent;
+        color: var(--muted-foreground);
+        text-decoration: none;
+        overflow-wrap: anywhere;
+        align-content: center;
+    }
+
+    .kp-contents__item[data-kp-level='1'] {
+        --kp-level: 1;
+    }
+
+    .kp-contents__item[data-kp-level='2'] {
+        --kp-level: 2;
+    }
+
+    .kp-contents__item[data-kp-level='3'] {
+        --kp-level: 3;
+    }
+
+    .kp-contents__link:hover {
+        color: var(--foreground);
+        background: var(--muted);
+    }
+
+    .kp-contents__link:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: -2px;
+    }
+
+    .kp-contents__link[data-kp-current] {
+        color: var(--foreground);
+        font-weight: 600;
+        border-inline-start-color: var(--primary);
+    }
+
+    .kp-contents__count {
+        font-variant-numeric: tabular-nums;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-contents__wait {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-contents__wait[hidden] {
+        display: none;
+    }
+
+    .kp-contents__bone {
+        block-size: 1rem;
+    }
+
+    .kp-contents[data-kp-state='loading'] > .kp-contents__list {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-contents__link {
+            transition:
+                color var(--fx-duration, 150ms) var(--fx-ease, ease-out),
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease-out);
+        }
+    }
+}
+

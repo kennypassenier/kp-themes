@@ -1,0 +1,458 @@
+/* @part: form-grid: A JSON field is a size container, and a container gives the row no */
+    /* A JSON field is a size container, and a container gives the row no
+       baseline: its label is set on the centre of the field's tool row
+       instead, which is the field's first line. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > :is(.kp-formgrid__label, .kp-formrow__label) {
+        align-self: start;
+        padding-block-start: calc(
+            (
+                    var(
+                            --kp-tools-height,
+                            var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))))
+                        ) -
+                        1lh
+                ) /
+                2
+        );
+    }
+
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > :is(.kp-formgrid__control, .kp-formrow__control) {
+        align-self: start;
+    }
+
+    /* A JSON field's tool row is its first line, so the row's own action (the actions column) stands on that line, not
+       on the field's top [formgrid-notes-1019; chassis-rs]: "Send test" in the actions column is centred on the line
+       of Format, Minify, Wrap and Copy, whatever its own height. The cell is exactly one tool row high and centres its
+       button on it (a taller button overflows evenly), so the row's height stays the field's. Stacked, the action
+       falls below the field as before. */
+    .kp-formgrid :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield) > .kp-formgrid__actions {
+        align-self: start;
+        align-items: center;
+        block-size: var(
+            --kp-tools-height,
+            var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))))
+        );
+    }
+
+    /* The row's hint or default (the value column) stands on that line too, its first line centred like the label. */
+    .kp-formgrid
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > :is(.kp-formgrid__value, .kp-formrow__aside) {
+        align-self: start;
+        padding-block-start: calc(
+            (
+                    var(
+                            --kp-tools-height,
+                            var(--kp-button-height-sm, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))))
+                        ) -
+                        1lh
+                ) /
+                2
+        );
+    }
+
+    @container kp-formgrid (max-width: 36rem) {
+        .kp-formgrid:not([data-kp-formgrid-stack='never'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+            > .kp-formgrid__actions {
+            block-size: auto;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+            > :is(.kp-formgrid__value, .kp-formrow__aside) {
+            padding-block-start: 0;
+        }
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always']
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > .kp-formgrid__actions {
+        block-size: auto;
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always']
+        :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+        > :is(.kp-formgrid__value, .kp-formrow__aside) {
+        padding-block-start: 0;
+    }
+
+    /* Control widths per kind: a field fills the track, a short control one
+       fixed step. */
+    .kp-formgrid
+        :is(.kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span])
+        > :is(
+            .kp-field__input,
+            select,
+            textarea,
+            .kp-combobox,
+            .kp-secret,
+            .kp-code,
+            .kp-command,
+            .kp-jsonfield,
+            .kp-type-confirm,
+            .kp-segmented--block,
+            .kp-formgrid__fill
+        ) {
+        justify-self: stretch;
+        inline-size: 100%;
+        max-inline-size: none;
+    }
+
+    .kp-formgrid
+        :is(.kp-formgrid__control, .kp-formrow__control)
+        > :is(.kp-quantity, .kp-time, input[type='number'], input[type='time'], input[type='date'], .kp-field__input--short, .kp-formgrid__short) {
+        --kp-time-width: var(--kp-formgrid-short, 14rem);
+        justify-self: start;
+        inline-size: min(100%, var(--kp-formgrid-short, 14rem));
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-quantity {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        /* Never squeezed under its unit, but never wider than the short step either: a stepper whose words needed 225.2 px
+           ended 1.2 px past the date picker's 224 px box, and short controls end on one edge [alignrest-1019]. */
+        min-inline-size: min(max-content, var(--kp-formgrid-short, 14rem));
+    }
+
+    /* A date picker is a short control too [gapform-1019; AuDHD 41]: its input box is the short step, so it ends on the
+       edge where a stepper's, a time field's and a number's box end, and the calendar button stands after it. In a
+       .kp-formgrid__short the box was the step minus the button, and ended 50 px short of the stepper above it; straight
+       in the control cell it filled the whole track. The panel still hangs from the picker's start. */
+    /* A stepper in a short wrapper fills the step, so it ends where the other short controls end [alignrest-1019]. */
+    .kp-formgrid .kp-formgrid__short > .kp-quantity {
+        inline-size: 100%;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control) > .kp-formgrid__short:has(> .kp-datepicker) {
+        inline-size: auto;
+        max-inline-size: 100%;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-datepicker {
+        display: grid;
+        grid-template-columns: minmax(0, var(--kp-formgrid-short, 14rem)) auto;
+        justify-content: start;
+        justify-self: start;
+        align-items: end;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        max-inline-size: 100%;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-datepicker > .kp-field__label {
+        grid-column: 1 / -1;
+    }
+
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-datepicker > :is(.kp-field__input, .kp-field) {
+        grid-column: 1;
+        inline-size: 100%;
+    }
+
+    /* A group of buttons in a cell: one line, one height, on the cell's
+       start edge (under the fields) or the actions column's end. */
+    .kp-formgrid :is(.kp-formgrid__control, .kp-formgrid__value, [data-kp-formgrid-span]) > .kp-formgrid__buttons,
+    .kp-formgrid .kp-formgrid__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* Changed, refused: the mark stays in the gap before the label. */
+    .kp-formgrid :is(.kp-formgrid__row)[data-kp-changed]::before,
+    .kp-formgrid :is(.kp-formgrid__row)[data-kp-state='error']::before {
+        content: '';
+        position: absolute;
+        inset-block: 0.25rem;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1);
+        inline-size: 2px;
+        background: var(--primary);
+    }
+
+    .kp-formgrid :is(.kp-formgrid__row)[data-kp-state='error']::before {
+        background: var(--destructive);
+    }
+
+    /* On a narrow grid (under 36rem of its own width) the rows stay on the grid's tracks, recomposed for a phone
+       (Kenny, 2026-10-19 11:22, phone: "Grid gebruiken, niet alles links alignen, maak het mooi!"; 17:20: "de knoppen
+       passen niet naast de tekst", "de inputs en de '- 4 files +' staan niet gecentreerd", "de input met 40 gebruikt niet
+       de hele breedte", "Save 2 changes en discard zijn ook lelijk links uitgelijnd") [formgrid-phone-1019]. Three lines:
+
+           label (and its note), the whole width        a button never stands beside wrapping text
+           control, the whole width                     a field, stepper, time, number: the track's width, contents centred
+           value ............................ | action  the hint on the tracks' start, the row's action in the actions track
+
+       A switch is the exception: its row reads label ........ switch (the switch ends in the actions track, on the edge
+       where every Reset ends), the value under them. The actions track keeps its own width through every row, so every
+       Reset has one width and ends on one edge. A fact and its value share a line (key in the label track, value from
+       the control edge). A row of buttons without a label: the buttons in equal columns on the first line (a pair is two
+       equal columns, never both left), the note centred under them, a lone action across the width. A group of buttons
+       is two equal columns (an odd last one across). data-kp-formgrid-stack="always" keeps the plain one-column reading
+       order. */
+    @container kp-formgrid (max-width: 36rem) {
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > :is(.kp-formgrid__label, .kp-formrow__label) {
+            grid-column: label-start / -1;
+            grid-row: auto;
+            min-inline-size: 0;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > :is(.kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span]) {
+            grid-column: label-start / -1;
+            grid-row: auto;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > :is(.kp-formgrid__value, .kp-formrow__aside) {
+            grid-column: label-start / value-end;
+            grid-row: auto;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(:has(> .kp-formgrid__actions > *))
+            > :is(.kp-formgrid__value, .kp-formrow__aside) {
+            grid-column: label-start / -1;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > .kp-formgrid__actions {
+            grid-column: -2 / -1;
+            grid-row: auto;
+            justify-self: end;
+        }
+
+        /* A row with an action: label and control each a line across the width, then the hint and the action on one line,
+           the action on the row's end edge (where every action ends) and the hint taking the rest, so the action keeps its
+           own width and never runs back over the hint. A compact grid's last track is flexible and can be 0 px wide on a
+           phone, so the action is not placed in it (Kitchen, tm-pick at 390: "Open the recipe" over the hint; st-calm:
+           the value over "Use default"). */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *) {
+            display: flex;
+            flex-wrap: wrap;
+            grid-column: label-start / -1;
+            column-gap: inherit;
+            row-gap: var(--kp-space-xs, 0.25rem);
+            align-items: center;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)
+            > :is(.kp-formgrid__label, .kp-formrow__label, .kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span]) {
+            flex: 1 0 100%;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)
+            > :is(.kp-formgrid__value, .kp-formrow__aside) {
+            flex: 1 1 0;
+            min-inline-size: 0;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):not(.kp-formgrid__row--buttons):has(> .kp-formgrid__actions > *)
+            > .kp-formgrid__actions {
+            /* After the hint whatever the source order (an action written before its hint stood on the start edge under
+               its label: Kitchen ck-begin, "Begin"). */
+            order: 1;
+            flex: 0 0 auto;
+            margin-inline-start: auto;
+        }
+
+        .kp-formgrid__actions > .kp-button {
+            min-inline-size: 6rem;
+        }
+
+        /* Rows, groups and headings run to the last line, the filler of a compact grid included. A fieldset or form that
+           stands in a row's control (tiles under a select) is that control's own content, not a block of the grid: it fills
+           the control, which has no label-start line [homelab 129]. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-formgrid__group, .kp-formrows, .kp-kv),
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(fieldset, form):not(:is(.kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span]) *),
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__group, fieldset:not(:is(.kp-formgrid__control, .kp-formrow__control, [data-kp-formgrid-span]) *))
+            > :is(legend, .kp-formgrid__heading) {
+            grid-column: label-start / -1;
+        }
+
+        /* An empty cell takes no line of its own. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > :is(.kp-formgrid__label, .kp-formrow__label, .kp-formgrid__value, .kp-formrow__aside, .kp-formgrid__actions):empty {
+            display: none;
+        }
+
+        /* A switch: label and switch on one line, the switch on the row's end edge, where every action ends. The row wraps
+           as text does: a switch whose own words do not fit beside the label goes to the next line (still on the end
+           edge) instead of squeezing them into a tall narrow column, and a label with a note stays centred on the switch
+           (Kitchen at 390: "Show digits beside the disc" 35 px off "Minutes as digits"; "No energy today" with its note
+           hanging 54.5 px under its switch; "Limit the wheel to what I can do" in four lines). */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child) {
+            display: flex;
+            flex-wrap: wrap;
+            grid-column: label-start / -1;
+            column-gap: inherit;
+            row-gap: var(--kp-space-xs, 0.25rem);
+            align-items: center;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child)
+            > :is(.kp-formgrid__label, .kp-formrow__label) {
+            flex: 1 1 8rem;
+            align-self: center;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child)
+            > :is(.kp-formgrid__control, .kp-formrow__control) {
+            flex: 0 1 auto;
+            margin-inline-start: auto;
+            align-self: center;
+            justify-items: end;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-switch:only-child)
+            > :is(.kp-formgrid__value, .kp-formrow__aside, .kp-formgrid__actions) {
+            flex: 1 0 100%;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow)
+            > :is(.kp-formgrid__control, .kp-formrow__control)
+            > .kp-switch:only-child {
+            justify-self: end;
+        }
+
+        /* Short controls take the track's whole width and centre what they show. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__control, .kp-formrow__control)
+            > :is(.kp-quantity, .kp-time, input[type='number'], input[type='time'], input[type='date'], .kp-field__input--short, .kp-formgrid__short) {
+            --kp-time-width: 100%;
+            justify-self: stretch;
+            inline-size: 100%;
+            max-inline-size: none;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) :is(.kp-formgrid__control, .kp-formrow__control, .kp-formgrid__short) > .kp-quantity {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            min-inline-size: 0;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-quantity__field {
+            justify-content: center;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-time {
+            display: block;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-time__control {
+            display: flex;
+            inline-size: 100%;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-time__input.kp-field__input {
+            padding-inline-start: 2.5rem;
+            text-align: center;
+        }
+
+        /* Every one-line field centres what it shows, so a column of fields reads as one centred column. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) :is(.kp-formgrid__control, .kp-formrow__control) > :is(input.kp-field__input, select.kp-field__input) {
+            text-align: center;
+            text-align-last: center;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-formgrid__short:has(> .kp-datepicker) {
+            inline-size: 100%;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-datepicker {
+            grid-template-columns: minmax(0, 1fr) auto;
+            justify-self: stretch;
+            inline-size: 100%;
+        }
+
+        /* Buttons in equal columns: a pair is two equal columns, four are two by two, an odd last one runs across. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-formgrid__buttons {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(max-content, 1fr));
+            justify-items: stretch;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-formgrid__buttons > .kp-button {
+            white-space: nowrap;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-formgrid__buttons > :only-child,
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-formgrid__buttons > :nth-child(odd):last-child {
+            grid-column: 1 / -1;
+        }
+
+        /* A row of buttons without a label: the buttons first, the note centred under them, a lone action across. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            .kp-formgrid__row--buttons:not(:has(> :is(.kp-formgrid__label, .kp-formrow__label):not(:empty)))
+            > :is(.kp-formgrid__value, .kp-formrow__aside) {
+            grid-column: label-start / -1;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            .kp-formgrid__row--buttons:not(:has(> :is(.kp-formgrid__label, .kp-formrow__label):not(:empty)))
+            > .kp-formgrid__actions {
+            grid-column: label-start / -1;
+        }
+
+        /* A fact and its value on one line. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always']) .kp-kv__row > dd {
+            grid-column: control-start / -1;
+        }
+
+        /* A JSON field's label stands on the label line, not on the field's tool row. */
+        .kp-formgrid:not([data-kp-formgrid-stack='never'], [data-kp-formgrid-stack='always'])
+            :is(.kp-formgrid__row, .kp-formrow):has(> :is(.kp-formgrid__control, .kp-formrow__control) > .kp-jsonfield)
+            > :is(.kp-formgrid__label, .kp-formrow__label, .kp-formgrid__actions) {
+            align-self: center;
+            padding-block-start: 0;
+        }
+    }
+
+    /* Stacked whatever the width: the same reading order, by the attribute. */
+    .kp-formgrid[data-kp-formgrid-stack='always'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always']
+        :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-formgrid__group, .kp-formrows, .kp-kv, fieldset, form, .kp-refresh, .kp-refresh__bar) {
+        grid-column: 1 / -1;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] :is(.kp-formgrid__group, fieldset) > :is(legend, .kp-formgrid__heading),
+    .kp-formgrid[data-kp-formgrid-stack='always'] :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row, .kp-refresh, .kp-refresh__bar) > *,
+    .kp-formgrid[data-kp-formgrid-stack='always'] :is(.kp-formgrid__row, .kp-formrow, .kp-kv__row) > [data-kp-formgrid-span] {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] .kp-formgrid__actions {
+        justify-content: flex-start;
+    }
+
+    .kp-formgrid[data-kp-formgrid-stack='always'] .kp-formgrid__actions > :only-child {
+        flex: 0 0 auto;
+    }
+

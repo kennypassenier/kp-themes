@@ -1,0 +1,57 @@
+/* @part: autogrow-textarea: A text box that grows with its text */
+@layer kp.components {
+    /* kpadopt6-media:autosize:start */
+    /* --- A text box that grows with its text [kpadopt6-media] ------------------
+     * js/autosize.js. An opt-in on the existing multiline field (`data-kp-autosize`): the field is exactly as tall as its
+     * text, between `rows` lines and `data-kp-autosize-max` (20), then it scrolls inside. Never animated: an animated height
+     * is a layout shift. Where the browser sizes a field to its content itself (`field-sizing`) it does, and the package
+     * only says the least and the most. Knobs [KT6]: --kp-autosize-min and --kp-autosize-max (set by the script, in px). */
+    .kp-autosize {
+        resize: vertical;
+    }
+
+    .kp-field__input--multiline.kp-autosize {
+        min-height: 0;
+        overflow-y: hidden;
+    }
+
+    .kp-autosize[data-kp-resize='none'] {
+        resize: none;
+    }
+
+    .kp-autosize[data-kp-autosize-engine-used='css'] {
+        field-sizing: content;
+        min-block-size: var(--kp-autosize-min, 0);
+        max-block-size: var(--kp-autosize-max, none);
+        overflow-y: auto;
+    }
+
+    .kp-autosize__frame {
+        position: relative;
+        display: block;
+    }
+
+    /* The counter: tabular numerals, a line of its own at the end, the same height whatever it says; the warning tone is a plate
+       of the warning pair, never a bare status colour. */
+    .kp-autosize__counter {
+        box-sizing: border-box;
+        inline-size: fit-content;
+        min-block-size: 1.5lh;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        margin-inline-start: auto;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.5;
+        text-align: end;
+    }
+
+    .kp-autosize__counter[data-kp-tone='warning'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+    /* kpadopt6-media:autosize:end */
+}
+

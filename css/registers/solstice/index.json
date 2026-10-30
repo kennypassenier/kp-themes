@@ -1,0 +1,75 @@
+{
+  "output": "css/solstice-register.css",
+  "items": [
+    {
+      "open": "/* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at\n   rest, 1 at the end of the unit. Registered so the browser can transition\n   them, at the top level because Firefox does not register an @property\n   inside a layer. */\n@property --kp-sig-solstice-point {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-solstice-press {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n/* A clock with nothing drawn on it: the bar's mega menu is held on screen\n   until a transition on its panel has played (js/components.js); this is\n   that transition, the length of the panel's close. */\n@property --kp-sig-solstice-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-hooks.css",
+        "nav.css",
+        "card.css",
+        "data.css",
+        "the-demos-own-pieces.css",
+        "motion.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* solstice's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/solstice.css and research/signature-elements/themes/solstice.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base/base.css",
+        "signature-base/g3s-dome-from-nothing-at-the.css",
+        "the-meter-with-a-mark-this.css",
+        "the-mark-past-the-end.css",
+        "pointing-and-pressing/base.css",
+        "pointing-and-pressing/review-round-3-kenny-2026-10.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "file": "the-kpadopt4-data-pieces.css"
+    },
+    {
+      "file": "the-uptime-strip-in-this.css"
+    },
+    {
+      "file": "rows-checks-choices.css"
+    },
+    {
+      "file": "flows-and-records-in-this.css"
+    },
+    {
+      "file": "the-ideas-in-this-theme.css"
+    },
+    {
+      "file": "the-recipe-components.css"
+    },
+    {
+      "file": "the-new-adoption-parts.css"
+    },
+    {
+      "file": "signature.css"
+    },
+    {
+      "file": "graph-loading-shape-1.css"
+    },
+    {
+      "file": "graph-loading-r3-d-sol.css"
+    }
+  ]
+}

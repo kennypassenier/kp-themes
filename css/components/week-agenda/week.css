@@ -1,0 +1,184 @@
+/* @part: week-agenda: .kp-week */
+    @container kp-week (max-width: 39.99rem) {
+        .kp-week__grid {
+            --kp-week-mode: list;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: none;
+            padding-block-end: 0;
+        }
+
+        .kp-week__title {
+            flex-basis: 100%;
+            font-size: var(--kp-week-title-size-narrow, 1.0625rem);
+        }
+
+        .kp-week__axis,
+        .kp-week__now,
+        .kp-week__more {
+            display: none;
+        }
+
+        .kp-week__day {
+            display: grid;
+            grid-template-columns: var(--kp-week-day-label, 5.5rem) minmax(0, 1fr);
+            column-gap: var(--kp-space-sm, 0.5rem);
+            align-items: start;
+            padding-block: var(--kp-space-sm, 0.5rem);
+            border-block-end: 1px solid var(--border);
+        }
+
+        .kp-week__head {
+            grid-row: auto;
+            grid-column: 1;
+            grid-template-columns: auto auto;
+            align-content: start;
+            padding: 0.125rem 0 0;
+        }
+
+        .kp-week__date {
+            display: inline;
+            grid-column: 1 / -1;
+            letter-spacing: 0;
+            text-transform: none;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .kp-week__today {
+            grid-column: 1 / -1;
+        }
+
+        .kp-week__col {
+            grid-row: auto;
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            gap: var(--kp-week-gap, 0.25rem);
+            /* --kp-week-hold: the height a day keeps while the week loads again (js/week.js holdRows()). */
+            min-block-size: max(var(--kp-week-pill, 1.5rem), var(--kp-week-hold, 0px));
+            border: 0;
+            background: none;
+        }
+
+        /* In rows the sentence stays in the items' column, clear of the day names it would otherwise run over. */
+        .kp-week__state {
+            inset-inline-start: calc(var(--kp-week-day-label, 5.5rem) + var(--kp-space-sm, 0.5rem));
+        }
+
+        .kp-week__day[data-kp-today] .kp-week__col {
+            background: none;
+        }
+
+        .kp-week__pill {
+            position: static;
+            inset: auto;
+            flex: none;
+        }
+    }
+
+    /* The upcoming list [kpadopt3] (`data-kp-week-upcoming="8"`, js/week.js): below 40rem the agenda lists its next items
+     * in place of the day rows, in the rows' own columns and rules: the day on the start side, named on the first row of
+     * each day, the item's own pill beside it. Wider it is not drawn. It keeps its height while the week loads again
+     * (--kp-week-hold, as a day row does). */
+    .kp-week__upcoming {
+        display: none;
+    }
+
+    @container kp-week (max-width: 39.99rem) {
+        .kp-week:has(> .kp-week__frame > .kp-week__upcoming) .kp-week__grid {
+            display: none;
+        }
+
+        .kp-week__upcoming {
+            display: grid;
+            min-block-size: var(--kp-week-hold, 0px);
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            align-content: start;
+        }
+
+        /* A loading list holds at least the busy card's panel, so the card has a data area to cover and centre on even when
+         * the list is empty or held short (a first load, one item): the held footprint wins when it is taller. */
+        .kp-week[data-kp-state='loading'] .kp-week__upcoming {
+            min-block-size: max(var(--kp-week-hold, 0px), 7.5rem);
+        }
+
+        /* While it loads, the list fills the whole held agenda (js/footprint.js holds the host at its loaded height), so
+         * the busy card laid over the list covers the data area rather than a short strip at its top [almanac, 2c3a5c6e]. */
+        .kp-week[data-kp-state='loading']:has(> .kp-week__frame > .kp-week__upcoming) {
+            grid-template-rows: auto minmax(0, 1fr) auto;
+        }
+
+        .kp-week[data-kp-state='loading']:not(:has(> .kp-week__nav)):has(> .kp-week__frame > .kp-week__upcoming) {
+            grid-template-rows: minmax(0, 1fr) auto;
+        }
+
+        .kp-week[data-kp-state='loading'] > .kp-week__frame:has(> .kp-week__upcoming) {
+            display: grid;
+        }
+
+        .kp-week__next {
+            display: grid;
+            grid-template-columns: var(--kp-week-day-label, 5.5rem) minmax(0, 1fr);
+            column-gap: var(--kp-space-sm, 0.5rem);
+            align-items: center;
+            padding-block: var(--kp-week-next-pad, 0.375rem);
+            border-block-end: 1px solid var(--border);
+        }
+
+        /* A run of the same day reads as one block: the rule falls only where the next day starts. */
+        .kp-week__next:has(+ .kp-week__next:not([data-kp-day-start])) {
+            border-block-end-color: transparent;
+        }
+
+        .kp-week__next[data-kp-day-start] {
+            padding-block-start: var(--kp-space-sm, 0.5rem);
+        }
+
+        .kp-week__next > .kp-week__pill {
+            grid-column: 2;
+            min-inline-size: 0;
+        }
+
+        /* The day on one line, as tall as a pill, so every row is a pill's height: the weekday and the date; today's
+         * says Today in the today colour in place of its weekday. */
+        .kp-week__next > .kp-week__head {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            min-block-size: var(--kp-week-pill, 1.5rem);
+            padding: 0;
+            white-space: nowrap;
+        }
+
+        .kp-week__next > .kp-week__head > .kp-week__today {
+            display: none;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        .kp-week__next[data-kp-today] > .kp-week__head {
+            color: var(--foreground);
+            font-weight: 600;
+        }
+
+        .kp-week__next[data-kp-today] > .kp-week__head > .kp-week__dow {
+            display: none;
+        }
+
+        .kp-week__next[data-kp-today] > .kp-week__head > .kp-week__today {
+            display: inline;
+            visibility: visible;
+            color: var(--kp-week-today, var(--primary));
+        }
+
+        .kp-week__none {
+            grid-column: 2;
+            display: flex;
+            align-items: center;
+            min-block-size: var(--kp-week-pill, 1.5rem);
+            color: var(--muted-foreground);
+            font-size: var(--kp-text-sm, 0.8125rem);
+        }
+    }
+

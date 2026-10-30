@@ -1,0 +1,184 @@
+/* @part: layout: One state plate for every area that can be empty or fail */
+/* One state plate for every area that can be empty or fail [state-plates-1019]: js/state-plate.js `hostStatePlate()` puts the
+ * package's plate into the component's own box (the heat grid and matrix, the run timeline, the week, the network graph, the data
+ * table), over the whole footprint the component has with its data, with a normal-size Retry on a failure. The rules live in the last
+ * layer because a register dresses `.kp-alert` and `.kp-empty` and beats kp.components. Knobs [KT6]: --kp-stateplate-floor (the least
+ * height of a plate with no loaded height to hold, 12rem), --kp-datatable-held (written by js/datatable.js). */
+@layer kp.layout {
+    .kp-stateplate__art {
+        display: block;
+        color: var(--muted-foreground);
+        font-size: 2.5rem;
+        line-height: 1;
+    }
+
+    .kp-stateplate--error .kp-stateplate__art {
+        color: inherit;
+    }
+
+    .kp-stateplate__art > svg {
+        display: block;
+        inline-size: 2.5rem;
+        block-size: 2.5rem;
+        margin-inline: auto;
+    }
+
+    /* The heat grid and the matrix: the plate is the whole box (js/footprint.js holds the loaded height on the host). */
+    .kp-heat:is([data-kp-state='empty'], [data-kp-state='error']),
+    .kp-matrix:is([data-kp-state='empty'], [data-kp-state='error']) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+        align-content: stretch;
+        align-items: stretch;
+    }
+
+    .kp-heat__state,
+    .kp-matrix__state {
+        display: grid;
+        grid-column: 1 / -1;
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+        color: inherit;
+        font-size: inherit;
+    }
+
+    .kp-heat__state > .kp-stateplate,
+    .kp-matrix__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* The network graph: an empty or failed network is the state plate over the whole picture. Loading is not a plate: it is the ghost
+       of the coming network drawn in the picture (`.kp-graph__ghost`, js/graph.js), moved by the register's decided loading picture. */
+    .kp-graph__state {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        border-radius: inherit;
+        background: var(--background);
+    }
+
+    .kp-graph__state[hidden] {
+        display: none;
+    }
+
+    .kp-graph__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* The run timeline and the week: the plate over the plot (below the axis) or the whole agenda. */
+    .kp-gantt__plate {
+        position: absolute;
+        /* The whole frame, axis included: the plate fills the data area's footprint, not what is left under the axis [states-check-1019]. */
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-gantt__plate[hidden],
+    .kp-week__plate[hidden] {
+        display: none;
+    }
+
+    .kp-week__plate {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        background: var(--kp-week-state-ground, var(--card));
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-week__frame:has(> .kp-week__plate:not([hidden])) {
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
+    /* A timeline held at its loaded height (js/footprint.js) gives the plate that whole height: the frame grows into what the
+     * toolbar and the legend leave, and the plate fills the frame [states-check-1019]. */
+    .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error'], :has(> .kp-gantt__frame > .kp-gantt__plate:not([hidden]))) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error'], :has(> .kp-gantt__frame > .kp-gantt__plate:not([hidden]))) > .kp-gantt__frame {
+        flex: 1 1 auto;
+        /* The plate's words, text and Retry need the plate's floor; a short timeline's frame was clipped to its lanes. */
+        min-block-size: var(--kp-stateplate-floor, 12rem);
+    }
+
+    /* Loading: the frame takes the held height too (no floor: the lanes it had are the height), so the busy card covers the whole data area [gaps-time-1019]. */
+    .kp-gantt[data-kp-state='loading'] {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-gantt[data-kp-state='loading'] > .kp-gantt__frame {
+        flex: 1 1 auto;
+    }
+
+    /* The busy card is laid on the whole timeline (js/gantt.js drawBusy), over the frame and what the held footprint holds below it. */
+    .kp-gantt:has(> .kp-gantt__busy) {
+        position: relative;
+    }
+
+    /* A week held at its loaded height (js/footprint.js) gives its plate that whole height: the frame grows into what the week's
+     * title bar leaves [gaps-time-1019]. */
+    .kp-week:is([data-kp-state='empty'], [data-kp-state='error'], :has(> .kp-week__frame > .kp-week__plate:not([hidden]))) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-week:is([data-kp-state='empty'], [data-kp-state='error'], :has(> .kp-week__frame > .kp-week__plate:not([hidden]))) > .kp-week__frame {
+        flex: 1 1 auto;
+    }
+
+    .kp-gantt__plate > .kp-stateplate,
+    .kp-week__plate > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* What the plate covers is not drawn behind it: the hour rules and the lanes of the timeline, the days of the week, the empty picture of the graph. */
+    .kp-gantt__frame:has(> .kp-gantt__plate:not([hidden])) :is(.kp-gantt__lines, .kp-gantt__plot, .kp-gantt__lane, .kp-gantt__track),
+    .kp-week__frame:has(> .kp-week__plate:not([hidden])) > :is(.kp-week__grid, .kp-week__upcoming),
+    .kp-graph:is([data-kp-state='empty'], [data-kp-state='error']) .kp-graph__svg {
+        visibility: hidden;
+    }
+
+    /* The data table: a failed table, or one with nothing to show, covers its rows and the plate fills the height the table had. */
+    /* A card's empty note has the failed note's air (24 px), not the plate's 32, so both fit the stage a short list leaves them. */
+    .kp-card__state > .kp-card__empty.kp-stateplate {
+        padding: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-datatable > [data-kp-state-covered] {
+        display: none;
+    }
+
+    .kp-datatable > :is([data-kp-datatable-empty], [data-kp-datatable-failed]).kp-stateplate {
+        min-block-size: max(var(--kp-stateplate-floor, 12rem), min(var(--kp-datatable-held, 0px), var(--kp-footprint-max, 48rem)));
+        /* The host is held at its loaded height (js/footprint.js): the plate takes what the toolbar and the pager leave [states-check-1019]. */
+        flex: 1 1 auto;
+    }
+
+    /* The sentence a page wrote in the empty slot is body text; its title (`.kp-empty__title`) is the plate's heading. */
+    .kp-datatable > [data-kp-datatable-empty].kp-stateplate {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-datatable > [data-kp-datatable-empty].kp-stateplate :is(.kp-empty__title, .kp-stateplate__title) {
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        font-weight: 600;
+    }
+
+    .kp-datatable > [data-kp-datatable-failed] > [data-kp-datatable-failed-reason] {
+        margin: 0;
+    }
+
+    /* A group of uptime strips that load together has ONE busy card over the group (js/uptime.js groupHost). */
+    [data-kp-uptime-group] {
+        position: relative;
+    }
+}
+

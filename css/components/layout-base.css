@@ -1,0 +1,6 @@
+/* @part: layout-base: opening of the layout block */
+    .kp-logviewer__stage > .kp-logviewer__plate {
+        position: absolute;
+        inset: 0;
+    }
+    /* gap-activity-feed:feed:start */

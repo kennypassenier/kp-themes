@@ -1,0 +1,322 @@
+/* @part: the-navbar: C. The navbar */
+    /* ── C. The navbar [G3, G6, G8, G12, G14] ───────────────────────────────────────────────
+       The bar is a holo plate: its yellow ground with the scan lines at 135 degrees, cut by the
+       14 px notch at the dossier corner. It is drawn on a pseudo-element, not on the bar,
+       because a clip on the bar would cut its dropdowns with it. */
+    [data-theme='cyberpunk'] .kp-nav::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background:
+            repeating-linear-gradient(135deg, hsl(from var(--surface-hero-fg) h s l / 0.06) 0 2px, transparent 2px 6px), var(--surface-hero-bg);
+        clip-path: var(--kp-cp-clip-plate);
+    }
+
+    /* The bar arrives by the channel split as one picture, plate and links together (the copies
+       are drawn by `filter`, which sees what the notch cut), and a bar that leaves goes as that
+       played backwards, held on its last pose until it is removed. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-nav {
+            animation: kp-sig-cyberpunk-split-bar 480ms steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-nav-wrap, .kp-nav)[data-kp-leaving] {
+            animation: kp-sig-cyberpunk-split-bar-out 480ms steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-nav-wrap[data-kp-leaving] > .kp-nav {
+            animation: none;
+        }
+    }
+
+    /* The bar's leave: the arrival's four poses in the other order, the last held until the bar is
+       gone, so no frame of it is the bare bar. */
+    @keyframes kp-sig-cyberpunk-split-bar-out {
+        0% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+        }
+
+        25% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+        }
+
+        50% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+        }
+
+        75%,
+        100% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+        }
+    }
+
+    /* Pointing, focus and press on the bar's links, its brand, the pagination and the phone
+       toggle are the theme's own: the split edge (cyan along the head and the end, red along the
+       foot, 6 px settling to 2 px in four ticks), four closing brackets in two channels, and the
+       closed circuit while held; none of them moves the part. The brackets and the grid are
+       background layers, because a link's two pseudo-elements are its caret and its glitch copy. */
+    [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button)) {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-grid-a: 0;
+        position: relative;
+        box-shadow:
+            inset 0 calc(-1 * var(--kp-cp-d)) 0 0 color-mix(in srgb, var(--destructive) calc(var(--kp-cp-p) * 100%), transparent),
+            inset calc(-1 * var(--kp-cp-d)) var(--kp-cp-d) 0 0 color-mix(in srgb, var(--accent) calc(var(--kp-cp-p) * 100%), transparent);
+        background-image:
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            repeating-linear-gradient(to bottom, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        background-size:
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            100% 100%,
+            100% 100%;
+        background-position:
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            0 0,
+            0 0;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__brand {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        margin: -0.25rem -0.5rem;
+    }
+
+    [data-theme='cyberpunk']
+        :is(
+            .kp-nav__link:hover,
+            .kp-nav__links > li:hover > .kp-nav__link,
+            .kp-nav__brand:hover,
+            .kp-pagination :is(a, button):hover:not(:disabled, [aria-disabled='true'])
+        ) {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button)):focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button)):active:not(:disabled, [aria-disabled='true']) {
+        --kp-cp-grid-a: 0.6;
+        background-color: var(--secondary);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link.kp-nav__link--cta:active:not(:disabled, [aria-disabled='true']) {
+        background-color: var(--primary-active);
+    }
+
+    /* The phone bar's toggle is a cut control: its split edge follows the cut (a ring between the
+       cut and the cut moved in, as on a button) and the cut is drawn with its own line. */
+    [data-theme='cyberpunk'] .kp-nav__toggle {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-ct: 0px;
+        --kp-cp-cb: var(--kp-cp-notch-sm);
+        --kp-cp-grid-a: 0;
+        --kp-cp-ring: polygon(
+            evenodd,
+            0 0,
+            calc(100% - var(--kp-cp-ct)) 0,
+            100% var(--kp-cp-ct),
+            100% calc(100% - var(--kp-cp-cb)),
+            calc(100% - var(--kp-cp-cb)) 100%,
+            0 100%,
+            0 0,
+            0 var(--kp-cp-d),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d))) var(--kp-cp-d),
+            calc(100% - var(--kp-cp-d)) max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d)),
+            calc(100% - var(--kp-cp-d)) calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))) calc(100% - var(--kp-cp-d)),
+            0 calc(100% - var(--kp-cp-d)),
+            0 var(--kp-cp-d)
+        );
+        position: relative;
+        isolation: isolate;
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image:
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(135deg, transparent calc(50% - 1px), var(--border-strong) calc(50% - 1px)),
+            repeating-linear-gradient(to bottom, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        background-size:
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            var(--kp-cp-notch-sm) var(--kp-cp-notch-sm),
+            100% 100%,
+            100% 100%;
+        background-position:
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right bottom,
+            0 0,
+            0 0;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: linear-gradient(0deg, var(--destructive) 0 var(--kp-cp-d), var(--accent) var(--kp-cp-d));
+        clip-path: var(--kp-cp-ring);
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:hover {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:active {
+        --kp-cp-grid-a: 0.6;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button), .kp-nav__toggle) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-nav__link:hover,
+                .kp-nav__links > li:hover > .kp-nav__link,
+                .kp-nav__brand:hover,
+                .kp-pagination :is(a, button):hover:not(:disabled, [aria-disabled='true']),
+                .kp-nav__toggle:hover
+            ) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button), .kp-nav__toggle):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-nav__link:hover,
+                .kp-nav__links > li:hover > .kp-nav__link,
+                .kp-nav__brand:hover,
+                .kp-pagination :is(a, button):hover:not(:disabled, [aria-disabled='true']),
+                .kp-nav__toggle:hover
+            ):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+    }
+

@@ -1,0 +1,155 @@
+/* @part: the-navbar: The navbar */
+    /* ── The navbar: a strip on paper, ruled off with the one line weight ── */
+
+    [data-theme='brutalism'] .kp-nav-wrap {
+        background: var(--background);
+        border-bottom: var(--kp-line) solid var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-nav {
+        background: var(--background);
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1));
+        position: relative;
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
+    }
+
+    [data-theme='brutalism'] .kp-nav__brand {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        font-size: 1.45rem;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        line-height: 1;
+        color: var(--foreground);
+        text-decoration: none;
+    }
+
+    [data-theme='brutalism'] .kp-nav__links {
+        gap: 0.35rem;
+        align-items: center;
+    }
+
+    [data-theme='brutalism'] .kp-nav__link {
+        display: block;
+        padding-inline: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        border: var(--kp-line) solid transparent;
+        border-radius: 0;
+        background: none;
+        text-decoration: none;
+    }
+
+    /* Pointing at it inverts it [G8, Kenny 2026-10-07 23:44]; the current
+       one and the one with focus are the yellow hand. */
+    [data-theme='brutalism'] .kp-nav__link:focus-visible,
+    [data-theme='brutalism'] .kp-nav__link[aria-current],
+    [data-theme='brutalism'] .kp-nav__links > li:focus-within > .kp-nav__link {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-nav__link:hover {
+        background: var(--foreground);
+        color: var(--secondary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='brutalism'] .kp-nav__link[aria-haspopup]::after {
+        content: ' ▾';
+    }
+
+    [data-theme='brutalism'] .kp-nav__link--lang {
+        margin-inline-start: 0.5rem;
+        padding-inline-start: 0.7rem;
+        border-inline-start: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+    }
+
+    [data-theme='brutalism'] .kp-nav__link--lang:hover,
+    [data-theme='brutalism'] .kp-nav__link--lang:focus-visible {
+        border-inline-start-color: var(--border-strong);
+    }
+
+    /* The call to action: the ink plate with the yellow ink and the shadow;
+       pointed at it inverts (yellow plate, ink words), focus lifts it under
+       the ring, a press drives it onto its footprint [G8, G14]. */
+    [data-theme='brutalism'] .kp-nav__link--cta {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--border-strong);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-nav__link--cta:hover {
+        background: var(--primary-foreground);
+        color: var(--primary);
+    }
+
+    [data-theme='brutalism'] .kp-nav__link--cta:focus-visible {
+        translate: -2px -2px;
+        box-shadow: var(--kp-shadow-up);
+    }
+
+    [data-theme='brutalism'] .kp-nav__link--cta:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
+            var(--kp-shadow-up);
+    }
+
+    [data-theme='brutalism'] .kp-nav__link--cta:active {
+        background: var(--primary-active);
+        color: var(--primary-foreground);
+        translate: var(--kp-drop) var(--kp-drop);
+        box-shadow: none;
+    }
+
+    /* The dropdown snaps: white, the line, the shadow — no fade, no blur. */
+    [data-theme='brutalism'] .kp-nav__menu {
+        background: var(--popover);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+        padding: 0.3rem 0;
+        min-width: 12rem;
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    [data-theme='brutalism'] .kp-nav__menu a {
+        display: block;
+        padding-inline: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--popover-foreground);
+        text-decoration: none;
+        border-radius: 0;
+    }
+
+    [data-theme='brutalism'] .kp-nav__menu a:focus-visible {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-nav__menu a:hover {
+        background: var(--foreground);
+        color: var(--secondary);
+    }
+

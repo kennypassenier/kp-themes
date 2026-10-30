@@ -1,0 +1,114 @@
+/* @part: the-mark-past-the-end: the mark past the end */
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='titanium'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '▸';
+    }
+
+    [data-theme='titanium'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='titanium'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-meter__mark {
+            transition:
+                inset-inline-start 300ms var(--kp-sig-ti-ease),
+                rotate 300ms var(--kp-sig-ti-ease);
+        }
+    }
+
+    @keyframes kp-sig-titanium-meter-grow-o {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes kp-sig-titanium-meter-jolt-d {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-titanium-meter-jolt-o {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-titanium-meter-jolt-w {
+        0% {
+            translate: 0 0;
+        }
+
+        20% {
+            translate: -2px 0;
+        }
+
+        40% {
+            translate: 2px 0;
+        }
+
+        60% {
+            translate: -1px 0;
+        }
+
+        80% {
+            translate: 1px 0;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+

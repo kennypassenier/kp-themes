@@ -1,0 +1,61 @@
+/* @part: live-change-lays-a-growth: A live change lays a growth ring round it */
+    /* ── A live change lays a growth ring round it [G8; Kenny, 2026-10-07:
+       "a growth ring is laid round what changed"]. js/update.js writes the
+       new value at once and marks the element `[data-kp-updating='ring']`;
+       a thin ring in the acting green is drawn round it once, clockwise from
+       the top, on the growth curve in 55 % of the time, then it fades, in
+       all 1000 ms (the theme's update time, themeMotion(), times 0.8). The
+       value, the word, the line never move. A spark's ring is a circle
+       round its last reading. A state word keeps its width-holding ::after,
+       so its ring is drawn on ::before. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] {
+            --kp-update: ring;
+        }
+
+        /* The ring is positioned against the updated element; one that is
+           already positioned (the tour's card is fixed) keeps its own. */
+        [data-theme='forest'] [data-kp-updating='ring']:not(.kp-tour) {
+            position: relative;
+        }
+
+        [data-theme='forest'] [data-kp-updating='ring']:not(.kp-state-word)::after,
+        [data-theme='forest'] .kp-state-word[data-kp-updating='ring']::before {
+            content: '';
+            position: absolute;
+            inset: -4px -8px;
+            border: 1.5px solid var(--primary);
+            border-radius: 999px;
+            mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-forest-update-ring calc(var(--kp-update-duration, 1250ms) * 0.8) linear both;
+        }
+
+        [data-theme='forest'] [data-kp-updating='ring']:has(> svg)::after {
+            inset: -12% -3% auto auto;
+            inline-size: 1.5rem;
+            block-size: 1.5rem;
+            border-radius: 50%;
+        }
+    }
+
+    @keyframes kp-sig-forest-update-ring {
+        0% {
+            --kp-fo-arc: 0deg;
+            opacity: 1;
+            animation-timing-function: var(--kp-sig-fo-grow);
+        }
+
+        55% {
+            --kp-fo-arc: 360deg;
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        100% {
+            --kp-fo-arc: 360deg;
+            opacity: 0;
+        }
+    }
+

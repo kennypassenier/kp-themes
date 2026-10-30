@@ -1,0 +1,321 @@
+/* @part: auto-refresh: The automatic refresh chooser */
+@layer kp.components {
+    /* kpadopt5-ops:auto-refresh:start */
+    /* --- The automatic refresh chooser [kpadopt5-ops] -------------------------------
+     * js/auto-refresh.js. A choice ("Every 30 s", a menu or segments, plus Other… for any
+     * number of seconds), the freshness line and Refresh now on one row; a thin rule under
+     * it runs down to the next refresh; a failed refresh says so under it with Retry now.
+     * The words "updated 12 s ago" and "updating…" stand in one cell, so the line keeps its
+     * width whichever is shown. Knobs [KT6]: --kp-refresh-ms (written by the script: the
+     * time to the next refresh), --kp-refresh-rule (the rule's thickness, 2px). */
+    .kp-refresh {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    /* The chooser may be narrower than its segments, so the track scrolls along its own line
+       (data-kp-segmented-overflow) and never pushes the card wider [t56-sharedfix-1018]. */
+    .kp-refresh__chooser {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    /* A grid, not a flex row [align-grid-1019; HTTPSwitchboard gap 24, almanac the same]: chooser | freshness | Refresh
+     * now, each in its own track, so inside a .kp-formgrid the bar becomes a subgrid and "Refresh now" stands in the
+     * actions column of the rows around it. The chooser's track scrolls (above) and the line wraps, so nothing needs to
+     * wrap onto a second row. */
+    .kp-refresh__bar {
+        display: grid;
+        /* The freshness track is never narrower than its words [gapform-1019; HTTPSwitchboard 30]: at minmax(0, 1fr) a bar in
+           a narrow column on a wide screen (homelab settings, 436 px at 1280) gave it no width at all, and "not updated yet"
+           ran under "Refresh now". The chooser gives way instead; its track scrolls. */
+        grid-template-columns: minmax(0, auto) minmax(min-content, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-formgrid > .kp-refresh,
+    .kp-formgrid__group > .kp-refresh {
+        grid-column: label-start / actions-end;
+        grid-template-columns: subgrid;
+        /* The grid's column gap, not the refresh's own 0.75rem: the chooser starts on the same edge as every other control
+           [formgrid-notes-1019; homelab 54]. */
+        column-gap: inherit;
+    }
+
+    .kp-formgrid :is(.kp-refresh) > :not(.kp-refresh__bar) {
+        grid-column: control-start / actions-end;
+    }
+
+    .kp-formgrid .kp-refresh > .kp-refresh__bar {
+        grid-column: label-start / actions-end;
+        grid-template-columns: subgrid;
+        column-gap: inherit;
+    }
+
+    /* A label for the refresh [formgrid-notes-1019; homelab 52]: data-kp-refresh-label draws it as the bar's first cell. On its own
+       it is a heading line above the bar; in a form grid it stands in the label track of the row, so the chooser, the
+       freshness line and Refresh now stand beside it on the control, value and actions tracks, on one first baseline. */
+    .kp-refresh__label {
+        grid-column: 1 / -1;
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+    }
+
+    /* A title in the bar's grid [wish-1028; almanac 21]: data-kp-refresh-title (or a slot) is the bar's first cell, so the title, the chooser,
+       the freshness line and Refresh now stand on one row in four tracks. With a label as well, the title is the heading line over
+       the whole bar. In a form grid it takes the label track. --kp-refresh-title-width sizes the track (max-content). */
+    .kp-refresh__title {
+        min-inline-size: 0;
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+    }
+
+    .kp-refresh__title > [data-kp-refresh-slot='title'][hidden] {
+        display: none;
+    }
+
+    .kp-refresh:where(:not(.kp-formgrid .kp-refresh)) > .kp-refresh__bar:where(:has(> .kp-refresh__title):not(:has(> .kp-refresh__label))) {
+        grid-template-columns: minmax(0, var(--kp-refresh-title-width, max-content)) minmax(0, auto) minmax(min-content, 1fr) auto;
+    }
+
+    .kp-refresh__bar > .kp-refresh__title:has(~ .kp-refresh__label) {
+        grid-column: 1 / -1;
+    }
+
+    .kp-formgrid .kp-refresh__bar:has(> .kp-refresh__title) {
+        align-items: first baseline;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__title {
+        grid-column: label;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__title:has(~ .kp-refresh__label) {
+        grid-column: label-start / actions-end;
+    }
+
+    .kp-formgrid .kp-refresh__bar:has(> .kp-refresh__label) {
+        align-items: first baseline;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__label {
+        grid-column: label;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__chooser {
+        grid-column: control;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__line {
+        grid-column: value;
+    }
+
+    .kp-formgrid .kp-refresh__bar > .kp-refresh__now {
+        grid-column: actions;
+        justify-self: stretch;
+    }
+
+    /* A title with no label, in a form grid [wish-1028]: the form's value track is far narrower than "updated 12 s ago", so the bar keeps its
+       own four tracks (title | chooser | freshness | Refresh now) and the package's column gap, as it does outside a grid. */
+    .kp-formgrid .kp-refresh > .kp-refresh__bar:has(> .kp-refresh__title):not(:has(> .kp-refresh__label)) {
+        grid-template-columns: minmax(0, var(--kp-refresh-title-width, max-content)) minmax(0, auto) minmax(min-content, 1fr) auto;
+        column-gap: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-formgrid .kp-refresh > .kp-refresh__bar:has(> .kp-refresh__title):not(:has(> .kp-refresh__label)) > * {
+        grid-column: auto;
+    }
+
+    @container kp-formgrid (max-width: 36rem) {
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) :is(.kp-refresh, .kp-refresh__bar) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) :is(.kp-refresh, .kp-refresh__bar) > * {
+            grid-column: 1;
+            justify-self: start;
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) .kp-refresh > .kp-refresh__bar:has(> .kp-refresh__title):not(:has(> .kp-refresh__label)) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-formgrid:not([data-kp-formgrid-stack='never']) .kp-refresh > .kp-refresh__bar:has(> .kp-refresh__title):not(:has(> .kp-refresh__label)) > * {
+            grid-column: 1;
+        }
+    }
+
+    .kp-refresh__button {
+        white-space: nowrap;
+    }
+
+    /* The menu hangs from the button's start edge: the chooser stands at the start of its row. */
+    .kp-refresh__menu > .kp-menu {
+        inset-inline: 0 auto;
+    }
+
+    .kp-refresh__line {
+        display: inline-grid;
+        align-items: center;
+    }
+
+    .kp-refresh__line > * {
+        grid-area: 1 / 1;
+    }
+
+    .kp-refresh__busy {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-refresh__busy[hidden] {
+        display: block;
+        visibility: hidden;
+    }
+
+    .kp-refresh__line[data-kp-busy] > .kp-refresh__ago {
+        visibility: hidden;
+    }
+
+    .kp-refresh__now {
+        white-space: nowrap;
+    }
+
+    .kp-refresh__count {
+        position: relative;
+        display: block;
+        block-size: var(--kp-refresh-rule, 2px);
+        background: var(--border);
+        overflow: hidden;
+    }
+
+    .kp-refresh__count::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left center;
+    }
+
+    .kp-refresh__count[data-kp-run]::before {
+        transform: scaleX(1);
+        animation: kp-refresh-run var(--kp-refresh-ms, 30s) linear forwards;
+    }
+
+    .kp-refresh[data-kp-paused] > .kp-refresh__count {
+        visibility: hidden;
+    }
+
+    @keyframes kp-refresh-run {
+        from {
+            transform: scaleX(1);
+        }
+
+        to {
+            transform: scaleX(0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-refresh__count[data-kp-run]::before {
+            animation: none;
+            transform: scaleX(0);
+        }
+    }
+
+    .kp-refresh__custom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-refresh__custom[hidden] {
+        display: none;
+    }
+
+    .kp-refresh__input {
+        inline-size: 7rem;
+    }
+
+    .kp-refresh__problem {
+        flex: 1 1 100%;
+        color: var(--destructive);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-refresh__problem:empty {
+        display: none;
+    }
+
+    .kp-refresh__failure {
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-refresh__failure[hidden] {
+        display: none;
+    }
+
+    .kp-refresh__note {
+        flex: 1 1 14rem;
+        min-inline-size: 0;
+        margin: 0;
+    }
+
+    /* kpadopt5-ops:auto-refresh:end */
+
+    /* stackbar-refresh-1019:refresh:start
+     * Two faults of the bar outside its own grid [homelab 30, almanac 22; N8, N12].
+     * 1. Its words start at the start. A centred ancestor (a card or a page with `text-align: center`) was inherited by the
+     *    freshness line and the label, so "updated 12 s ago" stood in the middle of its wide value track, off the edge the
+     *    chooser above and the rows around it start on. The bar says `start` itself.
+     * 2. It folds on a phone. Outside a `.kp-formgrid` the three tracks (chooser | freshness | Refresh now) had nothing to
+     *    fold on, so at 390 px the chooser and the button left the freshness line a zero-width track and "not updated yet"
+     *    ran under "Refresh now". Under 40rem the bar is one column, in the form grid's own reading order (chooser, line,
+     *    button), everything on the start edge. No size container (see .kp-snooze): the fold follows the viewport, and a
+     *    form grid keeps its own fold on its own width (above); data-kp-refresh-stack picks it by hand. */
+    .kp-refresh {
+        text-align: start;
+    }
+
+    .kp-refresh__line {
+        justify-items: start;
+    }
+
+    @media (max-width: 40rem) {
+        .kp-refresh:not(.kp-formgrid .kp-refresh, [data-kp-refresh-stack='never']) > .kp-refresh__bar {
+            grid-template-columns: minmax(0, 1fr);
+            justify-items: start;
+        }
+    }
+
+    /* The same fold, whatever the screen: data-kp-refresh-stack="always" (a narrow column on a wide screen), "never" keeps the
+       row, "auto" (the default) is the fold above. Read by CSS alone, like data-kp-formgrid-stack. */
+    .kp-refresh[data-kp-refresh-stack='always']:not(.kp-formgrid .kp-refresh) > .kp-refresh__bar {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+    }
+    /* stackbar-refresh-1019:refresh:end */
+
+    /* stackbar-refresh-1019:formgrid-start:start
+     * A form grid reads from the start too (found while measuring the refresh's start edge): a label inherited a centred parent's
+     * `text-align: center`, so "Name" stood in the middle of the label track while "Auto-refresh" filled it, two edges for one
+     * column. One `start` on the grid, which every cell inherits. */
+    .kp-formgrid {
+        text-align: start;
+    }
+    /* stackbar-refresh-1019:formgrid-start:end */
+}
+

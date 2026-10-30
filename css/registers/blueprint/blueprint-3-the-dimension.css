@@ -1,0 +1,164 @@
+/* @part: blueprint-3-the-dimension: blueprint · 3 · the dimension line */
+    /* ── blueprint · 3 · the dimension line ── */
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 0.875rem;
+        --kp-sig-meter-mo-ink: var(--warning);
+        border-radius: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 50% / 100% 1px no-repeat;
+    }
+
+    /* The measured length, drawn flat: the pen's stroke has no arrowhead.
+       One box carries everything the reading is made of, as layers, so the
+       share, the pen that reads it and the pointers all move on one set of
+       numbers: it spans the track and 8 px past each end (the pen's carriage
+       runs inside it) and reaches from the carriage's top to 10 px below the
+       track. In it, from the front: the pen, the amber pointer the pen reads
+       with (lifted when the reading is done), the tone's pointer under the
+       track in the tone's ink, and the share (the fill, inked as far as the
+       pen has read: --kp-bp-rp). The share is --kp-value clamped to the track;
+       --kp-bp-ms is that number. */
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-bp-ms: clamp(0, var(--kp-value, 0), 1);
+        --kp-bp-rp: 1;
+        --kp-bp-rv: 0;
+        --kp-bp-pv: 0;
+        --kp-bp-nib: 0;
+        --kp-bp-px: calc(var(--kp-bp-rp) * var(--kp-bp-ms));
+        --kp-bp-py: 0.0714;
+    }
+
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before {
+        --kp-bp-c-read: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+        --kp-bp-c-tone: hsl(from var(--kp-meter-fill-colour) h s l / calc(var(--kp-bp-sv) * (1 - var(--kp-bp-rv))));
+        --kp-bp-pointer: conic-gradient(from 135deg at 50% 0, var(--kp-bp-c-read) 90deg, transparent 0);
+        inset-block: calc(var(--kp-meter-height) / 2 - 9px) auto;
+        inset-inline: -8px;
+        inline-size: auto;
+        block-size: 23px;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image:
+            var(--kp-bp-pen-img), var(--kp-bp-pointer), conic-gradient(from 135deg at 50% 0, var(--kp-bp-c-tone) 90deg, transparent 0),
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour));
+        background-size:
+            var(--kp-bp-pen-size),
+            9px 6px,
+            9px 6px,
+            calc(var(--kp-bp-px) * (100% - 16px)) calc(var(--kp-meter-height) - 2px);
+        background-position:
+            var(--kp-bp-pen-pos),
+            calc(var(--kp-bp-px) * 100% + 3.5px - var(--kp-bp-px) * 7px) calc(9px + var(--kp-meter-height) / 2 + 1px),
+            calc(var(--kp-bp-ms) * 100% + 3.5px - var(--kp-bp-ms) * 7px) calc(9px + var(--kp-meter-height) / 2 + 1px),
+            8px calc(10px - var(--kp-meter-height) / 2);
+    }
+
+    /* The reading is laid out from the left; a right-to-left sheet mirrors the
+       whole box (it is symmetric about the track), so the share starts at the
+       start edge and the pen runs the way the reader does. */
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter):dir(rtl)::before {
+        scale: -1 1;
+    }
+
+    /* A tone is pointed out on the track's own scale: a pointer under the
+       track at the reading, in the tone's ink (a warning, a failure). It comes
+       up on the feed when the tone is set. */
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter):is([data-kp-tone='warning'], [data-kp-tone='destructive']),
+    [data-theme='blueprint'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__meter {
+        --kp-bp-sv: 1;
+    }
+
+    /* An amber leader with its ring. */
+    [data-theme='blueprint'] .kp-meter__mark {
+        inset-block: -6px -2px;
+        border-radius: 0;
+        background: var(--warning);
+        box-shadow:
+            0 0 0 1px var(--background),
+            0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='blueprint'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 6px;
+        block-size: 6px;
+        translate: -50% 0;
+        border: 1.5px solid var(--warning);
+        border-radius: 50%;
+        box-sizing: border-box;
+    }
+
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '↦';
+        inset-inline-start: calc(100% + 2px);
+        inset-block-start: 50%;
+        translate: 0 -55%;
+        color: var(--kp-meter-fill-colour);
+        font: 700 0.75rem/1 var(--theme-font-mono, monospace);
+    }
+
+    /* ── how the share arrives, and a new reading [arrival, live, leave] ──
+       A share is read out (Kenny, 2026-10-07 23:41): the pen is set down at the
+       start of the track, lowered, and runs along it to the reading on one
+       feed, inking the share as it goes and carrying an amber pointer on the
+       scale under it; at the end the pen is lifted and the amber with it, and
+       the tone's pointer, if there is one, stands in its place. The same
+       keyframes and the same three units as every part (kp-sig-blueprint-read);
+       a share that leaves plays them backwards. A new reading (a changed
+       --kp-value, a changed tone) is read again: the share and its pointers
+       slide to it on the feed in two units, the pointer standing under it the
+       whole way. ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter) {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear backwards;
+        }
+
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)[data-kp-leaving] {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear reverse forwards;
+        }
+
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before {
+            transition:
+                background-size calc(2 * var(--fx-duration)) var(--kp-sig-bp-feed),
+                background-position calc(2 * var(--fx-duration)) var(--kp-sig-bp-feed);
+        }
+
+        [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter) {
+            transition: --kp-bp-sv calc(2 * var(--fx-duration)) var(--kp-sig-bp-feed);
+        }
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '▸';
+    }
+
+    [data-theme='blueprint'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='blueprint'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-meter__mark {
+            transition:
+                inset-inline-start 500ms steps(5),
+                rotate 500ms steps(5);
+        }
+    }
+
+    /* <<character */

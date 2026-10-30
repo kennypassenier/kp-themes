@@ -1,0 +1,288 @@
+/* @part: tabbar: Bottom tab bar */
+    /* --- Bottom tab bar [kpadopt-nav] -------------------------------------- */
+
+    /* The phone's navigation: the frequent areas within thumb reach, then a
+ * More tab that opens a drawer (the homelab dashboard's `.nx-tabbar`, drawn
+ * by hand before this). Markup in js/tabbar.js. A `nav.kp-tabbar` holds
+ * `.kp-tabbar__tab`s, links or buttons, each an icon over a label; a count
+ * is a `.kp-badge.kp-tabbar__badge` at the icon's end corner (empty, it is a
+ * dot; `hidden`, it is gone, and the tab does not move). The current page is
+ * `aria-current="page"`, carried by a mark along the bar's top edge and a
+ * heavier label as well as the colour [DI4]. The More tab is a
+ * `data-kp-dialog` button; it reads as current (`aria-current="true"`, set by
+ * js/tabbar.js) while the drawer holds the current page.
+ *
+ * It shows below 40rem of window (the package's one step; a fixed bar answers
+ * to the window, not to a container). `kp-tabbar--wide` shows it below 60rem,
+ * where a dashboard's top bar has no room for its links either;
+ * `kp-tabbar--always` at every width; `kp-tabbar--static` leaves it in the
+ * flow, for a frame, a preview or a page that places the bar itself. Fixed, it
+ * stands on the bottom edge on its own layer (--kp-z-tabbar, 40: over the
+ * page and the bar, under back-to-top, dialogs and toasts), keeps the
+ * device's safe area (`env(safe-area-inset-*)`; the page needs
+ * `viewport-fit=cover`) and gives the page its height: the body keeps its last
+ * line clear, scrolling keeps a focused control clear (`scroll-padding`), and
+ * toasts and back-to-top rise by `--kp-tabbar-height`, which js/tabbar.js
+ * writes on the root while the bar is shown.
+ *
+ * A tab is at least 3rem high (the touch target). Knobs: --kp-tabbar-tab-height
+ * (3rem), --kp-tabbar-icon (1.5rem), --kp-tabbar-pad (0.25rem),
+ * --kp-tabbar-size (the label, --kp-text-xs), --kp-tabbar-safe-bottom (0px; the
+ * least safe area to keep, for a frame that simulates a home indicator),
+ * --kp-tabbar-duration (the mark, the theme's --fx-duration), --kp-z-tabbar. */
+    .kp-tabbar {
+        display: none;
+        box-sizing: border-box;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 1fr);
+        position: fixed;
+        inset: auto 0 0 0;
+        z-index: var(--kp-z-tabbar, 40);
+        padding-block: var(--kp-tabbar-pad, 0.25rem)
+            calc(var(--kp-tabbar-pad, 0.25rem) + max(env(safe-area-inset-bottom, 0px), var(--kp-tabbar-safe-bottom, 0px)));
+        padding-inline: max(var(--kp-tabbar-pad, 0.25rem), env(safe-area-inset-left, 0px))
+            max(var(--kp-tabbar-pad, 0.25rem), env(safe-area-inset-right, 0px));
+        background: var(--card);
+        color: var(--muted-foreground);
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    .kp-tabbar--static {
+        position: static;
+        inset: auto;
+    }
+
+    @media (max-width: 40rem) {
+        .kp-tabbar:not(.kp-tabbar--wide, .kp-tabbar--always) {
+            display: grid;
+        }
+
+        body:has(.kp-tabbar:not(.kp-tabbar--wide, .kp-tabbar--always, .kp-tabbar--static)) {
+            padding-block-end: var(--kp-tabbar-height, var(--kp-tabbar-room));
+        }
+    }
+
+    @media (max-width: 60rem) {
+        .kp-tabbar--wide {
+            display: grid;
+        }
+
+        body:has(.kp-tabbar--wide:not(.kp-tabbar--static)) {
+            padding-block-end: var(--kp-tabbar-height, var(--kp-tabbar-room));
+        }
+    }
+
+    .kp-tabbar--always {
+        display: grid;
+    }
+
+    body:has(.kp-tabbar--always:not(.kp-tabbar--static)) {
+        padding-block-end: var(--kp-tabbar-height, var(--kp-tabbar-room));
+    }
+
+    /* The room the bar will take, for the first paint and for a page without the
+ * script: the tab, the padding, the border and the safe area. The script's
+ * measure (--kp-tabbar-height) replaces it. */
+    body:has(.kp-tabbar:not(.kp-tabbar--static)) {
+        --kp-tabbar-room: calc(
+            var(--kp-tabbar-tab-height, 3rem) + 2 * var(--kp-tabbar-pad, 0.25rem) + 1px +
+                max(env(safe-area-inset-bottom, 0px), var(--kp-tabbar-safe-bottom, 0px))
+        );
+    }
+
+    :root:has(.kp-tabbar:not(.kp-tabbar--static)) {
+        scroll-padding-block-end: var(--kp-tabbar-height, 0px);
+    }
+
+    .kp-tabbar__tab {
+        position: relative;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-rows: var(--kp-tabbar-icon, 1.5rem) auto;
+        justify-items: center;
+        align-content: center;
+        row-gap: 0.125rem;
+        min-block-size: var(--kp-tabbar-tab-height, 3rem);
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0.25rem 0.125rem;
+        border: 0;
+        border-radius: var(--radius, 0.5rem);
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-tabbar-size, var(--kp-text-xs, 0.75rem));
+        line-height: 1.2;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .kp-tabbar__icon {
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-tabbar-icon, 1.5rem);
+        block-size: var(--kp-tabbar-icon, 1.5rem);
+    }
+
+    .kp-tabbar__icon > :where(svg, img) {
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    /* The More tab draws its three dots, as the nav toggle draws its three bars:
+ * this package ships type, not icons. */
+    .kp-tabbar__icon--more::before {
+        content: '';
+        inline-size: 0.25rem;
+        block-size: 0.25rem;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: currentColor;
+        box-shadow:
+            -0.5rem 0 0 currentColor,
+            0.5rem 0 0 currentColor;
+    }
+
+    .kp-tabbar__label {
+        max-inline-size: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* The mark: a line along the bar's top edge over the current tab. It grows
+ * from the middle when a tab becomes current; a register gives it the
+ * theme's own shape. */
+    .kp-tabbar__tab::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0.5rem;
+        inset-block-start: calc(-1 * var(--kp-tabbar-pad, 0.25rem) - 1px);
+        block-size: 2px;
+        background: var(--primary);
+        scale: 0 1;
+        pointer-events: none;
+    }
+
+    .kp-tabbar__tab[aria-current]:not([aria-current='false']) {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-tabbar__tab[aria-current]:not([aria-current='false'])::before {
+        scale: 1 1;
+    }
+
+    .kp-tabbar__tab[aria-current]:not([aria-current='false']) .kp-tabbar__icon {
+        color: var(--primary);
+    }
+
+    @media (hover: hover) {
+        .kp-tabbar__tab:hover {
+            color: var(--foreground);
+        }
+    }
+
+    .kp-tabbar__tab:active {
+        translate: 0 1px;
+    }
+
+    .kp-tabbar__tab:is([aria-disabled='true'], :disabled) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    /* Waiting on one tab: the theme's own spinner (js/tabbar.js setTabbarBusy)
+ * takes the icon's place. */
+    .kp-tabbar__icon > .kp-spinner {
+        --kp-spinner-size: calc(var(--kp-tabbar-icon, 1.5rem) * 0.75);
+    }
+
+    .kp-tabbar__icon:has(> .kp-spinner) > :not(.kp-spinner) {
+        display: none;
+    }
+
+    /* The count. Beside the icon at its end corner, never over it (text never touches
+ * an icon, DEMO_RULES ch. 2), out of the flow, so a count that appears, grows or
+ * goes moves nothing. Empty, it is a dot. */
+    .kp-tabbar__badge {
+        --kp-badge-size: var(--kp-text-xs, 0.75rem);
+        --kp-badge-padding-block: 0;
+        position: absolute;
+        inset-block-start: 0.125rem;
+        inset-inline-start: calc(50% + var(--kp-tabbar-icon, 1.5rem) / 2 + 0.25rem);
+        justify-content: center;
+        min-inline-size: 1.25rem;
+        box-sizing: border-box;
+        padding-inline: 0.25rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        pointer-events: none;
+        /* The whole number, never capped (12, 1534): the badge is out of the flow and anchored at its start
+         * edge, so it grows outward over the icon's corner, sizes to its digits (no ellipsis, no clip) and
+         * moves no neighbour. */
+        flex: none;
+        inline-size: max-content;
+        max-inline-size: none;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .kp-tabbar__badge:empty {
+        min-inline-size: 0;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        padding: 0;
+    }
+
+    .kp-tabbar__badge[hidden] {
+        display: none;
+    }
+
+    /* Loading the bar: the tabs are places, not yet links. */
+    .kp-tabbar[aria-busy='true'] .kp-tabbar__tab {
+        pointer-events: none;
+    }
+
+    .kp-tabbar[aria-busy='true'] .kp-tabbar__icon {
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+    }
+
+    .kp-tabbar[aria-busy='true'] .kp-tabbar__icon > *,
+    .kp-tabbar[aria-busy='true'] .kp-tabbar__badge {
+        visibility: hidden;
+    }
+
+    .kp-tabbar[aria-busy='true'] .kp-tabbar__icon--more::before {
+        content: none;
+    }
+
+    .kp-tabbar[aria-busy='true'] .kp-tabbar__label {
+        justify-self: center;
+        inline-size: 2.5rem;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: transparent;
+        user-select: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-tabbar__tab::before {
+            transition: scale var(--kp-tabbar-duration, var(--fx-duration, 180ms)) var(--fx-ease, ease);
+        }
+
+        .kp-tabbar__tab {
+            transition:
+                color var(--kp-tabbar-duration, var(--fx-duration, 180ms)) var(--fx-ease, ease),
+                translate 60ms linear;
+        }
+
+        .kp-tabbar[aria-busy='true'] :is(.kp-tabbar__icon, .kp-tabbar__label) {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+    }
+

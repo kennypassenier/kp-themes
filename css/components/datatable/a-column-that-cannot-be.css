@@ -1,0 +1,235 @@
+/* @part: datatable: A column that cannot be sorted now */
+    .kp-table th[data-kp-sort]::after {
+        content: var(--kp-glyph-sortable, '↕');
+        margin-inline-start: 0.375rem;
+        opacity: 0.35;
+    }
+
+    .kp-table th[aria-sort='ascending']::after {
+        content: var(--kp-glyph-ascending, '↑');
+        opacity: 1;
+    }
+
+    .kp-table th[aria-sort='descending']::after {
+        content: var(--kp-glyph-descending, '↓');
+        opacity: 1;
+    }
+
+    /* A column that cannot be sorted now [kpadopt4] (`aria-disabled="true"`): no pointer, no sortable mark; a sort it
+ * already carries keeps its arrow. */
+    .kp-table th[data-kp-sort][aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-table th[data-kp-sort][aria-disabled='true']:not([aria-sort='ascending'], [aria-sort='descending'])::after {
+        content: none;
+    }
+
+    .kp-datatable__status {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-datatable__pager {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .kp-datatable__page {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Narrow: a row becomes a card [TH37, TH96, DI11].
+ *
+ * The alternative every table reaches for is a horizontal scrollbar, and
+ * SC 1.4.10 is about not making a reader drag a page sideways to finish a
+ * sentence. The header text is carried into each cell through a data
+ * attribute the consumer writes, because a cell without its column name
+ * is a value with no question attached.
+ *
+ * Two things changed in 3.2.0 [TH96]. The width that decides is the
+ * width of the TABLE'S OWN CONTAINER rather than the window's: a table
+ * in a 400 px column on a 1280 px page was told it had 1280 px and kept
+ * a shape that did not fit. And the plain `.kp-table` can do it too, by
+ * asking for it — `data-kp-cards` on the table, `data-label` on the
+ * cells, which is what components/table.jsx writes for the React
+ * channel. Opt-in rather than automatic, because every plain table that
+ * already ships would otherwise change shape in a minor release [S20].
+ *
+ * The container is `.kp-table-wrap`, and `.kp-datatable` as well for the
+ * markup that has no wrapper — the nearest one wins, and in the shape
+ * this package draws the two are the same width [AR24]. */
+    @container kp-table (max-width: 40rem) {
+        /* 40rem is a contract value [TH26]: a container query can no more
+     * read a custom property than a media query can, so this number is
+     * repeated in docs/USER_GUIDE.md rather than exposed as a knob. It is
+     * the same number as the one this block used as a media query up to
+     * 3.1.1, so no table changes shape at a width it did not before. */
+        /* The headers are the sort control and they are hidden, so the
+     * control that stands in for them shows [gap-13]. */
+        .kp-datatable[data-kp-cards] > .kp-datatable__card-sort {
+            display: flex;
+        }
+
+        /* A card has no columns to keep in place. */
+        .kp-datatable[data-kp-cards] .kp-table :is(th, td)[data-kp-fixed] {
+            position: static;
+            box-shadow: none;
+        }
+
+        .kp-datatable[data-kp-cards] .kp-table thead,
+        .kp-table[data-kp-cards] thead {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+        }
+
+        .kp-datatable[data-kp-cards] .kp-table,
+        .kp-datatable[data-kp-cards] .kp-table tbody,
+        .kp-datatable[data-kp-cards] .kp-table tr,
+        .kp-datatable[data-kp-cards] .kp-table td,
+        .kp-table[data-kp-cards],
+        .kp-table[data-kp-cards] tbody,
+        .kp-table[data-kp-cards] tr,
+        .kp-table[data-kp-cards] td {
+            display: block;
+            width: auto;
+        }
+
+        /* The caption is a table part; with the table laid out as blocks
+     * it has no table to sit above, so it becomes one too. */
+        .kp-datatable[data-kp-cards] .kp-table caption,
+        .kp-table[data-kp-cards] caption {
+            display: block;
+        }
+
+        .kp-datatable[data-kp-cards] .kp-table tr,
+        .kp-table[data-kp-cards] tr {
+            margin-block-end: 0.75rem;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+        }
+
+        .kp-datatable[data-kp-cards] .kp-table td,
+        .kp-table[data-kp-cards] td {
+            display: flex;
+            /* A card's line is a block, where a block size is a height and
+         * not a floor: it sizes to its value, with the padding it had
+         * before the row height was fixed [scope-80]. */
+            block-size: auto;
+            padding-block: var(--kp-table-cell-block, var(--kp-space-sm, 0.5rem));
+            gap: 0.75rem;
+            justify-content: space-between;
+            border: 0;
+        }
+
+        .kp-datatable[data-kp-cards] .kp-table td::before,
+        .kp-table[data-kp-cards] td::before {
+            content: attr(data-label);
+            color: var(--muted-foreground);
+            font-weight: 500;
+        }
+
+        /* The low-priority column, at the same width as the cards [TH96].
+     * Header and cells together: hiding the header alone leaves a column
+     * of values with nothing saying what they are, which is worse than
+     * either keeping it or dropping it. A separate threshold would be a
+     * second layout to reason about, so there is only one. */
+        .kp-table .kp-col-low {
+            display: none;
+        }
+    }
+
+    /* The card's lines on two tracks [datatable-r5-1019, B2, N20]. Each card
+ * is a grid of a label track (the longest label, at most 40 % of the card:
+ * `--kp-datatable-card-label`) and a value track, and every line of it is a
+ * subgrid of those two, so the values of one card start on one edge whatever
+ * they hold: a word, a badge, a code cell. A line whose column has no name
+ * (the selection box, the actions) has no label track and spans the card; a
+ * cell that holds several controls puts its label on a line of its own and
+ * the controls in a wrapping row under it, so the row actions of every card
+ * stand on the same edge at their own widths. `data-kp-cards="spread"` keeps
+ * the earlier look (label left, value pushed to the right edge). */
+    @container kp-table (max-width: 40rem) {
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) {
+            --kp-datatable-card-gap: var(--kp-space-md, 0.75rem);
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) {
+            display: grid;
+            grid-template-columns: fit-content(var(--kp-datatable-card-label, 40%)) minmax(0, 1fr);
+            column-gap: var(--kp-datatable-card-gap);
+            align-items: baseline;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: subgrid;
+            align-items: baseline;
+            column-gap: var(--kp-datatable-card-gap);
+            justify-content: normal;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td::before {
+            grid-column: 1;
+            /* The label stands on its track's start edge whatever the cell's own alignment: a number cell (`kp-text-end`) pushed its
+             * label to the track's far side, so "Snapshots" sat 16 px right of every other label (Kenny, 2026-10-19 17:20). */
+            text-align: start;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > * {
+            grid-column: 2;
+            min-inline-size: 0;
+            justify-self: start;
+        }
+
+        /* A value that is a block of its own (a code cell, a field) fills the track. */
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td > :is(.kp-code, .kp-field__input, .kp-jsonfield) {
+            justify-self: stretch;
+        }
+
+        /* Several controls in one cell: the label above, the controls in a row. */
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:has(> * + *) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--kp-space-sm, 0.5rem);
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:has(> * + *)::before {
+            flex: 0 0 100%;
+        }
+
+        /* No column name: no label track; the content starts on the card's edge. */
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:is(:not([data-label]), [data-label='']) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--kp-space-sm, 0.5rem);
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr:not([data-kp-row-group]) > td:is(:not([data-label]), [data-label=''])::before {
+            display: none;
+        }
+
+        :is(.kp-datatable[data-kp-cards]:not([data-kp-cards='spread']) .kp-table, .kp-table[data-kp-cards]:not([data-kp-cards='spread'])) tr[data-kp-row-detail] > td:is(:not([data-label]), [data-label], :has(> * + *)) {
+            display: block;
+        }
+
+        /* A card has no columns to keep in place, at the end either. */
+        .kp-datatable[data-kp-cards] .kp-table :is(th, td)[data-kp-fixed-end] {
+            position: static;
+            box-shadow: none;
+        }
+    }
+

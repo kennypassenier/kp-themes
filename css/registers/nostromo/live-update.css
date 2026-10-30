@@ -1,0 +1,175 @@
+/* @part: live-update: A live update */
+    /* ── A live update: the reading is redrawn and its lamp lights [live
+       "raster", Kenny 08/10/2026 00:05, research/nostromo-character; G9] ──
+       js/update.js writes the new value at once and marks it
+       `[data-kp-updating='raster']` while the keyframes play. The new value
+       is there from the first frame, dimmed to about a third (its own mask,
+       so whatever the ground); the raster rewrites it from the top in 4
+       frames (320 ms), the dimmed part shrinking under the beam with its
+       fading tail (::before) until it stands at full strength. The lamp
+       beside the reading's label (a key figure's, also when its spark
+       changes) switches on in the LED orange in one frame, holds, and goes
+       out after 8 frames (640 ms); the value never moves, glows or inverts.
+       The mark stays on for the lamp's 640 ms: the value's own animation
+       runs that long, the redraw in its first half. Under reduced motion no
+       idea is named and the value simply changes. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] {
+            --kp-update: raster;
+        }
+
+        [data-theme='nostromo'] [data-kp-updating='raster'] {
+            position: relative;
+            -webkit-mask: linear-gradient(to bottom, var(--foreground) 50%, hsl(from var(--foreground) h s l / 0.34) 50%) 0 0% / 100% 200% no-repeat;
+            mask: linear-gradient(to bottom, var(--foreground) 50%, hsl(from var(--foreground) h s l / 0.34) 50%) 0 0% / 100% 200% no-repeat;
+            animation: kp-sig-nostromo-update-redraw var(--kp-sig-no-print) linear both;
+        }
+
+        [data-theme='nostromo'] [data-kp-updating='raster']::before {
+            --kp-sig-no-tail: 0.9rem;
+            content: '';
+            position: absolute;
+            z-index: 1;
+            inset-inline: 0;
+            inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+            block-size: var(--kp-sig-no-tail);
+            background: var(--kp-sig-no-beam);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-nostromo-update-beam var(--kp-sig-no-strike) steps(4, end) both;
+        }
+
+        [data-theme='nostromo'] .kp-kpi:has([data-kp-updating='raster']) .kp-kpi__label::before {
+            animation: kp-sig-nostromo-update-lamp var(--kp-sig-no-print) steps(1, end);
+        }
+
+        /* The dimmed part of the value, from the top edge down: the mask's
+           bright half rides down in 4 held frames, then stands. */
+        @keyframes kp-sig-nostromo-update-redraw {
+            0% {
+                -webkit-mask-position: 0 100%;
+                mask-position: 0 100%;
+                animation-timing-function: steps(4, end);
+            }
+
+            49.99% {
+                -webkit-mask-position: 0 0%;
+                mask-position: 0 0%;
+                animation-timing-function: steps(1, end);
+            }
+
+            50%,
+            100% {
+                -webkit-mask-position: 0 0%;
+                mask-position: 0 0%;
+            }
+        }
+
+        @keyframes kp-sig-nostromo-update-beam {
+            from {
+                inset-block-start: calc(var(--kp-sig-no-tail) * -1);
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            to {
+                inset-block-start: calc(100% - var(--kp-sig-no-tail));
+                opacity: 0;
+            }
+        }
+
+        /* The lamp lit as the LED, the same lens and glow a focused switch
+           shows, for the whole 640 ms. */
+        @keyframes kp-sig-nostromo-update-lamp {
+            from,
+            to {
+                background: var(--kp-sig-no-lens);
+                box-shadow:
+                    0 0 0 1px var(--foreground),
+                    0 0 6px 1px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+                opacity: 1;
+            }
+        }
+    }
+
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── nostromo: the ship's terminal, in amber. The box moves a line at a
+           time behind a flickering amber frame, and a new line prints with a
+           scan. ─────────────────────────────────────────────────────────── */
+        [data-theme='nostromo'] {
+            --kp-size-steps: line;
+            /* One step per 80 ms frame: a resize, a fold and an unfold keep the theme's clock
+               (js/motion.js steppedDuration). */
+            --kp-size-step: var(--kp-sig-no-frame);
+        }
+
+        [data-theme='nostromo'] [data-kp-resizing] {
+            outline: 1px solid var(--primary);
+            outline-offset: 2px;
+            filter: drop-shadow(0 0 6px hsl(from var(--primary) h s l / 0.6));
+        }
+
+        [data-theme='nostromo'] [data-kp-arriving] {
+            animation: kp-sig-nostromo-size-scan var(--kp-sig-no-strike) steps(4, jump-end) backwards;
+        }
+
+        @keyframes kp-sig-nostromo-size-scan {
+            from {
+                clip-path: inset(0 0 100% 0);
+                filter: brightness(1.8);
+            }
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── nostromo: erased by the raster (Kenny, 2026-10-07 23:18, leave
+           "raster"; it was a flare and a blur in place, 480 ms ease-in): the
+           part is the raster's draw played backwards, frame for frame, erased
+           from the bottom up in 4 frames of 80 ms. ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards,
+           which makes every arrival the raster's draw. */
+        [data-theme='nostromo'] {
+            --kp-open: reverse-close;
+        }
+
+        /* Its own name, so js/motion.js tells the leave from the entrance
+           (a toast's entrance is the raster's draw). Erasing full to empty
+           with the steps at the start of each frame is the draw played
+           backwards frame for frame: frame t of the leave is frame (T - t)
+           of the draw. */
+        [data-theme='nostromo'] [data-kp-leaving] {
+            animation: kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+        }
+
+        /* A toast, a tile and a key figure are erased under the beam, which
+           climbs back up the edge on the same frames (its background layer,
+           kp-sig-nostromo-beam-layer-erase); played backwards by js/motion.js,
+           this is also how a tile or a key figure arrives. */
+        [data-theme='nostromo'] :is(.kp-toast, .kp-card, .kp-kpi)[data-kp-leaving] {
+            animation:
+                kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards,
+                kp-sig-nostromo-beam-layer-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-erase {
+        from {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1));
+        }
+
+        to {
+            clip-path: inset(calc(var(--kp-sig-no-reach) * -1) calc(var(--kp-sig-no-reach) * -1) 100% calc(var(--kp-sig-no-reach) * -1));
+        }
+    }
+

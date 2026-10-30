@@ -1,0 +1,242 @@
+/* @part: time-chart: Time chart */
+    /* --- Time chart [scope-143] ------------------------------------------- */
+
+    /* One time chart for every page, so its controls mean the same
+ * everywhere: a legend that singles a source out and keeps sources on or
+ * off, a crosshair every chart of a group shares, a tooltip with the change
+ * over the hour before and the events within reach, drag to zoom, and
+ * event markers. attachCharts() draws it; the colours are the theme's
+ * `--chart-1..5`, and from the sixth source on they come round again with
+ * a dashed line. */
+    .kp-chart-group {
+        display: grid;
+        gap: var(--kp-space-lg, 1.5rem);
+        min-inline-size: 0;
+    }
+
+    /* The range buttons and the zoom chip, once for the group. */
+    .kp-chart-group__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    }
+
+    .kp-chart-ranges {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-chart-ranges > [aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+        color: var(--foreground);
+    }
+
+    .kp-chart-zoom {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-chart-zoom[hidden] {
+        display: none;
+    }
+
+    .kp-chart-zoom__reset {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+    }
+
+    .kp-chart-zoom__reset:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-chart {
+        container: kp-chart / inline-size;
+        position: relative;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        margin: 0;
+        /* The source's colour: its `--chart-n`, or its own. */
+        --kp-chart-series: var(--chart-1);
+    }
+
+    .kp-chart__title {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-chart [data-kp-series='2'] {
+        --kp-chart-series: var(--chart-2);
+    }
+
+    .kp-chart [data-kp-series='3'] {
+        --kp-chart-series: var(--chart-3);
+    }
+
+    .kp-chart [data-kp-series='4'] {
+        --kp-chart-series: var(--chart-4);
+    }
+
+    .kp-chart [data-kp-series='5'] {
+        --kp-chart-series: var(--chart-5);
+    }
+
+    .kp-chart__plot {
+        position: relative;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        cursor: crosshair;
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-chart__plot:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 4px;
+    }
+
+    .kp-chart__plot > svg {
+        display: block;
+        inline-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-chart__grid {
+        stroke: var(--border);
+        stroke-width: 1;
+    }
+
+    .kp-chart__tick {
+        fill: var(--muted-foreground);
+        font-size: var(--kp-chart-tick-size, 11px);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-chart__line {
+        fill: none;
+        stroke: var(--kp-chart-series);
+        stroke-width: 2;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+    }
+
+    .kp-chart__series[data-kp-dash='1'] .kp-chart__line {
+        stroke-dasharray: 5 3;
+    }
+
+    .kp-chart__series[data-kp-dash='2'] .kp-chart__line {
+        stroke-dasharray: 1.5 2.5;
+    }
+
+    .kp-chart__series[data-kp-dash='3'] .kp-chart__line {
+        stroke-dasharray: 8 3 1.5 3;
+    }
+
+    /* A soft area under the line while one or two sources are on; with
+ * three or more, the lines alone. Stacked sources are areas always. */
+    .kp-chart__area {
+        fill: var(--kp-chart-series);
+        fill-opacity: 0.06;
+        stroke: none;
+    }
+
+    .kp-chart__area--alone {
+        fill-opacity: 0.12;
+    }
+
+    .kp-chart__area--stacked {
+        fill-opacity: 0.22;
+    }
+
+    .kp-chart__point {
+        fill: var(--kp-chart-series);
+    }
+
+    /* A source singled out: it thickens, the others fade. */
+    .kp-chart__series[data-kp-state='hot'] .kp-chart__line {
+        stroke-width: 2.75;
+    }
+
+    .kp-chart__series[data-kp-state='dim'] .kp-chart__line {
+        opacity: 0.18;
+    }
+
+    .kp-chart__series[data-kp-state='dim'] .kp-chart__area {
+        fill-opacity: 0.02;
+    }
+
+    .kp-chart__threshold {
+        stroke: var(--destructive);
+        stroke-dasharray: 4 4;
+        opacity: 0.8;
+    }
+
+    /* The levels after the first [wish-1120, homelab 104]: finer and dotted, so the alarm stays the main line. */
+    .kp-chart__threshold--more {
+        stroke-width: 1;
+        stroke-dasharray: 1.5 3;
+        opacity: 0.7;
+    }
+
+    /* A histogram column [wish-1120, homelab 104]: the series' colour, soft enough that the grid shows through, whole when singled out. */
+    .kp-chart__column {
+        fill: var(--kp-chart-series);
+        fill-opacity: 0.62;
+        stroke: none;
+    }
+
+    .kp-chart__series[data-kp-state='hot'] .kp-chart__column {
+        fill-opacity: 0.9;
+    }
+
+    .kp-chart__series[data-kp-state='dim'] .kp-chart__column {
+        fill-opacity: 0.12;
+    }
+
+    .kp-chart__event-line {
+        stroke: var(--muted-foreground);
+        stroke-dasharray: 2 3;
+        opacity: 0.7;
+    }
+
+    .kp-chart__mark {
+        cursor: pointer;
+        --kp-chart-tone: var(--info-foreground);
+    }
+
+    .kp-chart [data-kp-tone='warning'] {
+        --kp-chart-tone: var(--warning-foreground);
+    }
+
+    .kp-chart [data-kp-tone='critical'] {
+        --kp-chart-tone: var(--destructive);
+    }
+
+    .kp-chart__mark-hit {
+        fill: transparent;
+    }
+
+    .kp-chart__mark-dot {
+        fill: var(--kp-chart-tone);
+        stroke: var(--card);
+        stroke-width: 1.5;
+    }
+
+    .kp-chart__mark:hover .kp-chart__mark-dot {
+        stroke: var(--foreground);
+    }
+

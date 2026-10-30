@@ -1,0 +1,275 @@
+/* @part: the-demos-own-pieces: The demo's own pieces */
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-side-note {
+        position: absolute;
+        inset-inline-end: 1.25rem;
+        inset-block-start: 0;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        padding: 0.4rem 0;
+        border-inline-start: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-laurels {
+        gap: 1.1rem;
+        font-size: 0.72rem;
+        color: var(--muted-foreground);
+        letter-spacing: 0.03em;
+    }
+
+    [data-theme='pastel'] .kp-laurels b {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-lede {
+        max-width: 42ch;
+        font-size: 1.05rem;
+    }
+
+    [data-theme='pastel'] .kp-platforms {
+        font-family: var(--theme-font-body);
+        font-size: 0.72rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-platforms span {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 0.25rem 0.55rem;
+        background: var(--card);
+    }
+
+    /* The spec sheet: the demo's soft/base colour pairs as a kit, and the
+       rounded chip that carries them. */
+    [data-theme='pastel'] .kp-spec {
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+        background: var(--card);
+        padding: 1.4rem;
+    }
+
+    [data-theme='pastel'] .kp-spec__swatch {
+        border-radius: 0.85rem;
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-spec dt {
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='pastel'] .kp-log {
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+        background: var(--card);
+    }
+
+    [data-theme='pastel'] .kp-log__level {
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] .kp-spec dd {
+        font-family: var(--theme-font-mono);
+        font-size: 0.66rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-spec__font {
+        font-size: 1.3rem;
+    }
+
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js); kp-fill
+       and kp-draw carry no opacity step and are OUT_OF_SCOPE in
+       gates/check-motion.mjs (a size grow, no luminance change). */
+    @keyframes kp-registration {
+        0% {
+            transform: translate(14px, 10px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translate(2px, 2px);
+            opacity: 0.55;
+        }
+    }
+
+    @keyframes kp-fill {
+        from {
+            background-size: 0% 100%;
+        }
+
+        to {
+            background-size: 100% 100%;
+        }
+    }
+
+    @keyframes kp-draw {
+        from {
+            width: 0%;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a rounded pill on the card colour, like everything else here. */
+    [data-theme='pastel'] .kp-marquee {
+        background: var(--card);
+        border-radius: 999px;
+        margin-inline: 1rem;
+        --kp-marquee: 38000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='pastel'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='pastel'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        background: color-mix(in srgb, var(--primary) 12%, transparent);
+        border-radius: 999px;
+        margin: 0.25rem;
+        border-block-end: 0;
+        text-transform: none;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The sticker Kenny chose for this theme, now on the row you are on:
+       peeled down at a slight angle, with a hard edge under it and a soft
+       drop below that [approved 2026-09-11]. */
+    [data-theme='pastel'] .kp-sidenav {
+        --kp-sidenav-gap: 0.3rem;
+        border-radius: 1.2rem;
+    }
+
+    /* The plate's ink (0 to 1) also brings a floating panel's edge and shadow in and out. */
+    [data-theme='pastel'] .kp-sidenav[data-kp-sidenav-variant='floating'] {
+        --kp-sidenav-float-ink: var(--kp-sig-pa-ink);
+    }
+
+    [data-theme='pastel'] .kp-sidenav__header {
+        border-block-end: none;
+        padding-block-end: 0.2rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link,
+    [data-theme='pastel'] .kp-sidenav__category-toggle {
+        border-radius: 0.85rem;
+        padding-inline: 0.8rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-sidenav__link {
+            transition:
+                translate var(--fx-duration, 200ms) var(--fx-ease, ease),
+                background var(--fx-duration, 200ms) ease;
+        }
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link:hover {
+        translate: 0 -1px;
+    }
+
+    /* The row you are on is a sticker: plum with its flat peel, upright (G7,
+       G14; no soft drop). */
+    [data-theme='pastel'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 3px 0 hsl(from var(--primary) h s calc(l * 0.55));
+    }
+
+    [data-theme='pastel'] .kp-sidenav__badge {
+        color: inherit;
+        opacity: 0.75;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Rounder than everything else, and the picture sits slightly askew
+       in its frame the way a photograph in an album does. */
+    [data-theme='pastel'] .kp-to-top {
+        border-radius: 999px;
+        box-shadow: 0 3px 0 hsl(from var(--primary) h s calc(l * 0.55));
+    }
+
+    [data-theme='pastel'] .kp-media {
+        border-radius: 1.2rem;
+        border: 2px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-media-figure > figcaption {
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='pastel'] .kp-media-figure {
+        text-align: center;
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='pastel'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='pastel'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='pastel'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): soft words on a well-rounded plate that
+       fills with the muted ground when pointed at. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.7rem;
+        border: 0;
+        border-radius: 0.6rem;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--muted);
+        color: var(--foreground);
+        box-shadow: none;
+    }
+

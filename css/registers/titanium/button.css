@@ -1,0 +1,82 @@
+/* @part: button: Buttons */
+    /* ── Buttons: a flat panel, an edge, no bevel ──────────────────────── */
+
+    [data-theme='titanium'] .kp-button,
+    [data-theme='titanium'] .kp-icon-button {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        font-weight: 600;
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='titanium'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='titanium'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    [data-theme='titanium'] .kp-button:hover {
+        background: var(--accent);
+    }
+
+    [data-theme='titanium'] [data-kp-surface='hero'] .kp-row > .kp-button {
+        min-width: min(11rem, 100%);
+    }
+
+    [data-theme='titanium'] .kp-button--primary,
+    [data-theme='titanium'] .kp-button--primary:hover {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* A step down, not up [scope-80]. The primary is a pale metal on a
+       dark ground, and six points lighter took it to a near-white nobody
+       could tell from the rest: measured on catalogue/button.html, rest to
+       hover was 4.9 in OKLab distance where roughly 10 is "tells them
+       apart", and the bare button's hover is 8.9. Fourteen points darker is
+       11.4, and the pressed state below goes a further thirteen, so pressed
+       stays 11.0 from hover (DI3's floor of 10). */
+    [data-theme='titanium'] .kp-button--primary:hover {
+        background: hsl(from var(--primary) h s calc(l - 14));
+        border-color: hsl(from var(--primary) h s calc(l - 14));
+    }
+
+    [data-theme='titanium'] .kp-button--ghost {
+        background: transparent;
+        border-color: transparent;
+        color: var(--foreground);
+    }
+
+    [data-theme='titanium'] .kp-button--ghost:hover {
+        background: var(--accent);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='titanium'] .kp-button--destructive {
+        background: transparent;
+        border-color: var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='titanium'] .kp-button--destructive:hover {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='titanium'] .kp-button:disabled {
+        opacity: 0.45;
+    }
+

@@ -1,0 +1,63 @@
+/* @part: the-mark-past-the-end: the mark past the end */
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='nostromo'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '▼';
+    }
+
+    [data-theme='nostromo'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='nostromo'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-meter__mark {
+            transition:
+                inset-inline-start 500ms ease-in-out,
+                rotate 500ms ease-in-out;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-meter-scan {
+        0% {
+            background-position: -40% 0;
+        }
+
+        100% {
+            background-position: 140% 0;
+        }
+    }
+
+    @keyframes kp-sig-nostromo-meter-wipe-o {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    /* A menu and a popover are drawn by the raster as the toast is, the beam riding the
+       edge as a background layer, 4 frames (G3); they close as the draw played backwards
+       (js/motion.js playClose). */
+    [data-theme='nostromo'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.1rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+    }
+

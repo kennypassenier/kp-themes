@@ -1,0 +1,287 @@
+/* @part: the-dashboard-parts: The dashboard parts */
+/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the
+   week agenda and the run timeline [kpadopt2] ──
+   Titanium's own (themes/titanium/CHARACTER.md): a tile is a machined plate, square with the register's chamfer pair
+   (top-start and bottom-end), the bright tool edge along its top (G7, G8); every contact is instant and linear, metal
+   does not ease (G1, G4): pointing turns the tool edge to bare bright metal, a press drops the plate 1 px; a pick is
+   bright metal, a running process blue oxide (G6); waiting is the anodising bath, the oxide ramp drifting start to end
+   in every waiting part (G10); Martian Mono for labels and counts (G8). */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-actions {
+        --kp-actions-gap: 0.625rem;
+    }
+    [data-theme='titanium'] .kp-action {
+        --kp-sig-ti-c: 0.5rem;
+        --kp-action-radius: 0;
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-shadow: inset 0 2px 0 hsl(from var(--foreground) h s l / 0.22);
+        --kp-action-shadow-hover: inset 0 2px 0 var(--primary);
+        --kp-action-shadow-active: inset 0 2px 0 var(--primary), inset 0 1px 3px hsl(from var(--background) h s l / 0.6);
+        --kp-action-ground-active: var(--muted);
+        --kp-action-press: 0 1px;
+        --kp-action-title-weight: 700;
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.035) 0 1px, transparent 1px 3px),
+            var(--kp-action-ground, var(--card));
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        background: repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.05) 0 1px, transparent 1px 3px), var(--card);
+    }
+    [data-theme='titanium'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        background: var(--muted);
+    }
+    [data-theme='titanium'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        background: var(--muted);
+    }
+    /* Focus: DI2's two channels drawn inside the plate, and carried across the two cut corners on the chamfer's own
+       diagonal, so the ring is whole and chamfered. */
+    [data-theme='titanium'] :is(.kp-action, .kp-week__pill, .kp-gantt__run):focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+        background-image:
+            linear-gradient(
+                135deg,
+                transparent calc(var(--kp-sig-ti-c) * 0.7071),
+                var(--focus-ring) 0 calc(var(--kp-sig-ti-c) * 0.7071 + 2px),
+                var(--focus-ring-contrast) 0 calc(var(--kp-sig-ti-c) * 0.7071 + 4px),
+                transparent 0
+            ),
+            linear-gradient(
+                315deg,
+                transparent calc(var(--kp-sig-ti-c) * 0.7071),
+                var(--focus-ring) 0 calc(var(--kp-sig-ti-c) * 0.7071 + 2px),
+                var(--focus-ring-contrast) 0 calc(var(--kp-sig-ti-c) * 0.7071 + 4px),
+                transparent 0
+            );
+        background-size:
+            calc(var(--kp-sig-ti-c) * 2 + 8px) calc(var(--kp-sig-ti-c) * 2 + 8px),
+            calc(var(--kp-sig-ti-c) * 2 + 8px) calc(var(--kp-sig-ti-c) * 2 + 8px);
+        background-position:
+            0 0,
+            100% 100%;
+        background-repeat: no-repeat;
+    }
+    [data-theme='titanium'] .kp-action__meta {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+    /* Destructive: the tool edge in the red's bronze heat along its top and the title in the red; no side bar. */
+    [data-theme='titanium'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) {
+        --kp-action-tone-edge: var(--border-strong);
+        --kp-action-tone-edge-hover: var(--border-strong);
+        --kp-action-shadow: inset 0 3px 0 var(--destructive);
+        --kp-action-shadow-hover: inset 0 3px 0 var(--destructive), inset 0 4px 0 var(--primary);
+        --kp-action-shadow-active: inset 0 3px 0 var(--destructive), inset 0 1px 3px hsl(from var(--background) h s l / 0.6);
+    }
+    [data-theme='titanium'] .kp-action--destructive::after {
+        display: none;
+    }
+    [data-theme='titanium'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title {
+        color: var(--destructive);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-action {
+            transition:
+                box-shadow var(--kp-sig-ti-fast) linear,
+                translate var(--kp-sig-ti-fast) linear,
+                background-color var(--kp-sig-ti-fast) linear;
+        }
+    }
+
+    /* Status rows: machined rows on the small chamfer with the tool edge, the detail in Martian Mono. A failed row's
+       edge is the red; a loading row is in the bath, the oxide drifting through it. */
+    [data-theme='titanium'] .kp-statuslist {
+        --kp-statuslist-gap: 0.5rem;
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='titanium'] .kp-statusrow {
+        --kp-sig-ti-c: 0.35rem;
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-radius: 0;
+        box-shadow: inset 0 2px 0 hsl(from var(--foreground) h s l / 0.18);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-statusrow[data-state='loading'] {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+    [data-theme='titanium'] .kp-statusrow[data-state='empty'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-statusrow__detail {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    /* Facets: square rows, the muted ground at once under the hand; counts in Martian Mono. The counts on their way
+       are small plates in the bath. */
+    [data-theme='titanium'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='titanium'] .kp-facet {
+        --kp-facet-hover: var(--muted);
+    }
+    [data-theme='titanium'] .kp-facet:hover {
+        box-shadow: inset 2px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] :is(.kp-facet__count, .kp-facets__title) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 0;
+        background: var(--kp-sig-ti-bath), var(--card);
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    /* Heat grid and matrix: machined tiles, a bright chamfer on the top and start edges and a dark one on the others;
+       pointing lights the tool edge in bright metal, at once; the pick is bright metal. Waiting is the bath. */
+    [data-theme='titanium'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-lift: inset 1px 1px 0 hsl(from var(--foreground) h s l / 0.28), inset -1px -1px 0 hsl(from var(--background) h s 0% / 0.4);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+        --kp-heat-cell-gap: 2px;
+    }
+    [data-theme='titanium'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='titanium'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='titanium'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='titanium'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow:
+            inset 0 2px 0 var(--primary),
+            inset -1px -1px 0 hsl(from var(--background) h s 0% / 0.4);
+    }
+    [data-theme='titanium'] .kp-heat__cell[data-kp-picked],
+    [data-theme='titanium'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='titanium'] :is(.kp-heat__label, .kp-matrix__name, .kp-heat__col, .kp-matrix__corner) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.02em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='titanium'] .kp-matrix__corner {
+        font-size: 0.6875rem;
+        letter-spacing: 0;
+        text-wrap: balance;
+    }
+    [data-theme='titanium'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--muted);
+        color: var(--foreground);
+        box-shadow: inset 2px 0 0 var(--primary);
+    }
+    /* The bath runs in the waiting lines this page draws (the register's own line rule holds its lines still). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium']
+            :is(.kp-heat__label-skeleton, .kp-gantt__ghost .kp-skeleton, .kp-bar-cell__ghost).kp-skeleton:not(
+                .kp-skeleton--circle,
+                .kp-skeleton--block
+            ),
+        [data-theme='titanium'] :is(.kp-statusrow[data-state='loading'], .kp-facets[aria-busy='true'] .kp-facet__count) {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+        [data-theme='titanium'] :is(.kp-heat__cell, .kp-matrix__cell, .kp-facet) {
+            transition: box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }
+    /* A phone's timeline keeps its toolbar on one row: the range steps close in, in Martian Mono's wide cells. */
+    @container kp-gantt (max-width: 22rem) {
+        [data-theme='titanium'] .kp-gantt__ranges {
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+    }
+    [data-theme='titanium'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-family: var(--theme-font-mono);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Week agenda and run timeline: machined plates with the chamfer pair, cut outwards past the box so the focus ring
+       stays whole; pointing lights the tool edge; the next run is bright metal; the line for now is blue oxide, what the
+       system says. A running run is blue oxide with the film drifting through it at a constant feed. */
+    [data-theme='titanium'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--chart-1);
+    }
+    /* A planned run [gaps-time-1019]: brushed metal: fine vertical grain. */
+    [data-theme='titanium'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='planned'] {
+        background-image: repeating-linear-gradient(90deg, color-mix(in oklab, var(--kp-gantt-fill) 35%, transparent) 0 1px, transparent 1px 3px);
+    }
+    [data-theme='titanium'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--chart-1);
+        --kp-gantt-state-ground: var(--card);
+    }
+    [data-theme='titanium'] :is(.kp-week__pill, .kp-gantt__run) {
+        --kp-sig-ti-c: calc(var(--kp-chamfer, 0.5rem) * 0.6);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+        border-color: var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-gantt__run {
+        --kp-sig-ti-c: 3px;
+    }
+    [data-theme='titanium'] :is(.kp-week__pill, .kp-gantt__run):is(button):hover {
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+    [data-theme='titanium'] .kp-week__now::before {
+        border-radius: 50%;
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.5);
+    }
+    [data-theme='titanium'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span, .kp-week__head) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        border-color: var(--chart-1);
+        color: var(--foreground);
+        background: var(--kp-sig-ti-bath), color-mix(in oklab, var(--chart-1) 40%, var(--card));
+        box-shadow: inset -2px 0 0 var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+        [data-theme='titanium'] :is(.kp-week__pill, .kp-gantt__run) {
+            transition: box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }
+}
+

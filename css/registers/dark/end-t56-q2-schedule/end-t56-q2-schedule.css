@@ -1,0 +1,18 @@
+/* @part: end-t56-q2-schedule: end t56-q2 schedule */
+/* ── end t56-q2 schedule ── */
+
+/* ── graph loading · shape 1 · The status board: the paper, the nodes and the links the ghost network is drawn in (research/character-graph/decided.json, Kenny 2026-10-06 21:37) ── */
+@layer kp.signature {
+    [data-theme='dark'] .kp-graph[data-kp-state='loading'] {
+        --kp-graph-load-paper: color-mix(in oklch, var(--background) 70%, oklch(from var(--background) 0 0 h));
+        --kp-graph-load-font: var(--theme-font-mono);
+        --kp-graph-load-size: 11.5px;
+        --kp-graph-load-ring-fill: var(--kp-graph-load-paper);
+        --kp-graph-load-ring-w: 2;
+        --kp-graph-load-core-op: 0.85;
+        --kp-graph-load-edge-w: 1.2;
+        --kp-graph-load-edge-on-w: 2.2;
+        --kp-graph-load-node-mix: 70%;
+    }
+}
+

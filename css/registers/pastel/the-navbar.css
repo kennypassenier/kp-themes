@@ -1,0 +1,115 @@
+/* @part: the-navbar: The navbar */
+    /* ── The navbar ────────────────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-nav-wrap {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-nav {
+        background: var(--card);
+        padding-block: calc(var(--kp-nav-pad-block, 0.9rem) * var(--kp-nav-pad-scale, 1));
+    }
+
+    [data-theme='pastel'] .kp-nav__brand {
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: 0.01em;
+        color: var(--foreground);
+        text-decoration: none;
+    }
+
+    [data-theme='pastel'] .kp-nav__brand-tag {
+        display: block;
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        font-size: 0.65rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-nav__link {
+        padding-inline: 0.7rem;
+        border-radius: 0.85rem;
+        color: var(--foreground);
+        background: none;
+    }
+
+    [data-theme='pastel'] .kp-nav__link:hover,
+    [data-theme='pastel'] .kp-nav__link:focus-visible,
+    [data-theme='pastel'] .kp-nav__link[aria-current],
+    [data-theme='pastel'] .kp-nav__links > li:focus-within > .kp-nav__link {
+        background: var(--muted);
+        color: var(--foreground);
+        box-shadow: none;
+    }
+
+    /* The keyboard keeps its ring [fix-38, DI2]: `box-shadow: none` above
+       took the inner half off a focused link too, and the outer half is the
+       page's own ground, so a Tab changed no pixel a person could see. */
+    [data-theme='pastel'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    [data-theme='pastel'] .kp-nav__link[aria-haspopup]::after {
+        content: ' ▾';
+        font-size: 0.7em;
+    }
+
+    [data-theme='pastel'] .kp-nav__link--lang {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-body);
+        font-size: 0.78rem;
+    }
+
+    [data-theme='pastel'] .kp-nav__link--cta {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] .kp-nav__link--cta:hover,
+    [data-theme='pastel'] .kp-nav__link--cta:focus-visible {
+        background: var(--foreground);
+        color: var(--primary-foreground);
+    }
+
+    /* The dropdown [KT14]: a raised card, the same soft radius as the
+       theme's other panels. */
+    [data-theme='pastel'] .kp-nav__menu {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: 1.2rem;
+        box-shadow: none;
+        padding: 0.4rem;
+        min-width: 12rem;
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    [data-theme='pastel'] .kp-nav__menu a {
+        padding-inline: 0.6rem;
+        border-radius: 0.68rem;
+        color: var(--foreground);
+    }
+
+    [data-theme='pastel'] .kp-nav__menu a:hover,
+    [data-theme='pastel'] .kp-nav__menu a:focus-visible {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    /* ── Buttons: the springy hover lift and press settle ──────────────── */
+

@@ -1,0 +1,5 @@
+/* @part: signature-base: opening of the signature block */
+    [data-theme='titanium'] {
+        --kp-wheel-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+

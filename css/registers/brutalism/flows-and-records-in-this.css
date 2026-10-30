@@ -1,0 +1,344 @@
+/* @part: flows-and-records-in-this: Flows and records, in this theme */
+/* ── Flows and records, in this theme [kpadopt4-flows] ──
+   A secret printed on the page is slammed onto its yellow offset when it is shown, and its time runs out in ten hard
+   steps of a six-pixel bar (G9, G11, G16); a dialog's sections are ruled off in the ink line, the danger section taped
+   off (G13); a moment on the timeline is a square bolt with its own small shadow, a stretch in warning is hazard tape
+   (G16); a journey is a path of blocks, the one it stands at lifted off its footprint; the pipeline's lanes and cards
+   are slabs, pointing lifts a card up-left off its footprint (G7, G8). */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-secret {
+        --kp-secret-drain: var(--border-strong);
+        --kp-secret-drain-size: 6px;
+    }
+    [data-theme='brutalism'] .kp-secret__value {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__value {
+        background: var(--accent);
+        color: var(--accent-foreground, var(--foreground));
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: var(--muted);
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-secret__line {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-secret__drain {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0 0 0.5rem;
+        border-inline-start: 0;
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.375rem no-repeat;
+        font-weight: 700;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism']
+            .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown']
+            .kp-secret__drain {
+            animation-timing-function: steps(10, jump-end);
+        }
+        [data-theme='brutalism'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-brutalism-secret-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+    @keyframes kp-sig-brutalism-secret-slam {
+        0% {
+            translate: -6px -6px;
+            filter: drop-shadow(9px 9px 0 var(--border-strong));
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+        20%,
+        99.9% {
+            translate: 0 0;
+            filter: drop-shadow(3px 3px 0 var(--border-strong));
+        }
+        100% {
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* The dialog in sections. */
+    [data-theme='brutalism'] .kp-dialog__section {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+    }
+    [data-theme='brutalism'] .kp-dialog__heading {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-dialog__note {
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-dialog__section--danger {
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+        padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.5rem);
+        border-inline-start: 0;
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat;
+    }
+    [data-theme='brutalism'] .kp-dialog__section--danger:last-child {
+        padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.5rem);
+    }
+    [data-theme='brutalism'] .kp-confirm__dependents {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--muted);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-confirm__dependents .kp-dialog__heading {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+    }
+    [data-theme='brutalism'] .kp-confirm__list {
+        font-weight: 700;
+    }
+
+    /* Moments and stretches on the timeline. */
+    [data-theme='brutalism'] .kp-gantt {
+        --kp-gantt-mark-size: 0.75rem;
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-gantt-mark);
+        box-shadow: 1px 1px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='diamond']::before {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='triangle']::before {
+        border: 0;
+        background: var(--border-strong);
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='ring']::before,
+    [data-theme='brutalism'] .kp-gantt__point[data-kp-planned]::before {
+        background: var(--card);
+    }
+    [data-theme='brutalism'] .kp-gantt__point[data-kp-planned][data-kp-shape='triangle']::before {
+        background:
+            linear-gradient(var(--card), var(--card)) content-box,
+            var(--border-strong) border-box;
+    }
+    [data-theme='brutalism'] .kp-gantt__point:hover::before {
+        translate: -1px -1px;
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-gantt__point:active::before {
+        translate: 1px 1px;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__zone,
+    [data-theme='brutalism'] .kp-gantt__band {
+        border-inline: 2px solid var(--border-strong);
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-gantt-mark) h s l / 0.35) 0 4px, transparent 4px 10px);
+    }
+    [data-theme='brutalism'] .kp-gantt__zone[data-kp-lane-zone] {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-gantt-mark);
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'] {
+        --kp-gantt-mark: var(--warning);
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'][data-kp-lane-zone] {
+        background: repeating-linear-gradient(45deg, var(--warning) 0 4px, var(--border-strong) 4px 8px);
+    }
+    [data-theme='brutalism'] .kp-gantt__count {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 2px 2px 0 var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-size: 0.6875rem;
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-gantt__sub {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-gantt__lane-link {
+        text-decoration-thickness: 3px;
+        text-underline-offset: 0.15em;
+    }
+    [data-theme='brutalism'] .kp-gantt__lane-link:hover {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    /* The journey: a path of blocks. */
+    [data-theme='brutalism'] .kp-steplist--journey {
+        --kp-journey-rule: 4px;
+        --kp-steplist-mark: 1.5rem;
+        --kp-steplist-mark-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__mark {
+        border: 3px solid var(--border-strong);
+        background-color: var(--card);
+        box-shadow: 2px 2px 0 var(--border-strong);
+        font-family: var(--theme-font-display);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:not([data-state='current']) .kp-steplist__title {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 4px, var(--border-strong) 4px 8px);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        background: var(--border-strong);
+        color: var(--card);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='done'][data-kp-tone] .kp-steplist__mark {
+        border-color: var(--border-strong);
+        background: var(--kp-step-tone);
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--border-strong);
+        background: var(--kp-step-tone, var(--secondary));
+        translate: -2px -2px;
+        box-shadow: 5px 5px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='failed'] .kp-steplist__mark {
+        border-color: var(--border-strong);
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: repeating-linear-gradient(180deg, var(--border-strong) 0 6px, transparent 6px 10px);
+        }
+        [data-theme='brutalism']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--border-strong);
+        }
+        [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(135deg, var(--destructive) 0 4px, var(--border-strong) 4px 8px);
+        }
+    }
+
+    /* The pipeline. */
+    [data-theme='brutalism'] .kp-pipeline {
+        --kp-pipeline-gap: 1rem;
+    }
+    [data-theme='brutalism'] .kp-pipeline__lane {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__head {
+        border: 0;
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-pipeline-tone);
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__name {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-pipeline__share {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:hover {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: -2px -2px;
+        box-shadow: 5px 5px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:hover :is(.kp-pipeline__sub, .kp-pipeline__meta) {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:active {
+        translate: 3px 3px;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow:
+            inset 0 0 0 2px var(--border-strong),
+            3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[aria-current='true'] :is(.kp-pipeline__sub, .kp-pipeline__meta) {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[data-kp-dimmed] {
+        border-style: dashed;
+        background: transparent;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-pipeline__title {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+    [data-theme='brutalism'] .kp-pipeline__sub,
+    [data-theme='brutalism'] .kp-pipeline__meta {
+        font-family: var(--theme-font-mono);
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-pipeline__mark {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-pipeline-tone, var(--muted));
+        box-shadow: 2px 2px 0 var(--border-strong);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-pipeline__card {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-fall),
+                box-shadow var(--fx-duration) var(--kp-sig-br-fall);
+        }
+    }
+}
+

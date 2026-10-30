@@ -1,0 +1,380 @@
+/* @part: small-patterns: The small patterns */
+    /* --- The small patterns [TH50, TH51, TH52, TH53, TH54] --------------- */
+
+    /* An empty state that knows which emptiness it is. "Nog geen items" and
+ * "niets gevonden" are different messages, and offering "maak er een" to
+ * someone who just typed a filter is noise. */
+    .kp-empty__title {
+        margin: 0 0 0.25rem;
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-empty__body {
+        margin: 0 0 0.75rem;
+    }
+
+    /* A drawing at the top of an empty state [kpadopt4] (`data-kp-art`, js/art.js): a picture only, the words carry the
+ * meaning. Every theme draws its own set and its register shows it; a theme without one shows none, so the drawing is
+ * hidden here. Knobs [KT6]: `--kp-art-size` (7.5rem wide; `data-kp-art-size` sm 5rem, lg 10rem), `--kp-art-stroke`
+ * (1.5px), `--kp-art-rule` (the acting colour), `--kp-art-line` (the faint ruled lines), `--kp-art-ink`, `--kp-art-red`. */
+    .kp-art {
+        display: none;
+        box-sizing: content-box;
+        inline-size: var(--kp-art-size, 7.5rem);
+        block-size: auto;
+        aspect-ratio: 120 / 72;
+        margin: 0 auto var(--kp-space-sm, 0.5rem);
+        overflow: visible;
+    }
+
+    .kp-art > g {
+        display: none;
+    }
+
+    .kp-art path {
+        fill: none;
+        stroke-width: var(--kp-art-stroke, 1.5px);
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-art__rule {
+        stroke: var(--kp-art-rule, var(--primary));
+    }
+
+    .kp-art path.kp-art__rule {
+        stroke-width: calc(var(--kp-art-stroke, 1.5px) + 0.5px);
+    }
+
+    .kp-art__line {
+        stroke: var(--kp-art-line, var(--border-strong));
+    }
+
+    .kp-art path.kp-art__line {
+        stroke-width: 1px;
+    }
+
+    .kp-art__ink {
+        stroke: var(--kp-art-ink, var(--muted-foreground));
+    }
+
+    .kp-art__red {
+        stroke: var(--kp-art-red, var(--destructive));
+    }
+
+    [data-kp-art-size='sm'] > .kp-art {
+        --kp-art-size: 5rem;
+    }
+
+    [data-kp-art-size='lg'] > .kp-art {
+        --kp-art-size: 10rem;
+    }
+
+    /* Copyable value [TH53] */
+    .kp-copyable {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        /* The 3.2.0 copy of the overflow floor -- `max-inline-size: 100%`
+     * here and `overflow-wrap: anywhere` on the value -- moved to the
+     * shared rule above the button [AR32]. It was found the same way the
+     * other four were: a 44-character key measured 344px inside a 360px
+     * viewport and put the copy button at 421, hidden until the
+     * documentation site stopped wrapping its examples in a scroll box. */
+    }
+
+    .kp-copyable__value {
+        font-family: var(--font-mono, ui-monospace, monospace);
+        min-inline-size: 0;
+    }
+
+    /* The Copy button keeps its word in one piece [r6r8-1019; almanac gap 15]: the shared overflow floor (`overflow-wrap: anywhere`)
+     * lowers a flex item's minimum width to one letter, so a narrow cell squeezed "Copy" into "Co / py" while the long value
+     * kept its room. The button is a short fixed word, so it neither wraps nor shrinks; the value takes what is left. */
+    .kp-copyable__button {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        overflow-wrap: normal;
+    }
+
+    .kp-copyable__value {
+        flex: 1 1 auto;
+    }
+
+    /* In a fact list the copyable takes its value cell and the Copy button stands at the cell's end, so the buttons of every
+     * row line up in one column and the value wraps in the room beside them. */
+    .kp-kv__row > dd > .kp-copyable {
+        display: flex;
+        flex: 1 1 100%;
+        justify-content: space-between;
+    }
+
+    /* Confirmed in words on the button, not by colour: a green flash is
+ * invisible to a screen reader and to anyone who looked away.
+ *
+ * Both states are restated in every register [gap-12]: a register paints
+ * its buttons in kp.register, which beats this layer, and 19 of 22 themes
+ * painted their own ghost ground over the success plate. */
+    .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    /* A copy the clipboard refused says so on the button as well as in the
+     * toast [gap-12]: the destructive ink and a dashed frame, so the two
+     * carriers are a colour and a shape. The word stays "Copy", because
+     * pressing it again is the way out [KT6]. */
+    .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
+    /* Secret field [kpadopt4] -----------------------------------------------
+ * `.kp-secret[data-kp-secret]` (js/patterns.js): a masked value, Reveal and
+ * Copy, and one line under them for the countdown, the reason a field is off
+ * or why it could not be read. The value box has the control height and the
+ * row's width whatever it holds, and the line under it always keeps its
+ * room, so showing, hiding, loading or failing moves nothing. A long value
+ * stays on one line and scrolls inside its box (a fade at the end says there
+ * is more) unless `data-kp-secret-wrap="wrap"`, which keeps
+ * `data-kp-secret-lines` lines of room. Knobs [KT6]: `--kp-secret-min`
+ * (16rem, the value box's least width before the buttons go under it),
+ * `--kp-secret-lines` (2), `--kp-secret-drain` (the rule that runs out with
+ * the countdown, `--primary`), `--kp-secret-drain-size` (2px). */
+    .kp-secret {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-secret__value {
+        box-sizing: border-box;
+        display: block;
+        flex: 1 1 var(--kp-secret-min, 16rem);
+        min-inline-size: 0;
+        block-size: var(--kp-control-height, 2.25rem);
+        margin: 0;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: calc(var(--kp-control-height, 2.25rem) - 2px);
+        white-space: nowrap;
+        scrollbar-width: none;
+    }
+
+    .kp-secret__value.kp-masked {
+        color: var(--muted-foreground);
+        user-select: none;
+    }
+
+    .kp-secret[data-kp-secret-overflow] .kp-secret__value {
+        mask-image: linear-gradient(to left, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-secret[data-kp-secret-overflow] .kp-secret__value:dir(rtl) {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-secret[data-kp-secret-wrap='wrap'] .kp-secret__value {
+        block-size: auto;
+        min-block-size: calc(var(--kp-secret-lines, 2) * 1.5em + 2 * var(--kp-space-xs, 0.25rem) + 2px);
+        padding-block: var(--kp-space-xs, 0.25rem);
+        overflow: visible;
+        line-height: 1.5;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    /* The input mode [wish-1028, chassis-rs 1]: the typed box takes the display field's value slot and fills it (no 448 px cap), its
+     * buttons are the same row of buttons. Hidden typing is the browser's password glyphs; shown typing is the mono face of the value. */
+    .kp-secret__entry {
+        box-sizing: border-box;
+        flex: 1 1 var(--kp-secret-min, 16rem);
+        min-inline-size: 0;
+    }
+
+    .kp-secret__input {
+        box-sizing: border-box;
+        inline-size: 100%;
+        max-inline-size: none;
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-secret__paste {
+        white-space: nowrap;
+    }
+
+    .kp-secret[data-kp-secret-mode='input'][data-kp-secret-state='error'] .kp-secret__input {
+        border-color: var(--destructive);
+    }
+
+    .kp-secret[data-kp-secret-mode='input'][data-kp-secret-state='shown'] .kp-secret__input {
+        border-style: dashed;
+    }
+
+    .kp-secret__actions {
+        display: flex;
+        flex: none;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The reveal button keeps the width of its longest word, so Reveal, Hide and Try again move nothing. */
+    .kp-secret__reveal {
+        min-inline-size: 6.5em;
+    }
+
+    .kp-secret__line {
+        display: grid;
+        grid-template-rows: var(--kp-secret-drain-size, 2px) auto;
+        flex: 1 0 100%;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        min-block-size: calc(var(--kp-secret-drain-size, 2px) + var(--kp-space-xs, 0.25rem) + 1.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.25rem;
+    }
+
+    .kp-secret__words {
+        grid-row: 2;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-secret__spinner {
+        --kp-spinner-size: 0.875rem;
+        flex: none;
+    }
+
+    .kp-secret__drain {
+        grid-row: 1;
+        display: block;
+        block-size: var(--kp-secret-drain-size, 2px);
+        background: var(--kp-secret-drain, var(--primary));
+        transform-origin: 0 50%;
+        visibility: hidden;
+    }
+
+    .kp-secret__drain:dir(rtl) {
+        transform-origin: 100% 50%;
+    }
+
+    /* Why it could not be read: an entry ruled off along its start edge, in the page's ink [fix-70]. */
+    .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        border-inline-start: 3px solid var(--destructive);
+        color: var(--foreground);
+    }
+
+    .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        border-style: dashed;
+        background: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+            visibility: visible;
+            animation: kp-secret-drain var(--kp-secret-ttl, 30s) linear forwards;
+        }
+
+        .kp-secret[data-kp-secret-paused] .kp-secret__drain {
+            animation-play-state: paused;
+        }
+    }
+
+    @keyframes kp-secret-drain {
+        from {
+            scale: 1 1;
+        }
+
+        to {
+            scale: 0 1;
+        }
+    }
+
+    /* Status parts [TH52] */
+    .kp-health {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+    }
+
+    /* The dot is the second carrier, never the only one: the word beside it
+ * is what makes this readable to someone who cannot tell the colours
+ * apart [DI4]. */
+    .kp-health__dot {
+        width: 0.625rem;
+        height: 0.625rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--muted);
+    }
+
+    .kp-health[data-state='ok'] .kp-health__dot {
+        background: var(--success);
+    }
+
+    .kp-health[data-state='warn'] .kp-health__dot {
+        background: var(--warning);
+    }
+
+    .kp-health[data-state='down'] .kp-health__dot {
+        background: var(--destructive);
+    }
+
+    .kp-timeline {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-timeline__item {
+        display: grid;
+        grid-template-columns: 0.75rem 1fr;
+        gap: 0.75rem;
+        padding-block: 0.5rem;
+    }
+
+    /* The rule down the left is drawn on the marker, so a one-item timeline
+ * does not get a line hanging under it. */
+    .kp-timeline__item:not(:last-child) .kp-timeline__marker {
+        background-image: linear-gradient(var(--border), var(--border));
+        background-repeat: no-repeat;
+        background-position: 50% 0.75rem;
+        background-size: 1px 100%;
+    }
+
+    .kp-timeline__marker {
+        width: 0.75rem;
+        height: 0.75rem;
+        margin-block-start: 0.25rem;
+        border: 2px solid var(--primary);
+        border-radius: var(--kp-radius-pill, 999px);
+    }
+
+    .kp-timeline__when {
+        display: block;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+

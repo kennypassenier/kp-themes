@@ -1,0 +1,141 @@
+/* @part: the-character: Review round 3 (Kenny, 2026-10-13: "sidenav: Niet de open/close animat */
+    /* Review round 3 (Kenny, 2026-10-13: "sidenav: Niet de open/close animatie van dit thema",
+       "alarm: Niet de open/close animatie van dit thema"). The side navigation and the alarm are drawn
+       as the dialog is [G2, G3]: the pen traces the outline from its top-start corner, along the top,
+       down the end, back along the foot and up the start, each side on the feed, and at three quarters
+       of the panel's 5 units (800 ms) the part is inked at once and the construction line lifted; the
+       close is the drawing backwards (the ink lifted, the outline untraced).
+
+       The side navigation (over, push) no longer slides in from its edge (G2: nothing slides): it is
+       drawn where it opens, the trace's own keyframes; closing plays them backwards under the second
+       name (`kp-sig-blueprint-trace-out`, lesson 44), which also hides it at its last frame. Its rows
+       stay visible to the focus while the pen draws and are painted by the ink, as the dialog's are.
+       The content a push panel moves makes room at once when the panel is inked (the `translate`
+       clock below: nothing at the feed until three quarters, then all of it) and goes back at once
+       when the ink is lifted, a quarter into the close; js/sidenav.js copies this timing onto it.
+       The panel's `translate` never changes: the transition is only that clock. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            --kp-bp-ov: visible;
+            translate: 0 0;
+            visibility: hidden;
+            transition: translate var(--kp-sig-bp-panel) linear(0, 0 25%, 1 25%, 1);
+            animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse both;
+        }
+
+        [data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            transition: translate var(--kp-sig-bp-panel) linear(0, 0 75%, 1 75%, 1);
+            animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] > * {
+            visibility: visible;
+            opacity: var(--kp-bp-ink);
+        }
+
+        /* The pen and the construction line, the dialog's (its ::after). On the side navigation the
+           line runs on the panel's own edge; on the alarm it runs on the alarm's frame, so the frame
+           is what the pen constructs before the screen is inked. */
+        [data-theme='blueprint']
+            :is(
+                .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+                .kp-alarm[open]:not([data-kp-alarm-motion='still'])
+            )::after {
+            content: '';
+            position: absolute;
+            z-index: 4;
+            pointer-events: none;
+            visibility: visible;
+            background-repeat: no-repeat;
+            --kp-bp-c-pen: hsl(from var(--primary) h s l / var(--kp-bp-pv));
+            --kp-bp-c-nib: hsl(from var(--primary) h s l / calc(var(--kp-bp-nib) * var(--kp-bp-pv)));
+            --kp-bp-c-steel: hsl(from var(--border-strong) h s l / var(--kp-bp-pv));
+            --kp-bp-c-ground: hsl(from var(--background) h s l / var(--kp-bp-pv));
+            --kp-bp-c-note: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+            --kp-bp-c-trace: hsl(from var(--primary) h s l / var(--kp-bp-tv));
+            --kp-bp-pen-img:
+                radial-gradient(circle closest-side, var(--kp-bp-c-nib) 0 1.3px, var(--kp-bp-c-pen) 1.5px 2.2px, transparent 2.5px),
+                linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+                linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+                linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+                linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+                linear-gradient(var(--kp-bp-c-ground), var(--kp-bp-c-ground));
+            --kp-bp-pen-size: 5px 5px, 1px 5px, 1px 5px, 5px 1px, 5px 1px, 9px 1px, 9px 1px, 1px 9px, 1px 9px, 9px 9px;
+            --kp-bp-pen-pos:
+                calc(var(--kp-bp-px) * 100% + 6px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 6px - var(--kp-bp-py) * 11px),
+                calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 0px - var(--kp-bp-py) * 11px),
+                calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 12px - var(--kp-bp-py) * 11px),
+                calc(var(--kp-bp-px) * 100% + 0px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+                calc(var(--kp-bp-px) * 100% + 12px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+                calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 15px),
+                calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 12px - var(--kp-bp-py) * 15px),
+                calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px),
+                calc(var(--kp-bp-px) * 100% + 12px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px),
+                calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px);
+            --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+            --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+            background-image:
+                var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+                linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+                linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+            background-size:
+                var(--kp-bp-pen-size),
+                calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+                1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+                calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+                1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+            background-position:
+                var(--kp-bp-pen-pos),
+                8px 8px,
+                right 8px top 8px,
+                right 8px bottom 8px,
+                left 8px bottom 8px;
+        }
+
+        [data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+            inset: -8px;
+        }
+
+        [data-theme='blueprint'] .kp-alarm[open]:not([data-kp-alarm-motion='still'])::after {
+            inset: calc(var(--kp-alarm-bar, 0.9rem) + 0.75rem - 8px) calc(0.75rem - 8px);
+            box-shadow: none;
+            animation: none;
+        }
+
+        /* Its backdrop (where a page keeps one) dims in the panel's 5 units on the feed. A literal,
+           for the flash check that reads it. */
+        [data-theme='blueprint'] .kp-sidenav__backdrop {
+            animation-duration: 800ms;
+            animation-timing-function: var(--kp-sig-bp-feed);
+        }
+
+        /* The alarm is a dialog the size of the screen: traced and inked as the dialog, its ground,
+           frame, bars and words together at the ink; js/motion.js keeps this entrance and plays it
+           backwards to close it. What it holds stays visible to the focus (the acknowledge button
+           takes it at once) and is painted by the ink. The frame's breathing glow, which lived on
+           the ::after the pen now takes, breathes on the scan layer's ::after. The package's fade,
+           rise and scale are not this theme's (G2: nothing rises or scales). */
+        [data-theme='blueprint'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            --kp-bp-ov: hidden auto;
+            animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) > :is(.kp-alarm__scan, .kp-alarm__bars, .kp-alarm__panel) {
+            visibility: visible;
+            opacity: var(--kp-bp-ink);
+        }
+
+        [data-theme='blueprint'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='blueprint'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            block-size: auto;
+            background: none;
+            box-shadow: inset 0 0 7rem var(--kp-alarm-glow);
+            animation: kp-alarm-pulse 1400ms ease-in-out infinite alternate;
+        }
+    }

@@ -1,0 +1,309 @@
+{
+  "output": "css/components.css",
+  "items": [
+    {
+      "open": "@layer kp.components {\n",
+      "files": [
+        "intro.css",
+        "theme-picker.css",
+        "showing-data.css",
+        "state-word.css",
+        "page-shell.css",
+        "page-header/base.css",
+        "button.css",
+        "badge.css",
+        "card.css",
+        "tiles.css",
+        "key-figures.css",
+        "meter.css",
+        "key-figure-columns.css",
+        "key-figure-trend.css",
+        "time-chart.css",
+        "annotations/base.css",
+        "annotations/a-source-not-shown-is-struck.css",
+        "alert.css",
+        "graph/base.css",
+        "graph/a-view-is-one-transform.css",
+        "freshness-line.css",
+        "attention-band.css",
+        "form-field.css",
+        "switch.css",
+        "table.css",
+        "action-columns.css",
+        "navbar/base.css",
+        "navbar/a-dropdown-under-a-link.css",
+        "media.css",
+        "back-to-top.css",
+        "sidenav/base.css",
+        "sidenav/the-control-that-opens-it-it.css",
+        "entrance-reverse.css",
+        "grow-shrink.css",
+        "dialog.css",
+        "popover.css",
+        "toast.css",
+        "accordion.css",
+        "tabs.css",
+        "breadcrumb-pagination.css",
+        "log.css",
+        "progress-spinner-skeleton.css",
+        "theme-menu.css",
+        "combobox.css",
+        "command-palette.css",
+        "datatable/base.css",
+        "datatable/a-header-that-stays-whenever.css",
+        "datatable/a-column-that-cannot-be.css",
+        "forms.css",
+        "small-patterns.css",
+        "step-list.css",
+        "week-agenda/base.css",
+        "week-agenda/week.css",
+        "run-timeline/base.css",
+        "run-timeline/a-running-bars-planned.css",
+        "run-timeline/a-lanes-name-as-a-link-and-a.css",
+        "pipeline.css",
+        "diff.css",
+        "tree-reorder-split.css",
+        "date-picker.css",
+        "upload-wizard.css",
+        "colour-picker.css",
+        "movable-grid.css",
+        "alarm/base.css",
+        "alarm/rules.css",
+        "month-heatmap.css",
+        "heat-grid.css",
+        "matrix.css",
+        "bar-cell.css",
+        "tabbar.css",
+        "running-job-button.css",
+        "menu-button.css",
+        "drawer-tour.css",
+        "segmented-toolbar/base.css",
+        "segmented-toolbar/the-filters-that-are-on-one.css",
+        "action-tiles.css",
+        "status-rows.css",
+        "facet-list.css",
+        "quantity.css",
+        "checklist-sink.css",
+        "kitchen-timers.css",
+        "focus-steps.css",
+        "parallel-tracks.css",
+        "wheel.css",
+        "uptime-strip.css",
+        "typed-confirmation.css",
+        "command-block.css",
+        "visual-timer.css",
+        "countdown.css",
+        "range-picker.css",
+        "weekday-picker.css",
+        "next-times.css",
+        "snooze-picker.css",
+        "dated-option-picker.css",
+        "sentence-form.css",
+        "slider.css",
+        "unsaved-bar.css",
+        "compare-slider.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ===== kpadopt5-basics: calm mode, the shortcut engine, the lede, the problem alert, the flash button ===== */\n@layer kp.components {\n",
+      "files": [
+        "calm-mode.css",
+        "lede.css",
+        "problem-alert.css",
+        "shortcut-engine.css",
+        "disabled-reason.css",
+        "flash-button.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "state-plate.css"
+    },
+    {
+      "file": "master-detail.css"
+    },
+    {
+      "file": "ops-page.css"
+    },
+    {
+      "file": "auto-refresh.css"
+    },
+    {
+      "file": "connection-banner.css"
+    },
+    {
+      "file": "transfer.css"
+    },
+    {
+      "file": "question-card.css"
+    },
+    {
+      "file": "notification-centre.css"
+    },
+    {
+      "file": "layout/base.css"
+    },
+    {
+      "file": "sidenav/the-side-navigations-looks.css"
+    },
+    {
+      "file": "layout/sidenav.css"
+    },
+    {
+      "file": "layout/the-peek-strip-of-a-floating.css"
+    },
+    {
+      "file": "layout/a-page-element-in-the.css"
+    },
+    {
+      "file": "layout/the-side-navigation-chooses.css"
+    },
+    {
+      "file": "passkey-list.css"
+    },
+    {
+      "file": "conversation.css"
+    },
+    {
+      "open": "/* ====================================================================\n * Data pieces every app drew itself [kpadopt4-data]: the identity mark,\n * the share bar, the bullet list, the key-value grid and the form rows,\n * the code block, and the page header's heading line.\n *\n *   .kp-idmark / .kp-idmark-group      a small identity chip made from a name\n *                                  (JobTracker `Mark`, homelab `stackMark`)\n *   .kp-stackbar                   one bar split into the parts of a whole,\n *                                  with its legend (homelab `hk-stack-bar`)\n *   .kp-bullets                    rows of a value against a threshold\n *                                  (JobTracker's follow-up clock)\n *   .kp-kv                         a read-only key-value grid (hl-kv, cf-kv,\n *                                  mp-kv, jt-kv, chassis' status `dl`)\n *   .kp-formrows / .kp-formrow     label | control | aside rows (jt-row,\n *                                  homelab `st-set`)\n *   .kp-code                       a payload or code block (kyu `snippet`)\n *   .kp-page-header__heading       a mark, the title, a badge and the\n *                                  freshness line on one line\n *\n * Behaviour: js/mark.js, js/stackbar.js, js/bullets.js, js/code.js and\n * js/tick.js. Drawn from the tokens alone until each register answers them\n * (gates/register-pending.json).\n * ==================================================================== */\n@layer kp.components {\n",
+      "files": [
+        "identity-mark.css",
+        "avatar.css",
+        "share-bar.css",
+        "bullet-rows.css",
+        "key-value-grid.css",
+        "form-rows.css",
+        "form-grid/base.css",
+        "form-grid/a-json-field-is-a-size.css",
+        "code-block.css",
+        "new-lines-pill.css",
+        "json-box.css",
+        "request-inspector.css",
+        "page-header/the-page-headers-heading-line.css",
+        "ticking-number.css",
+        "rating.css",
+        "quote-card.css",
+        "calm-status.css",
+        "calm-tones.css",
+        "one-question.css",
+        "usual-picker.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "autogrow-textarea.css"
+    },
+    {
+      "file": "anchors/base.css"
+    },
+    {
+      "file": "anchors/anchors-under-a-form-grid.css"
+    },
+    {
+      "file": "document-page.css"
+    },
+    {
+      "file": "viewer.css"
+    },
+    {
+      "file": "gallery.css"
+    },
+    {
+      "file": "used-by.css"
+    },
+    {
+      "file": "who-brings.css"
+    },
+    {
+      "file": "who-can-come.css"
+    },
+    {
+      "file": "qr-link.css"
+    },
+    {
+      "file": "time-field.css"
+    },
+    {
+      "file": "console.css"
+    },
+    {
+      "file": "toggle-button.css"
+    },
+    {
+      "file": "palette-any-order.css"
+    },
+    {
+      "file": "version-jump.css"
+    },
+    {
+      "file": "ack-gate/base.css"
+    },
+    {
+      "file": "dependency-list.css"
+    },
+    {
+      "file": "connection-path.css"
+    },
+    {
+      "file": "entity-card.css"
+    },
+    {
+      "file": "state-plates-last-layer.css"
+    },
+    {
+      "file": "layout/a-failed-operations-page.css"
+    },
+    {
+      "file": "layout/a-waiting-gallery-tile-keeps.css"
+    },
+    {
+      "file": "layout/a-failed-ratings-plate-is.css"
+    },
+    {
+      "file": "layout/one-state-plate-for-every.css"
+    },
+    {
+      "file": "log-viewer.css"
+    },
+    {
+      "open": "/* The find's mark and the stage's plate keep their place in the last layer: a register gives `.kp-alert` and `.kp-empty` a\n * position of its own (pastel's printed pass) and beats the absolute placement in kp.components, which would put the plate\n * back in the flow under the lines [gap-log-viewer]. */\n@layer kp.layout {\n",
+      "files": [
+        "layout-base.css",
+        "activity-feed/base.css",
+        "activity-feed/the-foot-load-earlier-the.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "touch-target.css"
+    },
+    {
+      "file": "plain-card.css"
+    },
+    {
+      "file": "job-line.css"
+    },
+    {
+      "file": "typed-tile-name.css"
+    },
+    {
+      "file": "heat-paging.css"
+    },
+    {
+      "file": "ack-gate/release-notes-in-an.css"
+    },
+    {
+      "file": "code-field.css"
+    },
+    {
+      "file": "on-this-page.css"
+    },
+    {
+      "file": "quiet-hours.css"
+    },
+    {
+      "file": "sequencer.css"
+    }
+  ]
+}

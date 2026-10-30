@@ -1,0 +1,11 @@
+/* @part: intro: opening comment, knobs and base */
+    /* Component styles [T1, L4].
+ *
+ * Separate from themes.css on purpose: a consumer who only wants the
+ * palette takes themes.css and is done. This file is for the consumers
+ * who also take the components, and every rule in it reads tokens rather
+ * than colours, so it inherits whatever theme is active.
+ *
+ * Import order: themes.css first, this after.
+ */
+

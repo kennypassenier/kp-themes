@@ -1,0 +1,14 @@
+/* @part: t56-q: t56-q */
+/* ── t56-q: the failed chart is the failed plate ── */
+@layer kp.signature {
+    /* A failed chart was a pale tint with a dot beside the first line; every other failed area in the field kit is the rust plate
+       with the leaf corners and its sentence in the plate's ink. */
+    [data-theme='forest'] .kp-chart__state[data-kp-state='error'] {
+        background: var(--destructive);
+        border-color: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='forest'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}

@@ -1,0 +1,128 @@
+/* @part: ack-gate: Acknowledge gate */
+@layer kp.components {
+    /* --- Acknowledge gate: a tick before a button may be pressed [kpadopt6-ops] ---
+ * `.kp-alert.kp-ack[data-kp-ack]` (js/ack-gate.js). The warning alert's words, then the side: the release-notes link and
+ * the tick with its sentence, the whole label one hit area. Wide: the side stands at the end of the alert; under 30rem of
+ * its own width it goes under the words and the label is 44 px tall. While the notes are looked up the words are held in
+ * place and the busy card of a loading data table (spinner and words, centred, js/busy-card.js) lies over them, so the alert keeps its
+ * height (`--kp-ack-keep`, written by the script, never under `--kp-ack-loading-min`, 8rem, the room the card needs); a
+ * failed lookup says so in a line and, with `data-kp-ack-retry`, offers Retry. Knobs [KT6]: --kp-ack-gap, --kp-ack-side
+ * (the side's width, 18rem). */
+    .kp-ack {
+        position: relative;
+        container: kp-ack / inline-size;
+        display: block;
+        inline-size: 100%;
+        min-inline-size: 0;
+        box-sizing: border-box;
+    }
+
+    .kp-ack__frame {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, var(--kp-ack-side, 18rem));
+        align-items: center;
+        gap: var(--kp-ack-gap, var(--kp-space-md, 0.75rem));
+        min-inline-size: 0;
+    }
+
+    /* The control a gate holds back is dimmed and says why (js/reason.js); it still answers a press. */
+    [data-kp-ack-held][aria-disabled='true'] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-ack[hidden] {
+        display: none;
+    }
+
+    .kp-ack[data-kp-state='loading'],
+    .kp-ack[data-kp-state='error'] {
+        min-block-size: var(--kp-ack-keep, 0px);
+    }
+
+    .kp-ack[data-kp-state='loading'] {
+        min-block-size: max(var(--kp-ack-keep, 0px), var(--kp-ack-loading-min, 8rem));
+    }
+
+    .kp-ack__frame > :not(.kp-ack__side, .kp-ack__problem) {
+        grid-column: 1;
+        min-inline-size: 0;
+    }
+
+    .kp-ack__side {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        justify-items: start;
+    }
+
+    .kp-ack__link {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: var(--kp-control-height, 2.25rem);
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-ack__tick {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: 2.25rem;
+        padding-block: var(--kp-space-xs, 0.25rem);
+        cursor: pointer;
+        overflow-wrap: break-word;
+    }
+
+    .kp-ack__tick:has(:disabled) {
+        cursor: not-allowed;
+    }
+
+    .kp-ack__tick > input {
+        flex: none;
+        margin-block-start: 0.2em;
+    }
+
+    .kp-ack__label {
+        min-inline-size: 0;
+    }
+
+    .kp-ack[data-kp-state='loading'] > .kp-ack__frame {
+        visibility: hidden;
+    }
+
+    .kp-ack__problem[hidden],
+    .kp-ack__retry[hidden] {
+        display: none;
+    }
+
+    .kp-ack__problem {
+        min-block-size: var(--kp-control-height, 2.25rem);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    @container kp-ack (max-width: 30rem) {
+        .kp-ack__frame {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-ack__side {
+            grid-column: 1;
+            grid-row: auto;
+            inline-size: 100%;
+        }
+
+        .kp-ack__tick {
+            inline-size: 100%;
+            min-block-size: 2.75rem;
+            align-items: center;
+        }
+    }
+}
+

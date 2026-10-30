@@ -1,0 +1,191 @@
+/* @part: form-rows: Form rows */
+    /* --- Form rows: label | control | aside ----------------------------- */
+
+    /* A settings form as rows: the label column is as wide as the longest
+     * label (fix-64), the control takes the rest with its help and error
+     * under it (`.kp-field__help`, `.kp-field__error`), and an aside column
+     * holds what is said about the row (where the value comes from, when it
+     * was set, a badge, an Edit button), as wide as its widest. Under 36rem
+     * of the form's width each row reads top to bottom. Every control inside
+     * is the package's own (`.kp-field__input`, `.kp-switch`, `.kp-button`). */
+    .kp-formrows {
+        container: kp-formrows / inline-size;
+        display: grid;
+        grid-template-columns: fit-content(var(--kp-formrow-label-max, 34%)) minmax(0, 1fr) auto;
+        row-gap: var(--kp-formrow-gap, var(--kp-space-md, 0.75rem));
+        margin: 0;
+    }
+
+    .kp-formrow {
+        position: relative;
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        /* Every cell on the label's first baseline: the label's first line, the text in a field, a stepper's number, a
+         * switch's word and the aside's words stand on one line [align-grid-1019]. The padding guess that was here
+         * (half the control height less half a line) put a 44 px stepper 4 px and a switch 6 px off the label. */
+        align-items: first baseline;
+        column-gap: var(--kp-space-lg, 1rem);
+        min-inline-size: 0;
+    }
+
+    .kp-formrows--lines {
+        row-gap: 0;
+    }
+
+    .kp-formrows--lines > .kp-formrow {
+        padding-block: var(--kp-formrow-line-pad, 0.75rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-formrows--lines > .kp-formrow:last-child {
+        border-block-end: 0;
+    }
+
+    .kp-formrow__label {
+        display: grid;
+        /* One track the width of the label: without it the track is as wide as the longest unbroken piece and that piece
+         * ran out of the label's box instead of breaking [t56-words-1018]. */
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.125rem;
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+    }
+
+    .kp-formrow__label > :is(small) {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 400;
+    }
+
+    .kp-formrow__control {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.25rem;
+        justify-items: start;
+        align-items: first baseline;
+        min-inline-size: 0;
+    }
+
+    /* One width per kind of control, so the column ends on one of two edges [align-grid-1019]: a field fills the
+     * track up to --kp-formrow-input-max (28rem), a short control (stepper, time, number, date) takes one step,
+     * --kp-formgrid-short (14rem); a switch or a checkbox keeps its own size. */
+    .kp-formrow__control > :is(.kp-field__input, select, textarea, .kp-combobox, .kp-secret) {
+        justify-self: stretch;
+        inline-size: 100%;
+        max-inline-size: var(--kp-formrow-input-max, 28rem);
+    }
+
+    .kp-formrow__control > :is(.kp-quantity, .kp-time, input[type='number'], input[type='time'], input[type='date'], .kp-field__input--short) {
+        --kp-time-width: var(--kp-formgrid-short, 14rem);
+        inline-size: min(100%, var(--kp-formgrid-short, 14rem));
+        max-inline-size: 100%;
+    }
+
+    .kp-formrow__control > .kp-quantity {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        /* Never squeezed under its words: a unit that would wrap ("mi n") grows the stepper instead, up to the short step: a
+         * stepper that outgrew it ended on a third edge beside its neighbours [alignrest-1019]. */
+        min-inline-size: min(max-content, var(--kp-formgrid-short, 14rem));
+    }
+
+    /* A switch reads its baseline from its words, not from the bottom of its track, so "Off" stands on the label's
+     * line: the words join the baseline group, the track keeps its place at the start [align-grid-1019]. */
+    :is(.kp-formrow__control, .kp-formgrid__control) .kp-switch > :not(input) {
+        align-self: baseline;
+    }
+
+    .kp-formrow__control > :is(p) {
+        margin: 0;
+    }
+
+    .kp-formrow__aside {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: flex-end;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-formrow--top .kp-formrow__label {
+        padding-block-start: 0;
+    }
+
+    .kp-formrow--wide .kp-formrow__control {
+        grid-column: 2 / -1;
+    }
+
+    .kp-formrow--wide .kp-formrow__control > :is(.kp-field__input) {
+        max-inline-size: none;
+    }
+
+    /* Changed and not saved yet: a primary rule on the start edge, in the
+     * gap before the label, so nothing moves. */
+    .kp-formrow[data-kp-changed]::before,
+    .kp-formrow[data-kp-state='error']::before {
+        content: '';
+        position: absolute;
+        inset-block: 0.25rem;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1);
+        inline-size: 2px;
+        background: var(--primary);
+    }
+
+    .kp-formrow[data-kp-state='error']::before {
+        background: var(--destructive);
+    }
+
+    /* Locked: the label quiet, a padlock before the aside's words. */
+    .kp-formrow[data-kp-locked] .kp-formrow__label {
+        color: var(--muted-foreground);
+    }
+
+    .kp-formrow__lock {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+    }
+
+    .kp-formrow__lock::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.45rem;
+        margin-block-start: 0.2rem;
+        border: 1.5px solid currentColor;
+        border-radius: 2px;
+        box-shadow: 0 -0.25rem 0 -0.16rem currentColor;
+    }
+
+    @container kp-formrows (max-width: 36rem) {
+        .kp-formrow__label {
+            grid-column: 1 / 3;
+            padding-block-start: 0;
+            align-self: center;
+        }
+
+        .kp-formrow__aside {
+            grid-column: 3;
+            grid-row: 1;
+            min-block-size: 0;
+        }
+
+        .kp-formrow__control,
+        .kp-formrow--wide .kp-formrow__control {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            margin-block-start: 0.25rem;
+        }
+
+        /* A row whose control is one action (Replay, Forget, Reset) takes the control track, under the label's line, the way
+           it stands on a wide form: the column of controls runs through every row on one edge, and the action does not sit
+           under its label on the start edge, a stack on one left edge [alignrest-1019; settings browser at 390]. */
+        .kp-formrow__control:has(> .kp-button:only-child) {
+            grid-column: 2 / -1;
+        }
+    }
+

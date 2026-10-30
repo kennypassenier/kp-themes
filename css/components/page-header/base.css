@@ -1,0 +1,316 @@
+/* @part: page-header: Page header */
+    /* --- Page header [scope-143] ------------------------------------------ */
+
+    /* A page's title and its one-sentence description on the left; what acts
+ * on the whole page on the right: secondary buttons, ONE primary, and an
+ * overflow menu last (a `.kp-button` that says "More ▾", opening a
+ * `.kp-popover` with a `.kp-menu`). On a narrow page it reads top to
+ * bottom. */
+    .kp-page-header {
+        container: kp-page-header / inline-size;
+    }
+
+    .kp-page-header__inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        /* The title's first line and the actions' first line stand on one baseline. Top-aligned, a 36 px button beside a 39.6 px title
+         * line has its centre 1.8 px above the title's and no edge in common with its text [hltwo-1019]. */
+        align-items: first baseline;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-page-header__title {
+        margin: 0;
+    }
+
+    .kp-page-header__description {
+        /* Fills the page column; a page that wants a reading measure sets --kp-page-header-measure (70ch, say) [width-fill-1026]. */
+        max-inline-size: var(--kp-page-header-measure, none);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+    }
+
+    .kp-page-header__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-page-header__actions > .kp-button {
+        white-space: nowrap;
+    }
+
+    /* The overflow menu hangs under its button towards the start, so it
+ * stays on the page from a header's far end. */
+    .kp-page-header__actions > .kp-popover {
+        position-area: block-end span-inline-start;
+    }
+
+    @container kp-page-header (max-width: 40rem) {
+        .kp-page-header__inner {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        /* The buttons as one row of equal columns, the primary first; when
+ * they cannot fit beside each other they wrap as equal columns, never as
+ * a ragged stack (qr-header-1019). */
+        .kp-page-header__actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+            justify-content: stretch;
+            align-items: stretch;
+        }
+
+        /* Two buttons: the primary takes the rest of the row and the
+ * secondary its own width, so a long primary stays on one line and a
+ * short secondary (More) does not float in a half-width track
+ * (chassis-rs, 2026-10-19: 167 + 167 px wrapped "Register this device"). */
+        @container kp-page-header (min-width: 20rem) {
+            .kp-page-header__actions:has(> :nth-child(2 of .kp-button, .kp-menu-button)):not(:has(> :nth-child(3 of .kp-button, .kp-menu-button))) {
+                grid-template-columns: minmax(0, 1fr) auto;
+            }
+        }
+
+        /* Narrower than two buttons can stand beside each other: one full-width column. */
+        @container kp-page-header (max-width: 19.99rem) {
+            .kp-page-header__actions {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .kp-page-header__actions > .kp-button {
+            justify-content: center;
+            white-space: normal;
+        }
+
+        .kp-page-header__actions > .kp-button--primary {
+            order: -1;
+        }
+    }
+
+    /* ====================================================================
+ * The concept demo's own pieces [S46, round six]: laurels, a side note,
+ * a platforms line and a spec sheet. Quiet by default — a list, a note,
+ * a row, a card — so a theme without an answer shows them plainly and a
+ * register may dramatise them.
+ * ==================================================================== */
+    .kp-laurels {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem 2rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: var(--kp-text-sm);
+        color: var(--muted-foreground);
+    }
+    .kp-laurels b {
+        display: block;
+        color: var(--foreground);
+    }
+    .kp-side-note {
+        margin: 0;
+        font-size: var(--kp-text-xs);
+        color: var(--muted-foreground);
+    }
+    .kp-platforms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.5rem;
+        font-size: var(--kp-text-xs);
+        color: var(--muted-foreground);
+    }
+    .kp-spec {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        padding: 1rem 1.25rem;
+        font-size: var(--kp-text-sm);
+        line-height: 1.7;
+    }
+    .kp-spec dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 0.15rem 1.2rem;
+    }
+    .kp-spec dt {
+        color: var(--muted-foreground);
+    }
+    .kp-spec dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+    .kp-spec__swatch {
+        display: inline-block;
+        inline-size: 0.9em;
+        block-size: 0.9em;
+        vertical-align: -0.1em;
+        margin-inline-end: 0.4em;
+        border: 1px solid var(--border-strong);
+    }
+    .kp-spec__swatch[data-token='surface-hero-bg'] {
+        background: var(--surface-hero-bg);
+    }
+    .kp-spec__swatch[data-token='background'] {
+        background: var(--background);
+    }
+    .kp-spec__swatch[data-token='destructive'] {
+        background: var(--destructive);
+    }
+    .kp-spec__swatch[data-token='accent'] {
+        background: var(--accent);
+    }
+    .kp-spec__swatch[data-token='chart-4'] {
+        background: var(--chart-4);
+    }
+    .kp-spec__swatch[data-token='foreground'] {
+        background: var(--foreground);
+    }
+    .kp-spec__swatch[data-token='card'] {
+        background: var(--card);
+    }
+    .kp-spec__swatch[data-token='card-foreground'] {
+        background: var(--card-foreground);
+    }
+    .kp-spec__swatch[data-token='primary'] {
+        background: var(--primary);
+    }
+    .kp-spec__swatch[data-token='primary-foreground'] {
+        background: var(--primary-foreground);
+    }
+    .kp-spec__swatch[data-token='secondary'] {
+        background: var(--secondary);
+    }
+    .kp-spec__swatch[data-token='muted'] {
+        background: var(--muted);
+    }
+    .kp-spec__swatch[data-token='muted-foreground'] {
+        background: var(--muted-foreground);
+    }
+    .kp-spec__swatch[data-token='border'] {
+        background: var(--border);
+    }
+    .kp-spec__swatch[data-token='border-strong'] {
+        background: var(--border-strong);
+    }
+    .kp-spec__swatch[data-token='input'] {
+        background: var(--input);
+    }
+    .kp-spec__swatch[data-token='selected'] {
+        background: var(--selected);
+    }
+    .kp-spec__swatch[data-token='surface-hero-fg'] {
+        background: var(--surface-hero-fg);
+    }
+    .kp-spec__swatch[data-token='surface-hero-fg-2'] {
+        background: var(--surface-hero-fg-2);
+    }
+    .kp-spec__swatch[data-token='surface-hero-muted'] {
+        background: var(--surface-hero-muted);
+    }
+    .kp-spec__swatch[data-token='surface-hero-border'] {
+        background: var(--surface-hero-border);
+    }
+    .kp-spec__swatch[data-token='surface-hero-primary'] {
+        background: var(--surface-hero-primary);
+    }
+    .kp-spec__swatch[data-token='surface-hero-primary-foreground'] {
+        background: var(--surface-hero-primary-foreground);
+    }
+    .kp-spec__swatch[data-token='surface-hero-danger'] {
+        background: var(--surface-hero-danger);
+    }
+    .kp-spec__swatch[data-token='surface-hero-card'] {
+        background: var(--surface-hero-card);
+    }
+    .kp-spec__swatch[data-token='success'] {
+        background: var(--success);
+    }
+    .kp-spec__swatch[data-token='warning'] {
+        background: var(--warning);
+    }
+    .kp-spec__swatch[data-token='info'] {
+        background: var(--info);
+    }
+    .kp-spec__swatch[data-token='link'] {
+        background: var(--link);
+    }
+    .kp-spec__font[data-font='display'] {
+        font-family: var(--theme-font-display);
+    }
+    .kp-spec__font[data-font='body'] {
+        font-family: var(--theme-font-body);
+    }
+    .kp-spec__font[data-font='mono'] {
+        font-family: var(--kp-mono, monospace);
+    }
+    .kp-footer {
+        padding: 1.5rem clamp(1rem, 4vw, 3rem);
+        border-top: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: var(--kp-footer-size, 0.875rem);
+    }
+
+    /* A footer column's heading: its size is the package's [scope-87],
+     * titanium's 0.95rem taken to 15px. */
+    .kp-footer h4 {
+        font-size: var(--kp-footer-heading-size, 0.9375rem);
+        line-height: var(--kp-heading-line-height, 1.1);
+    }
+
+    /* An error page is a message, not a wall: the destructive colour names
+ * the failure, the body text explains it on the ordinary surface. */
+    .kp-error {
+        max-width: var(--kp-error-max-width, 60ch);
+        margin: 3rem auto;
+        padding: 0 1rem;
+    }
+
+    .kp-error h1 {
+        color: var(--destructive);
+        margin-bottom: 0.5rem;
+    }
+
+    /* ====================================================================
+ * The seven base components [L7, TH1-TH7].
+ *
+ * One set of classes, used by both channels: the React components render
+ * exactly these class names, so a page can mix the two and nothing
+ * betrays which is which. That is what makes the side-by-side comparison
+ * mean anything.
+ *
+ * Every colour is a token, and every token pair used here is in the
+ * contrast gate. No component invents a colour.
+ * ==================================================================== */
+
+    /* The overflow floor, written once [TH113, AR32].
+ *
+ * Five inline-flex components that held a single unbroken value at its
+ * full width and pushed the document sideways with it. Measured at 360px
+ * before this rule: .kp-button 607, .kp-badge 485, .kp-tag 483,
+ * .kp-health 581. A key, a hash or an id has no space to wrap at, so the
+ * value has to be allowed to break rather than the layout.
+ *
+ * One rule the five share rather than five copies of it: AR32, and the
+ * reason is that .kp-copyable already grew its own copy in 3.2.0 and the
+ * other four did not inherit it. overflow-wrap is inherited, so the
+ * anonymous flex item that carries the text gets it from here -- and
+ * `anywhere` rather than `break-word` because only `anywhere` takes the
+ * min-content contribution down, which is what a flex item's automatic
+ * minimum size is measured against.
+ *
+ * .kp-icon-button is deliberately not in this list: it has a fixed size.
+ */
+    .kp-button,
+    .kp-badge,
+    .kp-tag,
+    .kp-health,
+    .kp-copyable {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+

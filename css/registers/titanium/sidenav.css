@@ -1,0 +1,203 @@
+/* @part: sidenav: The side navigation and the alarm are cut open as titanium's dialog is */
+    /* ── The side navigation and the alarm are cut open as titanium's dialog is
+       [G3; Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       uncovered from the top edge down on the theme curve, the cutter line in the
+       second oxide (`--chart-2`) running ahead of the cut; the close is that cut
+       played backwards. ── */
+    [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-block-end: 2px solid var(--chart-2);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The side navigation that slides over or pushes the page no longer
+           slides (the slide was the package's, not the cut): it stands in its
+           place from the opening's first frame, is cut open in the panel's band
+           (240 ms), is cut shut backwards and only then goes back off screen;
+           a pushed page moves with those two frames. */
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-ti-panel);
+            animation: kp-sig-titanium-panel-cut-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false']::after {
+            animation: kp-sig-titanium-ti-cutter-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                margin-inline-end 0s linear,
+                padding-inline-start 0s linear,
+                padding-inline-end 0s linear;
+        }
+
+        [data-theme='titanium'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-ti-panel),
+                margin-inline-end 0s linear var(--kp-sig-ti-panel),
+                padding-inline-start 0s linear var(--kp-sig-ti-panel),
+                padding-inline-end 0s linear var(--kp-sig-ti-panel);
+        }
+
+        /* The alarm: the whole screen cut open from the top on the dialog's
+           time, the cutter line drawn by the scan layer's ::after (titanium
+           does not sweep the scan). The package's rise, scale and fades of the
+           panel, the headline and the reason are retired; js/motion.js keeps
+           the cut and plays it backwards to close. */
+        [data-theme='titanium'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-dur, 240ms) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            block-size: auto;
+            border-block-end: 2px solid var(--chart-2);
+            background: none;
+            opacity: 0;
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur, 240ms) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+
+    /* A panel uncovered from its top edge down; its shadow keeps room at the sides
+       and the foot. */
+    @keyframes kp-sig-titanium-panel-cut {
+        from {
+            clip-path: inset(0 -3rem 100% -3rem);
+        }
+
+        to {
+            clip-path: inset(0 -3rem -3rem -3rem);
+        }
+    }
+
+    /* The same cut and cutter under second names, for a close that plays them
+       backwards and must restart (lesson 8). */
+    @keyframes kp-sig-titanium-panel-cut-back {
+        from {
+            clip-path: inset(0 -3rem 100% -3rem);
+        }
+
+        to {
+            clip-path: inset(0 -3rem -3rem -3rem);
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-cutter-back {
+        from {
+            opacity: 1;
+            transform: translateY(-100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-titanium-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+
+    /* The leave and its heat under second names, for a busy layer that arrives
+       and then leaves (an arrival that turns into its leave must restart). */
+    @keyframes kp-sig-titanium-leave-in {
+        0%,
+        70% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-titanium-leave-2-in {
+        from {
+            opacity: 0;
+            background-position: 100% 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 1;
+            background-position: 0% 0;
+        }
+    }
+
+    /* Information that updates in place, this theme's way [picked by Kenny on
+       research/update-motion, 2026-10-05]. js/update.js writes the new value at
+       once and marks the element `[data-kp-updating]` with this register's
+       `--kp-update` while the keyframes play, at `--kp-update-duration` on
+       `--kp-update-ease` (themeMotion()). The value is never hidden or resized. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── titanium: heat tint. The anodised colours of the leave (gold, violet, blue) run across the value through
+           `mix-blend-mode: color` and cool away; the value keeps its lightness, so it stays readable. ── */
+        [data-theme='titanium'] {
+            --kp-update: anodise;
+        }
+
+        [data-theme='titanium'] [data-kp-updating='anodise'] {
+            position: relative;
+        }
+
+        [data-theme='titanium'] [data-kp-updating='anodise']::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: var(--kp-sig-ti-heat);
+            mix-blend-mode: color;
+            animation: kp-sig-titanium-update-anodise var(--kp-update-duration) var(--kp-update-ease) both;
+        }
+
+        /* A chart changes at its last point: the tint runs over its last part. */
+        [data-theme='titanium'] [data-kp-updating='anodise']:has(> svg)::before {
+            inset: -0.25rem -0.5rem -0.25rem 72%;
+        }
+
+        @keyframes kp-sig-titanium-update-anodise {
+            from {
+                background-position-x: 100%;
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            75% {
+                opacity: 1;
+            }
+
+            to {
+                background-position-x: 0%;
+                opacity: 0;
+            }
+        }
+    }
+

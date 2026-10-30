@@ -1,0 +1,78 @@
+/* @part: countdown: Countdown */
+    /* --- Countdown: a named timer in digits [kpadopt4-ideas] ---
+ * `.kp-countdown[data-kp-countdown="25:00"]` (js/countdown.js). The name, the digits (every digit in a cell one `ch`
+ * wide, so the time never moves the layout, in the theme's display face), one line for Paused or Time is up, and Start,
+ * a minute more and Reset. At the end the plate breathes three times and keeps a ring, still under reduced motion.
+ * Knobs [KT6]: --kp-countdown-size (3rem, the digits), --kp-countdown-ink (--foreground), --kp-countdown-ring (the end
+ * ring's colour). */
+    /* The room of a taller neighbour goes over the name, so the digits and the buttons of a row stand on one line. */
+    .kp-countdown {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 1fr auto auto auto;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        text-align: center;
+        transition: box-shadow var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-countdown__time {
+        margin: 0;
+        color: var(--kp-countdown-ink, var(--foreground));
+        font-family: var(--theme-font-display, inherit);
+        font-size: var(--kp-countdown-size, 3rem);
+        font-variant-numeric: tabular-nums lining-nums;
+        font-weight: 600;
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+
+    .kp-countdown__digit {
+        display: inline-block;
+        inline-size: 1ch;
+        text-align: center;
+    }
+
+    .kp-countdown__colon {
+        display: inline-block;
+        inline-size: 0.4ch;
+        text-align: center;
+    }
+
+    .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--muted-foreground);
+    }
+
+    .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: 0 0 0 3px var(--kp-countdown-ring, color-mix(in oklab, var(--primary) 35%, transparent));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        .kp-countdown[data-kp-countdown-state='ended'] {
+            /* A literal, not a knob: three slow breaths, far under the flash threshold of DI5. */
+            animation: kp-timer-breathe 1600ms ease-in-out 3;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-timer-disc__face,
+        .kp-timer-disc__sector,
+        .kp-countdown {
+            transition: none;
+        }
+    }
+
+    @keyframes kp-timer-breathe {
+        50% {
+            box-shadow: 0 0 0 10px color-mix(in oklab, var(--primary) 12%, transparent);
+        }
+    }
+

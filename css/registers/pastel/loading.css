@@ -1,0 +1,280 @@
+/* @part: loading: 10 · Loading */
+    /* ── 10 · Loading: everything becomes caterpillar (G10, b-bug-6) ──── */
+
+    /* What waits becomes the pom-pom caterpillar itself. js/loading-pieces.js
+       reads `--kp-loading-pieces: caterpillar` and adds the pieces to every
+       waiting part (`[data-kp-pieces]` on it while they are there):
+         - a skeleton line, the busy progress bar, a loading meter: a row of
+           mint pom-poms with a plum head at its end, the hump running
+           through them tail to head (1200 ms);
+         - a loading day of the month: its body, a mint pom-pom rim and two
+           legs, the hump running through the days, a head beside the last;
+         - a plate that waits (a block skeleton, the busy table's panel, the
+           busy month's card, a busy menu): a head on its top-end corner and
+           legs under it that step in turn.
+       Without the script each still shows a row of pom-poms with its head
+       (the rule below), standing. */
+    [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        overflow: visible;
+        block-size: 0.7rem;
+        margin-inline: 0;
+        margin-block: 0.45rem;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='pastel'] .kp-skeleton--block {
+        position: relative;
+        overflow: visible;
+        border-radius: var(--kp-sig-pa-r-plate);
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        animation: none;
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+
+    [data-theme='pastel'] .kp-skeleton--circle {
+        position: relative;
+        overflow: visible;
+        border-radius: 50%;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        animation: none;
+    }
+
+    /* The still row of pom-poms (no script): beads as round as the line is
+       high and a plum head at its end. The pieces replace it. */
+    [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-pa-row-h: 0.7rem;
+    }
+
+    [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track {
+        --kp-sig-pa-row-h: calc(var(--kp-progressbar-height, 1.125rem) - 6px);
+    }
+
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-pa-row-h: var(--kp-meter-height, 0.625rem);
+    }
+
+    [data-theme='pastel']
+        :is(.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block), .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track):not(
+            [data-kp-pieces]
+        )::before,
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]:not([data-kp-pieces])::after {
+        content: '';
+        position: absolute;
+        inset-block: calc(50% - var(--kp-sig-pa-row-h) / 2);
+        inset-inline: 0 calc(var(--kp-sig-pa-row-h) * 1.1);
+        border-radius: 0;
+        background: radial-gradient(circle closest-side, var(--accent) 0 calc(100% - 0.5px), transparent 100%) 0 50% /
+            calc(var(--kp-sig-pa-row-h) * 0.78) var(--kp-sig-pa-row-h) round no-repeat;
+        filter: drop-shadow(1.5px 1.5px 0 var(--kp-sig-pa-pass-c));
+        opacity: 1;
+        mask: none;
+        clip-path: none;
+        translate: none;
+        animation: none;
+    }
+
+    [data-theme='pastel']
+        :is(.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block), .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track):not(
+            [data-kp-pieces]
+        )::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - var(--kp-sig-pa-row-h) * 0.59);
+        inset-inline-end: 0;
+        inline-size: calc(var(--kp-sig-pa-row-h) * 1.18);
+        block-size: calc(var(--kp-sig-pa-row-h) * 1.18);
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 60% 42%, var(--primary) 0 7%, transparent 9.5%),
+            radial-gradient(circle at 82% 42%, var(--primary) 0 7%, transparent 9.5%),
+            radial-gradient(circle at 60% 42%, var(--card) 0 15%, transparent 17.5%),
+            radial-gradient(circle at 82% 42%, var(--card) 0 15%, transparent 17.5%), var(--primary);
+        filter: drop-shadow(1.5px 1.5px 0 var(--kp-sig-pa-pass-c));
+        animation: none;
+    }
+
+    [data-theme='pastel']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track
+        )[data-kp-pieces]::before,
+    [data-theme='pastel']
+        :is(
+            .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+            .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track
+        )[data-kp-pieces]::after,
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading][data-kp-pieces]::after {
+        content: none;
+    }
+
+    [data-theme='pastel'] [data-kp-pieces] > :is(.kp-pieces) {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The pieces (js/loading-pieces.js): a pom-pom is mint with a fine dot
+       of its own darker stripe; the head is plum with two paper eyes looking
+       ahead and two feelers; a leg is a short plum stub. Sky only as the flat
+       second pass beside them. */
+    [data-theme='pastel'] .kp-pieces {
+        --kp-sig-pa-q: var(--kp-pieces-q, 9px);
+        filter: drop-shadow(1.5px 1.5px 0 var(--kp-sig-pa-pass-c));
+    }
+
+    [data-theme='pastel'] .kp-pieces :is(.kp-pieces__bead, .kp-pieces__pom, .kp-pieces__head) {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        box-sizing: border-box;
+        inline-size: var(--s, var(--kp-sig-pa-q));
+        block-size: var(--s, var(--kp-sig-pa-q));
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--kp-sig-pa-tape-stripe) 0.6px, transparent 1.1px) 0 0 / 3px 3px,
+            var(--accent);
+    }
+
+    [data-theme='pastel'] .kp-pieces .kp-pieces__head {
+        --q: var(--s, var(--kp-sig-pa-q));
+        inline-size: calc(var(--q) * 1.18);
+        block-size: calc(var(--q) * 1.18);
+        background:
+            radial-gradient(circle at 60% 42%, var(--primary) 0 calc(var(--q) * 0.07), transparent calc(var(--q) * 0.095)),
+            radial-gradient(circle at 82% 42%, var(--primary) 0 calc(var(--q) * 0.07), transparent calc(var(--q) * 0.095)),
+            radial-gradient(circle at 60% 42%, var(--card) 0 calc(var(--q) * 0.15), transparent calc(var(--q) * 0.175)),
+            radial-gradient(circle at 82% 42%, var(--card) 0 calc(var(--q) * 0.15), transparent calc(var(--q) * 0.175)), var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-pieces .kp-pieces__head::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 80%;
+        inset-inline-start: 34%;
+        --f: calc(var(--q) * 0.11);
+        inline-size: calc(var(--q) * 0.7);
+        block-size: calc(var(--q) * 0.55);
+        background:
+            radial-gradient(circle at var(--f) var(--f), var(--primary) 0 var(--f), transparent calc(var(--f) * 1.35)),
+            radial-gradient(circle at calc(100% - var(--f)) var(--f), var(--primary) 0 var(--f), transparent calc(var(--f) * 1.35)),
+            linear-gradient(var(--primary), var(--primary)) calc(var(--f) * 0.6) var(--f) / max(1px, calc(var(--q) * 0.1)) 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) calc(100% - var(--f) * 0.6) var(--f) / max(1px, calc(var(--q) * 0.1)) 100% no-repeat;
+        transform-origin: 50% 100%;
+    }
+
+    /* A big head beside the last day, and one on a plate's top-end corner. */
+    [data-theme='pastel'] .kp-pieces .kp-pieces__head--day {
+        --q: calc(var(--kp-sig-pa-q) * 4.4 / 1.18);
+        translate: 0 -50%;
+    }
+
+    [data-theme='pastel'] .kp-pieces .kp-pieces__head--lead {
+        --q: calc(var(--kp-sig-pa-q) * 1.55 / 1.18);
+        translate: -50% -50%;
+    }
+
+    [data-theme='pastel'] .kp-pieces .kp-pieces__leg {
+        position: absolute;
+        inline-size: max(1.5px, calc(var(--kp-sig-pa-q) * 0.24));
+        block-size: calc(var(--kp-sig-pa-q) * 0.75);
+        margin-inline-start: calc(var(--kp-sig-pa-q) * -0.12);
+        border-radius: 0 0 1em 1em;
+        background: var(--primary);
+        transform-origin: 50% 0;
+    }
+
+    [data-theme='pastel'] .kp-pieces--day .kp-pieces__leg {
+        block-size: var(--kp-sig-pa-q);
+        margin-block-start: 0.16rem;
+    }
+
+    /* A loading day is the body: a mint pom-pom rim with its pass. */
+    [data-theme='pastel'] :is(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'] {
+        box-shadow:
+            0 0 0 0.16rem var(--accent),
+            1.5px 1.5px 0 0.16rem var(--kp-sig-pa-pass-c);
+    }
+
+    /* The busy progress bar is the row along its track; its fill stands down. */
+    [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
+        overflow: visible;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] :is(.kp-progressbar__fill, .kp-progressbar__head) {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The hump through the days themselves and through the beads, in
+           reading order; the legs step in turn; the feelers feel. */
+        [data-theme='pastel'] .kp-calendar__day[data-kp-pieces] {
+            animation: kp-sig-pastel-bug-rise calc(var(--kp-sig-pa-loop) / 2) ease-in-out var(--kp-pieces-d, 0ms) infinite;
+        }
+
+        [data-theme='pastel'] .kp-pieces :is(.kp-pieces__bead, .kp-pieces__head--line) {
+            animation: kp-sig-pastel-bug-rise-bead calc(var(--kp-sig-pa-loop) / 2) ease-in-out calc(var(--k, 0) * 70ms) infinite;
+        }
+
+        [data-theme='pastel'] .kp-pieces .kp-pieces__leg {
+            animation: kp-sig-pastel-bug-step calc(var(--kp-sig-pa-loop) / 2) ease-in-out calc(var(--kp-pieces-d, 0ms) + var(--k, 0) * 110ms) infinite;
+        }
+
+        [data-theme='pastel'] .kp-pieces .kp-pieces__leg--b {
+            animation-delay: calc(var(--kp-pieces-d, 0ms) + 600ms);
+        }
+
+        [data-theme='pastel'] .kp-pieces :is(.kp-pieces__head--day, .kp-pieces__head--lead)::before {
+            animation: kp-sig-pastel-bug-feel calc(var(--kp-sig-pa-loop) / 2) ease-in-out infinite alternate;
+        }
+    }
+
+    @keyframes kp-sig-pastel-bug-rise {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0 -0.22rem;
+        }
+    }
+
+    @keyframes kp-sig-pastel-bug-rise-bead {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+
+        50% {
+            translate: 0 calc(var(--s, 9px) * -0.32);
+        }
+    }
+
+    @keyframes kp-sig-pastel-bug-step {
+        0%,
+        100% {
+            rotate: -24deg;
+        }
+
+        50% {
+            rotate: 24deg;
+        }
+    }
+
+    @keyframes kp-sig-pastel-bug-feel {
+        from {
+            rotate: -8deg;
+        }
+
+        to {
+            rotate: 8deg;
+        }
+    }
+

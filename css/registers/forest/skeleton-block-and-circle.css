@@ -1,0 +1,99 @@
+/* @part: skeleton-block-and-circle: Skeleton block and circle */
+    /* ── Skeleton block and circle: the treeline fills in [G9, §6; Kenny,
+       2026-10-07: option 1 of research/forest-skeleton, after the stripes and
+       the planted plot did not give forest vibes]. Two ridges of the same
+       paper-brown rise from the foot, the far one first, then the planted tree
+       line (the lines' own trees, whole trees only, the lines' pitch, margin
+       and edge arithmetic) walks across start to end on the ground line. One
+       clock, --kp-fo-grow, 0 to 1 on the bar's own breath (Kenny, 2026-10-09
+       on research/forest-uniformity, timing: "the bar's breath
+       everywhere"): it arrives in 3000 ms, stands for 600 ms and leaves in
+       3000 ms as the arrival played backwards, on the bar's ease, so it
+       breathes with the lines and the bar beside it. The ridges are heights in percent and the trees are a fixed
+       size per shape, so it fits any block height and the circle (clipped to
+       the circle) alike. Standing still it is the finished picture
+       (--kp-fo-grow stays 1). The chart's loading panel and legend stubs are
+       block skeletons, so they are drawn here too. ── */
+    [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
+        --kp-fo-tree: 2.25rem;
+        --kp-fo-pitch: calc(var(--kp-fo-tree) / 2);
+        --kp-fo-run: calc(round(down, 100% - var(--kp-fo-pitch), 2 * var(--kp-fo-pitch)) + var(--kp-fo-pitch));
+        --kp-fo-margin: calc((100% - var(--kp-fo-run)) / 2);
+        --kp-fo-w: clamp(0, (var(--kp-fo-grow) - 0.12) / 0.88, 1);
+        --kp-fo-edge: calc(
+            var(--kp-fo-margin) + min(round(down, var(--kp-fo-w) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)), var(--kp-fo-run))
+        );
+        --kp-fo-r1: clamp(0, var(--kp-fo-grow) / 0.45, 1);
+        --kp-fo-r2: clamp(0, (var(--kp-fo-grow) - 0.1) / 0.45, 1);
+        --kp-fo-ridge-far: color-mix(in oklab, var(--border-strong) 26%, var(--muted));
+        --kp-fo-ridge-near: color-mix(in oklab, var(--border-strong) 52%, var(--muted));
+        position: relative;
+        overflow: clip;
+        box-sizing: border-box;
+        border: 0;
+        background:
+            linear-gradient(to top, var(--border-strong) 0 1px, transparent 1px),
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--kp-fo-ridge-near) 0 99%, transparent 100%) 4.5rem
+                calc((1 - var(--kp-fo-r2) * 0.34) / 0.66 * 100%) / 7rem 34% repeat-x,
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--kp-fo-ridge-near) 0 99%, transparent 100%) -1rem
+                calc((1 - var(--kp-fo-r2) * 0.46) / 0.54 * 100%) / 12rem 46% repeat-x,
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--kp-fo-ridge-far) 0 99%, transparent 100%) 7rem
+                calc((1 - var(--kp-fo-r1) * 0.5) / 0.5 * 100%) / 10rem 50% repeat-x,
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--kp-fo-ridge-far) 0 99%, transparent 100%) 0
+                calc((1 - var(--kp-fo-r1) * 0.66) / 0.34 * 100%) / 17rem 66% repeat-x,
+            var(--muted);
+        animation: none;
+    }
+
+    [data-theme='forest'] .kp-skeleton--block {
+        border-radius: var(--kp-sig-fo-part);
+    }
+
+    [data-theme='forest'] .kp-skeleton--circle {
+        --kp-fo-tree: 1.1rem;
+        border-radius: 50%;
+    }
+
+    [data-theme='forest'] .kp-skeleton--block.kp-chart__source-stub {
+        --kp-fo-tree: 0.8rem;
+    }
+
+    [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle)::before {
+        content: none;
+    }
+
+    [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 0;
+        pointer-events: none;
+        background: var(--primary);
+        mask: var(--kp-fo-trees) 50% 100% / calc(var(--kp-fo-pitch) * 7) var(--kp-fo-tree) repeat-x;
+        clip-path: inset(calc(100% - var(--kp-fo-tree)) calc(100% - var(--kp-fo-edge)) 0 var(--kp-fo-margin));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
+            animation: kp-skeleton-forest-treeline var(--kp-sig-fo-breath) linear infinite;
+        }
+    }
+
+    @keyframes kp-skeleton-forest-treeline {
+        0% {
+            --kp-fo-grow: 0;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+        }
+        45.4545% {
+            --kp-fo-grow: 1;
+            animation-timing-function: linear;
+        }
+        54.5455% {
+            --kp-fo-grow: 1;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+        }
+        100% {
+            --kp-fo-grow: 0;
+        }
+    }
+

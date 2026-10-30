@@ -1,0 +1,103 @@
+/* @part: sidenav: The side navigation */
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Not a panel but a column of slabs, each with its own hard shadow.
+       The current one does not tint: it slides into its shadow and the
+       shadow goes out from under it [approved by Kenny, 2026-09-11]. */
+    [data-theme='brutalism'] .kp-sidenav {
+        --kp-sidenav-surface: transparent;
+        --kp-sidenav-gap: 0.4rem;
+        border: none;
+    }
+
+    /* Over the page the slabs need ground of their own: on a transparent panel the page under it
+       showed between and behind them and the items were hard to read (Kenny, 2026-10-13, round 4:
+       "er is geen achtergrond"). The page's ground, closed by a hard 3 px edge like a slab's. */
+    [data-theme='brutalism'] .kp-sidenav[data-kp-sidenav-mode='over'] {
+        --kp-sidenav-surface: var(--background);
+        border-inline-end: 3px solid var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__header {
+        background: var(--foreground);
+        color: var(--background);
+        border: 2px solid var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__title {
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link,
+    [data-theme='brutalism'] .kp-sidenav__category-toggle {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+        padding-inline: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-sidenav__link,
+        [data-theme='brutalism'] .kp-sidenav__category-toggle {
+            transition:
+                translate var(--fx-duration, 100ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 100ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* Pointed at: inverted, the shadow staying on the ground [G8]. */
+    [data-theme='brutalism'] .kp-sidenav__link:not([aria-current='page']):hover {
+        background: var(--foreground);
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link:not([aria-current='page']):focus-visible {
+        translate: -2px -2px;
+        box-shadow: 5px 5px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: 3px 3px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Slabs. The control sits on its shadow and moves into it when
+       pressed; the frame has the same border and never rounds. */
+    [data-theme='brutalism'] .kp-to-top {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-to-top:active {
+        translate: 3px 3px;
+        box-shadow: 0 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media {
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 6px 6px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-media-figure > figcaption {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        font-size: 0.75rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='brutalism'] .kp-media-figure {
+        color: var(--foreground);
+        text-align: start;
+    }
+

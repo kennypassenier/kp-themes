@@ -1,0 +1,82 @@
+/* @part: typed-confirmation: Typed confirmation */
+    /* --- Typed confirmation: the name typed before a destructive action [kpadopt4-ideas] ---
+ * `.kp-type-confirm` (js/components.js): what will be lost, the label with the name set in as code, the field, the
+ * rule it is matched by and one line that says whether it matches. It stands in the confirmation dialog a button with
+ * `data-kp-confirm-type` opens (`.kp-confirm--typed`, a little wider than a plain question), or in a page's own
+ * dialog or form (`data-kp-type-confirm`). The match line is always there, one badge high, so nothing moves while
+ * the reader types; a match is a word on the success plate, never a colour alone.
+ * Knobs [KT6]: --kp-type-confirm-gap (--kp-space-xs), --kp-type-confirm-list-max (12rem, then the list scrolls),
+ * --kp-confirm-typed-max-width (30rem). */
+    .kp-confirm.kp-confirm--typed {
+        max-inline-size: var(--kp-confirm-typed-max-width, min(30rem, calc(100vw - 2rem)));
+    }
+
+    .kp-type-confirm {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-type-confirm-gap, var(--kp-space-xs, 0.25rem));
+        min-inline-size: 0;
+    }
+
+    .kp-type-confirm__loses {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-inline-start: 3px solid var(--destructive);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-type-confirm__loses-title {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-type-confirm__list {
+        max-block-size: var(--kp-type-confirm-list-max, 12rem);
+        margin: 0;
+        padding-inline-start: 1.25rem;
+        overflow-y: auto;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-xs, 0.75rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-type-confirm__list > li + li {
+        margin-block-start: 2px;
+    }
+
+    .kp-type-confirm__name {
+        padding: 0 0.3em;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        user-select: all;
+        /* A long name that breaks keeps its chip's room on every line. */
+        box-decoration-break: clone;
+    }
+
+    .kp-type-confirm__input {
+        font-family: var(--font-mono, ui-monospace, monospace);
+    }
+
+    .kp-type-confirm__rule {
+        margin: 0;
+    }
+
+    .kp-type-confirm__status {
+        display: flex;
+        align-items: center;
+        min-block-size: max(1.5rem, 1lh);
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+

@@ -1,0 +1,470 @@
+/* @part: sidenav: Side navigation */
+    /* --- Side navigation [feat-nav-3] ------------------------------------
+       A navigation that stands beside the content instead of above it,
+       built to the feature list Kenny pointed at (MDBootstrap's sidenav,
+       read 2026-09-11). Three modes, a slim rail, collapsible categories,
+       a backdrop, either edge, and a way out of every one of them [KT6].
+
+       What is deliberately NOT taken from that reference is its `color`
+       option. What the active link looks like is the theme's to say, and
+       that is the whole of this package: a register answers `.kp-sidenav`,
+       and a consumer picks a theme rather than a colour.
+
+       One thing CSS cannot do alone: `push` and `side` offset a content
+       element this component does not own, so the module sets that inset
+       and says so in an event. Everything else here is CSS, so a page
+       without JavaScript still gets a navigation rather than a pile of
+       links. */
+
+    .kp-sidenav {
+        --kp-sidenav-w: var(--kp-sidenav-width, 15rem);
+        /* The knob names the whole panel, border included. Without this it
+           named the content box, the panel painted a pixel wider than the
+           number, and the offset a push mode puts on the content — which
+           reads that same knob — left the text under the border. The
+           package does not set box-sizing globally, so a component that
+           has a width says so itself. */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        /* It has a width, so it does not give it up. In `side` mode the
+           panel is a flex item of the consumer's own layout, and the
+           default there is to shrink — which made a panel asked for 11rem
+           paint at 135px beside its content. */
+        flex-shrink: 0;
+        inline-size: var(--kp-sidenav-w);
+        max-inline-size: 100%;
+        background: var(--kp-sidenav-surface, var(--card));
+        color: var(--foreground);
+        border-inline-end: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    /* A narrower panel on a narrow screen [Kenny, 2026-10-14, from the
+       libraries survey: shadcn's --sidebar-width-mobile, Mantine's
+       responsive width]. `data-kp-sidenav-narrow` is what js/sidenav.js writes
+       while `data-kp-sidenav-over-below` holds the panel as an `over` panel
+       (40rem or its own step). The knob is opt-in: without
+       `--kp-sidenav-width-narrow` the fallback is the width the panel has
+       anywhere else, so nothing moves. It stands before the rail's rule
+       below, which names a width of its own and wins over it. */
+    .kp-sidenav[data-kp-sidenav-narrow] {
+        --kp-sidenav-w: var(--kp-sidenav-width-narrow, var(--kp-sidenav-width, 15rem));
+    }
+
+    /* The panel that is part of the page. This is the default because a
+       navigation that is there is a better starting point than one that
+       has to be summoned; `over` and `push` are the ones you ask for. */
+    .kp-sidenav[data-kp-sidenav-mode='over'],
+    .kp-sidenav[data-kp-sidenav-mode='push'] {
+        --kp-sidenav-away: var(--kp-sidenav-away-to-start, -100%);
+        position: fixed;
+        /* One value or two, so a page with a bar it wants to keep can say
+           `--kp-sidenav-inset-block: 3rem 0` and have the panel start under
+           it instead of sliding beneath it. */
+        inset-block: var(--kp-sidenav-inset-block, 0);
+        inset-inline-start: 0;
+        z-index: var(--kp-sidenav-layer, 60);
+        translate: var(--kp-sidenav-away) 0;
+    }
+
+    .kp-sidenav[data-kp-sidenav-position='absolute'] {
+        position: absolute;
+    }
+
+    /* Either edge, and the edge is logical: in a right-to-left page the
+       start is the right, and the panel still slides out of the side it
+       came from. */
+    .kp-sidenav[data-kp-sidenav-side='end'] {
+        --kp-sidenav-away: var(--kp-sidenav-away-to-end, 100%);
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+        border-inline-end: none;
+        border-inline-start: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    .kp-sidenav:dir(rtl) {
+        --kp-sidenav-away: var(--kp-sidenav-away-to-end, 100%);
+    }
+
+    .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl) {
+        --kp-sidenav-away: var(--kp-sidenav-away-to-start, -100%);
+    }
+
+    .kp-sidenav[data-kp-sidenav-open='true'] {
+        translate: 0 0;
+    }
+
+    .kp-sidenav[data-kp-sidenav-mode='side'][data-kp-sidenav-open='false'],
+    .kp-sidenav[data-kp-sidenav-mode='side'][data-kp-sidenav-open='false'] + .kp-sidenav__backdrop {
+        display: none;
+    }
+
+    /* Its timing is the theme's, like everything else here: a slide on the
+       package's own `ease` keyword read as abrupt, and terminal steps where
+       pastel overshoots is the handwriting this file is for. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav {
+            transition: translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+
+        /* The far edge travels again [gap-9]. It was excepted here for
+           nine days — `transition: none`, because the slide read as rough
+           through two attempts and Kenny, 2026-09-11: "die is nog altijd
+           fucked up. Maar voorlopig laten we het er gewoon uit". The eye
+           was wrong: measured 2026-09-20, frame by frame, the panel moves
+           in 10 to 15 frames at one every 17 to 18 ms, for as long as each
+           register declares — formal 166 ms of 180, dark 216 of 220,
+           pastel 232 of 220 because its ease overshoots. Nothing is
+           dropped, and terminal's two steps are its own `steps(2, end)`
+           [research/gap-9-far-edge/README.md]. */
+
+        /* Width is a layout property and animating it costs a reflow per
+           frame. Only a panel that actually has a rail pays for it. */
+        .kp-sidenav[data-kp-sidenav-slim] {
+            transition:
+                translate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease)),
+                inline-size var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+
+        /* Closing and collapsing are the opening played backwards: a
+           transition takes the curve of the state it goes to, so the panel
+           going away and the rail going slim take the theme's curve turned
+           around, which js/sidenav.js writes as --kp-sidenav-ease-back
+           (Kenny, 2026-10-05: no discrepancy between opening and closing). */
+        .kp-sidenav:is(
+            [data-kp-sidenav-open='false'],
+            [data-kp-sidenav-slim-collapsed]:not(
+                [data-kp-sidenav-peek='open'],
+                [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+            )
+        ) {
+            transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
+        }
+    }
+
+    /* The slim rail: icons stay, labels go. `--slim-hide` and `--slim-show`
+       are the two halves of the same switch, so a consumer can swap a
+       wordmark for a monogram rather than only losing text. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed] {
+        --kp-sidenav-w: var(--kp-sidenav-slim-width, 4.5rem);
+    }
+
+    /* Collapsed and not peeking: a rail told to expand on hover is expanded
+       while js/sidenav.js writes `data-kp-sidenav-peek="open"` (after the
+       pointer has rested, or while the focus is inside), and on plain
+       `:hover` on a page without the module. Narrowing again it is
+       `"leaving"` until the rail has its icon width: the words stay while
+       the width closes, as they came at once when it opened, so the close
+       is the opening backwards. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+        [data-kp-sidenav-slim-hide],
+    .kp-sidenav:not([data-kp-sidenav-slim-collapsed]) [data-kp-sidenav-slim-show] {
+        display: none;
+    }
+
+    /* A label leaves the eye, never the accessibility tree [scope-45]. With
+       display:none a rail entry whose only visible content is an icon had no
+       name at all, so a screen reader said "button". The consumer's own
+       slim-hide hooks keep display:none: those are ornaments the consumer
+       chose to drop, where a label is the entry's name. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+        .kp-sidenav__label:not(.kp-sidenav__flyout *) {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    /* Hovering a rail that was told to expand gives the labels back without
+       changing the state anything else reads. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:is(
+            [data-kp-sidenav-peek='open'],
+            [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+        ) {
+        --kp-sidenav-w: var(--kp-sidenav-width, 15rem);
+    }
+
+    /* In the collapsed rail a group's submenu floats beside the rail, in the
+       top layer (js/sidenav.js makes it a manual `.kp-popover` there, so it
+       opens with the theme's popover effect and js/motion.js plays its close
+       as that opening backwards), and an item's label shows as the
+       package's tooltip. Both are placed by the module beside the rail and
+       kept inside the window. */
+    :is(.kp-sidenav__flyout, .kp-sidenav__tip):popover-open,
+    :is(.kp-sidenav__flyout, .kp-sidenav__tip)[data-kp-ghost] {
+        position: fixed;
+        inset: auto;
+        left: var(--kp-sidenav-float-x, 0);
+        top: var(--kp-sidenav-float-y, 0);
+        margin: 0;
+        position-area: none;
+    }
+
+    /* In the floating mode a group's chevron shows the group's folded or
+       unfolded state, not whether it floats out: the float is drawn by the
+       popover, and a chevron that turned with it would turn on a different
+       clock from the popover's open and close. */
+    .kp-sidenav__category:has(> .kp-sidenav__flyout) > .kp-sidenav__category-toggle::after {
+        rotate: -45deg;
+    }
+
+    .kp-sidenav__category[data-kp-sidenav-expanded]:has(> .kp-sidenav__flyout) > .kp-sidenav__category-toggle::after {
+        rotate: 45deg;
+    }
+
+    /* The submenu's own `display` would beat the browser's rule that hides a
+       popover that is not open. */
+    .kp-sidenav__flyout:not(:popover-open, [data-kp-ghost]) {
+        display: none;
+    }
+
+    .kp-sidenav__flyout:popover-open {
+        display: grid;
+        grid-template-rows: 1fr;
+        min-inline-size: var(--kp-sidenav-flyout-min, 11rem);
+        transition: none;
+    }
+
+    .kp-sidenav__flyout .kp-sidenav__link {
+        padding-inline-start: var(--kp-sidenav-flyout-indent, 0.6rem);
+    }
+
+    .kp-sidenav__tip {
+        white-space: nowrap;
+    }
+
+    .kp-sidenav__header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--kp-sidenav-pad, 0.75rem);
+        border-block-end: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    .kp-sidenav__title {
+        margin: 0;
+        /* Its size is the package's [scope-88]: titanium's 14px, on the
+           running line height; a register keeps its face, case and spacing. */
+        padding-block: 0;
+        font-size: var(--kp-sidenav-title-size, 0.875rem);
+        line-height: var(--kp-line-height, 1.5);
+        font-weight: 600;
+    }
+
+    /* The list scrolls, the header and footer do not. A long navigation in
+       a short window is the normal case, not the edge one. */
+    .kp-sidenav__scroll {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        /* Never sideways [Kenny, 2026-09-11]. A narrow panel measured 140px
+           of content in a 127px box and the count after a long label sat two
+           pixels past the edge, reachable only by scrolling. A navigation you
+           have to scroll sideways is a navigation you cannot read. */
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+    }
+
+    .kp-sidenav__list {
+        list-style: none;
+        margin: 0;
+        padding: var(--kp-sidenav-list-pad, 0.4rem);
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-sidenav-gap, 0.1rem);
+    }
+
+    .kp-sidenav__link,
+    .kp-sidenav__category-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        /* Its width INCLUDING its padding. The package sets no global
+           box-sizing, so `inline-size: 100%` on a padded row made every row
+           19px wider than the list that held it — which is where the
+           sideways scroll came from. */
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-inline-size: 0;
+        /* The row's block padding, type size and line height are the
+           package's in every theme [scope-87], titanium's values; a
+           register keeps its inline padding (gates/box-metrics.test.mjs). */
+        padding: var(--kp-sidenav-item-pad, var(--kp-sidenav-link-padding-block, var(--kp-space-sm, 0.5rem)) 0.6rem);
+        font: inherit;
+        font-size: var(--kp-sidenav-link-size, var(--kp-font-size-sm, 0.875rem));
+        line-height: var(--kp-line-height, 1.5);
+        text-align: start;
+        text-decoration: none;
+        color: inherit;
+        background: none;
+        border: none;
+        border-radius: var(--radius, 0);
+        cursor: pointer;
+    }
+
+    .kp-sidenav__link:hover,
+    .kp-sidenav__category-toggle:hover {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    /* The current page is marked by more than colour [DI4], the same way
+       the top bar marks it: aria-current is what a screen reader reads and
+       what every theme hangs its own mark on. */
+    .kp-sidenav__link[aria-current='page'] {
+        background: var(--muted);
+        font-weight: 600;
+    }
+
+    .kp-sidenav__icon {
+        flex: 0 0 auto;
+        display: inline-flex;
+        inline-size: var(--kp-sidenav-icon-size, 1.25rem);
+        justify-content: center;
+    }
+
+    .kp-sidenav__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-sidenav__badge {
+        margin-inline-start: auto;
+        /* The label gives way, the count does not: a number cut in half is
+           worse than a name cut in half, because a name still reads. */
+        flex-shrink: 0;
+        font-size: var(--kp-font-size-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-sidenav__divider {
+        block-size: 1px;
+        margin: var(--kp-sidenav-gap, 0.4rem) 0;
+        background: var(--border);
+        border: none;
+    }
+
+    .kp-sidenav__footer {
+        padding: var(--kp-sidenav-pad, 0.75rem);
+        border-block-start: var(--kp-sidenav-edge, 1px solid var(--border));
+    }
+
+    /* A category and its submenu. The open height is a grid track rather
+       than a measured pixel value, so the package animates it without
+       JavaScript having to know how tall the list is. */
+    .kp-sidenav__category-toggle::after {
+        content: '';
+        margin-inline-start: auto;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-inline-end: 1px solid currentcolor;
+        border-block-end: 1px solid currentcolor;
+        rotate: -45deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__category-toggle::after {
+            transition: rotate var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+    }
+
+    .kp-sidenav__category-toggle[aria-expanded='true']::after {
+        rotate: 45deg;
+    }
+
+    .kp-sidenav__submenu {
+        display: grid;
+        grid-template-rows: 0fr;
+    }
+
+    .kp-sidenav__submenu > * {
+        overflow: hidden;
+        min-block-size: 0;
+        /* A zero track does not go below its child's own padding, so a
+           closed submenu measured 12.8px — the list's padding — and sat
+           there as a visible sliver. The inline inset stays; the block
+           inset comes from the items. */
+        padding-block: 0;
+    }
+
+    .kp-sidenav__category[data-kp-sidenav-expanded] > .kp-sidenav__submenu {
+        grid-template-rows: 1fr;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__submenu {
+            transition: grid-template-rows var(--kp-sidenav-duration, var(--fx-duration, 220ms)) var(--kp-sidenav-ease, var(--fx-ease, ease));
+        }
+
+        /* A group folding shut is its unfolding played backwards, as the
+           rail's collapse is (above). */
+        .kp-sidenav__category:not([data-kp-sidenav-expanded]) > .kp-sidenav__submenu,
+        .kp-sidenav__category-toggle[aria-expanded='false']::after {
+            transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
+        }
+    }
+
+    .kp-sidenav__submenu .kp-sidenav__link {
+        padding-inline-start: var(--kp-sidenav-submenu-indent, 2.1rem);
+    }
+
+    /* A submenu item says so before its name (Kenny, 2026-09-20: "zodat het
+       extra duidelijk is wat nu juist een hoofdmenuitem en een submenuitem
+       is"). The mark stands in the name's own line, right before its first
+       letter, so it is before the word in every theme whatever inline
+       padding a register gave the row — pastel's submenu row starts its text
+       12.8px in where formal's starts 33.6px, and a mark measured from the
+       row's edge fell on top of the word in one and before it in the other.
+       In the line rather than over it, because the name clips what overflows
+       it for the ellipsis, and an absolutely placed mark was clipped away
+       with it. Every submenu name in a theme takes the same mark, so they
+       still begin at one point [fix-64].
+
+       Which mark is the register's answer — a glyph through the knob, or a
+       shape it draws itself the way nostromo lights the dot its rows already
+       carry. Empty by default, so a consumer's own theme shows none. */
+    .kp-sidenav__submenu .kp-sidenav__link .kp-sidenav__label::before {
+        content: var(--kp-sidenav-submenu-mark, '');
+        margin-inline-end: var(--kp-sidenav-submenu-mark-gap, 0.45em);
+        color: var(--kp-sidenav-submenu-mark-ink, var(--muted-foreground));
+    }
+
+    /* The backdrop is a dimming, not a tint: the same value the dialog
+       uses, for the same reason. */
+    .kp-sidenav__backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: calc(var(--kp-sidenav-layer, 60) - 1);
+        background: rgb(0 0 0 / 0.5);
+    }
+
+    /* It arrives with the panel instead of appearing on top of it. A
+       backdrop that snaps to full while the panel is still sliding is what
+       makes the whole movement read as jerky. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-sidenav__backdrop {
+            /* A literal duration, unlike the panel's. The flash check has to
+               read this number to know the fade cannot strobe, and a chain of
+               fallbacks reads as zero to it — which is the worst case it then
+               has to assume. One fade from nothing to half-dark has nothing
+               worth tuning anyway. */
+            animation: kp-sidenav-backdrop 220ms var(--kp-sidenav-ease, var(--fx-ease, ease)) both;
+        }
+    }
+
+    @keyframes kp-sidenav-backdrop {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+

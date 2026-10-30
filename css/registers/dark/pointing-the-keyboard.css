@@ -1,0 +1,138 @@
+/* @part: pointing-the-keyboard: Pointing, the keyboard and the press */
+    /* ── Pointing, the keyboard and the press: one manner for every control
+       [G14, G15, G17; Kenny, 2026-10-09, questions 14, 15 and 17]. A button
+       in a header, a menu, a drawer, a tile or a tour hovers, focuses and
+       presses exactly like dark's own bracketed button; a menu entry like
+       the button; a link by its underline taking the film (above). The line
+       rests at the start: a 2 px slice of the film with its glow stands at
+       the control's start edge and the brackets close one step (the
+       register's own, above). The keyboard's ring is DI2's two channels
+       inside the cut, and it wins over the pointer when both apply. A press
+       is a pass: on contact the line crosses the face (220 ms) and the film
+       edge turns a quarter (+90 degrees) and settles; the brackets close; the
+       release turns it back. Nothing moves. ── */
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item) {
+        background-image: var(--kp-sig-dk-line);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 0 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):hover:not(:disabled, [aria-disabled='true']) {
+        background-size: 2px 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):hover:not(:disabled, [aria-disabled='true'], :focus-visible) {
+        box-shadow: inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.4);
+    }
+
+    /* The film's edge on a link tile or a filter tile: the line at the start. */
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: 0 0 9px hsl(from var(--chart-1) h s l / 0.4);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle):hover::before {
+        opacity: 1;
+    }
+
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle):is(:focus-visible) {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-size var(--fx-duration) var(--fx-ease),
+                --kp-sig-dk-turn var(--fx-duration) cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+
+        /* On contact: the edge turns a quarter on the settle, the ground and the
+           line answer at once; the line crosses the face in the contact time. */
+        [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):active:not(:disabled) {
+            --kp-sig-dk-turn: 90deg;
+            background-size: 2px 100%;
+            transition:
+                background-color 0s,
+                border-color 0s,
+                color 0s,
+                box-shadow 0s,
+                background-size 0s,
+                --kp-sig-dk-turn var(--fx-duration) var(--fx-ease);
+            animation: kp-sig-dark-tap var(--fx-duration) linear both;
+        }
+    }
+
+    /* ── A live update is one pass over the figure [G9; Kenny, 2026-10-09,
+       question 9: "One pass over the figure"]. js/update.js writes the new
+       value at once and marks the element `[data-kp-updating='pass']`; the
+       line crosses the changed figure once from its start (the theme's update
+       time, 660 ms), the letters behind it take the film and settle back to
+       ink once it has gone by; the figure never moves, flares or jolts and
+       the box keeps its space. Applies to the key figure, the state word, the
+       trend, the strip column and the tile alike. A state word keeps its
+       width-holding ::after, so its line is drawn on ::before; a spark (an
+       svg) has no letters, its line crosses the parent's box. Two numbers, how
+       far the line has come (--kp-sig-dk-at) and how much ink lies over the
+       film (--kp-sig-dk-ink), are @property at the top of this file. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] {
+            --kp-update: pass;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass'] {
+            position: relative;
+            --kp-sig-dk-ink-colour: var(--foreground);
+        }
+
+        [data-theme='dark'] .kp-kpi > .kp-kpi__value[data-kp-updating='pass'] {
+            justify-self: start;
+            inline-size: fit-content;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass']:not(:has(> svg)) {
+            background:
+                linear-gradient(var(--kp-sig-dk-gdir), transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
+                linear-gradient(
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink)),
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink))
+                ),
+                var(--kp-iris);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: kp-sig-dark-figure var(--kp-update-duration, 660ms) linear both;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass']:not(.kp-state-word)::after,
+        [data-theme='dark'] .kp-state-word[data-kp-updating='pass']::before {
+            content: '';
+            position: absolute;
+            inset: -2px -4px;
+            z-index: 1;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-live var(--kp-update-duration, 660ms) linear both;
+        }
+    }
+

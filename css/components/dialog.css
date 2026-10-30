@@ -1,0 +1,216 @@
+/* @part: dialog: Dialog */
+    /* --- Dialog ---------------------------------------------------------- */
+
+    /* The browser centres a dialog with `margin: auto` from its own sheet;
+       a reset that zeroes every margin (Tailwind's preflight) takes that
+       away, and a modal dialog lands in the top-left corner (found live in
+       JobTracker, 2026-10-03; fix-92). The dialog says it itself, so a reset in an
+       earlier layer cannot undo it. */
+    .kp-dialog {
+        margin: auto;
+        max-width: var(--kp-dialog-max-width, min(32rem, calc(100vw - 2rem)));
+        padding: 1.25rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+    }
+
+    /* A dialog stops short of the window and scrolls its body, not itself
+ * [gap-11]. With no maximum height of its own, sixty rows scrolled the
+ * whole dialog (the browser's cap on a modal one) and took the title and
+ * the actions away with the rows. Open, a dialog with a body is a column:
+ * the title, the description and the actions keep their size, and the
+ * body takes what is left and scrolls inside it. A dialog without a
+ * `.kp-dialog__body` keeps its block flow and only gains the cap. */
+    .kp-dialog:modal {
+        inset: 0;
+    }
+
+    .kp-dialog[open] {
+        max-block-size: var(--kp-dialog-max-height, calc(100dvh - 2rem));
+        box-sizing: border-box;
+    }
+
+    .kp-dialog[open]:has(> .kp-dialog__body) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-dialog[open]:has(> .kp-dialog__body) > :not(.kp-dialog__body) {
+        flex: none;
+    }
+
+    .kp-dialog__body {
+        flex: 1 1 auto;
+        min-block-size: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .kp-dialog__body > :first-child {
+        margin-block-start: 0;
+    }
+
+    .kp-dialog__body > :last-child {
+        margin-block-end: 0;
+    }
+
+    .kp-dialog::backdrop {
+        /* Not a token: a backdrop is a dimming of whatever is behind it, and
+     * a theme colour here would tint the page rather than dim it. */
+        background: rgb(0 0 0 / 0.5);
+    }
+
+    .kp-dialog__title {
+        margin: 0 0 0.5rem;
+        /* Titanium's 1.2rem, taken to 1.25rem so the line is a whole pixel
+     * count (22px) at the heading line height [scope-87]. */
+        font-size: var(--kp-dialog-title-size, 1.25rem);
+        line-height: var(--kp-heading-line-height, 1.1);
+    }
+
+    /* The confirmation TH107 opens is a .kp-dialog with one question in
+ * it, so it wants the width of a question rather than of a form. Its
+ * own class, because a consumer needs something to reach it by. */
+    .kp-confirm {
+        max-inline-size: var(--kp-confirm-max-width, min(26rem, calc(100vw - 2rem)));
+    }
+
+    .kp-dialog__actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+
+    /* The parts a dialog grew in 3.0.0: a description under the title, an
+ * optional close button in the corner, and a body class where there was
+ * a bare div. */
+    .kp-dialog__description {
+        margin: 0 0 var(--kp-space-md);
+        color: var(--muted-foreground);
+        font-size: var(--kp-dialog-description-size, 0.875rem);
+    }
+
+    .kp-dialog__close {
+        position: absolute;
+        inset-inline-end: var(--kp-space-sm);
+        inset-block-start: var(--kp-space-sm);
+    }
+
+    /* The title stops short of the close button, by at least half a rem
+ * [scope-60]. The button is out of flow in the corner, so the title's
+ * line ran under it in fifteen themes — formal's words 24px beneath it.
+ * The room is the button's size, its inset and the half rem, whatever
+ * padding the dialog has; padding rather than margin, because several
+ * registers restate the title's margin. */
+    .kp-dialog:has(> .kp-dialog__close) > .kp-dialog__title {
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem);
+    }
+
+    /* A dialog in sections [kpadopt4; chassis's client dialog, almanac's calendars]: a head that holds the title, a state
+ * badge beside it and the description under both; a body of sections, each with a heading and an optional note, the
+ * last one the danger section; and a wide variant for a dialog that manages one thing. The wide dialog takes its full
+ * width at once, so a section that fills later (a revealed token, a list of requests) moves nothing sideways. Knobs
+ * [KT6]: `--kp-dialog-wide` (42rem), `--kp-dialog-section-gap` (the room between sections, 0.75rem). */
+    .kp-dialog--wide {
+        --kp-dialog-max-width: min(var(--kp-dialog-wide, 42rem), calc(100vw - 2rem));
+        inline-size: var(--kp-dialog-max-width);
+        box-sizing: border-box;
+    }
+
+    .kp-dialog__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-dialog__head > .kp-dialog__title {
+        margin: 0;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dialog__head > .kp-dialog__description {
+        flex-basis: 100%;
+        margin: 0;
+    }
+
+    .kp-dialog:has(> .kp-dialog__close) > .kp-dialog__head {
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem);
+    }
+
+    .kp-dialog__section {
+        padding-block: var(--kp-dialog-section-gap, 0.75rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* A section is ruled off along its top, and its words keep air from the ends of that rule: the section's box is
+     * wider than the text column by `--kp-dialog-section-inset` (0.5rem) on each side and pads it back, so the words stay
+     * in line with the title above while the rule runs on past them (text never touches the edge of its plate). The body
+     * takes the same room as its own padding, so its scrolling edge does not cut the rule. The danger section has its
+     * own edge and padding below and is not pulled out. */
+    .kp-dialog__body {
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+    }
+
+    .kp-dialog__section:not(.kp-dialog__section--danger) {
+        margin-inline: calc(-1 * var(--kp-dialog-section-inset, 0.5rem));
+        padding-inline: var(--kp-dialog-section-inset, 0.5rem);
+    }
+
+    .kp-dialog__section:first-child {
+        padding-block-start: 0;
+        border-block-start: 0;
+    }
+
+    .kp-dialog__section:last-child {
+        padding-block-end: 0;
+    }
+
+    .kp-dialog__heading {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-size: var(--kp-text-sm, 0.875rem);
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .kp-dialog__note {
+        margin: var(--kp-space-sm, 0.5rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* The danger section: an entry ruled off along its start edge in the destructive ink, its words in the page's own ink. */
+    .kp-dialog__section--danger {
+        padding-inline-start: var(--kp-space-md, 0.75rem);
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    /* What still uses the thing a confirmation would remove [kpadopt4], and the field a name is typed into. */
+    .kp-confirm__dependents {
+        margin: 0 0 var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+    }
+
+    .kp-confirm__list {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding-inline-start: 1.25rem;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-menu__separator {
+        margin: var(--kp-space-xs) 0;
+        border: 0;
+        border-block-start: 1px solid var(--border);
+    }
+

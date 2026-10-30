@@ -1,0 +1,478 @@
+/* @part: datatable: A header that stays whenever the table has a max height */
+    /* A header that stays whenever the table has a max height [Kenny,
+ * 2026-09-13]: `data-kp-max-height` on the data table, which the script
+ * carries into the knob. The ground is opaque so rows do not show through
+ * the header; a register whose data table stands on another surface
+ * names it in `--kp-datatable-head-ground`, and a register that paints its
+ * headers keeps its own paint, because it is a later layer. */
+    .kp-datatable[data-kp-max-height] > .kp-table-wrap {
+        max-block-size: var(--kp-datatable-max-height, 24rem);
+        overflow: auto;
+    }
+
+    .kp-datatable[data-kp-max-height] .kp-table thead th {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 1;
+        background-color: var(--kp-datatable-head-ground, var(--background));
+    }
+
+    /* The header's ground reaches 2px above the header [fix-32]: Kenny saw
+ * slivers of row text just above it while wheel-scrolling in FireDragon,
+ * the box starting on a half pixel. An unblurred shadow in the header's
+ * own ground, clipped by the scroll box. The shadow is a knob: a register
+ * that paints its header in another colour names that colour in
+ * `--kp-datatable-head-ground` on the cell, and one that draws its own
+ * shadow on the cell adds `var(--kp-datatable-head-reach)` to its list,
+ * under `[data-kp-scrolled]` only.
+ *
+ * The reach is drawn only while the box is scrolled away from the top
+ * [scope-90]: at rest it painted the bottom 2px of a caption standing
+ * directly above the header. js/datatable.js (both channels) sets
+ * `data-kp-scrolled` on the data table while its scroll box is scrolled;
+ * without script the attribute never comes, and there is no reach at all,
+ * which is accepted: the slivers it covers only appear while scrolling. */
+    .kp-datatable[data-kp-max-height] .kp-table thead th {
+        --kp-datatable-head-reach: 0 -2px 0 0 var(--kp-datatable-head-ground, var(--background));
+    }
+
+    .kp-datatable[data-kp-max-height][data-kp-scrolled] .kp-table thead th {
+        box-shadow: var(--kp-datatable-head-reach);
+    }
+
+    /* The box clips its own top edge while scrolled [fix-32, 2026-09-15
+ * follow-up]. Kenny still saw row letters above the header in FireDragon,
+ * zoomed. Recorded from the compositor (FireDragon 155 on a virtual
+ * display, real wheel clicks): when the box's top edge falls in the lower
+ * half of a device pixel, the box's ground and the sticky header start on
+ * the next pixel row, but row text still paints one device pixel above
+ * them, outside the box, at every zoom 1 to 1.75 and in every theme. The
+ * reach cannot cover it — the box clips the reach too — and a larger reach,
+ * a backing pseudo-element or a layer on the header left it; a clip-path
+ * with its top at 0 took it away. Only the top edge is clipped, and only
+ * while scrolled and not keyboard-focused, so a caption above is untouched
+ * at rest and the focus ring keeps its top side. */
+    .kp-datatable[data-kp-max-height][data-kp-scrolled] > .kp-table-wrap:not(:focus-visible) {
+        clip-path: inset(0 -100vmax -100vmax);
+    }
+
+    /* A status label in a table keeps its word whole [gap-13]: the badge's
+ * default `anywhere` broke "WATCHING" into WATCHI / NG in nostromo, in a
+ * column squeezed by a long note. The knob is the badge's own. */
+    .kp-datatable,
+    .kp-table {
+        --kp-badge-wrap: normal;
+    }
+
+    .kp-table tr[data-kp-clickable] {
+        cursor: pointer;
+    }
+
+    /* The seven of Kenny's form of 2026-09-13 ("Alle zeven, nu"), each as
+ * its approved mock in research/datatable/demo.html drew it. */
+
+    /* Sorting on more than one column: each sorted header carries its place
+ * in a small ring beside its label, on the header's line [#multi-sort]. */
+    .kp-datatable[data-kp-sort-multi] .kp-table thead th {
+        white-space: nowrap;
+    }
+
+    .kp-datatable__sort-order {
+        display: inline-block;
+        margin-inline-start: 0.3rem;
+        min-inline-size: 1.2em;
+        padding: 0 0.25em;
+        border: 1px solid currentColor;
+        border-radius: var(--kp-datatable-sort-order-radius, 999px);
+        font-size: var(--kp-datatable-sort-order-size, 0.7em);
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    .kp-datatable__sort-summary {
+        flex: 1 1 auto;
+    }
+
+    /* The multi-sort summary's own line [fix-83]: one line high whatever it
+       says, so sorting moves nothing, and the way back to the opening sort
+       keeps its room when there is nothing to go back to. */
+    .kp-datatable__sort-line {
+        flex-wrap: nowrap;
+    }
+
+    .kp-datatable__sort-line > .kp-datatable__sort-summary {
+        min-inline-size: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    [data-kp-datatable-sort-reset][data-kp-datatable-at-opening] {
+        visibility: hidden;
+    }
+
+    /* Refreshing: a spinner beside the status words [#states]. */
+    .kp-datatable__status:has(> .kp-spinner) {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-datatable__status > .kp-spinner {
+        --kp-spinner-size: 1em;
+    }
+
+    /* Loading, in sight [busy overlay]: a table long or slow enough that its
+ * status line sits below the fold asks for a large spinner over its rows,
+ * with the status words and the count under it. The layer is placed in the
+ * box that holds the table, under the header, so nothing moves when it
+ * comes or goes; the rows show dimmed through it. */
+    .kp-datatable:has(> .kp-datatable__busy-overlay) {
+        position: relative;
+    }
+
+    .kp-datatable__busy-overlay {
+        position: absolute;
+        inset: var(--kp-busy-overlay-top, 0px) var(--kp-busy-overlay-right, 0px) var(--kp-busy-overlay-bottom, 0px) var(--kp-busy-overlay-left, 0px);
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        background: color-mix(in oklab, var(--background) var(--kp-busy-overlay-veil, 70%), transparent);
+        pointer-events: none;
+    }
+
+    .kp-datatable__busy-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1rem);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0 0 1px var(--border);
+        text-align: center;
+    }
+
+    .kp-datatable__busy-panel > .kp-spinner {
+        --kp-spinner-size: var(--kp-busy-overlay-spinner, 2.5rem);
+    }
+
+    .kp-datatable__busy-panel > .kp-datatable__busy-clock {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Loading, on a phone [scope-143]: the layer clips rather than spilling
+ * over the status line, and in a narrow table the panel lies flat: the
+ * spinner beside the words, the words kept to three lines (the status line
+ * says all of it), so it fits over the three skeleton rows of a first
+ * load. */
+    .kp-datatable__busy-overlay {
+        overflow: hidden;
+    }
+
+    @container kp-table (max-width: 30rem) {
+        .kp-datatable__busy-panel {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: center;
+            gap: 0 var(--kp-space-md, 1rem);
+            max-inline-size: calc(100% - 2 * var(--kp-space-sm, 0.5rem));
+            padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+            text-align: start;
+        }
+
+        .kp-datatable__busy-panel > .kp-spinner {
+            --kp-spinner-size: var(--kp-busy-overlay-spinner-narrow, 1.75rem);
+            grid-row: span 2;
+        }
+
+        .kp-datatable__busy-panel > .kp-datatable__busy-words {
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+        }
+    }
+
+    /* Choosing which columns show [#columns]. The menu hangs under its
+ * button, and above it where the window has no room below, placed as the
+ * "+ Add filter" menu is (fixed, see there): opened at the bottom of a
+ * 720px window it ran 212 to 288px past the edge in all 22 themes. */
+    .kp-datatable__columns {
+        position: fixed;
+        position-try-fallbacks: flip-block;
+    }
+
+    /* A checkbox and its column on one line in the menu. */
+    .kp-datatable__column-option {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* Rows that open: the detail row wraps its prose rather than widening
+ * the table, and the toggle keeps its width when its glyph turns
+ * [#expansion]. */
+    /* The whole row opens it, so the whole row says so [Kenny, 2026-10-02]. */
+    .kp-datatable tbody > tr:has(> td [data-kp-row-toggle]) {
+        cursor: pointer;
+    }
+
+    .kp-datatable__expand {
+        min-inline-size: var(--kp-datatable-expand-size, 2em);
+    }
+
+    /* The expand column is as wide as its toggle, like the reorder column: in a wide table the spare width goes to the
+     * data, not to a blank band beside the toggle [fix-1026]. */
+    .kp-table :is(th, td):is([data-kp-expand-column], [data-kp-expand-cell]) {
+        inline-size: 1%;
+        white-space: nowrap;
+    }
+
+    /* Row reorder [wish-1120, homelab 93]: a column of drag handles, first in the row, as wide as the handle. The grip is six dots drawn
+     * with two gradients, so it takes the text colour of whatever theme the table is in. */
+    .kp-table :is(th, td)[data-kp-reorder-column],
+    .kp-table :is(th, td)[data-kp-reorder-cell] {
+        inline-size: 1%;
+        white-space: nowrap;
+        padding-inline-end: 0;
+    }
+
+    .kp-datatable__handle {
+        cursor: grab;
+        touch-action: none;
+        min-inline-size: var(--kp-datatable-handle-size, 2em);
+    }
+
+    .kp-datatable__handle[aria-disabled] {
+        cursor: not-allowed;
+        opacity: 0.45;
+    }
+
+    .kp-datatable__grip {
+        display: block;
+        inline-size: 0.6em;
+        block-size: 1em;
+        margin-inline: auto;
+        background:
+            radial-gradient(circle, currentColor 0.09em, transparent 0.1em) 0 0 / 0.3em 0.33em repeat;
+        opacity: 0.8;
+    }
+
+    .kp-table tbody > tr[data-kp-dragging] {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: -2px;
+        cursor: grabbing;
+    }
+
+    .kp-table tr.kp-datatable__detail > td {
+        padding-block: var(--kp-datatable-detail-padding-block, 0.75rem 1rem);
+        white-space: normal;
+    }
+
+    /* A group row that folds a run of rows [J2, scope-143]: the whole row
+ * folds, so the whole row says so; it reads as a heading over its rows,
+ * on the ground a row takes under the pointer, and its toggle sits before
+ * its name. */
+    .kp-datatable tbody > tr[data-kp-row-group] {
+        cursor: pointer;
+    }
+
+    .kp-table tbody > tr[data-kp-row-group] > :is(th, td) {
+        background-color: var(--kp-datatable-group-ground, var(--muted));
+        font-weight: var(--kp-datatable-group-weight, 600);
+        text-align: start;
+        white-space: normal;
+    }
+
+    /* Whatever follows the toggle (a mark, an icon, the name) keeps a gap of its own: 0.25rem left the group mark touching the
+     * button (Kenny, 2026-10-19 17:20, "De iconen plakken NOG ALTIJD tegen de opening/sluitingsknop"). */
+    .kp-datatable__group-toggle {
+        margin-inline-end: var(--kp-datatable-group-toggle-gap, var(--kp-space-sm, 0.5rem));
+    }
+
+    /* In the card layout a group row is the heading over its cards, not a
+ * card of its own: the whole width, no frame [J2]. */
+    @container kp-table (max-width: 40rem) {
+        .kp-datatable[data-kp-cards] .kp-table tr[data-kp-row-group] {
+            padding: 0;
+            border: 0;
+            background: none;
+        }
+
+        .kp-datatable[data-kp-cards] .kp-table tr[data-kp-row-group] > :is(th, td) {
+            display: block;
+            /* A block, where the table's block size is a height and not a floor: a heading that holds an action which wraps
+             * grows with it, and its toggle no longer lands on the action (the row stayed 40 px high round a 68 px heading,
+             * so Restore… and the toggle overlapped by 3.5 x 3 px at 390) [alignrest-1019]. */
+            block-size: auto;
+            min-block-size: var(--kp-row-height, calc(var(--kp-control-height, 2.25rem) + 0.25rem));
+            border-radius: var(--radius, 0.5rem);
+        }
+    }
+
+    /* A first column that stays [#sticky]. The script marks the cells of the
+ * fixed columns and writes the offset each sticks at; the ground is opaque
+ * so the scrolled cells do not show through, and the last fixed column
+ * draws a hairline. The header's cells stay above the body's, and the
+ * corner above both. */
+    .kp-datatable[data-kp-fixed-columns] .kp-table :is(th, td)[data-kp-fixed] {
+        position: sticky;
+        inset-inline-start: var(--kp-datatable-fixed-start, 0);
+        z-index: 1;
+        background-color: var(--kp-datatable-fixed-ground, var(--kp-datatable-head-ground, var(--background)));
+    }
+
+    .kp-datatable[data-kp-fixed-columns] .kp-table :is(th, td)[data-kp-fixed='last'] {
+        box-shadow: inset calc(-1 * var(--kp-datatable-fixed-rule-width, 1px)) 0 var(--kp-datatable-fixed-rule, var(--border-strong));
+    }
+
+    .kp-datatable[data-kp-fixed-columns][data-kp-max-height] .kp-table thead th {
+        z-index: 2;
+    }
+
+    /* The last fixed header cell keeps its hairline and, while the box is
+ * scrolled, the reach above the sticky header [fix-32, scope-90]. At rest
+ * the hairline rule above draws it alone. */
+    .kp-datatable[data-kp-fixed-columns][data-kp-max-height][data-kp-scrolled] .kp-table thead th[data-kp-fixed='last'] {
+        box-shadow:
+            inset calc(-1 * var(--kp-datatable-fixed-rule-width, 1px)) 0 var(--kp-datatable-fixed-rule, var(--border-strong)),
+            var(--kp-datatable-head-reach);
+    }
+
+    .kp-datatable[data-kp-fixed-columns] .kp-table thead th[data-kp-fixed] {
+        z-index: 3;
+    }
+
+    /* A last column that stays [datatable-r5-1019, O22]. `data-kp-fixed-end="n"`
+ * keeps the last n columns at the end edge while the box scrolls sideways
+ * (an action column stays reachable). The script marks the cells
+ * (`data-kp-fixed-end`, `first` on the one that draws the hairline) and
+ * writes the offset each sticks at; the ground is opaque like the start
+ * columns', and the header's cells stay above the body's. */
+    .kp-datatable[data-kp-fixed-end] .kp-table :is(th, td)[data-kp-fixed-end] {
+        position: sticky;
+        inset-inline-end: var(--kp-datatable-fixed-end, 0);
+        z-index: 1;
+        background-color: var(--kp-datatable-fixed-ground, var(--kp-datatable-head-ground, var(--background)));
+    }
+
+    .kp-datatable[data-kp-fixed-end] .kp-table :is(th, td)[data-kp-fixed-end='first'] {
+        box-shadow: inset var(--kp-datatable-fixed-rule-width, 1px) 0 var(--kp-datatable-fixed-rule, var(--border-strong));
+    }
+
+    .kp-datatable[data-kp-fixed-end] .kp-table thead th[data-kp-fixed-end] {
+        z-index: 3;
+    }
+
+    /* Editing a value in its cell [#inline-edit]: an editable value is a
+ * button with a dashed underline and a pencil, so it can be told apart
+ * before a pointer finds it; the editor is the package's own field, in
+ * the compact density so the row does not jump. */
+    .kp-datatable__edit {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-block-end: 1px dashed var(--kp-datatable-edit-rule, var(--border-strong));
+        border-radius: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        text-align: inherit;
+        cursor: pointer;
+    }
+
+    /* The pencil is paint, not text: it stays out of the value a search, a
+ * sort or an export reads, and out of what a screen reader says (the
+ * second declaration, for a browser that reads alternative text). */
+    .kp-datatable__edit::after {
+        content: var(--kp-datatable-edit-glyph, '✎');
+        content: var(--kp-datatable-edit-glyph, '✎') / '';
+    }
+
+    .kp-datatable__editor {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: var(--kp-datatable-editor-min, 8rem);
+    }
+
+    .kp-datatable__editor > .kp-field__input {
+        inline-size: 100%;
+    }
+
+    /* Moving through cells with the arrow keys [#keyboard]: the two-part
+ * ring drawn inside the cell, so the next cell's ground and the scroll box
+ * cannot cut it away. */
+    .kp-table[role='grid'] :is(th, td):focus-visible {
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow: inset 0 0 0 calc(var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px)) var(--focus-ring);
+    }
+
+    .kp-datatable {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        /* The fallback container for a data table whose markup has no
+     * `.kp-table-wrap` [TH96, AR24]: without it, converting the card
+     * layout from a media query to a container query would have taken
+     * the cards away from every consumer who left the wrapper out, which
+     * is a repair that breaks the thing it repairs. Where both exist the
+     * wrapper is nearer and wins, and the two measure the same width in
+     * the shape this package draws. */
+        container: kp-table / inline-size;
+        /* The same floor as .kp-table-wrap; see there for why [R3-CQ]. */
+        min-inline-size: var(--kp-table-wrap-min, auto);
+    }
+
+    .kp-datatable__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        /* An inset of its own [gap-11, Kenny 2026-09-13, seen in nostromo].
+     * Twenty registers frame the data table and draw its bars as strips,
+     * and with no padding the row count sat on the frame's left edge and
+     * the pager on its bottom edge. The bar carries the inset rather than
+     * the table, so the rows still run to the frame.
+     * Two knobs rather than one shorthand [Kenny's note of 2026-09-13, "Bars
+     * inset" chosen in research/datatable/demo.html]: the inset is the
+     * default, and a theme or a consumer moves the inline and the block half
+     * on their own. */
+        padding-block: var(--kp-datatable-bar-padding-block, var(--kp-space-sm, 0.5rem));
+        padding-inline: var(--kp-datatable-bar-padding-inline, var(--kp-space-md, 0.75rem));
+    }
+
+    .kp-datatable__search {
+        box-sizing: border-box;
+        flex: 1 1 12rem;
+        /* The spacing steps rather than their comfortable values [gap-13]:
+     * the same 0.5rem and 0.75rem in the default density, and the density
+     * switch reaches the search box as it reaches the rows. */
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font: inherit;
+        inline-size: 100%;
+        min-inline-size: 0;
+        box-sizing: border-box;
+    }
+
+    /* A sortable header is a control, so it says so on hover and carries its
+ * state in an arrow that is not the only carrier — aria-sort is. */
+    .kp-table th[data-kp-sort] {
+        cursor: pointer;
+        user-select: none;
+    }
+

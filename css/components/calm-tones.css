@@ -1,0 +1,113 @@
+/* @part: calm-tones: Calm tones for the calendar, the heat grid and the uptime strip */
+    /* --- Calm tones for the calendar, the heat grid and the uptime strip [kpadopt6] -----
+ * `data-kp-tones="calm"` (js/calm-tones.js): `logged` is the theme's accent (`--primary`, "this is mine"; `data-kp-logged-fill=
+ * "success"` on the component asks for the success plate), `quiet` is the muted plate lowered a step toward the page with no
+ * border, no glyph and no count, `paused` is hatched like `before`. Never a red, never the word "missed". The quiet fill is
+ * one shared rule, so every theme answers it the same way: a register that dresses `[data-kp-tone='muted']` dresses these
+ * through the same selector list. Knobs [KT6]: --kp-quiet-fill, --kp-quiet-ink, --kp-logged-fill, --kp-logged-ink. */
+    :is(.kp-calendar, .kp-heat, .kp-uptime) {
+        --kp-logged-fill: var(--primary);
+        --kp-logged-ink: var(--primary-foreground);
+        --kp-quiet-fill: color-mix(in oklab, var(--muted) 55%, var(--card));
+        --kp-quiet-ink: var(--muted-foreground);
+    }
+
+    :is(.kp-calendar, .kp-heat, .kp-uptime)[data-kp-logged-fill='success'] {
+        --kp-logged-fill: var(--success);
+        --kp-logged-ink: var(--success-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='logged'],
+    .kp-calendar__swatch[data-kp-tone='logged'] {
+        background: var(--kp-logged-fill);
+        color: var(--kp-logged-ink);
+    }
+
+    .kp-calendar__day[data-kp-tone='quiet'],
+    .kp-calendar__swatch[data-kp-tone='quiet'] {
+        background: var(--kp-quiet-fill);
+        color: var(--kp-quiet-ink);
+    }
+
+    .kp-calendar__day[data-kp-tone='paused'],
+    .kp-calendar__swatch[data-kp-tone='paused'] {
+        background-image: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+        color: var(--muted-foreground);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='logged'] {
+        --kp-heat-fill: var(--kp-logged-fill);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='quiet'] {
+        --kp-heat-fill: var(--kp-quiet-fill);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='paused'] {
+        --kp-heat-fill: transparent;
+        --kp-heat-pattern: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+    }
+
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='logged'] {
+        --kp-uptime-fill: var(--kp-logged-fill);
+    }
+
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='quiet'] {
+        --kp-uptime-fill: var(--kp-quiet-fill);
+    }
+
+    /* A calm calendar's plate stands over its grid, centred, at the heading size; a failed month is dimmed under it. */
+    .kp-calendar > .kp-calendar__grid {
+        grid-row: 3;
+        grid-column: 1;
+    }
+
+    .kp-calendar__plate {
+        grid-row: 3;
+        grid-column: 1;
+        z-index: 1;
+        display: grid;
+        min-block-size: 0;
+        /* [r1r2-1019] On the nav's and the legend's edges, from the weekday row to the last week's foot: the grid's own border-spacing is the air. */
+        margin: var(--kp-calendar-gap, 6px) 0;
+    }
+
+    .kp-calendar__plate > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+    }
+
+    .kp-calendar__grid[data-kp-dim] {
+        opacity: 0.35;
+    }
+
+    /* Under the plate the days are blank plates: their numbers would run under its words. */
+    .kp-calendar__grid[data-kp-dim] :is(.kp-calendar__num, .kp-calendar__count, .kp-calendar__pad) {
+        visibility: hidden;
+    }
+
+    .kp-quote[data-kp-state='loading'] .kp-card__data {
+        visibility: hidden;
+    }
+
+    /* A calm calendar that could not be read says so on its plate; the red dot of the state line would be a second, smaller alarm. */
+    .kp-calendar[data-kp-tones='calm'] .kp-calendar__state::before {
+        display: none;
+    }
+
+    /* [r1r2-1019] Every tone's empty or failed month says so on the plate over its grid (js/calendar.js). The state line keeps its row
+ * and its words for a screen reader, so the page does not jump, but is not drawn a second time under the title. */
+    .kp-calendar__state:is([data-kp-state='empty'], [data-kp-state='error']) {
+        opacity: 0;
+    }
+
+    .kp-calendar__caption {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-calendar__caption[hidden] {
+        display: none;
+    }
+

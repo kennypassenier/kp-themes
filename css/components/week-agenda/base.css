@@ -1,0 +1,416 @@
+/* @part: week-agenda: Week agenda */
+    /* --- Week agenda: seven days, the items of the week placed in time -----
+ * `section.kp-week[data-kp-week]` (js/week.js). A grid of an hour axis and
+ * one column per day; every item is a pill at its time of day. The column's
+ * height is fixed (--kp-week-height), so nothing moves when items arrive,
+ * when a day is crowded or when the week is loading: what does not fit is
+ * folded into a `+N` menu button at the end of the stack. Below the agenda's
+ * own width of 40rem (a container query, so it follows the pane and not the
+ * window) the columns become rows: the day on the left, its items in time
+ * order on the right, every item shown.
+ *
+ * Every state is a shape or a word as well as a colour [DI4]: the day that
+ * is today wears the word and a filled number; the next run a ring; an item
+ * that is off or skipped is struck through and quieter by ink, not by
+ * opacity; the host's own round is dashed and is not a button.
+ * Knobs [KT6]: `--kp-week-height` (15rem, the day column), `--kp-week-pill`
+ * (1.5rem, one pill's height), `--kp-week-axis` (3.25rem, the hour labels'
+ * column), `--kp-week-day-label` (5.5rem, the day's column in the list),
+ * `--kp-week-pill-radius`, `--kp-week-now` (the line for now, --destructive),
+ * `--kp-week-today` (the today plate, --primary), `--kp-week-gap`. */
+    .kp-week {
+        container: kp-week / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    /* The range's title on the start side, the steps on the end side, on one line; the title in the theme's display
+     * face, as a page's section title. The steps are the package's segmented track (`.kp-segmented.kp-week__steps`,
+     * dressed by every register) used as a group of actions: nothing in it is chosen, so no plate; a chevron back,
+     * Today, a chevron on. Today is `aria-disabled` while the range already starts today.
+     * Knobs: --kp-week-title-size (1.25rem), --kp-week-step-pad (the chevrons' inline padding, --kp-space-sm). */
+    .kp-week__nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-week__title {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+        margin: 0;
+        font-family: var(--theme-font-display, inherit);
+        font-size: var(--kp-week-title-size, 1.25rem);
+        line-height: 1.25;
+        font-variant-numeric: tabular-nums;
+        text-align: start;
+    }
+
+    /* Two classes: the segmented track is written later in this layer and gives its items equal columns. */
+    .kp-segmented.kp-week__steps {
+        flex: none;
+        grid-auto-columns: auto;
+    }
+
+    .kp-segmented__item.kp-week__step--icon {
+        padding-inline: var(--kp-week-step-pad, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-week__chevron {
+        inline-size: 1rem;
+        block-size: 1rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .kp-week__steps:dir(rtl) .kp-week__chevron {
+        scale: -1 1;
+    }
+
+    .kp-week__frame {
+        position: relative;
+    }
+
+    .kp-week__grid {
+        --kp-week-mode: grid;
+        display: grid;
+        grid-template-columns: var(--kp-week-axis, 3.25rem) repeat(var(--kp-week-days, 7), minmax(0, 1fr));
+        grid-template-rows: auto var(--kp-week-height, 15rem);
+        padding-block-end: 0.5rem;
+        min-inline-size: 0;
+    }
+
+    .kp-week__day {
+        display: contents;
+    }
+
+    .kp-week__head {
+        grid-row: 1;
+        grid-column: calc(var(--kp-week-i, 0) + 2);
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: start;
+        align-content: end;
+        align-items: baseline;
+        column-gap: 0.375rem;
+        padding: 0 var(--kp-space-sm, 0.5rem) 0.75rem;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .kp-week__num {
+        font-variant-numeric: tabular-nums;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-week__date {
+        display: none;
+    }
+
+    /* The mark's room is always there, so today moving from one day to the
+ * next changes no height. */
+    .kp-week__today {
+        grid-column: 1 / -1;
+        visibility: hidden;
+        font-size: 0.625rem;
+        line-height: 1;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__head {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__today {
+        visibility: visible;
+        color: var(--kp-week-today, var(--primary));
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__num {
+        color: var(--kp-week-today, var(--primary));
+    }
+
+    .kp-week__axis {
+        grid-row: 2;
+        grid-column: 1;
+        position: relative;
+    }
+
+    .kp-week__axis > span {
+        position: absolute;
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        inset-block-start: calc(var(--kp-week-at, 0) * 100%);
+        translate: 0 -50%;
+        color: var(--muted-foreground);
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+    }
+
+    .kp-week__col {
+        grid-row: 2;
+        grid-column: calc(var(--kp-week-i, 0) + 2);
+        position: relative;
+        min-inline-size: 0;
+        border-inline-start: 1px solid var(--border);
+        border-block-end: 1px solid var(--border);
+        background-image: linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+        background-size: 100% 25%;
+        background-repeat: no-repeat repeat;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__col {
+        background-color: color-mix(in oklab, var(--kp-week-today, var(--primary)) 6%, transparent);
+    }
+
+    .kp-week__pill {
+        --kp-week-ink: var(--chart-1);
+        box-sizing: border-box;
+        position: absolute;
+        inset-inline: 0.25rem;
+        inset-block-start: var(--kp-week-top, 0);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        block-size: var(--kp-week-pill, 1.5rem);
+        margin: 0;
+        padding: 0 0.375rem;
+        overflow: hidden;
+        border: 1px solid color-mix(in oklab, var(--kp-week-ink) 45%, var(--border));
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: color-mix(in oklab, var(--kp-week-ink) 14%, var(--card));
+        color: var(--foreground);
+        font: inherit;
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1;
+        text-align: start;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-week__pill[data-kp-series='2'],
+    .kp-week__swatch[data-kp-series='2'] {
+        --kp-week-ink: var(--chart-2);
+    }
+
+    .kp-week__pill[data-kp-series='3'],
+    .kp-week__swatch[data-kp-series='3'] {
+        --kp-week-ink: var(--chart-3);
+    }
+
+    .kp-week__pill[data-kp-series='4'],
+    .kp-week__swatch[data-kp-series='4'] {
+        --kp-week-ink: var(--chart-4);
+    }
+
+    .kp-week__pill[data-kp-series='5'],
+    .kp-week__swatch[data-kp-series='5'] {
+        --kp-week-ink: var(--chart-5);
+    }
+
+    .kp-week__time {
+        flex: none;
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .kp-week__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* align-pkg-1019:week:start
+     * The label cell fills the pill after the time, so the cells of one role end on one edge (the pill's inner edge)
+     * instead of wherever each label's words end (15 px apart at 390 px in state-plates week-states). */
+    .kp-week__pill > .kp-week__label {
+        flex: 1 1 0;
+    }
+    /* align-pkg-1019:week:end */
+
+    .kp-week__pill:is(button):hover {
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 2px var(--ring);
+    }
+
+    .kp-week__pill[data-kp-state='next']:hover {
+        box-shadow:
+            0 0 0 2px var(--ring),
+            0 0 0 3px var(--foreground);
+    }
+
+    /* Off and skipped: quieter by ink and a strike, so the words keep their contrast. */
+    .kp-week__pill:is([data-kp-state='off'], [data-kp-state='skipped']) {
+        background: transparent;
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
+
+    .kp-week__pill[data-kp-state='reference'] {
+        background: transparent;
+        border-style: dashed;
+        border-color: var(--border-strong);
+        color: var(--muted-foreground);
+        cursor: default;
+    }
+
+    .kp-week__pill[data-kp-past]:not([data-kp-state='next']) .kp-week__label {
+        color: var(--muted-foreground);
+    }
+
+    .kp-week .kp-week__pill--more {
+        position: static;
+        inset: auto;
+        justify-content: center;
+        inline-size: 100%;
+        border-style: solid;
+        border-color: var(--border-strong);
+        background: var(--card);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-week .kp-week__more {
+        position: absolute;
+        display: block;
+        inset-inline: 0.25rem;
+        inset-block-start: var(--kp-week-top, 0);
+        block-size: var(--kp-week-pill, 1.5rem);
+    }
+
+    .kp-week__more[hidden] {
+        display: none;
+    }
+
+    .kp-week__now {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-week-at, 0) * 100%);
+        z-index: 2;
+        border-block-start: 2px solid var(--kp-week-now, var(--destructive));
+        pointer-events: none;
+    }
+
+    .kp-week__now[hidden] {
+        display: none;
+    }
+
+    .kp-week__now::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: -4px;
+        inset-block-start: -5px;
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--kp-week-now, var(--destructive));
+    }
+
+    /* Loading is the data table's own loading picture [Kenny, 2026-10-16: "zoals bij table waarbij de hele table het
+ * laadicoon centraal krijgt"]: js/week.js puts the busy table's layer and panel (`.kp-datatable__busy-overlay` >
+ * `.kp-datatable__busy-panel`, the theme's spinner and the words) centred over the days' columns, which stay empty
+ * and steady under it. The days hold nothing to dim, so the layer draws no veil: the grid's rules read the same
+ * while it loads and once it has loaded. */
+    .kp-week__busy {
+        --kp-busy-overlay-veil: 0%;
+        /* In rows the layer is only the items' column wide: the panel keeps a margin from its edges there. */
+        padding-inline: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-week[data-kp-state='loading'] .kp-week__now {
+        display: none;
+    }
+
+    /* The sentence of an empty, loading or failed week sits over the grid:
+ * it takes no room, so nothing moves when it comes and goes. */
+    .kp-week__state {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .kp-week__state-words {
+        max-inline-size: 36rem;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-week-state-ground, var(--card));
+    }
+
+    .kp-week__state:empty {
+        display: none;
+    }
+
+    /* While the week loads, the busy panel says so; the sentence is still read out (role="status") but drawn nowhere, so
+     * no second plate stands beside the panel (Kenny, 2026-10-16: the words alone in the middle were not enough). */
+    .kp-week__state[data-kp-state='loading'] {
+        inset: auto;
+        inline-size: 1px;
+        block-size: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .kp-week__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    .kp-week__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-week__legend[hidden] {
+        display: none;
+    }
+
+    .kp-week__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-week__swatch {
+        --kp-week-ink: var(--chart-1);
+        inline-size: 0.875rem;
+        block-size: 0.625rem;
+        border: 1px solid color-mix(in oklab, var(--kp-week-ink) 45%, var(--border));
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: color-mix(in oklab, var(--kp-week-ink) 14%, var(--card));
+    }
+
+    /* The items that did not fit are listed in the `+N` menu; the narrow
+ * layout shows every item and needs none of it. */
+    @container kp-week (min-width: 40rem) {
+        .kp-week__pill[data-kp-overflow] {
+            display: none;
+        }
+    }
+

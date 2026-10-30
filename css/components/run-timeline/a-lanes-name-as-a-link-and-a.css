@@ -1,0 +1,96 @@
+/* @part: run-timeline: A lane's name as a link, and a second line under it. */
+    .kp-gantt__band {
+        --kp-gantt-mark: var(--warning);
+        box-sizing: border-box;
+        inline-size: 1.25rem;
+        block-size: 0.625rem;
+        border-inline: 1px dashed var(--kp-gantt-mark);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.14);
+    }
+
+    .kp-gantt__legend > li[hidden] {
+        display: none;
+    }
+
+    /* A lane's name as a link, and a second line under it. */
+    .kp-gantt__lane > a {
+        min-inline-size: 0;
+    }
+
+    .kp-gantt__lane-link {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-gantt__words,
+    .kp-gantt__words > .kp-gantt__lane-link {
+        display: grid;
+        min-inline-size: 0;
+        line-height: 1.25;
+    }
+
+    :is(.kp-gantt__name, .kp-gantt__sub) {
+        display: block;
+        min-inline-size: 0;
+        overflow-wrap: break-word;
+    }
+
+    .kp-gantt__sub {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__body[data-kp-gantt-subs] {
+        --kp-gantt-row: var(--kp-gantt-row-sub, 2.5rem);
+    }
+
+    /* The dated line [kpadopt4] (`.kp-gantt--line`): one lane, no toolbar, no lane names, no hint, the axis under the line. */
+    .kp-gantt--line :is(.kp-gantt__bar, .kp-gantt__hint) {
+        display: none;
+    }
+
+    .kp-gantt--line .kp-gantt__body {
+        --kp-gantt-row: 2.25rem;
+        grid-template-columns: 0 minmax(0, 1fr);
+    }
+
+    .kp-gantt--line .kp-gantt__lane {
+        visibility: hidden;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .kp-gantt--line .kp-gantt__corner {
+        min-inline-size: 0;
+    }
+
+    .kp-gantt--line :is(.kp-gantt__corner, .kp-gantt__axis) {
+        grid-row: 3;
+        position: relative;
+        border-block-end: 0;
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    .kp-gantt--line .kp-gantt__track {
+        border-block-end: 0;
+    }
+
+    .kp-gantt--line .kp-gantt__state {
+        inset: 0 0 var(--kp-gantt-axis, 1.75rem);
+    }
+
+    /* A timeline of moments [kpadopt4] gives its sentence the card's ground, so no rule of the axis runs through it. */
+    .kp-gantt[data-kp-gantt-points]:not([data-kp-state='loading']) .kp-gantt__state:not(:empty) {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+    }
+

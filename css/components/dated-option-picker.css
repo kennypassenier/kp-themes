@@ -1,0 +1,250 @@
+/* @part: dated-option-picker: Dated option picker */
+    /* --- Dated option picker: a choice where every option has a date and an age [kpadopt5-time] ---
+ * `.kp-dated[data-kp-dated]` (js/dated-options.js). Up to seven options are radio rows of the package's fieldset
+ * (`data-kp-layout="dated"`): the radio, the option's name (or its date) with a "Latest" badge on the newest, how long ago
+ * under it, and the meta (a size, a kind) in one column at the end, as wide as the widest, so the values line up from row
+ * to row. Longer lists are the package's combobox whose list shows the same two lines. Below 26rem of its own the meta
+ * drops under the name. Every state keeps the height of `--kp-dated-rows` rows: loading is the busy card over placeholder
+ * bars, empty is the page's reason in the empty plate, centred at heading size, failed is the alert with a normal Try again.
+ * Knobs [KT6]: --kp-dated-row (3.5rem), --kp-dated-gap (--kp-space-xs), the tile knobs of a choice as tiles
+ * (--kp-field-tile-pad, -radius, -ground, -ground-checked, -edge-checked). */
+    .kp-dated {
+        container: kp-dated / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        min-inline-size: 0;
+        --kp-dated-row: 3.5rem;
+    }
+
+    .kp-dated__stage {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        min-block-size: max(
+            calc(var(--kp-dated-rows, 4) * var(--kp-dated-row) + (var(--kp-dated-rows, 4) - 1) * var(--kp-dated-gap, var(--kp-space-xs, 0.25rem))),
+            var(--kp-dated-keep, 0px)
+        );
+    }
+
+    .kp-dated__stage > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-dated__body {
+        align-self: start;
+    }
+
+    .kp-dated[data-kp-picker-kind='combobox'] .kp-dated__stage {
+        min-block-size: calc(var(--kp-dated-rows, 2) * var(--kp-dated-row));
+    }
+
+    .kp-dated[data-kp-state='empty'] .kp-dated__body,
+    .kp-dated[data-kp-state='error'] .kp-dated__body {
+        visibility: hidden;
+    }
+
+    .kp-dated__group {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) max-content;
+        gap: var(--kp-dated-gap, var(--kp-space-xs, 0.25rem));
+        align-content: start;
+    }
+
+    .kp-dated[data-kp-meta-column-off] .kp-dated__group {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .kp-dated__option {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        grid-template-rows: auto auto;
+        align-items: start;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        row-gap: 0.125rem;
+        min-block-size: var(--kp-dated-row);
+        padding: var(--kp-field-tile-pad, 0.625rem 0.875rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-field-tile-radius, var(--radius, 0.5rem));
+        background: var(--kp-field-tile-ground, var(--card));
+        color: var(--card-foreground, var(--foreground));
+        cursor: pointer;
+    }
+
+    .kp-dated__option > .kp-field__check {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    .kp-dated__option > .kp-field__option-title,
+    .kp-dated__option > .kp-field__option-hint {
+        grid-column: 2;
+    }
+
+    .kp-dated__option > .kp-field__option-title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-dated__option > .kp-dated__meta {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    .kp-dated__hint {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-dated__meta {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-dated__latest {
+        flex: none;
+    }
+
+    @media (hover: hover) {
+        .kp-dated__option:hover:not(:has(> .kp-field__check:disabled)) {
+            border-color: var(--ring);
+        }
+    }
+
+    .kp-dated__option:has(> .kp-field__check:checked) {
+        border-color: var(--kp-field-tile-edge-checked, var(--primary));
+        background: var(--kp-field-tile-ground-checked, color-mix(in oklab, var(--primary) 6%, var(--card)));
+        box-shadow: inset 0 0 0 1px var(--kp-field-tile-edge-checked, var(--primary));
+    }
+
+    .kp-dated__option:has(> .kp-field__check:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+    }
+
+    .kp-dated__option:has(> .kp-field__check:disabled) {
+        border-style: dashed;
+        background: var(--muted);
+        color: var(--muted-foreground);
+        cursor: not-allowed;
+    }
+
+    /* The list of a long picker: the same two lines, the meta at the end. */
+    .kp-dated__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: var(--kp-space-md, 0.75rem);
+        row-gap: 0.125rem;
+    }
+
+    .kp-dated__item-name {
+        grid-column: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-dated__item-hint {
+        grid-column: 1;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-dated__item > .kp-dated__meta {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    .kp-dated__wait {
+        display: grid;
+        gap: var(--kp-dated-gap, var(--kp-space-xs, 0.25rem));
+        align-content: start;
+    }
+
+    .kp-dated__bar {
+        block-size: var(--kp-dated-row);
+        border-radius: var(--kp-field-tile-radius, var(--radius, 0.5rem));
+    }
+
+    .kp-dated__state {
+        display: grid;
+        align-items: stretch;
+    }
+
+    .kp-dated__state[hidden] {
+        display: none;
+    }
+
+    .kp-dated__empty,
+    .kp-dated__failure {
+        box-sizing: border-box;
+        block-size: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 1rem);
+        text-align: center;
+    }
+
+    .kp-dated__empty-title,
+    .kp-dated__failure-title {
+        margin: 0;
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dated__failure > .kp-alert__body {
+        flex: none;
+        display: grid;
+        justify-items: center;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+        max-inline-size: 100%;
+    }
+
+    .kp-dated__failure-text {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dated__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-dated (max-width: 26rem) {
+        .kp-dated__group {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-dated__option > .kp-dated__meta {
+            grid-column: 2;
+            grid-row: 3;
+            text-align: start;
+        }
+
+        .kp-dated__option > .kp-field__check {
+            grid-row: 1 / span 3;
+        }
+
+        .kp-dated__option {
+            grid-template-rows: auto auto auto;
+        }
+    }
+

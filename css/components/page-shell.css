@@ -1,0 +1,21 @@
+/* @part: page-shell: The page's shell */
+    /* --- The page's shell [TH36] ---------------------------------------- */
+
+    /* The skip link is visible only when focused, and then it must be
+ * unmissable: it is the first thing a keyboard user meets on the page. */
+    .kp-skip-link {
+        position: absolute;
+        inset-inline-start: 0.5rem;
+        inset-block-start: -100%;
+        z-index: var(--kp-z-skip, 100);
+        padding: 0.5rem 0.875rem;
+        border-radius: var(--radius, 0.5rem);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        text-decoration: underline;
+    }
+
+    .kp-skip-link:focus {
+        inset-block-start: 0.5rem;
+    }
+

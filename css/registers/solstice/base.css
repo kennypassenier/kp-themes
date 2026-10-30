@@ -1,0 +1,87 @@
+/* @part: base: opening comment, knobs and base */
+    /* @kp-soft/themes — css/solstice-register.css
+   The solstice register, 5.0.0 [S48, S49]: warm dark, no neon. The
+   approved concept demo ("Low Sun", 2026-09-08) is the reference for
+   every value here; its own header comment names the two measured
+   sources (a display-serif recipe and a colour triad) and the hazards it
+   refuses. `themes/solstice/anatomy.md` is the idea in words; this file
+   is the idea in rules.
+
+   The character is an hour of the day, not a filter: charcoal warmed by
+   a trace of red, amber leading, rust following, a serif for display
+   because warmth reads better with a little contrast in the letterforms,
+   and the softest radius in the set because sharp corners fight the
+   warmth. Nothing here is a bevel, a scanline or a grid — DI9's texture
+   answer is "no texture, no register" (anatomy.md), and there is none.
+
+   Colour discipline (DI9): nothing here names a colour; every value is
+   var(--token) or a relative colour of one. Two knobs are new for this
+   theme and shared by nothing else: --kp-cal-* (the calibration wipe)
+   and --kp-redact-* (the dossier's redaction lift) — both one-shot,
+   both monotonic, both inside the no-preference guard at the bottom of
+   this file, so DI5 counts zero opposing changes for either. */
+
+    [data-theme='solstice'] {
+        /* The configuration surface [AR43], the demo's own values as
+       defaults. */
+        --kp-reveal-threshold: 0.6;
+        --kp-reveal-stagger: 260ms;
+        --kp-classified-delay: 1500ms;
+        --kp-cal-duration: 520ms;
+        --kp-cal-stagger: 110ms;
+        --kp-rule-duration: 480ms;
+        --kp-rule-delay: 260ms;
+        --kp-redact-duration: 320ms;
+        --kp-redact-stagger: 110ms;
+        /* The reveals this theme performs [S45]: js/effects.js reads
+       these and leaves a theme that declares none at rest. */
+        --kp-reveal-headline: calibrate;
+        --kp-reveal-emphasis: redact;
+        --kp-reveal-rule: draw;
+        /* No arrival: the demo's script wires the dropdown, the dossier
+       and the wipe dialog only — nothing counts up on first paint
+       (anatomy.md, "what it deliberately does not do"). */
+
+        /* The calibration wipe's three bands, in the demo's own order:
+       primary, accent, foreground — the same triad the swatches show. A
+       relative colour is not needed here; each band names a token
+       directly, which is the DI9-preferred form when a plain token IS
+       the value. */
+        --kp-cal-bands: linear-gradient(90deg, var(--primary) 0% 33.333%, var(--accent) 33.333% 66.666%, var(--foreground) 66.666% 100%);
+        /* A translucent version of the ground itself, standing in for the
+       demo's literal near-black shadow (DI9: no colour of the page's
+       own is available here, so the page's own darkest surface is). */
+        --kp-shadow-soft: hsl(from var(--background) h s l / 0.45);
+        --kp-shadow-deep: hsl(from var(--background) h s l / 0.55);
+        --kp-shadow-hair: hsl(from var(--background) h s l / 0.3);
+        /* A part a script removes or hides (the busy table's layer, a file
+           row, a tree's children, a re-shown alert) leaves first, as it
+           arrives: js/motion.js leavesState() (lessons 19, 37). What takes no
+           box arrives as nothing (lesson 23). The space a leave folds shut
+           takes the leave's own time and starts with it, so arriving and
+           leaving are one picture of one length (lesson 24). */
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+    }
+
+    /* ── Type ──────────────────────────────────────────────────────────── */
+
+    [data-theme='solstice'] h1,
+    [data-theme='solstice'] h2,
+    [data-theme='solstice'] h3 {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+
+    [data-theme='solstice'] .microlabel {
+        font-family: var(--theme-font-mono);
+        font-weight: 600;
+        font-size: 0.75rem;
+        line-height: 1.2;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+

@@ -1,0 +1,350 @@
+/* @part: motion: Motion */
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js). */
+    /* The headline's reveal, its first part: the tube strikes on [G16, motifs =
+       meaning: VHS is a still texture and a voice, never a tracking glitch,
+       which is cyberpunk's]. The bands that jumped sideways with an RGB fringe
+       are gone; the copy of the text in the near-white core lights, dips once
+       and goes out in hard steps, and the chrome shine follows. The name and
+       the 700 ms stay: js/effects.js waits that long before the shine. */
+    @keyframes kp-tracking {
+        0% {
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        34% {
+            opacity: 0.35;
+        }
+
+        48%,
+        72% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-shine {
+        from {
+            background-position: 100% 100%;
+        }
+
+        to {
+            background-position: 0% 0%;
+        }
+    }
+
+    @keyframes kp-tube-on {
+        0% {
+            color: hsl(from var(--foreground) h s l / 0.4);
+            text-shadow: none;
+        }
+
+        20% {
+            color: var(--kp-core);
+            text-shadow: var(--kp-tube-pink);
+        }
+
+        34% {
+            color: hsl(from var(--foreground) h s l / 0.5);
+            text-shadow: none;
+        }
+
+        50%,
+        100% {
+            color: var(--kp-core);
+            text-shadow: var(--kp-tube-pink);
+        }
+    }
+
+    @keyframes kp-sun-cut {
+        0% {
+            opacity: 1;
+            transform: translateX(-10%);
+        }
+
+        66% {
+            opacity: 1;
+            transform: translateX(10%);
+        }
+
+        100% {
+            opacity: 0;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-bar-in {
+        0% {
+            transform: translateY(10px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: none;
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-floor-drift {
+        to {
+            background-position: 0 6vw;
+        }
+    }
+
+    @keyframes kp-crt-off {
+        0% {
+            transform: scaleY(1);
+            filter: brightness(1);
+            opacity: 1;
+        }
+
+        60% {
+            transform: scaleY(0.006);
+            filter: brightness(8);
+        }
+
+        100% {
+            transform: scaleY(0.006) scaleX(0);
+            filter: brightness(50);
+            opacity: 0;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a neon rule under the band and a glow around the text. */
+    [data-theme='synthwave'] .kp-marquee {
+        background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, transparent), transparent);
+        border-block-end: 2px solid var(--primary);
+        text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
+        --kp-marquee: 26000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='synthwave'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='synthwave'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 60%, transparent);
+        border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar lights its current item from underneath. A column has no
+       underneath, so the glow moves to the leading edge and becomes the
+       tube running down the side of the active row. */
+    [data-theme='synthwave'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border-strong);
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__title {
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__link,
+    [data-theme='synthwave'] .kp-sidenav__category-toggle {
+        padding-inline: 1.1rem;
+        font-weight: 600;
+        border-radius: 0;
+    }
+
+    [data-theme='synthwave'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--kp-core);
+        background: none;
+        box-shadow:
+            inset 0.2rem 0 0 var(--primary),
+            inset 0 0 25px hsl(from var(--primary) h s l / 0.18);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Both get the tube: a ring of the primary that glows rather than
+       merely bounding. */
+    [data-theme='synthwave'] .kp-to-top {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    [data-theme='synthwave'] .kp-media {
+        border: 1px solid var(--primary);
+        box-shadow: 0 0 18px hsl(from var(--primary) h s l / 0.28);
+    }
+
+    [data-theme='synthwave'] .kp-media-figure > figcaption {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.6875rem;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='synthwave'] .kp-media-figure {
+        color: var(--primary);
+        text-align: start;
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='synthwave'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='synthwave'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): widely spaced capitals with room under them
+       for the gradient stripe that runs out beneath them, and the core ink
+       with a low inner glow, when pointed at. The link's typeface, case,
+       spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger {
+        position: relative;
+        padding-inline: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        color: var(--kp-core);
+        background: none;
+        box-shadow: inset 0 -5px 25px hsl(from var(--primary) h s l / 0.15);
+    }
+
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger::after {
+        content: '';
+        position: absolute;
+        left: 0.6rem;
+        right: 0.6rem;
+        bottom: 0;
+        height: 4px;
+        background: var(--kp-stripe);
+        transform: scaleX(0);
+        transform-origin: left center;
+    }
+
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:hover::after,
+    [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger:focus-visible::after {
+        transform: scaleX(1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-nav__search .kp-nav__search-trigger::after {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A neon sign in the night: a violet plate from its background, the red headline haloed in the pink of its primary, pink stripes and a pink frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='synthwave'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 4% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 62));
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--background) h s 4%);
+        --kp-alarm-glow: hsl(from var(--primary) h s l / 0.45);
+        --kp-alarm-halo: hsl(from var(--primary) h s l / 0.6);
+        --kp-alarm-scan: hsl(from var(--primary) h s l / 0.08);
+        --kp-alarm-vignette: hsl(from var(--background) h s 2% / 0.8);
+        --kp-alarm-stripe: var(--primary);
+        --kp-alarm-frame: 2px solid var(--primary);
+    }
+
+    [data-theme='synthwave'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='synthwave'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the neon dot it marks its own rows with. */
+    [data-theme='synthwave'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '●';
+    }
+
+    /* ── The OSD names, the chrome counts [G15, type = osd; Kenny,
+       2026-10-07 20:41] ─────────────────────────────────────────────────────
+       Identifiers, timestamps and the data faces speak in the OSD (VT323);
+       KP Tech Mono, the register's data face until now, is cyberpunk's label
+       face and leaves synthwave. VT323 stands small on its em, so every
+       surface that takes it from `--kp-mono` is sized by its x-height. */
+    [data-theme='synthwave'] {
+        --kp-mono: var(--kp-osd);
+    }
+
+    [data-theme='synthwave']
+        :is(
+            .kp-id,
+            .kp-url,
+            .kp-numeric,
+            .kp-timestamp,
+            .kp-masked,
+            .kp-copyable,
+            .kp-truncate,
+            .kp-cell-break,
+            .kp-cell-truncate,
+            .kp-diff__line,
+            .kp-diff__hunk,
+            .kp-tree,
+            .kp-colorpicker__value,
+            .kp-spec,
+            .kp-log
+        ) {
+        font-size-adjust: 0.5;
+    }
+

@@ -1,0 +1,48 @@
+/* @part: lede: The lede */
+    /* --- The lede [kpadopt5] ---
+ * The short muted paragraph under a section or card title that says what this part does, and `.kp-field__why`, the
+ * reason line under a field. Seen from a screen reader as the heading's description (js/lede.js). Knobs [KT6]:
+ * `--kp-lede-measure` (none: the lede fills its column, Kenny's full-width rule [width-fill-1]; `data-kp-lede-measure` narrow 48ch, full), `--kp-lede-size` (0.9375rem), `data-kp-lede-collapsible`
+ * folds a long text after its first sentences. */
+    .kp-lede {
+        max-inline-size: var(--kp-lede-measure, none);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-lede-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+        text-wrap: pretty;
+    }
+
+    .kp-lede[data-kp-lede-measure='narrow'] {
+        --kp-lede-measure: 48ch;
+    }
+
+    .kp-lede[data-kp-lede-measure='full'] {
+        --kp-lede-measure: none;
+    }
+
+    .kp-lede[data-kp-lede-tone='plain'] {
+        color: var(--foreground);
+    }
+
+    .kp-lede__link {
+        white-space: nowrap;
+    }
+
+    .kp-lede__toggle {
+        display: block;
+        justify-self: start;
+        inline-size: fit-content;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-field__why {
+        font-size: var(--kp-field-help-size, 0.8rem);
+        line-height: var(--kp-line-height, 1.5);
+        color: var(--muted-foreground);
+    }
+
+    .kp-field__why[data-kp-blocking] {
+        color: var(--destructive);
+    }
+

@@ -1,0 +1,43 @@
+/* @part: end-t56: end t56 */
+/* ── end t56 ── */
+
+/* ── t56-q: the failed plate keeps its cut edge ── */
+@layer kp.signature {
+    /* A failed chart was a pale tint with a dot beside the first line. It is the alarm plate every failed area here is: the void
+       tinted with the alert's red, its edge, the cut at the foot, the words pulled toward white. */
+    [data-theme='cyberpunk'] .kp-chart__state[data-kp-state='error'] {
+        --kp-cp-neon: var(--fx-hot-alarm, var(--destructive));
+        --kp-cp-neon-edge: var(--destructive);
+        background-color: hsl(from var(--destructive) h calc(s * 0.6) 8%);
+        color: hsl(from var(--kp-cp-neon) h calc(s * 0.6) 90%);
+        border: 1px solid hsl(from var(--destructive) h s l / 0.85);
+        border-left: 3px solid var(--destructive);
+        border-radius: 0;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+    [data-theme='cyberpunk'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+    /* The clip took the edge along the cut with it, so the foot's corner read as missing: the cut is drawn as a line. */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure),
+            .kp-chart__state[data-kp-state='error']
+        ) {
+        position: relative;
+    }
+    [data-theme='cyberpunk']
+        :is(
+            .kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure),
+            .kp-chart__state[data-kp-state='error']
+        )::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: 0;
+        inset-block-end: 0;
+        inline-size: var(--fx-notch-sm);
+        block-size: var(--fx-notch-sm);
+        background: linear-gradient(135deg, transparent calc(50% - 1px), var(--destructive) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px));
+        pointer-events: none;
+    }
+}

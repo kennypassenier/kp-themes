@@ -1,0 +1,95 @@
+/* @part: paper-at-rest: 7 · Paper at rest */
+    /* ── 7 · Paper at rest: the pass, the tape, the tack (G6, G7) ──────── */
+
+    /* A plate is white paper with its flat sky pass 6 px off register. */
+    [data-theme='pastel']
+        :is(
+            .kp-card,
+            .kp-kpi,
+            .kp-grid__tile,
+            .kp-split__pane,
+            .kp-datatable,
+            .kp-wizard,
+            .kp-spec,
+            .kp-log,
+            .kp-calendar,
+            .kp-reorder,
+            .kp-diff,
+            .kp-nav__menu
+        ) {
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+
+    /* The bar's menu draws its pass in its item (section 3), where anchor
+       positioning is there. */
+    @supports (anchor-name: --a) {
+        @container kp-nav (width > 40rem) {
+            [data-theme='pastel'] .kp-nav__menu {
+                box-shadow: none;
+            }
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            box-shadow: none;
+            border-radius: 0;
+        }
+    }
+
+    /* A part fixed to the page carries its thumbtack at its top centre: a
+       round plum head with a rim and a glint, its flat shadow in the second
+       ink (G12, Kenny 2026-10-14). Every key figure carries it, the ones
+       that act too (a link, a toggle): theirs is the ::before, since their
+       ::after is the corner that curls on a hover (section 8). */
+    [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile) {
+        position: relative;
+    }
+
+    [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile)::after,
+    [data-theme='pastel'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
+        content: '';
+        position: absolute;
+        z-index: 3;
+        inset-block-start: -0.5rem;
+        inset-inline-start: 50%;
+        inline-size: 1.2rem;
+        block-size: 1.2rem;
+        box-sizing: border-box;
+        border: 1.5px solid var(--kp-sig-pa-peel);
+        border-radius: 50%;
+        background:
+            radial-gradient(ellipse 0.3rem 0.2rem at 36% 32%, color-mix(in srgb, var(--primary) 22%, var(--card)) 0 92%, transparent 100%),
+            radial-gradient(circle at 50% 50%, var(--primary) 0 54%, hsl(from var(--primary) h s calc(l * 0.82)) 58% 100%);
+        box-shadow: 2px 2px 0 var(--kp-sig-pa-pass-c);
+        translate: -50% 0;
+        pointer-events: none;
+    }
+
+    [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile):dir(rtl)::after,
+    [data-theme='pastel'] :is(a.kp-kpi, .kp-kpi--toggle):dir(rtl)::before {
+        translate: 50% 0;
+    }
+
+    /* A panel stuck to the page carries one strip of washi tape across its
+       top-start corner. */
+    [data-theme='pastel'] :is(.kp-wizard, .kp-spec) {
+        position: relative;
+    }
+
+    [data-theme='pastel'] :is(.kp-wizard, .kp-spec)::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.4rem;
+        inset-inline-start: 0.5rem;
+        inline-size: 2.75rem;
+        block-size: 0.8rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: calc(-14deg * var(--kp-sig-pa-dir));
+        opacity: 0.94;
+        pointer-events: none;
+    }
+

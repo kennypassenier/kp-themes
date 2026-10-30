@@ -1,0 +1,269 @@
+/* @part: uptime-strip: Uptime strip */
+    /* ── Uptime strip: a lit window ── */
+    [data-theme='nostromo'] .kp-uptime {
+        --kp-uptime-up: hsl(from var(--success) h s calc(l + 22));
+        --kp-uptime-degraded: hsl(from var(--warning-foreground) h s calc(l + 16));
+        --kp-uptime-down: hsl(from var(--destructive) h s calc(l + 14));
+        --kp-uptime-cell-radius: 1px;
+        row-gap: 0.5rem;
+    }
+    [data-theme='nostromo'] .kp-uptime__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-uptime__percent {
+        font-family: var(--theme-font-display);
+        font-size: 0.8125rem;
+        font-weight: 400;
+    }
+    [data-theme='nostromo'] .kp-uptime__summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: var(--kp-sig-no-tape);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+    [data-theme='nostromo'] .kp-uptime__axis {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-uptime__track {
+        box-sizing: border-box;
+        padding: 2px;
+        border-radius: 0.15rem;
+        background: var(--sidebar-background);
+        box-shadow:
+            0 0 0 2px var(--secondary),
+            0 0 0 3px var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell {
+        position: relative;
+        border: 0;
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:not([data-kp-tone]) {
+        --kp-uptime-fill: var(--sidebar-accent);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:is([data-kp-tone='up'], [data-kp-tone='degraded'], [data-kp-tone='down']) {
+        box-shadow: 0 0 4px hsl(from var(--kp-uptime-fill) h s l / 0.55);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:is([data-kp-tone='up'], [data-kp-tone='degraded'], [data-kp-tone='down'])::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 62% 0;
+        background: hsl(from var(--kp-no-cream) h s 100% / 0.28);
+        pointer-events: none;
+    }
+    [data-theme='nostromo'] .kp-uptime__cell[data-kp-tone='none'] {
+        --kp-uptime-fill: transparent;
+        box-shadow: inset 0 0 0 1px var(--sidebar-accent);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']) {
+        box-shadow:
+            0 0 0 1px var(--sidebar-background),
+            0 0 0 2px var(--sidebar-primary),
+            0 0 8px hsl(from var(--sidebar-primary) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:focus-visible,
+    [data-theme='nostromo'] .kp-uptime__cell[aria-expanded='true'] {
+        outline: 0;
+    }
+    [data-theme='nostromo'] .kp-uptime__swatch {
+        border: 0;
+        border-radius: 1px;
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-uptime__info-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-uptime__info-state {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    /* Waiting: the track is the lamp bank, computing (G10). */
+    [data-theme='nostromo'] .kp-uptime__cell.kp-skeleton {
+        visibility: hidden;
+    }
+    [data-theme='nostromo'] .kp-uptime__track:has(> .kp-uptime__cell.kp-skeleton) {
+        --kp-no-pitch: 5px;
+        background:
+            var(--kp-no-leds) 0 50% / calc(var(--kp-no-pitch) * 37) calc(100% - 8px) repeat-x,
+            linear-gradient(90deg, var(--sidebar-accent) 0 3px, transparent 0) 0 50% / var(--kp-no-pitch) calc(100% - 8px) repeat-x,
+            var(--sidebar-background);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-uptime__track:has(> .kp-uptime__cell.kp-skeleton) {
+            animation: kp-sig-nostromo-bank var(--kp-sig-no-loop) steps(1, end) infinite;
+        }
+        [data-theme='nostromo'] .kp-uptime__cell {
+            transition: block-size var(--fx-duration) steps(2, jump-end);
+        }
+    }
+
+    /* ── Kitchen timers: the time is a screen readout; ended, the klaxon frames the card (never flashing) ── */
+    [data-theme='nostromo'] .kp-timers {
+        --kp-timer-font: var(--theme-font-mono);
+        --kp-timer-size: 2.25rem;
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-timer {
+        border-color: var(--border-strong);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-timer__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-timer__time {
+        box-sizing: content-box;
+        padding-inline: 0.5rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        color: var(--kp-no-phosphor);
+        text-align: end;
+        text-shadow: 0 0 6px hsl(from var(--sidebar-primary) h s l / 0.6);
+        font-weight: 700;
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--kp-no-dim);
+        text-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        padding-inline: 0.4rem;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        font-size: calc(var(--kp-timer-size) * 0.62);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* ── Countdown: a named timer in digits on the screen ── */
+    [data-theme='nostromo'] .kp-countdown {
+        --kp-countdown-ink: var(--kp-no-phosphor);
+        --kp-countdown-size: 2.75rem;
+        --kp-countdown-ring: var(--destructive);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-countdown__name,
+    [data-theme='nostromo'] .kp-timer-disc__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-countdown__status,
+    [data-theme='nostromo'] .kp-timer-disc__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-countdown__time {
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        text-shadow: 0 0 8px hsl(from var(--sidebar-primary) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--kp-no-dim);
+        text-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+        animation: none;
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status,
+    [data-theme='nostromo'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        padding-inline: 0.4rem;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* ── Timer disc: a round screen, the time left a lit sector, the rim marks in cream ── */
+    [data-theme='nostromo'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--kp-no-phosphor);
+        --kp-timer-disc-marks: var(--kp-no-cream);
+        --kp-timer-disc-ring: var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-timer-disc__face {
+        border: 0;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow:
+            0 0 0 3px var(--secondary),
+            0 0 0 4px var(--border-strong),
+            inset 0 0 16px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+    }
+    [data-theme='nostromo'] .kp-timer-disc__sector {
+        filter: drop-shadow(0 0 5px hsl(from var(--sidebar-primary) h s l / 0.6));
+    }
+    [data-theme='nostromo'] .kp-timer-disc__hub {
+        border: 0;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1.5px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            0 0 0 3px var(--destructive),
+            0 0 0 4px var(--border-strong),
+            inset 0 0 16px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        animation: none;
+    }
+
+    /* ── Range picker: the custom window in force is a key sunk in its well ── */
+    [data-theme='nostromo'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-range__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: inset 0 0 0 2px var(--destructive);
+    }
+

@@ -1,0 +1,169 @@
+/* @part: time-and-flows: Time and flows */
+/* ── Time and flows [kpadopt4]: moments, the journey, the pipeline, the drawings ── */
+@layer kp.signature {
+    /* Moments on the run timeline: a moment is a node on the trail, a planned one dashed; pointing blazes it with the
+       dashed green ring; a count on a cluster is a field note; a stretch is a dashed trail line in the tone's own
+       colour; the dated line is the trail itself, its dates notes. */
+    [data-theme='forest'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
+        border-radius: 0 3px;
+    }
+    [data-theme='forest'] .kp-gantt__point[data-kp-planned]::before {
+        border-style: dashed;
+    }
+    [data-theme='forest'] .kp-gantt__point:hover::before {
+        box-shadow: none;
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-gantt__count {
+        border-radius: 0;
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-gantt__zone[data-kp-lane-zone] {
+        border-radius: 0;
+        background: repeating-linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.8) 0 8px, transparent 8px 12px);
+    }
+    [data-theme='forest'] .kp-gantt__sub {
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-gantt__point::before {
+            transition: outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* A journey: the steps stand along one trail; a reached step is a solid green node joined by a solid rule, the
+       ones to come are joined by a trail of dashes; the step it stands at is a node with a dashed ring laid round it
+       (a blaze); a closed path ends in the red's cross and its dashes; the names are notes, the dates upright. */
+    [data-theme='forest'] .kp-steplist--journey > .kp-steplist__item {
+        border-inline-start: 0;
+    }
+    [data-theme='forest'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 5px, transparent 5px 9px);
+    }
+    [data-theme='forest'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--primary));
+    }
+    [data-theme='forest'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+    [data-theme='forest'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        outline: 2px dashed var(--kp-step-tone, var(--primary));
+        outline-offset: 3px;
+    }
+    [data-theme='forest'] .kp-steplist--journey .kp-steplist__title {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        font-style: normal;
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='forest'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: repeating-linear-gradient(180deg, var(--border-strong) 0 5px, transparent 5px 9px);
+        }
+        [data-theme='forest']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+    }
+
+    /* The pipeline: a lane is a kraft plate with the leaf corner, its head a wooden tag in the stage's own stain; a card
+       is a kraft card with the small leaf corner, blazed when pointed at, closed in solid when pressed; the open one has
+       the solid green ring; a dimmed one is dashed; the share is a note. */
+    [data-theme='forest'] .kp-pipeline__lane {
+        border-radius: var(--kp-sig-fo-plate);
+        background: color-mix(in oklab, var(--muted) 70%, var(--card));
+    }
+    [data-theme='forest'] .kp-pipeline__head {
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), color-mix(in oklab, var(--kp-pipeline-tone) 24%, var(--card));
+        box-shadow: var(--kp-sig-fo-routed);
+        border-color: transparent;
+    }
+    [data-theme='forest'] .kp-pipeline__share,
+    [data-theme='forest'] .kp-pipeline__sub,
+    [data-theme='forest'] .kp-pipeline__none {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-pipeline__card {
+        border-radius: var(--kp-sig-fo-part);
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-pipeline__card:is(button, a):hover:not(:focus-visible) {
+        border-color: var(--border);
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-pipeline__card:is(button, a):active:not(:focus-visible) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border);
+        box-shadow: none;
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-pipeline__mark {
+        border-radius: 3px;
+        background-image: var(--kp-sig-fo-wood);
+        font-style: italic;
+        text-transform: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-pipeline__card {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Drawings for an empty state: the field kit (js/art.js). Each stroke grows up out of its own line on the growth
+       curve, 1000 ms, 80 ms apart from the ground up, turning from autumn to green as it grows (G10). The drawing takes
+       the place of the empty state's contour clearing and its sprout. Reduced, the drawing stands grown. */
+    [data-theme='forest'] .kp-art {
+        display: block;
+    }
+    [data-theme='forest'] .kp-art > g[data-kp-art-set='fieldkit'] {
+        display: inline;
+    }
+    [data-theme='forest'] .kp-art path {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    [data-theme='forest'] .kp-art__ink {
+        stroke: var(--foreground);
+    }
+    [data-theme='forest'] .kp-empty[data-kp-art] {
+        background: var(--card);
+    }
+    [data-theme='forest'] .kp-empty[data-kp-art]::before,
+    [data-theme='forest'] .kp-empty[data-kp-art]::after {
+        content: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-art > g[data-kp-art-set='fieldkit'] > path {
+            transform-box: fill-box;
+            transform-origin: 50% 100%;
+            animation: kp-sig-forest-art-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow) both;
+            animation-delay: calc(var(--kp-art-i, 0) * var(--kp-sig-fo-stagger));
+        }
+    }
+    @keyframes kp-sig-forest-art-grow {
+        from {
+            scale: 1 0;
+            opacity: 0;
+            filter: sepia(1) saturate(0.6);
+        }
+        to {
+            scale: 1 1;
+            opacity: 1;
+            filter: none;
+        }
+    }
+}
+

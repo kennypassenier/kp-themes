@@ -1,0 +1,393 @@
+/* @part: the-calm-components: The calm components and the seven new ones */
+/* ── The calm components and the seven new ones [kpadopt4]: chips, quantity, checklist, timers, steps, wheel,
+   uptime, command, disc, countdown, range, compare ── */
+@layer kp.signature {
+    /* Three-way chips: the chip that is in is plum on its peel (the chips' own), the one that is out a dashed outline
+       with the word struck through and a red sticker for its mark; pointing lifts any of them 2 px. */
+    [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-style: dashed;
+        border-width: 2px;
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-segmented__mark {
+        border-width: 2px;
+    }
+    @media (hover: hover) {
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover {
+            box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+            translate: 0 -2px;
+        }
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri='exclude']:hover {
+            box-shadow: none;
+        }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+
+    /* Quantity: the steps are pastel's own buttons; the number sits on paper with its sky pass, focus is the dashed line. */
+    [data-theme='pastel'] .kp-quantity__field {
+        border-radius: var(--kp-sig-pa-r-ctl);
+        border-color: var(--border-strong);
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-quantity__input {
+        font-weight: 700;
+    }
+
+    /* Checklist: a row is lifted onto the mint wash when pointed at; a ticked item is struck through in plum; the rules
+       are threads of pearls, the bar's a dashed cut; a finished group's count carries a tick sticker. */
+    [data-theme='pastel'] .kp-checklist__bar {
+        border-block-end: 2px dashed var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__list {
+        border-block-start: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__item {
+        border-block-end: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__row {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    @media (hover: hover) {
+        [data-theme='pastel'] .kp-checklist__row:hover {
+            background: var(--accent);
+            color: var(--accent-foreground);
+        }
+        [data-theme='pastel'] .kp-checklist__row:hover :is(.kp-checklist__detail, .kp-checklist__label) {
+            color: inherit;
+        }
+    }
+    [data-theme='pastel'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+    }
+    [data-theme='pastel'] .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        display: inline-block;
+        padding: 0 0.35em;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--success);
+        color: var(--success-foreground);
+        box-shadow: 0 1.5px 0 hsl(from var(--success) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] :is(.kp-checklist__empty, .kp-timers__empty) {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+    [data-theme='pastel'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-style: solid;
+        border-color: var(--destructive);
+    }
+
+    /* Kitchen timers: a card is a plate with its sky pass, a strip of washi tape across its top start edge; a paused
+       timer's tape lifts at its end; a finished one wobbles round its foot three times and stays on its plate. */
+    [data-theme='pastel'] .kp-timer {
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1rem;
+        inline-size: 3rem;
+        block-size: 0.7rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        transform-origin: 0 50%;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='paused']::before {
+        rotate: -14deg;
+        translate: 0 -0.05rem;
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done'] {
+        border-color: var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done']::before {
+        opacity: 0;
+    }
+    [data-theme='pastel'] .kp-timer__time {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--muted-foreground);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        color: inherit;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-timer::before {
+            transition: rotate var(--fx-duration) var(--kp-sig-pa-land);
+        }
+        [data-theme='pastel'] .kp-timer[data-kp-timer-ringing] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out 3;
+        }
+    }
+
+    /* Cook mode: what the step needs is a note taped in (a dashed edge on paper) under a mint sticker for its title;
+       the screen lamp is a pearl; each step arrives stuck on (the package's own arrival). */
+    [data-theme='pastel'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem) 1rem;
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        background: var(--card);
+    }
+    [data-theme='pastel'] .kp-focus-steps__needs-title {
+        justify-self: start;
+        display: inline-block;
+        padding: 0 0.6rem;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-focus-steps__count {
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-focus-steps__amount {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        box-shadow: 0 1.5px 0 var(--kp-sig-pa-peel);
+    }
+
+    /* Wheel: a sticker sheet round, its sky pass off register on the stage; every wedge die-cut with a paper gap, the
+       rim plum; it spins on the soft landing and settles back once past its mark; the winner's name wobbles. */
+    [data-theme='pastel'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sig-pa-land);
+        --kp-wheel-hub-ring: 5px;
+    }
+    [data-theme='pastel'] .kp-wheel__stage {
+        filter: drop-shadow(calc(5px * var(--kp-sig-pa-dir)) 5px 0 var(--kp-sig-pa-pass-c));
+    }
+    [data-theme='pastel'] .kp-wheel__segment {
+        stroke-width: 2.4;
+    }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='pastel'] .kp-wheel__spin.kp-button::before,
+    [data-theme='pastel'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='pastel'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-wheel__rim {
+        stroke: var(--primary);
+        stroke-width: 2;
+    }
+    [data-theme='pastel'] .kp-wheel__label {
+        font-weight: 600;
+    }
+    [data-theme='pastel'] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+        color: var(--primary);
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-wheel__outcome[data-kp-wheel-note] {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-wheel[data-kp-wheel-won] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out;
+        }
+    }
+
+    /* Uptime: every period is a small sticker standing on its own peel; the one pointed at grows into the room above,
+       its ring the dashed plum line; a failure to read is a sticker on the red's plate. */
+    [data-theme='pastel'] .kp-uptime {
+        --kp-uptime-cell-radius: 4px;
+        --kp-uptime-gap: 3px;
+    }
+    [data-theme='pastel'] .kp-uptime__cell:not(.kp-skeleton) {
+        box-shadow: inset 0 -2px 0 hsl(from var(--kp-uptime-fill) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-uptime__cell:is(:focus-visible, [aria-expanded='true']) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='pastel'] .kp-uptime__percent {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: var(--kp-sig-pa-r-ctl);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-uptime__swatch {
+        border-radius: 3px;
+    }
+
+    /* Command: a plate stuck to the page, its sky pass off register and a strip of tape over its top edge; the shell
+       is a mint sticker, the prompt plum, the head cut from the line by a dashed edge. */
+    [data-theme='pastel'] .kp-command {
+        --kp-command-prompt-ink: var(--primary);
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        overflow: visible;
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-command::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1.25rem;
+        inline-size: 3.25rem;
+        block-size: 0.75rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-command__head,
+    [data-theme='pastel'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: 2px dashed var(--border-strong);
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+    }
+    [data-theme='pastel'] .kp-command__head {
+        padding-block-start: calc(var(--kp-space-xs, 0.25rem) + 0.25rem);
+    }
+    [data-theme='pastel'] .kp-command__shell {
+        padding: 0 0.6rem;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-command__where {
+        border-block-start: 2px dashed var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-command__code {
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+    }
+
+    /* Visual timer and countdown: the timer is a round sticker with its sky pass off register, the time left plum on
+       paper, the hub a pearl; a finished one wobbles round its foot and keeps its pass; the countdown is a plate with
+       its pass and a strip of tape, its digits plum. */
+    [data-theme='pastel'] .kp-timer-disc__face {
+        border-width: 2px;
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--border-strong);
+        --kp-timer-disc-ring: var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer-disc__hub {
+        background: var(--primary);
+        border-color: var(--card);
+    }
+    [data-theme='pastel'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-countdown {
+        --kp-countdown-ink: var(--primary);
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-countdown::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1rem;
+        inline-size: 3rem;
+        block-size: 0.7rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--muted-foreground);
+    }
+    [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='ended'] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out 3;
+        }
+    }
+
+    /* Range picker: the custom window in force is a sticker pressed on, ringed in plum; its panel is the popover's own
+       plate (opaque); an invalid time takes the dashed red line. */
+    [data-theme='pastel'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow:
+            0 0 0 2px var(--primary),
+            0 4px 0 1px var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+
+    /* Compare slider: a photo stuck down in a frame with its sky pass; the divider is a strip of washi tape laid across
+       it; the handle is a round sticker on its peel that lifts when pointed at; the two labels are stickers. */
+    [data-theme='pastel'] .kp-compare {
+        --kp-compare-line: 10px;
+        --kp-compare-ink: var(--primary);
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-compare__divider {
+        border-inline-start-color: transparent;
+        background:
+            repeating-linear-gradient(0deg, var(--accent) 0 6px, transparent 6px 12px),
+            var(--kp-sig-pa-tape-stripe);
+    }
+    [data-theme='pastel'] .kp-compare__handle {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:hover {
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:active {
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:focus-visible {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='pastel'] .kp-compare__label {
+        border: 0;
+        border-radius: var(--kp-sig-pa-r-chip);
+        padding-inline: 0.7rem;
+        box-shadow: 0 2px 0 var(--kp-sig-pa-peel);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-compare__handle {
+            transition: box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+        [data-theme='pastel'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition-timing-function: var(--kp-sig-pa-land-size);
+        }
+    }
+}
+

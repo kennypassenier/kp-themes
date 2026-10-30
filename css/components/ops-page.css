@@ -1,0 +1,209 @@
+/* @part: ops-page: The operations page */
+@layer kp.components {
+    /* kpadopt5-ops:ops-page:start */
+    /* --- The operations page: one anatomy for every dashboard page [kpadopt5-ops] ---
+     * Spec item 6, UI_PRINCIPLES section 3. CSS only: it fixes the order, the gaps and
+     * the 12-column spans of the slots, so a page writes no glue.
+     *
+     *   <div class="kp-ops">
+     *       <header class="kp-ops__head kp-page-header">…title, lede, freshness line, actions…</header>
+     *       <div class="kp-ops__kpis"><div class="kp-kpis">…</div></div>
+     *       <div class="kp-ops__attention kp-attention">…one alert per problem…</div>
+     *       <div class="kp-ops__toolbar kp-toolbar">…</div>
+     *       <div class="kp-ops__body"><section class="kp-card" data-kp-span="8">…</section>…</div>
+     *   </div>
+     *
+     * The head and the body are required; a missing or empty slot takes no room. The
+     * order is fixed whatever the source order. Attributes on `.kp-ops`:
+     *   data-kp-ops-width   80vw (default, never under 64rem) | full | measure (64rem)
+     *   data-kp-ops-cards   the default span of a card: 12 | 8 | 6 (default) | 4 | 3
+     *   data-kp-ops-sticky  toolbar (default) | head | none: the part that stays reachable
+     *   data-kp-ops-failed  plate (default) | keep: what a failed page (`data-kp-state="error"`) shows; plate = the alert takes the body,
+     *                       centred, at the height the page had, the stale cards hidden; keep = the cards stay, the alert is a band on top
+     *   data-kp-uniform     off: cards in a row keep their own height (default: one height per row)
+     *   data-kp-density     comfortable (default) | compact
+     * and on a card `data-kp-span="3|4|6|8|12"`. Spans are 12 / 8 / 6 / 4 / 3 on a wide
+     * page, 6 / 12 on a tablet (up to 64rem) and 12 on a phone (up to 48rem), measured on
+     * the page's own width (a container query), so a page in a narrow frame folds the same
+     * way. On a phone the KPI strip is two tiles a row, `[data-kp-ops-wide]` actions leave
+     * the header and `[data-kp-ops-narrow]` entries of its More menu appear.
+     * Knobs [KT6]: --kp-ops-width, --kp-ops-gap, --kp-ops-pad-block, --kp-ops-pad-inline,
+     * --kp-ops-sticky-top (0), --kp-ops-kpi-min (7.5rem, so a loading tile is as tall as a
+     * loaded one). */
+    .kp-ops {
+        --kp-ops-gap: var(--kp-space-lg, 1.5rem);
+        container: kp-ops / inline-size;
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-ops-gap);
+        box-sizing: border-box;
+        inline-size: 100%;
+        max-inline-size: var(--kp-ops-width, max(80vw, 64rem));
+        margin-inline: auto;
+        padding: var(--kp-ops-pad-block, var(--kp-space-xl, 2rem))
+            var(--kp-ops-pad-inline, clamp(var(--kp-space-md, 1rem), 3vw, var(--kp-space-xl, 2rem)));
+    }
+
+    .kp-ops[data-kp-ops-width='full'] {
+        --kp-ops-width: none;
+    }
+
+    .kp-ops[data-kp-ops-width='measure'] {
+        --kp-ops-width: 64rem;
+    }
+
+    .kp-ops[data-kp-density='compact'] {
+        --kp-ops-gap: var(--kp-space-md, 1rem);
+        --kp-ops-pad-block: var(--kp-space-md, 1rem);
+    }
+
+    .kp-ops > * {
+        min-inline-size: 0;
+    }
+
+    .kp-ops > .kp-ops__head {
+        order: 1;
+    }
+
+    .kp-ops > .kp-ops__kpis {
+        order: 2;
+    }
+
+    .kp-ops > .kp-ops__attention {
+        order: 3;
+    }
+
+    .kp-ops > .kp-ops__toolbar {
+        order: 4;
+    }
+
+    .kp-ops > .kp-ops__body {
+        order: 5;
+    }
+
+    .kp-ops > :is(.kp-ops__kpis, .kp-ops__attention, .kp-ops__toolbar):not(:has(*)),
+    .kp-ops > [hidden] {
+        display: none;
+    }
+
+    /* The part that stays reachable on a long page. */
+    .kp-ops:not([data-kp-ops-sticky]) > .kp-ops__toolbar,
+    .kp-ops[data-kp-ops-sticky='toolbar'] > .kp-ops__toolbar,
+    .kp-ops[data-kp-ops-sticky='head'] > .kp-ops__head {
+        position: sticky;
+        inset-block-start: var(--kp-ops-sticky-top, 0px);
+        z-index: var(--kp-z-sticky, 10);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem);
+        background: var(--background);
+    }
+
+    .kp-ops__kpis > .kp-kpis > .kp-kpi {
+        min-block-size: var(--kp-ops-kpi-min, 7.5rem);
+    }
+
+    .kp-ops__body {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        align-items: stretch;
+        gap: var(--kp-ops-gap);
+    }
+
+    .kp-ops[data-kp-uniform='off'] > .kp-ops__body {
+        align-items: start;
+    }
+
+    .kp-ops__body > * {
+        grid-column: span var(--kp-ops-span, 6);
+        min-inline-size: 0;
+    }
+
+    .kp-ops[data-kp-ops-cards='12'] {
+        --kp-ops-span: 12;
+    }
+
+    .kp-ops[data-kp-ops-cards='8'] {
+        --kp-ops-span: 8;
+    }
+
+    .kp-ops[data-kp-ops-cards='4'] {
+        --kp-ops-span: 4;
+    }
+
+    .kp-ops[data-kp-ops-cards='3'] {
+        --kp-ops-span: 3;
+    }
+
+    .kp-ops__body > [data-kp-span='12'] {
+        --kp-ops-span: 12;
+    }
+
+    .kp-ops__body > [data-kp-span='8'] {
+        --kp-ops-span: 8;
+    }
+
+    .kp-ops__body > [data-kp-span='6'] {
+        --kp-ops-span: 6;
+    }
+
+    .kp-ops__body > [data-kp-span='4'] {
+        --kp-ops-span: 4;
+    }
+
+    .kp-ops__body > [data-kp-span='3'] {
+        --kp-ops-span: 3;
+    }
+
+    /* A wrapper's one card fills the wrapper, so the cards of a row share one height. */
+    .kp-ops__body > :not(.kp-card) > .kp-card:only-child {
+        block-size: 100%;
+    }
+
+    .kp-ops__body > .kp-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kp-ops__body > .kp-card > .kp-card__stage {
+        flex: 1 1 auto;
+    }
+
+    [data-kp-ops-narrow] {
+        display: none;
+    }
+
+    /* A tablet: 6 / 12. It starts under 56rem (was 64rem): on a stage of about 1000 px an 8 + 4 pair stacked into 12 / 6, a desktop
+       row folded for room it had [CHA 11]. */
+    @container kp-ops (max-width: 56rem) {
+        .kp-ops__body > * {
+            grid-column: span 6;
+        }
+
+        .kp-ops__body > :is([data-kp-span='8'], [data-kp-span='12']),
+        .kp-ops[data-kp-ops-cards='12'] > .kp-ops__body > :not([data-kp-span]),
+        .kp-ops[data-kp-ops-cards='8'] > .kp-ops__body > :not([data-kp-span]) {
+            grid-column: span 12;
+        }
+    }
+
+    /* A phone: one column, two KPI tiles a row, the secondary actions in the More menu. */
+    @container kp-ops (max-width: 48rem) {
+        .kp-ops__body > * {
+            grid-column: span 12 !important;
+        }
+
+        .kp-ops__kpis > .kp-kpis {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        [data-kp-ops-wide] {
+            display: none;
+        }
+
+        [data-kp-ops-narrow] {
+            display: revert;
+        }
+    }
+
+    /* kpadopt5-ops:ops-page:end */
+}
+

@@ -1,0 +1,288 @@
+/* @part: pipeline: Pipeline */
+    /* ── Pipeline: plates in a rack, the stage an oxide strip along the head ── */
+    [data-theme='titanium'] .kp-pipeline__lane {
+        --kp-sig-ti-c: 0.75rem;
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-pipeline__head {
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow:
+            inset 0 3px 0 var(--kp-pipeline-tone),
+            var(--kp-tool-edge);
+        padding-block-start: calc(var(--kp-space-xs, 0.25rem) + 3px);
+    }
+    [data-theme='titanium'] .kp-pipeline__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-pipeline__count,
+    [data-theme='titanium'] .kp-pipeline__share,
+    [data-theme='titanium'] .kp-pipeline__meta {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-pipeline__count {
+        font-size: 1rem;
+    }
+    [data-theme='titanium'] .kp-pipeline__card {
+        --kp-sig-ti-c: 0.4rem;
+        border-color: var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-pipeline__card:hover {
+        border-color: var(--border-strong);
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-pipeline__card:active {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border-strong);
+        background: var(--muted);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-pipeline__card[aria-current='true']:dir(rtl) {
+        box-shadow: inset -3px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-pipeline__card:focus-visible {
+        outline: 0;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+    [data-theme='titanium'] .kp-pipeline__mark {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        box-shadow: var(--kp-tool-edge);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-pipeline__card {
+            transition:
+                box-shadow var(--kp-sig-ti-fast) linear,
+                translate var(--kp-sig-ti-fast) linear;
+        }
+    }
+
+    /* ── Journey: a rail, the way travelled is oxide, the step it stands at a bare-metal ring ── */
+    [data-theme='titanium'] .kp-steplist--journey {
+        --kp-journey-rule: 3px;
+        --kp-steplist-mark-radius: 0;
+    }
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before,
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+        background: var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.12);
+    }
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--chart-1));
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.4);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__mark {
+        --kp-sig-ti-c: 0.3rem;
+        border-width: 1px;
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--primary);
+        background: radial-gradient(circle, var(--kp-step-tone, var(--primary)) 0 32%, transparent 36%), var(--background);
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 3px var(--card);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.01em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+
+    /* ── Moments on the timeline: machined marks; a stretch is oxide ── */
+    [data-theme='titanium'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.4);
+    }
+    [data-theme='titanium'] .kp-gantt__point {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-gantt__point:hover::before {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary);
+    }
+    [data-theme='titanium'] .kp-gantt__point:active {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-gantt__count {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(2px 0, 100% 0, 100% calc(100% - 2px), calc(100% - 2px) 100%, 0 100%, 0 2px);
+    }
+    [data-theme='titanium'] .kp-gantt__zone[data-kp-lane-zone] {
+        border-radius: 0;
+        background: linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.35), hsl(from var(--kp-gantt-mark) h s l / 0.8));
+    }
+    [data-theme='titanium'] :is(.kp-gantt__zone:not([data-kp-lane-zone]), .kp-gantt__band) {
+        border-inline: 0;
+        border-inline-start: 2px solid var(--kp-gantt-mark);
+        background: linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.24), hsl(from var(--kp-gantt-mark) h s l / 0.06));
+    }
+    [data-theme='titanium'] .kp-gantt__sub {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-gantt__point::before {
+            transition: box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }
+
+    /* ── Secret field: a pocket the value is fed into from the start edge; the countdown is the film cooling away ── */
+    [data-theme='titanium'] .kp-secret {
+        --kp-secret-drain-size: 3px;
+    }
+    [data-theme='titanium'] .kp-secret__value {
+        border-radius: 0;
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.6);
+    }
+    [data-theme='titanium'] .kp-secret__line {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-secret__drain {
+        background: var(--kp-sig-ti-oxide);
+        transform-origin: 100% 50%;
+    }
+    [data-theme='titanium'] .kp-secret__drain:dir(rtl) {
+        transform-origin: 0 50%;
+    }
+    [data-theme='titanium'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        border-inline-start-width: 3px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-titanium-secret-cut 240ms var(--kp-sig-ti-ease) backwards;
+        }
+        [data-theme='titanium'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text:dir(rtl) {
+            animation-name: kp-sig-titanium-secret-cut-rtl;
+        }
+    }
+    @keyframes kp-sig-titanium-secret-cut {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+    @keyframes kp-sig-titanium-secret-cut-rtl {
+        from {
+            clip-path: inset(0 0 0 100%);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* ── A dialog in sections: milled grooves between them, the danger section's bronze tool edge ── */
+    [data-theme='titanium'] .kp-dialog__section {
+        border-block-start: 1px solid var(--background);
+        box-shadow: 0 -1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-dialog__heading {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-dialog__section--danger {
+        margin-block-start: 0.5rem;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        padding-block: calc(var(--kp-dialog-section-gap, 0.75rem) + 3px) var(--kp-dialog-section-gap, 0.75rem);
+        border: 1px solid var(--border-strong);
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: inset 0 3px 0 var(--destructive);
+        clip-path: polygon(0.5rem 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%, 0 0.5rem);
+    }
+    [data-theme='titanium'] .kp-dialog__section--danger:first-child {
+        margin-block-start: 0;
+    }
+    [data-theme='titanium'] .kp-dialog__section--danger:last-child {
+        padding-block-end: var(--kp-dialog-section-gap, 0.75rem);
+    }
+    [data-theme='titanium'] .kp-confirm__dependents {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.6);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+    }
+    [data-theme='titanium'] .kp-type-confirm__loses {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: inset 0 3px 0 var(--destructive);
+        clip-path: polygon(0.4rem 0, 100% 0, 100% calc(100% - 0.4rem), calc(100% - 0.4rem) 100%, 0 100%, 0 0.4rem);
+    }
+    [data-theme='titanium'] .kp-type-confirm__loses-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-type-confirm__name {
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }

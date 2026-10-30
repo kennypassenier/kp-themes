@@ -1,0 +1,101 @@
+/* @part: every-part-that-opens: .kp-nav */
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(3) {
+            --kp-fm-k: 2;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(4) {
+            --kp-fm-k: 3;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(5) {
+            --kp-fm-k: 4;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(6) {
+            --kp-fm-k: 5;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(7) {
+            --kp-fm-k: 6;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(n + 8) {
+            --kp-fm-k: 7;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *,
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > * {
+            --kp-fm-f: clamp(0, (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(
+                0,
+                (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
+                1
+            );
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 100%;
+        }
+
+        /* Wide, the phone bar's links are the bar itself: nothing is ruled. */
+        @container kp-nav (min-width: 40.0001rem) {
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links,
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > * {
+                --kp-fm-t: 1;
+                clip-path: none;
+                background-image: none;
+                transition: none;
+            }
+        }
+
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(1)) {
+                --kp-nav-close-time: 560ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(2)) {
+                --kp-nav-close-time: 620ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(3)) {
+                --kp-nav-close-time: 680ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(4)) {
+                --kp-nav-close-time: 740ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(5)) {
+                --kp-nav-close-time: 800ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(6)) {
+                --kp-nav-close-time: 860ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(7)) {
+                --kp-nav-close-time: 920ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(8)) {
+                --kp-nav-close-time: 980ms;
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='formal'] .kp-nav {
+            --kp-nav-close-time: 0ms;
+        }
+    }

@@ -1,0 +1,84 @@
+{
+  "output": "css/deco-register.css",
+  "items": [
+    {
+      "open": "/* The numbers deco's motion is made of, registered at the top level because\n   Firefox does not register an @property inside a cascade layer; with no\n   registration a number would not animate or transition. Each initial value\n   is the finished pose. --kp-sig-deco-draw: how far a plate's inlay is drawn\n   round from its start (0 none, 1 closed). --kp-sig-deco-up: how far its\n   lacquer, wallpaper and words are up. --kp-sig-deco-hv: a pointer's leaf\n   (0 away, 1 on it). --kp-sig-deco-pr: a press (0 rest, 1 sunk).\n   --kp-sig-deco-ring: the seal's ring (0 at the centre, 1 at its edge).\n   --kp-sig-deco-p: how far a waiting part's lift doors have parted (0 shut).\n   --kp-sig-deco-g: where a glint is along a busy bar (0 before the start, 1\n   past the end). --kp-sig-deco-a1 and -a2: the great fan's two guard sticks,\n   from the left along its foot (182deg is folded away below it).\n   --kp-sig-deco-v: how much of the fan's dressing is drawn. */\n@property --kp-sig-deco-draw {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-sig-deco-up {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n@property --kp-sig-deco-hv {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-deco-pr {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-deco-ring {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 1;\n}\n\n@property --kp-sig-deco-p {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-deco-g {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 0;\n}\n\n@property --kp-sig-deco-a1 {\n    syntax: '<angle>';\n    inherits: true;\n    initial-value: 182deg;\n}\n\n@property --kp-sig-deco-a2 {\n    syntax: '<angle>';\n    inherits: true;\n    initial-value: 182deg;\n}\n\n@property --kp-sig-deco-v {\n    syntax: '<number>';\n    inherits: true;\n    initial-value: 1;\n}\n\n/* --kp-sig-deco-hold: a number the navbar's panels transition while they\n   close, so js/components.js (which waits for a transition on a closing mega\n   menu) holds them for the close's 480 ms. */\n@property --kp-sig-deco-hold {\n    syntax: '<number>';\n    inherits: false;\n    initial-value: 0;\n}\n\n@layer kp.register {\n",
+      "files": [
+        "base.css",
+        "the-hooks.css",
+        "the-navbar.css",
+        "button.css",
+        "fields.css",
+        "card.css",
+        "data.css",
+        "the-demos-own-pieces.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "open": "/* ── Signature [scope-140] ─────────────────────────────────────────────── */\n/* deco's approved signature (Kenny, 2026-10-03, three review rounds): the\n   progress bar and the ten elements (spinner, skeleton, switch, check and\n   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),\n   ported once from research/progress-signature/themes/deco.css and research/signature-elements/themes/deco.css\n   and maintained here from now on. In kp.signature, which css/themes.css\n   orders after kp.register, so it draws over the register exactly as the\n   approved demos did, whatever the weight of a register selector. */\n@layer kp.signature {\n",
+      "files": [
+        "signature-base.css",
+        "the-navbars-panels-open.css",
+        "sidenav.css",
+        "q7-q19-the-plate/base.css",
+        "q7-q19-the-plate/the-empty-state-no-crest-q19.css",
+        "q13-leaving-and-arriving.css",
+        "q10-loading.css",
+        "q11-the-progress-bar.css",
+        "q14-to-q17-the-colour.css",
+        "the-meter-with-a-mark-this.css",
+        "the-mark-past-the-end.css"
+      ],
+      "close": "}\n\n"
+    },
+    {
+      "file": "register.css"
+    },
+    {
+      "file": "end-of-the-signature.css"
+    },
+    {
+      "file": "the-dashboard-parts/base.css"
+    },
+    {
+      "file": "the-dashboard-parts/the-dashboard-parts.css"
+    },
+    {
+      "file": "the-six-opt-in-options.css"
+    },
+    {
+      "file": "the-kpadopt4-data-pieces.css"
+    },
+    {
+      "file": "the-uptime-strip-in-this.css"
+    },
+    {
+      "file": "rows-checks-choices.css"
+    },
+    {
+      "file": "flows-and-records-in-this.css"
+    },
+    {
+      "file": "the-ideas-and-the-recipe.css"
+    },
+    {
+      "file": "the-new-adoption-parts.css"
+    },
+    {
+      "file": "the-whole-grid-loading.css"
+    },
+    {
+      "file": "signature/base.css"
+    },
+    {
+      "file": "signature/a-ghost-that-stands-alone-end.css"
+    },
+    {
+      "file": "graph-loading-shape-2.css"
+    },
+    {
+      "file": "graph-loading-r4-dec-load.css"
+    }
+  ]
+}
