@@ -2,6 +2,13 @@
 // written out like PART_FILES in gates/checksums-parts.mjs, which holds the earlier ones and may not pass 500 lines.
 // Each module's facade `js/<name>.js` is in FILES in gates/checksums.mjs; its folder `js/<name>/` is here.
 export const CONTROLLER_PART_FILES = [
+    'js/ack-gate/build.js',
+    'js/ack-gate/controller.js',
+    'js/ack-gate/core.js',
+    'js/ack-gate/notes.js',
+    'js/ack-gate/sync.js',
+    'js/ack-gate/targets.js',
+    'js/ack-gate/values.js',
     'js/auto-refresh/api.js',
     'js/auto-refresh/bar.js',
     'js/auto-refresh/chooser.js',

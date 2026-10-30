@@ -1,9 +1,4 @@
-/** The gates this module drives. */
-export declare const ACK_GATE = "[data-kp-ack]";
-/** Fired on the gate when its tick changes: `{ key, checked, remaining, at }`. */
-export declare const ACK_EVENT = "kp-ack-change";
-/** Fired on the gate when its Retry is pressed. */
-export declare const ACK_RETRY_EVENT = "kp-ack-retry";
+export { ACK_GATE, ACK_EVENT, ACK_RETRY_EVENT } from './ack-gate/values.js';
 export type AckHandle = {
     element: HTMLElement;
     checked: () => boolean;
@@ -19,6 +14,16 @@ export type AckHandle = {
      */
     remaining: () => number;
 };
+/**
+ * @typedef {object} AckHandle
+ * @property {HTMLElement} element
+ * @property {() => boolean} checked
+ * @property {(checked: boolean) => void} set
+ * @property {(state: 'ready' | 'loading' | 'error' | 'empty') => void} setState
+ * @property {(markdown: string | null) => void} setNotes the release notes as markdown, drawn safely in a fold of the gate; null takes them away
+ * @property {(locked: boolean) => void} setLocked
+ * @property {() => number} remaining how many gates of this gate's controls are still unticked
+ */
 /**
  * The handle of an attached gate.
  * @param {Element} el

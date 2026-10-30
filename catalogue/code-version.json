@@ -2,7 +2,7 @@
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
     "base": "bf1b91549bab712f",
     "modules": {
-        "js/ack-gate.js": { "digest": "79d0ae91bb3024b3", "when": "[data-kp-ack]" },
+        "js/ack-gate.js": { "digest": "54a187318f3557ef", "when": "[data-kp-ack]" },
         "js/action-tiles.js": { "digest": "8b991575d50cd0aa", "when": ".kp-action" },
         "js/actions.js": { "digest": "7254ebf2bbcb9da0", "when": ".kp-row-actions" },
         "js/alarm.js": { "digest": "647bf77baf844ec6", "when": "[data-kp-alarm]" },
