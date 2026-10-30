@@ -25,7 +25,7 @@
         "js/colorpicker.js": { "digest": "6792f52017de9605", "when": "[data-kp-colorpicker]" },
         "js/combobox.js": { "digest": "a9e082ef176acb02", "when": "[data-kp-combobox], select" },
         "js/command.js": { "digest": "ff9014001a7c3f9d", "when": "[data-kp-command]" },
-        "js/compare.js": { "digest": "dcef5bea97a3e554", "when": "[data-kp-compare]" },
+        "js/compare.js": { "digest": "593b56b2dc26d88c", "when": "[data-kp-compare]" },
         "js/components.js": {
             "digest": "c49ba974ac2da58d",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], [data-kp-type-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
