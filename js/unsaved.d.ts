@@ -1,69 +1,12 @@
-export type UnsavedConfig = {
-    storage?: Storage | null;
-};
-/**
- * Set where every bar keeps its changes, once: a browser `Storage`, or `null` to keep nothing. Without it a bar uses
- * `sessionStorage` (`localStorage` with `data-kp-keep="local"`). A bar attached with its own `storage` option keeps that one [wish-1028].
- * @param {UnsavedConfig} next
- */
-export declare function configureUnsaved(next: UnsavedConfig): void;
-/** An unsaved-changes bar. */
-export declare const UNSAVED = "[data-kp-unsaved]";
-/** Fired on the bar when the count changes: `{ count, changes }`. */
-export declare const UNSAVED_CHANGE_EVENT = "kp-unsaved-change";
-/** Fired on the bar, bubbling and cancelable, when Save is pressed: `{ changes }`. */
-export declare const UNSAVED_SAVE_EVENT = "kp-unsaved-save";
-/** Fired on the bar when the changes were discarded: `{ changes }`; and `kp-unsaved-undo` when they were put back. */
-export declare const UNSAVED_DISCARD_EVENT = "kp-unsaved-discard";
-/** Fired on the bar when a discard is undone: `{ changes }`. */
-export declare const UNSAVED_UNDO_EVENT = "kp-unsaved-undo";
-/** Fired on the bar, bubbling and cancelable, when a link would leave a page with unsaved changes: `{ href }`. */
-export declare const UNSAVED_LEAVE_EVENT = "kp-unsaved-leave";
-/** Fired on the bar, bubbling and cancelable, when one change is reverted: `{ key, row }`. */
-export declare const UNSAVED_REVERT_EVENT = "kp-unsaved-revert";
-export type UnsavedChange = {
-    /**
-     * the row's name
-     */
-    key: string;
-    /**
-     * what it was
-     */
-    was: string;
-    /**
-     * what it is
-     */
-    now: string;
-    /**
-     * the row (or the control) that carries `data-kp-changed`
-     */
-    row: HTMLElement;
-};
-export type UnsavedHandle = {
-    element: HTMLElement;
-    /**
-     * the changes now
-     */
-    changes: () => UnsavedChange[];
-    state: () => 'clean' | 'dirty' | 'saving';
-    /**
-     * put every value back (with Undo)
-     */
-    discard: () => void;
-    /**
-     * the page's answer to Save
-     */
-    saved: (result?: {
-        refused?: Record<string, string>;
-    }) => void;
-    /**
-     * take what the form holds now as the saved values
-     */
-    markClean: () => void;
-    setSaving: (saving: boolean) => void;
-};
+export { configureUnsaved, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, } from './unsaved/config.js';
+export type UnsavedConfig = import('./unsaved/config.js').UnsavedConfig;
+export type UnsavedChange = import('./unsaved/config.js').UnsavedChange;
+export type UnsavedHandle = import('./unsaved/config.js').UnsavedHandle;
+/** @typedef {import('./unsaved/config.js').UnsavedConfig} UnsavedConfig */
+/** @typedef {import('./unsaved/config.js').UnsavedChange} UnsavedChange */
+/** @typedef {import('./unsaved/config.js').UnsavedHandle} UnsavedHandle */
 /** The handle of an attached bar. @param {Element} element */
-export declare function unsaved(element: Element): UnsavedHandle | null;
+export declare function unsaved(element: Element): import("./unsaved/config.js").UnsavedHandle | null;
 /**
  * The page's answer to Save: the changes that went through stop counting, those in `refused` (their key and the
  * reason) stay marked and the bar says why.
@@ -93,4 +36,4 @@ export declare function setUnsavedSaving(element: Element, saving: boolean): voi
  * @param {UnsavedConfig} [options] `storage`: where this call's bars keep their changes (a browser Storage, or null for nowhere)
  * @returns {() => void} detach
  */
-export declare function attachUnsaved(root?: ParentNode, options?: UnsavedConfig): () => void;
+export declare const attachUnsaved: (root?: ParentNode, options?: UnsavedConfig) => () => void;

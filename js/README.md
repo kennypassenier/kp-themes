@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The twenty-seven largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The forty-one largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -638,3 +638,147 @@ The tree, the reorder list and the split pane, one controller each. 4 files.
 | `shared.js`  | The selectors, the events, the defaults and the walk of a tree's visible items.         |
 | `split.js`   | SplitControl: the separator by keys and pointer, vertical too, the fold on double click. |
 | `tree.js`    | TreeControl: walking, opening, typeahead, one tab stop, selection, remembered branches. |
+
+## js/datepicker.js → js/datepicker/
+
+The date picker: a typed field with a calendar panel of days, months and years, and the handle to set and read the date. 10 files.
+
+| File            | Does                                                                                                                           |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `attach.js`     | Attaches the date pickers of a page and hands back their handles.                                                              |
+| `constants.js`  | The names, event names and fixed numbers of the date picker, and the types of its views and handle.                            |
+| `controller.js` | One date picker: the field, the open button and the panel; typing, choosing, setting, and the handle a page gets back.         |
+| `dates.js`      | Pure date helpers: ISO and locale text, month clamping, year blocks, range tests and the month and year grid's key moves.      |
+| `grid.js`       | Draws the panel: the head with its steps and title, and the day, month or year grid under it.                                  |
+| `keys.js`       | The panel's keyboard and pointer: Escape steps back, arrows move the focus, Enter chooses, a click picks a day, month or year. |
+| `opening.js`    | Opens and closes the panel: the top layer, the arrival and the close played backwards, and where the focus goes afterwards.    |
+| `place.js`      | Places an open calendar panel inside the window, raises it above its containers and measures the day view to hold.             |
+| `settings.js`   | What one picker is set to: the page's options and the picker's own attributes, resolved once when it attaches.                 |
+| `views.js`      | Which grid the panel shows (days, months or years): redraws, the steps in and out of the month and year grids, and the focus.  |
+
+## js/segmented.js → js/segmented/
+
+The segmented control and the filter chips: single, multi and three-way groups, with the plate under the chosen segment. 14 files.
+
+| File           | Does                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `actions.js`   | Pressing an item: what a click or the keyboard's choice does, and the event it fires.                                          |
+| `api.js`       | The calls a page makes on a group: set its values, its three-way chips and its counts, or reset it; none fires a press.        |
+| `constants.js` | The selectors, attribute names, event name and fixed numbers of the segmented control, and the types of its items.             |
+| `group.js`     | One segmented group: the roles and states its markup left out, its size and scroll watching, and its mode watching.            |
+| `items.js`     | Replaces the items of a group when the values change under it, keeping what is on and where the focus was.                     |
+| `keys.js`      | The keyboard of a group: where an arrow, Home or End moves the focus, and the delete of a three-way chip.                      |
+| `mode.js`      | A group whose `data-kp-segmented` changes at runtime [live-options-1019]: rewrites its roles and states for the new mode.      |
+| `paint.js`     | Writes the state of every item from a list of values, then the roving tab stop, then the plate; fires no event.                |
+| `plate.js`     | The plate under the chosen segment, and the marks for a scrolling track that has more segments out of sight.                   |
+| `read.js`      | Reads a group's markup: its mode, its items, their values and states, and the values that are on.                              |
+| `root.js`      | Attaches the segmented groups under a root: delegated click, key and focus handling, and groups that arrive later.             |
+| `roving.js`    | The roving tab stop: one item of the group is in the tab order, the others are reached by the arrows.                          |
+| `state.js`     | What outlives one group controller: the roving tab stop of each group, and the events already handled.                         |
+| `tri.js`       | The three-way look [kpadopt4]: a chip's state and its spoken word, the Clear all item, the summary line and the status region. |
+
+## js/code.js → js/code/
+
+The code block: JSON, TOML and shell text in a scrolling box, with Pretty and Raw, Wrap, Copy, a fold and its states. 12 files.
+
+| File            | Does                                                                                                                          |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `actions.js`    | What the head's tools do: a layout choice, Wrap, the fold (in place or in a dialog) and Copy.                                 |
+| `attach.js`     | Draws code blocks: `setCode` for a page that draws later, `attachCodes` for the blocks js/auto.js finds in markup.            |
+| `body.js`       | The body of a block: the coloured lines with their fold and foot, or the plate or sentence of an empty, binary or failed one. |
+| `constants.js`  | The selector, timings and fixed numbers of the code block, and the type of what a page draws into it.                         |
+| `controller.js` | One code block: the state the reader changes (wrap, layout, fold), the draw flow, and the listeners of its tools.             |
+| `dialog.js`     | Opens the whole payload of a folded cell in a modal dialog, as a full block of its own.                                       |
+| `dom.js`        | Small element builders shared by the code block's parts.                                                                      |
+| `head.js`       | The head of a block: its title and meta, and the tools that keep their place in every state (Pretty and Raw, Wrap, Copy).     |
+| `highlight.js`  | Colours one line of text as nodes: JSON keys and punctuation, TOML tables and values, shell commands, flags and variables.    |
+| `language.js`   | The language of a block: JSON that parses, the languages that get colour, and `auto` resolved from the text.                  |
+| `loading.js`    | The loading state: the block waits at its final height under the data table's busy card.                                      |
+| `state.js`      | The counter that gives each code body an id of its own, for the fold button's `aria-controls`.                                |
+
+## js/timefield.js → js/timefield/
+
+The time field: a 24-hour text box, a list of times, keys that step, presets and the hidden value it posts. 10 files.
+
+| File            | Does                                                                                                                              |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`        | The calls a page makes on a time field: set, read, check, give presets, and attach.                                               |
+| `attributes.js` | Reads a root's `data-kp-time-*` options, and the entries and presets they describe.                                               |
+| `build.js`      | Builds the parts of a time field once: the text box, the open button, the hidden input, the lines and the list.                   |
+| `constants.js`  | The selector, event names and fixed numbers of the time field, and the types of its presets.                                      |
+| `controller.js` | Wires one time field: its typing, keys, paste, clicks, focus, outside presses and the attributes it follows.                      |
+| `field.js`      | A time field's value and its words: writing the value, the invalid line, committing typed text, and the sync with its attributes. |
+| `keys.js`       | The keyboard of the text box: Enter and Escape, Alt+Down to open, arrows through the list, and stepping the time.                 |
+| `list.js`       | The list of times: the presets above it, the options, the active option, and opening it on the overlay layer.                     |
+| `parse.js`      | Pure time-of-day helpers: reading what was typed, minutes and text, stepping past midnight, and the window test.                  |
+| `state.js`      | What the time fields share: the counter that gives each its own ids, and the field each root has been built into.                 |
+
+## js/gallery.js → js/gallery/
+
+The photo gallery: a grid of tiles that open large in the viewer, with previous and next, zoom, swipe and an address per picture. 8 files.
+
+| File                | Does                                                                                                                                |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `attach.js`         | The calls a page makes on a gallery: write it, read its pictures, open one, and attach it.                                          |
+| `constants.js`      | The selector, event names, states and fixed numbers of the gallery, and the types of its pictures, actions and spec.                |
+| `dom.js`            | Small helpers of the gallery's parts: an element with a class, an attribute with a default, and a picture address that asks again.  |
+| `gallery.js`        | One gallery: its pictures and spec, how it draws itself in each state, the busy card, and what it remembers.                        |
+| `lightbox-info.js`  | What the lightbox shows beside the picture: its caption and facts, and the buttons in the foot.                                     |
+| `lightbox-input.js` | How a person moves the lightbox: the controls that fade, the swipe on a phone, and the address that carries the open picture.       |
+| `lightbox.js`       | The lightbox of one opened picture: the viewer shell, previous and next, zoom, the picture's load, and closing.                     |
+| `render.js`         | Builds the gallery's tiles and plates: the grid and its cells, the add tile, the failed-picture tile and the empty or failed plate. |
+
+## js/calendar.js → js/calendar/
+
+The month heatmap: a six-week grid of tone plates with navigation, picking, a state plate, a legend and a calm look. 12 files.
+
+| File            | Does                                                                                                                              |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`        | The calls a page makes on a calendar: give it days, a state, a selection, a month, a legend and a caption, and attach it.         |
+| `build.js`      | Builds the calendar's elements once: the navigation, the state line, the six-week grid of buttons, the busy layer and the legend. |
+| `busy.js`       | The busy layers a theme holds on screen while their state goes: marks them as leaving and tidies their words when they are gone.  |
+| `constants.js`  | The selector, event names and fixed numbers of the calendar, and the types of its days, states and options.                       |
+| `controller.js` | One month heatmap: its month, its days and state, the picking and the keys, and the calls a page makes on it.                     |
+| `dates.js`      | Pure calendar arithmetic on `YYYY-MM-DD` keys: the day a moment falls on, shifting days and months, and a month's 42 cells.       |
+| `day.js`        | Which tone and words a day gets: the standard vocabulary, or the calm one (logged, quiet, paused).                                |
+| `dom.js`        | Small helpers of the calendar's parts: an element with a class and text, and the host's `data-kp-key`.                            |
+| `keys.js`       | The keys of the day grid: which day an arrow, Home, End, Page Up or Page Down goes to.                                            |
+| `paint.js`      | Repaints the grid in place: the month's title, each day's tone and words, the tab stop, and the busy layers that leave.           |
+| `plate.js`      | The plate over a calendar's grid: an empty month's centred plate, and a failed month's with Retry.                                |
+| `state.js`      | The counter that gives each calendar's title an id of its own.                                                                    |
+
+## js/rating.js → js/rating/
+
+The star rating: a radio row of stars to set or a display row to read, with half stars, Undo and a saving state. 10 files.
+
+| File            | Does                                                                                                                                            |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api.js`        | The calls a page makes on a rating: attach, read its handle, set it, set its state, and draw one in a table cell.                               |
+| `build.js`      | Builds one rating's elements: the row of stars, the caption, the Clear, Save and Cancel buttons, and the lines for reason, flash and failure.   |
+| `commit.js`     | A person changes the rating: choosing a value (held for Save or at once), the event that can be refused, the save that is waited for, and Undo. |
+| `constants.js`  | The selector, event names, states and fixed numbers of the rating, and the types of its options, sources and handle.                            |
+| `controller.js` | One rating: its model (value, draft, preview, busy), the stars it draws, and its pointer, key, button and attribute handling.                   |
+| `keys.js`       | The keyboard of the row: arrows and Home and End move and choose, Backspace and Delete clear, Space and Enter choose the focused star.          |
+| `math.js`       | Pure rating arithmetic: clamping, snapping a value to the step and the scale, and plain numbers for sentences.                                  |
+| `paint.js`      | Brings the stars, the names, the caption and the buttons in step with the rating's model.                                                       |
+| `read.js`       | What a rating's attributes say now: its options, its state, and whether it can be changed.                                                      |
+| `state.js`      | The counter that gives each rating's caption and reason an id of its own.                                                                       |
+
+## js/unsaved.js → js/unsaved/
+
+The unsaved-changes bar: it counts the marked rows, offers Save, Discard and Undo, lists the changes and warns before the page is left. 12 files.
+
+| File            | Does                                                                                                                         |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `actions.js`    | What the bar's buttons do: jump to a change, revert one, discard with Undo, save, and take the page's answer to Save.        |
+| `changes.js`    | Tracks what is changed: the baseline of every control, the rows marked `data-kp-changed`, and the list of changes.           |
+| `config.js`     | The unsaved bar's names, fixed numbers, page-wide storage choice and the settings one bar reads from its markup.             |
+| `controller.js` | One unsaved-changes bar: builds it, paints the count, runs Save, Discard, Undo and Revert, and hands the page its handle.    |
+| `dock.js`       | Where the bar stands: in the header, or docked to the screen once the header is out of view; and when it goes compact.       |
+| `keeper.js`     | Keeps the changes across a reload: writes them to a Storage as they change and puts them back when the bar attaches.         |
+| `leave.js`      | Warns before the page is left with unsaved changes: the browser's own prompt, and a confirmation on in-page links.           |
+| `paint.js`      | Paints one unsaved bar from its changes: the state, the words, the buttons and the More menu, the list, and the count event. |
+| `panel.js`      | The list of changes: opens under the count chip on the overlay layer, closes with motion, and places itself.                 |
+| `parts.js`      | Builds the bar's elements, the list entries and the refusal alert; no behaviour, only structure and classes.                 |
+| `state.js`      | The counter that gives each bar without an id its own.                                                                       |
+| `values.js`     | What a form control holds: reading the live value, the markup's value, and putting a value back.                             |
