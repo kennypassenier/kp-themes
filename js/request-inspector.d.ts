@@ -1,19 +1,5 @@
-/** The inspectors this module looks after. */
-export declare const REQUESTS = "[data-kp-requests]";
-/** The header names masked unless the page says otherwise. */
-export declare const SECRET_HEADERS: readonly string[];
-/** What a masked value is drawn as. */
-export declare const MASK = "********";
-/** How many requests show before "Show older". */
-export declare const REQUESTS_MAX = 20;
-/** Fired on the element after a copy: `{ what: 'curl' | 'json' | 'body', masked }`. */
-export declare const REQUESTS_COPY_EVENT = "kp-requests-copy";
-/** Fired when the empty list's Send test is pressed. */
-export declare const REQUESTS_TEST_EVENT = "kp-requests-test";
-/** Fired when the failed list's Retry is pressed. */
-export declare const REQUESTS_RETRY_EVENT = "kp-requests-retry";
-/** How long "Copied" stays [ms]. */
-export declare const REQUESTS_COPIED_MS = 1500;
+export { REQUESTS, SECRET_HEADERS, MASK, REQUESTS_MAX, REQUESTS_COPY_EVENT, REQUESTS_TEST_EVENT, REQUESTS_RETRY_EVENT, REQUESTS_COPIED_MS, toneOf, toCurl, toJson, } from './request-inspector/format.js';
+export { setRequests, setRequestsState } from './request-inspector/api.js';
 export type CapturedRequest = {
     /**
      * the moment: ISO text or milliseconds
@@ -53,46 +39,29 @@ export type InspectorOptions = {
      */
     origin?: string;
 };
-export type Memory = {
-    list: CapturedRequest[];
-    filter: string;
-    shown: number;
-    /**
-     * keys the reader opened
-     */
-    opened: Set<string>;
-    /**
-     * keys the reader closed
-     */
-    closed: Set<string>;
-    options: InspectorOptions;
-    /**
-     * what the page passed to attachRequestInspectors()
-     */
-    given: InspectorOptions;
-};
-/** @param {number | undefined} status @returns {'success' | 'info' | 'warning' | 'error' | 'none'} */
-export declare function toneOf(status: number | undefined): 'success' | 'info' | 'warning' | 'error' | 'none';
 /**
- * A request as a curl command.
- * @param {CapturedRequest} request
- * @param {{ mask?: boolean, secretHeaders?: readonly string[], origin?: string }} [options] `mask` draws the secret headers as ********
- * @returns {string}
+ * @typedef {object} CapturedRequest
+ * @property {string | number} [at] the moment: ISO text or milliseconds
+ * @property {string} method
+ * @property {string} path
+ * @property {number} [status]
+ * @property {Record<string, string> | [string, string][]} [headers]
+ * @property {string} [body]
+ * @property {boolean} [truncated] only the start of the body was kept
+ * @property {number} [bodyBytes] the size of the whole body
+ * @property {boolean} [binary]
+ * @property {string} [source] `test` marks a request the page sent itself
+ * @property {string} [url] the full address, for curl (otherwise `origin` + path)
  */
-export declare function toCurl(request: CapturedRequest, { mask, secretHeaders, origin }?: {
-    mask?: boolean;
-    secretHeaders?: readonly string[];
-    origin?: string;
-}): string;
 /**
- * A request as JSON, with the secret headers masked unless asked.
- * @param {CapturedRequest} request
- * @param {{ mask?: boolean, secretHeaders?: readonly string[] }} [options]
+ * @typedef {object} InspectorOptions
+ * @property {readonly string[]} [secretHeaders]
+ * @property {'masked' | 'masked-only' | 'real'} [secretsInCopy]
+ * @property {'failed' | 'first' | 'none'} [open]
+ * @property {number} [max]
+ * @property {readonly ('curl' | 'json' | 'body')[]} [copyAs]
+ * @property {string} [origin] put before a path that is not a full address
  */
-export declare function toJson(request: CapturedRequest, { mask, secretHeaders }?: {
-    mask?: boolean;
-    secretHeaders?: readonly string[];
-}): string;
 /**
  * Give every `[data-kp-requests]` under `root` its card, filter and list.
  * @param {ParentNode} [root]
@@ -100,18 +69,3 @@ export declare function toJson(request: CapturedRequest, { mask, secretHeaders }
  * @returns {() => void} detach
  */
 export declare function attachRequestInspectors(root?: ParentNode, options?: InspectorOptions): () => void;
-/**
- * Show a list of requests, newest first. An empty list is the empty state.
- * @param {HTMLElement} el
- * @param {readonly CapturedRequest[]} requests
- */
-export declare function setRequests(el: HTMLElement, requests: readonly CapturedRequest[]): void;
-/**
- * Put the list in one of the card's four states.
- * @param {HTMLElement} el
- * @param {'loading' | 'empty' | 'error' | 'ready'} state
- * @param {{ message?: string }} [options] the sentence of a failed list
- */
-export declare function setRequestsState(el: HTMLElement, state: 'loading' | 'empty' | 'error' | 'ready', options?: {
-    message?: string;
-}): void;

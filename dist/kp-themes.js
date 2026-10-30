@@ -37800,24 +37800,7 @@ var init_json_field = __esm({
   }
 });
 
-// js/request-inspector.js
-var request_inspector_exports = {};
-__export(request_inspector_exports, {
-  MASK: () => MASK,
-  REQUESTS: () => REQUESTS,
-  REQUESTS_COPIED_MS: () => REQUESTS_COPIED_MS,
-  REQUESTS_COPY_EVENT: () => REQUESTS_COPY_EVENT,
-  REQUESTS_MAX: () => REQUESTS_MAX,
-  REQUESTS_RETRY_EVENT: () => REQUESTS_RETRY_EVENT,
-  REQUESTS_TEST_EVENT: () => REQUESTS_TEST_EVENT,
-  SECRET_HEADERS: () => SECRET_HEADERS,
-  attachRequestInspectors: () => attachRequestInspectors,
-  setRequests: () => setRequests,
-  setRequestsState: () => setRequestsState,
-  toCurl: () => toCurl,
-  toJson: () => toJson,
-  toneOf: () => toneOf
-});
+// js/request-inspector/format.js
 function toneOf(status) {
   if (status === void 0 || !Number.isFinite(status)) return "none";
   if (status >= 500) return "error";
@@ -37859,6 +37842,268 @@ function readOptions(el16) {
     )
   };
 }
+function pathNodes(doc, path) {
+  const nodes = [];
+  for (const piece of path.split(/(?<=[/?&])/)) {
+    nodes.push(doc.createTextNode(piece), doc.createElement("wbr"));
+  }
+  return nodes;
+}
+var REQUESTS, SECRET_HEADERS, MASK, REQUESTS_MAX, REQUESTS_COPY_EVENT, REQUESTS_TEST_EVENT, REQUESTS_RETRY_EVENT, REQUESTS_COPIED_MS, ITEM_REQUEST, make8, pairsOf, classOf, msOf2, quote, keyOf3;
+var init_format2 = __esm({
+  "js/request-inspector/format.js"() {
+    "use strict";
+    REQUESTS = "[data-kp-requests]";
+    SECRET_HEADERS = Object.freeze(["authorization", "cookie", "set-cookie", "x-api-key", "proxy-authorization"]);
+    MASK = "********";
+    REQUESTS_MAX = 20;
+    REQUESTS_COPY_EVENT = "kp-requests-copy";
+    REQUESTS_TEST_EVENT = "kp-requests-test";
+    REQUESTS_RETRY_EVENT = "kp-requests-retry";
+    REQUESTS_COPIED_MS = 1500;
+    ITEM_REQUEST = /* @__PURE__ */ new WeakMap();
+    make8 = (doc, className, tag = "div") => {
+      const node = doc.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    pairsOf = (headers) => Array.isArray(headers) ? headers : Object.entries(headers ?? {});
+    classOf = (status) => status === void 0 ? "none" : `${Math.floor(status / 100)}xx`;
+    msOf2 = (at) => typeof at === "number" ? at : at ? Date.parse(at) : Number.NaN;
+    quote = (text) => `'${text.replace(/'/g, `'\\''`)}'`;
+    keyOf3 = (request3, index) => `${request3.at ?? ""}|${request3.method}|${request3.path}|${index}`;
+  }
+});
+
+// js/request-inspector/copy.js
+async function copy(el16, memory, button5) {
+  const strings = getStrings();
+  const item = button5.closest(".kp-inspector__item");
+  const request3 = item ? ITEM_REQUEST.get(item) : void 0;
+  if (!request3) return;
+  const options = memory.options;
+  const real = button5.hasAttribute("data-kp-requests-real") || options.secretsInCopy === "real";
+  const mask = !real;
+  const which = button5.dataset.kpRequestsCopy;
+  const secretHeaders = options.secretHeaders ?? SECRET_HEADERS;
+  const text = which === "curl" ? toCurl(request3, { mask, secretHeaders, origin: options.origin ?? "" }) : which === "json" ? toJson(request3, { mask, secretHeaders }) : request3.body ?? "";
+  const word = (
+    /** @type {HTMLElement} */
+    button5.querySelector(".kp-code__word")
+  );
+  const idle = word.getAttribute("data-kp-code-words")?.split("\n")[0] ?? "";
+  const view = el16.ownerDocument.defaultView;
+  try {
+    await navigator.clipboard.writeText(text);
+    word.textContent = strings.copied;
+    const live4 = el16.querySelector(".kp-inspector__live");
+    if (live4) {
+      const named = which === "curl" ? "curl" : which === "json" ? "JSON" : strings.reqBody;
+      live4.textContent = [strings.reqCopyDone(named), mask && which !== "body" ? strings.reqMaskedNote : ""].filter(Boolean).join(", ");
+    }
+    el16.dispatchEvent(new CustomEvent(REQUESTS_COPY_EVENT, { bubbles: true, detail: { what: which, masked: mask && which !== "body", text } }));
+  } catch {
+    word.textContent = strings.copyBlocked;
+  }
+  view?.setTimeout(() => word.textContent = idle, REQUESTS_COPIED_MS);
+}
+var init_copy2 = __esm({
+  "js/request-inspector/copy.js"() {
+    "use strict";
+    init_strings();
+    init_format2();
+  }
+});
+
+// js/request-inspector/request.js
+function drawRequest(el16, memory, request3, index, slot) {
+  const doc = el16.ownerDocument;
+  const options = memory.options;
+  const key = keyOf3(request3, slot);
+  const tone = toneOf(request3.status);
+  const failed = request3.status === void 0 || request3.status >= 400;
+  const defaultOpen = options.open === "first" ? index === 0 : options.open === "failed" ? failed : false;
+  const open4 = memory.opened.has(key) || defaultOpen && !memory.closed.has(key);
+  const item = (
+    /** @type {HTMLDetailsElement} */
+    make8(doc, "kp-accordion__item kp-inspector__item", "details")
+  );
+  item.setAttribute("role", "listitem");
+  item.dataset.kpRequestKey = key;
+  item.dataset.kpRequestTone = tone;
+  if (open4) item.setAttribute("open", "");
+  item.append(summaryOf2(doc, request3, tone));
+  let built = false;
+  const ensure = () => {
+    if (built) return;
+    built = true;
+    item.append(bodyOf(doc, request3, options));
+  };
+  if (open4) ensure();
+  item.addEventListener("toggle", () => {
+    if (item.open) {
+      ensure();
+      memory.opened.add(key);
+      memory.closed.delete(key);
+    } else {
+      memory.opened.delete(key);
+      memory.closed.add(key);
+    }
+  });
+  ITEM_REQUEST.set(item, request3);
+  return item;
+}
+function summaryOf2(doc, request3, tone) {
+  const strings = getStrings();
+  const summary2 = make8(doc, "kp-accordion__summary kp-inspector__summary", "summary");
+  const method = make8(doc, "kp-inspector__method", "span");
+  method.textContent = request3.method.toUpperCase();
+  const path = make8(doc, "kp-inspector__path", "span");
+  path.append(...pathNodes(doc, request3.path));
+  const status = make8(doc, `kp-badge kp-inspector__status${tone === "none" ? "" : ` kp-badge--${tone === "error" ? "destructive" : tone}`}`, "span");
+  const word = { success: strings.reqToneSuccess, info: strings.reqToneInfo, warning: strings.reqToneWarning, error: strings.reqToneError, none: strings.reqToneNone }[tone];
+  status.textContent = request3.status === void 0 ? word : `${request3.status} ${word}`;
+  const row = make8(doc, "kp-inspector__row", "span");
+  row.append(method, status, path);
+  if (request3.source === "test") {
+    const badge = make8(doc, "kp-badge kp-inspector__source", "span");
+    badge.textContent = strings.reqSourceTest;
+    row.append(badge);
+  }
+  const at = msOf2(request3.at);
+  if (Number.isFinite(at)) {
+    const time = (
+      /** @type {HTMLTimeElement} */
+      make8(doc, "kp-inspector__time", "time")
+    );
+    time.dateTime = new Date(at).toISOString();
+    time.title = new Date(at).toISOString();
+    time.textContent = agoMoment(at);
+    row.append(time);
+  }
+  summary2.append(row);
+  summary2.setAttribute("aria-label", strings.reqSummary(request3.method.toUpperCase(), request3.path, status.textContent ?? ""));
+  return summary2;
+}
+function bodyOf(doc, request3, options) {
+  const body = make8(doc, "kp-accordion__body kp-inspector__body");
+  const secret = new Set((options.secretHeaders ?? SECRET_HEADERS).map((h2) => h2.toLowerCase()));
+  const pairs = pairsOf(request3.headers);
+  body.append(...headersOf2(doc, pairs, secret));
+  const text = request3.body ?? "";
+  const binary = request3.binary === true || text.includes("\0");
+  codeInto(body, request3, options, text, binary);
+  body.append(actionsOf(doc, options, pairs, secret, text === "" || binary));
+  return body;
+}
+function headersOf2(doc, pairs, secret) {
+  const strings = getStrings();
+  const title = make8(doc, "kp-inspector__heading", "h4");
+  title.textContent = strings.reqHeaders;
+  if (pairs.length === 0) {
+    const none = make8(doc, "kp-kv__none", "p");
+    none.textContent = strings.reqNoHeaders;
+    return [title, none];
+  }
+  const kv = make8(doc, "kp-kv kp-kv--lines kp-inspector__headers", "dl");
+  for (const [name, value] of pairs) {
+    const row = make8(doc, "kp-kv__row", "div");
+    const dt = make8(doc, "", "dt");
+    dt.textContent = name;
+    const dd = make8(doc, "", "dd");
+    if (secret.has(name.toLowerCase())) dd.append(...maskedValue(doc, value, strings));
+    else dd.textContent = value;
+    row.append(dt, dd);
+    kv.append(row);
+  }
+  return [title, kv];
+}
+function maskedValue(doc, value, strings) {
+  const text = make8(doc, "kp-inspector__secret", "span");
+  text.textContent = MASK;
+  text.dataset.value = value;
+  text.setAttribute("aria-label", strings.reqSecretMasked);
+  const show = (
+    /** @type {HTMLButtonElement} */
+    make8(doc, "kp-button kp-button--sm kp-button--ghost", "button")
+  );
+  show.type = "button";
+  show.dataset.kpRequestSecret = "";
+  show.setAttribute("aria-pressed", "false");
+  show.textContent = strings.reqSecretShow;
+  return [text, show];
+}
+function codeInto(body, request3, options, text, binary) {
+  const strings = getStrings();
+  const doc = body.ownerDocument;
+  if (text === "" && !binary) {
+    const none = make8(doc, "kp-kv__none", "p");
+    none.textContent = strings.reqNoBody;
+    const title = make8(doc, "kp-inspector__heading", "h4");
+    title.textContent = strings.reqBody;
+    body.append(title, none);
+    return;
+  }
+  const figure = make8(doc, "kp-code kp-inspector__code", "figure");
+  const bytes = new TextEncoder().encode(text).length;
+  const size2 = request3.bodyBytes ?? bytes;
+  body.append(figure);
+  setCode(figure, {
+    title: strings.reqBody,
+    text: binary ? "" : text,
+    language: "auto",
+    size: formatBytes(size2),
+    maxLines: BODY_LINES,
+    lines: true,
+    wrap: true,
+    state: binary ? "binary" : "ready",
+    truncated: request3.truncated ? { shown: formatBytes(bytes), total: formatBytes(size2) } : void 0,
+    copy: options.copyAs?.includes("body") ?? true
+  });
+}
+function actionsOf(doc, options, pairs, secret, noBody) {
+  const strings = getStrings();
+  const actions = make8(doc, "kp-inspector__actions");
+  const what = options.copyAs ?? ["curl", "json", "body"];
+  const button5 = (which, label, real) => {
+    const b = (
+      /** @type {HTMLButtonElement} */
+      make8(doc, "kp-button kp-button--sm", "button")
+    );
+    b.type = "button";
+    b.dataset.kpRequestsCopy = which;
+    if (real) b.dataset.kpRequestsReal = "";
+    const w = make8(doc, "kp-code__word", "span");
+    w.setAttribute("data-kp-code-words", [label, strings.copied].join("\n"));
+    w.textContent = label;
+    b.append(w);
+    return b;
+  };
+  if (what.includes("curl")) actions.append(button5("curl", strings.reqCopyCurl, false));
+  if (what.includes("json")) actions.append(button5("json", strings.reqCopyJson, false));
+  const offerReal = options.secretsInCopy !== "masked-only" && options.secretsInCopy !== "real" && pairs.some(([n]) => secret.has(n.toLowerCase()));
+  if (what.includes("curl") && offerReal) actions.append(button5("curl", strings.reqCopyCurlSecrets, true));
+  if (what.includes("body") && noBody) {
+    const b = button5("body", strings.reqCopyBody, false);
+    b.disabled = true;
+    actions.append(b);
+  }
+  return actions;
+}
+var BODY_LINES;
+var init_request = __esm({
+  "js/request-inspector/request.js"() {
+    "use strict";
+    init_code();
+    init_freshness();
+    init_locale();
+    init_strings();
+    init_format2();
+    BODY_LINES = 10;
+  }
+});
+
+// js/request-inspector/list.js
 function partsOf3(el16) {
   const doc = el16.ownerDocument;
   if (!el16.classList.contains("kp-card")) el16.classList.add("kp-card");
@@ -37919,13 +38164,6 @@ function partsOf3(el16) {
     stage,
     list
   };
-}
-function pathNodes(doc, path) {
-  const nodes = [];
-  for (const piece of path.split(/(?<=[/?&])/)) {
-    nodes.push(doc.createTextNode(piece), doc.createElement("wbr"));
-  }
-  return nodes;
 }
 function draw5(el16, memory) {
   memory.options = { ...readOptions(el16), ...memory.given };
@@ -37992,302 +38230,110 @@ function draw5(el16, memory) {
   }
   p.list.replaceChildren(...nodes);
 }
-function drawRequest(el16, memory, request3, index, slot) {
-  const strings = getStrings();
-  const doc = el16.ownerDocument;
-  const options = memory.options;
-  const key = keyOf3(request3, slot);
-  const tone = toneOf(request3.status);
-  const failed = request3.status === void 0 || request3.status >= 400;
-  const defaultOpen = options.open === "first" ? index === 0 : options.open === "failed" ? failed : false;
-  const open4 = memory.opened.has(key) || defaultOpen && !memory.closed.has(key);
-  const item = (
-    /** @type {HTMLDetailsElement} */
-    make8(doc, "kp-accordion__item kp-inspector__item", "details")
-  );
-  item.setAttribute("role", "listitem");
-  item.dataset.kpRequestKey = key;
-  item.dataset.kpRequestTone = tone;
-  if (open4) item.setAttribute("open", "");
-  const summary2 = make8(doc, "kp-accordion__summary kp-inspector__summary", "summary");
-  const method = make8(doc, "kp-inspector__method", "span");
-  method.textContent = request3.method.toUpperCase();
-  const path = make8(doc, "kp-inspector__path", "span");
-  path.append(...pathNodes(doc, request3.path));
-  const status = make8(
-    doc,
-    `kp-badge kp-inspector__status${tone === "none" ? "" : ` kp-badge--${tone === "error" ? "destructive" : tone}`}`,
-    "span"
-  );
-  const word = {
-    success: strings.reqToneSuccess,
-    info: strings.reqToneInfo,
-    warning: strings.reqToneWarning,
-    error: strings.reqToneError,
-    none: strings.reqToneNone
-  }[tone];
-  status.textContent = request3.status === void 0 ? word : `${request3.status} ${word}`;
-  const row = make8(doc, "kp-inspector__row", "span");
-  row.append(method, status, path);
-  if (request3.source === "test") {
-    const badge = make8(doc, "kp-badge kp-inspector__source", "span");
-    badge.textContent = strings.reqSourceTest;
-    row.append(badge);
+var init_list = __esm({
+  "js/request-inspector/list.js"() {
+    "use strict";
+    init_segmented();
+    init_strings();
+    init_format2();
+    init_request();
   }
-  const at = msOf2(request3.at);
-  if (Number.isFinite(at)) {
-    const time = (
-      /** @type {HTMLTimeElement} */
-      make8(doc, "kp-inspector__time", "time")
-    );
-    time.dateTime = new Date(at).toISOString();
-    time.title = new Date(at).toISOString();
-    time.textContent = agoMoment(at);
-    row.append(time);
-  }
-  summary2.append(row);
-  summary2.setAttribute("aria-label", strings.reqSummary(request3.method.toUpperCase(), request3.path, status.textContent ?? ""));
-  item.append(summary2);
-  const buildBody2 = () => {
-    const body = make8(doc, "kp-accordion__body kp-inspector__body");
-    const headersTitle = make8(doc, "kp-inspector__heading", "h4");
-    headersTitle.textContent = strings.reqHeaders;
-    const secret = new Set((options.secretHeaders ?? SECRET_HEADERS).map((h2) => h2.toLowerCase()));
-    const pairs = pairsOf(request3.headers);
-    const kv = make8(doc, "kp-kv kp-kv--lines kp-inspector__headers", "dl");
-    for (const [name, value] of pairs) {
-      const row2 = make8(doc, "kp-kv__row", "div");
-      const dt = make8(doc, "", "dt");
-      dt.textContent = name;
-      const dd = make8(doc, "", "dd");
-      if (secret.has(name.toLowerCase())) {
-        const text2 = make8(doc, "kp-inspector__secret", "span");
-        text2.textContent = MASK;
-        text2.dataset.value = value;
-        text2.setAttribute("aria-label", strings.reqSecretMasked);
-        const show = (
-          /** @type {HTMLButtonElement} */
-          make8(doc, "kp-button kp-button--sm kp-button--ghost", "button")
+});
+
+// js/request-inspector/controller.js
+var OPTIONS3, RequestInspector;
+var init_controller7 = __esm({
+  "js/request-inspector/controller.js"() {
+    "use strict";
+    init_card_state();
+    init_controller();
+    init_strings();
+    init_copy2();
+    init_format2();
+    init_list();
+    OPTIONS3 = ["data-kp-secrets-in-copy", "data-kp-requests-open", "data-kp-copy-as", "data-kp-secret-headers", "data-kp-requests-max"];
+    RequestInspector = class extends Controller {
+      /** @param {HTMLElement} el @param {InspectorOptions} [given] */
+      constructor(el16, given2 = {}) {
+        super(el16, given2);
+        const options = { ...readOptions(el16), ...given2 };
+        this.memory = { list: [], filter: "all", shown: options.max ?? REQUESTS_MAX, opened: /* @__PURE__ */ new Set(), closed: /* @__PURE__ */ new Set(), options, given: given2 };
+      }
+      connect() {
+        const el16 = this.host;
+        partsOf3(el16);
+        el16.style.setProperty("--kp-card-stage-min", "var(--kp-inspector-min, 22rem)");
+        el16.setAttribute("data-kp-state", el16.getAttribute("data-kp-state") ?? "loading");
+        this.own(attachCardStates(el16));
+        draw5(el16, this.memory);
+        const view = el16.ownerDocument.defaultView;
+        if (view && "MutationObserver" in view) this.observe(new view.MutationObserver(() => draw5(el16, this.memory))).observe(el16, { attributes: true, attributeFilter: OPTIONS3 });
+        this.listen(el16, "click", (event) => this.onClick(event));
+        this.listen(el16, "kp-segmented-change", (event) => this.onFilter(event));
+        this.listen(el16, "kp-card-retry", () => el16.dispatchEvent(new CustomEvent(REQUESTS_RETRY_EVENT, { bubbles: true })));
+      }
+      /** @param {Event} event */
+      onClick(event) {
+        const el16 = this.host;
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) return;
+        const copyButton = (
+          /** @type {HTMLButtonElement | null} */
+          target.closest("[data-kp-requests-copy]")
         );
-        show.type = "button";
-        show.dataset.kpRequestSecret = "";
-        show.setAttribute("aria-pressed", "false");
-        show.textContent = strings.reqSecretShow;
-        dd.append(text2, show);
-      } else dd.textContent = value;
-      row2.append(dt, dd);
-      kv.append(row2);
-    }
-    if (pairs.length === 0) {
-      const none = make8(doc, "kp-kv__none", "p");
-      none.textContent = strings.reqNoHeaders;
-      body.append(headersTitle, none);
-    } else body.append(headersTitle, kv);
-    const figure = make8(doc, "kp-code kp-inspector__code", "figure");
-    const text = request3.body ?? "";
-    const binary = request3.binary === true || text.includes("\0");
-    const bytes = new TextEncoder().encode(text).length;
-    const size2 = request3.bodyBytes ?? bytes;
-    if (text === "" && !binary) {
-      const none = make8(doc, "kp-kv__none", "p");
-      none.textContent = strings.reqNoBody;
-      const bodyTitle = make8(doc, "kp-inspector__heading", "h4");
-      bodyTitle.textContent = strings.reqBody;
-      body.append(bodyTitle, none);
-    } else {
-      body.append(figure);
-      setCode(figure, {
-        title: strings.reqBody,
-        text: binary ? "" : text,
-        language: "auto",
-        size: formatBytes(size2),
-        maxLines: 10,
-        lines: true,
-        wrap: true,
-        state: binary ? "binary" : "ready",
-        truncated: request3.truncated ? { shown: formatBytes(bytes), total: formatBytes(size2) } : void 0,
-        copy: options.copyAs?.includes("body") ?? true
-      });
-    }
-    const actions = make8(doc, "kp-inspector__actions");
-    const what = options.copyAs ?? ["curl", "json", "body"];
-    const button5 = (which, label, real) => {
-      const b = (
-        /** @type {HTMLButtonElement} */
-        make8(doc, "kp-button kp-button--sm", "button")
-      );
-      b.type = "button";
-      b.dataset.kpRequestsCopy = which;
-      if (real) b.dataset.kpRequestsReal = "";
-      const w = make8(doc, "kp-code__word", "span");
-      w.setAttribute("data-kp-code-words", [label, strings.copied].join("\n"));
-      w.textContent = label;
-      b.append(w);
-      return b;
-    };
-    if (what.includes("curl")) actions.append(button5("curl", strings.reqCopyCurl, false));
-    if (what.includes("json")) actions.append(button5("json", strings.reqCopyJson, false));
-    if (what.includes("curl") && options.secretsInCopy !== "masked-only" && options.secretsInCopy !== "real" && pairs.some(([n]) => secret.has(n.toLowerCase())))
-      actions.append(button5("curl", strings.reqCopyCurlSecrets, true));
-    if (what.includes("body") && (text === "" || binary)) {
-      const b = button5("body", strings.reqCopyBody, false);
-      b.disabled = true;
-      actions.append(b);
-    }
-    body.append(actions);
-    return body;
-  };
-  let built = false;
-  const ensure = () => {
-    if (built) return;
-    built = true;
-    item.append(buildBody2());
-  };
-  if (open4) ensure();
-  const onToggle = () => {
-    if (item.open) {
-      ensure();
-      memory.opened.add(key);
-      memory.closed.delete(key);
-    } else {
-      memory.opened.delete(key);
-      memory.closed.add(key);
-    }
-  };
-  item.addEventListener("toggle", onToggle);
-  ITEM_REQUEST.set(item, request3);
-  return item;
-}
-async function copy(el16, memory, button5) {
-  const strings = getStrings();
-  const item = button5.closest(".kp-inspector__item");
-  const request3 = item ? ITEM_REQUEST.get(item) : void 0;
-  if (!request3) return;
-  const options = memory.options;
-  const real = button5.hasAttribute("data-kp-requests-real") || options.secretsInCopy === "real";
-  const mask = !real;
-  const which = button5.dataset.kpRequestsCopy;
-  const secretHeaders = options.secretHeaders ?? SECRET_HEADERS;
-  const text = which === "curl" ? toCurl(request3, { mask, secretHeaders, origin: options.origin ?? "" }) : which === "json" ? toJson(request3, { mask, secretHeaders }) : request3.body ?? "";
-  const word = (
-    /** @type {HTMLElement} */
-    button5.querySelector(".kp-code__word")
-  );
-  const idle = word.getAttribute("data-kp-code-words")?.split("\n")[0] ?? "";
-  const view = el16.ownerDocument.defaultView;
-  try {
-    await navigator.clipboard.writeText(text);
-    word.textContent = strings.copied;
-    const live4 = el16.querySelector(".kp-inspector__live");
-    if (live4) {
-      const named = which === "curl" ? "curl" : which === "json" ? "JSON" : strings.reqBody;
-      live4.textContent = [strings.reqCopyDone(named), mask && which !== "body" ? strings.reqMaskedNote : ""].filter(Boolean).join(", ");
-    }
-    el16.dispatchEvent(new CustomEvent(REQUESTS_COPY_EVENT, { bubbles: true, detail: { what: which, masked: mask && which !== "body", text } }));
-  } catch {
-    word.textContent = strings.copyBlocked;
-  }
-  view?.setTimeout(() => word.textContent = idle, REQUESTS_COPIED_MS);
-}
-function attachOne5(el16, given2) {
-  if (MEMORY5.has(el16)) return () => void 0;
-  const options = { ...readOptions(el16), ...given2 };
-  const memory = { list: [], filter: "all", shown: options.max ?? REQUESTS_MAX, opened: /* @__PURE__ */ new Set(), closed: /* @__PURE__ */ new Set(), options, given: given2 };
-  MEMORY5.set(el16, memory);
-  partsOf3(el16);
-  el16.style.setProperty("--kp-card-stage-min", "var(--kp-inspector-min, 22rem)");
-  el16.setAttribute("data-kp-state", el16.getAttribute("data-kp-state") ?? "loading");
-  const detachStates = attachCardStates(el16);
-  draw5(el16, memory);
-  const onClick = (event) => {
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target) return;
-    const strings = getStrings();
-    const copyButton = (
-      /** @type {HTMLButtonElement | null} */
-      target.closest("[data-kp-requests-copy]")
-    );
-    if (copyButton) {
-      void copy(el16, memory, copyButton);
-      return;
-    }
-    const secret = (
-      /** @type {HTMLButtonElement | null} */
-      target.closest("[data-kp-request-secret]")
-    );
-    if (secret) {
-      const text = (
-        /** @type {HTMLElement | null} */
-        secret.previousElementSibling
-      );
-      const shown5 = secret.getAttribute("aria-pressed") !== "true";
-      secret.setAttribute("aria-pressed", String(shown5));
-      secret.textContent = shown5 ? strings.reqSecretHide : strings.reqSecretShow;
-      if (text) {
+        if (copyButton) return void copy(el16, this.memory, copyButton);
+        const secret = (
+          /** @type {HTMLButtonElement | null} */
+          target.closest("[data-kp-request-secret]")
+        );
+        if (secret) return this.flipSecret(secret);
+        if (target.closest("[data-kp-requests-older]")) {
+          this.memory.shown += this.memory.options.max ?? REQUESTS_MAX;
+          return draw5(el16, this.memory);
+        }
+        const filter = (
+          /** @type {HTMLElement | null} */
+          target.closest("[data-kp-requests-filter]")
+        );
+        if (filter) {
+          this.memory.filter = filter.dataset.kpRequestsFilter ?? "all";
+          return draw5(el16, this.memory);
+        }
+        if (target.closest("[data-kp-requests-send]")) el16.dispatchEvent(new CustomEvent(REQUESTS_TEST_EVENT, { bubbles: true }));
+      }
+      /** Show a secret header's value, or mask it again. @param {HTMLButtonElement} secret */
+      flipSecret(secret) {
+        const strings = getStrings();
+        const text = (
+          /** @type {HTMLElement | null} */
+          secret.previousElementSibling
+        );
+        const shown5 = secret.getAttribute("aria-pressed") !== "true";
+        secret.setAttribute("aria-pressed", String(shown5));
+        secret.textContent = shown5 ? strings.reqSecretHide : strings.reqSecretShow;
+        if (!text) return;
         text.textContent = shown5 ? text.dataset.value ?? "" : MASK;
         if (shown5) text.removeAttribute("aria-label");
         else text.setAttribute("aria-label", strings.reqSecretMasked);
       }
-      return;
-    }
-    if (target.closest("[data-kp-requests-older]")) {
-      memory.shown += memory.options.max ?? REQUESTS_MAX;
-      draw5(el16, memory);
-      return;
-    }
-    const filter = (
-      /** @type {HTMLElement | null} */
-      target.closest("[data-kp-requests-filter]")
-    );
-    if (filter) {
-      memory.filter = filter.dataset.kpRequestsFilter ?? "all";
-      draw5(el16, memory);
-      return;
-    }
-    if (target.closest("[data-kp-requests-send]")) el16.dispatchEvent(new CustomEvent(REQUESTS_TEST_EVENT, { bubbles: true }));
-  };
-  const onFilter = (event) => {
-    if (!(event.target instanceof Element) || !event.target.closest(".kp-inspector__filter")) return;
-    const detail = (
-      /** @type {CustomEvent<{ value: string | null }>} */
-      event.detail
-    );
-    memory.filter = detail?.value ?? "all";
-    memory.shown = memory.options.max ?? REQUESTS_MAX;
-    draw5(el16, memory);
-  };
-  const onRetry = () => el16.dispatchEvent(new CustomEvent(REQUESTS_RETRY_EVENT, { bubbles: true }));
-  const view = el16.ownerDocument.defaultView;
-  const watch2 = view && "MutationObserver" in view ? new view.MutationObserver(() => draw5(el16, memory)) : null;
-  watch2?.observe(el16, {
-    attributes: true,
-    attributeFilter: ["data-kp-secrets-in-copy", "data-kp-requests-open", "data-kp-copy-as", "data-kp-secret-headers", "data-kp-requests-max"]
-  });
-  el16.addEventListener("click", onClick);
-  el16.addEventListener("kp-segmented-change", onFilter);
-  el16.addEventListener("kp-card-retry", onRetry);
-  return () => {
-    el16.removeEventListener("click", onClick);
-    el16.removeEventListener("kp-segmented-change", onFilter);
-    el16.removeEventListener("kp-card-retry", onRetry);
-    watch2?.disconnect();
-    detachStates();
-    MEMORY5.delete(el16);
-  };
-}
-function attachRequestInspectors(root = document, options = {}) {
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(REQUESTS) ? [root] : [],
-      ...root.querySelectorAll(REQUESTS)
-    ]
-  );
-  const undo = found.map((el16) => attachOne5(el16, options));
-  return () => undo.forEach((u) => u());
-}
+      /** The code blocks inside have a segmented control of their own: only the status filter counts. @param {Event} event */
+      onFilter(event) {
+        if (!(event.target instanceof Element) || !event.target.closest(".kp-inspector__filter")) return;
+        const detail = (
+          /** @type {CustomEvent<{ value: string | null }>} */
+          event.detail
+        );
+        this.memory.filter = detail?.value ?? "all";
+        this.memory.shown = this.memory.options.max ?? REQUESTS_MAX;
+        draw5(this.host, this.memory);
+      }
+    };
+  }
+});
+
+// js/request-inspector/api.js
 function setRequests(el16, requests) {
-  const memory = MEMORY5.get(el16);
+  const memory = memoryOf2(el16);
   if (!memory) return;
   memory.list = [...requests];
   memory.shown = memory.options.max ?? REQUESTS_MAX;
@@ -38314,36 +38360,49 @@ function setRequestsState(el16, state6, options = {}) {
   }
   setCardState(el16, state6, state6 === "loading" ? { words: strings.reqLoading } : void 0);
 }
-var REQUESTS, SECRET_HEADERS, MASK, REQUESTS_MAX, REQUESTS_COPY_EVENT, REQUESTS_TEST_EVENT, REQUESTS_RETRY_EVENT, REQUESTS_COPIED_MS, MEMORY5, ITEM_REQUEST, make8, pairsOf, classOf, msOf2, quote, keyOf3;
+var memoryOf2;
+var init_api6 = __esm({
+  "js/request-inspector/api.js"() {
+    "use strict";
+    init_card_state();
+    init_controller();
+    init_strings();
+    init_controller7();
+    init_format2();
+    init_list();
+    memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
+  }
+});
+
+// js/request-inspector.js
+var request_inspector_exports = {};
+__export(request_inspector_exports, {
+  MASK: () => MASK,
+  REQUESTS: () => REQUESTS,
+  REQUESTS_COPIED_MS: () => REQUESTS_COPIED_MS,
+  REQUESTS_COPY_EVENT: () => REQUESTS_COPY_EVENT,
+  REQUESTS_MAX: () => REQUESTS_MAX,
+  REQUESTS_RETRY_EVENT: () => REQUESTS_RETRY_EVENT,
+  REQUESTS_TEST_EVENT: () => REQUESTS_TEST_EVENT,
+  SECRET_HEADERS: () => SECRET_HEADERS,
+  attachRequestInspectors: () => attachRequestInspectors,
+  setRequests: () => setRequests,
+  setRequestsState: () => setRequestsState,
+  toCurl: () => toCurl,
+  toJson: () => toJson,
+  toneOf: () => toneOf
+});
+function attachRequestInspectors(root = document, options = {}) {
+  return attachAll(root, REQUESTS, RequestInspector, options);
+}
 var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
-    init_strings();
-    init_card_state();
-    init_code();
-    init_locale();
-    init_freshness();
-    init_segmented();
-    REQUESTS = "[data-kp-requests]";
-    SECRET_HEADERS = Object.freeze(["authorization", "cookie", "set-cookie", "x-api-key", "proxy-authorization"]);
-    MASK = "********";
-    REQUESTS_MAX = 20;
-    REQUESTS_COPY_EVENT = "kp-requests-copy";
-    REQUESTS_TEST_EVENT = "kp-requests-test";
-    REQUESTS_RETRY_EVENT = "kp-requests-retry";
-    REQUESTS_COPIED_MS = 1500;
-    MEMORY5 = /* @__PURE__ */ new WeakMap();
-    ITEM_REQUEST = /* @__PURE__ */ new WeakMap();
-    make8 = (doc, className, tag = "div") => {
-      const node = doc.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    pairsOf = (headers) => Array.isArray(headers) ? headers : Object.entries(headers ?? {});
-    classOf = (status) => status === void 0 ? "none" : `${Math.floor(status / 100)}xx`;
-    msOf2 = (at) => typeof at === "number" ? at : at ? Date.parse(at) : Number.NaN;
-    quote = (text) => `'${text.replace(/'/g, `'\\''`)}'`;
-    keyOf3 = (request3, index) => `${request3.at ?? ""}|${request3.method}|${request3.path}|${index}`;
+    init_controller();
+    init_controller7();
+    init_format2();
+    init_format2();
+    init_api6();
   }
 });
 
@@ -38957,7 +39016,7 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller7 = __esm({
+var init_controller8 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
@@ -39022,7 +39081,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller7();
+    init_controller8();
     init_state8();
     init_state8();
     init_spin();
@@ -40183,7 +40242,7 @@ function stepsKey(root) {
   return stateOf2(root).steps.map((step) => step.id ?? step.answer?.id ?? step.title ?? step.text.slice(0, 24)).join("|");
 }
 function remember2(root) {
-  const memory = memoryOf2(root);
+  const memory = memoryOf3(root);
   if (!memory) return;
   const state6 = stateOf2(root);
   if (!state6.steps.length) return;
@@ -40197,7 +40256,7 @@ function remember2(root) {
   });
 }
 function storedProgress(root) {
-  const memory = memoryOf2(root);
+  const memory = memoryOf3(root);
   if (!memory) return null;
   const stored = memory.read(
     /** @type {string} */
@@ -40265,7 +40324,7 @@ function startResume(root) {
     paint4(root, false);
   } else applyProgress(root, stored);
 }
-var memoryOf2, hasMoved;
+var memoryOf3, hasMoved;
 var init_memory = __esm({
   "js/focus-steps/memory.js"() {
     "use strict";
@@ -40280,7 +40339,7 @@ var init_memory = __esm({
     init_track_nav();
     init_flow();
     init_constants13();
-    memoryOf2 = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
+    memoryOf3 = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
     hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
   }
 });
@@ -40334,7 +40393,7 @@ function goNext(root) {
     state6.finished = { total: state6.steps.length, answers: { ...state6.answers }, startedAt: state6.startedAt || finishedAt, finishedAt };
     Object.assign(detail, state6.finished);
   }
-  memoryOf2(root)?.forget("progress");
+  memoryOf3(root)?.forget("progress");
   root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail }));
 }
 function pressAnswer(root, button5) {
@@ -40560,7 +40619,7 @@ var init_flow = __esm({
     init_resume();
     init_tracks();
     init_track_nav();
-    init_api6();
+    init_api7();
   }
 });
 
@@ -40751,7 +40810,7 @@ function trackNext(root) {
   );
   recompute(root);
   if (state6.tracks.every((t) => t.order.every((i) => state6.done.has(i)))) {
-    memoryOf2(root)?.forget("progress");
+    memoryOf3(root)?.forget("progress");
     root.dispatchEvent(
       new CustomEvent(FOCUS_STEPS_DONE_EVENT, {
         bubbles: true,
@@ -41689,7 +41748,7 @@ function setFocusStepsState(root, kind, message) {
   paint4(root, false);
 }
 var getStepIndex, getSteps, typing3;
-var init_api6 = __esm({
+var init_api7 = __esm({
   "js/focus-steps/api.js"() {
     "use strict";
     init_strings();
@@ -41828,7 +41887,7 @@ function attachFocusSteps(scope = document) {
         if (state6.finished) root.dispatchEvent(new CustomEvent(FOCUS_STEPS_DONE_EVENT, { bubbles: true, detail: { ...state6.finished } }));
       } else if (button5.classList.contains("kp-focus-steps__resume-go") && state6.pendingResume) applyProgress(root, state6.pendingResume);
       else if (button5.classList.contains("kp-focus-steps__resume-restart")) {
-        memoryOf2(root)?.forget("progress");
+        memoryOf3(root)?.forget("progress");
         state6.pendingResume = null;
         paint4(root, false);
       } else if (button5.classList.contains("kp-focus-steps__next")) next2();
@@ -42047,7 +42106,7 @@ var init_attach12 = __esm({
     init_flow();
     init_tracks();
     init_track_nav();
-    init_api6();
+    init_api7();
     init_band();
     init_memory();
     init_lanes();
@@ -42082,7 +42141,7 @@ var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
     init_constants13();
-    init_api6();
+    init_api7();
     init_attach12();
   }
 });
@@ -42470,7 +42529,7 @@ function endUndo(list) {
     part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
 }
 var emit3;
-var init_api7 = __esm({
+var init_api8 = __esm({
   "js/checklist/api.js"() {
     "use strict";
     init_busy_card();
@@ -42484,12 +42543,12 @@ var init_api7 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_api7();
+    init_api8();
     init_parts();
     init_render2();
     init_rows2();
@@ -42631,10 +42690,10 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller8();
+    init_controller9();
     init_state11();
     init_state11();
-    init_api7();
+    init_api8();
   }
 });
 
@@ -43614,7 +43673,7 @@ var init_paint3 = __esm({
 
 // js/calendar/controller.js
 var WATCHED3, CalendarController;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -43863,12 +43922,12 @@ function attachCalendars(root = document, options = {}) {
   };
 }
 var calendarOf;
-var init_api8 = __esm({
+var init_api9 = __esm({
   "js/calendar/api.js"() {
     "use strict";
     init_controller();
     init_constants15();
-    init_controller9();
+    init_controller10();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -43902,7 +43961,7 @@ var init_calendar = __esm({
     "use strict";
     init_constants15();
     init_dates2();
-    init_api8();
+    init_api9();
   }
 });
 
@@ -44748,10 +44807,10 @@ function drawUsesMap(el16, spec, ctx) {
   const strings = getStrings();
   const state6 = spec.state ?? "ready";
   const loading = state6 === "loading";
-  let memory = MEMORY6.get(el16);
+  let memory = MEMORY5.get(el16);
   if (!memory) {
     memory = { pin: null, lit: null, stop: null, off: null };
-    MEMORY6.set(el16, memory);
+    MEMORY5.set(el16, memory);
     const key = rememberKey(el16);
     if (key) {
       try {
@@ -45215,14 +45274,14 @@ function setUsesPin(el16, key) {
   if (card instanceof HTMLElement && card.getAttribute("aria-pressed") !== "true") card.click();
 }
 function leaveUsesMap(el16) {
-  const memory = MEMORY6.get(el16);
+  const memory = MEMORY5.get(el16);
   memory?.off?.();
   if (memory) memory.off = null;
   el16.classList.remove("kp-matrix--lines");
   el16.removeAttribute("data-kp-collapsed");
   el16.removeAttribute("data-kp-lit");
 }
-var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, TONES2, TONE_GLYPH, MEMORY6, make11, attr2, rememberKey;
+var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, TONES2, TONE_GLYPH, MEMORY5, make11, attr2, rememberKey;
 var init_uses_map = __esm({
   "js/uses-map.js"() {
     "use strict";
@@ -45234,7 +45293,7 @@ var init_uses_map = __esm({
     USES_COLLAPSE_BELOW = 640;
     TONES2 = ["ok", "warn", "bad", "muted"];
     TONE_GLYPH = Object.freeze({ ok: "\u2713", warn: "!", bad: "\xD7", muted: "\u2013" });
-    MEMORY6 = /* @__PURE__ */ new WeakMap();
+    MEMORY5 = /* @__PURE__ */ new WeakMap();
     make11 = (doc, tag, cls) => {
       const node = doc.createElement(tag);
       node.className = cls;
@@ -46516,7 +46575,7 @@ function setWeekLegend(el16, entries3) {
   );
   c.legend.hidden = entries3.length === 0;
 }
-var init_api9 = __esm({
+var init_api10 = __esm({
   "js/week/api.js"() {
     "use strict";
     init_build2();
@@ -46696,7 +46755,7 @@ var init_attach13 = __esm({
     init_calendar();
     init_locale();
     init_strings();
-    init_api9();
+    init_api10();
     init_build2();
     init_busy3();
     init_constants17();
@@ -46729,7 +46788,7 @@ var init_week = __esm({
     init_constants17();
     init_pills2();
     init_attach13();
-    init_api9();
+    init_api10();
   }
 });
 
@@ -48449,7 +48508,7 @@ function setSequencerSelection(el16, id) {
   c.focusId = c.selected ?? c.focusId;
   paint8(c, { fit: false });
 }
-var init_api10 = __esm({
+var init_api11 = __esm({
   "js/sequencer/api.js"() {
     "use strict";
     init_instance2();
@@ -48505,7 +48564,7 @@ var init_sequencer = __esm({
     init_links();
     init_timeline();
     init_attach14();
-    init_api10();
+    init_api11();
   }
 });
 
@@ -49865,7 +49924,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint9(c);
 }
-var init_api11 = __esm({
+var init_api12 = __esm({
   "js/gantt/api.js"() {
     "use strict";
     init_constants19();
@@ -50231,7 +50290,7 @@ var init_attach15 = __esm({
     init_paint6();
     init_selection3();
     init_axis();
-    init_api11();
+    init_api12();
     init_scale();
     init_chrome2();
   }
@@ -50266,7 +50325,7 @@ var init_gantt = __esm({
     init_constants19();
     init_scale();
     init_attach15();
-    init_api11();
+    init_api12();
   }
 });
 
@@ -54441,7 +54500,7 @@ function caretPosition(text, offset) {
   const line = before.split("\n").length;
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
-function attachOne6(area) {
+function attachOne5(area) {
   if (HANDLES4.has(area)) return () => void 0;
   const doc = area.ownerDocument;
   const view = doc.defaultView;
@@ -54788,7 +54847,7 @@ function attachCodeFields(root = document) {
       ...root.querySelectorAll(CODE_FIELD)
     ]
   );
-  const undo = found.map((area) => attachOne6(area));
+  const undo = found.map((area) => attachOne5(area));
   return () => undo.forEach((u) => u());
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, HANDLES4, serial5;
@@ -54832,7 +54891,7 @@ function currentSection(boxes, offset, atEnd) {
   });
   return found;
 }
-function attachOne7(nav) {
+function attachOne6(nav) {
   if (HANDLES5.has(nav)) return () => void 0;
   const doc = nav.ownerDocument;
   const view = (
@@ -55085,7 +55144,7 @@ function attachContents(root = document) {
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(CONTENTS) ? [root] : [], ...root.querySelectorAll(CONTENTS)]
   );
-  const undo = found.map((nav) => attachOne7(nav));
+  const undo = found.map((nav) => attachOne6(nav));
   return () => undo.forEach((u) => u());
 }
 var CONTENTS, CONTENTS_EVENT, HANDLES5, serial6;
@@ -55320,7 +55379,7 @@ var init_build5 = __esm({
 
 // js/timefield/list.js
 var TimeList;
-var init_list = __esm({
+var init_list2 = __esm({
   "js/timefield/list.js"() {
     "use strict";
     init_strings();
@@ -55542,7 +55601,7 @@ var init_field = __esm({
     init_build5();
     init_state15();
     init_parse();
-    init_list();
+    init_list2();
     TimeField = class {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -55780,7 +55839,7 @@ var init_keys8 = __esm({
 
 // js/timefield/controller.js
 var WATCHED4, TimeController;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -55982,12 +56041,12 @@ function setTimePresets(root, presets) {
   if (field2.list.open) field2.list.draw();
 }
 var attachTimes;
-var init_api12 = __esm({
+var init_api13 = __esm({
   "js/timefield/api.js"() {
     "use strict";
     init_controller();
     init_constants21();
-    init_controller10();
+    init_controller11();
     init_field();
     init_state15();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -56017,7 +56076,7 @@ var init_timefield = __esm({
     "use strict";
     init_constants21();
     init_parse();
-    init_api12();
+    init_api13();
   }
 });
 
@@ -56309,7 +56368,7 @@ function severityWord2(key) {
     { critical: s2.quietCritical, warning: s2.quietWarning, info: s2.quietInfo, ok: s2.quietOk }[key] ?? key
   );
 }
-function attachOne8(root) {
+function attachOne7(root) {
   if (HANDLES7.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
@@ -56497,7 +56556,7 @@ function attachQuietHours(root = document) {
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(QUIET) ? [root] : [], ...root.querySelectorAll(QUIET)]
   );
-  const undo = found.map((el16) => attachOne8(el16));
+  const undo = found.map((el16) => attachOne7(el16));
   return () => undo.forEach((u) => u());
 }
 var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial7, HANDLES7;
@@ -57233,7 +57292,7 @@ function wire10(el16, now, zone) {
   el16.addEventListener("click", onClick);
   el16.addEventListener("keydown", onKey6);
   const watcher = new MutationObserver(() => render7());
-  watcher.observe(el16, { attributes: true, attributeFilter: OPTIONS3 });
+  watcher.observe(el16, { attributes: true, attributeFilter: OPTIONS4 });
   const view = doc.defaultView;
   const tick6 = view?.setInterval(() => {
     if (model.state === "ready" && (now() >= nextFlip || dayKey3(now(), zone) !== drawnDay)) render7();
@@ -57256,7 +57315,7 @@ function wire10(el16, now, zone) {
     handles15.delete(el16);
   };
 }
-var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, handles15, feedOf, OPTION_ATTRIBUTES2, OPTIONS3, idSeq3, dayKey3;
+var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, handles15, feedOf, OPTION_ATTRIBUTES2, OPTIONS4, idSeq3, dayKey3;
 var init_feed = __esm({
   "js/feed.js"() {
     "use strict";
@@ -57293,7 +57352,7 @@ var init_feed = __esm({
       max: "data-kp-feed-max",
       level: "data-kp-feed-level"
     };
-    OPTIONS3 = Object.values(OPTION_ATTRIBUTES2);
+    OPTIONS4 = Object.values(OPTION_ATTRIBUTES2);
     idSeq3 = 0;
     dayKey3 = (ms, zone) => agoMoment(ms, zone).slice(0, 10).split("/").reverse().join("-");
   }
@@ -57696,7 +57755,7 @@ var init_view = __esm({
 
 // js/notices/controller.js
 var idSeq4, NoticesCentre;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -57837,7 +57896,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller11();
+    init_controller12();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -58299,7 +58358,7 @@ var init_keys9 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED5, RatingController;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -58564,12 +58623,12 @@ function ratingCell(cell, value, { max = DEFAULT_STARS, count: count2, for: item
   return host;
 }
 var attachRatings;
-var init_api13 = __esm({
+var init_api14 = __esm({
   "js/rating/api.js"() {
     "use strict";
     init_controller();
     init_constants22();
-    init_controller12();
+    init_controller13();
     init_build6();
     init_commit();
     init_math();
@@ -58597,7 +58656,7 @@ var init_rating = __esm({
     "use strict";
     init_constants22();
     init_math();
-    init_api13();
+    init_api14();
   }
 });
 
@@ -60443,7 +60502,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -60634,7 +60693,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller13();
+    init_controller14();
     init_group4();
     init_group4();
   }
@@ -60962,7 +61021,7 @@ function orderDependencies(items, { numbers: numbers2 = true } = {}) {
 function deplist(el16) {
   return HANDLES8.get(el16) ?? null;
 }
-function attachOne9(el16) {
+function attachOne8(el16) {
   if (HANDLES8.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
@@ -61202,11 +61261,11 @@ function attachDeplists(root = document) {
       ...root.querySelectorAll(DEPLIST)
     ]
   );
-  const undo = found.map((el16) => attachOne9(el16));
+  const undo = found.map((el16) => attachOne8(el16));
   return () => undo.forEach((u) => u());
 }
 function setDeplist(el16, items) {
-  if (!HANDLES8.has(el16)) attachOne9(el16);
+  if (!HANDLES8.has(el16)) attachOne8(el16);
   HANDLES8.get(el16)?.set(items);
 }
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES8, made3;
@@ -61274,7 +61333,7 @@ function traceText(hops, stop = "first-refusal") {
 function trace(el16) {
   return HANDLES9.get(el16) ?? null;
 }
-function attachOne10(el16) {
+function attachOne9(el16) {
   if (HANDLES9.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
@@ -61458,11 +61517,11 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne10(el16));
+  const undo = found.map((el16) => attachOne9(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES9.has(el16)) attachOne10(el16);
+  if (!HANDLES9.has(el16)) attachOne9(el16);
   HANDLES9.get(el16)?.set(hops);
 }
 var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES9, made4;
@@ -63135,7 +63194,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -63388,7 +63447,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller14();
+    init_controller15();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -65761,7 +65820,7 @@ var init_core2 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build7();
@@ -65991,7 +66050,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller15();
+    init_controller16();
     init_values2();
     init_values2();
   }
@@ -66159,7 +66218,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq7, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -66388,7 +66447,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller16();
+    init_controller17();
     init_fields();
     init_fields();
   }
@@ -67418,7 +67477,7 @@ var init_panel2 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -67677,7 +67736,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller17();
+    init_controller18();
     init_choices();
   }
 });
@@ -68608,7 +68667,7 @@ function dataChild(el16) {
     return null;
   }
 }
-var init_api14 = __esm({
+var init_api15 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
@@ -69040,7 +69099,7 @@ var init_attach19 = __esm({
     init_strings();
     init_constants26();
     init_instance3();
-    init_api14();
+    init_api15();
     init_options2();
     init_layout2();
     init_draw7();
@@ -69081,7 +69140,7 @@ var init_graph = __esm({
     init_options2();
     init_layout2();
     init_labels2();
-    init_api14();
+    init_api15();
     init_attach19();
   }
 });
@@ -69798,7 +69857,7 @@ function setClaim(list, id, claim) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
   );
 }
-var init_api15 = __esm({
+var init_api16 = __esm({
   "js/claim/api.js"() {
     "use strict";
     init_checklist();
@@ -69987,7 +70046,7 @@ function press(list, row) {
   const mine = among(st.viewer, byOf(item));
   void request(list, id, mine ? "leave" : "join", st.viewer);
 }
-var init_request = __esm({
+var init_request2 = __esm({
   "js/claim/request.js"() {
     "use strict";
     init_strings();
@@ -70161,7 +70220,7 @@ var init_attach20 = __esm({
     init_constants27();
     init_decorate();
     init_model7();
-    init_request();
+    init_request2();
     init_rows3();
     init_state19();
   }
@@ -70190,7 +70249,7 @@ var init_claim2 = __esm({
     "use strict";
     init_constants27();
     init_model7();
-    init_api15();
+    init_api16();
     init_decorate();
     init_attach20();
   }
@@ -70439,7 +70498,7 @@ function columnsList(root, people, waiting = false) {
   return wrap;
 }
 var LIST_CARDS;
-var init_list2 = __esm({
+var init_list3 = __esm({
   "js/availability/list.js"() {
     "use strict";
     init_strings();
@@ -70741,7 +70800,7 @@ var init_paint9 = __esm({
     init_state_plate();
     init_remember();
     init_facts();
-    init_list2();
+    init_list3();
   }
 });
 
@@ -70838,7 +70897,7 @@ function paintKeys(root, person, keys) {
   }
   paintSummary(root);
 }
-var init_api16 = __esm({
+var init_api17 = __esm({
   "js/availability/api.js"() {
     "use strict";
     init_strings();
@@ -70981,12 +71040,12 @@ function setAvailabilityAnswerQuiet(st, person, key, answer2) {
   const target = st.spec.sets?.[st.unit];
   if (target) target.answers = structuredClone(st.set.answers);
 }
-var init_request2 = __esm({
+var init_request3 = __esm({
   "js/availability/request.js"() {
     "use strict";
     init_strings();
     init_undo_toast();
-    init_api16();
+    init_api17();
     init_constants28();
     init_facts();
     init_paint9();
@@ -71085,7 +71144,7 @@ var init_menu2 = __esm({
     "use strict";
     init_strings();
     init_facts();
-    init_request2();
+    init_request3();
   }
 });
 
@@ -71341,12 +71400,12 @@ var init_attach21 = __esm({
     init_shortcuts();
     init_remember();
     init_reason();
-    init_api16();
+    init_api17();
     init_constants28();
     init_facts();
     init_menu2();
     init_paint9();
-    init_request2();
+    init_request3();
   }
 });
 
@@ -71375,7 +71434,7 @@ var init_availability = __esm({
     init_constants28();
     init_dates3();
     init_facts();
-    init_api16();
+    init_api17();
     init_attach21();
   }
 });
@@ -72531,7 +72590,7 @@ var init_actions5 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -72635,7 +72694,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller18();
+    init_controller19();
     init_state20();
     init_state20();
     init_matrix2();
@@ -73427,7 +73486,7 @@ async function useTool(root, tool, b, button5) {
     }
   });
 }
-var init_api17 = __esm({
+var init_api18 = __esm({
   "js/console/api.js"() {
     "use strict";
     init_strings();
@@ -73647,7 +73706,7 @@ var init_attach22 = __esm({
     init_shortcuts();
     init_newpill();
     init_reason();
-    init_api17();
+    init_api18();
     init_bar();
     init_blocks();
     init_constants29();
@@ -73680,7 +73739,7 @@ var init_console3 = __esm({
   "js/console.js"() {
     "use strict";
     init_constants29();
-    init_api17();
+    init_api18();
     init_attach22();
   }
 });
@@ -74393,7 +74452,7 @@ function syncOptions(root) {
   const log = logOf(root);
   if (newPill(log)?.following()) log.scrollTop = log.scrollHeight;
 }
-var init_api18 = __esm({
+var init_api19 = __esm({
   "js/logviewer/api.js"() {
     "use strict";
     init_newpill();
@@ -74605,7 +74664,7 @@ var init_attach23 = __esm({
     init_reason();
     init_shortcuts();
     init_flash();
-    init_api18();
+    init_api19();
     init_constants30();
     init_model9();
     init_parts5();
@@ -74637,7 +74696,7 @@ var init_logviewer = __esm({
     "use strict";
     init_constants30();
     init_levels();
-    init_api18();
+    init_api19();
     init_attach23();
   }
 });
@@ -77598,7 +77657,6 @@ export {
   MARKDOWN_LIMIT,
   MARQUEE_KNOB,
   MARQUEE_PAUSE_KNOB,
-  MASK,
   MASTER_DETAIL,
   MEASURE_KNOB,
   MEMO_PREFIX,
@@ -77695,12 +77753,6 @@ export {
   REGISTER_PATTERN_DEFAULT,
   REJECT_EVENT,
   REMOVE_EVENT,
-  REQUESTS,
-  REQUESTS_COPIED_MS,
-  REQUESTS_COPY_EVENT,
-  REQUESTS_MAX,
-  REQUESTS_RETRY_EVENT,
-  REQUESTS_TEST_EVENT,
   REVEALS,
   REVEAL_EVENT,
   REVEAL_STATE,
@@ -77712,7 +77764,6 @@ export {
   RUNS,
   RUNS_RETRY_EVENT,
   RUNS_STATES,
-  SECRET_HEADERS,
   SEVERITIES,
   SHORTCUTS_LIVE_SHEET,
   SHORTCUT_EVENT,
@@ -78237,8 +78288,6 @@ export {
   setRange,
   setRefreshInterval,
   setRefreshTitle,
-  setRequests,
-  setRequestsState,
   setRowBusy,
   setRuns,
   setRunsState,
@@ -78314,12 +78363,9 @@ export {
   timerDiscOf,
   timer_exports as timerExports,
   timerZone,
-  toCurl,
-  toJson,
   toggle,
   toggle_exports as toggleExports,
   tokenColour,
-  toneOf,
   toolbar_exports as toolbarExports,
   toolbarSearch,
   tourCardPlace,
