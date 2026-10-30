@@ -9006,6 +9006,113 @@ var init_alarm = __esm({
   }
 });
 
+// js/controller.js
+function hostsOf(root, selector) {
+  const self = root instanceof Element && root.matches(selector) ? [root] : [];
+  return (
+    /** @type {HTMLElement[]} */
+    [...self, ...root.querySelectorAll(selector)]
+  );
+}
+function controllerOf(host, Ctor) {
+  return (
+    /** @type {C | undefined} */
+    LIVE.get(Ctor)?.get(host)
+  );
+}
+function attachOne2(host, Ctor, options = {}) {
+  let live4 = LIVE.get(Ctor);
+  if (!live4) LIVE.set(Ctor, live4 = /* @__PURE__ */ new WeakMap());
+  const existing = (
+    /** @type {C | undefined} */
+    live4.get(host)
+  );
+  if (existing) return existing;
+  const controller = new Ctor(host, options);
+  live4.set(host, controller);
+  try {
+    controller.connect();
+    return controller;
+  } catch (error) {
+    controller.destroy();
+    report(error);
+    return void 0;
+  }
+}
+function attachAll(root, selector, Ctor, options = {}) {
+  const made6 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne2(host, Ctor, options)).filter((controller) => controller !== void 0);
+  return () => {
+    for (const controller of made6) controller.destroy();
+  };
+}
+var LIVE, report, Controller;
+var init_controller = __esm({
+  "js/controller.js"() {
+    "use strict";
+    LIVE = /* @__PURE__ */ new WeakMap();
+    report = (error) => typeof globalThis.reportError === "function" ? globalThis.reportError(error) : console.error(error);
+    Controller = class {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options = {}) {
+        this.host = host;
+        this.options = options;
+        this.teardown = [];
+        this.destroyed = false;
+      }
+      /**
+       * Register an undo step for `destroy()`.
+       * @template {() => void} F
+       * @param {F} undo
+       * @returns {F}
+       */
+      own(undo) {
+        this.teardown.push(undo);
+        return undo;
+      }
+      /**
+       * Add an event listener that `destroy()` removes.
+       * @param {EventTarget} target
+       * @param {string} type
+       * @param {EventListenerOrEventListenerObject} handler
+       * @param {AddEventListenerOptions | boolean} [options]
+       */
+      listen(target, type, handler, options) {
+        target.addEventListener(type, handler, options);
+        this.own(() => target.removeEventListener(type, handler, options));
+      }
+      /**
+       * Start an observer that `destroy()` disconnects.
+       * @template {{ disconnect(): void }} O
+       * @param {O} observer
+       * @returns {O}
+       */
+      observe(observer) {
+        this.own(() => observer.disconnect());
+        return observer;
+      }
+      /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
+      connect() {
+      }
+      /** Undo everything the controller set up, newest first; an undo step that throws is reported and the rest still run. */
+      destroy() {
+        if (this.destroyed) return;
+        this.destroyed = true;
+        for (const undo of this.teardown.splice(0).reverse()) {
+          try {
+            undo();
+          } catch (error) {
+            report(error);
+          }
+        }
+        LIVE.get(this.constructor)?.delete(this.host);
+      }
+    };
+  }
+});
+
 // js/shortcuts.js
 var shortcuts_exports = {};
 __export(shortcuts_exports, {
@@ -9461,26 +9568,58 @@ var init_shortcuts = __esm({
   }
 });
 
-// js/anchors.js
-var anchors_exports = {};
-__export(anchors_exports, {
-  ANCHOR: () => ANCHOR,
-  ANCHORS: () => ANCHORS,
-  ANCHOR_COPIED_MS: () => ANCHOR_COPIED_MS,
-  ANCHOR_COPY_EVENT: () => ANCHOR_COPY_EVENT,
-  ANCHOR_HIT_MS: () => ANCHOR_HIT_MS,
-  ANCHOR_MISSING_EVENT: () => ANCHOR_MISSING_EVENT,
-  ANCHOR_QUIET_MS: () => ANCHOR_QUIET_MS,
-  ANCHOR_REVEAL_EVENT: () => ANCHOR_REVEAL_EVENT,
-  ANCHOR_WAIT_MS: () => ANCHOR_WAIT_MS,
-  anchorSlug: () => anchorSlug,
-  attachAnchors: () => attachAnchors,
-  refreshAnchors: () => refreshAnchors,
-  uniqueAnchorId: () => uniqueAnchorId
-});
-function refreshAnchors(box) {
-  REBUILD.get(box)?.();
+// js/anchors/copy-key.js
+function serveCopyKey(doc, strings, provider) {
+  let shared = COPY_KEY.get(doc);
+  if (!shared) {
+    const made6 = { providers: /* @__PURE__ */ new Set(), off: (
+      /** @type {(() => void) | null} */
+      null
+    ) };
+    shared = made6;
+    COPY_KEY.set(doc, made6);
+    void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
+      if (made6.providers.size === 0 || COPY_KEY.get(doc) !== made6) return;
+      made6.off = registerShortcuts2(
+        doc.body,
+        [
+          {
+            keys: "y l",
+            what: strings.anchorKeyCopy,
+            group: strings.anchorKeyGroup,
+            when: () => [...made6.providers].some((p) => p() !== null),
+            run: () => {
+              for (const p of made6.providers) {
+                const go = p();
+                if (go) return go();
+              }
+            }
+          }
+        ],
+        { dev: false }
+      );
+    });
+  }
+  const mine = shared;
+  mine.providers.add(provider);
+  return () => {
+    mine.providers.delete(provider);
+    if (mine.providers.size === 0) {
+      mine.off?.();
+      if (COPY_KEY.get(doc) === mine) COPY_KEY.delete(doc);
+    }
+  };
 }
+var LAST_CHANGE, COPY_KEY;
+var init_copy_key = __esm({
+  "js/anchors/copy-key.js"() {
+    "use strict";
+    LAST_CHANGE = /* @__PURE__ */ new WeakMap();
+    COPY_KEY = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/anchors/text.js
 function anchorSlug(text) {
   return text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
@@ -9527,343 +9666,10 @@ async function copyText(doc, text) {
     return ok;
   }
 }
-function serveCopyKey(doc, strings, provider) {
-  let shared = COPY_KEY.get(doc);
-  if (!shared) {
-    const made6 = { providers: /* @__PURE__ */ new Set(), off: (
-      /** @type {(() => void) | null} */
-      null
-    ) };
-    shared = made6;
-    COPY_KEY.set(doc, made6);
-    void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
-      if (made6.providers.size === 0 || COPY_KEY.get(doc) !== made6) return;
-      made6.off = registerShortcuts2(
-        doc.body,
-        [
-          {
-            keys: "y l",
-            what: strings.anchorKeyCopy,
-            group: strings.anchorKeyGroup,
-            when: () => [...made6.providers].some((p) => p() !== null),
-            run: () => {
-              for (const p of made6.providers) {
-                const go = p();
-                if (go) return go();
-              }
-            }
-          }
-        ],
-        { dev: false }
-      );
-    });
-  }
-  const mine = shared;
-  mine.providers.add(provider);
-  return () => {
-    mine.providers.delete(provider);
-    if (mine.providers.size === 0) {
-      mine.off?.();
-      if (COPY_KEY.get(doc) === mine) COPY_KEY.delete(doc);
-    }
-  };
-}
-function attachAnchors(root = document, options = {}) {
-  const cleanups = [];
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(ANCHORS) ? [root] : [],
-      ...root.querySelectorAll(ANCHORS)
-    ]
-  );
-  for (const box of found) {
-    if (box.dataset.kpAnchorsAttached !== void 0) continue;
-    const mode2 = options.anchors ?? attr(box, "data-kp-anchors", "off");
-    if (mode2 === "off") continue;
-    box.dataset.kpAnchorsAttached = "";
-    const doc = box.ownerDocument;
-    const view = (
-      /** @type {Window} */
-      doc.defaultView
-    );
-    const strings = getStrings();
-    const levels = () => (options.levels ?? attr(box, "data-kp-anchor-levels", "2,3").split(",").map(Number)).filter((n) => n >= 1 && n <= 6);
-    const showMode = () => options.show ?? attr(box, "data-kp-anchor-show", "hover");
-    const copyMode = () => options.copy ?? attr(box, "data-kp-anchor-copy", "url");
-    const highlights = () => (options.target ?? attr(box, "data-kp-anchor-target", "highlight")) !== "none";
-    const opensFirst = () => (options.open ?? attr(box, "data-kp-anchor-open", "on") !== "off") !== false;
-    const copiedMs = () => Number(attr(box, "data-kp-flash-ms", "")) || options.copiedMs || ANCHOR_COPIED_MS;
-    const waitMs = () => {
-      const said = options.wait ?? (box.hasAttribute("data-kp-anchor-wait") ? Number(box.getAttribute("data-kp-anchor-wait")) : Number.NaN);
-      return Number.isFinite(said) && said >= 0 ? said : ANCHOR_WAIT_MS;
-    };
-    const drawing2 = () => [...doc.querySelectorAll(ANCHORS)].some(
-      (c) => c.matches('[aria-busy="true"]') || c.querySelector('[aria-busy="true"], .kp-skeleton, [data-kp-state="loading"]') !== null
-    );
-    box.classList.add("kp-anchors");
-    box.setAttribute("data-kp-anchor-show", showMode());
-    const offset = box.getAttribute("data-kp-anchor-offset");
-    if (offset) box.style.setProperty("--kp-anchor-offset", offset);
-    const live4 = doc.createElement("span");
-    live4.className = "kp-sr-only kp-anchors__live";
-    live4.setAttribute("role", "status");
-    box.append(live4);
-    const say18 = (text) => {
-      live4.textContent = "";
-      view.setTimeout(() => {
-        live4.textContent = text;
-      }, 30);
-    };
-    const marks = /* @__PURE__ */ new Map();
-    const timers = [];
-    const idFor = (el16) => {
-      const said = el16.getAttribute("data-kp-anchor");
-      if (said) return said;
-      if (el16.id) return el16.id;
-      const base = isHeading(el16) ? anchorSlug(nameOf(el16)) : el16.getAttribute("data-kp-row-key") ? `row-${anchorSlug(el16.getAttribute("data-kp-row-key") ?? "")}` : "";
-      return uniqueAnchorId(doc, base, isHeading(el16) ? "section" : "row");
-    };
-    const isReal = (el16) => !el16.matches('.kp-skeleton, [aria-busy="true"], [data-kp-state="loading"]') && el16.querySelector(":scope > .kp-skeleton") === null;
-    const mark = (el16, kind) => {
-      if (marks.has(el16) || !isReal(el16)) return;
-      const id = idFor(el16);
-      if (!el16.id) el16.id = id;
-      el16.setAttribute("data-kp-anchored", kind);
-      const button4 = doc.createElement("button");
-      button4.type = "button";
-      button4.className = "kp-anchor";
-      button4.setAttribute("data-kp-anchor-mark", "");
-      button4.setAttribute("aria-label", strings.anchorCopyLink(nameOf(el16)));
-      const hash = doc.createElement("span");
-      hash.className = "kp-anchor__hash";
-      hash.setAttribute("aria-hidden", "true");
-      hash.setAttribute("data-kp-text", "#");
-      const done = doc.createElement("span");
-      done.className = "kp-anchor__done";
-      done.setAttribute("aria-hidden", "true");
-      done.setAttribute("data-kp-text", kind === "row" ? "\u2713" : strings.anchorCopied);
-      button4.append(hash, done);
-      const before = (el16.getAttribute("data-kp-anchor-position") ?? box.getAttribute("data-kp-anchor-position") ?? (kind === "row" ? "before" : "after")) === "before";
-      if (kind === "row") {
-        const cell = el16.matches('tr, [role="row"]') ? el16.querySelector('th, td, [role="cell"], [role="gridcell"], [role="rowheader"]') ?? el16 : el16;
-        if (before) cell.prepend(button4);
-        else cell.append(button4);
-      } else if (before) el16.prepend(button4);
-      else el16.append(button4);
-      marks.set(el16, button4);
-    };
-    const scan = () => {
-      const want = options.anchors ?? attr(box, "data-kp-anchors", "off");
-      if (want === "headings" || want === "both") {
-        const wanted = levels().map((n) => `h${n}`).join(",");
-        if (wanted) {
-          for (const h2 of box.querySelectorAll(wanted))
-            if (h2 instanceof HTMLElement && !h2.closest('[data-kp-anchors="off"]')) mark(h2, "heading");
-        }
-      }
-      if (want === "rows" || want === "both") {
-        for (const row of box.querySelectorAll(`[data-kp-anchor], ${KEYED_ROWS}`))
-          if (row instanceof HTMLElement && !isHeading(row)) mark(row, "row");
-      }
-      for (const lone of box.querySelectorAll("[data-kp-anchor]")) {
-        if (lone instanceof HTMLElement && isHeading(lone)) mark(lone, "heading");
-      }
-      for (const [el16, button4] of marks) {
-        if (!el16.isConnected || !box.contains(el16)) {
-          button4.remove();
-          marks.delete(el16);
-        }
-      }
-    };
-    let notice = null;
-    let waitTimer = 0;
-    let lit = null;
-    let litTimer = 0;
-    const clearNotice = () => {
-      notice?.remove();
-      notice = null;
-    };
-    const reveal = (target) => {
-      if (!opensFirst()) return;
-      for (let p = target.parentElement; p && p !== doc.body; p = p.parentElement) {
-        if (p instanceof HTMLDetailsElement && !p.open) p.open = true;
-      }
-    };
-    const land = (id) => {
-      const target = id ? doc.getElementById(id) : null;
-      if (!target || !box.contains(target)) return false;
-      clearNotice();
-      window.clearTimeout(waitTimer);
-      const go = box.dispatchEvent(new CustomEvent(ANCHOR_REVEAL_EVENT, { bubbles: true, cancelable: true, detail: { id, target } }));
-      if (go) reveal(target);
-      target.scrollIntoView({ block: "start", behavior: motionAllowed(box) ? "smooth" : "auto" });
-      if (highlights()) {
-        if (lit && lit !== target) lit.removeAttribute("data-kp-anchor-hit");
-        lit = target;
-        target.setAttribute("data-kp-anchor-hit", "");
-        window.clearTimeout(litTimer);
-        litTimer = window.setTimeout(() => {
-          target.removeAttribute("data-kp-anchor-hit");
-          if (lit === target) lit = null;
-        }, ANCHOR_HIT_MS);
-      }
-      return true;
-    };
-    const showMissing = (id) => {
-      clearNotice();
-      notice = doc.createElement("div");
-      notice.className = "kp-alert kp-alert--info kp-anchors__notice";
-      notice.setAttribute("role", "status");
-      const text = doc.createElement("span");
-      text.className = "kp-alert__body kp-anchors__notice-text";
-      text.textContent = strings.anchorMissing;
-      const reset = doc.createElement("button");
-      reset.type = "button";
-      reset.className = "kp-button kp-button--sm kp-anchors__notice-action";
-      reset.textContent = strings.anchorShowAll;
-      reset.addEventListener("click", () => {
-        try {
-          view.history.replaceState(null, "", `${view.location.pathname}${view.location.search}`);
-        } catch {
-        }
-        clearNotice();
-        box.dispatchEvent(new CustomEvent("kp-anchor-reset", { bubbles: true, detail: { id } }));
-      });
-      notice.append(text, reset);
-      box.prepend(notice);
-      box.dispatchEvent(new CustomEvent(ANCHOR_MISSING_EVENT, { bubbles: true, detail: { id } }));
-    };
-    const idOfHash = () => {
-      try {
-        return decodeURIComponent(view.location.hash.slice(1));
-      } catch {
-        return view.location.hash.slice(1);
-      }
-    };
-    const arrive2 = () => {
-      const id = idOfHash();
-      window.clearTimeout(waitTimer);
-      if (!id) return;
-      const startedAt = Date.now();
-      const tick6 = () => {
-        const there = doc.getElementById(id);
-        if (there && box.contains(there)) {
-          land(id);
-          return;
-        }
-        if (there) return;
-        const now = Date.now();
-        const still = !drawing2() && now - Math.max(startedAt, LAST_CHANGE.get(doc) ?? 0) >= ANCHOR_QUIET_MS;
-        if (now - startedAt >= waitMs() || still) {
-          if (doc.querySelector(ANCHORS) === box) showMissing(id);
-          return;
-        }
-        waitTimer = window.setTimeout(tick6, 250);
-      };
-      tick6();
-    };
-    const onClick = async (event) => {
-      const button4 = event.target instanceof Element ? (
-        /** @type {HTMLButtonElement | null} */
-        event.target.closest("[data-kp-anchor-mark]")
-      ) : null;
-      if (!button4 || !box.contains(button4)) return;
-      const el16 = [...marks].find(([, b]) => b === button4)?.[0];
-      if (!el16) return;
-      const markdownWanted = event instanceof MouseEvent && event.shiftKey;
-      await copyLink2(el16, button4, markdownWanted);
-    };
-    const copyLink2 = async (el16, button4, markdownWanted = false) => {
-      const id = el16.id;
-      const hash = `#${encodeURIComponent(id)}`;
-      const url = copyMode() === "hash" ? hash : `${view.location.origin}${view.location.pathname}${view.location.search}${hash}`;
-      const markdown = `[${nameOf(el16)}](${url})`;
-      const text = markdownWanted ? markdown : url;
-      try {
-        view.history.replaceState(null, "", hash);
-      } catch {
-      }
-      const ok = await copyText(doc, text);
-      button4.setAttribute("data-kp-anchor-state", ok ? "copied" : "failed");
-      const done = button4.querySelector(".kp-anchor__done");
-      const kind = el16.getAttribute("data-kp-anchored");
-      if (done)
-        done.setAttribute("data-kp-text", ok ? kind === "row" ? "\u2713" : strings.anchorCopied : kind === "row" ? "!" : strings.anchorFailed);
-      say18(ok ? strings.anchorCopiedAnnounce(nameOf(el16)) : strings.anchorFailedAnnounce);
-      button4.dispatchEvent(new CustomEvent(ANCHOR_COPY_EVENT, { bubbles: true, detail: { id, url, text, markdown, ok } }));
-      const timer2 = view.setTimeout(() => {
-        button4.removeAttribute("data-kp-anchor-state");
-      }, copiedMs());
-      timers.push(timer2);
-    };
-    box.addEventListener("click", onClick);
-    view.addEventListener("hashchange", arrive2);
-    let scheduled = false;
-    const observer = new MutationObserver(() => {
-      LAST_CHANGE.set(doc, Date.now());
-      if (scheduled) return;
-      scheduled = true;
-      queueMicrotask(() => {
-        scheduled = false;
-        scan();
-      });
-    });
-    observer.observe(box, { childList: true, subtree: true });
-    const focusedRow = () => {
-      const active = doc.activeElement;
-      if (!(active instanceof Element) || !box.contains(active)) return null;
-      for (const el16 of marks.keys()) if (el16.contains(active) && el16.getAttribute("data-kp-anchored") === "row") return el16;
-      return null;
-    };
-    const releaseKey = serveCopyKey(doc, strings, () => {
-      const el16 = focusedRow();
-      const button4 = el16 ? marks.get(el16) : void 0;
-      return el16 && button4 ? () => void copyLink2(el16, button4) : null;
-    });
-    REBUILD.set(box, () => {
-      for (const [el16, button4] of marks) {
-        button4.remove();
-        el16.removeAttribute("data-kp-anchored");
-      }
-      marks.clear();
-      scan();
-    });
-    scan();
-    if (view.location.hash) view.setTimeout(arrive2, 0);
-    cleanups.push(() => {
-      box.removeEventListener("click", onClick);
-      view.removeEventListener("hashchange", arrive2);
-      observer.disconnect();
-      REBUILD.delete(box);
-      releaseKey();
-      for (const t of timers) view.clearTimeout(t);
-      window.clearTimeout(waitTimer);
-      window.clearTimeout(litTimer);
-      for (const [el16, button4] of marks) {
-        button4.remove();
-        el16.removeAttribute("data-kp-anchored");
-      }
-      marks.clear();
-      clearNotice();
-      live4.remove();
-      lit?.removeAttribute("data-kp-anchor-hit");
-      box.classList.remove("kp-anchors");
-      box.removeAttribute("data-kp-anchor-show");
-      delete box.dataset.kpAnchorsAttached;
-    });
-  }
-  return () => {
-    for (const clean of cleanups) clean();
-  };
-}
-var REBUILD, ANCHORS, ANCHOR, ANCHOR_COPY_EVENT, ANCHOR_REVEAL_EVENT, ANCHOR_MISSING_EVENT, ANCHOR_HIT_MS, ANCHOR_WAIT_MS, ANCHOR_QUIET_MS, ANCHOR_COPIED_MS, attr, isHeading, KEYED_ROWS, LAST_CHANGE, COPY_KEY;
-var init_anchors = __esm({
-  "js/anchors.js"() {
+var ANCHORS, ANCHOR, ANCHOR_COPY_EVENT, ANCHOR_REVEAL_EVENT, ANCHOR_MISSING_EVENT, ANCHOR_HIT_MS, ANCHOR_WAIT_MS, ANCHOR_QUIET_MS, ANCHOR_COPIED_MS, attr, isHeading, KEYED_ROWS;
+var init_text = __esm({
+  "js/anchors/text.js"() {
     "use strict";
-    init_strings();
-    init_calm();
-    REBUILD = /* @__PURE__ */ new WeakMap();
     ANCHORS = "[data-kp-anchors]";
     ANCHOR = "[data-kp-anchor]";
     ANCHOR_COPY_EVENT = "kp-anchor-copy";
@@ -9876,8 +9682,396 @@ var init_anchors = __esm({
     attr = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
     isHeading = (el16) => /^h[1-6]$/i.test(el16.tagName) || el16.matches("legend, .kp-formgrid__heading");
     KEYED_ROWS = 'tr[data-kp-row-key], [role="row"][data-kp-row-key], li[data-kp-row-key]';
-    LAST_CHANGE = /* @__PURE__ */ new WeakMap();
-    COPY_KEY = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/anchors/marks.js
+var LEVELS, LEVEL_MIN, LEVEL_MAX, SAY_DELAY_MS, DRAWING, AnchorMarks;
+var init_marks = __esm({
+  "js/anchors/marks.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_text();
+    LEVELS = "2,3";
+    LEVEL_MIN = 1;
+    LEVEL_MAX = 6;
+    SAY_DELAY_MS = 30;
+    DRAWING = '.kp-skeleton, [aria-busy="true"], [data-kp-state="loading"]';
+    AnchorMarks = class extends Controller {
+      /** @param {HTMLElement} box @param {AnchorOptions} [options] overrides the markup */
+      constructor(box, options = {}) {
+        super(box, options);
+        this.opts = options;
+        this.doc = box.ownerDocument;
+        this.view = /** @type {Window} */
+        this.doc.defaultView;
+        this.strings = getStrings();
+        this.marks = /* @__PURE__ */ new Map();
+        this.live = this.doc.createElement("span");
+      }
+      // The options, read when they are used: the markup, unless the page passed them to attachAnchors().
+      levels() {
+        return (this.opts.levels ?? attr(this.host, "data-kp-anchor-levels", LEVELS).split(",").map(Number)).filter((n) => n >= LEVEL_MIN && n <= LEVEL_MAX);
+      }
+      showMode() {
+        return this.opts.show ?? attr(this.host, "data-kp-anchor-show", "hover");
+      }
+      copyMode() {
+        return this.opts.copy ?? attr(this.host, "data-kp-anchor-copy", "url");
+      }
+      highlights() {
+        return (this.opts.target ?? attr(this.host, "data-kp-anchor-target", "highlight")) !== "none";
+      }
+      opensFirst() {
+        return (this.opts.open ?? attr(this.host, "data-kp-anchor-open", "on") !== "off") !== false;
+      }
+      copiedMs() {
+        return Number(attr(this.host, "data-kp-flash-ms", "")) || this.opts.copiedMs || ANCHOR_COPIED_MS;
+      }
+      waitMs() {
+        const said = this.opts.wait ?? (this.host.hasAttribute("data-kp-anchor-wait") ? Number(this.host.getAttribute("data-kp-anchor-wait")) : Number.NaN);
+        return Number.isFinite(said) && said >= 0 ? said : ANCHOR_WAIT_MS;
+      }
+      /** Whether something is still being drawn in any container of the page: the hash may be a row of another one. */
+      drawing() {
+        return [...this.doc.querySelectorAll(ANCHORS)].some((c) => c.matches('[aria-busy="true"]') || c.querySelector('[aria-busy="true"], .kp-skeleton, [data-kp-state="loading"]') !== null);
+      }
+      /** One status region for the whole container: the copy is said politely. */
+      mountVoice() {
+        this.live.className = "kp-sr-only kp-anchors__live";
+        this.live.setAttribute("role", "status");
+        this.host.append(this.live);
+      }
+      /** @param {string} text */
+      say(text) {
+        this.live.textContent = "";
+        this.view.setTimeout(() => {
+          this.live.textContent = text;
+        }, SAY_DELAY_MS);
+      }
+      /** The id of a heading or a row: its own word, else its id, else a slug of its text. @param {HTMLElement} el */
+      idFor(el16) {
+        const said = el16.getAttribute("data-kp-anchor");
+        if (said) return said;
+        if (el16.id) return el16.id;
+        const key = el16.getAttribute("data-kp-row-key");
+        const base = isHeading(el16) ? anchorSlug(nameOf(el16)) : key ? `row-${anchorSlug(key)}` : "";
+        return uniqueAnchorId(this.doc, base, isHeading(el16) ? "section" : "row");
+      }
+      /** Give a heading or a row its mark, once. @param {HTMLElement} el @param {'heading' | 'row'} kind */
+      mark(el16, kind) {
+        if (this.marks.has(el16) || el16.matches(DRAWING) || el16.querySelector(":scope > .kp-skeleton") !== null) return;
+        const id = this.idFor(el16);
+        if (!el16.id) el16.id = id;
+        el16.setAttribute("data-kp-anchored", kind);
+        const button4 = this.makeMark(el16, kind);
+        const before = (el16.getAttribute("data-kp-anchor-position") ?? this.host.getAttribute("data-kp-anchor-position") ?? (kind === "row" ? "before" : "after")) === "before";
+        const into = kind === "row" && el16.matches('tr, [role="row"]') ? el16.querySelector('th, td, [role="cell"], [role="gridcell"], [role="rowheader"]') ?? el16 : el16;
+        if (before) into.prepend(button4);
+        else into.append(button4);
+        this.marks.set(el16, button4);
+      }
+      /**
+       * The mark: a button whose faces carry their words as an attribute the stylesheet prints. The mark has no text of its own, so
+       * a table's sort, a search and a copy of the cell never pick up "#Copied". A row's mark stands in a narrow first column: it
+       * shows a tick, and the words are said politely.
+       * @param {HTMLElement} el @param {'heading' | 'row'} kind
+       */
+      makeMark(el16, kind) {
+        const button4 = this.doc.createElement("button");
+        button4.type = "button";
+        button4.className = "kp-anchor";
+        button4.setAttribute("data-kp-anchor-mark", "");
+        button4.setAttribute("aria-label", this.strings.anchorCopyLink(nameOf(el16)));
+        const face = (className, text) => {
+          const span4 = this.doc.createElement("span");
+          span4.className = className;
+          span4.setAttribute("aria-hidden", "true");
+          span4.setAttribute("data-kp-text", text);
+          return span4;
+        };
+        button4.append(face("kp-anchor__hash", "#"), face("kp-anchor__done", kind === "row" ? "\u2713" : this.strings.anchorCopied));
+        return button4;
+      }
+      /** Mark what the mode asks for, and take the marks of rows that left. */
+      scan() {
+        const box = this.host;
+        const want = this.opts.anchors ?? attr(box, "data-kp-anchors", "off");
+        if (want === "headings" || want === "both") {
+          const wanted = this.levels().map((n) => `h${n}`).join(",");
+          if (wanted) {
+            for (const h2 of box.querySelectorAll(wanted)) if (h2 instanceof HTMLElement && !h2.closest('[data-kp-anchors="off"]')) this.mark(h2, "heading");
+          }
+        }
+        if (want === "rows" || want === "both") {
+          for (const row of box.querySelectorAll(`[data-kp-anchor], ${KEYED_ROWS}`)) if (row instanceof HTMLElement && !isHeading(row)) this.mark(row, "row");
+        }
+        for (const lone of box.querySelectorAll("[data-kp-anchor]")) if (lone instanceof HTMLElement && isHeading(lone)) this.mark(lone, "heading");
+        for (const [el16, button4] of this.marks) {
+          if (!el16.isConnected || !box.contains(el16)) {
+            button4.remove();
+            this.marks.delete(el16);
+          }
+        }
+      }
+      /** Take every mark off. */
+      unmark() {
+        for (const [el16, button4] of this.marks) {
+          button4.remove();
+          el16.removeAttribute("data-kp-anchored");
+        }
+        this.marks.clear();
+      }
+      /** Draw the marks again, after an option changed (the position of the mark, the levels). */
+      rebuild() {
+        this.unmark();
+        this.scan();
+      }
+    };
+  }
+});
+
+// js/anchors/controller.js
+var LOOK_AGAIN_MS, AnchorBox;
+var init_controller2 = __esm({
+  "js/anchors/controller.js"() {
+    "use strict";
+    init_calm();
+    init_copy_key();
+    init_marks();
+    init_text();
+    LOOK_AGAIN_MS = 250;
+    AnchorBox = class extends AnchorMarks {
+      /** @param {HTMLElement} box @param {import('../anchors.js').AnchorOptions} [options] */
+      constructor(box, options = {}) {
+        super(box, options);
+        this.notice = null;
+        this.waitTimer = 0;
+        this.lit = null;
+        this.litTimer = 0;
+        this.timers = [];
+        this.scheduled = false;
+      }
+      connect() {
+        const box = this.host;
+        box.dataset.kpAnchorsAttached = "";
+        box.classList.add("kp-anchors");
+        box.setAttribute("data-kp-anchor-show", this.showMode());
+        const offset = box.getAttribute("data-kp-anchor-offset");
+        if (offset) box.style.setProperty("--kp-anchor-offset", offset);
+        this.mountVoice();
+        this.own(() => this.takeDown());
+        this.listen(box, "click", (event) => void this.onClick(event));
+        this.listen(this.view, "hashchange", () => this.arrive());
+        this.observe(new MutationObserver(() => this.changed())).observe(box, { childList: true, subtree: true });
+        this.own(serveCopyKey(this.doc, this.strings, () => this.copyFocused()));
+        this.scan();
+        if (this.view.location.hash) this.view.setTimeout(() => this.arrive(), 0);
+      }
+      takeDown() {
+        const box = this.host;
+        for (const t of this.timers) this.view.clearTimeout(t);
+        window.clearTimeout(this.waitTimer);
+        window.clearTimeout(this.litTimer);
+        this.unmark();
+        this.clearNotice();
+        this.live.remove();
+        this.lit?.removeAttribute("data-kp-anchor-hit");
+        box.classList.remove("kp-anchors");
+        box.removeAttribute("data-kp-anchor-show");
+        delete box.dataset.kpAnchorsAttached;
+      }
+      changed() {
+        LAST_CHANGE.set(this.doc, Date.now());
+        if (this.scheduled) return;
+        this.scheduled = true;
+        queueMicrotask(() => {
+          this.scheduled = false;
+          this.scan();
+        });
+      }
+      // --- Landing on a link. ---
+      clearNotice() {
+        this.notice?.remove();
+        this.notice = null;
+      }
+      /** Open every closed `<details>` around the place, unless the container says not to. @param {HTMLElement} target */
+      reveal(target) {
+        if (!this.opensFirst()) return;
+        for (let p = target.parentElement; p && p !== this.doc.body; p = p.parentElement) {
+          if (p instanceof HTMLDetailsElement && !p.open) p.open = true;
+        }
+      }
+      /** @param {string} id @returns {boolean} whether there was a place to land */
+      land(id) {
+        const box = this.host;
+        const target = id ? this.doc.getElementById(id) : null;
+        if (!target || !box.contains(target)) return false;
+        this.clearNotice();
+        window.clearTimeout(this.waitTimer);
+        const go = box.dispatchEvent(new CustomEvent(ANCHOR_REVEAL_EVENT, { bubbles: true, cancelable: true, detail: { id, target } }));
+        if (go) this.reveal(target);
+        target.scrollIntoView({ block: "start", behavior: motionAllowed(box) ? "smooth" : "auto" });
+        if (this.highlights()) this.light(target);
+        return true;
+      }
+      /** Mark the place a link landed on for a moment. @param {HTMLElement} target */
+      light(target) {
+        if (this.lit && this.lit !== target) this.lit.removeAttribute("data-kp-anchor-hit");
+        this.lit = target;
+        target.setAttribute("data-kp-anchor-hit", "");
+        window.clearTimeout(this.litTimer);
+        this.litTimer = window.setTimeout(() => {
+          target.removeAttribute("data-kp-anchor-hit");
+          if (this.lit === target) this.lit = null;
+        }, ANCHOR_HIT_MS);
+      }
+      /** The notice of a hash without a place, with Show all, which drops the hash. @param {string} id */
+      showMissing(id) {
+        this.clearNotice();
+        const notice = this.doc.createElement("div");
+        notice.className = "kp-alert kp-alert--info kp-anchors__notice";
+        notice.setAttribute("role", "status");
+        const text = this.doc.createElement("span");
+        text.className = "kp-alert__body kp-anchors__notice-text";
+        text.textContent = this.strings.anchorMissing;
+        const reset = this.doc.createElement("button");
+        reset.type = "button";
+        reset.className = "kp-button kp-button--sm kp-anchors__notice-action";
+        reset.textContent = this.strings.anchorShowAll;
+        reset.addEventListener("click", () => {
+          try {
+            this.view.history.replaceState(null, "", `${this.view.location.pathname}${this.view.location.search}`);
+          } catch {
+          }
+          this.clearNotice();
+          this.host.dispatchEvent(new CustomEvent("kp-anchor-reset", { bubbles: true, detail: { id } }));
+        });
+        notice.append(text, reset);
+        this.notice = notice;
+        this.host.prepend(notice);
+        this.host.dispatchEvent(new CustomEvent(ANCHOR_MISSING_EVENT, { bubbles: true, detail: { id } }));
+      }
+      idOfHash() {
+        try {
+          return decodeURIComponent(this.view.location.hash.slice(1));
+        } catch {
+          return this.view.location.hash.slice(1);
+        }
+      }
+      /** Land on the hash, waiting for a place that is still being drawn. */
+      arrive() {
+        const id = this.idOfHash();
+        window.clearTimeout(this.waitTimer);
+        if (!id) return;
+        const startedAt = Date.now();
+        const tick6 = () => {
+          const there = this.doc.getElementById(id);
+          if (there && this.host.contains(there)) return void this.land(id);
+          if (there) return;
+          const now = Date.now();
+          const still = !this.drawing() && now - Math.max(startedAt, LAST_CHANGE.get(this.doc) ?? 0) >= ANCHOR_QUIET_MS;
+          if (now - startedAt >= this.waitMs() || still) {
+            if (this.doc.querySelector(ANCHORS) === this.host) this.showMissing(id);
+            return;
+          }
+          this.waitTimer = window.setTimeout(tick6, LOOK_AGAIN_MS);
+        };
+        tick6();
+      }
+      // --- Copying. ---
+      /** A press copies; with Shift, as a Markdown link. @param {Event} event */
+      async onClick(event) {
+        const button4 = event.target instanceof Element ? (
+          /** @type {HTMLButtonElement | null} */
+          event.target.closest("[data-kp-anchor-mark]")
+        ) : null;
+        if (!button4 || !this.host.contains(button4)) return;
+        const el16 = [...this.marks].find(([, b]) => b === button4)?.[0];
+        if (!el16) return;
+        await this.copyLink(el16, button4, event instanceof MouseEvent && event.shiftKey);
+      }
+      /** The `y l` provider: a way to copy the focused row's link, or null when no row of this container is focused. */
+      copyFocused() {
+        const active = this.doc.activeElement;
+        if (!(active instanceof Element) || !this.host.contains(active)) return null;
+        for (const [el16, button4] of this.marks) if (el16.contains(active) && el16.getAttribute("data-kp-anchored") === "row") return () => void this.copyLink(el16, button4);
+        return null;
+      }
+      /** @param {HTMLElement} el @param {HTMLButtonElement} button @param {boolean} [markdownWanted] */
+      async copyLink(el16, button4, markdownWanted = false) {
+        const view = this.view;
+        const id = el16.id;
+        const hash = `#${encodeURIComponent(id)}`;
+        const url = this.copyMode() === "hash" ? hash : `${view.location.origin}${view.location.pathname}${view.location.search}${hash}`;
+        const markdown = `[${nameOf(el16)}](${url})`;
+        const text = markdownWanted ? markdown : url;
+        try {
+          view.history.replaceState(null, "", hash);
+        } catch {
+        }
+        const ok = await copyText(this.doc, text);
+        this.showCopied(el16, button4, ok);
+        button4.dispatchEvent(new CustomEvent(ANCHOR_COPY_EVENT, { bubbles: true, detail: { id, url, text, markdown, ok } }));
+        this.timers.push(view.setTimeout(() => button4.removeAttribute("data-kp-anchor-state"), this.copiedMs()));
+      }
+      /** The mark says Copied (a tick on a row) or that it failed, and the voice says it. @param {HTMLElement} el @param {HTMLButtonElement} button @param {boolean} ok */
+      showCopied(el16, button4, ok) {
+        const s2 = this.strings;
+        button4.setAttribute("data-kp-anchor-state", ok ? "copied" : "failed");
+        const done = button4.querySelector(".kp-anchor__done");
+        const row = el16.getAttribute("data-kp-anchored") === "row";
+        if (done) done.setAttribute("data-kp-text", ok ? row ? "\u2713" : s2.anchorCopied : row ? "!" : s2.anchorFailed);
+        this.say(ok ? s2.anchorCopiedAnnounce(nameOf(el16)) : s2.anchorFailedAnnounce);
+      }
+    };
+  }
+});
+
+// js/anchors.js
+var anchors_exports = {};
+__export(anchors_exports, {
+  ANCHOR: () => ANCHOR,
+  ANCHORS: () => ANCHORS,
+  ANCHOR_COPIED_MS: () => ANCHOR_COPIED_MS,
+  ANCHOR_COPY_EVENT: () => ANCHOR_COPY_EVENT,
+  ANCHOR_HIT_MS: () => ANCHOR_HIT_MS,
+  ANCHOR_MISSING_EVENT: () => ANCHOR_MISSING_EVENT,
+  ANCHOR_QUIET_MS: () => ANCHOR_QUIET_MS,
+  ANCHOR_REVEAL_EVENT: () => ANCHOR_REVEAL_EVENT,
+  ANCHOR_WAIT_MS: () => ANCHOR_WAIT_MS,
+  anchorSlug: () => anchorSlug,
+  attachAnchors: () => attachAnchors,
+  refreshAnchors: () => refreshAnchors,
+  uniqueAnchorId: () => uniqueAnchorId
+});
+function refreshAnchors(box) {
+  controllerOf(box, AnchorBox)?.rebuild();
+}
+function attachAnchors(root = document, options = {}) {
+  const found = (
+    /** @type {HTMLElement[]} */
+    [...root instanceof HTMLElement && root.matches(ANCHORS) ? [root] : [], ...root.querySelectorAll(ANCHORS)]
+  );
+  const made6 = [];
+  for (const box of found) {
+    if (box.dataset.kpAnchorsAttached !== void 0) continue;
+    if ((options.anchors ?? attr(box, "data-kp-anchors", "off")) === "off") continue;
+    const anchored = attachOne2(box, AnchorBox, options);
+    if (anchored) made6.push(anchored);
+  }
+  return () => {
+    for (const anchored of made6) anchored.destroy();
+  };
+}
+var init_anchors = __esm({
+  "js/anchors.js"() {
+    "use strict";
+    init_controller();
+    init_controller2();
+    init_text();
+    init_text();
   }
 });
 
@@ -9958,11 +10152,11 @@ var init_console2 = __esm({
 });
 
 // js/art/drawing.js
-var DRAWING;
+var DRAWING2;
 var init_drawing = __esm({
   "js/art/drawing.js"() {
     "use strict";
-    DRAWING = {
+    DRAWING2 = {
       // A part not drawn yet: its four corner marks, the centre lines and the compass circle round the centre.
       none: [
         ["line", "M18 36h84"],
@@ -10716,7 +10910,7 @@ var init_sets = __esm({
       horizon: HORIZON,
       stickers: STICKERS,
       fieldkit: FIELD_KIT,
-      drawing: DRAWING,
+      drawing: DRAWING2,
       lowsun: LOW_SUN,
       slab: SLAB,
       fan: FAN,
@@ -11865,7 +12059,7 @@ var init_menu_button = __esm({
 });
 
 // js/segmented/constants.js
-var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, TRI_ATTRIBUTE, TRI_STATES, OVERFLOW_ATTRIBUTE, MORE_ATTRIBUTE, SCROLL_SLOP_PX, SAY_DELAY_MS;
+var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, TRI_ATTRIBUTE, TRI_STATES, OVERFLOW_ATTRIBUTE, MORE_ATTRIBUTE, SCROLL_SLOP_PX, SAY_DELAY_MS2;
 var init_constants5 = __esm({
   "js/segmented/constants.js"() {
     "use strict";
@@ -11880,7 +12074,7 @@ var init_constants5 = __esm({
     OVERFLOW_ATTRIBUTE = "data-kp-segmented-overflow";
     MORE_ATTRIBUTE = "data-kp-segmented-more";
     SCROLL_SLOP_PX = 1;
-    SAY_DELAY_MS = 60;
+    SAY_DELAY_MS2 = 60;
   }
 });
 
@@ -11961,113 +12155,6 @@ var init_plate = __esm({
     "use strict";
     init_constants5();
     init_read();
-  }
-});
-
-// js/controller.js
-function hostsOf(root, selector) {
-  const self = root instanceof Element && root.matches(selector) ? [root] : [];
-  return (
-    /** @type {HTMLElement[]} */
-    [...self, ...root.querySelectorAll(selector)]
-  );
-}
-function controllerOf(host, Ctor) {
-  return (
-    /** @type {C | undefined} */
-    LIVE.get(Ctor)?.get(host)
-  );
-}
-function attachOne2(host, Ctor, options = {}) {
-  let live4 = LIVE.get(Ctor);
-  if (!live4) LIVE.set(Ctor, live4 = /* @__PURE__ */ new WeakMap());
-  const existing = (
-    /** @type {C | undefined} */
-    live4.get(host)
-  );
-  if (existing) return existing;
-  const controller = new Ctor(host, options);
-  live4.set(host, controller);
-  try {
-    controller.connect();
-    return controller;
-  } catch (error) {
-    controller.destroy();
-    report(error);
-    return void 0;
-  }
-}
-function attachAll(root, selector, Ctor, options = {}) {
-  const made6 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne2(host, Ctor, options)).filter((controller) => controller !== void 0);
-  return () => {
-    for (const controller of made6) controller.destroy();
-  };
-}
-var LIVE, report, Controller;
-var init_controller = __esm({
-  "js/controller.js"() {
-    "use strict";
-    LIVE = /* @__PURE__ */ new WeakMap();
-    report = (error) => typeof globalThis.reportError === "function" ? globalThis.reportError(error) : console.error(error);
-    Controller = class {
-      /**
-       * @param {HTMLElement} host
-       * @param {Record<string, unknown>} [options]
-       */
-      constructor(host, options = {}) {
-        this.host = host;
-        this.options = options;
-        this.teardown = [];
-        this.destroyed = false;
-      }
-      /**
-       * Register an undo step for `destroy()`.
-       * @template {() => void} F
-       * @param {F} undo
-       * @returns {F}
-       */
-      own(undo) {
-        this.teardown.push(undo);
-        return undo;
-      }
-      /**
-       * Add an event listener that `destroy()` removes.
-       * @param {EventTarget} target
-       * @param {string} type
-       * @param {EventListenerOrEventListenerObject} handler
-       * @param {AddEventListenerOptions | boolean} [options]
-       */
-      listen(target, type, handler, options) {
-        target.addEventListener(type, handler, options);
-        this.own(() => target.removeEventListener(type, handler, options));
-      }
-      /**
-       * Start an observer that `destroy()` disconnects.
-       * @template {{ disconnect(): void }} O
-       * @param {O} observer
-       * @returns {O}
-       */
-      observe(observer) {
-        this.own(() => observer.disconnect());
-        return observer;
-      }
-      /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
-      connect() {
-      }
-      /** Undo everything the controller set up, newest first; an undo step that throws is reported and the rest still run. */
-      destroy() {
-        if (this.destroyed) return;
-        this.destroyed = true;
-        for (const undo of this.teardown.splice(0).reverse()) {
-          try {
-            undo();
-          } catch (error) {
-            report(error);
-          }
-        }
-        LIVE.get(this.constructor)?.delete(this.host);
-      }
-    };
   }
 });
 
@@ -12197,7 +12284,7 @@ function sayTri(group, message) {
   }
   const target = region;
   target.textContent = "";
-  setTimeout(() => target.textContent = message, SAY_DELAY_MS);
+  setTimeout(() => target.textContent = message, SAY_DELAY_MS2);
 }
 function setTriValues(group, { include = [], exclude = [] }) {
   const inc = new Set(include);
@@ -20133,7 +20220,7 @@ function partsOf(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller2 = __esm({
+var init_controller3 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -20318,7 +20405,7 @@ var init_attach7 = __esm({
     "use strict";
     init_controller();
     init_constants9();
-    init_controller2();
+    init_controller3();
   }
 });
 
@@ -35535,7 +35622,7 @@ var init_loading = __esm({
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller3 = __esm({
+var init_controller4 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
@@ -35678,7 +35765,7 @@ var init_attach10 = __esm({
     init_controller();
     init_locale();
     init_constants12();
-    init_controller3();
+    init_controller4();
   }
 });
 
@@ -35957,7 +36044,7 @@ var init_core = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller4 = __esm({
+var init_controller5 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
     init_keys5();
@@ -36244,7 +36331,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller4();
+    init_controller5();
     init_rows();
     init_rows();
   }
@@ -42198,7 +42285,7 @@ var init_api6 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller5 = __esm({
+var init_controller6 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
@@ -42345,7 +42432,7 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller5();
+    init_controller6();
     init_state10();
     init_state10();
     init_api6();
@@ -43328,7 +43415,7 @@ var init_paint3 = __esm({
 
 // js/calendar/controller.js
 var WATCHED, CalendarController;
-var init_controller6 = __esm({
+var init_controller7 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -43582,7 +43669,7 @@ var init_api7 = __esm({
     "use strict";
     init_controller();
     init_constants15();
-    init_controller6();
+    init_controller7();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -54815,7 +54902,7 @@ var init_page_contents = __esm({
 });
 
 // js/timefield/constants.js
-var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, MINUTES_PER_HOUR, MINUTES_PER_DAY, DEFAULT_STEP, DEFAULT_NEAR_WIDTH, SAY_DELAY_MS2, NARROW_QUERY, POPUP_EDGE_PX, POPUP_GAP_PX, POPUP_MIN_WIDTH_PX, BARE_DIGITS;
+var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, MINUTES_PER_HOUR, MINUTES_PER_DAY, DEFAULT_STEP, DEFAULT_NEAR_WIDTH, SAY_DELAY_MS3, NARROW_QUERY, POPUP_EDGE_PX, POPUP_GAP_PX, POPUP_MIN_WIDTH_PX, BARE_DIGITS;
 var init_constants21 = __esm({
   "js/timefield/constants.js"() {
     "use strict";
@@ -54827,7 +54914,7 @@ var init_constants21 = __esm({
     MINUTES_PER_DAY = 1440;
     DEFAULT_STEP = 5;
     DEFAULT_NEAR_WIDTH = 60;
-    SAY_DELAY_MS2 = 60;
+    SAY_DELAY_MS3 = 60;
     NARROW_QUERY = "(max-width: 40rem)";
     POPUP_EDGE_PX = 8;
     POPUP_GAP_PX = 4;
@@ -55295,7 +55382,7 @@ var init_field = __esm({
         }
         const target = region;
         target.textContent = "";
-        setTimeout(() => target.textContent = message, SAY_DELAY_MS2);
+        setTimeout(() => target.textContent = message, SAY_DELAY_MS3);
       }
       /** The why line. */
       get why() {
@@ -55494,7 +55581,7 @@ var init_keys7 = __esm({
 
 // js/timefield/controller.js
 var WATCHED2, TimeController;
-var init_controller7 = __esm({
+var init_controller8 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -55701,7 +55788,7 @@ var init_api11 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller7();
+    init_controller8();
     init_field();
     init_state14();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -57410,7 +57497,7 @@ var init_view = __esm({
 
 // js/notices/controller.js
 var idSeq4, NoticesCentre;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -57551,14 +57638,14 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller8();
+    init_controller9();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
 });
 
 // js/rating/constants.js
-var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, MIN_STARS, MAX_STARS, DEFAULT_STARS, DEFAULT_UNDO_MS, DEFAULT_FLASH_MS, SAY_DELAY_MS3, DISPLAY_STEP;
+var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, MIN_STARS, MAX_STARS, DEFAULT_STARS, DEFAULT_UNDO_MS, DEFAULT_FLASH_MS, SAY_DELAY_MS4, DISPLAY_STEP;
 var init_constants22 = __esm({
   "js/rating/constants.js"() {
     "use strict";
@@ -57573,7 +57660,7 @@ var init_constants22 = __esm({
     DEFAULT_STARS = 5;
     DEFAULT_UNDO_MS = 6e3;
     DEFAULT_FLASH_MS = 3e3;
-    SAY_DELAY_MS3 = 30;
+    SAY_DELAY_MS4 = 30;
     DISPLAY_STEP = 0.01;
   }
 });
@@ -57855,7 +57942,7 @@ function say9(m, text) {
   m.live.textContent = "";
   window.setTimeout(() => {
     m.live.textContent = text;
-  }, SAY_DELAY_MS3);
+  }, SAY_DELAY_MS4);
 }
 function tell(m, text) {
   window.clearTimeout(m.flashTimer);
@@ -58013,7 +58100,7 @@ var init_keys8 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED3, RatingController;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -58283,7 +58370,7 @@ var init_api12 = __esm({
     "use strict";
     init_controller();
     init_constants22();
-    init_controller9();
+    init_controller10();
     init_build6();
     init_commit();
     init_math();
@@ -62800,7 +62887,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -63053,7 +63140,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller10();
+    init_controller11();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -65709,7 +65796,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq7, SAY_AFTER_MS, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -65938,7 +66025,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller11();
+    init_controller12();
     init_fields();
     init_fields();
   }
@@ -72033,7 +72120,7 @@ var init_actions5 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -72137,7 +72224,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller12();
+    init_controller13();
     init_state19();
     init_state19();
     init_matrix2();
@@ -76963,15 +77050,6 @@ export {
   ALARM_OPEN_EVENT,
   ALARM_SECONDS,
   ALTGR_KEYS,
-  ANCHOR,
-  ANCHORS,
-  ANCHOR_COPIED_MS,
-  ANCHOR_COPY_EVENT,
-  ANCHOR_HIT_MS,
-  ANCHOR_MISSING_EVENT,
-  ANCHOR_QUIET_MS,
-  ANCHOR_REVEAL_EVENT,
-  ANCHOR_WAIT_MS,
   ARRIVAL,
   ARRIVALS,
   ATTENTION,
@@ -77356,7 +77434,6 @@ export {
   agoMoment,
   agoText,
   alarm_exports as alarmExports,
-  anchorSlug,
   anchors_exports as anchorsExports,
   applyLayout,
   applyStoredCalm,
@@ -77917,7 +77994,6 @@ export {
   treeItemId,
   undoToast,
   undo_toast_exports as undoToastExports,
-  uniqueAnchorId,
   unknownEffects,
   unmarkUpdating,
   unsaved,

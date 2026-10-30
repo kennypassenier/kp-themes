@@ -1,0 +1,40 @@
+/** A container whose headings or rows get anchors. */
+export declare const ANCHORS = "[data-kp-anchors]";
+/** One element that says its own id. */
+export declare const ANCHOR = "[data-kp-anchor]";
+/** Fired on the mark when a link was copied: `{ id, url, text, markdown, ok }`. */
+export declare const ANCHOR_COPY_EVENT = "kp-anchor-copy";
+/** Fired (cancelable) on the container before a link lands in a place that may be folded or on another page: `{ id, target }`. */
+export declare const ANCHOR_REVEAL_EVENT = "kp-anchor-reveal";
+/** Fired on the container when a hash has no place to land: `{ id }`. */
+export declare const ANCHOR_MISSING_EVENT = "kp-anchor-missing";
+/** How long a place a link landed on stays marked, in ms. */
+export declare const ANCHOR_HIT_MS = 2000;
+/** The longest a hash that has no row yet is waited for, in ms. */
+export declare const ANCHOR_WAIT_MS = 10000;
+/** How long a container must have been still, with nothing in it drawing, before a hash without a place is given up, in ms. */
+export declare const ANCHOR_QUIET_MS = 1000;
+/** How long "Copied" stays on the mark, in ms. */
+export declare const ANCHOR_COPIED_MS = 1500;
+/**
+ * A slug of some text: lower case, accents folded, anything else a dash. Pure.
+ * @param {string} text
+ */
+export declare function anchorSlug(text: string): string;
+/**
+ * An id that no element of the document has yet: the slug, then `-2`, `-3`. Pure over the document.
+ * @param {Document} doc @param {string} slug @param {string} [fallback]
+ */
+export declare function uniqueAnchorId(doc: Document, slug: string, fallback?: string): string;
+/** @param {Element} el @param {string} name @param {string} fallback */
+export declare const attr: (el: Element, name: string, fallback: string) => string;
+/** A heading: an h1 to h6, or the heading of a form grid's group. @param {Element} el */
+export declare const isHeading: (el: Element) => boolean;
+/** Rows that carry a key the page already writes. */
+export declare const KEYED_ROWS = "tr[data-kp-row-key], [role=\"row\"][data-kp-row-key], li[data-kp-row-key]";
+/** The words of an element without the marks this module added. @param {Element} el */
+export declare function plainText(el: Element): string;
+/** What the row or heading is called, for the mark's name. @param {HTMLElement} el */
+export declare function nameOf(el: HTMLElement): string;
+/** Copy text, with the old way when the clipboard is not offered. @param {Document} doc @param {string} text */
+export declare function copyText(doc: Document, text: string): Promise<boolean>;

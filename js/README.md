@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The forty-one largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The forty-two largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -782,3 +782,14 @@ The unsaved-changes bar: it counts the marked rows, offers Save, Discard and Und
 | `parts.js`      | Builds the bar's elements, the list entries and the refusal alert; no behaviour, only structure and classes.                 |
 | `state.js`      | The counter that gives each bar without an id its own.                                                                       |
 | `values.js`     | What a form control holds: reading the live value, the markup's value, and putting a value back.                             |
+
+## js/anchors.js → js/anchors/
+
+The link anchors on headings and rows, as an AnchorBox controller. 4 files.
+
+| File            | Does                                                                                   |
+| --------------- | -------------------------------------------------------------------------------------- |
+| `controller.js` | AnchorBox: copying a link (press, Shift, `y l`) and landing on one (open, scroll, mark). |
+| `copy-key.js`   | The page's one `y l` shortcut, shared by every container, and when a container changed. |
+| `marks.js`      | AnchorMarks: the options, the voice, which headings and rows get a mark, and the mark.  |
+| `text.js`       | Selectors, events and times, slugs, unique ids, an element's name, copying text.        |

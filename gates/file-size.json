@@ -20,7 +20,6 @@
         "date": "2026-10-30",
         "note": "Kenny, 2026-10-30: a file of that size is absolutely unacceptable. These files predate the 500-line limit and are split in phase 2. The list may only shrink; a listed file may not grow.",
         "files": {
-            "js/anchors.js": 555,
             "js/auto-refresh.js": 596,
             "js/auto.js": 537,
             "js/autosize.js": 622,

@@ -6,7 +6,7 @@
         "js/action-tiles.js": { "digest": "8b991575d50cd0aa", "when": ".kp-action" },
         "js/actions.js": { "digest": "7254ebf2bbcb9da0", "when": ".kp-row-actions" },
         "js/alarm.js": { "digest": "647bf77baf844ec6", "when": "[data-kp-alarm]" },
-        "js/anchors.js": { "digest": "366abb973b5d7b4e", "when": "[data-kp-anchors]" },
+        "js/anchors.js": { "digest": "1cf5841c25e107ad", "when": "[data-kp-anchors]" },
         "js/art.js": { "digest": "22eeb301a2b92523", "when": "[data-kp-art]" },
         "js/attention.js": { "digest": "76a2e4da0f8bdd07", "when": ".kp-attention" },
         "js/auto-refresh.js": { "digest": "ac643e549d8d823e", "when": "[data-kp-refresh]" },
