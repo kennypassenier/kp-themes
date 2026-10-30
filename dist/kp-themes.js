@@ -3367,7 +3367,7 @@ async function leaveOne(el16, hide2, exited, count2 = 1) {
     getComputedStyle(el16).animationName;
   }
   const own = ownName && ownName !== "none" && (ownName !== before || turned) ? { duration: firstMs(style.animationDuration) } : null;
-  const running2 = [];
+  const running = [];
   const lasts = own ? own.duration : arrival2?.duration ?? 0;
   const fold2 = style.getPropertyValue("--kp-leave-fold").trim();
   let actor = el16;
@@ -3416,7 +3416,7 @@ async function leaveOne(el16, hide2, exited, count2 = 1) {
     const keyframes = keyframesOf(effect);
     a.cancel();
     try {
-      running2.push(
+      running.push(
         actor.animate(keyframes, {
           duration: Number(timing.duration) || 0,
           iterations: Number(timing.iterations),
@@ -3437,7 +3437,7 @@ async function leaveOne(el16, hide2, exited, count2 = 1) {
   if (capped !== null) void atTime(actor, capped, exit, lines).then(exited);
   else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit, lines).then(exited);
   else void exit.then(exited);
-  running2.push(exit);
+  running.push(exit);
   const foldTo = size2 > 0 && !(el16 instanceof HTMLTableRowElement) && !floats(el16, style) ? foldFrames(el16, style) : null;
   if (foldTo && !foldReflows(el16, ...foldTo)) {
     el16.style.setProperty("overflow", "clip");
@@ -3454,9 +3454,9 @@ async function leaveOne(el16, hide2, exited, count2 = 1) {
       easing: withoutOvershoot(foldEase),
       fill: "forwards"
     });
-    running2.push(folding.finished.catch(() => void 0));
+    running.push(folding.finished.catch(() => void 0));
   }
-  await Promise.all(running2);
+  await Promise.all(running);
   heightFolds.delete(el16);
   if (actor !== el16) actor.remove();
   gone();
@@ -3567,24 +3567,24 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   motionState.watching += 1;
   const keys = [...arriveKeys, ...ARRIVE_KEYS];
   let last = box.offsetHeight;
-  let running2 = null;
+  let running = null;
   let followedAt = -Infinity;
   const fresh = firstRender(box);
   const settle3 = () => {
     if (!box.isConnected) return;
     const effect = (
       /** @type {KeyframeEffect | null} */
-      running2?.effect ?? null
+      running?.effect ?? null
     );
-    if (running2 && effect) {
+    if (running && effect) {
       effect.target = null;
       const natural = settledHeight(box);
       effect.target = box;
       if (Math.abs(natural - last) < 1) return;
     }
-    const from = running2 ? box.offsetHeight : last;
-    running2?.finish();
-    running2 = null;
+    const from = running ? box.offsetHeight : last;
+    running?.finish();
+    running = null;
     const to = settledHeight(box);
     last = to;
     if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) {
@@ -3604,15 +3604,15 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     const delay = to < from ? Math.max(0, foldingOutFor(box) - size2) : 0;
     const easing = sizeEase(box, ease, to - from);
     const { animation: mine, done } = glide(box, from, to, steppedDuration(box, easing, size2), easing, false, delay);
-    running2 = mine;
+    running = mine;
     mine.finished.then(() => {
       done();
-      if (running2 === mine) running2 = null;
+      if (running === mine) running = null;
     }).catch(() => void 0);
   };
   const sizes = new ResizeObserver((entries2) => {
     if (entries2.some((entry) => entry.target !== box)) settle3();
-    else if (!running2) last = box.offsetHeight;
+    else if (!running) last = box.offsetHeight;
   });
   const watch2 = () => {
     sizes.disconnect();
@@ -3654,7 +3654,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     motionState.watching -= 1;
     sizes.disconnect();
     list.disconnect();
-    running2?.cancel();
+    running?.cancel();
     box.style.removeProperty("overflow");
     box.style.removeProperty("box-sizing");
     delete own.__kpSize;
@@ -3672,7 +3672,7 @@ function attachFold(details) {
   };
   own.__kpFold = true;
   motionState.watching += 1;
-  let running2 = null;
+  let running = null;
   let folding = false;
   const fresh = firstRender(details);
   const shutHeight = () => {
@@ -3687,17 +3687,17 @@ function attachFold(details) {
     watcher.takeRecords();
   };
   const move = (opening, from, size2, ease) => {
-    running2?.finish();
+    running?.finish();
     folding = !opening;
     setOpen(true);
     const to = opening ? layoutHeight(details) : shutHeight();
     details.toggleAttribute("data-kp-folding", folding);
     const { animation: mine, done } = glide(details, from, to, size2, sizeEase(details, ease, to - from, true), true);
-    running2 = mine;
+    running = mine;
     mine.finished.then(() => {
       done();
-      if (running2 !== mine) return;
-      running2 = null;
+      if (running !== mine) return;
+      running = null;
       if (folding) {
         folding = false;
         setOpen(false);
@@ -3718,7 +3718,7 @@ function attachFold(details) {
     const { size: size2, ease } = themeMotion(details);
     if (size2 <= 0) return;
     let from;
-    if (running2) from = layoutHeight(details);
+    if (running) from = layoutHeight(details);
     else if (now) from = shutHeight();
     else {
       setOpen(true);
@@ -3733,7 +3733,7 @@ function attachFold(details) {
     motionState.watching -= 1;
     watcher.disconnect();
     summary2.removeEventListener("click", onClick);
-    running2?.cancel();
+    running?.cancel();
     details.style.removeProperty("overflow");
     details.removeAttribute("data-kp-folding");
     delete own.__kpFold;
@@ -4268,7 +4268,7 @@ function playEntranceBackwards(el16) {
       a.addEventListener("remove", done, { once: true });
       a.finished.then(done, done);
     });
-    const running2 = () => el16.getAnimations().filter(
+    const running = () => el16.getAnimations().filter(
       (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
       a.effect?.target === el16 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
     );
@@ -4276,7 +4276,7 @@ function playEntranceBackwards(el16) {
       if (own.__kpReversing === void 0) return;
       void Promise.all(waited.map(ended)).then(() => {
         if (own.__kpReversing === void 0) return;
-        const next2 = running2();
+        const next2 = running();
         if (next2.length > 0) return settle3(next2);
         delete own.__kpReversing;
         resolve(true);
@@ -5953,7 +5953,7 @@ function markdownFragment(doc, text, { headings = 4, limit = MARKDOWN_LIMIT } = 
   const lines = source.split("\n");
   let i = 0;
   let paragraph = [];
-  const flush2 = () => {
+  const flush = () => {
     if (!paragraph.length) return;
     const p = doc.createElement("p");
     inline(doc, p, paragraph.join(" ").trim());
@@ -5964,13 +5964,13 @@ function markdownFragment(doc, text, { headings = 4, limit = MARKDOWN_LIMIT } = 
   while (i < lines.length) {
     const line = lines[i];
     if (/^\s*$/.test(line)) {
-      flush2();
+      flush();
       i += 1;
       continue;
     }
     const fence = /^\s*(```|~~~)/.exec(line);
     if (fence) {
-      flush2();
+      flush();
       const body = [];
       i += 1;
       while (i < lines.length && !lines[i].trimStart().startsWith(fence[1])) body.push(lines[i++]);
@@ -5984,7 +5984,7 @@ function markdownFragment(doc, text, { headings = 4, limit = MARKDOWN_LIMIT } = 
     }
     const head = /^(#{1,6})\s+(.*?)\s*#*\s*$/.exec(line);
     if (head) {
-      flush2();
+      flush();
       const h2 = doc.createElement(`h${Math.min(6, base + head[1].length - 1)}`);
       inline(doc, h2, head[2]);
       out.append(h2);
@@ -5997,7 +5997,7 @@ function markdownFragment(doc, text, { headings = 4, limit = MARKDOWN_LIMIT } = 
       continue;
     }
     if (/^\s*>/.test(line)) {
-      flush2();
+      flush();
       const quoted = [];
       while (i < lines.length && /^\s*>/.test(lines[i])) quoted.push(lines[i++].replace(/^\s*>\s?/, ""));
       const quote3 = doc.createElement("blockquote");
@@ -6006,7 +6006,7 @@ function markdownFragment(doc, text, { headings = 4, limit = MARKDOWN_LIMIT } = 
       continue;
     }
     if (item.test(line)) {
-      flush2();
+      flush();
       const stack = [];
       while (i < lines.length && (item.test(lines[i]) || /^\s+\S/.test(lines[i]) && stack.length)) {
         const m = item.exec(lines[i]);
@@ -6038,7 +6038,7 @@ function markdownFragment(doc, text, { headings = 4, limit = MARKDOWN_LIMIT } = 
     paragraph.push(line.trim());
     i += 1;
   }
-  flush2();
+  flush();
   if (cut) {
     const p = doc.createElement("p");
     p.className = "kp-markdown__cut";
@@ -10076,9 +10076,9 @@ var init_board = __esm({
       /** Tells the page whether a chord waits for its next key. */
       announcePending() {
         if (typeof document === "undefined") return;
-        const { pending: pending4 } = this;
+        const { pending: pending3 } = this;
         document.dispatchEvent(
-          new CustomEvent(SHORTCUT_PENDING_EVENT, { detail: { keys: pending4?.shown ?? "", waiting: pending4 !== null, ms: pending4 ? this.config.chordMs : 0 } })
+          new CustomEvent(SHORTCUT_PENDING_EVENT, { detail: { keys: pending3?.shown ?? "", waiting: pending3 !== null, ms: pending3 ? this.config.chordMs : 0 } })
         );
       }
       /**
@@ -10136,9 +10136,9 @@ var init_board = __esm({
       }
       /** More than one step is left: show the cap and wait for the next key. @param {Entry[]} more @param {number} index @param {Pending | null} live @param {KeyboardEvent} event @param {number} now */
       waitForNext(more, index, live4, event, now) {
-        const pending4 = { candidates: more, index: index + 1, at: now, shown: [live4?.shown, event.key].filter(Boolean).join(" ") };
-        this.pending = pending4;
-        this.hint.chord(pending4.shown.split(" "), false);
+        const pending3 = { candidates: more, index: index + 1, at: now, shown: [live4?.shown, event.key].filter(Boolean).join(" ") };
+        this.pending = pending3;
+        this.hint.chord(pending3.shown.split(" "), false);
         this.hint.arm(() => {
           this.pending = null;
           this.hint.hide();
@@ -32181,13 +32181,13 @@ function laneSummaries(root) {
     const cur = track.order[track.pos] ?? 0;
     const passed = track.order.every((i) => state12.done.has(i));
     const timersOf = track.order.map((i) => timers.find((t) => t.id === timerIdOf(state12, i))).filter((t) => t !== void 0);
-    const running2 = timersOf.filter((t) => t.state === "running").sort((a, b) => a.remaining - b.remaining);
+    const running = timersOf.filter((t) => t.state === "running").sort((a, b) => a.remaining - b.remaining);
     const paused = timersOf.filter((t) => t.state === "paused").sort((a, b) => a.remaining - b.remaining);
     const alert = state12.alerts.get(track.key);
     const blocks = passed ? [] : blockersOf(state12, cur, timers);
-    const status = passed && running2.length === 0 && paused.length === 0 ? "finished" : alert?.reason === "timer" ? "ringing" : blocks.length ? "waiting" : running2.length ? "running" : paused.length ? "paused" : "ready";
+    const status = passed && running.length === 0 && paused.length === 0 ? "finished" : alert?.reason === "timer" ? "ringing" : blocks.length ? "waiting" : running.length ? "running" : paused.length ? "paused" : "ready";
     const ringer = alert?.timerId ? timers.find((t) => t.id === alert.timerId) : void 0;
-    const timer = status === "ringing" ? ringer ?? null : running2[0] ?? paused[0] ?? null;
+    const timer = status === "ringing" ? ringer ?? null : running[0] ?? paused[0] ?? null;
     return { track, key: track.key, name: track.name, active: track.key === state12.track, status, timer, blocks };
   });
 }
@@ -33601,14 +33601,14 @@ function sync2(list) {
   empty.hidden = !(error !== null || timers.size === 0);
   empty.toggleAttribute("data-kp-timers-failed", error !== null);
   list.toggleAttribute("data-kp-timers-covered", error !== null || timers.size === 0);
-  const running2 = [...timers.values()].some((t) => t.state === "running");
+  const running = [...timers.values()].some((t) => t.state === "running");
   const ticker2 = TICKERS.get(list);
-  if (running2 && !ticker2)
+  if (running && !ticker2)
     TICKERS.set(
       list,
       setInterval(() => tick2(list), TIMER_TICK_MS)
     );
-  else if (!running2 && ticker2) {
+  else if (!running && ticker2) {
     clearInterval(ticker2);
     TICKERS.delete(list);
   }
@@ -33910,9 +33910,9 @@ function attachTimers(root = document) {
     const seconds = parseDuration(starter.getAttribute("data-kp-timer-start") ?? "");
     const name = starter.getAttribute("data-kp-timer-name") ?? starter.textContent?.trim() ?? "";
     const id = starter.getAttribute("data-kp-timer-id") ?? `start:${name}`;
-    const running2 = find(list, id);
-    if (running2 && running2.state !== "done") {
-      running2.card.querySelector(".kp-timer__toggle")?.focus();
+    const running = find(list, id);
+    if (running && running.state !== "done") {
+      running.card.querySelector(".kp-timer__toggle")?.focus();
       say6(list, getStrings().timerAlready(name));
       return;
     }
@@ -38140,15 +38140,15 @@ function attachComboboxes(root = document, {
       onChoose: (_, option) => take(option),
       onDismiss: close
     });
-    let pending4 = 0;
+    let pending3 = 0;
     const onInput = () => {
-      clearTimeout(pending4);
+      clearTimeout(pending3);
       const run = () => {
         const visible3 = filter();
         if (visible3 > 0 || showsEmpty && input.value.trim() !== "") open4();
         else close();
       };
-      if (debounce > 0) pending4 = window.setTimeout(run, debounce);
+      if (debounce > 0) pending3 = window.setTimeout(run, debounce);
       else run();
     };
     const onKeyDown = (event) => {
@@ -38238,7 +38238,7 @@ function attachComboboxes(root = document, {
     handles3.set(box, handle);
     created.push(handle);
     cleanups.push(() => {
-      clearTimeout(pending4);
+      clearTimeout(pending3);
       lower();
       listbox.destroy();
       input.removeEventListener("input", onInput);
@@ -51614,10 +51614,10 @@ function commit(c, list, source) {
   return true;
 }
 function flushPending(c) {
-  const pending4 = c.pending;
-  if (!pending4 || c.press || c.kb) return;
+  const pending3 = c.pending;
+  if (!pending3 || c.press || c.kb) return;
   c.pending = null;
-  apply(c, pending4.items, pending4.lanes);
+  apply(c, pending3.items, pending3.lanes);
 }
 function apply(c, raw, lanes) {
   c.items = sequencerClean(raw);
@@ -58503,10 +58503,10 @@ var init_parts8 = __esm({
 });
 
 // js/connection/text.js
-function textFor(t, state12, { attempt, pending: pending4, refusedWhy }) {
+function textFor(t, state12, { attempt, pending: pending3, refusedWhy }) {
   if (state12 === "offline") return [t.connOffline, t.connOfflineWhy];
   if (state12 === "reconnecting") return [t.connReconnecting, attempt > 1 ? t.connAttempt(attempt) : t.connReconnectingWhy];
-  if (state12 === "back") return [t.connBack, pending4 > 0 ? t.connBackSending(pending4) : t.connBackWhy];
+  if (state12 === "back") return [t.connBack, pending3 > 0 ? t.connBackSending(pending3) : t.connBackWhy];
   return [t.connRefused, refusedWhy || t.connRefusedWhy];
 }
 var init_text3 = __esm({
@@ -64074,7 +64074,7 @@ function paintCaption(m, shown5) {
 function paintActions(m) {
   const s2 = getStrings();
   const item = itemName(m);
-  const pending4 = m.draft !== m.value;
+  const pending3 = m.draft !== m.value;
   const clearButton = (
     /** @type {HTMLButtonElement} */
     m.actions.querySelector(".kp-rating__clear")
@@ -64082,7 +64082,7 @@ function paintActions(m) {
   clearButton.textContent = s2.ratingClear;
   clearButton.setAttribute("aria-label", item ? s2.ratingClearName(item) : s2.ratingClear);
   const canClear = m.mode === "input" && attr5(m, "clear") !== "off";
-  const clearNow = canClear && interactive(m) && m.value > 0 && !pending4;
+  const clearNow = canClear && interactive(m) && m.value > 0 && !pending3;
   clearButton.hidden = !canClear;
   clearButton.toggleAttribute("data-kp-off", !clearNow);
   clearButton.disabled = !clearNow;
@@ -64096,9 +64096,9 @@ function paintActions(m) {
   );
   save2.textContent = s2.ratingConfirm;
   drop.textContent = s2.ratingCancel;
-  save2.hidden = drop.hidden = !pending4;
+  save2.hidden = drop.hidden = !pending3;
   m.actions.hidden = clearButton.hidden && save2.hidden;
-  if (pending4) m.caption.textContent = s2.ratingPending(plain(m.draft), m.max);
+  if (pending3) m.caption.textContent = s2.ratingPending(plain(m.draft), m.max);
   if (m.field) m.field.value = m.value > 0 ? String(plain(m.value)) : "";
 }
 function paint11(m) {
@@ -76456,7 +76456,7 @@ function attachLoadingPieces(root = document) {
   const waiting = /* @__PURE__ */ new Set();
   let frame3 = 0;
   let everything = false;
-  const flush2 = () => {
+  const flush = () => {
     frame3 = 0;
     const all = everything;
     everything = false;
@@ -76494,7 +76494,7 @@ function attachLoadingPieces(root = document) {
     }
   };
   const schedule = () => {
-    if (!frame3) frame3 = requestAnimationFrame(flush2);
+    if (!frame3) frame3 = requestAnimationFrame(flush);
   };
   const queue = (el16) => {
     waiting.add(el16);
@@ -84400,9 +84400,8 @@ __export(update_exports, {
   updateTiming: () => updateTiming,
   updateTimingOf: () => updateTimingOf
 });
-init_motion();
-init_kpi();
-init_components();
+
+// js/update/values.js
 var UPDATING_ATTRIBUTE = "data-kp-updating";
 var UPDATE_PROPERTY = "--kp-update";
 var UPDATE_STYLE = (
@@ -84410,18 +84409,24 @@ var UPDATE_STYLE = (
   Object.freeze(["display", "--kp-update-duration", "--kp-update-ease"])
 );
 var SVG_NS7 = "http://www.w3.org/2000/svg";
+var UPDATE_STRETCH = 1.25;
+
+// js/update/timing.js
+init_motion();
 function updateIdea(value) {
   const idea = String(value ?? "").trim();
   return idea === "none" ? "" : idea;
 }
 function updateTimingOf({ size: size2, close, ease, time = null }) {
-  const duration2 = time !== null && Number.isFinite(time) && time >= 0 ? time : Math.max(size2, close) * 1.25;
+  const duration2 = time !== null && Number.isFinite(time) && time >= 0 ? time : Math.max(size2, close) * UPDATE_STRETCH;
   return { duration: duration2, ease: withoutOvershoot(ease) };
 }
 function updateTiming(scope = document.documentElement) {
   return updateTimingOf({ ...themeMotion(scope), time: registerTime(scope, "--kp-update-time") });
 }
 var updatePlays = (idea) => idea !== "";
+
+// js/update/mark.js
 function markUpdating(host, idea, timing, { inline: inline2 = false } = {}) {
   const before = {};
   for (const name of UPDATE_STYLE) before[name] = host.style.getPropertyValue(name);
@@ -84438,8 +84443,9 @@ function unmarkUpdating(host, before) {
     else host.style.removeProperty(name);
   }
 }
-var running = /* @__PURE__ */ new WeakMap();
-var isSvg = (el16) => el16.namespaceURI === SVG_NS7 && el16.localName === "svg";
+
+// js/update/spark.js
+init_kpi();
 async function writeSpark(svg2, values) {
   const oldLine = svg2.querySelector('[class$="-line"]');
   const parts2 = /(\S+)-line\b/.exec(oldLine?.getAttribute("class") ?? "")?.[1] ?? "kp-kpi__spark";
@@ -84465,59 +84471,106 @@ function glideSpark({ svg: svg2, parts: parts2, from, to }, timing) {
   }
   return out;
 }
-var pending3 = /* @__PURE__ */ new Map();
-function enqueue(job) {
-  if (pending3.size === 0) queueMicrotask(flush);
-  pending3.get(job.host)?.resolve(0);
-  pending3.set(job.host, job);
-}
-function flush() {
-  const jobs = [...pending3.values()];
-  pending3.clear();
-  const started2 = performance.now();
-  const read = jobs.map((job) => {
-    const idea = updateIdea(getComputedStyle(job.el).getPropertyValue(UPDATE_PROPERTY));
-    const inline2 = idea !== "" && getComputedStyle(job.host).display === "inline";
-    return { job, idea, inline: inline2 };
-  });
-  const timings = /* @__PURE__ */ new Map();
-  const timingOf = (host) => {
+
+// js/update/run.js
+init_components();
+
+// js/update/batch.js
+var UpdateBatch = class {
+  constructor() {
+    this.pending = /* @__PURE__ */ new Map();
+    this.running = /* @__PURE__ */ new WeakMap();
+  }
+  /** End the update playing on `host`, if there is one. @param {HTMLElement} host */
+  cancel(host) {
+    this.running.get(host)?.();
+  }
+  /** @param {UpdateJob} job */
+  enqueue(job) {
+    if (this.pending.size === 0) queueMicrotask(() => this.flush());
+    this.pending.get(job.host)?.resolve(0);
+    this.pending.set(job.host, job);
+  }
+  /**
+   * Mark every update written in this task at once: all reads, then all
+   * writes, then the animations read back. Never a read between two writes.
+   */
+  flush() {
+    const jobs = [...this.pending.values()];
+    this.pending.clear();
+    const started2 = performance.now();
+    const plays = this.readAll(jobs);
+    const marked = plays.map((p) => ({ ...p, before: markUpdating(p.job.host, p.idea, p.timing, { inline: p.inline }) }));
+    const css = marked.map(
+      (m) => m.job.host.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName.includes("-update-"))
+    );
+    marked.forEach((m, at) => this.play(m, css[at], started2));
+  }
+  /**
+   * Reads. The idea on the element itself (a spark's svg may name none),
+   * the host's display; then the theme's timing once per themed scope
+   * (themeMotion() reads a probe it adds and takes off: once per theme,
+   * not once per value). Updates whose register names no idea are resolved here.
+   * @param {UpdateJob[]} jobs
+   */
+  readAll(jobs) {
+    const read = jobs.map((job) => {
+      const idea = updateIdea(getComputedStyle(job.el).getPropertyValue(UPDATE_PROPERTY));
+      const inline2 = idea !== "" && getComputedStyle(job.host).display === "inline";
+      return { job, idea, inline: inline2 };
+    });
+    const timings = /* @__PURE__ */ new Map();
+    const plays = read.filter((r) => updatePlays(r.idea)).map((r) => ({ ...r, timing: this.timingOf(timings, r.job.host) }));
+    for (const r of read) if (!updatePlays(r.idea)) r.job.resolve(0);
+    return plays;
+  }
+  /**
+   * The theme's timing at `host`, read once per themed scope.
+   * @param {Map<Element, UpdateTiming>} timings
+   * @param {HTMLElement} host
+   * @returns {UpdateTiming}
+   */
+  timingOf(timings, host) {
     const scope = host.closest("[data-theme]") ?? host.ownerDocument.documentElement;
     let timing = timings.get(scope);
     if (!timing) timings.set(scope, timing = updateTiming(host));
     return timing;
-  };
-  const plays = read.filter((r) => updatePlays(r.idea)).map((r) => ({ ...r, timing: timingOf(r.job.host) }));
-  for (const r of read) if (!updatePlays(r.idea)) r.job.resolve(0);
-  const marked = plays.map((p) => ({ ...p, before: markUpdating(p.job.host, p.idea, p.timing, { inline: p.inline }) }));
-  const css = marked.map(
-    (m) => m.job.host.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && a.animationName.includes("-update-"))
-  );
-  marked.forEach((m, at) => {
-    const glide3 = m.job.spark ? glideSpark(m.job.spark, m.timing) : [];
-    const { host, resolve } = m.job;
+  }
+  /**
+   * Start the glide, and take the mark off when the register's keyframes and the glide are done.
+   * @param {{ job: UpdateJob, timing: UpdateTiming, before: Record<string, string> }} marked
+   * @param {Animation[]} cssAnimations
+   * @param {number} started
+   */
+  play(marked, cssAnimations, started2) {
+    const glide3 = marked.job.spark ? glideSpark(marked.job.spark, marked.timing) : [];
+    const { host, resolve } = marked.job;
     let done = false;
     const end = () => {
       if (done) return;
       done = true;
-      unmarkUpdating(host, m.before);
+      unmarkUpdating(host, marked.before);
       for (const a of glide3) a.cancel();
-      if (running.get(host) === end) running.delete(host);
+      if (this.running.get(host) === end) this.running.delete(host);
     };
-    running.set(host, end);
-    Promise.all([...css[at], ...glide3].map((a) => a.finished.catch(() => void 0))).then(() => {
+    this.running.set(host, end);
+    Promise.all([...cssAnimations, ...glide3].map((a) => a.finished.catch(() => void 0))).then(() => {
       const took = performance.now() - started2;
       end();
       resolve(took);
     });
-  });
-}
+  }
+};
+
+// js/update/run.js
+var BATCH = new UpdateBatch();
+var isSvg = (el16) => el16.namespaceURI === SVG_NS7 && el16.localName === "svg";
 async function update(el16, next2) {
   const host = (
     /** @type {HTMLElement} */
     isSvg(el16) ? el16.parentElement ?? el16 : el16
   );
-  running.get(host)?.();
+  BATCH.cancel(host);
   let spark = null;
   if (isSvg(el16) && Array.isArray(next2)) spark = await writeSpark(
     /** @type {SVGSVGElement} */
@@ -84530,7 +84583,7 @@ async function update(el16, next2) {
     String(next2)
   );
   else el16.textContent = String(next2);
-  return new Promise((resolve) => enqueue({ el: el16, host, spark, resolve }));
+  return new Promise((resolve) => BATCH.enqueue({ el: el16, host, spark, resolve }));
 }
 
 // js/tour/place.js
