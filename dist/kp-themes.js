@@ -60527,6 +60527,356 @@ var init_timefield = __esm({
   }
 });
 
+// js/weekdays/values.js
+var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, WEEK2, MONTH_DAYS, DEFAULT_MIN;
+var init_values18 = __esm({
+  "js/weekdays/values.js"() {
+    "use strict";
+    WEEKDAYS = "[data-kp-weekdays]";
+    WEEKDAYS_EVENT = "kp-weekdays-change";
+    WEEKDAY_PRESETS = /** @type {const} */
+    ["weekdays", "weekend", "every"];
+    SETS = {
+      weekdays: [1, 2, 3, 4, 5],
+      weekend: [6, 0],
+      every: [0, 1, 2, 3, 4, 5, 6]
+    };
+    NAMES2 = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+    WEEK2 = 7;
+    MONTH_DAYS = 31;
+    DEFAULT_MIN = 1;
+  }
+});
+
+// js/weekdays/options.js
+function readWeekdaysOptions(el16, { locale: localeOption, weekStartsOn: weekOption }) {
+  const month = el16.dataset.kpDays === "month";
+  const locale = resolveLocale(localeOption ?? el16.dataset.kpLocale, el16);
+  const presetsAttr = el16.dataset.kpPresets;
+  return {
+    month,
+    locale,
+    firstDay: weekStartsOn(locale, el16.dataset.kpWeekStartsOn === void 0 ? weekOption : Number(el16.dataset.kpWeekStartsOn)),
+    narrow: el16.dataset.kpDayNames === "narrow",
+    min: el16.dataset.kpMin === void 0 ? DEFAULT_MIN : Math.max(0, Number(el16.dataset.kpMin) || 0),
+    showSummary: el16.dataset.kpSummary !== "false",
+    presets: month || presetsAttr === "false" ? [] : (presetsAttr ? presetsAttr.split(/[\s,]+/) : [...WEEKDAY_PRESETS]).filter((p) => p in SETS),
+    disabled: el16.hasAttribute("data-kp-disabled")
+  };
+}
+var init_options5 = __esm({
+  "js/weekdays/options.js"() {
+    "use strict";
+    init_locale();
+    init_values18();
+  }
+});
+
+// js/weekdays/names.js
+function dayNumber(value) {
+  if (typeof value === "number") return Number.isInteger(value) && value >= 0 && value <= 6 ? value : null;
+  const text = String(value ?? "").trim().toLowerCase();
+  if (/^[0-6]$/.test(text)) return Number(text);
+  const at = NAMES2.indexOf(text.slice(0, 3));
+  return at >= 0 && /^[a-z]+$/.test(text) ? at : null;
+}
+function dayNames(style, locale) {
+  const s2 = getStrings();
+  const own = style === "short" ? s2.weekdaysShort : style === "narrow" ? s2.weekdaysNarrow : s2.weekdaysLong;
+  const sundayFirst = DICTIONARY_ORDER.map((i) => own[i] ?? "");
+  try {
+    const resolved = resolveLocale(locale);
+    if (new Intl.Locale(resolved).language === "en") return sundayFirst;
+    const format = new Intl.DateTimeFormat(resolved, { weekday: style });
+    return Array.from({ length: WEEK2 }, (_, i) => format.format(new Date(2001, 0, SUNDAY + i)));
+  } catch {
+    return sundayFirst;
+  }
+}
+var DICTIONARY_ORDER, SUNDAY;
+var init_names = __esm({
+  "js/weekdays/names.js"() {
+    "use strict";
+    init_strings();
+    init_locale();
+    init_values18();
+    DICTIONARY_ORDER = [6, 0, 1, 2, 3, 4, 5];
+    SUNDAY = 7;
+  }
+});
+
+// js/weekdays/parts.js
+function buildChips(doc, o, label) {
+  const group = doc.createElement("div");
+  group.className = `kp-segmented kp-segmented--chips kp-weekdays__chips${o.month ? " kp-weekdays__chips--month" : ""}`;
+  group.dataset.kpSegmented = "multi";
+  group.dataset.kpSegmentedCollapse = "false";
+  group.setAttribute("role", "group");
+  group.setAttribute("aria-label", label);
+  if (o.disabled) group.setAttribute("aria-disabled", "true");
+  return group;
+}
+function chipItems(o, s2) {
+  if (o.month) {
+    return [
+      ...Array.from({ length: MONTH_DAYS }, (_, i) => ({ value: String(i + 1), label: String(i + 1), hint: s2.weekdaysOrdinal(i + 1) })),
+      { value: "last", label: s2.weekdaysLast, hint: s2.weekdaysLastDay }
+    ];
+  }
+  const shortNames = dayNames(o.narrow ? "narrow" : "short", o.locale);
+  const longNames = dayNames("long", o.locale);
+  return Array.from({ length: WEEK2 }, (_, i) => (i + o.firstDay) % WEEK2).map((d) => ({ value: String(d), label: shortNames[d] ?? "", hint: longNames[d] ?? "" }));
+}
+function buildLines(el16, o, id) {
+  const doc = el16.ownerDocument;
+  const summary2 = doc.createElement("p");
+  summary2.className = "kp-weekdays__summary";
+  summary2.id = `${id}-summary`;
+  summary2.setAttribute("aria-live", "polite");
+  summary2.hidden = !o.showSummary;
+  const why = doc.createElement("p");
+  why.className = "kp-field__error kp-weekdays__why";
+  why.id = `${id}-why`;
+  why.hidden = true;
+  const reason = doc.createElement("p");
+  reason.className = "kp-weekdays__reason";
+  reason.id = `${id}-reason`;
+  const reasonText = el16.dataset.kpDisabledReason;
+  reason.hidden = !(o.disabled && reasonText);
+  reason.textContent = o.disabled && reasonText ? reasonText : "";
+  return { summary: summary2, why, reason };
+}
+function buildQuick(doc, o, s2) {
+  const quick = doc.createElement("div");
+  quick.className = "kp-weekdays__presets";
+  quick.setAttribute("role", "group");
+  quick.setAttribute("aria-label", s2.weekdaysPresets);
+  quick.hidden = o.presets.length === 0;
+  const buttons = /* @__PURE__ */ new Map();
+  for (const name of o.presets) {
+    const button6 = doc.createElement("button");
+    button6.type = "button";
+    button6.className = "kp-button kp-button--ghost kp-button--sm kp-weekdays__preset";
+    button6.dataset.kpWeekdaysPreset = name;
+    button6.disabled = o.disabled;
+    button6.setAttribute("aria-pressed", "false");
+    button6.textContent = name === "weekdays" ? s2.weekdaysPresetWeekdays : name === "weekend" ? s2.weekdaysPresetWeekend : s2.weekdaysPresetEvery;
+    quick.append(button6);
+    buttons.set(name, button6);
+  }
+  return { quick, buttons };
+}
+var init_parts8 = __esm({
+  "js/weekdays/parts.js"() {
+    "use strict";
+    init_names();
+    init_values18();
+  }
+});
+
+// js/weekdays/summary.js
+function joinWords(items, and = getStrings().weekdaysAnd) {
+  if (items.length <= 1) return items.join("");
+  return `${items.slice(0, -1).join(", ")} ${and} ${items[items.length - 1]}`;
+}
+function weekdaySummary(days, { firstDay = 1, names = dayNames("short") } = {}) {
+  const s2 = getStrings();
+  const on = new Set(days);
+  if (on.size === 0) return s2.weekdaysNone;
+  const same = (set) => set.length === on.size && set.every((d) => on.has(d));
+  if (same(SETS.every)) return s2.weekdaysEvery;
+  if (same(SETS.weekdays)) return s2.weekdaysWeekdays;
+  if (same(SETS.weekend)) return s2.weekdaysWeekend;
+  const ordered2 = SETS.every.map((i) => (i + firstDay) % WEEK2).filter((d) => on.has(d));
+  return joinWords(ordered2.map((d) => names[d] ?? ""));
+}
+function monthSummary(days) {
+  const s2 = getStrings();
+  if (days.length === 0) return s2.weekdaysNone;
+  const numbers2 = days.filter((d) => d !== "last").sort((a, b) => Number(a) - Number(b));
+  const parts2 = numbers2.map((d) => s2.weekdaysOrdinal(Number(d)));
+  if (days.includes("last")) parts2.push(s2.weekdaysLastDay);
+  return s2.weekdaysOnThe(joinWords(parts2));
+}
+var init_summary3 = __esm({
+  "js/weekdays/summary.js"() {
+    "use strict";
+    init_strings();
+    init_names();
+    init_values18();
+  }
+});
+
+// js/weekdays/core.js
+var seq3, WeekdaysCore;
+var init_core14 = __esm({
+  "js/weekdays/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_segmented();
+    init_options5();
+    init_parts8();
+    init_names();
+    init_summary3();
+    init_values18();
+    seq3 = 0;
+    WeekdaysCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ locale?: string, weekStartsOn?: number }} [options]
+       */
+      constructor(host, options = {}) {
+        super(host, options);
+        const s2 = getStrings();
+        const doc = host.ownerDocument;
+        this.s = s2;
+        this.id = `kp-weekdays-${++seq3}`;
+        this.o = readWeekdaysOptions(host, options);
+        this.label = host.getAttribute("aria-label") ?? s2.weekdaysGroup;
+        this.group = buildChips(doc, this.o, this.label);
+        this.items = chipItems(this.o, s2);
+        this.lines = buildLines(host, this.o, this.id);
+        this.quick = buildQuick(doc, this.o, s2);
+      }
+      /** The picked values, in the order the chips stand. @returns {string[]} */
+      picked() {
+        return getSegmentedValues(this.group);
+      }
+      /** @returns {(number | 'last')[]} */
+      values() {
+        const { month, firstDay } = this.o;
+        if (month) {
+          return (
+            /** @type {(number | 'last')[]} */
+            this.picked().map((v) => v === "last" ? "last" : Number(v)).sort((a, b) => a === "last" ? 1 : b === "last" ? -1 : a - b)
+          );
+        }
+        return this.picked().map(Number).sort((a, b) => (a - firstDay + WEEK2) % WEEK2 - (b - firstDay + WEEK2) % WEEK2);
+      }
+      words() {
+        const { month, firstDay, locale } = this.o;
+        return month ? monthSummary(this.values()) : weekdaySummary(
+          /** @type {number[]} */
+          this.values(),
+          { firstDay, names: dayNames("short", locale) }
+        );
+      }
+      valid() {
+        return this.values().length >= this.o.min;
+      }
+      /** Bring the line, the error and the quick picks in step with the chips. */
+      paint() {
+        const el16 = this.host;
+        const { summary: summary2, why, reason } = this.lines;
+        const have = this.values();
+        summary2.textContent = this.words();
+        const ok = have.length >= this.o.min;
+        why.hidden = ok;
+        why.textContent = ok ? "" : this.s.weekdaysMin(this.o.min);
+        const described = [this.o.showSummary ? summary2.id : "", ok ? "" : why.id, reason.hidden ? "" : reason.id].filter(Boolean).join(" ");
+        if (described) el16.setAttribute("aria-describedby", described);
+        else el16.removeAttribute("aria-describedby");
+        el16.toggleAttribute("data-kp-invalid", !ok);
+        if (!ok) el16.setAttribute("aria-invalid", "true");
+        else el16.removeAttribute("aria-invalid");
+        for (const [name, button6] of this.quick.buttons) {
+          const set = SETS[
+            /** @type {keyof typeof SETS} */
+            name
+          ];
+          button6.setAttribute("aria-pressed", String(!this.o.month && set.length === have.length && set.every((d) => have.includes(d))));
+        }
+      }
+    };
+  }
+});
+
+// js/weekdays/controller.js
+var WeekdayPicker;
+var init_controller32 = __esm({
+  "js/weekdays/controller.js"() {
+    "use strict";
+    init_segmented();
+    init_core14();
+    init_names();
+    init_values18();
+    WeekdayPicker = class extends WeekdaysCore {
+      /**
+       * @param {HTMLElement} host
+       * @param {{ locale?: string, weekStartsOn?: number }} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.handle = {
+          element: host,
+          values: () => this.values(),
+          set: (next2) => this.set(next2),
+          summary: () => this.words(),
+          valid: () => this.valid()
+        };
+      }
+      connect() {
+        const el16 = this.host;
+        el16.classList.add("kp-weekdays");
+        if (!el16.hasAttribute("role")) el16.setAttribute("role", "group");
+        if (!el16.hasAttribute("aria-label") && !el16.hasAttribute("aria-labelledby")) el16.setAttribute("aria-label", this.label);
+        const { summary: summary2, why, reason } = this.lines;
+        el16.replaceChildren(this.group, this.quick.quick, summary2, why, reason);
+        setSegmentedItems(this.group, this.items);
+        this.own(() => {
+          el16.replaceChildren();
+          el16.removeAttribute("aria-describedby");
+          el16.removeAttribute("aria-invalid");
+          el16.removeAttribute("data-kp-invalid");
+        });
+        this.own(attachSegmented(el16));
+        this.listen(this.group, SEGMENTED_EVENT, (event) => this.onChips(event));
+        this.listen(this.quick.quick, "click", (event) => this.onPreset(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.set(
+          (el16.dataset.kpValue ?? "").split(/[\s,]+/).map((v) => v.trim()).filter(Boolean)
+        );
+        this.paint();
+      }
+      /** Replace the picked days, without the event. @param {readonly (number | string)[]} next */
+      set(next2) {
+        const { month } = this.o;
+        const wanted = new Set(
+          next2.map((v) => month ? String(v).toLowerCase() === "last" ? "last" : String(Math.round(Number(v))) : String(dayNumber(v))).filter((v) => month ? v === "last" || Number(v) >= 1 && Number(v) <= MONTH_DAYS : v !== "null")
+        );
+        setSegmentedValues(this.group, wanted);
+        this.paint();
+      }
+      /** @param {boolean} fire */
+      change(fire2) {
+        this.paint();
+        if (fire2) this.host.dispatchEvent(new CustomEvent(WEEKDAYS_EVENT, { bubbles: true, detail: { values: this.values(), summary: this.words(), valid: this.valid() } }));
+      }
+      /** @param {Event} event */
+      onChips(event) {
+        if (event.target !== this.group) return;
+        this.change(true);
+      }
+      /** @param {MouseEvent} event */
+      onPreset(event) {
+        const quick = this.quick.quick;
+        const button6 = event.target instanceof Element ? event.target.closest("[data-kp-weekdays-preset]") : null;
+        if (!(button6 instanceof HTMLButtonElement) || button6.disabled || !quick.contains(button6)) return;
+        const name = (
+          /** @type {keyof typeof SETS} */
+          button6.dataset.kpWeekdaysPreset
+        );
+        const same = button6.getAttribute("aria-pressed") === "true";
+        this.set(same ? [] : SETS[name]);
+        this.change(true);
+      }
+    };
+  }
+});
+
 // js/weekdays.js
 var weekdays_exports = {};
 __export(weekdays_exports, {
@@ -60543,232 +60893,27 @@ __export(weekdays_exports, {
   weekdays: () => weekdays,
   weekdaysOf: () => weekdaysOf
 });
-function dayNumber(value) {
-  if (typeof value === "number") return Number.isInteger(value) && value >= 0 && value <= 6 ? value : null;
-  const text = String(value ?? "").trim().toLowerCase();
-  if (/^[0-6]$/.test(text)) return Number(text);
-  const at = NAMES2.indexOf(text.slice(0, 3));
-  return at >= 0 && /^[a-z]+$/.test(text) ? at : null;
-}
-function dayNames(style, locale) {
-  const s2 = getStrings();
-  const own = style === "short" ? s2.weekdaysShort : style === "narrow" ? s2.weekdaysNarrow : s2.weekdaysLong;
-  const sundayFirst = [6, 0, 1, 2, 3, 4, 5].map((i) => own[i] ?? "");
-  try {
-    const resolved = resolveLocale(locale);
-    if (new Intl.Locale(resolved).language === "en") return sundayFirst;
-    const format = new Intl.DateTimeFormat(resolved, { weekday: style });
-    return Array.from({ length: 7 }, (_, i) => format.format(new Date(2001, 0, 7 + i)));
-  } catch {
-    return sundayFirst;
-  }
-}
-function joinWords(items, and = getStrings().weekdaysAnd) {
-  if (items.length <= 1) return items.join("");
-  return `${items.slice(0, -1).join(", ")} ${and} ${items[items.length - 1]}`;
-}
-function weekdaySummary(days, { firstDay = 1, names = dayNames("short") } = {}) {
-  const s2 = getStrings();
-  const on = new Set(days);
-  if (on.size === 0) return s2.weekdaysNone;
-  const same = (set) => set.length === on.size && set.every((d) => on.has(d));
-  if (same(SETS.every)) return s2.weekdaysEvery;
-  if (same(SETS.weekdays)) return s2.weekdaysWeekdays;
-  if (same(SETS.weekend)) return s2.weekdaysWeekend;
-  const ordered2 = [0, 1, 2, 3, 4, 5, 6].map((i) => (i + firstDay) % 7).filter((d) => on.has(d));
-  return joinWords(ordered2.map((d) => names[d] ?? ""));
-}
-function monthSummary(days) {
-  const s2 = getStrings();
-  if (days.length === 0) return s2.weekdaysNone;
-  const numbers2 = days.filter((d) => d !== "last").sort((a, b) => Number(a) - Number(b));
-  const parts2 = numbers2.map((d) => s2.weekdaysOrdinal(Number(d)));
-  if (days.includes("last")) parts2.push(s2.weekdaysLastDay);
-  return s2.weekdaysOnThe(joinWords(parts2));
-}
 function weekdays(element) {
-  return HANDLES2.get(element) ?? null;
+  return controllerOf(element, WeekdayPicker)?.handle ?? null;
 }
 function weekdaysOf(element) {
-  return HANDLES2.get(element)?.values() ?? [];
+  return weekdays(element)?.values() ?? [];
 }
 function setWeekdays(element, values) {
-  HANDLES2.get(element)?.set(values);
+  weekdays(element)?.set(values);
 }
-function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: weekOption } = {}) {
-  const cleanups = [];
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(WEEKDAYS) ? [root] : [],
-      ...root.querySelectorAll(WEEKDAYS)
-    ]
-  );
-  for (const el16 of found) {
-    if (HANDLES2.has(el16)) continue;
-    const s2 = getStrings();
-    const doc = el16.ownerDocument;
-    const id = `kp-weekdays-${++seq3}`;
-    const month = el16.dataset.kpDays === "month";
-    const locale = resolveLocale(localeOption ?? el16.dataset.kpLocale, el16);
-    const firstDay = weekStartsOn(locale, el16.dataset.kpWeekStartsOn === void 0 ? weekOption : Number(el16.dataset.kpWeekStartsOn));
-    const narrow = el16.dataset.kpDayNames === "narrow";
-    const min = el16.dataset.kpMin === void 0 ? 1 : Math.max(0, Number(el16.dataset.kpMin) || 0);
-    const showSummary = el16.dataset.kpSummary !== "false";
-    const presetsAttr = el16.dataset.kpPresets;
-    const presets = month || presetsAttr === "false" ? [] : (presetsAttr ? presetsAttr.split(/[\s,]+/) : [...WEEKDAY_PRESETS]).filter((p) => p in SETS);
-    const disabled2 = el16.hasAttribute("data-kp-disabled");
-    el16.classList.add("kp-weekdays");
-    if (!el16.hasAttribute("role")) el16.setAttribute("role", "group");
-    const label = el16.getAttribute("aria-label") ?? s2.weekdaysGroup;
-    if (!el16.hasAttribute("aria-label") && !el16.hasAttribute("aria-labelledby")) el16.setAttribute("aria-label", label);
-    const group = doc.createElement("div");
-    group.className = `kp-segmented kp-segmented--chips kp-weekdays__chips${month ? " kp-weekdays__chips--month" : ""}`;
-    group.dataset.kpSegmented = "multi";
-    group.dataset.kpSegmentedCollapse = "false";
-    group.setAttribute("role", "group");
-    group.setAttribute("aria-label", label);
-    if (disabled2) group.setAttribute("aria-disabled", "true");
-    const shortNames = dayNames(narrow ? "narrow" : "short", locale);
-    const longNames = dayNames("long", locale);
-    const items = month ? [
-      ...Array.from({ length: 31 }, (_, i) => ({ value: String(i + 1), label: String(i + 1), hint: s2.weekdaysOrdinal(i + 1) })),
-      { value: "last", label: s2.weekdaysLast, hint: s2.weekdaysLastDay }
-    ] : [0, 1, 2, 3, 4, 5, 6].map((i) => (i + firstDay) % 7).map((d) => ({ value: String(d), label: shortNames[d] ?? "", hint: longNames[d] ?? "" }));
-    const summary2 = doc.createElement("p");
-    summary2.className = "kp-weekdays__summary";
-    summary2.id = `${id}-summary`;
-    summary2.setAttribute("aria-live", "polite");
-    summary2.hidden = !showSummary;
-    const why = doc.createElement("p");
-    why.className = "kp-field__error kp-weekdays__why";
-    why.id = `${id}-why`;
-    why.hidden = true;
-    const reason = doc.createElement("p");
-    reason.className = "kp-weekdays__reason";
-    reason.id = `${id}-reason`;
-    const reasonText = el16.dataset.kpDisabledReason;
-    reason.hidden = !(disabled2 && reasonText);
-    reason.textContent = disabled2 && reasonText ? reasonText : "";
-    const quick = doc.createElement("div");
-    quick.className = "kp-weekdays__presets";
-    quick.setAttribute("role", "group");
-    quick.setAttribute("aria-label", s2.weekdaysPresets);
-    quick.hidden = presets.length === 0;
-    const quickButtons = /* @__PURE__ */ new Map();
-    for (const name of presets) {
-      const button6 = doc.createElement("button");
-      button6.type = "button";
-      button6.className = "kp-button kp-button--ghost kp-button--sm kp-weekdays__preset";
-      button6.dataset.kpWeekdaysPreset = name;
-      button6.disabled = disabled2;
-      button6.setAttribute("aria-pressed", "false");
-      button6.textContent = name === "weekdays" ? s2.weekdaysPresetWeekdays : name === "weekend" ? s2.weekdaysPresetWeekend : s2.weekdaysPresetEvery;
-      quick.append(button6);
-      quickButtons.set(name, button6);
-    }
-    el16.replaceChildren(group, quick, summary2, why, reason);
-    setSegmentedItems(group, items);
-    const detachSegmented = attachSegmented(el16);
-    const picked = () => getSegmentedValues(group);
-    const values = () => month ? (
-      /** @type {(number | 'last')[]} */
-      picked().map((v) => v === "last" ? "last" : Number(v)).sort((a, b) => a === "last" ? 1 : b === "last" ? -1 : a - b)
-    ) : picked().map(Number).sort((a, b) => (a - firstDay + 7) % 7 - (b - firstDay + 7) % 7);
-    const words3 = () => month ? monthSummary(values()) : weekdaySummary(
-      /** @type {number[]} */
-      values(),
-      { firstDay, names: dayNames("short", locale) }
-    );
-    const valid = () => values().length >= min;
-    const paint12 = () => {
-      const have = values();
-      summary2.textContent = words3();
-      const ok = have.length >= min;
-      why.hidden = ok;
-      why.textContent = ok ? "" : s2.weekdaysMin(min);
-      const described = [showSummary ? summary2.id : "", ok ? "" : why.id, reason.hidden ? "" : reason.id].filter(Boolean).join(" ");
-      if (described) el16.setAttribute("aria-describedby", described);
-      else el16.removeAttribute("aria-describedby");
-      el16.toggleAttribute("data-kp-invalid", !ok);
-      if (!ok) el16.setAttribute("aria-invalid", "true");
-      else el16.removeAttribute("aria-invalid");
-      for (const [name, button6] of quickButtons) {
-        const set2 = SETS[
-          /** @type {keyof typeof SETS} */
-          name
-        ];
-        button6.setAttribute("aria-pressed", String(!month && set2.length === have.length && set2.every((d) => have.includes(d))));
-      }
-    };
-    const set = (next2) => {
-      const wanted = new Set(
-        next2.map((v) => month ? String(v).toLowerCase() === "last" ? "last" : String(Math.round(Number(v))) : String(dayNumber(v))).filter((v) => month ? v === "last" || Number(v) >= 1 && Number(v) <= 31 : v !== "null")
-      );
-      setSegmentedValues(group, wanted);
-      paint12();
-    };
-    const change2 = (fire2) => {
-      paint12();
-      if (fire2)
-        el16.dispatchEvent(new CustomEvent(WEEKDAYS_EVENT, { bubbles: true, detail: { values: values(), summary: words3(), valid: valid() } }));
-    };
-    const onChips = (event) => {
-      if (event.target !== group) return;
-      change2(true);
-    };
-    const onPreset = (event) => {
-      const button6 = event.target instanceof Element ? event.target.closest("[data-kp-weekdays-preset]") : null;
-      if (!(button6 instanceof HTMLButtonElement) || button6.disabled || !quick.contains(button6)) return;
-      const name = (
-        /** @type {keyof typeof SETS} */
-        button6.dataset.kpWeekdaysPreset
-      );
-      const same = button6.getAttribute("aria-pressed") === "true";
-      set(same ? [] : SETS[name]);
-      change2(true);
-    };
-    group.addEventListener(SEGMENTED_EVENT, onChips);
-    quick.addEventListener("click", onPreset);
-    const initial = (el16.dataset.kpValue ?? "").split(/[\s,]+/).map((v) => v.trim()).filter(Boolean);
-    set(initial);
-    paint12();
-    const handle = { element: el16, values, set, summary: words3, valid };
-    HANDLES2.set(el16, handle);
-    cleanups.push(() => {
-      group.removeEventListener(SEGMENTED_EVENT, onChips);
-      quick.removeEventListener("click", onPreset);
-      detachSegmented();
-      HANDLES2.delete(el16);
-      el16.replaceChildren();
-      el16.removeAttribute("aria-describedby");
-      el16.removeAttribute("aria-invalid");
-      el16.removeAttribute("data-kp-invalid");
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
+function attachWeekdays(root = document, options = {}) {
+  return attachAll(root, WEEKDAYS, WeekdayPicker, options);
 }
-var WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, SETS, NAMES2, HANDLES2, seq3;
 var init_weekdays = __esm({
   "js/weekdays.js"() {
     "use strict";
-    init_strings();
-    init_segmented();
-    init_locale();
-    WEEKDAYS = "[data-kp-weekdays]";
-    WEEKDAYS_EVENT = "kp-weekdays-change";
-    WEEKDAY_PRESETS = /** @type {const} */
-    ["weekdays", "weekend", "every"];
-    SETS = {
-      weekdays: [1, 2, 3, 4, 5],
-      weekend: [6, 0],
-      every: [0, 1, 2, 3, 4, 5, 6]
-    };
-    NAMES2 = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-    HANDLES2 = /* @__PURE__ */ new WeakMap();
-    seq3 = 0;
+    init_controller();
+    init_controller32();
+    init_values18();
+    init_values18();
+    init_names();
+    init_summary3();
   }
 });
 
@@ -60816,7 +60961,7 @@ function severityWord2(key) {
   );
 }
 function attachOne2(root) {
-  if (HANDLES3.has(root)) return () => void 0;
+  if (HANDLES2.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
   const id = root.id || (root.id = `kp-quiet-${serial6 += 1}`);
@@ -60981,7 +61126,7 @@ function attachOne2(root) {
     paint12();
   });
   watch2.observe(root, { attributes: true, attributeFilter: ["data-kp-quiet-severities", "data-kp-quiet-label", "data-kp-disabled", "data-kp-state"] });
-  HANDLES3.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
+  HANDLES2.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
   return () => {
     root.removeEventListener(TIME_EVENT, onTime);
     root.removeEventListener(WEEKDAYS_EVENT, onDays);
@@ -60989,14 +61134,14 @@ function attachOne2(root) {
     through.removeEventListener("change", changed2);
     watch2.disconnect();
     root.replaceChildren();
-    HANDLES3.delete(root);
+    HANDLES2.delete(root);
   };
 }
 function quietValue(el16) {
-  return HANDLES3.get(el16)?.value() ?? null;
+  return HANDLES2.get(el16)?.value() ?? null;
 }
 function setQuiet(el16, value) {
-  HANDLES3.get(el16)?.set({ ...HANDLES3.get(el16)?.value() ?? DEFAULT, ...value });
+  HANDLES2.get(el16)?.set({ ...HANDLES2.get(el16)?.value() ?? DEFAULT, ...value });
 }
 function attachQuietHours(root = document) {
   const found = (
@@ -61006,7 +61151,7 @@ function attachQuietHours(root = document) {
   const undo = found.map((el16) => attachOne2(el16));
   return () => undo.forEach((u) => u());
 }
-var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial6, HANDLES3;
+var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial6, HANDLES2;
 var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
@@ -61019,13 +61164,13 @@ var init_quiet_hours = __esm({
     ["critical", "warning", "info", "ok"];
     DEFAULT = { on: false, from: "22:00", to: "07:00", days: [0, 1, 2, 3, 4, 5, 6], through: ["critical"] };
     serial6 = 0;
-    HANDLES3 = /* @__PURE__ */ new WeakMap();
+    HANDLES2 = /* @__PURE__ */ new WeakMap();
   }
 });
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -61116,7 +61261,7 @@ var init_build11 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values18();
+    init_values19();
     make19 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -61149,7 +61294,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values18();
+    init_values19();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -61158,13 +61303,13 @@ var init_title = __esm({
 
 // js/question-card/core.js
 var QuestionCore;
-var init_core14 = __esm({
+var init_core15 = __esm({
   "js/question-card/core.js"() {
     "use strict";
     init_controller();
     init_freshness();
     init_strings();
-    init_values18();
+    init_values19();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -61281,9 +61426,9 @@ var init_run3 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values18();
+    init_values19();
     init_title();
-    init_core14();
+    init_core15();
     QuestionRun = class extends QuestionCore {
       /**
        * @param {HTMLElement} host the card
@@ -61442,7 +61587,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values18();
+    init_values19();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -61493,8 +61638,8 @@ var init_question_card = __esm({
     init_build11();
     init_run3();
     init_spec();
-    init_values18();
-    init_values18();
+    init_values19();
+    init_values19();
   }
 });
 
@@ -61631,7 +61776,7 @@ function feedOptions(el16) {
   };
 }
 var optionAttr, dayKey3;
-var init_options5 = __esm({
+var init_options6 = __esm({
   "js/feed/options.js"() {
     "use strict";
     init_strings();
@@ -61690,7 +61835,7 @@ var init_words3 = __esm({
     "use strict";
     init_strings();
     init_constants30();
-    init_options5();
+    init_options6();
     counted = (n, unit2) => `${n} ${n === 1 ? unit2.one : unit2.many}`;
   }
 });
@@ -61813,7 +61958,7 @@ var init_row3 = __esm({
     init_strings();
     init_constants30();
     init_dom8();
-    init_options5();
+    init_options6();
     init_state21();
     init_words3();
   }
@@ -61868,7 +62013,7 @@ var init_days = __esm({
     init_strings();
     init_constants30();
     init_dom8();
-    init_options5();
+    init_options6();
     init_row3();
     init_words3();
   }
@@ -62011,21 +62156,21 @@ var init_render3 = __esm({
     init_days();
     init_dom8();
     init_frame2();
-    init_options5();
+    init_options6();
     init_words3();
   }
 });
 
 // js/feed/controller.js
 var FeedController;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_constants30();
     init_frame2();
-    init_options5();
+    init_options6();
     init_render3();
     init_state21();
     FeedController = class extends Controller {
@@ -62177,7 +62322,7 @@ var init_api21 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller32();
+    init_controller33();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -62298,7 +62443,7 @@ function mountParts2(el16, p, isPage) {
   p.panel.append(p.head, p.body, p.sourcesBox, p.foot);
   el16.replaceChildren(p.trigger, p.panel, p.voice);
 }
-var init_parts8 = __esm({
+var init_parts9 = __esm({
   "js/notices/parts.js"() {
     "use strict";
   }
@@ -62392,7 +62537,7 @@ var init_row4 = __esm({
   "js/notices/row.js"() {
     "use strict";
     init_freshness();
-    init_parts8();
+    init_parts9();
     severityWord3 = (t, severity) => severity === "critical" ? t.attentionCritical : severity === "warning" ? t.attentionWarning : t.attentionInfo;
   }
 });
@@ -62410,7 +62555,7 @@ var init_view3 = __esm({
     init_strings();
     init_events2();
     init_model6();
-    init_parts8();
+    init_parts9();
     init_row4();
     DATE_LENGTH = 10;
     TIME_START2 = 11;
@@ -62608,12 +62753,12 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
     init_events2();
-    init_parts8();
+    init_parts9();
     init_view3();
     idSeq3 = 0;
     NoticesCentre = class extends NoticesView {
@@ -62749,7 +62894,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller33();
+    init_controller34();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -63211,7 +63356,7 @@ var init_keys13 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -63481,7 +63626,7 @@ var init_api22 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller34();
+    init_controller35();
     init_build12();
     init_commit();
     init_math4();
@@ -63769,7 +63914,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -64002,7 +64147,7 @@ var init_api23 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller35();
+    init_controller36();
     init_list4();
     init_render4();
   }
@@ -64072,7 +64217,7 @@ function similarity(a, b) {
 function nearNames(typed, names, threshold = 0.8, max = 3) {
   return names.map((name) => ({ name, score: similarity(typed, name.label) })).filter(({ score }) => score >= threshold && score < 1).sort((a, b) => b.score - a.score).slice(0, max).map(({ name }) => name);
 }
-var init_names = __esm({
+var init_names2 = __esm({
   "js/usual-picker/names.js"() {
     "use strict";
   }
@@ -64158,7 +64303,7 @@ var init_lookup = __esm({
   "js/usual-picker/lookup.js"() {
     "use strict";
     init_model7();
-    init_names();
+    init_names2();
     exactItem = (m, typed) => m.items.find((i) => normaliseName(i.label) === normaliseName(typed));
     pickedValues = (m) => m.box.hasAttribute("data-kp-tags") ? m.handle.values() : [];
     nearOf2 = (m, typed) => attr7(m, "near", "ask") === "off" ? [] : nearNames(typed, m.items, clamp2(Number(attr7(m, "near-threshold")) || 0.8, 0.5, 1), clamp2(Number(attr7(m, "near-max")) || 3, 1, 5));
@@ -64941,7 +65086,7 @@ var init_wire5 = __esm({
     init_layout2();
     init_lookup();
     init_model7();
-    init_names();
+    init_names2();
     init_picking();
     init_state23();
     init_sync5();
@@ -65025,7 +65170,7 @@ var init_usual_picker = __esm({
   "js/usual-picker.js"() {
     "use strict";
     init_constants33();
-    init_names();
+    init_names2();
     init_attach18();
   }
 });
@@ -65138,7 +65283,7 @@ var init_group6 = __esm({
 
 // js/toggle/parts.js
 var SAY_AFTER_MS, COUNT_DIGITS, ToggleParts;
-var init_parts9 = __esm({
+var init_parts10 = __esm({
   "js/toggle/parts.js"() {
     "use strict";
     init_controller();
@@ -65340,7 +65485,7 @@ var init_handle4 = __esm({
   "js/toggle/handle.js"() {
     "use strict";
     init_group6();
-    init_parts9();
+    init_parts10();
     ToggleAnswers = class extends ToggleParts {
       /** @param {HTMLElement} button @param {import('../toggle.js').ToggleOptions} [options] */
       constructor(button6, options = {}) {
@@ -65445,7 +65590,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller36 = __esm({
+var init_controller37 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -65636,7 +65781,7 @@ var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller36();
+    init_controller37();
     init_group6();
     init_group6();
   }
@@ -65644,7 +65789,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -65713,7 +65858,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values19();
+    init_values20();
   }
 });
 
@@ -65727,12 +65872,12 @@ function toneMap(text) {
   return map;
 }
 var shown4, near, ChipCore;
-var init_core15 = __esm({
+var init_core16 = __esm({
   "js/version-delta/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values19();
+    init_values20();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -65817,8 +65962,8 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values19();
-    init_core15();
+    init_values20();
+    init_core16();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
       markChip(v) {
@@ -65925,10 +66070,10 @@ var init_view4 = __esm({
 
 // js/version-delta/controller.js
 var VersionChip;
-var init_controller37 = __esm({
+var init_controller38 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values19();
+    init_values20();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -66032,9 +66177,9 @@ var init_version_delta = __esm({
   "js/version-delta.js"() {
     "use strict";
     init_controller();
-    init_controller37();
-    init_values19();
-    init_values19();
+    init_controller38();
+    init_values20();
+    init_values20();
     init_level();
     init_links2();
   }
@@ -66042,7 +66187,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values20 = __esm({
+var init_values21 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -66109,11 +66254,11 @@ var init_order = __esm({
 
 // js/deplist/core.js
 var made4, DeplistCore;
-var init_core16 = __esm({
+var init_core17 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values20();
+    init_values21();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -66224,8 +66369,8 @@ var init_rows5 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values20();
-    init_core16();
+    init_values21();
+    init_core17();
     DeplistRows = class extends DeplistCore {
       /**
        * A thing's name with its identity mark, a link when the list has a template.
@@ -66327,16 +66472,16 @@ var init_rows5 = __esm({
 
 // js/deplist/controller.js
 var DependencyList;
-var init_controller38 = __esm({
+var init_controller39 = __esm({
   "js/deplist/controller.js"() {
     "use strict";
     init_busy_card();
     init_flash();
     init_state_plate();
     init_strings();
-    init_values20();
+    init_values21();
     init_order();
-    init_core16();
+    init_core17();
     init_rows5();
     DependencyList = class extends DeplistRows {
       connect() {
@@ -66511,9 +66656,9 @@ var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
     init_controller();
-    init_controller38();
-    init_values20();
-    init_values20();
+    init_controller39();
+    init_values21();
+    init_values21();
     init_order();
   }
 });
@@ -66559,10 +66704,10 @@ function traceText(hops, stop = "first-refusal") {
   }).join(" > ");
 }
 function trace(el16) {
-  return HANDLES4.get(el16) ?? null;
+  return HANDLES3.get(el16) ?? null;
 }
 function attachOne3(el16) {
-  if (HANDLES4.has(el16)) return () => void 0;
+  if (HANDLES3.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
   el16.classList.add("kp-trace");
@@ -66700,10 +66845,10 @@ function attachOne3(el16) {
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
-  HANDLES4.set(el16, handle);
+  HANDLES3.set(el16, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES4.delete(el16);
+    HANDLES3.delete(el16);
   });
   const watch2 = new MutationObserver(draw7);
   watch2.observe(el16, {
@@ -66749,10 +66894,10 @@ function attachTraces(root = document) {
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES4.has(el16)) attachOne3(el16);
-  HANDLES4.get(el16)?.set(hops);
+  if (!HANDLES3.has(el16)) attachOne3(el16);
+  HANDLES3.get(el16)?.set(hops);
 }
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES4, made5;
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES3, made5;
 var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
@@ -66766,7 +66911,7 @@ var init_path_trace = __esm({
     TRACE_RULE_EVENT = "kp-trace-rule";
     TRACE_SWAP_EVENT = "kp-trace-swap";
     TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES4 = /* @__PURE__ */ new WeakMap();
+    HANDLES3 = /* @__PURE__ */ new WeakMap();
     made5 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -67678,7 +67823,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values21 = __esm({
+var init_values22 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -67798,7 +67943,7 @@ function buildAlert(doc, s2, refused, savedCount, onDismiss) {
   alert.append(body, dismiss);
   return alert;
 }
-var init_parts10 = __esm({
+var init_parts11 = __esm({
   "js/unsaved/parts.js"() {
     "use strict";
   }
@@ -67886,7 +68031,7 @@ var init_paint11 = __esm({
     "use strict";
     init_menu_button();
     init_config();
-    init_parts10();
+    init_parts11();
   }
 });
 
@@ -68016,8 +68161,8 @@ var init_actions5 = __esm({
     init_overlays();
     init_config();
     init_paint11();
-    init_parts10();
-    init_values21();
+    init_parts11();
+    init_values22();
   }
 });
 
@@ -68027,7 +68172,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values21();
+    init_values22();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -68147,7 +68292,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values21();
+    init_values22();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -68422,7 +68567,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller39 = __esm({
+var init_controller40 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -68430,7 +68575,7 @@ var init_controller39 = __esm({
     init_controller();
     init_config();
     init_state24();
-    init_parts10();
+    init_parts11();
     init_actions5();
     init_paint11();
     init_changes();
@@ -68675,7 +68820,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller39();
+    init_controller40();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -69021,7 +69166,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -69326,7 +69471,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller40();
+    init_controller41();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -69464,7 +69609,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values22 = __esm({
+var init_values23 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -69537,7 +69682,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values22();
+    init_values23();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -69809,7 +69954,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values22();
+    init_values23();
   }
 });
 
@@ -69846,13 +69991,13 @@ var init_keys14 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core17 = __esm({
+var init_core18 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
     init_locale();
     init_strings();
-    init_values22();
+    init_values23();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -69968,9 +70113,9 @@ var init_run4 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values22();
+    init_values23();
     init_kinds();
-    init_core17();
+    init_core18();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -70139,7 +70284,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values22();
+    init_values23();
     init_kinds();
     init_keys14();
     init_run4();
@@ -70261,8 +70406,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values22();
-    init_values22();
+    init_values23();
+    init_values23();
     init_kinds();
     init_glyph();
     init_open3();
@@ -71163,7 +71308,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values23 = __esm({
+var init_values24 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -71288,7 +71433,7 @@ function buildFields(el16, o, inputs, w, s2) {
   }
   return { fields, boxes };
 }
-function buildLines(doc, id) {
+function buildLines2(doc, id) {
   const why = make28(doc, "p", "kp-field__error kp-slider__why");
   why.id = `${id}-why`;
   why.setAttribute("role", "alert");
@@ -71302,7 +71447,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build13 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values23();
+    init_values24();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -71316,13 +71461,13 @@ var init_build13 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core18 = __esm({
+var init_core19 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build13();
-    init_values23();
+    init_values24();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -71343,7 +71488,7 @@ var init_core18 = __esm({
         this.bubbles = [];
         this.boxes = [];
         this.pressed = false;
-        const { why, skeleton: skeleton2 } = buildLines(this.doc, this.id);
+        const { why, skeleton: skeleton2 } = buildLines2(this.doc, this.id);
         this.why = why;
         this.skeleton = skeleton2;
         this.handle = { element: el16, values: () => this.values.slice(), set: (next2) => this.setValues(next2), setState: (state12) => this.setState(state12), text: () => this.fullText() };
@@ -71437,12 +71582,12 @@ var init_core18 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build13();
-    init_core18();
-    init_values23();
+    init_core19();
+    init_values24();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -71667,9 +71812,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller41();
-    init_values23();
-    init_values23();
+    init_controller42();
+    init_values24();
+    init_values24();
   }
 });
 
@@ -71835,7 +71980,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -72064,7 +72209,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller42();
+    init_controller43();
     init_fields();
     init_fields();
   }
@@ -72404,7 +72549,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -72655,7 +72800,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller43();
+    init_controller44();
   }
 });
 
@@ -72698,7 +72843,7 @@ var init_input = __esm({
 
 // js/runs/values.js
 var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS2;
-var init_values24 = __esm({
+var init_values25 = __esm({
   "js/runs/values.js"() {
     "use strict";
     RUNS = "[data-kp-runs]";
@@ -72728,11 +72873,11 @@ function readRunsOptions(el16, nowOption) {
     now: nowOption ?? (Number.isFinite(fixed) ? () => fixed : () => Date.now())
   };
 }
-var init_options6 = __esm({
+var init_options7 = __esm({
   "js/runs/options.js"() {
     "use strict";
     init_chart();
-    init_values24();
+    init_values25();
   }
 });
 
@@ -72763,7 +72908,7 @@ function buildRunsParts(el16, id, titleText) {
   live4.setAttribute("aria-live", "polite");
   return { title, stage, list, note: note2, button: button6, live: live4 };
 }
-var init_parts11 = __esm({
+var init_parts12 = __esm({
   "js/runs/parts.js"() {
     "use strict";
   }
@@ -72797,22 +72942,22 @@ var init_time3 = __esm({
     init_weekdays();
     init_freshness();
     init_chart();
-    init_values24();
+    init_values25();
     two6 = (n) => String(n).padStart(2, "0");
   }
 });
 
 // js/runs/core.js
 var seq6, RunsCore;
-var init_core19 = __esm({
+var init_core20 = __esm({
   "js/runs/core.js"() {
     "use strict";
     init_controller();
     init_busy_card();
     init_strings();
     init_input();
-    init_options6();
-    init_parts11();
+    init_options7();
+    init_parts12();
     init_time3();
     seq6 = 0;
     RunsCore = class extends Controller {
@@ -72879,7 +73024,7 @@ var RunsRows;
 var init_rows7 = __esm({
   "js/runs/rows.js"() {
     "use strict";
-    init_core19();
+    init_core20();
     init_time3();
     RunsRows = class extends RunsCore {
       /** The marks of a run: the clock turning before it, and the app's own conflict. @param {import('./core.js').Run} run @param {number | undefined} before */
@@ -72979,11 +73124,11 @@ var init_note2 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note2();
-    init_values24();
+    init_values25();
     RunsList = class extends RunsNote {
       /**
        * @param {HTMLElement} host
@@ -73090,9 +73235,9 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller44();
-    init_values24();
-    init_values24();
+    init_controller45();
+    init_values25();
+    init_values25();
     init_time3();
   }
 });
@@ -73418,7 +73563,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -73677,7 +73822,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller45();
+    init_controller46();
     init_choices();
   }
 });
@@ -73741,7 +73886,7 @@ function setGraphOptions(el16, options) {
     else el16.setAttribute(name, value === true ? "" : String(value));
   }
 }
-var init_options7 = __esm({
+var init_options8 = __esm({
   "js/graph/options.js"() {
     "use strict";
   }
@@ -74529,7 +74674,7 @@ var init_draw11 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
-    init_options7();
+    init_options8();
     init_view5();
     init_instance3();
     init_layout3();
@@ -75041,7 +75186,7 @@ var init_attach20 = __esm({
     init_constants38();
     init_instance3();
     init_api26();
-    init_options7();
+    init_options8();
     init_layout3();
     init_draw11();
     init_view5();
@@ -75078,7 +75223,7 @@ var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
     init_constants38();
-    init_options7();
+    init_options8();
     init_layout3();
     init_labels3();
     init_api26();
@@ -78531,7 +78676,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -78635,7 +78780,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller46();
+    init_controller47();
     init_state28();
     init_state28();
     init_matrix2();
@@ -80012,7 +80157,7 @@ function applyTools(root) {
   search.hidden = !wanted.includes("search");
   bar.hidden = tools.hidden && search.hidden;
 }
-var init_parts12 = __esm({
+var init_parts13 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
@@ -80399,7 +80544,7 @@ var init_api30 = __esm({
     init_newpill();
     init_levels();
     init_model10();
-    init_parts12();
+    init_parts13();
     init_reads();
     init_refresh();
     init_rows9();
@@ -80608,7 +80753,7 @@ var init_attach24 = __esm({
     init_api30();
     init_constants42();
     init_model10();
-    init_parts12();
+    init_parts13();
     init_reads();
     init_rows9();
   }

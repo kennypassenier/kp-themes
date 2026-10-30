@@ -304,4 +304,11 @@ export const CONTROLLER_PART_FILES = [
     'js/version-delta/links.js',
     'js/version-delta/values.js',
     'js/version-delta/view.js',
+    'js/weekdays/controller.js',
+    'js/weekdays/core.js',
+    'js/weekdays/names.js',
+    'js/weekdays/options.js',
+    'js/weekdays/parts.js',
+    'js/weekdays/summary.js',
+    'js/weekdays/values.js',
 ];

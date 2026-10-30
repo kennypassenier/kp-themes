@@ -232,6 +232,7 @@
         { "path": "js/range/*.js", "tags": ["@component:data"], "why": "the range picker [kpadopt4-ideas]" },
         { "path": "js/compare.js", "tags": ["@component:media"], "why": "the compare slider [kpadopt4-ideas]" },
         { "path": "js/weekdays.js", "tags": ["@component:picker"], "why": "the weekday picker [kpadopt5-time]" },
+        { "path": "js/weekdays/*.js", "tags": ["@component:picker"], "why": "the weekday picker [kpadopt5-time]" },
         { "path": "js/runs.js", "tags": ["@component:data"], "why": "the next-runs list [kpadopt5-time]" },
         { "path": "js/runs/*.js", "tags": ["@component:data"], "why": "the next-runs list [kpadopt5-time]" },
         { "path": "js/snooze.js", "tags": ["@component:picker"], "why": "the snooze picker [kpadopt5-time]" },
