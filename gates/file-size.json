@@ -20,9 +20,6 @@
         "note": "Kenny, 2026-10-30: a file of that size is absolutely unacceptable. These files predate the 500-line limit and are split in phase 2. The list may only shrink; a listed file may not grow.",
         "files": {
             "css/_rules.css": 692,
-            "gates/check-verdicts.test.mjs": 526,
-            "gates/gates.test.mjs": 1600,
-            "gates/site/extractors.test.mjs": 503,
             "js/anchors.js": 555,
             "js/auto-refresh.js": 596,
             "js/auto.js": 537,
