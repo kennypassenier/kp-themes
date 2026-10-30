@@ -1,9 +1,5 @@
-/** A share bar the page fills with setStackbar(). */
-export declare const STACKBAR = "[data-kp-stackbar]";
-/** Fired on the root when a part or its legend row is pressed: `{ key, part }`. */
-export declare const STACKBAR_PICK_EVENT = "kp-stackbar-pick";
-/** Fired on the root when the Retry of a failed share bar is pressed. */
-export declare const STACKBAR_RETRY_EVENT = "kp-stackbar-retry";
+export { STACKBAR, STACKBAR_PICK_EVENT, STACKBAR_RETRY_EVENT } from './stackbar/values.js';
+export { shareText, stackbarParts } from './stackbar/math.js';
 export type StackbarPart = {
     /**
      * stable id (default the label)
@@ -78,30 +74,31 @@ export type StackbarSpec = {
      */
     picked?: string[];
 };
-/** A share as words: one decimal under ten per cent, whole above. @param {number} share @param {string | undefined} lang */
-export declare function shareText(share: number, lang: string | undefined): string;
 /**
- * The arithmetic of a share bar, with no DOM: the parts as drawn (merged
- * into Other where asked), each with its share of the bar, the free rest,
- * and whether the parts run past the whole.
- * @param {StackbarPart[]} parts @param {number | undefined} total @param {number} [other]
+ * @typedef {object} StackbarPart
+ * @property {string} [key]    stable id (default the label)
+ * @property {string} label
+ * @property {number} value    in the unit of `total`
+ * @property {string} [tip]    the hover card's text, in place of label, value and share
+ * @property {'warning' | 'destructive'} [tone]  a part that needs attention takes the status colour
  */
-export declare function stackbarParts(parts: StackbarPart[], total: number | undefined, other?: number): {
-    parts: {
-        key: string;
-        label: string;
-        value: number;
-        tip?: string;
-        tone?: 'warning' | 'destructive';
-        merged?: number;
-        share: number;
-        width: number;
-    }[];
-    whole: number;
-    sum: number;
-    rest: number;
-    over: number;
-};
+/**
+ * @typedef {object} StackbarSpec
+ * @property {StackbarPart[]} [parts]
+ * @property {number} [total]       the whole; without it, the sum of the parts
+ * @property {string} [title]       a line over the bar
+ * @property {string} [summary]     the words at the head's end (default: the sum of the format over the whole)
+ * @property {(value: number) => string} [format]  how a value reads (default: the number in the page's language)
+ * @property {string} [restLabel]   the free row's label (default the dictionary's `stackbarRest`)
+ * @property {number} [other]       parts under this share are merged into "Other" (default 0, none)
+ * @property {{ at: number, label?: string }[]} [marks]  ticks across the bar at a share of the whole
+ * @property {boolean} [legend]     default true
+ * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
+ * @property {string} [message]     the sentence of an empty or failed bar
+ * @property {boolean} [retry]      false leaves Retry out of a failed bar (a read the page cannot repeat)
+ * @property {string} [label]       the bar's accessible name (default: every part in order)
+ * @property {string[]} [picked]    keys of the parts the page has pressed; given (even empty), the parts are toggle buttons with `aria-pressed`
+ */
 /**
  * Draw (or redraw) a share bar. Calling it again with new numbers keeps the
  * focus on the part it was on, by key.

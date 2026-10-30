@@ -366,6 +366,7 @@
         { "path": "js/thread.js", "tags": ["@component:data"], "why": "the conversation in bubbles [kpadopt5-people]" },
         { "path": "js/thread/*.js", "tags": ["@component:data"], "why": "the conversation in bubbles [kpadopt5-people]" },
         { "path": "js/stackbar.js", "tags": ["@component:data"], "why": "the share bar with its legend [kpadopt4-data]" },
+        { "path": "js/stackbar/*.js", "tags": ["@component:data"], "why": "the share bar with its legend [kpadopt4-data]" },
         { "path": "js/bullets.js", "tags": ["@component:data"], "why": "the bullet list, a value against a threshold [kpadopt4-data]" },
         { "path": "js/code.js", "tags": ["@component:data"], "why": "the code and payload block [kpadopt4-data]" },
         { "path": "js/code/*.js", "tags": ["@component:data"] },
