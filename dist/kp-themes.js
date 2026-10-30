@@ -6072,11 +6072,11 @@ var init_notes = __esm({
        * @param {import('../strings.js').Strings} s
        * @param {() => void} paint called when the fold opens or closes
        */
-      constructor(gate, before, s2, paint15) {
+      constructor(gate, before, s2, paint14) {
         this.gate = gate;
         this.before = before;
         this.s = s2;
-        this.paint = paint15;
+        this.paint = paint14;
         this.fold = null;
         this.opened = false;
       }
@@ -7763,7 +7763,7 @@ function install6(ctx) {
         (el16) => view.getComputedStyle(el16).getPropertyValue(LIGHT_KNOB).trim() === "pointer"
       );
     };
-    const paint15 = () => {
+    const paint14 = () => {
       const here = at;
       if (!here || reduced4()) {
         for (const el16 of lit) clear(el16);
@@ -7793,7 +7793,7 @@ function install6(ctx) {
       queued = view.requestAnimationFrame(() => {
         frames.delete(queued);
         queued = 0;
-        paint15();
+        paint14();
       });
       frames.add(queued);
     };
@@ -7813,7 +7813,7 @@ function install6(ctx) {
         frames.delete(recollect);
         recollect = 0;
         collect2();
-        paint15();
+        paint14();
       });
       frames.add(recollect);
     });
@@ -7836,7 +7836,7 @@ function install6(ctx) {
       /** @param {PointerEvent | MouseEvent} event */
       put(event) {
         at = "pointerType" in event && event.pointerType === "touch" ? null : { x: event.clientX, y: event.clientY };
-        paint15();
+        paint14();
       }
     };
   };
@@ -15585,10 +15585,10 @@ function attachTileKeys(root = document) {
   const view = doc.defaultView;
   if (!view) return () => {
   };
-  const boards2 = [...root instanceof HTMLElement && root.matches(TILES_KEYS) ? [root] : [], .../** @type {NodeListOf<HTMLElement>} */
+  const boards = [...root instanceof HTMLElement && root.matches(TILES_KEYS) ? [root] : [], .../** @type {NodeListOf<HTMLElement>} */
   root.querySelectorAll(TILES_KEYS)];
   const made7 = [];
-  for (const board2 of boards2) {
+  for (const board2 of boards) {
     if (controllerOf(board2, TileBoard)) continue;
     const fresh = attachOne(board2, TileBoard, { view });
     if (fresh) made7.push(fresh);
@@ -16137,7 +16137,7 @@ var init_group2 = __esm({
           /** @type {HTMLElement[]} */
           [...el16.querySelectorAll("[data-kp-chart-range]")].filter((b) => b.closest(CHART_GROUP) === el16)
         );
-        const paint15 = () => {
+        const paint14 = () => {
           for (const b of buttons) b.setAttribute("aria-pressed", String(b.dataset.kpChartRange === el16.dataset.kpChartSpan));
         };
         const onClick = (event) => {
@@ -16150,7 +16150,7 @@ var init_group2 = __esm({
           if (span4 == null) return;
           el16.dataset.kpChartSpan = range;
           this.span = span4;
-          paint15();
+          paint14();
           this.zoom = null;
           el16.dispatchEvent(new CustomEvent(CHART_RANGE_EVENT, { bubbles: true, detail: { range, span: span4 } }));
           this.setZoom(null);
@@ -16164,7 +16164,7 @@ var init_group2 = __esm({
             value: b.dataset.kpChartRange
           });
         }
-        paint15();
+        paint14();
         this.stops.push(() => buttons.forEach((b) => b.removeEventListener("click", onClick)));
       }
       /** The newest point of any plot in the group. */
@@ -19443,7 +19443,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     window.clearInterval(timer2);
     timer2 = 0;
   };
-  const paint15 = () => {
+  const paint14 = () => {
     const why = disabledWhy();
     const bad = invalidWhy();
     const empty = input.value === "";
@@ -19468,7 +19468,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     if (!shown5) return;
     shown5 = false;
     stop();
-    paint15();
+    paint14();
     say18(s2.secretHidden);
     field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
   };
@@ -19476,7 +19476,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     left -= 1;
     if (left === 10 && seconds > 10) say18(s2.secretHidesIn(10));
     if (left <= 0) hide2("timer");
-    else paint15();
+    else paint14();
   };
   const show = (reason = "press") => {
     if (shown5 || disabledWhy() !== void 0 || input.value === "") return;
@@ -19485,7 +19485,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     drain.style.animation = "none";
     void drain.offsetWidth;
     drain.style.removeProperty("animation");
-    paint15();
+    paint14();
     say18(s2.secretShown(seconds));
     field2.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
     if (seconds > 0) timer2 = window.setInterval(tick6, 1e3);
@@ -19498,7 +19498,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
   const onInput = () => {
     pasteProblem = "";
     if (input.value === "" && shown5) hide2("call");
-    else paint15();
+    else paint14();
   };
   const onPaste = async () => {
     if (!paste) return;
@@ -19507,7 +19507,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
       text = await navigator.clipboard.readText();
     } catch {
       pasteProblem = s2.secretPasteBlocked;
-      paint15();
+      paint14();
       say18(pasteProblem);
       input.focus();
       return;
@@ -19539,7 +19539,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     window.clearTimeout(copiedTimer);
     copiedTimer = window.setTimeout(() => {
       delete copy3.dataset.kpCopied;
-      paint15();
+      paint14();
     }, copiedMs);
     cancelClear();
     const wait = clearDelay(field2.dataset.kpSecretClear, clearAfterMs);
@@ -19560,10 +19560,10 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
   copy3?.addEventListener("click", onCopy);
   field2.addEventListener("focusout", onFocusOut);
   doc.addEventListener("visibilitychange", onAway);
-  paint15();
+  paint14();
   const watch2 = new MutationObserver(() => {
     if (disabledWhy() !== void 0) hide2("call");
-    paint15();
+    paint14();
   });
   watch2.observe(field2, { attributes: true, attributeFilter: ["data-kp-secret-disabled", "data-kp-secret-invalid"] });
   const stopOptions = watchOptions(field2, ["data-kp-secret-ttl"], () => {
@@ -19573,7 +19573,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
       left = seconds;
       if (seconds > 0) timer2 = window.setInterval(tick6, 1e3);
     }
-    paint15();
+    paint14();
   });
   secrets.set(field2, { reveal: (reason) => show(reason), hide: (reason) => hide2(reason) });
   return () => {
@@ -21619,7 +21619,7 @@ function setIdmarkGroup(el16, people, { max = 4, size: size2 = "md", round: roun
   el16.replaceChildren(...marks, ...tail);
 }
 function attachIdmarks(root = document) {
-  const paint15 = () => {
+  const paint14 = () => {
     const sets = /* @__PURE__ */ new Map();
     const all = (
       /** @type {HTMLElement[]} */
@@ -21648,7 +21648,7 @@ function attachIdmarks(root = document) {
       setIdmark(el16, name, { slot: want });
     }
   };
-  paint15();
+  paint14();
   const View = (root instanceof Document ? root : root.ownerDocument)?.defaultView;
   if (!View?.MutationObserver) return () => {
   };
@@ -21661,7 +21661,7 @@ function attachIdmarks(root = document) {
     queued = true;
     View.queueMicrotask(() => {
       queued = false;
-      paint15();
+      paint14();
     });
   });
   observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-kp-idmark", ...AVATAR_ATTRIBUTES] });
@@ -36575,7 +36575,7 @@ function attachSelect(select2, { loop = false, typeaheadMs = 500 } = {}) {
   select2.after(list);
   select2.setAttribute("aria-controls", list.id);
   select2.setAttribute("aria-expanded", "false");
-  const build9 = () => {
+  const build8 = () => {
     list.replaceChildren(
       ...[...select2.options].map((native, i) => {
         const option = document.createElement("li");
@@ -36610,7 +36610,7 @@ function attachSelect(select2, { loop = false, typeaheadMs = 500 } = {}) {
   };
   const open4 = () => {
     if (select2.disabled) return;
-    build9();
+    build8();
     list.hidden = false;
     lower();
     lower = raiseOverlay(list, place3);
@@ -36688,15 +36688,15 @@ function attachSelect(select2, { loop = false, typeaheadMs = 500 } = {}) {
     }, 0);
   };
   const onChange = () => {
-    if (isOpen3()) build9();
+    if (isOpen3()) build8();
   };
   select2.addEventListener("keydown", onKeyDownCapture, { capture: true });
   select2.addEventListener("mousedown", onMouseDown);
   select2.addEventListener("focusout", onFocusOut);
   select2.addEventListener("change", onChange);
   list.addEventListener("mousedown", onListMouseDown);
-  build9();
-  const handle = { element: select2, list, open: open4, close, refresh: build9 };
+  build8();
+  const handle = { element: select2, list, open: open4, close, refresh: build8 };
   selectHandles.set(select2, handle);
   select2.dataset.kpSelectAttached = "";
   const detach = () => {
@@ -52165,6 +52165,489 @@ var init_gantt = __esm({
   }
 });
 
+// js/pipeline/values.js
+var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make18;
+var init_values2 = __esm({
+  "js/pipeline/values.js"() {
+    "use strict";
+    PIPELINE = "[data-kp-pipeline]";
+    PIPELINE_OPEN_EVENT = "kp-pipeline-open";
+    PIPELINE_RETRY_EVENT = "kp-pipeline-retry";
+    PIPELINE_MORE_EVENT = "kp-pipeline-more";
+    GHOST_CARDS = 2;
+    GHOST_CARDS_CLOSED = 3;
+    PERCENT2 = 100;
+    make18 = (doc, tag, className, text) => {
+      const el16 = doc.createElement(tag);
+      if (className) el16.className = className;
+      if (text != null) el16.textContent = text;
+      return el16;
+    };
+  }
+});
+
+// js/pipeline/core.js
+var PipelineCore;
+var init_core4 = __esm({
+  "js/pipeline/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_values2();
+    PipelineCore = class extends Controller {
+      /**
+       * @param {HTMLElement} el
+       * @param {{ strings?: Partial<import('../strings.js').Strings> }} [options]
+       */
+      constructor(el16, options = {}) {
+        super(el16, options);
+        this.strings = resolveStrings(options.strings);
+        this.lanes = [];
+        this.cards = [];
+        this.state = "ready";
+        this.words = "";
+        this.open = /* @__PURE__ */ new Set();
+        this.selected = null;
+        this.active = null;
+        const doc = el16.ownerDocument;
+        this.board = make18(doc, "div", "kp-pipeline__board");
+        this.closed = make18(doc, "div", "kp-pipeline__closed");
+        this.plate = make18(doc, "div", "kp-pipeline__plate");
+        this.live = make18(doc, "p", "kp-sr-only kp-pipeline__live");
+        this.plateKey = "";
+        this.nodes = /* @__PURE__ */ new Map();
+        this.busy = null;
+        this.leaving = null;
+        this.drawn = false;
+      }
+      /** A board that was loading or empty is ready once data arrives. */
+      settle() {
+        if (this.state === "loading" || this.state === "empty") this.state = "ready";
+      }
+      /** Whether the plate must be rebuilt for what it says now; remembers it. @param {string} key */
+      plateChanged(key) {
+        if (this.plateKey === key) return false;
+        this.plateKey = key;
+        return true;
+      }
+      /** Keep the loading card that was opened. @param {import('../busy-card.js').BusyCard} card */
+      holdBusy(card) {
+        this.busy = card;
+      }
+      /** Hand over the loading card and forget it. @returns {import('../busy-card.js').BusyCard | null} */
+      takeBusy() {
+        const card = this.busy;
+        this.busy = null;
+        return card;
+      }
+      /** The board's limit per lane; 0 shows every card. */
+      limit() {
+        return Math.max(0, Number.parseInt(this.host.dataset.kpPipelineLimit ?? "", 10) || 0);
+      }
+      /** Build the frame once. */
+      build() {
+        const doc = this.host.ownerDocument;
+        this.board.setAttribute("role", "list");
+        this.closed.setAttribute("role", "list");
+        this.plate.hidden = true;
+        this.live.setAttribute("role", "status");
+        const frame3 = make18(doc, "div", "kp-pipeline__frame");
+        frame3.append(this.board);
+        this.host.replaceChildren(frame3, this.closed, this.plate, this.live);
+      }
+      /** The cards a person can reach, per lane (the board's lanes, then the closed ones). @returns {HTMLElement[][]} */
+      reachable() {
+        return [...this.host.querySelectorAll(".kp-pipeline__lane")].map((lane) => (
+          /** @type {HTMLElement[]} */
+          [...lane.querySelectorAll(".kp-pipeline__card:not(.kp-pipeline__ghost), .kp-pipeline__more")]
+        )).filter((l) => l.length);
+      }
+      /** One tab stop: the active card. */
+      syncTabStops() {
+        const all = this.reachable().flat();
+        let target = all.find((n) => n.dataset.kpId === this.active || n.dataset.kpPipelineMore === this.active);
+        target ??= all[0];
+        for (const n of all) n.tabIndex = n === target ? 0 : -1;
+      }
+    };
+  }
+});
+
+// js/pipeline/lanes.js
+var PipelineLanes;
+var init_lanes3 = __esm({
+  "js/pipeline/lanes.js"() {
+    "use strict";
+    init_core4();
+    init_values2();
+    PipelineLanes = class extends PipelineCore {
+      /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
+      cardShell(card) {
+        const doc = this.host.ownerDocument;
+        const tag = card.href ? "A" : "BUTTON";
+        let node = this.nodes.get(card.id);
+        if (!node || node.tagName !== tag) {
+          node?.remove();
+          node = card.href ? make18(doc, "a", "kp-pipeline__card") : make18(doc, "button", "kp-pipeline__card");
+          if (node instanceof HTMLButtonElement) node.type = "button";
+          node.append(make18(doc, "span", "kp-pipeline__mark"), make18(doc, "span", "kp-pipeline__title"), make18(doc, "span", "kp-pipeline__sub"));
+          node.append(make18(doc, "span", "kp-pipeline__meta"));
+          this.nodes.set(card.id, node);
+        }
+        return node;
+      }
+      /**
+       * One card, made or kept by id.
+       * @param {import('./core.js').PipelineCard} card @param {import('./core.js').PipelineLane | undefined} lane
+       */
+      cardNode(card, lane) {
+        const node = this.cardShell(card);
+        if (node instanceof HTMLAnchorElement && card.href) node.href = card.href;
+        node.dataset.kpId = card.id;
+        node.setAttribute("role", "listitem");
+        if (lane?.tone) node.dataset.kpTone = String(lane.tone);
+        else delete node.dataset.kpTone;
+        const [mark, title, sub, meta] = (
+          /** @type {HTMLElement[]} */
+          [...node.children]
+        );
+        if (mark) {
+          mark.textContent = card.mark ?? "";
+          mark.hidden = !card.mark;
+          mark.setAttribute("aria-hidden", "true");
+        }
+        if (title) title.textContent = card.title;
+        if (sub) {
+          sub.textContent = card.sub ?? "";
+          sub.hidden = !card.sub;
+        }
+        if (meta) {
+          meta.textContent = card.meta ?? "";
+          meta.hidden = !card.meta;
+        }
+        node.title = [card.title, card.sub, card.meta].filter(Boolean).join(" \xB7 ");
+        node.toggleAttribute("data-kp-dimmed", card.dimmed === true);
+        if (card.id === this.selected) node.setAttribute("aria-current", "true");
+        else node.removeAttribute("aria-current");
+        return node;
+      }
+      /** Whether the lanes are drawn as placeholders: loading, or the loading card is still leaving. */
+      loading() {
+        return this.state === "loading" || this.leaving !== null;
+      }
+      /** The lane's head: its name, a flag for a failing stage, and the exact count. @param {import('./core.js').PipelineLane} lane @param {number} count @param {string} id */
+      laneHead(lane, count2, id) {
+        const doc = this.host.ownerDocument;
+        const head = make18(doc, "header", "kp-pipeline__head");
+        const name = make18(doc, "h3", "kp-pipeline__name", lane.label);
+        name.id = id;
+        const counter5 = make18(doc, "span", "kp-pipeline__count");
+        if (this.loading()) counter5.append(make18(doc, "span", "kp-skeleton kp-pipeline__ghost-count"));
+        else counter5.textContent = String(count2);
+        if (lane.danger) head.append(name, make18(doc, "span", "kp-pipeline__flag", this.strings.pipelineDanger), counter5);
+        else head.append(name, counter5);
+        return head;
+      }
+      /** The placeholder cards of a loading lane. @param {boolean} closed */
+      ghosts(closed) {
+        const doc = this.host.ownerDocument;
+        const out = [];
+        for (let i = 0; i < (closed ? GHOST_CARDS_CLOSED : GHOST_CARDS); i += 1) {
+          const ghost = make18(doc, "span", "kp-pipeline__card kp-pipeline__ghost");
+          ghost.setAttribute("aria-hidden", "true");
+          ghost.append(make18(doc, "span", "kp-skeleton"), make18(doc, "span", "kp-skeleton"));
+          out.push(ghost);
+        }
+        return out;
+      }
+      /** The cards of a lane, as many as its limit allows, and the toggle for the rest. @param {import('./core.js').PipelineLane} lane @param {import('./core.js').PipelineCard[]} cards @param {HTMLElement} list */
+      fillCards(lane, cards2, list) {
+        const doc = this.host.ownerDocument;
+        const s2 = this.strings;
+        const limit = lane.closed ? 0 : this.limit();
+        const open4 = this.open.has(lane.key);
+        const shown5 = limit > 0 && !open4 ? cards2.slice(0, limit) : cards2;
+        for (const card of shown5) list.append(this.cardNode(card, lane));
+        if (limit > 0 && cards2.length > limit) {
+          const more = make18(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-pipeline__more");
+          more.type = "button";
+          more.dataset.kpPipelineMore = lane.key;
+          more.setAttribute("aria-expanded", String(open4));
+          more.textContent = open4 ? s2.pipelineLess : s2.pipelineMore(cards2.length - limit);
+          list.append(more);
+        }
+      }
+      /** A lane, made from scratch on every paint (its cards are kept by id). @param {import('./core.js').PipelineLane} lane @param {import('./core.js').PipelineCard[]} cards @param {number} total */
+      laneNode(lane, cards2, total) {
+        const doc = this.host.ownerDocument;
+        const loading = this.loading();
+        const node = make18(doc, "section", `kp-pipeline__lane${lane.closed ? " kp-pipeline__lane--closed" : ""}`);
+        node.setAttribute("role", "listitem");
+        node.dataset.kpLane = lane.key;
+        if (lane.tone) node.dataset.kpTone = String(lane.tone);
+        if (lane.danger) node.dataset.kpStatus = "danger";
+        const id = `${this.host.id || "kp-pipeline"}-${lane.key}`;
+        node.setAttribute("aria-labelledby", id);
+        node.append(this.laneHead(lane, cards2.length, id));
+        if (this.host.dataset.kpPipelineShare !== "false" && !lane.closed) {
+          const share = make18(doc, "p", "kp-pipeline__share");
+          share.textContent = loading || total === 0 ? "" : this.strings.pipelineShare(Math.round(cards2.length / total * PERCENT2));
+          node.append(share);
+        }
+        const list = make18(doc, "div", "kp-pipeline__cards");
+        list.setAttribute("role", "list");
+        list.setAttribute("aria-labelledby", id);
+        if (loading) list.append(...this.ghosts(lane.closed === true));
+        else if (cards2.length === 0) list.append(make18(doc, "p", "kp-pipeline__none", this.strings.pipelineNone));
+        else this.fillCards(lane, cards2, list);
+        node.append(list);
+        return node;
+      }
+    };
+  }
+});
+
+// js/pipeline/view.js
+var PipelineView;
+var init_view2 = __esm({
+  "js/pipeline/view.js"() {
+    "use strict";
+    init_busy_card();
+    init_state_plate();
+    init_lanes3();
+    init_values2();
+    PipelineView = class extends PipelineLanes {
+      /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
+      byLane() {
+        const byLane = new Map(this.lanes.map((l) => [
+          l.key,
+          /** @type {import('./core.js').PipelineCard[]} */
+          []
+        ]));
+        for (const card of this.cards) byLane.get(card.lane)?.push(card);
+        return byLane;
+      }
+      /** Take the nodes of cards that are gone off the board. */
+      prune() {
+        const keep = new Set(this.cards.map((card) => card.id));
+        for (const [id, node] of this.nodes)
+          if (!keep.has(id)) {
+            node.remove();
+            this.nodes.delete(id);
+          }
+      }
+      /** Draw the lanes: the board's, then the closed ones under it. */
+      drawLanes() {
+        const byLane = this.byLane();
+        const total = this.cards.filter((card) => this.lanes.some((l) => l.key === card.lane && !l.closed)).length;
+        const open4 = this.lanes.filter((l) => !l.closed);
+        const closed = this.lanes.filter((l) => l.closed);
+        this.board.style.setProperty("--kp-pipeline-lanes", String(Math.max(1, open4.length)));
+        this.board.replaceChildren(...open4.map((l) => this.laneNode(l, byLane.get(l.key) ?? [], total)));
+        this.closed.replaceChildren(...closed.map((l) => this.laneNode(l, byLane.get(l.key) ?? [], total)));
+        this.closed.hidden = closed.length === 0;
+      }
+      /** Which state plate covers the board: `error`, `empty`, or none. @returns {'error' | 'empty' | null} */
+      plateKind() {
+        const empty = this.state === "empty" || this.state === "ready" && this.cards.length === 0;
+        if (this.state === "error") return "error";
+        return empty && this.leaving === null ? "empty" : null;
+      }
+      /** Draw the plate, rebuilt only when what it says changes, so the focus on its Retry survives a repaint. @param {'error' | 'empty' | null} shown */
+      drawPlate(shown5) {
+        const s2 = this.strings;
+        const key = shown5 === null ? "" : `${shown5}|${this.words}`;
+        if (this.plateChanged(key)) {
+          this.plate.replaceChildren();
+          if (shown5 !== null)
+            this.plate.append(
+              hostStatePlate(this.host, {
+                kind: shown5,
+                title: shown5 === "error" ? s2.pipelineFailed("") : this.words || s2.pipelineEmpty,
+                ...shown5 === "error" && this.words ? { text: this.words } : {},
+                retryEvent: PIPELINE_RETRY_EVENT,
+                retryLabel: s2.pipelineRetry
+              })
+            );
+        }
+        this.plate.hidden = shown5 === null;
+        this.board.parentElement?.toggleAttribute("inert", shown5 !== null);
+        this.closed.toggleAttribute("inert", shown5 !== null);
+      }
+      /** Everything, from the state. */
+      paint() {
+        this.prune();
+        this.drawLanes();
+        const empty = this.state === "empty" || this.state === "ready" && this.cards.length === 0;
+        this.host.dataset.kpState = this.state === "ready" && empty ? "empty" : this.state;
+        this.board.toggleAttribute("aria-busy", this.state === "loading");
+        this.drawPlate(this.plateKind());
+        this.drawBusy();
+        this.syncTabStops();
+      }
+      /** The loading card over the board, the data table's own [Kenny, 2026-10-16]. */
+      drawBusy() {
+        const want = this.state === "loading";
+        if (want === (this.busy !== null)) {
+          this.busy?.place();
+          return;
+        }
+        const frame3 = (
+          /** @type {HTMLElement} */
+          this.board.parentElement
+        );
+        if (!want) {
+          this.closeBusy();
+          return;
+        }
+        for (const old of frame3.querySelectorAll(":scope > .kp-pipeline__busy")) old.remove();
+        this.leaving = null;
+        this.holdBusy(
+          openBusyCard(frame3, { words: this.strings.pipelineLoading, area: () => [this.board], className: "kp-pipeline__busy", arrive: this.drawn })
+        );
+        this.live.textContent = this.strings.pipelineLoading;
+      }
+      /** Let the loading card go; the cards are drawn once it has gone. */
+      closeBusy() {
+        const card = (
+          /** @type {import('../busy-card.js').BusyCard} */
+          this.takeBusy()
+        );
+        const gone = card.close();
+        this.leaving = gone;
+        void gone.then(() => {
+          if (this.leaving !== gone) return;
+          this.leaving = null;
+          if (!this.destroyed) this.paint();
+        });
+      }
+    };
+  }
+});
+
+// js/pipeline/controller.js
+var PipelineBoard;
+var init_controller19 = __esm({
+  "js/pipeline/controller.js"() {
+    "use strict";
+    init_view2();
+    init_values2();
+    PipelineBoard = class extends PipelineView {
+      connect() {
+        const el16 = this.host;
+        el16.classList.add("kp-pipeline");
+        this.build();
+        this.paint();
+        window.requestAnimationFrame(() => this.markDrawn());
+        this.listen(el16, "click", (event) => this.onClick(
+          /** @type {MouseEvent} */
+          event
+        ));
+        this.listen(el16, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.own(() => this.busy?.remove());
+      }
+      /** The first frame has passed: a loading card may arrive with motion from here on. */
+      markDrawn() {
+        this.drawn = true;
+      }
+      /** The lanes and the cards, kept by id; a board that was loading is ready from here on. @param {import('../pipeline.js').PipelineLane[] | undefined} lanes @param {import('../pipeline.js').PipelineCard[]} cards */
+      setData(lanes, cards2) {
+        if (lanes) this.lanes = lanes;
+        this.cards = cards2;
+        this.settle();
+        this.paint();
+      }
+      /** @param {import('../pipeline.js').PipelineState} state @param {string} words */
+      setState(state12, words3) {
+        this.state = state12;
+        this.words = words3;
+        this.paint();
+      }
+      /** Mark the card that is open (`aria-current`), or none. @param {string | null} id */
+      setSelected(id) {
+        this.selected = id;
+        for (const [key, node] of this.nodes) {
+          if (key === id) node.setAttribute("aria-current", "true");
+          else node.removeAttribute("aria-current");
+        }
+      }
+      /** A lane shows more or fewer cards. @param {HTMLElement} more the toggle that was pressed */
+      toggleMore(more) {
+        const key = more.dataset.kpPipelineMore ?? "";
+        const open4 = !this.open.has(key);
+        if (open4) this.open.add(key);
+        else this.open.delete(key);
+        this.active = key;
+        this.paint();
+        this.host.querySelector(`[data-kp-pipeline-more="${CSS.escape(key)}"]`)?.focus();
+        this.host.dispatchEvent(new CustomEvent(PIPELINE_MORE_EVENT, { bubbles: true, detail: { lane: key, open: open4 } }));
+      }
+      /** @param {MouseEvent} event */
+      onClick(event) {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) return;
+        const more = (
+          /** @type {HTMLElement | null} */
+          target.closest("[data-kp-pipeline-more]")
+        );
+        if (more) {
+          this.toggleMore(more);
+          return;
+        }
+        const node = (
+          /** @type {HTMLElement | null} */
+          target.closest(".kp-pipeline__card[data-kp-id]")
+        );
+        if (!node) return;
+        const card = this.cards.find((k) => k.id === node.dataset.kpId);
+        if (!card) return;
+        this.active = card.id;
+        this.syncTabStops();
+        this.host.dispatchEvent(
+          new CustomEvent(PIPELINE_OPEN_EVENT, { bubbles: true, detail: { id: card.id, card, source: event.detail === 0 ? "keyboard" : "pointer" } })
+        );
+      }
+      /** Where an arrow, Home or End goes from a card: along the lane, or to the neighbouring lane. @param {KeyboardEvent} event @param {HTMLElement[][]} lanes @param {number} li the lane it is in @param {number} at its place in the lane */
+      destination(event, lanes, li, at) {
+        const lane = (
+          /** @type {HTMLElement[]} */
+          lanes[li]
+        );
+        const rtl = getComputedStyle(this.host).direction === "rtl";
+        const side = event.key === "ArrowRight" ? rtl ? -1 : 1 : event.key === "ArrowLeft" ? rtl ? 1 : -1 : 0;
+        if (side) {
+          const next2 = lanes[li + side];
+          return next2 ? next2[Math.min(at, next2.length - 1)] : void 0;
+        }
+        if (event.key === "ArrowDown") return lane[Math.min(lane.length - 1, at + 1)];
+        if (event.key === "ArrowUp") return lane[Math.max(0, at - 1)];
+        if (event.key === "Home") return lane[0];
+        if (event.key === "End") return lane[lane.length - 1];
+        return void 0;
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        if (event.altKey || event.ctrlKey || event.metaKey) return;
+        const from = event.target instanceof HTMLElement ? event.target.closest(".kp-pipeline__card, .kp-pipeline__more") : null;
+        if (!(from instanceof HTMLElement)) return;
+        const lanes = this.reachable();
+        const li = lanes.findIndex((l) => l.includes(from));
+        const lane = lanes[li];
+        if (!lane) return;
+        const to = this.destination(event, lanes, li, lane.indexOf(from));
+        if (!to) return;
+        event.preventDefault();
+        this.active = to.dataset.kpId ?? to.dataset.kpPipelineMore ?? null;
+        this.syncTabStops();
+        to.focus();
+      }
+    };
+  }
+});
+
 // js/pipeline.js
 var pipeline_exports = {};
 __export(pipeline_exports, {
@@ -52177,358 +52660,25 @@ __export(pipeline_exports, {
   setPipelineSelected: () => setPipelineSelected,
   setPipelineState: () => setPipelineState
 });
-function build7(c) {
-  const doc = c.el.ownerDocument;
-  c.board = make18(doc, "div", "kp-pipeline__board");
-  c.board.setAttribute("role", "list");
-  c.closed = make18(doc, "div", "kp-pipeline__closed");
-  c.closed.setAttribute("role", "list");
-  c.plate = make18(doc, "div", "kp-pipeline__plate");
-  c.plate.hidden = true;
-  c.live = make18(doc, "p", "kp-sr-only kp-pipeline__live");
-  c.live.setAttribute("role", "status");
-  const frame3 = make18(doc, "div", "kp-pipeline__frame");
-  frame3.append(c.board);
-  c.el.replaceChildren(frame3, c.closed, c.plate, c.live);
-}
-function cardNode(c, card, lane) {
-  const doc = c.el.ownerDocument;
-  const tag = card.href ? "A" : "BUTTON";
-  let node = c.nodes.get(card.id);
-  if (!node || node.tagName !== tag) {
-    node?.remove();
-    node = card.href ? make18(doc, "a", "kp-pipeline__card") : make18(doc, "button", "kp-pipeline__card");
-    if (node instanceof HTMLButtonElement) node.type = "button";
-    node.append(make18(doc, "span", "kp-pipeline__mark"), make18(doc, "span", "kp-pipeline__title"), make18(doc, "span", "kp-pipeline__sub"));
-    node.append(make18(doc, "span", "kp-pipeline__meta"));
-    c.nodes.set(card.id, node);
-  }
-  if (node instanceof HTMLAnchorElement && card.href) node.href = card.href;
-  node.dataset.kpId = card.id;
-  node.setAttribute("role", "listitem");
-  if (lane?.tone) node.dataset.kpTone = String(lane.tone);
-  else delete node.dataset.kpTone;
-  const [mark, title, sub, meta] = (
-    /** @type {HTMLElement[]} */
-    [...node.children]
-  );
-  if (mark) {
-    mark.textContent = card.mark ?? "";
-    mark.hidden = !card.mark;
-    mark.setAttribute("aria-hidden", "true");
-  }
-  if (title) title.textContent = card.title;
-  if (sub) {
-    sub.textContent = card.sub ?? "";
-    sub.hidden = !card.sub;
-  }
-  if (meta) {
-    meta.textContent = card.meta ?? "";
-    meta.hidden = !card.meta;
-  }
-  node.title = [card.title, card.sub, card.meta].filter(Boolean).join(" \xB7 ");
-  node.toggleAttribute("data-kp-dimmed", card.dimmed === true);
-  if (card.id === c.selected) node.setAttribute("aria-current", "true");
-  else node.removeAttribute("aria-current");
-  return node;
-}
-function laneNode(c, lane, cards2, total) {
-  const doc = c.el.ownerDocument;
-  const s2 = c.strings;
-  const loading = c.state === "loading" || c.leaving !== null;
-  const node = make18(doc, "section", `kp-pipeline__lane${lane.closed ? " kp-pipeline__lane--closed" : ""}`);
-  node.setAttribute("role", "listitem");
-  node.dataset.kpLane = lane.key;
-  if (lane.tone) node.dataset.kpTone = String(lane.tone);
-  if (lane.danger) node.dataset.kpStatus = "danger";
-  const head = make18(doc, "header", "kp-pipeline__head");
-  const name = make18(doc, "h3", "kp-pipeline__name", lane.label);
-  const id = `${c.el.id || "kp-pipeline"}-${lane.key}`;
-  name.id = id;
-  node.setAttribute("aria-labelledby", id);
-  const count2 = make18(doc, "span", "kp-pipeline__count");
-  if (loading) count2.append(make18(doc, "span", "kp-skeleton kp-pipeline__ghost-count"));
-  else count2.textContent = String(cards2.length);
-  if (lane.danger) head.append(name, make18(doc, "span", "kp-pipeline__flag", s2.pipelineDanger), count2);
-  else head.append(name, count2);
-  node.append(head);
-  if (c.el.dataset.kpPipelineShare !== "false" && !lane.closed) {
-    const share = make18(doc, "p", "kp-pipeline__share");
-    share.textContent = loading || total === 0 ? "" : s2.pipelineShare(Math.round(cards2.length / total * 100));
-    node.append(share);
-  }
-  const list = make18(doc, "div", "kp-pipeline__cards");
-  list.setAttribute("role", "list");
-  list.setAttribute("aria-labelledby", id);
-  if (loading) {
-    for (let i = 0; i < (lane.closed ? 3 : 2); i += 1) {
-      const ghost = make18(doc, "span", "kp-pipeline__card kp-pipeline__ghost");
-      ghost.setAttribute("aria-hidden", "true");
-      ghost.append(make18(doc, "span", "kp-skeleton"), make18(doc, "span", "kp-skeleton"));
-      list.append(ghost);
-    }
-  } else if (cards2.length === 0) {
-    list.append(make18(doc, "p", "kp-pipeline__none", s2.pipelineNone));
-  } else {
-    const limit = lane.closed ? 0 : limitOf(c);
-    const open4 = c.open.has(lane.key);
-    const shown5 = limit > 0 && !open4 ? cards2.slice(0, limit) : cards2;
-    for (const card of shown5) list.append(cardNode(c, card, lane));
-    if (limit > 0 && cards2.length > limit) {
-      const more = make18(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-pipeline__more");
-      more.type = "button";
-      more.dataset.kpPipelineMore = lane.key;
-      more.setAttribute("aria-expanded", String(open4));
-      more.textContent = open4 ? s2.pipelineLess : s2.pipelineMore(cards2.length - limit);
-      list.append(more);
-    }
-  }
-  node.append(list);
-  return node;
-}
-function paint10(c) {
-  const s2 = c.strings;
-  const byLane = new Map(c.lanes.map((l) => [
-    l.key,
-    /** @type {PipelineCard[]} */
-    []
-  ]));
-  for (const card of c.cards) byLane.get(card.lane)?.push(card);
-  const total = c.cards.filter((card) => c.lanes.some((l) => l.key === card.lane && !l.closed)).length;
-  const keep = new Set(c.cards.map((card) => card.id));
-  for (const [id, node] of c.nodes)
-    if (!keep.has(id)) {
-      node.remove();
-      c.nodes.delete(id);
-    }
-  const open4 = c.lanes.filter((l) => !l.closed);
-  const closed = c.lanes.filter((l) => l.closed);
-  c.board.style.setProperty("--kp-pipeline-lanes", String(Math.max(1, open4.length)));
-  c.board.replaceChildren(...open4.map((l) => laneNode(c, l, byLane.get(l.key) ?? [], total)));
-  c.closed.replaceChildren(...closed.map((l) => laneNode(c, l, byLane.get(l.key) ?? [], total)));
-  c.closed.hidden = closed.length === 0;
-  const empty = c.state === "empty" || c.state === "ready" && c.cards.length === 0;
-  const shown5 = c.state === "error" ? "error" : empty && c.leaving === null ? "empty" : null;
-  c.el.dataset.kpState = c.state === "ready" && empty ? "empty" : c.state;
-  c.board.toggleAttribute("aria-busy", c.state === "loading");
-  const key = shown5 === null ? "" : `${shown5}|${c.words}`;
-  if (c.plateKey !== key) {
-    c.plateKey = key;
-    c.plate.replaceChildren();
-    if (shown5 !== null)
-      c.plate.append(
-        hostStatePlate(c.el, {
-          kind: shown5,
-          title: shown5 === "error" ? s2.pipelineFailed("") : c.words || s2.pipelineEmpty,
-          ...shown5 === "error" && c.words ? { text: c.words } : {},
-          retryEvent: PIPELINE_RETRY_EVENT,
-          retryLabel: s2.pipelineRetry
-        })
-      );
-  }
-  c.plate.hidden = shown5 === null;
-  c.board.parentElement?.toggleAttribute("inert", shown5 !== null);
-  c.closed.toggleAttribute("inert", shown5 !== null);
-  drawBusy3(c);
-  syncTabStops3(c);
-}
-function drawBusy3(c) {
-  const want = c.state === "loading";
-  if (want === (c.busy !== null)) {
-    c.busy?.place();
-    return;
-  }
-  const frame3 = (
-    /** @type {HTMLElement} */
-    c.board.parentElement
-  );
-  if (!want) {
-    const card = (
-      /** @type {import('./busy-card.js').BusyCard} */
-      c.busy
-    );
-    c.busy = null;
-    const gone = card.close();
-    c.leaving = gone;
-    void gone.then(() => {
-      if (c.leaving !== gone) return;
-      c.leaving = null;
-      if (boards.get(c.el) === c) paint10(c);
-    });
-    return;
-  }
-  for (const old of frame3.querySelectorAll(":scope > .kp-pipeline__busy")) old.remove();
-  c.leaving = null;
-  c.busy = openBusyCard(frame3, {
-    words: c.strings.pipelineLoading,
-    area: () => [c.board],
-    className: "kp-pipeline__busy",
-    arrive: c.drawn
-  });
-  c.live.textContent = c.strings.pipelineLoading;
-}
-function reachable2(c) {
-  return [...c.el.querySelectorAll(".kp-pipeline__lane")].map((lane) => (
-    /** @type {HTMLElement[]} */
-    [...lane.querySelectorAll(".kp-pipeline__card:not(.kp-pipeline__ghost), .kp-pipeline__more")]
-  )).filter((l) => l.length);
-}
-function syncTabStops3(c) {
-  const lanes = reachable2(c);
-  const all = lanes.flat();
-  let target = all.find((n) => n.dataset.kpId === c.active || n.dataset.kpPipelineMore === c.active);
-  target ??= all[0];
-  for (const n of all) n.tabIndex = n === target ? 0 : -1;
-}
 function attachPipelines(root = document, options = {}) {
-  const undo = [];
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(PIPELINE) ? [root] : [],
-      ...root.querySelectorAll(PIPELINE)
-    ]
-  );
-  for (const el16 of found) {
-    if (boards.has(el16)) continue;
-    el16.classList.add("kp-pipeline");
-    const c = {
-      el: el16,
-      strings: resolveStrings(options.strings),
-      lanes: [],
-      cards: [],
-      state: "ready",
-      words: "",
-      open: /* @__PURE__ */ new Set(),
-      selected: null,
-      active: null,
-      board: el16,
-      closed: el16,
-      plate: el16,
-      plateKey: "",
-      live: el16,
-      nodes: /* @__PURE__ */ new Map(),
-      busy: null,
-      leaving: null,
-      drawn: false
-    };
-    boards.set(el16, c);
-    build7(c);
-    paint10(c);
-    window.requestAnimationFrame(() => c.drawn = true);
-    const onClick = (event) => {
-      const target = event.target instanceof Element ? event.target : null;
-      if (!target) return;
-      const more = (
-        /** @type {HTMLElement | null} */
-        target.closest("[data-kp-pipeline-more]")
-      );
-      if (more) {
-        const key = more.dataset.kpPipelineMore ?? "";
-        const open4 = !c.open.has(key);
-        if (open4) c.open.add(key);
-        else c.open.delete(key);
-        c.active = key;
-        paint10(c);
-        el16.querySelector(`[data-kp-pipeline-more="${CSS.escape(key)}"]`)?.focus();
-        el16.dispatchEvent(new CustomEvent(PIPELINE_MORE_EVENT, { bubbles: true, detail: { lane: key, open: open4 } }));
-        return;
-      }
-      const node = (
-        /** @type {HTMLElement | null} */
-        target.closest(".kp-pipeline__card[data-kp-id]")
-      );
-      if (!node) return;
-      const card = c.cards.find((k) => k.id === node.dataset.kpId);
-      if (!card) return;
-      c.active = card.id;
-      syncTabStops3(c);
-      el16.dispatchEvent(
-        new CustomEvent(PIPELINE_OPEN_EVENT, {
-          bubbles: true,
-          detail: { id: card.id, card, source: event.detail === 0 ? "keyboard" : "pointer" }
-        })
-      );
-    };
-    const onKey5 = (event) => {
-      if (event.altKey || event.ctrlKey || event.metaKey) return;
-      const from = event.target instanceof HTMLElement ? event.target.closest(".kp-pipeline__card, .kp-pipeline__more") : null;
-      if (!(from instanceof HTMLElement)) return;
-      const lanes = reachable2(c);
-      const li = lanes.findIndex((l) => l.includes(from));
-      const lane = lanes[li];
-      if (!lane) return;
-      const at = lane.indexOf(from);
-      const rtl = getComputedStyle(el16).direction === "rtl";
-      const side = event.key === "ArrowRight" ? rtl ? -1 : 1 : event.key === "ArrowLeft" ? rtl ? 1 : -1 : 0;
-      let to;
-      if (side) {
-        const next2 = lanes[li + side];
-        if (next2) to = next2[Math.min(at, next2.length - 1)];
-      } else if (event.key === "ArrowDown") to = lane[Math.min(lane.length - 1, at + 1)];
-      else if (event.key === "ArrowUp") to = lane[Math.max(0, at - 1)];
-      else if (event.key === "Home") to = lane[0];
-      else if (event.key === "End") to = lane[lane.length - 1];
-      if (!to) return;
-      event.preventDefault();
-      c.active = to.dataset.kpId ?? to.dataset.kpPipelineMore ?? null;
-      syncTabStops3(c);
-      to.focus();
-    };
-    el16.addEventListener("click", onClick);
-    el16.addEventListener("keydown", onKey5);
-    undo.push(() => {
-      el16.removeEventListener("click", onClick);
-      el16.removeEventListener("keydown", onKey5);
-      c.busy?.remove();
-      boards.delete(el16);
-    });
-  }
-  return () => undo.splice(0).forEach((off) => off());
+  return attachAll(root, PIPELINE, PipelineBoard, options);
 }
 function setPipeline(el16, { lanes, cards: cards2 }) {
-  const c = boards.get(el16);
-  if (!c) return;
-  if (lanes) c.lanes = lanes;
-  c.cards = cards2;
-  if (c.state === "loading" || c.state === "empty") c.state = "ready";
-  paint10(c);
+  controllerOf(el16, PipelineBoard)?.setData(lanes, cards2);
 }
 function setPipelineState(el16, state12, words3 = "") {
-  const c = boards.get(el16);
-  if (!c) return;
-  c.state = state12;
-  c.words = words3;
-  paint10(c);
+  controllerOf(el16, PipelineBoard)?.setState(state12, words3);
 }
 function setPipelineSelected(el16, id) {
-  const c = boards.get(el16);
-  if (!c) return;
-  c.selected = id;
-  for (const [key, node] of c.nodes) {
-    if (key === id) node.setAttribute("aria-current", "true");
-    else node.removeAttribute("aria-current");
-  }
+  controllerOf(el16, PipelineBoard)?.setSelected(id);
 }
-var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, boards, make18, limitOf;
 var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
-    init_strings();
-    init_busy_card();
-    init_state_plate();
-    PIPELINE = "[data-kp-pipeline]";
-    PIPELINE_OPEN_EVENT = "kp-pipeline-open";
-    PIPELINE_RETRY_EVENT = "kp-pipeline-retry";
-    PIPELINE_MORE_EVENT = "kp-pipeline-more";
-    boards = /* @__PURE__ */ new WeakMap();
-    make18 = (doc, tag, className, text) => {
-      const el16 = doc.createElement(tag);
-      if (className) el16.className = className;
-      if (text != null) el16.textContent = text;
-      return el16;
-    };
-    limitOf = (c) => Math.max(0, Number.parseInt(c.el.dataset.kpPipelineLimit ?? "", 10) || 0);
+    init_controller();
+    init_controller19();
+    init_values2();
+    init_values2();
   }
 });
 
@@ -53734,7 +53884,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values2 = __esm({
+var init_values3 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -53871,14 +54021,14 @@ var init_build6 = __esm({
 
 // js/range/core.js
 var seq2, DEFAULT_PRESET_AT, RangeCore;
-var init_core4 = __esm({
+var init_core5 = __esm({
   "js/range/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_segmented();
     init_chart();
-    init_values2();
+    init_values3();
     init_build6();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
@@ -53953,7 +54103,7 @@ var init_panel = __esm({
     init_top_layer();
     init_motion();
     init_build6();
-    init_values2();
+    init_values3();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -54125,11 +54275,11 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
-    init_core4();
+    init_core5();
     init_panel();
     RangeController = class extends RangeCore {
       connect() {
@@ -54206,9 +54356,9 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller19();
-    init_values2();
-    init_values2();
+    init_controller20();
+    init_values3();
+    init_values3();
   }
 });
 
@@ -54757,7 +54907,7 @@ function setProblems(container, items, options = {}) {
     items,
     options
   );
-  paint11(container, items, options);
+  paint10(container, items, options);
 }
 function watch(host, items, options) {
   const known4 = LAST.get(host);
@@ -54771,10 +54921,10 @@ function watch(host, items, options) {
   LAST.set(host, state12);
   new MutationObserver(() => {
     const wanted = `${host.getAttribute("data-kp-problems-mode")}|${host.getAttribute("data-kp-problems-fold-from")}`;
-    if (wanted !== state12.rendered) paint11(host, state12.items, state12.options);
+    if (wanted !== state12.rendered) paint10(host, state12.items, state12.options);
   }).observe(host, { attributes: true, attributeFilter: ["data-kp-problems-mode", "data-kp-problems-fold-from"] });
 }
-function paint11(container, items, options) {
+function paint10(container, items, options) {
   const doc = container.ownerDocument;
   const host = (
     /** @type {HTMLElement} */
@@ -55562,7 +55712,7 @@ var init_parts3 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -55849,7 +55999,7 @@ var init_api18 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller20();
+    init_controller21();
     init_parts3();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -56168,7 +56318,7 @@ function part6(row, className, tag = "span") {
   }
   return node;
 }
-function build8(row) {
+function build7(row) {
   const label = part6(row, "kp-progress__label");
   if (!label.textContent) label.textContent = row.getAttribute("data-kp-transfer-name") ?? "";
   let bar = (
@@ -56202,7 +56352,7 @@ function build8(row) {
   }
   return { label, bar, value, rate, eta, status };
 }
-function paint12(row, st, p) {
+function paint11(row, st, p) {
   const s2 = getStrings();
   const now = st.now();
   const last = st.samples.at(-1);
@@ -56297,7 +56447,7 @@ function tick5() {
       live3.delete(row);
       continue;
     }
-    if (st.phase === "running") paint12(row, st, build8(row));
+    if (st.phase === "running") paint11(row, st, build7(row));
   }
   if (!live3.size) {
     clearInterval(ticker);
@@ -56305,7 +56455,7 @@ function tick5() {
   }
 }
 function setTransfer(row, sample, { now } = {}) {
-  const p = build8(row);
+  const p = build7(row);
   let st = states2.get(row);
   const at = sample.at ?? (now ? now() : Date.now());
   if (!st) {
@@ -56328,7 +56478,7 @@ function setTransfer(row, sample, { now } = {}) {
   if (sample.failed !== void 0) {
     st.phase = "failed";
     live3.delete(row);
-    paint12(row, st, p);
+    paint11(row, st, p);
     const s2 = getStrings();
     const note2 = row.ownerDocument.createElement("div");
     note2.className = "kp-alert kp-alert--destructive kp-transfer__failure";
@@ -56361,7 +56511,7 @@ function setTransfer(row, sample, { now } = {}) {
   if (st.total !== null && done >= st.total) {
     st.phase = "done";
     live3.delete(row);
-    paint12(row, st, p);
+    paint11(row, st, p);
     p.status.textContent = getStrings().transferAnnounce(p.label.textContent ?? "", 100);
     row.dispatchEvent(new CustomEvent(TRANSFER_DONE_EVENT, { bubbles: true, detail: { total: st.total, ms: at - st.start } }));
     const linger = numberOf2(row, "data-kp-linger", 30);
@@ -56373,7 +56523,7 @@ function setTransfer(row, sample, { now } = {}) {
     }
     return;
   }
-  paint12(row, st, p);
+  paint11(row, st, p);
   live3.add(row);
   if (!ticker) ticker = window.setInterval(tick5, 1e3);
 }
@@ -56383,7 +56533,7 @@ function resetTransfer(row) {
   states2.delete(row);
   row.querySelector(":scope > .kp-transfer__failure")?.remove();
   row.removeAttribute("data-kp-state");
-  const p = build8(row);
+  const p = build7(row);
   p.bar.setAttribute("aria-valuenow", "0");
   setProgress(p.bar, 0);
   p.value.textContent = "";
@@ -56403,7 +56553,7 @@ function attachTransfers(root = document) {
     ]
   );
   for (const row of rows) {
-    const p = build8(row);
+    const p = build7(row);
     p.bar.setAttribute("aria-valuenow", "0");
     p.value.textContent = "";
   }
@@ -56544,7 +56694,7 @@ function stepPosition(list) {
   const index = at >= 0 ? at : waiting >= 0 ? waiting : items.length - 1;
   return { step: Math.max(0, index) + 1, steps: items.length };
 }
-function paint13(line, report2) {
+function paint12(line, report2) {
   const base = (
     /** @type {1000 | 1024} */
     line.getAttribute("data-kp-bytes-base") === "1024" ? 1024 : 1e3
@@ -56569,7 +56719,7 @@ function setJobLine(line, report2) {
   }
   reports.set(line, next2);
   const list = listOf4(line);
-  paint13(line, list && !("step" in report2) ? { ...next2, ...stepPosition(list) } : next2);
+  paint12(line, list && !("step" in report2) ? { ...next2, ...stepPosition(list) } : next2);
 }
 function buildJobLine({ label, steplist } = {}) {
   const line = document.createElement("p");
@@ -56589,7 +56739,7 @@ function attachJobLines(root = document) {
     line.setAttribute("aria-live", "off");
     line.setAttribute("aria-atomic", "true");
     const list = listOf4(line);
-    paint13(line, list ? { ...reports.get(line) ?? {}, ...stepPosition(list) } : reports.get(line) ?? {});
+    paint12(line, list ? { ...reports.get(line) ?? {}, ...stepPosition(list) } : reports.get(line) ?? {});
   }
   const onStep = (event) => {
     const list = event.target instanceof Element ? event.target.closest(STEPLIST_SELECTOR) : null;
@@ -56692,7 +56842,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -56706,13 +56856,13 @@ var init_values3 = __esm({
 
 // js/code-field/core.js
 var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
-var init_core5 = __esm({
+var init_core6 = __esm({
   "js/code-field/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build7();
-    init_values3();
+    init_values4();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -56841,8 +56991,8 @@ var init_problem = __esm({
   "js/code-field/problem.js"() {
     "use strict";
     init_forms();
-    init_core5();
-    init_values3();
+    init_core6();
+    init_values4();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -56918,12 +57068,12 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
     init_build7();
-    init_values3();
+    init_values4();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -57158,9 +57308,9 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller21();
-    init_values3();
-    init_values3();
+    init_controller22();
+    init_values4();
+    init_values4();
   }
 });
 
@@ -58136,7 +58286,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -58343,7 +58493,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller22();
+    init_controller23();
     init_field();
     init_state19();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -58531,7 +58681,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
       { firstDay, names: dayNames("short", locale) }
     );
     const valid = () => values().length >= min;
-    const paint15 = () => {
+    const paint14 = () => {
       const have = values();
       summary2.textContent = words3();
       const ok = have.length >= min;
@@ -58556,10 +58706,10 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
         next2.map((v) => month ? String(v).toLowerCase() === "last" ? "last" : String(Math.round(Number(v))) : String(dayNumber(v))).filter((v) => month ? v === "last" || Number(v) >= 1 && Number(v) <= 31 : v !== "null")
       );
       setSegmentedValues(group, wanted);
-      paint15();
+      paint14();
     };
     const change2 = (fire2) => {
-      paint15();
+      paint14();
       if (fire2)
         el16.dispatchEvent(new CustomEvent(WEEKDAYS_EVENT, { bubbles: true, detail: { values: values(), summary: words3(), valid: valid() } }));
     };
@@ -58582,7 +58732,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     quick.addEventListener("click", onPreset);
     const initial = (el16.dataset.kpValue ?? "").split(/[\s,]+/).map((v) => v.trim()).filter(Boolean);
     set(initial);
-    paint15();
+    paint14();
     const handle = { element: el16, values, set, summary: words3, valid };
     HANDLES4.set(el16, handle);
     cleanups.push(() => {
@@ -58757,7 +58907,7 @@ function attachOne4(root) {
     );
   };
   const valid = () => !value.on || value.from !== value.to;
-  const paint15 = () => {
+  const paint14 = () => {
     onWords.textContent = root.getAttribute("data-kp-quiet-label") ?? s2.quietLabel;
     root.setAttribute("aria-label", onWords.textContent);
     onInput.checked = value.on;
@@ -58780,12 +58930,12 @@ function attachOne4(root) {
     setTime(fromBox, value.from);
     setTime(toBox, value.to);
     setWeekdays(dayBox, value.days);
-    paint15();
+    paint14();
     if (fire2) root.dispatchEvent(new CustomEvent(QUIET_EVENT, { bubbles: true, detail: { value: { ...value }, summary: summary2.textContent, valid: valid() } }));
   };
   const changed2 = () => {
     value = { on: onInput.checked, from: value.from, to: value.to, days: value.days, through: checks().filter((b) => b.checked).map((b) => b.value) };
-    paint15();
+    paint14();
     root.dispatchEvent(new CustomEvent(QUIET_EVENT, { bubbles: true, detail: { value: { ...value }, summary: summary2.textContent, valid: valid() } }));
   };
   drawSeverities();
@@ -58809,7 +58959,7 @@ function attachOne4(root) {
     if (target === fromBox || fromBox.contains(target)) value = { ...value, from: detail.value };
     else if (target === toBox || toBox.contains(target)) value = { ...value, to: detail.value };
     else return;
-    paint15();
+    paint14();
     root.dispatchEvent(new CustomEvent(QUIET_EVENT, { bubbles: true, detail: { value: { ...value }, summary: summary2.textContent, valid: valid() } }));
   };
   const onDays = (event) => {
@@ -58818,7 +58968,7 @@ function attachOne4(root) {
       event.detail
     );
     value = { ...value, days: (detail?.values ?? []).filter((d) => typeof d === "number") };
-    paint15();
+    paint14();
     root.dispatchEvent(new CustomEvent(QUIET_EVENT, { bubbles: true, detail: { value: { ...value }, summary: summary2.textContent, valid: valid() } }));
   };
   root.addEventListener(TIME_EVENT, onTime);
@@ -58828,7 +58978,7 @@ function attachOne4(root) {
   const watch2 = new MutationObserver(() => {
     severities();
     drawSeverities();
-    paint15();
+    paint14();
   });
   watch2.observe(root, { attributes: true, attributeFilter: ["data-kp-quiet-severities", "data-kp-quiet-label", "data-kp-disabled", "data-kp-state"] });
   HANDLES5.set(root, { value: () => ({ ...value, days: [...value.days], through: [...value.through] }), set: (next2) => write2(readQuiet(next2), false) });
@@ -59686,7 +59836,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -59845,7 +59995,7 @@ var init_api20 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller23();
+    init_controller24();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -60067,7 +60217,7 @@ var init_row3 = __esm({
 
 // js/notices/view.js
 var DATE_LENGTH, TIME_START2, NoticesView;
-var init_view2 = __esm({
+var init_view3 = __esm({
   "js/notices/view.js"() {
     "use strict";
     init_busy_card();
@@ -60276,13 +60426,13 @@ var init_view2 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
     init_events2();
     init_parts4();
-    init_view2();
+    init_view3();
     idSeq3 = 0;
     NoticesCentre = class extends NoticesView {
       /** @param {HTMLElement} el */
@@ -60417,7 +60567,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller24();
+    init_controller25();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -60699,7 +60849,7 @@ function paintActions(m) {
   if (pending4) m.caption.textContent = s2.ratingPending(plain(m.draft), m.max);
   if (m.field) m.field.value = m.value > 0 ? String(plain(m.value)) : "";
 }
-function paint14(m) {
+function paint13(m) {
   const shown5 = m.preview ?? m.draft;
   paintHost2(m);
   paintStars(m, shown5);
@@ -60741,7 +60891,7 @@ function pop(m, value) {
 }
 function afterChange(m, value, previous, source, s2, item) {
   m.busy = false;
-  paint14(m);
+  paint13(m);
   if (announceLevel(m) !== "off") say9(m, value > 0 ? s2.ratingAnnounce(item, plain(value), m.max) : s2.ratingAnnounceCleared(item));
   const ms = m.el.hasAttribute("data-kp-undo-ms") ? Number(m.el.getAttribute("data-kp-undo-ms")) : DEFAULT_UNDO_MS;
   if (source !== "undo" && ms > 0) {
@@ -60758,7 +60908,7 @@ function commit2(m, next2, source) {
   const value = snapRating(next2, m.max, m.step);
   if (value === previous) {
     m.draft = previous;
-    paint14(m);
+    paint13(m);
     return;
   }
   const waits = [];
@@ -60772,7 +60922,7 @@ function commit2(m, next2, source) {
   const kept = m.el.dispatchEvent(event);
   if (!kept) {
     m.value = m.draft = previous;
-    paint14(m);
+    paint13(m);
     return;
   }
   const s2 = getStrings();
@@ -60783,13 +60933,13 @@ function commit2(m, next2, source) {
     return;
   }
   m.busy = true;
-  paint14(m);
+  paint13(m);
   void Promise.all(waits).then(
     () => afterChange(m, value, previous, source, s2, item),
     () => {
       m.value = m.draft = previous;
       m.busy = false;
-      paint14(m);
+      paint13(m);
       tell(m, s2.ratingSaveFailed(item));
     }
   );
@@ -60808,7 +60958,7 @@ function choose2(m, value, source) {
   const next2 = snapRating(value, m.max, m.step);
   if (confirm && source !== "clear" && source !== "undo") {
     m.draft = next2;
-    paint14(m);
+    paint13(m);
     return;
   }
   if (attr5(m, "clear") !== "off" && next2 === m.value && next2 > 0 && source !== "keyboard") commit2(m, 0, "clear");
@@ -60879,7 +61029,7 @@ var init_keys12 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -61024,7 +61174,7 @@ var init_controller25 = __esm({
         retry.textContent = s2.ratingRetry;
         row.inert = foot.inert = st === "error";
         this.el.toggleAttribute("data-kp-loading", st === "loading");
-        paint14(this);
+        paint13(this);
       }
       /** A change of the scale, the step or the mode draws the row again; the other options are read as they are used. @param {MutationRecord[]} records */
       onAttributes(records) {
@@ -61042,7 +61192,7 @@ var init_controller25 = __esm({
         const next2 = attachOne(el16, _RatingController, options);
         if (!next2) return;
         next2.value = next2.draft = snapRating(value, next2.max, next2.valueStep);
-        paint14(next2);
+        paint13(next2);
       }
       /** @param {Event} event @returns {number} the star's number, 0 when none */
       starOf(event) {
@@ -61055,12 +61205,12 @@ var init_controller25 = __esm({
         const n = this.starOf(event);
         if (!n) return;
         this.preview = valueAt(this, n, event);
-        paint14(this);
+        paint13(this);
       }
       onLeave() {
         if (this.preview === null) return;
         this.preview = null;
-        paint14(this);
+        paint13(this);
       }
       /** @param {MouseEvent} event */
       onClick(event) {
@@ -61078,7 +61228,7 @@ var init_controller25 = __esm({
         else if (button6 === save2) commit2(this, this.draft, "pointer");
         else if (button6 === drop) {
           this.draft = this.value;
-          paint14(this);
+          paint13(this);
         }
       }
     };
@@ -61110,7 +61260,7 @@ function setRating(element, value) {
   if (!m) return;
   m.value = m.draft = snapRating(value, m.max, m.valueStep);
   m.el.setAttribute("data-kp-rating-value", String(m.value));
-  paint14(m);
+  paint13(m);
 }
 function setRatingState(element, next2) {
   if (!(element instanceof HTMLElement)) return;
@@ -61137,7 +61287,7 @@ function ratingCell(cell, value, { max = DEFAULT_STARS, count: count2, for: item
   const known4 = controllerOf(host, RatingController);
   if (known4) {
     known4.value = known4.draft = snapRating(value, known4.max, DISPLAY_STEP);
-    paint14(known4);
+    paint13(known4);
   } else {
     attachRatings(host);
   }
@@ -61149,7 +61299,7 @@ var init_api21 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller25();
+    init_controller26();
     init_build9();
     init_commit();
     init_math();
@@ -61437,7 +61587,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -61670,7 +61820,7 @@ var init_api22 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller26();
+    init_controller27();
     init_list4();
     init_render4();
   }
@@ -63113,7 +63263,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -63304,7 +63454,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller27();
+    init_controller28();
     init_group4();
     init_group4();
   }
@@ -64532,13 +64682,13 @@ function setEntity(card, data) {
   const trendOn = kind === "stack" && (trendMode === "on" || trendMode !== "off" && trended);
   card.style.setProperty("--kp-entity-meters", String(meterRows + (trendOn ? 1 : 0)));
   const key = data.key;
-  const slot = (slot_, signature2, build9) => {
+  const slot = (slot_, signature2, build8) => {
     const text = sig(signature2);
     if (drawn2[slot_] === text) return;
     drawn2[slot_] = text;
     const el16 = slotOf(card, slot_);
     el16.replaceChildren();
-    build9(el16);
+    build8(el16);
   };
   const loading = status === "loading";
   if (loading) {
@@ -65061,7 +65211,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values4 = __esm({
+var init_values5 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -65400,7 +65550,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint9();
     init_parts6();
-    init_values4();
+    init_values5();
   }
 });
 
@@ -65410,7 +65560,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values4();
+    init_values5();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -65530,7 +65680,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values4();
+    init_values5();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -65805,7 +65955,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -66058,7 +66208,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller28();
+    init_controller29();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -66404,7 +66554,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -66709,7 +66859,7 @@ var init_api23 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller29();
+    init_controller30();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -68326,7 +68476,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values5 = __esm({
+var init_values6 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -68465,7 +68615,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build10 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values5();
+    init_values6();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -68479,13 +68629,13 @@ var init_build10 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core6 = __esm({
+var init_core7 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build10();
-    init_values5();
+    init_values6();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -68600,12 +68750,12 @@ var init_core6 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build10();
-    init_core6();
-    init_values5();
+    init_core7();
+    init_values6();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -68830,9 +68980,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller30();
-    init_values5();
-    init_values5();
+    init_controller31();
+    init_values6();
+    init_values6();
   }
 });
 
@@ -68998,7 +69148,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -69227,7 +69377,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller31();
+    init_controller32();
     init_fields();
     init_fields();
   }
@@ -69567,7 +69717,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -69818,7 +69968,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller32();
+    init_controller33();
   }
 });
 
@@ -70423,7 +70573,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -70682,7 +70832,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller33();
+    init_controller34();
     init_choices();
   }
 });
@@ -71220,7 +71370,7 @@ function renderDetail(g) {
   if (!body.childNodes.length) body.append(make30(doc, "p", "kp-graph__detail-text", node.description));
 }
 var detailCount, insetOf;
-var init_view3 = __esm({
+var init_view4 = __esm({
   "js/graph/view.js"() {
     "use strict";
     init_constants38();
@@ -71535,7 +71685,7 @@ var init_draw8 = __esm({
     "use strict";
     init_state_plate();
     init_options5();
-    init_view3();
+    init_view4();
     init_instance3();
     init_layout3();
     init_constants38();
@@ -71618,7 +71768,7 @@ var init_api25 = __esm({
     "use strict";
     init_instance3();
     init_draw8();
-    init_view3();
+    init_view4();
   }
 });
 
@@ -72049,7 +72199,7 @@ var init_attach19 = __esm({
     init_options5();
     init_layout3();
     init_draw8();
-    init_view3();
+    init_view4();
   }
 });
 
@@ -75536,7 +75686,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -75640,7 +75790,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller34();
+    init_controller35();
     init_state27();
     init_state27();
     init_matrix2();
@@ -80607,10 +80757,6 @@ export {
   PIECES_ATTRIBUTE,
   PIECES_PROPERTY,
   PIECE_CARRIERS,
-  PIPELINE,
-  PIPELINE_MORE_EVENT,
-  PIPELINE_OPEN_EVENT,
-  PIPELINE_RETRY_EVENT,
   PREVIEW,
   PREVIEW_EVENT,
   PREVIEW_LEAVE_MS,

@@ -1,11 +1,4 @@
-/** A board: `section.kp-pipeline[data-kp-pipeline]`. */
-export declare const PIPELINE = "[data-kp-pipeline]";
-/** Fired on the board, bubbling, when a card is opened: `{ id, card, source: 'pointer' | 'keyboard' }`. */
-export declare const PIPELINE_OPEN_EVENT = "kp-pipeline-open";
-/** Fired on the board, bubbling, when Try again is pressed. */
-export declare const PIPELINE_RETRY_EVENT = "kp-pipeline-retry";
-/** Fired on the board, bubbling, when a lane shows more or fewer: `{ lane, open }`. */
-export declare const PIPELINE_MORE_EVENT = "kp-pipeline-more";
+export { PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT } from './pipeline/values.js';
 export type PipelineLane = {
     key: string;
     label: string;
@@ -66,6 +59,25 @@ export type PipelineModel = {
     leaving: Promise<void> | null;
     drawn: boolean;
 };
+/**
+ * @typedef {{ key: string, label: string, tone?: 1 | 2 | 3 | 4 | 5, closed?: boolean, danger?: boolean }} PipelineLane
+ * @typedef {object} PipelineCard
+ * @property {string} id
+ * @property {string} lane the lane's key
+ * @property {string} title
+ * @property {string} [sub] the line under the title (a company)
+ * @property {string} [meta] a short last line (a date)
+ * @property {string} [mark] a short sign, two letters, in the lane's colour
+ * @property {string} [href] a link; without it the card is a button
+ * @property {boolean} [dimmed] filtered out, kept in its place
+ * @typedef {'loading' | 'ready' | 'empty' | 'error'} PipelineState
+ * @typedef {import('./strings.js').Strings} Strings
+ * @typedef {{ strings?: Partial<Strings> }} PipelineOptions
+ * @typedef {{ el: HTMLElement, strings: Strings, lanes: PipelineLane[], cards: PipelineCard[], state: PipelineState,
+ *   words: string, open: Set<string>, selected: string | null, active: string | null, board: HTMLElement,
+ *   closed: HTMLElement, plate: HTMLElement, plateKey: string, live: HTMLElement,
+ *   nodes: Map<string, HTMLElement>, busy: import('./busy-card.js').BusyCard | null, leaving: Promise<void> | null, drawn: boolean }} PipelineModel
+ */
 /**
  * Attach every board under `root`.
  * @param {ParentNode} [root]
