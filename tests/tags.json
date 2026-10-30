@@ -483,6 +483,7 @@
         { "path": "js/lazy-register.js", "tags": ["@component:picker"] },
         { "path": "js/lazy-register/*.js", "tags": ["@component:picker"] },
         { "path": "js/diagnostics.js", "tags": ["@component:picker"] },
+        { "path": "js/diagnostics/*.js", "tags": ["@component:picker"] },
         { "path": "js/theme-registry.js", "tags": ["@sweep", "@component:picker"], "why": "generated from every theme's tokens" },
         { "path": "js/strings.js", "all": "the dictionary every component and many specs read" },
         { "path": "js/strings/*.js", "all": "the dictionary every component and many specs read" },

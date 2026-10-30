@@ -84636,42 +84636,14 @@ __export(diagnostics_exports, {
   scriptSide: () => scriptSide,
   stylesheetSide: () => stylesheetSide
 });
+
+// js/diagnostics/sides.js
 init_effects();
-init_strings();
 var VERSION_PROPERTY = "--kp-themes-version";
 var NAMES_PROPERTY = "--kp-themes-names";
 function unquote(raw) {
   const trimmed = (raw ?? "").trim();
   return trimmed.replace(/^['"]/, "").replace(/['"]$/, "").trim();
-}
-function compareVersions(a, b) {
-  const parse = (
-    /** @param {string} v @returns {{ numbers: number[], pre: string[] | null } | null} */
-    (v) => {
-      const m = /^(\d+(?:\.\d+)*)(?:-([0-9A-Za-z.-]+))?$/.exec(v.trim());
-      return m ? { numbers: m[1].split(".").map(Number), pre: m[2] === void 0 ? null : m[2].split(".") } : null;
-    }
-  );
-  const left = parse(a);
-  const right = parse(b);
-  if (left === null || right === null) return null;
-  for (let i = 0; i < Math.max(left.numbers.length, right.numbers.length); i++) {
-    const diff = (left.numbers[i] ?? 0) - (right.numbers[i] ?? 0);
-    if (diff !== 0) return diff;
-  }
-  if (left.pre === null && right.pre === null) return 0;
-  if (left.pre === null) return 1;
-  if (right.pre === null) return -1;
-  for (let i = 0; i < Math.max(left.pre.length, right.pre.length); i++) {
-    const l = left.pre[i];
-    const r = right.pre[i];
-    if (l === void 0) return -1;
-    if (r === void 0) return 1;
-    const both = /^\d+$/.test(l) && /^\d+$/.test(r);
-    const diff = both ? Number(l) - Number(r) : l < r ? -1 : l > r ? 1 : 0;
-    if (diff !== 0) return diff;
-  }
-  return 0;
 }
 function stylesheetSide({ root } = {}) {
   if (typeof document === "undefined") return { version: null, themes: [] };
@@ -84683,6 +84655,40 @@ function stylesheetSide({ root } = {}) {
 function scriptSide() {
   return { version: VERSION, themes: THEMES.map((t) => t.name), unknownEffects: unknownEffects() };
 }
+
+// js/diagnostics/compare.js
+function parseVersion(v) {
+  const m = /^(\d+(?:\.\d+)*)(?:-([0-9A-Za-z.-]+))?$/.exec(v.trim());
+  return m ? { numbers: m[1].split(".").map(Number), pre: m[2] === void 0 ? null : m[2].split(".") } : null;
+}
+function comparePre(left, right) {
+  for (let i = 0; i < Math.max(left.length, right.length); i++) {
+    const l = left[i];
+    const r = right[i];
+    if (l === void 0) return -1;
+    if (r === void 0) return 1;
+    const both = /^\d+$/.test(l) && /^\d+$/.test(r);
+    const diff = both ? Number(l) - Number(r) : l < r ? -1 : l > r ? 1 : 0;
+    if (diff !== 0) return diff;
+  }
+  return 0;
+}
+function compareVersions(a, b) {
+  const left = parseVersion(a);
+  const right = parseVersion(b);
+  if (left === null || right === null) return null;
+  for (let i = 0; i < Math.max(left.numbers.length, right.numbers.length); i++) {
+    const diff = (left.numbers[i] ?? 0) - (right.numbers[i] ?? 0);
+    if (diff !== 0) return diff;
+  }
+  if (left.pre === null && right.pre === null) return 0;
+  if (left.pre === null) return 1;
+  if (right.pre === null) return -1;
+  return comparePre(left.pre, right.pre);
+}
+
+// js/diagnostics/report.js
+init_strings();
 function diagnose(stylesheet, script, strings = getStrings()) {
   const onlyInStylesheet = stylesheet.themes.filter((name) => !script.themes.includes(name));
   const onlyInScript = script.themes.filter((name) => !stylesheet.themes.includes(name));
@@ -84699,29 +84705,25 @@ function diagnose(stylesheet, script, strings = getStrings()) {
 function diagnostics({ root, strings } = {}) {
   return diagnose(stylesheetSide({ root }), scriptSide(), strings ?? getStrings());
 }
-function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
-  const s2 = strings ?? getStrings();
-  const report3 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
-  const unknown = s2.diagnosticsUnknownVersion;
-  const heading = document.createElement("h2");
-  heading.textContent = s2.diagnosticsHeading;
-  const table = document.createElement("table");
-  table.className = "kp-table";
-  const row2 = (label, left, right, key) => {
-    const tr = document.createElement("tr");
-    tr.dataset.kpDiagnostic = key;
-    const th = document.createElement("th");
-    th.scope = "row";
-    th.textContent = label;
-    const a = document.createElement("td");
-    a.dataset.kpSide = "stylesheet";
-    a.textContent = left;
-    const b = document.createElement("td");
-    b.dataset.kpSide = "script";
-    b.textContent = right;
-    tr.append(th, a, b);
-    return tr;
-  };
+
+// js/diagnostics/render.js
+init_strings();
+function tableRow(label, left, right, key) {
+  const tr = document.createElement("tr");
+  tr.dataset.kpDiagnostic = key;
+  const th = document.createElement("th");
+  th.scope = "row";
+  th.textContent = label;
+  const a = document.createElement("td");
+  a.dataset.kpSide = "stylesheet";
+  a.textContent = left;
+  const b = document.createElement("td");
+  b.dataset.kpSide = "script";
+  b.textContent = right;
+  tr.append(th, a, b);
+  return tr;
+}
+function tableHead(s2) {
   const head = document.createElement("tr");
   for (const label of ["", s2.diagnosticsStylesheet, s2.diagnosticsScript]) {
     const th = document.createElement("th");
@@ -84731,23 +84733,32 @@ function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
   }
   const thead = document.createElement("thead");
   thead.append(head);
+  return thead;
+}
+function tableBody(s2, report3) {
+  const unknown = s2.diagnosticsUnknownVersion;
   const tbody = document.createElement("tbody");
   tbody.append(
-    row2(s2.diagnosticsVersion, report3.stylesheet.version ?? unknown, report3.script.version ?? unknown, "version"),
-    row2(s2.diagnosticsThemes, report3.stylesheet.themes.join(" "), report3.script.themes.join(" "), "themes"),
-    row2(
+    tableRow(s2.diagnosticsVersion, report3.stylesheet.version ?? unknown, report3.script.version ?? unknown, "version"),
+    tableRow(s2.diagnosticsThemes, report3.stylesheet.themes.join(" "), report3.script.themes.join(" "), "themes"),
+    tableRow(
       s2.diagnosticsEffects,
       "\u2014",
       report3.script.unknownEffects?.length ? report3.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
       "effects"
     )
   );
-  table.append(thead, tbody);
+  return tbody;
+}
+function verdictLine(report3) {
   const verdict = document.createElement("p");
   verdict.className = report3.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
   verdict.dataset.kpDiagnostic = "verdict";
   verdict.dataset.kpStatus = report3.status;
   verdict.textContent = report3.verdict;
+  return verdict;
+}
+function detailList(s2, report3) {
   const detail = document.createElement("ul");
   detail.dataset.kpDiagnostic = "detail";
   for (
@@ -84763,7 +84774,17 @@ function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
     li.textContent = sentence2(names.join(" "));
     detail.append(li);
   }
-  target.replaceChildren(heading, verdict, table, detail);
+  return detail;
+}
+function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
+  const s2 = strings ?? getStrings();
+  const report3 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
+  const heading = document.createElement("h2");
+  heading.textContent = s2.diagnosticsHeading;
+  const table = document.createElement("table");
+  table.className = "kp-table";
+  table.append(tableHead(s2), tableBody(s2, report3));
+  target.replaceChildren(heading, verdictLine(report3), table, detailList(s2, report3));
   return report3;
 }
 

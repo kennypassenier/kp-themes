@@ -1,7 +1,7 @@
-/** The custom property carrying the stylesheet's version [AR25]. */
-export declare const VERSION_PROPERTY = "--kp-themes-version";
-/** The custom property carrying the stylesheet's theme names [AR25]. */
-export declare const NAMES_PROPERTY = "--kp-themes-names";
+export { VERSION_PROPERTY, NAMES_PROPERTY, stylesheetSide, scriptSide } from './diagnostics/sides.js';
+export { compareVersions } from './diagnostics/compare.js';
+export { diagnose, diagnostics } from './diagnostics/report.js';
+export { renderDiagnostics } from './diagnostics/render.js';
 export type Side = {
     /**
      * the version this half was generated from, or null when it does not say
@@ -34,69 +34,17 @@ export type Report = {
     verdict: string;
 };
 /**
- * Compare two dotted version numbers.
- *
- * @param {string} a
- * @param {string} b
- * @returns {number | null} negative when a is older, 0 when equal, positive when a is newer; null when either is not a version
+ * @typedef {object} Side
+ * @property {string | null} version the version this half was generated from, or null when it does not say
+ * @property {string[]} themes the theme names this half knows
+ * @property {string[]} [unknownEffects] the hook values js/effects.js reported as unknown on this page [AR44]
  */
-export declare function compareVersions(a: string, b: string): number | null;
 /**
- * What the stylesheet on this page says about itself.
- *
- * A stylesheet older than 3.2.0 declares neither property, and that is
- * information rather than an error: it is older than any JavaScript that
- * can ask the question.
- *
- * @param {{ root?: Element }} [options]
- * @returns {Side}
+ * @typedef {object} Report
+ * @property {'match' | 'stylesheet-behind' | 'script-behind' | 'themes-differ' | 'no-version'} status
+ * @property {Side} stylesheet
+ * @property {Side} script
+ * @property {string[]} onlyInStylesheet themes the stylesheet has and the JavaScript does not
+ * @property {string[]} onlyInScript themes the JavaScript has and the stylesheet does not
+ * @property {string} verdict one sentence, from the dictionary, saying which half is behind
  */
-export declare function stylesheetSide({ root }?: {
-    root?: Element;
-}): Side;
-/**
- * What the JavaScript on this page says about itself.
- *
- * @returns {Side}
- */
-export declare function scriptSide(): Side;
-/**
- * Lay the two halves beside each other and name the one that is behind.
- *
- * Pure: same arguments, same report, no document and no clock. The test
- * that measures this feeds it a pair it knows to be mismatched, because a
- * verdict that has only ever seen a matching pair has never been read.
- *
- * @param {Side} stylesheet
- * @param {Side} script
- * @param {import('./strings.js').Strings} [strings]
- * @returns {Report}
- */
-export declare function diagnose(stylesheet: Side, script: Side, strings?: import('./strings.js').Strings): Report;
-/**
- * The same judgement, over the page this runs on.
- *
- * @param {{ root?: Element, strings?: import('./strings.js').Strings }} [options]
- * @returns {Report}
- */
-export declare function diagnostics({ root, strings }?: {
-    root?: Element;
-    strings?: import('./strings.js').Strings;
-}): Report;
-/**
- * Render the report into an element, as a table and one sentence.
- *
- * Every side is overridable, which is how the test feeds it a pair it
- * knows to be wrong [KT6]: nothing here reaches for a value it was not
- * given or could not read from the page it was pointed at.
- *
- * @param {Element} target
- * @param {{ root?: Element, stylesheet?: Side, script?: Side, strings?: import('./strings.js').Strings }} [options]
- * @returns {Report} the report it just drew
- */
-export declare function renderDiagnostics(target: Element, { root, stylesheet, script, strings }?: {
-    root?: Element;
-    stylesheet?: Side;
-    script?: Side;
-    strings?: import('./strings.js').Strings;
-}): Report;
