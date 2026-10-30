@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The ten largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The twenty-seven largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -276,3 +276,292 @@ Confirmations, skip links, back to top and the navigation toggles, menus and sti
 | `sticky-nav.js`     | Sticky navigation: compacts the nav once the page scrolls.                  |
 | `to-top.js`         | The back-to-top button.                                                     |
 | `type-confirm.js`   | The type-to-confirm field: its constants, matching and markup.              |
+
+## js/heat.js → js/heat/
+
+The heat grid and the matrix: coloured cells a person reads at a glance and asks about. 12 files.
+
+| File             | Does                                                                                      |
+| ---------------- | ----------------------------------------------------------------------------------------- |
+| `card.js`        | The busy card over a loading grid and the redraw that waits for it.                       |
+| `constants.js`   | The selectors, event names, tone list and cell selectors of the heat grid and the matrix. |
+| `dom.js`         | Element, tone and unit helpers every part of the heat grid uses.                          |
+| `draw.js`        | Draws the heat grid from its spec.                                                        |
+| `grid-state.js`  | The per-grid memory the drawing and the wiring share: decorate, tab stop and lit keys.    |
+| `legend.js`      | The legend under a heat grid: its entries, its keys and the calm tones.                   |
+| `matrix-wire.js` | Wires the matrices of a page: pointer, keys and the attach.                               |
+| `matrix.js`      | Draws the matrix and sets its lit headers and its pinned cell.                            |
+| `paging.js`      | The Earlier / Today / Later bar before a heat grid.                                       |
+| `pick.js`        | The picked column and the lit rows of a heat grid.                                        |
+| `types.js`       | The types of the heat grid and the matrix: specs, cells, options and decorate info.       |
+| `wire.js`        | Wires the heat grids of a page: pointer, keys and the attach.                             |
+
+## js/availability.js → js/availability/
+
+The availability grid: who can come, edited cell by cell. 10 files.
+
+| File           | Does                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------- |
+| `api.js`       | The functions a page calls to set the spec and read or set an answer.                 |
+| `attach.js`    | Attaches the availability grids of a page.                                            |
+| `constants.js` | The selector, event names, answer words and timings of the availability grid.         |
+| `dates.js`     | Pure date helpers: the days and the range an availability grid spans.                 |
+| `facts.js`     | Reads the grid: its state, its answers, who may edit what and the facts of a column.  |
+| `list.js`      | The list view of the columns on a narrow screen.                                      |
+| `menu.js`      | The answer menu on a cell.                                                            |
+| `paint.js`     | Paints the cells, the summary row and the whole grid from its state.                  |
+| `request.js`   | Sends an answer to the page, with undo, and rolls it back when the page refuses.      |
+| `types.js`     | The types of the availability grid: answers, people, columns, the spec and the state. |
+
+## js/usual-picker.js → js/usual-picker/
+
+The picker with the usual on top: pick, add and fold names. 12 files.
+
+| File           | Does                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| `add.js`       | Adding a name that is not in the list yet.                                                       |
+| `attach.js`    | Attaches the usual pickers of a page and the functions a page calls on one.                      |
+| `constants.js` | The selector, event names and states of the usual picker.                                        |
+| `layout.js`    | Arranges the options and paints the tail and the headers.                                        |
+| `lookup.js`    | Looks an item up: the exact one, the picked values and the nearest name to what was typed.       |
+| `model.js`     | The model of one picker and what it reads from its box: items, pinned values, bands and folding. |
+| `names.js`     | Pure name matching: normalising, similarity and the nearest names.                               |
+| `picking.js`   | Picking, unpicking and adding a name.                                                            |
+| `state.js`     | The counter the usual picker parts share to give each picker its own ids.                        |
+| `sync.js`      | The yes/no check, the panel and the hint kept in step with the model, and the render.            |
+| `types.js`     | The types of the usual picker: its items, its model and the handle a page gets.                  |
+| `wire.js`      | Prepares a picker and wires its combobox, segmented control, keys and events.                    |
+
+## js/week.js → js/week/
+
+The week agenda: days, pills, the upcoming list and the busy state. 12 files.
+
+| File           | Does                                                                                         |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| `api.js`       | The functions a page calls to set the events, state, start and legend of a week.             |
+| `attach.js`    | Attaches the week agendas of a page.                                                         |
+| `build.js`     | Builds the week: the frame, the steppers and the day columns.                                |
+| `busy.js`      | Holds the rows of a loading week and places its busy card.                                   |
+| `constants.js` | The selector, event names and fixed numbers of the week agenda.                              |
+| `helpers.js`   | Small helpers: elements, times, keys and day names.                                          |
+| `menu.js`      | The overflow menu of a day, tab stops and the focus on a pill.                               |
+| `paint.js`     | Paints the events into the week, draws its busy state, lays it out and ticks the clock line. |
+| `pills.js`     | Pure pill layout: how many pills a day holds and how an overflow stacks.                     |
+| `state.js`     | The per-week memory and the id counter the parts share.                                      |
+| `types.js`     | The types of the week agenda: event states and decorate info.                                |
+| `upcoming.js`  | The upcoming list under the week: what is next and how it reads.                             |
+
+## js/patterns.js → js/patterns/
+
+Copy buttons, secret blocks and secret inputs. 7 files.
+
+| File              | Does                                                                           |
+| ----------------- | ------------------------------------------------------------------------------ |
+| `clipboard.js`    | Clears the clipboard later, only when it still holds the secret.               |
+| `constants.js`    | The selectors, event names and timings of copy buttons and secrets.            |
+| `copy.js`         | Attaches the copy buttons, the secret blocks and the other patterns of a page. |
+| `secret-api.js`   | The functions a page calls to reveal, hide and read a secret.                  |
+| `secret-input.js` | Wires one secret input: reveal, copy, mask and clear.                          |
+| `secrets.js`      | Attaches the secrets of a page.                                                |
+| `types.js`        | The types of the copy buttons and the secret fields.                           |
+
+## js/overlays.js → js/overlays/
+
+Dialogs, tabs, toasts, dismissible alerts, tooltips and scroll boxes. 7 files.
+
+| File            | Does                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| `constants.js`  | The event names, selectors and timings of dialogs, tabs, toasts, dismissals, tooltips and scroll boxes. |
+| `dialogs.js`    | Dialogs: opening at the top, the close label and the attach.                                            |
+| `dismissals.js` | Dismissible alerts: dismissing, remembering and showing again.                                          |
+| `scrollbars.js` | Scroll boxes: the overflow marker and the scrollbar watcher.                                            |
+| `tabs.js`       | Tabs: selecting, revealing, the overflow and the attach.                                                |
+| `toast.js`      | Toasts: the region, the stack and the toast that waits while it is attended.                            |
+| `tooltips.js`   | Tooltips: attaches them to the elements that carry one.                                                 |
+
+## js/console.js → js/console/
+
+The interactive console: a command bar, output blocks and a run. 10 files.
+
+| File           | Does                                                                                                  |
+| -------------- | ----------------------------------------------------------------------------------------------------- |
+| `api.js`       | The functions a page calls to feed, read and clear a console, and the tool hook.                      |
+| `attach.js`    | Attaches the consoles of a page.                                                                      |
+| `bar.js`       | The parts of a console, its bar and its status line.                                                  |
+| `blocks.js`    | The blocks of output: one block, the body and the whole redraw.                                       |
+| `constants.js` | The selector, event names, states and limits of the console.                                          |
+| `history.js`   | The command history, kept in storage per console.                                                     |
+| `model.js`     | What a console remembers and reads: its state, its attributes, the elapsed time and the announcement. |
+| `run.js`       | Running a command: the ticker, following the output, applying a change and submitting.                |
+| `state.js`     | The counter the console parts share to give each console its own ids.                                 |
+| `types.js`     | The types of the console: changes, jobs, runs, blocks and state.                                      |
+
+## js/palette.js → js/palette/
+
+The command palette and its intent filter. 7 files.
+
+| File               | Does                                                                                           |
+| ------------------ | ---------------------------------------------------------------------------------------------- |
+| `api.js`           | The handle a page gets for a palette and the lookup by dialog.                                 |
+| `attach.js`        | Attaches the command palettes of a page.                                                       |
+| `constants.js`     | The part names, the opener selector, the event names and the empty-state words of the palette. |
+| `intent-filter.js` | The intent filter: the field, the matching and the keyboard of the palette list.               |
+| `keys.js`          | Keyboard facts: the platform, the matchers of a hotkey and whether the focus is typing.        |
+| `outside.js`       | Closing a dialog on an outside press and finding the control that opened it.                   |
+| `types.js`         | The types of the command palette: the matcher and the handle a page gets.                      |
+
+## js/entity-card.js → js/entity-card/
+
+The entity card and its grid. 7 files.
+
+| File           | Does                                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| `constants.js` | The selectors and event names of the entity card and its grid.                                         |
+| `grid.js`      | The grid of cards: its data, its states and the attach.                                                |
+| `helpers.js`   | Small helpers: options, star keys, the name, the slots, the kind of a tile, the frame and the columns. |
+| `set.js`       | Writes the data into one entity card; fits its flags and actions and redraws it when they change.      |
+| `star.js`      | The star: listening for its key, appending it and syncing it.                                          |
+| `tile.js`      | Draws one tile: the trend row and the tile itself.                                                     |
+| `types.js`     | The types of the entity card: its data and the empty options.                                          |
+
+## js/logviewer.js → js/logviewer/
+
+The live log viewer. 11 files.
+
+| File           | Does                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| `api.js`       | The functions a page calls to append, read, clear, search and set a log viewer.           |
+| `attach.js`    | Attaches the log viewers of a page.                                                       |
+| `constants.js` | The selector, event names, limit and level words of the log viewer.                       |
+| `levels.js`    | Level aliases and the time and level words a line prints.                                 |
+| `model.js`     | What a viewer remembers: its state, built parts, attributes and the reads of its options. |
+| `parts.js`     | Builds the parts of a viewer and applies its tools.                                       |
+| `reads.js`     | Reads a viewer: its tools, signature, limits, floor, query, announcement and text.        |
+| `refresh.js`   | Refreshes the visible rows: the filter, the redraw and the trim.                          |
+| `rows.js`      | Builds and dresses one log row, and finds the words that match.                           |
+| `state.js`     | The counter the log viewer parts share to give each viewer its own ids.                   |
+| `types.js`     | The types of the log viewer: lines, the spec and the state.                               |
+
+## js/art.js → js/art/
+
+The drawings of an empty state, one file per theme set. 17 files.
+
+| File           | Does                                                                                |
+| -------------- | ----------------------------------------------------------------------------------- |
+| `attach.js`    | Gives every element with a kind its drawing and follows a change of the kind.       |
+| `console.js`   | Nostromo's console set of drawings.                                                 |
+| `constants.js` | The selector, the kinds and the SVG namespace of the drawings.                      |
+| `draw.js`      | Draws one kind: an svg with the group of every set.                                 |
+| `drawing.js`   | The drawing-board set of drawings.                                                  |
+| `fan.js`       | The fan set of drawings.                                                            |
+| `field-kit.js` | The field kit set of drawings.                                                      |
+| `horizon.js`   | The horizon set of drawings.                                                        |
+| `hud.js`       | The HUD set of drawings.                                                            |
+| `ledger.js`    | Formal's set, the ledger: every drawing is something a clerk does to a ledger page. |
+| `low-sun.js`   | The low sun set of drawings.                                                        |
+| `machined.js`  | Titanium's machined set of drawings.                                                |
+| `sets.js`      | Every set the package has, by the name a register shows.                            |
+| `slab.js`      | The slab set of drawings.                                                           |
+| `spectrum.js`  | Spectrum's set of drawings.                                                         |
+| `stickers.js`  | The stickers set of drawings.                                                       |
+| `types.js`     | The types of the empty-state drawings: kinds, inks and strokes.                     |
+
+## js/menu-button.js → js/menu-button/
+
+The menu button with its rich menu. 10 files.
+
+| File           | Does                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------ |
+| `attach.js`    | Attaches the menu buttons of a page.                                                       |
+| `constants.js` | The selector, event names, the line-count property and the gutter of the menu button.      |
+| `count.js`     | Counting the lines of a menu: the line count property and the count of a menu.             |
+| `items.js`     | Builds the items of a menu: roles, labels, entries, the drawn list and the empty line.     |
+| `keys.js`      | The key a menu item answers to.                                                            |
+| `model.js`     | What a menu remembers and reads: its state, ids, keys and signature.                       |
+| `open.js`      | Opening, closing, setting and wiring a menu, and dressing its button.                      |
+| `placement.js` | Where a menu goes: the edges it must clear, the clip, the raise and lower and the placing. |
+| `state.js`     | The counter the menu button parts share to give each menu its own id.                      |
+| `types.js`     | The types of the menu button: items, groups, options, state and placement.                 |
+
+## js/diff.js → js/diff/
+
+The diff view with file headers, folded context and changed words. 12 files.
+
+| File           | Does                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------- |
+| `actions.js`   | The functions a page calls on a diff: set it, toggle a file and copy a path.                                  |
+| `attach.js`    | Attaches the diffs of a page.                                                                                 |
+| `constants.js` | The selector, event names and limits of the diff view.                                                        |
+| `file.js`      | Draws one file of the diff: its path, its change bar and its header.                                          |
+| `fold.js`      | Folding the unchanged context of a hunk.                                                                      |
+| `lines.js`     | Draws the lines and rows of a hunk and fills the body of a file.                                              |
+| `model.js`     | What a diff remembers and reads: its state, attributes and count.                                             |
+| `read.js`      | Reads a diff: the kind and head of a file, normalising it, whether it is open, the announcement and the text. |
+| `render.js`    | Renders the whole diff: the column sizes, the skeleton and the files.                                         |
+| `state.js`     | The counter the diff parts share to give each diff its own ids.                                               |
+| `types.js`     | The types of the diff view: lines, hunks, files, the spec and the state.                                      |
+| `words.js`     | Pure word diffing: tokens, segments and the pairs of words that changed.                                      |
+
+## js/claim.js → js/claim/
+
+Who brings what on a checklist. 10 files.
+
+| File           | Does                                                                                           |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| `api.js`       | The functions a page calls to set the viewer, the people, the filter and a claim.              |
+| `attach.js`    | Attaches the claim lists of a page.                                                            |
+| `bulk.js`      | Claiming everything at once and the gaps that copy.                                            |
+| `constants.js` | The selector, event names, filters and timings of claims.                                      |
+| `decorate.js`  | Decorates a claim list: every row, its filter and its summary; setting the filter redecorates. |
+| `model.js`     | What a claim list remembers and reads: its state, people, attributes and the item of a row.    |
+| `request.js`   | Sends a claim to the page, refuses it, announces it and offers the undo.                       |
+| `rows.js`      | Builds one claim row: its words, its cell, its button and its content.                         |
+| `state.js`     | The counter the claim parts share to give each list its own ids.                               |
+| `types.js`     | The types of the claim list: people, info, detail and state.                                   |
+
+## js/uptime.js → js/uptime/
+
+The uptime strip. 9 files.
+
+| File           | Does                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------ |
+| `attach.js`    | Attaches the uptime strips of a page.                                                |
+| `constants.js` | The selector, event names, states and counts of the uptime strip.                    |
+| `draw.js`      | Draws the strip from its spec.                                                       |
+| `figures.js`   | Pure figures: the uptime share, its percent and how many periods fit.                |
+| `fit.js`       | Fits the strip to its width and measures its edges.                                  |
+| `group.js`     | Strips that group: their host, joining and leaving the group card and the info mode. |
+| `helpers.js`   | Small helpers: tone and word of a period, the count and element makers.              |
+| `state.js`     | The per-strip memory the parts share: specs, cards, groups and info.                 |
+| `types.js`     | The types of the uptime strip: periods, the spec and the figures.                    |
+
+## js/timer.js → js/timer/
+
+Kitchen timers: named countdowns that keep running. 9 files.
+
+| File           | Does                                                                                           |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| `attach.js`    | Attaches the timer lists of a page.                                                            |
+| `card.js`      | Builds and paints one timer card.                                                              |
+| `constants.js` | The selector and the event names of the timers.                                                |
+| `model.js`     | What a timer list reads: the clock face, the time left, its state and its parts.               |
+| `run.js`       | Running a timer: finishing, starting, pausing, resuming, adding time, stopping and restoring.  |
+| `sound.js`     | The sounds a finished timer makes and the ring that stops them.                                |
+| `state.js`     | What the timer parts share: the lists, tickers, the audio context and the id counter.          |
+| `sync.js`      | Syncs the list with its timers: the busy state, the cards, the tick and the finish of a timer. |
+| `types.js`     | The types of the timers: their state and the timer itself.                                     |
+
+## js/combobox.js → js/combobox/
+
+The combobox and the drawn select. 8 files.
+
+| File           | Does                                                                         |
+| -------------- | ---------------------------------------------------------------------------- |
+| `attach.js`    | Attaches the comboboxes of a page.                                           |
+| `constants.js` | The part names, event names and empty-state words of the combobox.           |
+| `handle.js`    | The handles of the comboboxes and the lookup a page uses.                    |
+| `helpers.js`   | Small helpers: the label of an option and the status slot of a box.          |
+| `matchers.js`  | The matchers a combobox filters its options with.                            |
+| `select.js`    | The drawn select: its test, its handles and its attach.                      |
+| `state.js`     | The counter the drawn selects share to give each select its own id.          |
+| `types.js`     | The types of the combobox and the drawn select: matchers, handles and hooks. |

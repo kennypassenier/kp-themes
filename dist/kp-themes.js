@@ -4,7 +4,7 @@
    (ackGateExports, actionTilesExports, actionsExports, alarmExports, anchorsExports, artExports, attentionExports, autoRefreshExports, autoExports, autosizeExports, availabilityExports, barcellExports, bulletsExports, busyCardExports, calendarExports, calmTonesExports, calmExports, cardStateExports, chartExports, checklistExports, claimExports, codeFieldExports, codeExports, colorpickerExports, comboboxExports, commandExports, compareExports, componentsExports, connectionExports, consoleExports, contrastExports, countdownExports, datatableExports, datedOptionsExports, datepickerExports, deplistExports, diagnosticsExports, diffExports, docpreviewExports, effectsExports, entityCardExports, facetsExports, feedExports, flashExports, focusStepsExports, footprintExports, formsExports, freshnessExports, galleryExports, ganttExports, graphExports, gridlayoutExports, heatExports, hovercardExports, idmarkExports, intentExports, jobLineExports, jsonFieldExports, keysExports, kpiExports, lazyRegisterExports, ledeExports, listboxExports, liveOptionsExports, loadingPiecesExports, logviewerExports, markdownExports, masterDetailExports, menuButtonExports, motionExports, navFoldExports, newpillExports, noFlashExports, noticesExports, overlaysExports, pageContentsExports, paletteExports, passkeysExports, pathTraceExports, patternsExports, pipelineExports, printExports, problemsExports, progressbarExports, qrExports, quantityExports, questionCardExports, quietHoursExports, quoteExports, rangeExports, ratingExports, reasonExports, rememberExports, requestInspectorExports, rowSelectExports, runsExports, segmentedExports, selectionBarExports, sentenceExports, sequencerExports, shortcutsExports, sidenavExports, sliderExports, snoozeExports, stackbarExports, statusrowExports, steplistExports, stringsExports, structureExports, tabbarExports, tablesExports, themeCoreExports, themePickerExports, themeRegistryExports, threadExports, tickExports, tilesExports, timefieldExports, timerDiscExports, timerExports, toggleExports, toolbarExports, tourExports, transferExports, undoToastExports, unsavedExports, updateExports, uploadExports, uptimeExports, usesMapExports, usualPickerExports, versionDeltaExports, viewerExports, weekExports, weekdaysExports, wheelExports, wizardExports),
    plus every export that exactly one module declares, flat.
    Reachable only through a namespace, because more than one module
-   declares them: ROW_OPEN_EVENT, OPEN_EVENT, MATCHERS, setProgress. */
+   declares them: ROW_OPEN_EVENT, setProgress. */
 var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __esm = (fn, res, err) => function __init() {
@@ -4434,6 +4434,415 @@ var init_busy_card = __esm({
   }
 });
 
+// js/overlays/constants.js
+var TOAST_MS, DIALOG_OPEN_EVENT, TAB_CHANGE_EVENT, TOAST_LINGER_MS, TOAST_SHOW_EVENT, TOAST_HIDE_EVENT, TOAST_PAUSE_EVENT, TABS_OVERFLOW, ALERT_DISMISS_EVENT, DISMISS_OWNED, TOOLTIP_EVENT, TOOLTIP_OWNED, SCROLL_OVERFLOW, SCROLL_BOXES;
+var init_constants2 = __esm({
+  "js/overlays/constants.js"() {
+    "use strict";
+    TOAST_MS = 5e3;
+    DIALOG_OPEN_EVENT = "kp-dialog-open";
+    TAB_CHANGE_EVENT = "kp-tab-change";
+    TOAST_LINGER_MS = 2e3;
+    TOAST_SHOW_EVENT = "kp-toast-show";
+    TOAST_HIDE_EVENT = "kp-toast-hide";
+    TOAST_PAUSE_EVENT = "kp-toast-pause";
+    TABS_OVERFLOW = "data-kp-tabs-overflow";
+    ALERT_DISMISS_EVENT = "kp-alert-dismiss";
+    DISMISS_OWNED = "[data-kp-dismiss-owner]";
+    TOOLTIP_EVENT = "kp-tooltip";
+    TOOLTIP_OWNED = "[data-kp-tooltip-owner]";
+    SCROLL_OVERFLOW = "data-kp-popover-overflowing";
+    SCROLL_BOXES = ".kp-popover, .kp-dialog, .kp-dialog__body";
+  }
+});
+
+// js/overlays/dialogs.js
+function openAtTop(dialog) {
+  const body = dialog.querySelector(":scope > .kp-dialog__body");
+  for (const box of [dialog, body]) if (box) box.scrollTop = 0;
+  const focused = document.activeElement;
+  if (focused instanceof HTMLElement && focused !== dialog && dialog.contains(focused))
+    focused.scrollIntoView({ block: "nearest", inline: "nearest" });
+}
+function attachDialogs(root = document, { modal = true } = {}) {
+  const cleanups = [];
+  for (const el16 of root.querySelectorAll("[data-kp-dialog]")) {
+    const trigger = (
+      /** @type {HTMLElement} */
+      el16
+    );
+    if (trigger.dataset.kpDialogAttached !== void 0) continue;
+    const dialog = document.getElementById(trigger.dataset.kpDialog ?? "");
+    if (!(dialog instanceof HTMLDialogElement)) continue;
+    trigger.dataset.kpDialogAttached = "";
+    const open4 = () => {
+      const asModal = trigger.dataset.kpDialogMode === void 0 ? modal : trigger.dataset.kpDialogMode !== "non-modal";
+      if (dialog.open) return;
+      if (asModal) dialog.showModal();
+      else dialog.show();
+      openAtTop(dialog);
+      dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
+    };
+    trigger.addEventListener("click", open4);
+    cleanups.push(() => {
+      trigger.removeEventListener("click", open4);
+      delete trigger.dataset.kpDialogAttached;
+    });
+  }
+  for (const el16 of root.querySelectorAll("[data-kp-dialog-close]")) {
+    const button = (
+      /** @type {HTMLElement} */
+      el16
+    );
+    if (button.dataset.kpDialogCloseAttached !== void 0) continue;
+    button.dataset.kpDialogCloseAttached = "";
+    const close = () => button.closest("dialog")?.close(button.dataset.kpDialogClose || void 0);
+    button.addEventListener("click", close);
+    cleanups.push(() => {
+      button.removeEventListener("click", close);
+      delete button.dataset.kpDialogCloseAttached;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
+}
+var closeLabel;
+var init_dialogs = __esm({
+  "js/overlays/dialogs.js"() {
+    "use strict";
+    init_strings();
+    init_constants2();
+    closeLabel = () => getStrings().close;
+  }
+});
+
+// js/overlays/tabs.js
+function selectTab(list, which) {
+  const handle = handles.get(list);
+  if (handle === void 0) return;
+  const tabs = handle.tabs();
+  const index = typeof which === "number" ? which : tabs.findIndex((t) => t.id === which);
+  if (index >= 0 && index < tabs.length) handle.select(index, { focus: false });
+}
+function revealTab(list, tab) {
+  if (tab === void 0 || list.scrollWidth <= list.clientWidth) return;
+  const row = list.getBoundingClientRect();
+  const box = tab.getBoundingClientRect();
+  if (box.left < row.left) list.scrollLeft -= row.left - box.left;
+  else if (box.right > row.right) list.scrollLeft += box.right - row.right;
+}
+function watchTabOverflow(list, selected) {
+  const measure = () => {
+    const over = list.scrollWidth > list.clientWidth + 1;
+    if (over === list.hasAttribute(TABS_OVERFLOW)) return;
+    list.toggleAttribute(TABS_OVERFLOW, over);
+    if (over) revealTab(list, selected());
+  };
+  measure();
+  if (typeof ResizeObserver === "undefined") return () => list.removeAttribute(TABS_OVERFLOW);
+  const observer = new ResizeObserver(measure);
+  observer.observe(list);
+  for (const tab of list.children) observer.observe(tab);
+  return () => {
+    observer.disconnect();
+    list.removeAttribute(TABS_OVERFLOW);
+  };
+}
+function attachTabs(root = document, { activation = "automatic", loop = true } = {}) {
+  const cleanups = [];
+  for (const el16 of root.querySelectorAll('[role="tablist"]')) {
+    const list = (
+      /** @type {HTMLElement} */
+      el16
+    );
+    if (list.dataset.kpTabsAttached !== void 0) continue;
+    const tabs = () => [.../** @type {NodeListOf<HTMLElement>} */
+    list.querySelectorAll('[role="tab"]')];
+    if (tabs().length === 0) continue;
+    list.dataset.kpTabsAttached = "";
+    const manual = (list.dataset.kpActivation ?? activation) === "manual";
+    const wraps = list.dataset.kpLoop === void 0 ? loop : list.dataset.kpLoop !== "false";
+    const vertical = list.getAttribute("aria-orientation") === "vertical";
+    const before = tabs().map((tab) => ({
+      tab,
+      tabIndex: tab.getAttribute("tabindex"),
+      selected: tab.getAttribute("aria-selected"),
+      panel: document.getElementById(tab.getAttribute("aria-controls") ?? ""),
+      hidden: document.getElementById(tab.getAttribute("aria-controls") ?? "")?.hidden ?? false
+    }));
+    const leaving = /* @__PURE__ */ new Map();
+    let turn2 = 0;
+    const select2 = (index, { focus = true } = {}) => {
+      const all = tabs();
+      const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
+      let shown4 = null;
+      const going = [];
+      all.forEach((tab, i) => {
+        const selected = i === index;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "");
+        if (!panel) return;
+        if (selected) shown4 = panel;
+        else if (leaving.has(panel)) going.push(
+          /** @type {Promise<void>} */
+          leaving.get(panel)
+        );
+        else if (!panel.hidden) {
+          const gone = leave(panel, { hide: true }).finally(() => leaving.delete(panel));
+          leaving.set(panel, gone);
+          going.push(gone);
+        }
+      });
+      const mine = ++turn2;
+      const show = (
+        /** @type {HTMLElement | null} */
+        shown4
+      );
+      if (show) {
+        const back = leaving.get(show);
+        if (back) going.push(back);
+        if (going.length === 0) show.hidden = false;
+        else if (!back && leavesState(show)) {
+          show.setAttribute("data-kp-tabs-swapping", "");
+          setTimeout(() => show.removeAttribute("data-kp-tabs-swapping"), 400);
+          show.hidden = false;
+        } else {
+          if (!back) show.hidden = true;
+          void Promise.all(going).then(() => {
+            if (turn2 === mine) show.hidden = false;
+          });
+        }
+      }
+      if (focus) all[index]?.focus();
+      revealTab(list, all[index]);
+      if (previous !== index) {
+        const tab = all[index];
+        list.dispatchEvent(
+          new CustomEvent(TAB_CHANGE_EVENT, {
+            bubbles: true,
+            detail: { index, tab, panel: document.getElementById(tab?.getAttribute("aria-controls") ?? ""), previous }
+          })
+        );
+      }
+    };
+    const roam = (index) => {
+      const all = tabs();
+      all.forEach((tab, i) => {
+        tab.tabIndex = i === index ? 0 : -1;
+      });
+      all[index]?.focus();
+    };
+    const onKey4 = (e) => {
+      const all = tabs();
+      const current2 = all.indexOf(
+        /** @type {HTMLElement} */
+        document.activeElement
+      );
+      if (current2 === -1) return;
+      const next2 = vertical ? "ArrowDown" : "ArrowRight";
+      const prev = vertical ? "ArrowUp" : "ArrowLeft";
+      if (manual && (e.key === "Enter" || e.key === " ")) {
+        e.preventDefault();
+        select2(current2);
+        return;
+      }
+      const move = { [next2]: 1, [prev]: -1, Home: -current2, End: all.length - 1 - current2 }[e.key];
+      if (move === void 0) return;
+      e.preventDefault();
+      let target = current2 + move;
+      if (wraps) target = (target + all.length) % all.length;
+      else target = Math.max(0, Math.min(all.length - 1, target));
+      if (manual) roam(target);
+      else select2(target);
+    };
+    const onClick = (e) => {
+      const tab = (
+        /** @type {HTMLElement} */
+        e.target.closest('[role="tab"]')
+      );
+      if (tab) select2(tabs().indexOf(
+        /** @type {HTMLElement} */
+        tab
+      ));
+    };
+    const initial = Math.max(
+      0,
+      tabs().findIndex((t) => t.getAttribute("aria-selected") === "true")
+    );
+    tabs().forEach((tab, i) => {
+      tab.tabIndex = i === initial ? 0 : -1;
+    });
+    const stopWatching = watchTabOverflow(list, () => tabs().find((t) => t.getAttribute("aria-selected") === "true"));
+    revealTab(list, tabs()[initial]);
+    list.addEventListener("keydown", onKey4);
+    list.addEventListener("click", onClick);
+    handles.set(list, { tabs, select: select2 });
+    cleanups.push(() => {
+      list.removeEventListener("keydown", onKey4);
+      list.removeEventListener("click", onClick);
+      stopWatching();
+      handles.delete(list);
+      delete list.dataset.kpTabsAttached;
+      for (const b of before) {
+        if (b.tabIndex === null) b.tab.removeAttribute("tabindex");
+        else b.tab.setAttribute("tabindex", b.tabIndex);
+        if (b.selected === null) b.tab.removeAttribute("aria-selected");
+        else b.tab.setAttribute("aria-selected", b.selected);
+        if (b.panel) b.panel.hidden = b.hidden;
+      }
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
+}
+var handles;
+var init_tabs = __esm({
+  "js/overlays/tabs.js"() {
+    "use strict";
+    init_motion();
+    init_constants2();
+    handles = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/overlays/toast.js
+function toastRegion({ region = null, role = "status", live: live4 = "polite", className = "kp-toasts" } = {}) {
+  if (region) return region;
+  let found = (
+    /** @type {HTMLElement | null} */
+    document.querySelector(`.${className.split(/\s+/)[0]}`)
+  );
+  if (!found) {
+    found = document.createElement("div");
+    found.className = className;
+    found.setAttribute("role", role);
+    found.setAttribute("aria-live", live4);
+    document.body.append(found);
+  }
+  return found;
+}
+function toast(content, {
+  ms = TOAST_MS,
+  region = null,
+  live: live4,
+  className = "kp-toast",
+  action,
+  max,
+  pause = true,
+  linger = TOAST_LINGER_MS,
+  close = false,
+  sticky = false
+} = {}) {
+  const host = live4 === "assertive" ? toastRegion({ role: "alert", live: "assertive", className: "kp-toasts kp-toasts--assertive" }) : toastRegion({ region });
+  const el16 = (
+    /** @type {HTMLElement & { dismiss: () => void }} */
+    /** @type {unknown} */
+    document.createElement("div")
+  );
+  el16.className = className;
+  const body = document.createElement("span");
+  body.className = "kp-toast__body";
+  if (typeof content === "string") body.textContent = content;
+  else body.append(content);
+  el16.append(body);
+  if (action) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "kp-button kp-button--ghost";
+    button.textContent = action.label;
+    button.addEventListener("click", action.onClick);
+    el16.append(button);
+  }
+  if (close || sticky) {
+    const closer = document.createElement("button");
+    closer.type = "button";
+    closer.className = "kp-icon-button kp-toast__close";
+    closer.setAttribute("aria-label", getStrings().close);
+    closer.textContent = "\xD7";
+    closer.setAttribute("data-kp-dismiss-owner", "");
+    closer.addEventListener("click", () => el16.dismiss());
+    el16.append(closer);
+  }
+  let timer2 = 0;
+  el16.dismiss = () => {
+    clearTimeout(timer2);
+    if (!el16.isConnected || goingToasts.has(el16)) return;
+    goingToasts.add(el16);
+    void leave(el16).then(() => host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el16 } })));
+  };
+  host.append(el16);
+  if (max !== void 0) {
+    const staying = [...host.children].filter((child) => !goingToasts.has(child));
+    for (const old of staying.slice(0, Math.max(0, staying.length - max)))
+      old.dismiss?.();
+  }
+  host.dispatchEvent(
+    new CustomEvent(TOAST_SHOW_EVENT, { bubbles: true, detail: { toast: el16, text: typeof content === "string" ? content : el16.textContent } })
+  );
+  const lasting = sticky ? 0 : ms;
+  if (lasting > 0) {
+    timer2 = window.setTimeout(el16.dismiss, lasting);
+    if (pause)
+      holdWhileAttended(
+        el16,
+        () => timer2,
+        (next2) => timer2 = next2,
+        linger
+      );
+  }
+  el16.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || event.defaultPrevented) return;
+    event.preventDefault();
+    el16.dismiss();
+  });
+  return el16;
+}
+function holdWhileAttended(el16, getTimer, setTimer, linger) {
+  let pointer = false;
+  let focus = false;
+  let held2 = false;
+  const settle2 = () => {
+    const attended = pointer || focus;
+    if (attended === held2) return;
+    held2 = attended;
+    clearTimeout(getTimer());
+    el16.toggleAttribute("data-kp-paused", held2);
+    if (!held2) setTimer(window.setTimeout(el16.dismiss, linger));
+    el16.parentElement?.dispatchEvent(new CustomEvent(TOAST_PAUSE_EVENT, { bubbles: true, detail: { toast: el16, paused: held2 } }));
+  };
+  el16.addEventListener("pointerenter", (event) => {
+    if (event.pointerType === "touch") return;
+    pointer = true;
+    settle2();
+  });
+  el16.addEventListener("pointerleave", () => {
+    pointer = false;
+    settle2();
+  });
+  el16.addEventListener("focusin", () => {
+    focus = true;
+    settle2();
+  });
+  el16.addEventListener("focusout", (event) => {
+    if (event.relatedTarget instanceof Node && el16.contains(event.relatedTarget)) return;
+    focus = false;
+    settle2();
+  });
+}
+var goingToasts;
+var init_toast = __esm({
+  "js/overlays/toast.js"() {
+    "use strict";
+    init_strings();
+    init_motion();
+    init_constants2();
+    goingToasts = /* @__PURE__ */ new WeakSet();
+  }
+});
+
 // js/remember.js
 var remember_exports = {};
 __export(remember_exports, {
@@ -4800,374 +5209,7 @@ var init_remember = __esm({
   }
 });
 
-// js/overlays.js
-var overlays_exports = {};
-__export(overlays_exports, {
-  ALERT_DISMISS_EVENT: () => ALERT_DISMISS_EVENT,
-  DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
-  DISMISS_OWNED: () => DISMISS_OWNED,
-  SCROLL_BOXES: () => SCROLL_BOXES,
-  SCROLL_OVERFLOW: () => SCROLL_OVERFLOW,
-  TABS_OVERFLOW: () => TABS_OVERFLOW,
-  TAB_CHANGE_EVENT: () => TAB_CHANGE_EVENT,
-  TOAST_HIDE_EVENT: () => TOAST_HIDE_EVENT,
-  TOAST_LINGER_MS: () => TOAST_LINGER_MS,
-  TOAST_MS: () => TOAST_MS,
-  TOAST_PAUSE_EVENT: () => TOAST_PAUSE_EVENT,
-  TOAST_SHOW_EVENT: () => TOAST_SHOW_EVENT,
-  TOOLTIP_EVENT: () => TOOLTIP_EVENT,
-  TOOLTIP_OWNED: () => TOOLTIP_OWNED,
-  attachDialogs: () => attachDialogs,
-  attachDismissals: () => attachDismissals,
-  attachScrollbars: () => attachScrollbars,
-  attachTabs: () => attachTabs,
-  attachTooltips: () => attachTooltips,
-  closeLabel: () => closeLabel,
-  openAtTop: () => openAtTop,
-  revealTab: () => revealTab,
-  selectTab: () => selectTab,
-  showAlertAgain: () => showAlertAgain,
-  toast: () => toast,
-  toastRegion: () => toastRegion,
-  watchScrollbar: () => watchScrollbar,
-  watchTabOverflow: () => watchTabOverflow
-});
-function openAtTop(dialog) {
-  const body = dialog.querySelector(":scope > .kp-dialog__body");
-  for (const box of [dialog, body]) if (box) box.scrollTop = 0;
-  const focused = document.activeElement;
-  if (focused instanceof HTMLElement && focused !== dialog && dialog.contains(focused))
-    focused.scrollIntoView({ block: "nearest", inline: "nearest" });
-}
-function attachDialogs(root = document, { modal = true } = {}) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll("[data-kp-dialog]")) {
-    const trigger = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (trigger.dataset.kpDialogAttached !== void 0) continue;
-    const dialog = document.getElementById(trigger.dataset.kpDialog ?? "");
-    if (!(dialog instanceof HTMLDialogElement)) continue;
-    trigger.dataset.kpDialogAttached = "";
-    const open4 = () => {
-      const asModal = trigger.dataset.kpDialogMode === void 0 ? modal : trigger.dataset.kpDialogMode !== "non-modal";
-      if (dialog.open) return;
-      if (asModal) dialog.showModal();
-      else dialog.show();
-      openAtTop(dialog);
-      dialog.dispatchEvent(new CustomEvent(DIALOG_OPEN_EVENT, { bubbles: true, detail: { trigger, modal: asModal } }));
-    };
-    trigger.addEventListener("click", open4);
-    cleanups.push(() => {
-      trigger.removeEventListener("click", open4);
-      delete trigger.dataset.kpDialogAttached;
-    });
-  }
-  for (const el16 of root.querySelectorAll("[data-kp-dialog-close]")) {
-    const button = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (button.dataset.kpDialogCloseAttached !== void 0) continue;
-    button.dataset.kpDialogCloseAttached = "";
-    const close = () => button.closest("dialog")?.close(button.dataset.kpDialogClose || void 0);
-    button.addEventListener("click", close);
-    cleanups.push(() => {
-      button.removeEventListener("click", close);
-      delete button.dataset.kpDialogCloseAttached;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
-function selectTab(list, which) {
-  const handle = handles.get(list);
-  if (handle === void 0) return;
-  const tabs = handle.tabs();
-  const index = typeof which === "number" ? which : tabs.findIndex((t) => t.id === which);
-  if (index >= 0 && index < tabs.length) handle.select(index, { focus: false });
-}
-function revealTab(list, tab) {
-  if (tab === void 0 || list.scrollWidth <= list.clientWidth) return;
-  const row = list.getBoundingClientRect();
-  const box = tab.getBoundingClientRect();
-  if (box.left < row.left) list.scrollLeft -= row.left - box.left;
-  else if (box.right > row.right) list.scrollLeft += box.right - row.right;
-}
-function watchTabOverflow(list, selected) {
-  const measure = () => {
-    const over = list.scrollWidth > list.clientWidth + 1;
-    if (over === list.hasAttribute(TABS_OVERFLOW)) return;
-    list.toggleAttribute(TABS_OVERFLOW, over);
-    if (over) revealTab(list, selected());
-  };
-  measure();
-  if (typeof ResizeObserver === "undefined") return () => list.removeAttribute(TABS_OVERFLOW);
-  const observer = new ResizeObserver(measure);
-  observer.observe(list);
-  for (const tab of list.children) observer.observe(tab);
-  return () => {
-    observer.disconnect();
-    list.removeAttribute(TABS_OVERFLOW);
-  };
-}
-function attachTabs(root = document, { activation = "automatic", loop = true } = {}) {
-  const cleanups = [];
-  for (const el16 of root.querySelectorAll('[role="tablist"]')) {
-    const list = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    if (list.dataset.kpTabsAttached !== void 0) continue;
-    const tabs = () => [.../** @type {NodeListOf<HTMLElement>} */
-    list.querySelectorAll('[role="tab"]')];
-    if (tabs().length === 0) continue;
-    list.dataset.kpTabsAttached = "";
-    const manual = (list.dataset.kpActivation ?? activation) === "manual";
-    const wraps = list.dataset.kpLoop === void 0 ? loop : list.dataset.kpLoop !== "false";
-    const vertical = list.getAttribute("aria-orientation") === "vertical";
-    const before = tabs().map((tab) => ({
-      tab,
-      tabIndex: tab.getAttribute("tabindex"),
-      selected: tab.getAttribute("aria-selected"),
-      panel: document.getElementById(tab.getAttribute("aria-controls") ?? ""),
-      hidden: document.getElementById(tab.getAttribute("aria-controls") ?? "")?.hidden ?? false
-    }));
-    const leaving = /* @__PURE__ */ new Map();
-    let turn2 = 0;
-    const select2 = (index, { focus = true } = {}) => {
-      const all = tabs();
-      const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
-      let shown4 = null;
-      const going = [];
-      all.forEach((tab, i) => {
-        const selected = i === index;
-        tab.setAttribute("aria-selected", String(selected));
-        tab.tabIndex = selected ? 0 : -1;
-        const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "");
-        if (!panel) return;
-        if (selected) shown4 = panel;
-        else if (leaving.has(panel)) going.push(
-          /** @type {Promise<void>} */
-          leaving.get(panel)
-        );
-        else if (!panel.hidden) {
-          const gone = leave(panel, { hide: true }).finally(() => leaving.delete(panel));
-          leaving.set(panel, gone);
-          going.push(gone);
-        }
-      });
-      const mine = ++turn2;
-      const show = (
-        /** @type {HTMLElement | null} */
-        shown4
-      );
-      if (show) {
-        const back = leaving.get(show);
-        if (back) going.push(back);
-        if (going.length === 0) show.hidden = false;
-        else if (!back && leavesState(show)) {
-          show.setAttribute("data-kp-tabs-swapping", "");
-          setTimeout(() => show.removeAttribute("data-kp-tabs-swapping"), 400);
-          show.hidden = false;
-        } else {
-          if (!back) show.hidden = true;
-          void Promise.all(going).then(() => {
-            if (turn2 === mine) show.hidden = false;
-          });
-        }
-      }
-      if (focus) all[index]?.focus();
-      revealTab(list, all[index]);
-      if (previous !== index) {
-        const tab = all[index];
-        list.dispatchEvent(
-          new CustomEvent(TAB_CHANGE_EVENT, {
-            bubbles: true,
-            detail: { index, tab, panel: document.getElementById(tab?.getAttribute("aria-controls") ?? ""), previous }
-          })
-        );
-      }
-    };
-    const roam = (index) => {
-      const all = tabs();
-      all.forEach((tab, i) => {
-        tab.tabIndex = i === index ? 0 : -1;
-      });
-      all[index]?.focus();
-    };
-    const onKey4 = (e) => {
-      const all = tabs();
-      const current2 = all.indexOf(
-        /** @type {HTMLElement} */
-        document.activeElement
-      );
-      if (current2 === -1) return;
-      const next2 = vertical ? "ArrowDown" : "ArrowRight";
-      const prev = vertical ? "ArrowUp" : "ArrowLeft";
-      if (manual && (e.key === "Enter" || e.key === " ")) {
-        e.preventDefault();
-        select2(current2);
-        return;
-      }
-      const move = { [next2]: 1, [prev]: -1, Home: -current2, End: all.length - 1 - current2 }[e.key];
-      if (move === void 0) return;
-      e.preventDefault();
-      let target = current2 + move;
-      if (wraps) target = (target + all.length) % all.length;
-      else target = Math.max(0, Math.min(all.length - 1, target));
-      if (manual) roam(target);
-      else select2(target);
-    };
-    const onClick = (e) => {
-      const tab = (
-        /** @type {HTMLElement} */
-        e.target.closest('[role="tab"]')
-      );
-      if (tab) select2(tabs().indexOf(
-        /** @type {HTMLElement} */
-        tab
-      ));
-    };
-    const initial = Math.max(
-      0,
-      tabs().findIndex((t) => t.getAttribute("aria-selected") === "true")
-    );
-    tabs().forEach((tab, i) => {
-      tab.tabIndex = i === initial ? 0 : -1;
-    });
-    const stopWatching = watchTabOverflow(list, () => tabs().find((t) => t.getAttribute("aria-selected") === "true"));
-    revealTab(list, tabs()[initial]);
-    list.addEventListener("keydown", onKey4);
-    list.addEventListener("click", onClick);
-    handles.set(list, { tabs, select: select2 });
-    cleanups.push(() => {
-      list.removeEventListener("keydown", onKey4);
-      list.removeEventListener("click", onClick);
-      stopWatching();
-      handles.delete(list);
-      delete list.dataset.kpTabsAttached;
-      for (const b of before) {
-        if (b.tabIndex === null) b.tab.removeAttribute("tabindex");
-        else b.tab.setAttribute("tabindex", b.tabIndex);
-        if (b.selected === null) b.tab.removeAttribute("aria-selected");
-        else b.tab.setAttribute("aria-selected", b.selected);
-        if (b.panel) b.panel.hidden = b.hidden;
-      }
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
-function toastRegion({ region = null, role = "status", live: live4 = "polite", className = "kp-toasts" } = {}) {
-  if (region) return region;
-  let found = (
-    /** @type {HTMLElement | null} */
-    document.querySelector(`.${className.split(/\s+/)[0]}`)
-  );
-  if (!found) {
-    found = document.createElement("div");
-    found.className = className;
-    found.setAttribute("role", role);
-    found.setAttribute("aria-live", live4);
-    document.body.append(found);
-  }
-  return found;
-}
-function toast(content, { ms = TOAST_MS, region = null, live: live4, className = "kp-toast", action, max, pause = true, linger = TOAST_LINGER_MS, close = false, sticky = false } = {}) {
-  const host = live4 === "assertive" ? toastRegion({ role: "alert", live: "assertive", className: "kp-toasts kp-toasts--assertive" }) : toastRegion({ region });
-  const el16 = (
-    /** @type {HTMLElement & { dismiss: () => void }} */
-    /** @type {unknown} */
-    document.createElement("div")
-  );
-  el16.className = className;
-  const body = document.createElement("span");
-  body.className = "kp-toast__body";
-  if (typeof content === "string") body.textContent = content;
-  else body.append(content);
-  el16.append(body);
-  if (action) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "kp-button kp-button--ghost";
-    button.textContent = action.label;
-    button.addEventListener("click", action.onClick);
-    el16.append(button);
-  }
-  if (close || sticky) {
-    const closer = document.createElement("button");
-    closer.type = "button";
-    closer.className = "kp-icon-button kp-toast__close";
-    closer.setAttribute("aria-label", getStrings().close);
-    closer.textContent = "\xD7";
-    closer.setAttribute("data-kp-dismiss-owner", "");
-    closer.addEventListener("click", () => el16.dismiss());
-    el16.append(closer);
-  }
-  let timer2 = 0;
-  el16.dismiss = () => {
-    clearTimeout(timer2);
-    if (!el16.isConnected || goingToasts.has(el16)) return;
-    goingToasts.add(el16);
-    void leave(el16).then(() => host.dispatchEvent(new CustomEvent(TOAST_HIDE_EVENT, { bubbles: true, detail: { toast: el16 } })));
-  };
-  host.append(el16);
-  if (max !== void 0) {
-    const staying = [...host.children].filter((child) => !goingToasts.has(child));
-    for (const old of staying.slice(0, Math.max(0, staying.length - max)))
-      old.dismiss?.();
-  }
-  host.dispatchEvent(
-    new CustomEvent(TOAST_SHOW_EVENT, { bubbles: true, detail: { toast: el16, text: typeof content === "string" ? content : el16.textContent } })
-  );
-  const lasting = sticky ? 0 : ms;
-  if (lasting > 0) {
-    timer2 = window.setTimeout(el16.dismiss, lasting);
-    if (pause) holdWhileAttended(el16, () => timer2, (next2) => timer2 = next2, linger);
-  }
-  el16.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || event.defaultPrevented) return;
-    event.preventDefault();
-    el16.dismiss();
-  });
-  return el16;
-}
-function holdWhileAttended(el16, getTimer, setTimer, linger) {
-  let pointer = false;
-  let focus = false;
-  let held2 = false;
-  const settle2 = () => {
-    const attended = pointer || focus;
-    if (attended === held2) return;
-    held2 = attended;
-    clearTimeout(getTimer());
-    el16.toggleAttribute("data-kp-paused", held2);
-    if (!held2) setTimer(window.setTimeout(el16.dismiss, linger));
-    el16.parentElement?.dispatchEvent(new CustomEvent(TOAST_PAUSE_EVENT, { bubbles: true, detail: { toast: el16, paused: held2 } }));
-  };
-  el16.addEventListener("pointerenter", (event) => {
-    if (event.pointerType === "touch") return;
-    pointer = true;
-    settle2();
-  });
-  el16.addEventListener("pointerleave", () => {
-    pointer = false;
-    settle2();
-  });
-  el16.addEventListener("focusin", () => {
-    focus = true;
-    settle2();
-  });
-  el16.addEventListener("focusout", (event) => {
-    if (event.relatedTarget instanceof Node && el16.contains(event.relatedTarget)) return;
-    focus = false;
-    settle2();
-  });
-}
+// js/overlays/dismissals.js
 function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
   const onClick = (event) => {
     if (dismissHandled.has(event)) return;
@@ -5217,6 +5259,19 @@ function showAlertAgain(alert) {
   memoryFor(alert, "alert")?.forget("dismissed");
   alert.hidden = false;
 }
+var dismissHandled;
+var init_dismissals = __esm({
+  "js/overlays/dismissals.js"() {
+    "use strict";
+    init_remember();
+    init_motion();
+    init_constants2();
+    init_toast();
+    dismissHandled = /* @__PURE__ */ new WeakSet();
+  }
+});
+
+// js/overlays/tooltips.js
 function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100, closeOnEscape = true, ownedBy = TOOLTIP_OWNED } = {}) {
   const cleanups = [];
   let count2 = 0;
@@ -5319,6 +5374,15 @@ function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100
     for (const c of cleanups) c();
   };
 }
+var init_tooltips = __esm({
+  "js/overlays/tooltips.js"() {
+    "use strict";
+    init_motion();
+    init_constants2();
+  }
+});
+
+// js/overlays/scrollbars.js
 function watchScrollbar(box) {
   const PROPS = ["--kp-scroll-view", "--kp-scroll-ratio", "--kp-scroll-progress"];
   const measure = () => {
@@ -5435,32 +5499,57 @@ function attachScrollbars(root = document) {
     watched.clear();
   };
 }
-var TOAST_MS, DIALOG_OPEN_EVENT, TAB_CHANGE_EVENT, TOAST_LINGER_MS, TOAST_SHOW_EVENT, TOAST_HIDE_EVENT, TOAST_PAUSE_EVENT, handles, TABS_OVERFLOW, goingToasts, ALERT_DISMISS_EVENT, DISMISS_OWNED, dismissHandled, TOOLTIP_EVENT, TOOLTIP_OWNED, SCROLL_OVERFLOW, SCROLL_BOXES, scrollbarsWatched, closeLabel;
+var scrollbarsWatched;
+var init_scrollbars = __esm({
+  "js/overlays/scrollbars.js"() {
+    "use strict";
+    init_constants2();
+    scrollbarsWatched = /* @__PURE__ */ new WeakSet();
+  }
+});
+
+// js/overlays.js
+var overlays_exports = {};
+__export(overlays_exports, {
+  ALERT_DISMISS_EVENT: () => ALERT_DISMISS_EVENT,
+  DIALOG_OPEN_EVENT: () => DIALOG_OPEN_EVENT,
+  DISMISS_OWNED: () => DISMISS_OWNED,
+  SCROLL_BOXES: () => SCROLL_BOXES,
+  SCROLL_OVERFLOW: () => SCROLL_OVERFLOW,
+  TABS_OVERFLOW: () => TABS_OVERFLOW,
+  TAB_CHANGE_EVENT: () => TAB_CHANGE_EVENT,
+  TOAST_HIDE_EVENT: () => TOAST_HIDE_EVENT,
+  TOAST_LINGER_MS: () => TOAST_LINGER_MS,
+  TOAST_MS: () => TOAST_MS,
+  TOAST_PAUSE_EVENT: () => TOAST_PAUSE_EVENT,
+  TOAST_SHOW_EVENT: () => TOAST_SHOW_EVENT,
+  TOOLTIP_EVENT: () => TOOLTIP_EVENT,
+  TOOLTIP_OWNED: () => TOOLTIP_OWNED,
+  attachDialogs: () => attachDialogs,
+  attachDismissals: () => attachDismissals,
+  attachScrollbars: () => attachScrollbars,
+  attachTabs: () => attachTabs,
+  attachTooltips: () => attachTooltips,
+  closeLabel: () => closeLabel,
+  openAtTop: () => openAtTop,
+  revealTab: () => revealTab,
+  selectTab: () => selectTab,
+  showAlertAgain: () => showAlertAgain,
+  toast: () => toast,
+  toastRegion: () => toastRegion,
+  watchScrollbar: () => watchScrollbar,
+  watchTabOverflow: () => watchTabOverflow
+});
 var init_overlays = __esm({
   "js/overlays.js"() {
     "use strict";
-    init_strings();
-    init_remember();
-    init_motion();
-    TOAST_MS = 5e3;
-    DIALOG_OPEN_EVENT = "kp-dialog-open";
-    TAB_CHANGE_EVENT = "kp-tab-change";
-    TOAST_LINGER_MS = 2e3;
-    TOAST_SHOW_EVENT = "kp-toast-show";
-    TOAST_HIDE_EVENT = "kp-toast-hide";
-    TOAST_PAUSE_EVENT = "kp-toast-pause";
-    handles = /* @__PURE__ */ new WeakMap();
-    TABS_OVERFLOW = "data-kp-tabs-overflow";
-    goingToasts = /* @__PURE__ */ new WeakSet();
-    ALERT_DISMISS_EVENT = "kp-alert-dismiss";
-    DISMISS_OWNED = "[data-kp-dismiss-owner]";
-    dismissHandled = /* @__PURE__ */ new WeakSet();
-    TOOLTIP_EVENT = "kp-tooltip";
-    TOOLTIP_OWNED = "[data-kp-tooltip-owner]";
-    SCROLL_OVERFLOW = "data-kp-popover-overflowing";
-    SCROLL_BOXES = ".kp-popover, .kp-dialog, .kp-dialog__body";
-    scrollbarsWatched = /* @__PURE__ */ new WeakSet();
-    closeLabel = () => getStrings().close;
+    init_constants2();
+    init_dialogs();
+    init_tabs();
+    init_toast();
+    init_dismissals();
+    init_tooltips();
+    init_scrollbars();
   }
 });
 
@@ -9792,201 +9881,357 @@ var init_anchors = __esm({
   }
 });
 
-// js/art.js
-var art_exports = {};
-__export(art_exports, {
-  ART: () => ART,
-  ART_KINDS: () => ART_KINDS,
-  ART_SETS: () => ART_SETS,
-  attachArt: () => attachArt,
-  drawArt: () => drawArt
-});
-function drawArt(doc, kind) {
-  const svg2 = (
-    /** @type {SVGSVGElement} */
-    doc.createElementNS(SVG, "svg")
-  );
-  svg2.setAttribute("class", "kp-art");
-  svg2.setAttribute("viewBox", "0 0 120 72");
-  svg2.setAttribute("fill", "none");
-  svg2.setAttribute("aria-hidden", "true");
-  svg2.setAttribute("focusable", "false");
-  svg2.dataset.kpArtKind = kind;
-  for (const [name, set] of Object.entries(ART_SETS)) {
-    const group = doc.createElementNS(SVG, "g");
-    group.setAttribute("data-kp-art-set", name);
-    set[kind].forEach(([ink, d], i) => {
-      const path = doc.createElementNS(SVG, "path");
-      path.setAttribute("d", d);
-      path.setAttribute("pathLength", "1");
-      path.setAttribute("class", `kp-art__${ink}`);
-      path.style.setProperty("--kp-art-i", String(i));
-      group.append(path);
-    });
-    svg2.append(group);
-  }
-  return svg2;
-}
-function attachArt(root = document) {
-  const hosts = (
-    /** @type {HTMLElement[]} */
-    [...root instanceof Element && root.matches(ART) ? [root] : [], ...root.querySelectorAll(ART)]
-  );
-  const made6 = [];
-  const place3 = (host) => {
-    host.querySelector(":scope > .kp-art")?.remove();
-    const kind = host.dataset.kpArt ?? "";
-    if (!isKind(kind)) return;
-    const svg2 = drawArt(host.ownerDocument, kind);
-    host.prepend(svg2);
-    made6.push(svg2);
-  };
-  for (const host of hosts) place3(host);
-  if (typeof MutationObserver === "undefined" || hosts.length === 0)
-    return () => {
-      for (const svg2 of made6) svg2.remove();
-    };
-  const watch2 = new MutationObserver((records) => {
-    for (const record of records) place3(
-      /** @type {HTMLElement} */
-      record.target
-    );
-  });
-  for (const host of hosts) watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-art"] });
-  return () => {
-    watch2.disconnect();
-    for (const svg2 of made6) svg2.remove();
-  };
-}
-var ART, ART_KINDS, SVG, LEDGER, SPECTRUM, HUD, HORIZON, STICKERS, FIELD_KIT, DRAWING, LOW_SUN, SLAB, FAN, CONSOLE, MACHINED, ART_SETS, isKind;
-var init_art = __esm({
-  "js/art.js"() {
+// js/art/constants.js
+var ART, ART_KINDS, SVG;
+var init_constants3 = __esm({
+  "js/art/constants.js"() {
     "use strict";
     ART = "[data-kp-art]";
     ART_KINDS = /** @type {const} */
     ["none", "nomatch", "error", "offline", "done", "locked"];
     SVG = "http://www.w3.org/2000/svg";
-    LEDGER = {
-      // An open page, ruled and blank, the pen's tick waiting at the first line.
+  }
+});
+
+// js/art/console.js
+var CONSOLE;
+var init_console2 = __esm({
+  "js/art/console.js"() {
+    "use strict";
+    CONSOLE = {
+      // An empty cassette bay: the case, the label strip, the window with its two bare hubs. Nothing wound on them.
       none: [
-        ["ink", "M26 8h68v56H26z"],
-        ["rule", "M30 16h60"],
-        ["rule", "M30 19h60"],
-        ["line", "M30 29h60"],
-        ["line", "M30 38h60"],
-        ["line", "M30 47h60"],
-        ["line", "M30 56h60"],
-        ["rule", "M33 25v4"]
+        ["ink", "M26 12h68a4 4 0 0 1 4 4v38a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4V16a4 4 0 0 1 4-4z"],
+        ["line", "M30 18h60v10H30z"],
+        ["ink", "M38 34h44v16H38z"],
+        ["rule", "M54 42a4 4 0 1 0-8 0a4 4 0 1 0 8 0"],
+        ["rule", "M74 42a4 4 0 1 0-8 0a4 4 0 1 0 8 0"]
       ],
-      // The page searched: its lines with no entry under them, and the reading glass over its foot.
+      // The scope searched: its rings and crosshair, the sweep line, and no blip anywhere.
       nomatch: [
-        ["ink", "M20 8h64v56H20z"],
-        ["rule", "M24 16h56"],
-        ["rule", "M24 19h56"],
-        ["line", "M24 29h56"],
-        ["line", "M24 38h56"],
-        ["line", "M24 47h30"],
-        ["ink", "M86 44a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
-        ["rule", "M83 53l13 13"]
+        ["ink", "M86 36a26 26 0 1 0-52 0a26 26 0 1 0 52 0"],
+        ["line", "M73 36a13 13 0 1 0-26 0a13 13 0 1 0 26 0"],
+        ["line", "M60 10v52"],
+        ["line", "M34 36h52"],
+        ["rule", "M60 36l18-17"]
       ],
-      // An entry struck through in red ink, ruled off along its start edge.
+      // The tape off its reel: the reel stands, the tape runs out of it in red and tangles.
       error: [
-        ["ink", "M26 8h68v56H26z"],
-        ["rule", "M30 16h60"],
-        ["rule", "M30 19h60"],
-        ["line", "M30 29h60"],
-        ["ink", "M36 37c4-5 7 4 11-1s6 3 10-1 7 3 11 0 5 2 8 0"],
-        ["red", "M33 37.5h50"],
-        ["red", "M30 31v13"],
-        ["line", "M30 47h60"],
-        ["line", "M30 56h60"]
+        ["ink", "M54 34a16 16 0 1 0-32 0a16 16 0 1 0 32 0"],
+        ["line", "M42 34a4 4 0 1 0-8 0a4 4 0 1 0 8 0"],
+        ["red", "M54 34c10 0 10 18 20 18s10-30 20-30 10 26 16 22"],
+        ["red", "M110 44c3 8-5 12-9 6"]
       ],
-      // The double rule broken in its middle: the two halves of the account no longer meet.
+      // The jack and its socket, drawn apart: the plug on its cable, the socket on its own, a spark in the gap.
       offline: [
-        ["rule", "M10 30h38"],
-        ["rule", "M10 34h38"],
-        ["ink", "M48 26v12"],
-        ["rule", "M72 30h38"],
-        ["rule", "M72 34h38"],
-        ["ink", "M72 26v12"],
-        ["line", "M56 32h8"],
-        ["line", "M10 48h100"]
+        ["line", "M8 36h22"],
+        ["ink", "M30 28h16v16H30z"],
+        ["ink", "M46 31h8"],
+        ["ink", "M46 41h8"],
+        ["rule", "M58 36l2-4 3 8 2-4"],
+        ["ink", "M74 26h16v20H74z"],
+        ["line", "M78 31h5"],
+        ["line", "M78 41h5"],
+        ["line", "M90 36h22"]
       ],
-      // The account closed: a column of figures, ruled under, and closed with the double rule.
+      // A row of five lamps, every one lit, and the check under them.
       done: [
-        ["ink", "M26 8h68v56H26z"],
-        ["line", "M30 17h60"],
-        ["ink", "M70 17h16"],
-        ["line", "M30 26h60"],
-        ["ink", "M74 26h12"],
-        ["line", "M30 35h60"],
-        ["ink", "M66 35h20"],
-        ["rule", "M62 44h26"],
-        ["rule", "M62 47.5h26"],
-        ["ink", "M70 55h16"]
+        ["ink", "M28 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
+        ["ink", "M47 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
+        ["ink", "M66 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
+        ["ink", "M85 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
+        ["ink", "M104 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
+        ["rule", "M23 26h-2M42 26h-2M61 26h-2M80 26h-2M99 26h-2"],
+        ["line", "M12 40h96"],
+        ["rule", "M50 52l7 7 14-15"]
       ],
-      // The ledger shut, its strap across the cover and the clasp closed on it.
+      // The key switch: the plate with its four screws, the cylinder, the key slot, the label tape under it.
+      locked: [
+        ["ink", "M32 8h56a4 4 0 0 1 4 4v48a4 4 0 0 1-4 4H32a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z"],
+        ["line", "M37 16a1.5 1.5 0 1 0-3 0a1.5 1.5 0 1 0 3 0M86 16a1.5 1.5 0 1 0-3 0a1.5 1.5 0 1 0 3 0"],
+        ["ink", "M70 30a10 10 0 1 0-20 0a10 10 0 1 0 20 0"],
+        ["rule", "M60 24v12"],
+        ["line", "M44 50h32"]
+      ]
+    };
+  }
+});
+
+// js/art/drawing.js
+var DRAWING;
+var init_drawing = __esm({
+  "js/art/drawing.js"() {
+    "use strict";
+    DRAWING = {
+      // A part not drawn yet: its four corner marks, the centre lines and the compass circle round the centre.
+      none: [
+        ["line", "M18 36h84"],
+        ["line", "M60 8v56"],
+        ["ink", "M26 20V10h10"],
+        ["ink", "M84 10h10v10"],
+        ["ink", "M94 52v10H84"],
+        ["ink", "M36 62H26V52"],
+        ["rule", "M72 36a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
+        ["ink", "M30 68h60M30 65v6M90 65v6"]
+      ],
+      // The circle searched: a leader from it to a note that holds nothing.
+      nomatch: [
+        ["line", "M16 36h60"],
+        ["line", "M46 10v52"],
+        ["ink", "M62 36a16 16 0 1 0-32 0a16 16 0 1 0 32 0"],
+        ["rule", "M58 25l16-12h20"],
+        ["ink", "M94 8h18v10H94z"]
+      ],
+      // The part with its failure flagged: the filled triangle in red, the part's outline unfinished at one corner.
+      error: [
+        ["ink", "M30 14h60v40H30z"],
+        ["line", "M60 14v40M30 34h60"],
+        ["red", "M60 20l11 20H49z"],
+        ["red", "M60 26v7M60 36v1"],
+        ["rule", "M30 64h60M30 61v6M90 61v6"]
+      ],
+      // Two parts on one centre line, and the break in it where they no longer meet.
+      offline: [
+        ["ink", "M10 24h36v24H10z"],
+        ["ink", "M74 24h36v24H74z"],
+        ["line", "M4 36h6M46 36h6M68 36h6M110 36h6"],
+        ["ink", "M53 36l3-6 6 12 3-6"],
+        ["rule", "M10 56h36M10 53v6M46 53v6"],
+        ["rule", "M74 56h36M74 53v6M110 53v6"]
+      ],
+      // The section hatched and checked: the part is complete.
+      done: [
+        ["ink", "M30 12h60v44H30z"],
+        ["line", "M30 56L74 12M44 56L88 12M60 56L90 26M30 38L56 12"],
+        ["rule", "M50 36l8 8 14-16"],
+        ["ink", "M30 64h60M30 61v6M90 61v6"]
+      ],
+      // The part held under a lock: hatched across, the padlock drawn on its centre.
       locked: [
         ["ink", "M30 10h60v52H30z"],
-        ["ink", "M36 10v52"],
-        ["rule", "M30 36h60"],
-        ["ink", "M54 31h12v10H54z"],
-        ["rule", "M57 31v-4a3 3 0 0 1 6 0v4"]
+        ["line", "M30 62L82 10M30 40L60 10M52 62L90 24"],
+        ["ink", "M50 32h20v18H50z"],
+        ["rule", "M54 32v-6a6 6 0 0 1 12 0v6"],
+        ["rule", "M20 6h6M23 3v6M94 6h6M97 3v6"]
       ]
     };
-    SPECTRUM = {
-      // An empty screen: the grid, the baseline, the line waiting at its start edge.
+  }
+});
+
+// js/art/fan.js
+var FAN;
+var init_fan = __esm({
+  "js/art/fan.js"() {
+    "use strict";
+    FAN = {
+      // The fan closed, standing on its pivot over the double rule: nothing opened yet.
       none: [
-        ["ink", "M22 8h66l10 10v46H32L22 54z"],
-        ["line", "M34 22h52"],
-        ["line", "M34 50h52"],
-        ["line", "M60 14v44"],
-        ["line", "M34 36h52"],
-        ["rule", "M34 30v12"]
+        ["rule", "M60 56l-4 4 4 4 4-4z"],
+        ["ink", "M60 56L52 14h16z"],
+        ["line", "M30 66h60"],
+        ["line", "M30 69h60"]
       ],
-      // The spectrum read and no line found: the baseline flat, a pair of brackets round nothing.
+      // The ribs without their leaf: the fan open and nothing on it that matched.
       nomatch: [
-        ["ink", "M22 8h66l10 10v46H32L22 54z"],
-        ["line", "M34 36h14"],
-        ["line", "M72 36h14"],
-        ["ink", "M54 24h-6v24h6"],
-        ["ink", "M66 24h6v24h-6"],
-        ["rule", "M60 31v10"]
+        ["rule", "M60 56l-4 4 4 4 4-4z"],
+        ["line", "M60.0 62.0L67.6 18.7"],
+        ["line", "M60.0 62.0L52.4 18.7"],
+        ["line", "M60.0 62.0L82.0 23.9"],
+        ["line", "M60.0 62.0L38.0 23.9"],
+        ["line", "M60.0 62.0L93.7 33.7"],
+        ["line", "M60.0 62.0L26.3 33.7"],
+        ["line", "M60.0 62.0L101.3 47.0"],
+        ["line", "M60.0 62.0L18.7 47.0"],
+        ["line", "M24 66h72"]
       ],
-      // The line laid up to a point and cut there in coral: the rest of the track dark.
+      // One rib broken through in ruby, the rest of the fan whole.
       error: [
-        ["ink", "M22 8h66l10 10v46H32L22 54z"],
-        ["rule", "M34 36h20"],
-        ["red", "M58 24l8 24"],
-        ["red", "M66 24l-8 24"],
-        ["line", "M70 36h16"]
+        ["rule", "M60 56l-4 4 4 4 4-4z"],
+        ["red", "M60.0 62.0L63.4 42.5"],
+        ["red", "M64.6 36.0L67.6 18.7"],
+        ["ink", "M60.0 62.0L52.4 18.7"],
+        ["ink", "M60.0 62.0L82.0 23.9"],
+        ["ink", "M60.0 62.0L38.0 23.9"],
+        ["ink", "M60.0 62.0L93.7 33.7"],
+        ["ink", "M60.0 62.0L26.3 33.7"],
+        ["ink", "M60.0 62.0L101.3 47.0"],
+        ["ink", "M60.0 62.0L18.7 47.0"]
       ],
-      // The track broken in two with the brackets turned away from each other: nothing crosses the gap.
+      // Two chevrons turned toward each other and no longer meeting, over the double rule.
       offline: [
-        ["line", "M10 36h26"],
-        ["ink", "M44 26h-6v20h6"],
-        ["ink", "M76 26h6v20h-6"],
-        ["line", "M84 36h26"],
-        ["rule", "M52 36h4"],
-        ["rule", "M64 36h4"]
+        ["line", "M10 66h100"],
+        ["line", "M10 69h100"],
+        ["ink", "M24 24l16 16-16 16"],
+        ["ink", "M96 24l-16 16 16 16"],
+        ["rule", "M60 34l6 6-6 6-6-6z"]
       ],
-      // The pass finished: the whole track laid in film, the bracket closed on its end.
+      // The fan wide open with its leaf: everything is done.
       done: [
-        ["ink", "M22 8h66l10 10v46H32L22 54z"],
-        ["line", "M34 22h52"],
-        ["line", "M34 50h52"],
-        ["rule", "M34 36h46"],
-        ["ink", "M82 26h6v20h-6"],
-        ["rule", "M46 54l6 5l12-12"]
+        ["rule", "M60 56l-4 4 4 4 4-4z"],
+        ["ink", "M60.0 62.0L67.6 18.7"],
+        ["ink", "M60.0 62.0L52.4 18.7"],
+        ["ink", "M60.0 62.0L82.0 23.9"],
+        ["ink", "M60.0 62.0L38.0 23.9"],
+        ["ink", "M60.0 62.0L93.7 33.7"],
+        ["ink", "M60.0 62.0L26.3 33.7"],
+        ["ink", "M60.0 62.0L101.3 47.0"],
+        ["ink", "M60.0 62.0L18.7 47.0"],
+        ["rule", "M101.3 47.0A44 44 0 0 0 18.7 47.0"],
+        ["rule", "M86.3 52.4A28 28 0 0 0 33.7 52.4"]
       ],
-      // The screen behind a plate: a shackle, the plate cut on its corners, the keyhole in film.
+      // The fan folded shut with its band and the lozenge clasp across it.
       locked: [
-        ["ink", "M22 8h66l10 10v46H32L22 54z"],
-        ["ink", "M52 34v-7a8 8 0 0 1 16 0v7"],
-        ["ink", "M48 34h24v18H54l-6-6z"],
-        ["rule", "M60 39v8"]
+        ["ink", "M60 60L50 12h20z"],
+        ["rule", "M44 38h32"],
+        ["rule", "M60 32l6 6-6 6-6-6z"],
+        ["line", "M30 66h60"],
+        ["line", "M30 69h60"]
       ]
     };
+  }
+});
+
+// js/art/field-kit.js
+var FIELD_KIT;
+var init_field_kit = __esm({
+  "js/art/field-kit.js"() {
+    "use strict";
+    FIELD_KIT = {
+      // A map with nothing charted yet: contour rings round a bare trig point.
+      none: [
+        ["ink", "M22 8h58a10 10 0 0 1 10 10v44H32a10 10 0 0 1-10-10z"],
+        ["line", "M36 46c-2-10 8-17 22-16c13 1 20 10 14 19c-7 8-33 7-36-3z"],
+        ["line", "M46 44c2-6 8-9 15-7c7 2 9 8 4 13c-6 4-18 3-19-6z"],
+        ["rule", "M60 35l5 9h-10z"],
+        ["rule", "M61.5 41a1.5 1.5 0 1 0-3 0a1.5 1.5 0 1 0 3 0"],
+        ["rule", "M30 18h16"]
+      ],
+      // The trail searched: it runs out where the lens lies and finds nothing.
+      nomatch: [
+        ["ink", "M22 8h58a10 10 0 0 1 10 10v44H32a10 10 0 0 1-10-10z"],
+        ["line", "M28 28c10-6 18 2 28-2s14-8 24-4"],
+        ["line", "M28 36c10-6 18 2 28-2s14-8 24-4"],
+        ["rule", "M30 52l8-4 7 3 8-6"],
+        ["ink", "M86 36a11 11 0 1 0-22 0a11 11 0 1 0 22 0"],
+        ["rule", "M82 44l9 10"]
+      ],
+      // A tree with a red blaze crossed through: the trail is closed here.
+      error: [
+        ["line", "M30 62h60"],
+        ["ink", "M56 62V30M64 62V30"],
+        ["rule", "M60 6l15 24H45z"],
+        ["red", "M54 40h12v11H54z"],
+        ["red", "M54 40l12 11M66 40L54 51"]
+      ],
+      // The trail on one bank and the trail on the other, and a stream between with nothing across it.
+      offline: [
+        ["ink", "M8 40h38M74 40h38"],
+        ["line", "M46 24c5 5 5 11 0 16s-5 11 0 16"],
+        ["line", "M74 24c-5 5-5 11 0 16s5 11 0 16"],
+        ["rule", "M12 34h9M25 34h9"],
+        ["rule", "M86 34h9M99 34h9"],
+        ["rule", "M38 22a4 4 0 1 0-8 0a4 4 0 1 0 8 0"],
+        ["rule", "M90 22a4 4 0 1 0-8 0a4 4 0 1 0 8 0"]
+      ],
+      // A tree grown whole on its ground, a flag at the trig point: the plot is finished.
+      done: [
+        ["line", "M36 66h48"],
+        ["ink", "M30 58h60"],
+        ["ink", "M58 58V40h4v18"],
+        ["rule", "M60 6l12 16h-5l10 16H43l10-16h-5z"],
+        ["rule", "M94 58V44l9 4-9 4"]
+      ],
+      // A gate in a fence, its latch fastened.
+      locked: [
+        ["ink", "M30 12v52M90 12v52"],
+        ["rule", "M30 22h60M30 36h60M30 50h60"],
+        ["line", "M32 48L88 24"],
+        ["ink", "M55 31h10v10H55z"],
+        ["rule", "M57 31v-3a3 3 0 0 1 6 0v3"]
+      ]
+    };
+  }
+});
+
+// js/art/horizon.js
+var HORIZON;
+var init_horizon = __esm({
+  "js/art/horizon.js"() {
+    "use strict";
+    HORIZON = {
+      // The marquee with its bulbs unlit, the floor closing on the horizon under it.
+      none: [
+        ["ink", "M26 14h6"],
+        ["ink", "M42 14h6"],
+        ["ink", "M58 14h6"],
+        ["ink", "M74 14h6"],
+        ["ink", "M90 14h6"],
+        ["rule", "M10 30h100"],
+        ["line", "M60 30l-40 34"],
+        ["line", "M60 30l-20 34"],
+        ["line", "M60 30v34"],
+        ["line", "M60 30l20 34"],
+        ["line", "M60 30l40 34"],
+        ["line", "M18 42h84"],
+        ["line", "M8 56h104"]
+      ],
+      // A neon ring held over the floor with a laser laid under it: it holds nothing.
+      nomatch: [
+        ["ink", "M72 24a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
+        ["line", "M56 24h8"],
+        ["rule", "M12 44h96"],
+        ["line", "M18 54h84"],
+        ["line", "M8 64h104"]
+      ],
+      // A red neon ring with its bar across it: the tube that failed, the floor still under it.
+      error: [
+        ["red", "M72 24a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
+        ["red", "M54 24h12"],
+        ["rule", "M12 44h96"],
+        ["line", "M18 54h84"],
+        ["line", "M8 64h104"]
+      ],
+      // The horizon tube in two halves, each ending in a plug that meets no socket.
+      offline: [
+        ["rule", "M10 30h38"],
+        ["ink", "M48 22v16"],
+        ["ink", "M72 22v16"],
+        ["rule", "M72 30h38"],
+        ["line", "M52 30h4"],
+        ["line", "M64 30h4"],
+        ["line", "M18 46h84"],
+        ["line", "M8 58h104"]
+      ],
+      // Every bulb of the marquee lit, the horizon closed under them.
+      done: [
+        ["rule", "M24 14h8"],
+        ["rule", "M40 14h8"],
+        ["rule", "M56 14h8"],
+        ["rule", "M72 14h8"],
+        ["rule", "M88 14h8"],
+        ["ink", "M10 30h100"],
+        ["line", "M18 42h84"],
+        ["line", "M8 56h104"]
+      ],
+      // The shutter down: slats, a lock strung on the lowest one.
+      locked: [
+        ["ink", "M32 8h56"],
+        ["ink", "M32 16h56"],
+        ["ink", "M32 24h56"],
+        ["ink", "M32 32h56"],
+        ["ink", "M54 40v-3a6 6 0 0 1 12 0v3"],
+        ["rule", "M52 40h16v12H52z"],
+        ["line", "M18 62h84"]
+      ]
+    };
+  }
+});
+
+// js/art/hud.js
+var HUD;
+var init_hud = __esm({
+  "js/art/hud.js"() {
+    "use strict";
     HUD = {
       // An empty holo card, the reticle standing open at its middle, the cursor waiting.
       none: [
@@ -10057,72 +10302,327 @@ var init_art = __esm({
         ["line", "M28 60h8"]
       ]
     };
-    HORIZON = {
-      // The marquee with its bulbs unlit, the floor closing on the horizon under it.
+  }
+});
+
+// js/art/ledger.js
+var LEDGER;
+var init_ledger = __esm({
+  "js/art/ledger.js"() {
+    "use strict";
+    LEDGER = {
+      // An open page, ruled and blank, the pen's tick waiting at the first line.
       none: [
-        ["ink", "M26 14h6"],
-        ["ink", "M42 14h6"],
-        ["ink", "M58 14h6"],
-        ["ink", "M74 14h6"],
-        ["ink", "M90 14h6"],
-        ["rule", "M10 30h100"],
-        ["line", "M60 30l-40 34"],
-        ["line", "M60 30l-20 34"],
-        ["line", "M60 30v34"],
-        ["line", "M60 30l20 34"],
-        ["line", "M60 30l40 34"],
-        ["line", "M18 42h84"],
-        ["line", "M8 56h104"]
+        ["ink", "M26 8h68v56H26z"],
+        ["rule", "M30 16h60"],
+        ["rule", "M30 19h60"],
+        ["line", "M30 29h60"],
+        ["line", "M30 38h60"],
+        ["line", "M30 47h60"],
+        ["line", "M30 56h60"],
+        ["rule", "M33 25v4"]
       ],
-      // A neon ring held over the floor with a laser laid under it: it holds nothing.
+      // The page searched: its lines with no entry under them, and the reading glass over its foot.
       nomatch: [
-        ["ink", "M72 24a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
-        ["line", "M56 24h8"],
-        ["rule", "M12 44h96"],
-        ["line", "M18 54h84"],
-        ["line", "M8 64h104"]
+        ["ink", "M20 8h64v56H20z"],
+        ["rule", "M24 16h56"],
+        ["rule", "M24 19h56"],
+        ["line", "M24 29h56"],
+        ["line", "M24 38h56"],
+        ["line", "M24 47h30"],
+        ["ink", "M86 44a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
+        ["rule", "M83 53l13 13"]
       ],
-      // A red neon ring with its bar across it: the tube that failed, the floor still under it.
+      // An entry struck through in red ink, ruled off along its start edge.
       error: [
-        ["red", "M72 24a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
-        ["red", "M54 24h12"],
-        ["rule", "M12 44h96"],
-        ["line", "M18 54h84"],
-        ["line", "M8 64h104"]
+        ["ink", "M26 8h68v56H26z"],
+        ["rule", "M30 16h60"],
+        ["rule", "M30 19h60"],
+        ["line", "M30 29h60"],
+        ["ink", "M36 37c4-5 7 4 11-1s6 3 10-1 7 3 11 0 5 2 8 0"],
+        ["red", "M33 37.5h50"],
+        ["red", "M30 31v13"],
+        ["line", "M30 47h60"],
+        ["line", "M30 56h60"]
       ],
-      // The horizon tube in two halves, each ending in a plug that meets no socket.
+      // The double rule broken in its middle: the two halves of the account no longer meet.
       offline: [
         ["rule", "M10 30h38"],
-        ["ink", "M48 22v16"],
-        ["ink", "M72 22v16"],
+        ["rule", "M10 34h38"],
+        ["ink", "M48 26v12"],
         ["rule", "M72 30h38"],
-        ["line", "M52 30h4"],
-        ["line", "M64 30h4"],
-        ["line", "M18 46h84"],
-        ["line", "M8 58h104"]
+        ["rule", "M72 34h38"],
+        ["ink", "M72 26v12"],
+        ["line", "M56 32h8"],
+        ["line", "M10 48h100"]
       ],
-      // Every bulb of the marquee lit, the horizon closed under them.
+      // The account closed: a column of figures, ruled under, and closed with the double rule.
       done: [
-        ["rule", "M24 14h8"],
-        ["rule", "M40 14h8"],
-        ["rule", "M56 14h8"],
-        ["rule", "M72 14h8"],
-        ["rule", "M88 14h8"],
-        ["ink", "M10 30h100"],
-        ["line", "M18 42h84"],
-        ["line", "M8 56h104"]
+        ["ink", "M26 8h68v56H26z"],
+        ["line", "M30 17h60"],
+        ["ink", "M70 17h16"],
+        ["line", "M30 26h60"],
+        ["ink", "M74 26h12"],
+        ["line", "M30 35h60"],
+        ["ink", "M66 35h20"],
+        ["rule", "M62 44h26"],
+        ["rule", "M62 47.5h26"],
+        ["ink", "M70 55h16"]
       ],
-      // The shutter down: slats, a lock strung on the lowest one.
+      // The ledger shut, its strap across the cover and the clasp closed on it.
       locked: [
-        ["ink", "M32 8h56"],
-        ["ink", "M32 16h56"],
-        ["ink", "M32 24h56"],
-        ["ink", "M32 32h56"],
-        ["ink", "M54 40v-3a6 6 0 0 1 12 0v3"],
-        ["rule", "M52 40h16v12H52z"],
-        ["line", "M18 62h84"]
+        ["ink", "M30 10h60v52H30z"],
+        ["ink", "M36 10v52"],
+        ["rule", "M30 36h60"],
+        ["ink", "M54 31h12v10H54z"],
+        ["rule", "M57 31v-4a3 3 0 0 1 6 0v4"]
       ]
     };
+  }
+});
+
+// js/art/low-sun.js
+var LOW_SUN;
+var init_low_sun = __esm({
+  "js/art/low-sun.js"() {
+    "use strict";
+    LOW_SUN = {
+      // The sun not yet up: the horizon, a half disc on it and its first rays.
+      none: [
+        ["line", "M10 52h100"],
+        ["rule", "M46 52a14 14 0 0 1 28 0"],
+        ["line", "M60 29v-6"],
+        ["line", "M40 36l-4-4"],
+        ["line", "M80 36l4-4"]
+      ],
+      // The arc traced, and a hollow ring where the sun would stand: nothing matched.
+      nomatch: [
+        ["line", "M10 52h100"],
+        ["line", "M16 52a44 44 0 0 1 88 0"],
+        ["ink", "M52 8a8 8 0 1 0 16 0a8 8 0 1 0-16 0"],
+        ["rule", "M74 20l10 10"]
+      ],
+      // The sky reddened: the sun low behind bands of red haze.
+      error: [
+        ["line", "M10 56h100"],
+        ["ink", "M46 52a14 14 0 0 1 28 0"],
+        ["red", "M22 44h76"],
+        ["red", "M32 36h56"],
+        ["red", "M44 28h32"]
+      ],
+      // The arc broken in its middle and no sun on it.
+      offline: [
+        ["line", "M10 56h100"],
+        ["ink", "M14 56a46 46 0 0 1 23-40"],
+        ["ink", "M83 16a46 46 0 0 1 23 40"],
+        ["line", "M54 14h12"]
+      ],
+      // Noon: the whole sun risen over the horizon, every ray out.
+      done: [
+        ["line", "M10 58h100"],
+        ["rule", "M48 34a12 12 0 1 0 24 0a12 12 0 1 0-24 0"],
+        ["ink", "M60 14v6"],
+        ["ink", "M60 48v6"],
+        ["ink", "M34 34h6"],
+        ["ink", "M80 34h6"],
+        ["ink", "M41 15l4 4"],
+        ["ink", "M79 15l-4 4"]
+      ],
+      // The sun behind a closed shutter: its rays stop at the board, a keyhole in it.
+      locked: [
+        ["ink", "M26 36h68v24H26z"],
+        ["rule", "M54 47a6 6 0 1 0 12 0a6 6 0 1 0-12 0"],
+        ["rule", "M60 53v4"],
+        ["line", "M60 12v14"],
+        ["line", "M40 18l6 10"],
+        ["line", "M80 18l-6 10"]
+      ]
+    };
+  }
+});
+
+// js/art/machined.js
+var MACHINED;
+var init_machined = __esm({
+  "js/art/machined.js"() {
+    "use strict";
+    MACHINED = {
+      // Bar stock before the first cut: the chamfered plate, its brushed grain, the datum cross where the work starts.
+      none: [
+        ["ink", "M36 8h56v48l-8 8H28V16z"],
+        ["line", "M38 24h46"],
+        ["line", "M38 48h46"],
+        ["line", "M20 36h8M92 36h8"],
+        ["rule", "M54 36h12M60 30v12"]
+      ],
+      // The plate probed: three drilled holes, the stylus come down on a fourth place, and nothing there to find.
+      nomatch: [
+        ["ink", "M36 8h56v48l-8 8H28V16z"],
+        ["ink", "M50 29a3 3 0 1 0-6 0a3 3 0 1 0 6 0"],
+        ["ink", "M63 29a3 3 0 1 0-6 0a3 3 0 1 0 6 0"],
+        ["ink", "M76 29a3 3 0 1 0-6 0a3 3 0 1 0 6 0"],
+        ["line", "M44 46h32"],
+        ["rule", "M60 46h4M62 44v4"],
+        ["rule", "M100 6L63 43"]
+      ],
+      // The plate fractured through: the crack runs top to bottom in red, the halves no longer one part.
+      error: [
+        ["ink", "M36 8h22M62 8h30v48l-8 8H62M58 64H28V16l8-8"],
+        ["red", "M58 8l5 12-9 9 8 10-7 9 6 8-2 8"],
+        ["line", "M38 28h12"],
+        ["line", "M70 48h14"]
+      ],
+      // A bar parted: two halves with their chamfered ends, the axis through both, the gap dimensioned.
+      offline: [
+        ["ink", "M14 28h34l4 4v8l-4 4H14z"],
+        ["ink", "M106 28H72l-4 4v8l4 4h34z"],
+        ["line", "M8 36h104"],
+        ["rule", "M52 56h16"],
+        ["rule", "M56 53l-4 3 4 3M64 53l4 3-4 3"]
+      ],
+      // The finished part: the plate, its bore, and the inspection tick stamped in the bore.
+      done: [
+        ["ink", "M36 8h56v48l-8 8H28V16z"],
+        ["ink", "M72 36a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
+        ["rule", "M54 36l4 4 9-9"],
+        ["line", "M36 20h8"],
+        ["line", "M76 52h8"]
+      ],
+      // The part under its clasp: the body with its chamfers, the shackle over it, the key bore.
+      locked: [
+        ["ink", "M46 32h34v26l-6 6H40V38z"],
+        ["rule", "M48 32v-8a12 12 0 0 1 24 0v8"],
+        ["ink", "M63 46a3 3 0 1 0-6 0a3 3 0 1 0 6 0"],
+        ["rule", "M60 49v7"],
+        ["line", "M14 56h18M88 56h18"]
+      ]
+    };
+  }
+});
+
+// js/art/slab.js
+var SLAB;
+var init_slab = __esm({
+  "js/art/slab.js"() {
+    "use strict";
+    SLAB = {
+      // The footprint and the slab that stands on it, nothing on the slab yet.
+      none: [
+        ["line", "M34 62h54V20"],
+        ["ink", "M28 12h54v44H28z"]
+      ],
+      // The footprint with nothing on it and the slab lifted off, up and to the left, where it was.
+      nomatch: [
+        ["line", "M40 62h56V20"],
+        ["ink", "M18 6h54v44H18z"],
+        ["rule", "M44 56v-2"],
+        ["rule", "M70 56v-2"]
+      ],
+      // The slab taped off: three red stripes across it.
+      error: [
+        ["line", "M34 62h54V20"],
+        ["ink", "M28 12h54v44H28z"],
+        ["red", "M28 34L50 12"],
+        ["red", "M28 56L72 12"],
+        ["red", "M50 56l32-32"]
+      ],
+      // Two slabs on their ground with the cable between them cut through.
+      offline: [
+        ["line", "M6 62h108"],
+        ["ink", "M6 20h34v36H6z"],
+        ["ink", "M80 20h34v36H80z"],
+        ["rule", "M40 38h12"],
+        ["rule", "M68 38h12"],
+        ["red", "M54 30v16"],
+        ["red", "M66 30v16"]
+      ],
+      // The slab set down on its footprint and stamped with a tick.
+      done: [
+        ["line", "M34 62h54V20"],
+        ["ink", "M28 12h54v44H28z"],
+        ["rule", "M42 34l10 10 18-22"]
+      ],
+      // The slab bolted shut: four square bolts, a padlock on it.
+      locked: [
+        ["line", "M32 64h66V16"],
+        ["ink", "M26 8h68v52H26z"],
+        ["ink", "M44 32h32v20H44z"],
+        ["rule", "M50 32v-6a10 10 0 0 1 20 0v6"],
+        ["ink", "M31 13h5v5h-5z"],
+        ["ink", "M84 13h5v5h-5z"],
+        ["ink", "M31 50h5v5h-5z"],
+        ["ink", "M84 50h5v5h-5z"]
+      ]
+    };
+  }
+});
+
+// js/art/spectrum.js
+var SPECTRUM;
+var init_spectrum = __esm({
+  "js/art/spectrum.js"() {
+    "use strict";
+    SPECTRUM = {
+      // An empty screen: the grid, the baseline, the line waiting at its start edge.
+      none: [
+        ["ink", "M22 8h66l10 10v46H32L22 54z"],
+        ["line", "M34 22h52"],
+        ["line", "M34 50h52"],
+        ["line", "M60 14v44"],
+        ["line", "M34 36h52"],
+        ["rule", "M34 30v12"]
+      ],
+      // The spectrum read and no line found: the baseline flat, a pair of brackets round nothing.
+      nomatch: [
+        ["ink", "M22 8h66l10 10v46H32L22 54z"],
+        ["line", "M34 36h14"],
+        ["line", "M72 36h14"],
+        ["ink", "M54 24h-6v24h6"],
+        ["ink", "M66 24h6v24h-6"],
+        ["rule", "M60 31v10"]
+      ],
+      // The line laid up to a point and cut there in coral: the rest of the track dark.
+      error: [
+        ["ink", "M22 8h66l10 10v46H32L22 54z"],
+        ["rule", "M34 36h20"],
+        ["red", "M58 24l8 24"],
+        ["red", "M66 24l-8 24"],
+        ["line", "M70 36h16"]
+      ],
+      // The track broken in two with the brackets turned away from each other: nothing crosses the gap.
+      offline: [
+        ["line", "M10 36h26"],
+        ["ink", "M44 26h-6v20h6"],
+        ["ink", "M76 26h6v20h-6"],
+        ["line", "M84 36h26"],
+        ["rule", "M52 36h4"],
+        ["rule", "M64 36h4"]
+      ],
+      // The pass finished: the whole track laid in film, the bracket closed on its end.
+      done: [
+        ["ink", "M22 8h66l10 10v46H32L22 54z"],
+        ["line", "M34 22h52"],
+        ["line", "M34 50h52"],
+        ["rule", "M34 36h46"],
+        ["ink", "M82 26h6v20h-6"],
+        ["rule", "M46 54l6 5l12-12"]
+      ],
+      // The screen behind a plate: a shackle, the plate cut on its corners, the keyhole in film.
+      locked: [
+        ["ink", "M22 8h66l10 10v46H32L22 54z"],
+        ["ink", "M52 34v-7a8 8 0 0 1 16 0v7"],
+        ["ink", "M48 34h24v18H54l-6-6z"],
+        ["rule", "M60 39v8"]
+      ]
+    };
+  }
+});
+
+// js/art/stickers.js
+var STICKERS;
+var init_stickers = __esm({
+  "js/art/stickers.js"() {
+    "use strict";
     STICKERS = {
       // A blank planner page: three empty pearls on a thread, waiting for something to be threaded.
       none: [
@@ -10189,386 +10689,26 @@ var init_art = __esm({
         ["ink", "M22 14l12-8 5 7-12 9z"]
       ]
     };
-    FIELD_KIT = {
-      // A map with nothing charted yet: contour rings round a bare trig point.
-      none: [
-        ["ink", "M22 8h58a10 10 0 0 1 10 10v44H32a10 10 0 0 1-10-10z"],
-        ["line", "M36 46c-2-10 8-17 22-16c13 1 20 10 14 19c-7 8-33 7-36-3z"],
-        ["line", "M46 44c2-6 8-9 15-7c7 2 9 8 4 13c-6 4-18 3-19-6z"],
-        ["rule", "M60 35l5 9h-10z"],
-        ["rule", "M61.5 41a1.5 1.5 0 1 0-3 0a1.5 1.5 0 1 0 3 0"],
-        ["rule", "M30 18h16"]
-      ],
-      // The trail searched: it runs out where the lens lies and finds nothing.
-      nomatch: [
-        ["ink", "M22 8h58a10 10 0 0 1 10 10v44H32a10 10 0 0 1-10-10z"],
-        ["line", "M28 28c10-6 18 2 28-2s14-8 24-4"],
-        ["line", "M28 36c10-6 18 2 28-2s14-8 24-4"],
-        ["rule", "M30 52l8-4 7 3 8-6"],
-        ["ink", "M86 36a11 11 0 1 0-22 0a11 11 0 1 0 22 0"],
-        ["rule", "M82 44l9 10"]
-      ],
-      // A tree with a red blaze crossed through: the trail is closed here.
-      error: [
-        ["line", "M30 62h60"],
-        ["ink", "M56 62V30M64 62V30"],
-        ["rule", "M60 6l15 24H45z"],
-        ["red", "M54 40h12v11H54z"],
-        ["red", "M54 40l12 11M66 40L54 51"]
-      ],
-      // The trail on one bank and the trail on the other, and a stream between with nothing across it.
-      offline: [
-        ["ink", "M8 40h38M74 40h38"],
-        ["line", "M46 24c5 5 5 11 0 16s-5 11 0 16"],
-        ["line", "M74 24c-5 5-5 11 0 16s5 11 0 16"],
-        ["rule", "M12 34h9M25 34h9"],
-        ["rule", "M86 34h9M99 34h9"],
-        ["rule", "M38 22a4 4 0 1 0-8 0a4 4 0 1 0 8 0"],
-        ["rule", "M90 22a4 4 0 1 0-8 0a4 4 0 1 0 8 0"]
-      ],
-      // A tree grown whole on its ground, a flag at the trig point: the plot is finished.
-      done: [
-        ["line", "M36 66h48"],
-        ["ink", "M30 58h60"],
-        ["ink", "M58 58V40h4v18"],
-        ["rule", "M60 6l12 16h-5l10 16H43l10-16h-5z"],
-        ["rule", "M94 58V44l9 4-9 4"]
-      ],
-      // A gate in a fence, its latch fastened.
-      locked: [
-        ["ink", "M30 12v52M90 12v52"],
-        ["rule", "M30 22h60M30 36h60M30 50h60"],
-        ["line", "M32 48L88 24"],
-        ["ink", "M55 31h10v10H55z"],
-        ["rule", "M57 31v-3a3 3 0 0 1 6 0v3"]
-      ]
-    };
-    DRAWING = {
-      // A part not drawn yet: its four corner marks, the centre lines and the compass circle round the centre.
-      none: [
-        ["line", "M18 36h84"],
-        ["line", "M60 8v56"],
-        ["ink", "M26 20V10h10"],
-        ["ink", "M84 10h10v10"],
-        ["ink", "M94 52v10H84"],
-        ["ink", "M36 62H26V52"],
-        ["rule", "M72 36a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
-        ["ink", "M30 68h60M30 65v6M90 65v6"]
-      ],
-      // The circle searched: a leader from it to a note that holds nothing.
-      nomatch: [
-        ["line", "M16 36h60"],
-        ["line", "M46 10v52"],
-        ["ink", "M62 36a16 16 0 1 0-32 0a16 16 0 1 0 32 0"],
-        ["rule", "M58 25l16-12h20"],
-        ["ink", "M94 8h18v10H94z"]
-      ],
-      // The part with its failure flagged: the filled triangle in red, the part's outline unfinished at one corner.
-      error: [
-        ["ink", "M30 14h60v40H30z"],
-        ["line", "M60 14v40M30 34h60"],
-        ["red", "M60 20l11 20H49z"],
-        ["red", "M60 26v7M60 36v1"],
-        ["rule", "M30 64h60M30 61v6M90 61v6"]
-      ],
-      // Two parts on one centre line, and the break in it where they no longer meet.
-      offline: [
-        ["ink", "M10 24h36v24H10z"],
-        ["ink", "M74 24h36v24H74z"],
-        ["line", "M4 36h6M46 36h6M68 36h6M110 36h6"],
-        ["ink", "M53 36l3-6 6 12 3-6"],
-        ["rule", "M10 56h36M10 53v6M46 53v6"],
-        ["rule", "M74 56h36M74 53v6M110 53v6"]
-      ],
-      // The section hatched and checked: the part is complete.
-      done: [
-        ["ink", "M30 12h60v44H30z"],
-        ["line", "M30 56L74 12M44 56L88 12M60 56L90 26M30 38L56 12"],
-        ["rule", "M50 36l8 8 14-16"],
-        ["ink", "M30 64h60M30 61v6M90 61v6"]
-      ],
-      // The part held under a lock: hatched across, the padlock drawn on its centre.
-      locked: [
-        ["ink", "M30 10h60v52H30z"],
-        ["line", "M30 62L82 10M30 40L60 10M52 62L90 24"],
-        ["ink", "M50 32h20v18H50z"],
-        ["rule", "M54 32v-6a6 6 0 0 1 12 0v6"],
-        ["rule", "M20 6h6M23 3v6M94 6h6M97 3v6"]
-      ]
-    };
-    LOW_SUN = {
-      // The sun not yet up: the horizon, a half disc on it and its first rays.
-      none: [
-        ["line", "M10 52h100"],
-        ["rule", "M46 52a14 14 0 0 1 28 0"],
-        ["line", "M60 29v-6"],
-        ["line", "M40 36l-4-4"],
-        ["line", "M80 36l4-4"]
-      ],
-      // The arc traced, and a hollow ring where the sun would stand: nothing matched.
-      nomatch: [
-        ["line", "M10 52h100"],
-        ["line", "M16 52a44 44 0 0 1 88 0"],
-        ["ink", "M52 8a8 8 0 1 0 16 0a8 8 0 1 0-16 0"],
-        ["rule", "M74 20l10 10"]
-      ],
-      // The sky reddened: the sun low behind bands of red haze.
-      error: [
-        ["line", "M10 56h100"],
-        ["ink", "M46 52a14 14 0 0 1 28 0"],
-        ["red", "M22 44h76"],
-        ["red", "M32 36h56"],
-        ["red", "M44 28h32"]
-      ],
-      // The arc broken in its middle and no sun on it.
-      offline: [
-        ["line", "M10 56h100"],
-        ["ink", "M14 56a46 46 0 0 1 23-40"],
-        ["ink", "M83 16a46 46 0 0 1 23 40"],
-        ["line", "M54 14h12"]
-      ],
-      // Noon: the whole sun risen over the horizon, every ray out.
-      done: [
-        ["line", "M10 58h100"],
-        ["rule", "M48 34a12 12 0 1 0 24 0a12 12 0 1 0-24 0"],
-        ["ink", "M60 14v6"],
-        ["ink", "M60 48v6"],
-        ["ink", "M34 34h6"],
-        ["ink", "M80 34h6"],
-        ["ink", "M41 15l4 4"],
-        ["ink", "M79 15l-4 4"]
-      ],
-      // The sun behind a closed shutter: its rays stop at the board, a keyhole in it.
-      locked: [
-        ["ink", "M26 36h68v24H26z"],
-        ["rule", "M54 47a6 6 0 1 0 12 0a6 6 0 1 0-12 0"],
-        ["rule", "M60 53v4"],
-        ["line", "M60 12v14"],
-        ["line", "M40 18l6 10"],
-        ["line", "M80 18l-6 10"]
-      ]
-    };
-    SLAB = {
-      // The footprint and the slab that stands on it, nothing on the slab yet.
-      none: [
-        ["line", "M34 62h54V20"],
-        ["ink", "M28 12h54v44H28z"]
-      ],
-      // The footprint with nothing on it and the slab lifted off, up and to the left, where it was.
-      nomatch: [
-        ["line", "M40 62h56V20"],
-        ["ink", "M18 6h54v44H18z"],
-        ["rule", "M44 56v-2"],
-        ["rule", "M70 56v-2"]
-      ],
-      // The slab taped off: three red stripes across it.
-      error: [
-        ["line", "M34 62h54V20"],
-        ["ink", "M28 12h54v44H28z"],
-        ["red", "M28 34L50 12"],
-        ["red", "M28 56L72 12"],
-        ["red", "M50 56l32-32"]
-      ],
-      // Two slabs on their ground with the cable between them cut through.
-      offline: [
-        ["line", "M6 62h108"],
-        ["ink", "M6 20h34v36H6z"],
-        ["ink", "M80 20h34v36H80z"],
-        ["rule", "M40 38h12"],
-        ["rule", "M68 38h12"],
-        ["red", "M54 30v16"],
-        ["red", "M66 30v16"]
-      ],
-      // The slab set down on its footprint and stamped with a tick.
-      done: [
-        ["line", "M34 62h54V20"],
-        ["ink", "M28 12h54v44H28z"],
-        ["rule", "M42 34l10 10 18-22"]
-      ],
-      // The slab bolted shut: four square bolts, a padlock on it.
-      locked: [
-        ["line", "M32 64h66V16"],
-        ["ink", "M26 8h68v52H26z"],
-        ["ink", "M44 32h32v20H44z"],
-        ["rule", "M50 32v-6a10 10 0 0 1 20 0v6"],
-        ["ink", "M31 13h5v5h-5z"],
-        ["ink", "M84 13h5v5h-5z"],
-        ["ink", "M31 50h5v5h-5z"],
-        ["ink", "M84 50h5v5h-5z"]
-      ]
-    };
-    FAN = {
-      // The fan closed, standing on its pivot over the double rule: nothing opened yet.
-      none: [
-        ["rule", "M60 56l-4 4 4 4 4-4z"],
-        ["ink", "M60 56L52 14h16z"],
-        ["line", "M30 66h60"],
-        ["line", "M30 69h60"]
-      ],
-      // The ribs without their leaf: the fan open and nothing on it that matched.
-      nomatch: [
-        ["rule", "M60 56l-4 4 4 4 4-4z"],
-        ["line", "M60.0 62.0L67.6 18.7"],
-        ["line", "M60.0 62.0L52.4 18.7"],
-        ["line", "M60.0 62.0L82.0 23.9"],
-        ["line", "M60.0 62.0L38.0 23.9"],
-        ["line", "M60.0 62.0L93.7 33.7"],
-        ["line", "M60.0 62.0L26.3 33.7"],
-        ["line", "M60.0 62.0L101.3 47.0"],
-        ["line", "M60.0 62.0L18.7 47.0"],
-        ["line", "M24 66h72"]
-      ],
-      // One rib broken through in ruby, the rest of the fan whole.
-      error: [
-        ["rule", "M60 56l-4 4 4 4 4-4z"],
-        ["red", "M60.0 62.0L63.4 42.5"],
-        ["red", "M64.6 36.0L67.6 18.7"],
-        ["ink", "M60.0 62.0L52.4 18.7"],
-        ["ink", "M60.0 62.0L82.0 23.9"],
-        ["ink", "M60.0 62.0L38.0 23.9"],
-        ["ink", "M60.0 62.0L93.7 33.7"],
-        ["ink", "M60.0 62.0L26.3 33.7"],
-        ["ink", "M60.0 62.0L101.3 47.0"],
-        ["ink", "M60.0 62.0L18.7 47.0"]
-      ],
-      // Two chevrons turned toward each other and no longer meeting, over the double rule.
-      offline: [
-        ["line", "M10 66h100"],
-        ["line", "M10 69h100"],
-        ["ink", "M24 24l16 16-16 16"],
-        ["ink", "M96 24l-16 16 16 16"],
-        ["rule", "M60 34l6 6-6 6-6-6z"]
-      ],
-      // The fan wide open with its leaf: everything is done.
-      done: [
-        ["rule", "M60 56l-4 4 4 4 4-4z"],
-        ["ink", "M60.0 62.0L67.6 18.7"],
-        ["ink", "M60.0 62.0L52.4 18.7"],
-        ["ink", "M60.0 62.0L82.0 23.9"],
-        ["ink", "M60.0 62.0L38.0 23.9"],
-        ["ink", "M60.0 62.0L93.7 33.7"],
-        ["ink", "M60.0 62.0L26.3 33.7"],
-        ["ink", "M60.0 62.0L101.3 47.0"],
-        ["ink", "M60.0 62.0L18.7 47.0"],
-        ["rule", "M101.3 47.0A44 44 0 0 0 18.7 47.0"],
-        ["rule", "M86.3 52.4A28 28 0 0 0 33.7 52.4"]
-      ],
-      // The fan folded shut with its band and the lozenge clasp across it.
-      locked: [
-        ["ink", "M60 60L50 12h20z"],
-        ["rule", "M44 38h32"],
-        ["rule", "M60 32l6 6-6 6-6-6z"],
-        ["line", "M30 66h60"],
-        ["line", "M30 69h60"]
-      ]
-    };
-    CONSOLE = {
-      // An empty cassette bay: the case, the label strip, the window with its two bare hubs. Nothing wound on them.
-      none: [
-        ["ink", "M26 12h68a4 4 0 0 1 4 4v38a4 4 0 0 1-4 4H26a4 4 0 0 1-4-4V16a4 4 0 0 1 4-4z"],
-        ["line", "M30 18h60v10H30z"],
-        ["ink", "M38 34h44v16H38z"],
-        ["rule", "M54 42a4 4 0 1 0-8 0a4 4 0 1 0 8 0"],
-        ["rule", "M74 42a4 4 0 1 0-8 0a4 4 0 1 0 8 0"]
-      ],
-      // The scope searched: its rings and crosshair, the sweep line, and no blip anywhere.
-      nomatch: [
-        ["ink", "M86 36a26 26 0 1 0-52 0a26 26 0 1 0 52 0"],
-        ["line", "M73 36a13 13 0 1 0-26 0a13 13 0 1 0 26 0"],
-        ["line", "M60 10v52"],
-        ["line", "M34 36h52"],
-        ["rule", "M60 36l18-17"]
-      ],
-      // The tape off its reel: the reel stands, the tape runs out of it in red and tangles.
-      error: [
-        ["ink", "M54 34a16 16 0 1 0-32 0a16 16 0 1 0 32 0"],
-        ["line", "M42 34a4 4 0 1 0-8 0a4 4 0 1 0 8 0"],
-        ["red", "M54 34c10 0 10 18 20 18s10-30 20-30 10 26 16 22"],
-        ["red", "M110 44c3 8-5 12-9 6"]
-      ],
-      // The jack and its socket, drawn apart: the plug on its cable, the socket on its own, a spark in the gap.
-      offline: [
-        ["line", "M8 36h22"],
-        ["ink", "M30 28h16v16H30z"],
-        ["ink", "M46 31h8"],
-        ["ink", "M46 41h8"],
-        ["rule", "M58 36l2-4 3 8 2-4"],
-        ["ink", "M74 26h16v20H74z"],
-        ["line", "M78 31h5"],
-        ["line", "M78 41h5"],
-        ["line", "M90 36h22"]
-      ],
-      // A row of five lamps, every one lit, and the check under them.
-      done: [
-        ["ink", "M28 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
-        ["ink", "M47 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
-        ["ink", "M66 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
-        ["ink", "M85 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
-        ["ink", "M104 26a6 6 0 1 0-12 0a6 6 0 1 0 12 0"],
-        ["rule", "M23 26h-2M42 26h-2M61 26h-2M80 26h-2M99 26h-2"],
-        ["line", "M12 40h96"],
-        ["rule", "M50 52l7 7 14-15"]
-      ],
-      // The key switch: the plate with its four screws, the cylinder, the key slot, the label tape under it.
-      locked: [
-        ["ink", "M32 8h56a4 4 0 0 1 4 4v48a4 4 0 0 1-4 4H32a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z"],
-        ["line", "M37 16a1.5 1.5 0 1 0-3 0a1.5 1.5 0 1 0 3 0M86 16a1.5 1.5 0 1 0-3 0a1.5 1.5 0 1 0 3 0"],
-        ["ink", "M70 30a10 10 0 1 0-20 0a10 10 0 1 0 20 0"],
-        ["rule", "M60 24v12"],
-        ["line", "M44 50h32"]
-      ]
-    };
-    MACHINED = {
-      // Bar stock before the first cut: the chamfered plate, its brushed grain, the datum cross where the work starts.
-      none: [
-        ["ink", "M36 8h56v48l-8 8H28V16z"],
-        ["line", "M38 24h46"],
-        ["line", "M38 48h46"],
-        ["line", "M20 36h8M92 36h8"],
-        ["rule", "M54 36h12M60 30v12"]
-      ],
-      // The plate probed: three drilled holes, the stylus come down on a fourth place, and nothing there to find.
-      nomatch: [
-        ["ink", "M36 8h56v48l-8 8H28V16z"],
-        ["ink", "M50 29a3 3 0 1 0-6 0a3 3 0 1 0 6 0"],
-        ["ink", "M63 29a3 3 0 1 0-6 0a3 3 0 1 0 6 0"],
-        ["ink", "M76 29a3 3 0 1 0-6 0a3 3 0 1 0 6 0"],
-        ["line", "M44 46h32"],
-        ["rule", "M60 46h4M62 44v4"],
-        ["rule", "M100 6L63 43"]
-      ],
-      // The plate fractured through: the crack runs top to bottom in red, the halves no longer one part.
-      error: [
-        ["ink", "M36 8h22M62 8h30v48l-8 8H62M58 64H28V16l8-8"],
-        ["red", "M58 8l5 12-9 9 8 10-7 9 6 8-2 8"],
-        ["line", "M38 28h12"],
-        ["line", "M70 48h14"]
-      ],
-      // A bar parted: two halves with their chamfered ends, the axis through both, the gap dimensioned.
-      offline: [
-        ["ink", "M14 28h34l4 4v8l-4 4H14z"],
-        ["ink", "M106 28H72l-4 4v8l4 4h34z"],
-        ["line", "M8 36h104"],
-        ["rule", "M52 56h16"],
-        ["rule", "M56 53l-4 3 4 3M64 53l4 3-4 3"]
-      ],
-      // The finished part: the plate, its bore, and the inspection tick stamped in the bore.
-      done: [
-        ["ink", "M36 8h56v48l-8 8H28V16z"],
-        ["ink", "M72 36a12 12 0 1 0-24 0a12 12 0 1 0 24 0"],
-        ["rule", "M54 36l4 4 9-9"],
-        ["line", "M36 20h8"],
-        ["line", "M76 52h8"]
-      ],
-      // The part under its clasp: the body with its chamfers, the shackle over it, the key bore.
-      locked: [
-        ["ink", "M46 32h34v26l-6 6H40V38z"],
-        ["rule", "M48 32v-8a12 12 0 0 1 24 0v8"],
-        ["ink", "M63 46a3 3 0 1 0-6 0a3 3 0 1 0 6 0"],
-        ["rule", "M60 49v7"],
-        ["line", "M14 56h18M88 56h18"]
-      ]
-    };
+  }
+});
+
+// js/art/sets.js
+var ART_SETS;
+var init_sets = __esm({
+  "js/art/sets.js"() {
+    "use strict";
+    init_console2();
+    init_drawing();
+    init_fan();
+    init_field_kit();
+    init_horizon();
+    init_hud();
+    init_ledger();
+    init_low_sun();
+    init_machined();
+    init_slab();
+    init_spectrum();
+    init_stickers();
     ART_SETS = {
       ledger: LEDGER,
       spectrum: SPECTRUM,
@@ -10583,10 +10723,105 @@ var init_art = __esm({
       nostromo: CONSOLE,
       titanium: MACHINED
     };
+  }
+});
+
+// js/art/draw.js
+function drawArt(doc, kind) {
+  const svg2 = (
+    /** @type {SVGSVGElement} */
+    doc.createElementNS(SVG, "svg")
+  );
+  svg2.setAttribute("class", "kp-art");
+  svg2.setAttribute("viewBox", "0 0 120 72");
+  svg2.setAttribute("fill", "none");
+  svg2.setAttribute("aria-hidden", "true");
+  svg2.setAttribute("focusable", "false");
+  svg2.dataset.kpArtKind = kind;
+  for (const [name, set] of Object.entries(ART_SETS)) {
+    const group = doc.createElementNS(SVG, "g");
+    group.setAttribute("data-kp-art-set", name);
+    set[kind].forEach(([ink, d], i) => {
+      const path = doc.createElementNS(SVG, "path");
+      path.setAttribute("d", d);
+      path.setAttribute("pathLength", "1");
+      path.setAttribute("class", `kp-art__${ink}`);
+      path.style.setProperty("--kp-art-i", String(i));
+      group.append(path);
+    });
+    svg2.append(group);
+  }
+  return svg2;
+}
+var isKind;
+var init_draw = __esm({
+  "js/art/draw.js"() {
+    "use strict";
+    init_constants3();
+    init_sets();
     isKind = (value) => (
       /** @type {readonly string[]} */
       ART_KINDS.includes(value)
     );
+  }
+});
+
+// js/art/attach.js
+function attachArt(root = document) {
+  const hosts = (
+    /** @type {HTMLElement[]} */
+    [...root instanceof Element && root.matches(ART) ? [root] : [], ...root.querySelectorAll(ART)]
+  );
+  const made6 = [];
+  const place3 = (host) => {
+    host.querySelector(":scope > .kp-art")?.remove();
+    const kind = host.dataset.kpArt ?? "";
+    if (!isKind(kind)) return;
+    const svg2 = drawArt(host.ownerDocument, kind);
+    host.prepend(svg2);
+    made6.push(svg2);
+  };
+  for (const host of hosts) place3(host);
+  if (typeof MutationObserver === "undefined" || hosts.length === 0)
+    return () => {
+      for (const svg2 of made6) svg2.remove();
+    };
+  const watch2 = new MutationObserver((records) => {
+    for (const record of records) place3(
+      /** @type {HTMLElement} */
+      record.target
+    );
+  });
+  for (const host of hosts) watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-art"] });
+  return () => {
+    watch2.disconnect();
+    for (const svg2 of made6) svg2.remove();
+  };
+}
+var init_attach2 = __esm({
+  "js/art/attach.js"() {
+    "use strict";
+    init_constants3();
+    init_draw();
+  }
+});
+
+// js/art.js
+var art_exports = {};
+__export(art_exports, {
+  ART: () => ART,
+  ART_KINDS: () => ART_KINDS,
+  ART_SETS: () => ART_SETS,
+  attachArt: () => attachArt,
+  drawArt: () => drawArt
+});
+var init_art = __esm({
+  "js/art.js"() {
+    "use strict";
+    init_constants3();
+    init_sets();
+    init_draw();
+    init_attach2();
   }
 });
 
@@ -10794,6 +11029,99 @@ var init_attention = __esm({
   }
 });
 
+// js/menu-button/constants.js
+var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, MENU_GUTTER;
+var init_constants4 = __esm({
+  "js/menu-button/constants.js"() {
+    "use strict";
+    MENU_BUTTON = "[data-kp-menu-button]";
+    MENU_OPEN_EVENT = "kp-menu-open";
+    MENU_CLOSE_EVENT = "kp-menu-close";
+    MENU_SELECT_EVENT = "kp-menu-select";
+    MENU_COUNT_PROPERTY = "--kp-menu-count";
+    MENU_GUTTER = 8;
+  }
+});
+
+// js/menu-button/count.js
+function menuLineCount(menu) {
+  return menu.children.length;
+}
+function countMenu(menu) {
+  const next2 = String(menuLineCount(menu));
+  const hosts = [menu];
+  const popover = menu.parentElement;
+  if (popover?.matches(".kp-popover[popover]")) hosts.push(popover);
+  for (const host of hosts) if (host.style.getPropertyValue(MENU_COUNT_PROPERTY) !== next2) host.style.setProperty(MENU_COUNT_PROPERTY, next2);
+}
+var init_count2 = __esm({
+  "js/menu-button/count.js"() {
+    "use strict";
+    init_constants4();
+  }
+});
+
+// js/menu-button/state.js
+var menuState;
+var init_state2 = __esm({
+  "js/menu-button/state.js"() {
+    "use strict";
+    menuState = {
+      idSeq: 0
+    };
+  }
+});
+
+// js/menu-button/model.js
+var menus, nextId, keyOf, menuSignature;
+var init_model = __esm({
+  "js/menu-button/model.js"() {
+    "use strict";
+    init_state2();
+    menus = /* @__PURE__ */ new WeakMap();
+    nextId = (prefix) => `${prefix}-${menuState.idSeq += 1}`;
+    keyOf = (host) => host.getAttribute("data-kp-key") ?? void 0;
+    menuSignature = (groups) => groups === "loading" ? "loading" : JSON.stringify(
+      groups.map((g) => [
+        g.group,
+        g.items.map((i) => [
+          i.label,
+          i.hint ?? "",
+          i.href ?? "",
+          i.download ?? "",
+          i.disabled ?? "",
+          !!i.danger,
+          i.attrs ?? null,
+          i.value ?? ""
+        ])
+      ])
+    );
+  }
+});
+
+// js/menu-button/keys.js
+function menuKeyTarget(event, at, labels) {
+  const n = labels.length;
+  if (!n) return null;
+  const { key } = event;
+  if (key === "ArrowDown") return (at + 1) % n;
+  if (key === "ArrowUp") return (at - 1 + n) % n;
+  if (key === "Home") return 0;
+  if (key === "End") return n - 1;
+  if (key.length !== 1 || key === " " || event.ctrlKey || event.metaKey || event.altKey) return null;
+  const letter = key.toLocaleLowerCase();
+  for (let step = 1; step <= n; step += 1) {
+    const index = ((at + step) % n + n) % n;
+    if (labels[index].trim().toLocaleLowerCase().startsWith(letter)) return index;
+  }
+  return null;
+}
+var init_keys = __esm({
+  "js/menu-button/keys.js"() {
+    "use strict";
+  }
+});
+
 // js/top-layer.js
 function unturnedRect(el16, style) {
   const box = el16.getBoundingClientRect();
@@ -10934,143 +11262,7 @@ var init_top_layer = __esm({
   }
 });
 
-// js/menu-button.js
-var menu_button_exports = {};
-__export(menu_button_exports, {
-  MENU_BUTTON: () => MENU_BUTTON,
-  MENU_CLOSE_EVENT: () => MENU_CLOSE_EVENT,
-  MENU_COUNT_PROPERTY: () => MENU_COUNT_PROPERTY,
-  MENU_GUTTER: () => MENU_GUTTER,
-  MENU_OPEN_EVENT: () => MENU_OPEN_EVENT,
-  MENU_SELECT_EVENT: () => MENU_SELECT_EVENT,
-  attachMenuButtons: () => attachMenuButtons,
-  closeMenu: () => closeMenu,
-  menuKeyTarget: () => menuKeyTarget,
-  menuLineCount: () => menuLineCount,
-  menuPlacement: () => menuPlacement,
-  menuSignature: () => menuSignature,
-  openMenu: () => openMenu,
-  setMenu: () => setMenu
-});
-function menuLineCount(menu) {
-  return menu.children.length;
-}
-function countMenu(menu) {
-  const next2 = String(menuLineCount(menu));
-  const hosts = [menu];
-  const popover = menu.parentElement;
-  if (popover?.matches(".kp-popover[popover]")) hosts.push(popover);
-  for (const host of hosts) if (host.style.getPropertyValue(MENU_COUNT_PROPERTY) !== next2) host.style.setProperty(MENU_COUNT_PROPERTY, next2);
-}
-function menuKeyTarget(event, at, labels) {
-  const n = labels.length;
-  if (!n) return null;
-  const { key } = event;
-  if (key === "ArrowDown") return (at + 1) % n;
-  if (key === "ArrowUp") return (at - 1 + n) % n;
-  if (key === "Home") return 0;
-  if (key === "End") return n - 1;
-  if (key.length !== 1 || key === " " || event.ctrlKey || event.metaKey || event.altKey) return null;
-  const letter = key.toLocaleLowerCase();
-  for (let step = 1; step <= n; step += 1) {
-    const index = ((at + step) % n + n) % n;
-    if (labels[index].trim().toLocaleLowerCase().startsWith(letter)) return index;
-  }
-  return null;
-}
-function menuEntry(doc, item) {
-  const el16 = (
-    /** @type {HTMLElement} */
-    doc.createElement(item.href ? "a" : "button")
-  );
-  if (item.href) {
-    el16.setAttribute("href", item.href);
-    if (item.download) el16.setAttribute("download", item.download);
-  } else el16.setAttribute("type", "button");
-  el16.setAttribute("role", "menuitem");
-  el16.className = `kp-menu__item${item.danger ? " kp-menu__item--destructive" : ""}`;
-  el16.tabIndex = -1;
-  const label = make(doc, "span", "kp-menu__label", item.label);
-  label.id = nextId("kp-menu-label");
-  el16.setAttribute("aria-labelledby", label.id);
-  el16.append(label);
-  const described = [];
-  if (item.hint) {
-    const hint2 = make(doc, "span", "kp-menu__hint", item.hint);
-    hint2.id = nextId("kp-menu-hint");
-    described.push(hint2.id);
-    el16.append(hint2);
-  }
-  if (item.disabled) {
-    const reason = make(doc, "span", "kp-menu__hint kp-menu__reason", item.disabled);
-    reason.id = nextId("kp-menu-reason");
-    described.push(reason.id);
-    el16.append(reason);
-    el16.setAttribute("aria-disabled", "true");
-    el16.dataset.kpReason = item.disabled;
-  }
-  if (described.length) el16.setAttribute("aria-describedby", described.join(" "));
-  el16.title = item.disabled ?? item.hint ?? "";
-  if (item.value) el16.dataset.kpValue = item.value;
-  for (const [name, value] of Object.entries(item.attrs ?? {})) {
-    if (value == null) el16.removeAttribute(name);
-    else el16.setAttribute(name, value);
-  }
-  return el16;
-}
-function drawMenu(s2, groups) {
-  const doc = s2.menu.ownerDocument;
-  const strings = resolveStrings(s2.strings);
-  s2.drawn = menuSignature(groups);
-  if (groups === "loading") {
-    const entry = menuEntry(doc, { label: strings.menuLoading, hint: "\xA0" });
-    entry.setAttribute("aria-disabled", "true");
-    entry.dataset.kpLoading = "";
-    s2.menu.replaceChildren(entry);
-    s2.menu.setAttribute("aria-busy", "true");
-    countMenu(s2.menu);
-    setEmpty(s2, false, strings);
-    return;
-  }
-  s2.menu.removeAttribute("aria-busy");
-  const used = groups.filter((g) => g.items.length);
-  const total = used.reduce((n, g) => n + g.items.length, 0);
-  const blocks = [];
-  let index = 0;
-  for (const group of used) {
-    const block = make(doc, "div", "kp-menu__group");
-    if (group.group && total > 1) {
-      const heading = make(doc, "p", "kp-menu__heading", group.group);
-      heading.id = nextId("kp-menu-group");
-      heading.setAttribute("role", "presentation");
-      block.setAttribute("role", "group");
-      block.setAttribute("aria-labelledby", heading.id);
-      block.append(heading);
-    } else block.setAttribute("role", "none");
-    for (const item of group.items) {
-      const entry = menuEntry(doc, item);
-      block.append(entry);
-      decorateItem(s2, entry, index);
-      index += 1;
-    }
-    blocks.push(block);
-  }
-  s2.menu.replaceChildren(...blocks);
-  countMenu(s2.menu);
-  setEmpty(s2, total === 0, strings);
-}
-function setEmpty(s2, empty, strings) {
-  s2.empty = empty;
-  const hide2 = s2.wrapper.dataset.kpMenuEmpty === "hide";
-  s2.wrapper.hidden = empty && hide2;
-  if (empty && !hide2) {
-    s2.button.setAttribute("aria-disabled", "true");
-    s2.button.title = strings.menuEmpty;
-  } else if (s2.button.getAttribute("aria-disabled") === "true") {
-    s2.button.removeAttribute("aria-disabled");
-    s2.button.removeAttribute("title");
-  }
-}
+// js/menu-button/placement.js
 function menuPlacement({ button, menu, height, gap, room }) {
   const width = menu.right - menu.left;
   const across = room.right - room.left;
@@ -11246,6 +11438,142 @@ function placeMenu(s2, view, covered) {
     menu.style.setProperty("--kp-menu-anchor-x", `${Math.round(x * 10) / 10}px`);
   }
 }
+var PLACED, ANCHOR_EDGE;
+var init_placement = __esm({
+  "js/menu-button/placement.js"() {
+    "use strict";
+    init_top_layer();
+    init_constants4();
+    PLACED = ["left", "right", "top", "bottom", "width", "max-block-size", "max-inline-size", "--kp-menu-anchor-x"];
+    ANCHOR_EDGE = 14;
+  }
+});
+
+// js/menu-button/items.js
+function menuEntry(doc, item) {
+  const el16 = (
+    /** @type {HTMLElement} */
+    doc.createElement(item.href ? "a" : "button")
+  );
+  if (item.href) {
+    el16.setAttribute("href", item.href);
+    if (item.download) el16.setAttribute("download", item.download);
+  } else el16.setAttribute("type", "button");
+  el16.setAttribute("role", "menuitem");
+  el16.className = `kp-menu__item${item.danger ? " kp-menu__item--destructive" : ""}`;
+  el16.tabIndex = -1;
+  const label = make(doc, "span", "kp-menu__label", item.label);
+  label.id = nextId("kp-menu-label");
+  el16.setAttribute("aria-labelledby", label.id);
+  el16.append(label);
+  const described = [];
+  if (item.hint) {
+    const hint2 = make(doc, "span", "kp-menu__hint", item.hint);
+    hint2.id = nextId("kp-menu-hint");
+    described.push(hint2.id);
+    el16.append(hint2);
+  }
+  if (item.disabled) {
+    const reason = make(doc, "span", "kp-menu__hint kp-menu__reason", item.disabled);
+    reason.id = nextId("kp-menu-reason");
+    described.push(reason.id);
+    el16.append(reason);
+    el16.setAttribute("aria-disabled", "true");
+    el16.dataset.kpReason = item.disabled;
+  }
+  if (described.length) el16.setAttribute("aria-describedby", described.join(" "));
+  el16.title = item.disabled ?? item.hint ?? "";
+  if (item.value) el16.dataset.kpValue = item.value;
+  for (const [name, value] of Object.entries(item.attrs ?? {})) {
+    if (value == null) el16.removeAttribute(name);
+    else el16.setAttribute(name, value);
+  }
+  return el16;
+}
+function drawMenu(s2, groups) {
+  const doc = s2.menu.ownerDocument;
+  const strings = resolveStrings(s2.strings);
+  s2.drawn = menuSignature(groups);
+  if (groups === "loading") {
+    const entry = menuEntry(doc, { label: strings.menuLoading, hint: "\xA0" });
+    entry.setAttribute("aria-disabled", "true");
+    entry.dataset.kpLoading = "";
+    s2.menu.replaceChildren(entry);
+    s2.menu.setAttribute("aria-busy", "true");
+    countMenu(s2.menu);
+    setEmpty(s2, false, strings);
+    return;
+  }
+  s2.menu.removeAttribute("aria-busy");
+  const used = groups.filter((g) => g.items.length);
+  const total = used.reduce((n, g) => n + g.items.length, 0);
+  const blocks = [];
+  let index = 0;
+  for (const group of used) {
+    const block = make(doc, "div", "kp-menu__group");
+    if (group.group && total > 1) {
+      const heading = make(doc, "p", "kp-menu__heading", group.group);
+      heading.id = nextId("kp-menu-group");
+      heading.setAttribute("role", "presentation");
+      block.setAttribute("role", "group");
+      block.setAttribute("aria-labelledby", heading.id);
+      block.append(heading);
+    } else block.setAttribute("role", "none");
+    for (const item of group.items) {
+      const entry = menuEntry(doc, item);
+      block.append(entry);
+      decorateItem(s2, entry, index);
+      index += 1;
+    }
+    blocks.push(block);
+  }
+  s2.menu.replaceChildren(...blocks);
+  countMenu(s2.menu);
+  setEmpty(s2, total === 0, strings);
+}
+function setEmpty(s2, empty, strings) {
+  s2.empty = empty;
+  const hide2 = s2.wrapper.dataset.kpMenuEmpty === "hide";
+  s2.wrapper.hidden = empty && hide2;
+  if (empty && !hide2) {
+    s2.button.setAttribute("aria-disabled", "true");
+    s2.button.title = strings.menuEmpty;
+  } else if (s2.button.getAttribute("aria-disabled") === "true") {
+    s2.button.removeAttribute("aria-disabled");
+    s2.button.removeAttribute("title");
+  }
+}
+var ITEM_ROLES, menuItems, labelOf, decorateItem, make;
+var init_items = __esm({
+  "js/menu-button/items.js"() {
+    "use strict";
+    init_strings();
+    init_count2();
+    init_model();
+    ITEM_ROLES = '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]';
+    menuItems = (s2) => (
+      /** @type {HTMLElement[]} */
+      [...s2.menu.querySelectorAll(ITEM_ROLES)]
+    );
+    labelOf = (item) => item.querySelector(".kp-menu__label")?.textContent ?? item.textContent ?? "";
+    decorateItem = (s2, item, index) => {
+      if (!s2.decorate) return;
+      const info = { kind: "menu-item", host: s2.wrapper, index, label: labelOf(item) };
+      const key = keyOf(s2.wrapper);
+      if (key !== void 0) info.key = key;
+      if (item.dataset.kpValue !== void 0) info.value = item.dataset.kpValue;
+      s2.decorate(item, info);
+    };
+    make = (doc, tag, className, text) => {
+      const el16 = doc.createElement(tag);
+      el16.className = className;
+      if (text != null) el16.textContent = text;
+      return el16;
+    };
+  }
+});
+
+// js/menu-button/open.js
 function openMenu(wrapper, { focus = "first" } = {}) {
   const s2 = menus.get(wrapper);
   if (!s2 || s2.open || s2.empty) return;
@@ -11371,6 +11699,27 @@ function wireMenu(wrapper, { decorate: decorate2, strings }) {
   countMenu(menu);
   return s2;
 }
+var decorateButton;
+var init_open = __esm({
+  "js/menu-button/open.js"() {
+    "use strict";
+    init_motion();
+    init_constants4();
+    init_count2();
+    init_items();
+    init_model();
+    init_placement();
+    decorateButton = (s2) => {
+      if (!s2.decorate) return;
+      const info = { kind: "menu-button", host: s2.wrapper };
+      const key = keyOf(s2.wrapper);
+      if (key !== void 0) info.key = key;
+      s2.decorate(s2.button, info);
+    };
+  }
+});
+
+// js/menu-button/attach.js
 function attachMenuButtons(root = document, { decorate: decorate2, strings } = {}) {
   const undo = [];
   for (
@@ -11470,68 +11819,48 @@ function attachMenuButtons(root = document, { decorate: decorate2, strings } = {
   ) countMenu(menu);
   return () => undo.splice(0).forEach((off) => off());
 }
-var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, menus, idSeq, nextId, keyOf, menuSignature, ITEM_ROLES, menuItems, labelOf, decorateItem, make, MENU_GUTTER, PLACED, ANCHOR_EDGE, decorateButton, attached;
+var attached;
+var init_attach3 = __esm({
+  "js/menu-button/attach.js"() {
+    "use strict";
+    init_constants4();
+    init_count2();
+    init_items();
+    init_keys();
+    init_model();
+    init_open();
+    attached = /* @__PURE__ */ new WeakSet();
+  }
+});
+
+// js/menu-button.js
+var menu_button_exports = {};
+__export(menu_button_exports, {
+  MENU_BUTTON: () => MENU_BUTTON,
+  MENU_CLOSE_EVENT: () => MENU_CLOSE_EVENT,
+  MENU_COUNT_PROPERTY: () => MENU_COUNT_PROPERTY,
+  MENU_GUTTER: () => MENU_GUTTER,
+  MENU_OPEN_EVENT: () => MENU_OPEN_EVENT,
+  MENU_SELECT_EVENT: () => MENU_SELECT_EVENT,
+  attachMenuButtons: () => attachMenuButtons,
+  closeMenu: () => closeMenu,
+  menuKeyTarget: () => menuKeyTarget,
+  menuLineCount: () => menuLineCount,
+  menuPlacement: () => menuPlacement,
+  menuSignature: () => menuSignature,
+  openMenu: () => openMenu,
+  setMenu: () => setMenu
+});
 var init_menu_button = __esm({
   "js/menu-button.js"() {
     "use strict";
-    init_strings();
-    init_motion();
-    init_top_layer();
-    MENU_BUTTON = "[data-kp-menu-button]";
-    MENU_OPEN_EVENT = "kp-menu-open";
-    MENU_CLOSE_EVENT = "kp-menu-close";
-    MENU_SELECT_EVENT = "kp-menu-select";
-    MENU_COUNT_PROPERTY = "--kp-menu-count";
-    menus = /* @__PURE__ */ new WeakMap();
-    idSeq = 0;
-    nextId = (prefix) => `${prefix}-${idSeq += 1}`;
-    keyOf = (host) => host.getAttribute("data-kp-key") ?? void 0;
-    menuSignature = (groups) => groups === "loading" ? "loading" : JSON.stringify(
-      groups.map((g) => [
-        g.group,
-        g.items.map((i) => [
-          i.label,
-          i.hint ?? "",
-          i.href ?? "",
-          i.download ?? "",
-          i.disabled ?? "",
-          !!i.danger,
-          i.attrs ?? null,
-          i.value ?? ""
-        ])
-      ])
-    );
-    ITEM_ROLES = '[role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]';
-    menuItems = (s2) => (
-      /** @type {HTMLElement[]} */
-      [...s2.menu.querySelectorAll(ITEM_ROLES)]
-    );
-    labelOf = (item) => item.querySelector(".kp-menu__label")?.textContent ?? item.textContent ?? "";
-    decorateItem = (s2, item, index) => {
-      if (!s2.decorate) return;
-      const info = { kind: "menu-item", host: s2.wrapper, index, label: labelOf(item) };
-      const key = keyOf(s2.wrapper);
-      if (key !== void 0) info.key = key;
-      if (item.dataset.kpValue !== void 0) info.value = item.dataset.kpValue;
-      s2.decorate(item, info);
-    };
-    make = (doc, tag, className, text) => {
-      const el16 = doc.createElement(tag);
-      el16.className = className;
-      if (text != null) el16.textContent = text;
-      return el16;
-    };
-    MENU_GUTTER = 8;
-    PLACED = ["left", "right", "top", "bottom", "width", "max-block-size", "max-inline-size", "--kp-menu-anchor-x"];
-    ANCHOR_EDGE = 14;
-    decorateButton = (s2) => {
-      if (!s2.decorate) return;
-      const info = { kind: "menu-button", host: s2.wrapper };
-      const key = keyOf(s2.wrapper);
-      if (key !== void 0) info.key = key;
-      s2.decorate(s2.button, info);
-    };
-    attached = /* @__PURE__ */ new WeakSet();
+    init_constants4();
+    init_count2();
+    init_model();
+    init_keys();
+    init_placement();
+    init_open();
+    init_attach3();
   }
 });
 
@@ -13896,7 +14225,7 @@ var init_components = __esm({
 
 // js/sidenav/constants.js
 var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles3, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN;
-var init_constants2 = __esm({
+var init_constants5 = __esm({
   "js/sidenav/constants.js"() {
     "use strict";
     SIDENAV_TOGGLE_EVENT = "kp-sidenav-toggle";
@@ -14164,7 +14493,7 @@ var FOCUSABLE;
 var init_helpers = __esm({
   "js/sidenav/helpers.js"() {
     "use strict";
-    init_constants2();
+    init_constants5();
     FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   }
 });
@@ -14294,7 +14623,7 @@ var init_geometry = __esm({
   "js/sidenav/attach/geometry.js"() {
     "use strict";
     init_options();
-    init_constants2();
+    init_constants5();
   }
 });
 
@@ -14379,7 +14708,7 @@ var init_shift = __esm({
     "use strict";
     init_helpers();
     init_options();
-    init_constants2();
+    init_constants5();
   }
 });
 
@@ -14439,7 +14768,7 @@ function installLaunchers(c) {
 var init_launchers = __esm({
   "js/sidenav/attach/launchers.js"() {
     "use strict";
-    init_constants2();
+    init_constants5();
     init_options();
     init_strings();
     init_helpers();
@@ -14598,10 +14927,10 @@ function installOpen(c) {
   const open4 = ({ remember: remember3 = true } = {}) => set(true, true, remember3);
   c.open = open4;
 }
-var init_open = __esm({
+var init_open2 = __esm({
   "js/sidenav/attach/open.js"() {
     "use strict";
-    init_constants2();
+    init_constants5();
     init_options();
     init_calm();
     init_helpers();
@@ -14658,7 +14987,7 @@ var init_slim = __esm({
     init_options();
     init_strings();
     init_helpers();
-    init_constants2();
+    init_constants5();
   }
 });
 
@@ -14776,7 +15105,7 @@ function installTip(c) {
 var init_tip = __esm({
   "js/sidenav/attach/tip.js"() {
     "use strict";
-    init_constants2();
+    init_constants5();
     init_motion();
     init_options();
   }
@@ -14882,7 +15211,7 @@ var init_flyout = __esm({
     "use strict";
     init_options();
     init_helpers();
-    init_constants2();
+    init_constants5();
   }
 });
 
@@ -15122,7 +15451,7 @@ var init_narrow = __esm({
   "js/sidenav/attach/narrow.js"() {
     "use strict";
     init_options();
-    init_constants2();
+    init_constants5();
   }
 });
 
@@ -15236,7 +15565,7 @@ var init_resizer = __esm({
     "use strict";
     init_options();
     init_strings();
-    init_constants2();
+    init_constants5();
   }
 });
 
@@ -15312,7 +15641,7 @@ function installRail(c) {
 var init_rail = __esm({
   "js/sidenav/attach/rail.js"() {
     "use strict";
-    init_constants2();
+    init_constants5();
     init_options();
   }
 });
@@ -15616,7 +15945,7 @@ var init_handle = __esm({
   "js/sidenav/attach/handle.js"() {
     "use strict";
     init_options();
-    init_constants2();
+    init_constants5();
   }
 });
 
@@ -15657,16 +15986,16 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     for (const c of cleanups) c();
   };
 }
-var init_attach2 = __esm({
+var init_attach4 = __esm({
   "js/sidenav/attach.js"() {
     "use strict";
-    init_constants2();
+    init_constants5();
     init_basics();
     init_geometry();
     init_shift();
     init_launchers();
     init_backdrop();
-    init_open();
+    init_open2();
     init_slim();
     init_tip();
     init_flyout();
@@ -15699,10 +16028,32 @@ __export(sidenav_exports, {
 var init_sidenav = __esm({
   "js/sidenav.js"() {
     "use strict";
-    init_constants2();
+    init_constants5();
     init_options();
     init_helpers();
-    init_attach2();
+    init_attach4();
+  }
+});
+
+// js/combobox/constants.js
+var COMBOBOX, INPUT, LIST, STATUS2, TAGS, EMPTY, RESULTS_TEXT, CHANGE_EVENT, OPEN_EVENT;
+var init_constants6 = __esm({
+  "js/combobox/constants.js"() {
+    "use strict";
+    init_strings();
+    COMBOBOX = "[data-kp-combobox]";
+    INPUT = 'input[role="combobox"]';
+    LIST = '[role="listbox"]';
+    STATUS2 = "[data-kp-combobox-status]";
+    TAGS = "[data-kp-tag-list]";
+    EMPTY = "[data-kp-combobox-empty]";
+    RESULTS_TEXT = /** @param {number} n */
+    (n) => {
+      const s2 = getStrings();
+      return n === 0 ? s2.noResults : n === 1 ? s2.oneResult : s2.manyResults(n);
+    };
+    CHANGE_EVENT = "kp-combobox-change";
+    OPEN_EVENT = "kp-combobox-open";
   }
 });
 
@@ -15961,19 +16312,33 @@ var init_listbox = __esm({
   }
 });
 
-// js/combobox.js
-var combobox_exports = {};
-__export(combobox_exports, {
-  CHANGE_EVENT: () => CHANGE_EVENT,
-  MATCHERS: () => MATCHERS,
-  OPEN_EVENT: () => OPEN_EVENT,
-  attachComboboxes: () => attachComboboxes,
-  attachSelect: () => attachSelect,
-  attachSelects: () => attachSelects,
-  combobox: () => combobox,
-  drawnSelect: () => drawnSelect,
-  drawsSelect: () => drawsSelect
+// js/combobox/matchers.js
+var MATCHERS;
+var init_matchers = __esm({
+  "js/combobox/matchers.js"() {
+    "use strict";
+    init_listbox();
+    MATCHERS = {
+      substring: (text, query) => text.includes(query),
+      prefix: (text, query) => text.startsWith(query),
+      subsequence: (text, query) => subsequence(text, query)
+    };
+  }
 });
+
+// js/combobox/handle.js
+function combobox(element) {
+  return handles4.get(element) ?? null;
+}
+var handles4;
+var init_handle2 = __esm({
+  "js/combobox/handle.js"() {
+    "use strict";
+    handles4 = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/combobox/helpers.js
 function slotStatus(box, status) {
   if (status === null || box.hasAttribute("data-kp-usual")) return () => {
   };
@@ -15992,9 +16357,15 @@ function slotStatus(box, status) {
     home?.insertBefore(status, next2);
   };
 }
-function combobox(element) {
-  return handles4.get(element) ?? null;
-}
+var labelOf2;
+var init_helpers2 = __esm({
+  "js/combobox/helpers.js"() {
+    "use strict";
+    labelOf2 = (option, fallback2 = "") => option?.dataset.kpLabel ?? (option?.textContent ?? fallback2).trim();
+  }
+});
+
+// js/combobox/attach.js
 function attachComboboxes(root = document, {
   match = "substring",
   loop = false,
@@ -16349,6 +16720,31 @@ function attachComboboxes(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
+var init_attach5 = __esm({
+  "js/combobox/attach.js"() {
+    "use strict";
+    init_listbox();
+    init_strings();
+    init_top_layer();
+    init_constants6();
+    init_handle2();
+    init_helpers2();
+    init_matchers();
+  }
+});
+
+// js/combobox/state.js
+var comboboxState;
+var init_state3 = __esm({
+  "js/combobox/state.js"() {
+    "use strict";
+    comboboxState = {
+      selectCount: 0
+    };
+  }
+});
+
+// js/combobox/select.js
 function drawsSelect(element) {
   if (!(element instanceof HTMLSelectElement) || element.multiple) return false;
   const asked = element.getAttribute("data-kp-select");
@@ -16363,10 +16759,10 @@ function attachSelect(select2, { loop = false, typeaheadMs = 500 } = {}) {
     expanded: select2.getAttribute("aria-expanded"),
     controls: select2.getAttribute("aria-controls")
   };
-  selectCount += 1;
+  comboboxState.selectCount += 1;
   const list = document.createElement("ul");
   list.className = "kp-combobox__list";
-  list.id = `${select2.id || "kp-select"}-drawn-${selectCount}`;
+  list.id = `${select2.id || "kp-select"}-drawn-${comboboxState.selectCount}`;
   list.setAttribute("role", "listbox");
   list.dataset.kpSelectList = "";
   list.dataset.kpArrive = "none";
@@ -16547,35 +16943,62 @@ function attachSelects(root = document, options = {}) {
   };
   return Object.assign(detach, { handles: created });
 }
-var COMBOBOX, INPUT, LIST, STATUS2, TAGS, EMPTY, labelOf2, RESULTS_TEXT, CHANGE_EVENT, OPEN_EVENT, MATCHERS, handles4, selectHandles, selectCount;
+var selectHandles;
+var init_select = __esm({
+  "js/combobox/select.js"() {
+    "use strict";
+    init_listbox();
+    init_top_layer();
+    init_constants6();
+    init_state3();
+    selectHandles = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/combobox.js
+var combobox_exports = {};
+__export(combobox_exports, {
+  CHANGE_EVENT: () => CHANGE_EVENT,
+  MATCHERS: () => MATCHERS,
+  OPEN_EVENT: () => OPEN_EVENT,
+  attachComboboxes: () => attachComboboxes,
+  attachSelect: () => attachSelect,
+  attachSelects: () => attachSelects,
+  combobox: () => combobox,
+  drawnSelect: () => drawnSelect,
+  drawsSelect: () => drawsSelect
+});
 var init_combobox = __esm({
   "js/combobox.js"() {
     "use strict";
-    init_listbox();
+    init_constants6();
+    init_matchers();
+    init_handle2();
+    init_attach5();
+    init_select();
+  }
+});
+
+// js/palette/constants.js
+var PALETTE, SHEET, INPUT2, LIST2, STATUS3, GROUP, OPENER, KEYS_SLOT, RUN_EVENT, OPEN_EVENT2, RESULTS_TEXT2;
+var init_constants7 = __esm({
+  "js/palette/constants.js"() {
+    "use strict";
     init_strings();
-    init_top_layer();
-    COMBOBOX = "[data-kp-combobox]";
-    INPUT = 'input[role="combobox"]';
-    LIST = '[role="listbox"]';
-    STATUS2 = "[data-kp-combobox-status]";
-    TAGS = "[data-kp-tag-list]";
-    EMPTY = "[data-kp-combobox-empty]";
-    labelOf2 = (option, fallback2 = "") => option?.dataset.kpLabel ?? (option?.textContent ?? fallback2).trim();
-    RESULTS_TEXT = /** @param {number} n */
-    (n) => {
+    PALETTE = "[data-kp-palette]";
+    SHEET = "[data-kp-shortcuts]";
+    INPUT2 = 'input[role="combobox"]';
+    LIST2 = '[role="listbox"]';
+    STATUS3 = '[role="status"]';
+    GROUP = "[data-kp-group]";
+    OPENER = "[data-kp-palette-open]";
+    KEYS_SLOT = "[data-kp-palette-keys]";
+    RUN_EVENT = "kp-palette-run";
+    OPEN_EVENT2 = "kp-palette-open";
+    RESULTS_TEXT2 = (n) => {
       const s2 = getStrings();
-      return n === 0 ? s2.noResults : n === 1 ? s2.oneResult : s2.manyResults(n);
+      return n === 0 ? s2.noCommands : n === 1 ? s2.oneCommand : s2.manyCommands(n);
     };
-    CHANGE_EVENT = "kp-combobox-change";
-    OPEN_EVENT = "kp-combobox-open";
-    MATCHERS = {
-      substring: (text, query) => text.includes(query),
-      prefix: (text, query) => text.startsWith(query),
-      subsequence: (text, query) => subsequence(text, query)
-    };
-    handles4 = /* @__PURE__ */ new WeakMap();
-    selectHandles = /* @__PURE__ */ new WeakMap();
-    selectCount = 0;
   }
 });
 
@@ -16727,6 +17150,91 @@ var init_intent = __esm({
   }
 });
 
+// js/palette/keys.js
+function isMac2() {
+  if (typeof navigator === "undefined") return false;
+  const platform = (
+    /** @type {any} */
+    navigator.userAgentData?.platform ?? navigator.platform ?? ""
+  );
+  return /mac|iphone|ipad/i.test(platform);
+}
+function isHotkey(event, key) {
+  return event.key.toLowerCase() === key.toLowerCase() && (event.metaKey || event.ctrlKey);
+}
+function isTyping(target, typingSelector) {
+  if (!(target instanceof HTMLElement)) return false;
+  return target.isContentEditable || target.matches(typingSelector);
+}
+var MATCHERS2;
+var init_keys2 = __esm({
+  "js/palette/keys.js"() {
+    "use strict";
+    init_listbox();
+    init_intent();
+    MATCHERS2 = {
+      // Words in any order, each starting a word of the command [kpadopt6-ops]: the default since then, drawn by the
+      // palette itself (ranking, marks, the cap), so this entry is for a consumer that asks a single yes or no.
+      intent: (text, query) => matchIntent(text, query),
+      // Literal [scope-56]: a subsequence let "read" find "Report
+      // an incident", which reads as a wrong answer rather than a clever
+      // one. `data-kp-match="subsequence"` keeps "thm" finding "Theme" for
+      // a palette that wants it.
+      subsequence: (text, query) => subsequence(text, query),
+      substring: (text, query) => text.toLowerCase().includes(query.toLowerCase()),
+      prefix: (text, query) => text.toLowerCase().startsWith(query.toLowerCase())
+    };
+  }
+});
+
+// js/palette/outside.js
+function closeOnOutsidePress(dialog) {
+  const outside = (event) => {
+    if (event.target !== dialog) return false;
+    const box = dialog.getBoundingClientRect();
+    return event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+  };
+  let pressedOutside = false;
+  const onDown2 = (event) => {
+    pressedOutside = dialog.open && outside(event);
+  };
+  const onClick = (event) => {
+    const both = pressedOutside && outside(event);
+    pressedOutside = false;
+    if (both && dialog.open) dialog.close();
+  };
+  dialog.addEventListener("pointerdown", onDown2);
+  dialog.addEventListener("click", onClick);
+  return () => {
+    dialog.removeEventListener("pointerdown", onDown2);
+    dialog.removeEventListener("click", onClick);
+  };
+}
+function openerFor(event, dialog, answersKey) {
+  const opener = event.target instanceof Element ? event.target.closest(OPENER) : null;
+  if (opener === null) return false;
+  const name = opener.getAttribute("data-kp-palette-open") ?? "";
+  return name === "" ? answersKey : name === dialog.id;
+}
+var init_outside = __esm({
+  "js/palette/outside.js"() {
+    "use strict";
+    init_constants7();
+  }
+});
+
+// js/palette/api.js
+function palette(element) {
+  return handles5.get(element) ?? null;
+}
+var handles5;
+var init_api = __esm({
+  "js/palette/api.js"() {
+    "use strict";
+    handles5 = /* @__PURE__ */ new WeakMap();
+  }
+});
+
 // js/state-plate.js
 function statePlate(doc, { kind, title, text, actionLabel, onAction, actionAttribute, art, into }) {
   const plate = into ?? doc.createElement("div");
@@ -16788,62 +17296,7 @@ var init_state_plate = __esm({
   }
 });
 
-// js/palette.js
-var palette_exports = {};
-__export(palette_exports, {
-  KEYS_SLOT: () => KEYS_SLOT,
-  MATCHERS: () => MATCHERS2,
-  OPENER: () => OPENER,
-  OPEN_EVENT: () => OPEN_EVENT2,
-  RUN_EVENT: () => RUN_EVENT,
-  attachPalettes: () => attachPalettes,
-  closeOnOutsidePress: () => closeOnOutsidePress,
-  isMac: () => isMac2,
-  palette: () => palette
-});
-function closeOnOutsidePress(dialog) {
-  const outside = (event) => {
-    if (event.target !== dialog) return false;
-    const box = dialog.getBoundingClientRect();
-    return event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
-  };
-  let pressedOutside = false;
-  const onDown2 = (event) => {
-    pressedOutside = dialog.open && outside(event);
-  };
-  const onClick = (event) => {
-    const both = pressedOutside && outside(event);
-    pressedOutside = false;
-    if (both && dialog.open) dialog.close();
-  };
-  dialog.addEventListener("pointerdown", onDown2);
-  dialog.addEventListener("click", onClick);
-  return () => {
-    dialog.removeEventListener("pointerdown", onDown2);
-    dialog.removeEventListener("click", onClick);
-  };
-}
-function openerFor(event, dialog, answersKey) {
-  const opener = event.target instanceof Element ? event.target.closest(OPENER) : null;
-  if (opener === null) return false;
-  const name = opener.getAttribute("data-kp-palette-open") ?? "";
-  return name === "" ? answersKey : name === dialog.id;
-}
-function isMac2() {
-  if (typeof navigator === "undefined") return false;
-  const platform = (
-    /** @type {any} */
-    navigator.userAgentData?.platform ?? navigator.platform ?? ""
-  );
-  return /mac|iphone|ipad/i.test(platform);
-}
-function isHotkey(event, key) {
-  return event.key.toLowerCase() === key.toLowerCase() && (event.metaKey || event.ctrlKey);
-}
-function isTyping(target, typingSelector) {
-  if (!(target instanceof HTMLElement)) return false;
-  return target.isContentEditable || target.matches(typingSelector);
-}
+// js/palette/intent-filter.js
 function createIntentFilter(dialog, list, status) {
   const doc = dialog.ownerDocument;
   const origin = /* @__PURE__ */ new WeakMap();
@@ -17198,9 +17651,18 @@ function createIntentFilter(dialog, list, status) {
     }
   };
 }
-function palette(element) {
-  return handles5.get(element) ?? null;
-}
+var init_intent_filter = __esm({
+  "js/palette/intent-filter.js"() {
+    "use strict";
+    init_listbox();
+    init_strings();
+    init_intent();
+    init_state_plate();
+    init_busy_card();
+  }
+});
+
+// js/palette/attach.js
 function attachPalettes(root = document, {
   hotkey = "k",
   sheetKey = "?",
@@ -17460,43 +17922,41 @@ function attachPalettes(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var PALETTE, SHEET, INPUT2, LIST2, STATUS3, GROUP, OPENER, KEYS_SLOT, RUN_EVENT, OPEN_EVENT2, RESULTS_TEXT2, MATCHERS2, handles5;
-var init_palette = __esm({
-  "js/palette.js"() {
+var init_attach6 = __esm({
+  "js/palette/attach.js"() {
     "use strict";
     init_listbox();
     init_strings();
     init_live_options();
-    init_intent();
-    init_state_plate();
-    init_busy_card();
-    PALETTE = "[data-kp-palette]";
-    SHEET = "[data-kp-shortcuts]";
-    INPUT2 = 'input[role="combobox"]';
-    LIST2 = '[role="listbox"]';
-    STATUS3 = '[role="status"]';
-    GROUP = "[data-kp-group]";
-    OPENER = "[data-kp-palette-open]";
-    KEYS_SLOT = "[data-kp-palette-keys]";
-    RUN_EVENT = "kp-palette-run";
-    OPEN_EVENT2 = "kp-palette-open";
-    RESULTS_TEXT2 = (n) => {
-      const s2 = getStrings();
-      return n === 0 ? s2.noCommands : n === 1 ? s2.oneCommand : s2.manyCommands(n);
-    };
-    MATCHERS2 = {
-      // Words in any order, each starting a word of the command [kpadopt6-ops]: the default since then, drawn by the
-      // palette itself (ranking, marks, the cap), so this entry is for a consumer that asks a single yes or no.
-      intent: (text, query) => matchIntent(text, query),
-      // Literal [scope-56]: a subsequence let "read" find "Report
-      // an incident", which reads as a wrong answer rather than a clever
-      // one. `data-kp-match="subsequence"` keeps "thm" finding "Theme" for
-      // a palette that wants it.
-      subsequence: (text, query) => subsequence(text, query),
-      substring: (text, query) => text.toLowerCase().includes(query.toLowerCase()),
-      prefix: (text, query) => text.toLowerCase().startsWith(query.toLowerCase())
-    };
-    handles5 = /* @__PURE__ */ new WeakMap();
+    init_api();
+    init_constants7();
+    init_intent_filter();
+    init_keys2();
+    init_outside();
+  }
+});
+
+// js/palette.js
+var palette_exports = {};
+__export(palette_exports, {
+  KEYS_SLOT: () => KEYS_SLOT,
+  MATCHERS: () => MATCHERS2,
+  OPENER: () => OPENER,
+  OPEN_EVENT: () => OPEN_EVENT2,
+  RUN_EVENT: () => RUN_EVENT,
+  attachPalettes: () => attachPalettes,
+  closeOnOutsidePress: () => closeOnOutsidePress,
+  isMac: () => isMac2,
+  palette: () => palette
+});
+var init_palette = __esm({
+  "js/palette.js"() {
+    "use strict";
+    init_constants7();
+    init_keys2();
+    init_outside();
+    init_api();
+    init_attach6();
   }
 });
 
@@ -18065,7 +18525,7 @@ var init_instance = __esm({
 
 // js/datatable/state.js
 var datatableState;
-var init_state2 = __esm({
+var init_state4 = __esm({
   "js/datatable/state.js"() {
     "use strict";
     datatableState = {
@@ -18185,7 +18645,7 @@ function installIdentity(c) {
 var init_identity = __esm({
   "js/datatable/attach/identity.js"() {
     "use strict";
-    init_state2();
+    init_state4();
     init_strings();
     init_tables();
   }
@@ -18498,7 +18958,7 @@ function installModel(c) {
   c.overlayLayer = null;
   c.overlayClock = null;
 }
-var init_model = __esm({
+var init_model2 = __esm({
   "js/datatable/attach/model.js"() {
     "use strict";
     init_selectors();
@@ -22571,7 +23031,7 @@ function installHandle2(c) {
     })
   );
 }
-var init_handle2 = __esm({
+var init_handle3 = __esm({
   "js/datatable/attach/handle.js"() {
     "use strict";
     init_instance();
@@ -22889,11 +23349,11 @@ function attachDataTables(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var init_attach3 = __esm({
+var init_attach7 = __esm({
   "js/datatable/attach.js"() {
     "use strict";
     init_remember();
-    init_state2();
+    init_state4();
     init_sort();
     init_instance();
     init_events();
@@ -22902,7 +23362,7 @@ var init_attach3 = __esm({
     init_controls2();
     init_details();
     init_columns();
-    init_model();
+    init_model2();
     init_busy();
     init_chrome();
     init_filter_ui();
@@ -22920,7 +23380,7 @@ var init_attach3 = __esm({
     init_selection();
     init_edit();
     init_wire2();
-    init_handle2();
+    init_handle3();
     init_unwire();
   }
 });
@@ -22969,7 +23429,7 @@ var init_datatable = __esm({
     init_filter();
     init_grid();
     init_instance();
-    init_attach3();
+    init_attach7();
   }
 });
 
@@ -23362,29 +23822,7 @@ var init_forms = __esm({
   }
 });
 
-// js/patterns.js
-var patterns_exports = {};
-__export(patterns_exports, {
-  CLEAR_AFTER_MS: () => CLEAR_AFTER_MS,
-  COMMIT_EVENT: () => COMMIT_EVENT,
-  COPIED_MS: () => COPIED_MS,
-  COPY_EVENT: () => COPY_EVENT,
-  COPY_FAILED_EVENT: () => COPY_FAILED_EVENT,
-  SECRET: () => SECRET,
-  SECRET_CLIPBOARD_EVENT: () => SECRET_CLIPBOARD_EVENT,
-  SECRET_EVENT: () => SECRET_EVENT,
-  SECRET_MASK: () => SECRET_MASK,
-  SECRET_REQUEST_EVENT: () => SECRET_REQUEST_EVENT,
-  SECRET_TTL: () => SECRET_TTL,
-  UNDO_EVENT: () => UNDO_EVENT,
-  UNDO_MS: () => UNDO_MS,
-  attachPatterns: () => attachPatterns,
-  attachSecrets: () => attachSecrets,
-  hideSecret: () => hideSecret,
-  revealSecret: () => revealSecret,
-  secretInputValue: () => secretInputValue,
-  setSecretInputValue: () => setSecretInputValue
-});
+// js/patterns/constants.js
 function clearDelay(attribute, fallback2) {
   const text = (attribute ?? "").trim().toLowerCase();
   if (text === "") return fallback2 || 0;
@@ -23396,118 +23834,31 @@ function clearDelay(attribute, fallback2) {
     match[1]
   ) * (CLEAR_UNITS[match[2] ?? "s"] ?? 1e3);
 }
-function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_MS, clearAfterMs = CLEAR_AFTER_MS, toastOnCopyFailure = true, undoClassName = "kp-button kp-button--ghost", secretLoad } = {}) {
-  const cleanups = [];
-  cleanups.push(attachSecrets(root, { copiedMs, clearAfterMs, ...secretLoad ? { load: secretLoad } : {} }));
-  for (const element of root.querySelectorAll(COPY)) {
-    const button = (
-      /** @type {HTMLButtonElement} */
-      element
-    );
-    if (button.dataset.kpCopyAttached !== void 0) continue;
-    button.dataset.kpCopyAttached = "";
-    const idle = button.textContent ?? "";
-    const done = button.dataset.kpCopiedText ?? getStrings().copied;
-    const revertMs = Number.parseInt(button.dataset.kpCopiedMs ?? "", 10) || copiedMs;
-    let revert = 0;
-    const onClick = async () => {
-      const target = button.dataset.kpCopy ?? "";
-      const source = target === "" ? null : document.getElementById(target);
-      const text = source?.textContent?.trim() ?? button.dataset.kpCopyValue ?? "";
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch (error) {
-        button.dataset.kpCopyFailed = "";
-        if (toastOnCopyFailure && button.dataset.kpCopyToast !== "false") toast(getStrings().copyBlockedAnnouncement);
-        button.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text, error } }));
-        return;
-      }
-      delete button.dataset.kpCopyFailed;
-      button.textContent = done;
-      button.dataset.kpCopied = "";
-      button.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text } }));
-      clearTimeout(revert);
-      revert = window.setTimeout(() => {
-        button.textContent = idle;
-        delete button.dataset.kpCopied;
-      }, revertMs);
-    };
-    button.addEventListener("click", onClick);
-    cleanups.push(() => {
-      button.removeEventListener("click", onClick);
-      clearTimeout(revert);
-      button.textContent = idle;
-      delete button.dataset.kpCopied;
-      delete button.dataset.kpCopyFailed;
-      delete button.dataset.kpCopyAttached;
-    });
+var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, CLEAR_AFTER_MS, CLEAR_UNITS, COPY_EVENT, COPY_FAILED_EVENT;
+var init_constants8 = __esm({
+  "js/patterns/constants.js"() {
+    "use strict";
+    COPY = "[data-kp-copy]";
+    UNDO = "[data-kp-undo-action]";
+    SECRET = "[data-kp-secret]";
+    SECRET_TTL = 30;
+    SECRET_MASK = 12;
+    SECRET_CLIPBOARD_EVENT = "kp-secret-clipboard";
+    SECRET_EVENT = "kp-secret";
+    SECRET_REQUEST_EVENT = "kp-secret-request";
+    UNDO_MS = 6e3;
+    COPIED_MS = 1500;
+    COMMIT_EVENT = "kp-action-commit";
+    UNDO_EVENT = "kp-action-undo";
+    CLEAR_AFTER_MS = 3e4;
+    CLEAR_UNITS = /** @type {Record<string, number>} */
+    { ms: 1, s: 1e3, sec: 1e3, min: 6e4, m: 6e4, h: 36e5 };
+    COPY_EVENT = "kp-copy";
+    COPY_FAILED_EVENT = "kp-copy-failed";
   }
-  for (const element of root.querySelectorAll(UNDO)) {
-    const button = (
-      /** @type {HTMLButtonElement} */
-      element
-    );
-    if (button.dataset.kpUndoAttached !== void 0) continue;
-    button.dataset.kpUndoAttached = "";
-    const ms = Number.parseInt(button.dataset.kpUndoMs ?? "", 10) || undoMs;
-    const inFlight = /* @__PURE__ */ new Set();
-    const onClick = () => {
-      const selector = button.dataset.kpUndoSelector;
-      const target = (selector ? button.closest(selector) : null) ?? button.closest("[data-kp-undo-target]") ?? button.closest("tr") ?? button.parentElement;
-      if (!(target instanceof HTMLElement)) return;
-      const key = target.dataset.kpRowKey ?? target.dataset.kpKey ?? (target.id || null);
-      target.hidden = true;
-      target.dataset.kpUndoPending = "";
-      let settled = false;
-      const restore2 = () => {
-        target.hidden = false;
-        delete target.dataset.kpUndoPending;
-      };
-      const detail = { target, button, key, restore: restore2 };
-      let timer2 = 0;
-      const message = toast(button.dataset.kpUndoText ?? getStrings().deleted, {
-        ms: Number.parseInt(button.dataset.kpUndoToastMs ?? "", 10) || ms,
-        action: {
-          label: button.dataset.kpUndoLabel ?? getStrings().undo,
-          onClick: () => {
-            if (settled) return;
-            settled = true;
-            inFlight.delete(cancel);
-            clearTimeout(timer2);
-            restore2();
-            message.dismiss();
-            target.dispatchEvent(new CustomEvent(UNDO_EVENT, { bubbles: true, detail }));
-          }
-        }
-      });
-      for (const b of message.querySelectorAll("button")) b.className = undoClassName;
-      timer2 = window.setTimeout(() => {
-        if (settled) return;
-        settled = true;
-        inFlight.delete(cancel);
-        delete target.dataset.kpUndoPending;
-        target.dispatchEvent(new CustomEvent(COMMIT_EVENT, { bubbles: true, detail }));
-      }, ms);
-      const cancel = () => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timer2);
-        restore2();
-        message.dismiss();
-      };
-      inFlight.add(cancel);
-    };
-    button.addEventListener("click", onClick);
-    cleanups.push(() => {
-      button.removeEventListener("click", onClick);
-      for (const cancel of inFlight) cancel();
-      delete button.dataset.kpUndoAttached;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
-}
+});
+
+// js/patterns/clipboard.js
 function clearClipboardLater(field, secret, wait, say19) {
   const s2 = getStrings();
   let dropFocus = null;
@@ -23548,6 +23899,15 @@ function clearClipboardLater(field, secret, wait, say19) {
     dropFocus?.();
   };
 }
+var init_clipboard = __esm({
+  "js/patterns/clipboard.js"() {
+    "use strict";
+    init_strings();
+    init_constants8();
+  }
+});
+
+// js/patterns/secret-api.js
 function revealSecret(field) {
   secrets.get(field)?.reveal("call");
 }
@@ -23563,6 +23923,16 @@ function setSecretInputValue(field, value) {
   input.value = value;
   input.dispatchEvent(new Event("input", { bubbles: true }));
 }
+var secrets, secretInputs;
+var init_secret_api = __esm({
+  "js/patterns/secret-api.js"() {
+    "use strict";
+    secrets = /* @__PURE__ */ new WeakMap();
+    secretInputs = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/patterns/secret-input.js
 function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   const doc = field.ownerDocument;
   const s2 = getStrings();
@@ -23832,6 +24202,18 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     secretInputs.delete(field);
   };
 }
+var init_secret_input = __esm({
+  "js/patterns/secret-input.js"() {
+    "use strict";
+    init_strings();
+    init_live_options();
+    init_clipboard();
+    init_constants8();
+    init_secret_api();
+  }
+});
+
+// js/patterns/secrets.js
 function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfterMs = CLEAR_AFTER_MS } = {}) {
   const cleanups = [];
   const fields = (
@@ -24167,27 +24549,31 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       writeLine();
     });
     watch2.observe(field, { attributes: true, attributeFilter: ["data-kp-secret-disabled"] });
-    const stopOptions = watchOptions(field, ["data-kp-secret-ttl", "data-kp-secret-reveal-on", "data-kp-secret-mask", "data-kp-secret-mask-char"], (names) => {
-      const wasHold = hold;
-      if (names.includes("data-kp-secret-reveal-on") && (state2 === "shown" || state2 === "loading")) hide2("call");
-      readOptions3();
-      field.style.setProperty("--kp-secret-ttl", `${seconds2}s`);
-      if (hold !== wasHold) setState2(state2);
-      if (names.includes("data-kp-secret-mask") || names.includes("data-kp-secret-mask-char")) {
-        if (state2 !== "shown") value.textContent = mask;
+    const stopOptions = watchOptions(
+      field,
+      ["data-kp-secret-ttl", "data-kp-secret-reveal-on", "data-kp-secret-mask", "data-kp-secret-mask-char"],
+      (names) => {
+        const wasHold = hold;
+        if (names.includes("data-kp-secret-reveal-on") && (state2 === "shown" || state2 === "loading")) hide2("call");
+        readOptions3();
+        field.style.setProperty("--kp-secret-ttl", `${seconds2}s`);
+        if (hold !== wasHold) setState2(state2);
+        if (names.includes("data-kp-secret-mask") || names.includes("data-kp-secret-mask-char")) {
+          if (state2 !== "shown") value.textContent = mask;
+        }
+        if (state2 === "shown" && names.includes("data-kp-secret-ttl")) {
+          stop();
+          left = seconds2;
+          paused = false;
+          field.removeAttribute("data-kp-secret-paused");
+          drain.style.animation = "none";
+          void drain.offsetWidth;
+          drain.style.removeProperty("animation");
+          if (seconds2 > 0 && !hold) timer2 = window.setInterval(tick6, 1e3);
+          writeLine();
+        }
       }
-      if (state2 === "shown" && names.includes("data-kp-secret-ttl")) {
-        stop();
-        left = seconds2;
-        paused = false;
-        field.removeAttribute("data-kp-secret-paused");
-        drain.style.animation = "none";
-        void drain.offsetWidth;
-        drain.style.removeProperty("animation");
-        if (seconds2 > 0 && !hold) timer2 = window.setInterval(tick6, 1e3);
-        writeLine();
-      }
-    });
+    );
     secrets.set(field, { reveal: (reason) => void show(reason), hide: (reason) => hide2(reason) });
     cleanups.push(() => {
       watch2.disconnect();
@@ -24218,32 +24604,178 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     for (const c of cleanups.splice(0)) c();
   };
 }
-var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, CLEAR_AFTER_MS, CLEAR_UNITS, COPY_EVENT, COPY_FAILED_EVENT, secrets, secretInputs;
-var init_patterns = __esm({
-  "js/patterns.js"() {
+var init_secrets = __esm({
+  "js/patterns/secrets.js"() {
+    "use strict";
+    init_strings();
+    init_live_options();
+    init_clipboard();
+    init_constants8();
+    init_secret_api();
+    init_secret_input();
+  }
+});
+
+// js/patterns/copy.js
+function attachPatterns(root = document, {
+  copiedMs = COPIED_MS,
+  undoMs = UNDO_MS,
+  clearAfterMs = CLEAR_AFTER_MS,
+  toastOnCopyFailure = true,
+  undoClassName = "kp-button kp-button--ghost",
+  secretLoad
+} = {}) {
+  const cleanups = [];
+  cleanups.push(attachSecrets(root, { copiedMs, clearAfterMs, ...secretLoad ? { load: secretLoad } : {} }));
+  for (const element of root.querySelectorAll(COPY)) {
+    const button = (
+      /** @type {HTMLButtonElement} */
+      element
+    );
+    if (button.dataset.kpCopyAttached !== void 0) continue;
+    button.dataset.kpCopyAttached = "";
+    const idle = button.textContent ?? "";
+    const done = button.dataset.kpCopiedText ?? getStrings().copied;
+    const revertMs = Number.parseInt(button.dataset.kpCopiedMs ?? "", 10) || copiedMs;
+    let revert = 0;
+    const onClick = async () => {
+      const target = button.dataset.kpCopy ?? "";
+      const source = target === "" ? null : document.getElementById(target);
+      const text = source?.textContent?.trim() ?? button.dataset.kpCopyValue ?? "";
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (error) {
+        button.dataset.kpCopyFailed = "";
+        if (toastOnCopyFailure && button.dataset.kpCopyToast !== "false") toast(getStrings().copyBlockedAnnouncement);
+        button.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text, error } }));
+        return;
+      }
+      delete button.dataset.kpCopyFailed;
+      button.textContent = done;
+      button.dataset.kpCopied = "";
+      button.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text } }));
+      clearTimeout(revert);
+      revert = window.setTimeout(() => {
+        button.textContent = idle;
+        delete button.dataset.kpCopied;
+      }, revertMs);
+    };
+    button.addEventListener("click", onClick);
+    cleanups.push(() => {
+      button.removeEventListener("click", onClick);
+      clearTimeout(revert);
+      button.textContent = idle;
+      delete button.dataset.kpCopied;
+      delete button.dataset.kpCopyFailed;
+      delete button.dataset.kpCopyAttached;
+    });
+  }
+  for (const element of root.querySelectorAll(UNDO)) {
+    const button = (
+      /** @type {HTMLButtonElement} */
+      element
+    );
+    if (button.dataset.kpUndoAttached !== void 0) continue;
+    button.dataset.kpUndoAttached = "";
+    const ms = Number.parseInt(button.dataset.kpUndoMs ?? "", 10) || undoMs;
+    const inFlight = /* @__PURE__ */ new Set();
+    const onClick = () => {
+      const selector = button.dataset.kpUndoSelector;
+      const target = (selector ? button.closest(selector) : null) ?? button.closest("[data-kp-undo-target]") ?? button.closest("tr") ?? button.parentElement;
+      if (!(target instanceof HTMLElement)) return;
+      const key = target.dataset.kpRowKey ?? target.dataset.kpKey ?? (target.id || null);
+      target.hidden = true;
+      target.dataset.kpUndoPending = "";
+      let settled = false;
+      const restore2 = () => {
+        target.hidden = false;
+        delete target.dataset.kpUndoPending;
+      };
+      const detail = { target, button, key, restore: restore2 };
+      let timer2 = 0;
+      const message = toast(button.dataset.kpUndoText ?? getStrings().deleted, {
+        ms: Number.parseInt(button.dataset.kpUndoToastMs ?? "", 10) || ms,
+        action: {
+          label: button.dataset.kpUndoLabel ?? getStrings().undo,
+          onClick: () => {
+            if (settled) return;
+            settled = true;
+            inFlight.delete(cancel);
+            clearTimeout(timer2);
+            restore2();
+            message.dismiss();
+            target.dispatchEvent(new CustomEvent(UNDO_EVENT, { bubbles: true, detail }));
+          }
+        }
+      });
+      for (const b of message.querySelectorAll("button")) b.className = undoClassName;
+      timer2 = window.setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        inFlight.delete(cancel);
+        delete target.dataset.kpUndoPending;
+        target.dispatchEvent(new CustomEvent(COMMIT_EVENT, { bubbles: true, detail }));
+      }, ms);
+      const cancel = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer2);
+        restore2();
+        message.dismiss();
+      };
+      inFlight.add(cancel);
+    };
+    button.addEventListener("click", onClick);
+    cleanups.push(() => {
+      button.removeEventListener("click", onClick);
+      for (const cancel of inFlight) cancel();
+      delete button.dataset.kpUndoAttached;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
+}
+var init_copy = __esm({
+  "js/patterns/copy.js"() {
     "use strict";
     init_overlays();
     init_strings();
-    init_live_options();
-    COPY = "[data-kp-copy]";
-    UNDO = "[data-kp-undo-action]";
-    SECRET = "[data-kp-secret]";
-    SECRET_TTL = 30;
-    SECRET_MASK = 12;
-    SECRET_CLIPBOARD_EVENT = "kp-secret-clipboard";
-    SECRET_EVENT = "kp-secret";
-    SECRET_REQUEST_EVENT = "kp-secret-request";
-    UNDO_MS = 6e3;
-    COPIED_MS = 1500;
-    COMMIT_EVENT = "kp-action-commit";
-    UNDO_EVENT = "kp-action-undo";
-    CLEAR_AFTER_MS = 3e4;
-    CLEAR_UNITS = /** @type {Record<string, number>} */
-    { ms: 1, s: 1e3, sec: 1e3, min: 6e4, m: 6e4, h: 36e5 };
-    COPY_EVENT = "kp-copy";
-    COPY_FAILED_EVENT = "kp-copy-failed";
-    secrets = /* @__PURE__ */ new WeakMap();
-    secretInputs = /* @__PURE__ */ new WeakMap();
+    init_constants8();
+    init_secrets();
+  }
+});
+
+// js/patterns.js
+var patterns_exports = {};
+__export(patterns_exports, {
+  CLEAR_AFTER_MS: () => CLEAR_AFTER_MS,
+  COMMIT_EVENT: () => COMMIT_EVENT,
+  COPIED_MS: () => COPIED_MS,
+  COPY_EVENT: () => COPY_EVENT,
+  COPY_FAILED_EVENT: () => COPY_FAILED_EVENT,
+  SECRET: () => SECRET,
+  SECRET_CLIPBOARD_EVENT: () => SECRET_CLIPBOARD_EVENT,
+  SECRET_EVENT: () => SECRET_EVENT,
+  SECRET_MASK: () => SECRET_MASK,
+  SECRET_REQUEST_EVENT: () => SECRET_REQUEST_EVENT,
+  SECRET_TTL: () => SECRET_TTL,
+  UNDO_EVENT: () => UNDO_EVENT,
+  UNDO_MS: () => UNDO_MS,
+  attachPatterns: () => attachPatterns,
+  attachSecrets: () => attachSecrets,
+  hideSecret: () => hideSecret,
+  revealSecret: () => revealSecret,
+  secretInputValue: () => secretInputValue,
+  setSecretInputValue: () => setSecretInputValue
+});
+var init_patterns = __esm({
+  "js/patterns.js"() {
+    "use strict";
+    init_constants8();
+    init_copy();
+    init_secret_api();
+    init_secrets();
   }
 });
 
@@ -26992,7 +27524,7 @@ var init_tiles = __esm({
 
 // js/chart/constants.js
 var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_TIME_ZONE, TREND_CHART;
-var init_constants3 = __esm({
+var init_constants9 = __esm({
   "js/chart/constants.js"() {
     "use strict";
     CHART = "[data-kp-chart]";
@@ -27330,7 +27862,7 @@ var init_time = __esm({
   "js/chart/time.js"() {
     "use strict";
     init_strings();
-    init_constants3();
+    init_constants9();
     MINUTE = 6e4;
     HOUR = 60 * MINUTE;
     DAY = 24 * HOUR;
@@ -27429,8 +27961,8 @@ var SVGNS, pendingEnds;
 var init_dom = __esm({
   "js/chart/dom.js"() {
     "use strict";
-    init_api();
-    init_constants3();
+    init_api2();
+    init_constants9();
     SVGNS = "http://www.w3.org/2000/svg";
     pendingEnds = [];
   }
@@ -27442,9 +27974,9 @@ var init_group = __esm({
   "js/chart/group.js"() {
     "use strict";
     init_stats();
-    init_api();
+    init_api2();
     init_dom();
-    init_constants3();
+    init_constants9();
     init_time();
     ChartGroup = class {
       /**
@@ -27686,7 +28218,7 @@ function detachChart(el16) {
   return true;
 }
 var DATA, CHARTS, GROUPS, LOOSE, CHIPS, PAGES, CHART_TIME_UNITS;
-var init_api = __esm({
+var init_api2 = __esm({
   "js/chart/api.js"() {
     "use strict";
     init_dom();
@@ -27702,7 +28234,7 @@ var init_api = __esm({
 
 // js/chart/state.js
 var chartState;
-var init_state3 = __esm({
+var init_state5 = __esm({
   "js/chart/state.js"() {
     "use strict";
     chartState = {
@@ -27944,13 +28476,13 @@ var init_trend = __esm({
     init_kpi();
     init_state_plate();
     init_busy_card();
-    init_state3();
-    init_api();
+    init_state5();
+    init_api2();
     init_dom();
-    init_attach4();
+    init_attach8();
     init_spark();
     init_selection2();
-    init_constants3();
+    init_constants9();
   }
 });
 
@@ -28095,9 +28627,9 @@ var init_spark = __esm({
     "use strict";
     init_kpi();
     init_trend();
-    init_api();
+    init_api2();
     init_dom();
-    init_attach4();
+    init_attach8();
     init_selection2();
     init_time();
   }
@@ -28197,10 +28729,10 @@ function installSetup(c) {
 var init_setup = __esm({
   "js/chart/plot/setup.js"() {
     "use strict";
-    init_api();
+    init_api2();
     init_dom();
-    init_attach4();
-    init_state3();
+    init_attach8();
+    init_state5();
   }
 });
 
@@ -28261,7 +28793,7 @@ var init_readers = __esm({
   "js/chart/plot/readers.js"() {
     "use strict";
     init_time();
-    init_constants3();
+    init_constants9();
     init_dom();
   }
 });
@@ -28432,7 +28964,7 @@ var init_legend = __esm({
   "js/chart/plot/legend.js"() {
     "use strict";
     init_dom();
-    init_attach4();
+    init_attach8();
     init_selection2();
   }
 });
@@ -28859,13 +29391,13 @@ function installDraw(c) {
     c.paintTip();
   }
 }
-var init_draw = __esm({
+var init_draw2 = __esm({
   "js/chart/plot/draw.js"() {
     "use strict";
     init_dom();
-    init_constants3();
+    init_constants9();
     init_state_plate();
-    init_attach4();
+    init_attach8();
     init_format();
     init_time();
     init_stats();
@@ -29014,7 +29546,7 @@ var init_tip2 = __esm({
     init_selection2();
     init_time();
     init_dom();
-    init_attach4();
+    init_attach8();
   }
 });
 
@@ -29216,7 +29748,7 @@ function installApi(c) {
   };
   c.state = state2;
 }
-var init_api2 = __esm({
+var init_api3 = __esm({
   "js/chart/plot/api.js"() {
     "use strict";
     init_selection2();
@@ -29245,10 +29777,10 @@ var init_plot = __esm({
     init_setup();
     init_readers();
     init_legend();
-    init_draw();
+    init_draw2();
     init_tip2();
     init_pointer2();
-    init_api2();
+    init_api3();
   }
 });
 
@@ -29351,15 +29883,15 @@ function chartHeight(host, data) {
   const n = Number(m[1]);
   return m[2] === "rem" ? n * (parseFloat(view.getComputedStyle(host.ownerDocument.documentElement).fontSize) || 16) : n;
 }
-var init_attach4 = __esm({
+var init_attach8 = __esm({
   "js/chart/attach.js"() {
     "use strict";
     init_locale();
     init_group();
-    init_constants3();
+    init_constants9();
     init_words();
     init_time();
-    init_api();
+    init_api2();
     init_spark();
     init_plot();
     init_stats();
@@ -29409,14 +29941,14 @@ __export(chart_exports, {
 var init_chart = __esm({
   "js/chart.js"() {
     "use strict";
-    init_constants3();
+    init_constants9();
     init_words();
     init_stats();
     init_format();
     init_selection2();
     init_time();
-    init_api();
-    init_attach4();
+    init_api2();
+    init_attach8();
   }
 });
 
@@ -34272,7 +34804,7 @@ function attachKeys(root = document) {
   return () => void 0;
 }
 var MOD_CAP, KEYS, capText;
-var init_keys = __esm({
+var init_keys3 = __esm({
   "js/keys.js"() {
     "use strict";
     init_strings();
@@ -34637,7 +35169,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_strings();
-    init_keys();
+    init_keys3();
     ROW_SELECT = "[data-kp-select-keys]";
     ROW_SELECT_AUTO = "[data-kp-datatable]:has([data-kp-select-row])";
     SELECT_BOX = "[data-kp-select-row]";
@@ -37162,7 +37694,7 @@ var init_wheel = __esm({
 
 // js/focus-steps/constants.js
 var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED2;
-var init_constants4 = __esm({
+var init_constants10 = __esm({
   "js/focus-steps/constants.js"() {
     "use strict";
     FOCUS_STEPS = "[data-kp-focus-steps]";
@@ -37185,7 +37717,7 @@ var init_constants4 = __esm({
 
 // js/focus-steps/state.js
 var focusState;
-var init_state4 = __esm({
+var init_state6 = __esm({
   "js/focus-steps/state.js"() {
     "use strict";
     focusState = {
@@ -37271,8 +37803,8 @@ var init_dom2 = __esm({
     "use strict";
     init_progressbar();
     init_strings();
-    init_state4();
-    init_constants4();
+    init_state6();
+    init_constants10();
     el6 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -37402,7 +37934,7 @@ var init_tracks = __esm({
   "js/focus-steps/tracks.js"() {
     "use strict";
     init_strings();
-    init_state4();
+    init_state6();
     init_dom2();
     init_resume();
     tracksOn = (root) => stateOf2(root).tracks.length > 1 && opt(root, "tracks", "auto") !== "off";
@@ -38058,7 +38590,7 @@ var init_lanes = __esm({
     "use strict";
     init_progressbar();
     init_strings();
-    init_state4();
+    init_state6();
     init_dom2();
     init_blockers();
     init_resume();
@@ -38297,7 +38829,7 @@ var init_paint = __esm({
     "use strict";
     init_strings();
     init_state_plate();
-    init_state4();
+    init_state6();
     init_dom2();
     init_resume();
     init_tracks();
@@ -38410,7 +38942,7 @@ var init_memory = __esm({
     init_paint();
     init_track_nav();
     init_flow();
-    init_constants4();
+    init_constants10();
     memoryOf = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
     hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
   }
@@ -38684,14 +39216,14 @@ var init_flow = __esm({
   "js/focus-steps/flow.js"() {
     "use strict";
     init_strings();
-    init_state4();
+    init_state6();
     init_dom2();
-    init_constants4();
+    init_constants10();
     init_memory();
     init_resume();
     init_tracks();
     init_track_nav();
-    init_api3();
+    init_api4();
   }
 });
 
@@ -38758,7 +39290,7 @@ var init_band = __esm({
     init_dom2();
     init_resume();
     init_flow();
-    init_constants4();
+    init_constants10();
     init_tracks();
     suggestion = (lanes) => lanes.find((l) => !l.active && l.status === "ringing") ?? lanes.find((l) => !l.active && l.status === "ready");
   }
@@ -38987,40 +39519,47 @@ var init_track_nav = __esm({
     init_paint();
     init_memory();
     init_flow();
-    init_constants4();
+    init_constants10();
     init_resume();
     init_blockers();
     init_lanes();
   }
 });
 
-// js/timer.js
-var timer_exports = {};
-__export(timer_exports, {
-  TIMERS: () => TIMERS,
-  TIMERS_RETRY_EVENT: () => TIMERS_RETRY_EVENT,
-  TIMER_CHANGE_EVENT: () => TIMER_CHANGE_EVENT,
-  TIMER_DONE_EVENT: () => TIMER_DONE_EVENT,
-  TIMER_SOUNDS: () => TIMER_SOUNDS,
-  TIMER_START: () => TIMER_START,
-  TIMER_START_EVENT: () => TIMER_START_EVENT,
-  TIMER_STOP_EVENT: () => TIMER_STOP_EVENT,
-  TIMER_TICK_MS: () => TIMER_TICK_MS,
-  addTimerTime: () => addTimerTime,
-  askTimerNotifications: () => askTimerNotifications,
-  attachTimers: () => attachTimers,
-  getTimers: () => getTimers,
-  parseDuration: () => parseDuration,
-  pauseTimer: () => pauseTimer,
-  playTimerSound: () => playTimerSound,
-  restoreTimers: () => restoreTimers,
-  resumeTimer: () => resumeTimer,
-  setTimersState: () => setTimersState,
-  speakTimerMessage: () => speakTimerMessage,
-  startTimer: () => startTimer,
-  stopTimer: () => stopTimer,
-  stopTimerRing: () => stopTimerRing
+// js/timer/constants.js
+var TIMERS, TIMER_START, TIMER_START_EVENT, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_STOP_EVENT, TIMERS_RETRY_EVENT, TIMER_TICK_MS;
+var init_constants11 = __esm({
+  "js/timer/constants.js"() {
+    "use strict";
+    TIMERS = "[data-kp-timers]";
+    TIMER_START = "[data-kp-timer-start]";
+    TIMER_START_EVENT = "kp-timer-start";
+    TIMER_CHANGE_EVENT = "kp-timer-change";
+    TIMER_DONE_EVENT = "kp-timer-done";
+    TIMER_STOP_EVENT = "kp-timer-stop";
+    TIMERS_RETRY_EVENT = "kp-timers-retry";
+    TIMER_TICK_MS = 250;
+  }
 });
+
+// js/timer/state.js
+var LISTS, TICKERS, WIRED3, HANDLED2, timerState;
+var init_state7 = __esm({
+  "js/timer/state.js"() {
+    "use strict";
+    LISTS = /* @__PURE__ */ new WeakMap();
+    TICKERS = /* @__PURE__ */ new WeakMap();
+    WIRED3 = /* @__PURE__ */ new WeakSet();
+    HANDLED2 = /* @__PURE__ */ new WeakSet();
+    timerState = {
+      /** @type {AudioContext | null} */
+      audio: null,
+      serial: 0
+    };
+  }
+});
+
+// js/timer/model.js
 function getTimers(list) {
   return [...LISTS.get(list)?.values() ?? []].map(stateOf3);
 }
@@ -39048,14 +39587,48 @@ function say7(list, message, where = "live") {
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
 }
+var clockOf, leftOf, stateOf3, el7, listOf2;
+var init_model3 = __esm({
+  "js/timer/model.js"() {
+    "use strict";
+    init_countdown();
+    init_state7();
+    clockOf = (timer2, ms) => formatCountdown(ms, timer2.total >= 36e5);
+    leftOf = (timer2) => timer2.state === "running" && timer2.endsAt !== null ? Math.max(0, timer2.endsAt - Date.now()) : timer2.left;
+    stateOf3 = (timer2) => ({
+      id: timer2.id,
+      name: timer2.name,
+      seconds: Math.round(timer2.total / 1e3),
+      remaining: Math.ceil(leftOf(timer2) / 1e3),
+      endsAt: timer2.state === "running" ? timer2.endsAt : null,
+      state: timer2.state,
+      ...timer2.say ? { say: timer2.say } : {}
+    });
+    el7 = (className, tag = "div") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    listOf2 = (list) => {
+      let timers = LISTS.get(list);
+      if (!timers) {
+        timers = /* @__PURE__ */ new Map();
+        LISTS.set(list, timers);
+      }
+      return timers;
+    };
+  }
+});
+
+// js/timer/card.js
 function buildCard(id) {
   const strings = getStrings();
   const card = el7("kp-timer", "li");
   card.setAttribute("data-kp-timer-id", id);
-  serial5 += 1;
+  timerState.serial += 1;
   const head = el7("kp-timer__head");
   const name = el7("kp-timer__name", "span");
-  name.id = `kp-timer-${serial5}-name`;
+  name.id = `kp-timer-${timerState.serial}-name`;
   const word = el7("kp-timer__state", "span");
   word.setAttribute("data-kp-words", [strings.timerRunning, strings.timerPaused, strings.timerDoneWord].join("\n"));
   head.append(name, word);
@@ -39149,88 +39722,27 @@ function paint5(timer2) {
   remove2.setAttribute("aria-label", strings.timerRemove(timer2.name));
   remove2.title = strings.timerRemove(timer2.name);
 }
-function sync2(list) {
-  const timers = listOf2(list);
-  const empty = part3(list, "empty");
-  const strings = getStrings();
-  const error = list.getAttribute("data-kp-timers-error");
-  const loading = list.hasAttribute("aria-busy");
-  const shown4 = list.getAttribute("data-kp-state");
-  if (shown4 === null || shown4 === "ready" || shown4 === "empty") {
-    if (timers.size === 0) list.setAttribute("data-kp-state", "empty");
-    else if (shown4 === "empty") list.setAttribute("data-kp-state", "ready");
+var init_card = __esm({
+  "js/timer/card.js"() {
+    "use strict";
+    init_strings();
+    init_progressbar();
+    init_model3();
+    init_state7();
   }
-  const title = error ?? list.getAttribute("data-kp-timers-empty") ?? strings.timerEmpty;
-  const plateKey = loading ? "loading" : `${error !== null ? "error" : "empty"}|${title}`;
-  if (PLATE.get(empty) !== plateKey) {
-    PLATE.set(empty, plateKey);
-    if (loading) {
-      empty.replaceChildren();
-      empty.classList.remove("kp-alert", "kp-alert--destructive", "kp-empty", "kp-stateplate", "kp-stateplate--error", "kp-stateplate--empty");
-    } else hostStatePlate(list, { kind: error !== null ? "error" : "empty", title, retryEvent: TIMERS_RETRY_EVENT, into: empty });
-  }
-  empty.hidden = !(error !== null || timers.size === 0);
-  empty.toggleAttribute("data-kp-timers-failed", error !== null);
-  list.toggleAttribute("data-kp-timers-covered", error !== null || timers.size === 0);
-  const running2 = [...timers.values()].some((t) => t.state === "running");
-  const ticker2 = TICKERS.get(list);
-  if (running2 && !ticker2)
-    TICKERS.set(
-      list,
-      setInterval(() => tick2(list), TIMER_TICK_MS)
-    );
-  else if (!running2 && ticker2) {
-    clearInterval(ticker2);
-    TICKERS.delete(list);
-  }
-}
-function setTimersState(list, state2, message) {
-  if (!(list instanceof HTMLElement)) return;
-  list.setAttribute("data-kp-state", state2);
-  if (state2 === "error") list.setAttribute("data-kp-timers-error", message ?? getStrings().timersFailed);
-  else list.removeAttribute("data-kp-timers-error");
-  const card = BUSY.get(list);
-  if (state2 === "loading") {
-    list.setAttribute("aria-busy", "true");
-    if (!card)
-      BUSY.set(
-        list,
-        openBusyCard(list, { words: message ?? getStrings().timersLoading, area: () => [list], className: "kp-timers__busy" })
-      );
-  } else {
-    list.removeAttribute("aria-busy");
-    if (card) {
-      BUSY.delete(list);
-      void card.close();
-    }
-  }
-  sync2(list);
-}
-function tick2(list) {
-  for (const timer2 of listOf2(list).values()) {
-    if (timer2.state !== "running") continue;
-    const left = leftOf(timer2);
-    if (left <= 0) finish(list, timer2);
-    else {
-      if (!timer2.warned && left <= 6e4 && timer2.total > 9e4) {
-        timer2.warned = true;
-        say7(list, getStrings().timerLastMinute(timer2.name));
-      }
-      paint5(timer2);
-    }
-  }
-  sync2(list);
-}
+});
+
+// js/timer/sound.js
 function context() {
   const Context = window.AudioContext ?? /** @type {any} */
   window.webkitAudioContext;
   if (!Context) return null;
-  if (audio === null && /** @type {any} */
+  if (timerState.audio === null && /** @type {any} */
   navigator.userActivation?.isActive === false) return null;
-  audio ??= new Context();
+  timerState.audio ??= new Context();
   const ctx = (
     /** @type {AudioContext} */
-    audio
+    timerState.audio
   );
   if (ctx.state === "suspended") void ctx.resume();
   return ctx;
@@ -39289,6 +39801,118 @@ function stopRing(timer2) {
   timer2.card.removeAttribute("data-kp-timer-ringing");
   if (timer2.state === "done" && typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
 }
+var TIMER_SOUNDS, SOUNDS;
+var init_sound = __esm({
+  "js/timer/sound.js"() {
+    "use strict";
+    init_state7();
+    TIMER_SOUNDS = ["chime", "bell", "buzzer"];
+    SOUNDS = {
+      // A soft two-note chime.
+      chime(ctx, at) {
+        [659.25, 880].forEach((hz, i) => note(ctx, ctx.destination, at + i * 0.32, hz, { peak: 0.16, attack: 0.03, decay: 0.9 }));
+        return 1.25;
+      },
+      // A wind-up kitchen timer: a hammer striking two bells in turn, twice, ten strikes each, with the bell metal's
+      // inharmonic overtones; softened above 4.5 kHz so it is loud without being shrill.
+      bell(ctx, at) {
+        const out = soften(ctx, 4500);
+        for (let burst = 0; burst < 2; burst += 1)
+          for (let hit = 0; hit < 10; hit += 1) {
+            const start = at + burst * 0.95 + hit * 0.075;
+            const base = hit % 2 === 0 ? 1180 : 1330;
+            [
+              [1, 0.11],
+              [2.4, 0.06],
+              [4.1, 0.03]
+            ].forEach(([ratio, peak]) => note(ctx, out, start, base * ratio, { peak, attack: 2e-3, decay: 0.26 }));
+          }
+        return 1.9;
+      },
+      // An electronic beeper: four short, slightly detuned saw beeps, twice. Harsh on purpose, softened above 3 kHz.
+      buzzer(ctx, at) {
+        const out = soften(ctx, 3e3);
+        for (let group = 0; group < 2; group += 1)
+          for (let beep = 0; beep < 4; beep += 1) {
+            const start = at + group * 1.3 + beep * 0.26;
+            for (const hz of [740, 749]) note(ctx, out, start, hz, { type: "sawtooth", peak: 0.1, attack: 8e-3, decay: 0.17 });
+          }
+        return 2.2;
+      }
+    };
+  }
+});
+
+// js/timer/sync.js
+function sync2(list) {
+  const timers = listOf2(list);
+  const empty = part3(list, "empty");
+  const strings = getStrings();
+  const error = list.getAttribute("data-kp-timers-error");
+  const loading = list.hasAttribute("aria-busy");
+  const shown4 = list.getAttribute("data-kp-state");
+  if (shown4 === null || shown4 === "ready" || shown4 === "empty") {
+    if (timers.size === 0) list.setAttribute("data-kp-state", "empty");
+    else if (shown4 === "empty") list.setAttribute("data-kp-state", "ready");
+  }
+  const title = error ?? list.getAttribute("data-kp-timers-empty") ?? strings.timerEmpty;
+  const plateKey = loading ? "loading" : `${error !== null ? "error" : "empty"}|${title}`;
+  if (PLATE.get(empty) !== plateKey) {
+    PLATE.set(empty, plateKey);
+    if (loading) {
+      empty.replaceChildren();
+      empty.classList.remove("kp-alert", "kp-alert--destructive", "kp-empty", "kp-stateplate", "kp-stateplate--error", "kp-stateplate--empty");
+    } else hostStatePlate(list, { kind: error !== null ? "error" : "empty", title, retryEvent: TIMERS_RETRY_EVENT, into: empty });
+  }
+  empty.hidden = !(error !== null || timers.size === 0);
+  empty.toggleAttribute("data-kp-timers-failed", error !== null);
+  list.toggleAttribute("data-kp-timers-covered", error !== null || timers.size === 0);
+  const running2 = [...timers.values()].some((t) => t.state === "running");
+  const ticker2 = TICKERS.get(list);
+  if (running2 && !ticker2)
+    TICKERS.set(
+      list,
+      setInterval(() => tick2(list), TIMER_TICK_MS)
+    );
+  else if (!running2 && ticker2) {
+    clearInterval(ticker2);
+    TICKERS.delete(list);
+  }
+}
+function setTimersState(list, state2, message) {
+  if (!(list instanceof HTMLElement)) return;
+  list.setAttribute("data-kp-state", state2);
+  if (state2 === "error") list.setAttribute("data-kp-timers-error", message ?? getStrings().timersFailed);
+  else list.removeAttribute("data-kp-timers-error");
+  const card = BUSY.get(list);
+  if (state2 === "loading") {
+    list.setAttribute("aria-busy", "true");
+    if (!card)
+      BUSY.set(list, openBusyCard(list, { words: message ?? getStrings().timersLoading, area: () => [list], className: "kp-timers__busy" }));
+  } else {
+    list.removeAttribute("aria-busy");
+    if (card) {
+      BUSY.delete(list);
+      void card.close();
+    }
+  }
+  sync2(list);
+}
+function tick2(list) {
+  for (const timer2 of listOf2(list).values()) {
+    if (timer2.state !== "running") continue;
+    const left = leftOf(timer2);
+    if (left <= 0) finish(list, timer2);
+    else {
+      if (!timer2.warned && left <= 6e4 && timer2.total > 9e4) {
+        timer2.warned = true;
+        say7(list, getStrings().timerLastMinute(timer2.name));
+      }
+      paint5(timer2);
+    }
+  }
+  sync2(list);
+}
 function finish(list, timer2, { quiet = false } = {}) {
   timer2.state = "done";
   timer2.endsAt = null;
@@ -39301,7 +39925,11 @@ function finish(list, timer2, { quiet = false } = {}) {
     const speak = list.getAttribute("data-kp-timers-speak") === "on";
     const announce4 = () => {
       const length = playTimerSound(sound);
-      if (speak) setTimeout(() => listOf2(list).get(timer2.id) === timer2 && timer2.state === "done" && speakTimerMessage(timer2.say || strings.timerSpoken(timer2.name)), length * 1e3);
+      if (speak)
+        setTimeout(
+          () => listOf2(list).get(timer2.id) === timer2 && timer2.state === "done" && speakTimerMessage(timer2.say || strings.timerSpoken(timer2.name)),
+          length * 1e3
+        );
     };
     if (sound !== "off" || speak) {
       announce4();
@@ -39325,6 +39953,24 @@ function finish(list, timer2, { quiet = false } = {}) {
   }
   list.dispatchEvent(new CustomEvent(TIMER_DONE_EVENT, { bubbles: true, detail: { timer: stateOf3(timer2) } }));
 }
+var BUSY, PLATE;
+var init_sync2 = __esm({
+  "js/timer/sync.js"() {
+    "use strict";
+    init_strings();
+    init_busy_card();
+    init_state_plate();
+    init_card();
+    init_constants11();
+    init_model3();
+    init_sound();
+    init_state7();
+    BUSY = /* @__PURE__ */ new WeakMap();
+    PLATE = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/timer/run.js
 async function askTimerNotifications() {
   if (typeof Notification === "undefined") return "unsupported";
   if (Notification.permission !== "default") return Notification.permission;
@@ -39333,7 +39979,7 @@ async function askTimerNotifications() {
 function startTimer(list, { name, seconds: seconds2, id, say: message = "" }) {
   if (!(list instanceof HTMLElement) || !(seconds2 > 0)) return null;
   const timers = listOf2(list);
-  const key = id ?? `t${Date.now().toString(36)}${serial5 += 1}`;
+  const key = id ?? `t${Date.now().toString(36)}${timerState.serial += 1}`;
   const existing = timers.get(key);
   if (existing && existing.state !== "done") return key;
   if (existing) removeCard(list, existing, false);
@@ -39449,6 +40095,28 @@ function restoreTimers(list, saved) {
   }
   sync2(list);
 }
+var emit2, find, targetOf;
+var init_run = __esm({
+  "js/timer/run.js"() {
+    "use strict";
+    init_strings();
+    init_card();
+    init_constants11();
+    init_model3();
+    init_sound();
+    init_state7();
+    init_sync2();
+    emit2 = (list, timer2, type, extra = {}) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { timer: stateOf3(timer2), ...extra } }));
+    find = (list, id) => LISTS.get(list)?.get(id) ?? null;
+    targetOf = (starter) => {
+      const named = starter.getAttribute("data-kp-timer-for");
+      const found = named ? document.getElementById(named) : document.querySelector(TIMERS);
+      return found instanceof HTMLElement ? found : null;
+    };
+  }
+});
+
+// js/timer/attach.js
 function attachTimers(root = document) {
   const lists = (
     /** @type {HTMLElement[]} */
@@ -39542,96 +40210,57 @@ function attachTimers(root = document) {
   });
   return () => undo.forEach((u) => u());
 }
-var TIMERS, TIMER_START, TIMER_START_EVENT, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_STOP_EVENT, TIMERS_RETRY_EVENT, TIMER_TICK_MS, LISTS, TICKERS, WIRED3, HANDLED2, audio, serial5, clockOf, leftOf, stateOf3, el7, listOf2, BUSY, PLATE, TIMER_SOUNDS, SOUNDS, emit2, find, targetOf;
+var init_attach9 = __esm({
+  "js/timer/attach.js"() {
+    "use strict";
+    init_strings();
+    init_countdown();
+    init_constants11();
+    init_model3();
+    init_run();
+    init_sound();
+    init_state7();
+    init_sync2();
+  }
+});
+
+// js/timer.js
+var timer_exports = {};
+__export(timer_exports, {
+  TIMERS: () => TIMERS,
+  TIMERS_RETRY_EVENT: () => TIMERS_RETRY_EVENT,
+  TIMER_CHANGE_EVENT: () => TIMER_CHANGE_EVENT,
+  TIMER_DONE_EVENT: () => TIMER_DONE_EVENT,
+  TIMER_SOUNDS: () => TIMER_SOUNDS,
+  TIMER_START: () => TIMER_START,
+  TIMER_START_EVENT: () => TIMER_START_EVENT,
+  TIMER_STOP_EVENT: () => TIMER_STOP_EVENT,
+  TIMER_TICK_MS: () => TIMER_TICK_MS,
+  addTimerTime: () => addTimerTime,
+  askTimerNotifications: () => askTimerNotifications,
+  attachTimers: () => attachTimers,
+  getTimers: () => getTimers,
+  parseDuration: () => parseDuration,
+  pauseTimer: () => pauseTimer,
+  playTimerSound: () => playTimerSound,
+  restoreTimers: () => restoreTimers,
+  resumeTimer: () => resumeTimer,
+  setTimersState: () => setTimersState,
+  speakTimerMessage: () => speakTimerMessage,
+  startTimer: () => startTimer,
+  stopTimer: () => stopTimer,
+  stopTimerRing: () => stopTimerRing
+});
 var init_timer = __esm({
   "js/timer.js"() {
     "use strict";
-    init_strings();
-    init_progressbar();
+    init_constants11();
+    init_model3();
+    init_sync2();
+    init_sound();
+    init_run();
+    init_attach9();
     init_countdown();
-    init_busy_card();
-    init_state_plate();
-    TIMERS = "[data-kp-timers]";
-    TIMER_START = "[data-kp-timer-start]";
-    TIMER_START_EVENT = "kp-timer-start";
-    TIMER_CHANGE_EVENT = "kp-timer-change";
-    TIMER_DONE_EVENT = "kp-timer-done";
-    TIMER_STOP_EVENT = "kp-timer-stop";
-    TIMERS_RETRY_EVENT = "kp-timers-retry";
-    TIMER_TICK_MS = 250;
-    LISTS = /* @__PURE__ */ new WeakMap();
-    TICKERS = /* @__PURE__ */ new WeakMap();
-    WIRED3 = /* @__PURE__ */ new WeakSet();
-    HANDLED2 = /* @__PURE__ */ new WeakSet();
-    audio = null;
-    serial5 = 0;
-    clockOf = (timer2, ms) => formatCountdown(ms, timer2.total >= 36e5);
-    leftOf = (timer2) => timer2.state === "running" && timer2.endsAt !== null ? Math.max(0, timer2.endsAt - Date.now()) : timer2.left;
-    stateOf3 = (timer2) => ({
-      id: timer2.id,
-      name: timer2.name,
-      seconds: Math.round(timer2.total / 1e3),
-      remaining: Math.ceil(leftOf(timer2) / 1e3),
-      endsAt: timer2.state === "running" ? timer2.endsAt : null,
-      state: timer2.state,
-      ...timer2.say ? { say: timer2.say } : {}
-    });
-    el7 = (className, tag = "div") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    listOf2 = (list) => {
-      let timers = LISTS.get(list);
-      if (!timers) {
-        timers = /* @__PURE__ */ new Map();
-        LISTS.set(list, timers);
-      }
-      return timers;
-    };
-    BUSY = /* @__PURE__ */ new WeakMap();
-    PLATE = /* @__PURE__ */ new WeakMap();
-    TIMER_SOUNDS = ["chime", "bell", "buzzer"];
-    SOUNDS = {
-      // A soft two-note chime.
-      chime(ctx, at) {
-        [659.25, 880].forEach((hz, i) => note(ctx, ctx.destination, at + i * 0.32, hz, { peak: 0.16, attack: 0.03, decay: 0.9 }));
-        return 1.25;
-      },
-      // A wind-up kitchen timer: a hammer striking two bells in turn, twice, ten strikes each, with the bell metal's
-      // inharmonic overtones; softened above 4.5 kHz so it is loud without being shrill.
-      bell(ctx, at) {
-        const out = soften(ctx, 4500);
-        for (let burst = 0; burst < 2; burst += 1)
-          for (let hit = 0; hit < 10; hit += 1) {
-            const start = at + burst * 0.95 + hit * 0.075;
-            const base = hit % 2 === 0 ? 1180 : 1330;
-            [
-              [1, 0.11],
-              [2.4, 0.06],
-              [4.1, 0.03]
-            ].forEach(([ratio, peak]) => note(ctx, out, start, base * ratio, { peak, attack: 2e-3, decay: 0.26 }));
-          }
-        return 1.9;
-      },
-      // An electronic beeper: four short, slightly detuned saw beeps, twice. Harsh on purpose, softened above 3 kHz.
-      buzzer(ctx, at) {
-        const out = soften(ctx, 3e3);
-        for (let group = 0; group < 2; group += 1)
-          for (let beep = 0; beep < 4; beep += 1) {
-            const start = at + group * 1.3 + beep * 0.26;
-            for (const hz of [740, 749]) note(ctx, out, start, hz, { type: "sawtooth", peak: 0.1, attack: 8e-3, decay: 0.17 });
-          }
-        return 2.2;
-      }
-    };
-    emit2 = (list, timer2, type, extra = {}) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { timer: stateOf3(timer2), ...extra } }));
-    find = (list, id) => LISTS.get(list)?.get(id) ?? null;
-    targetOf = (starter) => {
-      const named = starter.getAttribute("data-kp-timer-for");
-      const found = named ? document.getElementById(named) : document.querySelector(TIMERS);
-      return found instanceof HTMLElement ? found : null;
-    };
   }
 });
 
@@ -39723,12 +40352,12 @@ function setFocusStepsState(root, kind, message) {
   paint4(root, false);
 }
 var getStepIndex, getSteps, typing3;
-var init_api3 = __esm({
+var init_api4 = __esm({
   "js/focus-steps/api.js"() {
     "use strict";
     init_strings();
     init_busy_card();
-    init_state4();
+    init_state6();
     init_tracks();
     init_track_nav();
     init_dom2();
@@ -39736,7 +40365,7 @@ var init_api3 = __esm({
     init_paint();
     init_flow();
     init_memory();
-    init_constants4();
+    init_constants10();
     getStepIndex = (root) => stateOf2(root).index;
     getSteps = (root) => stateOf2(root).steps.map((step) => ({ ...step }));
     typing3 = (target) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
@@ -39802,7 +40431,7 @@ var init_wake = __esm({
     "use strict";
     init_strings();
     init_dom2();
-    init_constants4();
+    init_constants10();
     init_resume();
   }
 });
@@ -40067,13 +40696,13 @@ function attachFocusSteps(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var init_attach5 = __esm({
+var init_attach10 = __esm({
   "js/focus-steps/attach.js"() {
     "use strict";
     init_strings();
     init_shortcuts();
     init_live_options();
-    init_constants4();
+    init_constants10();
     init_dom2();
     init_paint();
     init_wake();
@@ -40081,7 +40710,7 @@ var init_attach5 = __esm({
     init_flow();
     init_tracks();
     init_track_nav();
-    init_api3();
+    init_api4();
     init_band();
     init_memory();
     init_lanes();
@@ -40115,9 +40744,9 @@ __export(focus_steps_exports, {
 var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
-    init_constants4();
-    init_api3();
-    init_attach5();
+    init_constants10();
+    init_api4();
+    init_attach10();
   }
 });
 
@@ -40212,11 +40841,11 @@ function rowFor(row, item) {
       el8("kp-field__check kp-checklist__check", "input")
     );
     check2.type = "checkbox";
-    serial6 += 1;
+    serial5 += 1;
     const text2 = el8("kp-checklist__label", "span");
-    text2.id = `kp-checklist-${serial6}-label`;
+    text2.id = `kp-checklist-${serial5}-label`;
     const detail2 = el8("kp-checklist__detail", "span");
-    detail2.id = `kp-checklist-${serial6}-detail`;
+    detail2.id = `kp-checklist-${serial5}-detail`;
     check2.setAttribute("aria-labelledby", text2.id);
     label.append(check2, text2, detail2);
     row.append(label);
@@ -40276,8 +40905,8 @@ function render(list) {
       section.setAttribute("data-group", key);
       if (key) {
         const head = el8("kp-checklist__head", `h${level}`);
-        serial6 += 1;
-        head.id = `kp-checklist-${serial6}-head`;
+        serial5 += 1;
+        head.id = `kp-checklist-${serial5}-head`;
         head.append(el8("kp-checklist__title", "span"), el8("kp-checklist__count", "span"));
         section.append(head);
         section.setAttribute("aria-labelledby", head.id);
@@ -40561,7 +41190,7 @@ function attachChecklists(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var CHECKLIST, CHECKLIST_EVENT, CHECKLIST_CLEAR_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_RETRY_EVENT, CHECKLIST_RENDER_EVENT, CHECKLIST_UNDO_MS, ITEMS, UNDO2, PLATE2, BUSY2, WIRED4, serial6, el8, sinks, shownOrder, emit3;
+var CHECKLIST, CHECKLIST_EVENT, CHECKLIST_CLEAR_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_RETRY_EVENT, CHECKLIST_RENDER_EVENT, CHECKLIST_UNDO_MS, ITEMS, UNDO2, PLATE2, BUSY2, WIRED4, serial5, el8, sinks, shownOrder, emit3;
 var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
@@ -40581,7 +41210,7 @@ var init_checklist = __esm({
     PLATE2 = /* @__PURE__ */ new WeakMap();
     BUSY2 = /* @__PURE__ */ new WeakMap();
     WIRED4 = /* @__PURE__ */ new WeakSet();
-    serial6 = 0;
+    serial5 = 0;
     el8 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -41378,7 +42007,7 @@ function attachCalendars(root = document, options = {}) {
       `h${el16.dataset.kpHeadingLevel ?? "2"}`,
       "kp-calendar__title"
     );
-    title.id = `kp-calendar-title-${idSeq2 += 1}`;
+    title.id = `kp-calendar-title-${idSeq += 1}`;
     title.setAttribute("aria-live", "polite");
     const next2 = make9(doc, "button", "kp-button kp-button--sm", s2.calendarNext);
     next2.type = "button";
@@ -41600,7 +42229,7 @@ function setCalendarCaption(el16, text) {
   caption.textContent = text;
   caption.hidden = text === "";
 }
-var CALENDAR, CALENDAR_PICK_EVENT, CALENDAR_MONTH_EVENT, CALENDAR_RETRY_EVENT, calendars, DAY_MS, two2, isoOf, formatDayKey, weekday, keyOf4, make9, idSeq2, monthKey, calmLegend, BUSY_LAYERS, buttonFor;
+var CALENDAR, CALENDAR_PICK_EVENT, CALENDAR_MONTH_EVENT, CALENDAR_RETRY_EVENT, calendars, DAY_MS, two2, isoOf, formatDayKey, weekday, keyOf4, make9, idSeq, monthKey, calmLegend, BUSY_LAYERS, buttonFor;
 var init_calendar = __esm({
   "js/calendar.js"() {
     "use strict";
@@ -41626,7 +42255,7 @@ var init_calendar = __esm({
       if (text != null) el16.textContent = text;
       return el16;
     };
-    idSeq2 = 0;
+    idSeq = 0;
     monthKey = (c) => `${c.year}-${two2(c.month)}`;
     calmLegend = (s2) => (
       /** @type {{ tone: CalendarTone, label: string }[]} */
@@ -41638,6 +42267,765 @@ var init_calendar = __esm({
     );
     BUSY_LAYERS = ".kp-calendar__busy, .kp-calendar__day-busy";
     buttonFor = (c, iso) => c.cells.find((cell) => cell.button.dataset.kpDate === iso)?.button ?? null;
+  }
+});
+
+// js/heat/constants.js
+var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES, HEAT_CELL, MATRIX_CELL, GLYPHS3;
+var init_constants12 = __esm({
+  "js/heat/constants.js"() {
+    "use strict";
+    HEAT = "[data-kp-heat]";
+    MATRIX = "[data-kp-matrix]";
+    HEAT_PICK_EVENT = "kp-heat-pick";
+    HEAT_ROW_EVENT = "kp-heat-row";
+    HEAT_PAGE_EVENT = "kp-heat-page";
+    MATRIX_PICK_EVENT = "kp-matrix-pick";
+    HEAT_RETRY_EVENT = "kp-heat-retry";
+    MATRIX_RETRY_EVENT = "kp-matrix-retry";
+    MATRIX_LIGHT_EVENT = "kp-matrix-light";
+    TONES = ["ok", "warn", "bad", "muted", "future", "before", "none", "level", "loading", "self", "logged", "quiet", "paused"];
+    HEAT_CELL = ".kp-heat__cell[data-c]:not(.kp-skeleton)";
+    MATRIX_CELL = ".kp-matrix__cell[data-c]:not([data-kp-inert])";
+    GLYPHS3 = Object.freeze({ ok: "\u2713", warn: "!", bad: "\xD7", muted: "\u2013", none: "\u2013" });
+  }
+});
+
+// js/heat/card.js
+function waitForCard(el16, spec, loading, draw8) {
+  const waiting = WAITING.get(el16);
+  if (loading) {
+    if (waiting) {
+      WAITING.delete(el16);
+      waiting.card.remove();
+    }
+    return false;
+  }
+  if (waiting) {
+    waiting.spec = spec;
+    return true;
+  }
+  const card = CARDS.get(el16);
+  if (!card) return false;
+  CARDS.delete(el16);
+  const entry = { card, spec };
+  WAITING.set(el16, entry);
+  void card.close().then(() => {
+    if (WAITING.get(el16) !== entry) return;
+    WAITING.delete(el16);
+    draw8(el16, entry.spec);
+  });
+  return true;
+}
+function syncCard2(el16, loading, words2, area, className) {
+  const first = !DRAWN3.has(el16);
+  markDrawn(el16);
+  const card = CARDS.get(el16);
+  if (!loading) {
+    if (card) {
+      CARDS.delete(el16);
+      card.remove();
+    }
+    return;
+  }
+  if (card) {
+    if (card.layer.parentElement !== el16) el16.append(card.layer);
+    card.place();
+    return;
+  }
+  CARDS.set(el16, openBusyCard(el16, { words: words2, area, className, arrive: !first }));
+}
+function markDrawn(el16) {
+  if (DRAWN3.has(el16)) return;
+  const view = el16.ownerDocument.defaultView;
+  if (view) view.requestAnimationFrame(() => DRAWN3.add(el16));
+  else DRAWN3.add(el16);
+}
+function replaceKeepingCard(el16, nodes) {
+  const keep = CARDS.get(el16)?.layer;
+  for (const child of [...el16.childNodes]) if (child !== keep) child.remove();
+  if (keep && keep.parentElement === el16) keep.before(...nodes);
+  else el16.append(...nodes);
+}
+var CARDS, WAITING, DRAWN3, PLATES;
+var init_card2 = __esm({
+  "js/heat/card.js"() {
+    "use strict";
+    init_busy_card();
+    CARDS = /* @__PURE__ */ new WeakMap();
+    WAITING = /* @__PURE__ */ new WeakMap();
+    DRAWN3 = /* @__PURE__ */ new WeakSet();
+    PLATES = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/heat/dom.js
+function make10(doc, tag, cls = "", attrs = {}) {
+  const node = doc.createElement(tag);
+  if (cls) node.className = cls;
+  for (const [name, value] of Object.entries(attrs)) node.setAttribute(name, value);
+  return node;
+}
+var toneOf2, unit;
+var init_dom3 = __esm({
+  "js/heat/dom.js"() {
+    "use strict";
+    init_constants12();
+    toneOf2 = (tone) => TONES.includes(tone ?? "") ? (
+      /** @type {GridTone} */
+      tone
+    ) : "muted";
+    unit = (v) => String(Math.min(1, Math.max(0, Number.isFinite(v) ? (
+      /** @type {number} */
+      v
+    ) : 0)));
+  }
+});
+
+// js/heat/grid-state.js
+var DECORATE, STOPS, LIT;
+var init_grid_state = __esm({
+  "js/heat/grid-state.js"() {
+    "use strict";
+    DECORATE = /* @__PURE__ */ new WeakMap();
+    STOPS = /* @__PURE__ */ new WeakMap();
+    LIT = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/heat/legend.js
+function legendOf(el16) {
+  const next2 = el16.nextElementSibling;
+  return next2 instanceof HTMLElement && next2.matches(".kp-heat__legend") ? next2 : null;
+}
+function describedBy(el16, legend, on) {
+  if (!legend) return;
+  const ids = (el16.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id && id !== legend.id);
+  if (on) ids.push(legend.id);
+  if (ids.length) el16.setAttribute("aria-describedby", ids.join(" "));
+  else el16.removeAttribute("aria-describedby");
+}
+function removeLegend(el16) {
+  const legend = legendOf(el16);
+  if (!legend) return;
+  legend.hidden = true;
+  legend.replaceChildren();
+  legend.removeAttribute("data-kp-legend-source");
+  describedBy(el16, legend, false);
+}
+function syncCalmLegend(el16) {
+  const legend = legendOf(el16);
+  const own = legend?.getAttribute("data-kp-legend-source") === "auto";
+  if (legend && !own && legend.childElementCount > 0) return;
+  if (isCalmTones(el16) && el16.getAttribute("data-kp-legend") !== "hide") {
+    const present = new Set([...el16.querySelectorAll(".kp-heat__cell[data-kp-tone]")].map((c) => c.getAttribute("data-kp-tone")));
+    const all = el16.getAttribute("data-kp-legend") === "all" || !["logged", "quiet", "paused"].some((t) => present.has(t));
+    const entries3 = calmLegendEntries().filter((e) => all || present.has(e.tone));
+    const signature2 = entries3.map((e) => e.tone).join(" ");
+    if (own && !legend?.hidden && legend?.getAttribute("data-kp-legend-tones") === signature2) return;
+    const made6 = setHeatLegend(el16, entries3, { source: "auto" });
+    made6?.setAttribute("data-kp-legend-tones", signature2);
+  } else if (own) removeLegend(el16);
+}
+function setHeatLegend(el16, entries3, options = {}) {
+  const doc = el16.ownerDocument;
+  const s2 = getStrings();
+  let legend = legendOf(el16);
+  if (!legend) {
+    if (!el16.parentNode) return null;
+    legend = make10(doc, "ul", "kp-heat__legend");
+    el16.after(legend);
+  }
+  if (!legend.id) legend.id = `${el16.id || "kp-heat"}-legend${el16.id ? "" : `-${legendCount += 1}`}`;
+  const keys = options.keys === true ? defaultHeatKeys(s2) : options.keys || null;
+  legend.setAttribute("aria-label", options.label ?? s2.heatLegendLabel);
+  if (options.source) legend.setAttribute("data-kp-legend-source", options.source);
+  else legend.removeAttribute("data-kp-legend-source");
+  const items = [];
+  for (const entry of entries3) {
+    const li = make10(doc, "li");
+    if (entry.ramp) {
+      const steps = Math.min(9, Math.max(2, Math.trunc(entry.steps ?? 5)));
+      const ramp = make10(doc, "span", "kp-heat__ramp", { "aria-hidden": "true" });
+      for (let i = 0; i < steps; i += 1) {
+        const swatch = make10(doc, "span", "kp-heat__swatch", { "data-kp-tone": "level" });
+        swatch.style.setProperty("--kp-heat-level", String(Math.round(i / (steps - 1) * 100) / 100));
+        ramp.append(swatch);
+      }
+      li.append(entry.less ?? s2.heatLegendLess, ramp, entry.more ?? s2.heatLegendMore);
+    } else {
+      const swatch = make10(doc, "span", "kp-heat__swatch", { "data-kp-tone": entry.tone ?? "muted", "aria-hidden": "true" });
+      li.append(swatch, ` ${entry.label ?? ""}`);
+    }
+    items.push(li);
+  }
+  if (keys && keys.length) {
+    const end = make10(doc, "li", "kp-heat__legend-end");
+    const line = make10(doc, "div", "kp-keys");
+    setKeys(line, keys);
+    end.append(line);
+    items.push(end);
+  }
+  legend.replaceChildren(...items);
+  legend.hidden = items.length === 0;
+  describedBy(el16, legend, items.length > 0);
+  return legend;
+}
+function defaultHeatKeys(s2) {
+  return [
+    [["\u2190", "\u2191", "\u2193", "\u2192"], s2.heatKeysMove],
+    ["Enter", s2.heatKeysPick],
+    ["Esc", s2.heatKeysDrop],
+    [["PgUp", "PgDn"], s2.heatKeysPage]
+  ];
+}
+var legendCount;
+var init_legend2 = __esm({
+  "js/heat/legend.js"() {
+    "use strict";
+    init_strings();
+    init_calm_tones();
+    init_keys3();
+    init_dom3();
+    legendCount = 0;
+  }
+});
+
+// js/heat/paging.js
+function pagerOf(el16) {
+  const kept = PAGERS.get(el16);
+  if (kept?.isConnected) return kept;
+  const before = el16.previousElementSibling;
+  return before instanceof HTMLElement && before.matches(".kp-heat__pager") ? before : null;
+}
+function heatOffset(el16) {
+  const n = Number(el16.getAttribute("data-kp-heat-offset"));
+  return Number.isFinite(n) ? Math.trunc(n) : 0;
+}
+function setHeatPaging(el16, paging = {}) {
+  const doc = el16.ownerDocument;
+  const s2 = getStrings();
+  let bar = pagerOf(el16);
+  if (!bar) {
+    if (!el16.parentNode) return null;
+    bar = make10(doc, "div", "kp-heat__pager", { role: "group" });
+    const button = (part7) => make10(doc, "button", `kp-button kp-button--ghost kp-button--sm kp-heat__pager-${part7}`, { type: "button", "data-kp-heat-page": part7 });
+    const words2 = make10(doc, "span", "kp-heat__pager-label");
+    words2.setAttribute("aria-live", "polite");
+    bar.append(button("earlier"), button("today"), button("later"), words2);
+    el16.before(bar);
+    bar.addEventListener("click", (event) => {
+      const target = event.target instanceof Element ? event.target.closest("[data-kp-heat-page]") : null;
+      if (!target || !(target instanceof HTMLButtonElement) || target.disabled) return;
+      const direction = (
+        /** @type {'earlier' | 'later' | 'today'} */
+        target.getAttribute("data-kp-heat-page")
+      );
+      const now = heatOffset(el16);
+      const offset2 = direction === "today" ? 0 : direction === "earlier" ? now + 1 : now - 1;
+      if (!el16.hasAttribute("data-kp-heat-owned")) {
+        el16.setAttribute("data-kp-heat-offset", String(offset2));
+        setHeatPaging(el16, { ...PAGING.get(el16) ?? {}, offset: offset2 });
+      }
+      el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction, offset: offset2, source: "pager" } }));
+    });
+  }
+  PAGERS.set(el16, bar);
+  const given2 = { ...PAGING.get(el16) ?? {}, ...paging };
+  PAGING.set(el16, given2);
+  const offset = paging.offset ?? heatOffset(el16);
+  el16.setAttribute("data-kp-heat-offset", String(offset));
+  const min = given2.min ?? 0;
+  const text = [
+    ["earlier", s2.heatEarlier, given2.max !== void 0 && offset >= given2.max],
+    ["today", s2.heatToday, offset === 0],
+    ["later", s2.heatLater, offset <= min]
+  ];
+  bar.setAttribute("aria-label", s2.heatPagerLabel);
+  for (
+    const [part7, words2, off] of
+    /** @type {[string, string, boolean][]} */
+    text
+  ) {
+    const b = (
+      /** @type {HTMLButtonElement} */
+      bar.querySelector(`[data-kp-heat-page="${part7}"]`)
+    );
+    if (b.textContent !== words2) b.textContent = words2;
+    b.disabled = off;
+    const decorate2 = DECORATE.get(el16);
+    if (decorate2 && !MARKED.has(b)) {
+      MARKED.add(b);
+      const key = el16.getAttribute("data-kp-key");
+      decorate2(b, { kind: (
+        /** @type {'pager-earlier' | 'pager-today' | 'pager-later'} */
+        `pager-${part7}`
+      ), host: el16, ...key === null ? {} : { key }, label: words2 });
+    }
+  }
+  const label = (
+    /** @type {HTMLElement} */
+    bar.querySelector(".kp-heat__pager-label")
+  );
+  const wanted = given2.label ?? "";
+  if (label.textContent !== wanted) label.textContent = wanted;
+  return bar;
+}
+function removeHeatPaging(el16) {
+  pagerOf(el16)?.remove();
+  PAGERS.delete(el16);
+  PAGING.delete(el16);
+  el16.removeAttribute("data-kp-heat-offset");
+}
+var MARKED, PAGERS, PAGING;
+var init_paging = __esm({
+  "js/heat/paging.js"() {
+    "use strict";
+    init_strings();
+    init_constants12();
+    init_dom3();
+    init_grid_state();
+    MARKED = /* @__PURE__ */ new WeakSet();
+    PAGERS = /* @__PURE__ */ new WeakMap();
+    PAGING = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/heat/draw.js
+function cellGrid(grid2, cellSelector) {
+  const out = [];
+  for (
+    const cell of
+    /** @type {NodeListOf<HTMLElement>} */
+    grid2.querySelectorAll(cellSelector)
+  ) {
+    const r = Number(cell.dataset.r);
+    (out[r] ??= [])[Number(cell.dataset.c)] = cell;
+  }
+  return out;
+}
+function placeStop(grid2, selector, stop) {
+  const cells = (
+    /** @type {HTMLElement[]} */
+    [...grid2.querySelectorAll(selector)]
+  );
+  if (cells.length === 0) return;
+  for (const cell of cells) cell.setAttribute("tabindex", "-1");
+  const want = stop ?? { r: 0, c: 0 };
+  const at = cells.find((cell) => Number(cell.dataset.r) === want.r && Number(cell.dataset.c) === want.c && !cell.hasAttribute("aria-disabled")) ?? cells.find((cell) => !cell.hasAttribute("aria-disabled")) ?? cells[0];
+  at.setAttribute("tabindex", "0");
+  STOPS.set(grid2, { r: Number(at.dataset.r), c: Number(at.dataset.c) });
+}
+function setHeat(el16, spec, options) {
+  const doc = el16.ownerDocument;
+  const s2 = getStrings();
+  if (options && "decorate" in options) {
+    if (options.decorate) DECORATE.set(el16, options.decorate);
+    else DECORATE.delete(el16);
+  }
+  const decorate2 = DECORATE.get(el16);
+  const mark = (part7, info) => {
+    if (!decorate2) return;
+    const key = el16.getAttribute("data-kp-key");
+    decorate2(part7, { ...info, host: el16, ...key === null ? {} : { key } });
+  };
+  if (spec.paging === false) removeHeatPaging(el16);
+  else if (spec.paging) setHeatPaging(el16, spec.paging);
+  const state2 = spec.state ?? "ready";
+  const loading = state2 === "loading";
+  if (spec.legend !== void 0) {
+    if (spec.legend === false) removeLegend(el16);
+    else setHeatLegend(el16, spec.legend, { keys: spec.legendKeys });
+  } else syncCalmLegend(el16);
+  if (waitForCard(el16, spec, loading, setHeat)) return;
+  const every = Math.max(1, spec.every ?? 3);
+  const toggle2 = spec.toggle ?? el16.hasAttribute("data-kp-heat-toggle");
+  const pressedKeys = LIT.get(el16) ?? /* @__PURE__ */ new Set();
+  const hadFocus = el16.contains(doc.activeElement) && doc.activeElement?.matches(HEAT_CELL);
+  const focusAt = hadFocus ? { r: Number(
+    /** @type {HTMLElement} */
+    doc.activeElement.dataset.r
+  ), c: Number(
+    /** @type {HTMLElement} */
+    doc.activeElement.dataset.c
+  ) } : null;
+  let columns2 = spec.columns ?? [];
+  let rows = spec.rows ?? [];
+  if (loading && columns2.length === 0 && spec.skeleton)
+    columns2 = Array.from({ length: spec.skeleton.columns }, (_, i) => ({ key: String(i), label: "" }));
+  if (loading && rows.length === 0 && spec.skeleton)
+    rows = Array.from({ length: spec.skeleton.rows }, (_, i) => ({ key: `row-${i}`, label: "", cells: [] }));
+  const picked = spec.picked ?? el16.getAttribute("data-kp-heat-picked");
+  el16.classList.add("kp-heat");
+  el16.setAttribute("data-kp-heat", "");
+  el16.setAttribute("role", "grid");
+  if (spec.label && !el16.hasAttribute("aria-label")) el16.setAttribute("aria-label", spec.label);
+  el16.setAttribute("data-kp-state", state2);
+  el16.toggleAttribute("aria-busy", loading);
+  if (loading) el16.setAttribute("aria-busy", "true");
+  el16.style.setProperty("--kp-heat-cols", String(Math.max(1, columns2.length)));
+  if (picked == null) el16.removeAttribute("data-kp-heat-picked");
+  else el16.setAttribute("data-kp-heat-picked", picked);
+  if (state2 === "empty" || state2 === "error") {
+    const title = spec.message ?? (state2 === "error" ? s2.heatFailed : s2.heatEmpty);
+    const kept = PLATES.get(el16);
+    if (kept && kept.note.isConnected && el16.firstElementChild === kept.note && el16.childElementCount === 1) {
+      if (kept.state === state2 && kept.title === title && kept.text === spec.text && kept.art === spec.art) return;
+    }
+    const note3 = make10(doc, "div", "kp-heat__state", { "data-kp-state": state2 });
+    note3.append(
+      hostStatePlate(el16, {
+        kind: state2,
+        title,
+        ...spec.text ? { text: spec.text } : {},
+        art: spec.art,
+        retryEvent: HEAT_RETRY_EVENT
+      })
+    );
+    PLATES.set(el16, { note: note3, state: state2, title, text: spec.text, art: spec.art });
+    markDrawn(el16);
+    el16.replaceChildren(note3);
+    return;
+  }
+  const column = (key, text, minor) => {
+    const head = make10(doc, "span", "kp-heat__col", { role: "columnheader", "data-col-key": key });
+    const isPicked = picked != null && key === picked;
+    if (minor) head.setAttribute("data-kp-minor", "");
+    if (isPicked) head.setAttribute("data-kp-picked", "");
+    if (minor && !isPicked && text) head.setAttribute("aria-label", text);
+    else head.textContent = text;
+    return head;
+  };
+  const axis = make10(doc, "div", "kp-heat__row kp-heat__axis", { role: "row" });
+  axis.append(make10(doc, "span", "kp-heat__label", { role: "columnheader", "aria-hidden": "true" }));
+  const heads = make10(doc, "div", "kp-heat__cells", { role: "none" });
+  const open4 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
+  const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
+  const before = open4[open4.length - 2];
+  if (every > 1 && before !== void 0 && before === open4[open4.length - 1] - 1) named.delete(before);
+  columns2.forEach((c, i) => heads.append(column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i))));
+  axis.append(heads);
+  let r = -1;
+  const rowNode = (row, summary2) => {
+    r += 1;
+    const node = make10(doc, "div", `kp-heat__row${summary2 ? " kp-heat__row--summary" : ""}`, { role: "row", "data-row-key": row.key });
+    const label = make10(doc, "div", "kp-heat__label", { role: "rowheader" });
+    if (summary2) label.classList.add("kp-heat__label--summary");
+    if (loading && !row.label) {
+      label.append(make10(doc, "span", "kp-heat__label-skeleton kp-skeleton", { "aria-hidden": "true" }));
+    } else {
+      const inner = toggle2 && !summary2 ? make10(doc, "button", "kp-heat__label-button", {
+        type: "button",
+        "aria-pressed": String(row.pressed ?? pressedKeys.has(row.key)),
+        "data-key": row.key
+      }) : label;
+      if (row.mark) {
+        const mark2 = make10(doc, "i", "kp-heat__mark", { "aria-hidden": "true" });
+        mark2.style.setProperty("--kp-heat-mark", row.mark);
+        inner.append(mark2);
+      }
+      const text = make10(doc, "span", `kp-heat__label-text${row.muted ? " kp-heat__label-text--muted" : ""}`);
+      text.textContent = row.label;
+      text.title = row.label;
+      inner.append(text);
+      if (inner !== label) label.append(inner);
+      if (inner !== label) mark(inner, { kind: "row-label", value: row.key, label: row.label });
+    }
+    const cells = make10(doc, "div", "kp-heat__cells", { role: "none" });
+    columns2.forEach((col, c) => {
+      const cell = row.cells[c];
+      if (loading || cell?.tone === "loading") {
+        cells.append(
+          make10(doc, "span", "kp-heat__cell kp-skeleton kp-skeleton--block", {
+            role: "gridcell",
+            "data-kp-tone": "loading",
+            "aria-label": s2.heatLoading,
+            "data-r": String(r),
+            "data-c": String(c)
+          })
+        );
+        return;
+      }
+      const calm = isCalmTones(el16);
+      const tone = calm ? (
+        /** @type {GridTone} */
+        calmTone(cell?.tone ?? "quiet", el16)
+      ) : toneOf2(cell?.tone);
+      const said = calm && tone === "quiet" ? el16.getAttribute("data-kp-quiet-words") === "none" ? "" : calmWord("quiet") ?? "" : cell?.label;
+      const button = make10(doc, "button", "kp-heat__cell", {
+        type: "button",
+        role: "gridcell",
+        tabindex: "-1",
+        "data-kp-tone": tone,
+        "data-r": String(r),
+        "data-c": String(c),
+        "data-row-key": row.key,
+        "data-col-key": col.key,
+        "aria-label": cell?.aria && !(calm && tone === "quiet") ? cell.aria : `${row.label}, ${col.label}${said ? `: ${said}` : ""}`
+      });
+      if (tone === "level") button.style.setProperty("--kp-heat-level", unit(cell?.level));
+      if (summary2 && cell?.share != null) button.style.setProperty("--kp-heat-share", unit(cell.share));
+      if (summary2) button.setAttribute("data-kp-share", "");
+      if (cell?.disabled) {
+        button.setAttribute("aria-disabled", "true");
+        button.setAttribute("data-kp-inert", "");
+      }
+      if (cell?.tip !== void 0) button.setAttribute("data-kp-hovercard", cell.tip === true ? "" : cell.tip);
+      if (picked != null && col.key === picked) {
+        button.setAttribute("data-kp-picked", "");
+        button.setAttribute("aria-selected", "true");
+      }
+      mark(button, { kind: "cell", value: `${row.key}/${col.key}`, index: c, label: button.getAttribute("aria-label") ?? "" });
+      cells.append(button);
+    });
+    node.append(label, cells);
+    return node;
+  };
+  const body = [];
+  if ((spec.axis ?? "start") === "start") body.push(axis);
+  if (spec.summary) {
+    body.push(rowNode(spec.summary, true), make10(doc, "div", "kp-heat__sep", { role: "separator" }));
+  }
+  for (const row of rows) body.push(rowNode(row, false));
+  if (spec.axis === "end") body.push(axis);
+  replaceKeepingCard(el16, body);
+  if (spec.legend === void 0) syncCalmLegend(el16);
+  syncCard2(
+    el16,
+    loading,
+    s2.heatLoading,
+    () => heatArea(el16),
+    "kp-heat__busy"
+  );
+  const stop = focusAt ?? STOPS.get(el16);
+  placeStop(el16, HEAT_CELL, stop);
+  if (focusAt) {
+    const again2 = (
+      /** @type {HTMLElement | null} */
+      el16.querySelector(`${HEAT_CELL}[tabindex="0"]`)
+    );
+    again2?.focus({ preventScroll: true });
+  }
+}
+function heatArea(el16) {
+  const cells = [...el16.querySelectorAll(":scope > .kp-heat__row:not(.kp-heat__axis) > .kp-heat__cells")].map((c) => c.getBoundingClientRect());
+  if (!cells.length) return [];
+  const box = el16.getBoundingClientRect();
+  const style = getComputedStyle(el16);
+  const floor = box.bottom - el16.clientTop - (Number.parseFloat(style.paddingBottom) || 0);
+  const top = Math.min(...cells.map((r) => r.top));
+  return [
+    {
+      top,
+      left: Math.min(...cells.map((r) => r.left)),
+      bottom: Math.max(floor, ...cells.map((r) => r.bottom)),
+      right: Math.max(...cells.map((r) => r.right))
+    }
+  ];
+}
+var init_draw3 = __esm({
+  "js/heat/draw.js"() {
+    "use strict";
+    init_strings();
+    init_state_plate();
+    init_calm_tones();
+    init_card2();
+    init_constants12();
+    init_dom3();
+    init_grid_state();
+    init_legend2();
+    init_paging();
+  }
+});
+
+// js/heat/pick.js
+function setHeatPick(el16, key) {
+  if (key == null) el16.removeAttribute("data-kp-heat-picked");
+  else el16.setAttribute("data-kp-heat-picked", key);
+  for (
+    const node of
+    /** @type {NodeListOf<HTMLElement>} */
+    el16.querySelectorAll("[data-col-key]")
+  ) {
+    const on = key != null && node.dataset.colKey === key;
+    node.toggleAttribute("data-kp-picked", on);
+    if (node.matches(".kp-heat__cell")) {
+      if (on) node.setAttribute("aria-selected", "true");
+      else node.removeAttribute("aria-selected");
+    }
+  }
+}
+function setHeatRows(el16, keys) {
+  const set = new Set(keys);
+  LIT.set(el16, set);
+  for (
+    const button of
+    /** @type {NodeListOf<HTMLElement>} */
+    el16.querySelectorAll(".kp-heat__label-button")
+  ) {
+    button.setAttribute("aria-pressed", String(set.has(button.dataset.key ?? "")));
+  }
+}
+var init_pick = __esm({
+  "js/heat/pick.js"() {
+    "use strict";
+    init_grid_state();
+  }
+});
+
+// js/heat/wire.js
+function wireHeat(el16) {
+  const onClick = (event) => {
+    const target = (
+      /** @type {Element} */
+      event.target
+    );
+    const label = (
+      /** @type {HTMLElement | null} */
+      target.closest(".kp-heat__label-button")
+    );
+    if (label && el16.contains(label)) {
+      const key2 = label.dataset.key ?? "";
+      const keys = new Set(LIT.get(el16) ?? []);
+      const pressed = !keys.has(key2);
+      if (!el16.hasAttribute("data-kp-heat-owned")) {
+        if (pressed) keys.add(key2);
+        else keys.delete(key2);
+        setHeatRows(el16, [...keys]);
+      }
+      el16.dispatchEvent(new CustomEvent(HEAT_ROW_EVENT, { bubbles: true, detail: { key: key2, pressed, keys: [...keys] } }));
+      return;
+    }
+    const cell = (
+      /** @type {HTMLElement | null} */
+      target.closest(HEAT_CELL)
+    );
+    if (!cell || !el16.contains(cell) || cell.hasAttribute("aria-disabled")) return;
+    STOPS.set(el16, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
+    const key = cell.dataset.colKey ?? "";
+    const already = el16.getAttribute("data-kp-heat-picked") === key;
+    if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, already ? null : key);
+    el16.dispatchEvent(
+      new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: key, cell, picked: !already } })
+    );
+  };
+  const onKey4 = (event) => {
+    const cell = (
+      /** @type {HTMLElement | null} */
+      (event.target instanceof Element ? event.target : null)?.closest(HEAT_CELL) ?? null
+    );
+    if (!cell || !el16.contains(cell)) return;
+    const grid2 = cellGrid(el16, HEAT_CELL);
+    let r = Number(cell.dataset.r);
+    let c = Number(cell.dataset.c);
+    const rowsN = grid2.length;
+    const colsN = (grid2[r] ?? []).length;
+    const key = event.key;
+    let askLatest = false;
+    if (key === "ArrowRight") c = Math.min(colsN - 1, c + 1);
+    else if (key === "ArrowLeft") c = Math.max(0, c - 1);
+    else if (key === "ArrowDown") r = Math.min(rowsN - 1, r + 1);
+    else if (key === "ArrowUp") r = Math.max(0, r - 1);
+    else if (key === "Home" || key === "End") {
+      c = key === "Home" ? 0 : colsN - 1;
+      if (event.ctrlKey) r = key === "Home" ? 0 : rowsN - 1;
+      const latest = el16.getAttribute("data-kp-heat-latest");
+      askLatest = latest !== null && key === (latest === "start" ? "Home" : "End");
+    } else if (key === "PageUp" || key === "PageDown") {
+      event.preventDefault();
+      const earlier = key === "PageUp";
+      const detail = { direction: earlier ? "earlier" : "later" };
+      if (PAGING.has(el16)) {
+        const bound = PAGING.get(el16) ?? {};
+        const next2 = heatOffset(el16) + (earlier ? 1 : -1);
+        if (bound.max !== void 0 && next2 > bound.max || next2 < (bound.min ?? 0)) return;
+        detail.offset = next2;
+        if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPaging(el16, { offset: next2 });
+      }
+      el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail }));
+      return;
+    } else if (key === "Escape") {
+      if (el16.getAttribute("data-kp-heat-picked") == null) return;
+      event.preventDefault();
+      if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, null);
+      el16.dispatchEvent(
+        new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: null, cell, picked: false } })
+      );
+      return;
+    } else return;
+    event.preventDefault();
+    const to = grid2[r]?.[c];
+    if (!to) return;
+    STOPS.set(el16, { r, c });
+    placeStop(el16, HEAT_CELL, { r, c });
+    to.focus();
+    if (askLatest) el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: "latest" } }));
+  };
+  const onFocus = (event) => {
+    const cell = (
+      /** @type {HTMLElement | null} */
+      (event.target instanceof Element ? event.target : null)?.closest(HEAT_CELL) ?? null
+    );
+    if (!cell || !el16.contains(cell)) return;
+    const at = { r: Number(cell.dataset.r), c: Number(cell.dataset.c) };
+    const now = STOPS.get(el16);
+    if (now?.r !== at.r || now?.c !== at.c) placeStop(el16, HEAT_CELL, at);
+  };
+  el16.addEventListener("click", onClick);
+  el16.addEventListener("keydown", onKey4);
+  el16.addEventListener("focusin", onFocus);
+  syncCalmLegend(el16);
+  const legendWatch = new MutationObserver(() => syncCalmLegend(el16));
+  legendWatch.observe(el16, { attributes: true, attributeFilter: ["data-kp-tones", "data-kp-legend"] });
+  if (el16.querySelector(HEAT_CELL)) {
+    const pressed = (
+      /** @type {NodeListOf<HTMLElement>} */
+      el16.querySelectorAll('.kp-heat__label-button[aria-pressed="true"]')
+    );
+    LIT.set(el16, new Set([...pressed].map((b) => b.dataset.key ?? "")));
+    if (!el16.querySelector(`${HEAT_CELL}[tabindex="0"]`)) placeStop(el16, HEAT_CELL, void 0);
+  }
+  return () => {
+    el16.removeEventListener("click", onClick);
+    el16.removeEventListener("keydown", onKey4);
+    el16.removeEventListener("focusin", onFocus);
+    legendWatch.disconnect();
+  };
+}
+function attachHeats(root = document) {
+  const doc = root instanceof Document ? root : (
+    /** @type {Element} */
+    root.ownerDocument
+  );
+  attachHoverCards(doc);
+  const undo = [];
+  const all = (
+    /** @type {HTMLElement[]} */
+    [...root instanceof Element && root.matches(HEAT) ? [root] : [], ...root.querySelectorAll(HEAT)]
+  );
+  for (const el16 of all) {
+    if (WIRED6.has(el16)) continue;
+    const off = wireHeat(el16);
+    WIRED6.set(el16, off);
+    undo.push(() => {
+      off();
+      WIRED6.delete(el16);
+    });
+  }
+  return () => undo.forEach((fn) => fn());
+}
+var WIRED6;
+var init_wire3 = __esm({
+  "js/heat/wire.js"() {
+    "use strict";
+    init_hovercard();
+    init_constants12();
+    init_draw3();
+    init_grid_state();
+    init_legend2();
+    init_paging();
+    init_pick();
+    WIRED6 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -41693,7 +43081,7 @@ function usesRelation(spec) {
         hit
       );
       lines.set(`${row.key}>${column.key}`, {
-        ...TONES.includes(line.tone) ? { tone: line.tone } : {},
+        ...TONES2.includes(line.tone) ? { tone: line.tone } : {},
         ...typeof line.label === "string" && line.label.trim() ? { label: line.label.trim() } : {}
       });
     }
@@ -41707,15 +43095,15 @@ function usesPath(shape, x1, y1, x2, y2) {
   return `M${x1} ${y1} C${mid} ${y1} ${mid} ${y2} ${x2} ${y2}`;
 }
 function tagOf(doc, cls, line) {
-  const tag = make10(doc, "span", cls);
+  const tag = make11(doc, "span", cls);
   if (line.tone) {
     tag.setAttribute("data-kp-tone", line.tone);
-    const mark = make10(doc, "span", "kp-uses__tag-mark");
+    const mark = make11(doc, "span", "kp-uses__tag-mark");
     mark.setAttribute("aria-hidden", "true");
     mark.textContent = TONE_GLYPH[line.tone];
     tag.append(mark);
   }
-  tag.append(make10(doc, "span", "kp-uses__tag-text"));
+  tag.append(make11(doc, "span", "kp-uses__tag-text"));
   tag.lastElementChild.textContent = line.label ?? "";
   return tag;
 }
@@ -41754,7 +43142,7 @@ function drawUsesMap(el16, spec, ctx) {
   const hideEmpty = attr2(el16, "data-kp-lines-empty-sources", "show") === "hide";
   const collapseBelow = Number(attr2(el16, "data-kp-lines-collapse-below", String(USES_COLLAPSE_BELOW))) || USES_COLLAPSE_BELOW;
   if (state2 === "empty" || state2 === "error") {
-    const box = make10(doc, "div", "kp-uses__state");
+    const box = make11(doc, "div", "kp-uses__state");
     const isError = state2 === "error";
     box.append(
       statePlate(doc, {
@@ -41780,7 +43168,7 @@ function drawUsesMap(el16, spec, ctx) {
     const label = lineInfo.get(kind === "source" ? `${self}>${k}` : `${k}>${self}`)?.label;
     return `${byKey.get(k)?.label ?? k}${label ? ` (${label})` : ""}`;
   }).join(", ");
-  const root = make10(doc, "div", "kp-uses");
+  const root = make11(doc, "div", "kp-uses");
   root.setAttribute("role", "group");
   root.setAttribute("aria-label", spec.label ?? el16.getAttribute("aria-label") ?? strings.usesLabel);
   root.setAttribute("data-kp-lines-side", side);
@@ -41789,18 +43177,18 @@ function drawUsesMap(el16, spec, ctx) {
   svg2.setAttribute("class", "kp-uses__lines");
   svg2.setAttribute("aria-hidden", "true");
   svg2.setAttribute("focusable", "false");
-  const colSources = make10(doc, "ol", "kp-uses__col kp-uses__col--sources");
-  const colUsers = make10(doc, "ol", "kp-uses__col kp-uses__col--users");
+  const colSources = make11(doc, "ol", "kp-uses__col kp-uses__col--sources");
+  const colUsers = make11(doc, "ol", "kp-uses__col kp-uses__col--users");
   colSources.setAttribute("role", "list");
   colUsers.setAttribute("role", "list");
   colSources.setAttribute("aria-label", spec.sourcesLabel ?? strings.usesSources);
   colUsers.setAttribute("aria-label", spec.usersLabel ?? strings.usesUsers);
   const nodeFor = (node, kind) => {
-    const li = make10(doc, "li", "kp-uses__node");
+    const li = make11(doc, "li", "kp-uses__node");
     li.setAttribute("data-key", node.key);
     li.setAttribute("data-side", kind);
     if (loading) {
-      li.append(make10(doc, "span", "kp-uses__card kp-skeleton"));
+      li.append(make11(doc, "span", "kp-uses__card kp-skeleton"));
       li.setAttribute("aria-hidden", "true");
       return li;
     }
@@ -41809,7 +43197,7 @@ function drawUsesMap(el16, spec, ctx) {
     const related = kind === "source" ? uses.get(node.key) ?? [] : usedBy.get(node.key) ?? [];
     const card = (
       /** @type {HTMLButtonElement} */
-      make10(doc, "button", "kp-uses__card")
+      make11(doc, "button", "kp-uses__card")
     );
     card.type = "button";
     card.tabIndex = -1;
@@ -41817,23 +43205,23 @@ function drawUsesMap(el16, spec, ctx) {
     const what = related.length === 0 ? kind === "source" ? strings.usesNodeUnused(node.label) : strings.usesNodeNothing(node.label) : kind === "source" ? strings.usesNodeSource(node.label, related.length, names(related, node.key, "source")) : strings.usesNodeUser(node.label, names(related, node.key, "user"));
     card.setAttribute("aria-label", what);
     if (node.glyph) {
-      const glyph3 = make10(doc, "span", "kp-docglyph");
+      const glyph3 = make11(doc, "span", "kp-docglyph");
       glyph3.setAttribute("data-kp-doc-kind", node.glyph);
       glyph3.setAttribute("data-kp-size", "sm");
       glyph3.setAttribute("aria-hidden", "true");
       card.append(glyph3);
     }
-    const text = make10(doc, "span", "kp-uses__text");
-    const label = make10(doc, "span", "kp-uses__label");
+    const text = make11(doc, "span", "kp-uses__text");
+    const label = make11(doc, "span", "kp-uses__label");
     label.textContent = node.label;
     text.append(label);
     if (node.sub) {
-      const sub = make10(doc, "span", "kp-uses__sub");
+      const sub = make11(doc, "span", "kp-uses__sub");
       sub.textContent = node.sub;
       text.append(sub);
     }
     if (kind === "source" && countOn) {
-      const count2 = make10(doc, "span", "kp-uses__count");
+      const count2 = make11(doc, "span", "kp-uses__count");
       count2.textContent = related.length === 0 ? strings.usesNotUsed : spec.countLabel?.(related.length) ?? strings.usesCount(related.length);
       text.append(count2);
     }
@@ -41842,7 +43230,7 @@ function drawUsesMap(el16, spec, ctx) {
     if (node.href && !node.disabledReason) {
       const open4 = (
         /** @type {HTMLAnchorElement} */
-        make10(doc, "a", "kp-uses__open")
+        make11(doc, "a", "kp-uses__open")
       );
       open4.href = node.href;
       open4.tabIndex = -1;
@@ -41858,40 +43246,40 @@ function drawUsesMap(el16, spec, ctx) {
   colSources.append(...sources.map((n) => nodeFor(n, "source")));
   colUsers.append(...users.map((n) => nodeFor(n, "user")));
   root.append(svg2, colSources, colUsers);
-  const list = make10(doc, "ul", "kp-uses__list");
+  const list = make11(doc, "ul", "kp-uses__list");
   list.setAttribute("role", "list");
   if (!loading) {
     for (const source of sources) {
       const related = uses.get(source.key) ?? [];
-      const item = make10(doc, "li", "kp-uses__group");
+      const item = make11(doc, "li", "kp-uses__group");
       if (source.ghost) item.setAttribute("data-kp-ghost", "");
-      const head = make10(doc, "p", "kp-uses__group-head");
-      const label = make10(doc, "span", "kp-uses__label");
+      const head = make11(doc, "p", "kp-uses__group-head");
+      const label = make11(doc, "span", "kp-uses__label");
       label.textContent = source.label;
       head.append(label);
       if (source.sub) {
-        const sub = make10(doc, "span", "kp-uses__sub");
+        const sub = make11(doc, "span", "kp-uses__sub");
         sub.textContent = source.sub;
         head.append(sub);
       }
       if (countOn) {
-        const count2 = make10(doc, "span", "kp-uses__count");
+        const count2 = make11(doc, "span", "kp-uses__count");
         count2.textContent = related.length === 0 ? strings.usesNotUsed : spec.countLabel?.(related.length) ?? strings.usesCount(related.length);
         head.append(count2);
       }
       item.append(head);
       if (related.length > 0) {
-        const chips = make10(doc, "ul", "kp-uses__chips");
+        const chips = make11(doc, "ul", "kp-uses__chips");
         chips.setAttribute("role", "list");
         for (const key of related) {
           const user = byKey.get(key);
-          const chip = make10(doc, "li", "kp-uses__chip");
+          const chip = make11(doc, "li", "kp-uses__chip");
           const line = lineInfo.get(`${source.key}>${key}`);
           if (line?.tone) chip.setAttribute("data-kp-tone", line.tone);
           if (user?.href) {
             const a = (
               /** @type {HTMLAnchorElement} */
-              make10(doc, "a", "kp-uses__chip-link")
+              make11(doc, "a", "kp-uses__chip-link")
             );
             a.href = user.href;
             a.textContent = user.label;
@@ -42198,7 +43586,7 @@ function leaveUsesMap(el16) {
   el16.removeAttribute("data-kp-collapsed");
   el16.removeAttribute("data-kp-lit");
 }
-var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, TONES, TONE_GLYPH, MEMORY8, make10, attr2, rememberKey;
+var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, TONES2, TONE_GLYPH, MEMORY8, make11, attr2, rememberKey;
 var init_uses_map = __esm({
   "js/uses-map.js"() {
     "use strict";
@@ -42208,10 +43596,10 @@ var init_uses_map = __esm({
     USES_PIN_EVENT = "kp-uses-pin";
     USES_RETRY_EVENT = "kp-uses-retry";
     USES_COLLAPSE_BELOW = 640;
-    TONES = ["ok", "warn", "bad", "muted"];
+    TONES2 = ["ok", "warn", "bad", "muted"];
     TONE_GLYPH = Object.freeze({ ok: "\u2713", warn: "!", bad: "\xD7", muted: "\u2013" });
     MEMORY8 = /* @__PURE__ */ new WeakMap();
-    make10 = (doc, tag, cls) => {
+    make11 = (doc, tag, cls) => {
       const node = doc.createElement(tag);
       node.className = cls;
       return node;
@@ -42224,660 +43612,7 @@ var init_uses_map = __esm({
   }
 });
 
-// js/heat.js
-var heat_exports = {};
-__export(heat_exports, {
-  HEAT: () => HEAT,
-  HEAT_PAGE_EVENT: () => HEAT_PAGE_EVENT,
-  HEAT_PICK_EVENT: () => HEAT_PICK_EVENT,
-  HEAT_RETRY_EVENT: () => HEAT_RETRY_EVENT,
-  HEAT_ROW_EVENT: () => HEAT_ROW_EVENT,
-  MATRIX: () => MATRIX,
-  MATRIX_LIGHT_EVENT: () => MATRIX_LIGHT_EVENT,
-  MATRIX_PICK_EVENT: () => MATRIX_PICK_EVENT,
-  MATRIX_RETRY_EVENT: () => MATRIX_RETRY_EVENT,
-  attachHeats: () => attachHeats,
-  attachMatrices: () => attachMatrices,
-  heatOffset: () => heatOffset,
-  removeHeatPaging: () => removeHeatPaging,
-  setHeat: () => setHeat,
-  setHeatLegend: () => setHeatLegend,
-  setHeatPaging: () => setHeatPaging,
-  setHeatPick: () => setHeatPick,
-  setHeatRows: () => setHeatRows,
-  setMatrix: () => setMatrix,
-  setMatrixLit: () => setMatrixLit,
-  setMatrixPick: () => setMatrixPick
-});
-function make11(doc, tag, cls = "", attrs = {}) {
-  const node = doc.createElement(tag);
-  if (cls) node.className = cls;
-  for (const [name, value] of Object.entries(attrs)) node.setAttribute(name, value);
-  return node;
-}
-function waitForCard(el16, spec, loading, draw8) {
-  const waiting = WAITING.get(el16);
-  if (loading) {
-    if (waiting) {
-      WAITING.delete(el16);
-      waiting.card.remove();
-    }
-    return false;
-  }
-  if (waiting) {
-    waiting.spec = spec;
-    return true;
-  }
-  const card = CARDS.get(el16);
-  if (!card) return false;
-  CARDS.delete(el16);
-  const entry = { card, spec };
-  WAITING.set(el16, entry);
-  void card.close().then(() => {
-    if (WAITING.get(el16) !== entry) return;
-    WAITING.delete(el16);
-    draw8(el16, entry.spec);
-  });
-  return true;
-}
-function syncCard2(el16, loading, words2, area, className) {
-  const first = !DRAWN3.has(el16);
-  markDrawn(el16);
-  const card = CARDS.get(el16);
-  if (!loading) {
-    if (card) {
-      CARDS.delete(el16);
-      card.remove();
-    }
-    return;
-  }
-  if (card) {
-    if (card.layer.parentElement !== el16) el16.append(card.layer);
-    card.place();
-    return;
-  }
-  CARDS.set(el16, openBusyCard(el16, { words: words2, area, className, arrive: !first }));
-}
-function markDrawn(el16) {
-  if (DRAWN3.has(el16)) return;
-  const view = el16.ownerDocument.defaultView;
-  if (view) view.requestAnimationFrame(() => DRAWN3.add(el16));
-  else DRAWN3.add(el16);
-}
-function replaceKeepingCard(el16, nodes) {
-  const keep = CARDS.get(el16)?.layer;
-  for (const child of [...el16.childNodes]) if (child !== keep) child.remove();
-  if (keep && keep.parentElement === el16) keep.before(...nodes);
-  else el16.append(...nodes);
-}
-function cellGrid(grid2, cellSelector) {
-  const out = [];
-  for (
-    const cell of
-    /** @type {NodeListOf<HTMLElement>} */
-    grid2.querySelectorAll(cellSelector)
-  ) {
-    const r = Number(cell.dataset.r);
-    (out[r] ??= [])[Number(cell.dataset.c)] = cell;
-  }
-  return out;
-}
-function placeStop(grid2, selector, stop) {
-  const cells = (
-    /** @type {HTMLElement[]} */
-    [...grid2.querySelectorAll(selector)]
-  );
-  if (cells.length === 0) return;
-  for (const cell of cells) cell.setAttribute("tabindex", "-1");
-  const want = stop ?? { r: 0, c: 0 };
-  const at = cells.find((cell) => Number(cell.dataset.r) === want.r && Number(cell.dataset.c) === want.c && !cell.hasAttribute("aria-disabled")) ?? cells.find((cell) => !cell.hasAttribute("aria-disabled")) ?? cells[0];
-  at.setAttribute("tabindex", "0");
-  STOPS.set(grid2, { r: Number(at.dataset.r), c: Number(at.dataset.c) });
-}
-function setHeat(el16, spec, options) {
-  const doc = el16.ownerDocument;
-  const s2 = getStrings();
-  if (options && "decorate" in options) {
-    if (options.decorate) DECORATE.set(el16, options.decorate);
-    else DECORATE.delete(el16);
-  }
-  const decorate2 = DECORATE.get(el16);
-  const mark = (part7, info) => {
-    if (!decorate2) return;
-    const key = el16.getAttribute("data-kp-key");
-    decorate2(part7, { ...info, host: el16, ...key === null ? {} : { key } });
-  };
-  if (spec.paging === false) removeHeatPaging(el16);
-  else if (spec.paging) setHeatPaging(el16, spec.paging);
-  const state2 = spec.state ?? "ready";
-  const loading = state2 === "loading";
-  if (spec.legend !== void 0) {
-    if (spec.legend === false) removeLegend(el16);
-    else setHeatLegend(el16, spec.legend, { keys: spec.legendKeys });
-  } else syncCalmLegend(el16);
-  if (waitForCard(el16, spec, loading, setHeat)) return;
-  const every = Math.max(1, spec.every ?? 3);
-  const toggle2 = spec.toggle ?? el16.hasAttribute("data-kp-heat-toggle");
-  const pressedKeys = LIT.get(el16) ?? /* @__PURE__ */ new Set();
-  const hadFocus = el16.contains(doc.activeElement) && doc.activeElement?.matches(HEAT_CELL);
-  const focusAt = hadFocus ? { r: Number(
-    /** @type {HTMLElement} */
-    doc.activeElement.dataset.r
-  ), c: Number(
-    /** @type {HTMLElement} */
-    doc.activeElement.dataset.c
-  ) } : null;
-  let columns2 = spec.columns ?? [];
-  let rows = spec.rows ?? [];
-  if (loading && columns2.length === 0 && spec.skeleton)
-    columns2 = Array.from({ length: spec.skeleton.columns }, (_, i) => ({ key: String(i), label: "" }));
-  if (loading && rows.length === 0 && spec.skeleton)
-    rows = Array.from({ length: spec.skeleton.rows }, (_, i) => ({ key: `row-${i}`, label: "", cells: [] }));
-  const picked = spec.picked ?? el16.getAttribute("data-kp-heat-picked");
-  el16.classList.add("kp-heat");
-  el16.setAttribute("data-kp-heat", "");
-  el16.setAttribute("role", "grid");
-  if (spec.label && !el16.hasAttribute("aria-label")) el16.setAttribute("aria-label", spec.label);
-  el16.setAttribute("data-kp-state", state2);
-  el16.toggleAttribute("aria-busy", loading);
-  if (loading) el16.setAttribute("aria-busy", "true");
-  el16.style.setProperty("--kp-heat-cols", String(Math.max(1, columns2.length)));
-  if (picked == null) el16.removeAttribute("data-kp-heat-picked");
-  else el16.setAttribute("data-kp-heat-picked", picked);
-  if (state2 === "empty" || state2 === "error") {
-    const title = spec.message ?? (state2 === "error" ? s2.heatFailed : s2.heatEmpty);
-    const kept = PLATES.get(el16);
-    if (kept && kept.note.isConnected && el16.firstElementChild === kept.note && el16.childElementCount === 1) {
-      if (kept.state === state2 && kept.title === title && kept.text === spec.text && kept.art === spec.art) return;
-    }
-    const note3 = make11(doc, "div", "kp-heat__state", { "data-kp-state": state2 });
-    note3.append(
-      hostStatePlate(el16, {
-        kind: state2,
-        title,
-        ...spec.text ? { text: spec.text } : {},
-        art: spec.art,
-        retryEvent: HEAT_RETRY_EVENT
-      })
-    );
-    PLATES.set(el16, { note: note3, state: state2, title, text: spec.text, art: spec.art });
-    markDrawn(el16);
-    el16.replaceChildren(note3);
-    return;
-  }
-  const column = (key, text, minor) => {
-    const head = make11(doc, "span", "kp-heat__col", { role: "columnheader", "data-col-key": key });
-    const isPicked = picked != null && key === picked;
-    if (minor) head.setAttribute("data-kp-minor", "");
-    if (isPicked) head.setAttribute("data-kp-picked", "");
-    if (minor && !isPicked && text) head.setAttribute("aria-label", text);
-    else head.textContent = text;
-    return head;
-  };
-  const axis = make11(doc, "div", "kp-heat__row kp-heat__axis", { role: "row" });
-  axis.append(make11(doc, "span", "kp-heat__label", { role: "columnheader", "aria-hidden": "true" }));
-  const heads = make11(doc, "div", "kp-heat__cells", { role: "none" });
-  const open4 = columns2.map((c, i) => c.minor === void 0 ? i : -1).filter((i) => i >= 0);
-  const named = new Set(open4.filter((_, at) => at % every === 0 || at === open4.length - 1));
-  const before = open4[open4.length - 2];
-  if (every > 1 && before !== void 0 && before === open4[open4.length - 1] - 1) named.delete(before);
-  columns2.forEach((c, i) => heads.append(column(c.key, loading && !c.label ? "" : c.label, c.minor ?? !named.has(i))));
-  axis.append(heads);
-  let r = -1;
-  const rowNode = (row, summary2) => {
-    r += 1;
-    const node = make11(doc, "div", `kp-heat__row${summary2 ? " kp-heat__row--summary" : ""}`, { role: "row", "data-row-key": row.key });
-    const label = make11(doc, "div", "kp-heat__label", { role: "rowheader" });
-    if (summary2) label.classList.add("kp-heat__label--summary");
-    if (loading && !row.label) {
-      label.append(make11(doc, "span", "kp-heat__label-skeleton kp-skeleton", { "aria-hidden": "true" }));
-    } else {
-      const inner = toggle2 && !summary2 ? make11(doc, "button", "kp-heat__label-button", {
-        type: "button",
-        "aria-pressed": String(row.pressed ?? pressedKeys.has(row.key)),
-        "data-key": row.key
-      }) : label;
-      if (row.mark) {
-        const mark2 = make11(doc, "i", "kp-heat__mark", { "aria-hidden": "true" });
-        mark2.style.setProperty("--kp-heat-mark", row.mark);
-        inner.append(mark2);
-      }
-      const text = make11(doc, "span", `kp-heat__label-text${row.muted ? " kp-heat__label-text--muted" : ""}`);
-      text.textContent = row.label;
-      text.title = row.label;
-      inner.append(text);
-      if (inner !== label) label.append(inner);
-      if (inner !== label) mark(inner, { kind: "row-label", value: row.key, label: row.label });
-    }
-    const cells = make11(doc, "div", "kp-heat__cells", { role: "none" });
-    columns2.forEach((col, c) => {
-      const cell = row.cells[c];
-      if (loading || cell?.tone === "loading") {
-        cells.append(
-          make11(doc, "span", "kp-heat__cell kp-skeleton kp-skeleton--block", {
-            role: "gridcell",
-            "data-kp-tone": "loading",
-            "aria-label": s2.heatLoading,
-            "data-r": String(r),
-            "data-c": String(c)
-          })
-        );
-        return;
-      }
-      const calm = isCalmTones(el16);
-      const tone = calm ? (
-        /** @type {GridTone} */
-        calmTone(cell?.tone ?? "quiet", el16)
-      ) : toneOf2(cell?.tone);
-      const said = calm && tone === "quiet" ? el16.getAttribute("data-kp-quiet-words") === "none" ? "" : calmWord("quiet") ?? "" : cell?.label;
-      const button = make11(doc, "button", "kp-heat__cell", {
-        type: "button",
-        role: "gridcell",
-        tabindex: "-1",
-        "data-kp-tone": tone,
-        "data-r": String(r),
-        "data-c": String(c),
-        "data-row-key": row.key,
-        "data-col-key": col.key,
-        "aria-label": cell?.aria && !(calm && tone === "quiet") ? cell.aria : `${row.label}, ${col.label}${said ? `: ${said}` : ""}`
-      });
-      if (tone === "level") button.style.setProperty("--kp-heat-level", unit(cell?.level));
-      if (summary2 && cell?.share != null) button.style.setProperty("--kp-heat-share", unit(cell.share));
-      if (summary2) button.setAttribute("data-kp-share", "");
-      if (cell?.disabled) {
-        button.setAttribute("aria-disabled", "true");
-        button.setAttribute("data-kp-inert", "");
-      }
-      if (cell?.tip !== void 0) button.setAttribute("data-kp-hovercard", cell.tip === true ? "" : cell.tip);
-      if (picked != null && col.key === picked) {
-        button.setAttribute("data-kp-picked", "");
-        button.setAttribute("aria-selected", "true");
-      }
-      mark(button, { kind: "cell", value: `${row.key}/${col.key}`, index: c, label: button.getAttribute("aria-label") ?? "" });
-      cells.append(button);
-    });
-    node.append(label, cells);
-    return node;
-  };
-  const body = [];
-  if ((spec.axis ?? "start") === "start") body.push(axis);
-  if (spec.summary) {
-    body.push(rowNode(spec.summary, true), make11(doc, "div", "kp-heat__sep", { role: "separator" }));
-  }
-  for (const row of rows) body.push(rowNode(row, false));
-  if (spec.axis === "end") body.push(axis);
-  replaceKeepingCard(el16, body);
-  if (spec.legend === void 0) syncCalmLegend(el16);
-  syncCard2(
-    el16,
-    loading,
-    s2.heatLoading,
-    () => heatArea(el16),
-    "kp-heat__busy"
-  );
-  const stop = focusAt ?? STOPS.get(el16);
-  placeStop(el16, HEAT_CELL, stop);
-  if (focusAt) {
-    const again2 = (
-      /** @type {HTMLElement | null} */
-      el16.querySelector(`${HEAT_CELL}[tabindex="0"]`)
-    );
-    again2?.focus({ preventScroll: true });
-  }
-}
-function heatArea(el16) {
-  const cells = [...el16.querySelectorAll(":scope > .kp-heat__row:not(.kp-heat__axis) > .kp-heat__cells")].map((c) => c.getBoundingClientRect());
-  if (!cells.length) return [];
-  const box = el16.getBoundingClientRect();
-  const style = getComputedStyle(el16);
-  const floor = box.bottom - el16.clientTop - (Number.parseFloat(style.paddingBottom) || 0);
-  const top = Math.min(...cells.map((r) => r.top));
-  return [
-    {
-      top,
-      left: Math.min(...cells.map((r) => r.left)),
-      bottom: Math.max(floor, ...cells.map((r) => r.bottom)),
-      right: Math.max(...cells.map((r) => r.right))
-    }
-  ];
-}
-function setHeatPick(el16, key) {
-  if (key == null) el16.removeAttribute("data-kp-heat-picked");
-  else el16.setAttribute("data-kp-heat-picked", key);
-  for (
-    const node of
-    /** @type {NodeListOf<HTMLElement>} */
-    el16.querySelectorAll("[data-col-key]")
-  ) {
-    const on = key != null && node.dataset.colKey === key;
-    node.toggleAttribute("data-kp-picked", on);
-    if (node.matches(".kp-heat__cell")) {
-      if (on) node.setAttribute("aria-selected", "true");
-      else node.removeAttribute("aria-selected");
-    }
-  }
-}
-function setHeatRows(el16, keys) {
-  const set = new Set(keys);
-  LIT.set(el16, set);
-  for (
-    const button of
-    /** @type {NodeListOf<HTMLElement>} */
-    el16.querySelectorAll(".kp-heat__label-button")
-  ) {
-    button.setAttribute("aria-pressed", String(set.has(button.dataset.key ?? "")));
-  }
-}
-function pagerOf(el16) {
-  const kept = PAGERS.get(el16);
-  if (kept?.isConnected) return kept;
-  const before = el16.previousElementSibling;
-  return before instanceof HTMLElement && before.matches(".kp-heat__pager") ? before : null;
-}
-function heatOffset(el16) {
-  const n = Number(el16.getAttribute("data-kp-heat-offset"));
-  return Number.isFinite(n) ? Math.trunc(n) : 0;
-}
-function setHeatPaging(el16, paging = {}) {
-  const doc = el16.ownerDocument;
-  const s2 = getStrings();
-  let bar = pagerOf(el16);
-  if (!bar) {
-    if (!el16.parentNode) return null;
-    bar = make11(doc, "div", "kp-heat__pager", { role: "group" });
-    const button = (part7) => make11(doc, "button", `kp-button kp-button--ghost kp-button--sm kp-heat__pager-${part7}`, { type: "button", "data-kp-heat-page": part7 });
-    const words2 = make11(doc, "span", "kp-heat__pager-label");
-    words2.setAttribute("aria-live", "polite");
-    bar.append(button("earlier"), button("today"), button("later"), words2);
-    el16.before(bar);
-    bar.addEventListener("click", (event) => {
-      const target = event.target instanceof Element ? event.target.closest("[data-kp-heat-page]") : null;
-      if (!target || !(target instanceof HTMLButtonElement) || target.disabled) return;
-      const direction = (
-        /** @type {'earlier' | 'later' | 'today'} */
-        target.getAttribute("data-kp-heat-page")
-      );
-      const now = heatOffset(el16);
-      const offset2 = direction === "today" ? 0 : direction === "earlier" ? now + 1 : now - 1;
-      if (!el16.hasAttribute("data-kp-heat-owned")) {
-        el16.setAttribute("data-kp-heat-offset", String(offset2));
-        setHeatPaging(el16, { ...PAGING.get(el16) ?? {}, offset: offset2 });
-      }
-      el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction, offset: offset2, source: "pager" } }));
-    });
-  }
-  PAGERS.set(el16, bar);
-  const given2 = { ...PAGING.get(el16) ?? {}, ...paging };
-  PAGING.set(el16, given2);
-  const offset = paging.offset ?? heatOffset(el16);
-  el16.setAttribute("data-kp-heat-offset", String(offset));
-  const min = given2.min ?? 0;
-  const text = [
-    ["earlier", s2.heatEarlier, given2.max !== void 0 && offset >= given2.max],
-    ["today", s2.heatToday, offset === 0],
-    ["later", s2.heatLater, offset <= min]
-  ];
-  bar.setAttribute("aria-label", s2.heatPagerLabel);
-  for (
-    const [part7, words2, off] of
-    /** @type {[string, string, boolean][]} */
-    text
-  ) {
-    const b = (
-      /** @type {HTMLButtonElement} */
-      bar.querySelector(`[data-kp-heat-page="${part7}"]`)
-    );
-    if (b.textContent !== words2) b.textContent = words2;
-    b.disabled = off;
-    const decorate2 = DECORATE.get(el16);
-    if (decorate2 && !MARKED.has(b)) {
-      MARKED.add(b);
-      const key = el16.getAttribute("data-kp-key");
-      decorate2(b, { kind: (
-        /** @type {'pager-earlier' | 'pager-today' | 'pager-later'} */
-        `pager-${part7}`
-      ), host: el16, ...key === null ? {} : { key }, label: words2 });
-    }
-  }
-  const label = (
-    /** @type {HTMLElement} */
-    bar.querySelector(".kp-heat__pager-label")
-  );
-  const wanted = given2.label ?? "";
-  if (label.textContent !== wanted) label.textContent = wanted;
-  return bar;
-}
-function removeHeatPaging(el16) {
-  pagerOf(el16)?.remove();
-  PAGERS.delete(el16);
-  PAGING.delete(el16);
-  el16.removeAttribute("data-kp-heat-offset");
-}
-function legendOf(el16) {
-  const next2 = el16.nextElementSibling;
-  return next2 instanceof HTMLElement && next2.matches(".kp-heat__legend") ? next2 : null;
-}
-function describedBy(el16, legend, on) {
-  if (!legend) return;
-  const ids = (el16.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id && id !== legend.id);
-  if (on) ids.push(legend.id);
-  if (ids.length) el16.setAttribute("aria-describedby", ids.join(" "));
-  else el16.removeAttribute("aria-describedby");
-}
-function removeLegend(el16) {
-  const legend = legendOf(el16);
-  if (!legend) return;
-  legend.hidden = true;
-  legend.replaceChildren();
-  legend.removeAttribute("data-kp-legend-source");
-  describedBy(el16, legend, false);
-}
-function syncCalmLegend(el16) {
-  const legend = legendOf(el16);
-  const own = legend?.getAttribute("data-kp-legend-source") === "auto";
-  if (legend && !own && legend.childElementCount > 0) return;
-  if (isCalmTones(el16) && el16.getAttribute("data-kp-legend") !== "hide") {
-    const present = new Set([...el16.querySelectorAll(".kp-heat__cell[data-kp-tone]")].map((c) => c.getAttribute("data-kp-tone")));
-    const all = el16.getAttribute("data-kp-legend") === "all" || !["logged", "quiet", "paused"].some((t) => present.has(t));
-    const entries3 = calmLegendEntries().filter((e) => all || present.has(e.tone));
-    const signature2 = entries3.map((e) => e.tone).join(" ");
-    if (own && !legend?.hidden && legend?.getAttribute("data-kp-legend-tones") === signature2) return;
-    const made6 = setHeatLegend(el16, entries3, { source: "auto" });
-    made6?.setAttribute("data-kp-legend-tones", signature2);
-  } else if (own) removeLegend(el16);
-}
-function setHeatLegend(el16, entries3, options = {}) {
-  const doc = el16.ownerDocument;
-  const s2 = getStrings();
-  let legend = legendOf(el16);
-  if (!legend) {
-    if (!el16.parentNode) return null;
-    legend = make11(doc, "ul", "kp-heat__legend");
-    el16.after(legend);
-  }
-  if (!legend.id) legend.id = `${el16.id || "kp-heat"}-legend${el16.id ? "" : `-${legendCount += 1}`}`;
-  const keys = options.keys === true ? defaultHeatKeys(s2) : options.keys || null;
-  legend.setAttribute("aria-label", options.label ?? s2.heatLegendLabel);
-  if (options.source) legend.setAttribute("data-kp-legend-source", options.source);
-  else legend.removeAttribute("data-kp-legend-source");
-  const items = [];
-  for (const entry of entries3) {
-    const li = make11(doc, "li");
-    if (entry.ramp) {
-      const steps = Math.min(9, Math.max(2, Math.trunc(entry.steps ?? 5)));
-      const ramp = make11(doc, "span", "kp-heat__ramp", { "aria-hidden": "true" });
-      for (let i = 0; i < steps; i += 1) {
-        const swatch = make11(doc, "span", "kp-heat__swatch", { "data-kp-tone": "level" });
-        swatch.style.setProperty("--kp-heat-level", String(Math.round(i / (steps - 1) * 100) / 100));
-        ramp.append(swatch);
-      }
-      li.append(entry.less ?? s2.heatLegendLess, ramp, entry.more ?? s2.heatLegendMore);
-    } else {
-      const swatch = make11(doc, "span", "kp-heat__swatch", { "data-kp-tone": entry.tone ?? "muted", "aria-hidden": "true" });
-      li.append(swatch, ` ${entry.label ?? ""}`);
-    }
-    items.push(li);
-  }
-  if (keys && keys.length) {
-    const end = make11(doc, "li", "kp-heat__legend-end");
-    const line = make11(doc, "div", "kp-keys");
-    setKeys(line, keys);
-    end.append(line);
-    items.push(end);
-  }
-  legend.replaceChildren(...items);
-  legend.hidden = items.length === 0;
-  describedBy(el16, legend, items.length > 0);
-  return legend;
-}
-function defaultHeatKeys(s2) {
-  return [
-    [["\u2190", "\u2191", "\u2193", "\u2192"], s2.heatKeysMove],
-    ["Enter", s2.heatKeysPick],
-    ["Esc", s2.heatKeysDrop],
-    [["PgUp", "PgDn"], s2.heatKeysPage]
-  ];
-}
-function wireHeat(el16) {
-  const onClick = (event) => {
-    const target = (
-      /** @type {Element} */
-      event.target
-    );
-    const label = (
-      /** @type {HTMLElement | null} */
-      target.closest(".kp-heat__label-button")
-    );
-    if (label && el16.contains(label)) {
-      const key2 = label.dataset.key ?? "";
-      const keys = new Set(LIT.get(el16) ?? []);
-      const pressed = !keys.has(key2);
-      if (!el16.hasAttribute("data-kp-heat-owned")) {
-        if (pressed) keys.add(key2);
-        else keys.delete(key2);
-        setHeatRows(el16, [...keys]);
-      }
-      el16.dispatchEvent(new CustomEvent(HEAT_ROW_EVENT, { bubbles: true, detail: { key: key2, pressed, keys: [...keys] } }));
-      return;
-    }
-    const cell = (
-      /** @type {HTMLElement | null} */
-      target.closest(HEAT_CELL)
-    );
-    if (!cell || !el16.contains(cell) || cell.hasAttribute("aria-disabled")) return;
-    STOPS.set(el16, { r: Number(cell.dataset.r), c: Number(cell.dataset.c) });
-    const key = cell.dataset.colKey ?? "";
-    const already = el16.getAttribute("data-kp-heat-picked") === key;
-    if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, already ? null : key);
-    el16.dispatchEvent(
-      new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: key, cell, picked: !already } })
-    );
-  };
-  const onKey4 = (event) => {
-    const cell = (
-      /** @type {HTMLElement | null} */
-      (event.target instanceof Element ? event.target : null)?.closest(HEAT_CELL) ?? null
-    );
-    if (!cell || !el16.contains(cell)) return;
-    const grid2 = cellGrid(el16, HEAT_CELL);
-    let r = Number(cell.dataset.r);
-    let c = Number(cell.dataset.c);
-    const rowsN = grid2.length;
-    const colsN = (grid2[r] ?? []).length;
-    const key = event.key;
-    let askLatest = false;
-    if (key === "ArrowRight") c = Math.min(colsN - 1, c + 1);
-    else if (key === "ArrowLeft") c = Math.max(0, c - 1);
-    else if (key === "ArrowDown") r = Math.min(rowsN - 1, r + 1);
-    else if (key === "ArrowUp") r = Math.max(0, r - 1);
-    else if (key === "Home" || key === "End") {
-      c = key === "Home" ? 0 : colsN - 1;
-      if (event.ctrlKey) r = key === "Home" ? 0 : rowsN - 1;
-      const latest = el16.getAttribute("data-kp-heat-latest");
-      askLatest = latest !== null && key === (latest === "start" ? "Home" : "End");
-    } else if (key === "PageUp" || key === "PageDown") {
-      event.preventDefault();
-      const earlier = key === "PageUp";
-      const detail = { direction: earlier ? "earlier" : "later" };
-      if (PAGING.has(el16)) {
-        const bound = PAGING.get(el16) ?? {};
-        const next2 = heatOffset(el16) + (earlier ? 1 : -1);
-        if (bound.max !== void 0 && next2 > bound.max || next2 < (bound.min ?? 0)) return;
-        detail.offset = next2;
-        if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPaging(el16, { offset: next2 });
-      }
-      el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail }));
-      return;
-    } else if (key === "Escape") {
-      if (el16.getAttribute("data-kp-heat-picked") == null) return;
-      event.preventDefault();
-      if (!el16.hasAttribute("data-kp-heat-owned")) setHeatPick(el16, null);
-      el16.dispatchEvent(
-        new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: null, cell, picked: false } })
-      );
-      return;
-    } else return;
-    event.preventDefault();
-    const to = grid2[r]?.[c];
-    if (!to) return;
-    STOPS.set(el16, { r, c });
-    placeStop(el16, HEAT_CELL, { r, c });
-    to.focus();
-    if (askLatest) el16.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: "latest" } }));
-  };
-  const onFocus = (event) => {
-    const cell = (
-      /** @type {HTMLElement | null} */
-      (event.target instanceof Element ? event.target : null)?.closest(HEAT_CELL) ?? null
-    );
-    if (!cell || !el16.contains(cell)) return;
-    const at = { r: Number(cell.dataset.r), c: Number(cell.dataset.c) };
-    const now = STOPS.get(el16);
-    if (now?.r !== at.r || now?.c !== at.c) placeStop(el16, HEAT_CELL, at);
-  };
-  el16.addEventListener("click", onClick);
-  el16.addEventListener("keydown", onKey4);
-  el16.addEventListener("focusin", onFocus);
-  syncCalmLegend(el16);
-  const legendWatch = new MutationObserver(() => syncCalmLegend(el16));
-  legendWatch.observe(el16, { attributes: true, attributeFilter: ["data-kp-tones", "data-kp-legend"] });
-  if (el16.querySelector(HEAT_CELL)) {
-    const pressed = (
-      /** @type {NodeListOf<HTMLElement>} */
-      el16.querySelectorAll('.kp-heat__label-button[aria-pressed="true"]')
-    );
-    LIT.set(el16, new Set([...pressed].map((b) => b.dataset.key ?? "")));
-    if (!el16.querySelector(`${HEAT_CELL}[tabindex="0"]`)) placeStop(el16, HEAT_CELL, void 0);
-  }
-  return () => {
-    el16.removeEventListener("click", onClick);
-    el16.removeEventListener("keydown", onKey4);
-    el16.removeEventListener("focusin", onFocus);
-    legendWatch.disconnect();
-  };
-}
-function attachHeats(root = document) {
-  const doc = root instanceof Document ? root : (
-    /** @type {Element} */
-    root.ownerDocument
-  );
-  attachHoverCards(doc);
-  const undo = [];
-  const all = (
-    /** @type {HTMLElement[]} */
-    [...root instanceof Element && root.matches(HEAT) ? [root] : [], ...root.querySelectorAll(HEAT)]
-  );
-  for (const el16 of all) {
-    if (WIRED6.has(el16)) continue;
-    const off = wireHeat(el16);
-    WIRED6.set(el16, off);
-    undo.push(() => {
-      off();
-      WIRED6.delete(el16);
-    });
-  }
-  return () => undo.forEach((fn) => fn());
-}
+// js/heat/matrix.js
 function setMatrix(el16, spec) {
   const doc = el16.ownerDocument;
   const s2 = getStrings();
@@ -42919,13 +43654,13 @@ function setMatrix(el16, spec) {
     el16.querySelector(":scope > .kp-matrix__grid")
   );
   if (!grid2) {
-    grid2 = make11(doc, "div", "kp-matrix__grid", { role: "grid" });
+    grid2 = make10(doc, "div", "kp-matrix__grid", { role: "grid" });
     replaceKeepingCard(el16, [grid2]);
   }
   if (spec.label && !grid2.hasAttribute("aria-label")) grid2.setAttribute("aria-label", spec.label);
   grid2.style.setProperty("--kp-matrix-cols", String(Math.max(1, columns2.length)));
   if (state2 === "empty" || state2 === "error") {
-    const note3 = make11(doc, "div", "kp-matrix__state", { "data-kp-state": state2 });
+    const note3 = make10(doc, "div", "kp-matrix__state", { "data-kp-state": state2 });
     note3.append(
       hostStatePlate(el16, {
         kind: state2,
@@ -42942,36 +43677,36 @@ function setMatrix(el16, spec) {
   if (grid2.parentElement !== el16) replaceKeepingCard(el16, [grid2]);
   const header = (item, kind) => {
     if (loading && !item.label)
-      return make11(doc, "span", `kp-matrix__${kind} kp-matrix__${kind}--skeleton kp-skeleton`, { "aria-hidden": "true" });
-    const node = make11(doc, "button", `kp-matrix__${kind}`, {
+      return make10(doc, "span", `kp-matrix__${kind} kp-matrix__${kind}--skeleton kp-skeleton`, { "aria-hidden": "true" });
+    const node = make10(doc, "button", `kp-matrix__${kind}`, {
       type: "button",
       role: kind === "col" ? "columnheader" : "rowheader",
       "aria-pressed": String(lit.has(item.key)),
       "data-key": item.key
     });
     if (item.mark) {
-      const mark = make11(doc, "i", "kp-matrix__mark", { "aria-hidden": "true" });
+      const mark = make10(doc, "i", "kp-matrix__mark", { "aria-hidden": "true" });
       mark.style.setProperty("--kp-heat-mark", item.mark);
       node.append(mark);
     }
-    const text = make11(doc, "span", "kp-matrix__name");
+    const text = make10(doc, "span", "kp-matrix__name");
     text.textContent = item.label;
     text.title = item.label;
     node.append(text);
     return node;
   };
-  const head = make11(doc, "div", "kp-matrix__line", { role: "row" });
-  const corner = make11(doc, "span", "kp-matrix__corner", { role: "columnheader" });
+  const head = make10(doc, "div", "kp-matrix__line", { role: "row" });
+  const corner = make10(doc, "span", "kp-matrix__corner", { role: "columnheader" });
   corner.textContent = spec.corner ?? "";
   head.append(corner, ...columns2.map((c) => header(c, "col")));
   const body = [head];
   rows.forEach((row, r) => {
-    const node = make11(doc, "div", "kp-matrix__line", { role: "row" });
+    const node = make10(doc, "div", "kp-matrix__line", { role: "row" });
     node.append(header(row, "row"));
     columns2.forEach((col, c) => {
       if (loading) {
         node.append(
-          make11(doc, "span", "kp-matrix__cell kp-skeleton kp-skeleton--block", {
+          make10(doc, "span", "kp-matrix__cell kp-skeleton kp-skeleton--block", {
             role: "gridcell",
             "data-kp-tone": "loading",
             "data-kp-inert": "",
@@ -42985,7 +43720,7 @@ function setMatrix(el16, spec) {
       if (cell == null || cell.tone === "self" || cell.tone === "none") {
         const tone2 = cell?.tone === "self" || cell == null && row.key === col.key ? "self" : "none";
         node.append(
-          make11(doc, "span", "kp-matrix__cell", {
+          make10(doc, "span", "kp-matrix__cell", {
             role: "gridcell",
             "data-kp-tone": tone2,
             "data-kp-inert": "",
@@ -42997,7 +43732,7 @@ function setMatrix(el16, spec) {
         return;
       }
       const tone = toneOf2(cell.tone);
-      const button = make11(doc, "button", "kp-matrix__cell", {
+      const button = make10(doc, "button", "kp-matrix__cell", {
         type: "button",
         role: "gridcell",
         tabindex: "-1",
@@ -43094,6 +43829,21 @@ function setMatrixPick(el16, pick4) {
     if (at) placeStop(el16, MATRIX_CELL, at);
   }
 }
+var init_matrix = __esm({
+  "js/heat/matrix.js"() {
+    "use strict";
+    init_strings();
+    init_state_plate();
+    init_uses_map();
+    init_card2();
+    init_constants12();
+    init_dom3();
+    init_draw3();
+    init_grid_state();
+  }
+});
+
+// js/heat/matrix-wire.js
 function wireMatrix(el16) {
   const pin = (cell, source) => {
     const was = cell.getAttribute("aria-pressed") === "true";
@@ -43240,51 +43990,55 @@ function attachMatrices(root = document) {
   }
   return () => undo.forEach((fn) => fn());
 }
-var DECORATE, HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES2, toneOf2, unit, STOPS, LIT, CARDS, WAITING, DRAWN3, PLATES, HEAT_CELL, MARKED, PAGERS, PAGING, legendCount, WIRED6, MATRIX_CELL, GLYPHS3, MATRIX_WIRED;
+var MATRIX_WIRED;
+var init_matrix_wire = __esm({
+  "js/heat/matrix-wire.js"() {
+    "use strict";
+    init_hovercard();
+    init_constants12();
+    init_draw3();
+    init_grid_state();
+    init_matrix();
+    MATRIX_WIRED = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/heat.js
+var heat_exports = {};
+__export(heat_exports, {
+  HEAT: () => HEAT,
+  HEAT_PAGE_EVENT: () => HEAT_PAGE_EVENT,
+  HEAT_PICK_EVENT: () => HEAT_PICK_EVENT,
+  HEAT_RETRY_EVENT: () => HEAT_RETRY_EVENT,
+  HEAT_ROW_EVENT: () => HEAT_ROW_EVENT,
+  MATRIX: () => MATRIX,
+  MATRIX_LIGHT_EVENT: () => MATRIX_LIGHT_EVENT,
+  MATRIX_PICK_EVENT: () => MATRIX_PICK_EVENT,
+  MATRIX_RETRY_EVENT: () => MATRIX_RETRY_EVENT,
+  attachHeats: () => attachHeats,
+  attachMatrices: () => attachMatrices,
+  heatOffset: () => heatOffset,
+  removeHeatPaging: () => removeHeatPaging,
+  setHeat: () => setHeat,
+  setHeatLegend: () => setHeatLegend,
+  setHeatPaging: () => setHeatPaging,
+  setHeatPick: () => setHeatPick,
+  setHeatRows: () => setHeatRows,
+  setMatrix: () => setMatrix,
+  setMatrixLit: () => setMatrixLit,
+  setMatrixPick: () => setMatrixPick
+});
 var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
-    init_strings();
-    init_hovercard();
-    init_busy_card();
-    init_state_plate();
-    init_uses_map();
-    init_calm_tones();
-    init_keys();
-    DECORATE = /* @__PURE__ */ new WeakMap();
-    HEAT = "[data-kp-heat]";
-    MATRIX = "[data-kp-matrix]";
-    HEAT_PICK_EVENT = "kp-heat-pick";
-    HEAT_ROW_EVENT = "kp-heat-row";
-    HEAT_PAGE_EVENT = "kp-heat-page";
-    MATRIX_PICK_EVENT = "kp-matrix-pick";
-    HEAT_RETRY_EVENT = "kp-heat-retry";
-    MATRIX_RETRY_EVENT = "kp-matrix-retry";
-    MATRIX_LIGHT_EVENT = "kp-matrix-light";
-    TONES2 = ["ok", "warn", "bad", "muted", "future", "before", "none", "level", "loading", "self", "logged", "quiet", "paused"];
-    toneOf2 = (tone) => TONES2.includes(tone ?? "") ? (
-      /** @type {GridTone} */
-      tone
-    ) : "muted";
-    unit = (v) => String(Math.min(1, Math.max(0, Number.isFinite(v) ? (
-      /** @type {number} */
-      v
-    ) : 0)));
-    STOPS = /* @__PURE__ */ new WeakMap();
-    LIT = /* @__PURE__ */ new WeakMap();
-    CARDS = /* @__PURE__ */ new WeakMap();
-    WAITING = /* @__PURE__ */ new WeakMap();
-    DRAWN3 = /* @__PURE__ */ new WeakSet();
-    PLATES = /* @__PURE__ */ new WeakMap();
-    HEAT_CELL = ".kp-heat__cell[data-c]:not(.kp-skeleton)";
-    MARKED = /* @__PURE__ */ new WeakSet();
-    PAGERS = /* @__PURE__ */ new WeakMap();
-    PAGING = /* @__PURE__ */ new WeakMap();
-    legendCount = 0;
-    WIRED6 = /* @__PURE__ */ new WeakMap();
-    MATRIX_CELL = ".kp-matrix__cell[data-c]:not([data-kp-inert])";
-    GLYPHS3 = Object.freeze({ ok: "\u2713", warn: "!", bad: "\xD7", muted: "\u2013", none: "\u2013" });
-    MATRIX_WIRED = /* @__PURE__ */ new WeakMap();
+    init_constants12();
+    init_draw3();
+    init_pick();
+    init_paging();
+    init_legend2();
+    init_wire3();
+    init_matrix();
+    init_matrix_wire();
   }
 });
 
@@ -43398,22 +44152,54 @@ var init_barcell = __esm({
   }
 });
 
-// js/week.js
-var week_exports = {};
-__export(week_exports, {
-  WEEK: () => WEEK,
-  WEEK_OPEN_EVENT: () => WEEK_OPEN_EVENT,
-  WEEK_RANGE_EVENT: () => WEEK_RANGE_EVENT,
-  WEEK_RETRY_EVENT: () => WEEK_RETRY_EVENT,
-  WEEK_TICK_MS: () => WEEK_TICK_MS,
-  attachWeeks: () => attachWeeks,
-  pillCapacity: () => pillCapacity,
-  setWeekEvents: () => setWeekEvents,
-  setWeekLegend: () => setWeekLegend,
-  setWeekStart: () => setWeekStart,
-  setWeekState: () => setWeekState,
-  stackPills: () => stackPills
+// js/week/constants.js
+var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, WEEK_RETRY_EVENT, GAP, AXIS_HOURS;
+var init_constants13 = __esm({
+  "js/week/constants.js"() {
+    "use strict";
+    WEEK = "[data-kp-week]";
+    WEEK_OPEN_EVENT = "kp-week-open";
+    WEEK_RANGE_EVENT = "kp-week-range";
+    WEEK_TICK_MS = 3e4;
+    WEEK_RETRY_EVENT = "kp-week-retry";
+    GAP = 2;
+    AXIS_HOURS = [0, 6, 12, 18, 24];
+  }
 });
+
+// js/week/helpers.js
+function nameOf4(c, e, hhmm, iso) {
+  const s2 = c.strings;
+  const state2 = e.state === "next" ? s2.weekNextRun : e.state === "off" ? s2.weekOff : e.state === "skipped" ? s2.weekSkipped : e.state === "reference" ? s2.weekReference : "";
+  return [`${e.label}, ${dayName(c, iso)} ${dm(iso, true)} ${hhmm}`, state2, e.detail ?? ""].filter(Boolean).join(", ");
+}
+function timeOfDay(c, ms) {
+  const w = wallTime(ms, c.zone);
+  return { hhmm: `${two3(w.hour)}:${two3(w.minute)}`, at: (w.hour * 60 + w.minute) / 1440 };
+}
+var two3, make12, toMs, keyOf5, dayName, dm;
+var init_helpers3 = __esm({
+  "js/week/helpers.js"() {
+    "use strict";
+    init_chart();
+    two3 = (n) => String(n).padStart(2, "0");
+    make12 = (doc, tag, className, text) => {
+      const el16 = doc.createElement(tag);
+      if (className) el16.className = className;
+      if (text != null) el16.textContent = text;
+      return el16;
+    };
+    toMs = (when) => typeof when === "number" ? when : Date.parse(when);
+    keyOf5 = (host) => host.getAttribute("data-kp-key") ?? void 0;
+    dayName = (c, iso, style = (
+      /** @type {'short' | 'long'} */
+      "short"
+    )) => new Intl.DateTimeFormat(c.locale, { weekday: style, timeZone: "UTC" }).format(Date.parse(`${iso}T12:00:00Z`));
+    dm = (iso, year = false) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}${year ? `/${iso.slice(0, 4)}` : ""}`;
+  }
+});
+
+// js/week/pills.js
 function stackPills(wants, height, pill, gap = GAP) {
   const step = pill + gap;
   const max = Math.max(0, height - pill);
@@ -43429,15 +44215,34 @@ function stackPills(wants, height, pill, gap = GAP) {
 function pillCapacity(height, pill, gap = GAP) {
   return Math.max(1, Math.floor((height - pill) / (pill + gap)) + 1);
 }
-function nameOf4(c, e, hhmm, iso) {
-  const s2 = c.strings;
-  const state2 = e.state === "next" ? s2.weekNextRun : e.state === "off" ? s2.weekOff : e.state === "skipped" ? s2.weekSkipped : e.state === "reference" ? s2.weekReference : "";
-  return [`${e.label}, ${dayName(c, iso)} ${dm(iso, true)} ${hhmm}`, state2, e.detail ?? ""].filter(Boolean).join(", ");
+function pillFor(c, e) {
+  let button = c.pills.get(e.id);
+  const doc = c.el.ownerDocument;
+  const reference = e.state === "reference";
+  if (button && button.tagName === "BUTTON" === reference) {
+    button.remove();
+    button = void 0;
+  }
+  if (!button) {
+    button = /** @type {HTMLButtonElement} */
+    make12(doc, reference ? "span" : "button", "kp-week__pill");
+    if (!reference) button.type = "button";
+    button.append(make12(doc, "b", "kp-week__time"), make12(doc, "span", "kp-week__label"));
+    c.pills.set(e.id, button);
+    c.decorate?.(button, { kind: "pill", host: c.el, key: keyOf5(c.el), id: e.id });
+  }
+  button.dataset.kpId = e.id;
+  return button;
 }
-function timeOfDay(c, ms) {
-  const w = wallTime(ms, c.zone);
-  return { hhmm: `${two3(w.hour)}:${two3(w.minute)}`, at: (w.hour * 60 + w.minute) / 1440 };
-}
+var init_pills2 = __esm({
+  "js/week/pills.js"() {
+    "use strict";
+    init_constants13();
+    init_helpers3();
+  }
+});
+
+// js/week/build.js
 function stepButton(doc, name, path) {
   const button = make12(doc, "button", "kp-segmented__item kp-week__step kp-week__step--icon");
   button.type = "button";
@@ -43571,25 +44376,167 @@ function buildDays(c) {
     c.today.setAttribute("aria-disabled", String(c.start === today));
   }
 }
-function pillFor(c, e) {
-  let button = c.pills.get(e.id);
-  const doc = c.el.ownerDocument;
-  const reference = e.state === "reference";
-  if (button && button.tagName === "BUTTON" === reference) {
-    button.remove();
-    button = void 0;
+var init_build = __esm({
+  "js/week/build.js"() {
+    "use strict";
+    init_calendar();
+    init_constants13();
+    init_helpers3();
   }
-  if (!button) {
-    button = /** @type {HTMLButtonElement} */
-    make12(doc, reference ? "span" : "button", "kp-week__pill");
-    if (!reference) button.type = "button";
-    button.append(make12(doc, "b", "kp-week__time"), make12(doc, "span", "kp-week__label"));
-    c.pills.set(e.id, button);
-    c.decorate?.(button, { kind: "pill", host: c.el, key: keyOf5(c.el), id: e.id });
+});
+
+// js/week/busy.js
+function holdRows(c) {
+  const boxes = c.upcoming.on && c.upcoming.list ? [c.upcoming.list] : c.cols.map((col) => col.track);
+  if (c.state === "loading") {
+    if (c.held === null && c.mode === "list")
+      c.held = boxes.map((box) => c.upcoming.on ? box.getBoundingClientRect().height : box.offsetHeight);
+    if (c.held) for (const [i, box] of boxes.entries()) box.style.setProperty("--kp-week-hold", `${c.held[i] ?? 0}px`);
+    return;
   }
-  button.dataset.kpId = e.id;
-  return button;
+  if (c.held === null) return;
+  const held2 = c.held;
+  const until = performance.now() + 6e3;
+  const win = c.el.ownerDocument.defaultView ?? window;
+  const letGo = () => {
+    if (c.held !== held2 || c.state === "loading") return;
+    const scope = c.upcoming.on && c.upcoming.list ? c.upcoming.list : c.grid;
+    const busy = c.leaving || scope.querySelector("[data-kp-arriving], [data-kp-leaving], [data-kp-reversing]");
+    if (busy && performance.now() < until) {
+      win.requestAnimationFrame(letGo);
+      return;
+    }
+    c.held = null;
+    for (const box of boxes) box.style.removeProperty("--kp-week-hold");
+  };
+  win.requestAnimationFrame(() => win.requestAnimationFrame(letGo));
 }
+function placeBusy(c) {
+  const layer = c.busy;
+  if (!layer || !c.cols.length) return;
+  const host = c.frame.getBoundingClientRect();
+  const boxes = (c.upcoming.on && c.upcoming.list ? [c.upcoming.list] : c.cols.map((col) => col.track)).map((box) => box.getBoundingClientRect());
+  const top = Math.min(...boxes.map((b) => b.top));
+  const bottom = Math.max(...boxes.map((b) => b.bottom));
+  const left = Math.min(...boxes.map((b) => b.left));
+  const right = Math.max(...boxes.map((b) => b.right));
+  layer.style.setProperty("--kp-busy-overlay-top", `${Math.max(0, Math.round(top - host.top))}px`);
+  layer.style.setProperty("--kp-busy-overlay-bottom", `${Math.max(0, Math.round(host.bottom - bottom))}px`);
+  layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(left - host.left))}px`);
+  layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(host.right - right))}px`);
+}
+var init_busy2 = __esm({
+  "js/week/busy.js"() {
+    "use strict";
+  }
+});
+
+// js/week/menu.js
+function foldMenu(c, col, top = 0) {
+  const doc = c.el.ownerDocument;
+  const n = col.hidden.length;
+  if (!n) {
+    col.more?.setAttribute("hidden", "");
+    return;
+  }
+  if (!col.more) {
+    const wrapper = make12(doc, "div", "kp-menu-button kp-week__more");
+    wrapper.setAttribute("data-kp-menu-button", "");
+    const button = make12(doc, "button", "kp-week__pill kp-week__pill--more");
+    button.type = "button";
+    const menu = make12(doc, "div", "kp-menu kp-menu--rich");
+    menu.setAttribute("role", "menu");
+    wrapper.append(button, menu);
+    col.track.append(wrapper);
+    col.more = wrapper;
+    col.moreButton = button;
+    c.decorate?.(button, { kind: "more", host: c.el, key: keyOf5(c.el), id: col.iso });
+    menuModule ??= Promise.resolve().then(() => (init_menu_button(), menu_button_exports));
+    void menuModule.then((m) => {
+      m.attachMenuButtons(wrapper);
+      fillMenu(c, col);
+    });
+    wrapper.addEventListener("kp-menu-select", (event) => {
+      const id = (
+        /** @type {CustomEvent} */
+        event.detail?.value
+      );
+      const item = col.hidden.find((i) => i.event.id === id) ?? col.items.find((i) => i.event.id === id);
+      if (item) open2(c, item, "keyboard");
+    });
+  }
+  col.more.removeAttribute("hidden");
+  col.more.style.setProperty("--kp-week-top", `${top}px`);
+  const text = c.strings.weekMore(n);
+  if (col.moreButton && col.moreButton.textContent !== text) col.moreButton.textContent = text;
+  col.moreButton?.setAttribute("aria-label", c.strings.weekMoreLabel(n, `${dayName(c, col.iso)} ${dm(col.iso, true)}`));
+  void menuModule?.then(() => fillMenu(c, col));
+}
+function fillMenu(c, col) {
+  if (!col.more) return;
+  void menuModule?.then((m) => {
+    if (!col.more?.isConnected) return;
+    m.setMenu(col.more, [
+      {
+        group: "",
+        items: col.hidden.map((i) => ({
+          label: `${i.hhmm} ${i.event.label}`,
+          value: i.event.id,
+          ...i.event.detail ? { hint: i.event.detail } : {},
+          ...i.event.state === "reference" ? { disabled: c.strings.weekReference } : {}
+        }))
+      }
+    ]);
+  });
+}
+function reachable(c, col) {
+  const list = col.items.filter((i) => i.button.tagName === "BUTTON" && !(c.mode === "grid" && i.button.hasAttribute("data-kp-overflow")));
+  return (
+    /** @type {HTMLElement[]} */
+    list.map((i) => i.button).concat(
+      col.hidden.length && col.moreButton && c.mode === "grid" ? [col.moreButton] : []
+    )
+  );
+}
+function syncTabStops(c) {
+  const all = (
+    /** @type {HTMLElement[]} */
+    c.cols.flatMap((col) => [...col.items.map((i) => i.button), ...col.moreButton ? [col.moreButton] : []])
+  );
+  if (c.upcoming.on) {
+    const listed = c.upcoming.items.map((i) => i.button).filter((b) => b.tagName === "BUTTON");
+    const stop = listed.find((b) => b.dataset.kpId === c.active) ?? listed[0];
+    for (const el16 of all) el16.tabIndex = el16 === stop ? 0 : -1;
+    return;
+  }
+  let target = c.active ? c.pills.get(c.active) : void 0;
+  if (!target || !all.includes(target) || c.mode === "grid" && target.hasAttribute("data-kp-overflow")) {
+    target = /** @type {HTMLButtonElement | undefined} */
+    c.cols.flatMap((col) => reachable(c, col))[0];
+  }
+  for (const el16 of all) el16.tabIndex = el16 === target ? 0 : -1;
+}
+function open2(c, item, source) {
+  c.el.dispatchEvent(new CustomEvent(WEEK_OPEN_EVENT, { bubbles: true, detail: { id: item.event.id, event: item.event, source } }));
+}
+function focusPill(c, to) {
+  c.active = to.dataset.kpId ?? c.active;
+  syncTabStops(c);
+  if (to.tabIndex !== 0) to.tabIndex = 0;
+  to.focus();
+}
+var menuModule;
+var init_menu = __esm({
+  "js/week/menu.js"() {
+    "use strict";
+    init_constants13();
+    init_helpers3();
+    menuModule = /** @type {Promise<typeof import('../menu-button.js')> | null} */
+    null;
+  }
+});
+
+// js/week/upcoming.js
 function upcomingItems(c, now) {
   return c.cols.flatMap((col) => col.items).filter((item) => item.ms >= now && !NOT_UPCOMING.has(item.event.state ?? "")).sort((a, b) => a.ms - b.ms).slice(0, c.upcoming.n);
 }
@@ -43662,45 +44609,19 @@ function paintUpcoming(c, items) {
   const none2 = empty?.querySelector(".kp-week__none");
   if (none && none2 && none2.textContent !== words2) none2.textContent = words2;
 }
-function holdRows(c) {
-  const boxes = c.upcoming.on && c.upcoming.list ? [c.upcoming.list] : c.cols.map((col) => col.track);
-  if (c.state === "loading") {
-    if (c.held === null && c.mode === "list")
-      c.held = boxes.map((box) => c.upcoming.on ? box.getBoundingClientRect().height : box.offsetHeight);
-    if (c.held) for (const [i, box] of boxes.entries()) box.style.setProperty("--kp-week-hold", `${c.held[i] ?? 0}px`);
-    return;
+var modeOf, upcomingOn, NOT_UPCOMING;
+var init_upcoming = __esm({
+  "js/week/upcoming.js"() {
+    "use strict";
+    init_calendar();
+    init_helpers3();
+    modeOf = (c) => getComputedStyle(c.grid).getPropertyValue("--kp-week-mode").trim() === "list" ? "list" : "grid";
+    upcomingOn = (c) => c.upcoming.n > 0 && c.upcoming.list !== null && modeOf(c) === "list";
+    NOT_UPCOMING = /* @__PURE__ */ new Set(["off", "skipped", "reference"]);
   }
-  if (c.held === null) return;
-  const held2 = c.held;
-  const until = performance.now() + 6e3;
-  const win = c.el.ownerDocument.defaultView ?? window;
-  const letGo = () => {
-    if (c.held !== held2 || c.state === "loading") return;
-    const scope = c.upcoming.on && c.upcoming.list ? c.upcoming.list : c.grid;
-    const busy = c.leaving || scope.querySelector("[data-kp-arriving], [data-kp-leaving], [data-kp-reversing]");
-    if (busy && performance.now() < until) {
-      win.requestAnimationFrame(letGo);
-      return;
-    }
-    c.held = null;
-    for (const box of boxes) box.style.removeProperty("--kp-week-hold");
-  };
-  win.requestAnimationFrame(() => win.requestAnimationFrame(letGo));
-}
-function placeBusy(c) {
-  const layer = c.busy;
-  if (!layer || !c.cols.length) return;
-  const host = c.frame.getBoundingClientRect();
-  const boxes = (c.upcoming.on && c.upcoming.list ? [c.upcoming.list] : c.cols.map((col) => col.track)).map((box) => box.getBoundingClientRect());
-  const top = Math.min(...boxes.map((b) => b.top));
-  const bottom = Math.max(...boxes.map((b) => b.bottom));
-  const left = Math.min(...boxes.map((b) => b.left));
-  const right = Math.max(...boxes.map((b) => b.right));
-  layer.style.setProperty("--kp-busy-overlay-top", `${Math.max(0, Math.round(top - host.top))}px`);
-  layer.style.setProperty("--kp-busy-overlay-bottom", `${Math.max(0, Math.round(host.bottom - bottom))}px`);
-  layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(left - host.left))}px`);
-  layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(host.right - right))}px`);
-}
+});
+
+// js/week/paint.js
 function drawBusy(c) {
   const want = c.state === "loading";
   if (want === (c.busy !== null)) {
@@ -43876,93 +44797,6 @@ function layout2(c) {
     foldMenu(c, col, tops[keep.length] ?? 0);
   }
 }
-function foldMenu(c, col, top = 0) {
-  const doc = c.el.ownerDocument;
-  const n = col.hidden.length;
-  if (!n) {
-    col.more?.setAttribute("hidden", "");
-    return;
-  }
-  if (!col.more) {
-    const wrapper = make12(doc, "div", "kp-menu-button kp-week__more");
-    wrapper.setAttribute("data-kp-menu-button", "");
-    const button = make12(doc, "button", "kp-week__pill kp-week__pill--more");
-    button.type = "button";
-    const menu = make12(doc, "div", "kp-menu kp-menu--rich");
-    menu.setAttribute("role", "menu");
-    wrapper.append(button, menu);
-    col.track.append(wrapper);
-    col.more = wrapper;
-    col.moreButton = button;
-    c.decorate?.(button, { kind: "more", host: c.el, key: keyOf5(c.el), id: col.iso });
-    menuModule ??= Promise.resolve().then(() => (init_menu_button(), menu_button_exports));
-    void menuModule.then((m) => {
-      m.attachMenuButtons(wrapper);
-      fillMenu(c, col);
-    });
-    wrapper.addEventListener("kp-menu-select", (event) => {
-      const id = (
-        /** @type {CustomEvent} */
-        event.detail?.value
-      );
-      const item = col.hidden.find((i) => i.event.id === id) ?? col.items.find((i) => i.event.id === id);
-      if (item) open2(c, item, "keyboard");
-    });
-  }
-  col.more.removeAttribute("hidden");
-  col.more.style.setProperty("--kp-week-top", `${top}px`);
-  const text = c.strings.weekMore(n);
-  if (col.moreButton && col.moreButton.textContent !== text) col.moreButton.textContent = text;
-  col.moreButton?.setAttribute("aria-label", c.strings.weekMoreLabel(n, `${dayName(c, col.iso)} ${dm(col.iso, true)}`));
-  void menuModule?.then(() => fillMenu(c, col));
-}
-function fillMenu(c, col) {
-  if (!col.more) return;
-  void menuModule?.then((m) => {
-    if (!col.more?.isConnected) return;
-    m.setMenu(col.more, [
-      {
-        group: "",
-        items: col.hidden.map((i) => ({
-          label: `${i.hhmm} ${i.event.label}`,
-          value: i.event.id,
-          ...i.event.detail ? { hint: i.event.detail } : {},
-          ...i.event.state === "reference" ? { disabled: c.strings.weekReference } : {}
-        }))
-      }
-    ]);
-  });
-}
-function reachable(c, col) {
-  const list = col.items.filter((i) => i.button.tagName === "BUTTON" && !(c.mode === "grid" && i.button.hasAttribute("data-kp-overflow")));
-  return (
-    /** @type {HTMLElement[]} */
-    list.map((i) => i.button).concat(
-      col.hidden.length && col.moreButton && c.mode === "grid" ? [col.moreButton] : []
-    )
-  );
-}
-function syncTabStops(c) {
-  const all = (
-    /** @type {HTMLElement[]} */
-    c.cols.flatMap((col) => [...col.items.map((i) => i.button), ...col.moreButton ? [col.moreButton] : []])
-  );
-  if (c.upcoming.on) {
-    const listed = c.upcoming.items.map((i) => i.button).filter((b) => b.tagName === "BUTTON");
-    const stop = listed.find((b) => b.dataset.kpId === c.active) ?? listed[0];
-    for (const el16 of all) el16.tabIndex = el16 === stop ? 0 : -1;
-    return;
-  }
-  let target = c.active ? c.pills.get(c.active) : void 0;
-  if (!target || !all.includes(target) || c.mode === "grid" && target.hasAttribute("data-kp-overflow")) {
-    target = /** @type {HTMLButtonElement | undefined} */
-    c.cols.flatMap((col) => reachable(c, col))[0];
-  }
-  for (const el16 of all) el16.tabIndex = el16 === target ? 0 : -1;
-}
-function open2(c, item, source) {
-  c.el.dispatchEvent(new CustomEvent(WEEK_OPEN_EVENT, { bubbles: true, detail: { id: item.event.id, event: item.event, source } }));
-}
 function tick3(c) {
   const now = c.now();
   const today = dayKey2(now, c.zone);
@@ -43981,12 +44815,82 @@ function tick3(c) {
   }
   if (c.upcoming.on && c.upcoming.items.some((item) => item.ms < now)) paint7(c);
 }
-function focusPill(c, to) {
-  c.active = to.dataset.kpId ?? c.active;
-  syncTabStops(c);
-  if (to.tabIndex !== 0) to.tabIndex = 0;
-  to.focus();
+var init_paint2 = __esm({
+  "js/week/paint.js"() {
+    "use strict";
+    init_calendar();
+    init_state_plate();
+    init_busy2();
+    init_constants13();
+    init_helpers3();
+    init_menu();
+    init_pills2();
+    init_upcoming();
+  }
+});
+
+// js/week/state.js
+var weeks;
+var init_state8 = __esm({
+  "js/week/state.js"() {
+    "use strict";
+    weeks = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/week/api.js
+function setWeekEvents(el16, events) {
+  const c = weeks.get(el16);
+  if (!c) return;
+  c.events = events;
+  if (c.state === "loading" || c.state === "empty" && events.length) c.state = "ready";
+  else if (c.state === "ready" && !events.length) c.state = "empty";
+  paint7(c);
 }
+function setWeekState(el16, state2, words2 = "", { text = "", art = null } = {}) {
+  const c = weeks.get(el16);
+  if (!c) return;
+  if (state2 === "loading") watchArrivals(c);
+  c.state = state2;
+  c.stateLine.dataset.kpWords = words2;
+  c.plateText = text;
+  c.plateArt = art;
+  paint7(c);
+}
+function setWeekStart(el16, iso) {
+  const c = weeks.get(el16);
+  if (!c) return;
+  c.start = iso;
+  buildDays(c);
+  paint7(c);
+}
+function setWeekLegend(el16, entries3) {
+  const c = weeks.get(el16);
+  if (!c) return;
+  const doc = c.el.ownerDocument;
+  c.legend.replaceChildren(
+    ...entries3.map(({ series, label }) => {
+      const li = make12(doc, "li");
+      const swatch = make12(doc, "span", "kp-week__swatch");
+      swatch.dataset.kpSeries = String(series);
+      swatch.setAttribute("aria-hidden", "true");
+      li.append(swatch, make12(doc, "span", "", label));
+      return li;
+    })
+  );
+  c.legend.hidden = entries3.length === 0;
+}
+var init_api5 = __esm({
+  "js/week/api.js"() {
+    "use strict";
+    init_build();
+    init_helpers3();
+    init_paint2();
+    init_state8();
+  }
+});
+
+// js/week/attach.js
 function attachWeeks(root = document, options = {}) {
   const undo = [];
   for (
@@ -44149,89 +45053,53 @@ function attachWeeks(root = document, options = {}) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-function setWeekEvents(el16, events) {
-  const c = weeks.get(el16);
-  if (!c) return;
-  c.events = events;
-  if (c.state === "loading" || c.state === "empty" && events.length) c.state = "ready";
-  else if (c.state === "ready" && !events.length) c.state = "empty";
-  paint7(c);
-}
-function setWeekState(el16, state2, words2 = "", { text = "", art = null } = {}) {
-  const c = weeks.get(el16);
-  if (!c) return;
-  if (state2 === "loading") watchArrivals(c);
-  c.state = state2;
-  c.stateLine.dataset.kpWords = words2;
-  c.plateText = text;
-  c.plateArt = art;
-  paint7(c);
-}
-function setWeekStart(el16, iso) {
-  const c = weeks.get(el16);
-  if (!c) return;
-  c.start = iso;
-  buildDays(c);
-  paint7(c);
-}
-function setWeekLegend(el16, entries3) {
-  const c = weeks.get(el16);
-  if (!c) return;
-  const doc = c.el.ownerDocument;
-  c.legend.replaceChildren(
-    ...entries3.map(({ series, label }) => {
-      const li = make12(doc, "li");
-      const swatch = make12(doc, "span", "kp-week__swatch");
-      swatch.dataset.kpSeries = String(series);
-      swatch.setAttribute("aria-hidden", "true");
-      li.append(swatch, make12(doc, "span", "", label));
-      return li;
-    })
-  );
-  c.legend.hidden = entries3.length === 0;
-}
-var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, WEEK_RETRY_EVENT, weeks, GAP, AXIS_HOURS, two3, make12, toMs, keyOf5, dayName, dm, modeOf, upcomingOn, NOT_UPCOMING, menuModule;
-var init_week = __esm({
-  "js/week.js"() {
+var init_attach11 = __esm({
+  "js/week/attach.js"() {
     "use strict";
     init_chart();
     init_calendar();
     init_locale();
     init_strings();
-    init_state_plate();
-    WEEK = "[data-kp-week]";
-    WEEK_OPEN_EVENT = "kp-week-open";
-    WEEK_RANGE_EVENT = "kp-week-range";
-    WEEK_TICK_MS = 3e4;
-    WEEK_RETRY_EVENT = "kp-week-retry";
-    weeks = /* @__PURE__ */ new WeakMap();
-    GAP = 2;
-    AXIS_HOURS = [0, 6, 12, 18, 24];
-    two3 = (n) => String(n).padStart(2, "0");
-    make12 = (doc, tag, className, text) => {
-      const el16 = doc.createElement(tag);
-      if (className) el16.className = className;
-      if (text != null) el16.textContent = text;
-      return el16;
-    };
-    toMs = (when) => typeof when === "number" ? when : Date.parse(when);
-    keyOf5 = (host) => host.getAttribute("data-kp-key") ?? void 0;
-    dayName = (c, iso, style = (
-      /** @type {'short' | 'long'} */
-      "short"
-    )) => new Intl.DateTimeFormat(c.locale, { weekday: style, timeZone: "UTC" }).format(Date.parse(`${iso}T12:00:00Z`));
-    dm = (iso, year = false) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}${year ? `/${iso.slice(0, 4)}` : ""}`;
-    modeOf = (c) => getComputedStyle(c.grid).getPropertyValue("--kp-week-mode").trim() === "list" ? "list" : "grid";
-    upcomingOn = (c) => c.upcoming.n > 0 && c.upcoming.list !== null && modeOf(c) === "list";
-    NOT_UPCOMING = /* @__PURE__ */ new Set(["off", "skipped", "reference"]);
-    menuModule = /** @type {Promise<typeof import('./menu-button.js')> | null} */
-    null;
+    init_api5();
+    init_build();
+    init_busy2();
+    init_constants13();
+    init_menu();
+    init_paint2();
+    init_state8();
+    init_upcoming();
+  }
+});
+
+// js/week.js
+var week_exports = {};
+__export(week_exports, {
+  WEEK: () => WEEK,
+  WEEK_OPEN_EVENT: () => WEEK_OPEN_EVENT,
+  WEEK_RANGE_EVENT: () => WEEK_RANGE_EVENT,
+  WEEK_RETRY_EVENT: () => WEEK_RETRY_EVENT,
+  WEEK_TICK_MS: () => WEEK_TICK_MS,
+  attachWeeks: () => attachWeeks,
+  pillCapacity: () => pillCapacity,
+  setWeekEvents: () => setWeekEvents,
+  setWeekLegend: () => setWeekLegend,
+  setWeekStart: () => setWeekStart,
+  setWeekState: () => setWeekState,
+  stackPills: () => stackPills
+});
+var init_week = __esm({
+  "js/week.js"() {
+    "use strict";
+    init_constants13();
+    init_pills2();
+    init_attach11();
+    init_api5();
   }
 });
 
 // js/sequencer/constants.js
 var SEQUENCER, SEQUENCER_CHANGE_EVENT, SEQUENCER_SELECT_EVENT, SEQUENCER_REFUSE_EVENT, SEQUENCER_RETRY_EVENT, SEQUENCER_UNITS, SEQUENCER_OVERLAPS, SEQUENCER_ZOOM_MIN, SEQUENCER_ZOOM_MAX, TICK_STEPS, EPS, REACH_PX, DRAG_PX, HEADROOM;
-var init_constants5 = __esm({
+var init_constants14 = __esm({
   "js/sequencer/constants.js"() {
     "use strict";
     SEQUENCER = "[data-kp-sequencer]";
@@ -44324,7 +45192,7 @@ var round, num;
 var init_units = __esm({
   "js/sequencer/units.js"() {
     "use strict";
-    init_constants5();
+    init_constants14();
     round = (n) => Math.round(n * 1e6) / 1e6;
     num = (v, fallback2 = 0) => typeof v === "number" && Number.isFinite(v) ? v : Number.isFinite(Number(v)) && v !== "" && v != null ? Number(v) : fallback2;
   }
@@ -44410,7 +45278,7 @@ function sequencerApplyKey(items, id, action, options = {}) {
 var init_links = __esm({
   "js/sequencer/links.js"() {
     "use strict";
-    init_constants5();
+    init_constants14();
     init_plan();
     init_units();
   }
@@ -44610,7 +45478,7 @@ var init_plan = __esm({
   "js/sequencer/plan.js"() {
     "use strict";
     init_units();
-    init_constants5();
+    init_constants14();
     init_links();
     overlaps = (a, b) => a.start < b.start + b.duration - EPS && b.start < a.start + a.duration - EPS;
   }
@@ -44659,7 +45527,7 @@ function sequencerClampZoom(zoom) {
 var init_timeline = __esm({
   "js/sequencer/timeline.js"() {
     "use strict";
-    init_constants5();
+    init_constants14();
     init_units();
   }
 });
@@ -44721,7 +45589,7 @@ var init_instance2 = __esm({
 // js/sequencer/build.js
 function build5(el16, strings) {
   const doc = el16.ownerDocument;
-  const id = `kp-sequencer-${idSeq3 += 1}`;
+  const id = `kp-sequencer-${idSeq2 += 1}`;
   const bar = make13(doc, "div", "kp-gantt__bar kp-sequencer__bar");
   const zoomGroup = make13(doc, "div", "kp-sequencer__zoom");
   zoomGroup.setAttribute("role", "group");
@@ -44876,12 +45744,12 @@ function build5(el16, strings) {
     observer: null
   };
 }
-var idSeq3;
-var init_build = __esm({
+var idSeq2;
+var init_build2 = __esm({
   "js/sequencer/build.js"() {
     "use strict";
     init_instance2();
-    idSeq3 = 0;
+    idSeq2 = 0;
   }
 });
 
@@ -45236,14 +46104,14 @@ function paint8(c, { fit: fit2 = true } = {}) {
   paintSelection(c);
   c.drawn = true;
 }
-var init_paint2 = __esm({
+var init_paint3 = __esm({
   "js/sequencer/paint.js"() {
     "use strict";
     init_state_plate();
     init_busy_card();
     init_timeline();
     init_instance2();
-    init_constants5();
+    init_constants14();
     init_lanes2();
     init_bars();
   }
@@ -45358,13 +46226,13 @@ function unitAt(c, x) {
 var init_edit2 = __esm({
   "js/sequencer/edit.js"() {
     "use strict";
-    init_paint2();
+    init_paint3();
     init_bars();
     init_timeline();
     init_instance2();
     init_lanes2();
     init_links();
-    init_constants5();
+    init_constants14();
     init_plan();
   }
 });
@@ -45594,13 +46462,13 @@ var reachNow;
 var init_drag = __esm({
   "js/sequencer/drag.js"() {
     "use strict";
-    init_constants5();
+    init_constants14();
     init_plan();
     init_units();
     init_instance2();
     init_edit2();
     init_links();
-    init_paint2();
+    init_paint3();
     init_keyboard();
     reachNow = (c) => {
       const box = c.layer.getBoundingClientRect();
@@ -45735,7 +46603,7 @@ var init_pointer3 = __esm({
     "use strict";
     init_drag();
     init_edit2();
-    init_constants5();
+    init_constants14();
     init_instance2();
     init_plan();
   }
@@ -45880,16 +46748,16 @@ function attachSequencers(root = document, options = {}) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var init_attach6 = __esm({
+var init_attach12 = __esm({
   "js/sequencer/attach.js"() {
     "use strict";
     init_strings();
     init_live_options();
-    init_constants5();
+    init_constants14();
     init_instance2();
-    init_build();
+    init_build2();
     init_timeline();
-    init_paint2();
+    init_paint3();
     init_edit2();
     init_drag();
     init_keyboard();
@@ -45945,14 +46813,14 @@ function setSequencerSelection(el16, id) {
   c.focusId = c.selected ?? c.focusId;
   paint8(c, { fit: false });
 }
-var init_api4 = __esm({
+var init_api6 = __esm({
   "js/sequencer/api.js"() {
     "use strict";
     init_instance2();
     init_edit2();
     init_timeline();
     init_drag();
-    init_paint2();
+    init_paint3();
   }
 });
 
@@ -45995,19 +46863,19 @@ __export(sequencer_exports, {
 var init_sequencer = __esm({
   "js/sequencer.js"() {
     "use strict";
-    init_constants5();
+    init_constants14();
     init_units();
     init_plan();
     init_links();
     init_timeline();
-    init_attach6();
-    init_api4();
+    init_attach12();
+    init_api6();
   }
 });
 
 // js/gantt/constants.js
 var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, OPENED, gantts, two4, make14, toMs2, keyOf6;
-var init_constants6 = __esm({
+var init_constants15 = __esm({
   "js/gantt/constants.js"() {
     "use strict";
     GANTT = "[data-kp-gantt]";
@@ -46085,7 +46953,7 @@ var init_scale = __esm({
     "use strict";
     init_calendar();
     init_chart();
-    init_constants6();
+    init_constants15();
     stateWord3 = (c, state2) => ({
       queued: c.strings.ganttQueued,
       running: c.strings.ganttRunning,
@@ -46160,7 +47028,7 @@ var restOn, RESTS;
 var init_window = __esm({
   "js/gantt/window.js"() {
     "use strict";
-    init_constants6();
+    init_constants15();
     init_scale();
     restOn = (c) => c.el.getAttribute("data-kp-gantt-rest") !== "off";
     RESTS = /* @__PURE__ */ new WeakMap();
@@ -46268,7 +47136,7 @@ function build6(c) {
     legend.append(li);
   }
   c.el.replaceChildren(bar, frame3, legend, hint2, c.announcer);
-  c.el.dataset.kpGanttId = String(idSeq4 += 1);
+  c.el.dataset.kpGanttId = String(idSeq3 += 1);
 }
 function frame(c) {
   const w = windowOf(c);
@@ -46280,14 +47148,14 @@ function frame(c) {
   c.nowLine.setAttribute("aria-label", `${c.strings.ganttNow}, ${clock(c, c.now())}`);
   return w;
 }
-var idSeq4;
-var init_build2 = __esm({
+var idSeq3;
+var init_build3 = __esm({
   "js/gantt/build.js"() {
     "use strict";
     init_scale();
     init_window();
-    init_constants6();
-    idSeq4 = 0;
+    init_constants15();
+    idSeq3 = 0;
   }
 });
 
@@ -46467,7 +47335,7 @@ var MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX, RUN_GAP_PX, NOW_GAP_PX;
 var init_labels = __esm({
   "js/gantt/labels.js"() {
     "use strict";
-    init_constants6();
+    init_constants15();
     MEASURERS = /* @__PURE__ */ new WeakMap();
     OUTSIDE_GAP_PX = 6;
     MARK_GAP_PX = 2;
@@ -46610,7 +47478,7 @@ var init_points = __esm({
   "js/gantt/points.js"() {
     "use strict";
     init_calendar();
-    init_constants6();
+    init_constants15();
     init_scale();
   }
 });
@@ -46711,7 +47579,7 @@ function paintKinds(c) {
 var init_chrome2 = __esm({
   "js/gantt/chrome.js"() {
     "use strict";
-    init_constants6();
+    init_constants15();
     init_scale();
   }
 });
@@ -46846,7 +47714,7 @@ var init_axis = __esm({
     init_calendar();
     init_chart();
     init_scale();
-    init_constants6();
+    init_constants15();
   }
 });
 
@@ -46945,10 +47813,10 @@ var init_selection3 = __esm({
     init_window();
     init_points();
     init_labels();
-    init_build2();
+    init_build3();
     init_axis();
     init_scale();
-    init_constants6();
+    init_constants15();
   }
 });
 
@@ -47056,12 +47924,12 @@ function paintGhosts(c) {
   });
   c.body.style.setProperty("--kp-g-lanes", String(rows.length));
 }
-var init_busy2 = __esm({
+var init_busy3 = __esm({
   "js/gantt/busy.js"() {
     "use strict";
     init_busy_card();
-    init_constants6();
-    init_paint3();
+    init_constants15();
+    init_paint4();
     init_selection3();
   }
 });
@@ -47260,17 +48128,17 @@ function viewHeight(c) {
   }
   return fit2 > c.axis.offsetHeight ? fit2 : natural;
 }
-var init_paint3 = __esm({
+var init_paint4 = __esm({
   "js/gantt/paint.js"() {
     "use strict";
     init_state_plate();
     init_window();
-    init_constants6();
+    init_constants15();
     init_scale();
     init_labels();
     init_points();
     init_chrome2();
-    init_busy2();
+    init_busy3();
     init_selection3();
   }
 });
@@ -47361,15 +48229,15 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint9(c);
 }
-var init_api5 = __esm({
+var init_api7 = __esm({
   "js/gantt/api.js"() {
     "use strict";
-    init_constants6();
-    init_paint3();
+    init_constants15();
+    init_paint4();
     init_selection3();
     init_scale();
     init_window();
-    init_attach7();
+    init_attach13();
     init_chrome2();
   }
 });
@@ -47715,19 +48583,19 @@ function setLive(c, live4) {
   freshWindow(c);
   announceWindow(c, "live");
 }
-var init_attach7 = __esm({
+var init_attach13 = __esm({
   "js/gantt/attach.js"() {
     "use strict";
     init_chart();
     init_strings();
     init_live_options();
-    init_constants6();
-    init_build2();
+    init_constants15();
+    init_build3();
     init_window();
-    init_paint3();
+    init_paint4();
     init_selection3();
     init_axis();
-    init_api5();
+    init_api7();
     init_scale();
     init_chrome2();
   }
@@ -47759,10 +48627,10 @@ __export(gantt_exports, {
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
-    init_constants6();
+    init_constants15();
     init_scale();
-    init_attach7();
-    init_api5();
+    init_attach13();
+    init_api7();
   }
 });
 
@@ -48133,21 +49001,23 @@ var init_pipeline = __esm({
   }
 });
 
-// js/uptime.js
-var uptime_exports = {};
-__export(uptime_exports, {
-  UPTIME: () => UPTIME,
-  UPTIME_COUNT: () => UPTIME_COUNT,
-  UPTIME_OPEN_EVENT: () => UPTIME_OPEN_EVENT,
-  UPTIME_PICK_EVENT: () => UPTIME_PICK_EVENT,
-  UPTIME_RETRY_EVENT: () => UPTIME_RETRY_EVENT,
-  UPTIME_STATES: () => UPTIME_STATES,
-  attachUptimes: () => attachUptimes,
-  setUptime: () => setUptime,
-  uptimeFigures: () => uptimeFigures,
-  uptimeFit: () => uptimeFit,
-  uptimePercent: () => uptimePercent
+// js/uptime/constants.js
+var UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, UPTIME_RETRY_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT;
+var init_constants16 = __esm({
+  "js/uptime/constants.js"() {
+    "use strict";
+    UPTIME = "[data-kp-uptime]";
+    UPTIME_PICK_EVENT = "kp-uptime-pick";
+    UPTIME_OPEN_EVENT = "kp-uptime-open";
+    UPTIME_RETRY_EVENT = "kp-uptime-retry";
+    CELL = ".kp-uptime__cell:is(button, a)";
+    UPTIME_STATES = /** @type {const} */
+    ["up", "degraded", "down", "none"];
+    UPTIME_COUNT = 90;
+  }
 });
+
+// js/uptime/figures.js
 function uptimeFigures(periods) {
   const counts = { up: 0, degraded: 0, down: 0, none: 0 };
   let sum = 0;
@@ -48173,6 +49043,97 @@ function uptimeFit(count2, width, min, gap) {
   const fits = Math.floor((width + gap) / (Math.max(1, min) + gap));
   return Math.max(1, Math.min(count2, fits));
 }
+var init_figures = __esm({
+  "js/uptime/figures.js"() {
+    "use strict";
+    init_constants16();
+  }
+});
+
+// js/uptime/state.js
+var SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, uptimeState;
+var init_state9 = __esm({
+  "js/uptime/state.js"() {
+    "use strict";
+    SPECS = /* @__PURE__ */ new WeakMap();
+    CARDS2 = /* @__PURE__ */ new WeakMap();
+    WAITING2 = /* @__PURE__ */ new WeakMap();
+    GROUPS2 = /* @__PURE__ */ new WeakMap();
+    GROUP_OF = /* @__PURE__ */ new WeakMap();
+    UNPINNED = /* @__PURE__ */ new WeakSet();
+    DRAWN4 = /* @__PURE__ */ new WeakSet();
+    INFO = /* @__PURE__ */ new WeakMap();
+    uptimeState = {
+      /** Ids for the quick-info panels. */
+      infoMade: 0
+    };
+  }
+});
+
+// js/uptime/fit.js
+function fit(el16) {
+  const spec = SPECS.get(el16) ?? {};
+  const track = (
+    /** @type {HTMLElement | null} */
+    el16.querySelector(":scope > .kp-uptime__track")
+  );
+  if (!track) return;
+  const s2 = getStrings();
+  const cells = (
+    /** @type {HTMLElement[]} */
+    [...track.children]
+  );
+  const periods = spec.periods ?? [];
+  const scroll = el16.dataset.kpUptimeFit === "scroll";
+  const style = getComputedStyle(track);
+  const min = Number.parseFloat(style.getPropertyValue("--kp-uptime-cell-min")) || 4;
+  const gap = Number.parseFloat(style.columnGap) || 0;
+  const n = scroll ? cells.length : uptimeFit(cells.length, track.clientWidth, min, gap);
+  const firstShown = cells.length - n;
+  let moved = false;
+  cells.forEach((cell, i) => {
+    const hide2 = i < firstShown;
+    if (cell.hidden !== hide2) {
+      cell.hidden = hide2;
+      moved = true;
+    }
+  });
+  if (moved) {
+    const focusable2 = cells.filter((c) => !c.hidden && c.tabIndex === 0);
+    if (focusable2.length === 0) {
+      const last = cells.at(-1);
+      if (last && last.matches(CELL)) last.tabIndex = 0;
+    }
+    for (const c of cells) if (c.hidden && c.tabIndex === 0) c.tabIndex = -1;
+  }
+  track.style.setProperty("--kp-uptime-cells", String(n));
+  if (scroll && !UNPINNED.has(el16)) track.scrollLeft = track.scrollWidth;
+  const from = el16.querySelector(".kp-uptime__from");
+  const to = el16.querySelector(".kp-uptime__to");
+  const shown4 = el16.querySelector(".kp-uptime__shown");
+  const state2 = el16.dataset.kpUptimeState;
+  const real = state2 === "ready" && periods.length > 0;
+  if (from) from.textContent = real ? firstShown === 0 && spec.from ? spec.from : periods[firstShown]?.label ?? "" : spec.from ?? "";
+  if (to) to.textContent = spec.to ?? (real ? periods.at(-1)?.label ?? "" : "");
+  if (shown4) shown4.textContent = real && !scroll && firstShown > 0 ? s2.uptimeShown(n, cells.length) : "";
+  if (scroll) edges(el16, track);
+}
+function edges(el16, track) {
+  const max = track.scrollWidth - track.clientWidth;
+  el16.toggleAttribute("data-kp-uptime-before", track.scrollLeft > 1);
+  el16.toggleAttribute("data-kp-uptime-after", track.scrollLeft < max - 1);
+}
+var init_fit = __esm({
+  "js/uptime/fit.js"() {
+    "use strict";
+    init_strings();
+    init_constants16();
+    init_figures();
+    init_state9();
+  }
+});
+
+// js/uptime/group.js
 function groupHost(el16) {
   const marked = el16.closest("[data-kp-uptime-group]");
   if (marked) return marked.getAttribute("data-kp-uptime-group") === "off" ? null : marked;
@@ -48219,6 +49180,42 @@ function leaveGroupCard(el16) {
   if (group.loading.size > 0) group.card.place();
   return { last: group.loading.size === 0, card: group.card, host };
 }
+var infoMode;
+var init_group2 = __esm({
+  "js/uptime/group.js"() {
+    "use strict";
+    init_busy_card();
+    init_state9();
+    infoMode = (el16) => (SPECS.get(el16)?.open ?? el16.dataset.kpUptimeOpen) === "info";
+  }
+});
+
+// js/uptime/helpers.js
+var toneFor, wordFor, countOf2, make16;
+var init_helpers4 = __esm({
+  "js/uptime/helpers.js"() {
+    "use strict";
+    init_strings();
+    init_calm_tones();
+    init_constants16();
+    toneFor = (el16, state2) => isCalmTones(el16) ? state2 === "down" ? "quiet" : state2 === "none" ? "none" : "logged" : state2;
+    wordFor = (el16, tone) => (isCalmTones(el16) ? calmWord(tone) : null) ?? getStrings().uptimeStateWord(
+      /** @type {any} */
+      tone
+    );
+    countOf2 = (el16) => {
+      const n = Number.parseInt(el16.dataset.kpUptimeCount ?? "", 10);
+      return Number.isFinite(n) && n > 0 ? n : UPTIME_COUNT;
+    };
+    make16 = (el16, tag, className) => {
+      const node = el16.ownerDocument.createElement(tag);
+      if (className) node.className = className;
+      return node;
+    };
+  }
+});
+
+// js/uptime/draw.js
 function setUptime(el16, spec) {
   SPECS.set(el16, spec);
   const loading = spec.state === "loading";
@@ -48408,58 +49405,23 @@ function draw6(el16, spec) {
     if (left?.last) GROUPS2.delete(left.host);
   }
 }
-function fit(el16) {
-  const spec = SPECS.get(el16) ?? {};
-  const track = (
-    /** @type {HTMLElement | null} */
-    el16.querySelector(":scope > .kp-uptime__track")
-  );
-  if (!track) return;
-  const s2 = getStrings();
-  const cells = (
-    /** @type {HTMLElement[]} */
-    [...track.children]
-  );
-  const periods = spec.periods ?? [];
-  const scroll = el16.dataset.kpUptimeFit === "scroll";
-  const style = getComputedStyle(track);
-  const min = Number.parseFloat(style.getPropertyValue("--kp-uptime-cell-min")) || 4;
-  const gap = Number.parseFloat(style.columnGap) || 0;
-  const n = scroll ? cells.length : uptimeFit(cells.length, track.clientWidth, min, gap);
-  const firstShown = cells.length - n;
-  let moved = false;
-  cells.forEach((cell, i) => {
-    const hide2 = i < firstShown;
-    if (cell.hidden !== hide2) {
-      cell.hidden = hide2;
-      moved = true;
-    }
-  });
-  if (moved) {
-    const focusable2 = cells.filter((c) => !c.hidden && c.tabIndex === 0);
-    if (focusable2.length === 0) {
-      const last = cells.at(-1);
-      if (last && last.matches(CELL)) last.tabIndex = 0;
-    }
-    for (const c of cells) if (c.hidden && c.tabIndex === 0) c.tabIndex = -1;
+var init_draw4 = __esm({
+  "js/uptime/draw.js"() {
+    "use strict";
+    init_strings();
+    init_busy_card();
+    init_calm_tones();
+    init_state_plate();
+    init_constants16();
+    init_figures();
+    init_fit();
+    init_group2();
+    init_helpers4();
+    init_state9();
   }
-  track.style.setProperty("--kp-uptime-cells", String(n));
-  if (scroll && !UNPINNED.has(el16)) track.scrollLeft = track.scrollWidth;
-  const from = el16.querySelector(".kp-uptime__from");
-  const to = el16.querySelector(".kp-uptime__to");
-  const shown4 = el16.querySelector(".kp-uptime__shown");
-  const state2 = el16.dataset.kpUptimeState;
-  const real = state2 === "ready" && periods.length > 0;
-  if (from) from.textContent = real ? firstShown === 0 && spec.from ? spec.from : periods[firstShown]?.label ?? "" : spec.from ?? "";
-  if (to) to.textContent = spec.to ?? (real ? periods.at(-1)?.label ?? "" : "");
-  if (shown4) shown4.textContent = real && !scroll && firstShown > 0 ? s2.uptimeShown(n, cells.length) : "";
-  if (scroll) edges(el16, track);
-}
-function edges(el16, track) {
-  const max = track.scrollWidth - track.clientWidth;
-  el16.toggleAttribute("data-kp-uptime-before", track.scrollLeft > 1);
-  el16.toggleAttribute("data-kp-uptime-after", track.scrollLeft < max - 1);
-}
+});
+
+// js/uptime/attach.js
 function attachUptimes(root = document) {
   const cleanups = [];
   const strips = (
@@ -48574,7 +49536,7 @@ function attachUptimes(root = document) {
       if (index < 0) return;
       if (!panel) {
         panel = make16(el16, "div", "kp-popover kp-uptime__info");
-        panel.id = `kp-uptime-info-${infoMade += 1}`;
+        panel.id = `kp-uptime-info-${uptimeState.infoMade += 1}`;
         panel.setAttribute("role", "dialog");
         panel.hidden = true;
         el16.append(panel);
@@ -48716,49 +49678,45 @@ function attachUptimes(root = document) {
     for (const c of cleanups) c();
   };
 }
-var toneFor, wordFor, UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, UPTIME_RETRY_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, infoMade, infoMode, countOf2, make16;
-var init_uptime = __esm({
-  "js/uptime.js"() {
+var init_attach14 = __esm({
+  "js/uptime/attach.js"() {
     "use strict";
     init_strings();
     init_hovercard();
-    init_busy_card();
     init_motion();
     init_top_layer();
-    init_calm_tones();
-    init_state_plate();
-    toneFor = (el16, state2) => isCalmTones(el16) ? state2 === "down" ? "quiet" : state2 === "none" ? "none" : "logged" : state2;
-    wordFor = (el16, tone) => (isCalmTones(el16) ? calmWord(tone) : null) ?? getStrings().uptimeStateWord(
-      /** @type {any} */
-      tone
-    );
-    UPTIME = "[data-kp-uptime]";
-    UPTIME_PICK_EVENT = "kp-uptime-pick";
-    UPTIME_OPEN_EVENT = "kp-uptime-open";
-    UPTIME_RETRY_EVENT = "kp-uptime-retry";
-    CELL = ".kp-uptime__cell:is(button, a)";
-    UPTIME_STATES = /** @type {const} */
-    ["up", "degraded", "down", "none"];
-    UPTIME_COUNT = 90;
-    SPECS = /* @__PURE__ */ new WeakMap();
-    CARDS2 = /* @__PURE__ */ new WeakMap();
-    WAITING2 = /* @__PURE__ */ new WeakMap();
-    GROUPS2 = /* @__PURE__ */ new WeakMap();
-    GROUP_OF = /* @__PURE__ */ new WeakMap();
-    UNPINNED = /* @__PURE__ */ new WeakSet();
-    DRAWN4 = /* @__PURE__ */ new WeakSet();
-    INFO = /* @__PURE__ */ new WeakMap();
-    infoMade = 0;
-    infoMode = (el16) => (SPECS.get(el16)?.open ?? el16.dataset.kpUptimeOpen) === "info";
-    countOf2 = (el16) => {
-      const n = Number.parseInt(el16.dataset.kpUptimeCount ?? "", 10);
-      return Number.isFinite(n) && n > 0 ? n : UPTIME_COUNT;
-    };
-    make16 = (el16, tag, className) => {
-      const node = el16.ownerDocument.createElement(tag);
-      if (className) node.className = className;
-      return node;
-    };
+    init_constants16();
+    init_draw4();
+    init_figures();
+    init_fit();
+    init_group2();
+    init_helpers4();
+    init_state9();
+  }
+});
+
+// js/uptime.js
+var uptime_exports = {};
+__export(uptime_exports, {
+  UPTIME: () => UPTIME,
+  UPTIME_COUNT: () => UPTIME_COUNT,
+  UPTIME_OPEN_EVENT: () => UPTIME_OPEN_EVENT,
+  UPTIME_PICK_EVENT: () => UPTIME_PICK_EVENT,
+  UPTIME_RETRY_EVENT: () => UPTIME_RETRY_EVENT,
+  UPTIME_STATES: () => UPTIME_STATES,
+  attachUptimes: () => attachUptimes,
+  setUptime: () => setUptime,
+  uptimeFigures: () => uptimeFigures,
+  uptimeFit: () => uptimeFit,
+  uptimePercent: () => uptimePercent
+});
+var init_uptime = __esm({
+  "js/uptime.js"() {
+    "use strict";
+    init_constants16();
+    init_figures();
+    init_draw4();
+    init_attach14();
   }
 });
 
@@ -51862,7 +52820,7 @@ function attachOne7(area) {
   const blocks = () => area.getAttribute("data-kp-code-block") !== "false";
   let wrap = area.hasAttribute("data-kp-code-wrap") && area.getAttribute("data-kp-code-wrap") !== "false";
   const minRows = Math.max(2, Number(area.getAttribute("rows")) || 6);
-  const id = area.id || (area.id = `kp-codefield-${serial7 += 1}`);
+  const id = area.id || (area.id = `kp-codefield-${serial6 += 1}`);
   const root = doc.createElement("div");
   root.className = "kp-jsonfield kp-codefield";
   root.setAttribute("data-kp-json-wrap", String(wrap));
@@ -52197,7 +53155,7 @@ function attachCodeFields(root = document) {
   const undo = found.map((area) => attachOne7(area));
   return () => undo.forEach((u) => u());
 }
-var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, HANDLES5, serial7;
+var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, HANDLES5, serial6;
 var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
@@ -52210,7 +53168,7 @@ var init_code_field = __esm({
     CODE_FIELD_CHECK_MS = 300;
     CODE_FIELD_MAX_ROWS = 20;
     HANDLES5 = /* @__PURE__ */ new WeakMap();
-    serial7 = 0;
+    serial6 = 0;
   }
 });
 
@@ -52246,7 +53204,7 @@ function attachOne8(nav) {
     doc.defaultView
   );
   const s2 = getStrings();
-  const id = nav.id || (nav.id = `kp-contents-${serial8 += 1}`);
+  const id = nav.id || (nav.id = `kp-contents-${serial7 += 1}`);
   nav.classList.add("kp-contents");
   if (!nav.hasAttribute("aria-label") && !nav.hasAttribute("aria-labelledby")) nav.setAttribute("aria-label", s2.contentsLabel);
   const title = doc.createElement("p");
@@ -52494,7 +53452,7 @@ function attachContents(root = document) {
   const undo = found.map((nav) => attachOne8(nav));
   return () => undo.forEach((u) => u());
 }
-var CONTENTS, CONTENTS_EVENT, HANDLES6, serial8;
+var CONTENTS, CONTENTS_EVENT, HANDLES6, serial7;
 var init_page_contents = __esm({
   "js/page-contents.js"() {
     "use strict";
@@ -52502,7 +53460,7 @@ var init_page_contents = __esm({
     CONTENTS = "[data-kp-contents]";
     CONTENTS_EVENT = "kp-contents-change";
     HANDLES6 = /* @__PURE__ */ new WeakMap();
-    serial8 = 0;
+    serial7 = 0;
   }
 });
 
@@ -52597,7 +53555,7 @@ function build9(root) {
   const old = STATE4.get(root);
   if (old) return old;
   const s2 = getStrings();
-  serial9 += 1;
+  serial8 += 1;
   root.classList.add("kp-time");
   const control = el9("kp-time__control");
   const input = (
@@ -52605,7 +53563,7 @@ function build9(root) {
     el9("kp-field__input kp-time__input", "input")
   );
   input.type = "text";
-  input.id = root.getAttribute("data-kp-time-id") ?? `kp-time-${serial9}`;
+  input.id = root.getAttribute("data-kp-time-id") ?? `kp-time-${serial8}`;
   input.setAttribute("inputmode", "numeric");
   input.setAttribute("autocomplete", "off");
   input.setAttribute("autocapitalize", "off");
@@ -52638,10 +53596,10 @@ function build9(root) {
   if (name) hidden.name = name;
   const why = el9("kp-time__why", "p");
   why.hidden = true;
-  why.id = `kp-time-${serial9}-why`;
+  why.id = `kp-time-${serial8}-why`;
   const zone = el9("kp-time__zone", "p");
   const popup = el9("kp-popover kp-time__popup");
-  popup.id = `kp-time-${serial9}-popup`;
+  popup.id = `kp-time-${serial8}-popup`;
   popup.hidden = true;
   input.setAttribute("aria-controls", popup.id);
   const skeleton2 = el9("kp-skeleton kp-time__skeleton", "span");
@@ -53189,7 +54147,7 @@ function attachTimes(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, serial9, STATE4, el9, pad, attr4, stepOf, seconds;
+var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, serial8, STATE4, el9, pad, attr4, stepOf, seconds;
 var init_timefield = __esm({
   "js/timefield.js"() {
     "use strict";
@@ -53202,7 +54160,7 @@ var init_timefield = __esm({
     TIME_EVENT = "kp-time-change";
     TIME_RETRY_EVENT = "kp-time-retry";
     TIME_STEPS = Object.freeze([1, 5, 10, 15, 30, 60]);
-    serial9 = 0;
+    serial8 = 0;
     STATE4 = /* @__PURE__ */ new WeakMap();
     el9 = (className, tag = "div") => {
       const node = document.createElement(tag);
@@ -53511,7 +54469,7 @@ function attachOne9(root) {
   if (HANDLES8.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
-  const id = root.id || (root.id = `kp-quiet-${serial10 += 1}`);
+  const id = root.id || (root.id = `kp-quiet-${serial9 += 1}`);
   root.classList.add("kp-quiet");
   root.setAttribute("role", "group");
   const make24 = (className, tag = "div") => {
@@ -53698,7 +54656,7 @@ function attachQuietHours(root = document) {
   const undo = found.map((el16) => attachOne9(el16));
   return () => undo.forEach((u) => u());
 }
-var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial10, HANDLES8;
+var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial9, HANDLES8;
 var init_quiet_hours = __esm({
   "js/quiet-hours.js"() {
     "use strict";
@@ -53710,7 +54668,7 @@ var init_quiet_hours = __esm({
     QUIET_SEVERITIES = /** @type {const} */
     ["critical", "warning", "info", "ok"];
     DEFAULT = { on: false, from: "22:00", to: "07:00", days: [0, 1, 2, 3, 4, 5, 6], through: ["critical"] };
-    serial10 = 0;
+    serial9 = 0;
     HANDLES8 = /* @__PURE__ */ new WeakMap();
   }
 });
@@ -54047,7 +55005,7 @@ function wire11(el16, now, zone) {
     if (text) node.textContent = text;
     return node;
   };
-  const id = `kp-feed-${idSeq5 += 1}`;
+  const id = `kp-feed-${idSeq4 += 1}`;
   el16.classList.add("kp-feed");
   let model = { state: "ready", rows: [] };
   const open4 = /* @__PURE__ */ new Set();
@@ -54147,7 +55105,7 @@ function wire11(el16, now, zone) {
     cell.append(mark);
     const text = make24("div", "kp-feed__text");
     const openable = expandMode() !== "off" && !!row.more?.length;
-    const regionId = `${id}-more-${idSeq5 += 1}`;
+    const regionId = `${id}-more-${idSeq4 += 1}`;
     let title;
     if (openable) {
       const toggle2 = (
@@ -54454,7 +55412,7 @@ function wire11(el16, now, zone) {
     handles17.delete(el16);
   };
 }
-var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, handles17, feedOf, OPTION_ATTRIBUTES2, OPTIONS2, idSeq5, dayKey3;
+var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, handles17, feedOf, OPTION_ATTRIBUTES2, OPTIONS2, idSeq4, dayKey3;
 var init_feed = __esm({
   "js/feed.js"() {
     "use strict";
@@ -54492,7 +55450,7 @@ var init_feed = __esm({
       level: "data-kp-feed-level"
     };
     OPTIONS2 = Object.values(OPTION_ATTRIBUTES2);
-    idSeq5 = 0;
+    idSeq4 = 0;
     dayKey3 = (ms, zone) => agoMoment(ms, zone).slice(0, 10).split("/").reverse().join("-");
   }
 });
@@ -54544,7 +55502,7 @@ function wire12(el16) {
     if (text) node.textContent = text;
     return node;
   };
-  const id = `kp-notices-${idSeq6 += 1}`;
+  const id = `kp-notices-${idSeq5 += 1}`;
   el16.classList.add("kp-notices");
   let model = { state: "ready", items: [] };
   const readKeys = /* @__PURE__ */ new Set();
@@ -54890,7 +55848,7 @@ function wire12(el16) {
     void view;
   };
 }
-var NOTICES, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_SOURCE_EVENT, NOTICES_RETRY_EVENT, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICE_SEVERITIES, handles18, noticesOf, toMs4, idSeq6;
+var NOTICES, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_SOURCE_EVENT, NOTICES_RETRY_EVENT, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICE_SEVERITIES, handles18, noticesOf, toMs4, idSeq5;
 var init_notices = __esm({
   "js/notices.js"() {
     "use strict";
@@ -54916,7 +55874,7 @@ var init_notices = __esm({
       const ms = typeof v === "number" ? v : Date.parse(v);
       return Number.isFinite(ms) ? ms : null;
     };
-    idSeq6 = 0;
+    idSeq5 = 0;
   }
 });
 
@@ -55168,7 +56126,7 @@ function focusStar(m) {
   target?.focus({ preventScroll: true });
 }
 function wire13(el16, options) {
-  serial11 += 1;
+  serial10 += 1;
   const number = (name2, fallback2) => {
     const raw = el16.getAttribute(`data-kp-rating-${name2}`);
     const n = raw === null ? Number.NaN : Number(raw);
@@ -55188,7 +56146,7 @@ function wire13(el16, options) {
   });
   row.append(...stars);
   const caption = make17("span", "kp-rating__caption");
-  caption.id = `kp-rating-${serial11}-caption`;
+  caption.id = `kp-rating-${serial10}-caption`;
   const actions = make17("span", "kp-rating__actions");
   const clear = make17("button", "kp-button kp-button--sm kp-rating__clear");
   clear.type = "button";
@@ -55198,7 +56156,7 @@ function wire13(el16, options) {
   drop.type = "button";
   actions.append(clear, save2, drop);
   const reason = make17("span", "kp-rating__reason");
-  reason.id = `kp-rating-${serial11}-reason`;
+  reason.id = `kp-rating-${serial10}-reason`;
   reason.hidden = true;
   const flash = make17("span", "kp-rating__flash");
   flash.setAttribute("role", "alert");
@@ -55440,7 +56398,7 @@ function ratingCell(cell, value, { max = 5, count: count2, for: item } = {}) {
   }
   return host;
 }
-var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, models, serial11, make17, clamp, plain, attr5, itemName, disabled, readonly, state, interactive, focusable, levelOf, announceLevel;
+var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, models, serial10, make17, clamp, plain, attr5, itemName, disabled, readonly, state, interactive, focusable, levelOf, announceLevel;
 var init_rating = __esm({
   "js/rating.js"() {
     "use strict";
@@ -55454,7 +56412,7 @@ var init_rating = __esm({
     ["ready", "loading", "error"];
     STAR_PATH = "M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.2 1.2-6.5L2.5 9.5l6.6-.9z";
     models = /* @__PURE__ */ new WeakMap();
-    serial11 = 0;
+    serial10 = 0;
     make17 = (tag, className, text) => {
       const node = document.createElement(tag);
       if (className) node.className = className;
@@ -55906,25 +56864,23 @@ var init_quote = __esm({
   }
 });
 
-// js/usual-picker.js
-var usual_picker_exports = {};
-__export(usual_picker_exports, {
-  USUAL: () => USUAL,
-  USUAL_ADD_EVENT: () => USUAL_ADD_EVENT,
-  USUAL_FOLD_ABOVE: () => USUAL_FOLD_ABOVE,
-  USUAL_NOT_TODAY_EVENT: () => USUAL_NOT_TODAY_EVENT,
-  USUAL_PICK_EVENT: () => USUAL_PICK_EVENT,
-  USUAL_RETRY_EVENT: () => USUAL_RETRY_EVENT,
-  USUAL_STATES: () => USUAL_STATES,
-  attachUsualPickers: () => attachUsualPickers,
-  nearNames: () => nearNames,
-  normaliseName: () => normaliseName,
-  setUsual: () => setUsual,
-  setUsualState: () => setUsualState,
-  similarity: () => similarity,
-  usualNotToday: () => usualNotToday,
-  usualPicker: () => usualPicker
+// js/usual-picker/constants.js
+var USUAL, USUAL_PICK_EVENT, USUAL_ADD_EVENT, USUAL_NOT_TODAY_EVENT, USUAL_RETRY_EVENT, USUAL_STATES, USUAL_FOLD_ABOVE;
+var init_constants17 = __esm({
+  "js/usual-picker/constants.js"() {
+    "use strict";
+    USUAL = "[data-kp-usual]";
+    USUAL_PICK_EVENT = "kp-usual-pick";
+    USUAL_ADD_EVENT = "kp-usual-add";
+    USUAL_NOT_TODAY_EVENT = "kp-usual-not-today";
+    USUAL_RETRY_EVENT = "kp-usual-retry";
+    USUAL_STATES = /** @type {const} */
+    ["ready", "loading", "empty", "error"];
+    USUAL_FOLD_ABOVE = 12;
+  }
 });
+
+// js/usual-picker/names.js
 function normaliseName(text) {
   return text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/\s+/g, " ").trim();
 }
@@ -55946,6 +56902,13 @@ function similarity(a, b) {
 function nearNames(typed, names, threshold = 0.8, max = 3) {
   return names.map((name) => ({ name, score: similarity(typed, name.label) })).filter(({ score }) => score >= threshold && score < 1).sort((a, b) => b.score - a.score).slice(0, max).map(({ name }) => name);
 }
+var init_names = __esm({
+  "js/usual-picker/names.js"() {
+    "use strict";
+  }
+});
+
+// js/usual-picker/model.js
 function readItems(m) {
   m.items = realOptions(m.list).map((el16) => ({
     el: el16,
@@ -55995,6 +56958,55 @@ function canFold(m) {
 function say12(m, text) {
   if (m.status) m.status.textContent = text;
 }
+var models3, make19, attr7, clamp2, realOptions;
+var init_model4 = __esm({
+  "js/usual-picker/model.js"() {
+    "use strict";
+    init_listbox();
+    init_constants17();
+    models3 = /* @__PURE__ */ new WeakMap();
+    make19 = (tag, className, text) => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== void 0) node.textContent = text;
+      return node;
+    };
+    attr7 = (m, name, fallback2) => m.box.getAttribute(`data-kp-${name}`) ?? fallback2;
+    clamp2 = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
+    realOptions = (list) => (
+      /** @type {HTMLElement[]} */
+      [...list.querySelectorAll(OPTION_SELECTOR)].filter(
+        (o) => !o.hasAttribute("data-kp-synth") && !o.hasAttribute("data-kp-pinned")
+      )
+    );
+  }
+});
+
+// js/usual-picker/lookup.js
+var exactItem, pickedValues, nearOf2;
+var init_lookup = __esm({
+  "js/usual-picker/lookup.js"() {
+    "use strict";
+    init_model4();
+    init_names();
+    exactItem = (m, typed) => m.items.find((i) => normaliseName(i.label) === normaliseName(typed));
+    pickedValues = (m) => m.box.hasAttribute("data-kp-tags") ? m.handle.values() : [];
+    nearOf2 = (m, typed) => attr7(m, "near", "ask") === "off" ? [] : nearNames(typed, m.items, clamp2(Number(attr7(m, "near-threshold")) || 0.8, 0.5, 1), clamp2(Number(attr7(m, "near-max")) || 3, 1, 5));
+  }
+});
+
+// js/usual-picker/state.js
+var usualState;
+var init_state10 = __esm({
+  "js/usual-picker/state.js"() {
+    "use strict";
+    usualState = {
+      serial: 0
+    };
+  }
+});
+
+// js/usual-picker/layout.js
 function arrange(m) {
   const s2 = getStrings();
   for (const node of m.list.querySelectorAll("[data-kp-synth]")) node.remove();
@@ -56009,9 +57021,9 @@ function arrange(m) {
   for (const item of m.items) {
     const why = item.el.getAttribute("data-kp-reason");
     if (!why || item.el.querySelector(".kp-usual__reason")) continue;
-    serial12 += 1;
+    usualState.serial += 1;
     const reason = make19("span", "kp-usual__reason", why);
-    reason.id = `kp-usual-${serial12}-why`;
+    reason.id = `kp-usual-${usualState.serial}-why`;
     item.el.setAttribute("aria-describedby", reason.id);
     item.el.setAttribute("aria-disabled", "true");
     item.el.append(reason);
@@ -56122,6 +57134,17 @@ function paintHeaders(m) {
     node.hidden = !any;
   }
 }
+var init_layout = __esm({
+  "js/usual-picker/layout.js"() {
+    "use strict";
+    init_strings();
+    init_lookup();
+    init_model4();
+    init_state10();
+  }
+});
+
+// js/usual-picker/picking.js
 function originOf(m, value) {
   const row = (
     /** @type {HTMLElement[]} */
@@ -56160,48 +57183,17 @@ function unpick(m, value) {
     m.silent = false;
   }
 }
-function clearNote(m) {
-  m.noteEl.hidden = true;
-  m.noteEl.replaceChildren();
-}
-function addName(m, label, nearTo) {
-  const s2 = getStrings();
-  const event = new CustomEvent(USUAL_ADD_EVENT, { bubbles: true, cancelable: true, detail: { label, nearTo } });
-  if (!m.box.dispatchEvent(event)) return;
-  const row = make19("li", "kp-combobox__option", label);
-  row.setAttribute("role", "option");
-  row.setAttribute("data-kp-option", "");
-  row.dataset.value = label;
-  m.list.append(row);
-  arrange(m);
-  pick3(m, label, "typed");
-  arrange(m);
-  m.handle.refresh();
-  const undo = () => {
-    row.remove();
-    m.handle.set(m.handle.values().filter((v) => v !== label));
-    if (!m.box.hasAttribute("data-kp-tags")) m.input.value = "";
-    clearNote(m);
-    render3(m);
-    sayAfter(m, s2.usualAddUndone(label));
-  };
-  if (attr7(m, "usual-undo", "field") === "toast") {
-    sayAfter(m, s2.usualAdded(label));
-    const ms = m.box.hasAttribute("data-kp-undo-ms") ? Number(m.box.getAttribute("data-kp-undo-ms")) : 6e3;
-    if (ms > 0) undoToast(s2.usualAddedToast(label), { mode: "revert", ms, undo });
-    return;
+var sayAfter;
+var init_picking = __esm({
+  "js/usual-picker/picking.js"() {
+    "use strict";
+    init_listbox();
+    init_model4();
+    sayAfter = (m, text) => window.setTimeout(() => say12(m, text), 0);
   }
-  const words2 = make19("span", "kp-usual__note-text", s2.usualAddedNote(label));
-  const button = make19("button", "kp-button kp-button--ghost kp-button--sm kp-usual__undo", s2.usualUndo);
-  button.type = "button";
-  button.setAttribute("aria-label", s2.usualUndoName(label));
-  button.addEventListener("click", () => {
-    undo();
-    m.input.focus();
-  });
-  m.noteEl.replaceChildren(words2, button);
-  m.noteEl.hidden = false;
-}
+});
+
+// js/usual-picker/sync.js
 function checkLook(m) {
   if (!m.box.hasAttribute("data-kp-tags") || !m.box.hasAttribute("data-kp-not-today")) return null;
   const look = m.box.getAttribute("data-kp-not-today") ?? "";
@@ -56243,8 +57235,8 @@ function syncCheck(m) {
   const key = `${look}|${band.join("")}`;
   if (!m.check || m.checkKey !== key) {
     m.check?.remove();
-    serial12 += 1;
-    const id = `kp-usual-${serial12}-check`;
+    usualState.serial += 1;
+    const id = `kp-usual-${usualState.serial}-check`;
     const check = make19("div", `kp-usual__check kp-usual__check--${look}`);
     check.setAttribute("role", "group");
     check.setAttribute("aria-labelledby", `${id}-title`);
@@ -56414,6 +57406,78 @@ function render3(m) {
   syncHint(m);
   syncCheck(m);
 }
+var init_sync3 = __esm({
+  "js/usual-picker/sync.js"() {
+    "use strict";
+    init_strings();
+    init_state_plate();
+    init_busy_card();
+    init_segmented();
+    init_constants17();
+    init_layout();
+    init_model4();
+    init_picking();
+    init_state10();
+  }
+});
+
+// js/usual-picker/add.js
+function clearNote(m) {
+  m.noteEl.hidden = true;
+  m.noteEl.replaceChildren();
+}
+function addName(m, label, nearTo) {
+  const s2 = getStrings();
+  const event = new CustomEvent(USUAL_ADD_EVENT, { bubbles: true, cancelable: true, detail: { label, nearTo } });
+  if (!m.box.dispatchEvent(event)) return;
+  const row = make19("li", "kp-combobox__option", label);
+  row.setAttribute("role", "option");
+  row.setAttribute("data-kp-option", "");
+  row.dataset.value = label;
+  m.list.append(row);
+  arrange(m);
+  pick3(m, label, "typed");
+  arrange(m);
+  m.handle.refresh();
+  const undo = () => {
+    row.remove();
+    m.handle.set(m.handle.values().filter((v) => v !== label));
+    if (!m.box.hasAttribute("data-kp-tags")) m.input.value = "";
+    clearNote(m);
+    render3(m);
+    sayAfter(m, s2.usualAddUndone(label));
+  };
+  if (attr7(m, "usual-undo", "field") === "toast") {
+    sayAfter(m, s2.usualAdded(label));
+    const ms = m.box.hasAttribute("data-kp-undo-ms") ? Number(m.box.getAttribute("data-kp-undo-ms")) : 6e3;
+    if (ms > 0) undoToast(s2.usualAddedToast(label), { mode: "revert", ms, undo });
+    return;
+  }
+  const words2 = make19("span", "kp-usual__note-text", s2.usualAddedNote(label));
+  const button = make19("button", "kp-button kp-button--ghost kp-button--sm kp-usual__undo", s2.usualUndo);
+  button.type = "button";
+  button.setAttribute("aria-label", s2.usualUndoName(label));
+  button.addEventListener("click", () => {
+    undo();
+    m.input.focus();
+  });
+  m.noteEl.replaceChildren(words2, button);
+  m.noteEl.hidden = false;
+}
+var init_add = __esm({
+  "js/usual-picker/add.js"() {
+    "use strict";
+    init_strings();
+    init_undo_toast();
+    init_constants17();
+    init_layout();
+    init_model4();
+    init_picking();
+    init_sync3();
+  }
+});
+
+// js/usual-picker/wire.js
 function prepare(box) {
   if (box.hasAttribute("data-kp-multiple") && !box.hasAttribute("data-kp-tags")) {
     box.setAttribute("data-kp-tags", "");
@@ -56446,7 +57510,7 @@ function wire15(box) {
     box.querySelector('[role="listbox"]')
   );
   if (!handle || !input || !list) return null;
-  serial12 += 1;
+  usualState.serial += 1;
   const panel = make19("div", "kp-usual__state");
   panel.hidden = true;
   const hintEl = make19("p", "kp-usual__hint");
@@ -56695,6 +57759,26 @@ function wire15(box) {
     delete box.dataset.kpUsualReady;
   };
 }
+var init_wire4 = __esm({
+  "js/usual-picker/wire.js"() {
+    "use strict";
+    init_combobox();
+    init_strings();
+    init_shortcuts();
+    init_remember();
+    init_add();
+    init_constants17();
+    init_layout();
+    init_lookup();
+    init_model4();
+    init_names();
+    init_picking();
+    init_state10();
+    init_sync3();
+  }
+});
+
+// js/usual-picker/attach.js
 function attachUsualPickers(root = document) {
   const undo = [];
   const boxes = (
@@ -56738,47 +57822,41 @@ function setUsualState(element, state2) {
 function usualNotToday(element) {
   return [...models3.get(element)?.notToday ?? []];
 }
-var USUAL, USUAL_PICK_EVENT, USUAL_ADD_EVENT, USUAL_NOT_TODAY_EVENT, USUAL_RETRY_EVENT, USUAL_STATES, USUAL_FOLD_ABOVE, models3, serial12, make19, attr7, clamp2, realOptions, exactItem, pickedValues, nearOf2, sayAfter;
+var init_attach15 = __esm({
+  "js/usual-picker/attach.js"() {
+    "use strict";
+    init_constants17();
+    init_model4();
+    init_sync3();
+    init_wire4();
+  }
+});
+
+// js/usual-picker.js
+var usual_picker_exports = {};
+__export(usual_picker_exports, {
+  USUAL: () => USUAL,
+  USUAL_ADD_EVENT: () => USUAL_ADD_EVENT,
+  USUAL_FOLD_ABOVE: () => USUAL_FOLD_ABOVE,
+  USUAL_NOT_TODAY_EVENT: () => USUAL_NOT_TODAY_EVENT,
+  USUAL_PICK_EVENT: () => USUAL_PICK_EVENT,
+  USUAL_RETRY_EVENT: () => USUAL_RETRY_EVENT,
+  USUAL_STATES: () => USUAL_STATES,
+  attachUsualPickers: () => attachUsualPickers,
+  nearNames: () => nearNames,
+  normaliseName: () => normaliseName,
+  setUsual: () => setUsual,
+  setUsualState: () => setUsualState,
+  similarity: () => similarity,
+  usualNotToday: () => usualNotToday,
+  usualPicker: () => usualPicker
+});
 var init_usual_picker = __esm({
   "js/usual-picker.js"() {
     "use strict";
-    init_combobox();
-    init_strings();
-    init_undo_toast();
-    init_shortcuts();
-    init_remember();
-    init_state_plate();
-    init_busy_card();
-    init_listbox();
-    init_segmented();
-    USUAL = "[data-kp-usual]";
-    USUAL_PICK_EVENT = "kp-usual-pick";
-    USUAL_ADD_EVENT = "kp-usual-add";
-    USUAL_NOT_TODAY_EVENT = "kp-usual-not-today";
-    USUAL_RETRY_EVENT = "kp-usual-retry";
-    USUAL_STATES = /** @type {const} */
-    ["ready", "loading", "empty", "error"];
-    USUAL_FOLD_ABOVE = 12;
-    models3 = /* @__PURE__ */ new WeakMap();
-    serial12 = 0;
-    make19 = (tag, className, text) => {
-      const node = document.createElement(tag);
-      if (className) node.className = className;
-      if (text !== void 0) node.textContent = text;
-      return node;
-    };
-    attr7 = (m, name, fallback2) => m.box.getAttribute(`data-kp-${name}`) ?? fallback2;
-    clamp2 = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
-    realOptions = (list) => (
-      /** @type {HTMLElement[]} */
-      [...list.querySelectorAll(OPTION_SELECTOR)].filter(
-        (o) => !o.hasAttribute("data-kp-synth") && !o.hasAttribute("data-kp-pinned")
-      )
-    );
-    exactItem = (m, typed) => m.items.find((i) => normaliseName(i.label) === normaliseName(typed));
-    pickedValues = (m) => m.box.hasAttribute("data-kp-tags") ? m.handle.values() : [];
-    nearOf2 = (m, typed) => attr7(m, "near", "ask") === "off" ? [] : nearNames(typed, m.items, clamp2(Number(attr7(m, "near-threshold")) || 0.8, 0.5, 1), clamp2(Number(attr7(m, "near-max")) || 3, 1, 5));
-    sayAfter = (m, text) => window.setTimeout(() => say12(m, text), 0);
+    init_constants17();
+    init_names();
+    init_attach15();
   }
 });
 
@@ -58193,23 +59271,24 @@ var init_path_trace = __esm({
   }
 });
 
-// js/entity-card.js
-var entity_card_exports = {};
-__export(entity_card_exports, {
-  ENTITY_ACTION_EVENT: () => ENTITY_ACTION_EVENT,
-  ENTITY_CARD: () => ENTITY_CARD,
-  ENTITY_FLAG_EVENT: () => ENTITY_FLAG_EVENT,
-  ENTITY_GRID: () => ENTITY_GRID,
-  ENTITY_GRID_RETRY_EVENT: () => ENTITY_GRID_RETRY_EVENT,
-  ENTITY_NEW_EVENT: () => ENTITY_NEW_EVENT,
-  ENTITY_RETRY_EVENT: () => ENTITY_RETRY_EVENT,
-  ENTITY_STAR_EVENT: () => ENTITY_STAR_EVENT,
-  ENTITY_TICK_EVENT: () => ENTITY_TICK_EVENT,
-  attachEntityCards: () => attachEntityCards,
-  setEntity: () => setEntity,
-  setEntityGrid: () => setEntityGrid,
-  setEntityGridState: () => setEntityGridState
+// js/entity-card/constants.js
+var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT;
+var init_constants18 = __esm({
+  "js/entity-card/constants.js"() {
+    "use strict";
+    ENTITY_GRID = "[data-kp-entity-grid]";
+    ENTITY_CARD = "[data-kp-entity]";
+    ENTITY_ACTION_EVENT = "kp-entity-action";
+    ENTITY_FLAG_EVENT = "kp-entity-flag";
+    ENTITY_TICK_EVENT = "kp-entity-tick";
+    ENTITY_STAR_EVENT = "kp-entity-star";
+    ENTITY_RETRY_EVENT = "kp-entity-retry";
+    ENTITY_NEW_EVENT = "kp-entity-new";
+    ENTITY_GRID_RETRY_EVENT = "kp-entity-grid-retry";
+  }
 });
+
+// js/entity-card/helpers.js
 function writeName(el16, name, match) {
   const at = match ? name.toLowerCase().indexOf(match.toLowerCase()) : -1;
   if (!match || at < 0) {
@@ -58247,53 +59326,33 @@ function columnsFor(host, inline2) {
   }
   return Math.max(1, most + (more ? 1 : 0));
 }
-function fitFlags(card, shown4) {
-  const view = card.ownerDocument.defaultView;
-  view?.requestAnimationFrame(() => {
-    const row = slotOf(card, "flags");
-    if (!row || !card.isConnected || shown4 <= 0) return;
-    if (row.scrollWidth > row.clientWidth + 1) {
-      card.dataset.kpFlagsFit = String(shown4 - 1);
-      const was = DRAWN5.get(card);
-      if (was) {
-        delete was.drawn.flags;
-        setEntity(card, was.data);
-      }
-    }
-  });
-}
-function fitActions(host, inline2) {
-  if (inline2 <= 0 || ACTIONS_QUEUED.has(host)) return;
-  ACTIONS_QUEUED.add(host);
-  host.ownerDocument.defaultView?.requestAnimationFrame(() => {
-    ACTIONS_QUEUED.delete(host);
-    if (!host.isConnected || Number(host.dataset.kpEntityFit ?? inline2) < inline2) return;
-    const cards2 = (
-      /** @type {HTMLElement[]} */
-      host.matches(ENTITY_GRID) ? [...host.querySelectorAll(":scope > .kp-card--entity")] : [host]
+var DRAWN5, opt2, starKeyOf, made5, sig, SLOTS, kindOf, slotOf;
+var init_helpers5 = __esm({
+  "js/entity-card/helpers.js"() {
+    "use strict";
+    init_constants18();
+    DRAWN5 = /* @__PURE__ */ new WeakMap();
+    opt2 = (el16, name) => el16.getAttribute(name) ?? el16.closest(ENTITY_GRID)?.getAttribute(name) ?? null;
+    starKeyOf = (card) => (opt2(card, "data-kp-entity-star-key") ?? (card.closest('[data-kp-tiles-keys="letters"]') ? "." : "s")).toLowerCase();
+    made5 = (doc, tag, className) => {
+      const el16 = doc.createElement(tag);
+      el16.className = className;
+      return el16;
+    };
+    sig = (value) => JSON.stringify(value);
+    SLOTS = {
+      stack: ["id", "figures", "flags", "meters", "actions"],
+      tile: ["id", "state", "description", "lines"]
+    };
+    kindOf = (card) => opt2(card, "data-kp-entity-kind") === "tile" ? "tile" : "stack";
+    slotOf = (card, slot) => (
+      /** @type {HTMLElement} */
+      card.querySelector(`:scope > .kp-entity__${slot}`)
     );
-    const tooWide = cards2.some((card) => {
-      const row = slotOf(card, "actions");
-      if (!row || row.hidden || row.clientWidth === 0 || card.dataset.kpState === "error") return false;
-      const edge = row.getBoundingClientRect().right + 0.5;
-      return [...row.children].some((child) => {
-        const button = child.matches("button") ? child : child.querySelector("button");
-        return child.getBoundingClientRect().right > edge || button !== null && button.scrollWidth > button.clientWidth;
-      });
-    });
-    if (!tooWide) return;
-    host.dataset.kpEntityFit = String(inline2 - 1);
-    redraw(cards2);
-  });
-}
-function redraw(cards2, slots = ["actions"]) {
-  for (const card of cards2) {
-    const was = DRAWN5.get(card);
-    if (!was) continue;
-    for (const name of slots) delete was.drawn[name];
-    setEntity(card, was.data);
   }
-}
+});
+
+// js/entity-card/star.js
 function tickAndMark(card, el16, data, selectable, markKind) {
   const doc = card.ownerDocument;
   const s2 = getStrings();
@@ -58380,6 +59439,20 @@ function syncStar(card, star) {
   const button = card.querySelector(":scope > .kp-entity__id .kp-entity__star");
   if (button && button.getAttribute("aria-pressed") !== String(star)) button.setAttribute("aria-pressed", String(star));
 }
+var KEYED;
+var init_star = __esm({
+  "js/entity-card/star.js"() {
+    "use strict";
+    init_idmark();
+    init_toggle();
+    init_strings();
+    init_constants18();
+    init_helpers5();
+    KEYED = /* @__PURE__ */ new WeakSet();
+  }
+});
+
+// js/entity-card/tile.js
 function trendRow(doc, s2, data, status) {
   const row = made5(doc, "div", "kp-entity__meter kp-entity__trend");
   const label = made5(doc, "span", "kp-entity__meter-label");
@@ -58485,6 +59558,65 @@ function drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable,
       el16.append(line);
     }
   });
+}
+var init_tile = __esm({
+  "js/entity-card/tile.js"() {
+    "use strict";
+    init_kpi();
+    init_footprint();
+    init_constants18();
+    init_helpers5();
+    init_star();
+  }
+});
+
+// js/entity-card/set.js
+function fitFlags(card, shown4) {
+  const view = card.ownerDocument.defaultView;
+  view?.requestAnimationFrame(() => {
+    const row = slotOf(card, "flags");
+    if (!row || !card.isConnected || shown4 <= 0) return;
+    if (row.scrollWidth > row.clientWidth + 1) {
+      card.dataset.kpFlagsFit = String(shown4 - 1);
+      const was = DRAWN5.get(card);
+      if (was) {
+        delete was.drawn.flags;
+        setEntity(card, was.data);
+      }
+    }
+  });
+}
+function fitActions(host, inline2) {
+  if (inline2 <= 0 || ACTIONS_QUEUED.has(host)) return;
+  ACTIONS_QUEUED.add(host);
+  host.ownerDocument.defaultView?.requestAnimationFrame(() => {
+    ACTIONS_QUEUED.delete(host);
+    if (!host.isConnected || Number(host.dataset.kpEntityFit ?? inline2) < inline2) return;
+    const cards2 = (
+      /** @type {HTMLElement[]} */
+      host.matches(ENTITY_GRID) ? [...host.querySelectorAll(":scope > .kp-card--entity")] : [host]
+    );
+    const tooWide = cards2.some((card) => {
+      const row = slotOf(card, "actions");
+      if (!row || row.hidden || row.clientWidth === 0 || card.dataset.kpState === "error") return false;
+      const edge = row.getBoundingClientRect().right + 0.5;
+      return [...row.children].some((child) => {
+        const button = child.matches("button") ? child : child.querySelector("button");
+        return child.getBoundingClientRect().right > edge || button !== null && button.scrollWidth > button.clientWidth;
+      });
+    });
+    if (!tooWide) return;
+    host.dataset.kpEntityFit = String(inline2 - 1);
+    redraw(cards2);
+  });
+}
+function redraw(cards2, slots = ["actions"]) {
+  for (const card of cards2) {
+    const was = DRAWN5.get(card);
+    if (!was) continue;
+    for (const name of slots) delete was.drawn[name];
+    setEntity(card, was.data);
+  }
 }
 function setEntity(card, data) {
   const kind = frame2(card);
@@ -58716,6 +59848,22 @@ function setEntity(card, data) {
   });
   fitActions(host, inline2);
 }
+var ACTIONS_QUEUED;
+var init_set = __esm({
+  "js/entity-card/set.js"() {
+    "use strict";
+    init_kpi();
+    init_menu_button();
+    init_strings();
+    init_constants18();
+    init_helpers5();
+    init_star();
+    init_tile();
+    ACTIONS_QUEUED = /* @__PURE__ */ new WeakSet();
+  }
+});
+
+// js/entity-card/grid.js
 function setEntityGrid(grid2, list, empty = {}) {
   grid2.setAttribute("data-kp-entity-grid", "");
   grid2.removeAttribute("data-kp-state");
@@ -58877,48 +60025,43 @@ function attachEntityCards(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN5, opt2, starKeyOf, made5, sig, SLOTS, kindOf, slotOf, ACTIONS_QUEUED, KEYED, BUSY3;
-var init_entity_card = __esm({
-  "js/entity-card.js"() {
+var BUSY3;
+var init_grid2 = __esm({
+  "js/entity-card/grid.js"() {
     "use strict";
-    init_idmark();
-    init_kpi();
-    init_toggle();
-    init_menu_button();
     init_strings();
     init_busy_card();
     init_state_plate();
-    init_footprint();
-    ENTITY_GRID = "[data-kp-entity-grid]";
-    ENTITY_CARD = "[data-kp-entity]";
-    ENTITY_ACTION_EVENT = "kp-entity-action";
-    ENTITY_FLAG_EVENT = "kp-entity-flag";
-    ENTITY_TICK_EVENT = "kp-entity-tick";
-    ENTITY_STAR_EVENT = "kp-entity-star";
-    ENTITY_RETRY_EVENT = "kp-entity-retry";
-    ENTITY_NEW_EVENT = "kp-entity-new";
-    ENTITY_GRID_RETRY_EVENT = "kp-entity-grid-retry";
-    DRAWN5 = /* @__PURE__ */ new WeakMap();
-    opt2 = (el16, name) => el16.getAttribute(name) ?? el16.closest(ENTITY_GRID)?.getAttribute(name) ?? null;
-    starKeyOf = (card) => (opt2(card, "data-kp-entity-star-key") ?? (card.closest('[data-kp-tiles-keys="letters"]') ? "." : "s")).toLowerCase();
-    made5 = (doc, tag, className) => {
-      const el16 = doc.createElement(tag);
-      el16.className = className;
-      return el16;
-    };
-    sig = (value) => JSON.stringify(value);
-    SLOTS = {
-      stack: ["id", "figures", "flags", "meters", "actions"],
-      tile: ["id", "state", "description", "lines"]
-    };
-    kindOf = (card) => opt2(card, "data-kp-entity-kind") === "tile" ? "tile" : "stack";
-    slotOf = (card, slot) => (
-      /** @type {HTMLElement} */
-      card.querySelector(`:scope > .kp-entity__${slot}`)
-    );
-    ACTIONS_QUEUED = /* @__PURE__ */ new WeakSet();
-    KEYED = /* @__PURE__ */ new WeakSet();
+    init_constants18();
+    init_helpers5();
+    init_set();
     BUSY3 = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/entity-card.js
+var entity_card_exports = {};
+__export(entity_card_exports, {
+  ENTITY_ACTION_EVENT: () => ENTITY_ACTION_EVENT,
+  ENTITY_CARD: () => ENTITY_CARD,
+  ENTITY_FLAG_EVENT: () => ENTITY_FLAG_EVENT,
+  ENTITY_GRID: () => ENTITY_GRID,
+  ENTITY_GRID_RETRY_EVENT: () => ENTITY_GRID_RETRY_EVENT,
+  ENTITY_NEW_EVENT: () => ENTITY_NEW_EVENT,
+  ENTITY_RETRY_EVENT: () => ENTITY_RETRY_EVENT,
+  ENTITY_STAR_EVENT: () => ENTITY_STAR_EVENT,
+  ENTITY_TICK_EVENT: () => ENTITY_TICK_EVENT,
+  attachEntityCards: () => attachEntityCards,
+  setEntity: () => setEntity,
+  setEntityGrid: () => setEntityGrid,
+  setEntityGridState: () => setEntityGridState
+});
+var init_entity_card = __esm({
+  "js/entity-card.js"() {
+    "use strict";
+    init_constants18();
+    init_set();
+    init_grid2();
   }
 });
 
@@ -60324,7 +61467,7 @@ __export(viewer_exports, {
 function openViewer(options) {
   const doc = options.doc ?? document;
   const strings = getStrings();
-  const id = `kp-viewer-${++serial13}`;
+  const id = `kp-viewer-${++serial11}`;
   const dialog = (
     /** @type {HTMLDialogElement} */
     make20(doc, "dialog", `kp-dialog kp-viewer${options.className ? ` ${options.className}` : ""}`)
@@ -60517,7 +61660,7 @@ function openViewer(options) {
     close: () => dialog.close()
   };
 }
-var VIEWER, VIEWER_CLOSE_EVENT, VIEWER_STATES, serial13, make20;
+var VIEWER, VIEWER_CLOSE_EVENT, VIEWER_STATES, serial11, make20;
 var init_viewer = __esm({
   "js/viewer.js"() {
     "use strict";
@@ -60531,7 +61674,7 @@ var init_viewer = __esm({
     VIEWER_CLOSE_EVENT = "kp-viewer-close";
     VIEWER_STATES = /** @type {const} */
     ["ready", "loading", "error", "unsupported"];
-    serial13 = 0;
+    serial11 = 0;
     make20 = (doc, tag, cls) => {
       const node = doc.createElement(tag);
       node.className = cls;
@@ -63570,7 +64713,7 @@ var init_snooze = __esm({
 
 // js/graph/constants.js
 var GRAPH, GRAPH_CHANGE_EVENT, GRAPH_RETRY_EVENT, GRAPH_DETAIL_EVENT, GRAPH_OPTION_ATTRIBUTES;
-var init_constants7 = __esm({
+var init_constants19 = __esm({
   "js/graph/constants.js"() {
     "use strict";
     GRAPH = "[data-kp-graph]";
@@ -63814,7 +64957,7 @@ function graphRoom(data, W, H, widthOf, { radiusOf: rOf = (n) => radiusOf(n), li
   return two9.misses < one.misses || two9.misses === one.misses && two9.H < one.H ? { at: two9.at, H: two9.H, wraps: two9.wraps } : { at: one.at, H: one.H, wraps: /* @__PURE__ */ new Map() };
 }
 var keyOf7, ringOf, graphLayout;
-var init_layout = __esm({
+var init_layout2 = __esm({
   "js/graph/layout.js"() {
     "use strict";
     init_instance3();
@@ -64104,9 +65247,9 @@ var detailCount, insetOf;
 var init_view = __esm({
   "js/graph/view.js"() {
     "use strict";
-    init_constants7();
+    init_constants19();
     init_labels2();
-    init_layout();
+    init_layout2();
     init_instance3();
     detailCount = 0;
     insetOf = (o, hintHeight) => ({
@@ -64411,15 +65554,15 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
 var SIDE_ROOM;
-var init_draw2 = __esm({
+var init_draw5 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
     init_options2();
     init_view();
     init_instance3();
-    init_layout();
-    init_constants7();
+    init_layout2();
+    init_constants19();
     init_labels2();
     SIDE_ROOM = [1, 1.1, 1.2, 1.3, 1.4].flatMap(
       (height) => [1, 0.9, 1.1, 0.8, 1.2].flatMap((stretch) => [0, 0.25, 0.5, 0.75].map((phase) => ({ height, stretch, phase })))
@@ -64494,11 +65637,11 @@ function dataChild(el16) {
     return null;
   }
 }
-var init_api6 = __esm({
+var init_api8 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
-    init_draw2();
+    init_draw5();
     init_view();
   }
 });
@@ -64920,16 +66063,16 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var init_attach8 = __esm({
+var init_attach16 = __esm({
   "js/graph/attach.js"() {
     "use strict";
     init_strings();
-    init_constants7();
+    init_constants19();
     init_instance3();
-    init_api6();
+    init_api8();
     init_options2();
-    init_layout();
-    init_draw2();
+    init_layout2();
+    init_draw5();
     init_view();
   }
 });
@@ -64963,12 +66106,12 @@ __export(graph_exports, {
 var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
-    init_constants7();
+    init_constants19();
     init_options2();
-    init_layout();
+    init_layout2();
     init_labels2();
-    init_api6();
-    init_attach8();
+    init_api8();
+    init_attach16();
   }
 });
 
@@ -65201,49 +66344,25 @@ var init_loading_pieces = __esm({
   }
 });
 
-// js/claim.js
-var claim_exports = {};
-__export(claim_exports, {
-  CLAIM: () => CLAIM,
-  CLAIM_EVENT: () => CLAIM_EVENT,
-  CLAIM_FILTERS: () => CLAIM_FILTERS,
-  CLAIM_FILTER_EVENT: () => CLAIM_FILTER_EVENT,
-  CLAIM_REFUSED_MS: () => CLAIM_REFUSED_MS,
-  CLAIM_RETRY_EVENT: () => CLAIM_RETRY_EVENT,
-  CLAIM_UNDO_MS: () => CLAIM_UNDO_MS,
-  attachClaims: () => attachClaims,
-  claimFilter: () => claimFilter,
-  claimPeople: () => claimPeople,
-  setClaim: () => setClaim,
-  setClaimFilter: () => setClaimFilter,
-  setClaimPeople: () => setClaimPeople,
-  setClaimViewer: () => setClaimViewer
+// js/claim/constants.js
+var CLAIM, CLAIM_EVENT, CLAIM_FILTER_EVENT, CLAIM_RETRY_EVENT, CLAIM_FILTERS, CLAIM_REFUSED_MS, CLAIM_UNDO_MS;
+var init_constants20 = __esm({
+  "js/claim/constants.js"() {
+    "use strict";
+    CLAIM = "[data-kp-checklist-claim]";
+    CLAIM_EVENT = "kp-claim-change";
+    CLAIM_FILTER_EVENT = "kp-claim-filter";
+    CLAIM_RETRY_EVENT = "kp-claim-retry";
+    CLAIM_FILTERS = Object.freeze(["all", "gaps", "mine"]);
+    CLAIM_REFUSED_MS = 3e3;
+    CLAIM_UNDO_MS = 6e3;
+  }
 });
+
+// js/claim/model.js
 function claimPeople(by) {
   if (!by) return [];
   return (Array.isArray(by) ? by : [by]).filter((p) => p && p.id !== void 0).map((p) => ({ id: String(p.id), name: String(p.name ?? p.id) }));
-}
-function setClaimViewer(list, viewer) {
-  if (!(list instanceof HTMLElement)) return;
-  stateOf5(list).viewer = viewer ? claimPeople(viewer)[0] : null;
-  decorate(list);
-}
-function setClaimPeople(list, people) {
-  if (!(list instanceof HTMLElement)) return;
-  stateOf5(list).people = claimPeople(people);
-  decorate(list);
-}
-function claimFilter(list) {
-  return stateOf5(list).filter;
-}
-function setClaimFilter(list, filter) {
-  if (!(list instanceof HTMLElement) || !CLAIM_FILTERS.includes(filter)) return;
-  const s2 = stateOf5(list);
-  if (s2.filter === filter) return;
-  s2.filter = filter;
-  memoryFor(list, "claim")?.write("filter", filter);
-  decorate(list);
-  list.dispatchEvent(new CustomEvent(CLAIM_FILTER_EVENT, { bubbles: true, detail: { filter } }));
 }
 function say13(list, message) {
   let region = (
@@ -65265,13 +66384,32 @@ function write2(list, id, by) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...i.claim, by } } : i)
   );
 }
-function setClaim(list, id, claim) {
-  if (!(list instanceof HTMLElement)) return;
-  setChecklistItems(
-    list,
-    getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
-  );
-}
+var STATE5, el10, attr10, stateOf5, byOf, itemOf;
+var init_model5 = __esm({
+  "js/claim/model.js"() {
+    "use strict";
+    init_checklist();
+    STATE5 = /* @__PURE__ */ new WeakMap();
+    el10 = (className, tag = "div") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    attr10 = (list, name, fallback2) => list.getAttribute(`data-kp-claim-${name}`) ?? fallback2;
+    stateOf5 = (list) => {
+      let s2 = STATE5.get(list);
+      if (!s2) {
+        s2 = { viewer: null, people: [], busy: /* @__PURE__ */ new Set(), refused: /* @__PURE__ */ new Map(), filter: "all", off: [], said: "" };
+        STATE5.set(list, s2);
+      }
+      return s2;
+    };
+    byOf = (item) => claimPeople(item.claim?.by);
+    itemOf = (list, id) => getChecklistItems(list).find((i) => i.id === id);
+  }
+});
+
+// js/claim/rows.js
 function joinNames2(names) {
   if (names.length <= 1) return names.join("");
   return `${names.slice(0, -1).join(", ")} ${getStrings().claimAnd} ${names[names.length - 1]}`;
@@ -65436,6 +66574,29 @@ function fillRow(list, row, item) {
       }
     ]);
   }
+}
+var mode, among;
+var init_rows = __esm({
+  "js/claim/rows.js"() {
+    "use strict";
+    init_strings();
+    init_idmark();
+    init_menu_button();
+    init_model5();
+    mode = (list) => attr10(list, "mode", "claim") === "assign" ? "assign" : "claim";
+    among = (person, by) => person !== null && by.some((p) => p.id === person.id);
+  }
+});
+
+// js/claim/decorate.js
+function setClaimFilter(list, filter) {
+  if (!(list instanceof HTMLElement) || !CLAIM_FILTERS.includes(filter)) return;
+  const s2 = stateOf5(list);
+  if (s2.filter === filter) return;
+  s2.filter = filter;
+  memoryFor(list, "claim")?.write("filter", filter);
+  decorate(list);
+  list.dispatchEvent(new CustomEvent(CLAIM_FILTER_EVENT, { bubbles: true, detail: { filter } }));
 }
 function decorate(list) {
   const s2 = getStrings();
@@ -65632,6 +66793,115 @@ function decorate(list) {
   if (loading) list.setAttribute("data-kp-claim-loading", "");
   else list.removeAttribute("data-kp-claim-loading");
 }
+var init_decorate = __esm({
+  "js/claim/decorate.js"() {
+    "use strict";
+    init_strings();
+    init_checklist();
+    init_remember();
+    init_state_plate();
+    init_constants20();
+    init_model5();
+    init_rows();
+  }
+});
+
+// js/claim/api.js
+function setClaimViewer(list, viewer) {
+  if (!(list instanceof HTMLElement)) return;
+  stateOf5(list).viewer = viewer ? claimPeople(viewer)[0] : null;
+  decorate(list);
+}
+function setClaimPeople(list, people) {
+  if (!(list instanceof HTMLElement)) return;
+  stateOf5(list).people = claimPeople(people);
+  decorate(list);
+}
+function claimFilter(list) {
+  return stateOf5(list).filter;
+}
+function setClaim(list, id, claim) {
+  if (!(list instanceof HTMLElement)) return;
+  setChecklistItems(
+    list,
+    getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
+  );
+}
+var init_api9 = __esm({
+  "js/claim/api.js"() {
+    "use strict";
+    init_checklist();
+    init_decorate();
+    init_model5();
+  }
+});
+
+// js/claim/bulk.js
+async function takeAll(list) {
+  const s2 = getStrings();
+  const st = stateOf5(list);
+  const viewer = st.viewer;
+  if (!viewer) return;
+  const before = getChecklistItems(list);
+  const open4 = before.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
+  if (open4.length === 0) return;
+  const by = (i) => open4.includes(i) ? [viewer] : byOf(i);
+  let waiting = null;
+  const detail = {
+    id: "",
+    action: "take-all",
+    person: viewer,
+    by: [viewer],
+    previousBy: [],
+    items: before,
+    ids: open4.map((i) => i.id),
+    settle: (a) => void (waiting = a)
+  };
+  if (!list.dispatchEvent(new CustomEvent(CLAIM_EVENT, { bubbles: true, cancelable: true, detail }))) return;
+  if (waiting) {
+    try {
+      if (await waiting === false) return;
+    } catch {
+      say13(list, s2.claimNotSaved);
+      return;
+    }
+  }
+  setChecklistItems(
+    list,
+    before.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
+  );
+  say13(list, s2.claimTookAll(open4.length));
+  const ms = Number(attr10(list, "undo-ms", String(CLAIM_UNDO_MS)));
+  if (ms > 0)
+    undoToast(s2.claimTookAll(open4.length), {
+      mode: "revert",
+      ms,
+      undo: () => setChecklistItems(list, before)
+    });
+}
+async function copyGaps(list) {
+  const s2 = getStrings();
+  const names = getChecklistItems(list).filter((i) => byOf(i).length === 0).map((i) => i.label);
+  if (names.length === 0) return;
+  try {
+    await navigator.clipboard.writeText(s2.claimCopyLine(names.join(", ")));
+    say13(list, s2.claimCopied(names.length));
+  } catch {
+    say13(list, s2.claimCopyFailed);
+  }
+}
+var init_bulk = __esm({
+  "js/claim/bulk.js"() {
+    "use strict";
+    init_strings();
+    init_checklist();
+    init_undo_toast();
+    init_constants20();
+    init_model5();
+  }
+});
+
+// js/claim/request.js
 function flashRefused(list, id) {
   const st = stateOf5(list);
   clearTimeout(st.refused.get(id));
@@ -65653,7 +66923,15 @@ async function request(list, id, action, person, { undo = true } = {}) {
   const by = joining ? person && !among(person, previousBy) ? [...previousBy, person] : previousBy : previousBy.filter((p) => p.id !== person?.id);
   if (by.length === previousBy.length && by.every((p, i) => p.id === previousBy[i]?.id)) return;
   let waiting = null;
-  const detail = { id, action, person, by, previousBy, items: getChecklistItems(list), settle: (answer2) => void (waiting = answer2) };
+  const detail = {
+    id,
+    action,
+    person,
+    by,
+    previousBy,
+    items: getChecklistItems(list),
+    settle: (answer2) => void (waiting = answer2)
+  };
   const go = list.dispatchEvent(new CustomEvent(CLAIM_EVENT, { bubbles: true, cancelable: true, detail }));
   if (!go) {
     refuse2(list, item, previousBy, s2.claimNotSaved);
@@ -65738,63 +67016,38 @@ function press(list, row) {
   const mine = among(st.viewer, byOf(item));
   void request(list, id, mine ? "leave" : "join", st.viewer);
 }
-async function takeAll(list) {
-  const s2 = getStrings();
-  const st = stateOf5(list);
-  const viewer = st.viewer;
-  if (!viewer) return;
-  const before = getChecklistItems(list);
-  const open4 = before.filter((i) => byOf(i).length === 0 && !i.claim?.locked);
-  if (open4.length === 0) return;
-  const by = (i) => open4.includes(i) ? [viewer] : byOf(i);
-  let waiting = null;
-  const detail = {
-    id: "",
-    action: "take-all",
-    person: viewer,
-    by: [viewer],
-    previousBy: [],
-    items: before,
-    ids: open4.map((i) => i.id),
-    settle: (a) => void (waiting = a)
-  };
-  if (!list.dispatchEvent(new CustomEvent(CLAIM_EVENT, { bubbles: true, cancelable: true, detail }))) return;
-  if (waiting) {
-    try {
-      if (await waiting === false) return;
-    } catch {
-      say13(list, s2.claimNotSaved);
-      return;
-    }
+var init_request = __esm({
+  "js/claim/request.js"() {
+    "use strict";
+    init_strings();
+    init_checklist();
+    init_undo_toast();
+    init_constants20();
+    init_decorate();
+    init_model5();
+    init_rows();
   }
-  setChecklistItems(
-    list,
-    before.map((i) => ({ ...i, claim: { ...i.claim, by: by(i) } }))
-  );
-  say13(list, s2.claimTookAll(open4.length));
-  const ms = Number(attr10(list, "undo-ms", String(CLAIM_UNDO_MS)));
-  if (ms > 0)
-    undoToast(s2.claimTookAll(open4.length), {
-      mode: "revert",
-      ms,
-      undo: () => setChecklistItems(list, before)
-    });
-}
-async function copyGaps(list) {
-  const s2 = getStrings();
-  const names = getChecklistItems(list).filter((i) => byOf(i).length === 0).map((i) => i.label);
-  if (names.length === 0) return;
-  try {
-    await navigator.clipboard.writeText(s2.claimCopyLine(names.join(", ")));
-    say13(list, s2.claimCopied(names.length));
-  } catch {
-    say13(list, s2.claimCopyFailed);
+});
+
+// js/claim/state.js
+var claimState;
+var init_state11 = __esm({
+  "js/claim/state.js"() {
+    "use strict";
+    claimState = {
+      serial: 0
+    };
   }
-}
+});
+
+// js/claim/attach.js
 function attachClaims(root = document) {
   const lists = (
     /** @type {HTMLElement[]} */
-    [...root instanceof HTMLElement && root.matches(CLAIM) ? [root] : [], ...root.querySelectorAll(CLAIM)]
+    [
+      ...root instanceof HTMLElement && root.matches(CLAIM) ? [root] : [],
+      ...root.querySelectorAll(CLAIM)
+    ]
   );
   const undo = [];
   for (const list of lists) {
@@ -65859,7 +67112,20 @@ function attachClaims(root = document) {
     });
     watcher.observe(list, {
       attributes: true,
-      attributeFilter: ["mode", "gap", "gap-sort", "person", "count", "self-label", "max", "disabled", "disabled-reason", "take-all", "copy", "filter-chips"].map((n) => `data-kp-claim-${n}`)
+      attributeFilter: [
+        "mode",
+        "gap",
+        "gap-sort",
+        "person",
+        "count",
+        "self-label",
+        "max",
+        "disabled",
+        "disabled-reason",
+        "take-all",
+        "copy",
+        "filter-chips"
+      ].map((n) => `data-kp-claim-${n}`)
     });
     list.addEventListener("click", onClick);
     const onRetry = () => list.dispatchEvent(new CustomEvent(CLAIM_RETRY_EVENT, { bubbles: true }));
@@ -65906,73 +67172,76 @@ function attachClaims(root = document) {
     undo.push(() => {
       for (const stop of st.off) stop();
       st.off = [];
-      serial14 += 1;
+      claimState.serial += 1;
     });
   }
   return () => undo.forEach((u) => u());
 }
-var CLAIM, CLAIM_EVENT, CLAIM_FILTER_EVENT, CLAIM_RETRY_EVENT, CLAIM_FILTERS, CLAIM_REFUSED_MS, CLAIM_UNDO_MS, STATE5, serial14, el10, attr10, stateOf5, byOf, itemOf, mode, among;
-var init_claim2 = __esm({
-  "js/claim.js"() {
+var init_attach17 = __esm({
+  "js/claim/attach.js"() {
     "use strict";
     init_strings();
     init_checklist();
-    init_idmark();
     init_menu_button();
     init_reason();
     init_shortcuts();
-    init_undo_toast();
     init_remember();
-    init_state_plate();
-    CLAIM = "[data-kp-checklist-claim]";
-    CLAIM_EVENT = "kp-claim-change";
-    CLAIM_FILTER_EVENT = "kp-claim-filter";
-    CLAIM_RETRY_EVENT = "kp-claim-retry";
-    CLAIM_FILTERS = Object.freeze(["all", "gaps", "mine"]);
-    CLAIM_REFUSED_MS = 3e3;
-    CLAIM_UNDO_MS = 6e3;
-    STATE5 = /* @__PURE__ */ new WeakMap();
-    serial14 = 0;
-    el10 = (className, tag = "div") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    attr10 = (list, name, fallback2) => list.getAttribute(`data-kp-claim-${name}`) ?? fallback2;
-    stateOf5 = (list) => {
-      let s2 = STATE5.get(list);
-      if (!s2) {
-        s2 = { viewer: null, people: [], busy: /* @__PURE__ */ new Set(), refused: /* @__PURE__ */ new Map(), filter: "all", off: [], said: "" };
-        STATE5.set(list, s2);
-      }
-      return s2;
-    };
-    byOf = (item) => claimPeople(item.claim?.by);
-    itemOf = (list, id) => getChecklistItems(list).find((i) => i.id === id);
-    mode = (list) => attr10(list, "mode", "claim") === "assign" ? "assign" : "claim";
-    among = (person, by) => person !== null && by.some((p) => p.id === person.id);
+    init_bulk();
+    init_constants20();
+    init_decorate();
+    init_model5();
+    init_request();
+    init_rows();
+    init_state11();
   }
 });
 
-// js/availability.js
-var availability_exports = {};
-__export(availability_exports, {
-  AVAILABILITY: () => AVAILABILITY,
-  AVAILABILITY_ANSWERS: () => AVAILABILITY_ANSWERS,
-  AVAILABILITY_CHOOSE_EVENT: () => AVAILABILITY_CHOOSE_EVENT,
-  AVAILABILITY_EVENT: () => AVAILABILITY_EVENT,
-  AVAILABILITY_REFUSED_MS: () => AVAILABILITY_REFUSED_MS,
-  AVAILABILITY_RETRY_EVENT: () => AVAILABILITY_RETRY_EVENT,
-  AVAILABILITY_UNDO_MS: () => AVAILABILITY_UNDO_MS,
-  AVAILABILITY_UNIT_EVENT: () => AVAILABILITY_UNIT_EVENT,
-  attachAvailability: () => attachAvailability,
-  availabilityAnswers: () => availabilityAnswers,
-  availabilityBest: () => availabilityBest,
-  availabilityDays: () => availabilityDays,
-  availabilityRange: () => availabilityRange,
-  setAvailability: () => setAvailability,
-  setAvailabilityAnswer: () => setAvailabilityAnswer
+// js/claim.js
+var claim_exports = {};
+__export(claim_exports, {
+  CLAIM: () => CLAIM,
+  CLAIM_EVENT: () => CLAIM_EVENT,
+  CLAIM_FILTERS: () => CLAIM_FILTERS,
+  CLAIM_FILTER_EVENT: () => CLAIM_FILTER_EVENT,
+  CLAIM_REFUSED_MS: () => CLAIM_REFUSED_MS,
+  CLAIM_RETRY_EVENT: () => CLAIM_RETRY_EVENT,
+  CLAIM_UNDO_MS: () => CLAIM_UNDO_MS,
+  attachClaims: () => attachClaims,
+  claimFilter: () => claimFilter,
+  claimPeople: () => claimPeople,
+  setClaim: () => setClaim,
+  setClaimFilter: () => setClaimFilter,
+  setClaimPeople: () => setClaimPeople,
+  setClaimViewer: () => setClaimViewer
 });
+var init_claim2 = __esm({
+  "js/claim.js"() {
+    "use strict";
+    init_constants20();
+    init_model5();
+    init_api9();
+    init_decorate();
+    init_attach17();
+  }
+});
+
+// js/availability/constants.js
+var AVAILABILITY, AVAILABILITY_EVENT, AVAILABILITY_CHOOSE_EVENT, AVAILABILITY_UNIT_EVENT, AVAILABILITY_RETRY_EVENT, AVAILABILITY_ANSWERS, AVAILABILITY_REFUSED_MS, AVAILABILITY_UNDO_MS;
+var init_constants21 = __esm({
+  "js/availability/constants.js"() {
+    "use strict";
+    AVAILABILITY = "[data-kp-availability]";
+    AVAILABILITY_EVENT = "kp-availability-change";
+    AVAILABILITY_CHOOSE_EVENT = "kp-availability-choose";
+    AVAILABILITY_UNIT_EVENT = "kp-availability-unit";
+    AVAILABILITY_RETRY_EVENT = "kp-availability-retry";
+    AVAILABILITY_ANSWERS = Object.freeze(["yes", "maybe", "no"]);
+    AVAILABILITY_REFUSED_MS = 3e3;
+    AVAILABILITY_UNDO_MS = 6e3;
+  }
+});
+
+// js/availability/dates.js
 function availabilityDays(start, count2, zone = "Europe/Brussels") {
   const first = /* @__PURE__ */ new Date(`${start}T12:00:00Z`);
   const short = new Intl.DateTimeFormat("en-GB", { weekday: "short", timeZone: "UTC" });
@@ -65996,6 +67265,14 @@ function availabilityRange(start, end) {
     sub: getStrings().availabilityDaysLong(days)
   };
 }
+var init_dates = __esm({
+  "js/availability/dates.js"() {
+    "use strict";
+    init_strings();
+  }
+});
+
+// js/availability/facts.js
 function editable(root, person, column) {
   const st = stateOf6(root);
   if (root.hasAttribute("data-kp-disabled") || root.hasAttribute("data-kp-availability-disabled")) return false;
@@ -66053,21 +67330,6 @@ function availabilityBest(root) {
   const tops = score(top);
   return pool.filter((t) => score(t)[0] === tops[0] && score(t)[1] === tops[1]).map((t) => t.key);
 }
-function say14(root, message) {
-  if (root.getAttribute("data-kp-announce") === "off") return;
-  let region = (
-    /** @type {HTMLElement | null} */
-    root.querySelector(":scope > .kp-availability__live")
-  );
-  if (!region) {
-    region = el11("kp-sr-only kp-availability__live", "span");
-    region.setAttribute("role", "status");
-    root.append(region);
-  }
-  const target = region;
-  target.textContent = "";
-  setTimeout(() => target.textContent = message, 60);
-}
 function ordered(root) {
   const st = stateOf6(root);
   const people = [...st.spec.people ?? []];
@@ -66092,6 +67354,145 @@ function tipOf(f) {
   const s2 = getStrings();
   const part7 = (word, names) => names.length ? `${word}: ${names.join(", ")}` : "";
   return [part7(s2.availabilityYes, f.names.yes), part7(s2.availabilityMaybe, f.names.maybe), part7(s2.availabilityNo, f.names.no)].filter(Boolean).join(". ") || s2.availabilityNobodyAnswered;
+}
+var STATE6, el11, attr11, cellKey, toneOf3, glyphOf, wordOf, stateOf6, viewerOf, allowed, editMode;
+var init_facts = __esm({
+  "js/availability/facts.js"() {
+    "use strict";
+    init_strings();
+    STATE6 = /* @__PURE__ */ new WeakMap();
+    el11 = (className, tag = "div") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    attr11 = (root, name, fallback2) => root.getAttribute(`data-kp-availability-${name}`) ?? fallback2;
+    cellKey = (person, column) => `${person}\0${column}`;
+    toneOf3 = (a) => a === "yes" ? "ok" : a === "maybe" ? "warn" : a === "no" ? "bad" : "muted";
+    glyphOf = (a) => a === "yes" ? "\u2713" : a === "maybe" ? "~" : a === "no" ? "\xD7" : "";
+    wordOf = (a) => {
+      const s2 = getStrings();
+      return a === "yes" ? s2.availabilityYes : a === "maybe" ? s2.availabilityMaybe : a === "no" ? s2.availabilityNo : s2.availabilityNone;
+    };
+    stateOf6 = (root) => (
+      /** @type {AvState} */
+      STATE6.get(root)
+    );
+    viewerOf = (st) => (st.spec.people ?? []).find((p) => p.mine) ?? null;
+    allowed = (root) => attr11(root, "answers", "3") === "2" ? ["yes", "no"] : ["yes", "maybe", "no"];
+    editMode = (root) => {
+      const v = root.getAttribute("data-kp-heat-edit");
+      return v === "all" || v === "off" ? v : "own";
+    };
+  }
+});
+
+// js/availability/list.js
+function syncListCard(root, body, on) {
+  const card = LIST_CARDS.get(root);
+  if (!on) {
+    if (card) {
+      LIST_CARDS.delete(root);
+      card.remove();
+    }
+    return;
+  }
+  const list = (
+    /** @type {HTMLElement | null} */
+    body.querySelector(":scope > .kp-availability__columns")
+  );
+  if (!list) return;
+  if (card) {
+    if (card.layer.parentElement !== body) body.append(card.layer);
+    card.place();
+    return;
+  }
+  LIST_CARDS.set(
+    root,
+    openBusyCard(body, { words: getStrings().heatLoading, area: () => [list], className: "kp-availability__busy", arrive: false })
+  );
+}
+function columnsList(root, people, waiting = false) {
+  const st = stateOf6(root);
+  const s2 = getStrings();
+  const wrap = el11("kp-availability__columns");
+  if (waiting) {
+    wrap.classList.add("kp-availability__columns--waiting");
+    wrap.inert = true;
+  }
+  for (const c of st.set.columns) {
+    const f = columnFacts(root, c.key);
+    const sec = el11("kp-availability__column", "section");
+    sec.setAttribute("data-col-key", c.key);
+    const h2 = el11("kp-availability__column-head", "h4");
+    h2.textContent = c.sub ? `${c.label}, ${c.sub}` : c.label;
+    const sum = el11("kp-availability__column-sum", "span");
+    sum.textContent = s2.availabilityCount(f.yes, f.total);
+    sec.append(h2, sum);
+    const ul = el11("kp-availability__column-list", "ul");
+    for (const p of people) {
+      const li = el11("kp-availability__column-row", "li");
+      const name = el11("kp-availability__column-name", "span");
+      name.textContent = p.mine ? s2.availabilityYou(p.name) : p.name;
+      li.append(name);
+      const a = st.set.answers[p.id]?.[c.key];
+      if (editable(root, p.id, c.key)) {
+        const group = el11("kp-availability__column-answers");
+        group.setAttribute("role", "group");
+        group.setAttribute("aria-label", s2.availabilityCell(p.name, c.label, ""));
+        for (const answer2 of allowed(root)) {
+          const b = (
+            /** @type {HTMLButtonElement} */
+            el11("kp-button kp-button--sm kp-availability__pick", "button")
+          );
+          b.type = "button";
+          b.setAttribute("data-person", p.id);
+          b.setAttribute("data-column", c.key);
+          b.setAttribute("data-answer", answer2);
+          b.setAttribute("aria-pressed", String(a === answer2));
+          b.textContent = `${glyphOf(answer2)} ${wordOf(answer2)}`;
+          group.append(b);
+        }
+        li.append(group);
+      } else {
+        const v = el11("kp-availability__column-value", "span");
+        v.setAttribute("data-kp-availability-answer", a ?? "none");
+        v.textContent = `${glyphOf(a)} ${wordOf(a)}`.trim();
+        li.append(v);
+      }
+      ul.append(li);
+    }
+    sec.append(ul);
+    wrap.append(sec);
+  }
+  return wrap;
+}
+var LIST_CARDS;
+var init_list = __esm({
+  "js/availability/list.js"() {
+    "use strict";
+    init_strings();
+    init_busy_card();
+    init_facts();
+    LIST_CARDS = /* @__PURE__ */ new WeakMap();
+  }
+});
+
+// js/availability/paint.js
+function say14(root, message) {
+  if (root.getAttribute("data-kp-announce") === "off") return;
+  let region = (
+    /** @type {HTMLElement | null} */
+    root.querySelector(":scope > .kp-availability__live")
+  );
+  if (!region) {
+    region = el11("kp-sr-only kp-availability__live", "span");
+    region.setAttribute("role", "status");
+    root.append(region);
+  }
+  const target = region;
+  target.textContent = "";
+  setTimeout(() => target.textContent = message, 60);
 }
 function paintCell(root, cell) {
   const st = stateOf6(root);
@@ -66361,85 +67762,19 @@ function render4(root) {
   const at = mem?.read("scroll", null);
   if (typeof at === "number") grid2.scrollLeft = at;
 }
-function syncListCard(root, body, on) {
-  const card = LIST_CARDS.get(root);
-  if (!on) {
-    if (card) {
-      LIST_CARDS.delete(root);
-      card.remove();
-    }
-    return;
+var init_paint5 = __esm({
+  "js/availability/paint.js"() {
+    "use strict";
+    init_strings();
+    init_heat();
+    init_state_plate();
+    init_remember();
+    init_facts();
+    init_list();
   }
-  const list = (
-    /** @type {HTMLElement | null} */
-    body.querySelector(":scope > .kp-availability__columns")
-  );
-  if (!list) return;
-  if (card) {
-    if (card.layer.parentElement !== body) body.append(card.layer);
-    card.place();
-    return;
-  }
-  LIST_CARDS.set(
-    root,
-    openBusyCard(body, { words: getStrings().heatLoading, area: () => [list], className: "kp-availability__busy", arrive: false })
-  );
-}
-function columnsList(root, people, waiting = false) {
-  const st = stateOf6(root);
-  const s2 = getStrings();
-  const wrap = el11("kp-availability__columns");
-  if (waiting) {
-    wrap.classList.add("kp-availability__columns--waiting");
-    wrap.inert = true;
-  }
-  for (const c of st.set.columns) {
-    const f = columnFacts(root, c.key);
-    const sec = el11("kp-availability__column", "section");
-    sec.setAttribute("data-col-key", c.key);
-    const h2 = el11("kp-availability__column-head", "h4");
-    h2.textContent = c.sub ? `${c.label}, ${c.sub}` : c.label;
-    const sum = el11("kp-availability__column-sum", "span");
-    sum.textContent = s2.availabilityCount(f.yes, f.total);
-    sec.append(h2, sum);
-    const ul = el11("kp-availability__column-list", "ul");
-    for (const p of people) {
-      const li = el11("kp-availability__column-row", "li");
-      const name = el11("kp-availability__column-name", "span");
-      name.textContent = p.mine ? s2.availabilityYou(p.name) : p.name;
-      li.append(name);
-      const a = st.set.answers[p.id]?.[c.key];
-      if (editable(root, p.id, c.key)) {
-        const group = el11("kp-availability__column-answers");
-        group.setAttribute("role", "group");
-        group.setAttribute("aria-label", s2.availabilityCell(p.name, c.label, ""));
-        for (const answer2 of allowed(root)) {
-          const b = (
-            /** @type {HTMLButtonElement} */
-            el11("kp-button kp-button--sm kp-availability__pick", "button")
-          );
-          b.type = "button";
-          b.setAttribute("data-person", p.id);
-          b.setAttribute("data-column", c.key);
-          b.setAttribute("data-answer", answer2);
-          b.setAttribute("aria-pressed", String(a === answer2));
-          b.textContent = `${glyphOf(answer2)} ${wordOf(answer2)}`;
-          group.append(b);
-        }
-        li.append(group);
-      } else {
-        const v = el11("kp-availability__column-value", "span");
-        v.setAttribute("data-kp-availability-answer", a ?? "none");
-        v.textContent = `${glyphOf(a)} ${wordOf(a)}`.trim();
-        li.append(v);
-      }
-      ul.append(li);
-    }
-    sec.append(ul);
-    wrap.append(sec);
-  }
-  return wrap;
-}
+});
+
+// js/availability/api.js
 function setAvailability(root, spec) {
   if (!(root instanceof HTMLElement)) return;
   ensureParts(root);
@@ -66532,6 +67867,16 @@ function paintKeys(root, person, keys) {
   }
   paintSummary(root);
 }
+var init_api10 = __esm({
+  "js/availability/api.js"() {
+    "use strict";
+    init_strings();
+    init_facts();
+    init_paint5();
+  }
+});
+
+// js/availability/request.js
 async function request2(root, person, keys, answer2, { stroke = false } = {}) {
   const st = stateOf6(root);
   const s2 = getStrings();
@@ -66665,6 +68010,19 @@ function setAvailabilityAnswerQuiet(st, person, key, answer2) {
   const target = st.spec.sets?.[st.unit];
   if (target) target.answers = structuredClone(st.set.answers);
 }
+var init_request2 = __esm({
+  "js/availability/request.js"() {
+    "use strict";
+    init_strings();
+    init_undo_toast();
+    init_api10();
+    init_constants21();
+    init_facts();
+    init_paint5();
+  }
+});
+
+// js/availability/menu.js
 function next(root, now) {
   const order2 = allowed(root);
   if (!now) return order2[0];
@@ -66751,6 +68109,16 @@ function openMenu2(root, cell) {
   };
   document.addEventListener("pointerdown", outside, true);
 }
+var init_menu2 = __esm({
+  "js/availability/menu.js"() {
+    "use strict";
+    init_strings();
+    init_facts();
+    init_request2();
+  }
+});
+
+// js/availability/attach.js
 function attachAvailability(root = document) {
   const roots = (
     /** @type {HTMLElement[]} */
@@ -66994,51 +68362,50 @@ function attachAvailability(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var AVAILABILITY, AVAILABILITY_EVENT, AVAILABILITY_CHOOSE_EVENT, AVAILABILITY_UNIT_EVENT, AVAILABILITY_RETRY_EVENT, AVAILABILITY_ANSWERS, AVAILABILITY_REFUSED_MS, AVAILABILITY_UNDO_MS, STATE6, el11, attr11, cellKey, toneOf3, glyphOf, wordOf, stateOf6, viewerOf, allowed, editMode, LIST_CARDS;
+var init_attach18 = __esm({
+  "js/availability/attach.js"() {
+    "use strict";
+    init_strings();
+    init_heat();
+    init_shortcuts();
+    init_remember();
+    init_reason();
+    init_api10();
+    init_constants21();
+    init_facts();
+    init_menu2();
+    init_paint5();
+    init_request2();
+  }
+});
+
+// js/availability.js
+var availability_exports = {};
+__export(availability_exports, {
+  AVAILABILITY: () => AVAILABILITY,
+  AVAILABILITY_ANSWERS: () => AVAILABILITY_ANSWERS,
+  AVAILABILITY_CHOOSE_EVENT: () => AVAILABILITY_CHOOSE_EVENT,
+  AVAILABILITY_EVENT: () => AVAILABILITY_EVENT,
+  AVAILABILITY_REFUSED_MS: () => AVAILABILITY_REFUSED_MS,
+  AVAILABILITY_RETRY_EVENT: () => AVAILABILITY_RETRY_EVENT,
+  AVAILABILITY_UNDO_MS: () => AVAILABILITY_UNDO_MS,
+  AVAILABILITY_UNIT_EVENT: () => AVAILABILITY_UNIT_EVENT,
+  attachAvailability: () => attachAvailability,
+  availabilityAnswers: () => availabilityAnswers,
+  availabilityBest: () => availabilityBest,
+  availabilityDays: () => availabilityDays,
+  availabilityRange: () => availabilityRange,
+  setAvailability: () => setAvailability,
+  setAvailabilityAnswer: () => setAvailabilityAnswer
+});
 var init_availability = __esm({
   "js/availability.js"() {
     "use strict";
-    init_strings();
-    init_busy_card();
-    init_heat();
-    init_state_plate();
-    init_shortcuts();
-    init_undo_toast();
-    init_remember();
-    init_reason();
-    AVAILABILITY = "[data-kp-availability]";
-    AVAILABILITY_EVENT = "kp-availability-change";
-    AVAILABILITY_CHOOSE_EVENT = "kp-availability-choose";
-    AVAILABILITY_UNIT_EVENT = "kp-availability-unit";
-    AVAILABILITY_RETRY_EVENT = "kp-availability-retry";
-    AVAILABILITY_ANSWERS = Object.freeze(["yes", "maybe", "no"]);
-    AVAILABILITY_REFUSED_MS = 3e3;
-    AVAILABILITY_UNDO_MS = 6e3;
-    STATE6 = /* @__PURE__ */ new WeakMap();
-    el11 = (className, tag = "div") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    attr11 = (root, name, fallback2) => root.getAttribute(`data-kp-availability-${name}`) ?? fallback2;
-    cellKey = (person, column) => `${person}\0${column}`;
-    toneOf3 = (a) => a === "yes" ? "ok" : a === "maybe" ? "warn" : a === "no" ? "bad" : "muted";
-    glyphOf = (a) => a === "yes" ? "\u2713" : a === "maybe" ? "~" : a === "no" ? "\xD7" : "";
-    wordOf = (a) => {
-      const s2 = getStrings();
-      return a === "yes" ? s2.availabilityYes : a === "maybe" ? s2.availabilityMaybe : a === "no" ? s2.availabilityNo : s2.availabilityNone;
-    };
-    stateOf6 = (root) => (
-      /** @type {AvState} */
-      STATE6.get(root)
-    );
-    viewerOf = (st) => (st.spec.people ?? []).find((p) => p.mine) ?? null;
-    allowed = (root) => attr11(root, "answers", "3") === "2" ? ["yes", "no"] : ["yes", "maybe", "no"];
-    editMode = (root) => {
-      const v = root.getAttribute("data-kp-heat-edit");
-      return v === "all" || v === "off" ? v : "own";
-    };
-    LIST_CARDS = /* @__PURE__ */ new WeakMap();
+    init_constants21();
+    init_dates();
+    init_facts();
+    init_api10();
+    init_attach18();
   }
 });
 
@@ -67887,8 +69254,8 @@ function ensureParts2(root) {
   root.classList.add("kp-qr");
   const plate = el12("kp-qr__plate");
   const caption = el12("kp-qr__caption", "p");
-  serial15 += 1;
-  caption.id = `kp-qr-${serial15}-link`;
+  serial12 += 1;
+  caption.id = `kp-qr-${serial12}-link`;
   const actions = el12("kp-qr__actions");
   root.append(plate, caption, actions);
 }
@@ -68201,7 +69568,7 @@ function attachQr(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var QR, QR_COPY_EVENT, QR_REVEAL_EVENT, QR_EXPIRED_EVENT, QR_RETRY_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, STATE7, serial15, el12, attr12, valueOf2;
+var QR, QR_COPY_EVENT, QR_REVEAL_EVENT, QR_EXPIRED_EVENT, QR_RETRY_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, STATE7, serial12, el12, attr12, valueOf2;
 var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
@@ -68221,7 +69588,7 @@ var init_qr = __esm({
     QR_LEVELS = Object.freeze(["L", "M", "Q", "H"]);
     QR_PLATE = Object.freeze({ ground: "#ffffff", ink: "#000000" });
     STATE7 = /* @__PURE__ */ new WeakMap();
-    serial15 = 0;
+    serial12 = 0;
     el12 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -68232,25 +69599,22 @@ var init_qr = __esm({
   }
 });
 
-// js/console.js
-var console_exports = {};
-__export(console_exports, {
-  CONSOLE: () => CONSOLE2,
-  CONSOLE_BLOCK_EVENT: () => CONSOLE_BLOCK_EVENT,
-  CONSOLE_HISTORY: () => CONSOLE_HISTORY,
-  CONSOLE_MAX_BYTES: () => CONSOLE_MAX_BYTES,
-  CONSOLE_RETRY_EVENT: () => CONSOLE_RETRY_EVENT,
-  CONSOLE_RUN_EVENT: () => CONSOLE_RUN_EVENT,
-  CONSOLE_STATES: () => CONSOLE_STATES,
-  attachConsoles: () => attachConsoles,
-  clearConsole: () => clearConsole,
-  consoleBlocks: () => consoleBlocks,
-  runConsoleCommand: () => runConsoleCommand,
-  setConsole: () => setConsole,
-  setConsoleComplete: () => setConsoleComplete,
-  setConsoleContext: () => setConsoleContext,
-  setConsoleRun: () => setConsoleRun
+// js/console/constants.js
+var CONSOLE2, CONSOLE_RUN_EVENT, CONSOLE_BLOCK_EVENT, CONSOLE_RETRY_EVENT, CONSOLE_STATES, CONSOLE_HISTORY, CONSOLE_MAX_BYTES;
+var init_constants22 = __esm({
+  "js/console/constants.js"() {
+    "use strict";
+    CONSOLE2 = "[data-kp-console]";
+    CONSOLE_RUN_EVENT = "kp-console-run";
+    CONSOLE_BLOCK_EVENT = "kp-console-block";
+    CONSOLE_RETRY_EVENT = "kp-console-retry";
+    CONSOLE_STATES = Object.freeze(["sending", "queued", "running", "ok", "failed", "refused", "cancelled", "lost"]);
+    CONSOLE_HISTORY = 50;
+    CONSOLE_MAX_BYTES = 262144;
+  }
 });
+
+// js/console/model.js
 function stateOf8(root) {
   let st = STATE8.get(root);
   if (!st) {
@@ -68312,43 +69676,36 @@ function say16(root, message) {
   target.textContent = "";
   setTimeout(() => target.textContent = message, 60);
 }
-function storeKey2(root) {
-  const name = root.getAttribute("data-kp-remember") ?? root.getAttribute("data-kp-name");
-  const mode2 = attr13(root, "remember", "session");
-  if (!name || mode2 === "off") return null;
-  return `kp-remember:console:${name}:history`;
-}
-function storeOf(root) {
-  try {
-    return attr13(root, "remember", "session") === "device" ? localStorage : sessionStorage;
-  } catch {
-    return null;
+var STATE8, el13, attr13;
+var init_model6 = __esm({
+  "js/console/model.js"() {
+    "use strict";
+    STATE8 = /* @__PURE__ */ new WeakMap();
+    el13 = (className, tag = "div") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    attr13 = (root, name, fallback2) => root.getAttribute(`data-kp-console-${name}`) ?? fallback2;
   }
-}
-function loadHistory(root) {
-  const key = storeKey2(root);
-  const store = storeOf(root);
-  if (!key || !store) return [];
-  try {
-    const raw = JSON.parse(store.getItem(key) ?? "[]");
-    return Array.isArray(raw) ? raw.filter((x) => typeof x === "string").slice(-(Number(attr13(root, "history", String(CONSOLE_HISTORY))) || CONSOLE_HISTORY)) : [];
-  } catch {
-    return [];
+});
+
+// js/console/state.js
+var consoleState;
+var init_state12 = __esm({
+  "js/console/state.js"() {
+    "use strict";
+    consoleState = {
+      serial: 0
+    };
   }
-}
-function saveHistory(root) {
-  const key = storeKey2(root);
-  const store = storeOf(root);
-  if (!key || !store) return;
-  try {
-    store.setItem(key, JSON.stringify(stateOf8(root).history));
-  } catch {
-  }
-}
+});
+
+// js/console/bar.js
 function ensureParts3(root) {
   if (root.querySelector(":scope > .kp-console__stage, :scope > .kp-console__bar")) return;
   root.classList.add("kp-console");
-  serial16 += 1;
+  consoleState.serial += 1;
   const s2 = getStrings();
   const full = attr13(root, "mode", "full") !== "bar";
   const stage = el13("kp-console__stage");
@@ -68371,7 +69728,7 @@ function ensureParts3(root) {
     /** @type {HTMLSelectElement} */
     el13("kp-field__input kp-console__context", "select")
   );
-  select2.id = `kp-console-${serial16}-context`;
+  select2.id = `kp-console-${consoleState.serial}-context`;
   const contextLabel = el13("kp-console__context-label", "label");
   contextLabel.setAttribute("for", select2.id);
   context2.append(contextLabel, select2);
@@ -68383,7 +69740,7 @@ function ensureParts3(root) {
     el13("kp-field__input kp-console__input", "input")
   );
   input.type = "text";
-  input.id = `kp-console-${serial16}-input`;
+  input.id = `kp-console-${consoleState.serial}-input`;
   input.setAttribute("autocomplete", "off");
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("autocorrect", "off");
@@ -68396,7 +69753,7 @@ function ensureParts3(root) {
   run.type = "submit";
   line.append(prompt, input, run);
   const hint2 = el13("kp-console__hint", "p");
-  hint2.id = `kp-console-${serial16}-hint`;
+  hint2.id = `kp-console-${consoleState.serial}-hint`;
   const complete = el13("kp-console__complete");
   complete.hidden = true;
   form2.append(context2, line, complete, hint2);
@@ -68494,7 +69851,10 @@ function statusOf(root, b) {
     case "queued":
       return { glyph: "wait", text: s2.consoleQueued };
     case "running":
-      return { glyph: "run", text: attr13(root, "timer", "true") === "false" ? s2.consoleRunning : s2.consoleRunningFor(elapsed(Date.now() - b.startedAt)) };
+      return {
+        glyph: "run",
+        text: attr13(root, "timer", "true") === "false" ? s2.consoleRunning : s2.consoleRunningFor(elapsed(Date.now() - b.startedAt))
+      };
     case "ok":
       return { glyph: "ok", text: exit ? s2.consoleExit(b.code ?? 0) : s2.consoleDone, extra: exit ? s2.consoleDone : "" };
     case "failed":
@@ -68507,6 +69867,16 @@ function statusOf(root, b) {
       return { glyph: "lost", text: s2.consoleLost };
   }
 }
+var init_bar = __esm({
+  "js/console/bar.js"() {
+    "use strict";
+    init_strings();
+    init_model6();
+    init_state12();
+  }
+});
+
+// js/console/blocks.js
 function blockNode(root, b, node) {
   const s2 = getStrings();
   const st = stateOf8(root);
@@ -68571,7 +69941,11 @@ function blockNode(root, b, node) {
     ["copy-output", s2.consoleCopyOutput, b.output !== ""],
     ["again", s2.consoleAgain, b.state !== "running" && b.state !== "sending" && b.state !== "queued"],
     ["recheck", s2.consoleRecheck, b.state === "lost"],
-    ["cancel", s2.consoleCancel, attr13(root, "cancel", "false") !== "false" && root.hasAttribute("data-kp-console-cancel") && (b.state === "running" || b.state === "queued") && typeof st.jobs.get(b.id)?.cancel === "function"],
+    [
+      "cancel",
+      s2.consoleCancel,
+      attr13(root, "cancel", "false") !== "false" && root.hasAttribute("data-kp-console-cancel") && (b.state === "running" || b.state === "queued") && typeof st.jobs.get(b.id)?.cancel === "function"
+    ],
     ["collapse", b.collapsed ? s2.consoleExpand : s2.consoleCollapse, true]
   ];
   for (const [key, text, on] of wanted) {
@@ -68641,7 +70015,12 @@ function blockNode(root, b, node) {
           title: s2.consoleOutput,
           maxLines,
           wrap: false,
-          ...b.truncated ? { truncated: { shown: `${Math.round(shown4.length / 1024)} KB`, total: `${Math.round((b.total ?? shown4.length) / 1024)} KB` } } : {}
+          ...b.truncated ? {
+            truncated: {
+              shown: `${Math.round(shown4.length / 1024)} KB`,
+              total: `${Math.round((b.total ?? shown4.length) / 1024)} KB`
+            }
+          } : {}
         });
       }
     } else if (b.state === "running" || b.state === "queued") {
@@ -68712,7 +70091,8 @@ function drawBody2(root) {
     const n of
     /** @type {NodeListOf<HTMLElement>} */
     body.querySelectorAll(":scope > .kp-console__block")
-  ) nodes.set(n.getAttribute("data-id") ?? "", n);
+  )
+    nodes.set(n.getAttribute("data-id") ?? "", n);
   const newestFirst = attr13(root, "order", "newest-last") === "newest-first";
   const ordered2 = newestFirst ? [...visible3].reverse() : visible3;
   let anchor = (
@@ -68741,6 +70121,61 @@ function drawAll(root) {
   drawBar(root);
   drawBody2(root);
 }
+var init_blocks = __esm({
+  "js/console/blocks.js"() {
+    "use strict";
+    init_strings();
+    init_code();
+    init_state_plate();
+    init_busy_card();
+    init_bar();
+    init_model6();
+  }
+});
+
+// js/console/history.js
+function storeKey2(root) {
+  const name = root.getAttribute("data-kp-remember") ?? root.getAttribute("data-kp-name");
+  const mode2 = attr13(root, "remember", "session");
+  if (!name || mode2 === "off") return null;
+  return `kp-remember:console:${name}:history`;
+}
+function storeOf(root) {
+  try {
+    return attr13(root, "remember", "session") === "device" ? localStorage : sessionStorage;
+  } catch {
+    return null;
+  }
+}
+function loadHistory(root) {
+  const key = storeKey2(root);
+  const store = storeOf(root);
+  if (!key || !store) return [];
+  try {
+    const raw = JSON.parse(store.getItem(key) ?? "[]");
+    return Array.isArray(raw) ? raw.filter((x) => typeof x === "string").slice(-(Number(attr13(root, "history", String(CONSOLE_HISTORY))) || CONSOLE_HISTORY)) : [];
+  } catch {
+    return [];
+  }
+}
+function saveHistory(root) {
+  const key = storeKey2(root);
+  const store = storeOf(root);
+  if (!key || !store) return;
+  try {
+    store.setItem(key, JSON.stringify(stateOf8(root).history));
+  } catch {
+  }
+}
+var init_history = __esm({
+  "js/console/history.js"() {
+    "use strict";
+    init_constants22();
+    init_model6();
+  }
+});
+
+// js/console/run.js
 function startTicker(root) {
   const st = stateOf8(root);
   window.clearInterval(st.tick);
@@ -68790,7 +70225,10 @@ function applyChange(root, id, change2) {
     const last = st.blocks[st.blocks.length - 1];
     if (last && last.id === id) {
       const s2 = getStrings();
-      say16(root, b.state === "ok" ? s2.consoleFinishedOk(b.code ?? 0) : b.state === "failed" ? s2.consoleFinishedFailed(b.code ?? 1) : b.state === "refused" ? s2.consoleFinishedRefused : b.state === "cancelled" ? s2.consoleCancelled : s2.consoleLost);
+      say16(
+        root,
+        b.state === "ok" ? s2.consoleFinishedOk(b.code ?? 0) : b.state === "failed" ? s2.consoleFinishedFailed(b.code ?? 1) : b.state === "refused" ? s2.consoleFinishedRefused : b.state === "cancelled" ? s2.consoleCancelled : s2.consoleLost
+      );
     }
   }
 }
@@ -68852,6 +70290,20 @@ async function submit(root) {
   }
   input.focus();
 }
+var init_run2 = __esm({
+  "js/console/run.js"() {
+    "use strict";
+    init_strings();
+    init_newpill();
+    init_bar();
+    init_blocks();
+    init_constants22();
+    init_history();
+    init_model6();
+  }
+});
+
+// js/console/api.js
 function setConsoleRun(root, run) {
   ensureParts3(root);
   stateOf8(root).run = run;
@@ -68931,10 +70383,27 @@ async function useTool(root, tool, b, button) {
     }
   });
 }
+var init_api11 = __esm({
+  "js/console/api.js"() {
+    "use strict";
+    init_strings();
+    init_undo_toast();
+    init_flash();
+    init_bar();
+    init_blocks();
+    init_model6();
+    init_run2();
+  }
+});
+
+// js/console/attach.js
 function attachConsoles(root = document, options = {}) {
   const roots = (
     /** @type {HTMLElement[]} */
-    [...root instanceof HTMLElement && root.matches(CONSOLE2) ? [root] : [], ...root.querySelectorAll(CONSOLE2)]
+    [
+      ...root instanceof HTMLElement && root.matches(CONSOLE2) ? [root] : [],
+      ...root.querySelectorAll(CONSOLE2)
+    ]
   );
   const undo = [];
   for (const el_ of roots) {
@@ -69085,13 +70554,27 @@ function attachConsoles(root = document, options = {}) {
     });
     observer.observe(el_, {
       attributes: true,
-      attributeFilter: ["disabled", "data-kp-disabled", "data-kp-disabled-reason", ...["hint", "prompt", "order", "status", "timer", "cancel", "max-lines", "max-blocks", "context", "confirm"].map((n) => `data-kp-console-${n}`)]
+      attributeFilter: [
+        "disabled",
+        "data-kp-disabled",
+        "data-kp-disabled-reason",
+        ...["hint", "prompt", "order", "status", "timer", "cancel", "max-lines", "max-blocks", "context", "confirm"].map(
+          (n) => `data-kp-console-${n}`
+        )
+      ]
     });
     const s2 = getStrings();
     const keys = [{ keys: "Mod L", what: s2.consoleKeyClear, group: s2.consoleKeyGroup, run: () => clearConsole(el_) }];
     const focusKey = attr13(el_, "focus-key", ":");
     if (focusKey !== "false" && focusKey !== "") {
-      keys.push({ keys: focusKey, what: s2.consoleKeyFocus, group: s2.consoleKeyGroup, when: () => !input.disabled, reason: s2.consoleKeyFocusReason, run: () => input.focus() });
+      keys.push({
+        keys: focusKey,
+        what: s2.consoleKeyFocus,
+        group: s2.consoleKeyGroup,
+        when: () => !input.disabled,
+        reason: s2.consoleKeyFocusReason,
+        run: () => input.focus()
+      });
     }
     const stopKeys = registerShortcuts(el_, keys, { layoutGuard: "off" });
     startTicker(el_);
@@ -69113,55 +70596,104 @@ function attachConsoles(root = document, options = {}) {
   }
   return () => undo.forEach((u) => u());
 }
-var CONSOLE2, CONSOLE_RUN_EVENT, CONSOLE_BLOCK_EVENT, CONSOLE_RETRY_EVENT, CONSOLE_STATES, CONSOLE_HISTORY, CONSOLE_MAX_BYTES, STATE8, serial16, el13, attr13;
-var init_console2 = __esm({
-  "js/console.js"() {
+var init_attach19 = __esm({
+  "js/console/attach.js"() {
     "use strict";
     init_strings();
-    init_code();
-    init_state_plate();
-    init_busy_card();
     init_shortcuts();
-    init_undo_toast();
     init_newpill();
     init_reason();
-    init_flash();
-    CONSOLE2 = "[data-kp-console]";
-    CONSOLE_RUN_EVENT = "kp-console-run";
-    CONSOLE_BLOCK_EVENT = "kp-console-block";
-    CONSOLE_RETRY_EVENT = "kp-console-retry";
-    CONSOLE_STATES = Object.freeze(["sending", "queued", "running", "ok", "failed", "refused", "cancelled", "lost"]);
-    CONSOLE_HISTORY = 50;
-    CONSOLE_MAX_BYTES = 262144;
-    STATE8 = /* @__PURE__ */ new WeakMap();
-    serial16 = 0;
-    el13 = (className, tag = "div") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    attr13 = (root, name, fallback2) => root.getAttribute(`data-kp-console-${name}`) ?? fallback2;
+    init_api11();
+    init_bar();
+    init_blocks();
+    init_constants22();
+    init_history();
+    init_model6();
+    init_run2();
   }
 });
 
-// js/logviewer.js
-var logviewer_exports = {};
-__export(logviewer_exports, {
-  LOGVIEWER: () => LOGVIEWER,
-  LOGVIEWER_EVENT: () => LOGVIEWER_EVENT,
-  LOGVIEWER_MAX: () => LOGVIEWER_MAX,
-  LOGVIEWER_RETRY_EVENT: () => LOGVIEWER_RETRY_EVENT,
-  LOG_LEVELS: () => LOG_LEVELS,
-  appendLogLines: () => appendLogLines,
-  attachLogViewers: () => attachLogViewers,
-  clearLogViewer: () => clearLogViewer,
-  logLevel: () => logLevel,
-  logViewerLines: () => logViewerLines,
-  logViewerText: () => logViewerText,
-  searchLogViewer: () => searchLogViewer,
-  setLogViewer: () => setLogViewer,
-  stepLogMatch: () => stepLogMatch
+// js/console.js
+var console_exports = {};
+__export(console_exports, {
+  CONSOLE: () => CONSOLE2,
+  CONSOLE_BLOCK_EVENT: () => CONSOLE_BLOCK_EVENT,
+  CONSOLE_HISTORY: () => CONSOLE_HISTORY,
+  CONSOLE_MAX_BYTES: () => CONSOLE_MAX_BYTES,
+  CONSOLE_RETRY_EVENT: () => CONSOLE_RETRY_EVENT,
+  CONSOLE_RUN_EVENT: () => CONSOLE_RUN_EVENT,
+  CONSOLE_STATES: () => CONSOLE_STATES,
+  attachConsoles: () => attachConsoles,
+  clearConsole: () => clearConsole,
+  consoleBlocks: () => consoleBlocks,
+  runConsoleCommand: () => runConsoleCommand,
+  setConsole: () => setConsole,
+  setConsoleComplete: () => setConsoleComplete,
+  setConsoleContext: () => setConsoleContext,
+  setConsoleRun: () => setConsoleRun
 });
+var init_console3 = __esm({
+  "js/console.js"() {
+    "use strict";
+    init_constants22();
+    init_api11();
+    init_attach19();
+  }
+});
+
+// js/logviewer/constants.js
+var LOGVIEWER, LOGVIEWER_EVENT, LOGVIEWER_RETRY_EVENT, LOGVIEWER_MAX, LOG_LEVELS;
+var init_constants23 = __esm({
+  "js/logviewer/constants.js"() {
+    "use strict";
+    LOGVIEWER = "[data-kp-logviewer]";
+    LOGVIEWER_EVENT = "kp-logviewer-change";
+    LOGVIEWER_RETRY_EVENT = "kp-logviewer-retry";
+    LOGVIEWER_MAX = 2e3;
+    LOG_LEVELS = Object.freeze(["debug", "info", "notice", "warning", "error", "critical"]);
+  }
+});
+
+// js/logviewer/levels.js
+function clock3(ts, date) {
+  const d = new Date(ts);
+  const time = `${two8(d.getHours())}:${two8(d.getMinutes())}:${two8(d.getSeconds())}`;
+  return date ? `${two8(d.getDate())}/${two8(d.getMonth() + 1)}/${d.getFullYear()} ${time}` : time;
+}
+function stamp2(value) {
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === "number") return value;
+  const parsed = Date.parse(String(value));
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+var ALIASES2, logLevel, two8;
+var init_levels = __esm({
+  "js/logviewer/levels.js"() {
+    "use strict";
+    ALIASES2 = /** @type {Record<string, string>} */
+    {
+      trace: "debug",
+      debug: "debug",
+      info: "info",
+      information: "info",
+      notice: "notice",
+      warn: "warning",
+      warning: "warning",
+      err: "error",
+      error: "error",
+      crit: "critical",
+      critical: "critical",
+      fatal: "critical",
+      alert: "critical",
+      emerg: "critical",
+      emergency: "critical"
+    };
+    logLevel = (word) => ALIASES2[String(word).trim().toLowerCase()] ?? "info";
+    two8 = (n) => String(n).padStart(2, "0");
+  }
+});
+
+// js/logviewer/model.js
 function stateOf9(root) {
   let st = STATE9.get(root);
   if (!st) {
@@ -69183,17 +70715,22 @@ function stateOf9(root) {
   }
   return st;
 }
-function clock3(ts, date) {
-  const d = new Date(ts);
-  const time = `${two8(d.getHours())}:${two8(d.getMinutes())}:${two8(d.getSeconds())}`;
-  return date ? `${two8(d.getDate())}/${two8(d.getMonth() + 1)}/${d.getFullYear()} ${time}` : time;
-}
-function stamp2(value) {
-  if (value instanceof Date) return value.getTime();
-  if (typeof value === "number") return value;
-  const parsed = Date.parse(String(value));
-  return Number.isNaN(parsed) ? 0 : parsed;
-}
+var STATE9, BUILT, el14, attr14;
+var init_model7 = __esm({
+  "js/logviewer/model.js"() {
+    "use strict";
+    STATE9 = /* @__PURE__ */ new WeakMap();
+    BUILT = /* @__PURE__ */ new WeakMap();
+    el14 = (className, tag = "div") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    attr14 = (root, name, fallback2) => root.getAttribute(`data-kp-log-${name}`) ?? fallback2;
+  }
+});
+
+// js/logviewer/reads.js
 function toolsOf(root) {
   return attr14(root, "tools", "search,follow,wrap,time,level,copy,download").split(",").map((t) => t.trim()).filter(Boolean);
 }
@@ -69215,224 +70752,45 @@ function say17(root, message) {
   target.textContent = "";
   setTimeout(() => target.textContent = message, 60);
 }
-function rowFor2(line) {
-  const row = el14("kp-log__line");
-  row.setAttribute("data-id", line.id);
-  row.setAttribute("data-kp-severity", line.level);
-  const time = el14("kp-log__time", "span");
-  time.setAttribute("title", `${clock3(line.ts, true)}.${String(new Date(line.ts).getMilliseconds()).padStart(3, "0")}`);
-  const source = el14("kp-log__source", "span");
-  if (line.source) {
-    source.setAttribute("data-kp-source", line.source);
-    source.style.setProperty(SOURCE_PROPERTY, sourceColour(line.source));
-    source.textContent = line.source;
-  }
-  const level = el14("kp-log__level", "span");
-  const word = el14("kp-log__word", "span");
-  word.textContent = line.level;
-  level.append(word);
-  const message = el14("kp-log__message", "span");
-  row.append(time, source, level, message);
-  return row;
-}
-function dress2(root, row, line) {
-  const mode2 = attr14(root, "time", "time");
-  const timeCell = (
-    /** @type {HTMLElement} */
-    row.children[0]
-  );
-  if (mode2 !== "off") {
-    const text = clock3(line.ts, mode2 === "datetime");
-    if (timeCell.textContent !== text) timeCell.textContent = text;
-  } else timeCell.textContent = "";
-  const query = queryOf(root);
-  const message = (
-    /** @type {HTMLElement} */
-    row.children[3]
-  );
-  const hit = query !== "" && line.message.toLowerCase().includes(query);
-  if (BUILT.get(message) !== query || message.firstChild === null) {
-    message.replaceChildren();
-    if (!hit) message.textContent = line.message;
-    else {
-      const lower = line.message.toLowerCase();
-      let from = 0;
-      for (let at = lower.indexOf(query); at !== -1; at = lower.indexOf(query, from)) {
-        if (at > from) message.append(line.message.slice(from, at));
-        const mark = el14("kp-log__match", "mark");
-        mark.textContent = line.message.slice(at, at + query.length);
-        message.append(mark);
-        from = at + query.length;
-      }
-      if (from < line.message.length) message.append(line.message.slice(from));
-    }
-    BUILT.set(message, query);
-  }
-  const lowEnough = LOG_LEVELS.indexOf(line.level) >= floorOf(root);
-  const wanted = attr14(root, "search-only", "off") === "on" && query !== "" ? hit : true;
-  row.hidden = !(lowEnough && wanted);
-}
-function matchWords(root) {
-  const s2 = getStrings();
-  const st = stateOf9(root);
-  if (queryOf(root) === "") return s2.logviewerSearchIdle;
-  if (st.matches.length === 0) return s2.logviewerSearchNone;
-  return st.at >= 0 ? s2.logviewerMatchAt(st.at + 1, st.matches.length) : s2.logviewerMatches(st.matches.length);
-}
-function collect(root, reset = false) {
-  const st = stateOf9(root);
-  const log = logOf(root);
-  const before = reset ? null : st.matches[st.at] ?? null;
-  st.matches = queryOf(root) === "" ? [] : (
-    /** @type {HTMLElement[]} */
-    [...log.querySelectorAll(".kp-log__line:not([hidden]) mark.kp-log__match")]
-  );
-  st.at = before ? st.matches.indexOf(before) : -1;
-  for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
-  if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
-}
-function refresh2(root) {
-  const st = stateOf9(root);
-  const s2 = getStrings();
-  const log = logOf(root);
-  const stage = (
-    /** @type {HTMLElement} */
-    root.querySelector(".kp-logviewer__stage")
-  );
-  const state2 = root.getAttribute("data-kp-state") ?? "ready";
-  root.toggleAttribute("aria-busy", state2 === "loading");
-  const shown4 = st.lines.filter((line) => st.nodes.get(line.id)?.hidden === false).length;
-  const total = st.lines.length;
-  root.toggleAttribute("data-kp-log-nosource", !st.lines.some((line) => line.source !== ""));
-  for (const old of stage.querySelectorAll(":scope > .kp-logviewer__plate")) old.remove();
-  if (st.card && state2 !== "loading") {
-    st.card.remove();
-    st.card = null;
-  }
-  let plate = "";
-  if (state2 === "error") {
-    plate = "error";
-    const p = statePlate(document, {
-      kind: "error",
-      title: attr14(root, "error-title", "") || s2.logviewerFailed,
-      text: attr14(root, "error", "") || s2.logviewerFailedText,
-      actionLabel: s2.logviewerRetry,
-      actionAttribute: "data-kp-logviewer-retry"
-    });
-    p.classList.add("kp-logviewer__plate");
-    stage.append(p);
-  } else if (state2 === "loading") {
-    plate = "loading";
-    if (!st.card) {
-      st.card = openBusyCard(stage, { words: s2.logviewerLoading, area: () => [stage], className: "kp-logviewer__busy", arrive: false });
-      st.card.layer.setAttribute("data-kp-newpill-skip", "");
-    }
-  } else if (total === 0) {
-    plate = "empty";
-    const p = statePlate(document, { kind: "empty", title: s2.logviewerEmptyTitle, text: attr14(root, "hint", "") || s2.logviewerEmptyText });
-    p.classList.add("kp-logviewer__plate");
-    stage.append(p);
-  } else if (shown4 === 0) {
-    plate = "nomatch";
-    const p = statePlate(document, {
-      kind: "empty",
-      title: s2.logviewerNoMatchTitle,
-      text: s2.logviewerNoMatchText,
-      actionLabel: s2.logviewerClear,
-      actionAttribute: "data-kp-logviewer-clear"
-    });
-    p.classList.add("kp-logviewer__plate");
-    stage.append(p);
-  }
-  root.setAttribute("data-kp-log-plate", plate);
-  const bar = root.querySelector(".kp-logviewer__bar");
-  const find2 = (
-    /** @type {HTMLInputElement | null} */
-    bar?.querySelector(".kp-logviewer__find")
-  );
-  if (find2 && find2.value !== attr14(root, "search", "") && document.activeElement !== find2) find2.value = attr14(root, "search", "");
-  const count2 = bar?.querySelector(".kp-logviewer__matches");
-  if (count2) count2.textContent = matchWords(root);
-  const hasQuery = queryOf(root) !== "";
-  for (
-    const b of
-    /** @type {NodeListOf<HTMLButtonElement>} */
-    bar?.querySelectorAll("[data-kp-logviewer-step]") ?? []
-  )
-    b.disabled = st.matches.length === 0;
-  const only = (
-    /** @type {HTMLButtonElement | null} */
-    bar?.querySelector("[data-kp-logviewer-only]")
-  );
-  if (only) {
-    only.setAttribute("aria-pressed", String(attr14(root, "search-only", "off") === "on"));
-    only.disabled = !hasQuery;
-  }
-  const wrap = bar?.querySelector("[data-kp-logviewer-wrap]");
-  wrap?.setAttribute("aria-pressed", String(attr14(root, "wrap", "on") !== "off"));
-  for (const item of bar?.querySelectorAll("[data-kp-logviewer-time] .kp-segmented__item") ?? []) {
-    item.setAttribute("aria-checked", String(item.getAttribute("data-value") === attr14(root, "time", "time")));
-  }
-  const level = (
-    /** @type {HTMLSelectElement | null} */
-    bar?.querySelector(".kp-logviewer__level")
-  );
-  if (level) level.value = ["info", "warning", "error"].includes(attr14(root, "level", "debug")) ? attr14(root, "level", "debug") : "debug";
-  const nothing = shown4 === 0 || state2 !== "ready";
-  for (
-    const b of
-    /** @type {NodeListOf<HTMLButtonElement>} */
-    bar?.querySelectorAll("[data-kp-logviewer-copy], [data-kp-logviewer-download]") ?? []
-  )
-    b.disabled = nothing;
-  if (find2) find2.disabled = total === 0 || state2 !== "ready";
-  const foot = root.querySelector(".kp-logviewer__foot");
-  const countLine = foot?.querySelector(".kp-logviewer__count");
-  if (countLine) countLine.textContent = s2.logviewerCount(shown4, total);
-  const dropped = foot?.querySelector(".kp-logviewer__dropped");
-  if (dropped) {
-    dropped.textContent = st.dropped > 0 ? s2.logviewerDropped(st.dropped, maxOf(root)) : "";
-    dropped.hidden = st.dropped === 0;
-  }
-  log.setAttribute("aria-label", s2.logviewerLogLabel);
-  root.dispatchEvent(
-    new CustomEvent(LOGVIEWER_EVENT, {
-      bubbles: true,
-      detail: { total, shown: shown4, dropped: st.dropped, matches: st.matches.length, current: st.at >= 0 ? st.at + 1 : 0 }
-    })
-  );
-}
-function redraw2(root) {
-  const st = stateOf9(root);
-  trim(root);
-  for (const line of st.lines) {
-    const row = st.nodes.get(line.id);
-    if (row) dress2(root, row, line);
-  }
-  collect(root, true);
-  refresh2(root);
-}
-function trim(root) {
-  const st = stateOf9(root);
-  const max = maxOf(root);
-  while (st.lines.length > max) {
-    const gone = (
-      /** @type {Kept} */
-      st.lines.shift()
+var signature, logOf, maxOf, floorOf, queryOf, textOf2;
+var init_reads = __esm({
+  "js/logviewer/reads.js"() {
+    "use strict";
+    init_constants23();
+    init_levels();
+    init_model7();
+    signature = (root) => ["max", "wrap", "time", "level", "search", "search-only", "tools", "error", "error-title"].map((n) => attr14(root, n, "")).join("") + `${root.getAttribute("data-kp-state") ?? ""}`;
+    logOf = (root) => (
+      /** @type {HTMLElement} */
+      root.querySelector(".kp-logviewer__log")
     );
-    st.nodes.get(gone.id)?.remove();
-    st.nodes.delete(gone.id);
-    st.dropped += 1;
+    maxOf = (root) => Math.max(1, Math.floor(Number(attr14(root, "max", String(LOGVIEWER_MAX)))) || LOGVIEWER_MAX);
+    floorOf = (root) => Math.max(0, LOG_LEVELS.indexOf(logLevel(attr14(root, "level", "debug"))));
+    queryOf = (root) => attr14(root, "search", "").trim().toLowerCase();
+    textOf2 = (line) => [clock3(line.ts, true), line.source, line.level.toUpperCase(), line.message].filter(Boolean).join(" ");
   }
-}
+});
+
+// js/logviewer/state.js
+var logViewerState;
+var init_state13 = __esm({
+  "js/logviewer/state.js"() {
+    "use strict";
+    logViewerState = {
+      serial: 0
+    };
+  }
+});
+
+// js/logviewer/parts.js
 function ensureParts4(root) {
   if (root.querySelector(":scope > .kp-logviewer__stage")) return;
   root.classList.add("kp-logviewer");
-  serial17 += 1;
+  logViewerState.serial += 1;
   const s2 = getStrings();
   if (!root.hasAttribute("aria-label") && !root.hasAttribute("aria-labelledby")) root.setAttribute("aria-label", s2.logviewerLabel);
   root.setAttribute("role", "group");
-  const id = `kp-logviewer-${serial17}`;
+  const id = `kp-logviewer-${logViewerState.serial}`;
   const bar = el14("kp-logviewer__bar");
   const search = el14("kp-logviewer__search");
   const field = (
@@ -69610,6 +70968,254 @@ function applyTools(root) {
   search.hidden = !wanted.includes("search");
   bar.hidden = tools.hidden && search.hidden;
 }
+var init_parts = __esm({
+  "js/logviewer/parts.js"() {
+    "use strict";
+    init_strings();
+    init_model7();
+    init_reads();
+    init_state13();
+  }
+});
+
+// js/logviewer/rows.js
+function rowFor2(line) {
+  const row = el14("kp-log__line");
+  row.setAttribute("data-id", line.id);
+  row.setAttribute("data-kp-severity", line.level);
+  const time = el14("kp-log__time", "span");
+  time.setAttribute("title", `${clock3(line.ts, true)}.${String(new Date(line.ts).getMilliseconds()).padStart(3, "0")}`);
+  const source = el14("kp-log__source", "span");
+  if (line.source) {
+    source.setAttribute("data-kp-source", line.source);
+    source.style.setProperty(SOURCE_PROPERTY, sourceColour(line.source));
+    source.textContent = line.source;
+  }
+  const level = el14("kp-log__level", "span");
+  const word = el14("kp-log__word", "span");
+  word.textContent = line.level;
+  level.append(word);
+  const message = el14("kp-log__message", "span");
+  row.append(time, source, level, message);
+  return row;
+}
+function dress2(root, row, line) {
+  const mode2 = attr14(root, "time", "time");
+  const timeCell = (
+    /** @type {HTMLElement} */
+    row.children[0]
+  );
+  if (mode2 !== "off") {
+    const text = clock3(line.ts, mode2 === "datetime");
+    if (timeCell.textContent !== text) timeCell.textContent = text;
+  } else timeCell.textContent = "";
+  const query = queryOf(root);
+  const message = (
+    /** @type {HTMLElement} */
+    row.children[3]
+  );
+  const hit = query !== "" && line.message.toLowerCase().includes(query);
+  if (BUILT.get(message) !== query || message.firstChild === null) {
+    message.replaceChildren();
+    if (!hit) message.textContent = line.message;
+    else {
+      const lower = line.message.toLowerCase();
+      let from = 0;
+      for (let at = lower.indexOf(query); at !== -1; at = lower.indexOf(query, from)) {
+        if (at > from) message.append(line.message.slice(from, at));
+        const mark = el14("kp-log__match", "mark");
+        mark.textContent = line.message.slice(at, at + query.length);
+        message.append(mark);
+        from = at + query.length;
+      }
+      if (from < line.message.length) message.append(line.message.slice(from));
+    }
+    BUILT.set(message, query);
+  }
+  const lowEnough = LOG_LEVELS.indexOf(line.level) >= floorOf(root);
+  const wanted = attr14(root, "search-only", "off") === "on" && query !== "" ? hit : true;
+  row.hidden = !(lowEnough && wanted);
+}
+function matchWords(root) {
+  const s2 = getStrings();
+  const st = stateOf9(root);
+  if (queryOf(root) === "") return s2.logviewerSearchIdle;
+  if (st.matches.length === 0) return s2.logviewerSearchNone;
+  return st.at >= 0 ? s2.logviewerMatchAt(st.at + 1, st.matches.length) : s2.logviewerMatches(st.matches.length);
+}
+function collect(root, reset = false) {
+  const st = stateOf9(root);
+  const log = logOf(root);
+  const before = reset ? null : st.matches[st.at] ?? null;
+  st.matches = queryOf(root) === "" ? [] : (
+    /** @type {HTMLElement[]} */
+    [...log.querySelectorAll(".kp-log__line:not([hidden]) mark.kp-log__match")]
+  );
+  st.at = before ? st.matches.indexOf(before) : -1;
+  for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
+  if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
+}
+var init_rows2 = __esm({
+  "js/logviewer/rows.js"() {
+    "use strict";
+    init_strings();
+    init_log();
+    init_constants23();
+    init_levels();
+    init_model7();
+    init_reads();
+  }
+});
+
+// js/logviewer/refresh.js
+function refresh2(root) {
+  const st = stateOf9(root);
+  const s2 = getStrings();
+  const log = logOf(root);
+  const stage = (
+    /** @type {HTMLElement} */
+    root.querySelector(".kp-logviewer__stage")
+  );
+  const state2 = root.getAttribute("data-kp-state") ?? "ready";
+  root.toggleAttribute("aria-busy", state2 === "loading");
+  const shown4 = st.lines.filter((line) => st.nodes.get(line.id)?.hidden === false).length;
+  const total = st.lines.length;
+  root.toggleAttribute("data-kp-log-nosource", !st.lines.some((line) => line.source !== ""));
+  for (const old of stage.querySelectorAll(":scope > .kp-logviewer__plate")) old.remove();
+  if (st.card && state2 !== "loading") {
+    st.card.remove();
+    st.card = null;
+  }
+  let plate = "";
+  if (state2 === "error") {
+    plate = "error";
+    const p = statePlate(document, {
+      kind: "error",
+      title: attr14(root, "error-title", "") || s2.logviewerFailed,
+      text: attr14(root, "error", "") || s2.logviewerFailedText,
+      actionLabel: s2.logviewerRetry,
+      actionAttribute: "data-kp-logviewer-retry"
+    });
+    p.classList.add("kp-logviewer__plate");
+    stage.append(p);
+  } else if (state2 === "loading") {
+    plate = "loading";
+    if (!st.card) {
+      st.card = openBusyCard(stage, { words: s2.logviewerLoading, area: () => [stage], className: "kp-logviewer__busy", arrive: false });
+      st.card.layer.setAttribute("data-kp-newpill-skip", "");
+    }
+  } else if (total === 0) {
+    plate = "empty";
+    const p = statePlate(document, { kind: "empty", title: s2.logviewerEmptyTitle, text: attr14(root, "hint", "") || s2.logviewerEmptyText });
+    p.classList.add("kp-logviewer__plate");
+    stage.append(p);
+  } else if (shown4 === 0) {
+    plate = "nomatch";
+    const p = statePlate(document, {
+      kind: "empty",
+      title: s2.logviewerNoMatchTitle,
+      text: s2.logviewerNoMatchText,
+      actionLabel: s2.logviewerClear,
+      actionAttribute: "data-kp-logviewer-clear"
+    });
+    p.classList.add("kp-logviewer__plate");
+    stage.append(p);
+  }
+  root.setAttribute("data-kp-log-plate", plate);
+  const bar = root.querySelector(".kp-logviewer__bar");
+  const find2 = (
+    /** @type {HTMLInputElement | null} */
+    bar?.querySelector(".kp-logviewer__find")
+  );
+  if (find2 && find2.value !== attr14(root, "search", "") && document.activeElement !== find2) find2.value = attr14(root, "search", "");
+  const count2 = bar?.querySelector(".kp-logviewer__matches");
+  if (count2) count2.textContent = matchWords(root);
+  const hasQuery = queryOf(root) !== "";
+  for (
+    const b of
+    /** @type {NodeListOf<HTMLButtonElement>} */
+    bar?.querySelectorAll("[data-kp-logviewer-step]") ?? []
+  )
+    b.disabled = st.matches.length === 0;
+  const only = (
+    /** @type {HTMLButtonElement | null} */
+    bar?.querySelector("[data-kp-logviewer-only]")
+  );
+  if (only) {
+    only.setAttribute("aria-pressed", String(attr14(root, "search-only", "off") === "on"));
+    only.disabled = !hasQuery;
+  }
+  const wrap = bar?.querySelector("[data-kp-logviewer-wrap]");
+  wrap?.setAttribute("aria-pressed", String(attr14(root, "wrap", "on") !== "off"));
+  for (const item of bar?.querySelectorAll("[data-kp-logviewer-time] .kp-segmented__item") ?? []) {
+    item.setAttribute("aria-checked", String(item.getAttribute("data-value") === attr14(root, "time", "time")));
+  }
+  const level = (
+    /** @type {HTMLSelectElement | null} */
+    bar?.querySelector(".kp-logviewer__level")
+  );
+  if (level) level.value = ["info", "warning", "error"].includes(attr14(root, "level", "debug")) ? attr14(root, "level", "debug") : "debug";
+  const nothing = shown4 === 0 || state2 !== "ready";
+  for (
+    const b of
+    /** @type {NodeListOf<HTMLButtonElement>} */
+    bar?.querySelectorAll("[data-kp-logviewer-copy], [data-kp-logviewer-download]") ?? []
+  )
+    b.disabled = nothing;
+  if (find2) find2.disabled = total === 0 || state2 !== "ready";
+  const foot = root.querySelector(".kp-logviewer__foot");
+  const countLine = foot?.querySelector(".kp-logviewer__count");
+  if (countLine) countLine.textContent = s2.logviewerCount(shown4, total);
+  const dropped = foot?.querySelector(".kp-logviewer__dropped");
+  if (dropped) {
+    dropped.textContent = st.dropped > 0 ? s2.logviewerDropped(st.dropped, maxOf(root)) : "";
+    dropped.hidden = st.dropped === 0;
+  }
+  log.setAttribute("aria-label", s2.logviewerLogLabel);
+  root.dispatchEvent(
+    new CustomEvent(LOGVIEWER_EVENT, {
+      bubbles: true,
+      detail: { total, shown: shown4, dropped: st.dropped, matches: st.matches.length, current: st.at >= 0 ? st.at + 1 : 0 }
+    })
+  );
+}
+function redraw2(root) {
+  const st = stateOf9(root);
+  trim(root);
+  for (const line of st.lines) {
+    const row = st.nodes.get(line.id);
+    if (row) dress2(root, row, line);
+  }
+  collect(root, true);
+  refresh2(root);
+}
+function trim(root) {
+  const st = stateOf9(root);
+  const max = maxOf(root);
+  while (st.lines.length > max) {
+    const gone = (
+      /** @type {Kept} */
+      st.lines.shift()
+    );
+    st.nodes.get(gone.id)?.remove();
+    st.nodes.delete(gone.id);
+    st.dropped += 1;
+  }
+}
+var init_refresh = __esm({
+  "js/logviewer/refresh.js"() {
+    "use strict";
+    init_strings();
+    init_state_plate();
+    init_busy_card();
+    init_constants23();
+    init_model7();
+    init_reads();
+    init_rows2();
+  }
+});
+
+// js/logviewer/api.js
 function appendLogLines(el16, lines) {
   const root = (
     /** @type {HTMLElement} */
@@ -69743,6 +71349,20 @@ function syncOptions(root) {
   const log = logOf(root);
   if (newPill(log)?.following()) log.scrollTop = log.scrollHeight;
 }
+var init_api12 = __esm({
+  "js/logviewer/api.js"() {
+    "use strict";
+    init_newpill();
+    init_levels();
+    init_model7();
+    init_parts();
+    init_reads();
+    init_refresh();
+    init_rows2();
+  }
+});
+
+// js/logviewer/attach.js
 function attachLogViewers(root = document) {
   const undo = [];
   const found = (
@@ -69932,99 +71552,72 @@ function attachLogViewers(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var LOGVIEWER, LOGVIEWER_EVENT, LOGVIEWER_RETRY_EVENT, LOGVIEWER_MAX, LOG_LEVELS, STATE9, BUILT, serial17, el14, attr14, ALIASES2, logLevel, two8, signature, logOf, maxOf, floorOf, queryOf, textOf2;
-var init_logviewer = __esm({
-  "js/logviewer.js"() {
+var init_attach20 = __esm({
+  "js/logviewer/attach.js"() {
     "use strict";
     init_strings();
-    init_state_plate();
-    init_busy_card();
     init_newpill();
     init_segmented();
     init_reason();
     init_shortcuts();
     init_flash();
-    init_log();
-    LOGVIEWER = "[data-kp-logviewer]";
-    LOGVIEWER_EVENT = "kp-logviewer-change";
-    LOGVIEWER_RETRY_EVENT = "kp-logviewer-retry";
-    LOGVIEWER_MAX = 2e3;
-    LOG_LEVELS = Object.freeze(["debug", "info", "notice", "warning", "error", "critical"]);
-    STATE9 = /* @__PURE__ */ new WeakMap();
-    BUILT = /* @__PURE__ */ new WeakMap();
-    serial17 = 0;
-    el14 = (className, tag = "div") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    attr14 = (root, name, fallback2) => root.getAttribute(`data-kp-log-${name}`) ?? fallback2;
-    ALIASES2 = /** @type {Record<string, string>} */
-    {
-      trace: "debug",
-      debug: "debug",
-      info: "info",
-      information: "info",
-      notice: "notice",
-      warn: "warning",
-      warning: "warning",
-      err: "error",
-      error: "error",
-      crit: "critical",
-      critical: "critical",
-      fatal: "critical",
-      alert: "critical",
-      emerg: "critical",
-      emergency: "critical"
-    };
-    logLevel = (word) => ALIASES2[String(word).trim().toLowerCase()] ?? "info";
-    two8 = (n) => String(n).padStart(2, "0");
-    signature = (root) => ["max", "wrap", "time", "level", "search", "search-only", "tools", "error", "error-title"].map((n) => attr14(root, n, "")).join("") + `${root.getAttribute("data-kp-state") ?? ""}`;
-    logOf = (root) => (
-      /** @type {HTMLElement} */
-      root.querySelector(".kp-logviewer__log")
-    );
-    maxOf = (root) => Math.max(1, Math.floor(Number(attr14(root, "max", String(LOGVIEWER_MAX)))) || LOGVIEWER_MAX);
-    floorOf = (root) => Math.max(0, LOG_LEVELS.indexOf(logLevel(attr14(root, "level", "debug"))));
-    queryOf = (root) => attr14(root, "search", "").trim().toLowerCase();
-    textOf2 = (line) => [clock3(line.ts, true), line.source, line.level.toUpperCase(), line.message].filter(Boolean).join(" ");
+    init_api12();
+    init_constants23();
+    init_model7();
+    init_parts();
+    init_reads();
+    init_rows2();
   }
 });
 
-// js/diff.js
-var diff_exports = {};
-__export(diff_exports, {
-  DIFF: () => DIFF,
-  DIFF_CONTEXT: () => DIFF_CONTEXT,
-  DIFF_COPY_EVENT: () => DIFF_COPY_EVENT,
-  DIFF_EXPAND_EVENT: () => DIFF_EXPAND_EVENT,
-  DIFF_FOLD_MIN: () => DIFF_FOLD_MIN,
-  DIFF_MAX_LINES: () => DIFF_MAX_LINES,
-  DIFF_RETRY_EVENT: () => DIFF_RETRY_EVENT,
-  DIFF_STATUSES: () => DIFF_STATUSES,
-  DIFF_TOGGLE_EVENT: () => DIFF_TOGGLE_EVENT,
-  DIFF_WORD_LIMIT: () => DIFF_WORD_LIMIT,
-  DIFF_WORD_SHARE: () => DIFF_WORD_SHARE,
-  attachDiffs: () => attachDiffs,
-  diffWords: () => diffWords,
-  foldContext: () => foldContext,
-  setDiff: () => setDiff
+// js/logviewer.js
+var logviewer_exports = {};
+__export(logviewer_exports, {
+  LOGVIEWER: () => LOGVIEWER,
+  LOGVIEWER_EVENT: () => LOGVIEWER_EVENT,
+  LOGVIEWER_MAX: () => LOGVIEWER_MAX,
+  LOGVIEWER_RETRY_EVENT: () => LOGVIEWER_RETRY_EVENT,
+  LOG_LEVELS: () => LOG_LEVELS,
+  appendLogLines: () => appendLogLines,
+  attachLogViewers: () => attachLogViewers,
+  clearLogViewer: () => clearLogViewer,
+  logLevel: () => logLevel,
+  logViewerLines: () => logViewerLines,
+  logViewerText: () => logViewerText,
+  searchLogViewer: () => searchLogViewer,
+  setLogViewer: () => setLogViewer,
+  stepLogMatch: () => stepLogMatch
 });
-function count(root, name, fallback2) {
-  const raw = attr15(root, name, String(fallback2));
-  if (raw === "off" || raw === "false") return 0;
-  const n = Number(raw);
-  return Number.isFinite(n) && n >= 0 ? Math.floor(n) : fallback2;
-}
-function stateOf10(root) {
-  let st = STATE10.get(root);
-  if (!st) {
-    const first = root.getAttribute("data-kp-diff-state");
-    st = { spec: first === "loading" || first === "empty" || first === "error" ? { state: first } : {}, files: [], opened: /* @__PURE__ */ new Map(), folds: /* @__PURE__ */ new Set(), all: /* @__PURE__ */ new Set(), card: null, off: [], mode: attr15(root, "open", "all"), said: "" };
-    STATE10.set(root, st);
+var init_logviewer = __esm({
+  "js/logviewer.js"() {
+    "use strict";
+    init_constants23();
+    init_levels();
+    init_api12();
+    init_attach20();
   }
-  return st;
-}
+});
+
+// js/diff/constants.js
+var DIFF, DIFF_TOGGLE_EVENT, DIFF_EXPAND_EVENT, DIFF_COPY_EVENT, DIFF_RETRY_EVENT, DIFF_CONTEXT, DIFF_FOLD_MIN, DIFF_MAX_LINES, DIFF_WORD_LIMIT, DIFF_WORD_SHARE, DIFF_STATUSES;
+var init_constants24 = __esm({
+  "js/diff/constants.js"() {
+    "use strict";
+    DIFF = "[data-kp-diffview]";
+    DIFF_TOGGLE_EVENT = "kp-diff-toggle";
+    DIFF_EXPAND_EVENT = "kp-diff-expand";
+    DIFF_COPY_EVENT = "kp-diff-copy";
+    DIFF_RETRY_EVENT = "kp-diff-retry";
+    DIFF_CONTEXT = 3;
+    DIFF_FOLD_MIN = 3;
+    DIFF_MAX_LINES = 400;
+    DIFF_WORD_LIMIT = 500;
+    DIFF_WORD_SHARE = 0.6;
+    DIFF_STATUSES = Object.freeze(["added", "removed", "modified", "renamed", "binary"]);
+  }
+});
+
+// js/diff/words.js
 function segmentsOf(tokens, changed2) {
   const flags = [...changed2];
   for (let i = 1; i < tokens.length - 1; i += 1) if (!flags[i] && /^\s+$/.test(tokens[i]) && flags[i - 1] && flags[i + 1]) flags[i] = true;
@@ -70045,7 +71638,8 @@ function diffWords(oldText, newText) {
   const n = a.length;
   const m = b.length;
   const table = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
-  for (let i2 = n - 1; i2 >= 0; i2 -= 1) for (let j2 = m - 1; j2 >= 0; j2 -= 1) table[i2][j2] = a[i2] === b[j2] ? table[i2 + 1][j2 + 1] + 1 : Math.max(table[i2 + 1][j2], table[i2][j2 + 1]);
+  for (let i2 = n - 1; i2 >= 0; i2 -= 1)
+    for (let j2 = m - 1; j2 >= 0; j2 -= 1) table[i2][j2] = a[i2] === b[j2] ? table[i2 + 1][j2 + 1] + 1 : Math.max(table[i2 + 1][j2], table[i2][j2 + 1]);
   const goneA = new Array(n).fill(true);
   const goneB = new Array(m).fill(true);
   let i = 0;
@@ -70089,6 +71683,17 @@ function wordPairs(lines) {
   }
   return out;
 }
+var TOKENS, tokensOf;
+var init_words2 = __esm({
+  "js/diff/words.js"() {
+    "use strict";
+    init_constants24();
+    TOKENS = /[A-Za-z0-9_]+(?:[.-][A-Za-z0-9_]+)*|\s+|[^\sA-Za-z0-9_]/g;
+    tokensOf = (text) => text.match(TOKENS) ?? [];
+  }
+});
+
+// js/diff/fold.js
 function foldContext(lines, keep = DIFF_CONTEXT, min = DIFF_FOLD_MIN) {
   const n = lines.length;
   if (keep <= 0 || !lines.some((line) => line.kind !== "same")) return [{ kind: "lines", from: 0, lines: [...lines] }];
@@ -70116,6 +71721,54 @@ function foldContext(lines, keep = DIFF_CONTEXT, min = DIFF_FOLD_MIN) {
   if (start < n) out.push({ kind: "lines", from: start, lines: lines.slice(start) });
   return out;
 }
+var init_fold2 = __esm({
+  "js/diff/fold.js"() {
+    "use strict";
+    init_constants24();
+  }
+});
+
+// js/diff/model.js
+function count(root, name, fallback2) {
+  const raw = attr15(root, name, String(fallback2));
+  if (raw === "off" || raw === "false") return 0;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? Math.floor(n) : fallback2;
+}
+function stateOf10(root) {
+  let st = STATE10.get(root);
+  if (!st) {
+    const first = root.getAttribute("data-kp-diff-state");
+    st = {
+      spec: first === "loading" || first === "empty" || first === "error" ? { state: first } : {},
+      files: [],
+      opened: /* @__PURE__ */ new Map(),
+      folds: /* @__PURE__ */ new Set(),
+      all: /* @__PURE__ */ new Set(),
+      card: null,
+      off: [],
+      mode: attr15(root, "open", "all"),
+      said: ""
+    };
+    STATE10.set(root, st);
+  }
+  return st;
+}
+var STATE10, el15, attr15;
+var init_model8 = __esm({
+  "js/diff/model.js"() {
+    "use strict";
+    STATE10 = /* @__PURE__ */ new WeakMap();
+    el15 = (className, tag = "div") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+    attr15 = (root, name, fallback2) => root.getAttribute(`data-kp-diff-${name}`) ?? fallback2;
+  }
+});
+
+// js/diff/read.js
 function headOf(hunk) {
   if (typeof hunk.head === "string" && hunk.head.trim() !== "") {
     const found = /^\s*(@@.*?@@)\s?(.*)$/.exec(hunk.head);
@@ -70202,6 +71855,17 @@ function textOf3(text, segments) {
   }
   return node;
 }
+var kindOf3;
+var init_read = __esm({
+  "js/diff/read.js"() {
+    "use strict";
+    init_constants24();
+    init_model8();
+    kindOf3 = (kind) => kind === "added" || kind === "removed" ? kind : "same";
+  }
+});
+
+// js/diff/lines.js
 function lineEl(line, segments) {
   const row = el15("kp-diff__line");
   row.setAttribute("data-kind", line.kind);
@@ -70298,6 +71962,31 @@ function fillBody(root, st, file, body) {
   }
   body.append(surface);
 }
+var init_lines = __esm({
+  "js/diff/lines.js"() {
+    "use strict";
+    init_strings();
+    init_state_plate();
+    init_constants24();
+    init_fold2();
+    init_model8();
+    init_read();
+    init_words2();
+  }
+});
+
+// js/diff/state.js
+var diffState;
+var init_state14 = __esm({
+  "js/diff/state.js"() {
+    "use strict";
+    diffState = {
+      serial: 0
+    };
+  }
+});
+
+// js/diff/file.js
 function pathEl(path) {
   const cut = path.lastIndexOf("/") + 1;
   const name = el15("kp-diffview__name", "span");
@@ -70329,8 +72018,8 @@ function proportion(added, removed) {
 function fileEl(root, st, file, index) {
   const s2 = getStrings();
   const open4 = isOpen2(root, st, file, index);
-  serial18 += 1;
-  const id = `kp-diffview-${serial18}`;
+  diffState.serial += 1;
+  const id = `kp-diffview-${diffState.serial}`;
   const section = el15("kp-diffview__file", "section");
   section.setAttribute("data-kp-diff-status", file.status);
   section.setAttribute("data-kp-diff-file-open", String(open4));
@@ -70456,6 +72145,18 @@ function syncBar(root) {
     else button.removeAttribute("data-kp-disabled-reason");
   }
 }
+var init_file = __esm({
+  "js/diff/file.js"() {
+    "use strict";
+    init_strings();
+    init_lines();
+    init_model8();
+    init_read();
+    init_state14();
+  }
+});
+
+// js/diff/render.js
 function sizeColumns(root, files) {
   const longest = (numbers2) => Math.max(2, ...numbers2.map((n) => String(n).length + 1));
   root.style.setProperty("--kp-diffview-added-ch", String(longest(files.map((file) => file.added))));
@@ -70467,7 +72168,11 @@ function skeleton() {
   for (let i = 0; i < 3; i += 1) {
     const file = el15("kp-diffview__file kp-diffview__file--wait");
     const head = el15("kp-diffview__head kp-diffview__head--wait");
-    head.append(el15("kp-skeleton kp-diffview__wait-badge", "span"), el15("kp-skeleton kp-diffview__wait-path", "span"), el15("kp-skeleton kp-diffview__wait-counts", "span"));
+    head.append(
+      el15("kp-skeleton kp-diffview__wait-badge", "span"),
+      el15("kp-skeleton kp-diffview__wait-path", "span"),
+      el15("kp-skeleton kp-diffview__wait-counts", "span")
+    );
     file.append(head);
     if (i === 0) {
       const body = el15("kp-diffview__body kp-diffview__body--wait");
@@ -70540,6 +72245,20 @@ function render6(root) {
     root.append(stage);
   }
 }
+var init_render2 = __esm({
+  "js/diff/render.js"() {
+    "use strict";
+    init_strings();
+    init_state_plate();
+    init_busy_card();
+    init_reason();
+    init_file();
+    init_model8();
+    init_read();
+  }
+});
+
+// js/diff/actions.js
 function setDiff(root, spec) {
   if (!(root instanceof HTMLElement)) return;
   const st = stateOf10(root);
@@ -70594,10 +72313,28 @@ async function copyPath(root, button) {
     return s2.diffCopied;
   });
 }
+var init_actions2 = __esm({
+  "js/diff/actions.js"() {
+    "use strict";
+    init_strings();
+    init_flash();
+    init_constants24();
+    init_file();
+    init_lines();
+    init_model8();
+    init_read();
+    init_render2();
+  }
+});
+
+// js/diff/attach.js
 function attachDiffs(root = document) {
   const roots = (
     /** @type {HTMLElement[]} */
-    [...root instanceof HTMLElement && root.matches(DIFF) ? [root] : [], ...root.querySelectorAll(DIFF)]
+    [
+      ...root instanceof HTMLElement && root.matches(DIFF) ? [root] : [],
+      ...root.querySelectorAll(DIFF)
+    ]
   );
   const undo = [];
   for (const el_ of roots) {
@@ -70669,7 +72406,10 @@ function attachDiffs(root = document) {
       window.cancelAnimationFrame(queued2);
       queued2 = window.requestAnimationFrame(() => render6(el_));
     });
-    watcher.observe(el_, { attributes: true, attributeFilter: ["open", "context", "words", "bar", "copy", "max-lines", "label"].map((name) => `data-kp-diff-${name}`) });
+    watcher.observe(el_, {
+      attributes: true,
+      attributeFilter: ["open", "context", "words", "bar", "copy", "max-lines", "label"].map((name) => `data-kp-diff-${name}`)
+    });
     st.off = [() => el_.removeEventListener("click", onClick), () => watcher.disconnect(), () => window.cancelAnimationFrame(queued2)];
     undo.push(() => {
       for (const stop of st.off) stop();
@@ -70679,37 +72419,46 @@ function attachDiffs(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var DIFF, DIFF_TOGGLE_EVENT, DIFF_EXPAND_EVENT, DIFF_COPY_EVENT, DIFF_RETRY_EVENT, DIFF_CONTEXT, DIFF_FOLD_MIN, DIFF_MAX_LINES, DIFF_WORD_LIMIT, DIFF_WORD_SHARE, DIFF_STATUSES, STATE10, serial18, el15, attr15, TOKENS, tokensOf, kindOf3;
+var init_attach21 = __esm({
+  "js/diff/attach.js"() {
+    "use strict";
+    init_strings();
+    init_actions2();
+    init_constants24();
+    init_lines();
+    init_model8();
+    init_read();
+    init_render2();
+  }
+});
+
+// js/diff.js
+var diff_exports = {};
+__export(diff_exports, {
+  DIFF: () => DIFF,
+  DIFF_CONTEXT: () => DIFF_CONTEXT,
+  DIFF_COPY_EVENT: () => DIFF_COPY_EVENT,
+  DIFF_EXPAND_EVENT: () => DIFF_EXPAND_EVENT,
+  DIFF_FOLD_MIN: () => DIFF_FOLD_MIN,
+  DIFF_MAX_LINES: () => DIFF_MAX_LINES,
+  DIFF_RETRY_EVENT: () => DIFF_RETRY_EVENT,
+  DIFF_STATUSES: () => DIFF_STATUSES,
+  DIFF_TOGGLE_EVENT: () => DIFF_TOGGLE_EVENT,
+  DIFF_WORD_LIMIT: () => DIFF_WORD_LIMIT,
+  DIFF_WORD_SHARE: () => DIFF_WORD_SHARE,
+  attachDiffs: () => attachDiffs,
+  diffWords: () => diffWords,
+  foldContext: () => foldContext,
+  setDiff: () => setDiff
+});
 var init_diff = __esm({
   "js/diff.js"() {
     "use strict";
-    init_strings();
-    init_state_plate();
-    init_flash();
-    init_busy_card();
-    init_reason();
-    DIFF = "[data-kp-diffview]";
-    DIFF_TOGGLE_EVENT = "kp-diff-toggle";
-    DIFF_EXPAND_EVENT = "kp-diff-expand";
-    DIFF_COPY_EVENT = "kp-diff-copy";
-    DIFF_RETRY_EVENT = "kp-diff-retry";
-    DIFF_CONTEXT = 3;
-    DIFF_FOLD_MIN = 3;
-    DIFF_MAX_LINES = 400;
-    DIFF_WORD_LIMIT = 500;
-    DIFF_WORD_SHARE = 0.6;
-    DIFF_STATUSES = Object.freeze(["added", "removed", "modified", "renamed", "binary"]);
-    STATE10 = /* @__PURE__ */ new WeakMap();
-    serial18 = 0;
-    el15 = (className, tag = "div") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    attr15 = (root, name, fallback2) => root.getAttribute(`data-kp-diff-${name}`) ?? fallback2;
-    TOKENS = /[A-Za-z0-9_]+(?:[.-][A-Za-z0-9_]+)*|\s+|[^\sA-Za-z0-9_]/g;
-    tokensOf = (text) => text.match(TOKENS) ?? [];
-    kindOf3 = (kind) => kind === "added" || kind === "removed" ? kind : "same";
+    init_constants24();
+    init_words2();
+    init_fold2();
+    init_actions2();
+    init_attach21();
   }
 });
 
@@ -71435,7 +73184,7 @@ var NEEDS = [
   // A quantity with minus and plus, the kitchen timers, the checklist, one step at a time and the wheel [kpadopt4].
   { name: "quantity", when: "[data-kp-quantity]", load: () => Promise.resolve().then(() => (init_quantity(), quantity_exports)), attach: (m, root) => [m.attachQuantities(root)] },
   { name: "toolbar", when: "[data-kp-toolbar]", load: () => Promise.resolve().then(() => (init_toolbar(), toolbar_exports)), attach: (m, root) => [m.attachToolbars(root)] },
-  { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] },
+  { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys3(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] },
   // The month heatmap [scope-143]: a month of days, each a plate in the
   // colour of its state; the page gives the days with setCalendarDays().
   { name: "calendar", when: "[data-kp-calendar]", load: () => Promise.resolve().then(() => (init_calendar(), calendar_exports)), attach: (m, root) => [m.attachCalendars(root)] },
@@ -71586,7 +73335,7 @@ var NEEDS = [
     load: () => Promise.resolve().then(() => (init_footprint(), footprint_exports)),
     attach: (m, root) => [m.attachFootprints(root)]
   },
-  { name: "console", when: "[data-kp-console]", load: () => Promise.resolve().then(() => (init_console2(), console_exports)), attach: (m, root) => [m.attachConsoles(root)] },
+  { name: "console", when: "[data-kp-console]", load: () => Promise.resolve().then(() => (init_console3(), console_exports)), attach: (m, root) => [m.attachConsoles(root)] },
   { name: "logviewer", when: "[data-kp-logviewer]", load: () => Promise.resolve().then(() => (init_logviewer(), logviewer_exports)), attach: (m, root) => [m.attachLogViewers(root)] },
   { name: "diff", when: "[data-kp-diffview]", load: () => Promise.resolve().then(() => (init_diff(), diff_exports)), attach: (m, root) => [m.attachDiffs(root)] },
   {
@@ -71720,7 +73469,7 @@ init_command();
 init_compare();
 init_components();
 init_connection();
-init_console2();
+init_console3();
 init_contrast();
 init_countdown();
 init_datatable();
@@ -71893,7 +73642,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys();
+init_keys3();
 init_kpi();
 
 // js/lazy-register.js
@@ -72319,8 +74068,8 @@ function resolveTarget(step, doc) {
     [...doc.querySelectorAll(step.target)].find((el16) => isShown2(el16)) ?? null
   );
 }
-var idSeq7 = 0;
-var nextId2 = (prefix) => `${prefix}-${idSeq7 += 1}`;
+var idSeq6 = 0;
+var nextId2 = (prefix) => `${prefix}-${idSeq6 += 1}`;
 var make23 = (doc, tag, className, text) => {
   const el16 = doc.createElement(tag);
   el16.className = className;
@@ -72566,11 +74315,9 @@ init_action_tiles();
 init_actions();
 init_alarm();
 init_anchors();
-init_art();
 init_attention();
 init_auto_refresh();
 init_autosize();
-init_availability();
 init_barcell();
 init_bullets();
 init_busy_card();
@@ -72579,24 +74326,19 @@ init_calm_tones();
 init_calm();
 init_card_state();
 init_checklist();
-init_claim2();
 init_code_field();
 init_code();
 init_colorpicker();
-init_combobox();
 init_command();
 init_compare();
 init_connection();
-init_console2();
 init_contrast();
 init_countdown();
 init_dated_options();
 init_datepicker();
 init_deplist();
-init_diff();
 init_docpreview();
 init_effects();
-init_entity_card();
 init_facets();
 init_feed();
 init_flash();
@@ -72605,31 +74347,25 @@ init_forms();
 init_freshness();
 init_gallery();
 init_gridlayout();
-init_heat();
 init_hovercard();
 init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys();
+init_keys3();
 init_kpi();
 init_lede();
 init_listbox();
 init_live_options();
 init_loading_pieces();
-init_logviewer();
 init_markdown();
 init_master_detail();
-init_menu_button();
 init_nav_fold();
 init_newpill();
 init_notices();
-init_overlays();
 init_page_contents();
-init_palette();
 init_passkeys();
 init_path_trace();
-init_patterns();
 init_pipeline();
 init_print();
 init_problems();
@@ -72663,19 +74399,15 @@ init_tick();
 init_tiles();
 init_timefield();
 init_timer_disc();
-init_timer();
 init_toggle();
 init_toolbar();
 init_transfer();
 init_undo_toast();
 init_unsaved();
 init_upload();
-init_uptime();
 init_uses_map();
-init_usual_picker();
 init_version_delta();
 init_viewer();
-init_week();
 init_weekdays();
 init_wheel();
 init_wizard();
@@ -72691,7 +74423,6 @@ export {
   ALARM_CLOSE_EVENT,
   ALARM_OPEN_EVENT,
   ALARM_SECONDS,
-  ALERT_DISMISS_EVENT,
   ALTGR_KEYS,
   ANCHOR,
   ANCHORS,
@@ -72704,23 +74435,12 @@ export {
   ANCHOR_WAIT_MS,
   ARRIVAL,
   ARRIVALS,
-  ART,
-  ART_KINDS,
-  ART_SETS,
   ATTENTION,
   AUTOSIZE,
   AUTOSIZE_EVENT,
   AUTOSIZE_MAX_LINES,
   AUTOSIZE_MIN_LINES,
   AUTOSIZE_STATES,
-  AVAILABILITY,
-  AVAILABILITY_ANSWERS,
-  AVAILABILITY_CHOOSE_EVENT,
-  AVAILABILITY_EVENT,
-  AVAILABILITY_REFUSED_MS,
-  AVAILABILITY_RETRY_EVENT,
-  AVAILABILITY_UNDO_MS,
-  AVAILABILITY_UNIT_EVENT,
   BAR_CELL,
   BEFORE_STEP_EVENT,
   BEFORE_THEME_EVENT,
@@ -72745,7 +74465,6 @@ export {
   CARD_STATES,
   CARD_STATE_EVENT,
   CARET_KNOB,
-  CHANGE_EVENT,
   CHECKLIST,
   CHECKLIST_CLEAR_EVENT,
   CHECKLIST_EVENT,
@@ -72755,14 +74474,6 @@ export {
   CHECKLIST_UNDO_MS,
   CHOOSE_EVENT,
   CHORD_MS,
-  CLAIM,
-  CLAIM_EVENT,
-  CLAIM_FILTERS,
-  CLAIM_FILTER_EVENT,
-  CLAIM_REFUSED_MS,
-  CLAIM_RETRY_EVENT,
-  CLAIM_UNDO_MS,
-  CLEAR_AFTER_MS,
   CODE,
   CODE_COPIED_MS,
   CODE_FIELD,
@@ -72775,7 +74486,6 @@ export {
   COLUMNS,
   COMMAND,
   COMMAND_SHELLS,
-  COMMIT_EVENT,
   COMMIT_MS,
   COMPARE,
   COMPARE_EVENT,
@@ -72784,18 +74494,8 @@ export {
   CONNECTION_RETRY_EVENT,
   CONNECTION_STATES,
   CONNECTION_STATE_EVENT,
-  CONSOLE2 as CONSOLE,
-  CONSOLE_BLOCK_EVENT,
-  CONSOLE_HISTORY,
-  CONSOLE_MAX_BYTES,
-  CONSOLE_RETRY_EVENT,
-  CONSOLE_RUN_EVENT,
-  CONSOLE_STATES,
   CONTENTS,
   CONTENTS_EVENT,
-  COPIED_MS,
-  COPY_EVENT,
-  COPY_FAILED_EVENT,
   COUNTDOWN,
   COUNTDOWN_END_EVENT,
   COUNTDOWN_EVENT,
@@ -72812,34 +74512,12 @@ export {
   DEPLIST,
   DEPLIST_COLLAPSE,
   DEPLIST_RETRY_EVENT,
-  DIALOG_OPEN_EVENT,
-  DIFF,
-  DIFF_CONTEXT,
-  DIFF_COPY_EVENT,
-  DIFF_EXPAND_EVENT,
-  DIFF_FOLD_MIN,
-  DIFF_MAX_LINES,
-  DIFF_RETRY_EVENT,
-  DIFF_STATUSES,
-  DIFF_TOGGLE_EVENT,
-  DIFF_WORD_LIMIT,
-  DIFF_WORD_SHARE,
   DISABLED_REASON,
-  DISMISS_OWNED,
   DOC_GLYPH,
   DOC_KINDS,
   DONE_ATTRIBUTE,
   DONE_EVENT,
   EFFECTS_ATTRIBUTE,
-  ENTITY_ACTION_EVENT,
-  ENTITY_CARD,
-  ENTITY_FLAG_EVENT,
-  ENTITY_GRID,
-  ENTITY_GRID_RETRY_EVENT,
-  ENTITY_NEW_EVENT,
-  ENTITY_RETRY_EVENT,
-  ENTITY_STAR_EVENT,
-  ENTITY_TICK_EVENT,
   FACETS,
   FACET_EVENT,
   FEED,
@@ -72876,11 +74554,6 @@ export {
   GLIDE_ATTRIBUTE,
   GLYPHS,
   HEADLINE_ROUTINES,
-  HEAT,
-  HEAT_PAGE_EVENT,
-  HEAT_PICK_EVENT,
-  HEAT_RETRY_EVENT,
-  HEAT_ROW_EVENT,
   HIGHLIGHT_EVENT,
   HOLD_DELAY,
   HOLD_FAST,
@@ -72905,7 +74578,6 @@ export {
   JSON_STATE_EVENT,
   JSON_VALIDATE_EVENT,
   KEYS,
-  KEYS_SLOT,
   KNOBS,
   KPI_STRIP,
   KPI_TOGGLE,
@@ -72918,29 +74590,14 @@ export {
   LIGHT_KNOB,
   LIGHT_REACH,
   LIGHT_SELECTOR,
-  LOGVIEWER,
-  LOGVIEWER_EVENT,
-  LOGVIEWER_MAX,
-  LOGVIEWER_RETRY_EVENT,
-  LOG_LEVELS,
   LONG_PRESS_MS,
   MARKDOWN_LIMIT,
   MARQUEE_KNOB,
   MARQUEE_PAUSE_KNOB,
   MASK,
   MASTER_DETAIL,
-  MATRIX,
-  MATRIX_LIGHT_EVENT,
-  MATRIX_PICK_EVENT,
-  MATRIX_RETRY_EVENT,
   MEASURE_KNOB,
   MEMO_PREFIX,
-  MENU_BUTTON,
-  MENU_CLOSE_EVENT,
-  MENU_COUNT_PROPERTY,
-  MENU_GUTTER,
-  MENU_OPEN_EVENT,
-  MENU_SELECT_EVENT,
   METER,
   MOD_CAP,
   MONTH_EVENT,
@@ -72964,7 +74621,7 @@ export {
   NOTICE_READ_EVENT,
   NOTICE_SEVERITIES,
   NO_FLASH_SNIPPET,
-  OPENER,
+  OPEN_EVENT3 as OPEN_EVENT,
   OPTION_SELECTOR,
   OPT_OUT,
   OVERFLOW_ATTRIBUTE,
@@ -73083,16 +74740,7 @@ export {
   RUNS,
   RUNS_RETRY_EVENT,
   RUNS_STATES,
-  RUN_EVENT,
-  SCROLL_BOXES,
-  SCROLL_OVERFLOW,
-  SECRET,
-  SECRET_CLIPBOARD_EVENT,
-  SECRET_EVENT,
   SECRET_HEADERS,
-  SECRET_MASK,
-  SECRET_REQUEST_EVENT,
-  SECRET_TTL,
   SEGMENTED,
   SEGMENTED_EVENT,
   SEGMENTED_ITEM,
@@ -73144,8 +74792,6 @@ export {
   TAB,
   TABBAR,
   TABBAR_HEIGHT_PROPERTY,
-  TABS_OVERFLOW,
-  TAB_CHANGE_EVENT,
   TAB_COUNT_EVENT,
   TAB_COUNT_TONES,
   TEXT_ATTRIBUTE,
@@ -73170,26 +74816,12 @@ export {
   TILES_SET,
   TILE_ROW_MIN,
   TIME,
-  TIMERS,
-  TIMERS_RETRY_EVENT,
-  TIMER_CHANGE_EVENT,
   TIMER_DISC,
   TIMER_DISC_LEFT,
-  TIMER_DONE_EVENT,
-  TIMER_SOUNDS,
-  TIMER_START,
-  TIMER_START_EVENT,
-  TIMER_STOP_EVENT,
-  TIMER_TICK_MS,
   TIME_EVENT,
   TIME_RETRY_EVENT,
   TIME_STEPS,
   TIMINGS,
-  TOAST_HIDE_EVENT,
-  TOAST_LINGER_MS,
-  TOAST_MS,
-  TOAST_PAUSE_EVENT,
-  TOAST_SHOW_EVENT,
   TOGGLE,
   TOGGLE_CHANGED_EVENT,
   TOGGLE_EVENT,
@@ -73199,8 +74831,6 @@ export {
   TOOLBAR,
   TOOLBAR_CLEAR_EVENT,
   TOOLBAR_REMOVE_EVENT,
-  TOOLTIP_EVENT,
-  TOOLTIP_OWNED,
   TOUR_GAP,
   TOUR_GUTTER,
   TRACE,
@@ -73215,9 +74845,7 @@ export {
   TREE_SELECT_EVENT,
   TRI_ATTRIBUTE,
   TRI_STATES,
-  UNDO_EVENT,
   UNDO_MAX,
-  UNDO_MS,
   UNDO_RESTORED_MS,
   UNDO_TOAST,
   UNDO_TOAST_EVENT,
@@ -73234,23 +74862,10 @@ export {
   UPDATE_PROPERTY,
   UPDATE_STYLE,
   UPDATING_ATTRIBUTE,
-  UPTIME,
-  UPTIME_COUNT,
-  UPTIME_OPEN_EVENT,
-  UPTIME_PICK_EVENT,
-  UPTIME_RETRY_EVENT,
-  UPTIME_STATES,
   USES_COLLAPSE_BELOW,
   USES_MAP,
   USES_PIN_EVENT,
   USES_RETRY_EVENT,
-  USUAL,
-  USUAL_ADD_EVENT,
-  USUAL_FOLD_ABOVE,
-  USUAL_NOT_TODAY_EVENT,
-  USUAL_PICK_EVENT,
-  USUAL_RETRY_EVENT,
-  USUAL_STATES,
   VALID_EVENT,
   VALUE_PROPERTY,
   VERSION,
@@ -73262,14 +74877,9 @@ export {
   VIEWER,
   VIEWER_CLOSE_EVENT,
   VIEWER_STATES,
-  WEEK,
   WEEKDAYS,
   WEEKDAYS_EVENT,
   WEEKDAY_PRESETS,
-  WEEK_OPEN_EVENT,
-  WEEK_RANGE_EVENT,
-  WEEK_RETRY_EVENT,
-  WEEK_TICK_MS,
   WHEEL,
   WHEEL_RESULT_EVENT,
   WHEEL_SPIN_EVENT,
@@ -73279,20 +74889,17 @@ export {
   ack_gate_exports as ackGateExports,
   action_tiles_exports as actionTilesExports,
   actions_exports as actionsExports,
-  addTimerTime,
   agoMoment,
   agoText,
   alarm_exports as alarmExports,
   anchorSlug,
   anchors_exports as anchorsExports,
-  appendLogLines,
   applyLayout,
   applyStoredCalm,
   applyStoredTheme,
   applyTheme,
   art_exports as artExports,
   askQuestion,
-  askTimerNotifications,
   attachAckGates,
   attachActionColumns,
   attachActionTiles,
@@ -73300,38 +74907,29 @@ export {
   attachAlarms,
   attachAll,
   attachAnchors,
-  attachArt,
   attachAttention,
   attachAutosize,
-  attachAvailability,
   attachBarCells,
   attachBullets,
   attachCalendars,
   attachCalm,
   attachCardStates,
   attachChecklists,
-  attachClaims,
   attachCodeFields,
   attachCodes,
   attachColorPickers,
-  attachComboboxes,
   attachCommands,
   attachCompares,
   attachConnection,
-  attachConsoles,
   attachContents,
   attachCountdowns,
   attachDatePickers,
   attachDatedOptions,
   attachDeplists,
-  attachDialogs,
-  attachDiffs,
   attachDisabledReasons,
-  attachDismissals,
   attachDocGlyphs,
   attachDocPreviews,
   attachEffects,
-  attachEntityCards,
   attachFacets,
   attachFeeds,
   attachFlashButtons,
@@ -73341,7 +74939,6 @@ export {
   attachForms,
   attachGalleries,
   attachGrids,
-  attachHeats,
   attachHoverCards,
   attachIdmarks,
   attachJobLines,
@@ -73352,16 +74949,11 @@ export {
   attachLazyRegisters,
   attachLedes,
   attachLoadingPieces,
-  attachLogViewers,
   attachMasterDetails,
-  attachMatrices,
-  attachMenuButtons,
   attachNavFolds,
   attachNewPills,
   attachNotices,
-  attachPalettes,
   attachPasskeys,
-  attachPatterns,
   attachPipelines,
   attachPrint,
   attachProblems,
@@ -73379,12 +74971,8 @@ export {
   attachRowKeys,
   attachRowSelect,
   attachRuns,
-  attachScrollbars,
-  attachSecrets,
   attachSegmented,
-  attachSelect,
   attachSelectionBars,
-  attachSelects,
   attachSentences,
   attachShortcuts,
   attachSliders,
@@ -73398,27 +74986,21 @@ export {
   attachTabCounts,
   attachTabbars,
   attachTableRegions,
-  attachTabs,
   attachThemePickers,
   attachThreads,
   attachTicks,
   attachTileKeys,
   attachTileSets,
   attachTimerDiscs,
-  attachTimers,
   attachTimes,
   attachToggles,
   attachToolbars,
-  attachTooltips,
   attachTraces,
   attachTransfers,
   attachUnsaved,
   attachUploads,
-  attachUptimes,
-  attachUsualPickers,
   attachVersionDeltas,
   attachWeekdays,
-  attachWeeks,
   attachWheels,
   attachWizards,
   attention_exports as attentionExports,
@@ -73426,11 +75008,7 @@ export {
   auto_refresh_exports as autoRefreshExports,
   autosize,
   autosize_exports as autosizeExports,
-  availabilityAnswers,
-  availabilityBest,
-  availabilityDays,
   availability_exports as availabilityExports,
-  availabilityRange,
   barcell_exports as barcellExports,
   buildAlarm,
   buildJobLine,
@@ -73454,16 +75032,9 @@ export {
   chart_exports as chartExports,
   checklist_exports as checklistExports,
   claim_exports as claimExports,
-  claimFilter,
-  claimPeople,
   clampToMonth,
-  clearConsole,
   clearError,
-  clearLogViewer,
   clockShift,
-  closeLabel,
-  closeMenu,
-  closeOnOutsidePress,
   closePane,
   code_exports as codeExports,
   codeField,
@@ -73471,7 +75042,6 @@ export {
   colorPicker,
   colorpicker_exports as colorpickerExports,
   columnId,
-  combobox,
   combobox_exports as comboboxExports,
   command_exports as commandExports,
   commandLines,
@@ -73485,7 +75055,6 @@ export {
   configureUnsaved,
   connection_exports as connectionExports,
   connectionOf,
-  consoleBlocks,
   console_exports as consoleExports,
   contents,
   contentsSlug,
@@ -73519,19 +75088,15 @@ export {
   diagnostics,
   diagnostics_exports as diagnosticsExports,
   diff_exports as diffExports,
-  diffWords,
   discShare,
   discardUnsaved,
   displayShortcutKeys,
   docGlyph,
   docKindOf,
   docpreview_exports as docpreviewExports,
-  drawArt,
   drawSparkline,
   drawTabCount,
   drawUsesMap,
-  drawnSelect,
-  drawsSelect,
   effects_exports as effectsExports,
   endPreview,
   ensureRegister,
@@ -73546,7 +75111,6 @@ export {
   fitTextarea,
   flash_exports as flashExports,
   focus_steps_exports as focusStepsExports,
-  foldContext,
   foldNav,
   footprint_exports as footprintExports,
   forgetClaims,
@@ -73570,7 +75134,6 @@ export {
   getSegmentedTri,
   getSegmentedValues,
   getSelection,
-  getTimers,
   getWheelResult,
   githubRepo,
   glyphCells,
@@ -73579,8 +75142,6 @@ export {
   gridlayout_exports as gridlayoutExports,
   groupMessages,
   heat_exports as heatExports,
-  heatOffset,
-  hideSecret,
   holdFootprint,
   hovercard_exports as hovercardExports,
   hsl,
@@ -73600,7 +75161,6 @@ export {
   intentWords,
   isCalm,
   isCalmTones,
-  isMac2 as isMac,
   isTheme,
   itemsOf,
   job_line_exports as jobLineExports,
@@ -73623,9 +75183,6 @@ export {
   listbox_exports as listboxExports,
   live_options_exports as liveOptionsExports,
   loading_pieces_exports as loadingPiecesExports,
-  logLevel,
-  logViewerLines,
-  logViewerText,
   logviewer_exports as logviewerExports,
   luminance,
   markUnsavedClean,
@@ -73639,10 +75196,6 @@ export {
   meets,
   memoryFor,
   menu_button_exports as menuButtonExports,
-  menuKeyTarget,
-  menuLineCount,
-  menuPlacement,
-  menuSignature,
   mergeRoles,
   meterParts,
   meterText,
@@ -73654,7 +75207,6 @@ export {
   motion_exports as motionExports,
   nameOf2 as nameOf,
   nav_fold_exports as navFoldExports,
-  nearNames,
   newPill,
   newpill_exports as newpillExports,
   nextTile,
@@ -73662,16 +75214,13 @@ export {
   noFlashSnippet,
   noMatchText,
   noiseGlyph,
-  normaliseName,
   notices_exports as noticesExports,
   noticesOf,
   onThemeChange,
-  openAtTop,
   openBusyCard,
   openDocPreview,
   openGalleryFromHash,
   openGalleryItem,
-  openMenu,
   openPane,
   openSnoozePanel,
   openViewer,
@@ -73681,7 +75230,6 @@ export {
   overlays_exports as overlaysExports,
   page_contents_exports as pageContentsExports,
   paintRemembered,
-  palette,
   palette_exports as paletteExports,
   parseDate2 as parseDate,
   parseDuration,
@@ -73697,16 +75245,13 @@ export {
   passkeys_exports as passkeysExports,
   path_trace_exports as pathTraceExports,
   patterns_exports as patternsExports,
-  pauseTimer,
   pendingTheme,
   pickWeighted,
-  pillCapacity,
   pipeline_exports as pipelineExports,
   placeDatePanel,
   plainFileName,
   planFold,
   planSeparators,
-  playTimerSound,
   preparePrint,
   presetMs,
   prettyJson,
@@ -73756,7 +75301,6 @@ export {
   rememberView,
   rememberedName,
   rememberedView,
-  removeHeatPaging,
   removeRow,
   renderDiagnostics,
   renderShortcutSheet,
@@ -73764,16 +75308,11 @@ export {
   resetSegmented,
   resetTransfer,
   restoreRemembered,
-  restoreTimers,
-  resumeTimer,
-  revealSecret,
-  revealTab,
   rgbToHsl,
   rowRoles,
   rowSelect,
   row_select_exports as rowSelectExports,
   rowSelectKeys,
-  runConsoleCommand,
   runFlashButton,
   runMoment,
   runs,
@@ -73783,12 +75322,9 @@ export {
   scriptSide,
   scrollWithin,
   scrollersAround,
-  searchLogViewer,
-  secretInputValue,
   seenAcross,
   segmented_exports as segmentedExports,
   selectPane,
-  selectTab,
   selection_bar_exports as selectionBarExports,
   sentence,
   sentence_exports as sentenceExports,
@@ -73800,8 +75336,6 @@ export {
   setAgo,
   setAttention,
   setAutosizeState,
-  setAvailability,
-  setAvailabilityAnswer,
   setBarCell,
   setBullets,
   setCalendarCaption,
@@ -73813,28 +75347,16 @@ export {
   setChecklistChecked,
   setChecklistItems,
   setChecklistState,
-  setClaim,
-  setClaimFilter,
-  setClaimPeople,
-  setClaimViewer,
   setCode,
   setCodeFieldError,
   setCompare,
   setCompareBusy,
   setConnection,
-  setConsole,
-  setConsoleComplete,
-  setConsoleContext,
-  setConsoleRun,
   setContents,
   setDatedOptions,
   setDatedState,
   setDeplist,
-  setDiff,
   setDone,
-  setEntity,
-  setEntityGrid,
-  setEntityGridState,
   setError,
   setFacetCounts,
   setFacetItems,
@@ -73842,21 +75364,11 @@ export {
   setFeed,
   setGallery,
   setGalleryUploading,
-  setHeat,
-  setHeatLegend,
-  setHeatPaging,
-  setHeatPick,
-  setHeatRows,
   setIdmark,
   setIdmarkGroup,
   setIndeterminate,
   setJobLine,
   setKeys,
-  setLogViewer,
-  setMatrix,
-  setMatrixLit,
-  setMatrixPick,
-  setMenu,
   setMeter,
   setNotices,
   setPaneState,
@@ -73881,7 +75393,6 @@ export {
   setRowBusy,
   setRuns,
   setRunsState,
-  setSecretInputValue,
   setSegmentedCounts,
   setSegmentedItems,
   setSegmentedTri,
@@ -73909,21 +75420,13 @@ export {
   setThread,
   setTime,
   setTimePresets,
-  setTimersState,
   setTodayState,
   setToolbarActive,
   setTrace,
   setTransfer,
   setUnsavedSaving,
-  setUptime,
   setUsesPin,
-  setUsual,
-  setUsualState,
   setVersionDelta,
-  setWeekEvents,
-  setWeekLegend,
-  setWeekStart,
-  setWeekState,
   setWeekdays,
   setWheelItems,
   setWheelState,
@@ -73936,11 +75439,9 @@ export {
   shortcuts_exports as shortcutsExports,
   shouldStartTour,
   showAlarm,
-  showAlertAgain,
   showError,
   sidenav_exports as sidenavExports,
   sidenavGroups,
-  similarity,
   slider,
   slider_exports as sliderExports,
   sliderPercent,
@@ -73954,21 +75455,15 @@ export {
   sortAttention,
   sortPasskeys,
   sparkPaths,
-  speakTimerMessage,
   spinWheel,
-  stackPills,
   stackbar_exports as stackbarExports,
   stackbarParts,
-  startTimer,
   startTour,
   startsWord,
   statusrow_exports as statusrowExports,
-  stepLogMatch,
   stepPosition,
   stepTime,
   steplist_exports as steplistExports,
-  stopTimer,
-  stopTimerRing,
   storeTheme,
   storedTheme,
   strings_exports as stringsExports,
@@ -74008,8 +75503,6 @@ export {
   toDutch,
   toISO,
   toJson,
-  toast,
-  toastRegion,
   toggle,
   toggle_exports as toggleExports,
   toggleGroup,
@@ -74053,14 +75546,9 @@ export {
   upload,
   upload_exports as uploadExports,
   uptime_exports as uptimeExports,
-  uptimeFigures,
-  uptimeFit,
-  uptimePercent,
   uses_map_exports as usesMapExports,
   usesPath,
   usesRelation,
-  usualNotToday,
-  usualPicker,
   usual_picker_exports as usualPickerExports,
   valueOf,
   version_delta_exports as versionDeltaExports,
@@ -74069,8 +75557,6 @@ export {
   viewer_exports as viewerExports,
   visibleItems,
   watchOptions,
-  watchScrollbar,
-  watchTabOverflow,
   week_exports as weekExports,
   weekdaySummary,
   weekdays,
