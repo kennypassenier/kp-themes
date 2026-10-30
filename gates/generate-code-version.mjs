@@ -44,7 +44,6 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import * as prettier from 'prettier';
-
 // The loader's own table: every module it attaches, and the selector it acts
 // through [scope-136]. Read here rather than restated, so the hash and the page
 // cannot drift apart; `js/auto.js` imports cleanly outside a browser.
@@ -52,6 +51,7 @@ const { NEEDS } = await import('../js/auto.js');
 /** `js/<name>.js` for each need, with the selector that brings it in. */
 const ATTACHED_BY_SELECTOR = new Map(NEEDS.map((need) => [`js/${need.name}.js`, need.when]));
 import { loadMap, ruleFor, selectorChains, vocabularyOf, withoutComments } from './tags.mjs';
+import { selectorOwner, splitFolders } from './js-parts.mjs';
 
 const root = new URL('../', import.meta.url);
 export const CODE_VERSION = 'catalogue/code-version.json';
@@ -413,11 +413,11 @@ export function codeVersion() {
 
     /** @type {Record<string, { modules: string[], families: Set<string> }>} */
     const components = {};
-    /** @type {Record<string, { digest: string, when: string }>} */
-    const bySelector = {};
+    /** @type {Record<string, string[]>} */
+    const selectorParts = {};
     for (const file of [
         ...files('js/', (n) => n.endsWith('.js')),
-        ...files('js/effects/', (n) => n.endsWith('.js')),
+        ...['js/effects/', ...splitFolders(new URL('js/', root))].flatMap((dir) => files(dir, (n) => n.endsWith('.js'))),
         ...files('components/', (n) => n.endsWith('.jsx')),
     ]) {
         if (NOT_A_BLOCK_INPUT.has(file)) continue;
@@ -436,8 +436,8 @@ export function codeVersion() {
         // A module the loader attaches by selector is its own input: the
         // block that matches the selector is the block that loads it, and no
         // other block of the component pays for it [scope-136].
-        const when = ATTACHED_BY_SELECTOR.get(file);
-        if (when !== undefined) bySelector[file] = { digest: digest([`${file}\0`, source]), when };
+        const [owner, when] = selectorOwner(file, ATTACHED_BY_SELECTOR);
+        if (when !== undefined) (selectorParts[owner] ??= []).push(`${file}\0`, source);
         for (const name of named) {
             components[name] ??= { modules: [], families: new Set() };
             if (when === undefined) components[name].modules.push(`${file}\0`, source);
@@ -452,9 +452,9 @@ export function codeVersion() {
             'Written by gates/generate-code-version.mjs.',
         base: digest(base),
         modules: Object.fromEntries(
-            Object.keys(bySelector)
+            Object.keys(selectorParts)
                 .sort()
-                .map((file) => [file, bySelector[file]]),
+                .map((file) => [file, { digest: digest(selectorParts[file]), when: ATTACHED_BY_SELECTOR.get(file) }]),
         ),
         themes: Object.fromEntries(themes.map((t) => [t, digest(themeBase[t])])),
         rules: Object.fromEntries([...ruleLines.keys()].sort().map((key) => [key, digest(/** @type {string[]} */ (ruleLines.get(key)))])),

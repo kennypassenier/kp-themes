@@ -84,10 +84,14 @@ function corpus(/** @type {(f: string) => string} */ read) {
     const flatten = (/** @type {string} */ value) => value.replace(/`/g, '').replace(/\s+/g, ' ');
     let all = '';
     for (const dir of SOURCES) {
-        for (const entry of readdirSync(new URL(`${dir}/`, root), { withFileTypes: true })) {
-            if (!entry.isFile() || !/\.(mjs|js|jsx|sh)$/.test(entry.name)) continue;
-            all += flatten(read(`${dir}/${entry.name}`)) + '\n';
-        }
+        // Down into the folders too: a split module keeps its parts in js/<name>/.
+        const walk = (/** @type {string} */ at) => {
+            for (const entry of readdirSync(new URL(`${at}/`, root), { withFileTypes: true })) {
+                if (entry.isDirectory()) walk(`${at}/${entry.name}`);
+                else if (entry.isFile() && /\.(mjs|js|jsx|sh)$/.test(entry.name)) all += flatten(read(`${at}/${entry.name}`)) + '\n';
+            }
+        };
+        walk(dir);
     }
     return all;
 }

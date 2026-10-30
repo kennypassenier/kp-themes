@@ -8,6 +8,7 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import process from 'node:process';
 import { TIMINGS } from '../js/effects.js';
+import { moduleSource } from './js-parts.mjs';
 import { stylesheets } from './stylesheets.mjs';
 
 /**
@@ -574,13 +575,10 @@ export function unguardedMotion(source) {
  */
 export function unsubscribedPreferenceReads(dir) {
     const problems = [];
-    // Every source in the directory, not only the React ones. Until
-    // 2026-09-08 this filtered on `.jsx`, and `js/` holds none — so the
-    // scan read zero files, passed every time, and its own comment said
-    // it would name a module that stopped listening. The audit found it
-    // by running the function rather than reading it.
+    // Every source in the directory, not only the React ones (until 2026-09-08 this filtered on `.jsx`, and `js/` holds none: the
+    // scan read zero files and passed every time; the audit found it by running the function). A split module is read whole.
     for (const file of readdirSync(dir).filter((f) => /\.(js|jsx|mjs)$/.test(f))) {
-        const source = readFileSync(new URL(file, `file://${dir}/`), 'utf8');
+        const source = moduleSource(dir, file);
         // A file may read the preference as long as it also subscribes to
         // it: that is the whole rule. `js/effects.js` reads it once and
         // adds a `change` listener, which is correct; a file that reads

@@ -418,8 +418,8 @@ test('AR28: the vendored modules import nothing outside themselves', () => {
         [],
     );
     // Six until fix-56: chassis-rs bakes js/effects.js too, and since
-    // scope-117 the eleven files it takes to run.
-    assert.equal(VENDORED.length, 17);
+    // scope-117 the eleven files it takes to run (17), plus, since the 2026-10-30 split, the 39 parts of strings and components.
+    assert.equal(VENDORED.length, 56);
 });
 
 test('AR28: the closure walk reads an import it must not miss', () => {
@@ -664,7 +664,7 @@ test('TH103: a copyable export that is missing from the manifest is a difference
             './js/strings': { types: './js/strings.d.ts', default: './js/strings.js' },
         },
     };
-    assert.deepEqual(copyableExports(pkg), ['css/themes.css', 'js/strings.js']);
+    assert.deepEqual(copyableExports(pkg, { follow: false }), ['css/themes.css', 'js/strings.js']);
 });
 
 test('TH103: patterns, declarations and the React channel are not vendored files', () => {

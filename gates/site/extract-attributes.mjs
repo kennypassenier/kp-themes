@@ -23,6 +23,7 @@
 // Usage: node gates/site/extract-attributes.mjs
 
 import { readFileSync, readdirSync } from 'node:fs';
+import { moduleSource } from '../js-parts.mjs';
 import { stripComments } from './source.mjs';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
@@ -111,7 +112,8 @@ export function extractAttributes() {
             .map((f) => `effects/${f}`),
     ].sort();
 
-    for (const file of modules) scanModule(readFileSync(DIR + file, 'utf8'), `js/${file}`, found);
+    // A split module is read whole: the facade and the parts under its folder are one text.
+    for (const file of modules) scanModule(file.startsWith('effects/') ? readFileSync(DIR + file, 'utf8') : moduleSource(DIR, file), `js/${file}`, found);
 
     const attributes = [...found.values()].sort((a, b) => a.name.localeCompare(b.name));
     /** @type {Record<Role, number>} */

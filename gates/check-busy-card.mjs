@@ -26,6 +26,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
+import { moduleSource } from './js-parts.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
@@ -123,7 +124,7 @@ export const NOT_DATA = {
 /** What makes a module one that takes a loading state. */
 const LOADS = /=== 'loading'|aria-busy|data-kp-loading|kp-skeleton/;
 /** What makes a module one that lays the busy card. */
-const LAYS = /from '\.\/busy-card\.js'|kp-datatable__busy-overlay[\s\S]*kp-datatable__busy-panel/;
+const LAYS = /from '\.\.?\/busy-card\.js'|kp-datatable__busy-overlay[\s\S]*kp-datatable__busy-panel/;
 
 /**
  * The faults of a set of modules.
@@ -153,7 +154,7 @@ export function busyCardFaults(modules) {
 function main() {
     /** @type {Record<string, string>} */
     const modules = {};
-    for (const name of readdirSync(`${ROOT}js`)) if (name.endsWith('.js')) modules[`js/${name}`] = readFileSync(`${ROOT}js/${name}`, 'utf8');
+    for (const name of readdirSync(`${ROOT}js`)) if (name.endsWith('.js')) modules[`js/${name}`] = moduleSource(`${ROOT}js`, name);
     const faults = busyCardFaults(modules);
     if (faults.length) {
         console.error(

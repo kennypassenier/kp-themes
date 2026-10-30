@@ -32,8 +32,9 @@ const WATCHED = ['js', 'components', 'hooks', 'fx'];
 
 /** js/strings.js IS the dictionary, so its own sentences are the point. */
 const NOT_CHECKED = [
-    // The dictionary itself: its sentences are the point.
+    // The dictionary itself: its sentences are the point. It is a facade over js/strings/ since the split.
     'js/strings.js',
+    'js/strings/',
     // Generated from themes/*/tokens.json. The theme labels are Kenny's
     // names for his themes, not interface chrome — "Hoog contrast" stays
     // Dutch on an English page the way a product name does.
@@ -231,7 +232,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
     for (const dir of WATCHED) {
         for (const file of sources(dir)) {
-            if (NOT_CHECKED.includes(file)) continue;
+            if (NOT_CHECKED.some((entry) => (entry.endsWith('/') ? file.startsWith(entry) : file === entry))) continue;
             checked++;
             for (const phrase of loosePhrases(readFileSync(join(ROOT, file), 'utf8'), { jsx: file.endsWith('.jsx') })) {
                 if (known.has(phrase.text)) {

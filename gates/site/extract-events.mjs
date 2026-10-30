@@ -16,6 +16,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
+import { moduleSource } from '../js-parts.mjs';
 import { stripComments } from './source.mjs';
 
 const DIR = fileURLToPath(new URL('../../js/', import.meta.url));
@@ -77,7 +78,8 @@ export function extractEvents() {
 
     for (const file of modules) {
         const module = `js/${file}`;
-        const source = readFileSync(DIR + file, 'utf8');
+        // The facade and the parts of a split module, as one text.
+        const source = moduleSource(DIR, file);
         const code = stripComments(source);
 
         for (const match of source.matchAll(/^export const ([A-Z][A-Z0-9_]*) = '([^']*)';/gm)) {
