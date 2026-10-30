@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The seventy-six largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The seventy-seven largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`, `range.js`, `nav-fold.js`, `ack-gate.js`, `code-field.js`, `pipeline.js`, `tabbar.js`, `idmark.js`, `tour.js`, `problems.js`, `facets.js`, `undo-toast.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1254,3 +1254,15 @@ The facet list with counts and an "only" button, as a FacetGroup controller. 5 f
 | `pattern.js`    | The identity pattern: identityCells and the SVG drawn over a swatch.                         |
 | `rows.js`       | The rows: finding, wiring, building and painting them, the Everything row and the sync.      |
 | `values.js`     | The selector and the event.                                                                  |
+
+## js/undo-toast.js → js/undo-toast/
+
+The toast with Undo and a visible clock, as an UndoRun controller whose host is the toast. 5 files.
+
+| File        | Does                                                                                         |
+| ----------- | -------------------------------------------------------------------------------------------- |
+| `build.js`  | The toast's settings read from the options and the page's defaults, and its content.         |
+| `core.js`   | UndoCore: the state and the clock that holds while the pointer or the focus is on the toast. |
+| `run.js`    | UndoRun: Undo, the commit and its failure, Esc and close, and leaving the page.              |
+| `stack.js`  | The toasts still counting, and the one key that undoes the newest.                           |
+| `values.js` | The class, the event and the fixed numbers.                                                  |

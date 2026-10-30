@@ -1,11 +1,4 @@
-/** The toast's own class. */
-export declare const UNDO_TOAST = "kp-toast--undo";
-/** Fired on the toast region, bubbling, when the action is committed, undone or failed: `{ toast, outcome }`. */
-export declare const UNDO_TOAST_EVENT = "kp-undo-toast";
-/** How long the toast says "Restored" [ms]. */
-export declare const UNDO_RESTORED_MS = 1500;
-/** How many toasts stand at once. */
-export declare const UNDO_MAX = 3;
+export { UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX } from './undo-toast/values.js';
 export type UndoToastOptions = {
     /**
      * runs when the window closes (mode `defer`); a rejection is a failure
@@ -59,6 +52,29 @@ export type UndoToast = {
      */
     done: Promise<'committed' | 'undone' | 'failed' | 'left'>;
 };
+/**
+ * @typedef {object} UndoToastOptions
+ * @property {() => unknown | Promise<unknown>} [commit] runs when the window closes (mode `defer`); a rejection is a failure
+ * @property {() => unknown} [undo] runs on Undo
+ * @property {() => unknown} [restore] runs when a commit failed (default `undo`)
+ * @property {number} [ms] the window; 0 commits at once
+ * @property {'defer' | 'revert'} [mode]
+ * @property {'ring' | 'bar' | 'text' | 'none'} [clock]
+ * @property {string | false} [key] `Mod+Z`
+ * @property {'carry' | 'commit' | 'cancel'} [leave]
+ * @property {number} [max]
+ * @property {string} [failed] the toast's line when the commit fails, instead of "Not done: why"
+ * @property {string} [restored] the toast's line after Undo, instead of "Restored"
+ * @property {HTMLElement | null} [region]
+ */
+/**
+ * @typedef {object} UndoToast
+ * @property {HTMLElement & { dismiss: () => void }} toast
+ * @property {() => 'counting' | 'committing' | 'failed' | 'undone' | 'done'} state
+ * @property {() => void} undo undo now
+ * @property {() => Promise<void>} accept commit now
+ * @property {Promise<'committed' | 'undone' | 'failed' | 'left'>} done settles with how it ended
+ */
 /**
  * Show a toast with Undo and a clock.
  * @param {string} text what happened: "3 schedules deleted"

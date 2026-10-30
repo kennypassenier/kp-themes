@@ -383,6 +383,7 @@
         { "path": "js/selection-bar.js", "tags": ["@component:data"], "why": "the selection bar over a table or a list [kpadopt5]" },
         { "path": "js/selection-bar/*.js", "tags": ["@component:data"], "why": "the selection bar over a table or a list [kpadopt5]" },
         { "path": "js/undo-toast.js", "tags": ["@component:feedback"], "why": "a toast with Undo and a visible clock [kpadopt5]" },
+        { "path": "js/undo-toast/*.js", "tags": ["@component:feedback"], "why": "a toast with Undo and a visible clock [kpadopt5]" },
         {
             "path": "js/feed.js",
             "tags": ["@component:data"],

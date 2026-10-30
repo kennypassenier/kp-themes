@@ -20245,21 +20245,209 @@ var init_patterns = __esm({
   }
 });
 
-// js/undo-toast.js
-var undo_toast_exports = {};
-__export(undo_toast_exports, {
-  UNDO_MAX: () => UNDO_MAX,
-  UNDO_RESTORED_MS: () => UNDO_RESTORED_MS,
-  UNDO_TOAST: () => UNDO_TOAST,
-  UNDO_TOAST_EVENT: () => UNDO_TOAST_EVENT,
-  undoToast: () => undoToast
+// js/undo-toast/values.js
+var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, MS_PER_SECOND, CLOCK_TICK_MS;
+var init_values2 = __esm({
+  "js/undo-toast/values.js"() {
+    "use strict";
+    UNDO_TOAST = "kp-toast--undo";
+    UNDO_TOAST_EVENT = "kp-undo-toast";
+    UNDO_RESTORED_MS = 1500;
+    UNDO_MAX = 3;
+    MS_PER_SECOND = 1e3;
+    CLOCK_TICK_MS = 250;
+  }
 });
+
+// js/undo-toast/build.js
+function declared(name, region) {
+  const attr16 = `data-kp-undo-${name}`;
+  return region?.getAttribute(attr16) ?? (typeof document !== "undefined" ? document.documentElement.getAttribute(attr16) : null);
+}
+function readSettings(options) {
+  const region = options.region ?? null;
+  const msDeclared = declared("ms", region);
+  const ms = Math.max(0, options.ms ?? (msDeclared !== null && msDeclared !== "" ? Number(msDeclared) : UNDO_MS));
+  const mode2 = (options.mode ?? declared("mode", region)) === "revert" ? "revert" : "defer";
+  const clockRaw = options.clock ?? declared("clock", region);
+  const clock4 = clockRaw === "bar" || clockRaw === "text" || clockRaw === "none" ? clockRaw : "ring";
+  const keyRaw = options.key ?? declared("key", region);
+  const key = keyRaw === false || keyRaw === "false" ? false : String(keyRaw || "Mod+Z");
+  const leaveRaw = options.leave ?? declared("leave", region);
+  const leaves = leaveRaw === "commit" || leaveRaw === "cancel" ? leaveRaw : "carry";
+  const max = Math.max(1, options.max ?? (Number(declared("max", region)) || UNDO_MAX));
+  const seconds = Math.max(1, Math.round(ms / MS_PER_SECOND));
+  return { region, ms, mode: mode2, clock: clock4, key, leaves, max, seconds };
+}
+function buildRing(doc) {
+  const ring = doc.createElement("span");
+  ring.className = "kp-undo__ringbox";
+  ring.setAttribute("aria-hidden", "true");
+  const circles = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
+  circles.setAttribute("class", "kp-undo__ring");
+  circles.setAttribute("viewBox", "0 0 24 24");
+  for (const part7 of ["track", "fill"]) {
+    const circle = doc.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("class", `kp-undo__ring-${part7}`);
+    circle.setAttribute("cx", "12");
+    circle.setAttribute("cy", "12");
+    circle.setAttribute("r", "10");
+    circle.setAttribute("pathLength", "1");
+    circles.append(circle);
+  }
+  ring.append(circles);
+  return ring;
+}
+function buildBody(doc, text, { ms, clock: clock4, seconds }) {
+  const strings = getStrings();
+  const body = doc.createElement("span");
+  body.className = "kp-undo";
+  const ring = clock4 === "ring" ? buildRing(doc) : null;
+  if (ring) body.append(ring);
+  const words3 = doc.createElement("span");
+  words3.className = "kp-undo__text";
+  words3.setAttribute("aria-hidden", "true");
+  words3.textContent = text;
+  const said = doc.createElement("span");
+  said.className = "kp-sr-only";
+  said.textContent = ms > 0 ? strings.undoToastAnnounce(text, seconds) : text;
+  body.append(words3, said);
+  let secs = null;
+  if (clock4 === "text" || clock4 === "ring") {
+    secs = doc.createElement("span");
+    secs.className = clock4 === "ring" ? "kp-undo__secs" : "kp-undo__clock";
+    secs.setAttribute("aria-hidden", "true");
+    secs.textContent = clock4 === "ring" ? String(seconds) : strings.undoToastClock(seconds);
+    if (ring) ring.append(secs);
+    else body.append(secs);
+  }
+  if (clock4 === "bar") {
+    const bar = doc.createElement("span");
+    bar.className = "kp-undo__bar";
+    bar.setAttribute("aria-hidden", "true");
+    body.append(bar);
+  }
+  return { body, ring, secs, words: words3, said };
+}
+var init_build2 = __esm({
+  "js/undo-toast/build.js"() {
+    "use strict";
+    init_patterns();
+    init_strings();
+    init_values2();
+  }
+});
+
+// js/undo-toast/core.js
+var UndoCore;
+var init_core3 = __esm({
+  "js/undo-toast/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_values2();
+    UndoCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host the toast (it carries `dismiss`)
+       * @param {UndoRunOptions} run
+       */
+      constructor(host, run) {
+        super(host, run);
+        this.toast = /** @type {HTMLElement & { dismiss: () => void }} */
+        host;
+        this.doc = host.ownerDocument;
+        this.view = this.doc.defaultView;
+        this.strings = getStrings();
+        this.given = run.options;
+        this.settings = run.settings;
+        this.ui = run.ui;
+        this.state = "counting";
+        this.finish = () => void 0;
+        this.done = new Promise((resolve) => this.finish = resolve);
+        this.remaining = run.settings.ms;
+        this.startedAt = 0;
+        this.timer = 0;
+        this.tick = 0;
+        this.pointer = false;
+        this.focus = false;
+      }
+      /** Move to another state; the toast's attribute follows where the caller sets it. @param {UndoState} next */
+      enterState(next2) {
+        this.state = next2;
+      }
+      stopClocks() {
+        this.view?.clearTimeout(this.timer);
+        this.view?.clearInterval(this.tick);
+      }
+      /** @param {string} line */
+      setLine(line) {
+        this.ui.words.textContent = line;
+        this.ui.said.textContent = line;
+      }
+      /** @param {UndoOutcome} how */
+      announce(how) {
+        this.toast.parentElement?.dispatchEvent(new CustomEvent(UNDO_TOAST_EVENT, { bubbles: true, detail: { toast: this.toast, outcome: how } }));
+      }
+      /** The seconds on the toast, written from what is left. */
+      writeSeconds() {
+        const { secs } = this.ui;
+        if (!secs) return;
+        const left = Math.max(0, Math.ceil((this.remaining - (performance.now() - this.startedAt)) / 1e3));
+        secs.textContent = this.settings.clock === "ring" ? String(left) : this.strings.undoToastClock(left);
+      }
+      /** Start the clock: the commit after what is left, and the seconds every tick. */
+      run() {
+        this.startedAt = performance.now();
+        this.timer = this.view?.setTimeout(() => void this.accept(), this.remaining) ?? 0;
+        if (this.ui.secs) {
+          this.tick = this.view?.setInterval(() => this.writeSeconds(), CLOCK_TICK_MS) ?? 0;
+          this.writeSeconds();
+        }
+      }
+      /** Commit now; the running toast overrides it. @returns {Promise<void>} */
+      async accept() {
+      }
+      /** The pointer or the focus came: stop the clock where it is. */
+      hold() {
+        if (this.state !== "counting" || this.toast.hasAttribute("data-kp-paused")) return;
+        this.remaining = Math.max(0, this.remaining - (performance.now() - this.startedAt));
+        this.stopClocks();
+        this.toast.setAttribute("data-kp-paused", "");
+      }
+      /** Both left: go on where it stopped. */
+      go() {
+        if (this.state !== "counting" || !this.toast.hasAttribute("data-kp-paused")) return;
+        this.toast.removeAttribute("data-kp-paused");
+        this.run();
+      }
+      attended() {
+        if (this.pointer || this.focus) this.hold();
+        else this.go();
+      }
+      /** The pointer came or left. @param {boolean} on */
+      setPointer(on) {
+        this.pointer = on;
+        this.attended();
+      }
+      /** The focus came or left. @param {boolean} on */
+      setFocus(on) {
+        this.focus = on;
+        this.attended();
+      }
+    };
+  }
+});
+
+// js/undo-toast/stack.js
 function onKey(event) {
   if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== "z") return;
   const target = event.target instanceof Element ? event.target : null;
   if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
   for (let i = live2.length - 1; i >= 0; i -= 1) {
-    const entry = live2[i];
+    const entry = (
+      /** @type {StackEntry} */
+      live2[i]
+    );
     if (entry.key === false || entry.handle.state() !== "counting") continue;
     event.preventDefault();
     entry.handle.undo();
@@ -20281,287 +20469,10 @@ function leaveStack(handle) {
     listening2 = false;
   }
 }
-function declared(name, region) {
-  const attr16 = `data-kp-undo-${name}`;
-  return region?.getAttribute(attr16) ?? (typeof document !== "undefined" ? document.documentElement.getAttribute(attr16) : null);
-}
-function undoToast(text, options = {}) {
-  const strings = getStrings();
-  const doc = document;
-  const region = options.region ?? null;
-  const msDeclared = declared("ms", region);
-  const ms = Math.max(0, options.ms ?? (msDeclared !== null && msDeclared !== "" ? Number(msDeclared) : UNDO_MS));
-  const mode2 = (options.mode ?? declared("mode", region)) === "revert" ? "revert" : "defer";
-  const clockRaw = options.clock ?? declared("clock", region);
-  const clock4 = clockRaw === "bar" || clockRaw === "text" || clockRaw === "none" ? clockRaw : "ring";
-  const keyRaw = options.key ?? declared("key", region);
-  const key = keyRaw === false || keyRaw === "false" ? false : keyRaw || "Mod+Z";
-  const leaveRaw = options.leave ?? declared("leave", region);
-  const leaves = leaveRaw === "commit" || leaveRaw === "cancel" ? leaveRaw : "carry";
-  const max = Math.max(1, options.max ?? (Number(declared("max", region)) || UNDO_MAX));
-  const seconds = Math.max(1, Math.round(ms / 1e3));
-  let state12 = "counting";
-  let finish2 = () => void 0;
-  const done = new Promise((resolve) => finish2 = resolve);
-  const body = doc.createElement("span");
-  body.className = "kp-undo";
-  let ring = null;
-  let secs = null;
-  if (clock4 === "ring") {
-    ring = doc.createElement("span");
-    ring.className = "kp-undo__ringbox";
-    ring.setAttribute("aria-hidden", "true");
-    const circles = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
-    circles.setAttribute("class", "kp-undo__ring");
-    circles.setAttribute("viewBox", "0 0 24 24");
-    for (const part7 of ["track", "fill"]) {
-      const circle = doc.createElementNS("http://www.w3.org/2000/svg", "circle");
-      circle.setAttribute("class", `kp-undo__ring-${part7}`);
-      circle.setAttribute("cx", "12");
-      circle.setAttribute("cy", "12");
-      circle.setAttribute("r", "10");
-      circle.setAttribute("pathLength", "1");
-      circles.append(circle);
-    }
-    ring.append(circles);
-    body.append(ring);
-  }
-  const words3 = doc.createElement("span");
-  words3.className = "kp-undo__text";
-  words3.setAttribute("aria-hidden", "true");
-  words3.textContent = text;
-  const said = doc.createElement("span");
-  said.className = "kp-sr-only";
-  said.textContent = ms > 0 ? strings.undoToastAnnounce(text, seconds) : text;
-  body.append(words3, said);
-  if (clock4 === "text" || clock4 === "ring") {
-    secs = doc.createElement("span");
-    secs.className = clock4 === "ring" ? "kp-undo__secs" : "kp-undo__clock";
-    secs.setAttribute("aria-hidden", "true");
-    secs.textContent = clock4 === "ring" ? String(seconds) : strings.undoToastClock(seconds);
-    if (ring) ring.append(secs);
-    else body.append(secs);
-  }
-  if (clock4 === "bar") {
-    const bar = doc.createElement("span");
-    bar.className = "kp-undo__bar";
-    bar.setAttribute("aria-hidden", "true");
-    body.append(bar);
-  }
-  const el16 = toast(body, {
-    ms: 0,
-    region,
-    pause: false,
-    className: `kp-toast ${UNDO_TOAST}`,
-    action: ms > 0 ? { label: strings.undoToastUndo, onClick: () => handle.undo() } : void 0,
-    close: false
-  });
-  el16.setAttribute("data-kp-undo-state", "counting");
-  el16.setAttribute("data-kp-undo-clock", clock4);
-  el16.setAttribute("data-kp-undo-mode", mode2);
-  el16.style.setProperty("--kp-undo-ms", `${ms}ms`);
-  el16.style.setProperty("--kp-undo-steps", String(seconds));
-  const undoButton = (
-    /** @type {HTMLButtonElement | null} */
-    el16.querySelector(":scope > .kp-button")
-  );
-  if (undoButton && key) undoButton.title = strings.undoToastKeyTitle(keyName(key));
-  undoButton?.setAttribute("data-kp-undo-button", "");
-  const view = doc.defaultView;
-  let remaining = ms;
-  let startedAt = 0;
-  let timer2 = 0;
-  let tick6 = 0;
-  let pointer = false;
-  let focus = false;
-  const stopClocks = () => {
-    view?.clearTimeout(timer2);
-    view?.clearInterval(tick6);
-  };
-  const setLine = (line) => {
-    words3.textContent = line;
-    said.textContent = line;
-  };
-  const announce4 = (how) => {
-    el16.parentElement?.dispatchEvent(new CustomEvent(UNDO_TOAST_EVENT, { bubbles: true, detail: { toast: el16, outcome: how } }));
-  };
-  const run = () => {
-    startedAt = performance.now();
-    timer2 = view?.setTimeout(() => void handle.accept(), remaining) ?? 0;
-    if (secs) {
-      const write2 = () => {
-        const left = Math.max(0, Math.ceil((remaining - (performance.now() - startedAt)) / 1e3));
-        if (secs) secs.textContent = clock4 === "ring" ? String(left) : strings.undoToastClock(left);
-      };
-      tick6 = view?.setInterval(write2, 250) ?? 0;
-      write2();
-    }
-  };
-  const hold = () => {
-    if (state12 !== "counting" || el16.hasAttribute("data-kp-paused")) return;
-    remaining = Math.max(0, remaining - (performance.now() - startedAt));
-    stopClocks();
-    el16.setAttribute("data-kp-paused", "");
-  };
-  const go = () => {
-    if (state12 !== "counting" || !el16.hasAttribute("data-kp-paused")) return;
-    el16.removeAttribute("data-kp-paused");
-    run();
-  };
-  const attended = () => pointer || focus ? hold() : go();
-  el16.addEventListener("pointerenter", (event) => {
-    if (event.pointerType === "touch") return;
-    pointer = true;
-    attended();
-  });
-  el16.addEventListener("pointerleave", () => {
-    pointer = false;
-    attended();
-  });
-  el16.addEventListener("focusin", () => {
-    focus = true;
-    attended();
-  });
-  el16.addEventListener("focusout", (event) => {
-    if (event.relatedTarget instanceof Node && el16.contains(event.relatedTarget)) return;
-    focus = false;
-    attended();
-  });
-  const handle = {
-    toast: el16,
-    state: () => state12,
-    undo() {
-      if (state12 !== "counting") return;
-      state12 = "undone";
-      stopClocks();
-      leaveStack(handle);
-      el16.setAttribute("data-kp-undo-state", "undone");
-      el16.removeAttribute("data-kp-paused");
-      setLine(options.restored ?? strings.undoToastRestored);
-      undoButton?.remove();
-      ring?.remove();
-      secs?.remove();
-      body.querySelector(".kp-undo__bar")?.remove();
-      try {
-        void options.undo?.();
-      } catch {
-      }
-      announce4("undone");
-      finish2("undone");
-      view?.setTimeout(() => el16.dismiss(), UNDO_RESTORED_MS);
-    },
-    async accept() {
-      if (state12 !== "counting") return;
-      stopClocks();
-      state12 = "committing";
-      el16.setAttribute("data-kp-undo-state", "committing");
-      el16.removeAttribute("data-kp-paused");
-      undoButton?.remove();
-      if (mode2 === "revert" || !options.commit) {
-        state12 = "done";
-        leaveStack(handle);
-        el16.setAttribute("data-kp-undo-state", "done");
-        announce4("committed");
-        finish2("committed");
-        el16.dismiss();
-        return;
-      }
-      const wheel = doc.createElement("span");
-      wheel.className = "kp-spinner kp-undo__spinner";
-      wheel.setAttribute("aria-hidden", "true");
-      if (ring) ring.replaceWith(wheel);
-      else if (secs) secs.replaceWith(wheel);
-      else body.prepend(wheel);
-      body.querySelector(".kp-undo__bar")?.remove();
-      try {
-        await options.commit();
-      } catch (error) {
-        state12 = "failed";
-        leaveStack(handle);
-        el16.setAttribute("data-kp-undo-state", "failed");
-        el16.classList.add("kp-toast--destructive");
-        wheel.remove();
-        const why = error instanceof Error ? error.message : String(error ?? "");
-        setLine(options.failed ?? strings.undoToastFailed(why));
-        try {
-          void (options.restore ?? options.undo)?.();
-        } catch {
-        }
-        const closer = doc.createElement("button");
-        closer.type = "button";
-        closer.className = "kp-button kp-button--ghost";
-        closer.textContent = strings.undoToastDismiss;
-        closer.addEventListener("click", () => el16.dismiss());
-        el16.append(closer);
-        announce4("failed");
-        finish2("failed");
-        return;
-      }
-      state12 = "done";
-      leaveStack(handle);
-      el16.setAttribute("data-kp-undo-state", "done");
-      announce4("committed");
-      finish2("committed");
-      el16.dismiss();
-    },
-    done
-  };
-  const dismiss = el16.dismiss;
-  el16.dismiss = () => {
-    if (state12 === "counting") {
-      void handle.accept();
-      return;
-    }
-    if (state12 === "committing") return;
-    dismiss();
-  };
-  const onPageHide = () => {
-    if (state12 !== "counting") return;
-    if (leaves === "cancel") handle.undo();
-    else if (mode2 === "defer") {
-      try {
-        void options.commit?.();
-      } catch {
-      }
-      state12 = "done";
-      finish2("left");
-    }
-    leaveStack(handle);
-  };
-  const onSoftLeave = () => {
-    if (state12 !== "counting" || leaves === "carry") return;
-    if (leaves === "cancel") handle.undo();
-    else void handle.accept();
-  };
-  view?.addEventListener("pagehide", onPageHide);
-  view?.addEventListener("popstate", onSoftLeave);
-  view?.addEventListener("hashchange", onSoftLeave);
-  void done.then(() => {
-    view?.removeEventListener("pagehide", onPageHide);
-    view?.removeEventListener("popstate", onSoftLeave);
-    view?.removeEventListener("hashchange", onSoftLeave);
-  });
-  if (ms === 0) {
-    void handle.accept();
-    return handle;
-  }
-  enter({ handle, key });
-  const standing = live2.filter((e) => e.handle.state() === "counting" || e.handle.state() === "committing");
-  for (const old of standing.slice(0, Math.max(0, standing.length - max))) void old.handle.accept();
-  run();
-  return handle;
-}
-var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, live2, listening2, isMac2, keyName;
-var init_undo_toast = __esm({
-  "js/undo-toast.js"() {
+var live2, listening2, isMac2, keyName;
+var init_stack = __esm({
+  "js/undo-toast/stack.js"() {
     "use strict";
-    init_overlays();
-    init_strings();
-    init_patterns();
-    UNDO_TOAST = "kp-toast--undo";
-    UNDO_TOAST_EVENT = "kp-undo-toast";
-    UNDO_RESTORED_MS = 1500;
-    UNDO_MAX = 3;
     live2 = [];
     listening2 = false;
     isMac2 = () => typeof navigator !== "undefined" && /mac|iphone|ipad/i.test(
@@ -20569,6 +20480,250 @@ var init_undo_toast = __esm({
       navigator.userAgentData?.platform ?? navigator.platform ?? ""
     );
     keyName = (key) => key.replace(/^mod\+/i, isMac2() ? "\u2318" : "Ctrl+");
+  }
+});
+
+// js/undo-toast/run.js
+var UndoRun;
+var init_run = __esm({
+  "js/undo-toast/run.js"() {
+    "use strict";
+    init_core3();
+    init_stack();
+    init_values2();
+    UndoRun = class extends UndoCore {
+      /**
+       * @param {HTMLElement} host the toast
+       * @param {import('./core.js').UndoRunOptions} run
+       */
+      constructor(host, run) {
+        super(host, run);
+        this.handle = {
+          toast: this.toast,
+          state: () => this.state,
+          undo: () => this.undo(),
+          accept: () => this.accept(),
+          done: this.done
+        };
+      }
+      connect() {
+        const { settings, toast: el16 } = this;
+        const { ms, clock: clock4, mode: mode2, seconds, key, max } = settings;
+        el16.setAttribute("data-kp-undo-state", "counting");
+        el16.setAttribute("data-kp-undo-clock", clock4);
+        el16.setAttribute("data-kp-undo-mode", mode2);
+        el16.style.setProperty("--kp-undo-ms", `${ms}ms`);
+        el16.style.setProperty("--kp-undo-steps", String(seconds));
+        this.markButton(key);
+        this.listenAttention();
+        this.takeOverDismiss();
+        this.listenLeaving();
+        void this.done.then(() => this.destroy());
+        if (ms === 0) {
+          void this.accept();
+          return;
+        }
+        enter({ handle: this.handle, key });
+        const standing = live2.filter((e) => e.handle.state() === "counting" || e.handle.state() === "committing");
+        for (const old of standing.slice(0, Math.max(0, standing.length - max))) void old.handle.accept();
+        this.run();
+      }
+      /** The Undo button says which key undoes. @param {string | false} key */
+      markButton(key) {
+        const undoButton = (
+          /** @type {HTMLButtonElement | null} */
+          this.toast.querySelector(":scope > .kp-button")
+        );
+        if (undoButton && key) undoButton.title = this.strings.undoToastKeyTitle(keyName(key));
+        undoButton?.setAttribute("data-kp-undo-button", "");
+      }
+      /** The clock stops while the pointer or the focus is on the toast. */
+      listenAttention() {
+        const el16 = this.toast;
+        this.listen(el16, "pointerenter", (event) => {
+          if (
+            /** @type {PointerEvent} */
+            event.pointerType === "touch"
+          ) return;
+          this.setPointer(true);
+        });
+        this.listen(el16, "pointerleave", () => this.setPointer(false));
+        this.listen(el16, "focusin", () => this.setFocus(true));
+        this.listen(el16, "focusout", (event) => {
+          const to = (
+            /** @type {FocusEvent} */
+            event.relatedTarget
+          );
+          if (to instanceof Node && el16.contains(to)) return;
+          this.setFocus(false);
+        });
+      }
+      /** Esc or a close before the end accepts the action now. */
+      takeOverDismiss() {
+        const el16 = this.toast;
+        const dismiss = el16.dismiss;
+        el16.dismiss = () => {
+          if (this.state === "counting") {
+            void this.accept();
+            return;
+          }
+          if (this.state === "committing") return;
+          dismiss();
+        };
+      }
+      /** What a pending action does when the page is left, by the `leave` setting. */
+      listenLeaving() {
+        const { view } = this;
+        if (!view) return;
+        this.listen(view, "pagehide", () => this.onPageHide());
+        this.listen(view, "popstate", () => this.onSoftLeave());
+        this.listen(view, "hashchange", () => this.onSoftLeave());
+      }
+      onPageHide() {
+        if (this.state !== "counting") return;
+        if (this.settings.leaves === "cancel") this.undo();
+        else if (this.settings.mode === "defer") {
+          try {
+            void this.given.commit?.();
+          } catch {
+          }
+          this.enterState("done");
+          this.finish("left");
+        }
+        leaveStack(this.handle);
+      }
+      onSoftLeave() {
+        if (this.state !== "counting" || this.settings.leaves === "carry") return;
+        if (this.settings.leaves === "cancel") this.undo();
+        else void this.accept();
+      }
+      /** Undo now: the toast says "Restored", the page's reverse runs, and the toast goes after a moment. */
+      undo() {
+        if (this.state !== "counting") return;
+        const { toast: el16, ui } = this;
+        this.enterState("undone");
+        this.stopClocks();
+        leaveStack(this.handle);
+        el16.setAttribute("data-kp-undo-state", "undone");
+        el16.removeAttribute("data-kp-paused");
+        this.setLine(this.given.restored ?? this.strings.undoToastRestored);
+        el16.querySelector(":scope > .kp-button")?.remove();
+        ui.ring?.remove();
+        ui.secs?.remove();
+        ui.body.querySelector(".kp-undo__bar")?.remove();
+        try {
+          void this.given.undo?.();
+        } catch {
+        }
+        this.announce("undone");
+        this.finish("undone");
+        this.view?.setTimeout(() => el16.dismiss(), UNDO_RESTORED_MS);
+      }
+      /** The action is done for good: the toast says so and goes. @param {import('./core.js').UndoOutcome} how */
+      settle(how) {
+        this.enterState("done");
+        leaveStack(this.handle);
+        this.toast.setAttribute("data-kp-undo-state", "done");
+        this.announce(how);
+        this.finish(how);
+        this.toast.dismiss();
+      }
+      /** The commit failed: the toast turns into the problem and the row comes back. @param {unknown} error @param {HTMLElement} wheel */
+      failed(error, wheel) {
+        const el16 = this.toast;
+        this.enterState("failed");
+        leaveStack(this.handle);
+        el16.setAttribute("data-kp-undo-state", "failed");
+        el16.classList.add("kp-toast--destructive");
+        wheel.remove();
+        const why = error instanceof Error ? error.message : String(error ?? "");
+        this.setLine(this.given.failed ?? this.strings.undoToastFailed(why));
+        try {
+          void (this.given.restore ?? this.given.undo)?.();
+        } catch {
+        }
+        const closer = this.doc.createElement("button");
+        closer.type = "button";
+        closer.className = "kp-button kp-button--ghost";
+        closer.textContent = this.strings.undoToastDismiss;
+        closer.addEventListener("click", () => el16.dismiss());
+        el16.append(closer);
+        this.announce("failed");
+        this.finish("failed");
+      }
+      /** A wheel in the clock's place while the commit runs. @returns {HTMLElement} */
+      spinner() {
+        const { ring, secs, body } = this.ui;
+        const wheel = this.doc.createElement("span");
+        wheel.className = "kp-spinner kp-undo__spinner";
+        wheel.setAttribute("aria-hidden", "true");
+        if (ring) ring.replaceWith(wheel);
+        else if (secs) secs.replaceWith(wheel);
+        else body.prepend(wheel);
+        body.querySelector(".kp-undo__bar")?.remove();
+        return wheel;
+      }
+      /** Commit now. */
+      async accept() {
+        if (this.state !== "counting") return;
+        const el16 = this.toast;
+        this.stopClocks();
+        this.enterState("committing");
+        el16.setAttribute("data-kp-undo-state", "committing");
+        el16.removeAttribute("data-kp-paused");
+        el16.querySelector(":scope > .kp-button")?.remove();
+        if (this.settings.mode === "revert" || !this.given.commit) {
+          this.settle("committed");
+          return;
+        }
+        const wheel = this.spinner();
+        try {
+          await this.given.commit();
+        } catch (error) {
+          this.failed(error, wheel);
+          return;
+        }
+        this.settle("committed");
+      }
+    };
+  }
+});
+
+// js/undo-toast.js
+var undo_toast_exports = {};
+__export(undo_toast_exports, {
+  UNDO_MAX: () => UNDO_MAX,
+  UNDO_RESTORED_MS: () => UNDO_RESTORED_MS,
+  UNDO_TOAST: () => UNDO_TOAST,
+  UNDO_TOAST_EVENT: () => UNDO_TOAST_EVENT,
+  undoToast: () => undoToast
+});
+function undoToast(text, options = {}) {
+  const settings = readSettings(options);
+  const ui = buildBody(document, text, settings);
+  let run;
+  const el16 = toast(ui.body, {
+    ms: 0,
+    region: settings.region,
+    pause: false,
+    className: `kp-toast ${UNDO_TOAST}`,
+    action: settings.ms > 0 ? { label: getStrings().undoToastUndo, onClick: () => run?.undo() } : void 0,
+    close: false
+  });
+  run = attachOne(el16, UndoRun, { options, settings, ui });
+  if (!run) throw new Error("The undo toast could not be set up; the cause was reported.");
+  return run.handle;
+}
+var init_undo_toast = __esm({
+  "js/undo-toast.js"() {
+    "use strict";
+    init_controller();
+    init_overlays();
+    init_strings();
+    init_build2();
+    init_run();
+    init_values2();
+    init_values2();
   }
 });
 
@@ -21388,7 +21543,7 @@ var init_api5 = __esm({
 
 // js/facets/values.js
 var FACETS, FACET_EVENT;
-var init_values2 = __esm({
+var init_values3 = __esm({
   "js/facets/values.js"() {
     "use strict";
     FACETS = "[data-kp-facets]";
@@ -21405,7 +21560,7 @@ var init_controller8 = __esm({
     init_strings();
     init_api5();
     init_rows();
-    init_values2();
+    init_values3();
     SAY_FIRST_MS = 100;
     SAY_MS = 30;
     FacetGroup = class extends Controller {
@@ -21490,8 +21645,8 @@ var init_facets = __esm({
     "use strict";
     init_controller();
     init_controller8();
-    init_values2();
-    init_values2();
+    init_values3();
+    init_values3();
     init_pattern();
     init_api5();
   }
@@ -26063,7 +26218,7 @@ var init_rows2 = __esm({
 
 // js/row-select/core.js
 var RowSelectCore;
-var init_core3 = __esm({
+var init_core4 = __esm({
   "js/row-select/core.js"() {
     "use strict";
     init_controller();
@@ -26221,7 +26376,7 @@ var init_controller12 = __esm({
     "use strict";
     init_keys5();
     init_strings();
-    init_core3();
+    init_core4();
     init_rows2();
     TEXT_ENTRY = "textarea, select, [contenteditable]";
     RowSelector = class _RowSelector extends RowSelectCore {
@@ -32548,7 +32703,7 @@ function restoreTimers(list, saved) {
   sync2(list);
 }
 var emit, find, targetOf;
-var init_run = __esm({
+var init_run2 = __esm({
   "js/timer/run.js"() {
     "use strict";
     init_strings();
@@ -32669,7 +32824,7 @@ var init_attach7 = __esm({
     init_countdown();
     init_constants16();
     init_model3();
-    init_run();
+    init_run2();
     init_sound();
     init_state12();
     init_sync3();
@@ -32710,7 +32865,7 @@ var init_timer = __esm({
     init_model3();
     init_sync3();
     init_sound();
-    init_run();
+    init_run2();
     init_attach7();
     init_countdown();
   }
@@ -39545,7 +39700,7 @@ var init_opening = __esm({
 });
 
 // js/datepicker/settings.js
-function readSettings(picker, options) {
+function readSettings2(picker, options) {
   const {
     locale: localeOption,
     dateFormat: formatOption = "rule52",
@@ -39710,7 +39865,7 @@ var init_controller19 = __esm({
         this.input = parts2.input;
         this.open = parts2.open;
         this.panel = parts2.panel;
-        this.settings = readSettings(host, options);
+        this.settings = readSettings2(host, options);
         this.cursor = /* @__PURE__ */ new Date();
         this.live = document.createElement("span");
         this.views = new DateViews(this);
@@ -45257,7 +45412,7 @@ function buildCell(doc) {
   td.append(button6, pad2);
   return { td, button: button6, num: num3, count: count2, pad: pad2 };
 }
-function buildBody(doc) {
+function buildBody2(doc) {
   const body = make12(doc, "tbody");
   const cells = [];
   for (let w = 0; w < GRID_WEEKS; w += 1) {
@@ -45279,7 +45434,7 @@ function buildCalendar(el16, s2, locale, firstDay) {
   const grid2 = make12(doc, "table", "kp-calendar__grid");
   grid2.setAttribute("role", "grid");
   grid2.setAttribute("aria-labelledby", title.id);
-  const { body, cells } = buildBody(doc);
+  const { body, cells } = buildBody2(doc);
   grid2.append(buildHead2(doc, locale, firstDay), body);
   const legend = make12(doc, "ul", "kp-calendar__legend");
   legend.hidden = true;
@@ -45294,7 +45449,7 @@ function buildCalendar(el16, s2, locale, firstDay) {
   if (!el16.hasAttribute("aria-labelledby") && !el16.hasAttribute("aria-label")) el16.setAttribute("aria-labelledby", title.id);
   return { prev, next: next2, todayButton, title, stateLine, grid: grid2, body, cells, legend, busyText };
 }
-var init_build2 = __esm({
+var init_build3 = __esm({
   "js/calendar/build.js"() {
     "use strict";
     init_constants21();
@@ -45511,7 +45666,7 @@ var init_controller20 = __esm({
     init_chart();
     init_constants21();
     init_busy2();
-    init_build2();
+    init_build3();
     init_day();
     init_dates2();
     init_dom5();
@@ -48135,7 +48290,7 @@ function buildDays(c) {
     c.today.setAttribute("aria-disabled", String(c.start === today));
   }
 }
-var init_build3 = __esm({
+var init_build4 = __esm({
   "js/week/build.js"() {
     "use strict";
     init_calendar();
@@ -48642,7 +48797,7 @@ function setWeekLegend(el16, entries2) {
 var init_api16 = __esm({
   "js/week/api.js"() {
     "use strict";
-    init_build3();
+    init_build4();
     init_helpers3();
     init_paint5();
     init_state17();
@@ -48820,7 +48975,7 @@ var init_attach14 = __esm({
     init_locale();
     init_strings();
     init_api16();
-    init_build3();
+    init_build4();
     init_busy3();
     init_constants24();
     init_menu();
@@ -49504,7 +49659,7 @@ function build5(el16, strings) {
   };
 }
 var idSeq;
-var init_build4 = __esm({
+var init_build5 = __esm({
   "js/sequencer/build.js"() {
     "use strict";
     init_instance2();
@@ -50514,7 +50669,7 @@ var init_attach15 = __esm({
     init_live_options();
     init_constants25();
     init_instance2();
-    init_build4();
+    init_build5();
     init_timeline();
     init_paint6();
     init_edit2();
@@ -50908,7 +51063,7 @@ function frame(c) {
   return w;
 }
 var idSeq2;
-var init_build5 = __esm({
+var init_build6 = __esm({
   "js/gantt/build.js"() {
     "use strict";
     init_scale();
@@ -51572,7 +51727,7 @@ var init_selection3 = __esm({
     init_window();
     init_points();
     init_labels2();
-    init_build5();
+    init_build6();
     init_axis();
     init_scale();
     init_constants26();
@@ -52349,7 +52504,7 @@ var init_attach16 = __esm({
     init_strings();
     init_live_options();
     init_constants26();
-    init_build5();
+    init_build6();
     init_window();
     init_paint7();
     init_selection3();
@@ -52395,7 +52550,7 @@ var init_gantt = __esm({
 
 // js/pipeline/values.js
 var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make18;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -52416,12 +52571,12 @@ var init_values3 = __esm({
 
 // js/pipeline/core.js
 var PipelineCore;
-var init_core4 = __esm({
+var init_core5 = __esm({
   "js/pipeline/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_values3();
+    init_values4();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -52506,8 +52661,8 @@ var PipelineLanes;
 var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
-    init_core4();
-    init_values3();
+    init_core5();
+    init_values4();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -52643,7 +52798,7 @@ var init_view2 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values3();
+    init_values4();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -52759,7 +52914,7 @@ var init_controller21 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
-    init_values3();
+    init_values4();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -52905,8 +53060,8 @@ var init_pipeline = __esm({
     "use strict";
     init_controller();
     init_controller21();
-    init_values3();
-    init_values3();
+    init_values4();
+    init_values4();
   }
 });
 
@@ -54112,7 +54267,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values4 = __esm({
+var init_values5 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -54241,7 +54396,7 @@ function buildPanel(doc, s2, id) {
   panel.append(title, from.set, to.set, error, actions);
   return { panel, from, to, error, cancel, apply: apply2 };
 }
-var init_build6 = __esm({
+var init_build7 = __esm({
   "js/range/build.js"() {
     "use strict";
   }
@@ -54249,15 +54404,15 @@ var init_build6 = __esm({
 
 // js/range/core.js
 var seq2, DEFAULT_PRESET_AT, RangeCore;
-var init_core5 = __esm({
+var init_core6 = __esm({
   "js/range/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_segmented();
     init_chart();
-    init_values4();
-    init_build6();
+    init_values5();
+    init_build7();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
     RangeCore = class extends Controller {
@@ -54330,8 +54485,8 @@ var init_panel = __esm({
     init_datepicker();
     init_top_layer();
     init_motion();
-    init_build6();
-    init_values4();
+    init_build7();
+    init_values5();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -54507,7 +54662,7 @@ var init_controller22 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
-    init_core5();
+    init_core6();
     init_panel();
     RangeController = class extends RangeCore {
       connect() {
@@ -54585,8 +54740,8 @@ var init_range = __esm({
     "use strict";
     init_controller();
     init_controller22();
-    init_values4();
-    init_values4();
+    init_values5();
+    init_values5();
   }
 });
 
@@ -55018,7 +55173,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values5 = __esm({
+var init_values6 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -55144,7 +55299,7 @@ var init_parts3 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values5();
+    init_values6();
   }
 });
 
@@ -55185,7 +55340,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts3();
-    init_values5();
+    init_values6();
   }
 });
 
@@ -55251,7 +55406,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts3();
-    init_values5();
+    init_values6();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -55399,7 +55554,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values5();
+    init_values6();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -55508,8 +55663,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values5();
-    init_values5();
+    init_values6();
+    init_values6();
   }
 });
 
@@ -57195,7 +57350,7 @@ function mountChrome(area, ui) {
   area.classList.add("kp-jsonfield__input");
   return describedBefore;
 }
-var init_build7 = __esm({
+var init_build8 = __esm({
   "js/code-field/build.js"() {
     "use strict";
   }
@@ -57208,7 +57363,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values6 = __esm({
+var init_values7 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -57222,13 +57377,13 @@ var init_values6 = __esm({
 
 // js/code-field/core.js
 var LEAST_ROWS, DEFAULT_ROWS3, FALLBACK_LINE_PX, INDENT_SPACES, WIDE_INDENT_SPACES, serial4, CodeFieldCore;
-var init_core6 = __esm({
+var init_core7 = __esm({
   "js/code-field/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_build7();
-    init_values6();
+    init_build8();
+    init_values7();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -57357,8 +57512,8 @@ var init_problem = __esm({
   "js/code-field/problem.js"() {
     "use strict";
     init_forms();
-    init_core6();
-    init_values6();
+    init_core7();
+    init_values7();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -57438,8 +57593,8 @@ var init_controller24 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
-    init_build7();
-    init_values6();
+    init_build8();
+    init_values7();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -57675,8 +57830,8 @@ var init_code_field = __esm({
     "use strict";
     init_controller();
     init_controller24();
-    init_values6();
-    init_values6();
+    init_values7();
+    init_values7();
   }
 });
 
@@ -58176,7 +58331,7 @@ function buildParts3(root) {
   return { input, hidden: hidden2, popup, presets: presetsFromAttribute(root) };
 }
 var el9;
-var init_build8 = __esm({
+var init_build9 = __esm({
   "js/timefield/build.js"() {
     "use strict";
     init_strings();
@@ -58200,7 +58355,7 @@ var init_list3 = __esm({
     init_calm();
     init_constants29();
     init_attributes();
-    init_build8();
+    init_build9();
     init_parse();
     TimeList = class {
       /** @param {TimeField} field */
@@ -58411,7 +58566,7 @@ var init_field = __esm({
     init_remember();
     init_constants29();
     init_attributes();
-    init_build8();
+    init_build9();
     init_state19();
     init_parse();
     init_list3();
@@ -61072,7 +61227,7 @@ function buildRating(el16, max) {
   return { row, stars, caption, actions, clear, save: save2, drop, reason, flash, live: live4, failure, failureText, retry, foot, field: field2 };
 }
 var make22;
-var init_build9 = __esm({
+var init_build10 = __esm({
   "js/rating/build.js"() {
     "use strict";
     init_constants31();
@@ -61401,7 +61556,7 @@ var init_controller28 = __esm({
     init_controller();
     init_strings();
     init_constants31();
-    init_build9();
+    init_build10();
     init_commit();
     init_keys12();
     init_math();
@@ -61666,7 +61821,7 @@ var init_api22 = __esm({
     init_controller();
     init_constants31();
     init_controller28();
-    init_build9();
+    init_build10();
     init_commit();
     init_math();
     init_paint8();
@@ -65472,7 +65627,7 @@ var init_entity_card = __esm({
 function configureUnsaved(next2) {
   if (next2.storage !== void 0) config3.storage = next2.storage;
 }
-function readSettings2(el16, id) {
+function readSettings3(el16, id) {
   const doc = el16.ownerDocument;
   const win = doc.defaultView ?? window;
   const scopeSelector = el16.dataset.kpUnsavedFor;
@@ -65577,7 +65732,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values7 = __esm({
+var init_values8 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -65916,7 +66071,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint9();
     init_parts7();
-    init_values7();
+    init_values8();
   }
 });
 
@@ -65926,7 +66081,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values7();
+    init_values8();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -66046,7 +66201,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values7();
+    init_values8();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -66376,7 +66531,7 @@ var init_controller31 = __esm({
       connect() {
         const { el: el16 } = this;
         this.id = el16.id || `kp-unsaved-${nextBarNumber()}`;
-        this.settings = readSettings2(el16, this.id);
+        this.settings = readSettings3(el16, this.id);
         this.tracker = new ChangeTracker(el16, this.settings.scope, this.s);
         this.keeper.connect();
         el16.classList.add("kp-unsaved");
@@ -68842,7 +68997,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values8 = __esm({
+var init_values9 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -68978,10 +69133,10 @@ function buildLines(doc, id) {
   return { why, skeleton: skeleton2 };
 }
 var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
-var init_build10 = __esm({
+var init_build11 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values8();
+    init_values9();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -68995,13 +69150,13 @@ var init_build10 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core7 = __esm({
+var init_core8 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
-    init_build10();
-    init_values8();
+    init_build11();
+    init_values9();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -69119,9 +69274,9 @@ var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
 var init_controller33 = __esm({
   "js/slider/controller.js"() {
     "use strict";
-    init_build10();
-    init_core7();
-    init_values8();
+    init_build11();
+    init_core8();
+    init_values9();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -69347,8 +69502,8 @@ var init_slider = __esm({
     "use strict";
     init_controller();
     init_controller33();
-    init_values8();
-    init_values8();
+    init_values9();
+    init_values9();
   }
 });
 
@@ -70047,7 +70202,7 @@ var init_state25 = __esm({
 });
 
 // js/dated-options/settings.js
-function readSettings3(el16, nowOption) {
+function readSettings4(el16, nowOption) {
   const id = el16.id || `kp-dated-${nextPickerNumber()}`;
   const fixed = Date.parse(el16.dataset.kpNow ?? "");
   return {
@@ -70106,7 +70261,7 @@ var init_controller35 = __esm({
         super(host, options);
         const doc = host.ownerDocument;
         this.strings = getStrings();
-        this.settings = readSettings3(host, options.now);
+        this.settings = readSettings4(host, options.now);
         this.stage = doc.createElement("div");
         this.body = doc.createElement("div");
         this.note = doc.createElement("div");
@@ -70813,7 +70968,7 @@ function buildPanel3(doc, s2, id) {
   panel.append(make29(doc, "p", "kp-snooze__panel-title", s2.snoozePickTitle), inputs, error, actions);
   return { panel, picker, date, time, error, cancel, apply: apply2 };
 }
-var init_build11 = __esm({
+var init_build12 = __esm({
   "js/snooze/build.js"() {
     "use strict";
   }
@@ -70830,7 +70985,7 @@ var init_panel3 = __esm({
     init_motion();
     init_range();
     init_top_layer();
-    init_build11();
+    init_build12();
     init_choices();
     seq7 = 0;
     DAY_MS4 = 864e5;
@@ -76855,7 +77010,7 @@ async function submit(root) {
   }
   input.focus();
 }
-var init_run2 = __esm({
+var init_run3 = __esm({
   "js/console/run.js"() {
     "use strict";
     init_strings();
@@ -76957,7 +77112,7 @@ var init_api29 = __esm({
     init_bar2();
     init_blocks();
     init_model9();
-    init_run2();
+    init_run3();
   }
 });
 
@@ -77174,7 +77329,7 @@ var init_attach23 = __esm({
     init_constants41();
     init_history();
     init_model9();
-    init_run2();
+    init_run3();
   }
 });
 
@@ -81281,10 +81436,6 @@ export {
   TRANSFER_DONE_EVENT,
   TRANSFER_LEAVE_EVENT,
   TRANSFER_RETRY_EVENT,
-  UNDO_MAX,
-  UNDO_RESTORED_MS,
-  UNDO_TOAST,
-  UNDO_TOAST_EVENT,
   UNKNOWN_THEME_EVENT,
   UPDATE_PROPERTY,
   UPDATE_STYLE,
