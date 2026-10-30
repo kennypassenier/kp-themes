@@ -188,6 +188,7 @@
         { "path": "js/patterns.js", "tags": ["@component:data"] },
         { "path": "js/patterns/*.js", "tags": ["@component:data"] },
         { "path": "js/actions.js", "tags": ["@component:table"], "why": "row buttons on shared columns, in lists and tables [scope-143]" },
+        { "path": "js/actions/*.js", "tags": ["@component:table"], "why": "row buttons on shared columns, in lists and tables [scope-143]" },
         {
             "path": "js/kpi.js",
             "tags": ["@component:data"],

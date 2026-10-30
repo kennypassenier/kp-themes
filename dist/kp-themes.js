@@ -3160,7 +3160,7 @@ function settleAfter(root, done) {
   holds.set(root, (holds.get(root) ?? 0) + 1);
   root.setAttribute(SETTLING_ATTRIBUTE, "");
   let held2 = true;
-  const release = () => {
+  const release2 = () => {
     if (!held2) return;
     held2 = false;
     const left = (holds.get(root) ?? 1) - 1;
@@ -3168,10 +3168,10 @@ function settleAfter(root, done) {
     if (left <= 0) root.removeAttribute(SETTLING_ATTRIBUTE);
   };
   done.then(
-    () => afterPaint(release),
-    () => afterPaint(release)
+    () => afterPaint(release2),
+    () => afterPaint(release2)
   );
-  return release;
+  return release2;
 }
 var presentUnder, SETTLING_ATTRIBUTE, holds, settling;
 var init_as_of = __esm({
@@ -4435,10 +4435,10 @@ var init_close = __esm({
     if (typeof document !== "undefined" && typeof MutationObserver === "function") {
       new MutationObserver(() => {
         const mine = ++switching;
-        const release = () => {
+        const release2 = () => {
           if (switching === mine) switching = 0;
         };
-        requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release, release)));
+        requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release2, release2)));
       }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     }
     REVERSING_ATTRIBUTE = "data-kp-reversing";
@@ -6642,21 +6642,7 @@ var init_action_tiles = __esm({
   }
 });
 
-// js/actions.js
-var actions_exports = {};
-__export(actions_exports, {
-  ACTION_LIST: () => ACTION_LIST,
-  ROW_ACTIONS: () => ROW_ACTIONS,
-  ROW_KEYS: () => ROW_KEYS,
-  ROW_OPEN_EVENT: () => ROW_OPEN_EVENT,
-  attachActionColumns: () => attachActionColumns,
-  attachRowKeys: () => attachRowKeys,
-  fitActionColumns: () => fitActionColumns,
-  mergeRoles: () => mergeRoles,
-  removeRow: () => removeRow,
-  rowRoles: () => rowRoles,
-  setRowBusy: () => setRowBusy
-});
+// js/actions/roles.js
 function rowRoles(buttons) {
   const seen = /* @__PURE__ */ new Map();
   return buttons.map((button6, at) => {
@@ -6681,130 +6667,267 @@ function mergeRoles(rows) {
   }
   return order;
 }
-function fitActionColumns(list) {
-  if (!(list instanceof HTMLElement)) return;
-  const isTable = list instanceof HTMLTableElement;
+var init_roles = __esm({
+  "js/actions/roles.js"() {
+    "use strict";
+  }
+});
+
+// js/actions/values.js
+var ROW_ACTIONS, ACTION_LIST, ROW_KEYS, ROW_OPEN_EVENT;
+var init_values2 = __esm({
+  "js/actions/values.js"() {
+    "use strict";
+    ROW_ACTIONS = ".kp-row-actions";
+    ACTION_LIST = ".kp-action-list, table";
+    ROW_KEYS = "[data-kp-row-keys]";
+    ROW_OPEN_EVENT = "kp-row-open";
+  }
+});
+
+// js/actions/fit.js
+function buttonRows(list) {
   const boxes = (
     /** @type {HTMLElement[]} */
     [...list.querySelectorAll(ROW_ACTIONS)].filter((box) => box.closest(ACTION_LIST) === list)
   );
-  const rows = boxes.map((box) => (
+  return boxes.map((box) => (
     /** @type {HTMLElement[]} */
     [...box.children].filter((child) => !child.hidden)
   ));
+}
+function writeTableWidths(list, rows, roles, order) {
+  list.dataset.kpActionMeasuring = "";
+  const widths2 = order.map(() => 0);
+  rows.forEach(
+    (row, r) => row.forEach((button6, b) => {
+      const k = order.indexOf(roles[r][b]);
+      const style = getComputedStyle(button6);
+      const margins = (parseFloat(style.marginInlineStart) || 0) + (parseFloat(style.marginInlineEnd) || 0);
+      widths2[k] = Math.max(widths2[k], button6.getBoundingClientRect().width + margins);
+    })
+  );
+  delete list.dataset.kpActionMeasuring;
+  list.style.setProperty("--kp-action-widths", widths2.map((w) => `${Math.ceil(w)}px`).join(" "));
+  list.style.setProperty("--kp-action-stack", `${Math.ceil(Math.max(...widths2))}px`);
+}
+function fitActionColumns(list) {
+  if (!(list instanceof HTMLElement)) return;
+  const isTable = list instanceof HTMLTableElement;
+  const rows = buttonRows(list);
   const roles = rows.map((row) => rowRoles(row.map((button6) => ({ role: button6.dataset.kpAction ?? null }))));
   const order = mergeRoles(roles);
   const named = rows.some((row) => row.some((button6) => button6.dataset.kpAction !== void 0));
   for (const row of rows) for (const button6 of row) button6.style.removeProperty("--kp-action-col");
-  for (const name of ["--kp-action-count", "--kp-action-widths", "--kp-action-stack"]) list.style.removeProperty(name);
+  for (const name of LIST_PROPERTIES) list.style.removeProperty(name);
   if (order.length === 0 || !isTable && !named) return;
-  if (isTable) {
-    list.dataset.kpActionMeasuring = "";
-    const widths2 = order.map(() => 0);
-    rows.forEach(
-      (row, r) => row.forEach((button6, b) => {
-        const k = order.indexOf(roles[r][b]);
-        const style = getComputedStyle(button6);
-        const margins = (parseFloat(style.marginInlineStart) || 0) + (parseFloat(style.marginInlineEnd) || 0);
-        widths2[k] = Math.max(widths2[k], button6.getBoundingClientRect().width + margins);
-      })
-    );
-    delete list.dataset.kpActionMeasuring;
-    list.style.setProperty("--kp-action-widths", widths2.map((w) => `${Math.ceil(w)}px`).join(" "));
-    list.style.setProperty("--kp-action-stack", `${Math.ceil(Math.max(...widths2))}px`);
-  } else {
-    list.style.setProperty("--kp-action-count", String(order.length));
-  }
+  if (isTable) writeTableWidths(list, rows, roles, order);
+  else list.style.setProperty("--kp-action-count", String(order.length));
   rows.forEach((row, r) => row.forEach((button6, b) => button6.style.setProperty("--kp-action-col", String(order.indexOf(roles[r][b]) + 1))));
 }
-function attachActionColumns(root = document) {
-  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
-  const view = doc.defaultView;
-  if (!view) return () => {
-  };
-  const fitAll = () => {
-    const lists = new Set([...root.querySelectorAll(ROW_ACTIONS)].map((box) => box.closest(ACTION_LIST)));
-    for (const list of lists) if (list) fitActionColumns(list);
-  };
-  let queued = 0;
-  const queue = () => {
-    if (queued) return;
-    queued = view.requestAnimationFrame(() => {
-      queued = 0;
-      fitAll();
-    });
-  };
-  const touches2 = (node) => {
-    const el16 = node instanceof Element ? node : node.parentElement;
-    return el16 !== null && (el16.closest(ROW_ACTIONS) !== null || el16.querySelector(ROW_ACTIONS) !== null);
-  };
-  const rows = new view.MutationObserver((records) => {
-    if (records.some((r) => touches2(r.target) || [...r.addedNodes, ...r.removedNodes].some(touches2))) queue();
-  });
-  rows.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), {
-    childList: true,
-    subtree: true,
-    characterData: true,
-    attributes: true,
-    attributeFilter: ["hidden", "data-kp-action"]
-  });
-  const theme = new view.MutationObserver(queue);
-  theme.observe(doc.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  doc.fonts?.addEventListener?.("loadingdone", queue);
-  fitAll();
-  return () => {
-    rows.disconnect();
-    theme.disconnect();
-    doc.fonts?.removeEventListener?.("loadingdone", queue);
-    if (queued) view.cancelAnimationFrame(queued);
-  };
-}
-function setRowBusy(row, busy = true, button6 = null) {
-  const doc = row.ownerDocument;
-  const buttons = (
-    /** @type {HTMLElement[]} */
-    [...row.querySelectorAll(`${ROW_ACTIONS} > *`)]
-  );
-  if (busy) {
-    row.setAttribute("aria-busy", "true");
-    for (const b of buttons) {
-      if (b.getAttribute("aria-disabled") === "true" && !b.hasAttribute("data-kp-row-blocked")) continue;
-      b.setAttribute("aria-disabled", "true");
-      b.setAttribute("data-kp-row-blocked", "");
-    }
-    if (button6 && !button6.hasAttribute("data-kp-busy")) {
-      button6.style.setProperty("min-inline-size", `${button6.getBoundingClientRect().width}px`);
-      for (const node of [...button6.childNodes])
-        if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
-          const words3 = doc.createElement("span");
-          words3.className = "kp-button__text";
-          node.replaceWith(words3);
-          words3.append(node);
-        }
-      const holder = doc.createElement("span");
-      holder.className = "kp-button__busy";
-      holder.setAttribute("aria-hidden", "true");
-      const wheel = doc.createElement("span");
-      wheel.className = "kp-spinner";
-      holder.append(wheel);
-      button6.append(holder);
-      button6.setAttribute("data-kp-busy", "");
-    }
-    if (!blockers.has(row)) {
-      const block2 = (event) => {
-        const target = event.target instanceof Element ? event.target.closest("[data-kp-row-blocked]") : null;
-        if (!target) return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      };
-      row.addEventListener("click", block2, true);
-      blockers.set(row, block2);
-    }
-    return row;
+var LIST_PROPERTIES;
+var init_fit = __esm({
+  "js/actions/fit.js"() {
+    "use strict";
+    init_roles();
+    init_values2();
+    LIST_PROPERTIES = ["--kp-action-count", "--kp-action-widths", "--kp-action-stack"];
   }
+});
+
+// js/actions/columns.js
+function touches(node) {
+  const el16 = node instanceof Element ? node : node.parentElement;
+  return el16 !== null && (el16.closest(ROW_ACTIONS) !== null || el16.querySelector(ROW_ACTIONS) !== null);
+}
+var ROW_ATTRIBUTES, ActionColumns;
+var init_columns = __esm({
+  "js/actions/columns.js"() {
+    "use strict";
+    init_controller();
+    init_fit();
+    init_values2();
+    ROW_ATTRIBUTES = ["hidden", "data-kp-action"];
+    ActionColumns = class extends Controller {
+      /**
+       * @param {HTMLElement} host the root: an element, or the document
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.root = /** @type {ParentNode} */
+        /** @type {unknown} */
+        host;
+        this.doc = host instanceof Document ? host : host.ownerDocument ?? document;
+        this.view = this.doc.defaultView;
+        this.queued = 0;
+      }
+      connect() {
+        const { view, doc, root } = this;
+        if (!view) return;
+        this.own(() => {
+          if (this.queued) view.cancelAnimationFrame(this.queued);
+        });
+        if (typeof doc.fonts?.addEventListener === "function") this.listen(doc.fonts, "loadingdone", () => this.queue());
+        this.observe(new view.MutationObserver(() => this.queue())).observe(doc.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+        this.observe(new view.MutationObserver((records) => this.onRows(records))).observe(root instanceof Document ? root.documentElement : (
+          /** @type {Node} */
+          root
+        ), {
+          childList: true,
+          subtree: true,
+          characterData: true,
+          attributes: true,
+          attributeFilter: ROW_ATTRIBUTES
+        });
+        this.fitAll();
+      }
+      fitAll() {
+        const lists = new Set([...this.root.querySelectorAll(ROW_ACTIONS)].map((box) => box.closest(ACTION_LIST)));
+        for (const list of lists) if (list) fitActionColumns(list);
+      }
+      /** Fit once on the next frame, however many changes come before it. */
+      queue() {
+        if (this.queued || !this.view) return;
+        this.queued = this.view.requestAnimationFrame(() => {
+          this.queued = 0;
+          this.fitAll();
+        });
+      }
+      /** @param {MutationRecord[]} records */
+      onRows(records) {
+        if (records.some((r) => touches(r.target) || [...r.addedNodes, ...r.removedNodes].some(touches))) this.queue();
+      }
+    };
+  }
+});
+
+// js/actions/keys.js
+var RowKeys;
+var init_keys = __esm({
+  "js/actions/keys.js"() {
+    "use strict";
+    init_controller();
+    init_values2();
+    RowKeys = class extends Controller {
+      connect() {
+        this.settle();
+        if (typeof MutationObserver !== "undefined") this.observe(new MutationObserver(() => this.settle())).observe(this.host, { childList: true });
+        this.listen(this.host, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(this.host, "focusin", (event) => this.onFocus(
+          /** @type {FocusEvent} */
+          event
+        ));
+      }
+      /** @returns {HTMLElement[]} */
+      rowsOf() {
+        return (
+          /** @type {HTMLElement[]} */
+          [...this.host.children].filter(
+            (r) => r.tagName === "LI" && !r.hidden && !r.classList.contains("kp-action-list__group") && r.getAttribute("aria-hidden") !== "true"
+          )
+        );
+      }
+      /** Only this row is in the tab order. @param {HTMLElement} row */
+      current(row) {
+        for (const r of this.rowsOf()) r.tabIndex = r === row ? 0 : -1;
+      }
+      /** Every row focusable, one of them in the tab order; rows added later too. */
+      settle() {
+        const rows = this.rowsOf();
+        for (const r of rows) if (!r.hasAttribute("tabindex")) r.tabIndex = -1;
+        if (rows.length && !rows.some((r) => r.tabIndex === 0)) this.current(rows[0]);
+      }
+      /**
+       * The row a key moves to, or null when it is not a moving key.
+       * @param {KeyboardEvent} event @param {number} count @param {number} at @param {boolean} onRow
+       */
+      target(event, count2, at, onRow) {
+        if (event.key === "j" || event.key === "ArrowDown") return Math.min(count2 - 1, at + 1);
+        if (event.key === "k" || event.key === "ArrowUp") return Math.max(0, at - 1);
+        if (onRow && event.key === "Home") return 0;
+        if (onRow && event.key === "End") return count2 - 1;
+        return null;
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        const target = (
+          /** @type {HTMLElement | null} */
+          event.target instanceof HTMLElement ? event.target : null
+        );
+        if (!target || target.closest("input, textarea, select, [contenteditable]")) return;
+        const rows = this.rowsOf();
+        const at = rows.findIndex((r) => r === target || r.contains(target));
+        if (at < 0) return;
+        const onRow = rows[at] === target;
+        const to = this.target(event, rows.length, at, onRow);
+        if (to !== null) {
+          event.preventDefault();
+          this.current(rows[to]);
+          rows[to].focus();
+          return;
+        }
+        if (event.key === "Enter" && onRow) {
+          event.preventDefault();
+          rows[at].dispatchEvent(new CustomEvent(ROW_OPEN_EVENT, { bubbles: true, detail: { row: rows[at] } }));
+        }
+      }
+      /** @param {FocusEvent} event */
+      onFocus(event) {
+        const row = this.rowsOf().find((r) => event.target instanceof Node && r.contains(event.target));
+        if (row) this.current(row);
+      }
+    };
+  }
+});
+
+// js/actions/busy.js
+function blockButtons(buttons) {
+  for (const b of buttons) {
+    if (b.getAttribute("aria-disabled") === "true" && !b.hasAttribute("data-kp-row-blocked")) continue;
+    b.setAttribute("aria-disabled", "true");
+    b.setAttribute("data-kp-row-blocked", "");
+  }
+}
+function wrapWords(button6) {
+  const doc = button6.ownerDocument;
+  for (const node of [...button6.childNodes])
+    if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
+      const words3 = doc.createElement("span");
+      words3.className = "kp-button__text";
+      node.replaceWith(words3);
+      words3.append(node);
+    }
+}
+function showSpinner(button6) {
+  const doc = button6.ownerDocument;
+  button6.style.setProperty("min-inline-size", `${button6.getBoundingClientRect().width}px`);
+  wrapWords(button6);
+  const holder = doc.createElement("span");
+  holder.className = "kp-button__busy";
+  holder.setAttribute("aria-hidden", "true");
+  const wheel = doc.createElement("span");
+  wheel.className = "kp-spinner";
+  holder.append(wheel);
+  button6.append(holder);
+  button6.setAttribute("data-kp-busy", "");
+}
+function blockPresses(row) {
+  if (blockers.has(row)) return;
+  const block = (event) => {
+    const target = event.target instanceof Element ? event.target.closest("[data-kp-row-blocked]") : null;
+    if (!target) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  };
+  row.addEventListener("click", block, true);
+  blockers.set(row, block);
+}
+function release(row, buttons) {
   row.removeAttribute("aria-busy");
   for (const b of buttons) {
     if (!b.hasAttribute("data-kp-row-blocked")) continue;
@@ -6821,24 +6944,51 @@ function setRowBusy(row, busy = true, button6 = null) {
     row.removeEventListener("click", block, true);
     blockers.delete(row);
   }
+}
+function setRowBusy(row, busy = true, button6 = null) {
+  const buttons = buttonsOf(row);
+  if (!busy) {
+    release(row, buttons);
+    return row;
+  }
+  row.setAttribute("aria-busy", "true");
+  blockButtons(buttons);
+  if (button6 && !button6.hasAttribute("data-kp-busy")) showSpinner(button6);
+  blockPresses(row);
   return row;
+}
+var blockers, buttonsOf;
+var init_busy = __esm({
+  "js/actions/busy.js"() {
+    "use strict";
+    init_values2();
+    blockers = /* @__PURE__ */ new WeakMap();
+    buttonsOf = (row) => (
+      /** @type {HTMLElement[]} */
+      [...row.querySelectorAll(`${ROW_ACTIONS} > *`)]
+    );
+  }
+});
+
+// js/actions/remove.js
+function heirOf(list, row, active) {
+  const rows = (
+    /** @type {HTMLElement[]} */
+    [...list.children].filter((r) => r !== row && !r.hidden && !r.classList.contains("kp-action-list__group"))
+  );
+  const at = [...list.children].indexOf(row);
+  const next2 = rows.find((r) => [...list.children].indexOf(r) > at) ?? rows.reverse().find((r) => [...list.children].indexOf(r) < at) ?? null;
+  const place3 = [...row.querySelectorAll(`${ROW_ACTIONS} > *`)].indexOf(active);
+  return next2 ? (
+    /** @type {HTMLElement | undefined} */
+    next2.querySelectorAll(`${ROW_ACTIONS} > *`)[place3] ?? next2
+  ) : list;
 }
 async function removeRow(row) {
   const list = row.parentElement;
-  const doc = row.ownerDocument;
-  const active = doc.activeElement;
+  const active = row.ownerDocument.activeElement;
   if (list && active instanceof HTMLElement && row.contains(active)) {
-    const rows = (
-      /** @type {HTMLElement[]} */
-      [...list.children].filter((r) => r !== row && !r.hidden && !r.classList.contains("kp-action-list__group"))
-    );
-    const at = [...list.children].indexOf(row);
-    const next2 = rows.find((r) => [...list.children].indexOf(r) > at) ?? rows.reverse().find((r) => [...list.children].indexOf(r) < at) ?? null;
-    const place3 = [...row.querySelectorAll(`${ROW_ACTIONS} > *`)].indexOf(active);
-    const into = next2 ? (
-      /** @type {HTMLElement | undefined} */
-      next2.querySelectorAll(`${ROW_ACTIONS} > *`)[place3] ?? next2
-    ) : list;
+    const into = heirOf(list, row, active);
     if (!into.matches("a[href], button, input, select, textarea, [tabindex]")) into.tabIndex = -1;
     into.focus({ preventScroll: true });
   }
@@ -6846,79 +6996,55 @@ async function removeRow(row) {
   const { leave: leave2 } = await Promise.resolve().then(() => (init_motion(), motion_exports));
   await leave2(row);
 }
-function attachRowKeys(root = document) {
-  const lists = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(ROW_KEYS) ? [root] : [],
-      ...root.querySelectorAll(ROW_KEYS)
-    ]
-  );
-  const undo = [];
-  for (const list of lists) {
-    const rowsOf2 = () => (
-      /** @type {HTMLElement[]} */
-      [...list.children].filter(
-        (r) => r.tagName === "LI" && !r.hidden && !r.classList.contains("kp-action-list__group") && r.getAttribute("aria-hidden") !== "true"
-      )
-    );
-    const current2 = (row) => {
-      for (const r of rowsOf2()) r.tabIndex = r === row ? 0 : -1;
-    };
-    const settle2 = () => {
-      const rows = rowsOf2();
-      for (const r of rows) if (!r.hasAttribute("tabindex")) r.tabIndex = -1;
-      if (rows.length && !rows.some((r) => r.tabIndex === 0)) current2(rows[0]);
-    };
-    settle2();
-    const added = typeof MutationObserver === "undefined" ? null : new MutationObserver(settle2);
-    added?.observe(list, { childList: true });
-    const key = (event) => {
-      if (event.ctrlKey || event.metaKey || event.altKey) return;
-      const target = (
-        /** @type {HTMLElement | null} */
-        event.target instanceof HTMLElement ? event.target : null
-      );
-      if (!target || target.closest("input, textarea, select, [contenteditable]")) return;
-      const rows = rowsOf2();
-      const at = rows.findIndex((r) => r === target || r.contains(target));
-      if (at < 0) return;
-      const onRow = rows[at] === target;
-      const to = event.key === "j" || event.key === "ArrowDown" ? Math.min(rows.length - 1, at + 1) : event.key === "k" || event.key === "ArrowUp" ? Math.max(0, at - 1) : onRow && event.key === "Home" ? 0 : onRow && event.key === "End" ? rows.length - 1 : null;
-      if (to !== null) {
-        event.preventDefault();
-        current2(rows[to]);
-        rows[to].focus();
-        return;
-      }
-      if (event.key === "Enter" && onRow) {
-        event.preventDefault();
-        rows[at].dispatchEvent(new CustomEvent(ROW_OPEN_EVENT, { bubbles: true, detail: { row: rows[at] } }));
-      }
-    };
-    const focus = (event) => {
-      const row = rowsOf2().find((r) => event.target instanceof Node && r.contains(event.target));
-      if (row) current2(row);
-    };
-    list.addEventListener("keydown", key);
-    list.addEventListener("focusin", focus);
-    undo.push(() => {
-      added?.disconnect();
-      list.removeEventListener("keydown", key);
-      list.removeEventListener("focusin", focus);
-    });
+var init_remove = __esm({
+  "js/actions/remove.js"() {
+    "use strict";
+    init_values2();
   }
-  return () => undo.forEach((u) => u());
+});
+
+// js/actions.js
+var actions_exports = {};
+__export(actions_exports, {
+  ACTION_LIST: () => ACTION_LIST,
+  ROW_ACTIONS: () => ROW_ACTIONS,
+  ROW_KEYS: () => ROW_KEYS,
+  ROW_OPEN_EVENT: () => ROW_OPEN_EVENT,
+  attachActionColumns: () => attachActionColumns,
+  attachRowKeys: () => attachRowKeys,
+  fitActionColumns: () => fitActionColumns,
+  mergeRoles: () => mergeRoles,
+  removeRow: () => removeRow,
+  rowRoles: () => rowRoles,
+  setRowBusy: () => setRowBusy
+});
+function attachActionColumns(root = document) {
+  const host = (
+    /** @type {HTMLElement} */
+    /** @type {unknown} */
+    root
+  );
+  const kept = controllerOf(host, ActionColumns);
+  const columns2 = kept ?? attachOne(host, ActionColumns);
+  return () => {
+    if (!kept) columns2?.destroy();
+  };
 }
-var ROW_ACTIONS, ACTION_LIST, ROW_KEYS, ROW_OPEN_EVENT, blockers;
+function attachRowKeys(root = document) {
+  return attachAll(root, ROW_KEYS, RowKeys);
+}
 var init_actions = __esm({
   "js/actions.js"() {
     "use strict";
-    ROW_ACTIONS = ".kp-row-actions";
-    ACTION_LIST = ".kp-action-list, table";
-    ROW_KEYS = "[data-kp-row-keys]";
-    ROW_OPEN_EVENT = "kp-row-open";
-    blockers = /* @__PURE__ */ new WeakMap();
+    init_controller();
+    init_columns();
+    init_keys();
+    init_values2();
+    init_values2();
+    init_roles();
+    init_fit();
+    init_busy();
+    init_remove();
   }
 });
 
@@ -8102,7 +8228,7 @@ function install9(ctx) {
       announce4(html, "arrival", routine, true);
       return;
     }
-    const release = () => {
+    const release2 = () => {
       const held2 = arrivalsOnScreen2.get(doc);
       arrivalsOnScreen2.delete(doc);
       if (held2) for (const go of [...held2]) go();
@@ -8151,7 +8277,7 @@ function install9(ctx) {
       overlay.remove();
       announce4(html, "arrival", routine, false);
       state12.pending--;
-      release();
+      release2();
       done();
     };
     const end = () => {
@@ -8193,7 +8319,7 @@ function install9(ctx) {
     finishers.push(end);
     cleanups.push(() => {
       overlay.remove();
-      if (!removed) release();
+      if (!removed) release2();
     });
     if (card) {
       line.textContent = theme;
@@ -9631,7 +9757,7 @@ function ignoredKey(event) {
   return event.isComposing || event.repeat || event.key === "Dead" || event.key === "Shift" || event.key === "Control" || event.key === "Alt" || event.key === "Meta";
 }
 var MODIFIERS, normal;
-var init_keys = __esm({
+var init_keys2 = __esm({
   "js/shortcuts/keys.js"() {
     "use strict";
     MODIFIERS = /* @__PURE__ */ new Set(["mod", "ctrl", "control", "alt", "shift", "meta", "cmd"]);
@@ -9745,7 +9871,7 @@ var init_sheet = __esm({
     "use strict";
     init_strings();
     init_entries();
-    init_keys();
+    init_keys2();
     UNRANKED = 1e3;
     SCOPED_RANK = 0.5;
     listOf = (value) => (value ?? "").split(",").map((x) => x.trim()).filter(Boolean);
@@ -9760,7 +9886,7 @@ var init_board = __esm({
     init_constants3();
     init_entries();
     init_hint();
-    init_keys();
+    init_keys2();
     init_sheet();
     ShortcutBoard = class {
       constructor() {
@@ -10019,7 +10145,7 @@ var init_register = __esm({
     "use strict";
     init_strings();
     init_constants3();
-    init_keys();
+    init_keys2();
   }
 });
 
@@ -10083,7 +10209,7 @@ var init_shortcuts = __esm({
     init_register();
     init_sheet();
     init_constants3();
-    init_keys();
+    init_keys2();
     board = new ShortcutBoard();
   }
 });
@@ -11776,7 +11902,7 @@ var init_constants5 = __esm({
 
 // js/freshness/values.js
 var AGO, FRESHNESS_TIME_ZONE, MS_PER_SECOND, TICK_MS2, SECONDS, WIDEST_DAYS, WIDEST_HOURS, AGO_OBSERVED;
-var init_values2 = __esm({
+var init_values3 = __esm({
   "js/freshness/values.js"() {
     "use strict";
     AGO = "[data-kp-ago]";
@@ -11862,7 +11988,7 @@ var init_text2 = __esm({
   "js/freshness/text.js"() {
     "use strict";
     init_strings();
-    init_values2();
+    init_values3();
     unitsOf = (el16) => el16.getAttribute("data-kp-ago-units") === "days" ? "days" : void 0;
     FORMATS = /* @__PURE__ */ new Map();
   }
@@ -11963,7 +12089,7 @@ var init_paint = __esm({
   "js/freshness/paint.js"() {
     "use strict";
     init_strings();
-    init_values2();
+    init_values3();
     init_state2();
     init_text2();
   }
@@ -12006,7 +12132,7 @@ var init_engine2 = __esm({
   "js/freshness/engine.js"() {
     "use strict";
     init_strings();
-    init_values2();
+    init_values3();
     init_state2();
     init_paint();
     defaultContext = () => ({ timeZone: FRESHNESS_TIME_ZONE, now: () => Date.now(), overrides: void 0, owner: {} });
@@ -12023,7 +12149,7 @@ var init_watch = __esm({
   "js/freshness/watch.js"() {
     "use strict";
     init_controller();
-    init_values2();
+    init_values3();
     init_state2();
     init_engine2();
     init_paint();
@@ -12160,8 +12286,8 @@ var init_freshness = __esm({
   "js/freshness.js"() {
     "use strict";
     init_watch();
-    init_values2();
-    init_values2();
+    init_values3();
+    init_values3();
     init_text2();
     init_engine2();
   }
@@ -12371,7 +12497,7 @@ function menuKeyTarget(event, at, labels) {
   }
   return null;
 }
-var init_keys2 = __esm({
+var init_keys3 = __esm({
   "js/menu-button/keys.js"() {
     "use strict";
   }
@@ -13081,7 +13207,7 @@ var init_attach3 = __esm({
     init_constants6();
     init_count2();
     init_items();
-    init_keys2();
+    init_keys3();
     init_model();
     init_open();
     attached = /* @__PURE__ */ new WeakSet();
@@ -13112,7 +13238,7 @@ var init_menu_button = __esm({
     init_constants6();
     init_count2();
     init_model();
-    init_keys2();
+    init_keys3();
     init_placement();
     init_open();
     init_attach3();
@@ -13678,7 +13804,7 @@ function targetIndex(event, group, at, count2) {
   const step = stepFor(event, group);
   return step === 0 ? -1 : (at + step + count2) % count2;
 }
-var init_keys3 = __esm({
+var init_keys4 = __esm({
   "js/segmented/keys.js"() {
     "use strict";
   }
@@ -13704,7 +13830,7 @@ var init_root = __esm({
     init_read();
     init_group();
     init_actions2();
-    init_keys3();
+    init_keys4();
     init_roving();
     SegmentedRoot = class extends Controller {
       /** @param {ParentNode} root */
@@ -14645,7 +14771,7 @@ var init_scope = __esm({
 
 // js/kpi/values.js
 var SPARK, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, KPI_STRIP, TILE_LABEL, SPARK_BOX, SVG_NS, STRIP_DEFAULTS, FALLBACK_FONT_PX, LABEL_SLACK_PX, FULL_PERCENT;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/kpi/values.js"() {
     "use strict";
     SPARK = "svg[data-kp-spark]";
@@ -14693,7 +14819,7 @@ var init_spark = __esm({
   "js/kpi/spark.js"() {
     "use strict";
     init_scope();
-    init_values3();
+    init_values4();
     numbersIn = (text) => (text ?? "").split(/[\s,]+/).filter(Boolean).map(Number);
     SparklineWatch = class extends ScopeWatch {
       connect() {
@@ -14737,7 +14863,7 @@ var FLIPPED, KpiToggles;
 var init_toggle = __esm({
   "js/kpi/toggle.js"() {
     "use strict";
-    init_values3();
+    init_values4();
     init_scope();
     FLIPPED = /* @__PURE__ */ new WeakSet();
     KpiToggles = class extends ScopeWatch {
@@ -14830,10 +14956,10 @@ function fitKpiStrip(strip, width) {
     minTilePx = (inner - (columns2 - 1) * gapPx) / columns2 + 1;
   }
 }
-var init_columns = __esm({
+var init_columns2 = __esm({
   "js/kpi/columns.js"() {
     "use strict";
-    init_values3();
+    init_values4();
   }
 });
 
@@ -14842,8 +14968,8 @@ var KpiStrips;
 var init_strips = __esm({
   "js/kpi/strips.js"() {
     "use strict";
-    init_values3();
-    init_columns();
+    init_values4();
+    init_columns2();
     init_scope();
     KpiStrips = class extends ScopeWatch {
       /**
@@ -14980,7 +15106,7 @@ var init_meter = __esm({
   "js/kpi/meter.js"() {
     "use strict";
     init_strings();
-    init_values3();
+    init_values4();
   }
 });
 
@@ -15019,16 +15145,16 @@ var init_kpi = __esm({
     init_spark();
     init_toggle();
     init_strips();
-    init_values3();
+    init_values4();
     init_spark();
     init_meter();
-    init_columns();
+    init_columns2();
   }
 });
 
 // js/hovercard/values.js
 var HOVERCARD_ATTRIBUTE, HOVERCARD_EVENT, HOVERCARD_CARD, EDGE, OPEN_DELAY_MS, CLOSE_DELAY_MS, TAP_ANSWERED_MS, CONTROL_SELECTOR, ID_RADIX2, ID_RANDOM_START, ID_RANDOM_END;
-var init_values4 = __esm({
+var init_values5 = __esm({
   "js/hovercard/values.js"() {
     "use strict";
     HOVERCARD_ATTRIBUTE = "data-kp-hovercard";
@@ -15052,7 +15178,7 @@ var init_core2 = __esm({
     "use strict";
     init_top_layer();
     init_controller();
-    init_values4();
+    init_values5();
     made = 0;
     stripped = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== void 0));
     HoverCardCore = class extends Controller {
@@ -15292,7 +15418,7 @@ var HoverCardTouch;
 var init_touch = __esm({
   "js/hovercard/touch.js"() {
     "use strict";
-    init_values4();
+    init_values5();
     init_show();
     HoverCardTouch = class extends HoverCardShow {
       /** Whether a tap on this anchor is the anchor's own (a link, a button, a field). @param {HTMLElement} anchor */
@@ -15339,7 +15465,7 @@ var init_controller5 = __esm({
   "js/hovercard/controller.js"() {
     "use strict";
     init_motion();
-    init_values4();
+    init_values5();
     init_touch();
     HoverCard = class extends HoverCardTouch {
       /**
@@ -15495,7 +15621,7 @@ var init_hovercard = __esm({
     "use strict";
     init_controller();
     init_controller5();
-    init_values4();
+    init_values5();
   }
 });
 
@@ -15584,7 +15710,7 @@ var init_geometry = __esm({
 
 // js/tiles/keys.js
 var LETTERS_MS, ROW_GAP_PX, WATCHED2, TileBoard;
-var init_keys4 = __esm({
+var init_keys5 = __esm({
   "js/tiles/keys.js"() {
     "use strict";
     init_controller();
@@ -16006,7 +16132,7 @@ var init_tiles = __esm({
     "use strict";
     init_controller();
     init_geometry();
-    init_keys4();
+    init_keys5();
     init_sets2();
     init_geometry();
     init_sets2();
@@ -17345,11 +17471,11 @@ function installSetup(c) {
   c.plot = plot;
   const tipTime = h(doc, "b");
   c.tipTime = tipTime;
-  const release = h(doc, "button", { type: "button", class: "kp-chart__release", "aria-label": strings.release, title: strings.release }, "\u2715");
-  c.release = release;
+  const release2 = h(doc, "button", { type: "button", class: "kp-chart__release", "aria-label": strings.release, title: strings.release }, "\u2715");
+  c.release = release2;
   const pinWord = h(doc, "span");
   c.pinWord = pinWord;
-  const pin = h(doc, "span", { class: "kp-chart__pin" }, pinWord, release);
+  const pin = h(doc, "span", { class: "kp-chart__pin" }, pinWord, release2);
   c.pin = pin;
   const tipRows = h(doc, "div", { class: "kp-chart__tip-rows" });
   c.tipRows = tipRows;
@@ -17408,7 +17534,7 @@ var init_setup = __esm({
 
 // js/chart/plot/readers.js
 function installReaders(c) {
-  const { decorate: decorate2, group, host, key, kindsOff, plot, release, showAll, strings } = c;
+  const { decorate: decorate2, group, host, key, kindsOff, plot, release: release2, showAll, strings } = c;
   const visible3 = () => c.points.map((_, i) => i).filter((i) => c.sel.size === 0 || c.sel.has(i));
   c.visible = visible3;
   const range = () => {
@@ -17428,7 +17554,7 @@ function installReaders(c) {
   const decorateOwn = () => {
     decorateWith(decorate2, plot, { kind: "plot", host, key: key() });
     decorateWith(decorate2, showAll, { kind: "show-all", host, key: key() });
-    decorateWith(decorate2, release, { kind: "release", host, key: key() });
+    decorateWith(decorate2, release2, { kind: "release", host, key: key() });
   };
   c.decorateOwn = decorateOwn;
   const toneOf4 = (ev) => ev.tone ?? (ev.kind ? c.data.kinds?.[ev.kind]?.tone : void 0) ?? "info";
@@ -17484,7 +17610,7 @@ function installLegend(c) {
     legend,
     option,
     plot,
-    release,
+    release: release2,
     setSel,
     showAll,
     strings,
@@ -17624,7 +17750,7 @@ function installLegend(c) {
     setSel(/* @__PURE__ */ new Set());
     c.draw();
   });
-  release.addEventListener("click", () => {
+  release2.addEventListener("click", () => {
     c.pinned = null;
     c.draw();
     plot.focus();
@@ -20653,7 +20779,7 @@ var init_patterns = __esm({
 
 // js/undo-toast/values.js
 var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, MS_PER_SECOND2, CLOCK_TICK_MS;
-var init_values5 = __esm({
+var init_values6 = __esm({
   "js/undo-toast/values.js"() {
     "use strict";
     UNDO_TOAST = "kp-toast--undo";
@@ -20740,7 +20866,7 @@ var init_build2 = __esm({
     "use strict";
     init_patterns();
     init_strings();
-    init_values5();
+    init_values6();
   }
 });
 
@@ -20751,7 +20877,7 @@ var init_core4 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values5();
+    init_values6();
     UndoCore = class extends Controller {
       /**
        * @param {HTMLElement} host the toast (it carries `dismiss`)
@@ -20896,7 +21022,7 @@ var init_run = __esm({
     "use strict";
     init_core4();
     init_stack();
-    init_values5();
+    init_values6();
     UndoRun = class extends UndoCore {
       /**
        * @param {HTMLElement} host the toast
@@ -21128,8 +21254,8 @@ var init_undo_toast = __esm({
     init_strings();
     init_build2();
     init_run();
-    init_values5();
-    init_values5();
+    init_values6();
+    init_values6();
   }
 });
 
@@ -21949,7 +22075,7 @@ var init_api5 = __esm({
 
 // js/facets/values.js
 var FACETS, FACET_EVENT;
-var init_values6 = __esm({
+var init_values7 = __esm({
   "js/facets/values.js"() {
     "use strict";
     FACETS = "[data-kp-facets]";
@@ -21966,7 +22092,7 @@ var init_controller9 = __esm({
     init_strings();
     init_api5();
     init_rows();
-    init_values6();
+    init_values7();
     SAY_FIRST_MS = 100;
     SAY_MS = 30;
     FacetGroup = class extends Controller {
@@ -22051,8 +22177,8 @@ var init_facets = __esm({
     "use strict";
     init_controller();
     init_controller9();
-    init_values6();
-    init_values6();
+    init_values7();
+    init_values7();
     init_pattern();
     init_api5();
   }
@@ -24891,7 +25017,7 @@ var init_thread = __esm({
 
 // js/stackbar/values.js
 var STACKBAR, STACKBAR_PICK_EVENT, STACKBAR_RETRY_EVENT, DEFAULT_LEGEND_ROWS, PALETTE_SIZE, OTHER_KEY, DECIMAL_BELOW_PERCENT;
-var init_values7 = __esm({
+var init_values8 = __esm({
   "js/stackbar/values.js"() {
     "use strict";
     STACKBAR = "[data-kp-stackbar]";
@@ -24941,7 +25067,7 @@ var init_math = __esm({
   "js/stackbar/math.js"() {
     "use strict";
     init_strings();
-    init_values7();
+    init_values8();
     langOf = (el16) => (
       /** @type {HTMLElement | null} */
       el16.closest("[lang]")?.lang || void 0
@@ -24957,7 +25083,7 @@ var init_core5 = __esm({
     init_controller();
     init_strings();
     init_kpi();
-    init_values7();
+    init_values8();
     init_math();
     StackbarCore = class extends Controller {
       /**
@@ -25105,7 +25231,7 @@ var StackbarParts;
 var init_parts = __esm({
   "js/stackbar/parts.js"() {
     "use strict";
-    init_values7();
+    init_values8();
     init_math();
     init_core5();
     StackbarParts = class extends StackbarCore {
@@ -25220,7 +25346,7 @@ var init_controller12 = __esm({
   "js/stackbar/controller.js"() {
     "use strict";
     init_hovercard();
-    init_values7();
+    init_values8();
     init_parts();
     Stackbar = class extends StackbarParts {
       connect() {
@@ -25355,8 +25481,8 @@ var init_stackbar = __esm({
     "use strict";
     init_controller();
     init_controller12();
-    init_values7();
-    init_values7();
+    init_values8();
+    init_values8();
     init_math();
   }
 });
@@ -26719,7 +26845,7 @@ function attachKeys(root = document) {
   return () => void 0;
 }
 var MOD_CAP, KEYS, capText;
-var init_keys5 = __esm({
+var init_keys6 = __esm({
   "js/keys.js"() {
     "use strict";
     init_strings();
@@ -26931,7 +27057,7 @@ var TEXT_ENTRY, RowSelector;
 var init_controller14 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
-    init_keys5();
+    init_keys6();
     init_strings();
     init_core6();
     init_rows2();
@@ -27859,7 +27985,7 @@ var init_parts2 = __esm({
 
 // js/newpill/values.js
 var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, LEAVE_FALLBACK_MS, DIVIDER_COLSPAN;
-var init_values8 = __esm({
+var init_values9 = __esm({
   "js/newpill/values.js"() {
     "use strict";
     FOLLOW = "[data-kp-follow]";
@@ -27899,7 +28025,7 @@ var init_options3 = __esm({
   "js/newpill/options.js"() {
     "use strict";
     init_strings();
-    init_values8();
+    init_values9();
   }
 });
 
@@ -27984,7 +28110,7 @@ var init_draw5 = __esm({
   "js/newpill/draw.js"() {
     "use strict";
     init_core7();
-    init_values8();
+    init_values9();
     NewPillDraw = class extends NewPillCore {
       /** The pill is ruled in, and taken out the way it came [prefers-reduced-motion: at once]. @param {boolean} on */
       show(on) {
@@ -28063,7 +28189,7 @@ var init_away = __esm({
     "use strict";
     init_draw5();
     init_options3();
-    init_values8();
+    init_values9();
     NewPillAway = class extends NewPillDraw {
       /**
        * @param {HTMLElement} host the scroller
@@ -28141,7 +28267,7 @@ var init_controller16 = __esm({
     init_live_options();
     init_away();
     init_rows3();
-    init_values8();
+    init_values9();
     NewPill = class extends NewPillAway {
       /**
        * @param {HTMLElement} host the scroller
@@ -28300,8 +28426,8 @@ var init_newpill = __esm({
     "use strict";
     init_controller();
     init_controller16();
-    init_values8();
-    init_values8();
+    init_values9();
+    init_values9();
   }
 });
 
@@ -28463,7 +28589,7 @@ function handleKey(c, event) {
   }
   c.escaped = false;
 }
-var init_keys6 = __esm({
+var init_keys7 = __esm({
   "js/json-field/keys.js"() {
     "use strict";
     init_constants12();
@@ -29232,7 +29358,7 @@ var init_controller17 = __esm({
     init_constants12();
     init_explain();
     init_frame();
-    init_keys6();
+    init_keys7();
     init_layout();
     init_state9();
     init_tools();
@@ -34665,7 +34791,7 @@ var init_checklist = __esm({
 
 // js/quantity/values.js
 var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, HOLD_SLOW_REPEATS, PAGE_STEPS;
-var init_values9 = __esm({
+var init_values10 = __esm({
   "js/quantity/values.js"() {
     "use strict";
     QUANTITY = "[data-kp-quantity]";
@@ -34911,7 +35037,7 @@ var init_paint5 = __esm({
   "js/quantity/paint.js"() {
     "use strict";
     init_strings();
-    init_values9();
+    init_values10();
     init_build3();
     init_math2();
     init_read3();
@@ -34924,7 +35050,7 @@ var init_controller22 = __esm({
   "js/quantity/controller.js"() {
     "use strict";
     init_controller();
-    init_values9();
+    init_values10();
     init_math2();
     init_paint5();
     init_read3();
@@ -35082,11 +35208,11 @@ var init_quantity = __esm({
   "js/quantity.js"() {
     "use strict";
     init_controller();
-    init_values9();
+    init_values10();
     init_controller22();
     init_math2();
     init_paint5();
-    init_values9();
+    init_values10();
     init_math2();
     init_read3();
   }
@@ -37147,7 +37273,7 @@ function resolveListbox(given2) {
   };
 }
 var OPTION_SELECTOR, HIGHLIGHT_EVENT, CHOOSE_EVENT, DISABLED_SELECTOR, TYPEAHEAD_MS, FALLBACK_PREFIX;
-var init_values10 = __esm({
+var init_values11 = __esm({
   "js/listbox/values.js"() {
     "use strict";
     OPTION_SELECTOR = "[data-kp-option]";
@@ -37166,7 +37292,7 @@ var init_core8 = __esm({
     "use strict";
     init_controller();
     init_scroll();
-    init_values10();
+    init_values11();
     ListboxCore = class extends Controller {
       /**
        * @param {HTMLElement} list the element with role="listbox"
@@ -37485,7 +37611,7 @@ var init_listbox = __esm({
     "use strict";
     init_controller23();
     init_scroll();
-    init_values10();
+    init_values11();
     init_match();
   }
 });
@@ -38345,7 +38471,7 @@ function isTyping(target, typingSelector) {
   return target.isContentEditable || target.matches(typingSelector);
 }
 var MATCHERS2;
-var init_keys7 = __esm({
+var init_keys8 = __esm({
   "js/palette/keys.js"() {
     "use strict";
     init_listbox();
@@ -39048,7 +39174,7 @@ var init_attach11 = __esm({
     init_api14();
     init_constants19();
     init_intent_filter();
-    init_keys7();
+    init_keys8();
     init_outside();
   }
 });
@@ -39070,7 +39196,7 @@ var init_palette = __esm({
   "js/palette.js"() {
     "use strict";
     init_constants19();
-    init_keys7();
+    init_keys8();
     init_outside();
     init_api14();
     init_attach11();
@@ -39915,7 +40041,7 @@ function installColumns(c) {
   const keyOf8 = (row) => row.dataset.kpRowKey ?? row.id ?? "";
   c.keyOf = keyOf8;
 }
-var init_columns2 = __esm({
+var init_columns3 = __esm({
   "js/datatable/attach/columns.js"() {
     "use strict";
     init_remember();
@@ -40091,7 +40217,7 @@ function installBusy(c) {
   const busyWas = wrap.getAttribute("aria-busy");
   c.busyWas = busyWas;
 }
-var init_busy = __esm({
+var init_busy2 = __esm({
   "js/datatable/attach/busy.js"() {
     "use strict";
     init_motion();
@@ -40594,7 +40720,7 @@ function onPanelClick(ctl, event) {
   ctl.choose(/* @__PURE__ */ new Date(`${day.dataset.kpDay}T00:00:00`));
 }
 var jumpCellOf, dayCellOf, isChoose;
-var init_keys8 = __esm({
+var init_keys9 = __esm({
   "js/datepicker/keys.js"() {
     "use strict";
     init_constants20();
@@ -40841,7 +40967,7 @@ var init_controller24 = __esm({
     init_constants20();
     init_dates();
     init_grid2();
-    init_keys8();
+    init_keys9();
     init_opening();
     init_settings();
     init_views();
@@ -44611,9 +44737,9 @@ var init_attach13 = __esm({
     init_identity();
     init_controls2();
     init_details();
-    init_columns2();
+    init_columns3();
     init_model4();
-    init_busy();
+    init_busy2();
     init_chrome();
     init_filter_ui();
     init_sort_setup();
@@ -46314,7 +46440,7 @@ function writeBusyWords(c, words3) {
   }
 }
 var BUSY_LAYERS;
-var init_busy2 = __esm({
+var init_busy3 = __esm({
   "js/calendar/busy.js"() {
     "use strict";
     BUSY_LAYERS = ".kp-calendar__busy, .kp-calendar__day-busy";
@@ -46523,7 +46649,7 @@ function targetDay(key, shift, iso, firstDay) {
       return null;
   }
 }
-var init_keys9 = __esm({
+var init_keys10 = __esm({
   "js/calendar/keys.js"() {
     "use strict";
     init_constants21();
@@ -46640,7 +46766,7 @@ var init_paint6 = __esm({
   "js/calendar/paint.js"() {
     "use strict";
     init_calm_tones();
-    init_busy2();
+    init_busy3();
     init_day();
     init_dates2();
     init_dom5();
@@ -46660,12 +46786,12 @@ var init_controller25 = __esm({
     init_calm_tones();
     init_chart();
     init_constants21();
-    init_busy2();
+    init_busy3();
     init_build4();
     init_day();
     init_dates2();
     init_dom5();
-    init_keys9();
+    init_keys10();
     init_paint6();
     WATCHED4 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
     CalendarController = class extends Controller {
@@ -47158,7 +47284,7 @@ var init_legend2 = __esm({
     "use strict";
     init_strings();
     init_calm_tones();
-    init_keys5();
+    init_keys6();
     init_dom6();
     legendCount = 0;
   }
@@ -48058,7 +48184,7 @@ function keyTarget(m, root, card, key, kind, pressed) {
   return void 0;
 }
 var cardsOf;
-var init_keys10 = __esm({
+var init_keys11 = __esm({
   "js/uses-map/keys.js"() {
     "use strict";
     cardsOf = (root, kind) => [...root.querySelectorAll(`.kp-uses__node[data-side="${kind}"] .kp-uses__card`)].filter((n) => n instanceof HTMLElement);
@@ -48066,7 +48192,7 @@ var init_keys10 = __esm({
 });
 
 // js/uses-map/lines.js
-var TAG_GAP_SHARE, TAG_GAP_MARGIN, TAG_EDGE, TAG_ALONG, UsesLines, touches;
+var TAG_GAP_SHARE, TAG_GAP_MARGIN, TAG_EDGE, TAG_ALONG, UsesLines, touches2;
 var init_lines = __esm({
   "js/uses-map/lines.js"() {
     "use strict";
@@ -48200,18 +48326,18 @@ var init_lines = __esm({
           for (const k of m.usedBy.get(key) ?? []) hot.add(k);
         }
         m.el.toggleAttribute("data-kp-lit", key !== null);
-        for (const [pair, [path]] of this.lines) path.toggleAttribute("data-kp-hot", key !== null && touches(pair, key));
+        for (const [pair, [path]] of this.lines) path.toggleAttribute("data-kp-hot", key !== null && touches2(pair, key));
         for (const node of root.querySelectorAll(".kp-uses__node")) {
           node.toggleAttribute("data-kp-hot", key !== null && hot.has(node.getAttribute("data-key")));
         }
-        for (const [pair, tag] of this.tags) tag.toggleAttribute("data-kp-hot", key !== null && touches(pair, key));
+        for (const [pair, tag] of this.tags) tag.toggleAttribute("data-kp-hot", key !== null && touches2(pair, key));
       }
       /** Take the plates off the map. */
       dispose() {
         for (const tag of this.tags.values()) tag.remove();
       }
     };
-    touches = (pair, key) => {
+    touches2 = (pair, key) => {
       const [s2, u] = pair.split(">");
       return s2 === key || u === key;
     };
@@ -48225,7 +48351,7 @@ var init_wire4 = __esm({
     "use strict";
     init_controller();
     init_constants23();
-    init_keys10();
+    init_keys11();
     init_lines();
     init_memory2();
     UsesWire = class extends Controller {
@@ -49334,7 +49460,7 @@ function placeBusy(c) {
   layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(left - host.left))}px`);
   layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(host.right - right))}px`);
 }
-var init_busy3 = __esm({
+var init_busy4 = __esm({
   "js/week/busy.js"() {
     "use strict";
   }
@@ -49729,7 +49855,7 @@ var init_paint7 = __esm({
     "use strict";
     init_calendar();
     init_state_plate();
-    init_busy3();
+    init_busy4();
     init_constants24();
     init_helpers3();
     init_menu();
@@ -49971,7 +50097,7 @@ var init_attach14 = __esm({
     init_strings();
     init_api16();
     init_build5();
-    init_busy3();
+    init_busy4();
     init_constants24();
     init_menu();
     init_paint7();
@@ -52833,7 +52959,7 @@ function paintGhosts(c) {
   });
   c.body.style.setProperty("--kp-g-lanes", String(rows.length));
 }
-var init_busy4 = __esm({
+var init_busy5 = __esm({
   "js/gantt/busy.js"() {
     "use strict";
     init_busy_card();
@@ -53047,7 +53173,7 @@ var init_paint9 = __esm({
     init_labels2();
     init_points();
     init_chrome2();
-    init_busy4();
+    init_busy5();
     init_selection3();
   }
 });
@@ -53545,7 +53671,7 @@ var init_gantt = __esm({
 
 // js/pipeline/values.js
 var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make17;
-var init_values11 = __esm({
+var init_values12 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -53571,7 +53697,7 @@ var init_core9 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values11();
+    init_values12();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -53657,7 +53783,7 @@ var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
     init_core9();
-    init_values11();
+    init_values12();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -53793,7 +53919,7 @@ var init_view2 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values11();
+    init_values12();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -53909,7 +54035,7 @@ var init_controller26 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
-    init_values11();
+    init_values12();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -54055,8 +54181,8 @@ var init_pipeline = __esm({
     "use strict";
     init_controller();
     init_controller26();
-    init_values11();
-    init_values11();
+    init_values12();
+    init_values12();
   }
 });
 
@@ -54182,7 +54308,7 @@ function edges(el16, track) {
   el16.toggleAttribute("data-kp-uptime-before", track.scrollLeft > 1);
   el16.toggleAttribute("data-kp-uptime-after", track.scrollLeft < max - 1);
 }
-var init_fit = __esm({
+var init_fit2 = __esm({
   "js/uptime/fit.js"() {
     "use strict";
     init_strings();
@@ -54473,7 +54599,7 @@ var init_draw9 = __esm({
     init_state_plate();
     init_constants27();
     init_figures();
-    init_fit();
+    init_fit2();
     init_group4();
     init_helpers4();
     init_state19();
@@ -54747,7 +54873,7 @@ var init_attach17 = __esm({
     init_constants27();
     init_draw9();
     init_figures();
-    init_fit();
+    init_fit2();
     init_group4();
     init_helpers4();
     init_state19();
@@ -55262,7 +55388,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values12 = __esm({
+var init_values13 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -55410,7 +55536,7 @@ var init_core10 = __esm({
     init_strings();
     init_segmented();
     init_chart();
-    init_values12();
+    init_values13();
     init_build8();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
@@ -55485,7 +55611,7 @@ var init_panel = __esm({
     init_top_layer();
     init_motion();
     init_build8();
-    init_values12();
+    init_values13();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -55739,8 +55865,8 @@ var init_range = __esm({
     "use strict";
     init_controller();
     init_controller27();
-    init_values12();
-    init_values12();
+    init_values13();
+    init_values13();
   }
 });
 
@@ -56172,7 +56298,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values13 = __esm({
+var init_values14 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -56298,7 +56424,7 @@ var init_parts5 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values13();
+    init_values14();
   }
 });
 
@@ -56339,7 +56465,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts5();
-    init_values13();
+    init_values14();
   }
 });
 
@@ -56405,7 +56531,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts5();
-    init_values13();
+    init_values14();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -56553,7 +56679,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values13();
+    init_values14();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -56662,8 +56788,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values13();
-    init_values13();
+    init_values14();
+    init_values14();
   }
 });
 
@@ -57800,7 +57926,7 @@ var init_connection = __esm({
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS4, ANNOUNCE_STEP;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -57825,7 +57951,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values14();
+    init_values15();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -57875,7 +58001,7 @@ var init_math3 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values14();
+    init_values15();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -57916,7 +58042,7 @@ var init_core11 = __esm({
     init_strings();
     init_math3();
     init_read4();
-    init_values14();
+    init_values15();
     FULL = 100;
     TransferCore = class extends Controller {
       /**
@@ -58143,7 +58269,7 @@ var init_ticker = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
     init_parts7();
-    init_values14();
+    init_values15();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -58161,7 +58287,7 @@ var init_row2 = __esm({
     init_parts7();
     init_read4();
     init_ticker();
-    init_values14();
+    init_values15();
     TransferRow = class extends TransferCore {
       connect() {
         const row = this.host;
@@ -58315,8 +58441,8 @@ var init_transfer = __esm({
     init_controller();
     init_group5();
     init_row2();
-    init_values14();
-    init_values14();
+    init_values15();
+    init_values15();
     init_math3();
   }
 });
@@ -58548,7 +58674,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -58568,7 +58694,7 @@ var init_core12 = __esm({
     init_controller();
     init_strings();
     init_build9();
-    init_values15();
+    init_values16();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -58698,7 +58824,7 @@ var init_problem = __esm({
     "use strict";
     init_forms();
     init_core12();
-    init_values15();
+    init_values16();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -58779,7 +58905,7 @@ var init_controller29 = __esm({
     "use strict";
     init_problem();
     init_build9();
-    init_values15();
+    init_values16();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -59015,14 +59141,14 @@ var init_code_field = __esm({
     "use strict";
     init_controller();
     init_controller29();
-    init_values15();
-    init_values15();
+    init_values16();
+    init_values16();
   }
 });
 
 // js/page-contents/values.js
 var CONTENTS, CONTENTS_EVENT, DEFAULT_OFFSET_PX, DEFAULT_MIN_ENTRIES, DEFAULT_HEADINGS, WAIT_BARS, END_SLACK_PX, PANE_OFFSET_FRACTION, OPTION_ATTRIBUTES2, PAGE_ATTRIBUTES;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/page-contents/values.js"() {
     "use strict";
     CONTENTS = "[data-kp-contents]";
@@ -59071,7 +59197,7 @@ var init_core13 = __esm({
   "js/page-contents/core.js"() {
     "use strict";
     init_controller();
-    init_values16();
+    init_values17();
     serial5 = 0;
     ContentsCore = class extends Controller {
       /**
@@ -59184,7 +59310,7 @@ var ContentsRead;
 var init_read5 = __esm({
   "js/page-contents/read.js"() {
     "use strict";
-    init_values16();
+    init_values17();
     init_slug();
     init_core13();
     ContentsRead = class extends ContentsCore {
@@ -59240,7 +59366,7 @@ var ContentsSpy;
 var init_spy = __esm({
   "js/page-contents/spy.js"() {
     "use strict";
-    init_values16();
+    init_values17();
     init_slug();
     init_read5();
     ContentsSpy = class extends ContentsRead {
@@ -59358,7 +59484,7 @@ var ContentsList;
 var init_controller30 = __esm({
   "js/page-contents/controller.js"() {
     "use strict";
-    init_values16();
+    init_values17();
     init_draw10();
     init_strings();
     ContentsList = class extends ContentsDraw {
@@ -59474,8 +59600,8 @@ var init_page_contents = __esm({
     "use strict";
     init_controller();
     init_controller30();
-    init_values16();
-    init_values16();
+    init_values17();
+    init_values17();
     init_slug();
   }
 });
@@ -60148,7 +60274,7 @@ function onKey3(field2, event) {
   }
   stepValue(field2, event, up);
 }
-var init_keys11 = __esm({
+var init_keys12 = __esm({
   "js/timefield/keys.js"() {
     "use strict";
     init_strings();
@@ -60170,7 +60296,7 @@ var init_controller31 = __esm({
     init_constants29();
     init_attributes();
     init_field();
-    init_keys11();
+    init_keys12();
     init_parse();
     WATCHED5 = [
       "disabled",
@@ -60899,7 +61025,7 @@ var init_quiet_hours = __esm({
 
 // js/question-card/values.js
 var QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT, MS_PER_SECOND3, RING_RADIUS, RING_BOX, RING_CENTRE;
-var init_values17 = __esm({
+var init_values18 = __esm({
   "js/question-card/values.js"() {
     "use strict";
     QUESTIONS = "[data-kp-questions]";
@@ -60990,7 +61116,7 @@ var init_build11 = __esm({
   "js/question-card/build.js"() {
     "use strict";
     init_strings();
-    init_values17();
+    init_values18();
     make19 = (doc, tag, className, text = "") => {
       const node = doc.createElement(tag);
       node.className = className;
@@ -61023,7 +61149,7 @@ var init_title = __esm({
   "js/question-card/title.js"() {
     "use strict";
     init_strings();
-    init_values17();
+    init_values18();
     open3 = /* @__PURE__ */ new Set();
     baseTitle = "";
     titleOn = false;
@@ -61038,7 +61164,7 @@ var init_core14 = __esm({
     init_controller();
     init_freshness();
     init_strings();
-    init_values17();
+    init_values18();
     init_title();
     QuestionCore = class extends Controller {
       /**
@@ -61155,7 +61281,7 @@ var init_run3 = __esm({
   "js/question-card/run.js"() {
     "use strict";
     init_motion();
-    init_values17();
+    init_values18();
     init_title();
     init_core14();
     QuestionRun = class extends QuestionCore {
@@ -61316,7 +61442,7 @@ var init_spec = __esm({
   "js/question-card/spec.js"() {
     "use strict";
     init_strings();
-    init_values17();
+    init_values18();
     toMs3 = (value) => {
       if (value === void 0) return null;
       const ms = typeof value === "number" ? value : /^-?\d+(\.\d+)?$/.test(value.trim()) ? Number(value) : Date.parse(value);
@@ -61367,8 +61493,8 @@ var init_question_card = __esm({
     init_build11();
     init_run3();
     init_spec();
-    init_values17();
-    init_values17();
+    init_values18();
+    init_values18();
   }
 });
 
@@ -63073,7 +63199,7 @@ function onKey4(m, event) {
   window.setTimeout(() => focusStar(m), 0);
 }
 var starNumber;
-var init_keys12 = __esm({
+var init_keys13 = __esm({
   "js/rating/keys.js"() {
     "use strict";
     init_math4();
@@ -63093,7 +63219,7 @@ var init_controller34 = __esm({
     init_constants31();
     init_build12();
     init_commit();
-    init_keys12();
+    init_keys13();
     init_math4();
     init_paint10();
     init_read6();
@@ -65518,7 +65644,7 @@ var init_toggle2 = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values18 = __esm({
+var init_values19 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -65587,7 +65713,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values18();
+    init_values19();
   }
 });
 
@@ -65606,7 +65732,7 @@ var init_core15 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values18();
+    init_values19();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -65691,7 +65817,7 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values18();
+    init_values19();
     init_core15();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
@@ -65802,7 +65928,7 @@ var VersionChip;
 var init_controller37 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values18();
+    init_values19();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -65907,8 +66033,8 @@ var init_version_delta = __esm({
     "use strict";
     init_controller();
     init_controller37();
-    init_values18();
-    init_values18();
+    init_values19();
+    init_values19();
     init_level();
     init_links2();
   }
@@ -65916,7 +66042,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values19 = __esm({
+var init_values20 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -65987,7 +66113,7 @@ var init_core16 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values19();
+    init_values20();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -66098,7 +66224,7 @@ var init_rows5 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values19();
+    init_values20();
     init_core16();
     DeplistRows = class extends DeplistCore {
       /**
@@ -66208,7 +66334,7 @@ var init_controller38 = __esm({
     init_flash();
     init_state_plate();
     init_strings();
-    init_values19();
+    init_values20();
     init_order();
     init_core16();
     init_rows5();
@@ -66386,8 +66512,8 @@ var init_deplist = __esm({
     "use strict";
     init_controller();
     init_controller38();
-    init_values19();
-    init_values19();
+    init_values20();
+    init_values20();
     init_order();
   }
 });
@@ -67552,7 +67678,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values20 = __esm({
+var init_values21 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -67891,7 +68017,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts10();
-    init_values20();
+    init_values21();
   }
 });
 
@@ -67901,7 +68027,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values20();
+    init_values21();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -68021,7 +68147,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values20();
+    init_values21();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -68635,7 +68761,7 @@ function cssAutosizeSupported() {
   return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
 }
 var px3, WRAP_PROPS, TWIN_STYLE, TWINS;
-var init_fit2 = __esm({
+var init_fit3 = __esm({
   "js/autosize/fit.js"() {
     "use strict";
     init_constants35();
@@ -68904,7 +69030,7 @@ var init_controller40 = __esm({
     init_constants35();
     init_counter();
     init_draft();
-    init_fit2();
+    init_fit3();
     init_status();
     attr8 = (el16, name, fallback2) => el16.getAttribute(name) ?? fallback2;
     AutosizeController = class extends Controller {
@@ -69226,7 +69352,7 @@ var init_autosize = __esm({
   "js/autosize.js"() {
     "use strict";
     init_constants35();
-    init_fit2();
+    init_fit3();
     init_api24();
   }
 });
@@ -69338,7 +69464,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values21 = __esm({
+var init_values22 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -69411,7 +69537,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values21();
+    init_values22();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -69683,7 +69809,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values21();
+    init_values22();
   }
 });
 
@@ -69712,7 +69838,7 @@ function previewKeys(strings, grouped, runOf) {
     ] : []
   ];
 }
-var init_keys13 = __esm({
+var init_keys14 = __esm({
   "js/docpreview/keys.js"() {
     "use strict";
   }
@@ -69726,7 +69852,7 @@ var init_core17 = __esm({
     init_controller();
     init_locale();
     init_strings();
-    init_values21();
+    init_values22();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -69842,7 +69968,7 @@ var init_run4 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values21();
+    init_values22();
     init_kinds();
     init_core17();
     FACTS_BASE = 1024;
@@ -70013,9 +70139,9 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values21();
+    init_values22();
     init_kinds();
-    init_keys13();
+    init_keys14();
     init_run4();
   }
 });
@@ -70135,8 +70261,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values21();
-    init_values21();
+    init_values22();
+    init_values22();
     init_kinds();
     init_glyph();
     init_open3();
@@ -71037,7 +71163,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values22 = __esm({
+var init_values23 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -71176,7 +71302,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build13 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values22();
+    init_values23();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -71196,7 +71322,7 @@ var init_core18 = __esm({
     init_controller();
     init_strings();
     init_build13();
-    init_values22();
+    init_values23();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -71316,7 +71442,7 @@ var init_controller41 = __esm({
     "use strict";
     init_build13();
     init_core18();
-    init_values22();
+    init_values23();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -71542,8 +71668,8 @@ var init_slider = __esm({
     "use strict";
     init_controller();
     init_controller41();
-    init_values22();
-    init_values22();
+    init_values23();
+    init_values23();
   }
 });
 
@@ -81956,7 +82082,7 @@ var DASHBOARD_NEEDS = [
   // A quantity with minus and plus, the kitchen timers, the checklist, one step at a time and the wheel [kpadopt4].
   { name: "quantity", when: "[data-kp-quantity]", load: () => Promise.resolve().then(() => (init_quantity(), quantity_exports)), attach: (m, root) => [m.attachQuantities(root)] },
   { name: "toolbar", when: "[data-kp-toolbar]", load: () => Promise.resolve().then(() => (init_toolbar(), toolbar_exports)), attach: (m, root) => [m.attachToolbars(root)] },
-  { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys5(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] }
+  { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys6(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] }
 ];
 
 // js/auto/page.js
@@ -82527,7 +82653,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys5();
+init_keys6();
 init_kpi();
 
 // js/lazy-register.js
@@ -83349,7 +83475,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys5();
+init_keys6();
 init_kpi();
 init_lede();
 init_listbox();
