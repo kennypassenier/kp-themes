@@ -1,26 +1,4 @@
-/** A slider. */
-export declare const SLIDER = "[data-kp-slider]";
-/** Fired on the slider on every move by a person: `{ values, value, thumb, text }`. */
-export declare const SLIDER_INPUT_EVENT = "kp-slider-input";
-/** Fired on the slider when a value is committed (on release, or at once with `data-kp-commit="input"`). */
-export declare const SLIDER_CHANGE_EVENT = "kp-slider-change";
-/** The states a slider can be in. */
-export declare const SLIDER_STATES: readonly ['ready', 'loading'];
-/**
- * A value snapped to the step from the minimum, clamped, and without floating-point dust. Pure.
- * @param {number} value @param {number} min @param {number} max @param {number} step
- */
-export declare function snapSlider(value: number, min: number, max: number, step: number): number;
-/**
- * Where a value stands along the track, 0 to 100. Pure.
- * @param {number} value @param {number} min @param {number} max
- */
-export declare function sliderPercent(value: number, min: number, max: number): number;
-/**
- * A number typed in the box: the unit and spaces dropped, a comma read as the decimal; NaN when it is not a number. Pure.
- * @param {string} text @param {string} [unit]
- */
-export declare function parseSliderText(text: string, unit?: string): number;
+export { SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, snapSlider, sliderPercent, parseSliderText } from './slider/values.js';
 export type SliderHandle = {
     element: HTMLElement;
     /**
@@ -37,7 +15,15 @@ export type SliderHandle = {
      */
     text: () => string;
 };
-/** The handle of an attached slider. @param {Element} element */
+/**
+ * @typedef {object} SliderHandle
+ * @property {HTMLElement} element
+ * @property {() => number[]} values one value, or two for a range
+ * @property {(values: readonly number[]) => void} set replace the values (no event)
+ * @property {(state: 'ready' | 'loading') => void} setState
+ * @property {() => string} text the value as the box shows it
+ */
+/** The handle of an attached slider. @param {Element} element @returns {SliderHandle | null} */
 export declare function slider(element: Element): SliderHandle | null;
 /**
  * The values of a slider.

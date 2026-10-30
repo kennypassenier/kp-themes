@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The forty-three largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The forty-four largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -803,3 +803,14 @@ Remembered state (open groups, branches, widths, sorts) and the disclosures that
 | `disclosure.js` | RememberedDisclosure per `<details data-kp-remember>`, and RememberWatch for later ones.    |
 | `painters.js`   | The ids the painters read, one painter per component, and painting a page before it draws.  |
 | `store.js`      | The defaults, the storage, an element's name and its claims, a memory, and pruning.         |
+
+## js/slider.js → js/slider/
+
+The slider and the range slider, as a SliderControl controller. 4 files.
+
+| File            | Does                                                                                   |
+| --------------- | -------------------------------------------------------------------------------------- |
+| `build.js`      | The track, its inputs, bubbles and marks, the value boxes, the line and the skeleton.  |
+| `controller.js` | SliderControl: builds and takes down the markup; drag, keys, reset and typed boxes.    |
+| `core.js`       | SliderCore: the state, the paint, the allowed value, the events, state and values.     |
+| `values.js`     | Selector, events, the pure number helpers, the options read once, the value's words.  |

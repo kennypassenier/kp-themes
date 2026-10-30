@@ -103,7 +103,7 @@
         "js/sequencer.js": { "digest": "fcbfcdd9356781f7", "when": "[data-kp-sequencer]" },
         "js/shortcuts.js": { "digest": "58496115a807b312", "when": "[data-kp-shortcuts][data-kp-shortcuts-live]" },
         "js/sidenav.js": { "digest": "08a98d3ca22cc3f1", "when": ".kp-sidenav" },
-        "js/slider.js": { "digest": "3f8907accddaac9a", "when": "[data-kp-slider]" },
+        "js/slider.js": { "digest": "107b919ff1e5724c", "when": "[data-kp-slider]" },
         "js/snooze.js": { "digest": "aa4fa416a3cd323a", "when": "[data-kp-snooze]" },
         "js/stackbar.js": { "digest": "262f9782af3d2648", "when": "[data-kp-stackbar]" },
         "js/statusrow.js": { "digest": "c8421a8c5dced579", "when": ".kp-statuslist" },

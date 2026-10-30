@@ -229,6 +229,7 @@
         { "path": "js/sentence.js", "tags": ["@component:field"], "why": "the sentence form [kpadopt5-time]" },
         { "path": "js/sentence/*.js", "tags": ["@component:field"], "why": "the sentence form [kpadopt5-time]" },
         { "path": "js/slider.js", "tags": ["@component:field"], "why": "the slider [kpadopt5-time]" },
+        { "path": "js/slider/*.js", "tags": ["@component:field"], "why": "the slider [kpadopt5-time]" },
         { "path": "js/autosize.js", "tags": ["@component:field"], "why": "the growing text box [kpadopt6-media]" },
         { "path": "js/anchors.js", "tags": ["@component:structure"], "why": "the link anchors on headings and rows [kpadopt6-media]" },
         { "path": "js/anchors/*.js", "tags": ["@component:structure"], "why": "the link anchors on headings and rows [kpadopt6-media]" },

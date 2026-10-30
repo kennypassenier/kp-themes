@@ -6022,18 +6022,18 @@ function attachOne2(gate) {
   gate.classList.add(toneClass);
   gate.setAttribute("role", "group");
   const key = () => gate.getAttribute("data-kp-ack-key") ?? gate.id ?? id;
-  const make26 = (className, tag = "div") => {
+  const make27 = (className, tag = "div") => {
     const el16 = doc.createElement(tag);
     el16.className = className;
     return el16;
   };
-  const side = make26("kp-ack__side");
+  const side = make27("kp-ack__side");
   const link = gate.getAttribute("data-kp-ack-link");
   let anchor = null;
   let linkOpened = false;
   if (link) {
     anchor = /** @type {HTMLAnchorElement} */
-    make26("kp-ack__link", "a");
+    make27("kp-ack__link", "a");
     anchor.href = link;
     anchor.target = "_blank";
     anchor.rel = "noopener noreferrer";
@@ -6042,33 +6042,33 @@ function attachOne2(gate) {
   }
   const tick6 = (
     /** @type {HTMLLabelElement} */
-    make26("kp-ack__tick", "label")
+    make27("kp-ack__tick", "label")
   );
   const box = (
     /** @type {HTMLInputElement} */
-    make26("kp-field__check", "input")
+    make27("kp-field__check", "input")
   );
   box.type = "checkbox";
   box.id = `${id}-box`;
-  const words2 = make26("kp-ack__label", "span");
+  const words2 = make27("kp-ack__label", "span");
   tick6.append(box, words2);
   side.append(tick6);
-  const live4 = make26("kp-sr-only", "span");
+  const live4 = make27("kp-sr-only", "span");
   live4.setAttribute("role", "status");
   live4.setAttribute("aria-live", "polite");
   let busy = null;
-  const problem = make26("kp-ack__problem");
+  const problem = make27("kp-ack__problem");
   problem.hidden = true;
-  const problemText = make26("kp-ack__problem-text", "span");
+  const problemText = make27("kp-ack__problem-text", "span");
   const retry = (
     /** @type {HTMLButtonElement} */
-    make26("kp-button kp-ack__retry", "button")
+    make27("kp-button kp-ack__retry", "button")
   );
   retry.type = "button";
   retry.textContent = s2.ackRetry;
   retry.hidden = true;
   problem.append(problemText, retry);
-  const frame3 = make26("kp-ack__frame");
+  const frame3 = make27("kp-ack__frame");
   const authored = [...gate.childNodes];
   side.prepend(problem);
   frame3.append(...authored, side);
@@ -6213,10 +6213,10 @@ function attachOne2(gate) {
     }
     if (notes === null) {
       notes = /** @type {HTMLDetailsElement} */
-      make26("kp-ack__notes", "details");
-      const summary2 = make26("kp-ack__notes-summary", "summary");
+      make27("kp-ack__notes", "details");
+      const summary2 = make27("kp-ack__notes-summary", "summary");
       summary2.textContent = s2.ackNotes;
-      const body2 = make26("kp-ack__notes-body kp-markdown");
+      const body2 = make27("kp-ack__notes-body kp-markdown");
       body2.tabIndex = 0;
       body2.setAttribute("role", "region");
       notes.append(summary2, body2);
@@ -9250,8 +9250,8 @@ function scopeActive(entry) {
   const scope = entry.scope;
   if (typeof scope === "string") return true;
   if (!scope.isConnected) return false;
-  const hidden = scope.closest("[hidden], [inert]");
-  return hidden === null && (scope.getClientRects().length > 0 || scope.hasAttribute("data-kp-keys-always"));
+  const hidden2 = scope.closest("[hidden], [inert]");
+  return hidden2 === null && (scope.getClientRects().length > 0 || scope.hasAttribute("data-kp-keys-always"));
 }
 function available(entry) {
   try {
@@ -13176,12 +13176,12 @@ function wire(el16, clock4) {
   if (typeof remembered === "number" && remembered >= 0) interval = remembered;
   el16.classList.add("kp-refresh");
   const s2 = () => getStrings();
-  const make26 = (tag, className) => {
+  const make27 = (tag, className) => {
     const node = doc.createElement(tag);
     node.className = className;
     return node;
   };
-  const chooser = make26("div", "kp-refresh__chooser");
+  const chooser = make27("div", "kp-refresh__chooser");
   let menuHost = null;
   let segHost = null;
   let menuButton = null;
@@ -13192,19 +13192,19 @@ function wire(el16, clock4) {
     segHost = null;
     menuButton = null;
     if (drawnLook === "menu") {
-      menuHost = make26("div", "kp-menu-button kp-refresh__menu");
+      menuHost = make27("div", "kp-menu-button kp-refresh__menu");
       menuHost.setAttribute("data-kp-menu-button", "");
       menuButton = /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-refresh__button");
+      make27("button", "kp-button kp-refresh__button");
       menuButton.type = "button";
       menuButton.setAttribute("aria-label", s2().refreshLabel);
-      const menu = make26("div", "kp-menu kp-menu--rich");
+      const menu = make27("div", "kp-menu kp-menu--rich");
       menu.setAttribute("role", "menu");
       menu.setAttribute("aria-label", s2().refreshLabel);
       menuHost.append(menuButton, menu);
       chooser.replaceChildren(menuHost);
     } else {
-      segHost = make26("div", "kp-segmented kp-refresh__segments");
+      segHost = make27("div", "kp-segmented kp-refresh__segments");
       segHost.setAttribute("data-kp-segmented", "single");
       segHost.setAttribute("role", "radiogroup");
       segHost.setAttribute("aria-label", s2().refreshLabel);
@@ -13212,17 +13212,17 @@ function wire(el16, clock4) {
     }
   };
   buildChooser();
-  const custom = make26("form", "kp-refresh__custom");
+  const custom = make27("form", "kp-refresh__custom");
   custom.hidden = true;
   custom.setAttribute("novalidate", "");
   const customLabel = (
     /** @type {HTMLLabelElement} */
-    make26("label", "kp-refresh__custom-label")
+    make27("label", "kp-refresh__custom-label")
   );
   customLabel.textContent = s2().refreshCustomLabel;
   const input = (
     /** @type {HTMLInputElement} */
-    make26("input", "kp-field__input kp-refresh__input")
+    make27("input", "kp-field__input kp-refresh__input")
   );
   input.type = "number";
   input.min = "1";
@@ -13232,45 +13232,45 @@ function wire(el16, clock4) {
   customLabel.htmlFor = input.id;
   const apply2 = (
     /** @type {HTMLButtonElement} */
-    make26("button", "kp-button kp-refresh__apply")
+    make27("button", "kp-button kp-refresh__apply")
   );
   apply2.type = "submit";
   apply2.textContent = s2().refreshApply;
-  const problem = make26("span", "kp-refresh__problem");
+  const problem = make27("span", "kp-refresh__problem");
   problem.setAttribute("role", "alert");
   custom.append(customLabel, input, apply2, problem);
-  const line = make26("span", "kp-refresh__line");
+  const line = make27("span", "kp-refresh__line");
   const ago = (
     /** @type {HTMLElement} */
-    make26("time", "kp-ago kp-refresh__ago")
+    make27("time", "kp-ago kp-refresh__ago")
   );
   ago.setAttribute("data-kp-ago", "");
-  const busyWords = make26("span", "kp-refresh__busy");
+  const busyWords = make27("span", "kp-refresh__busy");
   busyWords.textContent = s2().refreshUpdating;
   busyWords.hidden = true;
   line.append(ago, busyWords);
   const now = (
     /** @type {HTMLButtonElement} */
-    make26("button", "kp-button kp-button--sm kp-refresh__now")
+    make27("button", "kp-button kp-button--sm kp-refresh__now")
   );
   now.type = "button";
   now.textContent = s2().refreshNow;
   now.setAttribute("aria-keyshortcuts", "R");
-  const count2 = make26("span", "kp-refresh__count");
+  const count2 = make27("span", "kp-refresh__count");
   count2.setAttribute("aria-hidden", "true");
-  const note2 = make26("p", "kp-refresh__note");
+  const note2 = make27("p", "kp-refresh__note");
   note2.setAttribute("role", "status");
   const retry = (
     /** @type {HTMLButtonElement} */
-    make26("button", "kp-button kp-button--sm kp-refresh__retry")
+    make27("button", "kp-button kp-button--sm kp-refresh__retry")
   );
   retry.type = "button";
   retry.textContent = s2().refreshRetryNow;
   retry.hidden = true;
-  const failure = make26("div", "kp-alert kp-alert--warning kp-refresh__failure");
+  const failure = make27("div", "kp-alert kp-alert--warning kp-refresh__failure");
   failure.hidden = true;
   failure.append(note2, retry);
-  const bar = make26("div", "kp-refresh__bar");
+  const bar = make27("div", "kp-refresh__bar");
   bar.append(chooser, line, now);
   const slotted = (
     /** @type {HTMLElement | null} */
@@ -13285,7 +13285,7 @@ function wire(el16, clock4) {
       return;
     }
     if (!titleCell) {
-      titleCell = make26("span", "kp-refresh__title kp-formgrid__label");
+      titleCell = make27("span", "kp-refresh__title kp-formgrid__label");
       bar.prepend(titleCell);
       if (labelCell) titleCell.after(labelCell);
       if (slotted) titleCell.append(slotted);
@@ -13293,7 +13293,7 @@ function wire(el16, clock4) {
     if (words2) {
       if (slotted?.parentElement === titleCell) slotted.hidden = true;
       titleCell.querySelector(":scope > .kp-refresh__title-words")?.remove();
-      const text = make26("span", "kp-refresh__title-words");
+      const text = make27("span", "kp-refresh__title-words");
       text.textContent = words2;
       titleCell.append(text);
     } else if (slotted) slotted.hidden = false;
@@ -13307,7 +13307,7 @@ function wire(el16, clock4) {
       return;
     }
     if (!labelCell) {
-      labelCell = make26("span", "kp-refresh__label kp-formgrid__label");
+      labelCell = make27("span", "kp-refresh__label kp-formgrid__label");
       bar.insertBefore(labelCell, titleCell ? titleCell.nextSibling : bar.firstChild);
     }
     labelCell.textContent = words2;
@@ -14932,7 +14932,7 @@ function wantsName(toggler) {
     /** @type {Element} */
     toggler.cloneNode(true)
   );
-  for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) hidden.remove();
+  for (const hidden2 of clone.querySelectorAll('[aria-hidden="true"]')) hidden2.remove();
   return (clone.textContent ?? "").trim() === "";
 }
 var FOCUSABLE;
@@ -16262,7 +16262,7 @@ function installHandle(c) {
       panel.toggleAttribute(OPTIONS.slimCollapsed, c.declared.slim);
       c.declared = null;
     }
-    for (const [control, hidden] of hiddenAtAttach) control.toggleAttribute("hidden", hidden);
+    for (const [control, hidden2] of hiddenAtAttach) control.toggleAttribute("hidden", hidden2);
     doc.removeEventListener("click", onToggleClick);
     doc.removeEventListener("click", onSlimClick);
     panel.removeEventListener("click", onCategory);
@@ -17872,8 +17872,8 @@ function createIntentFilter(dialog, list, status) {
     list.after(plate);
     return plate;
   };
-  const setHidden = (el16, hidden) => {
-    if (el16.hidden !== hidden) el16.hidden = hidden;
+  const setHidden = (el16, hidden2) => {
+    if (el16.hidden !== hidden2) el16.hidden = hidden2;
   };
   let ownListCap = null;
   const capList = (px5) => {
@@ -19064,7 +19064,7 @@ var init_tables = __esm({
 function installIdentity(c) {
   const { cleanups, regions, wrap } = c;
   c.add = add;
-  c.make = make26;
+  c.make = make27;
   const id = `kp-datatable-${datatableState.instances}`;
   c.id = id;
   const added = [];
@@ -19082,7 +19082,7 @@ function installIdentity(c) {
     added.push(node);
     return node;
   }
-  function make26(tag, className) {
+  function make27(tag, className) {
     const node = document.createElement(tag);
     if (className) node.className = className;
     return node;
@@ -19186,7 +19186,7 @@ var init_controls2 = __esm({
 
 // js/datatable/attach/details.js
 function installDetails(c) {
-  const { add, body, decorate: decorate2, detailFn, expandSingle, make: make26, s0, search, table, wrap } = c;
+  const { add, body, decorate: decorate2, detailFn, expandSingle, make: make27, s0, search, table, wrap } = c;
   const headRow = table.tHead?.rows[0];
   c.headRow = headRow;
   const details = /* @__PURE__ */ new Map();
@@ -19225,10 +19225,10 @@ function installDetails(c) {
   const expanded = /* @__PURE__ */ new Set();
   c.expanded = expanded;
   if (expandable && headRow !== void 0 && headRow.querySelector(EXPAND_COLUMN) === null) {
-    const th = add(make26("th"));
+    const th = add(make27("th"));
     th.setAttribute("scope", "col");
     th.dataset.kpExpandColumn = "";
-    const label = make26("span", "kp-sr-only");
+    const label = make27("span", "kp-sr-only");
     label.textContent = s0.tableDetailsColumn;
     th.append(label);
     headRow.prepend(th);
@@ -19236,10 +19236,10 @@ function installDetails(c) {
   const reorderable = wrap.dataset.kpRowsReorder !== void 0 && headRow !== void 0;
   c.reorderable = reorderable;
   if (reorderable && headRow !== void 0 && headRow.querySelector(REORDER_COLUMN) === null) {
-    const th = add(make26("th"));
+    const th = add(make27("th"));
     th.setAttribute("scope", "col");
     th.dataset.kpReorderColumn = "";
-    const label = make26("span", "kp-sr-only");
+    const label = make27("span", "kp-sr-only");
     label.textContent = s0.tableReorderColumn;
     th.append(label);
     headRow.prepend(th);
@@ -19249,18 +19249,18 @@ function installDetails(c) {
       return;
     const cell = (
       /** @type {HTMLTableCellElement} */
-      make26("td")
+      make27("td")
     );
     cell.dataset.kpReorderCell = "";
     cell.dataset.label = "";
     const button4 = (
       /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__handle")
+      make27("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__handle")
     );
     button4.type = "button";
     button4.dataset.kpReorderHandle = "";
     button4.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
-    const grip = make26("span", "kp-datatable__grip");
+    const grip = make27("span", "kp-datatable__grip");
     grip.setAttribute("aria-hidden", "true");
     button4.append(grip);
     cell.append(button4);
@@ -19274,14 +19274,14 @@ function installDetails(c) {
       return;
     const cell = (
       /** @type {HTMLTableCellElement} */
-      make26("td")
+      make27("td")
     );
     cell.dataset.kpExpandCell = "";
     cell.dataset.label = "";
     let button4 = null;
     if (details.has(row) || detailFn !== void 0 || details.size === 0) {
       button4 = /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand");
+      make27("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand");
       button4.type = "button";
       button4.dataset.kpRowToggle = "";
       cell.append(button4);
@@ -19413,7 +19413,7 @@ var init_model2 = __esm({
 
 // js/datatable/attach/busy.js
 function installBusy(c) {
-  const { make: make26, table, wrap } = c;
+  const { make: make27, table, wrap } = c;
   const busySeconds = () => Math.max(0, Math.floor((Date.now() - /** @type {number} */
   c.busySince) / 1e3));
   c.busySeconds = busySeconds;
@@ -19451,15 +19451,15 @@ function installBusy(c) {
     }
     const host = wrap;
     if (c.state !== "loading" || !c.busyOverlay) return;
-    const layer = make26("div", "kp-datatable__busy-overlay");
+    const layer = make27("div", "kp-datatable__busy-overlay");
     layer.setAttribute("aria-hidden", "true");
-    const panel = make26("div", "kp-datatable__busy-panel");
-    const spinner = make26("span", "kp-spinner");
-    const words2 = make26("span", "kp-datatable__busy-words");
+    const panel = make27("div", "kp-datatable__busy-panel");
+    const spinner = make27("span", "kp-spinner");
+    const words2 = make27("span", "kp-datatable__busy-words");
     words2.textContent = c.busyText ?? s2.busy;
     panel.append(spinner, words2);
     if (c.busySince !== null) {
-      c.overlayClock = make26("span", "kp-datatable__busy-clock");
+      c.overlayClock = make27("span", "kp-datatable__busy-clock");
       c.overlayClock.textContent = s2.tableBusyElapsed(busySeconds());
       panel.append(c.overlayClock);
     }
@@ -19548,7 +19548,7 @@ var init_busy = __esm({
 
 // js/datatable/attach/chrome.js
 function installChrome(c) {
-  const { add, controlColumn, densitySelect, headers, labelOf: labelOf7, make: make26, s0, scopeSelect, selectAll, status, table, undo, wrap } = c;
+  const { add, controlColumn, densitySelect, headers, labelOf: labelOf7, make: make27, s0, scopeSelect, selectAll, status, table, undo, wrap } = c;
   const themeBox = (box) => {
     if (box === null || box.classList.contains(CHECK_CLASS)) return;
     box.classList.add(CHECK_CLASS);
@@ -19580,7 +19580,7 @@ function installChrome(c) {
   ) ?? null;
   const ensureTopBar = () => {
     if (c.topBar !== null) return c.topBar;
-    c.topBar = add(make26("div", "kp-datatable__bar"));
+    c.topBar = add(make27("div", "kp-datatable__bar"));
     wrap.insertBefore(c.topBar, wrap.firstElementChild);
     return c.topBar;
   };
@@ -19596,7 +19596,7 @@ function installChrome(c) {
   c.putUnder = putUnder;
   if (scopeSelect !== null) {
     if (scopeSelect.options.length === 0) {
-      const every = make26("option");
+      const every = make27("option");
       every.setAttribute("value", "");
       every.textContent = s0.tableSearchAllColumns;
       scopeSelect.append(add(every));
@@ -19604,7 +19604,7 @@ function installChrome(c) {
         if (header.dataset.kpSearch === "false" || controlColumn(at) || labelOf7(at) === "") return;
         const option = (
           /** @type {HTMLOptionElement} */
-          make26("option")
+          make27("option")
         );
         option.value = String(at);
         option.textContent = labelOf7(at);
@@ -19625,7 +19625,7 @@ function installChrome(c) {
       ]) {
         const option = (
           /** @type {HTMLOptionElement} */
-          make26("option")
+          make27("option")
         );
         option.value = value ?? "";
         option.textContent = text ?? "";
@@ -20500,7 +20500,7 @@ var init_datepicker = __esm({
 
 // js/datatable/attach/filter-ui.js
 function installFilterUi(c) {
-  const { add, choiceText, decoratePart, ensureTopBar, filterKinds, filterMode, headers, id, labelOf: labelOf7, locale, make: make26, orders, s0, undo, wrap } = c;
+  const { add, choiceText, decoratePart, ensureTopBar, filterKinds, filterMode, headers, id, labelOf: labelOf7, locale, make: make27, orders, s0, undo, wrap } = c;
   c.choiceValues = choiceValues;
   c.fillChoices = fillChoices;
   c.datePickerFor = datePickerFor;
@@ -20523,7 +20523,7 @@ function installFilterUi(c) {
     wrap.querySelector(ADD_FILTER);
     if (c.addButton === null) {
       c.addButton = /** @type {HTMLButtonElement} */
-      add(make26("button", "kp-button kp-datatable__add-filter"));
+      add(make27("button", "kp-button kp-datatable__add-filter"));
       c.addButton.type = "button";
       c.addButton.dataset.kpDatatableAddFilter = "";
       ensureTopBar().append(c.addButton);
@@ -20553,17 +20553,17 @@ function installFilterUi(c) {
     c.addButton.setAttribute("aria-controls", popId);
     c.addButton.setAttribute("popovertarget", popId);
     c.addButton.style.setProperty("anchor-name", `--${popId}`);
-    c.addPop = add(make26("div", "kp-popover kp-datatable__add-menu"));
+    c.addPop = add(make27("div", "kp-popover kp-datatable__add-menu"));
     c.addPop.id = popId;
     c.addPop.setAttribute("popover", "auto");
     c.addPop.dataset.kpDatatableAddMenu = "";
     c.addPop.style.setProperty("position-anchor", `--${popId}`);
-    c.addMenu = make26("ul", "kp-menu");
+    c.addMenu = make27("ul", "kp-menu");
     c.addMenu.setAttribute("aria-label", s2.tableAddFilterMenu);
     c.addPop.append(c.addMenu);
     c.addButton.after(c.addPop);
     c.filterEditor = /** @type {HTMLFormElement} */
-    add(make26("form", "kp-datatable__filter-editor"));
+    add(make27("form", "kp-datatable__filter-editor"));
     c.filterEditor.id = `${id}-filter-editor`;
     c.filterEditor.dataset.kpDatatableFilterEditor = "";
     c.filterEditor.noValidate = true;
@@ -20574,7 +20574,7 @@ function installFilterUi(c) {
     c.panel = /** @type {HTMLElement | null} */
     wrap.querySelector(FILTERS);
     if (c.panel === null) {
-      c.panel = add(make26("div", "kp-datatable__filters"));
+      c.panel = add(make27("div", "kp-datatable__filters"));
       c.panel.dataset.kpDatatableFilters = "";
       c.panel.hidden = wrap.dataset.kpFiltersOpen === void 0;
       wrap.insertBefore(c.panel, c.tableBlock);
@@ -20592,18 +20592,18 @@ function installFilterUi(c) {
         filterKinds[at]
       );
       const label = labelOf7(at);
-      const set = add(make26("fieldset", "kp-fieldset kp-datatable__filter"));
+      const set = add(make27("fieldset", "kp-fieldset kp-datatable__filter"));
       set.dataset.kpFilterColumn = String(at);
-      const legend = make26("legend", "kp-field__label");
+      const legend = make27("legend", "kp-field__label");
       legend.textContent = label;
       set.append(legend);
       if (kind === "choice") fillChoices(set, at, []);
       else {
-        const range = make26("div", "kp-datatable__range");
+        const range = make27("div", "kp-datatable__range");
         for (const bound of ["from", "to"]) {
           const input = (
             /** @type {HTMLInputElement} */
-            make26("input", "kp-field__input")
+            make27("input", "kp-field__input")
           );
           input.dataset.kpFilterBound = bound;
           input.setAttribute("aria-label", bound === "from" ? s0.tableFilterFrom(label) : s0.tableFilterTo(label));
@@ -20627,7 +20627,7 @@ function installFilterUi(c) {
     wrap.querySelector(FILTER_TOGGLE);
     if (c.toggle === null) {
       c.toggle = /** @type {HTMLButtonElement} */
-      add(make26("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
+      add(make27("button", "kp-button kp-button--ghost kp-datatable__filter-toggle"));
       c.toggle.type = "button";
       c.toggle.dataset.kpDatatableFilterToggle = "";
       if (c.topBar !== null) c.topBar.append(c.toggle);
@@ -20640,7 +20640,7 @@ function installFilterUi(c) {
     c.pills = /** @type {HTMLElement | null} */
     wrap.querySelector(PILLS);
     if (c.pills === null) {
-      c.pills = add(make26("div", "kp-datatable__pills"));
+      c.pills = add(make27("div", "kp-datatable__pills"));
       c.pills.dataset.kpDatatablePills = "";
       wrap.insertBefore(c.pills, c.tableBlock);
     }
@@ -20662,10 +20662,10 @@ function installFilterUi(c) {
     if (boxes.length === values.length && boxes.every((box, i) => box.value === values[i])) return;
     for (const box of boxes) box.closest(".kp-field__option")?.remove();
     for (const value of values) {
-      const option = make26("label", "kp-field__option");
+      const option = make27("label", "kp-field__option");
       const box = (
         /** @type {HTMLInputElement} */
-        make26("input", CHECK_CLASS)
+        make27("input", CHECK_CLASS)
       );
       box.type = "checkbox";
       box.value = value;
@@ -20675,7 +20675,7 @@ function installFilterUi(c) {
     }
   }
   function datePickerFor(input) {
-    const picker = make26("div", "kp-datepicker");
+    const picker = make27("div", "kp-datepicker");
     picker.dataset.kpDatepicker = "";
     picker.dataset.kpLocale = locale;
     input.type = "text";
@@ -20684,17 +20684,17 @@ function installFilterUi(c) {
     const s2 = getStrings();
     const opener = (
       /** @type {HTMLButtonElement} */
-      make26("button", "kp-button")
+      make27("button", "kp-button")
     );
     opener.type = "button";
     opener.dataset.kpDateOpen = "";
     opener.setAttribute("aria-label", s2.calendarOpen);
     opener.title = s2.calendarOpen;
-    const glyph3 = make26("span");
+    const glyph3 = make27("span");
     glyph3.setAttribute("aria-hidden", "true");
     glyph3.textContent = s2.calendarButton;
     opener.append(glyph3);
-    const datePanel = make26("div", "kp-datepicker__panel");
+    const datePanel = make27("div", "kp-datepicker__panel");
     datePanel.dataset.kpDatePanel = "";
     datePanel.hidden = true;
     picker.append(input, opener, datePanel);
@@ -20715,22 +20715,22 @@ var init_filter_ui = __esm({
 
 // js/datatable/attach/sort-setup.js
 function installSortSetup(c) {
-  const { add, controlColumn, editKinds, ensureTopBar, headers, id, keyColumn, labelOf: labelOf7, make: make26, multi, putUnder, s0, wrap } = c;
+  const { add, controlColumn, editKinds, ensureTopBar, headers, id, keyColumn, labelOf: labelOf7, make: make27, multi, putUnder, s0, wrap } = c;
   const sortable = headers.flatMap((header, at) => header.dataset.kpSort === void 0 ? [] : [at]);
   c.sortBy = null;
   c.sortDirection = null;
   if (wrap.dataset.kpCards !== void 0 && sortable.length > 0 && wrap.querySelector(CARD_SORT) === null) {
-    const control = add(make26("div", "kp-datatable__card-sort"));
+    const control = add(make27("div", "kp-datatable__card-sort"));
     control.dataset.kpDatatableCardSort = "";
-    const label = make26("label", "kp-datatable__label");
+    const label = make27("label", "kp-datatable__label");
     label.append(s0.tableSortBy, " ");
     c.sortBy = /** @type {HTMLSelectElement} */
-    make26("select", "kp-field__input kp-datatable__select");
+    make27("select", "kp-field__input kp-datatable__select");
     c.sortBy.dataset.kpDatatableSortBy = "";
     c.sortBy.setAttribute("aria-label", s0.tableSortBy);
     const none = (
       /** @type {HTMLOptionElement} */
-      make26("option")
+      make27("option")
     );
     none.value = "";
     none.textContent = s0.tableSortNone;
@@ -20738,7 +20738,7 @@ function installSortSetup(c) {
     for (const at of sortable) {
       const option = (
         /** @type {HTMLOptionElement} */
-        make26("option")
+        make27("option")
       );
       option.value = String(at);
       option.textContent = labelOf7(at);
@@ -20746,7 +20746,7 @@ function installSortSetup(c) {
     }
     label.append(c.sortBy);
     c.sortDirection = /** @type {HTMLButtonElement} */
-    make26("button", "kp-button kp-button--ghost");
+    make27("button", "kp-button kp-button--ghost");
     c.sortDirection.type = "button";
     c.sortDirection.dataset.kpDatatableSortDirection = "";
     control.append(label, c.sortDirection);
@@ -20758,15 +20758,15 @@ function installSortSetup(c) {
     c.sortSummary = /** @type {HTMLElement | null} */
     wrap.querySelector(SORT_SUMMARY);
     if (c.sortSummary === null) {
-      const line = add(make26("div", "kp-datatable__bar kp-datatable__sort-line"));
-      c.sortSummary = make26("p", "kp-datatable__status kp-datatable__sort-summary");
+      const line = add(make27("div", "kp-datatable__bar kp-datatable__sort-line"));
+      c.sortSummary = make27("p", "kp-datatable__status kp-datatable__sort-summary");
       c.sortSummary.dataset.kpDatatableSortSummary = "";
       c.sortSummary.setAttribute("aria-live", "polite");
       line.append(c.sortSummary);
       if (wrap.querySelector(SORT_RESET) === null) {
         const back = (
           /** @type {HTMLButtonElement} */
-          make26("button", "kp-button kp-button--ghost kp-button--sm")
+          make27("button", "kp-button kp-button--ghost kp-button--sm")
         );
         back.type = "button";
         back.dataset.kpDatatableSortReset = "";
@@ -20790,7 +20790,7 @@ function installSortSetup(c) {
     const popId = `${id}-columns`;
     const button4 = (
       /** @type {HTMLButtonElement} */
-      add(make26("button", "kp-button kp-button--ghost kp-datatable__columns-toggle"))
+      add(make27("button", "kp-button kp-button--ghost kp-datatable__columns-toggle"))
     );
     button4.type = "button";
     button4.dataset.kpDatatableColumnsToggle = "";
@@ -20800,7 +20800,7 @@ function installSortSetup(c) {
     button4.setAttribute("aria-controls", popId);
     button4.setAttribute("popovertarget", popId);
     button4.style.setProperty("anchor-name", `--${popId}`);
-    const pop2 = add(make26("div", "kp-popover kp-datatable__columns"));
+    const pop2 = add(make27("div", "kp-popover kp-datatable__columns"));
     pop2.id = popId;
     pop2.setAttribute("popover", "auto");
     pop2.dataset.kpDatatableColumns = "";
@@ -20811,17 +20811,17 @@ function installSortSetup(c) {
         event.newState === "open"
       ));
     });
-    c.columnList = make26("ul", "kp-menu");
+    c.columnList = make27("ul", "kp-menu");
     c.columnList.setAttribute("aria-label", s0.tableColumnsLabel);
     pop2.append(c.columnList);
-    c.columnCount = add(make26("span", "kp-datatable__status kp-datatable__columns-count"));
+    c.columnCount = add(make27("span", "kp-datatable__status kp-datatable__columns-count"));
     c.columnCount.dataset.kpDatatableColumnsCount = "";
     bar.append(button4, pop2, c.columnCount);
   }
   const editable2 = editKinds.some((kind) => kind !== null);
   c.editLog = null;
   if (editable2) {
-    c.editLog = add(make26("p", "kp-datatable__status kp-datatable__edit-log"));
+    c.editLog = add(make27("p", "kp-datatable__status kp-datatable__edit-log"));
     c.editLog.dataset.kpDatatableEditLog = "";
     c.editLog.setAttribute("role", "status");
     c.editLog.setAttribute("aria-live", "polite");
@@ -20838,28 +20838,28 @@ var init_sort_setup = __esm({
 
 // js/datatable/attach/layout-setup.js
 function installLayoutSetup(c) {
-  const { add, make: make26, pager, putUnder, s0, sizes, undo, wrap } = c;
+  const { add, make: make27, pager, putUnder, s0, sizes, undo, wrap } = c;
   const gridMode = wrap.dataset.kpGrid !== void 0;
   c.gridMode = gridMode;
   c.gridReadout = null;
   if (gridMode) {
-    c.gridReadout = add(make26("p", "kp-datatable__status kp-datatable__grid-readout"));
+    c.gridReadout = add(make27("p", "kp-datatable__status kp-datatable__grid-readout"));
     c.gridReadout.dataset.kpDatatableGridReadout = "";
     c.gridReadout.setAttribute("aria-live", "polite");
     c.gridReadout.textContent = s0.tableGridStart;
     putUnder(c.gridReadout);
   }
   if (c.failedSlot === null) {
-    c.failedSlot = add(make26("div", "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error"));
+    c.failedSlot = add(make27("div", "kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error"));
     c.failedSlot.dataset.kpDatatableFailed = "";
     c.failedSlot.setAttribute("role", "alert");
     c.failedSlot.hidden = true;
-    const text = make26("p", "kp-stateplate__title");
+    const text = make27("p", "kp-stateplate__title");
     text.dataset.kpDatatableFailedReason = "";
     text.textContent = s0.tableFailed;
     const retry = (
       /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-stateplate__action")
+      make27("button", "kp-button kp-stateplate__action")
     );
     retry.type = "button";
     retry.dataset.kpDatatableRetry = "";
@@ -20872,12 +20872,12 @@ function installLayoutSetup(c) {
     undo.push(() => authored.classList.remove("kp-stateplate", "kp-stateplate--error"));
   }
   if (c.empty === null) {
-    c.empty = add(make26("div", "kp-empty kp-stateplate kp-stateplate--empty"));
+    c.empty = add(make27("div", "kp-empty kp-stateplate kp-stateplate--empty"));
     c.empty.dataset.kpDatatableEmpty = "";
     c.empty.setAttribute("role", "status");
     c.empty.hidden = true;
     c.emptyHidden = true;
-    const none = make26("strong", "kp-empty__title");
+    const none = make27("strong", "kp-empty__title");
     none.textContent = s0.tableEmpty;
     c.empty.append(none);
     wrap.insertBefore(c.empty, c.tableBlock);
@@ -20892,7 +20892,7 @@ function installLayoutSetup(c) {
   }
   if (c.empty !== null && c.empty.querySelector(".kp-empty__title, .kp-stateplate__title") === null) {
     const authored = c.empty;
-    const heading = make26("strong", "kp-empty__title");
+    const heading = make27("strong", "kp-empty__title");
     heading.textContent = s0.tableEmpty;
     authored.prepend(heading);
     undo.push(() => heading.remove());
@@ -20900,7 +20900,7 @@ function installLayoutSetup(c) {
   if (c.empty !== null) {
     for (const node of [...c.empty.childNodes]) {
       if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? "").trim() === "") continue;
-      const words2 = make26("span", "kp-stateplate__text");
+      const words2 = make27("span", "kp-stateplate__text");
       node.replaceWith(words2);
       words2.append(node);
       undo.push(() => words2.replaceWith(node));
@@ -20913,7 +20913,7 @@ function installLayoutSetup(c) {
       reason.classList.add("kp-stateplate__title");
       undo.push(() => reason.classList.remove("kp-stateplate__title"));
     } else {
-      const heading = make26("strong", "kp-stateplate__title");
+      const heading = make27("strong", "kp-stateplate__title");
       heading.dataset.kpDatatableFailedReason = "";
       heading.textContent = s0.tableFailed;
       authoredFailed.prepend(heading);
@@ -20955,15 +20955,15 @@ function installLayoutSetup(c) {
   c.sizeSelect = null;
   if (pager !== null && sizes.length > 0) {
     c.sizeLabel = /** @type {HTMLLabelElement} */
-    make26("label", "kp-datatable__label");
+    make27("label", "kp-datatable__label");
     c.sizeSelect = /** @type {HTMLSelectElement} */
-    make26("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
+    make27("select", "kp-field__input kp-datatable__select kp-datatable__page-size");
     c.sizeSelect.dataset.kpDatatablePageSize = "";
     c.sizeSelect.setAttribute("aria-label", s0.tableRowsPerPage);
     for (const n of sizes) {
       const option = (
         /** @type {HTMLOptionElement} */
-        make26("option")
+        make27("option")
       );
       option.value = String(n);
       option.textContent = String(n);
@@ -20995,7 +20995,7 @@ function installReorder(c) {
     keyColumn,
     keyOf: keyOf8,
     labelOf: labelOf7,
-    make: make26,
+    make: make27,
     pager,
     rendered,
     reorderable,
@@ -21018,11 +21018,11 @@ function installReorder(c) {
       if (kind === null || cell === void 0 || cell.querySelector(EDIT_CELL) !== null) return;
       const button4 = (
         /** @type {HTMLButtonElement} */
-        make26("button", "kp-datatable__edit")
+        make27("button", "kp-datatable__edit")
       );
       button4.type = "button";
       button4.dataset.kpEditCell = "";
-      const value = make26("span");
+      const value = make27("span");
       value.dataset.kpEditValue = "";
       value.append(...cell.childNodes);
       button4.append(value);
@@ -21096,7 +21096,7 @@ function installReorder(c) {
     c.render();
     row.querySelector(REORDER_HANDLE)?.focus({ preventScroll: true });
     if (reorderLive === null) {
-      reorderLive = make26("span", "kp-sr-only");
+      reorderLive = make27("span", "kp-sr-only");
       reorderLive.setAttribute("role", "status");
       reorderLive.setAttribute("aria-live", "polite");
       wrap.append(reorderLive);
@@ -21189,7 +21189,7 @@ var init_reorder = __esm({
 
 // js/datatable/attach/groups.js
 function installGroups(c) {
-  const { body, builtDetails, decoratePart, details, glyphs, headers, id, make: make26, rendered, serverMode } = c;
+  const { body, builtDetails, decoratePart, details, glyphs, headers, id, make: make27, rendered, serverMode } = c;
   const visibleColumns = () => headers.filter((_, at) => !c.hiddenColumns.has(at)).length;
   c.visibleColumns = visibleColumns;
   const groups = /* @__PURE__ */ new Map();
@@ -21226,7 +21226,7 @@ function installGroups(c) {
     preparedGroups.set(heading, { span: heading.cells.length === 1 ? cell.getAttribute("colspan") : null, hidden: heading.hidden === true });
     const button4 = (
       /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand kp-datatable__group-toggle")
+      make27("button", "kp-button kp-button--ghost kp-button--sm kp-datatable__expand kp-datatable__group-toggle")
     );
     button4.type = "button";
     button4.dataset.kpGroupToggle = "";
@@ -21398,7 +21398,7 @@ function installSync(c) {
     labelOf: labelOf7,
     loadingSlot,
     locked,
-    make: make26,
+    make: make27,
     orders,
     selectAll,
     serverMode,
@@ -21414,10 +21414,10 @@ function installSync(c) {
       const hasMarkup = [...detailsWereHidden.keys()].length > 0;
       if (detailFn === void 0 && hasMarkup) return void 0;
       detail = /** @type {HTMLTableRowElement} */
-      make26("tr");
+      make27("tr");
       detail.dataset.kpRowDetail = "";
       detail.hidden = true;
-      const cell2 = make26("td");
+      const cell2 = make27("td");
       detail.append(cell2);
       details.set(row, detail);
       builtDetails.add(detail);
@@ -21507,13 +21507,13 @@ function installSync(c) {
     }
     if (have.length > 0) return;
     for (let i = 0; i < 3; i += 1) {
-      const row = make26("tr");
+      const row = make27("tr");
       row.dataset.kpSkeletonRow = "";
       row.setAttribute("aria-hidden", "true");
       headers.forEach((_, at) => {
-        const cell = make26("td");
+        const cell = make27("td");
         if (c.hiddenColumns.has(at)) cell.hidden = true;
-        if (!controlColumn(at)) cell.append(make26("span", "kp-skeleton"));
+        if (!controlColumn(at)) cell.append(make27("span", "kp-skeleton"));
         row.append(cell);
       });
       body.append(row);
@@ -21548,7 +21548,7 @@ function installSync(c) {
       const key = c.sorts[index];
       header.setAttribute("aria-sort", key === void 0 ? "none" : key.direction);
       if (key === void 0 || c.sorts.length < 2) return;
-      const mark = make26("span", "kp-datatable__sort-order");
+      const mark = make27("span", "kp-datatable__sort-order");
       mark.setAttribute("aria-hidden", "true");
       mark.textContent = String(index + 1);
       (header.querySelector("button") ?? header).append(mark);
@@ -21593,14 +21593,14 @@ function installSync(c) {
     } else if (c.columnList !== null) {
       const s2 = getStrings();
       for (const at of choosable) {
-        const item = make26("li");
+        const item = make27("li");
         const label = (
           /** @type {HTMLLabelElement} */
-          make26("label", "kp-menu__item kp-datatable__column-option")
+          make27("label", "kp-menu__item kp-datatable__column-option")
         );
         const box = (
           /** @type {HTMLInputElement} */
-          make26("input", CHECK_CLASS)
+          make27("input", CHECK_CLASS)
         );
         box.type = "checkbox";
         box.value = String(at);
@@ -21611,12 +21611,12 @@ function installSync(c) {
         item.append(label);
         c.columnList.append(item);
       }
-      const separator = make26("li", "kp-menu__separator");
+      const separator = make27("li", "kp-menu__separator");
       separator.setAttribute("role", "separator");
-      const resetItem = make26("li");
+      const resetItem = make27("li");
       const reset = (
         /** @type {HTMLButtonElement} */
-        make26("button", "kp-menu__item")
+        make27("button", "kp-menu__item")
       );
       reset.type = "button";
       reset.dataset.kpDatatableColumnsReset = "";
@@ -21690,7 +21690,7 @@ function installRender(c) {
     keyOf: keyOf8,
     labelCells,
     labelRow,
-    make: make26,
+    make: make27,
     pageLabel,
     pager,
     pagerClassName,
@@ -21737,7 +21737,7 @@ function installRender(c) {
     if (status !== null) {
       status.textContent = "";
       if (c.state === "loading") {
-        const spinner = make26("span", "kp-spinner");
+        const spinner = make27("span", "kp-spinner");
         spinner.setAttribute("aria-hidden", "true");
         status.append(spinner, " ");
       }
@@ -21746,7 +21746,7 @@ function installRender(c) {
       );
       stopBusyClock();
       if (c.state === "loading" && c.busySince !== null) {
-        c.busyClock = make26("span", "kp-datatable__busy-clock");
+        c.busyClock = make27("span", "kp-datatable__busy-clock");
         c.busyClock.dataset.kpBusyClock = "";
         c.busyClock.setAttribute("aria-hidden", "true");
         c.busyClock.textContent = s2.tableBusyElapsed(busySeconds());
@@ -21803,11 +21803,11 @@ function installRender(c) {
     });
     return button4;
   };
-  const pillsList = add(make26("ul", "kp-tag-list"));
+  const pillsList = add(make27("ul", "kp-tag-list"));
   c.pillsList = pillsList;
   const clearButton = (
     /** @type {HTMLButtonElement} */
-    add(make26("button", `kp-button kp-button--ghost kp-datatable__clear-filters${addMode ? " kp-button--sm" : ""}`))
+    add(make27("button", `kp-button kp-button--ghost kp-datatable__clear-filters${addMode ? " kp-button--sm" : ""}`))
   );
   c.clearButton = clearButton;
   clearButton.type = "button";
@@ -21842,7 +21842,7 @@ function installPills(c) {
     id,
     labelOf: labelOf7,
     locale,
-    make: make26,
+    make: make27,
     pillsList,
     removeGlyph
   } = c;
@@ -21865,10 +21865,10 @@ function installPills(c) {
       );
       for (const pill of filterPills(kind, labelOf7(at), filters.get(at), s2, locale)) {
         count2 += 1;
-        const item = make26("li", "kp-tag");
+        const item = make27("li", "kp-tag");
         const remove2 = (
           /** @type {HTMLButtonElement} */
-          make26("button", "kp-tag__remove")
+          make27("button", "kp-tag__remove")
         );
         remove2.type = "button";
         remove2.setAttribute("aria-label", s2.tableRemoveFilter(pill.label));
@@ -21902,10 +21902,10 @@ function installPills(c) {
       const label = filterPillLabel(kind, labelOf7(at), value, s2, locale);
       if (label === null) continue;
       count2 += 1;
-      const item = make26("li", "kp-tag");
+      const item = make27("li", "kp-tag");
       const edit = (
         /** @type {HTMLButtonElement} */
-        make26("button", "kp-datatable__pill-edit")
+        make27("button", "kp-datatable__pill-edit")
       );
       edit.type = "button";
       edit.dataset.kpFilterPill = String(at);
@@ -21915,7 +21915,7 @@ function installPills(c) {
       edit.textContent = label;
       const remove2 = (
         /** @type {HTMLButtonElement} */
-        make26("button", "kp-tag__remove")
+        make27("button", "kp-tag__remove")
       );
       remove2.type = "button";
       remove2.dataset.kpFilterUnpill = String(at);
@@ -21940,10 +21940,10 @@ function installPills(c) {
     c.addMenu.textContent = "";
     for (const at of filterColumns) {
       const on = filters.has(at);
-      const item = make26("li");
+      const item = make27("li");
       const button4 = (
         /** @type {HTMLButtonElement} */
-        make26("button", "kp-menu__item kp-datatable__add-item")
+        make27("button", "kp-menu__item kp-datatable__add-item")
       );
       button4.type = "button";
       button4.dataset.kpFilterColumn = String(at);
@@ -21951,7 +21951,7 @@ function installPills(c) {
       button4.append(labelOf7(at));
       if (on) {
         button4.dataset.kpFilterMarked = "";
-        const mark = make26("span", "kp-badge");
+        const mark = make27("span", "kp-badge");
         mark.setAttribute("aria-hidden", "true");
         mark.textContent = s2.tableFilterMarked;
         button4.append(" ", mark);
@@ -21977,19 +21977,19 @@ function installPills(c) {
     editorReturn = returnTo;
     form2.setAttribute("aria-label", s2.tableFilterEditor(label));
     form2.dataset.kpFilterColumn = String(at);
-    const title = make26("p", "kp-datatable__filter-editor-title");
+    const title = make27("p", "kp-datatable__filter-editor-title");
     title.textContent = label;
     form2.append(title);
     if (kind === "choice") {
-      const set = make26("fieldset", "kp-fieldset");
-      const legend = make26("legend", "kp-sr-only");
+      const set = make27("fieldset", "kp-fieldset");
+      const legend = make27("legend", "kp-sr-only");
       legend.textContent = s2.tableFilterChoicesLegend(label);
-      const choices = make26("div", "kp-datatable__filter-editor-choices");
+      const choices = make27("div", "kp-datatable__filter-editor-choices");
       for (const value of choiceValues(at)) {
-        const option = make26("label", "kp-field__option");
+        const option = make27("label", "kp-field__option");
         const box = (
           /** @type {HTMLInputElement} */
-          make26("input", CHECK_CLASS)
+          make27("input", CHECK_CLASS)
         );
         box.type = "checkbox";
         box.name = "values";
@@ -22001,7 +22001,7 @@ function installPills(c) {
       set.append(legend, choices);
       form2.append(set);
     } else {
-      const pair = make26("div", "kp-datatable__filter-editor-pair");
+      const pair = make27("div", "kp-datatable__filter-editor-pair");
       for (
         const bound of
         /** @type {const} */
@@ -22009,7 +22009,7 @@ function installPills(c) {
       ) {
         const input = (
           /** @type {HTMLInputElement} */
-          make26("input", "kp-field__input")
+          make27("input", "kp-field__input")
         );
         input.id = `${id}-filter-editor-${bound}`;
         input.dataset.kpFilterBound = bound;
@@ -22017,7 +22017,7 @@ function installPills(c) {
         input.setAttribute("aria-describedby", `${id}-filter-editor-error`);
         const text = (
           /** @type {HTMLLabelElement} */
-          make26("label", "kp-field__label")
+          make27("label", "kp-field__label")
         );
         text.htmlFor = input.id;
         text.textContent = s2.tableFilterBound(kind, bound, label);
@@ -22025,7 +22025,7 @@ function installPills(c) {
           input.type = "text";
           input.inputMode = "decimal";
           input.value = range?.[bound] ?? "";
-          const field = make26("div", "kp-field");
+          const field = make27("div", "kp-field");
           field.append(text, input);
           pair.append(field);
         } else {
@@ -22036,21 +22036,21 @@ function installPills(c) {
       }
       form2.append(pair);
     }
-    const error = make26("p", "kp-field__error");
+    const error = make27("p", "kp-field__error");
     error.id = `${id}-filter-editor-error`;
     error.dataset.kpFilterError = "";
     error.setAttribute("role", "alert");
     error.hidden = true;
-    const actions = make26("div", "kp-datatable__filter-editor-actions");
+    const actions = make27("div", "kp-datatable__filter-editor-actions");
     const apply2 = (
       /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-button--primary kp-button--sm")
+      make27("button", "kp-button kp-button--primary kp-button--sm")
     );
     apply2.type = "submit";
     apply2.textContent = s2.tableFilterApply;
     const cancel = (
       /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-button--ghost kp-button--sm")
+      make27("button", "kp-button kp-button--ghost kp-button--sm")
     );
     cancel.type = "button";
     cancel.dataset.kpFilterCancel = "";
@@ -22417,7 +22417,7 @@ function installServer(c) {
     keyOf: keyOf8,
     labelOf: labelOf7,
     loadFn,
-    make: make26,
+    make: make27,
     prepareRow,
     render: render7,
     rowKeyFn,
@@ -22433,17 +22433,17 @@ function installServer(c) {
     if (item instanceof HTMLTableRowElement) return item;
     const row = (
       /** @type {HTMLTableRowElement} */
-      make26("tr")
+      make27("tr")
     );
     const field = wrap.dataset.kpRowKeyField ?? headers[keyColumn]?.dataset.kpField;
     row.dataset.kpRowKey = rowKeyFn ? rowKeyFn(item) : String((field === void 0 ? void 0 : item[field]) ?? item.key ?? item.id ?? "");
     headers.forEach((header, at) => {
       if (header.matches(EXPAND_COLUMN) || header.matches(REORDER_COLUMN)) return;
-      const cell = make26("td");
+      const cell = make27("td");
       if (header.querySelector(SELECT_ALL) !== null) {
         const box = (
           /** @type {HTMLInputElement} */
-          make26("input", CHECK_CLASS)
+          make27("input", CHECK_CLASS)
         );
         box.type = "checkbox";
         box.dataset.kpSelectRow = "";
@@ -22995,7 +22995,7 @@ function installEdit(c) {
     keyOf: keyOf8,
     labelOf: labelOf7,
     labelRow,
-    make: make26,
+    make: make27,
     onClear,
     onClearSelection,
     onEdit,
@@ -23013,7 +23013,7 @@ function installEdit(c) {
     if (!withUndo) return;
     const button4 = (
       /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-button--ghost kp-button--sm")
+      make27("button", "kp-button kp-button--ghost kp-button--sm")
     );
     button4.type = "button";
     button4.dataset.kpDatatableUndo = "";
@@ -23052,11 +23052,11 @@ function installEdit(c) {
     const header = headers[column];
     const key = keyOf8(row);
     const previous = cellText(row, column);
-    const holder = make26("div", "kp-datatable__editor");
+    const holder = make27("div", "kp-datatable__editor");
     holder.dataset.kpDatatableEditorWrap = "";
     holder.setAttribute("data-density", "compact");
     const errorId = `${id}-edit-error`;
-    const error = make26("p", "kp-field__error");
+    const error = make27("p", "kp-field__error");
     error.id = errorId;
     error.hidden = true;
     let control;
@@ -23065,7 +23065,7 @@ function installEdit(c) {
     if (kind === "select") {
       const select2 = (
         /** @type {HTMLSelectElement} */
-        make26("select", "kp-field__input")
+        make27("select", "kp-field__input")
       );
       const declared2 = splitList2(header?.dataset.kpEditOptions);
       const values = declared2.length > 0 ? declared2 : [...new Set(c.all.map((r) => cellText(r, column)).filter((v) => v !== ""))];
@@ -23073,7 +23073,7 @@ function installEdit(c) {
       for (const value of values) {
         const option = (
           /** @type {HTMLOptionElement} */
-          make26("option")
+          make27("option")
         );
         option.value = value;
         option.textContent = value;
@@ -23085,7 +23085,7 @@ function installEdit(c) {
     } else {
       const input = (
         /** @type {HTMLInputElement} */
-        make26("input", "kp-field__input")
+        make27("input", "kp-field__input")
       );
       input.value = kind === "date" ? "" : previous;
       if (kind === "number") {
@@ -24633,7 +24633,7 @@ var init_secret_api = __esm({
 function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   const doc = field.ownerDocument;
   const s2 = getStrings();
-  const make26 = (tag, className) => {
+  const make27 = (tag, className) => {
     const el16 = doc.createElement(tag);
     el16.className = className;
     return el16;
@@ -24651,7 +24651,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     field.querySelector(":scope > .kp-secret__entry")
   );
   if (!entry) {
-    entry = make26("div", "kp-secret__entry");
+    entry = make27("div", "kp-secret__entry");
     field.prepend(entry);
     built.push(entry);
   }
@@ -24662,7 +24662,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   const authored = input !== null;
   if (!input) {
     input = /** @type {HTMLInputElement} */
-    make26("input", "kp-field__input kp-secret__input");
+    make27("input", "kp-field__input kp-secret__input");
     entry.append(input);
   }
   input.classList.add("kp-secret__input");
@@ -24680,14 +24680,14 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     field.querySelector(":scope > .kp-secret__actions")
   );
   if (!actions) {
-    actions = make26("div", "kp-secret__actions");
+    actions = make27("div", "kp-secret__actions");
     entry.after(actions);
     built.push(actions);
   }
   const button4 = (className, marker) => {
     const el16 = (
       /** @type {HTMLButtonElement} */
-      make26("button", className)
+      make27("button", className)
     );
     el16.type = "button";
     el16.setAttribute(marker, "");
@@ -24703,15 +24703,15 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
     field.querySelector(":scope > .kp-secret__line")
   );
   if (!line) {
-    line = make26("p", "kp-secret__line");
+    line = make27("p", "kp-secret__line");
     field.append(line);
     built.push(line);
   }
-  const words2 = make26("span", "kp-secret__words");
-  const drain = make26("span", "kp-secret__drain");
+  const words2 = make27("span", "kp-secret__words");
+  const drain = make27("span", "kp-secret__drain");
   drain.setAttribute("aria-hidden", "true");
   line.replaceChildren(words2, drain);
-  const spoken = make26("span", "kp-sr-only kp-secret__live");
+  const spoken = make27("span", "kp-sr-only kp-secret__live");
   spoken.setAttribute("role", "status");
   spoken.setAttribute("aria-live", "polite");
   field.append(spoken);
@@ -24729,11 +24729,11 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   let cancelClear = () => {
   };
   let pasteProblem = "";
-  const readOptions3 = () => {
+  const readOptions4 = () => {
     const ms = clearDelay(field.dataset.kpSecretTtl, SECRET_TTL * 1e3);
     seconds = Math.round(ms / 1e3);
   };
-  readOptions3();
+  readOptions4();
   const hidesOnBlur = () => !["false", "off"].includes(field.dataset.kpSecretHideOnBlur ?? "");
   const disabledWhy = () => field.dataset.kpSecretDisabled;
   const invalidWhy = () => field.dataset.kpSecretInvalid;
@@ -24869,7 +24869,7 @@ function wireSecretInput(field, { copiedMs, clearAfterMs }) {
   });
   watch2.observe(field, { attributes: true, attributeFilter: ["data-kp-secret-disabled", "data-kp-secret-invalid"] });
   const stopOptions = watchOptions(field, ["data-kp-secret-ttl"], () => {
-    readOptions3();
+    readOptions4();
     if (shown4) {
       stop();
       left = seconds;
@@ -24928,7 +24928,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     }
     const doc = field.ownerDocument;
     const s2 = getStrings();
-    const make26 = (tag, className) => {
+    const make27 = (tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
       return el16;
@@ -24940,14 +24940,14 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     let hold = false;
     let seconds = SECRET_TTL;
     let mask = "";
-    const readOptions3 = () => {
+    const readOptions4 = () => {
       hold = field.dataset.kpSecretRevealOn === "hold";
       const ttl = Math.max(0, Number.parseInt(field.dataset.kpSecretTtl ?? "", 10));
       seconds = Number.isFinite(ttl) ? ttl : SECRET_TTL;
       const maskLength = Math.max(1, Number.parseInt(field.dataset.kpSecretMask ?? "", 10) || SECRET_MASK);
       mask = (field.dataset.kpSecretMaskChar ?? "\u2022").repeat(maskLength);
     };
-    readOptions3();
+    readOptions4();
     const built = (
       /** @type {Element[]} */
       []
@@ -24957,7 +24957,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       field.querySelector(":scope > .kp-secret__value")
     );
     if (!value) {
-      value = make26("code", "kp-secret__value");
+      value = make27("code", "kp-secret__value");
       field.prepend(value);
       built.push(value);
     }
@@ -24968,7 +24968,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       field.querySelector(":scope > .kp-secret__actions")
     );
     if (!actions) {
-      actions = make26("div", "kp-secret__actions");
+      actions = make27("div", "kp-secret__actions");
       value.after(actions);
       built.push(actions);
     }
@@ -24978,7 +24978,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     );
     if (!reveal) {
       reveal = /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-secret__reveal");
+      make27("button", "kp-button kp-secret__reveal");
       reveal.type = "button";
       reveal.setAttribute("data-kp-secret-reveal", "");
       actions.append(reveal);
@@ -24990,7 +24990,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
     );
     if (!copy3 && field.dataset.kpSecretCopy !== "false") {
       copy3 = /** @type {HTMLButtonElement} */
-      make26("button", "kp-button kp-copyable__button kp-secret__copy");
+      make27("button", "kp-button kp-copyable__button kp-secret__copy");
       copy3.type = "button";
       copy3.setAttribute("data-kp-secret-copy", "");
       copy3.textContent = s2.secretCopy;
@@ -25002,15 +25002,15 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       field.querySelector(":scope > .kp-secret__line")
     );
     if (!line) {
-      line = make26("p", "kp-secret__line");
+      line = make27("p", "kp-secret__line");
       field.append(line);
       built.push(line);
     }
-    const words2 = make26("span", "kp-secret__words");
-    const drain = make26("span", "kp-secret__drain");
+    const words2 = make27("span", "kp-secret__words");
+    const drain = make27("span", "kp-secret__drain");
     drain.setAttribute("aria-hidden", "true");
     line.replaceChildren(words2, drain);
-    const spoken = make26("span", "kp-sr-only kp-secret__live");
+    const spoken = make27("span", "kp-sr-only kp-secret__live");
     spoken.setAttribute("role", "status");
     spoken.setAttribute("aria-live", "polite");
     field.append(spoken);
@@ -25062,7 +25062,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       }
       if (state6 === "loading") {
         words2.replaceChildren();
-        const spinner = make26("span", "kp-spinner kp-secret__spinner");
+        const spinner = make27("span", "kp-spinner kp-secret__spinner");
         spinner.setAttribute("aria-hidden", "true");
         words2.append(spinner, doc.createTextNode(s2.secretReading));
       } else if (state6 === "shown") words2.textContent = seconds === 0 ? s2.secretStaysShown : paused ? s2.secretPaused : s2.secretHidesIn(left);
@@ -25136,7 +25136,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
         return;
       }
       if (mine !== ticket) return;
-      const shown4 = make26("span", "kp-secret__text");
+      const shown4 = make27("span", "kp-secret__text");
       shown4.textContent = text;
       value.replaceChildren(shown4);
       value.classList.remove("kp-masked");
@@ -25252,7 +25252,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       (names) => {
         const wasHold = hold;
         if (names.includes("data-kp-secret-reveal-on") && (state6 === "shown" || state6 === "loading")) hide2("call");
-        readOptions3();
+        readOptions4();
         field.style.setProperty("--kp-secret-ttl", `${seconds}s`);
         if (hold !== wasHold) setState2(state6);
         if (names.includes("data-kp-secret-mask") || names.includes("data-kp-secret-mask-char")) {
@@ -50794,9 +50794,9 @@ function draw6(el16, spec) {
     wait.setAttribute("aria-hidden", "true");
     summary2.append(wait);
     said = s2.uptimeLoading;
-    const hidden = make16(el16, "span", "kp-sr-only");
-    hidden.textContent = said;
-    summary2.append(hidden);
+    const hidden2 = make16(el16, "span", "kp-sr-only");
+    hidden2.textContent = said;
+    summary2.append(hidden2);
   } else if (failed) {
     summary2.dataset.kpTone = "error";
     said = spec.error ?? s2.uptimeError;
@@ -53585,7 +53585,7 @@ function wire9(el16) {
     doc.defaultView
   );
   const s2 = () => getStrings();
-  const make26 = (tag, className) => {
+  const make27 = (tag, className) => {
     const node = doc.createElement(tag);
     node.className = className;
     return node;
@@ -53607,21 +53607,21 @@ function wire9(el16) {
   };
   el16.classList.add("kp-connection");
   el16.hidden = true;
-  const band = make26("div", "kp-alert kp-connection__band");
-  const mark = make26("span", "kp-connection__mark");
+  const band = make27("div", "kp-alert kp-connection__band");
+  const mark = make27("span", "kp-connection__mark");
   mark.setAttribute("aria-hidden", "true");
-  const body = make26("div", "kp-alert__body kp-connection__body");
-  const title = make26("strong", "kp-connection__title");
-  const why = make26("span", "kp-connection__why");
-  const meta = make26("span", "kp-connection__meta");
+  const body = make27("div", "kp-alert__body kp-connection__body");
+  const title = make27("strong", "kp-connection__title");
+  const why = make27("span", "kp-connection__why");
+  const meta = make27("span", "kp-connection__meta");
   body.append(title, why, meta);
   const retry = (
     /** @type {HTMLButtonElement} */
-    make26("button", "kp-button kp-connection__retry")
+    make27("button", "kp-button kp-connection__retry")
   );
   retry.type = "button";
   band.append(mark, body, retry);
-  const voice = make26("span", "kp-sr-only");
+  const voice = make27("span", "kp-sr-only");
   voice.setAttribute("role", "status");
   el16.replaceChildren(band, voice);
   if (el16.getAttribute("data-kp-placement") !== "top") el16.setAttribute("data-kp-placement", "bottom");
@@ -53662,7 +53662,7 @@ function wire9(el16) {
     band.classList.toggle("kp-alert--success", state6 === "back");
     band.classList.toggle("kp-alert--destructive", state6 === "refused");
     mark.replaceChildren();
-    if (state6 === "reconnecting") mark.append(make26("span", "kp-spinner"));
+    if (state6 === "reconnecting") mark.append(make27("span", "kp-spinner"));
     else mark.textContent = state6 === "back" ? "\u2713" : "!";
     const t = s2();
     const text = state6 === "offline" ? [t.connOffline, t.connOfflineWhy] : state6 === "reconnecting" ? [t.connReconnecting, attempt > 1 ? t.connAttempt(attempt) : t.connReconnectingWhy] : state6 === "back" ? [t.connBack, pending5 > 0 ? t.connBackSending(pending5) : t.connBackWhy] : [t.connRefused, refusedWhy || t.connRefusedWhy];
@@ -55143,13 +55143,13 @@ function buildParts(root) {
   const control = el9("kp-time__control");
   const input = buildInput(root, n);
   control.append(input, buildToggle());
-  const hidden = (
+  const hidden2 = (
     /** @type {HTMLInputElement} */
     el9("kp-time__value", "input")
   );
-  hidden.type = "hidden";
+  hidden2.type = "hidden";
   const name = root.getAttribute("data-kp-name");
-  if (name) hidden.name = name;
+  if (name) hidden2.name = name;
   const why = el9("kp-time__why", "p");
   why.hidden = true;
   why.id = `kp-time-${n}-why`;
@@ -55160,8 +55160,8 @@ function buildParts(root) {
   input.setAttribute("aria-controls", popup.id);
   const skeleton2 = el9("kp-skeleton kp-time__skeleton", "span");
   skeleton2.setAttribute("aria-hidden", "true");
-  root.replaceChildren(control, hidden, why, zone, popup, skeleton2);
-  return { input, hidden, popup, presets: presetsFromAttribute(root) };
+  root.replaceChildren(control, hidden2, why, zone, popup, skeleton2);
+  return { input, hidden: hidden2, popup, presets: presetsFromAttribute(root) };
 }
 var el9;
 var init_build5 = __esm({
@@ -56176,7 +56176,7 @@ function attachOne9(root) {
   const id = root.id || (root.id = `kp-quiet-${serial7 += 1}`);
   root.classList.add("kp-quiet");
   root.setAttribute("role", "group");
-  const make26 = (className, tag = "div") => {
+  const make27 = (className, tag = "div") => {
     const node = doc.createElement(tag);
     node.className = className;
     return node;
@@ -56187,35 +56187,35 @@ function attachOne9(root) {
   });
   const onLabel = (
     /** @type {HTMLLabelElement} */
-    make26("kp-switch kp-quiet__on", "label")
+    make27("kp-switch kp-quiet__on", "label")
   );
   const onInput = (
     /** @type {HTMLInputElement} */
-    make26("kp-switch__input", "input")
+    make27("kp-switch__input", "input")
   );
   onInput.type = "checkbox";
   onInput.setAttribute("role", "switch");
-  const onWords = make26("kp-quiet__on-label", "span");
+  const onWords = make27("kp-quiet__on-label", "span");
   onLabel.append(onInput, onWords);
-  const body = make26("kp-quiet__body");
+  const body = make27("kp-quiet__body");
   const field = (name, text, control) => {
-    const row = make26(`kp-quiet__field kp-quiet__field--${name}`);
-    const label = make26("kp-quiet__label kp-field__label", "span");
+    const row = make27(`kp-quiet__field kp-quiet__field--${name}`);
+    const label = make27("kp-quiet__label kp-field__label", "span");
     label.id = `${id}-${name}`;
     label.textContent = text;
     row.append(label, control);
     return row;
   };
-  const fromBox = make26("kp-time");
+  const fromBox = make27("kp-time");
   fromBox.setAttribute("data-kp-time", "");
   fromBox.setAttribute("data-kp-name", `${id}-from`);
-  const toBox = make26("kp-time");
+  const toBox = make27("kp-time");
   toBox.setAttribute("data-kp-time", "");
   toBox.setAttribute("data-kp-name", `${id}-to`);
-  const dayBox = make26("kp-weekdays");
+  const dayBox = make27("kp-weekdays");
   dayBox.setAttribute("data-kp-weekdays", "");
   dayBox.setAttribute("data-kp-presets", "weekdays,weekend,every");
-  const through = make26("kp-quiet__through");
+  const through = make27("kp-quiet__through");
   through.setAttribute("role", "group");
   const rows = [
     field("from", s2.quietFrom, fromBox),
@@ -56224,18 +56224,18 @@ function attachOne9(root) {
     field("through", s2.quietThroughLabel, through)
   ];
   through.setAttribute("aria-labelledby", `${id}-through`);
-  const problem = make26("kp-quiet__problem kp-field__error", "p");
+  const problem = make27("kp-quiet__problem kp-field__error", "p");
   problem.id = `${id}-problem`;
   problem.hidden = true;
   body.append(...rows, problem);
-  const summary2 = make26("kp-quiet__summary", "p");
+  const summary2 = make27("kp-quiet__summary", "p");
   summary2.id = `${id}-summary`;
   summary2.setAttribute("aria-live", "polite");
-  const reason = make26("kp-quiet__reason kp-field__help", "p");
+  const reason = make27("kp-quiet__reason kp-field__help", "p");
   reason.hidden = true;
-  const wait = make26("kp-quiet__wait");
+  const wait = make27("kp-quiet__wait");
   wait.setAttribute("aria-hidden", "true");
-  for (let i = 0; i < 4; i += 1) wait.append(make26("kp-skeleton kp-quiet__bone", "span"));
+  for (let i = 0; i < 4; i += 1) wait.append(make27("kp-skeleton kp-quiet__bone", "span"));
   root.replaceChildren(onLabel, body, summary2, reason, wait);
   let value = readQuiet(root.getAttribute("data-kp-value") ?? DEFAULT);
   const checks = () => (
@@ -56245,15 +56245,15 @@ function attachOne9(root) {
   const drawSeverities = () => {
     through.replaceChildren(
       ...severities().map(({ key, label }) => {
-        const row = make26("kp-field__option kp-quiet__severity", "label");
+        const row = make27("kp-field__option kp-quiet__severity", "label");
         const box = (
           /** @type {HTMLInputElement} */
-          make26("kp-field__check", "input")
+          make27("kp-field__check", "input")
         );
         box.type = "checkbox";
         box.value = key;
         box.checked = value.through.includes(key);
-        const words2 = make26("kp-field__option-title", "span");
+        const words2 = make27("kp-field__option-title", "span");
         words2.textContent = label;
         row.append(box, words2);
         return row;
@@ -56419,68 +56419,68 @@ function askQuestion(container, spec, { now = () => Date.now(), frozen = false }
   ];
   const countdown = spec.countdown ?? "ring";
   const expiredMode = spec.expired ?? "keep";
-  const make26 = (tag, className, text = "") => {
+  const make27 = (tag, className, text = "") => {
     const node = doc.createElement(tag);
     node.className = className;
     if (text) node.textContent = text;
     return node;
   };
-  const card = make26("article", "kp-question kp-alert kp-alert--warning");
+  const card = make27("article", "kp-question kp-alert kp-alert--warning");
   card.id ||= `kp-question-${spec.id}`;
   card.tabIndex = 0;
   card.setAttribute("role", "group");
   card.setAttribute("data-kp-key", spec.id);
   card.setAttribute("data-kp-measure", countdown);
-  const head = make26("div", "kp-question__head");
-  const title = make26("strong", "kp-question__title", spec.question);
+  const head = make27("div", "kp-question__head");
+  const title = make27("strong", "kp-question__title", spec.question);
   title.id = `${card.id}-title`;
   card.setAttribute("aria-labelledby", title.id);
   head.append(title);
-  if (spec.text) head.append(make26("span", "kp-question__text", spec.text));
-  const time = make26("div", "kp-question__time");
-  const left = make26("span", "kp-question__left");
+  if (spec.text) head.append(make27("span", "kp-question__text", spec.text));
+  const time = make27("div", "kp-question__time");
+  const left = make27("span", "kp-question__left");
   const fallback2 = answers.find((a) => a.value === spec.defaultAnswer);
-  const ifNobody = make26("span", "kp-question__default", fallback2 ? s2().questionDefault(fallback2.label) : "");
+  const ifNobody = make27("span", "kp-question__default", fallback2 ? s2().questionDefault(fallback2.label) : "");
   let measure = null;
   if (countdown === "bar") {
-    measure = make26("span", "kp-question__bar");
+    measure = make27("span", "kp-question__bar");
     measure.setAttribute("aria-hidden", "true");
-    measure.append(make26("span", "kp-question__fill"));
+    measure.append(make27("span", "kp-question__fill"));
   } else if (countdown === "ring") {
-    measure = make26("span", "kp-question__ring");
+    measure = make27("span", "kp-question__ring");
     measure.setAttribute("aria-hidden", "true");
     measure.innerHTML = '<svg viewBox="0 0 36 36"><circle class="kp-question__ring-track" cx="18" cy="18" r="15.9155"/><circle class="kp-question__ring-fill" cx="18" cy="18" r="15.9155" pathLength="100"/></svg>';
   }
   time.append(...measure ? [measure] : [], left, ifNobody);
-  const list = make26("div", "kp-question__answers");
+  const list = make27("div", "kp-question__answers");
   const buttons = /* @__PURE__ */ new Map();
   answers.forEach((a, at) => {
-    const row = make26("div", "kp-question__answer");
+    const row = make27("div", "kp-question__answer");
     const button4 = (
       /** @type {HTMLButtonElement} */
-      make26("button", `kp-button kp-question__button${a.tone === "destructive" ? " kp-button--destructive" : ""}`)
+      make27("button", `kp-button kp-question__button${a.tone === "destructive" ? " kp-button--destructive" : ""}`)
     );
     button4.type = "button";
     button4.textContent = a.label;
     button4.setAttribute("data-kp-value", a.value);
     button4.setAttribute("aria-keyshortcuts", String(at + 1));
-    const why = make26("span", "kp-question__consequence", a.consequence ?? "");
+    const why = make27("span", "kp-question__consequence", a.consequence ?? "");
     why.id = `${card.id}-c${at}`;
     if (a.consequence) button4.setAttribute("aria-describedby", why.id);
     row.append(button4, why);
     list.append(row);
     buttons.set(a.value, button4);
   });
-  const outcome = make26("p", "kp-question__outcome");
+  const outcome = make27("p", "kp-question__outcome");
   outcome.setAttribute("role", "status");
   outcome.hidden = true;
   const dismiss = (
     /** @type {HTMLButtonElement} */
-    make26("button", "kp-button kp-button--sm kp-question__dismiss", s2().questionDismiss)
+    make27("button", "kp-button kp-button--sm kp-question__dismiss", s2().questionDismiss)
   );
   dismiss.type = "button";
   dismiss.hidden = true;
-  const voice = make26("span", "kp-sr-only");
+  const voice = make27("span", "kp-sr-only");
   voice.setAttribute("role", "status");
   card.append(head, time, list, outcome, dismiss, voice);
   let state6 = "waiting";
@@ -56703,7 +56703,7 @@ function attachFeeds(root = document, { now = () => Date.now(), timeZone = FEED_
 function wire10(el16, now, zone) {
   const doc = el16.ownerDocument;
   const s2 = () => getStrings();
-  const make26 = (tag, className, text = "") => {
+  const make27 = (tag, className, text = "") => {
     const node = doc.createElement(tag);
     node.className = className;
     if (text) node.textContent = text;
@@ -56718,31 +56718,31 @@ function wire10(el16, now, zone) {
   let lastSaid = 0;
   let drawnDay = "";
   let nextFlip = Infinity;
-  const head = make26("div", "kp-feed__head");
-  const count2 = make26("span", "kp-feed__count");
+  const head = make27("div", "kp-feed__head");
+  const count2 = make27("span", "kp-feed__count");
   const fresh = (
     /** @type {HTMLElement} */
-    make26("time", "kp-ago kp-feed__fresh")
+    make27("time", "kp-ago kp-feed__fresh")
   );
   fresh.setAttribute("data-kp-ago", "");
-  const stale = make26("div", "kp-feed__stale");
-  const staleText = make26("span", "kp-feed__stale-text");
+  const stale = make27("div", "kp-feed__stale");
+  const staleText = make27("span", "kp-feed__stale-text");
   const staleAction = (
     /** @type {HTMLButtonElement} */
-    make26("button", "kp-button kp-button--sm kp-feed__stale-action")
+    make27("button", "kp-button kp-button--sm kp-feed__stale-action")
   );
   staleAction.type = "button";
   staleAction.setAttribute("data-kp-feed-retry", "");
   stale.append(staleText, staleAction);
   head.append(count2, fresh, stale);
-  const body = make26("div", "kp-feed__body");
-  const skeleton2 = make26("div", "kp-feed__skeleton");
+  const body = make27("div", "kp-feed__body");
+  const skeleton2 = make27("div", "kp-feed__skeleton");
   skeleton2.setAttribute("aria-hidden", "true");
-  const list = make26("ol", "kp-feed__list");
-  const state6 = make26("div", "kp-feed__state");
+  const list = make27("ol", "kp-feed__list");
+  const state6 = make27("div", "kp-feed__state");
   body.append(skeleton2, list, state6);
-  const foot = make26("div", "kp-feed__foot");
-  const voice = make26("span", "kp-sr-only");
+  const foot = make27("div", "kp-feed__foot");
+  const voice = make27("span", "kp-sr-only");
   voice.setAttribute("role", "status");
   voice.setAttribute("aria-live", "polite");
   el16.replaceChildren(head, body, foot, voice);
@@ -56783,7 +56783,7 @@ function wire10(el16, now, zone) {
     if (relative) {
       const when2 = (
         /** @type {HTMLElement} */
-        make26("time", "kp-ago kp-feed__when")
+        make27("time", "kp-ago kp-feed__when")
       );
       when2.setAttribute("data-kp-ago-bare", "");
       setAgo(when2, row.at);
@@ -56792,61 +56792,61 @@ function wire10(el16, now, zone) {
       return when2;
     }
     const moment = agoMoment(row.at, zone);
-    const when = make26("time", "kp-feed__when", mode2 === "clock" && grouped ? moment.slice(11) : moment);
+    const when = make27("time", "kp-feed__when", mode2 === "clock" && grouped ? moment.slice(11) : moment);
     when.setAttribute("datetime", iso);
     when.title = moment;
     return when;
   }
   function rowItem2(row, slots, grouped) {
     const t = s2();
-    const li = make26("li", "kp-feed__row");
+    const li = make27("li", "kp-feed__row");
     li.setAttribute("data-kp-key", row.key);
     if (row.state) li.setAttribute("data-state", row.state);
-    const mark = make26("span", "kp-feed__mark");
+    const mark = make27("span", "kp-feed__mark");
     mark.setAttribute("aria-hidden", "true");
-    if (row.state === "running") mark.append(make26("span", "kp-spinner"));
-    const cell = make26("span", "kp-feed__mark-cell");
+    if (row.state === "running") mark.append(make27("span", "kp-spinner"));
+    const cell = make27("span", "kp-feed__mark-cell");
     cell.append(mark);
-    const text = make26("div", "kp-feed__text");
+    const text = make27("div", "kp-feed__text");
     const openable = expandMode() !== "off" && !!row.more?.length;
     const regionId = `${id}-more-${idSeq3 += 1}`;
     let title;
     if (openable) {
       const toggle2 = (
         /** @type {HTMLButtonElement} */
-        make26("button", "kp-feed__toggle")
+        make27("button", "kp-feed__toggle")
       );
       toggle2.type = "button";
       toggle2.setAttribute("aria-expanded", String(open4.has(row.key)));
       toggle2.setAttribute("aria-controls", regionId);
-      toggle2.append(make26("span", "kp-feed__title-text", row.title), make26("span", "kp-feed__chevron"));
+      toggle2.append(make27("span", "kp-feed__title-text", row.title), make27("span", "kp-feed__chevron"));
       title = toggle2;
     } else if (row.href) {
       const link = (
         /** @type {HTMLAnchorElement} */
-        make26("a", "kp-feed__link")
+        make27("a", "kp-feed__link")
       );
       link.href = row.href;
-      link.append(make26("span", "kp-feed__title-text", row.title));
+      link.append(make27("span", "kp-feed__title-text", row.title));
       title = link;
-    } else title = make26("span", "kp-feed__title-text", row.title);
-    const head2 = make26("div", "kp-feed__title");
+    } else title = make27("span", "kp-feed__title-text", row.title);
+    const head2 = make27("div", "kp-feed__title");
     head2.append(title);
     const word = stateWord4(row.state);
-    if (word) head2.append(make26("span", "kp-sr-only", `, ${word}`));
+    if (word) head2.append(make27("span", "kp-sr-only", `, ${word}`));
     text.append(head2);
-    if (row.detail) text.append(make26("div", "kp-feed__detail", row.detail));
+    if (row.detail) text.append(make27("div", "kp-feed__detail", row.detail));
     if (openable) {
-      const region = make26("div", "kp-feed__more");
+      const region = make27("div", "kp-feed__more");
       region.id = regionId;
       region.setAttribute("role", "region");
       region.setAttribute("aria-label", t.feedMoreLabel(row.title));
       region.hidden = !open4.has(row.key);
-      for (const line of row.more ?? []) region.append(make26("div", "kp-feed__line", line));
+      for (const line of row.more ?? []) region.append(make27("div", "kp-feed__line", line));
       if (row.href) {
         const out = (
           /** @type {HTMLAnchorElement} */
-          make26("a", "kp-feed__open", t.feedOpen)
+          make27("a", "kp-feed__open", t.feedOpen)
         );
         out.href = row.href;
         region.append(out);
@@ -56854,18 +56854,18 @@ function wire10(el16, now, zone) {
       text.append(region);
       li.toggleAttribute("data-kp-open", open4.has(row.key));
     }
-    const meta = make26("div", "kp-feed__meta");
+    const meta = make27("div", "kp-feed__meta");
     if (row.actor && actorMode() !== "off") {
-      const actor = make26("span", "kp-feed__actor");
-      const chip = make26("span", "kp-idmark-name kp-idmark-name--wrap");
-      const mk = make26("span", `kp-idmark kp-idmark--xs${["person", "agent"].includes(row.actor.kind ?? "") ? " kp-idmark--round" : ""}`);
+      const actor = make27("span", "kp-feed__actor");
+      const chip = make27("span", "kp-idmark-name kp-idmark-name--wrap");
+      const mk = make27("span", `kp-idmark kp-idmark--xs${["person", "agent"].includes(row.actor.kind ?? "") ? " kp-idmark--round" : ""}`);
       setIdmark(mk, row.actor.name, { slot: slots.get(row.actor.name), title: actorMode() === "mark" });
       if (actorMode() === "mark") {
-        chip.append(mk, make26("span", "kp-sr-only", row.actor.name));
-      } else chip.append(mk, make26("span", "kp-feed__actor-name", row.actor.name));
-      actor.append(make26("span", "kp-sr-only", `${t.feedBy} `), chip);
+        chip.append(mk, make27("span", "kp-sr-only", row.actor.name));
+      } else chip.append(mk, make27("span", "kp-feed__actor-name", row.actor.name));
+      actor.append(make27("span", "kp-sr-only", `${t.feedBy} `), chip);
       meta.append(actor);
-    } else if (actorMode() !== "off") meta.append(make26("span", "kp-feed__actor"));
+    } else if (actorMode() !== "off") meta.append(make27("span", "kp-feed__actor"));
     meta.append(whenCell(row, grouped));
     li.append(cell, text, meta);
     return li;
@@ -56873,15 +56873,15 @@ function wire10(el16, now, zone) {
   function skeletonRows() {
     const out = [];
     for (let day = 0; day < 2; day += 1) {
-      const group2 = make26("div", "kp-feed__skel-group");
-      group2.append(make26("span", "kp-feed__skel-day kp-skeleton"));
+      const group2 = make27("div", "kp-feed__skel-group");
+      group2.append(make27("span", "kp-feed__skel-day kp-skeleton"));
       for (let row = 0; row < 4; row += 1) {
-        const line = make26("div", "kp-feed__skel-row");
+        const line = make27("div", "kp-feed__skel-row");
         line.append(
-          make26("span", "kp-feed__skel-mark kp-skeleton kp-skeleton--circle"),
-          make26("span", "kp-feed__skel-text kp-skeleton"),
-          make26("span", "kp-feed__skel-chip kp-skeleton"),
-          make26("span", "kp-feed__skel-when kp-skeleton")
+          make27("span", "kp-feed__skel-mark kp-skeleton kp-skeleton--circle"),
+          make27("span", "kp-feed__skel-text kp-skeleton"),
+          make27("span", "kp-feed__skel-chip kp-skeleton"),
+          make27("span", "kp-feed__skel-when kp-skeleton")
         );
         group2.append(line);
       }
@@ -56934,23 +56934,23 @@ function wire10(el16, now, zone) {
     list.setAttribute("aria-label", el16.getAttribute("aria-label") ?? t.feedLabel);
     list.replaceChildren(
       ...st === "ready" ? days.map((day) => {
-        const li = make26("li", "kp-feed__group");
+        const li = make27("li", "kp-feed__group");
         if (grouped) {
-          const heading = make26("div", "kp-feed__day");
+          const heading = make27("div", "kp-feed__day");
           heading.setAttribute("role", "heading");
           heading.setAttribute("aria-level", String(level()));
           const failed = day.rows.filter((row) => row.state === "failed").length;
           const iso = new Date(day.at).toISOString();
-          const word = make26("span", "kp-feed__day-word", dayWord(day.at, day.key));
+          const word = make27("span", "kp-feed__day-word", dayWord(day.at, day.key));
           const date = (
             /** @type {HTMLElement} */
-            make26("time", "kp-feed__day-date", agoMoment(day.at, zone).slice(0, 10))
+            make27("time", "kp-feed__day-date", agoMoment(day.at, zone).slice(0, 10))
           );
           date.setAttribute("datetime", iso);
-          heading.append(word, date, make26("span", "kp-feed__day-rule"));
+          heading.append(word, date, make27("span", "kp-feed__day-rule"));
           if (attr16("summary") !== "off")
             heading.append(
-              make26(
+              make27(
                 "span",
                 "kp-feed__day-summary",
                 `${counted(day.rows.length)} \xB7 ${failed ? t.feedFailed(failed) : t.feedAllOk}`
@@ -56958,7 +56958,7 @@ function wire10(el16, now, zone) {
             );
           li.append(heading);
         }
-        const rowList = make26("ol", "kp-feed__rows");
+        const rowList = make27("ol", "kp-feed__rows");
         for (const row of day.rows) rowList.append(rowItem2(row, slots, grouped));
         li.append(rowList);
         return li;
@@ -56999,30 +56999,30 @@ function wire10(el16, now, zone) {
         (() => {
           const button4 = (
             /** @type {HTMLButtonElement} */
-            make26("button", "kp-button kp-feed__earlier")
+            make27("button", "kp-button kp-feed__earlier")
           );
           button4.type = "button";
           button4.setAttribute("data-kp-feed-earlier", "");
           if (earlier === "loading") {
             button4.setAttribute("aria-busy", "true");
             button4.disabled = true;
-            button4.append(make26("span", "kp-spinner"), make26("span", "kp-feed__earlier-label", t.feedEarlierLoading));
-          } else button4.append(make26("span", "kp-feed__earlier-label", t.feedEarlier));
+            button4.append(make27("span", "kp-spinner"), make27("span", "kp-feed__earlier-label", t.feedEarlierLoading));
+          } else button4.append(make27("span", "kp-feed__earlier-label", t.feedEarlier));
           return button4;
         })(),
-        make26("span", "kp-feed__foot-note", t.feedBackTo(rows.length, total, back))
+        make27("span", "kp-feed__foot-note", t.feedBackTo(rows.length, total, back))
       ] : earlier === "error" ? [
-        make26("span", "kp-feed__foot-note kp-feed__foot-note--error", t.feedEarlierError),
+        make27("span", "kp-feed__foot-note kp-feed__foot-note--error", t.feedEarlierError),
         (() => {
           const button4 = (
             /** @type {HTMLButtonElement} */
-            make26("button", "kp-button kp-feed__earlier", t.feedEarlierRetry)
+            make27("button", "kp-button kp-feed__earlier", t.feedEarlierRetry)
           );
           button4.type = "button";
           button4.setAttribute("data-kp-feed-earlier", "");
           return button4;
         })()
-      ] : earlier === "end" ? [make26("span", "kp-feed__foot-note", t.feedEnd(rows.length, back))] : []
+      ] : earlier === "end" ? [make27("span", "kp-feed__foot-note", t.feedEnd(rows.length, back))] : []
     );
     if (focusKey && focusPart) {
       const again2 = list.querySelector(`[data-kp-key="${CSS.escape(focusKey)}"] ${focusPart}`);
@@ -65226,6 +65226,547 @@ var init_gallery2 = __esm({
   }
 });
 
+// js/slider/values.js
+function snapSlider(value, min, max, step) {
+  const digits = Math.max(decimalsOf2(step), decimalsOf2(min));
+  const snapped = min + Math.round((value - min) / step) * step;
+  return Number(Math.min(max, Math.max(min, snapped)).toFixed(digits));
+}
+function sliderPercent(value, min, max) {
+  return max === min ? 0 : (Math.min(max, Math.max(min, value)) - min) / (max - min) * 100;
+}
+function parseSliderText(text, unit2 = "") {
+  let t = text.trim();
+  if (unit2 && t.endsWith(unit2)) t = t.slice(0, -unit2.length);
+  t = t.replace(/[\s ]/g, "").replace(",", ".");
+  return /^[+-]?(\d+\.?\d*|\.\d+)$/.test(t) ? Number(t) : Number.NaN;
+}
+function readOptions3(el16, s2) {
+  const authored = (
+    /** @type {HTMLInputElement[]} */
+    [...el16.querySelectorAll('input[type="range"]')]
+  );
+  const first = authored[0];
+  const min = Number(el16.dataset.kpMin ?? first?.min ?? 0);
+  const max = Number(el16.dataset.kpMax ?? first?.max ?? 100);
+  const step = Number(el16.dataset.kpStep ?? first?.step ?? 1) || 1;
+  const format = FORMATS2.slice(1).includes(el16.dataset.kpFormat ?? "") ? (
+    /** @type {string} */
+    el16.dataset.kpFormat
+  ) : "number";
+  return {
+    authored,
+    isRange: el16.dataset.kpSlider === "range" || authored.length === 2,
+    min,
+    max,
+    step,
+    gap: Math.max(step, Number(el16.dataset.kpMinGap) || step),
+    unit: el16.dataset.kpUnit ?? (el16.dataset.kpFormat === "percent" ? "%" : ""),
+    format,
+    typed: format === "number" || format === "percent",
+    show: showOf(el16),
+    commitOnInput: el16.dataset.kpCommit === "input",
+    vertical: el16.dataset.kpOrientation === "vertical",
+    locale: resolveLocale(el16.dataset.kpLocale, el16),
+    label: el16.getAttribute("aria-label") ?? s2.sliderGroup,
+    name: el16.dataset.kpName ?? "",
+    disabledByPage: el16.hasAttribute("data-kp-disabled"),
+    digits: Math.max(decimalsOf2(step), decimalsOf2(min)),
+    initial: numbersIn2(el16.dataset.kpValue),
+    defaults: numbersIn2(el16.dataset.kpDefault),
+    ticks: el16.dataset.kpTicks ?? ""
+  };
+}
+function writers(o, s2) {
+  const number = (v) => new Intl.NumberFormat(o.locale, { minimumFractionDigits: o.digits, maximumFractionDigits: o.digits, useGrouping: false }).format(v);
+  const text = (v) => {
+    if (o.format === "bytes") return formatBytes(v, o.locale);
+    if (o.format === "duration") return humanDuration(v, s2);
+    return o.unit ? `${number(v)} ${o.unit}` : number(v);
+  };
+  const plain2 = (v) => o.typed ? number(v) : text(v);
+  return { text, plain: plain2 };
+}
+function startValues(o, count2) {
+  const span4 = o.max - o.min;
+  let values = Array.from({ length: count2 }, (_, i) => {
+    const fallback2 = o.isRange ? o.min + span4 * (i === 0 ? LOW_START : HIGH_START) : o.min + span4 * MIDDLE;
+    const own = o.initial[i] ?? (o.authored[i] ? Number(o.authored[i].value) : fallback2);
+    return snapSlider(own, o.min, o.max, o.step);
+  });
+  if (o.isRange && values[0] > values[1] - o.gap) values = [values[0], Math.min(o.max, values[0] + o.gap)];
+  return values;
+}
+var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
+var init_values2 = __esm({
+  "js/slider/values.js"() {
+    "use strict";
+    init_locale();
+    init_freshness();
+    SLIDER = "[data-kp-slider]";
+    SLIDER_INPUT_EVENT = "kp-slider-input";
+    SLIDER_CHANGE_EVENT = "kp-slider-change";
+    SLIDER_STATES = /** @type {const} */
+    ["ready", "loading"];
+    decimalsOf2 = (n) => {
+      const text = String(n);
+      const at = text.indexOf(".");
+      return at < 0 ? 0 : text.length - at - 1;
+    };
+    LOW_START = 0.25;
+    HIGH_START = 0.75;
+    MIDDLE = 0.5;
+    FORMATS2 = ["number", "percent", "bytes", "duration"];
+    SHOWS = ["field", "bubble", "both", "none"];
+    showOf = (el16) => SHOWS.slice(1).includes(el16.dataset.kpSliderValue ?? "") ? (
+      /** @type {string} */
+      el16.dataset.kpSliderValue
+    ) : "field";
+    numbersIn2 = (said) => (said ?? "").split(/[\s,]+/).filter(Boolean).map(Number).filter(Number.isFinite);
+  }
+});
+
+// js/slider/build.js
+function make24(doc, tag, className) {
+  const node = doc.createElement(tag);
+  node.className = className;
+  return node;
+}
+function buildTrack(doc, o, inputs, values, w, s2) {
+  const track = make24(doc, "div", "kp-slider__track");
+  const rail = hidden(make24(doc, "span", "kp-slider__rail"));
+  rail.append(make24(doc, "span", "kp-slider__fill"));
+  track.append(rail);
+  const bubbles = [];
+  for (const [i, input] of inputs.entries()) {
+    input.classList.add("kp-slider__input");
+    input.min = String(o.min);
+    input.max = String(o.max);
+    input.step = String(o.step);
+    input.value = String(values[i]);
+    input.dataset.kpThumb = o.isRange ? i === 0 ? "low" : "high" : "only";
+    if (o.name) input.name = o.isRange ? `${o.name}-${i === 0 ? "min" : "max"}` : o.name;
+    input.setAttribute("aria-label", thumbName(o, s2, i));
+    if (o.vertical) input.setAttribute("aria-orientation", "vertical");
+    track.append(input);
+    const bubble = make24(doc, "output", "kp-slider__bubble");
+    bubble.dataset.kpThumb = String(i);
+    track.append(hidden(bubble));
+    bubbles.push(bubble);
+  }
+  const ticks = buildTicks(doc, o, w);
+  if (ticks) {
+    track.dataset.kpTicks = "";
+    track.append(ticks);
+  }
+  return { track, bubbles };
+}
+function buildTicks(doc, o, w) {
+  const spec = o.ticks;
+  const marks = [];
+  if (spec === "auto") {
+    for (let i = 0; i <= AUTO_TICKS; i++) {
+      const v = snapSlider(o.min + (o.max - o.min) * i / AUTO_TICKS, o.min, o.max, o.step);
+      marks.push({ at: v, label: w.text(v) });
+    }
+  } else if (spec) {
+    for (const part7 of spec.split(",")) {
+      const [raw, ...rest] = part7.split(":");
+      const v = Number(raw);
+      if (Number.isFinite(v) && v >= o.min && v <= o.max) marks.push({ at: v, label: rest.length ? rest.join(":").trim() : w.text(v) });
+    }
+  }
+  if (!marks.length) return null;
+  const ticks = hidden(make24(doc, "div", "kp-slider__ticks"));
+  for (const m of marks) {
+    const tick6 = make24(doc, "span", "kp-slider__tick");
+    tick6.style.setProperty("--kp-slider-at", String(sliderPercent(m.at, o.min, o.max) / 100));
+    const word = make24(doc, "span", "kp-slider__tick-label");
+    word.textContent = m.label;
+    tick6.append(word);
+    ticks.append(tick6);
+  }
+  return ticks;
+}
+function buildFields(el16, o, inputs, w, s2) {
+  const doc = el16.ownerDocument;
+  const fields = make24(doc, "div", "kp-slider__fields");
+  const boxes = [];
+  let longest = 0;
+  for (let i = 0; i <= WIDTH_SAMPLES; i++) longest = Math.max(longest, w.plain(snapSlider(o.min + (o.max - o.min) * i / WIDTH_SAMPLES, o.min, o.max, o.step)).length);
+  el16.style.setProperty("--kp-slider-field-ch", String(Math.max(longest, MIN_FIELD_CH) + 1));
+  for (const [i, input] of inputs.entries()) {
+    if (i === 1) {
+      const dash = hidden(make24(doc, "span", "kp-slider__dash"));
+      dash.textContent = "\u2013";
+      fields.append(dash);
+    }
+    const wrap = make24(doc, "span", "kp-slider__field-wrap");
+    const box = (
+      /** @type {HTMLInputElement} */
+      make24(doc, "input", "kp-field__input kp-slider__field")
+    );
+    box.type = "text";
+    box.inputMode = "decimal";
+    box.autocomplete = "off";
+    box.readOnly = !o.typed;
+    box.setAttribute("aria-label", o.isRange ? thumbName(o, s2, i) : s2.sliderValue(o.label));
+    box.dataset.kpThumb = input.dataset.kpThumb ?? "only";
+    wrap.append(box);
+    if (o.typed && o.unit) {
+      const u = hidden(make24(doc, "span", "kp-slider__unit"));
+      u.textContent = o.unit;
+      wrap.append(u);
+    }
+    fields.append(wrap);
+    boxes.push(box);
+  }
+  return { fields, boxes };
+}
+function buildLines(doc, id) {
+  const why = make24(doc, "p", "kp-field__error kp-slider__why");
+  why.id = `${id}-why`;
+  why.setAttribute("role", "alert");
+  why.hidden = true;
+  const skeleton2 = hidden(make24(doc, "span", "kp-slider__skeleton"));
+  skeleton2.hidden = true;
+  skeleton2.append(make24(doc, "span", "kp-skeleton kp-skeleton--block kp-slider__bar"));
+  return { why, skeleton: skeleton2 };
+}
+var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
+var init_build7 = __esm({
+  "js/slider/build.js"() {
+    "use strict";
+    init_values2();
+    AUTO_TICKS = 4;
+    WIDTH_SAMPLES = 20;
+    MIN_FIELD_CH = 2;
+    hidden = (node) => {
+      node.setAttribute("aria-hidden", "true");
+      return node;
+    };
+    thumbName = (o, s2, i) => o.isRange ? i === 0 ? s2.sliderMin(o.label) : s2.sliderMax(o.label) : o.label;
+  }
+});
+
+// js/slider/core.js
+var seq6, SliderCore;
+var init_core2 = __esm({
+  "js/slider/core.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_build7();
+    init_values2();
+    seq6 = 0;
+    SliderCore = class extends Controller {
+      /** @param {HTMLElement} el */
+      constructor(el16) {
+        super(el16);
+        this.s = getStrings();
+        this.doc = el16.ownerDocument;
+        this.id = el16.id || `kp-slider-${++seq6}`;
+        this.o = readOptions3(el16, this.s);
+        this.w = writers(this.o, this.s);
+        this.inputs = this.o.authored.slice(0, this.o.isRange ? 2 : 1);
+        while (this.inputs.length < (this.o.isRange ? 2 : 1)) {
+          const input = this.doc.createElement("input");
+          input.type = "range";
+          this.inputs.push(input);
+        }
+        this.values = startValues(this.o, this.inputs.length);
+        this.bubbles = [];
+        this.boxes = [];
+        this.pressed = false;
+        const { why, skeleton: skeleton2 } = buildLines(this.doc, this.id);
+        this.why = why;
+        this.skeleton = skeleton2;
+        this.handle = { element: el16, values: () => this.values.slice(), set: (next2) => this.setValues(next2), setState: (state6) => this.setState(state6), text: () => this.fullText() };
+      }
+      fullText() {
+        const { min, max } = this.o;
+        const v = this.values;
+        return this.o.isRange ? `${this.w.text(v[0] ?? min)} \u2013 ${this.w.text(v[1] ?? max)}` : this.w.text(v[0] ?? min);
+      }
+      /** The field boxes, the fill, the bubbles and the unit text, in step with the values. */
+      paint() {
+        const { min, max, isRange } = this.o;
+        const [a, b] = this.values;
+        const el16 = this.host;
+        el16.style.setProperty("--kp-slider-from", String(isRange ? sliderPercent(a, min, max) / 100 : 0));
+        el16.style.setProperty("--kp-slider-to", String(sliderPercent(isRange ? b : a, min, max) / 100));
+        for (const [i, input] of this.inputs.entries()) {
+          const v = this.values[i] ?? 0;
+          if (input.value !== String(v)) input.value = String(v);
+          input.setAttribute("aria-valuetext", this.w.text(v));
+          el16.style.setProperty(`--kp-slider-at-${i}`, String(sliderPercent(v, min, max) / 100));
+          const bubble = this.bubbles[i];
+          if (bubble) bubble.textContent = this.w.text(v);
+          const box = this.boxes[i];
+          if (box && this.doc.activeElement !== box) box.value = this.w.plain(v);
+        }
+      }
+      /** The value that is allowed for a thumb: snapped, and a range's thumbs kept the gap apart. @param {number} thumb @param {number} want */
+      allowed(thumb, want) {
+        const { min, max, step, gap } = this.o;
+        const v = snapSlider(want, min, max, step);
+        if (!this.o.isRange) return v;
+        return thumb === 0 ? Math.min(v, snapSlider(this.values[1] - gap, min, max, step)) : Math.max(v, snapSlider(this.values[0] + gap, min, max, step));
+      }
+      /** @param {number} thumb */
+      detailOf(thumb) {
+        const v = this.values;
+        return {
+          values: v.slice(),
+          value: v[thumb] ?? v[0],
+          thumb: this.o.isRange ? thumb === 0 ? "low" : "high" : "only",
+          text: this.o.isRange ? `${this.w.text(v[0])} \u2013 ${this.w.text(v[1])}` : this.w.text(v[0])
+        };
+      }
+      /** @param {string} type @param {number} thumb */
+      emit(type, thumb) {
+        this.host.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: this.detailOf(thumb) }));
+      }
+      /** @param {number} thumb @param {boolean} commit */
+      announce(thumb, commit3) {
+        this.emit(SLIDER_INPUT_EVENT, thumb);
+        if (commit3) this.emit(SLIDER_CHANGE_EVENT, thumb);
+      }
+      clearWhy() {
+        this.why.hidden = true;
+        this.why.textContent = "";
+        for (const box of this.boxes) {
+          box.removeAttribute("aria-invalid");
+          box.removeAttribute("aria-describedby");
+        }
+      }
+      /** @param {number} thumb @param {number} want @param {boolean} commit */
+      move(thumb, want, commit3) {
+        const next2 = this.allowed(thumb, want);
+        const changed2 = next2 !== this.values[thumb];
+        this.values[thumb] = next2;
+        this.paint();
+        this.clearWhy();
+        if (changed2 || commit3) this.announce(thumb, commit3);
+      }
+      /** `loading` shows the skeleton and switches the slider off. @param {'ready' | 'loading'} state */
+      setState(state6) {
+        const loading = state6 === "loading";
+        this.skeleton.hidden = !loading;
+        this.host.toggleAttribute("aria-busy", loading);
+        if (loading) this.host.dataset.kpState = "loading";
+        else delete this.host.dataset.kpState;
+        for (const control of [...this.inputs, ...this.boxes]) control.disabled = loading || this.o.disabledByPage;
+      }
+      /** Replace the values from a script, without the event. @param {readonly number[]} next */
+      setValues(next2) {
+        const { min, max, step, gap, isRange } = this.o;
+        this.values = this.inputs.map((_, i) => snapSlider(next2[i] ?? this.values[i] ?? min, min, max, step));
+        if (isRange && this.values[0] > this.values[1] - gap) this.values = [Math.min(this.values[0], this.values[1] - gap), this.values[1]];
+        this.paint();
+        this.clearWhy();
+      }
+    };
+  }
+});
+
+// js/slider/controller.js
+var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
+var init_controller12 = __esm({
+  "js/slider/controller.js"() {
+    "use strict";
+    init_build7();
+    init_core2();
+    init_values2();
+    BIG_STEP = 10;
+    PAGE_SHARE = 10;
+    KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
+    SliderControl = class extends SliderCore {
+      connect() {
+        this.stamp();
+        this.build();
+        this.showReason();
+        this.setState(this.host.dataset.kpState === "loading" ? "loading" : "ready");
+        this.paint();
+        this.own(() => this.unbuild());
+        const el16 = this.host;
+        this.listen(el16, "input", (event) => this.onInput(event));
+        this.listen(el16, "change", (event) => this.onChange(event));
+        this.listen(el16, "keydown", (event) => this.onKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(el16, "keydown", (event) => this.onBoxKey(
+          /** @type {KeyboardEvent} */
+          event
+        ));
+        this.listen(el16, "dblclick", (event) => this.onReset(event));
+        this.listen(el16, "pointerdown", (event) => this.onDown(event));
+        this.listen(this.doc, "pointerup", () => this.onUp());
+        for (const box of this.boxes) this.listen(box, "blur", (event) => this.onBoxBlur(event));
+      }
+      /** The host's role, name and kind, and where the number shows (switchable at runtime). */
+      stamp() {
+        const el16 = this.host;
+        el16.classList.add("kp-slider");
+        if (!el16.hasAttribute("role")) el16.setAttribute("role", "group");
+        if (!el16.hasAttribute("aria-label") && !el16.hasAttribute("aria-labelledby")) el16.setAttribute("aria-label", this.o.label);
+        el16.dataset.kpSliderKind = this.o.isRange ? "range" : "single";
+        el16.dataset.kpSliderShow = this.o.show;
+        this.observe(
+          new MutationObserver(() => {
+            const next2 = showOf(el16);
+            if (el16.dataset.kpSliderShow !== next2) el16.dataset.kpSliderShow = next2;
+          })
+        ).observe(el16, { attributes: true, attributeFilter: ["data-kp-slider-value"] });
+        if (this.o.vertical) el16.dataset.kpVertical = "";
+      }
+      build() {
+        const { track, bubbles } = buildTrack(this.doc, this.o, this.inputs, this.values, this.w, this.s);
+        this.bubbles = bubbles;
+        const { fields, boxes } = buildFields(this.host, this.o, this.inputs, this.w, this.s);
+        this.boxes = boxes;
+        const body = this.doc.createElement("div");
+        body.className = "kp-slider__body";
+        body.append(track);
+        if (boxes.length) body.append(fields);
+        this.host.replaceChildren(body, this.why, this.skeleton);
+      }
+      unbuild() {
+        const el16 = this.host;
+        el16.replaceChildren();
+        for (const p of KNOBS2) el16.style.removeProperty(p);
+        delete el16.dataset.kpSliderKind;
+        delete el16.dataset.kpSliderShow;
+      }
+      /** A slider the page switched off says why on its line. */
+      showReason() {
+        const el16 = this.host;
+        if (!this.o.disabledByPage || !el16.dataset.kpDisabledReason) return;
+        this.why.classList.remove("kp-field__error");
+        this.why.classList.add("kp-slider__reason");
+        this.why.setAttribute("role", "note");
+        this.why.textContent = el16.dataset.kpDisabledReason;
+        this.why.hidden = false;
+      }
+      /** @param {Event} event */
+      onInput(event) {
+        const input = (
+          /** @type {HTMLInputElement} */
+          event.target
+        );
+        const thumb = this.inputs.indexOf(input);
+        if (thumb < 0) return;
+        const next2 = this.allowed(thumb, Number(input.value));
+        if (next2 !== Number(input.value)) input.value = String(next2);
+        const changed2 = next2 !== this.values[thumb];
+        this.values[thumb] = next2;
+        this.paint();
+        this.clearWhy();
+        if (changed2) this.announce(thumb, this.o.commitOnInput);
+      }
+      /** @param {Event} event */
+      onChange(event) {
+        const thumb = this.inputs.indexOf(
+          /** @type {HTMLInputElement} */
+          event.target
+        );
+        if (thumb >= 0 && !this.o.commitOnInput) this.emit(SLIDER_CHANGE_EVENT, thumb);
+      }
+      /** Shift+arrow moves ten steps, Page Up and Down a tenth of the range. @param {KeyboardEvent} event */
+      onKey(event) {
+        const input = (
+          /** @type {HTMLInputElement} */
+          event.target
+        );
+        const thumb = this.inputs.indexOf(input);
+        if (thumb < 0 || input.disabled) return;
+        const { min, max, step } = this.o;
+        const page = Math.max(step, (max - min) / PAGE_SHARE);
+        const up = event.key === "ArrowRight" || event.key === "ArrowUp";
+        const down = event.key === "ArrowLeft" || event.key === "ArrowDown";
+        let delta = null;
+        if (event.shiftKey && up) delta = step * BIG_STEP;
+        else if (event.shiftKey && down) delta = -step * BIG_STEP;
+        else if (event.key === "PageUp") delta = page;
+        else if (event.key === "PageDown") delta = -page;
+        if (delta === null) return;
+        event.preventDefault();
+        this.move(thumb, (this.values[thumb] ?? min) + delta, true);
+      }
+      /** A double click puts a thumb back on its default (`data-kp-default`). @param {Event} event */
+      onReset(event) {
+        const input = (
+          /** @type {HTMLInputElement} */
+          event.target
+        );
+        const thumb = this.inputs.indexOf(input);
+        const to = this.o.defaults[thumb];
+        if (thumb < 0 || to === void 0 || input.disabled) return;
+        this.move(thumb, to, true);
+      }
+      /** The thumb last touched stays on top, so two thumbs at the ends can both be taken. @param {Event} event */
+      onDown(event) {
+        const input = (
+          /** @type {HTMLInputElement} */
+          event.target
+        );
+        if (!this.inputs.includes(input)) return;
+        for (const other of this.inputs) other.style.zIndex = other === input ? "2" : "1";
+        this.host.toggleAttribute("data-kp-dragging", true);
+        this.pressed = true;
+      }
+      onUp() {
+        if (!this.pressed) return;
+        this.pressed = false;
+        this.host.removeAttribute("data-kp-dragging");
+      }
+      /** @param {HTMLInputElement} box @param {string} words */
+      invalid(box, words2) {
+        box.setAttribute("aria-invalid", "true");
+        box.setAttribute("aria-describedby", this.why.id);
+        this.why.textContent = words2;
+        this.why.hidden = false;
+        return false;
+      }
+      /** A typed value, read on Enter or blur: out of range, or too close to the other thumb, says why. @param {HTMLInputElement} box */
+      readBox(box) {
+        const { min, max, step, gap, unit: unit2, isRange } = this.o;
+        const thumb = this.boxes.indexOf(box);
+        const n = parseSliderText(box.value, unit2);
+        if (Number.isNaN(n) || n < min || n > max) return this.invalid(box, this.s.sliderInvalid(this.w.plain(min), this.w.plain(max), unit2));
+        const next2 = this.allowed(thumb, n);
+        if (isRange && next2 !== snapSlider(n, min, max, step)) return this.invalid(box, this.s.sliderGap(this.w.plain(gap), unit2));
+        this.move(thumb, next2, true);
+        box.value = this.w.plain(this.values[thumb] ?? next2);
+        return true;
+      }
+      /** @param {KeyboardEvent} event */
+      onBoxKey(event) {
+        const box = event.target;
+        if (!(box instanceof HTMLInputElement) || !this.boxes.includes(box)) return;
+        const thumb = this.boxes.indexOf(box);
+        if (event.key === "Enter") {
+          event.preventDefault();
+          this.readBox(box);
+        } else if (event.key === "Escape") {
+          box.value = this.w.plain(this.values[thumb] ?? this.o.min);
+          this.clearWhy();
+        } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+          event.preventDefault();
+          const by = (event.key === "ArrowUp" ? this.o.step : -this.o.step) * (event.shiftKey ? BIG_STEP : 1);
+          this.move(thumb, (this.values[thumb] ?? this.o.min) + by, true);
+        }
+      }
+      /** @param {Event} event */
+      onBoxBlur(event) {
+        const box = event.target;
+        if (box instanceof HTMLInputElement && this.boxes.includes(box) && box.value !== this.w.plain(this.values[this.boxes.indexOf(box)] ?? this.o.min)) this.readBox(box);
+      }
+    };
+  }
+});
+
 // js/slider.js
 var slider_exports = {};
 __export(slider_exports, {
@@ -65242,454 +65783,28 @@ __export(slider_exports, {
   sliderValues: () => sliderValues,
   snapSlider: () => snapSlider
 });
-function snapSlider(value, min, max, step) {
-  const digits = Math.max(decimalsOf2(step), decimalsOf2(min));
-  const snapped = min + Math.round((value - min) / step) * step;
-  return Number(Math.min(max, Math.max(min, snapped)).toFixed(digits));
-}
-function sliderPercent(value, min, max) {
-  return max === min ? 0 : (Math.min(max, Math.max(min, value)) - min) / (max - min) * 100;
-}
-function parseSliderText(text, unit2 = "") {
-  let t = text.trim();
-  if (unit2 && t.endsWith(unit2)) t = t.slice(0, -unit2.length);
-  t = t.replace(/[\s ]/g, "").replace(",", ".");
-  return /^[+-]?(\d+\.?\d*|\.\d+)$/.test(t) ? Number(t) : Number.NaN;
-}
 function slider(element) {
-  return HANDLES12.get(element) ?? null;
+  return controllerOf(element, SliderControl)?.handle ?? null;
 }
 function sliderValues(element) {
-  return HANDLES12.get(element)?.values() ?? [];
+  return slider(element)?.values() ?? [];
 }
 function setSliderValues(element, values) {
-  HANDLES12.get(element)?.set(values);
+  slider(element)?.set(values);
 }
 function setSliderState(element, state6) {
-  HANDLES12.get(element)?.setState(state6);
+  slider(element)?.setState(state6);
 }
 function attachSliders(root = document) {
-  const cleanups = [];
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof Element && root.matches(SLIDER) ? [root] : [],
-      ...root.querySelectorAll(SLIDER)
-    ]
-  );
-  for (const el16 of found) {
-    if (HANDLES12.has(el16)) continue;
-    const s2 = getStrings();
-    const doc = el16.ownerDocument;
-    const id = el16.id || `kp-slider-${++seq6}`;
-    const authored = (
-      /** @type {HTMLInputElement[]} */
-      [...el16.querySelectorAll('input[type="range"]')]
-    );
-    const isRange = el16.dataset.kpSlider === "range" || authored.length === 2;
-    const first = authored[0];
-    const min = Number(el16.dataset.kpMin ?? first?.min ?? 0);
-    const max = Number(el16.dataset.kpMax ?? first?.max ?? 100);
-    const step = Number(el16.dataset.kpStep ?? first?.step ?? 1) || 1;
-    const gap = Math.max(step, Number(el16.dataset.kpMinGap) || step);
-    const unit2 = el16.dataset.kpUnit ?? (el16.dataset.kpFormat === "percent" ? "%" : "");
-    const format = ["percent", "bytes", "duration"].includes(el16.dataset.kpFormat ?? "") ? el16.dataset.kpFormat : "number";
-    const show = ["bubble", "both", "none"].includes(el16.dataset.kpSliderValue ?? "") ? el16.dataset.kpSliderValue : "field";
-    const commitOnInput = el16.dataset.kpCommit === "input";
-    const vertical = el16.dataset.kpOrientation === "vertical";
-    const locale = resolveLocale(el16.dataset.kpLocale, el16);
-    const label = el16.getAttribute("aria-label") ?? s2.sliderGroup;
-    const name = el16.dataset.kpName ?? "";
-    const disabledByPage = el16.hasAttribute("data-kp-disabled");
-    const digits = Math.max(decimalsOf2(step), decimalsOf2(min));
-    el16.classList.add("kp-slider");
-    if (!el16.hasAttribute("role")) el16.setAttribute("role", "group");
-    if (!el16.hasAttribute("aria-label") && !el16.hasAttribute("aria-labelledby")) el16.setAttribute("aria-label", label);
-    el16.dataset.kpSliderKind = isRange ? "range" : "single";
-    el16.dataset.kpSliderShow = show;
-    const showWatch = new MutationObserver(() => {
-      const next2 = ["bubble", "both", "none"].includes(el16.dataset.kpSliderValue ?? "") ? el16.dataset.kpSliderValue : "field";
-      if (el16.dataset.kpSliderShow !== next2) el16.dataset.kpSliderShow = next2;
-    });
-    showWatch.observe(el16, { attributes: true, attributeFilter: ["data-kp-slider-value"] });
-    if (vertical) el16.dataset.kpVertical = "";
-    const text = (v) => {
-      if (format === "bytes") return formatBytes(v, locale);
-      if (format === "duration") return humanDuration(v, s2);
-      const n = new Intl.NumberFormat(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: false }).format(v);
-      return unit2 ? `${n}\xA0${unit2}` : n;
-    };
-    const plain2 = (v) => format === "number" || format === "percent" ? new Intl.NumberFormat(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: false }).format(v) : text(v);
-    const typed = format === "number" || format === "percent";
-    const wanted = isRange ? 2 : 1;
-    const inputs = authored.slice(0, wanted);
-    while (inputs.length < wanted) {
-      const input = doc.createElement("input");
-      input.type = "range";
-      inputs.push(input);
-    }
-    const initial = (el16.dataset.kpValue ?? "").split(/[\s,]+/).filter(Boolean).map(Number).filter(Number.isFinite);
-    const defaults = (el16.dataset.kpDefault ?? "").split(/[\s,]+/).filter(Boolean).map(Number).filter(Number.isFinite);
-    let values = inputs.map((input, i) => {
-      const own = initial[i] ?? (authored[i] ? Number(authored[i].value) : isRange ? i === 0 ? min + (max - min) * 0.25 : min + (max - min) * 0.75 : min + (max - min) / 2);
-      return snapSlider(own, min, max, step);
-    });
-    if (isRange && values[0] > values[1] - gap) values = [values[0], Math.min(max, values[0] + gap)];
-    const track = doc.createElement("div");
-    track.className = "kp-slider__track";
-    const rail = doc.createElement("span");
-    rail.className = "kp-slider__rail";
-    rail.setAttribute("aria-hidden", "true");
-    const fill2 = doc.createElement("span");
-    fill2.className = "kp-slider__fill";
-    rail.append(fill2);
-    track.append(rail);
-    const bubbles = [];
-    for (const [i, input] of inputs.entries()) {
-      input.classList.add("kp-slider__input");
-      input.min = String(min);
-      input.max = String(max);
-      input.step = String(step);
-      input.value = String(values[i]);
-      input.dataset.kpThumb = isRange ? i === 0 ? "low" : "high" : "only";
-      if (name) input.name = isRange ? `${name}-${i === 0 ? "min" : "max"}` : name;
-      input.setAttribute("aria-label", isRange ? i === 0 ? s2.sliderMin(label) : s2.sliderMax(label) : label);
-      if (vertical) input.setAttribute("aria-orientation", "vertical");
-      track.append(input);
-      {
-        const bubble = doc.createElement("output");
-        bubble.className = "kp-slider__bubble";
-        bubble.dataset.kpThumb = String(i);
-        bubble.setAttribute("aria-hidden", "true");
-        track.append(bubble);
-        bubbles.push(bubble);
-      }
-    }
-    const tickSpec = el16.dataset.kpTicks;
-    const marks = [];
-    if (tickSpec === "auto") {
-      const count2 = 4;
-      for (let i = 0; i <= count2; i++) {
-        const v = snapSlider(min + (max - min) * i / count2, min, max, step);
-        marks.push({ at: v, label: text(v) });
-      }
-    } else if (tickSpec) {
-      for (const part7 of tickSpec.split(",")) {
-        const [raw, ...rest] = part7.split(":");
-        const v = Number(raw);
-        if (Number.isFinite(v) && v >= min && v <= max) marks.push({ at: v, label: rest.length ? rest.join(":").trim() : text(v) });
-      }
-    }
-    if (marks.length) {
-      track.dataset.kpTicks = "";
-      const ticks = doc.createElement("div");
-      ticks.className = "kp-slider__ticks";
-      ticks.setAttribute("aria-hidden", "true");
-      for (const m of marks) {
-        const tick6 = doc.createElement("span");
-        tick6.className = "kp-slider__tick";
-        tick6.style.setProperty("--kp-slider-at", String(sliderPercent(m.at, min, max) / 100));
-        const word = doc.createElement("span");
-        word.className = "kp-slider__tick-label";
-        word.textContent = m.label;
-        tick6.append(word);
-        ticks.append(tick6);
-      }
-      track.append(ticks);
-    }
-    const boxes = [];
-    const fields = doc.createElement("div");
-    fields.className = "kp-slider__fields";
-    const why = doc.createElement("p");
-    why.className = "kp-field__error kp-slider__why";
-    why.id = `${id}-why`;
-    why.setAttribute("role", "alert");
-    why.hidden = true;
-    {
-      let longest = 0;
-      for (let i = 0; i <= 20; i++) longest = Math.max(longest, plain2(snapSlider(min + (max - min) * i / 20, min, max, step)).length);
-      el16.style.setProperty("--kp-slider-field-ch", String(Math.max(longest, 2) + 1));
-      for (const [i, input] of inputs.entries()) {
-        if (i === 1) {
-          const dash = doc.createElement("span");
-          dash.className = "kp-slider__dash";
-          dash.setAttribute("aria-hidden", "true");
-          dash.textContent = "\u2013";
-          fields.append(dash);
-        }
-        const wrap = doc.createElement("span");
-        wrap.className = "kp-slider__field-wrap";
-        const box = doc.createElement("input");
-        box.type = "text";
-        box.className = "kp-field__input kp-slider__field";
-        box.inputMode = "decimal";
-        box.autocomplete = "off";
-        box.readOnly = !typed;
-        box.setAttribute("aria-label", isRange ? i === 0 ? s2.sliderMin(label) : s2.sliderMax(label) : s2.sliderValue(label));
-        box.dataset.kpThumb = input.dataset.kpThumb ?? "only";
-        wrap.append(box);
-        if (typed && unit2) {
-          const u = doc.createElement("span");
-          u.className = "kp-slider__unit";
-          u.setAttribute("aria-hidden", "true");
-          u.textContent = unit2;
-          wrap.append(u);
-        }
-        fields.append(wrap);
-        boxes.push(box);
-      }
-    }
-    const skeleton2 = doc.createElement("span");
-    skeleton2.className = "kp-slider__skeleton";
-    skeleton2.setAttribute("aria-hidden", "true");
-    skeleton2.hidden = true;
-    const bar = doc.createElement("span");
-    bar.className = "kp-skeleton kp-skeleton--block kp-slider__bar";
-    skeleton2.append(bar);
-    const body = doc.createElement("div");
-    body.className = "kp-slider__body";
-    body.append(track);
-    if (boxes.length) body.append(fields);
-    el16.replaceChildren(body, why, skeleton2);
-    const paint15 = () => {
-      const [a, b] = values;
-      const from = isRange ? sliderPercent(a, min, max) / 100 : 0;
-      const to = sliderPercent(isRange ? b : a, min, max) / 100;
-      el16.style.setProperty("--kp-slider-from", String(from));
-      el16.style.setProperty("--kp-slider-to", String(to));
-      for (const [i, input] of inputs.entries()) {
-        const v = values[i] ?? 0;
-        if (input.value !== String(v)) input.value = String(v);
-        input.setAttribute("aria-valuetext", text(v));
-        el16.style.setProperty(`--kp-slider-at-${i}`, String(sliderPercent(v, min, max) / 100));
-        const bubble = bubbles[i];
-        if (bubble) bubble.textContent = text(v);
-        const box = boxes[i];
-        if (box && doc.activeElement !== box) box.value = plain2(v);
-      }
-    };
-    const allowed2 = (thumb, want) => {
-      let v = snapSlider(want, min, max, step);
-      if (isRange) {
-        if (thumb === 0) v = Math.min(v, snapSlider(values[1] - gap, min, max, step));
-        else v = Math.max(v, snapSlider(values[0] + gap, min, max, step));
-      }
-      return v;
-    };
-    const detailOf = (thumb) => ({
-      values: values.slice(),
-      value: values[thumb] ?? values[0],
-      thumb: isRange ? thumb === 0 ? "low" : "high" : "only",
-      text: isRange ? `${text(values[0])} \u2013 ${text(values[1])}` : text(values[0])
-    });
-    const announce4 = (thumb, commit3) => {
-      el16.dispatchEvent(new CustomEvent(SLIDER_INPUT_EVENT, { bubbles: true, detail: detailOf(thumb) }));
-      if (commit3) el16.dispatchEvent(new CustomEvent(SLIDER_CHANGE_EVENT, { bubbles: true, detail: detailOf(thumb) }));
-    };
-    const clearWhy = () => {
-      why.hidden = true;
-      why.textContent = "";
-      for (const box of boxes) {
-        box.removeAttribute("aria-invalid");
-        box.removeAttribute("aria-describedby");
-      }
-    };
-    const move = (thumb, want, commit3) => {
-      const next2 = allowed2(thumb, want);
-      const changed2 = next2 !== values[thumb];
-      values[thumb] = next2;
-      paint15();
-      clearWhy();
-      if (changed2 || commit3) announce4(thumb, commit3);
-    };
-    const onInput = (event) => {
-      const input = (
-        /** @type {HTMLInputElement} */
-        event.target
-      );
-      const thumb = inputs.indexOf(input);
-      if (thumb < 0) return;
-      const next2 = allowed2(thumb, Number(input.value));
-      if (next2 !== Number(input.value)) input.value = String(next2);
-      const changed2 = next2 !== values[thumb];
-      values[thumb] = next2;
-      paint15();
-      clearWhy();
-      if (changed2) announce4(thumb, commitOnInput);
-    };
-    const onChange = (event) => {
-      const input = (
-        /** @type {HTMLInputElement} */
-        event.target
-      );
-      const thumb = inputs.indexOf(input);
-      if (thumb < 0) return;
-      if (!commitOnInput) el16.dispatchEvent(new CustomEvent(SLIDER_CHANGE_EVENT, { bubbles: true, detail: detailOf(thumb) }));
-    };
-    const onKey6 = (event) => {
-      const input = (
-        /** @type {HTMLInputElement} */
-        event.target
-      );
-      const thumb = inputs.indexOf(input);
-      if (thumb < 0 || input.disabled) return;
-      const range = max - min;
-      let delta = null;
-      if (event.shiftKey && (event.key === "ArrowRight" || event.key === "ArrowUp")) delta = step * 10;
-      else if (event.shiftKey && (event.key === "ArrowLeft" || event.key === "ArrowDown")) delta = -step * 10;
-      else if (event.key === "PageUp") delta = Math.max(step, range / 10);
-      else if (event.key === "PageDown") delta = -Math.max(step, range / 10);
-      if (delta === null) return;
-      event.preventDefault();
-      move(thumb, (values[thumb] ?? min) + delta, true);
-    };
-    const onReset = (event) => {
-      const input = (
-        /** @type {HTMLInputElement} */
-        event.target
-      );
-      const thumb = inputs.indexOf(input);
-      const to = defaults[thumb];
-      if (thumb < 0 || to === void 0 || input.disabled) return;
-      move(thumb, to, true);
-    };
-    let pressed = false;
-    const onDown2 = (event) => {
-      const input = (
-        /** @type {HTMLInputElement} */
-        event.target
-      );
-      if (!inputs.includes(input)) return;
-      for (const other of inputs) other.style.zIndex = other === input ? "2" : "1";
-      el16.toggleAttribute("data-kp-dragging", true);
-      pressed = true;
-    };
-    const onUp2 = () => {
-      if (!pressed) return;
-      pressed = false;
-      el16.removeAttribute("data-kp-dragging");
-    };
-    const readBox = (box) => {
-      const thumb = boxes.indexOf(box);
-      const n = parseSliderText(box.value, unit2);
-      if (Number.isNaN(n) || n < min || n > max) {
-        box.setAttribute("aria-invalid", "true");
-        box.setAttribute("aria-describedby", why.id);
-        why.textContent = s2.sliderInvalid(plain2(min), plain2(max), unit2);
-        why.hidden = false;
-        return false;
-      }
-      const next2 = allowed2(thumb, n);
-      if (isRange && next2 !== snapSlider(n, min, max, step)) {
-        box.setAttribute("aria-invalid", "true");
-        box.setAttribute("aria-describedby", why.id);
-        why.textContent = s2.sliderGap(plain2(gap), unit2);
-        why.hidden = false;
-        return false;
-      }
-      move(thumb, next2, true);
-      box.value = plain2(values[thumb] ?? next2);
-      return true;
-    };
-    const onBoxKey = (event) => {
-      const box = event.target;
-      if (!(box instanceof HTMLInputElement) || !boxes.includes(box)) return;
-      if (event.key === "Enter") {
-        event.preventDefault();
-        readBox(box);
-      } else if (event.key === "Escape") {
-        box.value = plain2(values[boxes.indexOf(box)] ?? min);
-        clearWhy();
-      } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        event.preventDefault();
-        const thumb = boxes.indexOf(box);
-        move(thumb, (values[thumb] ?? min) + (event.key === "ArrowUp" ? step : -step) * (event.shiftKey ? 10 : 1), true);
-      }
-    };
-    const onBoxBlur = (event) => {
-      const box = event.target;
-      if (box instanceof HTMLInputElement && boxes.includes(box) && box.value !== plain2(values[boxes.indexOf(box)] ?? min)) readBox(box);
-    };
-    const setState2 = (state6) => {
-      const loading = state6 === "loading";
-      skeleton2.hidden = !loading;
-      el16.toggleAttribute("aria-busy", loading);
-      if (loading) el16.dataset.kpState = "loading";
-      else delete el16.dataset.kpState;
-      const off = loading || disabledByPage;
-      for (const control of [...inputs, ...boxes]) control.disabled = off;
-    };
-    const handle = {
-      element: el16,
-      values: () => values.slice(),
-      set(next2) {
-        values = inputs.map((_, i) => snapSlider(next2[i] ?? values[i] ?? min, min, max, step));
-        if (isRange && values[0] > values[1] - gap) values = [Math.min(values[0], values[1] - gap), values[1]];
-        paint15();
-        clearWhy();
-      },
-      setState: setState2,
-      text: () => isRange ? `${text(values[0] ?? min)} \u2013 ${text(values[1] ?? max)}` : text(values[0] ?? min)
-    };
-    HANDLES12.set(el16, handle);
-    if (disabledByPage && el16.dataset.kpDisabledReason) {
-      why.classList.remove("kp-field__error");
-      why.classList.add("kp-slider__reason");
-      why.setAttribute("role", "note");
-      why.textContent = el16.dataset.kpDisabledReason;
-      why.hidden = false;
-    }
-    setState2(el16.dataset.kpState === "loading" ? "loading" : "ready");
-    paint15();
-    el16.addEventListener("input", onInput);
-    el16.addEventListener("change", onChange);
-    el16.addEventListener("keydown", onKey6);
-    el16.addEventListener("keydown", onBoxKey);
-    el16.addEventListener("dblclick", onReset);
-    el16.addEventListener("pointerdown", onDown2);
-    doc.addEventListener("pointerup", onUp2);
-    for (const box of boxes) box.addEventListener("blur", onBoxBlur);
-    cleanups.push(() => {
-      el16.removeEventListener("input", onInput);
-      el16.removeEventListener("change", onChange);
-      el16.removeEventListener("keydown", onKey6);
-      el16.removeEventListener("keydown", onBoxKey);
-      el16.removeEventListener("dblclick", onReset);
-      el16.removeEventListener("pointerdown", onDown2);
-      doc.removeEventListener("pointerup", onUp2);
-      for (const box of boxes) box.removeEventListener("blur", onBoxBlur);
-      showWatch.disconnect();
-      HANDLES12.delete(el16);
-      el16.replaceChildren();
-      for (const p of ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"])
-        el16.style.removeProperty(p);
-      delete el16.dataset.kpSliderKind;
-      delete el16.dataset.kpSliderShow;
-    });
-  }
-  return () => {
-    for (const c of cleanups) c();
-  };
+  return attachAll(root, SLIDER, SliderControl);
 }
-var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, HANDLES12, seq6;
 var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
-    init_strings();
-    init_locale();
-    init_freshness();
-    SLIDER = "[data-kp-slider]";
-    SLIDER_INPUT_EVENT = "kp-slider-input";
-    SLIDER_CHANGE_EVENT = "kp-slider-change";
-    SLIDER_STATES = /** @type {const} */
-    ["ready", "loading"];
-    decimalsOf2 = (n) => {
-      const text = String(n);
-      const at = text.indexOf(".");
-      return at < 0 ? 0 : text.length - at - 1;
-    };
-    HANDLES12 = /* @__PURE__ */ new WeakMap();
-    seq6 = 0;
+    init_controller();
+    init_controller12();
+    init_values2();
+    init_values2();
   }
 });
 
@@ -65855,7 +65970,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq7, SAY_AFTER_MS, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -66084,7 +66199,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller12();
+    init_controller13();
     init_fields();
     init_fields();
   }
@@ -66123,16 +66238,16 @@ function orderDated(options, order2 = "newest") {
   }).map((x) => x.o);
 }
 function datedOptions(element) {
-  return HANDLES13.get(element) ?? null;
+  return HANDLES12.get(element) ?? null;
 }
 function setDatedOptions(element, options, value) {
-  HANDLES13.get(element)?.set(options, value);
+  HANDLES12.get(element)?.set(options, value);
 }
 function setDatedState(element, state6, options) {
-  HANDLES13.get(element)?.setState(state6, options);
+  HANDLES12.get(element)?.setState(state6, options);
 }
 function datedValue(element) {
-  return HANDLES13.get(element)?.value() ?? null;
+  return HANDLES12.get(element)?.value() ?? null;
 }
 function attachDatedOptions(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -66141,7 +66256,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(DATED) ? [root] : [], ...root.querySelectorAll(DATED)]
   );
   for (const el16 of found) {
-    if (HANDLES13.has(el16)) continue;
+    if (HANDLES12.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = el16.id || `kp-dated-${++seq8}`;
@@ -66310,16 +66425,16 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       status.dataset.kpComboboxStatus = "";
       status.setAttribute("role", "status");
       status.setAttribute("aria-live", "polite");
-      const hidden = doc.createElement("input");
-      hidden.type = "hidden";
-      hidden.name = name;
-      hidden.className = "kp-dated__value";
-      box.append(input, list, status, hidden);
+      const hidden2 = doc.createElement("input");
+      hidden2.type = "hidden";
+      hidden2.name = name;
+      hidden2.className = "kp-dated__value";
+      box.append(input, list, status, hidden2);
       body.replaceChildren(box);
       detachCombobox = attachComboboxes(body);
       const handle2 = combobox(box);
       if (chosen !== null) handle2?.set([chosen]);
-      hidden.value = chosen ?? "";
+      hidden2.value = chosen ?? "";
     };
     const paintNote = () => {
       note2.replaceChildren();
@@ -66419,8 +66534,8 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
           input.checked = /** @type {HTMLInputElement} */
           input.value === chosen;
       } else {
-        const hidden = body.querySelector(".kp-dated__value");
-        if (hidden instanceof HTMLInputElement) hidden.value = chosen ?? "";
+        const hidden2 = body.querySelector(".kp-dated__value");
+        if (hidden2 instanceof HTMLInputElement) hidden2.value = chosen ?? "";
         const box = body.querySelector(".kp-combobox");
         if (box && fire2 === false) {
           suppress = true;
@@ -66455,7 +66570,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       options: () => shown4.slice(),
       state: () => state6
     };
-    HANDLES13.set(el16, handle);
+    HANDLES12.set(el16, handle);
     const onChange = (event) => {
       const target = event.target;
       if (target instanceof HTMLInputElement && target.type === "radio" && body.contains(target)) choose3(target.value, true);
@@ -66506,7 +66621,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
       el16.removeEventListener("keydown", onType);
       detachCombobox?.();
       busy?.remove();
-      HANDLES13.delete(el16);
+      HANDLES12.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-dated-rows");
       delete el16.dataset.kpDatedAttached;
@@ -66517,7 +66632,7 @@ function attachDatedOptions(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, HANDLES13, seq8;
+var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, HANDLES12, seq8;
 var init_dated_options = __esm({
   "js/dated-options.js"() {
     "use strict";
@@ -66532,7 +66647,7 @@ var init_dated_options = __esm({
     DATED_RETRY_EVENT = "kp-dated-retry";
     DATED_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
-    HANDLES13 = /* @__PURE__ */ new WeakMap();
+    HANDLES12 = /* @__PURE__ */ new WeakMap();
     seq8 = 0;
   }
 });
@@ -66578,13 +66693,13 @@ function toRun(input) {
   return "conflict" in raw && raw.conflict ? { at, conflict: raw.conflict } : { at };
 }
 function runs(element) {
-  return HANDLES14.get(element) ?? null;
+  return HANDLES13.get(element) ?? null;
 }
 function setRuns(element, times, options) {
-  HANDLES14.get(element)?.set(times, options);
+  HANDLES13.get(element)?.set(times, options);
 }
 function setRunsState(element, state6, options) {
-  HANDLES14.get(element)?.setState(state6, options);
+  HANDLES13.get(element)?.setState(state6, options);
 }
 function attachRuns(root = document, { now: nowOption } = {}) {
   const cleanups = [];
@@ -66593,7 +66708,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     [...root instanceof Element && root.matches(RUNS) ? [root] : [], ...root.querySelectorAll(RUNS)]
   );
   for (const el16 of found) {
-    if (HANDLES14.has(el16)) continue;
+    if (HANDLES13.has(el16)) continue;
     const s2 = getStrings();
     const doc = el16.ownerDocument;
     const id = `kp-runs-${++seq9}`;
@@ -66742,7 +66857,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       runs: () => all.slice(),
       state: () => state6
     };
-    HANDLES14.set(el16, handle);
+    HANDLES13.set(el16, handle);
     const onClick = (event) => {
       const target = event.target instanceof Element ? event.target : null;
       if (target?.closest("[data-kp-runs-retry]"))
@@ -66763,7 +66878,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       button4.removeEventListener("click", onMore);
       if (tick6) clearInterval(tick6);
       busy?.remove();
-      HANDLES14.delete(el16);
+      HANDLES13.delete(el16);
       el16.replaceChildren();
       el16.style.removeProperty("--kp-runs-count");
       delete el16.dataset.kpRunsAttached;
@@ -66773,7 +66888,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES14, seq9;
+var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, two6, HANDLES13, seq9;
 var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
@@ -66788,7 +66903,7 @@ var init_runs = __esm({
     RUNS_STATES = /** @type {const} */
     ["ready", "empty", "loading", "error"];
     two6 = (n) => String(n).padStart(2, "0");
-    HANDLES14 = /* @__PURE__ */ new WeakMap();
+    HANDLES13 = /* @__PURE__ */ new WeakMap();
     seq9 = 0;
   }
 });
@@ -66874,16 +66989,16 @@ function snoozeChoices({
   return out;
 }
 function snooze(element) {
-  return HANDLES15.get(element) ?? null;
+  return HANDLES14.get(element) ?? null;
 }
 function setSnoozedUntil(element, until) {
-  HANDLES15.get(element)?.setUntil(until);
+  HANDLES14.get(element)?.setUntil(until);
 }
 function setSnoozeBusy(element, busy) {
-  HANDLES15.get(element)?.setBusy(busy);
+  HANDLES14.get(element)?.setBusy(busy);
 }
 function openSnoozePanel(element, open4 = true) {
-  const h2 = HANDLES15.get(element);
+  const h2 = HANDLES14.get(element);
   if (open4) h2?.openPanel();
   else h2?.closePanel();
 }
@@ -66897,7 +67012,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
     ]
   );
   for (const el16 of found) {
-    if (HANDLES15.has(el16)) continue;
+    if (HANDLES14.has(el16)) continue;
     const s2 = snoozeWords(el16);
     const doc = el16.ownerDocument;
     const id = `kp-snooze-${++seq10}`;
@@ -67254,7 +67369,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
       openPanel,
       closePanel: () => void closePanel(false)
     };
-    HANDLES15.set(el16, handle);
+    HANDLES14.set(el16, handle);
     handle.setUntil(el16.dataset.kpSnoozedUntil ?? null);
     paintStatus();
     fill2();
@@ -67270,7 +67385,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
       end.removeEventListener("click", onEnd);
       doc.removeEventListener("pointerdown", onOutside, true);
       if (tick6) clearInterval(tick6);
-      HANDLES15.delete(el16);
+      HANDLES14.delete(el16);
       el16.replaceChildren();
       el16.removeAttribute("aria-busy");
       delete el16.dataset.kpSnoozeAttached;
@@ -67281,7 +67396,7 @@ function attachSnoozes(root = document, { now: nowOption } = {}) {
     for (const c of cleanups) c();
   };
 }
-var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES15, seq10;
+var SNOOZE, SNOOZE_EVENT, SNOOZE_END_EVENT, SNOOZE_CHOICES, MINUTE2, two7, WORD_SETS, WORD_ATTRIBUTES, HANDLES14, seq10;
 var init_snooze = __esm({
   "js/snooze.js"() {
     "use strict";
@@ -67325,7 +67440,7 @@ var init_snooze = __esm({
       ["data-kp-snooze-apply", "snoozeApply"],
       ["data-kp-snooze-saving", "snoozeSaving"]
     ];
-    HANDLES15 = /* @__PURE__ */ new WeakMap();
+    HANDLES14 = /* @__PURE__ */ new WeakMap();
     seq10 = 0;
   }
 });
@@ -67396,7 +67511,7 @@ var init_options2 = __esm({
 });
 
 // js/graph/instance.js
-var radiusOf, isShown, make24, SVG_NS3, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP;
+var radiusOf, isShown, make25, SVG_NS3, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP;
 var init_instance3 = __esm({
   "js/graph/instance.js"() {
     "use strict";
@@ -67406,7 +67521,7 @@ var init_instance3 = __esm({
       return base === 14 ? r : r * base / 14;
     };
     isShown = (el16) => !!el16 && el16.isConnected && el16.getClientRects().length > 0;
-    make24 = (doc, tag, className, text) => {
+    make25 = (doc, tag, className, text) => {
       const el16 = doc.createElement(tag);
       if (className) el16.className = className;
       if (text != null) el16.textContent = text;
@@ -67680,11 +67795,11 @@ function restyleGraph(g) {
   for (const path of g.svg.querySelectorAll(".kp-graph__edge, .kp-graph__arrow")) {
     const a = path.getAttribute("data-kp-from") ?? "";
     const b = path.getAttribute("data-kp-to") ?? "";
-    const hidden = g.hidden.has(path.getAttribute("data-kp-kind") ?? "");
-    const isOn2 = !hidden && (lit.has(a) || lit.has(b));
-    path.classList.toggle("is-hidden", hidden);
+    const hidden2 = g.hidden.has(path.getAttribute("data-kp-kind") ?? "");
+    const isOn2 = !hidden2 && (lit.has(a) || lit.has(b));
+    path.classList.toggle("is-hidden", hidden2);
     path.classList.toggle("is-on", isOn2);
-    path.classList.toggle("is-dim", lit.size > 0 && !isOn2 && !hidden);
+    path.classList.toggle("is-dim", lit.size > 0 && !isOn2 && !hidden2);
     if (isOn2) {
       on.add(a);
       on.add(b);
@@ -67842,15 +67957,15 @@ function renderDetail(g) {
   if (g.detailShown === node.id && !panel.hidden) return;
   const doc = g.el.ownerDocument;
   detailCount += 1;
-  const title = make24(doc, "h3", "kp-graph__detail-title", node.label);
+  const title = make25(doc, "h3", "kp-graph__detail-title", node.label);
   title.id = `kp-graph-detail-${detailCount}`;
   title.setAttribute("data-kp-anchors", "off");
-  const close = make24(doc, "button", "kp-button kp-button--sm kp-graph__detail-close", g.strings.graphDetailClose);
+  const close = make25(doc, "button", "kp-button kp-button--sm kp-graph__detail-close", g.strings.graphDetailClose);
   close.type = "button";
   close.title = g.strings.graphDetailCloseTitle;
   g.decorate?.(close, { kind: "detail-close", host: g.el, key: keyOf7(g.el), value: node.id, label: node.label });
-  const body = make24(doc, "div", "kp-graph__detail-body");
-  panel.replaceChildren(make24(doc, "div", "kp-graph__detail-head"), body);
+  const body = make25(doc, "div", "kp-graph__detail-body");
+  panel.replaceChildren(make25(doc, "div", "kp-graph__detail-head"), body);
   panel.firstElementChild.append(title, close);
   panel.setAttribute("aria-labelledby", title.id);
   panel.hidden = false;
@@ -67860,7 +67975,7 @@ function renderDetail(g) {
   g.el.dispatchEvent(new CustomEvent(GRAPH_DETAIL_EVENT, { bubbles: true, detail: info }));
   const made6 = g.detailHook?.(info);
   if (made6 != null && made6 !== void 0) body.append(made6 instanceof Node ? made6 : doc.createTextNode(String(made6)));
-  if (!body.childNodes.length) body.append(make24(doc, "p", "kp-graph__detail-text", node.description));
+  if (!body.childNodes.length) body.append(make25(doc, "p", "kp-graph__detail-text", node.description));
 }
 var detailCount, insetOf;
 var init_view2 = __esm({
@@ -68150,8 +68265,8 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   const present = data.kinds.filter((k) => data.edges.some((e) => e.kind === k.kind));
   g.legend.replaceChildren(
     ...present.map((k, index) => {
-      const li = make24(doc, "li");
-      const button4 = make24(doc, "button", "kp-graph__kind");
+      const li = make25(doc, "li");
+      const button4 = make25(doc, "button", "kp-graph__kind");
       button4.type = "button";
       button4.dataset.kpKind = k.kind;
       button4.title = k.hint;
@@ -68160,7 +68275,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
       const line = svgEl(doc, "line", { x1: 1, y1: 4, x2: 23, y2: 4, "data-kp-style": k.style });
       line.setAttribute("style", `--kp-graph-edge-colour: ${k.colour}`);
       sample.append(line);
-      button4.append(sample, make24(doc, "span", "", k.label));
+      button4.append(sample, make25(doc, "span", "", k.label));
       li.append(button4);
       g.decorate?.(button4, { kind: "kind", host: g.el, key: keyOf7(g.el), index, value: k.kind, label: k.label });
       return li;
@@ -68279,33 +68394,33 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
     const view = doc.defaultView;
     const initial = dataChild(el16);
     const script = el16.querySelector(":scope > script[data-kp-graph-data]");
-    const bar = make24(doc, "div", "kp-graph__bar");
-    const legend = make24(doc, "ul", "kp-graph__kinds");
+    const bar = make25(doc, "div", "kp-graph__bar");
+    const legend = make25(doc, "ul", "kp-graph__kinds");
     legend.setAttribute("aria-label", s2.graphKinds);
     legend.hidden = true;
-    const showAll = make24(doc, "button", "kp-button kp-button--sm kp-graph__show-all", s2.graphShowAll);
+    const showAll = make25(doc, "button", "kp-button kp-button--sm kp-graph__show-all", s2.graphShowAll);
     showAll.type = "button";
     showAll.title = s2.graphShowAllTitle;
     showAll.setAttribute("data-kp-idle", "");
     bar.append(legend, showAll);
-    const box = make24(doc, "div", "kp-graph__box");
+    const box = make25(doc, "div", "kp-graph__box");
     const svg2 = (
       /** @type {SVGSVGElement} */
       /** @type {unknown} */
       svgEl(doc, "svg", { class: "kp-graph__svg", role: "group" })
     );
     svg2.setAttribute("aria-label", `${el16.getAttribute("aria-label") ?? s2.graphUnnamed}. ${s2.graphHint}`);
-    const note2 = make24(doc, "p", "kp-graph__note");
+    const note2 = make25(doc, "p", "kp-graph__note");
     note2.setAttribute("role", "status");
-    const plate = make24(doc, "div", "kp-graph__state");
+    const plate = make25(doc, "div", "kp-graph__state");
     plate.hidden = true;
-    const zoomBox = make24(doc, "div", "kp-graph__zoom");
+    const zoomBox = make25(doc, "div", "kp-graph__zoom");
     zoomBox.setAttribute("role", "group");
     zoomBox.setAttribute("aria-label", s2.graphZoom);
     zoomBox.hidden = true;
-    const zoomOut = make24(doc, "button", "kp-button kp-button--sm kp-graph__zoom-out", "\u2212");
-    const zoomIn = make24(doc, "button", "kp-button kp-button--sm kp-graph__zoom-in", "+");
-    const zoomReset = make24(doc, "button", "kp-button kp-button--sm kp-graph__zoom-reset", s2.graphZoomReset);
+    const zoomOut = make25(doc, "button", "kp-button kp-button--sm kp-graph__zoom-out", "\u2212");
+    const zoomIn = make25(doc, "button", "kp-button kp-button--sm kp-graph__zoom-in", "+");
+    const zoomReset = make25(doc, "button", "kp-button kp-button--sm kp-graph__zoom-reset", s2.graphZoomReset);
     for (
       const [button4, label] of
       /** @type {const} */
@@ -68320,11 +68435,11 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       button4.setAttribute("aria-label", label);
     }
     zoomBox.append(zoomOut, zoomIn, zoomReset);
-    const panel = make24(doc, "aside", "kp-graph__detail");
+    const panel = make25(doc, "aside", "kp-graph__detail");
     panel.setAttribute("role", "region");
     panel.hidden = true;
     box.append(svg2, note2, plate, zoomBox, panel);
-    const hint2 = make24(doc, "p", "kp-graph__hint", s2.graphHint);
+    const hint2 = make25(doc, "p", "kp-graph__hint", s2.graphHint);
     el16.replaceChildren(bar, box, hint2, ...script ? [script] : []);
     const g = {
       el: el16,
@@ -71967,12 +72082,12 @@ function render5(root) {
   }
   if (st.expired && value !== "") state6 = "expired";
   root.setAttribute("data-kp-state", state6);
-  const hidden = state6 === "ready" && !st.shown;
-  const drawn2 = state6 === "ready" && matrix !== null && !("error" in matrix) && !hidden;
+  const hidden2 = state6 === "ready" && !st.shown;
+  const drawn2 = state6 === "ready" && matrix !== null && !("error" in matrix) && !hidden2;
   if (drawn2 && matrix && !("error" in matrix)) drawCode(root, plate, caption, matrix, st, s2);
-  else renderStandIn(root, plate, state6, hidden, st, s2);
+  else renderStandIn(root, plate, state6, hidden2, st, s2);
   const full = renderCaption(root, caption, value, state6, st);
-  renderActions(root, value, full, state6, drawn2, hidden, st, s2);
+  renderActions(root, value, full, state6, drawn2, hidden2, st, s2);
   renderWarn(root, new TextEncoder().encode(value).length, state6, s2);
 }
 function drawCode(root, plate, caption, matrix, st, s2) {
@@ -71988,8 +72103,8 @@ function drawCode(root, plate, caption, matrix, st, s2) {
     say14(root, s2.qrReady);
   }
 }
-function renderStandIn(root, plate, state6, hidden, st, s2) {
-  if (hidden) {
+function renderStandIn(root, plate, state6, hidden2, st, s2) {
+  if (hidden2) {
     const cover = statePlate(document, { kind: "empty", title: s2.qrHidden, actionLabel: s2.qrShow, actionAttribute: "data-kp-qr-show" });
     cover.classList.add("kp-qr__cover");
     plate.append(cover);
@@ -72028,7 +72143,7 @@ function button3(className, text) {
   b.textContent = text;
   return b;
 }
-function renderActions(root, value, full, state6, drawn2, hidden, st, s2) {
+function renderActions(root, value, full, state6, drawn2, hidden2, st, s2) {
   const actions = (
     /** @type {HTMLElement} */
     root.querySelector(":scope > .kp-qr__actions")
@@ -72048,7 +72163,7 @@ function renderActions(root, value, full, state6, drawn2, hidden, st, s2) {
     actions.append(more);
   }
   const dl = attr12(root, "download", "false");
-  if ((dl === "png" || dl === "svg") && drawn2 && !hidden) {
+  if ((dl === "png" || dl === "svg") && drawn2 && !hidden2) {
     const b = button3("kp-button kp-button--ghost kp-qr__download", dl === "png" ? s2.qrDownloadPng : s2.qrDownloadSvg);
     b.setAttribute("data-kp-qr-download-as", dl);
     actions.append(b);
@@ -72179,7 +72294,7 @@ var init_actions5 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -72283,7 +72398,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller13();
+    init_controller14();
     init_state19();
     init_state19();
     init_matrix2();
@@ -76762,7 +76877,7 @@ function resolveTarget(step, doc) {
 }
 var idSeq5 = 0;
 var nextId2 = (prefix) => `${prefix}-${idSeq5 += 1}`;
-var make25 = (doc, tag, className, text) => {
+var make26 = (doc, tag, className, text) => {
   const el16 = doc.createElement(tag);
   el16.className = className;
   if (text != null) el16.textContent = text;
@@ -76799,25 +76914,25 @@ function startTour(steps, { start = 0, remember: remember3, decorate: decorate2,
   let target = null;
   const card = (
     /** @type {HTMLDialogElement} */
-    make25(doc, "dialog", "kp-tour")
+    make26(doc, "dialog", "kp-tour")
   );
   card.dataset.kpArrive = "none";
-  const title = make25(doc, "h3", "kp-tour__title");
+  const title = make26(doc, "h3", "kp-tour__title");
   title.id = nextId2("kp-tour-title");
-  const text = make25(doc, "p", "kp-tour__text");
+  const text = make26(doc, "p", "kp-tour__text");
   text.id = nextId2("kp-tour-text");
   card.setAttribute("aria-labelledby", title.id);
   card.setAttribute("aria-describedby", text.id);
-  const foot = make25(doc, "footer", "kp-tour__foot");
-  const count2 = make25(doc, "span", "kp-tour__count");
-  const buttons = make25(doc, "span", "kp-tour__buttons");
-  const backButton = make25(doc, "button", "kp-button kp-button--sm", strings.tourBack);
+  const foot = make26(doc, "footer", "kp-tour__foot");
+  const count2 = make26(doc, "span", "kp-tour__count");
+  const buttons = make26(doc, "span", "kp-tour__buttons");
+  const backButton = make26(doc, "button", "kp-button kp-button--sm", strings.tourBack);
   backButton.type = "button";
   backButton.title = strings.tourBackTitle;
-  const skipButton = make25(doc, "button", "kp-button kp-button--sm kp-button--ghost", strings.tourSkip);
+  const skipButton = make26(doc, "button", "kp-button kp-button--sm kp-button--ghost", strings.tourSkip);
   skipButton.type = "button";
   skipButton.title = strings.tourSkipTitle;
-  const nextButton = make25(doc, "button", "kp-button kp-button--sm kp-button--primary", strings.tourNext);
+  const nextButton = make26(doc, "button", "kp-button kp-button--sm kp-button--primary", strings.tourNext);
   nextButton.type = "button";
   buttons.append(backButton, skipButton, nextButton);
   foot.append(count2, buttons);
@@ -77373,10 +77488,6 @@ export {
   SHORTCUT_EVENT,
   SHORTCUT_HINT_PLACES,
   SHORTCUT_PENDING_EVENT,
-  SLIDER,
-  SLIDER_CHANGE_EVENT,
-  SLIDER_INPUT_EVENT,
-  SLIDER_STATES,
   SNOOZE,
   SNOOZE_CHOICES,
   SNOOZE_END_EVENT,
@@ -77797,7 +77908,6 @@ export {
   parseHsl,
   parseQuantity,
   parseShortcutKeys,
-  parseSliderText,
   parseTick,
   parseTime,
   parseUntil,
@@ -77966,9 +78076,7 @@ export {
   sidenav_exports as sidenavExports,
   slider,
   slider_exports as sliderExports,
-  sliderPercent,
   sliderValues,
-  snapSlider,
   snooze,
   snoozeChoices,
   snooze_exports as snoozeExports,
