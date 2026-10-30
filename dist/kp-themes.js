@@ -14603,100 +14603,309 @@ var init_steplist = __esm({
   }
 });
 
-// js/kpi.js
-var kpi_exports = {};
-__export(kpi_exports, {
-  KPI_STRIP: () => KPI_STRIP,
-  KPI_TOGGLE: () => KPI_TOGGLE,
-  KPI_TOGGLE_EVENT: () => KPI_TOGGLE_EVENT,
-  METER: () => METER,
-  SPARK: () => SPARK,
-  attachKpiStrips: () => attachKpiStrips,
-  attachKpiToggles: () => attachKpiToggles,
-  attachSparklines: () => attachSparklines,
-  drawSparkline: () => drawSparkline,
-  fitKpiStrip: () => fitKpiStrip,
-  kpiColumns: () => kpiColumns,
-  meterParts: () => meterParts,
-  meterText: () => meterText,
-  setMeter: () => setMeter,
-  sparkPaths: () => sparkPaths
+// js/kpi/scope.js
+function attachScope(Watch, scope, options = {}) {
+  const watch2 = new Watch(scope, options);
+  try {
+    watch2.connect();
+  } catch (error) {
+    watch2.destroy();
+    throw error;
+  }
+  return () => watch2.destroy();
+}
+var ScopeWatch;
+var init_scope = __esm({
+  "js/kpi/scope.js"() {
+    "use strict";
+    init_controller();
+    ScopeWatch = class extends Controller {
+      /**
+       * @param {ParentNode} scope
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(scope, options = {}) {
+        super(
+          /** @type {HTMLElement} */
+          /** @type {unknown} */
+          scope,
+          options
+        );
+        this.scope = scope;
+        this.doc = /** @type {Document} */
+        scope instanceof Document ? scope : (
+          /** @type {Node} */
+          scope.ownerDocument ?? document
+        );
+        this.view = this.doc.defaultView;
+      }
+    };
+  }
 });
-function sparkPaths(values, { width = 100, height = 28 } = {}) {
+
+// js/kpi/values.js
+var SPARK, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, KPI_STRIP, TILE_LABEL, SPARK_BOX, SVG_NS, STRIP_DEFAULTS, FALLBACK_FONT_PX, LABEL_SLACK_PX, FULL_PERCENT;
+var init_values3 = __esm({
+  "js/kpi/values.js"() {
+    "use strict";
+    SPARK = "svg[data-kp-spark]";
+    KPI_TOGGLE = "button.kp-kpi--toggle";
+    KPI_TOGGLE_EVENT = "kp-kpi-toggle";
+    METER = ".kp-meter, .kp-kpi__meter";
+    KPI_STRIP = ".kp-kpis[data-kp-kpis-columns]";
+    TILE_LABEL = ":scope > .kp-kpi:not([hidden]) > .kp-kpi__label";
+    SPARK_BOX = { width: 100, height: 28, pad: 1.5 };
+    SVG_NS = "http://www.w3.org/2000/svg";
+    STRIP_DEFAULTS = { minTilePx: 144, gapPx: 16, allowed: "all 3 2 1" };
+    FALLBACK_FONT_PX = 16;
+    LABEL_SLACK_PX = 0.5;
+    FULL_PERCENT = 100;
+  }
+});
+
+// js/kpi/spark.js
+function sparkPaths(values, { width = SPARK_BOX.width, height = SPARK_BOX.height } = {}) {
   const points = values.filter((v) => Number.isFinite(v));
   if (points.length < 2) return { line: "", area: "" };
   const low = Math.min(...points);
   const high = Math.max(...points);
-  const pad2 = 1.5;
+  const pad2 = SPARK_BOX.pad;
   const y = (v) => high === low ? height / 2 : pad2 + (1 - (v - low) / (high - low)) * (height - 2 * pad2);
   const x = (at) => at / (points.length - 1) * width;
   const line = points.map((v, at) => `${at === 0 ? "M" : "L"}${x(at).toFixed(2)},${y(v).toFixed(2)}`).join(" ");
   return { line, area: `${line} L${width},${height} L0,${height} Z` };
 }
 function drawSparkline(svg2, values, { parts: parts2 = "kp-kpi__spark" } = {}) {
-  const ns = "http://www.w3.org/2000/svg";
   const { line, area } = sparkPaths(values);
-  svg2.setAttribute("viewBox", "0 0 100 28");
+  svg2.setAttribute("viewBox", `0 0 ${SPARK_BOX.width} ${SPARK_BOX.height}`);
   svg2.setAttribute("preserveAspectRatio", "none");
   if (!svg2.hasAttribute("role")) svg2.setAttribute("aria-hidden", "true");
-  const areaPath = svg2.ownerDocument.createElementNS(ns, "path");
+  const areaPath = svg2.ownerDocument.createElementNS(SVG_NS, "path");
   areaPath.setAttribute("class", `${parts2}-area`);
   areaPath.setAttribute("d", area);
-  const linePath = svg2.ownerDocument.createElementNS(ns, "path");
+  const linePath = svg2.ownerDocument.createElementNS(SVG_NS, "path");
   linePath.setAttribute("class", `${parts2}-line`);
   linePath.setAttribute("d", line);
   svg2.replaceChildren(areaPath, linePath);
 }
-function attachSparklines(root = document) {
-  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
-  const view = doc.defaultView;
-  for (const svg2 of root.querySelectorAll(SPARK)) drawSparkline(
-    /** @type {SVGSVGElement} */
-    svg2,
-    numbersIn(svg2.getAttribute("data-kp-spark"))
-  );
-  if (!view) return () => {
-  };
-  const watch2 = new view.MutationObserver((records) => {
-    for (const record of records) {
-      const svg2 = (
-        /** @type {Element} */
-        record.target
-      );
-      if (svg2.matches(SPARK)) drawSparkline(
-        /** @type {SVGSVGElement} */
-        svg2,
-        numbersIn(svg2.getAttribute("data-kp-spark"))
-      );
-    }
-  });
-  watch2.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), {
-    subtree: true,
-    attributes: true,
-    attributeFilter: ["data-kp-spark"]
-  });
-  return () => watch2.disconnect();
+var numbersIn, SparklineWatch;
+var init_spark = __esm({
+  "js/kpi/spark.js"() {
+    "use strict";
+    init_scope();
+    init_values3();
+    numbersIn = (text) => (text ?? "").split(/[\s,]+/).filter(Boolean).map(Number);
+    SparklineWatch = class extends ScopeWatch {
+      connect() {
+        for (const svg2 of this.scope.querySelectorAll(SPARK))
+          drawSparkline(
+            /** @type {SVGSVGElement} */
+            svg2,
+            numbersIn(svg2.getAttribute("data-kp-spark"))
+          );
+        const view = this.view;
+        if (!view) return;
+        this.observe(
+          new view.MutationObserver((records) => {
+            for (const record of records) {
+              const svg2 = (
+                /** @type {Element} */
+                record.target
+              );
+              if (svg2.matches(SPARK)) drawSparkline(
+                /** @type {SVGSVGElement} */
+                svg2,
+                numbersIn(svg2.getAttribute("data-kp-spark"))
+              );
+            }
+          })
+        ).observe(this.scope instanceof Document ? this.scope.documentElement : (
+          /** @type {Node} */
+          this.scope
+        ), {
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["data-kp-spark"]
+        });
+      }
+    };
+  }
+});
+
+// js/kpi/toggle.js
+var FLIPPED, KpiToggles;
+var init_toggle = __esm({
+  "js/kpi/toggle.js"() {
+    "use strict";
+    init_values3();
+    init_scope();
+    FLIPPED = /* @__PURE__ */ new WeakSet();
+    KpiToggles = class extends ScopeWatch {
+      connect() {
+        for (const tile of this.scope.querySelectorAll(KPI_TOGGLE))
+          if (!tile.hasAttribute("aria-pressed")) tile.setAttribute("aria-pressed", "false");
+        this.listen(this.scope, "click", (event) => this.onClick(event));
+      }
+      /** @param {Event} event */
+      onClick(event) {
+        const tile = (
+          /** @type {Element | null} */
+          event.target instanceof Element ? event.target.closest(KPI_TOGGLE) : null
+        );
+        if (!tile || tile.hasAttribute("data-kp-kpi-owned")) return;
+        if (FLIPPED.has(event)) return;
+        FLIPPED.add(event);
+        const pressed = tile.getAttribute("aria-pressed") !== "true";
+        tile.setAttribute("aria-pressed", String(pressed));
+        tile.dispatchEvent(new CustomEvent(KPI_TOGGLE_EVENT, { bubbles: true, detail: { pressed } }));
+      }
+    };
+  }
+});
+
+// js/kpi/columns.js
+function kpiColumns(n, width, { allowed: allowed2 = STRIP_DEFAULTS.allowed, minTilePx = STRIP_DEFAULTS.minTilePx, gapPx = STRIP_DEFAULTS.gapPx } = {}) {
+  if (n <= 1) return { columns: 1, spanLast: false };
+  const list = (typeof allowed2 === "string" ? allowed2.trim().split(/\s+/) : allowed2).map((c) => c === "all" ? n : Number(c)).filter((c) => Number.isInteger(c) && c >= 1 && c <= n).filter((c, at2, all) => all.indexOf(c) === at2);
+  if (!list.length) list.push(1);
+  const fits = (c) => (width - (c - 1) * gapPx) / c >= minTilePx;
+  const first = list.findIndex(fits);
+  const at = first < 0 ? list.length - 1 : first;
+  const columns2 = list[at];
+  if (columns2 > 1 && n % columns2 === 1) {
+    const better = list.slice(at + 1).find((c) => c >= 2 && c < columns2 && n % c !== 1);
+    if (better) return { columns: better, spanLast: false };
+    return { columns: columns2, spanLast: true };
+  }
+  return { columns: columns2, spanLast: false };
 }
-function attachKpiToggles(root = document) {
-  const onClick = (event) => {
+function lengthPx(el16, text, fallback2) {
+  const m = /^\s*(-?[\d.]+)\s*(px|rem|em)?\s*$/.exec(text);
+  if (!m) return fallback2;
+  const n = Number(m[1]);
+  const view = el16.ownerDocument.defaultView;
+  if (m[2] === "rem") return n * parseFloat(view?.getComputedStyle(el16.ownerDocument.documentElement).fontSize || String(FALLBACK_FONT_PX));
+  if (m[2] === "em") return n * parseFloat(view?.getComputedStyle(el16).fontSize || String(FALLBACK_FONT_PX));
+  return n;
+}
+function labelsFit(strip) {
+  return [...strip.querySelectorAll(TILE_LABEL)].every((label) => {
     const tile = (
-      /** @type {Element | null} */
-      event.target instanceof Element ? event.target.closest(KPI_TOGGLE) : null
+      /** @type {HTMLElement} */
+      label.parentElement
     );
-    if (!tile || tile.hasAttribute("data-kp-kpi-owned")) return;
-    if (FLIPPED.has(event)) return;
-    FLIPPED.add(event);
-    const pressed = tile.getAttribute("aria-pressed") !== "true";
-    tile.setAttribute("aria-pressed", String(pressed));
-    tile.dispatchEvent(new CustomEvent(KPI_TOGGLE_EVENT, { bubbles: true, detail: { pressed } }));
-  };
-  for (const tile of root.querySelectorAll(KPI_TOGGLE)) if (!tile.hasAttribute("aria-pressed")) tile.setAttribute("aria-pressed", "false");
-  root.addEventListener("click", onClick);
-  return () => root.removeEventListener("click", onClick);
+    const style = getComputedStyle(tile);
+    const box = tile.getBoundingClientRect();
+    const rtl = style.direction === "rtl";
+    const edge = rtl ? box.left + tile.clientLeft + (Number.parseFloat(style.paddingLeft) || 0) : box.right - tile.clientLeft - (Number.parseFloat(style.paddingRight) || 0);
+    const ends = (el16) => {
+      const r = el16.getBoundingClientRect();
+      const extent = Math.max(el16.scrollWidth, r.width);
+      return rtl ? r.right - extent : r.left + extent;
+    };
+    const reaches2 = (
+      /** @type {HTMLElement[]} */
+      [label, ...tile.querySelectorAll(":scope > .kp-kpi__hint")].map((el16) => ends(el16))
+    );
+    return reaches2.every((at) => rtl ? at >= edge - LABEL_SLACK_PX : at <= edge + LABEL_SLACK_PX);
+  });
 }
+function fitKpiStrip(strip, width) {
+  const view = strip.ownerDocument.defaultView;
+  if (!view) return;
+  const style = view.getComputedStyle(strip);
+  const inner = width ?? strip.clientWidth - parseFloat(style.paddingInlineStart || "0") - parseFloat(style.paddingInlineEnd || "0");
+  if (!(inner > 0)) return;
+  const n = [...strip.children].filter((tile) => !/** @type {HTMLElement} */
+  tile.hidden).length;
+  const allowed2 = strip.getAttribute("data-kp-kpis-columns") || STRIP_DEFAULTS.allowed;
+  const gapPx = parseFloat(style.columnGap) || 0;
+  let minTilePx = lengthPx(strip, style.getPropertyValue("--kp-kpi-min"), STRIP_DEFAULTS.minTilePx);
+  for (let last = Infinity; ; ) {
+    const { columns: columns2, spanLast } = kpiColumns(n, inner, { allowed: allowed2, minTilePx, gapPx });
+    strip.style.setProperty("--kp-kpis-columns", String(columns2));
+    strip.toggleAttribute("data-kp-kpis-span-last", spanLast);
+    if (columns2 <= 1 || columns2 >= last || labelsFit(strip)) return;
+    last = columns2;
+    minTilePx = (inner - (columns2 - 1) * gapPx) / columns2 + 1;
+  }
+}
+var init_columns = __esm({
+  "js/kpi/columns.js"() {
+    "use strict";
+    init_values3();
+  }
+});
+
+// js/kpi/strips.js
+var KpiStrips;
+var init_strips = __esm({
+  "js/kpi/strips.js"() {
+    "use strict";
+    init_values3();
+    init_columns();
+    init_scope();
+    KpiStrips = class extends ScopeWatch {
+      /**
+       * @param {ParentNode} scope
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(scope, options) {
+        super(scope, options);
+        this.watched = /* @__PURE__ */ new Set();
+        this.sizes = null;
+      }
+      connect() {
+        const view = this.view;
+        if (!view) return;
+        this.sizes = this.observe(
+          new view.ResizeObserver((entries2) => {
+            for (const entry of entries2) {
+              const size2 = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
+              fitKpiStrip(
+                /** @type {HTMLElement} */
+                entry.target,
+                size2
+              );
+            }
+          })
+        );
+        this.scan();
+        this.observe(new view.MutationObserver(() => this.scan())).observe(
+          this.scope instanceof Document ? this.scope.documentElement : (
+            /** @type {Node} */
+            this.scope
+          ),
+          {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            // A theme's type changes how wide a label is [fix-99, fix-101].
+            attributeFilter: ["hidden", "data-kp-kpis-columns", "data-theme"]
+          }
+        );
+        const fonts = this.doc.fonts;
+        if (fonts) this.listen(fonts, "loadingdone", () => this.scan());
+      }
+      /** Put every strip under the scope on its column count, and start watching the ones not watched yet. */
+      scan() {
+        for (
+          const strip of
+          /** @type {HTMLElement[]} */
+          [...this.scope.querySelectorAll(KPI_STRIP)]
+        ) {
+          if (!this.watched.has(strip)) {
+            this.watched.add(strip);
+            this.sizes?.observe(strip);
+          }
+          fitKpiStrip(strip);
+        }
+      }
+    };
+  }
+});
+
+// js/kpi/meter.js
 function meterParts(value, mark = null) {
   const measured2 = value != null && Number.isFinite(value);
   const v = measured2 ? Math.max(
@@ -14716,13 +14925,13 @@ function meterParts(value, mark = null) {
     over: v > 1,
     mark: marked ? Math.min(1, m) : null,
     markOver: marked && m > 1,
-    now: measured2 ? Math.min(100, Math.round(v * 100)) : null
+    now: measured2 ? Math.min(FULL_PERCENT, Math.round(v * FULL_PERCENT)) : null
   };
 }
 function meterText(value, mark = null, { unit: unit2 = "%", label, markLabel = "" } = {}) {
   const strings = getStrings();
   if (value == null || !Number.isFinite(value)) return strings.meterNotMeasured;
-  const share = (v) => `${Math.round(v * 100)}${unit2}`;
+  const share = (v) => `${Math.round(v * FULL_PERCENT)}${unit2}`;
   let text = `${share(value)} ${label ?? strings.meterUsed}`.trim();
   if (mark != null && Number.isFinite(mark)) text += `; ${share(mark)} ${markLabel}`.trimEnd();
   return text;
@@ -14731,7 +14940,7 @@ function setMeter(el16, { value = null, mark = null, tone = null, label, markLab
   const parts2 = meterParts(loading ? null : value, loading ? null : mark);
   el16.setAttribute("role", "meter");
   el16.setAttribute("aria-valuemin", "0");
-  el16.setAttribute("aria-valuemax", "100");
+  el16.setAttribute("aria-valuemax", String(FULL_PERCENT));
   el16.toggleAttribute("data-kp-loading", loading);
   if (loading) el16.setAttribute("aria-busy", "true");
   else el16.removeAttribute("aria-busy");
@@ -14767,139 +14976,59 @@ function setMeter(el16, { value = null, mark = null, tone = null, label, markLab
     tick6.toggleAttribute("data-kp-over", parts2.markOver);
   } else el16.style.removeProperty("--kp-mark");
 }
-function kpiColumns(n, width, { allowed: allowed2 = "all 3 2 1", minTilePx = 144, gapPx = 16 } = {}) {
-  if (n <= 1) return { columns: 1, spanLast: false };
-  const list = (typeof allowed2 === "string" ? allowed2.trim().split(/\s+/) : allowed2).map((c) => c === "all" ? n : Number(c)).filter((c) => Number.isInteger(c) && c >= 1 && c <= n).filter((c, at2, all) => all.indexOf(c) === at2);
-  if (!list.length) list.push(1);
-  const fits = (c) => (width - (c - 1) * gapPx) / c >= minTilePx;
-  const first = list.findIndex(fits);
-  const at = first < 0 ? list.length - 1 : first;
-  const columns2 = list[at];
-  if (columns2 > 1 && n % columns2 === 1) {
-    const better = list.slice(at + 1).find((c) => c >= 2 && c < columns2 && n % c !== 1);
-    if (better) return { columns: better, spanLast: false };
-    return { columns: columns2, spanLast: true };
+var init_meter = __esm({
+  "js/kpi/meter.js"() {
+    "use strict";
+    init_strings();
+    init_values3();
   }
-  return { columns: columns2, spanLast: false };
+});
+
+// js/kpi.js
+var kpi_exports = {};
+__export(kpi_exports, {
+  KPI_STRIP: () => KPI_STRIP,
+  KPI_TOGGLE: () => KPI_TOGGLE,
+  KPI_TOGGLE_EVENT: () => KPI_TOGGLE_EVENT,
+  METER: () => METER,
+  SPARK: () => SPARK,
+  attachKpiStrips: () => attachKpiStrips,
+  attachKpiToggles: () => attachKpiToggles,
+  attachSparklines: () => attachSparklines,
+  drawSparkline: () => drawSparkline,
+  fitKpiStrip: () => fitKpiStrip,
+  kpiColumns: () => kpiColumns,
+  meterParts: () => meterParts,
+  meterText: () => meterText,
+  setMeter: () => setMeter,
+  sparkPaths: () => sparkPaths
+});
+function attachSparklines(root = document) {
+  return attachScope(SparklineWatch, root);
 }
-function lengthPx(el16, text, fallback2) {
-  const m = /^\s*(-?[\d.]+)\s*(px|rem|em)?\s*$/.exec(text);
-  if (!m) return fallback2;
-  const n = Number(m[1]);
-  const view = el16.ownerDocument.defaultView;
-  if (m[2] === "rem") return n * parseFloat(view?.getComputedStyle(el16.ownerDocument.documentElement).fontSize || "16");
-  if (m[2] === "em") return n * parseFloat(view?.getComputedStyle(el16).fontSize || "16");
-  return n;
-}
-function labelsFit(strip) {
-  return [...strip.querySelectorAll(TILE_LABEL)].every((label) => {
-    const tile = (
-      /** @type {HTMLElement} */
-      label.parentElement
-    );
-    const style = getComputedStyle(tile);
-    const box = tile.getBoundingClientRect();
-    const rtl = style.direction === "rtl";
-    const edge = rtl ? box.left + tile.clientLeft + (Number.parseFloat(style.paddingLeft) || 0) : box.right - tile.clientLeft - (Number.parseFloat(style.paddingRight) || 0);
-    const ends = (el16) => {
-      const r = el16.getBoundingClientRect();
-      const extent = Math.max(el16.scrollWidth, r.width);
-      return rtl ? r.right - extent : r.left + extent;
-    };
-    const reaches2 = (
-      /** @type {HTMLElement[]} */
-      [label, ...tile.querySelectorAll(":scope > .kp-kpi__hint")].map((el16) => ends(el16))
-    );
-    return reaches2.every((at) => rtl ? at >= edge - 0.5 : at <= edge + 0.5);
-  });
-}
-function fitKpiStrip(strip, width) {
-  const view = strip.ownerDocument.defaultView;
-  if (!view) return;
-  const style = view.getComputedStyle(strip);
-  const inner = width ?? strip.clientWidth - parseFloat(style.paddingInlineStart || "0") - parseFloat(style.paddingInlineEnd || "0");
-  if (!(inner > 0)) return;
-  const n = [...strip.children].filter((tile) => !/** @type {HTMLElement} */
-  tile.hidden).length;
-  const allowed2 = strip.getAttribute("data-kp-kpis-columns") || "all 3 2 1";
-  const gapPx = parseFloat(style.columnGap) || 0;
-  let minTilePx = lengthPx(strip, style.getPropertyValue("--kp-kpi-min"), 144);
-  for (let last = Infinity; ; ) {
-    const { columns: columns2, spanLast } = kpiColumns(n, inner, { allowed: allowed2, minTilePx, gapPx });
-    strip.style.setProperty("--kp-kpis-columns", String(columns2));
-    strip.toggleAttribute("data-kp-kpis-span-last", spanLast);
-    if (columns2 <= 1 || columns2 >= last || labelsFit(strip)) return;
-    last = columns2;
-    minTilePx = (inner - (columns2 - 1) * gapPx) / columns2 + 1;
-  }
+function attachKpiToggles(root = document) {
+  return attachScope(KpiToggles, root);
 }
 function attachKpiStrips(root = document) {
-  const doc = root instanceof Document ? root : root.ownerDocument ?? document;
-  const view = doc.defaultView;
-  if (!view) return () => {
-  };
-  const watched = /* @__PURE__ */ new Set();
-  const sizes = new view.ResizeObserver((entries2) => {
-    for (const entry of entries2) {
-      const size2 = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
-      fitKpiStrip(
-        /** @type {HTMLElement} */
-        entry.target,
-        size2
-      );
-    }
-  });
-  const scan = () => {
-    for (
-      const strip of
-      /** @type {HTMLElement[]} */
-      [...root.querySelectorAll(KPI_STRIP)]
-    ) {
-      if (!watched.has(strip)) {
-        watched.add(strip);
-        sizes.observe(strip);
-      }
-      fitKpiStrip(strip);
-    }
-  };
-  scan();
-  const changes = new view.MutationObserver(scan);
-  changes.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    // A theme's type changes how wide a label is [fix-99, fix-101].
-    attributeFilter: ["hidden", "data-kp-kpis-columns", "data-theme"]
-  });
-  doc.fonts?.addEventListener("loadingdone", scan);
-  return () => {
-    sizes.disconnect();
-    changes.disconnect();
-    doc.fonts?.removeEventListener("loadingdone", scan);
-  };
+  return attachScope(KpiStrips, root);
 }
-var SPARK, numbersIn, KPI_TOGGLE, KPI_TOGGLE_EVENT, FLIPPED, METER, KPI_STRIP, TILE_LABEL;
 var init_kpi = __esm({
   "js/kpi.js"() {
     "use strict";
-    init_strings();
-    SPARK = "svg[data-kp-spark]";
-    numbersIn = (text) => (text ?? "").split(/[\s,]+/).filter(Boolean).map(Number);
-    KPI_TOGGLE = "button.kp-kpi--toggle";
-    KPI_TOGGLE_EVENT = "kp-kpi-toggle";
-    FLIPPED = /* @__PURE__ */ new WeakSet();
-    METER = ".kp-meter, .kp-kpi__meter";
-    KPI_STRIP = ".kp-kpis[data-kp-kpis-columns]";
-    TILE_LABEL = ":scope > .kp-kpi:not([hidden]) > .kp-kpi__label";
+    init_scope();
+    init_spark();
+    init_toggle();
+    init_strips();
+    init_values3();
+    init_spark();
+    init_meter();
+    init_columns();
   }
 });
 
 // js/hovercard/values.js
 var HOVERCARD_ATTRIBUTE, HOVERCARD_EVENT, HOVERCARD_CARD, EDGE, OPEN_DELAY_MS, CLOSE_DELAY_MS, TAP_ANSWERED_MS, CONTROL_SELECTOR, ID_RADIX2, ID_RANDOM_START, ID_RANDOM_END;
-var init_values3 = __esm({
+var init_values4 = __esm({
   "js/hovercard/values.js"() {
     "use strict";
     HOVERCARD_ATTRIBUTE = "data-kp-hovercard";
@@ -14923,7 +15052,7 @@ var init_core2 = __esm({
     "use strict";
     init_top_layer();
     init_controller();
-    init_values3();
+    init_values4();
     made = 0;
     stripped = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== void 0));
     HoverCardCore = class extends Controller {
@@ -15163,7 +15292,7 @@ var HoverCardTouch;
 var init_touch = __esm({
   "js/hovercard/touch.js"() {
     "use strict";
-    init_values3();
+    init_values4();
     init_show();
     HoverCardTouch = class extends HoverCardShow {
       /** Whether a tap on this anchor is the anchor's own (a link, a button, a field). @param {HTMLElement} anchor */
@@ -15210,7 +15339,7 @@ var init_controller5 = __esm({
   "js/hovercard/controller.js"() {
     "use strict";
     init_motion();
-    init_values3();
+    init_values4();
     init_touch();
     HoverCard = class extends HoverCardTouch {
       /**
@@ -15366,7 +15495,7 @@ var init_hovercard = __esm({
     "use strict";
     init_controller();
     init_controller5();
-    init_values3();
+    init_values4();
   }
 });
 
@@ -17021,7 +17150,7 @@ var init_trend = __esm({
     init_api3();
     init_dom();
     init_attach4();
-    init_spark();
+    init_spark2();
     init_selection();
     init_constants8();
   }
@@ -17163,7 +17292,7 @@ function trendWords(pts, series, ctx) {
   const { now, today, yesterday } = ctx.strings;
   return trendAxis(pts, { now: ctx.now(), step, timeZone: ctx.timeZone, time: ctx.time, words: { now, today, yesterday } });
 }
-var init_spark = __esm({
+var init_spark2 = __esm({
   "js/chart/spark.js"() {
     "use strict";
     init_kpi();
@@ -18433,7 +18562,7 @@ var init_attach4 = __esm({
     init_words2();
     init_time();
     init_api3();
-    init_spark();
+    init_spark2();
     init_plot();
     init_stats();
     init_format();
@@ -20524,7 +20653,7 @@ var init_patterns = __esm({
 
 // js/undo-toast/values.js
 var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, MS_PER_SECOND2, CLOCK_TICK_MS;
-var init_values4 = __esm({
+var init_values5 = __esm({
   "js/undo-toast/values.js"() {
     "use strict";
     UNDO_TOAST = "kp-toast--undo";
@@ -20611,7 +20740,7 @@ var init_build2 = __esm({
     "use strict";
     init_patterns();
     init_strings();
-    init_values4();
+    init_values5();
   }
 });
 
@@ -20622,7 +20751,7 @@ var init_core4 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values4();
+    init_values5();
     UndoCore = class extends Controller {
       /**
        * @param {HTMLElement} host the toast (it carries `dismiss`)
@@ -20767,7 +20896,7 @@ var init_run = __esm({
     "use strict";
     init_core4();
     init_stack();
-    init_values4();
+    init_values5();
     UndoRun = class extends UndoCore {
       /**
        * @param {HTMLElement} host the toast
@@ -20999,8 +21128,8 @@ var init_undo_toast = __esm({
     init_strings();
     init_build2();
     init_run();
-    init_values4();
-    init_values4();
+    init_values5();
+    init_values5();
   }
 });
 
@@ -21610,13 +21739,13 @@ function drawPattern(swatch, seed) {
   if (old && swatch.getAttribute("data-kp-facet-drawn") === seed) return;
   swatch.setAttribute("data-kp-facet-pattern", seed);
   swatch.setAttribute("data-kp-facet-drawn", seed);
-  const svg2 = document.createElementNS(SVG_NS, "svg");
+  const svg2 = document.createElementNS(SVG_NS2, "svg");
   svg2.setAttribute("class", "kp-facet__pattern");
   svg2.setAttribute("viewBox", `0 0 ${PATTERN_BOX} ${PATTERN_BOX}`);
   svg2.setAttribute("aria-hidden", "true");
   svg2.setAttribute("focusable", "false");
   svg2.setAttribute("shape-rendering", "crispEdges");
-  const path = document.createElementNS(SVG_NS, "path");
+  const path = document.createElementNS(SVG_NS2, "path");
   path.setAttribute(
     "d",
     identityCells(seed).map(([x, y]) => `M${x + 1} ${y + 1}h1v1h-1z`).join("")
@@ -21625,11 +21754,11 @@ function drawPattern(swatch, seed) {
   if (old) old.replaceWith(svg2);
   else swatch.append(svg2);
 }
-var SVG_NS, FNV_OFFSET, FNV_PRIME, GRID, HALF_COLUMNS, BIT_SKIP, PATTERN_BOX;
+var SVG_NS2, FNV_OFFSET, FNV_PRIME, GRID, HALF_COLUMNS, BIT_SKIP, PATTERN_BOX;
 var init_pattern = __esm({
   "js/facets/pattern.js"() {
     "use strict";
-    SVG_NS = "http://www.w3.org/2000/svg";
+    SVG_NS2 = "http://www.w3.org/2000/svg";
     FNV_OFFSET = 2166136261;
     FNV_PRIME = 16777619;
     GRID = 5;
@@ -21820,7 +21949,7 @@ var init_api5 = __esm({
 
 // js/facets/values.js
 var FACETS, FACET_EVENT;
-var init_values5 = __esm({
+var init_values6 = __esm({
   "js/facets/values.js"() {
     "use strict";
     FACETS = "[data-kp-facets]";
@@ -21837,7 +21966,7 @@ var init_controller9 = __esm({
     init_strings();
     init_api5();
     init_rows();
-    init_values5();
+    init_values6();
     SAY_FIRST_MS = 100;
     SAY_MS = 30;
     FacetGroup = class extends Controller {
@@ -21922,8 +22051,8 @@ var init_facets = __esm({
     "use strict";
     init_controller();
     init_controller9();
-    init_values5();
-    init_values5();
+    init_values6();
+    init_values6();
     init_pattern();
     init_api5();
   }
@@ -22071,13 +22200,13 @@ var init_avatar = __esm({
 
 // js/idmark/draw.js
 function patternSvg(doc, cells) {
-  const svg2 = doc.createElementNS(SVG_NS2, "svg");
+  const svg2 = doc.createElementNS(SVG_NS3, "svg");
   svg2.setAttribute("class", "kp-idmark__pattern");
   svg2.setAttribute("viewBox", `0 0 ${PATTERN_BOX2} ${PATTERN_BOX2}`);
   svg2.setAttribute("aria-hidden", "true");
   svg2.setAttribute("focusable", "false");
   svg2.setAttribute("shape-rendering", "crispEdges");
-  const path = doc.createElementNS(SVG_NS2, "path");
+  const path = doc.createElementNS(SVG_NS3, "path");
   path.setAttribute("d", cells.map(([x, y]) => `M${x + 1} ${y + 1}h1v1h-1z`).join(""));
   svg2.append(path);
   return svg2;
@@ -22104,14 +22233,14 @@ function setIdmark(el16, name, { slot, hue, title = true } = {}) {
   decorateAvatar(el16, mark.name);
   DRAWN2.set(el16, { base: baseKey(el16), slot: slot ?? mark.slot });
 }
-var SVG_NS2, PATTERN_BOX2, DRAWN2, baseKey;
+var SVG_NS3, PATTERN_BOX2, DRAWN2, baseKey;
 var init_draw3 = __esm({
   "js/idmark/draw.js"() {
     "use strict";
     init_strings();
     init_avatar();
     init_mark();
-    SVG_NS2 = "http://www.w3.org/2000/svg";
+    SVG_NS3 = "http://www.w3.org/2000/svg";
     PATTERN_BOX2 = 7;
     DRAWN2 = /* @__PURE__ */ new WeakMap();
     baseKey = (el16) => `${el16.getAttribute("data-kp-idmark") ?? ""}|${AVATAR_ATTRIBUTES.map((attr16) => el16.getAttribute(attr16) ?? "").join("|")}|${el16.className}`;
@@ -22348,7 +22477,7 @@ var init_idmark = __esm({
 });
 
 // js/passkeys/constants.js
-var PASSKEYS, PASSKEYS_REGISTER_EVENT, PASSKEYS_RETRY_EVENT, PASSKEYS_REMOVE_EVENT, PASSKEYS_RENAME_EVENT, PASSKEY_KINDS, DAY_MS, DEFAULT_NEVER_USED_DAYS, DEFAULT_WAIT_ROWS, GLYPH_BOX, SVG_NS3, GLYPHS2;
+var PASSKEYS, PASSKEYS_REGISTER_EVENT, PASSKEYS_RETRY_EVENT, PASSKEYS_REMOVE_EVENT, PASSKEYS_RENAME_EVENT, PASSKEY_KINDS, DAY_MS, DEFAULT_NEVER_USED_DAYS, DEFAULT_WAIT_ROWS, GLYPH_BOX, SVG_NS4, GLYPHS2;
 var init_constants10 = __esm({
   "js/passkeys/constants.js"() {
     "use strict";
@@ -22362,7 +22491,7 @@ var init_constants10 = __esm({
     DEFAULT_NEVER_USED_DAYS = 90;
     DEFAULT_WAIT_ROWS = 3;
     GLYPH_BOX = "0 0 20 20";
-    SVG_NS3 = "http://www.w3.org/2000/svg";
+    SVG_NS4 = "http://www.w3.org/2000/svg";
     GLYPHS2 = {
       passkey: "M13 3a4 4 0 1 1-2.4 7.2L9 11.8V14H7v2H5v-2.6l5.4-5.4A4 4 0 0 1 13 3Zm1 2.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z",
       "magic-link": "M3 5h14v10H3V5Zm1.6 1.6v.35L10 10.6l5.4-3.65V6.6H4.6Zm10.8 2.3L10 12.5 4.6 8.9v4.5h10.8V8.9Z",
@@ -23457,12 +23586,12 @@ var init_components = __esm({
 
 // js/passkeys/dom.js
 function glyph(doc, kind) {
-  const svg2 = doc.createElementNS(SVG_NS3, "svg");
+  const svg2 = doc.createElementNS(SVG_NS4, "svg");
   svg2.setAttribute("viewBox", GLYPH_BOX);
   svg2.setAttribute("class", "kp-passkeys__glyph");
   svg2.setAttribute("aria-hidden", "true");
   svg2.setAttribute("focusable", "false");
-  const path = doc.createElementNS(SVG_NS3, "path");
+  const path = doc.createElementNS(SVG_NS4, "path");
   path.setAttribute("d", GLYPHS2[kind] ?? GLYPHS2.passkey);
   path.setAttribute("fill", "currentColor");
   path.setAttribute("fill-rule", "evenodd");
@@ -24762,7 +24891,7 @@ var init_thread = __esm({
 
 // js/stackbar/values.js
 var STACKBAR, STACKBAR_PICK_EVENT, STACKBAR_RETRY_EVENT, DEFAULT_LEGEND_ROWS, PALETTE_SIZE, OTHER_KEY, DECIMAL_BELOW_PERCENT;
-var init_values6 = __esm({
+var init_values7 = __esm({
   "js/stackbar/values.js"() {
     "use strict";
     STACKBAR = "[data-kp-stackbar]";
@@ -24812,7 +24941,7 @@ var init_math = __esm({
   "js/stackbar/math.js"() {
     "use strict";
     init_strings();
-    init_values6();
+    init_values7();
     langOf = (el16) => (
       /** @type {HTMLElement | null} */
       el16.closest("[lang]")?.lang || void 0
@@ -24828,7 +24957,7 @@ var init_core5 = __esm({
     init_controller();
     init_strings();
     init_kpi();
-    init_values6();
+    init_values7();
     init_math();
     StackbarCore = class extends Controller {
       /**
@@ -24976,7 +25105,7 @@ var StackbarParts;
 var init_parts = __esm({
   "js/stackbar/parts.js"() {
     "use strict";
-    init_values6();
+    init_values7();
     init_math();
     init_core5();
     StackbarParts = class extends StackbarCore {
@@ -25091,7 +25220,7 @@ var init_controller12 = __esm({
   "js/stackbar/controller.js"() {
     "use strict";
     init_hovercard();
-    init_values6();
+    init_values7();
     init_parts();
     Stackbar = class extends StackbarParts {
       connect() {
@@ -25226,8 +25355,8 @@ var init_stackbar = __esm({
     "use strict";
     init_controller();
     init_controller12();
-    init_values6();
-    init_values6();
+    init_values7();
+    init_values7();
     init_math();
   }
 });
@@ -34338,7 +34467,7 @@ var init_checklist = __esm({
 
 // js/quantity/values.js
 var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, HOLD_SLOW_REPEATS, PAGE_STEPS;
-var init_values7 = __esm({
+var init_values8 = __esm({
   "js/quantity/values.js"() {
     "use strict";
     QUANTITY = "[data-kp-quantity]";
@@ -34584,7 +34713,7 @@ var init_paint5 = __esm({
   "js/quantity/paint.js"() {
     "use strict";
     init_strings();
-    init_values7();
+    init_values8();
     init_build3();
     init_math2();
     init_read3();
@@ -34597,7 +34726,7 @@ var init_controller21 = __esm({
   "js/quantity/controller.js"() {
     "use strict";
     init_controller();
-    init_values7();
+    init_values8();
     init_math2();
     init_paint5();
     init_read3();
@@ -34755,11 +34884,11 @@ var init_quantity = __esm({
   "js/quantity.js"() {
     "use strict";
     init_controller();
-    init_values7();
+    init_values8();
     init_controller21();
     init_math2();
     init_paint5();
-    init_values7();
+    init_values8();
     init_math2();
     init_read3();
   }
@@ -39453,7 +39582,7 @@ function installColumns(c) {
   const keyOf8 = (row) => row.dataset.kpRowKey ?? row.id ?? "";
   c.keyOf = keyOf8;
 }
-var init_columns = __esm({
+var init_columns2 = __esm({
   "js/datatable/attach/columns.js"() {
     "use strict";
     init_remember();
@@ -44149,7 +44278,7 @@ var init_attach13 = __esm({
     init_identity();
     init_controls2();
     init_details();
-    init_columns();
+    init_columns2();
     init_model4();
     init_busy();
     init_chrome();
@@ -47361,11 +47490,11 @@ function tagOf(doc, cls, line) {
   tag.lastElementChild.textContent = line.label ?? "";
   return tag;
 }
-var SVG_NS4, TONE_GLYPH, make13, attr2;
+var SVG_NS5, TONE_GLYPH, make13, attr2;
 var init_dom7 = __esm({
   "js/uses-map/dom.js"() {
     "use strict";
-    SVG_NS4 = "http://www.w3.org/2000/svg";
+    SVG_NS5 = "http://www.w3.org/2000/svg";
     TONE_GLYPH = Object.freeze({ ok: "\u2713", warn: "!", bad: "\xD7", muted: "\u2013" });
     make13 = (doc, tag, cls) => {
       const node = doc.createElement(tag);
@@ -47630,7 +47759,7 @@ var init_lines = __esm({
           for (const key of keys) {
             const path = (
               /** @type {SVGPathElement} */
-              m.doc.createElementNS(SVG_NS4, "path")
+              m.doc.createElementNS(SVG_NS5, "path")
             );
             path.setAttribute("class", "kp-uses__line");
             path.setAttribute("data-source", source);
@@ -47963,7 +48092,7 @@ function buildRoot(m) {
   root.setAttribute("role", "group");
   root.setAttribute("aria-label", spec.label ?? el16.getAttribute("aria-label") ?? strings.usesLabel);
   root.setAttribute("data-kp-lines-side", m.side);
-  const svg2 = doc.createElementNS(SVG_NS4, "svg");
+  const svg2 = doc.createElementNS(SVG_NS5, "svg");
   svg2.setAttribute("class", "kp-uses__lines");
   svg2.setAttribute("aria-hidden", "true");
   svg2.setAttribute("focusable", "false");
@@ -53083,7 +53212,7 @@ var init_gantt = __esm({
 
 // js/pipeline/values.js
 var PIPELINE, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, PIPELINE_MORE_EVENT, GHOST_CARDS, GHOST_CARDS_CLOSED, PERCENT2, make17;
-var init_values8 = __esm({
+var init_values9 = __esm({
   "js/pipeline/values.js"() {
     "use strict";
     PIPELINE = "[data-kp-pipeline]";
@@ -53109,7 +53238,7 @@ var init_core7 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values8();
+    init_values9();
     PipelineCore = class extends Controller {
       /**
        * @param {HTMLElement} el
@@ -53195,7 +53324,7 @@ var init_lanes3 = __esm({
   "js/pipeline/lanes.js"() {
     "use strict";
     init_core7();
-    init_values8();
+    init_values9();
     PipelineLanes = class extends PipelineCore {
       /** The card's element, made or kept by id; a card that turned from link to button (or back) is made again. @param {import('./core.js').PipelineCard} card */
       cardShell(card) {
@@ -53331,7 +53460,7 @@ var init_view2 = __esm({
     init_busy_card();
     init_state_plate();
     init_lanes3();
-    init_values8();
+    init_values9();
     PipelineView = class extends PipelineLanes {
       /** The cards of each lane, by the lane's key. @returns {Map<string, import('./core.js').PipelineCard[]>} */
       byLane() {
@@ -53447,7 +53576,7 @@ var init_controller24 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
-    init_values8();
+    init_values9();
     PipelineBoard = class extends PipelineView {
       connect() {
         const el16 = this.host;
@@ -53593,8 +53722,8 @@ var init_pipeline = __esm({
     "use strict";
     init_controller();
     init_controller24();
-    init_values8();
-    init_values8();
+    init_values9();
+    init_values9();
   }
 });
 
@@ -54800,7 +54929,7 @@ function rangeFaults(start, end, { now, future = false, maxDays = 0 }) {
   return faults;
 }
 var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, FUTURE_SLACK_MS, two5;
-var init_values9 = __esm({
+var init_values10 = __esm({
   "js/range/values.js"() {
     "use strict";
     init_chart();
@@ -54948,7 +55077,7 @@ var init_core8 = __esm({
     init_strings();
     init_segmented();
     init_chart();
-    init_values9();
+    init_values10();
     init_build8();
     seq2 = 0;
     DEFAULT_PRESET_AT = 2;
@@ -55023,7 +55152,7 @@ var init_panel = __esm({
     init_top_layer();
     init_motion();
     init_build8();
-    init_values9();
+    init_values10();
     EDGE_PX = 8;
     GAP_PX = 6;
     RangePanel = class {
@@ -55277,8 +55406,8 @@ var init_range = __esm({
     "use strict";
     init_controller();
     init_controller25();
-    init_values9();
-    init_values9();
+    init_values10();
+    init_values10();
   }
 });
 
@@ -55710,7 +55839,7 @@ function alertBody(alert, icon) {
   return body;
 }
 var PROBLEMS, PROBLEM_SEVERITIES, PROBLEM_MODES, PROBLEM_DISMISS_EVENT, FLAVOUR2, GLYPH2, DEFAULT_FOLD_FROM, LEAST_FOLD_FROM, DEFAULT_OPEN_ROWS, severityOf, setText2;
-var init_values10 = __esm({
+var init_values11 = __esm({
   "js/problems/values.js"() {
     "use strict";
     PROBLEMS = "[data-kp-problems]";
@@ -55836,7 +55965,7 @@ var init_parts4 = __esm({
   "js/problems/parts.js"() {
     "use strict";
     init_strings();
-    init_values10();
+    init_values11();
   }
 });
 
@@ -55877,7 +56006,7 @@ var init_alert = __esm({
     init_motion();
     init_strings();
     init_parts4();
-    init_values10();
+    init_values11();
   }
 });
 
@@ -55943,7 +56072,7 @@ var init_summary2 = __esm({
     init_strings();
     init_each();
     init_parts4();
-    init_values10();
+    init_values11();
     ProblemsSummary = class extends ProblemsEach {
       /** The one alert, made when missing or kept; its tone is the worst problem's. @param {Problem[]} list @returns {{ summary: HTMLElement, fresh: boolean }} */
       summaryShell(list) {
@@ -56091,7 +56220,7 @@ var init_board2 = __esm({
     "use strict";
     init_strings();
     init_summary2();
-    init_values10();
+    init_values11();
     ProblemsBoard = class extends ProblemsSummary {
       connect() {
         this.observe(
@@ -56200,8 +56329,8 @@ var init_problems = __esm({
     init_controller();
     init_board2();
     init_stamp();
-    init_values10();
-    init_values10();
+    init_values11();
+    init_values11();
   }
 });
 
@@ -57338,7 +57467,7 @@ var init_connection = __esm({
 
 // js/transfer/values.js
 var TRANSFER, TRANSFER_DONE_EVENT, TRANSFER_RETRY_EVENT, TRANSFER_LEAVE_EVENT, TRANSFER_GROUP, DEFAULT_RATE_WINDOW_S, DEFAULT_ETA_AFTER_S, DEFAULT_STALL_AFTER_S, DEFAULT_LINGER_S, MS, DEFAULT_FOLD_AT, TICK_MS4, ANNOUNCE_STEP;
-var init_values11 = __esm({
+var init_values12 = __esm({
   "js/transfer/values.js"() {
     "use strict";
     TRANSFER = "[data-kp-transfer]";
@@ -57363,7 +57492,7 @@ var init_group5 = __esm({
   "js/transfer/group.js"() {
     "use strict";
     init_controller();
-    init_values11();
+    init_values12();
     TransferGroup = class extends Controller {
       /** @param {HTMLElement} group */
       constructor(group) {
@@ -57413,7 +57542,7 @@ var init_math3 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_values11();
+    init_values12();
     EXACT_BELOW_S = 10;
     MINUTE_S2 = 60;
     HOUR_S2 = 3600;
@@ -57454,7 +57583,7 @@ var init_core9 = __esm({
     init_strings();
     init_math3();
     init_read4();
-    init_values11();
+    init_values12();
     FULL = 100;
     TransferCore = class extends Controller {
       /**
@@ -57681,7 +57810,7 @@ var init_ticker = __esm({
   "js/transfer/ticker.js"() {
     "use strict";
     init_parts6();
-    init_values11();
+    init_values12();
     live3 = /* @__PURE__ */ new Set();
     ticker = 0;
   }
@@ -57699,7 +57828,7 @@ var init_row2 = __esm({
     init_parts6();
     init_read4();
     init_ticker();
-    init_values11();
+    init_values12();
     TransferRow = class extends TransferCore {
       connect() {
         const row = this.host;
@@ -57853,8 +57982,8 @@ var init_transfer = __esm({
     init_controller();
     init_group5();
     init_row2();
-    init_values11();
-    init_values11();
+    init_values12();
+    init_values12();
     init_math3();
   }
 });
@@ -58086,7 +58215,7 @@ function caretPosition(text, offset) {
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS;
-var init_values12 = __esm({
+var init_values13 = __esm({
   "js/code-field/values.js"() {
     "use strict";
     CODE_FIELD = "textarea[data-kp-code-field]";
@@ -58106,7 +58235,7 @@ var init_core10 = __esm({
     init_controller();
     init_strings();
     init_build9();
-    init_values12();
+    init_values13();
     LEAST_ROWS = 2;
     DEFAULT_ROWS3 = 6;
     FALLBACK_LINE_PX = 20;
@@ -58236,7 +58365,7 @@ var init_problem = __esm({
     "use strict";
     init_forms();
     init_core10();
-    init_values12();
+    init_values13();
     CodeFieldProblems = class extends CodeFieldCore {
       /** @param {HTMLElement} host a `textarea[data-kp-code-field]` */
       constructor(host) {
@@ -58317,7 +58446,7 @@ var init_controller27 = __esm({
     "use strict";
     init_problem();
     init_build9();
-    init_values12();
+    init_values13();
     COPY_ANSWER_MS = 1500;
     MOST_STRIPPED = 4;
     CodeFieldControl = class extends CodeFieldProblems {
@@ -58553,8 +58682,8 @@ var init_code_field = __esm({
     "use strict";
     init_controller();
     init_controller27();
-    init_values12();
-    init_values12();
+    init_values13();
+    init_values13();
   }
 });
 
@@ -64694,7 +64823,7 @@ function toggle(el16) {
 function attachToggles(root = document, options = {}) {
   return attachAll(root, TOGGLE, ToggleControl, options);
 }
-var init_toggle = __esm({
+var init_toggle2 = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
@@ -64706,7 +64835,7 @@ var init_toggle = __esm({
 
 // js/version-delta/values.js
 var VERSION_DELTA, VERSION_COPY_EVENT, VERSION_LEVELS, VERSION_SORT, SEMVER_NUMBERS, DIGEST_SHORT_CHARS, VERSION_OBSERVED;
-var init_values13 = __esm({
+var init_values14 = __esm({
   "js/version-delta/values.js"() {
     "use strict";
     VERSION_DELTA = "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]";
@@ -64775,7 +64904,7 @@ var init_level = __esm({
   "js/version-delta/level.js"() {
     "use strict";
     init_strings();
-    init_values13();
+    init_values14();
   }
 });
 
@@ -64794,7 +64923,7 @@ var init_core11 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values13();
+    init_values14();
     init_level();
     shown4 = (version, digest) => digest === "short" && /^sha256:[0-9a-f]{13,}$/i.test(version) ? `${version.slice(0, "sha256:".length + DIGEST_SHORT_CHARS)}` : version;
     near = (el16, name) => el16.closest(`[${name}]`)?.getAttribute(name) ?? null;
@@ -64879,7 +65008,7 @@ var init_view4 = __esm({
   "js/version-delta/view.js"() {
     "use strict";
     init_strings();
-    init_values13();
+    init_values14();
     init_core11();
     ChipView = class extends ChipCore {
       /** The tone class, the level and the sort value; the busy mark and the title are cleared. @param {ChipSettings} v */
@@ -64990,7 +65119,7 @@ var VersionChip;
 var init_controller34 = __esm({
   "js/version-delta/controller.js"() {
     "use strict";
-    init_values13();
+    init_values14();
     init_view4();
     VersionChip = class extends ChipView {
       connect() {
@@ -65095,8 +65224,8 @@ var init_version_delta = __esm({
     "use strict";
     init_controller();
     init_controller34();
-    init_values13();
-    init_values13();
+    init_values14();
+    init_values14();
     init_level();
     init_links2();
   }
@@ -65104,7 +65233,7 @@ var init_version_delta = __esm({
 
 // js/deplist/values.js
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, DEPLIST_MIN_ROWS, DEPLIST_GHOST_ROWS, DEPLIST_OBSERVED;
-var init_values14 = __esm({
+var init_values15 = __esm({
   "js/deplist/values.js"() {
     "use strict";
     DEPLIST = "[data-kp-deplist]";
@@ -65175,7 +65304,7 @@ var init_core12 = __esm({
   "js/deplist/core.js"() {
     "use strict";
     init_controller();
-    init_values14();
+    init_values15();
     made4 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
@@ -65286,7 +65415,7 @@ var init_rows4 = __esm({
     "use strict";
     init_idmark();
     init_strings();
-    init_values14();
+    init_values15();
     init_core12();
     DeplistRows = class extends DeplistCore {
       /**
@@ -65396,7 +65525,7 @@ var init_controller35 = __esm({
     init_flash();
     init_state_plate();
     init_strings();
-    init_values14();
+    init_values15();
     init_order();
     init_core12();
     init_rows4();
@@ -65574,8 +65703,8 @@ var init_deplist = __esm({
     "use strict";
     init_controller();
     init_controller35();
-    init_values14();
-    init_values14();
+    init_values15();
+    init_values15();
     init_order();
   }
 });
@@ -66010,7 +66139,7 @@ var init_star = __esm({
   "js/entity-card/star.js"() {
     "use strict";
     init_idmark();
-    init_toggle();
+    init_toggle2();
     init_strings();
     init_constants34();
     init_helpers5();
@@ -66740,7 +66869,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values15 = __esm({
+var init_values16 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -67079,7 +67208,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts9();
-    init_values15();
+    init_values16();
   }
 });
 
@@ -67089,7 +67218,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values15();
+    init_values16();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -67209,7 +67338,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values15();
+    init_values16();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -67744,7 +67873,7 @@ var init_unsaved = __esm({
 });
 
 // js/autosize/constants.js
-var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, PHONE_HEIGHT_SHARE, NORMAL_LINE_HEIGHT, FALLBACK_FONT_PX, COUNTER_WARN_SHARE, LEVEL_NONE, LEVEL_NEAR, LEVEL_FULL;
+var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, PHONE_HEIGHT_SHARE, NORMAL_LINE_HEIGHT, FALLBACK_FONT_PX2, COUNTER_WARN_SHARE, LEVEL_NONE, LEVEL_NEAR, LEVEL_FULL;
 var init_constants35 = __esm({
   "js/autosize/constants.js"() {
     "use strict";
@@ -67757,7 +67886,7 @@ var init_constants35 = __esm({
     PHONE = "(max-width: 40em)";
     PHONE_HEIGHT_SHARE = 0.6;
     NORMAL_LINE_HEIGHT = 1.2;
-    FALLBACK_FONT_PX = 16;
+    FALLBACK_FONT_PX2 = 16;
     COUNTER_WARN_SHARE = 0.9;
     LEVEL_NONE = 0;
     LEVEL_NEAR = 1;
@@ -67768,7 +67897,7 @@ var init_constants35 = __esm({
 // js/autosize/fit.js
 function lineHeightOf(cs) {
   const n = Number.parseFloat(cs.lineHeight);
-  return Number.isFinite(n) ? n : px3(cs.fontSize, FALLBACK_FONT_PX) * NORMAL_LINE_HEIGHT;
+  return Number.isFinite(n) ? n : px3(cs.fontSize, FALLBACK_FONT_PX2) * NORMAL_LINE_HEIGHT;
 }
 function chromeOf(cs) {
   return px3(cs.paddingTop) + px3(cs.paddingBottom) + px3(cs.borderTopWidth) + px3(cs.borderBottomWidth);
@@ -68526,7 +68655,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values16 = __esm({
+var init_values17 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -68599,7 +68728,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values16();
+    init_values17();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -68871,7 +69000,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values16();
+    init_values17();
   }
 });
 
@@ -68914,7 +69043,7 @@ var init_core13 = __esm({
     init_controller();
     init_locale();
     init_strings();
-    init_values16();
+    init_values17();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -69030,7 +69159,7 @@ var init_run3 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values16();
+    init_values17();
     init_kinds();
     init_core13();
     FACTS_BASE = 1024;
@@ -69201,7 +69330,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values16();
+    init_values17();
     init_kinds();
     init_keys13();
     init_run3();
@@ -69323,8 +69452,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values16();
-    init_values16();
+    init_values17();
+    init_values17();
     init_kinds();
     init_glyph();
     init_open3();
@@ -70225,7 +70354,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values17 = __esm({
+var init_values18 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -70364,7 +70493,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build12 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values17();
+    init_values18();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -70384,7 +70513,7 @@ var init_core14 = __esm({
     init_controller();
     init_strings();
     init_build12();
-    init_values17();
+    init_values18();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -70504,7 +70633,7 @@ var init_controller38 = __esm({
     "use strict";
     init_build12();
     init_core14();
-    init_values17();
+    init_values18();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -70730,8 +70859,8 @@ var init_slider = __esm({
     "use strict";
     init_controller();
     init_controller38();
-    init_values17();
-    init_values17();
+    init_values18();
+    init_values18();
   }
 });
 
@@ -72652,7 +72781,7 @@ var init_options5 = __esm({
 });
 
 // js/graph/instance.js
-var radiusOf, isShown, make29, SVG_NS5, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP;
+var radiusOf, isShown, make29, SVG_NS6, svgEl, graphs, ZOOM_MIN, ZOOM_MAX, ZOOM_STEP;
 var init_instance3 = __esm({
   "js/graph/instance.js"() {
     "use strict";
@@ -72668,11 +72797,11 @@ var init_instance3 = __esm({
       if (text != null) el16.textContent = text;
       return el16;
     };
-    SVG_NS5 = "http://www.w3.org/2000/svg";
+    SVG_NS6 = "http://www.w3.org/2000/svg";
     svgEl = (doc, tag, attrs = {}) => {
       const el16 = (
         /** @type {SVGElement} */
-        doc.createElementNS(SVG_NS5, tag)
+        doc.createElementNS(SVG_NS6, tag)
       );
       for (const [name, value] of Object.entries(attrs)) el16.setAttribute(name, String(value));
       return el16;
@@ -81295,7 +81424,7 @@ var WIDGET_NEEDS = [
   { name: "rating", when: "[data-kp-rating]", load: () => Promise.resolve().then(() => (init_rating(), rating_exports)), attach: (m, root) => [m.attachRatings(root)] },
   { name: "quote", when: "[data-kp-quote], [data-kp-quote-list]", load: () => Promise.resolve().then(() => (init_quote(), quote_exports)), attach: (m, root) => [m.attachQuotes(root)] },
   { name: "usual-picker", when: "[data-kp-usual]", load: () => Promise.resolve().then(() => (init_usual_picker(), usual_picker_exports)), attach: (m, root) => [m.attachUsualPickers(root)] },
-  { name: "toggle", when: "[data-kp-toggle]", load: () => Promise.resolve().then(() => (init_toggle(), toggle_exports)), attach: (m, root) => [m.attachToggles(root)] },
+  { name: "toggle", when: "[data-kp-toggle]", load: () => Promise.resolve().then(() => (init_toggle2(), toggle_exports)), attach: (m, root) => [m.attachToggles(root)] },
   {
     name: "version-delta",
     when: "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]",
@@ -81932,7 +82061,7 @@ init_tiles();
 init_timefield();
 init_timer_disc();
 init_timer();
-init_toggle();
+init_toggle2();
 init_toolbar();
 
 // js/tour.js
@@ -82050,7 +82179,7 @@ var UPDATE_STYLE = (
   /** @type {readonly string[]} */
   Object.freeze(["display", "--kp-update-duration", "--kp-update-ease"])
 );
-var SVG_NS6 = "http://www.w3.org/2000/svg";
+var SVG_NS7 = "http://www.w3.org/2000/svg";
 function updateIdea(value) {
   const idea = String(value ?? "").trim();
   return idea === "none" ? "" : idea;
@@ -82080,7 +82209,7 @@ function unmarkUpdating(host, before) {
   }
 }
 var running = /* @__PURE__ */ new WeakMap();
-var isSvg = (el16) => el16.namespaceURI === SVG_NS6 && el16.localName === "svg";
+var isSvg = (el16) => el16.namespaceURI === SVG_NS7 && el16.localName === "svg";
 async function writeSpark(svg2, values) {
   const oldLine = svg2.querySelector('[class$="-line"]');
   const parts2 = /(\S+)-line\b/.exec(oldLine?.getAttribute("class") ?? "")?.[1] ?? "kp-kpi__spark";
@@ -82552,7 +82681,7 @@ init_thread();
 init_tick();
 init_tiles();
 init_timer_disc();
-init_toggle();
+init_toggle2();
 init_toolbar();
 init_transfer();
 init_undo_toast();
@@ -82624,14 +82753,10 @@ export {
   JOBLINE,
   JOBLINE_EVENT,
   KEYS,
-  KPI_STRIP,
-  KPI_TOGGLE,
-  KPI_TOGGLE_EVENT,
   LAYOUT_COMMIT_EVENT,
   LAYOUT_EVENT,
   LEDE,
   MARKDOWN_LIMIT,
-  METER,
   MOD_CAP,
   NAMES_PROPERTY,
   NEWPILL_JUMP_EVENT,
@@ -82671,7 +82796,6 @@ export {
   RUNS_STATES,
   SEVERITIES,
   SORT_VALUE_ATTRIBUTE,
-  SPARK,
   STEPLIST_EVENT,
   STEPLIST_SELECTOR,
   STEP_EVENT,
@@ -82861,14 +82985,12 @@ export {
   discShare,
   discardUnsaved,
   docpreview_exports as docpreviewExports,
-  drawSparkline,
   effects_exports as effectsExports,
   ensureRegister,
   entity_card_exports as entityCardExports,
   facets_exports as facetsExports,
   feed_exports as feedExports,
   fitActionColumns,
-  fitKpiStrip,
   flash_exports as flashExports,
   focus_steps_exports as focusStepsExports,
   foldNav,
@@ -82901,7 +83023,6 @@ export {
   joinWords,
   json_field_exports as jsonFieldExports,
   keys_exports as keysExports,
-  kpiColumns,
   kpi_exports as kpiExports,
   layoutOf,
   lazy_register_exports as lazyRegisterExports,
@@ -82921,8 +83042,6 @@ export {
   meets,
   menu_button_exports as menuButtonExports,
   mergeRoles,
-  meterParts,
-  meterText,
   missingLedes,
   monthSummary,
   motionAllowed,
@@ -83018,7 +83137,6 @@ export {
   setIndeterminate,
   setJobLine,
   setKeys,
-  setMeter,
   setNotices,
   setPipeline,
   setPipelineSelected,
@@ -83054,7 +83172,6 @@ export {
   snooze,
   snooze_exports as snoozeExports,
   sortAttention,
-  sparkPaths,
   stackbar_exports as stackbarExports,
   startTour,
   startsWord,

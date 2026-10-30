@@ -192,6 +192,7 @@
             "tags": ["@component:data"],
             "why": "the KPI tile's sparkline and filter toggle, the meter with a mark, the strip's column count [scope-143]"
         },
+        { "path": "js/kpi/*.js", "tags": ["@component:data"], "why": "the KPI tile's sparkline and filter toggle, the meter with a mark, the strip's column count [scope-143]" },
         {
             "path": "js/update.js",
             "tags": ["@component:data"],

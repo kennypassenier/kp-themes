@@ -60,7 +60,7 @@
         "js/job-line.js": { "digest": "e9a00c6ebb83426c", "when": "[data-kp-jobline]" },
         "js/json-field.js": { "digest": "f3b2a6701aefb5c4", "when": "textarea[data-kp-json]" },
         "js/keys.js": { "digest": "2e44ce22f8dd8260", "when": ".kp-kbd[data-kp-key]" },
-        "js/kpi.js": { "digest": "14ee6a18e3c9ca0d", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
+        "js/kpi.js": { "digest": "0cd9853cc958c091", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
         "js/lede.js": { "digest": "a2229dfa4db44e34", "when": ".kp-lede" },
         "js/loading-pieces.js": {
             "digest": "50d7cde51e8410d8",
