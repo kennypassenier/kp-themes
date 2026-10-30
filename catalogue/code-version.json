@@ -93,7 +93,7 @@
         "js/quote.js": { "digest": "0e961a3a16537647", "when": "[data-kp-quote], [data-kp-quote-list]" },
         "js/range.js": { "digest": "2df1841818bb6770", "when": "[data-kp-range]" },
         "js/rating.js": { "digest": "561fbe00f3e5aa4c", "when": "[data-kp-rating]" },
-        "js/reason.js": { "digest": "e03846b46d464fbe", "when": "[data-kp-disabled-reason]" },
+        "js/reason.js": { "digest": "f26bbd278cc2ed30", "when": "[data-kp-disabled-reason]" },
         "js/request-inspector.js": { "digest": "d79def1e0b5620d6", "when": "[data-kp-requests]" },
         "js/row-editor.js": { "digest": "1cd9a0c0219eef6e", "when": "[data-kp-rows]" },
         "js/row-select.js": { "digest": "dba95f9a5c0c551b", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },

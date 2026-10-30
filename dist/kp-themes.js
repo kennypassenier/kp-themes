@@ -5714,75 +5714,98 @@ __export(reason_exports, {
   attachDisabledReasons: () => attachDisabledReasons
 });
 function attachDisabledReasons(root = document) {
-  const cleanups = [];
+  const made6 = [];
   for (const found of root.querySelectorAll(DISABLED_REASON)) {
     const control = (
       /** @type {HTMLElement} */
       found
     );
     if (control.dataset.kpReasonAttached !== void 0 || control.closest(".kp-tooltip-anchor") !== null) continue;
-    control.dataset.kpReasonAttached = "";
-    const doc = control.ownerDocument;
-    const anchor = doc.createElement("span");
-    anchor.className = "kp-tooltip-anchor kp-reason";
-    const tip = doc.createElement("span");
-    tip.className = "kp-popover kp-tooltip";
-    tip.setAttribute("role", "tooltip");
-    tip.id = `kp-reason-${++counter}`;
-    const parent = control.parentNode;
-    if (!parent) continue;
-    parent.insertBefore(anchor, control);
-    anchor.append(control, tip);
-    const detachTip = attachTooltips(
-      /** @type {ParentNode} */
-      parent
-    );
-    const before = control.getAttribute("aria-describedby");
-    const mirrorRole = () => {
-      const role = control.getAttribute("data-kp-action");
-      if (role === null) anchor.removeAttribute("data-kp-action");
-      else anchor.setAttribute("data-kp-action", role);
-    };
-    mirrorRole();
-    const sync3 = () => {
-      mirrorRole();
-      const text = control.getAttribute("data-kp-disabled-reason") ?? "";
-      const shown5 = text !== "" && isOff(control);
-      tip.textContent = shown5 ? text : "";
-      if (!shown5) tip.hidden = true;
-      anchor.toggleAttribute("data-kp-reason-off", shown5);
-      const ids2 = (control.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id !== "" && id !== tip.id);
-      if (shown5) ids2.push(tip.id);
-      if (ids2.length > 0) control.setAttribute("aria-describedby", ids2.join(" "));
-      else control.removeAttribute("aria-describedby");
-    };
-    sync3();
-    const observer = new MutationObserver(sync3);
-    observer.observe(control, { attributes: true, attributeFilter: ["disabled", "aria-disabled", "data-kp-disabled-reason", "data-kp-action"] });
-    cleanups.push(() => {
-      observer.disconnect();
-      detachTip();
-      if (anchor.parentNode) {
-        anchor.replaceWith(control);
-      }
-      tip.remove();
-      if (before === null) control.removeAttribute("aria-describedby");
-      else control.setAttribute("aria-describedby", before);
-      delete control.dataset.kpReasonAttached;
-    });
+    const controller = attachOne(control, DisabledReasonController);
+    if (controller) made6.push(controller);
   }
   return () => {
-    for (const clean of cleanups) clean();
+    for (const controller of made6) controller.destroy();
   };
 }
-var DISABLED_REASON, counter, isOff;
+var DISABLED_REASON, counter, isOff, WATCHED, DisabledReasonController;
 var init_reason = __esm({
   "js/reason.js"() {
     "use strict";
     init_overlays();
+    init_controller();
     DISABLED_REASON = "[data-kp-disabled-reason]";
     counter = 0;
     isOff = (el16) => el16.matches(":disabled") || el16.getAttribute("aria-disabled") === "true";
+    WATCHED = ["disabled", "aria-disabled", "data-kp-disabled-reason", "data-kp-action"];
+    DisabledReasonController = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        const doc = host.ownerDocument;
+        this.anchor = doc.createElement("span");
+        this.anchor.className = "kp-tooltip-anchor kp-reason";
+        this.tip = doc.createElement("span");
+        this.tip.className = "kp-popover kp-tooltip";
+        this.tip.setAttribute("role", "tooltip");
+        this.before = host.getAttribute("aria-describedby");
+      }
+      connect() {
+        const control = this.host;
+        control.dataset.kpReasonAttached = "";
+        this.own(() => {
+          delete control.dataset.kpReasonAttached;
+        });
+        this.tip.id = `kp-reason-${++counter}`;
+        const parent = control.parentNode;
+        if (!parent) return;
+        parent.insertBefore(this.anchor, control);
+        this.anchor.append(control, this.tip);
+        this.own(() => this.restoreDescription());
+        this.own(() => this.tip.remove());
+        this.own(() => {
+          if (this.anchor.parentNode) this.anchor.replaceWith(control);
+        });
+        this.own(attachTooltips(
+          /** @type {ParentNode} */
+          parent
+        ));
+        this.mirrorRole();
+        this.sync();
+        const observer = this.observe(new MutationObserver(() => this.sync()));
+        observer.observe(control, { attributes: true, attributeFilter: WATCHED });
+      }
+      /** The role the control plays in a column of buttons, worn by the wrapper that stands in the row in its place. */
+      mirrorRole() {
+        const role = this.host.getAttribute("data-kp-action");
+        if (role === null) this.anchor.removeAttribute("data-kp-action");
+        else this.anchor.setAttribute("data-kp-action", role);
+      }
+      /** Show or hide the tooltip and add or take out its id in the control's description. */
+      sync() {
+        if (this.destroyed) return;
+        const control = this.host;
+        const { anchor, tip } = this;
+        this.mirrorRole();
+        const text = control.getAttribute("data-kp-disabled-reason") ?? "";
+        const shown5 = text !== "" && isOff(control);
+        tip.textContent = shown5 ? text : "";
+        if (!shown5) tip.hidden = true;
+        anchor.toggleAttribute("data-kp-reason-off", shown5);
+        const ids2 = (control.getAttribute("aria-describedby") ?? "").split(/\s+/).filter((id) => id !== "" && id !== tip.id);
+        if (shown5) ids2.push(tip.id);
+        if (ids2.length > 0) control.setAttribute("aria-describedby", ids2.join(" "));
+        else control.removeAttribute("aria-describedby");
+      }
+      /** Give the control back the description it had. */
+      restoreDescription() {
+        if (this.before === null) this.host.removeAttribute("aria-describedby");
+        else this.host.setAttribute("aria-describedby", this.before);
+      }
+    };
   }
 });
 
@@ -6556,7 +6579,7 @@ var init_sync = __esm({
 });
 
 // js/ack-gate/controller.js
-var TONES, WATCHED, AckGate;
+var TONES, WATCHED2, AckGate;
 var init_controller2 = __esm({
   "js/ack-gate/controller.js"() {
     "use strict";
@@ -6565,7 +6588,7 @@ var init_controller2 = __esm({
     init_targets();
     init_values3();
     TONES = ["warning", "destructive", "info"];
-    WATCHED = [
+    WATCHED2 = [
       "data-kp-ack-key",
       "data-kp-ack-version",
       "data-kp-ack-label",
@@ -6680,7 +6703,7 @@ var init_controller2 = __esm({
             this.syncTargets();
             if (gate.getAttribute("data-kp-state") === null) this.keepHeight();
           })
-        ).observe(gate, { attributes: true, attributeFilter: WATCHED });
+        ).observe(gate, { attributes: true, attributeFilter: WATCHED2 });
       }
       /** A min-ms wait ends by itself; the held height follows the gate's size. */
       watchHeight() {
@@ -12202,7 +12225,7 @@ var init_set = __esm({
 });
 
 // js/attention/max.js
-var MAX_ATTRIBUTE, FOLDED_ATTRIBUTE, EXPANDED_ATTRIBUTE, WATCHED2, AttentionMax;
+var MAX_ATTRIBUTE, FOLDED_ATTRIBUTE, EXPANDED_ATTRIBUTE, WATCHED3, AttentionMax;
 var init_max = __esm({
   "js/attention/max.js"() {
     "use strict";
@@ -12211,7 +12234,7 @@ var init_max = __esm({
     MAX_ATTRIBUTE = "data-kp-attention-max";
     FOLDED_ATTRIBUTE = "data-kp-folded";
     EXPANDED_ATTRIBUTE = "data-kp-attention-expanded";
-    WATCHED2 = { childList: true, subtree: true, attributes: true, attributeFilter: [MAX_ATTRIBUTE, "data-kp-severity", "data-kp-leaving"] };
+    WATCHED3 = { childList: true, subtree: true, attributes: true, attributeFilter: [MAX_ATTRIBUTE, "data-kp-severity", "data-kp-leaving"] };
     AttentionMax = class extends Controller {
       /** @param {HTMLElement} host the band */
       constructor(host) {
@@ -12221,7 +12244,7 @@ var init_max = __esm({
       }
       connect() {
         const band = this.host;
-        this.observe(new MutationObserver(() => this.apply())).observe(band, WATCHED2);
+        this.observe(new MutationObserver(() => this.apply())).observe(band, WATCHED3);
         this.listen(band, "click", (event) => {
           if (this.toggle && event.target instanceof Element && event.target.closest(".kp-attention__more") === this.toggle) this.flip();
         });
@@ -17228,7 +17251,7 @@ var init_geometry2 = __esm({
 });
 
 // js/tiles/keys.js
-var LETTERS_MS, ROW_GAP_PX, WATCHED3, TileBoard;
+var LETTERS_MS, ROW_GAP_PX, WATCHED4, TileBoard;
 var init_keys5 = __esm({
   "js/tiles/keys.js"() {
     "use strict";
@@ -17236,7 +17259,7 @@ var init_keys5 = __esm({
     init_geometry2();
     LETTERS_MS = 700;
     ROW_GAP_PX = 16;
-    WATCHED3 = ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"];
+    WATCHED4 = ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"];
     TileBoard = class extends Controller {
       /** @param {HTMLElement} board @param {{ view: Window & typeof globalThis }} options */
       constructor(board2, options) {
@@ -17255,7 +17278,7 @@ var init_keys5 = __esm({
           if (this.queued) this.view.cancelAnimationFrame(this.queued);
           this.restore();
         });
-        this.observe(new this.view.MutationObserver(() => this.queue())).observe(board2, { childList: true, subtree: true, attributes: true, attributeFilter: WATCHED3 });
+        this.observe(new this.view.MutationObserver(() => this.queue())).observe(board2, { childList: true, subtree: true, attributes: true, attributeFilter: WATCHED4 });
         if (typeof this.view.ResizeObserver === "function") this.observe(new this.view.ResizeObserver(() => this.queue())).observe(board2);
         this.listen(board2, "toggle", () => this.queue(), true);
         this.listen(board2, "focusin", (event) => this.onFocus(event));
@@ -17439,14 +17462,14 @@ function evenTileSet(grids) {
   }
   return tallest;
 }
-var WATCHED4, EASE_MIN_PX, shown, TileSetWatch;
+var WATCHED5, EASE_MIN_PX, shown, TileSetWatch;
 var init_sets2 = __esm({
   "js/tiles/sets.js"() {
     "use strict";
     init_controller();
     init_motion();
     init_geometry2();
-    WATCHED4 = ["hidden", "open", "class", "data-kp-tiles-set", "data-kp-folding"];
+    WATCHED5 = ["hidden", "open", "class", "data-kp-tiles-set", "data-kp-folding"];
     EASE_MIN_PX = 1;
     shown = (grids) => grids.flatMap((grid2) => [...grid2.children].filter(visible));
     TileSetWatch = class extends Controller {
@@ -17482,7 +17505,7 @@ var init_sets2 = __esm({
           subtree: true,
           characterData: true,
           attributes: true,
-          attributeFilter: WATCHED4
+          attributeFilter: WATCHED5
         });
         this.listen(
           /** @type {EventTarget} */
@@ -49409,7 +49432,7 @@ var init_paint6 = __esm({
 });
 
 // js/calendar/controller.js
-var WATCHED5, CalendarController;
+var WATCHED6, CalendarController;
 var init_controller33 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
@@ -49426,7 +49449,7 @@ var init_controller33 = __esm({
     init_dom6();
     init_keys10();
     init_paint6();
-    WATCHED5 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
+    WATCHED6 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
     CalendarController = class extends Controller {
       /**
        * @param {HTMLElement} host the calendar
@@ -49519,7 +49542,7 @@ var init_controller33 = __esm({
             paintCalendar(this);
           })
         );
-        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED5 });
+        watch2.observe(el16, { attributes: true, attributeFilter: WATCHED6 });
       }
       /** Move by whole months and say so. @param {number} months */
       step(months) {
@@ -63463,7 +63486,7 @@ var init_keys13 = __esm({
 });
 
 // js/timefield/controller.js
-var WATCHED6, TimeController;
+var WATCHED7, TimeController;
 var init_controller43 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
@@ -63476,7 +63499,7 @@ var init_controller43 = __esm({
     init_field();
     init_keys13();
     init_parse2();
-    WATCHED6 = [
+    WATCHED7 = [
       "disabled",
       "data-kp-disabled",
       "data-kp-disabled-reason",
@@ -63544,7 +63567,7 @@ var init_controller43 = __esm({
             if (field2.list.open) field2.list.draw();
           })
         );
-        observer.observe(host, { attributes: true, attributeFilter: WATCHED6 });
+        observer.observe(host, { attributes: true, attributeFilter: WATCHED7 });
       }
       /** Digits typed fast: 0230 becomes 02:30 as the fourth digit arrives; an open list follows the typed time. */
       onInput() {
@@ -66631,7 +66654,7 @@ var init_keys14 = __esm({
 });
 
 // js/rating/controller.js
-var REDRAW, WATCHED7, RatingController;
+var REDRAW, WATCHED8, RatingController;
 var init_controller48 = __esm({
   "js/rating/controller.js"() {
     "use strict";
@@ -66645,7 +66668,7 @@ var init_controller48 = __esm({
     init_paint10();
     init_read8();
     REDRAW = ["data-kp-rating-max", "data-kp-rating-step", "data-kp-rating-mode"];
-    WATCHED7 = [
+    WATCHED8 = [
       ...REDRAW,
       "data-kp-rating-value",
       "data-kp-rating-labels",
@@ -66757,7 +66780,7 @@ var init_controller48 = __esm({
           event
         ));
         this.listen(parts2.retry, "click", () => el16.dispatchEvent(new CustomEvent(RATING_RETRY_EVENT, { bubbles: true })));
-        this.observe(new MutationObserver((records) => this.onAttributes(records))).observe(el16, { attributes: true, attributeFilter: WATCHED7 });
+        this.observe(new MutationObserver((records) => this.onAttributes(records))).observe(el16, { attributes: true, attributeFilter: WATCHED8 });
         this.own(() => window.clearTimeout(this.flashTimer));
       }
       /** Give the element back what it held before the rating drew into it. */
@@ -79020,7 +79043,7 @@ var init_graph = __esm({
 });
 
 // js/loading-pieces/values.js
-var PIECES_PROPERTY, PIECES_ATTRIBUTE, PIECE_CARRIERS, ALL, WATCHED8, SHAPE;
+var PIECES_PROPERTY, PIECES_ATTRIBUTE, PIECE_CARRIERS, ALL, WATCHED9, SHAPE;
 var init_values49 = __esm({
   "js/loading-pieces/values.js"() {
     "use strict";
@@ -79034,7 +79057,7 @@ var init_values49 = __esm({
       spinner: ".kp-spinner"
     };
     ALL = Object.values(PIECE_CARRIERS).join(", ");
-    WATCHED8 = ["class", "aria-busy", "data-kp-indeterminate", "data-kp-loading", "data-kp-tone", "data-theme", "hidden"];
+    WATCHED9 = ["class", "aria-busy", "data-kp-indeterminate", "data-kp-loading", "data-kp-tone", "data-theme", "hidden"];
     SHAPE = Object.freeze({
       /** The unit of a day's or plate's legs and heads, in px. */
       unit: 9,
@@ -79250,7 +79273,7 @@ var init_watch4 = __esm({
           /** @type {Node} */
           scope instanceof Document ? scope.documentElement : scope
         );
-        watch2.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED8 });
+        watch2.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED9 });
         if (target !== document.documentElement) watch2.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
         this.everything = true;
         this.schedule();
