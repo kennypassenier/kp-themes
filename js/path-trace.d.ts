@@ -1,11 +1,5 @@
-/** The traces this module draws. */
-export declare const TRACE = "[data-kp-trace]";
-/** Fired on the trace when the deciding rule is pressed: `{ rule, hop }`. */
-export declare const TRACE_RULE_EVENT = "kp-trace-rule";
-/** Fired on the trace when Swap is pressed or S is typed. */
-export declare const TRACE_SWAP_EVENT = "kp-trace-swap";
-/** Fired on the trace when Retry is pressed. */
-export declare const TRACE_RETRY_EVENT = "kp-trace-retry";
+export { TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT } from './path-trace/values.js';
+export { traceStates, traceSummary, traceText } from './path-trace/states.js';
 export type TraceHop = {
     /**
      * the thing the packet reaches (a device, a network, a rule, a target)
@@ -25,36 +19,6 @@ export type TraceHop = {
      */
     ports?: string;
 };
-/**
- * @typedef {object} TraceHop
- * @property {string} title the thing the packet reaches (a device, a network, a rule, a target)
- * @property {string} [note] one line under it
- * @property {'allowed' | 'refused' | 'unknown'} verdict
- * @property {string} [rule] the rule that decided it
- * @property {string} [ports] "tcp 8096"
- */
-/**
- * The verdict of each hop once the first refusal stops the packet: `done`, `failed`, `skipped` or `pending`.
- * @param {readonly TraceHop[]} hops
- * @param {'first-refusal' | 'all'} [stop]
- * @returns {{ hop: TraceHop, state: 'done' | 'failed' | 'skipped' | 'pending' }[]}
- */
-export declare function traceStates(hops: readonly TraceHop[], stop?: 'first-refusal' | 'all'): {
-    hop: TraceHop;
-    state: 'done' | 'failed' | 'skipped' | 'pending';
-}[];
-/**
- * The outcome in one sentence.
- * @param {readonly TraceHop[]} hops
- * @param {'first-refusal' | 'all'} [stop]
- */
-export declare function traceSummary(hops: readonly TraceHop[], stop?: 'first-refusal' | 'all'): string;
-/**
- * The trace as text for a bug report: "tv > Firewall refused (rule IoT to media) > Jellyfin not reached".
- * @param {readonly TraceHop[]} hops
- * @param {'first-refusal' | 'all'} [stop]
- */
-export declare function traceText(hops: readonly TraceHop[], stop?: 'first-refusal' | 'all'): string;
 export type TraceHandle = {
     element: HTMLElement;
     /**
@@ -69,6 +33,21 @@ export type TraceHandle = {
      */
     text: () => string;
 };
+/**
+ * @typedef {object} TraceHop
+ * @property {string} title the thing the packet reaches (a device, a network, a rule, a target)
+ * @property {string} [note] one line under it
+ * @property {'allowed' | 'refused' | 'unknown'} verdict
+ * @property {string} [rule] the rule that decided it
+ * @property {string} [ports] "tcp 8096"
+ */
+/**
+ * @typedef {object} TraceHandle
+ * @property {HTMLElement} element
+ * @property {(hops: readonly TraceHop[]) => void} set draw the hops (clears any state)
+ * @property {(state: 'ready' | 'running' | 'empty' | 'error', options?: { message?: string }) => void} setState
+ * @property {() => string} text the trace as text
+ */
 /**
  * The handle of a trace.
  * @param {Element} el

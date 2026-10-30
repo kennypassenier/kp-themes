@@ -265,6 +265,7 @@
         { "path": "js/deplist.js", "tags": ["@component:data"], "why": "the dependency list [kpadopt6-ops]" },
         { "path": "js/deplist/*.js", "tags": ["@component:data"], "why": "the dependency list [kpadopt6-ops]" },
         { "path": "js/path-trace.js", "tags": ["@component:feedback"], "why": "the path of a connection [kpadopt6-ops]" },
+        { "path": "js/path-trace/*.js", "tags": ["@component:feedback"], "why": "the path of a connection [kpadopt6-ops]" },
         { "path": "js/entity-card.js", "tags": ["@component:data"], "why": "the entity card [kpadopt6-ops]" },
         { "path": "js/entity-card/*.js", "tags": ["@component:data"], "why": "the entity card [kpadopt6-ops]" },
         { "path": "js/unsaved.js", "tags": ["@component:feedback"], "why": "the unsaved-changes bar [kpadopt5-time]" },

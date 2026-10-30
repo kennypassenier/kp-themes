@@ -54,9 +54,9 @@ function attachOne(host, Ctor, options = {}) {
   }
 }
 function attachAll(root, selector, Ctor, options = {}) {
-  const made7 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne(host, Ctor, options)).filter((controller) => controller !== void 0);
+  const made6 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne(host, Ctor, options)).filter((controller) => controller !== void 0);
   return () => {
-    for (const controller of made7) controller.destroy();
+    for (const controller of made6) controller.destroy();
   };
 }
 var LIVE, report, Controller;
@@ -10184,7 +10184,7 @@ function renderShortcutSheet(sheet) {
   renderSheet(board, sheet);
 }
 function attachShortcuts(root = document) {
-  const made7 = [];
+  const made6 = [];
   for (const found of root.querySelectorAll(SHORTCUTS_LIVE_SHEET)) {
     const sheet = (
       /** @type {HTMLElement} */
@@ -10192,10 +10192,10 @@ function attachShortcuts(root = document) {
     );
     if (sheet.dataset.kpShortcutsLiveAttached !== void 0) continue;
     const live4 = attachOne(sheet, LiveSheet, { board });
-    if (live4) made7.push(live4);
+    if (live4) made6.push(live4);
   }
   return () => {
-    for (const live4 of made7) live4.destroy();
+    for (const live4 of made6) live4.destroy();
   };
 }
 var board;
@@ -10218,24 +10218,24 @@ var init_shortcuts = __esm({
 function serveCopyKey(doc, strings, provider) {
   let shared = COPY_KEY.get(doc);
   if (!shared) {
-    const made7 = { providers: /* @__PURE__ */ new Set(), off: (
+    const made6 = { providers: /* @__PURE__ */ new Set(), off: (
       /** @type {(() => void) | null} */
       null
     ) };
-    shared = made7;
-    COPY_KEY.set(doc, made7);
+    shared = made6;
+    COPY_KEY.set(doc, made6);
     void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
-      if (made7.providers.size === 0 || COPY_KEY.get(doc) !== made7) return;
-      made7.off = registerShortcuts2(
+      if (made6.providers.size === 0 || COPY_KEY.get(doc) !== made6) return;
+      made6.off = registerShortcuts2(
         doc.body,
         [
           {
             keys: "y l",
             what: strings.anchorKeyCopy,
             group: strings.anchorKeyGroup,
-            when: () => [...made7.providers].some((p) => p() !== null),
+            when: () => [...made6.providers].some((p) => p() !== null),
             run: () => {
-              for (const p of made7.providers) {
+              for (const p of made6.providers) {
                 const go = p();
                 if (go) return go();
               }
@@ -10700,15 +10700,15 @@ function attachAnchors(root = document, options = {}) {
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(ANCHORS) ? [root] : [], ...root.querySelectorAll(ANCHORS)]
   );
-  const made7 = [];
+  const made6 = [];
   for (const box of found) {
     if (box.dataset.kpAnchorsAttached !== void 0) continue;
     if ((options.anchors ?? attr(box, "data-kp-anchors", "off")) === "off") continue;
     const anchored = attachOne(box, AnchorBox, options);
-    if (anchored) made7.push(anchored);
+    if (anchored) made6.push(anchored);
   }
   return () => {
-    for (const anchored of made7) anchored.destroy();
+    for (const anchored of made6) anchored.destroy();
   };
 }
 var init_anchors = __esm({
@@ -11612,19 +11612,19 @@ function attachArt(root = document) {
     /** @type {HTMLElement[]} */
     [...root instanceof Element && root.matches(ART) ? [root] : [], ...root.querySelectorAll(ART)]
   );
-  const made7 = [];
+  const made6 = [];
   const place3 = (host) => {
     host.querySelector(":scope > .kp-art")?.remove();
     const kind = host.dataset.kpArt ?? "";
     if (!isKind(kind)) return;
     const svg2 = drawArt(host.ownerDocument, kind);
     host.prepend(svg2);
-    made7.push(svg2);
+    made6.push(svg2);
   };
   for (const host of hosts) place3(host);
   if (typeof MutationObserver === "undefined" || hosts.length === 0)
     return () => {
-      for (const svg2 of made7) svg2.remove();
+      for (const svg2 of made6) svg2.remove();
     };
   const watch2 = new MutationObserver((records) => {
     for (const record of records) place3(
@@ -11635,7 +11635,7 @@ function attachArt(root = document) {
   for (const host of hosts) watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-art"] });
   return () => {
     watch2.disconnect();
-    for (const svg2 of made7) svg2.remove();
+    for (const svg2 of made6) svg2.remove();
   };
 }
 var init_attach2 = __esm({
@@ -13719,13 +13719,13 @@ function setSegmentedItems(group, items) {
   const on = getSegmentedValues(group).filter((value) => items.some((item) => item.value === value));
   const active = group.ownerDocument.activeElement;
   const focused = active instanceof HTMLElement && group.contains(active) ? valueOf(active) : null;
-  const made7 = items.map((spec) => buildItem(spec, { multi, tri, kept }));
+  const made6 = items.map((spec) => buildItem(spec, { multi, tri, kept }));
   STOPS.delete(group);
-  group.replaceChildren(...made7);
+  group.replaceChildren(...made6);
   enhance(group);
   if (tri) paintTri(group);
   else paint2(group, on);
-  if (focused !== null) made7.find((item) => valueOf(item) === focused)?.focus();
+  if (focused !== null) made6.find((item) => valueOf(item) === focused)?.focus();
 }
 var init_items2 = __esm({
   "js/segmented/items.js"() {
@@ -16119,13 +16119,13 @@ function attachTileKeys(root = document) {
   };
   const boards = [...root instanceof HTMLElement && root.matches(TILES_KEYS) ? [root] : [], .../** @type {NodeListOf<HTMLElement>} */
   root.querySelectorAll(TILES_KEYS)];
-  const made7 = [];
+  const made6 = [];
   for (const board2 of boards) {
     if (controllerOf(board2, TileBoard)) continue;
     const fresh = attachOne(board2, TileBoard, { view });
-    if (fresh) made7.push(fresh);
+    if (fresh) made6.push(fresh);
   }
-  return () => made7.splice(0).forEach((board2) => board2.destroy());
+  return () => made6.splice(0).forEach((board2) => board2.destroy());
 }
 var init_tiles = __esm({
   "js/tiles.js"() {
@@ -19399,10 +19399,10 @@ function setTabbarBusy(tab, busy) {
   tab.toggleAttribute("aria-busy", busy);
   if (busy) tab.setAttribute("aria-busy", "true");
   if (busy && !spinner) {
-    const made7 = tab.ownerDocument.createElement("span");
-    made7.className = "kp-spinner";
-    made7.setAttribute("aria-hidden", "true");
-    icon.append(made7);
+    const made6 = tab.ownerDocument.createElement("span");
+    made6.className = "kp-spinner";
+    made6.setAttribute("aria-hidden", "true");
+    icon.append(made6);
   } else if (!busy) spinner?.remove();
 }
 var TABBAR, TABBAR_HEIGHT_PROPERTY;
@@ -27329,13 +27329,13 @@ function attachRowSelect(root = document, options = {}) {
     [...root.querySelectorAll(`${ROW_SELECT}, ${ROW_SELECT_AUTO}`)]
   );
   if (root instanceof HTMLElement && root.matches(`${ROW_SELECT}, ${ROW_SELECT_AUTO}`)) found.add(root);
-  const made7 = [];
+  const made6 = [];
   for (const el16 of found) {
     if (el16.getAttribute("data-kp-select-keys") === "false" || controllerOf(el16, RowSelector)) continue;
     const selector = attachOne(el16, RowSelector, options);
-    if (selector) made7.push(selector);
+    if (selector) made6.push(selector);
   }
-  return () => made7.forEach((selector) => selector.destroy());
+  return () => made6.forEach((selector) => selector.destroy());
 }
 var init_row_select = __esm({
   "js/row-select.js"() {
@@ -29189,9 +29189,9 @@ function attachForms(root = document, options = {}) {
   const forms = wireBelow(root, FORM, FormController, options, freshForm);
   const buttons = wireBelow(root, SUBMIT, SubmitController, {}, freshButton);
   const detach = () => {
-    for (const made7 of [...forms, ...buttons]) made7.destroy();
+    for (const made6 of [...forms, ...buttons]) made6.destroy();
   };
-  return Object.assign(detach, { handles: forms.map((made7) => made7.handle) });
+  return Object.assign(detach, { handles: forms.map((made6) => made6.handle) });
 }
 function attachFormgridStages(root = document) {
   const stages = wireBelow(root, FORMGRID_STAGE, FormgridStageController, {}, isHtml);
@@ -29960,10 +29960,10 @@ function partsOf2(el16) {
     stage.prepend(data);
   }
   if (!data.querySelector(".kp-inspector__list")) {
-    const made7 = make10(doc, "kp-inspector__list");
-    made7.setAttribute("role", "list");
-    made7.setAttribute("aria-label", getStrings().reqLabel);
-    data.append(made7);
+    const made6 = make10(doc, "kp-inspector__list");
+    made6.setAttribute("role", "list");
+    made6.setAttribute("aria-label", getStrings().reqLabel);
+    data.append(made6);
   }
   const list = (
     /** @type {HTMLElement} */
@@ -41132,11 +41132,11 @@ function wireable(picker) {
   return !wired2 && partsOf3(picker) !== null;
 }
 function attachDatePickers(root = document, options = {}) {
-  const made7 = hostsOf(root, PICKER2).filter(wireable).map((picker) => attachOne(picker, DatePickerController, options)).filter((controller) => controller !== void 0);
+  const made6 = hostsOf(root, PICKER2).filter(wireable).map((picker) => attachOne(picker, DatePickerController, options)).filter((controller) => controller !== void 0);
   const detach = () => {
-    for (const controller of made7) controller.destroy();
+    for (const controller of made6) controller.destroy();
   };
-  return Object.assign(detach, { handles: made7.flatMap((controller) => controller.handle ? [controller.handle] : []) });
+  return Object.assign(detach, { handles: made6.flatMap((controller) => controller.handle ? [controller.handle] : []) });
 }
 var init_attach12 = __esm({
   "js/datepicker/attach.js"() {
@@ -45353,7 +45353,7 @@ function structure(element) {
 }
 function attachStructure(root = document, options = {}) {
   const o = { ...DEFAULTS2, ...options };
-  const made7 = [];
+  const made6 = [];
   const created = [];
   for (const [selector, Kind] of KINDS2) {
     for (const element of root.querySelectorAll(selector)) {
@@ -45365,12 +45365,12 @@ function attachStructure(root = document, options = {}) {
         o
       );
       if (!control) continue;
-      made7.push(control);
+      made6.push(control);
       if (control.handle) created.push(control.handle);
     }
   }
   const detach = () => {
-    for (const control of made7) control.destroy();
+    for (const control of made6) control.destroy();
   };
   return Object.assign(detach, { handles: created });
 }
@@ -47017,12 +47017,12 @@ function setCalendarCaption(el16, text) {
   caption.hidden = text === "";
 }
 function attachCalendars(root = document, options = {}) {
-  const made7 = (
+  const made6 = (
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(CALENDAR)].filter((el16) => !controllerOf(el16, CalendarController)).map((el16) => attachOne(el16, CalendarController, options)).filter((controller) => controller !== void 0)
   );
   return () => {
-    for (const controller of made7) controller.destroy();
+    for (const controller of made6) controller.destroy();
   };
 }
 var calendarOf;
@@ -47222,8 +47222,8 @@ function syncCalmLegend(el16) {
     const entries2 = calmLegendEntries().filter((e) => all || present.has(e.tone));
     const signature2 = entries2.map((e) => e.tone).join(" ");
     if (own && !legend?.hidden && legend?.getAttribute("data-kp-legend-tones") === signature2) return;
-    const made7 = setHeatLegend(el16, entries2, { source: "auto" });
-    made7?.setAttribute("data-kp-legend-tones", signature2);
+    const made6 = setHeatLegend(el16, entries2, { source: "auto" });
+    made6?.setAttribute("data-kp-legend-tones", signature2);
   } else if (own) removeLegend(el16);
 }
 function setHeatLegend(el16, entries2, options = {}) {
@@ -56774,12 +56774,12 @@ function setProblems(container, items, options = {}) {
   board2?.paint(items, options);
 }
 function attachProblems(root = document) {
-  const made7 = (
+  const made6 = (
     /** @type {HTMLElement[]} */
     [...root.querySelectorAll(PROBLEMS)].filter((el16) => !el16.hasAttribute("data-kp-problems-attached") && !controllerOf(el16, ProblemsStamp)).map((el16) => attachOne(el16, ProblemsStamp)).filter((stamp4) => stamp4 !== void 0)
   );
   return () => {
-    for (const stamp4 of made7) stamp4.destroy();
+    for (const stamp4 of made6) stamp4.destroy();
   };
 }
 var init_problems = __esm({
@@ -57634,9 +57634,9 @@ function closePane(root) {
   masterDetail(root)?.close();
 }
 function attachMasterDetails(root = document, { history: useHistory } = {}) {
-  const made7 = hostsOf(root, MASTER_DETAIL).filter((el16) => !controllerOf(el16, MasterDetailController) && wireable2(el16)).map((el16) => attachOne(el16, MasterDetailController, useHistory === void 0 ? {} : { history: useHistory })).filter((layout3) => layout3 !== void 0);
+  const made6 = hostsOf(root, MASTER_DETAIL).filter((el16) => !controllerOf(el16, MasterDetailController) && wireable2(el16)).map((el16) => attachOne(el16, MasterDetailController, useHistory === void 0 ? {} : { history: useHistory })).filter((layout3) => layout3 !== void 0);
   return () => {
-    for (const layout3 of made7) layout3.destroy();
+    for (const layout3 of made6) layout3.destroy();
   };
 }
 var masterDetail, wireable2;
@@ -58425,13 +58425,13 @@ function attachTransfers(root = document) {
   const rows = hostsOf(root, TRANSFER);
   const detachRows = attachAll(root, TRANSFER, TransferRow, { prepare: true });
   const groups = new Set(rows.map((row) => row.closest(TRANSFER_GROUP)).filter((g) => g instanceof HTMLElement));
-  const made7 = [...groups].filter((group) => !controllerOf(group, TransferGroup)).map((group) => attachOne(
+  const made6 = [...groups].filter((group) => !controllerOf(group, TransferGroup)).map((group) => attachOne(
     /** @type {HTMLElement} */
     group,
     TransferGroup
   )).filter((controller) => controller !== void 0);
   return () => {
-    for (const controller of made7) controller.destroy();
+    for (const controller of made6) controller.destroy();
     detachRows();
   };
 }
@@ -64083,9 +64083,9 @@ var init_list4 = __esm({
 function attachQuotes(root = document, options = {}) {
   const cards2 = hostsOf(root, QUOTE).filter((el16) => !controllerOf(el16, QuoteController)).map((el16) => attachOne(el16, QuoteController, options));
   const lists = hostsOf(root, QUOTE_LIST).filter((list) => list.dataset.kpQuoteListAttached === void 0).map((list) => attachOne(list, QuoteListController));
-  const made7 = [...cards2, ...lists].filter((controller) => controller !== void 0);
+  const made6 = [...cards2, ...lists].filter((controller) => controller !== void 0);
   return () => {
-    for (const controller of made7.splice(0)) controller.destroy();
+    for (const controller of made6.splice(0)) controller.destroy();
   };
 }
 function setQuote(el16, spec) {
@@ -66663,20 +66663,74 @@ var init_deplist = __esm({
   }
 });
 
-// js/path-trace.js
-var path_trace_exports = {};
-__export(path_trace_exports, {
-  TRACE: () => TRACE,
-  TRACE_RETRY_EVENT: () => TRACE_RETRY_EVENT,
-  TRACE_RULE_EVENT: () => TRACE_RULE_EVENT,
-  TRACE_SWAP_EVENT: () => TRACE_SWAP_EVENT,
-  attachTraces: () => attachTraces,
-  setTrace: () => setTrace,
-  trace: () => trace,
-  traceStates: () => traceStates,
-  traceSummary: () => traceSummary,
-  traceText: () => traceText
+// js/path-trace/core.js
+var TraceCore;
+var init_core18 = __esm({
+  "js/path-trace/core.js"() {
+    "use strict";
+    init_controller();
+    init_busy_card();
+    init_strings();
+    TraceCore = class extends Controller {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.doc = host.ownerDocument;
+        this.summary = this.made("p", "kp-trace__summary");
+        this.stage = this.made("div", "kp-trace__stage");
+        this.foot = this.made("div", "kp-trace__foot");
+        this.hops = [];
+        this.state = "empty";
+        this.message = "";
+        this.busy = null;
+        this.kept = 0;
+      }
+      /** @param {string} tag @param {string} className */
+      made(tag, className) {
+        const el16 = this.doc.createElement(tag);
+        el16.className = className;
+        return el16;
+      }
+      /** An attribute of the host with a default. @param {string} name @param {string} fallback */
+      attr(name, fallback2) {
+        return this.host.getAttribute(name) ?? fallback2;
+      }
+      /** Whether a hop's verdict ends the packet at the first refusal or counts each hop on its own. @returns {'first-refusal' | 'all'} */
+      stop() {
+        return this.attr("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal";
+      }
+      /** The hops were given: the trace is ready. @param {readonly TraceHop[]} hops */
+      takeHops(hops) {
+        this.hops = hops;
+        this.state = "ready";
+        this.kept = 0;
+      }
+      /** The height of what was drawn is kept for the states that stand in its place. */
+      keepHeight() {
+        this.kept = this.stage.offsetHeight;
+      }
+      /** @param {TraceState} next @param {string} message */
+      takeState(next2, message) {
+        if (this.state === "ready" && this.stage.offsetHeight > 0) this.kept = this.stage.offsetHeight;
+        this.state = next2;
+        this.message = message;
+      }
+      clearBusy() {
+        this.busy?.remove();
+        this.busy = null;
+      }
+      /** The theme's busy card over the placeholder hops. @param {HTMLElement} list */
+      openBusy(list) {
+        this.busy = openBusyCard(this.stage, { words: getStrings().traceRunning, area: () => [list], className: "kp-trace__busy", arrive: true });
+      }
+    };
+  }
 });
+
+// js/path-trace/states.js
 function traceStates(hops, stop = "first-refusal") {
   let stopped = false;
   return hops.map((hop) => {
@@ -66696,227 +66750,268 @@ function traceSummary(hops, stop = "first-refusal") {
   if (rows.some((r) => r.state === "pending")) return s2.traceNotAll;
   return s2.traceAllowed;
 }
+function verdictWord(state12, s2 = getStrings()) {
+  if (state12 === "done") return s2.traceAllowedWord;
+  if (state12 === "failed") return s2.traceRefusedWord;
+  return state12 === "skipped" ? s2.traceNotReached : s2.traceNotMeasured;
+}
 function traceText(hops, stop = "first-refusal") {
   const s2 = getStrings();
-  return traceStates(hops, stop).map(({ hop, state: state12 }) => {
-    const word = state12 === "done" ? s2.traceAllowedWord : state12 === "failed" ? s2.traceRefusedWord : state12 === "skipped" ? s2.traceNotReached : s2.traceNotMeasured;
-    return `${hop.title} ${word}${hop.rule ? ` (${s2.traceRule(hop.rule)})` : ""}`;
-  }).join(" > ");
+  return traceStates(hops, stop).map(({ hop, state: state12 }) => `${hop.title} ${verdictWord(state12, s2)}${hop.rule ? ` (${s2.traceRule(hop.rule)})` : ""}`).join(" > ");
 }
-function trace(el16) {
-  return HANDLES3.get(el16) ?? null;
-}
-function attachOne3(el16) {
-  if (HANDLES3.has(el16)) return () => void 0;
-  const doc = el16.ownerDocument;
-  const undo = [];
-  el16.classList.add("kp-trace");
-  undo.push(() => el16.classList.remove("kp-trace"));
-  const summary2 = made5(doc, "p", "kp-trace__summary");
-  summary2.setAttribute("role", "status");
-  const stage = made5(doc, "div", "kp-trace__stage");
-  const foot = made5(doc, "div", "kp-trace__foot");
-  el16.replaceChildren(summary2, stage, foot);
-  undo.push(() => el16.replaceChildren());
-  let hops = [];
-  let state12 = "empty";
-  let message = "";
-  let busy = null;
-  let kept = 0;
-  const attr16 = (name, fallback2) => el16.getAttribute(name) ?? fallback2;
-  const draw7 = () => {
-    const s2 = getStrings();
-    const stop = attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal";
-    const ruleMode = attr16("data-kp-trace-rule", "chip");
-    busy?.remove();
-    busy = null;
-    stage.replaceChildren();
-    foot.replaceChildren();
-    el16.setAttribute("data-kp-state", state12);
-    stage.style.minBlockSize = state12 === "ready" || !kept ? "" : `${kept}px`;
-    summary2.hidden = attr16("data-kp-trace-summary", "on") === "off";
-    if (state12 === "empty" || state12 === "ready" && hops.length === 0) {
-      summary2.textContent = "";
-      stage.append(statePlate(doc, { kind: "empty", title: s2.traceEmpty, text: s2.traceEmptyText }));
-      return;
-    }
-    if (state12 === "error") {
-      summary2.textContent = "";
-      stage.append(
-        statePlate(doc, {
-          kind: "error",
-          title: s2.traceFailed,
-          text: message || s2.traceFailedText,
-          actionLabel: s2.traceRetry,
-          onAction: () => el16.dispatchEvent(new CustomEvent(TRACE_RETRY_EVENT, { bubbles: true }))
-        })
-      );
-      return;
-    }
-    const ghost = state12 === "running";
-    const rows = ghost ? [0, 1, 2].map(() => ({ hop: (
-      /** @type {TraceHop} */
-      { title: "\u2026", verdict: "unknown" }
-    ), state: (
-      /** @type {const} */
-      "pending"
-    ) })) : traceStates(hops, stop);
-    summary2.textContent = ghost ? s2.traceRunning : traceSummary(hops, stop);
-    const list = buildSteplist(
-      rows.map(({ hop, state: st }, i) => ({
-        id: `hop-${i}`,
-        title: ghost ? "" : hop.title,
-        note: ghost ? "" : [hop.note, hop.ports, ruleMode === "inline" && hop.rule ? s2.traceRule(hop.rule) : ""].filter(Boolean).join(" \xB7 "),
-        state: st,
-        time: ghost ? "" : st === "done" ? s2.traceAllowedWord : st === "failed" ? s2.traceRefusedWord : st === "skipped" ? s2.traceNotReached : s2.traceNotMeasured
-      })),
-      { label: s2.traceLabel }
-    );
-    list.classList.add("kp-steplist--trace");
-    stage.append(list);
-    if (ghost) {
-      list.setAttribute("aria-busy", "true");
-      for (const word of list.querySelectorAll(".kp-steplist__state")) word.remove();
-      busy = openBusyCard(stage, { words: s2.traceRunning, area: () => [list], className: "kp-trace__busy", arrive: true });
-    } else {
-      [...list.querySelectorAll(":scope > .kp-steplist__item")].forEach((item, i) => {
-        const { hop, state: st } = rows[i];
-        const word = item.querySelector(".kp-steplist__state");
-        if (word) word.setAttribute("aria-hidden", "true");
-        const spoken = made5(doc, "span", "kp-sr-only");
-        spoken.textContent = `, ${st === "done" ? s2.traceAllowedWord : st === "failed" ? s2.traceRefusedWord : st === "skipped" ? s2.traceNotReached : s2.traceNotMeasured}`;
-        item.querySelector(".kp-steplist__body")?.append(spoken);
-        if (hop.rule && ruleMode === "chip") {
-          const chip = (
-            /** @type {HTMLButtonElement} */
-            made5(doc, "button", "kp-badge kp-trace__rule")
-          );
-          chip.type = "button";
-          chip.textContent = s2.traceRule(hop.rule);
-          chip.addEventListener(
-            "click",
-            () => el16.dispatchEvent(new CustomEvent(TRACE_RULE_EVENT, { bubbles: true, detail: { rule: hop.rule, hop: hop.title } }))
-          );
-          item.querySelector(".kp-steplist__body")?.append(chip);
-        }
-      });
-    }
-    if (!ghost && el16.hasAttribute("data-kp-trace-copy")) {
-      const copy3 = (
-        /** @type {HTMLButtonElement} */
-        made5(doc, "button", "kp-button kp-button--ghost kp-trace__copy")
-      );
-      copy3.type = "button";
-      copy3.textContent = s2.traceCopy;
-      copy3.setAttribute("data-kp-flash-words", s2.traceCopied);
-      copy3.addEventListener("click", () => {
-        void runFlashButton(copy3, async () => {
-          await navigator.clipboard.writeText(traceText(hops, stop));
-          return s2.traceCopied;
-        });
-      });
-      foot.append(copy3);
-    }
-    if (!ghost && el16.hasAttribute("data-kp-trace-swap")) {
-      const swap = (
-        /** @type {HTMLButtonElement} */
-        made5(doc, "button", "kp-button kp-button--ghost kp-trace__swap")
-      );
-      swap.type = "button";
-      swap.textContent = s2.traceSwap;
-      swap.addEventListener("click", () => el16.dispatchEvent(new CustomEvent(TRACE_SWAP_EVENT, { bubbles: true })));
-      foot.append(swap);
-    }
-  };
-  const handle = {
-    element: el16,
-    set(next2) {
-      hops = next2;
-      state12 = "ready";
-      kept = 0;
-      draw7();
-      kept = stage.offsetHeight;
-    },
-    setState(next2, options = {}) {
-      if (state12 === "ready" && stage.offsetHeight > 0) kept = stage.offsetHeight;
-      state12 = next2;
-      message = options.message ?? "";
-      draw7();
-    },
-    text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
-  };
-  HANDLES3.set(el16, handle);
-  undo.push(() => {
-    busy?.remove();
-    HANDLES3.delete(el16);
-  });
-  const watch2 = new MutationObserver(draw7);
-  watch2.observe(el16, {
-    attributes: true,
-    attributeFilter: [
+var init_states = __esm({
+  "js/path-trace/states.js"() {
+    "use strict";
+    init_strings();
+  }
+});
+
+// js/path-trace/values.js
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, GHOST_HOPS, WATCHED_ATTRIBUTES5;
+var init_values22 = __esm({
+  "js/path-trace/values.js"() {
+    "use strict";
+    TRACE = "[data-kp-trace]";
+    TRACE_RULE_EVENT = "kp-trace-rule";
+    TRACE_SWAP_EVENT = "kp-trace-swap";
+    TRACE_RETRY_EVENT = "kp-trace-retry";
+    GHOST_HOPS = 3;
+    WATCHED_ATTRIBUTES5 = [
       "data-kp-trace-stop",
       "data-kp-trace-rule",
       "data-kp-trace-verdict",
       "data-kp-trace-summary",
       "data-kp-trace-copy",
       "data-kp-trace-swap"
-    ]
-  });
-  undo.push(() => watch2.disconnect());
-  if (el16.hasAttribute("data-kp-trace-swap")) {
-    const s2 = getStrings();
-    const off = registerShortcuts(
-      el16,
-      [
-        {
-          keys: "s",
-          what: s2.traceKeySwap,
-          group: s2.traceKeyGroup,
-          run: () => el16.dispatchEvent(new CustomEvent(TRACE_SWAP_EVENT, { bubbles: true }))
-        }
-      ],
-      { layoutGuard: "warn" }
-    );
-    undo.push(off);
+    ];
   }
-  draw7();
-  return () => undo.reverse().forEach((u) => u());
-}
-function attachTraces(root = document) {
-  const found = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(TRACE) ? [root] : [],
-      ...root.querySelectorAll(TRACE)
-    ]
-  );
-  const undo = found.map((el16) => attachOne3(el16));
-  return () => undo.forEach((u) => u());
-}
-function setTrace(el16, hops) {
-  if (!HANDLES3.has(el16)) attachOne3(el16);
-  HANDLES3.get(el16)?.set(hops);
-}
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES3, made5;
-var init_path_trace = __esm({
-  "js/path-trace.js"() {
+});
+
+// js/path-trace/draw.js
+var TraceDraw;
+var init_draw11 = __esm({
+  "js/path-trace/draw.js"() {
     "use strict";
     init_steplist();
     init_strings();
-    init_busy_card();
     init_state_plate();
     init_flash();
-    init_shortcuts();
-    TRACE = "[data-kp-trace]";
-    TRACE_RULE_EVENT = "kp-trace-rule";
-    TRACE_SWAP_EVENT = "kp-trace-swap";
-    TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES3 = /* @__PURE__ */ new WeakMap();
-    made5 = (doc, tag, className) => {
-      const el16 = doc.createElement(tag);
-      el16.className = className;
-      return el16;
+    init_core18();
+    init_states();
+    init_values22();
+    TraceDraw = class extends TraceCore {
+      draw() {
+        const { host, stage, foot, summary: summary2 } = this;
+        const s2 = getStrings();
+        const stop = this.stop();
+        this.clearBusy();
+        stage.replaceChildren();
+        foot.replaceChildren();
+        host.setAttribute("data-kp-state", this.state);
+        stage.style.minBlockSize = this.state === "ready" || !this.kept ? "" : `${this.kept}px`;
+        summary2.hidden = this.attr("data-kp-trace-summary", "on") === "off";
+        if (this.state === "empty" || this.state === "ready" && this.hops.length === 0) return this.drawEmpty(s2);
+        if (this.state === "error") return this.drawError(s2);
+        const ghost = this.state === "running";
+        const rows = ghost ? Array.from({ length: GHOST_HOPS }, () => ({ hop: (
+          /** @type {TraceHop} */
+          { title: "\u2026", verdict: "unknown" }
+        ), state: (
+          /** @type {const} */
+          "pending"
+        ) })) : traceStates(this.hops, stop);
+        summary2.textContent = ghost ? s2.traceRunning : traceSummary(this.hops, stop);
+        const ruleMode = this.attr("data-kp-trace-rule", "chip");
+        const list = buildSteplist(this.hopItems(rows, ghost, ruleMode, s2), { label: s2.traceLabel });
+        list.classList.add("kp-steplist--trace");
+        stage.append(list);
+        if (ghost) {
+          list.setAttribute("aria-busy", "true");
+          for (const word of list.querySelectorAll(".kp-steplist__state")) word.remove();
+          this.openBusy(list);
+          return;
+        }
+        this.dressItems(list, rows, ruleMode, s2);
+        this.drawFoot(s2, stop);
+      }
+      /** @param {Strings} s */
+      drawEmpty(s2) {
+        this.summary.textContent = "";
+        this.stage.append(statePlate(this.doc, { kind: "empty", title: s2.traceEmpty, text: s2.traceEmptyText }));
+      }
+      /** @param {Strings} s */
+      drawError(s2) {
+        this.summary.textContent = "";
+        this.stage.append(
+          statePlate(this.doc, {
+            kind: "error",
+            title: s2.traceFailed,
+            text: this.message || s2.traceFailedText,
+            actionLabel: s2.traceRetry,
+            onAction: () => this.host.dispatchEvent(new CustomEvent(TRACE_RETRY_EVENT, { bubbles: true }))
+          })
+        );
+      }
+      /** The step list's items: a title, a note and the verdict as the time. @param {{ hop: TraceHop, state: 'done' | 'failed' | 'skipped' | 'pending' }[]} rows @param {boolean} ghost @param {string} ruleMode @param {Strings} s */
+      hopItems(rows, ghost, ruleMode, s2) {
+        return rows.map(({ hop, state: st }, i) => ({
+          id: `hop-${i}`,
+          title: ghost ? "" : hop.title,
+          note: ghost ? "" : [hop.note, hop.ports, ruleMode === "inline" && hop.rule ? s2.traceRule(hop.rule) : ""].filter(Boolean).join(" \xB7 "),
+          state: st,
+          time: ghost ? "" : verdictWord(st, s2)
+        }));
+      }
+      /** The words the page says, not the step list's own ("done", "failed"), and the deciding rule as a chip. @param {HTMLElement} list @param {{ hop: TraceHop, state: 'done' | 'failed' | 'skipped' | 'pending' }[]} rows @param {string} ruleMode @param {Strings} s */
+      dressItems(list, rows, ruleMode, s2) {
+        [...list.querySelectorAll(":scope > .kp-steplist__item")].forEach((item, i) => {
+          const { hop, state: st } = rows[i];
+          const word = item.querySelector(".kp-steplist__state");
+          if (word) word.setAttribute("aria-hidden", "true");
+          const spoken = this.made("span", "kp-sr-only");
+          spoken.textContent = `, ${verdictWord(st, s2)}`;
+          item.querySelector(".kp-steplist__body")?.append(spoken);
+          if (hop.rule && ruleMode === "chip") item.querySelector(".kp-steplist__body")?.append(this.ruleChip(hop, s2));
+        });
+      }
+      /** @param {TraceHop} hop @param {Strings} s */
+      ruleChip(hop, s2) {
+        const chip = (
+          /** @type {HTMLButtonElement} */
+          this.made("button", "kp-badge kp-trace__rule")
+        );
+        chip.type = "button";
+        chip.textContent = s2.traceRule(hop.rule ?? "");
+        chip.addEventListener("click", () => this.host.dispatchEvent(new CustomEvent(TRACE_RULE_EVENT, { bubbles: true, detail: { rule: hop.rule, hop: hop.title } })));
+        return chip;
+      }
+      /** The copy and swap buttons under the hops. @param {Strings} s @param {'first-refusal' | 'all'} stop */
+      drawFoot(s2, stop) {
+        const { host, foot } = this;
+        if (host.hasAttribute("data-kp-trace-copy")) {
+          const copy3 = (
+            /** @type {HTMLButtonElement} */
+            this.made("button", "kp-button kp-button--ghost kp-trace__copy")
+          );
+          copy3.type = "button";
+          copy3.textContent = s2.traceCopy;
+          copy3.setAttribute("data-kp-flash-words", s2.traceCopied);
+          copy3.addEventListener("click", () => {
+            void runFlashButton(copy3, async () => {
+              await navigator.clipboard.writeText(traceText(this.hops, stop));
+              return s2.traceCopied;
+            });
+          });
+          foot.append(copy3);
+        }
+        if (host.hasAttribute("data-kp-trace-swap")) {
+          const swap = (
+            /** @type {HTMLButtonElement} */
+            this.made("button", "kp-button kp-button--ghost kp-trace__swap")
+          );
+          swap.type = "button";
+          swap.textContent = s2.traceSwap;
+          swap.addEventListener("click", () => host.dispatchEvent(new CustomEvent(TRACE_SWAP_EVENT, { bubbles: true })));
+          foot.append(swap);
+        }
+      }
     };
+  }
+});
+
+// js/path-trace/controller.js
+var Trace;
+var init_controller40 = __esm({
+  "js/path-trace/controller.js"() {
+    "use strict";
+    init_shortcuts();
+    init_strings();
+    init_draw11();
+    init_states();
+    init_values22();
+    Trace = class extends TraceDraw {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.handle = {
+          element: host,
+          set: (next2) => {
+            this.takeHops(next2);
+            this.draw();
+            this.keepHeight();
+          },
+          setState: (next2, given2 = {}) => {
+            this.takeState(next2, given2.message ?? "");
+            this.draw();
+          },
+          text: () => traceText(this.hops, this.stop())
+        };
+      }
+      connect() {
+        const el16 = this.host;
+        el16.classList.add("kp-trace");
+        this.own(() => el16.classList.remove("kp-trace"));
+        el16.replaceChildren(this.summary, this.stage, this.foot);
+        this.own(() => el16.replaceChildren());
+        this.own(() => this.busy?.remove());
+        this.observe(new MutationObserver(() => this.draw())).observe(el16, { attributes: true, attributeFilter: WATCHED_ATTRIBUTES5 });
+        if (el16.hasAttribute("data-kp-trace-swap")) this.own(this.registerSwapKey());
+        this.draw();
+      }
+      /** The S key asks for a swap, for a form that swaps source and target. */
+      registerSwapKey() {
+        const s2 = getStrings();
+        return registerShortcuts(
+          this.host,
+          [
+            {
+              keys: "s",
+              what: s2.traceKeySwap,
+              group: s2.traceKeyGroup,
+              run: () => this.host.dispatchEvent(new CustomEvent(TRACE_SWAP_EVENT, { bubbles: true }))
+            }
+          ],
+          { layoutGuard: "warn" }
+        );
+      }
+    };
+  }
+});
+
+// js/path-trace.js
+var path_trace_exports = {};
+__export(path_trace_exports, {
+  TRACE: () => TRACE,
+  TRACE_RETRY_EVENT: () => TRACE_RETRY_EVENT,
+  TRACE_RULE_EVENT: () => TRACE_RULE_EVENT,
+  TRACE_SWAP_EVENT: () => TRACE_SWAP_EVENT,
+  attachTraces: () => attachTraces,
+  setTrace: () => setTrace,
+  trace: () => trace,
+  traceStates: () => traceStates,
+  traceSummary: () => traceSummary,
+  traceText: () => traceText
+});
+function trace(el16) {
+  return controllerOf(el16, Trace)?.handle ?? null;
+}
+function attachTraces(root = document) {
+  return attachAll(root, TRACE, Trace);
+}
+function setTrace(el16, hops) {
+  attachOne(el16, Trace)?.handle.set(hops);
+}
+var init_path_trace = __esm({
+  "js/path-trace.js"() {
+    "use strict";
+    init_controller();
+    init_controller40();
+    init_values22();
+    init_values22();
+    init_states();
   }
 });
 
@@ -66957,7 +67052,7 @@ function frame2(card) {
   card.classList.add("kp-card", "kp-card--entity");
   card.setAttribute("data-kp-entity", "");
   card.toggleAttribute("data-kp-entity-tile", kind === "tile");
-  card.replaceChildren(...SLOTS[kind].map((slot) => made6(doc, "div", `kp-entity__${slot}`)));
+  card.replaceChildren(...SLOTS[kind].map((slot) => made5(doc, "div", `kp-entity__${slot}`)));
   const was = DRAWN5.get(card);
   if (was) was.drawn = {};
   return kind;
@@ -66975,7 +67070,7 @@ function columnsFor(host, inline2) {
   }
   return Math.max(1, most + (more ? 1 : 0));
 }
-var DRAWN5, opt2, starKeyOf, made6, sig, SLOTS, kindOf2, slotOf;
+var DRAWN5, opt2, starKeyOf, made5, sig, SLOTS, kindOf2, slotOf;
 var init_helpers5 = __esm({
   "js/entity-card/helpers.js"() {
     "use strict";
@@ -66983,7 +67078,7 @@ var init_helpers5 = __esm({
     DRAWN5 = /* @__PURE__ */ new WeakMap();
     opt2 = (el16, name) => el16.getAttribute(name) ?? el16.closest(ENTITY_GRID)?.getAttribute(name) ?? null;
     starKeyOf = (card) => (opt2(card, "data-kp-entity-star-key") ?? (card.closest('[data-kp-tiles-keys="letters"]') ? "." : "s")).toLowerCase();
-    made6 = (doc, tag, className) => {
+    made5 = (doc, tag, className) => {
       const el16 = doc.createElement(tag);
       el16.className = className;
       return el16;
@@ -67008,7 +67103,7 @@ function tickAndMark(card, el16, data, selectable, markKind) {
   if (selectable) {
     const box = (
       /** @type {HTMLInputElement} */
-      made6(doc, "input", "kp-field__check kp-entity__tick")
+      made5(doc, "input", "kp-field__check kp-entity__tick")
     );
     box.type = "checkbox";
     box.setAttribute("data-kp-select-row", "");
@@ -67020,7 +67115,7 @@ function tickAndMark(card, el16, data, selectable, markKind) {
     el16.append(box);
   }
   if (markKind !== "none") {
-    const mark = made6(doc, "span", "kp-idmark kp-idmark--sm");
+    const mark = made5(doc, "span", "kp-idmark kp-idmark--sm");
     if (markKind === "idmark") setIdmark(mark, data.name);
     else mark.textContent = "\u25C6";
     el16.append(mark);
@@ -67051,7 +67146,7 @@ function appendStar(card, el16, data, pressed, starKey) {
   const ns = "http://www.w3.org/2000/svg";
   const button6 = (
     /** @type {HTMLButtonElement} */
-    made6(doc, "button", "kp-button kp-button--ghost kp-entity__star")
+    made5(doc, "button", "kp-button kp-button--ghost kp-entity__star")
   );
   button6.type = "button";
   button6.setAttribute("data-kp-toggle", "");
@@ -67065,7 +67160,7 @@ function appendStar(card, el16, data, pressed, starKey) {
   const outline = doc.createElementNS(ns, "path");
   outline.setAttribute("d", "M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z");
   glyph3.append(outline);
-  const name = made6(doc, "span", "kp-sr-only");
+  const name = made5(doc, "span", "kp-sr-only");
   name.textContent = getStrings().entityStar(data.name);
   button6.append(glyph3, name);
   el16.append(button6);
@@ -67103,11 +67198,11 @@ var init_star = __esm({
 
 // js/entity-card/tile.js
 function trendRow(doc, s2, data, status) {
-  const row = made6(doc, "div", "kp-entity__meter kp-entity__trend");
-  const label = made6(doc, "span", "kp-entity__meter-label");
+  const row = made5(doc, "div", "kp-entity__meter kp-entity__trend");
+  const label = made5(doc, "span", "kp-entity__meter-label");
   label.textContent = data.trendLabel ?? s2.entityTrend;
-  const line = made6(doc, "div", "kp-entity__trend-line");
-  const value = made6(doc, "span", "kp-entity__meter-value");
+  const line = made5(doc, "div", "kp-entity__trend-line");
+  const value = made5(doc, "span", "kp-entity__meter-value");
   const points = (data.trend ?? []).filter((n) => Number.isFinite(n));
   if (status !== "empty" && points.length >= 2) {
     const last = (
@@ -67125,7 +67220,7 @@ function trendRow(doc, s2, data, status) {
     drawSparkline(svg2, points, { parts: "kp-entity__spark" });
     line.append(svg2);
   } else {
-    const none = made6(doc, "span", "kp-entity__none");
+    const none = made5(doc, "span", "kp-entity__none");
     none.textContent = status === "empty" ? s2.entityNotMeasured : s2.entityTrendNone;
     line.append(none);
   }
@@ -67138,21 +67233,21 @@ function drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable,
   const external2 = data.external === true && href !== null;
   slot("id", { n: data.name, m: data.match, href, external: external2, selectable, markKind, status, starOn, starKey }, (el16) => {
     tickAndMark(card, el16, data, selectable, markKind);
-    const name = href ? made6(doc, "a", "kp-entity__name") : made6(doc, "span", "kp-entity__name");
+    const name = href ? made5(doc, "a", "kp-entity__name") : made5(doc, "span", "kp-entity__name");
     writeName(name, data.name, data.match);
     if (name instanceof HTMLAnchorElement && href) {
       name.href = href;
       if (external2) {
         name.target = "_blank";
         name.rel = "noopener noreferrer";
-        const said = made6(doc, "span", "kp-sr-only");
+        const said = made5(doc, "span", "kp-sr-only");
         said.textContent = ` (${s2.entityOpensNew})`;
         name.append(said);
       }
     }
     el16.append(name);
     if (external2) {
-      const glyph3 = made6(doc, "span", "kp-entity__external");
+      const glyph3 = made5(doc, "span", "kp-entity__external");
       glyph3.setAttribute("aria-hidden", "true");
       glyph3.textContent = "\u2197";
       el16.append(glyph3);
@@ -67164,22 +67259,22 @@ function drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable,
     const word = status === "error" ? s2.entityFailed : data.state?.label ?? "";
     if (!word) return;
     const tone = status === "error" ? "destructive" : data.state?.tone;
-    const state12 = made6(doc, "span", "kp-health kp-entity__tile-state");
+    const state12 = made5(doc, "span", "kp-health kp-entity__tile-state");
     if (tone === "success") state12.setAttribute("data-state", "ok");
     else if (tone === "warning") state12.setAttribute("data-state", "warn");
     else if (tone === "destructive") state12.setAttribute("data-state", "down");
-    const dot = made6(doc, "span", "kp-health__dot");
+    const dot = made5(doc, "span", "kp-health__dot");
     dot.setAttribute("aria-hidden", "true");
     state12.append(dot, word);
     el16.append(state12);
   });
   slot("description", { d: data.description, status, e: data.error }, (el16) => {
     if (status === "error") {
-      const says = made6(doc, "span", "kp-entity__tile-failed");
+      const says = made5(doc, "span", "kp-entity__tile-failed");
       says.textContent = s2.entityTileFailed;
       const retry = (
         /** @type {HTMLButtonElement} */
-        made6(doc, "button", "kp-button kp-button--sm kp-entity__retry")
+        made5(doc, "button", "kp-button kp-button--sm kp-entity__retry")
       );
       retry.type = "button";
       retry.textContent = s2.entityRetry;
@@ -67189,20 +67284,20 @@ function drawTile({ card, data, doc, s: s2, slot, status, key, link, selectable,
       return;
     }
     if (!data.description) return;
-    const text = made6(doc, "span", "kp-entity__text");
+    const text = made5(doc, "span", "kp-entity__text");
     text.textContent = data.description;
     el16.append(text);
   });
   slotOf(card, "lines").hidden = status === "error";
   slot("lines", { l: data.lines, status }, (el16) => {
     if (status === "empty") {
-      const none = made6(doc, "span", "kp-entity__none");
+      const none = made5(doc, "span", "kp-entity__none");
       none.textContent = s2.entityNotMeasured;
       el16.append(none);
       return;
     }
     for (const text of data.lines ?? []) {
-      const line = made6(doc, "span", "kp-entity__line");
+      const line = made5(doc, "span", "kp-entity__line");
       line.textContent = text;
       el16.append(line);
     }
@@ -67308,7 +67403,7 @@ function setEntity(card, data) {
     slotOf(card, kind === "stack" ? "actions" : "lines").hidden = false;
     for (const name of SLOTS[kind]) {
       slot(name, "loading", (el16) => {
-        const bone = made6(doc, "span", "kp-skeleton kp-entity__bone");
+        const bone = made5(doc, "span", "kp-skeleton kp-entity__bone");
         bone.setAttribute("aria-hidden", "true");
         el16.append(bone);
       });
@@ -67328,14 +67423,14 @@ function setEntity(card, data) {
   }
   slot("id", { n: data.name, v: data.vmid, st: data.state, link, selectable, markKind, status, starOn, starKey }, (el16) => {
     tickAndMark(card, el16, data, selectable, markKind);
-    const name = link ? made6(doc, "a", "kp-entity__name") : made6(doc, "span", "kp-entity__name");
+    const name = link ? made5(doc, "a", "kp-entity__name") : made5(doc, "span", "kp-entity__name");
     if (name instanceof HTMLAnchorElement && link) name.href = link.replace("{key}", encodeURIComponent(key));
     name.textContent = data.name;
     el16.append(name);
-    const vmid = made6(doc, "span", "kp-entity__vmid");
+    const vmid = made5(doc, "span", "kp-entity__vmid");
     vmid.textContent = data.vmid ?? "";
     el16.append(vmid);
-    const st = made6(
+    const st = made5(
       doc,
       "span",
       `kp-badge kp-entity__state${data.state?.tone ? ` kp-badge--${status === "error" ? "destructive" : data.state.tone}` : status === "error" ? " kp-badge--destructive" : ""}`
@@ -67347,14 +67442,14 @@ function setEntity(card, data) {
   syncStar(card, star);
   slot("figures", { f: data.figures, status }, (el16) => {
     if (status === "empty") {
-      const none = made6(doc, "span", "kp-entity__none");
+      const none = made5(doc, "span", "kp-entity__none");
       none.textContent = s2.entityNotMeasured;
       el16.append(none);
       return;
     }
     for (const f of data.figures ?? []) {
-      const one = made6(doc, "span", "kp-entity__figure");
-      const value = made6(doc, "b", "kp-entity__value");
+      const one = made5(doc, "span", "kp-entity__figure");
+      const value = made5(doc, "b", "kp-entity__value");
       value.textContent = f.value;
       one.append(value, ` ${f.label}`);
       el16.append(one);
@@ -67365,23 +67460,23 @@ function setEntity(card, data) {
   slot("flags", { fl: data.flags, flagsMax }, (el16) => {
     const all = data.flags ?? [];
     for (const flag of all.slice(0, flagsMax)) {
-      const chip = made6(doc, "span", `kp-badge kp-entity__flag${flag.tone ? ` kp-badge--${flag.tone}` : ""}`);
+      const chip = made5(doc, "span", `kp-badge kp-entity__flag${flag.tone ? ` kp-badge--${flag.tone}` : ""}`);
       chip.textContent = flag.label;
       el16.append(chip);
     }
     const rest = all.slice(flagsMax);
     if (rest.length > 0) {
-      const wrap = made6(doc, "div", "kp-menu-button kp-entity__more-flags");
+      const wrap = made5(doc, "div", "kp-menu-button kp-entity__more-flags");
       wrap.setAttribute("data-kp-menu-button", "");
       wrap.setAttribute("data-kp-key", `${key}-flags`);
       const button6 = (
         /** @type {HTMLButtonElement} */
-        made6(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-entity__plus")
+        made5(doc, "button", "kp-button kp-button--ghost kp-button--sm kp-entity__plus")
       );
       button6.type = "button";
       button6.textContent = `+${rest.length}`;
       button6.setAttribute("aria-label", s2.entityMoreFlags(rest.length));
-      const menu = made6(doc, "div", "kp-menu kp-menu--rich");
+      const menu = made5(doc, "div", "kp-menu kp-menu--rich");
       menu.setAttribute("role", "menu");
       menu.setAttribute("aria-label", s2.entityFlagsLabel);
       wrap.append(button6, menu);
@@ -67402,11 +67497,11 @@ function setEntity(card, data) {
   slot("meters", { m: data.meters, meterRows, status, tr: trendOn ? [data.trend ?? null, data.trendLabel, data.trendText] : null }, (el16) => {
     for (let i = 0; i < meterRows; i++) {
       const m = data.meters?.[i];
-      const row = made6(doc, "div", "kp-entity__meter");
-      const label = made6(doc, "span", "kp-entity__meter-label");
+      const row = made5(doc, "div", "kp-entity__meter");
+      const label = made5(doc, "span", "kp-entity__meter-label");
       label.textContent = m?.label ?? "";
-      const bar = made6(doc, "div", "kp-meter");
-      const value = made6(doc, "span", "kp-entity__meter-value");
+      const bar = made5(doc, "div", "kp-meter");
+      const value = made5(doc, "span", "kp-entity__meter-value");
       if (m && status !== "empty") {
         const tone = m.tone ?? (m.value !== null && m.value >= 0.9 ? "destructive" : m.value !== null && m.value >= 0.75 ? "warning" : null);
         setMeter(bar, { value: m.value, mark: m.mark ?? null, tone, label: m.label });
@@ -67437,7 +67532,7 @@ function setEntity(card, data) {
     if (status === "error") {
       const retry = (
         /** @type {HTMLButtonElement} */
-        made6(doc, "button", "kp-button kp-entity__action kp-entity__retry")
+        made5(doc, "button", "kp-button kp-entity__action kp-entity__retry")
       );
       retry.type = "button";
       retry.textContent = s2.entityRetry;
@@ -67452,7 +67547,7 @@ function setEntity(card, data) {
     for (const a of shown5) {
       const button6 = (
         /** @type {HTMLButtonElement} */
-        made6(doc, "button", `kp-button kp-button--sm kp-entity__action${a.danger ? " kp-button--destructive" : ""}`)
+        made5(doc, "button", `kp-button kp-button--sm kp-entity__action${a.danger ? " kp-button--destructive" : ""}`)
       );
       button6.type = "button";
       button6.textContent = a.label;
@@ -67467,16 +67562,16 @@ function setEntity(card, data) {
       el16.append(button6);
     }
     if (rest.length > 0) {
-      const wrap = made6(doc, "div", "kp-menu-button kp-entity__more");
+      const wrap = made5(doc, "div", "kp-menu-button kp-entity__more");
       wrap.setAttribute("data-kp-menu-button", "");
       wrap.setAttribute("data-kp-key", `${key}-more`);
       const button6 = (
         /** @type {HTMLButtonElement} */
-        made6(doc, "button", "kp-button kp-button--sm")
+        made5(doc, "button", "kp-button kp-button--sm")
       );
       button6.type = "button";
       button6.textContent = s2.entityMore;
-      const menu = made6(doc, "div", "kp-menu kp-menu--rich");
+      const menu = made5(doc, "div", "kp-menu kp-menu--rich");
       menu.setAttribute("role", "menu");
       menu.setAttribute("aria-label", s2.entityMoreLabel);
       wrap.append(button6, menu);
@@ -67568,7 +67663,7 @@ function setEntityGridState(grid2, state12, options = {}) {
     for (let i = 0; i < (options.count ?? (had || 6)); i++) {
       const ghost = (
         /** @type {HTMLElement} */
-        made6(doc, "article", "kp-card--ghost")
+        made5(doc, "article", "kp-card--ghost")
       );
       grid2.append(ghost);
       setEntity(ghost, { key: `loading-${i}`, name: "", status: "loading" });
@@ -67823,7 +67918,7 @@ function fire(c) {
   c.dispatchEvent(new Event("change", { bubbles: true }));
 }
 var radioGroup;
-var init_values22 = __esm({
+var init_values23 = __esm({
   "js/unsaved/values.js"() {
     "use strict";
     radioGroup = (c) => c.name ? radiosNamed(c) : [c];
@@ -68162,7 +68257,7 @@ var init_actions5 = __esm({
     init_config();
     init_paint11();
     init_parts11();
-    init_values22();
+    init_values23();
   }
 });
 
@@ -68172,7 +68267,7 @@ var init_changes = __esm({
   "js/unsaved/changes.js"() {
     "use strict";
     init_config();
-    init_values22();
+    init_values23();
     ChangeTracker = class {
       /**
        * @param {HTMLElement} el the bar
@@ -68292,7 +68387,7 @@ var init_keeper = __esm({
     "use strict";
     init_overlays();
     init_config();
-    init_values22();
+    init_values23();
     ChangeKeeper = class {
       /** @param {import('./controller.js').UnsavedController} ctl */
       constructor(ctl) {
@@ -68567,7 +68662,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller40 = __esm({
+var init_controller41 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -68820,7 +68915,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller40();
+    init_controller41();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -69166,7 +69261,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller41 = __esm({
+var init_controller42 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -69460,9 +69555,9 @@ function setAutosizeState(element, state12, message) {
   if (box) applyState(box, state12, message);
 }
 function attachAutosize(root = document, options = {}) {
-  const made7 = hostsOf(root, AUTOSIZE).filter((area) => !controllerFor(area) && area.getAttribute("data-kp-autosize") !== "off").map((area) => attachOne(area, AutosizeController, options)).filter((box) => box !== void 0);
+  const made6 = hostsOf(root, AUTOSIZE).filter((area) => !controllerFor(area) && area.getAttribute("data-kp-autosize") !== "off").map((area) => attachOne(area, AutosizeController, options)).filter((box) => box !== void 0);
   return () => {
-    for (const box of made7) box.destroy();
+    for (const box of made6) box.destroy();
   };
 }
 var controllerFor;
@@ -69471,7 +69566,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller41();
+    init_controller42();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -69609,7 +69704,7 @@ var init_print = __esm({
 
 // js/docpreview/values.js
 var PREVIEW, DOC_GLYPH, DOC_KINDS, PREVIEW_TIMEOUT_MS, GLYPH_LINES, DEFAULT_ACTIONS, GLYPH_HOSTS, EXTENSIONS;
-var init_values23 = __esm({
+var init_values24 = __esm({
   "js/docpreview/values.js"() {
     "use strict";
     PREVIEW = "[data-kp-preview]";
@@ -69682,7 +69777,7 @@ var init_glyph = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_values23();
+    init_values24();
     DocGlyph = class extends Controller {
       connect() {
         const el16 = this.host;
@@ -69954,7 +70049,7 @@ function previewTypeOf(url, contentType = "") {
 var init_kinds = __esm({
   "js/docpreview/kinds.js"() {
     "use strict";
-    init_values23();
+    init_values24();
   }
 });
 
@@ -69991,13 +70086,13 @@ var init_keys14 = __esm({
 
 // js/docpreview/core.js
 var PreviewLoad, PreviewCore;
-var init_core18 = __esm({
+var init_core19 = __esm({
   "js/docpreview/core.js"() {
     "use strict";
     init_controller();
     init_locale();
     init_strings();
-    init_values23();
+    init_values24();
     init_kinds();
     PreviewLoad = class {
       constructor() {
@@ -70113,9 +70208,9 @@ var init_run4 = __esm({
     "use strict";
     init_freshness();
     init_locale();
-    init_values23();
+    init_values24();
     init_kinds();
-    init_core18();
+    init_core19();
     FACTS_BASE = 1024;
     PreviewRun = class extends PreviewCore {
       connect() {
@@ -70193,10 +70288,10 @@ var init_run4 = __esm({
       writeFacts(head, url, contentType) {
         const strings = this.strings;
         const bytes = Number(head.headers.get("content-length"));
-        const made7 = Date.parse(head.headers.get("last-modified") ?? "");
+        const made6 = Date.parse(head.headers.get("last-modified") ?? "");
         const kindWords = { pdf: "PDF", image: strings.docKindImage, text: strings.docKindText }[previewTypeOf(url, contentType)];
         const size2 = Number.isFinite(bytes) && bytes > 0 ? formatBytes(bytes, this.locale, { base: FACTS_BASE }) : "";
-        this.viewer.setFacts([kindWords, size2, Number.isFinite(made7) ? agoMoment(made7) : ""].filter(Boolean).join(" \xB7 "));
+        this.viewer.setFacts([kindWords, size2, Number.isFinite(made6) ? agoMoment(made6) : ""].filter(Boolean).join(" \xB7 "));
       }
       /**
        * Show the file as a picture or a frame, or say that the browser cannot show a PDF.
@@ -70284,7 +70379,7 @@ var init_open3 = __esm({
     init_controller();
     init_strings();
     init_viewer();
-    init_values23();
+    init_values24();
     init_kinds();
     init_keys14();
     init_run4();
@@ -70406,8 +70501,8 @@ var init_docpreview = __esm({
     init_controller();
     init_glyph();
     init_opener();
-    init_values23();
-    init_values23();
+    init_values24();
+    init_values24();
     init_kinds();
     init_glyph();
     init_open3();
@@ -71308,7 +71403,7 @@ function startValues(o, count2) {
   return values;
 }
 var SLIDER, SLIDER_INPUT_EVENT, SLIDER_CHANGE_EVENT, SLIDER_STATES, decimalsOf2, LOW_START, HIGH_START, MIDDLE, FORMATS2, SHOWS, showOf, numbersIn2;
-var init_values24 = __esm({
+var init_values25 = __esm({
   "js/slider/values.js"() {
     "use strict";
     init_locale();
@@ -71447,7 +71542,7 @@ var AUTO_TICKS, WIDTH_SAMPLES, MIN_FIELD_CH, hidden, thumbName;
 var init_build13 = __esm({
   "js/slider/build.js"() {
     "use strict";
-    init_values24();
+    init_values25();
     AUTO_TICKS = 4;
     WIDTH_SAMPLES = 20;
     MIN_FIELD_CH = 2;
@@ -71461,13 +71556,13 @@ var init_build13 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core19 = __esm({
+var init_core20 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
     init_strings();
     init_build13();
-    init_values24();
+    init_values25();
     seq4 = 0;
     SliderCore = class extends Controller {
       /** @param {HTMLElement} el */
@@ -71582,12 +71677,12 @@ var init_core19 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller42 = __esm({
+var init_controller43 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build13();
-    init_core19();
-    init_values24();
+    init_core20();
+    init_values25();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
     KNOBS2 = ["--kp-slider-from", "--kp-slider-to", "--kp-slider-field-ch", "--kp-slider-at-0", "--kp-slider-at-1"];
@@ -71812,9 +71907,9 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller42();
-    init_values24();
-    init_values24();
+    init_controller43();
+    init_values25();
+    init_values25();
   }
 });
 
@@ -71980,7 +72075,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller43 = __esm({
+var init_controller44 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -72209,7 +72304,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller43();
+    init_controller44();
     init_fields();
     init_fields();
   }
@@ -72549,7 +72644,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller44 = __esm({
+var init_controller45 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -72800,7 +72895,7 @@ var init_api25 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller44();
+    init_controller45();
   }
 });
 
@@ -72843,7 +72938,7 @@ var init_input = __esm({
 
 // js/runs/values.js
 var RUNS, RUNS_RETRY_EVENT, RUNS_STATES, DEFAULT_COUNT, REFRESH_MS, MINUTE_S4, DAY_S3, NOW_S, MINUTE_MS2;
-var init_values25 = __esm({
+var init_values26 = __esm({
   "js/runs/values.js"() {
     "use strict";
     RUNS = "[data-kp-runs]";
@@ -72877,7 +72972,7 @@ var init_options7 = __esm({
   "js/runs/options.js"() {
     "use strict";
     init_chart();
-    init_values25();
+    init_values26();
   }
 });
 
@@ -72942,14 +73037,14 @@ var init_time3 = __esm({
     init_weekdays();
     init_freshness();
     init_chart();
-    init_values25();
+    init_values26();
     two6 = (n) => String(n).padStart(2, "0");
   }
 });
 
 // js/runs/core.js
 var seq6, RunsCore;
-var init_core20 = __esm({
+var init_core21 = __esm({
   "js/runs/core.js"() {
     "use strict";
     init_controller();
@@ -73024,7 +73119,7 @@ var RunsRows;
 var init_rows7 = __esm({
   "js/runs/rows.js"() {
     "use strict";
-    init_core20();
+    init_core21();
     init_time3();
     RunsRows = class extends RunsCore {
       /** The marks of a run: the clock turning before it, and the app's own conflict. @param {import('./core.js').Run} run @param {number | undefined} before */
@@ -73124,11 +73219,11 @@ var init_note2 = __esm({
 
 // js/runs/controller.js
 var RunsList;
-var init_controller45 = __esm({
+var init_controller46 = __esm({
   "js/runs/controller.js"() {
     "use strict";
     init_note2();
-    init_values25();
+    init_values26();
     RunsList = class extends RunsNote {
       /**
        * @param {HTMLElement} host
@@ -73235,9 +73330,9 @@ var init_runs = __esm({
   "js/runs.js"() {
     "use strict";
     init_controller();
-    init_controller45();
-    init_values25();
-    init_values25();
+    init_controller46();
+    init_values26();
+    init_values26();
     init_time3();
   }
 });
@@ -73563,7 +73658,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS5, SnoozePicker;
-var init_controller46 = __esm({
+var init_controller47 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -73822,7 +73917,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller46();
+    init_controller47();
     init_choices();
   }
 });
@@ -74355,8 +74450,8 @@ function renderDetail(g) {
   g.el.setAttribute("data-kp-detail-open", "");
   const info = { id: node.id, node, slot: body, host: g.el, ...keyOf7(g.el) ? { key: keyOf7(g.el) } : {} };
   g.el.dispatchEvent(new CustomEvent(GRAPH_DETAIL_EVENT, { bubbles: true, detail: info }));
-  const made7 = g.detailHook?.(info);
-  if (made7 != null && made7 !== void 0) body.append(made7 instanceof Node ? made7 : doc.createTextNode(String(made7)));
+  const made6 = g.detailHook?.(info);
+  if (made6 != null && made6 !== void 0) body.append(made6 instanceof Node ? made6 : doc.createTextNode(String(made6)));
   if (!body.childNodes.length) body.append(make30(doc, "p", "kp-graph__detail-text", node.description));
 }
 var detailCount, insetOf;
@@ -74670,7 +74765,7 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   if (hadFocus) g.svg.querySelector(`[data-kp-id="${CSS.escape(hadFocus)}"]`)?.focus();
 }
 var SIDE_ROOM;
-var init_draw11 = __esm({
+var init_draw12 = __esm({
   "js/graph/draw.js"() {
     "use strict";
     init_state_plate();
@@ -74757,7 +74852,7 @@ var init_api26 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
-    init_draw11();
+    init_draw12();
     init_view5();
   }
 });
@@ -75188,7 +75283,7 @@ var init_attach20 = __esm({
     init_api26();
     init_options8();
     init_layout3();
-    init_draw11();
+    init_draw12();
     init_view5();
   }
 });
@@ -78385,7 +78480,7 @@ function drawCanvas(root, m) {
   return canvas;
 }
 var QUIET2, THEME_CONTRAST, CANVAS_SCALE, CANVAS_SCALE_MIN;
-var init_draw12 = __esm({
+var init_draw13 = __esm({
   "js/qr/draw.js"() {
     "use strict";
     init_matrix2();
@@ -78575,7 +78670,7 @@ var init_render6 = __esm({
     init_reason();
     init_state_plate();
     init_strings();
-    init_draw12();
+    init_draw13();
     init_matrix2();
     init_state28();
     TIMER_MAX_MS = 2 ** 31 - 1;
@@ -78676,7 +78771,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller47 = __esm({
+var init_controller48 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -78780,7 +78875,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller47();
+    init_controller48();
     init_state28();
     init_state28();
     init_matrix2();
@@ -82268,12 +82363,12 @@ function themeMenuMarkup({
 // js/theme-picker.js
 function attachThemePickers(root = document, { persist = true, closePopover = true, status = null, preview = void 0 } = {}) {
   const pickers = hostsOf(root, PICKER).filter((el16) => !(el16.dataset.kpThemeAttached === "1") && !controllerOf(el16, ThemePicker));
-  const made7 = pickers.map((el16) => attachOne(el16, ThemePicker, { persist, closePopover, status, preview })).filter((picker) => picker !== void 0);
+  const made6 = pickers.map((el16) => attachOne(el16, ThemePicker, { persist, closePopover, status, preview })).filter((picker) => picker !== void 0);
   const stop = onThemeChange((theme) => {
     for (const el16 of (root === document ? document : root).querySelectorAll(PICKER)) markSelection(el16, theme);
   });
   const detach = () => {
-    for (const picker of made7) picker.destroy();
+    for (const picker of made6) picker.destroy();
     stop();
   };
   return Object.assign(detach, {
