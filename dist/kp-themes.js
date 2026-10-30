@@ -48844,12 +48844,12 @@ __export(log_exports, {
   sourceIndex: () => sourceIndex
 });
 function sourceIndex(name) {
-  let hash = 2166136261;
+  let hash = FNV_OFFSET_BASIS;
   for (const byte of new TextEncoder().encode(name)) {
     hash ^= byte;
-    hash = Math.imul(hash, 16777619) >>> 0;
+    hash = Math.imul(hash, FNV_PRIME3) >>> 0;
   }
-  return hash % 5 + 1;
+  return hash % CHART_COLOURS + 1;
 }
 function attachLogs(root = document) {
   const present = presentUnder(root);
@@ -48862,12 +48862,15 @@ function attachLogs(root = document) {
     return marked;
   });
 }
-var SOURCE_PROPERTY, sourceColour;
+var SOURCE_PROPERTY, FNV_OFFSET_BASIS, FNV_PRIME3, CHART_COLOURS, sourceColour;
 var init_log = __esm({
   "js/log.js"() {
     "use strict";
     init_as_of();
     SOURCE_PROPERTY = "--kp-source-colour";
+    FNV_OFFSET_BASIS = 2166136261;
+    FNV_PRIME3 = 16777619;
+    CHART_COLOURS = 5;
     sourceColour = (name) => `var(--chart-${sourceIndex(name)})`;
   }
 });
