@@ -183,6 +183,7 @@
         { "path": "js/forms.js", "tags": ["@component:field", "@component:switch", "@component:structure"] },
         { "path": "js/forms/*.js", "tags": ["@component:field", "@component:switch", "@component:structure"] },
         { "path": "js/wizard.js", "tags": ["@component:structure"] },
+        { "path": "js/wizard/*.js", "tags": ["@component:structure"] },
         { "path": "js/upload.js", "tags": ["@component:upload"] },
         { "path": "js/upload/*.js", "tags": ["@component:upload"] },
         { "path": "js/structure.js", "tags": ["@component:structure"] },

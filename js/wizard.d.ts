@@ -1,9 +1,5 @@
-/** Fired when the step changed: `{ step, of, previous, direction }`. A contract value [TH26]. */
-export declare const STEP_EVENT = "kp-wizard-step";
-/** Fired before a step change, cancelable: `{ from, to, direction }`. preventDefault() holds the wizard where it is. */
-export declare const BEFORE_STEP_EVENT = "kp-wizard-before-step";
-/** Fired when Next is pressed on the last step: `{ of }`. */
-export declare const FINISH_EVENT = "kp-wizard-finish";
+export { STEP_EVENT, BEFORE_STEP_EVENT, FINISH_EVENT } from './wizard/values.js';
+export { wizard } from './wizard/attach.js';
 export type WizardHandle = {
     element: HTMLElement;
     step: () => number;
@@ -14,19 +10,45 @@ export type WizardHandle = {
     next: () => Promise<boolean>;
     back: () => Promise<boolean>;
 };
-/** The handle for an attached wizard. @param {Element} element */
-export declare function wizard(element: Element): WizardHandle | null;
+export type WizardOptions = {
+    /**
+     * whether Next waits for the step's fields to validate (default true)
+     */
+    validate?: boolean;
+    /**
+     * whether the focus moves into the new step (default true)
+     */
+    focusStep?: boolean;
+    /**
+     * whether a completed step's label can be pressed to go back (default false)
+     */
+    navigableLabels?: boolean;
+    /**
+     * holds or refuses a step change
+     */
+    beforeStep?: (from: number, to: number) => boolean | Promise<boolean>;
+};
+/**
+ * @typedef {object} WizardHandle
+ * @property {HTMLElement} element
+ * @property {() => number} step
+ * @property {(index: number) => Promise<boolean>} goTo resolves to whether the wizard moved
+ * @property {() => Promise<boolean>} next
+ * @property {() => Promise<boolean>} back
+ */
+/**
+ * @typedef {object} WizardOptions
+ * @property {boolean} [validate] whether Next waits for the step's fields to validate (default true)
+ * @property {boolean} [focusStep] whether the focus moves into the new step (default true)
+ * @property {boolean} [navigableLabels] whether a completed step's label can be pressed to go back (default false)
+ * @property {(from: number, to: number) => boolean | Promise<boolean>} [beforeStep] holds or refuses a step change
+ */
 /**
  * @param {ParentNode} root
- * @param {{ validate?: boolean, focusStep?: boolean, navigableLabels?: boolean, beforeStep?: (from: number, to: number) => boolean | Promise<boolean> }} [options]
+ * @param {WizardOptions} [options]
  *   Defaults; each also per wizard: `data-kp-validate="false"`, `data-kp-focus-step="false"`, `data-kp-navigable`.
  * @returns {(() => void) & { handles: WizardHandle[] }} detach
  */
-export declare function attachWizards(root?: ParentNode, { validate, focusStep, navigableLabels, beforeStep }?: {
-    validate?: boolean;
-    focusStep?: boolean;
-    navigableLabels?: boolean;
-    beforeStep?: (from: number, to: number) => boolean | Promise<boolean>;
-}): (() => void) & {
+export declare function attachWizards(root?: ParentNode, options?: WizardOptions): (() => void) & {
     handles: WizardHandle[];
 };

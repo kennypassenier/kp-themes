@@ -131,7 +131,7 @@
         "js/week.js": { "digest": "3b678451278a57b0", "when": "[data-kp-week]" },
         "js/weekdays.js": { "digest": "078ced966c766942", "when": "[data-kp-weekdays]" },
         "js/wheel.js": { "digest": "364615d2c0977987", "when": "[data-kp-wheel]" },
-        "js/wizard.js": { "digest": "511924d0f81de6b2", "when": "[data-kp-wizard]" }
+        "js/wizard.js": { "digest": "30df34a5ed6a9d70", "when": "[data-kp-wizard]" }
     },
     "themes": {
         "formal": "a3d0b60749933bf3",

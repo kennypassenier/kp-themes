@@ -402,4 +402,9 @@ export const CONTROLLER_PART_FILES = [
     'js/weekdays/parts.js',
     'js/weekdays/summary.js',
     'js/weekdays/values.js',
+    'js/wizard/attach.js',
+    'js/wizard/controller.js',
+    'js/wizard/validate.js',
+    'js/wizard/values.js',
+    'js/wizard/view.js',
 ];
