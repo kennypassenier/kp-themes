@@ -109,7 +109,7 @@
         "js/statusrow.js": { "digest": "0fed80955a05324a", "when": ".kp-statuslist" },
         "js/steplist.js": { "digest": "755a25b21d821b06", "when": ".kp-steplist" },
         "js/structure.js": { "digest": "7181ac59520127cf", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
-        "js/tabbar.js": { "digest": "9cc4d147a0f91925", "when": ".kp-tabbar" },
+        "js/tabbar.js": { "digest": "a60f6e029fc5dd56", "when": ".kp-tabbar" },
         "js/tables.js": { "digest": "66d205c2f610c15a", "when": ".kp-table-wrap" },
         "js/thread.js": { "digest": "98fafc3d3895dbe1", "when": "[data-kp-thread]" },
         "js/tick.js": { "digest": "127ccd885a791759", "when": "[data-kp-tick]" },

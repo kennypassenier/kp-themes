@@ -1144,7 +1144,7 @@ var init_split_confirm_chart = __esm({
       chartOpen: "Open",
       chartMark: (label, time) => `${label} \xB7 ${time}; click to pin`,
       chartZoomed: (from, to) => `Zoomed: ${from}\u2013${to} \xB7 `,
-      chartZoomedSpan: (span4) => `Zoomed: ${span4} \xB7 `,
+      chartZoomedSpan: (span5) => `Zoomed: ${span5} \xB7 `,
       chartReset: "Reset",
       chartResetTitle: "Show the whole range again (double-click or Esc)",
       chartUp: "up",
@@ -2405,8 +2405,8 @@ var init_feed_sequencer = __esm({
         }
         return `${value < 0 ? "-" : ""}${parts2.join(" ")}`;
       },
-      sequencerTotal: (span4) => `Total ${span4}`,
-      sequencerNow: (span4) => `Now, ${span4}`,
+      sequencerTotal: (span5) => `Total ${span5}`,
+      sequencerNow: (span5) => `Now, ${span5}`,
       sequencerHint: "Drag a step to move it, drag its edges to resize it \xB7 Enter picks a step up for the keyboard",
       sequencerHintReadonly: "Select a step for its times",
       sequencerItemHelp: "Press Enter to pick it up, then use the arrow keys.",
@@ -2905,12 +2905,12 @@ function lineOf(effect) {
   };
 }
 function turnLines(lines, total) {
-  const span4 = Math.max(0, ...lines.map((line) => line.end));
-  const scale = span4 > 0 ? total / span4 : 1;
+  const span5 = Math.max(0, ...lines.map((line) => line.end));
+  const scale = span5 > 0 ? total / span5 : 1;
   return lines.map((line) => ({
     duration: line.duration * scale,
     openDelay: line.delay * scale,
-    closeDelay: (span4 - line.end) * scale
+    closeDelay: (span5 - line.end) * scale
   }));
 }
 function turnEntrances(kept, total) {
@@ -7215,12 +7215,12 @@ function words(run) {
   const nodes = parts2.map((part7) => {
     if (part7 === "") return null;
     if (/^\s+$/.test(part7)) return doc.createTextNode(part7);
-    const span4 = doc.createElement("span");
-    span4.setAttribute("data-word", "");
-    span4.setAttribute("aria-hidden", "true");
-    span4.style.setProperty("--kp-i", String(index++));
-    span4.textContent = part7;
-    return span4;
+    const span5 = doc.createElement("span");
+    span5.setAttribute("data-word", "");
+    span5.setAttribute("aria-hidden", "true");
+    span5.style.setProperty("--kp-i", String(index++));
+    span5.textContent = part7;
+    return span5;
   });
   el16.replaceChildren(...nodes.filter((n) => n !== null));
   el16.classList.add(STATE.words);
@@ -7257,15 +7257,15 @@ function typeOut(run) {
   ctx.later(step, cfg.lead);
 }
 function glyphSpan(doc, ch) {
-  const span4 = doc.createElement("span");
-  span4.setAttribute("data-glyph", "");
-  span4.setAttribute("aria-hidden", "true");
-  if (/\s/.test(ch)) span4.textContent = ch;
+  const span5 = doc.createElement("span");
+  span5.setAttribute("data-glyph", "");
+  span5.setAttribute("aria-hidden", "true");
+  if (/\s/.test(ch)) span5.textContent = ch;
   else {
-    span4.textContent = randomGlyph();
-    span4.classList.add(STATE.noise);
+    span5.textContent = randomGlyph();
+    span5.classList.add(STATE.noise);
   }
-  return span4;
+  return span5;
 }
 function decipher(run) {
   const { ctx, el: el16, text } = run;
@@ -7306,17 +7306,17 @@ function decipher(run) {
 }
 function settleGlyphs(spans, chars, t, cfg, perChar) {
   let all = true;
-  spans.forEach((span4, i) => {
+  spans.forEach((span5, i) => {
     const ch = chars[i] ?? "";
     if (/\s/.test(ch)) return;
     if (t > cfg.lead + i * perChar) {
-      if (span4.classList.contains(STATE.noise)) {
-        span4.textContent = ch;
-        span4.classList.remove(STATE.noise);
+      if (span5.classList.contains(STATE.noise)) {
+        span5.textContent = ch;
+        span5.classList.remove(STATE.noise);
       }
     } else {
       all = false;
-      if (Math.random() < cfg.swap) span4.textContent = randomGlyph();
+      if (Math.random() < cfg.swap) span5.textContent = randomGlyph();
     }
   });
   return all;
@@ -10305,11 +10305,11 @@ var init_marks = __esm({
         button6.setAttribute("data-kp-anchor-mark", "");
         button6.setAttribute("aria-label", this.strings.anchorCopyLink(nameOf(el16)));
         const face = (className, text) => {
-          const span4 = this.doc.createElement("span");
-          span4.className = className;
-          span4.setAttribute("aria-hidden", "true");
-          span4.setAttribute("data-kp-text", text);
-          return span4;
+          const span5 = this.doc.createElement("span");
+          span5.className = className;
+          span5.setAttribute("aria-hidden", "true");
+          span5.setAttribute("data-kp-text", text);
+          return span5;
         };
         button6.append(face("kp-anchor__hash", "#"), face("kp-anchor__done", kind === "row" ? "\u2713" : this.strings.anchorCopied));
         return button6;
@@ -15905,13 +15905,13 @@ function trendAxis(points, { now, step = 6e5, timeZone = CHART_TIME_ZONE, time, 
   const right = now - last <= 2 * step ? say18.now : dayKeyOf(wallTime(last, timeZone)) === today ? print(last, "clock", {}) : `${print(last, "clock", {})} ${dayWord2(last)}`;
   return [left, right];
 }
-function tickStride(span4, most) {
+function tickStride(span5, most) {
   const fit2 = Math.max(1, most);
-  const least = span4 <= 2 * HOUR ? 15 * MINUTE : span4 <= 4 * HOUR ? 30 * MINUTE : span4 <= 8 * HOUR ? HOUR : span4 <= 16 * HOUR ? 3 * HOUR : span4 <= 28.8 * HOUR ? 6 * HOUR : DAY;
-  for (const stride of SUB_DAY_STRIDES) if (stride >= least && span4 / stride <= fit2) return stride;
-  for (const days2 of DAY_STRIDES) if (days2 * DAY >= least && span4 / (days2 * DAY) <= fit2) return days2 * DAY;
+  const least = span5 <= 2 * HOUR ? 15 * MINUTE : span5 <= 4 * HOUR ? 30 * MINUTE : span5 <= 8 * HOUR ? HOUR : span5 <= 16 * HOUR ? 3 * HOUR : span5 <= 28.8 * HOUR ? 6 * HOUR : DAY;
+  for (const stride of SUB_DAY_STRIDES) if (stride >= least && span5 / stride <= fit2) return stride;
+  for (const days2 of DAY_STRIDES) if (days2 * DAY >= least && span5 / (days2 * DAY) <= fit2) return days2 * DAY;
   let days = DAY_STRIDES[DAY_STRIDES.length - 1] * 2;
-  while (span4 / (days * DAY) > fit2) days *= 2;
+  while (span5 / (days * DAY) > fit2) days *= 2;
   return days * DAY;
 }
 function timeTicks(from, to, most, timeZone = CHART_TIME_ZONE) {
@@ -16146,13 +16146,13 @@ var init_group2 = __esm({
             event.currentTarget
           );
           const range = button6.dataset.kpChartRange ?? "";
-          const span4 = parseSpan(range);
-          if (span4 == null) return;
+          const span5 = parseSpan(range);
+          if (span5 == null) return;
           el16.dataset.kpChartSpan = range;
-          this.span = span4;
+          this.span = span5;
           paint14();
           this.zoom = null;
-          el16.dispatchEvent(new CustomEvent(CHART_RANGE_EVENT, { bubbles: true, detail: { range, span: span4 } }));
+          el16.dispatchEvent(new CustomEvent(CHART_RANGE_EVENT, { bubbles: true, detail: { range, span: span5 } }));
           this.setZoom(null);
         };
         for (const b of buttons) {
@@ -18707,22 +18707,133 @@ var init_nav_fold = __esm({
   }
 });
 
-// js/tabbar.js
-var tabbar_exports = {};
-__export(tabbar_exports, {
-  TAB: () => TAB,
-  TABBAR: () => TABBAR,
-  TABBAR_HEIGHT_PROPERTY: () => TABBAR_HEIGHT_PROPERTY,
-  TAB_COUNT_EVENT: () => TAB_COUNT_EVENT,
-  TAB_COUNT_TONES: () => TAB_COUNT_TONES,
-  attachTabCounts: () => attachTabCounts,
-  attachTabbars: () => attachTabbars,
-  drawTabCount: () => drawTabCount,
-  setTabCount: () => setTabCount,
-  setTabbarBadge: () => setTabbarBadge,
-  setTabbarBusy: () => setTabbarBusy,
-  setTabbarCurrent: () => setTabbarCurrent
+// js/tabbar/count.js
+function countOf(tab) {
+  const raw = tab.getAttribute("data-kp-tab-count");
+  const asked = tab.getAttribute("data-kp-tab-count-state");
+  const number = raw === null || raw.trim() === "" || Number.isNaN(Number(raw)) ? null : Math.max(0, Math.trunc(Number(raw)));
+  const state12 = raw === "loading" || asked === "loading" ? "loading" : raw === "error" || asked === "error" ? "error" : number === null ? "none" : "ready";
+  const tone = (
+    /** @type {TabCountTone} */
+    TAB_COUNT_TONES.find((t) => t === tab.getAttribute("data-kp-tab-count-tone")) ?? "neutral"
+  );
+  const unit2 = (tab.getAttribute("data-kp-tab-count-unit") ?? "").split(",").map((word) => word.trim()).filter(Boolean);
+  return {
+    state: state12,
+    count: number,
+    tone,
+    unit: unit2,
+    zero: tab.getAttribute("data-kp-tab-count-zero") === "show",
+    showUnit: tab.hasAttribute("data-kp-tab-count-show-unit")
+  };
+}
+function span3(doc, text, className) {
+  const node = doc.createElement("span");
+  if (className) node.className = className;
+  node.textContent = text;
+  return node;
+}
+function holdDigits(part7, state12, count2) {
+  if (state12 === "ready" && count2 !== null) part7.style.setProperty("--kp-tab-count-digits", String(Math.max(LEAST_DIGITS, String(count2).length)));
+  else if (!part7.style.getPropertyValue("--kp-tab-count-digits")) part7.style.setProperty("--kp-tab-count-digits", String(LEAST_DIGITS));
+}
+function fillPart(part7, state12, count2, word, showUnit) {
+  const doc = part7.ownerDocument;
+  const s2 = getStrings();
+  const lead = span3(doc, ", ", "kp-sr-only");
+  if (state12 === "loading") {
+    const bone = doc.createElement("span");
+    bone.className = "kp-skeleton kp-tab__bone";
+    bone.setAttribute("role", "img");
+    bone.setAttribute("aria-label", s2.tabCountCounting);
+    part7.replaceChildren(lead, bone);
+  } else if (state12 === "error") {
+    const dash = span3(doc, "\u2013");
+    dash.setAttribute("aria-hidden", "true");
+    part7.replaceChildren(lead, dash, span3(doc, s2.tabCountFailed, "kp-sr-only"));
+    part7.title = s2.tabCountFailed;
+  } else {
+    const nodes = [lead, span3(doc, String(count2))];
+    if (word) nodes.push(showUnit ? span3(doc, ` ${word}`, "kp-tab__unit") : span3(doc, ` ${word}`, "kp-sr-only"));
+    part7.replaceChildren(...nodes);
+  }
+}
+function drawTabCount(tab) {
+  const { state: state12, count: count2, tone, unit: unit2, zero, showUnit } = countOf(tab);
+  let part7 = (
+    /** @type {HTMLElement | null} */
+    tab.querySelector(":scope > .kp-tab__count")
+  );
+  const shown5 = state12 === "loading" || state12 === "error" || state12 === "ready" && (zero || (count2 ?? 0) > 0);
+  if (!shown5) {
+    part7?.remove();
+    if (DRAWN.has(tab)) {
+      DRAWN.delete(tab);
+      tab.dispatchEvent(new CustomEvent(TAB_COUNT_EVENT, { bubbles: true, detail: { tab, count: null, state: "none", tone } }));
+    }
+    return null;
+  }
+  if (!part7) {
+    part7 = tab.ownerDocument.createElement("span");
+    tab.append(part7);
+  }
+  const word = unit2.length === 0 ? "" : count2 === 1 || unit2.length === 1 ? unit2[0] : unit2[1];
+  const key = [state12, count2, tone, word, showUnit].join("|");
+  if (DRAWN.get(tab) === key && part7.isConnected) return part7;
+  DRAWN.set(tab, key);
+  part7.className = `kp-badge kp-tab__count${TONE_CLASS[tone] ? ` ${TONE_CLASS[tone]}` : ""}`;
+  part7.setAttribute("data-kp-tone", tone);
+  part7.setAttribute("data-kp-state", state12);
+  part7.removeAttribute("title");
+  holdDigits(part7, state12, count2);
+  fillPart(part7, state12, count2, word, showUnit);
+  tab.dispatchEvent(new CustomEvent(TAB_COUNT_EVENT, { bubbles: true, detail: { tab, count: state12 === "ready" ? count2 : null, state: state12, tone } }));
+  return part7;
+}
+function setTabCount(tab, count2, options = {}) {
+  if (count2 === "loading" || count2 === "error") {
+    tab.setAttribute("data-kp-tab-count-state", count2);
+  } else {
+    tab.removeAttribute("data-kp-tab-count-state");
+    const whole = count2 === null || !Number.isFinite(count2) ? null : Math.max(0, Math.trunc(count2));
+    if (whole === null) tab.removeAttribute("data-kp-tab-count");
+    else tab.setAttribute("data-kp-tab-count", String(whole));
+  }
+  const put = (name, value) => {
+    if (value === void 0) return;
+    if (value === null || value === "") tab.removeAttribute(name);
+    else tab.setAttribute(name, value);
+  };
+  put("data-kp-tab-count-tone", options.tone);
+  put("data-kp-tab-count-unit", options.unit);
+  put("data-kp-tab-count-zero", options.zero === "hide" ? null : options.zero);
+  if (options.showUnit !== void 0) tab.toggleAttribute("data-kp-tab-count-show-unit", options.showUnit === true);
+  return drawTabCount(tab);
+}
+var TAB, TAB_COUNT_TONES, TAB_COUNT_EVENT, COUNT_ATTRIBUTES, TONE_CLASS, LEAST_DIGITS, DRAWN;
+var init_count3 = __esm({
+  "js/tabbar/count.js"() {
+    "use strict";
+    init_strings();
+    TAB = ".kp-tab";
+    TAB_COUNT_TONES = /** @type {const} */
+    ["neutral", "info", "success", "warning", "error"];
+    TAB_COUNT_EVENT = "kp-tab-count";
+    COUNT_ATTRIBUTES = [
+      "data-kp-tab-count",
+      "data-kp-tab-count-tone",
+      "data-kp-tab-count-unit",
+      "data-kp-tab-count-state",
+      "data-kp-tab-count-zero",
+      "data-kp-tab-count-show-unit"
+    ];
+    TONE_CLASS = { info: "kp-badge--info", success: "kp-badge--success", warning: "kp-badge--warning", error: "kp-badge--destructive" };
+    LEAST_DIGITS = 2;
+    DRAWN = /* @__PURE__ */ new WeakMap();
+  }
 });
+
+// js/tabbar/badge.js
 function setTabbarBadge(tab, count2) {
   if (tab.matches(".kp-tab") && !tab.matches(".kp-tabbar__tab")) return setTabCount(tab, count2);
   let badge = (
@@ -18762,131 +18873,169 @@ function setTabbarBusy(tab, busy) {
     icon.append(made7);
   } else if (!busy) spinner?.remove();
 }
-function countOf(tab) {
-  const raw = tab.getAttribute("data-kp-tab-count");
-  const asked = tab.getAttribute("data-kp-tab-count-state");
-  const number = raw === null || raw.trim() === "" || Number.isNaN(Number(raw)) ? null : Math.max(0, Math.trunc(Number(raw)));
-  const state12 = raw === "loading" || asked === "loading" ? "loading" : raw === "error" || asked === "error" ? "error" : number === null ? "none" : "ready";
-  const tone = (
-    /** @type {TabCountTone} */
-    TAB_COUNT_TONES.find((t) => t === tab.getAttribute("data-kp-tab-count-tone")) ?? "neutral"
+var TABBAR, TABBAR_HEIGHT_PROPERTY;
+var init_badge = __esm({
+  "js/tabbar/badge.js"() {
+    "use strict";
+    init_count3();
+    TABBAR = ".kp-tabbar";
+    TABBAR_HEIGHT_PROPERTY = "--kp-tabbar-height";
+  }
+});
+
+// js/tabbar/dialog.js
+var TabbarDialog;
+var init_dialog = __esm({
+  "js/tabbar/dialog.js"() {
+    "use strict";
+    TabbarDialog = class {
+      /**
+       * @param {TabbarController} bar the bar this tab belongs to
+       * @param {HTMLElement} tab the tab that opens the dialog
+       * @param {HTMLDialogElement} dialog
+       */
+      constructor(bar, tab, dialog) {
+        this.bar = bar;
+        this.tab = tab;
+        this.dialog = dialog;
+        this.marked = false;
+      }
+      connect() {
+        const { bar, tab, dialog } = this;
+        tab.setAttribute("aria-haspopup", "dialog");
+        tab.setAttribute("aria-controls", dialog.id);
+        this.sync();
+        dialog.setAttribute("data-kp-tabbar-drawer", "");
+        bar.own(() => this.release());
+        bar.listen(dialog, "click", (event) => this.onPress(
+          /** @type {MouseEvent} */
+          event
+        ));
+        bar.observe(new MutationObserver(() => this.sync())).observe(dialog, { attributes: true, attributeFilter: ["open", "aria-current"], subtree: true });
+        bar.listen(dialog, "close", () => this.sync());
+      }
+      /** Take the marks this tab and its dialog got off again. */
+      release() {
+        const { tab, dialog } = this;
+        dialog.removeAttribute("data-kp-tabbar-drawer");
+        tab.removeAttribute("aria-haspopup");
+        tab.removeAttribute("aria-controls");
+        tab.removeAttribute("aria-expanded");
+        if (this.marked) tab.removeAttribute("aria-current");
+      }
+      /** The tab says whether the dialog is open, and reads as current while the dialog holds the current page. */
+      sync() {
+        const { tab, dialog } = this;
+        tab.setAttribute("aria-expanded", String(dialog.open));
+        const held2 = dialog.querySelector('[aria-current]:not([aria-current="false"])') !== null;
+        if (held2 && !tab.hasAttribute("aria-current")) {
+          tab.setAttribute("aria-current", "true");
+          this.marked = true;
+        } else if (!held2 && this.marked) {
+          tab.removeAttribute("aria-current");
+          this.marked = false;
+        }
+      }
+      /** @param {MouseEvent} event */
+      onPress(event) {
+        const { dialog, bar } = this;
+        if (!dialog.open) return;
+        const target = event.target;
+        if (target === dialog) {
+          const box = dialog.getBoundingClientRect();
+          const outside = event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+          if (outside) dialog.close();
+          return;
+        }
+        if (target instanceof Element && target.closest("a[href], .kp-menu__item") !== null && target.closest("[data-kp-dialog-close]") === null)
+          bar.view.setTimeout(() => dialog.close(), 0);
+      }
+    };
+  }
+});
+
+// js/tabbar/controller.js
+var TabbarController;
+var init_controller6 = __esm({
+  "js/tabbar/controller.js"() {
+    "use strict";
+    init_controller();
+    init_badge();
+    init_dialog();
+    TabbarController = class extends Controller {
+      /** @param {HTMLElement} bar */
+      constructor(bar) {
+        super(bar);
+        this.doc = bar.ownerDocument;
+        this.view = /** @type {Window & typeof globalThis} */
+        this.doc.defaultView;
+      }
+      connect() {
+        if (!this.view) return;
+        this.publishHeight();
+        this.wireDialogs();
+      }
+      /** The height, published while the bar is on the screen. A static bar sits in the page's flow and gives nobody room to keep. */
+      publishHeight() {
+        const { host: bar, doc, view } = this;
+        if (bar.classList.contains("kp-tabbar--static")) return;
+        const root = doc.documentElement;
+        const publish = () => {
+          const shown5 = view.getComputedStyle(bar).display !== "none";
+          root.style.setProperty(TABBAR_HEIGHT_PROPERTY, shown5 ? `${bar.offsetHeight}px` : "0px");
+        };
+        if (typeof ResizeObserver !== "undefined") this.observe(new ResizeObserver(publish)).observe(bar);
+        this.listen(view, "resize", publish);
+        publish();
+        this.own(() => root.style.removeProperty(TABBAR_HEIGHT_PROPERTY));
+      }
+      /** A tab that opens a dialog: say so, and follow the dialog. */
+      wireDialogs() {
+        for (const el16 of this.host.querySelectorAll(".kp-tabbar__tab[data-kp-dialog]")) {
+          const tab = (
+            /** @type {HTMLElement} */
+            el16
+          );
+          const dialog = this.doc.getElementById(tab.dataset.kpDialog ?? "");
+          if (dialog instanceof HTMLDialogElement) new TabbarDialog(this, tab, dialog).connect();
+        }
+      }
+    };
+  }
+});
+
+// js/tabbar/count-watch.js
+function askingTabs(root) {
+  const found = (
+    /** @type {Element[]} */
+    []
   );
-  const unit2 = (tab.getAttribute("data-kp-tab-count-unit") ?? "").split(",").map((word) => word.trim()).filter(Boolean);
-  return {
-    state: state12,
-    count: number,
-    tone,
-    unit: unit2,
-    zero: tab.getAttribute("data-kp-tab-count-zero") === "show",
-    showUnit: tab.hasAttribute("data-kp-tab-count-show-unit")
-  };
+  if (root instanceof Element && root.matches(ASKED)) found.push(root);
+  for (const tab of root.querySelectorAll(ASKED)) found.push(tab);
+  return found;
 }
-function drawTabCount(tab) {
-  const doc = tab.ownerDocument;
-  const s2 = getStrings();
-  const { state: state12, count: count2, tone, unit: unit2, zero, showUnit } = countOf(tab);
-  let part7 = (
-    /** @type {HTMLElement | null} */
-    tab.querySelector(":scope > .kp-tab__count")
-  );
-  const shown5 = state12 === "loading" || state12 === "error" || state12 === "ready" && (zero || (count2 ?? 0) > 0);
-  if (!shown5) {
-    part7?.remove();
-    if (DRAWN.has(tab)) {
-      DRAWN.delete(tab);
-      tab.dispatchEvent(new CustomEvent(TAB_COUNT_EVENT, { bubbles: true, detail: { tab, count: null, state: "none", tone } }));
-    }
-    return null;
+function changedTabs(records, view) {
+  const todo = /* @__PURE__ */ new Set();
+  for (const record of records) {
+    if (record.type === "attributes") {
+      if (record.target instanceof view.Element && record.target.matches(TAB)) todo.add(record.target);
+    } else
+      for (const node of record.addedNodes)
+        if (node instanceof view.Element) {
+          if (node.matches(ASKED)) todo.add(node);
+          for (const tab of node.querySelectorAll(ASKED)) todo.add(tab);
+        }
   }
-  if (!part7) {
-    part7 = doc.createElement("span");
-    tab.append(part7);
-  }
-  const word = unit2.length === 0 ? "" : count2 === 1 || unit2.length === 1 ? unit2[0] : unit2[1];
-  const key = [state12, count2, tone, word, showUnit].join("|");
-  if (DRAWN.get(tab) === key && part7.isConnected) return part7;
-  DRAWN.set(tab, key);
-  part7.className = `kp-badge kp-tab__count${TONE_CLASS[tone] ? ` ${TONE_CLASS[tone]}` : ""}`;
-  part7.setAttribute("data-kp-tone", tone);
-  part7.setAttribute("data-kp-state", state12);
-  part7.removeAttribute("title");
-  if (state12 === "ready" && count2 !== null) part7.style.setProperty("--kp-tab-count-digits", String(Math.max(2, String(count2).length)));
-  else if (!part7.style.getPropertyValue("--kp-tab-count-digits")) part7.style.setProperty("--kp-tab-count-digits", "2");
-  const span4 = (text, className) => {
-    const node = doc.createElement("span");
-    if (className) node.className = className;
-    node.textContent = text;
-    return node;
-  };
-  const lead = span4(", ", "kp-sr-only");
-  if (state12 === "loading") {
-    const bone = doc.createElement("span");
-    bone.className = "kp-skeleton kp-tab__bone";
-    bone.setAttribute("role", "img");
-    bone.setAttribute("aria-label", s2.tabCountCounting);
-    part7.replaceChildren(lead, bone);
-  } else if (state12 === "error") {
-    const dash = span4("\u2013");
-    dash.setAttribute("aria-hidden", "true");
-    part7.replaceChildren(lead, dash, span4(s2.tabCountFailed, "kp-sr-only"));
-    part7.title = s2.tabCountFailed;
-  } else {
-    const nodes = [lead, span4(String(count2))];
-    if (word) nodes.push(showUnit ? span4(` ${word}`, "kp-tab__unit") : span4(` ${word}`, "kp-sr-only"));
-    part7.replaceChildren(...nodes);
-  }
-  tab.dispatchEvent(new CustomEvent(TAB_COUNT_EVENT, { bubbles: true, detail: { tab, count: state12 === "ready" ? count2 : null, state: state12, tone } }));
-  return part7;
-}
-function setTabCount(tab, count2, options = {}) {
-  if (count2 === "loading" || count2 === "error") {
-    tab.setAttribute("data-kp-tab-count-state", count2);
-  } else {
-    tab.removeAttribute("data-kp-tab-count-state");
-    const whole = count2 === null || !Number.isFinite(count2) ? null : Math.max(0, Math.trunc(count2));
-    if (whole === null) tab.removeAttribute("data-kp-tab-count");
-    else tab.setAttribute("data-kp-tab-count", String(whole));
-  }
-  const put = (name, value) => {
-    if (value === void 0) return;
-    if (value === null || value === "") tab.removeAttribute(name);
-    else tab.setAttribute(name, value);
-  };
-  put("data-kp-tab-count-tone", options.tone);
-  put("data-kp-tab-count-unit", options.unit);
-  put("data-kp-tab-count-zero", options.zero === "hide" ? null : options.zero);
-  if (options.showUnit !== void 0) tab.toggleAttribute("data-kp-tab-count-show-unit", options.showUnit === true);
-  return drawTabCount(tab);
+  return todo;
 }
 function attachTabCounts(root = document) {
   const doc = root instanceof Document ? root : root.ownerDocument ?? document;
   const view = doc.defaultView;
-  const asked = `${TAB}[data-kp-tab-count], ${TAB}[data-kp-tab-count-state]`;
-  const all = () => {
-    const found = (
-      /** @type {Element[]} */
-      []
-    );
-    if (root instanceof Element && root.matches(asked)) found.push(root);
-    for (const tab of root.querySelectorAll(asked)) found.push(tab);
-    return found;
-  };
-  for (const tab of all()) drawTabCount(tab);
+  for (const tab of askingTabs(root)) drawTabCount(tab);
   if (!view || typeof view.MutationObserver !== "function") return () => {
   };
   const watch2 = new view.MutationObserver((records) => {
-    const todo = /* @__PURE__ */ new Set();
-    for (const record of records) {
-      if (record.type === "attributes") {
-        if (record.target instanceof view.Element && record.target.matches(TAB)) todo.add(record.target);
-      } else
-        for (const node of record.addedNodes)
-          if (node instanceof view.Element) {
-            if (node.matches(asked)) todo.add(node);
-            for (const tab of node.querySelectorAll(asked)) todo.add(tab);
-          }
-    }
-    for (const tab of todo) drawTabCount(tab);
+    for (const tab of changedTabs(records, view)) drawTabCount(tab);
   });
   watch2.observe(root instanceof Document ? root.documentElement : (
     /** @type {Node} */
@@ -18899,121 +19048,43 @@ function attachTabCounts(root = document) {
   });
   return () => watch2.disconnect();
 }
-function wire(bar) {
-  const doc = bar.ownerDocument;
-  const view = doc.defaultView;
-  if (!view) return () => {
-  };
-  const undo = [];
-  if (!bar.classList.contains("kp-tabbar--static")) {
-    const root = doc.documentElement;
-    const publish = () => {
-      const shown5 = view.getComputedStyle(bar).display !== "none";
-      root.style.setProperty(TABBAR_HEIGHT_PROPERTY, shown5 ? `${bar.offsetHeight}px` : "0px");
-    };
-    const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(publish);
-    resize?.observe(bar);
-    view.addEventListener("resize", publish);
-    publish();
-    undo.push(() => {
-      resize?.disconnect();
-      view.removeEventListener("resize", publish);
-      root.style.removeProperty(TABBAR_HEIGHT_PROPERTY);
-    });
+var ASKED;
+var init_count_watch = __esm({
+  "js/tabbar/count-watch.js"() {
+    "use strict";
+    init_count3();
+    ASKED = `${TAB}[data-kp-tab-count], ${TAB}[data-kp-tab-count-state]`;
   }
-  for (const el16 of bar.querySelectorAll(".kp-tabbar__tab[data-kp-dialog]")) {
-    const tab = (
-      /** @type {HTMLElement} */
-      el16
-    );
-    const dialog = doc.getElementById(tab.dataset.kpDialog ?? "");
-    if (!(dialog instanceof HTMLDialogElement)) continue;
-    tab.setAttribute("aria-haspopup", "dialog");
-    tab.setAttribute("aria-controls", dialog.id);
-    let marked = false;
-    const sync3 = () => {
-      tab.setAttribute("aria-expanded", String(dialog.open));
-      const held2 = dialog.querySelector('[aria-current]:not([aria-current="false"])') !== null;
-      if (held2 && !tab.hasAttribute("aria-current")) {
-        tab.setAttribute("aria-current", "true");
-        marked = true;
-      } else if (!held2 && marked) {
-        tab.removeAttribute("aria-current");
-        marked = false;
-      }
-    };
-    sync3();
-    dialog.setAttribute("data-kp-tabbar-drawer", "");
-    const onPress = (event) => {
-      if (!dialog.open) return;
-      const target = event.target;
-      if (target === dialog) {
-        const box = dialog.getBoundingClientRect();
-        const outside = event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
-        if (outside) dialog.close();
-        return;
-      }
-      if (target instanceof Element && target.closest("a[href], .kp-menu__item") !== null && target.closest("[data-kp-dialog-close]") === null)
-        view.setTimeout(() => dialog.close(), 0);
-    };
-    dialog.addEventListener("click", onPress);
-    const watch2 = new MutationObserver(sync3);
-    watch2.observe(dialog, { attributes: true, attributeFilter: ["open", "aria-current"], subtree: true });
-    dialog.addEventListener("close", sync3);
-    undo.push(() => {
-      watch2.disconnect();
-      dialog.removeEventListener("close", sync3);
-      dialog.removeEventListener("click", onPress);
-      dialog.removeAttribute("data-kp-tabbar-drawer");
-      tab.removeAttribute("aria-haspopup");
-      tab.removeAttribute("aria-controls");
-      tab.removeAttribute("aria-expanded");
-      if (marked) tab.removeAttribute("aria-current");
-    });
-  }
-  return () => undo.splice(0).forEach((off) => off());
-}
+});
+
+// js/tabbar.js
+var tabbar_exports = {};
+__export(tabbar_exports, {
+  TAB: () => TAB,
+  TABBAR: () => TABBAR,
+  TABBAR_HEIGHT_PROPERTY: () => TABBAR_HEIGHT_PROPERTY,
+  TAB_COUNT_EVENT: () => TAB_COUNT_EVENT,
+  TAB_COUNT_TONES: () => TAB_COUNT_TONES,
+  attachTabCounts: () => attachTabCounts,
+  attachTabbars: () => attachTabbars,
+  drawTabCount: () => drawTabCount,
+  setTabCount: () => setTabCount,
+  setTabbarBadge: () => setTabbarBadge,
+  setTabbarBusy: () => setTabbarBusy,
+  setTabbarCurrent: () => setTabbarCurrent
+});
 function attachTabbars(root = document) {
-  const undo = [];
-  const found = [];
-  if (root instanceof HTMLElement && root.matches(TABBAR)) found.push(root);
-  for (const el16 of root.querySelectorAll(TABBAR)) found.push(
-    /** @type {HTMLElement} */
-    el16
-  );
-  for (const bar of found) {
-    if (wired.has(bar)) continue;
-    wired.add(bar);
-    const off = wire(bar);
-    undo.push(() => {
-      off();
-      wired.delete(bar);
-    });
-  }
-  return () => undo.splice(0).forEach((off) => off());
+  return attachAll(root, TABBAR, TabbarController);
 }
-var TABBAR, TABBAR_HEIGHT_PROPERTY, TAB, TAB_COUNT_TONES, TAB_COUNT_EVENT, COUNT_ATTRIBUTES, TONE_CLASS, DRAWN, wired;
 var init_tabbar = __esm({
   "js/tabbar.js"() {
     "use strict";
-    init_strings();
-    TABBAR = ".kp-tabbar";
-    TABBAR_HEIGHT_PROPERTY = "--kp-tabbar-height";
-    TAB = ".kp-tab";
-    TAB_COUNT_TONES = /** @type {const} */
-    ["neutral", "info", "success", "warning", "error"];
-    TAB_COUNT_EVENT = "kp-tab-count";
-    COUNT_ATTRIBUTES = [
-      "data-kp-tab-count",
-      "data-kp-tab-count-tone",
-      "data-kp-tab-count-unit",
-      "data-kp-tab-count-state",
-      "data-kp-tab-count-zero",
-      "data-kp-tab-count-show-unit"
-    ];
-    TONE_CLASS = { info: "kp-badge--info", success: "kp-badge--success", warning: "kp-badge--warning", error: "kp-badge--destructive" };
-    DRAWN = /* @__PURE__ */ new WeakMap();
-    wired = /* @__PURE__ */ new WeakSet();
+    init_controller();
+    init_controller6();
+    init_badge();
+    init_badge();
+    init_count3();
+    init_count_watch();
   }
 });
 
@@ -20944,7 +21015,7 @@ var init_list = __esm({
 
 // js/statusrow/controller.js
 var CALM_OPTIONS, ROWS, StatusList;
-var init_controller6 = __esm({
+var init_controller7 = __esm({
   "js/statusrow/controller.js"() {
     "use strict";
     init_controller();
@@ -21076,7 +21147,7 @@ var init_statusrow = __esm({
   "js/statusrow.js"() {
     "use strict";
     init_controller();
-    init_controller6();
+    init_controller7();
     init_state5();
     init_state5();
     init_list();
@@ -21498,7 +21569,7 @@ function decorateAvatar(el16, name) {
     OWN_LABEL.delete(el16);
   }
   el16.querySelector(":scope > .kp-idmark__photo")?.remove();
-  ASKED.set(el16, src);
+  ASKED2.set(el16, src);
   if (src === "" || name === "") {
     el16.removeAttribute("data-kp-photo");
     return;
@@ -21510,7 +21581,7 @@ function decorateAvatar(el16, name) {
   img.draggable = false;
   img.loading = el16.getAttribute("data-kp-idmark-loading") === "eager" ? "eager" : "lazy";
   const settle2 = (state12) => {
-    if (ASKED.get(el16) !== src) return;
+    if (ASKED2.get(el16) !== src) return;
     if (state12 === "failed") img.remove();
     el16.setAttribute("data-kp-photo", state12);
     el16.dispatchEvent(new CustomEvent("kp-idmark-photo", { bubbles: true, detail: { state: state12, src } }));
@@ -21667,7 +21738,7 @@ function attachIdmarks(root = document) {
   observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-kp-idmark", ...AVATAR_ATTRIBUTES] });
   return () => observer.disconnect();
 }
-var IDMARK, IDMARK_SLOTS, IDMARK_GLYPHS, SVG_NS2, DRAWN2, baseKey, AVATAR_ATTRIBUTES, IDMARK_STATUSES, OWN_LABEL, ASKED, moreSeq;
+var IDMARK, IDMARK_SLOTS, IDMARK_GLYPHS, SVG_NS2, DRAWN2, baseKey, AVATAR_ATTRIBUTES, IDMARK_STATUSES, OWN_LABEL, ASKED2, moreSeq;
 var init_idmark = __esm({
   "js/idmark.js"() {
     "use strict";
@@ -21682,7 +21753,7 @@ var init_idmark = __esm({
     AVATAR_ATTRIBUTES = ["data-kp-idmark-hue", "data-kp-idmark-src", "data-kp-idmark-status", "data-kp-idmark-alt", "data-kp-idmark-loading"];
     IDMARK_STATUSES = Object.freeze(["online", "away", "busy"]);
     OWN_LABEL = /* @__PURE__ */ new WeakSet();
-    ASKED = /* @__PURE__ */ new WeakMap();
+    ASKED2 = /* @__PURE__ */ new WeakMap();
     moreSeq = 0;
   }
 });
@@ -22574,7 +22645,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       /** @type {HTMLElement[]} */
       [...nav.querySelectorAll("[data-kp-nav-disclosure]")]
     );
-    const wired3 = /* @__PURE__ */ new Map();
+    const wired2 = /* @__PURE__ */ new Map();
     for (const button6 of buttons) {
       const panel = button6.parentElement?.querySelector(":scope > .kp-nav__menu--wide") ?? null;
       const stamped = ["aria-expanded"];
@@ -22588,7 +22659,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
         stamped.push("aria-label");
       }
       button6.setAttribute("aria-expanded", "false");
-      wired3.set(button6, { panel, stamped });
+      wired2.set(button6, { panel, stamped });
     }
     const openButton = () => buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
     const settleClosing = (item, panel) => {
@@ -22604,7 +22675,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
         for (const other of buttons) if (other !== button6 && other.getAttribute("aria-expanded") === "true") set(other, false);
       }
       const was = button6.getAttribute("aria-expanded") === "true";
-      const panel = wired3.get(button6)?.panel;
+      const panel = wired2.get(button6)?.panel;
       const item = button6.parentElement;
       if (open4) item?.removeAttribute("data-kp-nav-closing");
       button6.setAttribute("aria-expanded", String(open4));
@@ -22705,7 +22776,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       );
       document.removeEventListener("click", onOutside, true);
       window.removeEventListener("resize", placeOpen);
-      for (const [button6, { stamped }] of wired3) {
+      for (const [button6, { stamped }] of wired2) {
         button6.removeEventListener("click", onClick);
         for (const name of stamped) button6.removeAttribute(name);
       }
@@ -23182,7 +23253,7 @@ var init_paint2 = __esm({
 
 // js/passkeys/controller.js
 var reasonOf, PasskeysController;
-var init_controller7 = __esm({
+var init_controller8 = __esm({
   "js/passkeys/controller.js"() {
     "use strict";
     init_controller();
@@ -23427,7 +23498,7 @@ var init_api5 = __esm({
     "use strict";
     init_controller();
     init_constants10();
-    init_controller7();
+    init_controller8();
   }
 });
 
@@ -23957,7 +24028,7 @@ async function copyText2(button6, text) {
   }, COPIED_MS2);
 }
 var COPIED_MS2, ThreadControl;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/thread/controller.js"() {
     "use strict";
     init_strings();
@@ -24094,7 +24165,7 @@ var init_thread = __esm({
   "js/thread.js"() {
     "use strict";
     init_controller();
-    init_controller8();
+    init_controller9();
     init_options2();
     init_options2();
   }
@@ -24318,10 +24389,10 @@ function setStackbar(el16, spec) {
   if (state12 !== "loading") attachHoverCards(doc);
   if (!memory.wired) {
     memory.wired = true;
-    wire2(el16);
+    wire(el16);
   }
 }
-function wire2(el16) {
+function wire(el16) {
   const keyOf8 = (target) => target instanceof Element ? (
     /** @type {HTMLElement | null} */
     target.closest("[data-kp-stackbar-key]")?.dataset.kpStackbarKey
@@ -24888,7 +24959,7 @@ var init_footprint = __esm({
 });
 
 // js/code/dom.js
-var make8, span3;
+var make8, span4;
 var init_dom3 = __esm({
   "js/code/dom.js"() {
     "use strict";
@@ -24897,7 +24968,7 @@ var init_dom3 = __esm({
       node.className = className;
       return node;
     };
-    span3 = (doc, className, text) => {
+    span4 = (doc, className, text) => {
       const node = make8(doc, className);
       node.textContent = text;
       return node;
@@ -24946,37 +25017,37 @@ function tomlStart(doc, line, state12, out) {
   if (state12.open) {
     const end = line.indexOf(state12.open);
     if (end === -1) {
-      out.push(span3(doc, "kp-code__string", line));
+      out.push(span4(doc, "kp-code__string", line));
       return null;
     }
-    out.push(span3(doc, "kp-code__string", line.slice(0, end + TRIPLE)));
+    out.push(span4(doc, "kp-code__string", line.slice(0, end + TRIPLE)));
     state12.open = "";
     return line.slice(end + TRIPLE);
   }
   const header = /^(\s*)(\[\[?[^\]]*\]\]?)(.*)$/.exec(line);
   if (!header) return line;
-  out.push(doc.createTextNode(header[1]), span3(doc, "kp-code__section", header[2]));
+  out.push(doc.createTextNode(header[1]), span4(doc, "kp-code__section", header[2]));
   return header[3];
 }
 function tomlTriple(doc, rest, at, match, state12) {
   const end = rest.indexOf(match[2], at + TRIPLE);
   if (end === -1) {
     state12.open = match[2];
-    return [span3(doc, "kp-code__string", rest.slice(at)), rest.length - at];
+    return [span4(doc, "kp-code__string", rest.slice(at)), rest.length - at];
   }
-  return [span3(doc, "kp-code__string", rest.slice(at, end + TRIPLE)), end + TRIPLE - at];
+  return [span4(doc, "kp-code__string", rest.slice(at, end + TRIPLE)), end + TRIPLE - at];
 }
 function tomlToken(doc, rest, at, match, state12) {
   const length = match[0].length;
-  if (match[1] !== void 0) return [span3(doc, "kp-code__comment", match[1]), length];
+  if (match[1] !== void 0) return [span4(doc, "kp-code__comment", match[1]), length];
   if (match[2] !== void 0) return tomlTriple(doc, rest, at, match, state12);
   if (match[3] !== void 0) {
     const asKey = /^\s*=/.test(rest.slice(at + length)) && !rest.slice(0, at).includes("=");
-    return [span3(doc, asKey ? "kp-code__key" : "kp-code__string", match[3]), length];
+    return [span4(doc, asKey ? "kp-code__key" : "kp-code__string", match[3]), length];
   }
-  if (match[4] !== void 0) return [span3(doc, "kp-code__key", match[4]), length];
-  if (match[5] !== void 0) return [span3(doc, "kp-code__value", match[5]), length];
-  return [span3(doc, "kp-code__punct", match[6]), length];
+  if (match[4] !== void 0) return [span4(doc, "kp-code__key", match[4]), length];
+  if (match[5] !== void 0) return [span4(doc, "kp-code__value", match[5]), length];
+  return [span4(doc, "kp-code__punct", match[6]), length];
 }
 function tomlLine(doc, line, state12) {
   const out = [];
@@ -24997,31 +25068,31 @@ function tomlLine(doc, line, state12) {
 }
 function shellWord(doc, word, ctx, out) {
   const keyword = ctx.expectCommand && SHELL_KEYWORDS.has(word);
-  if (keyword) out.push(span3(doc, "kp-code__section", word));
-  else if (ctx.expectCommand && !ctx.assigned) out.push(span3(doc, "kp-code__key", word));
+  if (keyword) out.push(span4(doc, "kp-code__section", word));
+  else if (ctx.expectCommand && !ctx.assigned) out.push(span4(doc, "kp-code__key", word));
   else out.push(doc.createTextNode(word));
   ctx.expectCommand = keyword && SHELL_OPENS.has(word);
 }
 function shellToken(doc, match, ctx, out) {
   const before = ctx.expectCommand;
-  if (match[1] !== void 0) out.push(span3(doc, "kp-code__punct", match[1]));
+  if (match[1] !== void 0) out.push(span4(doc, "kp-code__punct", match[1]));
   else if (match[3] !== void 0) {
     if (match[2]) out.push(doc.createTextNode(match[2]));
-    out.push(span3(doc, "kp-code__comment", match[3]));
+    out.push(span4(doc, "kp-code__comment", match[3]));
   } else if (match[4] !== void 0) {
-    out.push(span3(doc, "kp-code__string", match[4]));
+    out.push(span4(doc, "kp-code__string", match[4]));
     ctx.expectCommand = false;
   } else if (match[5] !== void 0) {
-    out.push(span3(doc, "kp-code__var", match[5]));
+    out.push(span4(doc, "kp-code__var", match[5]));
     ctx.expectCommand = match[5] === "$(";
   } else if (match[6] !== void 0) {
-    out.push(span3(doc, "kp-code__punct", match[6]));
+    out.push(span4(doc, "kp-code__punct", match[6]));
     ctx.expectCommand = SHELL_COMMAND_STARTS.includes(match[6]);
   } else if (match[7] !== void 0) {
-    out.push(doc.createTextNode(match[7][0]), span3(doc, "kp-code__value", match[7].slice(1)));
+    out.push(doc.createTextNode(match[7][0]), span4(doc, "kp-code__value", match[7].slice(1)));
     ctx.expectCommand = false;
   } else if (match[8] !== void 0) {
-    out.push(span3(doc, "kp-code__var", match[8]));
+    out.push(span4(doc, "kp-code__var", match[8]));
     if (before) {
       ctx.assigned = true;
       ctx.commandAfter = true;
@@ -25270,7 +25341,7 @@ function openInDialog(ctl) {
   dialog.showModal();
   ctl.host.dispatchEvent(new CustomEvent("kp-code-open", { bubbles: true, detail: { dialog } }));
 }
-var init_dialog = __esm({
+var init_dialog2 = __esm({
   "js/code/dialog.js"() {
     "use strict";
     init_controller();
@@ -25499,7 +25570,7 @@ var init_actions3 = __esm({
     init_strings();
     init_constants11();
     init_body();
-    init_dialog();
+    init_dialog2();
     init_head();
   }
 });
@@ -25566,7 +25637,7 @@ var init_loading = __esm({
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
@@ -25709,7 +25780,7 @@ var init_attach5 = __esm({
     init_controller();
     init_locale();
     init_constants11();
-    init_controller9();
+    init_controller10();
   }
 });
 
@@ -25988,7 +26059,7 @@ var init_core3 = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
     init_keys5();
@@ -26275,7 +26346,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller10();
+    init_controller11();
     init_rows();
     init_rows();
   }
@@ -26603,7 +26674,7 @@ var init_draw3 = __esm({
 
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS, SOURCE_EVENTS, SelectionBar;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/selection-bar/controller.js"() {
     "use strict";
     init_controller();
@@ -26851,7 +26922,7 @@ var init_api6 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_controller11();
+    init_controller12();
     init_draw3();
     init_model2();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
@@ -26883,7 +26954,7 @@ var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
     init_controller();
-    init_controller11();
+    init_controller12();
     init_model2();
     init_model2();
     init_api6();
@@ -28086,7 +28157,7 @@ var init_validation = __esm({
 
 // js/json-field/controller.js
 var JsonFieldController;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/json-field/controller.js"() {
     "use strict";
     init_controller();
@@ -28328,7 +28399,7 @@ var init_api8 = __esm({
     "use strict";
     init_controller();
     init_constants12();
-    init_controller12();
+    init_controller13();
   }
 });
 
@@ -28796,7 +28867,7 @@ var init_list2 = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS2, RequestInspector;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -28921,7 +28992,7 @@ var init_api9 = __esm({
     init_card_state();
     init_controller();
     init_strings();
-    init_controller13();
+    init_controller14();
     init_format2();
     init_list2();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
@@ -28953,7 +29024,7 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller13();
+    init_controller14();
     init_format2();
     init_format2();
     init_api9();
@@ -29148,12 +29219,12 @@ function wheelAngles(weights) {
   const total = weights.reduce((a, b) => a + Math.max(0, b), 0);
   let at = 0;
   return weights.map((w) => {
-    const span4 = total > 0 ? Math.max(0, w) / total * 360 : 0;
+    const span5 = total > 0 ? Math.max(0, w) / total * 360 : 0;
     const segment = (
       /** @type {[number, number]} */
-      [at, at + span4]
+      [at, at + span5]
     );
-    at += span4;
+    at += span5;
     return segment;
   });
 }
@@ -29244,10 +29315,10 @@ function drawDisc(root, measure) {
   }
   ids.forEach((id, i) => {
     const [a0, a1] = angles[i];
-    const span4 = a1 - a0;
+    const span5 = a1 - a0;
     let tone = i % 5 + 1;
     if (i === ids.length - 1 && i > 0 && tone === 1) tone = 3;
-    const shape = span4 >= 359.99 ? svg("circle", { r: String(R), cx: "0", cy: "0" }) : svg("path", { d: `M0 0L${point(a0, R)}A${R} ${R} 0 ${span4 > 180 ? 1 : 0} 1 ${point(a1, R)}Z` });
+    const shape = span5 >= 359.99 ? svg("circle", { r: String(R), cx: "0", cy: "0" }) : svg("path", { d: `M0 0L${point(a0, R)}A${R} ${R} 0 ${span5 > 180 ? 1 : 0} 1 ${point(a1, R)}Z` });
     shape.setAttribute("class", "kp-wheel__segment");
     shape.setAttribute("data-tone", String(tone));
     shape.setAttribute("data-id", id);
@@ -29257,7 +29328,7 @@ function drawDisc(root, measure) {
     if (resting) shape.setAttribute("data-kp-wheel-resting", "");
     group.append(shape);
     const mid = (a0 + a1) / 2;
-    const half = Math.min(Math.PI / 2, span4 / 2 * Math.PI / 180);
+    const half = Math.min(Math.PI / 2, span5 / 2 * Math.PI / 180);
     const item = items.get(id);
     const plan = fitLabel(group, [item?.label ?? "", item?.short ?? ""], half, measure);
     const name = svg("title");
@@ -29276,7 +29347,7 @@ function drawDisc(root, measure) {
     });
     if (won === id) text.setAttribute("data-kp-wheel-chosen", "");
     if (resting) text.setAttribute("data-kp-wheel-resting", "");
-    text.setAttribute("data-span", span4.toFixed(3));
+    text.setAttribute("data-span", span5.toFixed(3));
     if (plan.lines.length === 1) text.textContent = plan.lines[0];
     else
       plan.lines.forEach((line, n) => {
@@ -29570,7 +29641,7 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
@@ -29635,7 +29706,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller14();
+    init_controller15();
     init_state10();
     init_state10();
     init_spin();
@@ -29702,9 +29773,9 @@ function buildProgressbar(el16) {
   track.className = "kp-progressbar__track";
   track.setAttribute("aria-hidden", "true");
   for (const part7 of ["fill", "head"]) {
-    const span4 = document.createElement("span");
-    span4.className = `kp-progressbar__${part7}`;
-    track.append(span4);
+    const span5 = document.createElement("span");
+    span5.className = `kp-progressbar__${part7}`;
+    track.append(span5);
   }
   el16.append(track);
   return el16;
@@ -30363,7 +30434,7 @@ var init_digits = __esm({
 
 // js/countdown/controller.js
 var CountdownController;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/countdown/controller.js"() {
     "use strict";
     init_controller();
@@ -30597,7 +30668,7 @@ var init_api10 = __esm({
     "use strict";
     init_controller();
     init_constants15();
-    init_controller15();
+    init_controller16();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -33371,7 +33442,7 @@ var init_api12 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
@@ -33518,7 +33589,7 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller16();
+    init_controller17();
     init_state13();
     init_state13();
     init_api12();
@@ -37116,11 +37187,11 @@ function createIntentFilter(dialog, list, status) {
     if (run2.length > 0) runs2.push(run2);
     for (const nodes of runs2) {
       if (!nodes.some((n) => (n.data ?? "").trim() !== "")) continue;
-      const span4 = doc.createElement("span");
-      span4.className = "kp-palette__label";
-      span4.setAttribute("data-kp-generated", "");
-      nodes[0].before(span4);
-      span4.append(...nodes);
+      const span5 = doc.createElement("span");
+      span5.className = "kp-palette__label";
+      span5.setAttribute("data-kp-generated", "");
+      nodes[0].before(span5);
+      span5.append(...nodes);
     }
   };
   const markWords = (option, want, mode2) => {
@@ -39454,7 +39525,7 @@ function partsOf3(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -39624,8 +39695,8 @@ function datePicker(element) {
   return controllerOf(element, DatePickerController)?.handle ?? null;
 }
 function wireable(picker) {
-  const wired3 = picker.dataset.kpDatepickerAttached !== void 0;
-  return !wired3 && partsOf3(picker) !== null;
+  const wired2 = picker.dataset.kpDatepickerAttached !== void 0;
+  return !wired2 && partsOf3(picker) !== null;
 }
 function attachDatePickers(root = document, options = {}) {
   const made7 = hostsOf(root, PICKER2).filter(wireable).map((picker) => attachOne(picker, DatePickerController, options)).filter((controller) => controller !== void 0);
@@ -39639,7 +39710,7 @@ var init_attach11 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller17();
+    init_controller18();
   }
 });
 
@@ -45273,7 +45344,7 @@ var init_paint4 = __esm({
 
 // js/calendar/controller.js
 var WATCHED4, CalendarController;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -45527,7 +45598,7 @@ var init_api14 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller18();
+    init_controller19();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -47084,9 +47155,9 @@ function drawUsesMap(el16, spec, ctx) {
   ctx.syncCard(el16, m.loading, m.strings.usesLoading, () => [el16], "kp-uses__busy");
   ctx.markDrawn(el16);
   if (m.loading) return;
-  const wire6 = new UsesWire(m, root, svg2, list);
-  wire6.connect();
-  memory.off = () => wire6.destroy();
+  const wire5 = new UsesWire(m, root, svg2, list);
+  wire5.connect();
+  memory.off = () => wire5.destroy();
 }
 function setUsesPin(el16, key) {
   const card = key ? el16.querySelector(`.kp-uses__node[data-key="${CSS.escape(key)}"] .kp-uses__card`) : null;
@@ -49043,13 +49114,13 @@ function sequencerWindow(total, minSpan, step) {
   const want = Math.max(minSpan, total + Math.max(total * HEADROOM, s2 * 2));
   return Math.max(s2, round(Math.ceil(want / s2 - EPS) * s2));
 }
-function sequencerTicks(span4, room, unitSeconds, gap = 72) {
+function sequencerTicks(span5, room, unitSeconds, gap = 72) {
   const most = Math.max(2, Math.floor(room / gap));
-  const seconds = TICK_STEPS.find((s2) => span4 * unitSeconds / s2 <= most) ?? /** @type {number} */
+  const seconds = TICK_STEPS.find((s2) => span5 * unitSeconds / s2 <= most) ?? /** @type {number} */
   TICK_STEPS[TICK_STEPS.length - 1];
   const step = seconds / unitSeconds;
   const values = [];
-  for (let k = 0; k * step <= span4 + EPS && values.length < 400; k += 1) values.push(round(k * step));
+  for (let k = 0; k * step <= span5 + EPS && values.length < 400; k += 1) values.push(round(k * step));
   return { step, values };
 }
 function sequencerClampZoom(zoom) {
@@ -49082,8 +49153,8 @@ function readOptions3(c) {
   c.edges = d.kpSequencerSnapItems !== "off";
   c.laneMove = d.kpSequencerLanes !== "fixed";
   c.editable = d.kpSequencerEditable !== "off";
-  const span4 = Number(d.kpSequencerSpan);
-  c.minSpan = Number.isFinite(span4) && span4 > 0 ? span4 : 0;
+  const span5 = Number(d.kpSequencerSpan);
+  c.minSpan = Number.isFinite(span5) && span5 > 0 ? span5 : 0;
   c.bar.hidden = d.kpSequencerToolbar === "off";
   c.hint.hidden = d.kpSequencerHint === "off";
   c.hint.textContent = c.editable ? c.strings.sequencerHint : c.strings.sequencerHintReadonly;
@@ -50442,9 +50513,9 @@ function rangeSeconds(word) {
     m[2]
   ];
 }
-function axisStep(span4, room, gap = 72) {
+function axisStep(span5, room, gap = 72) {
   const most = Math.max(2, Math.floor(room / gap));
-  return GANTT_STEPS.find((step) => span4 / step <= most) ?? /** @type {number} */
+  return GANTT_STEPS.find((step) => span5 / step <= most) ?? /** @type {number} */
   GANTT_STEPS[GANTT_STEPS.length - 1];
 }
 function packRows(runs2, before = /* @__PURE__ */ new Map(), pad2 = 0, fixed = []) {
@@ -50513,9 +50584,9 @@ function fitWindow(c) {
   for (const zone of c.zones) for (const edge of [toMs2(zone.from), toMs2(zone.to)]) if (Number.isFinite(edge)) moments.push(edge);
   const lo = Math.min(...moments) / 1e3;
   const hi = Math.max(...moments) / 1e3;
-  const span4 = Math.max(c.el.hasAttribute("data-kp-gantt-points") ? 604800 : 3600, hi - lo);
-  const pad2 = span4 / 20;
-  c.span = span4 + 2 * pad2;
+  const span5 = Math.max(c.el.hasAttribute("data-kp-gantt-points") ? 604800 : 3600, hi - lo);
+  const pad2 = span5 / 20;
+  c.span = span5 + 2 * pad2;
   c.to = hi - c.base + pad2;
   c.live = false;
 }
@@ -52527,7 +52598,7 @@ var init_view2 = __esm({
 
 // js/pipeline/controller.js
 var PipelineBoard;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/pipeline/controller.js"() {
     "use strict";
     init_view2();
@@ -52676,7 +52747,7 @@ var init_pipeline = __esm({
   "js/pipeline.js"() {
     "use strict";
     init_controller();
-    init_controller19();
+    init_controller20();
     init_values2();
     init_values2();
   }
@@ -54275,7 +54346,7 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
@@ -54356,7 +54427,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller20();
+    init_controller21();
     init_values3();
     init_values3();
   }
@@ -55158,8 +55229,8 @@ __export(flash_exports, {
   attachFlashButtons: () => attachFlashButtons,
   runFlashButton: () => runFlashButton
 });
-function wire3(button6, options) {
-  const known4 = wired2.get(button6);
+function wire2(button6, options) {
+  const known4 = wired.get(button6);
   if (known4) return known4;
   const doc = button6.ownerDocument;
   const s2 = getStrings();
@@ -55231,10 +55302,10 @@ function wire3(button6, options) {
         line.textContent = "";
         line.removeAttribute("data-kp-tone");
       }
-      wired2.delete(button6);
+      wired.delete(button6);
     }
   };
-  wired2.set(button6, handle);
+  wired.set(button6, handle);
   return handle;
 }
 function setState2(button6, w, state12, detail = {}) {
@@ -55249,7 +55320,7 @@ function setState2(button6, w, state12, detail = {}) {
   button6.dispatchEvent(new CustomEvent(FLASH_EVENT, { bubbles: true, detail: { state: state12, ...detail } }));
 }
 async function runFlashButton(button6, work, options = {}) {
-  const w = wire3(button6, options);
+  const w = wire2(button6, options);
   if (w.running) return null;
   const s2 = getStrings();
   w.running = true;
@@ -55308,7 +55379,7 @@ async function runFlashButton(button6, work, options = {}) {
   setState2(button6, w, ok ? "success" : "refused", { ok, word, line });
   const ms = ok ? num2(button6, "data-kp-flash-ms", options.flashMs ?? FLASH_MS) : num2(button6, "data-kp-flash-error-ms", options.errorMs ?? FLASH_ERROR_MS);
   w.timer = window.setTimeout(() => {
-    if (!wired2.has(button6)) return;
+    if (!wired.has(button6)) return;
     if (onButton && options.width === void 0) {
       if (handWidth === null) button6.removeAttribute("data-kp-width");
       else button6.setAttribute("data-kp-width", handWidth);
@@ -55347,8 +55418,8 @@ function attachFlashButtons(root = document, options = {}) {
       /** @type {HTMLElement} */
       found
     );
-    if (wired2.has(button6)) continue;
-    const w = wire3(button6, options);
+    if (wired.has(button6)) continue;
+    const w = wire2(button6, options);
     const onClick = (event) => {
       if (!button6.hasAttribute("data-kp-post")) return;
       event.preventDefault();
@@ -55372,7 +55443,7 @@ function attachFlashButtons(root = document, options = {}) {
     for (const clean of cleanups) clean();
   };
 }
-var FLASH_BUTTON, FLASH_EVENT, FLASH_RELOAD_EVENT, FLASH_MS, FLASH_ERROR_MS, wired2, attr3, num2;
+var FLASH_BUTTON, FLASH_EVENT, FLASH_RELOAD_EVENT, FLASH_MS, FLASH_ERROR_MS, wired, attr3, num2;
 var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
@@ -55383,7 +55454,7 @@ var init_flash = __esm({
     FLASH_RELOAD_EVENT = "kp-flash-reload";
     FLASH_MS = 1500;
     FLASH_ERROR_MS = 3e3;
-    wired2 = /* @__PURE__ */ new WeakMap();
+    wired = /* @__PURE__ */ new WeakMap();
     attr3 = (button6, name, fallback2) => button6.getAttribute(name) ?? fallback2;
     num2 = (button6, name, fallback2) => {
       const n = Number.parseInt(button6.getAttribute(name) ?? "", 10);
@@ -55712,7 +55783,7 @@ var init_parts3 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -55999,7 +56070,7 @@ var init_api18 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller21();
+    init_controller22();
     init_parts3();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -56056,10 +56127,10 @@ function attachConnection(root = document) {
     ]
   );
   const undo = [];
-  for (const el16 of found) if (!handles10.has(el16)) undo.push(wire4(el16));
+  for (const el16 of found) if (!handles10.has(el16)) undo.push(wire3(el16));
   return () => undo.forEach((u) => u());
 }
-function wire4(el16) {
+function wire3(el16) {
   const doc = el16.ownerDocument;
   const view = (
     /** @type {Window} */
@@ -57068,7 +57139,7 @@ var init_problem = __esm({
 
 // js/code-field/controller.js
 var COPY_ANSWER_MS, MOST_STRIPPED, CodeFieldControl;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/code-field/controller.js"() {
     "use strict";
     init_problem();
@@ -57308,7 +57379,7 @@ var init_code_field = __esm({
   "js/code-field.js"() {
     "use strict";
     init_controller();
-    init_controller22();
+    init_controller23();
     init_values4();
     init_values4();
   }
@@ -58286,7 +58357,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED5, TimeController;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -58493,7 +58564,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller23();
+    init_controller24();
     init_field();
     init_state19();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -59836,7 +59907,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -59995,7 +60066,7 @@ var init_api20 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller24();
+    init_controller25();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -60426,7 +60497,7 @@ var init_view3 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -60567,7 +60638,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller25();
+    init_controller26();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -61029,7 +61100,7 @@ var init_keys12 = __esm({
 
 // js/rating/controller.js
 var REDRAW, WATCHED6, RatingController;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -61299,7 +61370,7 @@ var init_api21 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller26();
+    init_controller27();
     init_build9();
     init_commit();
     init_math();
@@ -61587,7 +61658,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -61820,7 +61891,7 @@ var init_api22 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller27();
+    init_controller28();
     init_list4();
     init_render4();
   }
@@ -62485,7 +62556,7 @@ function prepare(box) {
   }
   box.dataset.kpUsualReady = "";
 }
-function wire5(box) {
+function wire4(box) {
   prepare(box);
   attachComboboxes(box.parentElement ?? document);
   const handle = combobox(box);
@@ -62778,7 +62849,7 @@ function attachUsualPickers(root = document) {
   );
   for (const box of boxes) {
     if (models.has(box)) continue;
-    const off = wire5(box);
+    const off = wire4(box);
     if (off) undo.push(off);
   }
   return () => undo.splice(0).forEach((off) => off());
@@ -63263,7 +63334,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -63454,7 +63525,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller28();
+    init_controller29();
     init_group4();
     init_group4();
   }
@@ -65955,7 +66026,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -66208,7 +66279,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller29();
+    init_controller30();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -66554,7 +66625,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -66859,7 +66930,7 @@ var init_api23 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller30();
+    init_controller31();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -68466,9 +68537,9 @@ function writers(o, s2) {
   return { text, plain: plain2 };
 }
 function startValues(o, count2) {
-  const span4 = o.max - o.min;
+  const span5 = o.max - o.min;
   let values = Array.from({ length: count2 }, (_, i) => {
-    const fallback2 = o.isRange ? o.min + span4 * (i === 0 ? LOW_START : HIGH_START) : o.min + span4 * MIDDLE;
+    const fallback2 = o.isRange ? o.min + span5 * (i === 0 ? LOW_START : HIGH_START) : o.min + span5 * MIDDLE;
     const own = o.initial[i] ?? (o.authored[i] ? Number(o.authored[i].value) : fallback2);
     return snapSlider(own, o.min, o.max, o.step);
   });
@@ -68750,7 +68821,7 @@ var init_core7 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build10();
@@ -68980,7 +69051,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller31();
+    init_controller32();
     init_values6();
     init_values6();
   }
@@ -69148,7 +69219,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller32 = __esm({
+var init_controller33 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -69377,7 +69448,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller32();
+    init_controller33();
     init_fields();
     init_fields();
   }
@@ -69446,10 +69517,10 @@ function metaOf(doc, o) {
   const texts = (Array.isArray(o.meta) ? o.meta : [o.meta]).filter((t) => typeof t === "string" && t !== "");
   if (!texts.length) return null;
   const one = (text) => {
-    const span4 = doc.createElement("span");
-    span4.className = "kp-dated__meta";
-    span4.textContent = text;
-    return span4;
+    const span5 = doc.createElement("span");
+    span5.className = "kp-dated__meta";
+    span5.textContent = text;
+    return span5;
   };
   if (texts.length === 1) return one(texts[0]);
   const box = doc.createElement("span");
@@ -69717,7 +69788,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller33 = __esm({
+var init_controller34 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -69968,7 +70039,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller33();
+    init_controller34();
   }
 });
 
@@ -70573,7 +70644,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller34 = __esm({
+var init_controller35 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -70832,7 +70903,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller34();
+    init_controller35();
     init_choices();
   }
 });
@@ -75686,7 +75757,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller35 = __esm({
+var init_controller36 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -75790,7 +75861,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller35();
+    init_controller36();
     init_state27();
     init_state27();
     init_matrix2();
@@ -80807,11 +80878,6 @@ export {
   STEP_ID_ATTRIBUTE,
   STEP_STATES,
   STORAGE_KEY,
-  TAB,
-  TABBAR,
-  TABBAR_HEIGHT_PROPERTY,
-  TAB_COUNT_EVENT,
-  TAB_COUNT_TONES,
   THEMES,
   THEME_ATTRIBUTE,
   THEME_EVENT,
@@ -80936,7 +81002,6 @@ export {
   attachStatusLists,
   attachSteplists,
   attachStructure,
-  attachTabCounts,
   attachTabbars,
   attachTableRegions,
   attachThemePickers,
@@ -81024,7 +81089,6 @@ export {
   docKindOf,
   docpreview_exports as docpreviewExports,
   drawSparkline,
-  drawTabCount,
   effects_exports as effectsExports,
   endPreview,
   ensureRegister,
@@ -81230,10 +81294,6 @@ export {
   setSnoozedUntil,
   setStackbar,
   setStep,
-  setTabCount,
-  setTabbarBadge,
-  setTabbarBusy,
-  setTabbarCurrent,
   setThread,
   setToolbarActive,
   setTrace,
