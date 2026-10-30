@@ -110,7 +110,7 @@ test.describe('the last two pieces of the page', { tag: ['@component:navigation'
     test('back to top: the docs page and the fixture write the button class that exists [gap-12]', { tag: ['@component:site'] }, async () => {
         // Before: both wrote `kp-btn`, a class the package never declared, so
         // the documented control had no button look at all.
-        for (const file of ['../site/components/to-top.html', 'fixtures/page-parts.html', '../gates/site/descriptors.mjs']) {
+        for (const file of ['../site/components/to-top.html', 'fixtures/page-parts.html', '../gates/site/descriptors/to-top.mjs']) {
             const text = readFileSync(new globalThis.URL(file, import.meta.url), 'utf8');
             expect(text.includes('kp-btn'), `${file} still writes kp-btn`).toBe(false);
         }

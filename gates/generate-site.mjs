@@ -2,7 +2,7 @@
 //
 // One generator, one output directory. Everything a page states about
 // the package is either extracted from a source file or rendered from a
-// document that already exists; the descriptors in gates/site/descriptors.mjs
+// document that already exists; the descriptors in gates/site/descriptors/
 // hold only what no machine can know -- prose, examples, and which unit a
 // page is about.
 //

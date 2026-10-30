@@ -67,7 +67,6 @@
             "gates/generate-code-version.mjs": 507,
             "gates/generate-compare.mjs": 624,
             "gates/generate-site.mjs": 839,
-            "gates/site/descriptors.mjs": 13372,
             "gates/site/extractors.test.mjs": 503,
             "gates/tags.mjs": 589,
             "gates/verdict-hashes.mjs": 552,
