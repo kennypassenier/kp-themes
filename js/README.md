@@ -1,7 +1,7 @@
 # js/ source index
 
 The JavaScript modules a consumer imports live in `js/<name>.js`; the `package.json` exports, `auto.js` and every app point at
-those paths and nothing else. The sixty-five largest modules are a **facade**: a short file that re-exports exactly the names the module
+those paths and nothing else. The sixty-six largest modules are a **facade**: a short file that re-exports exactly the names the module
 always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purpose files. A file is never longer than
 500 lines (`npm run check:file-size`, `gates/file-size.json`), the same rule as `css/`.
 
@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`, `structure.js`, `unsaved.js`, `datepicker.js`, `segmented.js`, `code.js`, `timefield.js`, `gallery.js`, `calendar.js`, `rating.js`, `anchors.js`, `remember.js`, `slider.js`, `tiles.js`, `wheel.js`, `toggle.js`, `snooze.js`, `selection-bar.js`, `request-inspector.js`, `statusrow.js`, `passkeys.js`, `feed.js`, `autosize.js`, `countdown.js`, `forms.js`, `auto-refresh.js`, `json-field.js`, `master-detail.js`, `dated-options.js`, `quote.js`, `thread.js`, `uses-map.js`, `shortcuts.js`, `auto.js`, `effects.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -1108,3 +1108,23 @@ The loader: its table of selectors in three parts, and one AutoLoader per root. 
 | `needs.js`     | The loader's table in full, the three parts joined in attach order.                               |
 | `page.js`      | The loader's table, part one: page furniture, forms and input widgets.                            |
 | `widgets.js`   | The loader's table, part three: calendars, grids, timers, ranges and the late `reason` module.    |
+
+## js/effects.js → js/effects-core/
+
+The effects module: the vocabulary, the knobs and the DI5 table, and one EffectsEngine per attach that builds the context the hooks in js/effects/ receive; the headline hook is split over three helpers beside it. 13 files.
+
+| File                               | Does                                                                                                           |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `effects-core/base.js`             | EffectsBase: the settings read once, the timers, the memo, the unknown values and the hooks fetched on demand. |
+| `effects-core/context.js`          | The context a hook receives from attachEffects, built from the engine.                                         |
+| `effects-core/engine.js`           | EffectsEngine: the dispatch of the reveals, the arrival decision, the theme buses and the handle.              |
+| `effects-core/knobs.js`            | The custom properties, attributes, events and fixed numbers a theme sets and the module writes back.           |
+| `effects-core/registry.js`         | What is kept per page rather than per attach: what has started, the arrivals on screen, the unknown values.    |
+| `effects-core/timings-early.js`    | The DI5 table, part one: the 5.0.0 register, synthwave, alarm and the first theme ports.                       |
+| `effects-core/timings-formal.js`   | The DI5 table, part two: blueprint, update motion, formal and the meter rounds.                                |
+| `effects-core/timings-grammars.js` | The DI5 table, part three: the phantom throw and the light and dark grammars.                                  |
+| `effects-core/timings.js`          | The DI5 table merged from its three parts, in row order.                                                       |
+| `effects-core/vocabulary.js`       | The hook vocabulary: attributes, values, state classes and the knobs that name routines.                       |
+| `effects/headline-run.js`          | HeadlineRun: one headline reveal, its rest state and the routines that are one class and one keyframe.         |
+| `effects/headline-special.js`      | The tracking, draw, arrive and ink routines.                                                                   |
+| `effects/headline-text.js`         | The word routines, the typed headline and the decipher.                                                        |

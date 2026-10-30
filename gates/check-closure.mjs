@@ -80,10 +80,24 @@ export const VENDORED = [
     // list did not follow [fix-56]; at 5.0.0 it imported strings.js only, so
     // the closure held by luck. Since scope-117 it fetches its hooks with
     // import() and attaches through js/as-of.js: chassis-rs bakes all eleven
-    // at its 7.0.0 upgrade, as MIGRATION.md's task for it says.
+    // at its 7.0.0 upgrade, as MIGRATION.md's task for it says. Since the 2026-10-30 split js/effects.js is a facade over
+    // js/effects-core/ and the headline hook sits over js/effects/headline-*.js; chassis-rs bakes the parts in beside them.
     'js/effects.js',
+    'js/effects-core/base.js',
+    'js/effects-core/context.js',
+    'js/effects-core/engine.js',
+    'js/effects-core/knobs.js',
+    'js/effects-core/registry.js',
+    'js/effects-core/timings-early.js',
+    'js/effects-core/timings-formal.js',
+    'js/effects-core/timings-grammars.js',
+    'js/effects-core/timings.js',
+    'js/effects-core/vocabulary.js',
     'js/as-of.js',
     'js/effects/headline.js',
+    'js/effects/headline-run.js',
+    'js/effects/headline-special.js',
+    'js/effects/headline-text.js',
     'js/effects/emphasis.js',
     'js/effects/rule.js',
     'js/effects/count.js',

@@ -12,6 +12,12 @@ import { dirname, join } from 'node:path';
 const SEPARATE = new Set(['effects', 'vendor']);
 
 /**
+ * Facades whose parts sit in a folder of another name, because the folder of their own name holds something else:
+ * `js/effects/` is the hooks, each scanned as a module of its own, so the parts of `js/effects.js` are in `js/effects-core/`.
+ */
+const PARTS_FOLDER = new Map([['effects', 'effects-core']]);
+
+/**
  * Every `.js` file under `dir`, relative to it, sorted.
  *
  * @param {string} dir absolute path
@@ -38,7 +44,8 @@ export function jsFilesUnder(dir, prefix = '') {
  * @returns {string[]} paths relative to `jsDir`
  */
 export function moduleFiles(jsDir, file) {
-    const folder = file.replace(/\.js$/, '');
+    const name = file.replace(/\.js$/, '');
+    const folder = PARTS_FOLDER.get(name) ?? name;
     // `js/effects/` holds the hooks of js/effects.js, scanned as modules of their own; `js/vendor/` is not ours.
     if (SEPARATE.has(folder)) return [file];
     const own = new Set(jsFilesUnder(join(jsDir, folder), folder));

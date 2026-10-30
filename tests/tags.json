@@ -418,6 +418,7 @@
             "tags": ["@component:button", "@component:overlays", "@component:feedback", "@component:navigation", "@component:page"]
         },
         { "path": "js/effects.js", "tags": ["@component:page-effects", "@component:media"] },
+        { "path": "js/effects-core/*.js", "tags": ["@component:page-effects", "@component:media"] },
         {
             "path": "js/effects/*.js",
             "tags": ["@component:page-effects", "@component:media"],

@@ -421,7 +421,7 @@ var init_selection_undo_newpill = __esm({
       selectionMatching: (total) => `Select all ${total} that match`,
       selectionMatchingOn: (total) => `All ${total} that match are selected`,
       selectionOnlyShown: (n) => `Select only the ${n} shown`,
-      selectionBusy: (words2) => words2 || "Working\u2026",
+      selectionBusy: (words3) => words3 || "Working\u2026",
       selectionProgress: (done, total) => `${done} of ${total} done`,
       selectionResult: (done, refused) => refused === 0 ? `${done} done` : `${done} done, ${refused} refused`,
       selectionDropped: (n) => n === 1 ? "1 selected row is no longer in the list" : `${n} selected rows are no longer in the list`,
@@ -2243,7 +2243,7 @@ var init_feed_sequencer = __esm({
       sequencerZoomValue: (percent) => `${percent}%`,
       sequencerSpan: (value, unit2) => {
         const seconds = { second: 1, minute: 60, hour: 3600, day: 86400, week: 604800 }[unit2] ?? 60;
-        const words2 = [
+        const words3 = [
           ["w", 604800],
           ["d", 86400],
           ["h", 3600],
@@ -2251,9 +2251,9 @@ var init_feed_sequencer = __esm({
           ["s", 1]
         ];
         let rest = Math.round(Math.abs(value) * seconds);
-        if (rest === 0) return `0 ${words2.find(([, size2]) => size2 === seconds)?.[0] ?? "min"}`;
+        if (rest === 0) return `0 ${words3.find(([, size2]) => size2 === seconds)?.[0] ?? "min"}`;
         const parts2 = [];
-        for (const [word, size2] of words2) {
+        for (const [word, size2] of words3) {
           const n = Math.floor(rest / size2);
           rest -= n * size2;
           if (n) parts2.push(`${n} ${word}`);
@@ -4195,7 +4195,7 @@ var init_close = __esm({
 });
 
 // js/motion/attach.js
-function attachMotion(root = document, { size: size2 = "", arrive: arrive2 = "all", arriveKeys = [] } = {}) {
+function attachMotion(root = document, { size: size2 = "", arrive: arrive3 = "all", arriveKeys = [] } = {}) {
   const detaches = /* @__PURE__ */ new Map();
   const sizeSelector = size2.trim() ? `${SIZE_SELECTOR}, ${size2}` : SIZE_SELECTOR;
   const keep = (el16, detach) => {
@@ -4216,7 +4216,7 @@ function attachMotion(root = document, { size: size2 = "", arrive: arrive2 = "al
       if (!el16.hasAttribute("data-kp-ghost")) keep(el16, easeSize(
         /** @type {HTMLElement} */
         el16,
-        { arrive: arrive2, arriveKeys }
+        { arrive: arrive3, arriveKeys }
       ));
     for (const el16 of all(FOLD_SELECTOR)) if (el16 instanceof HTMLDetailsElement && !el16.hasAttribute("data-kp-ghost")) keep(el16, attachFold(el16));
   };
@@ -4334,7 +4334,7 @@ function seenAcross(host, left, right) {
   }
   return { left: seenLeft, right: Math.max(seenLeft, seenRight) };
 }
-function openBusyCard(host, { words: words2, area, className = "", arrive: arrive2 = true }) {
+function openBusyCard(host, { words: words3, area, className = "", arrive: arrive3 = true }) {
   const doc = host.ownerDocument;
   const layer = doc.createElement("div");
   layer.className = `kp-datatable__busy-overlay kp-datatable__busy-card${className ? ` ${className}` : ""}`;
@@ -4345,7 +4345,7 @@ function openBusyCard(host, { words: words2, area, className = "", arrive: arriv
   spinner.className = "kp-spinner";
   const said = doc.createElement("span");
   said.className = "kp-datatable__busy-words";
-  said.textContent = words2;
+  said.textContent = words3;
   panel.append(spinner, said);
   layer.append(panel);
   const place3 = () => {
@@ -4402,7 +4402,7 @@ function openBusyCard(host, { words: words2, area, className = "", arrive: arriv
     host.removeEventListener("scroll", place3);
     for (const scroller of scrollers) scroller.removeEventListener("scroll", place3);
   };
-  if (arrive2) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => layer.isConnected && m.arriveShown(layer));
+  if (arrive3) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => layer.isConnected && m.arriveShown(layer));
   let closing2 = null;
   return {
     layer,
@@ -5074,8 +5074,8 @@ function sidenavGroups(panel) {
   return [...panel.querySelectorAll(".kp-sidenav__category")].map((group, at) => {
     const toggle2 = group.querySelector(".kp-sidenav__category-toggle");
     const own = group.getAttribute(REMEMBER_ATTRIBUTE);
-    const words2 = (toggle2?.textContent ?? "").trim();
-    return { group, toggle: toggle2, id: own !== null && own !== "" ? own : words2 !== "" ? words2 : String(at) };
+    const words3 = (toggle2?.textContent ?? "").trim();
+    return { group, toggle: toggle2, id: own !== null && own !== "" ? own : words3 !== "" ? words3 : String(at) };
   });
 }
 function treeItemId(item) {
@@ -6050,8 +6050,8 @@ function attachOne2(gate) {
   );
   box.type = "checkbox";
   box.id = `${id}-box`;
-  const words2 = make31("kp-ack__label", "span");
-  tick6.append(box, words2);
+  const words3 = make31("kp-ack__label", "span");
+  tick6.append(box, words3);
   side.append(tick6);
   const live4 = make31("kp-sr-only", "span");
   live4.setAttribute("role", "status");
@@ -6150,7 +6150,7 @@ function attachOne2(gate) {
     sayTimer = window.setTimeout(() => live4.textContent = text, 40);
   };
   const paint15 = () => {
-    words2.textContent = labelText();
+    words3.textContent = labelText();
     const block = tickBlock();
     box.disabled = block !== "";
     if (block) tick6.setAttribute("data-kp-reason", block);
@@ -6622,10 +6622,10 @@ function setRowBusy(row, busy = true, button6 = null) {
       button6.style.setProperty("min-inline-size", `${button6.getBoundingClientRect().width}px`);
       for (const node of [...button6.childNodes])
         if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
-          const words2 = doc.createElement("span");
-          words2.className = "kp-button__text";
-          node.replaceWith(words2);
-          words2.append(node);
+          const words3 = doc.createElement("span");
+          words3.className = "kp-button__text";
+          node.replaceWith(words3);
+          words3.append(node);
         }
       const holder = doc.createElement("span");
       holder.className = "kp-button__busy";
@@ -6765,456 +6765,555 @@ var init_actions = __esm({
   }
 });
 
+// js/effects-core/knobs.js
+var CARET_KNOB, KNOBS, COUNT_KNOB, COUNT_FROM_KNOB, BOOT_PROGRESS, MARQUEE_KNOB, MARQUEE_PAUSE_KNOB, MEASURE_KNOB, POINTER_KNOB, POINTER, LIGHT_KNOB, LIGHT, LIGHT_SELECTOR, LIGHT_REACH, LIGHT_FAR, PRESS_KNOB, PRESS, PRESS_SIZE, PRESS_HOLD, PRESS_HELD, PRESS_HOLD_MS, ROOT_ATTRIBUTE, DONE_ATTRIBUTE, REVEAL_STATE, TEXT_ATTRIBUTE, UNKNOWN_EVENT, REVEAL_EVENT, MEMO_PREFIX, GLYPHS;
+var init_knobs = __esm({
+  "js/effects-core/knobs.js"() {
+    "use strict";
+    CARET_KNOB = "--kp-caret";
+    KNOBS = Object.freeze({
+      /** `block` builds the segmented bar retro's POST counts along. */
+      arrivalBar: "--kp-arrival-bar",
+      /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
+      arrivalCount: "--kp-arrival-count",
+      /**
+       * Whether a click anywhere on the arrival overlay ends it [CP1].
+       *
+       * `anywhere` (the default since 6.0.0) or `skip-only` for what it did
+       * before. The overlay is `position: fixed; inset: 0`, so until now it
+       * ate every click for up to 1100ms and only the Skip button ended it —
+       * a click elsewhere did nothing and gave no sign it had been lost.
+       * JobTracker reported that as "the theme picker does not work on
+       * phantom"; the picker was fine.
+       */
+      arrivalDismiss: "--kp-arrival-dismiss",
+      /**
+       * How fast the arrival plays, as a factor [scope-84]. Default 1.
+       *
+       * Every wait of the arrival — a boot line's step, a percentage's step,
+       * the card's hold, the pause before it switches off — is divided by
+       * it, and every CSS animation on the overlay (the CRT switching off,
+       * the card's bar and its shove) plays at it as its playback rate. So
+       * `0.5` takes twice as long and `2` half as long, and the sequence
+       * stays the same sequence. A value that is not a number above zero
+       * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
+       * sets it on the root of a frame; no register declares it, and a page
+       * that never sets it plays exactly as before.
+       */
+      arrivalRate: "--kp-arrival-rate"
+    });
+    COUNT_KNOB = "--kp-count";
+    COUNT_FROM_KNOB = "--kp-count-from";
+    BOOT_PROGRESS = "--kp-boot-progress";
+    MARQUEE_KNOB = "--kp-marquee";
+    MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
+    MEASURE_KNOB = "--kp-measure";
+    POINTER_KNOB = "--kp-pointer";
+    POINTER = Object.freeze({ x: "--kp-px", y: "--kp-py" });
+    LIGHT_KNOB = "--kp-light";
+    LIGHT = Object.freeze({
+      x: "--kp-light-x",
+      y: "--kp-light-y",
+      near: "--kp-light-near",
+      lift: "--kp-light-lift",
+      atX: "--kp-light-at-x",
+      atY: "--kp-light-at-y"
+    });
+    LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
+    LIGHT_REACH = 240;
+    LIGHT_FAR = 560;
+    PRESS_KNOB = "--kp-press";
+    PRESS = Object.freeze({ x: "--kp-press-x", y: "--kp-press-y" });
+    PRESS_SIZE = "data-kp-press-size";
+    PRESS_HOLD = "--kp-press-hold";
+    PRESS_HELD = ".kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend, .kp-calendar__day";
+    PRESS_HOLD_MS = 400;
+    ROOT_ATTRIBUTE = "data-kp-effects";
+    DONE_ATTRIBUTE = "data-kp-effects-done";
+    REVEAL_STATE = "data-kp-reveal-state";
+    TEXT_ATTRIBUTE = "data-kp-text";
+    UNKNOWN_EVENT = "kp-effect-unknown";
+    REVEAL_EVENT = "kp-reveal";
+    MEMO_PREFIX = "kp-effects:";
+    GLYPHS = "01<>/\\|=+*#%@&$?!ZXKQ";
+  }
+});
+
+// js/effects-core/vocabulary.js
+var HOOKS, SURFACES, REVEALS, HEADLINE_ROUTINES, ARRIVALS, STATE, ROUTINES, ARRIVAL;
+var init_vocabulary = __esm({
+  "js/effects-core/vocabulary.js"() {
+    "use strict";
+    HOOKS = Object.freeze({
+      surface: "data-kp-surface",
+      reveal: "data-kp-reveal",
+      revealTrigger: "data-kp-reveal-trigger",
+      revealEvery: "data-kp-reveal-every",
+      divider: "data-kp-divider",
+      /** A row of items a theme may run [M1, 2026-09-08]. */
+      marquee: "data-kp-marquee",
+      label: "data-kp-label",
+      /** The label a stamp takes once the file is open [S49, A11]. */
+      labelOpen: "data-kp-label-open",
+      /** Set on the container while the file is open. */
+      openState: "data-kp-open",
+      navSide: "data-kp-nav-side",
+      /**
+       * A number that counts up to what it already says [feat-count-1].
+       *
+       * The element's authored text is the truth and the module never
+       * invents one: it reads the number out of that text, counts to it,
+       * and puts the text back exactly as written. A page that never
+       * attaches this module, or a reader who asked for less movement,
+       * sees the final number and nothing else — which is the frozen bar.
+       */
+      count: "data-kp-count",
+      /** `armed` | `running` | `done`, readable at any moment [KT16]. */
+      countState: "data-kp-count-state"
+    });
+    SURFACES = Object.freeze(["hero", "app"]);
+    REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
+    HEADLINE_ROUTINES = Object.freeze([
+      "decipher",
+      "type",
+      "dissolve",
+      "shout",
+      "slam",
+      "focus",
+      "resolve",
+      "blur",
+      "sharpen",
+      "clip",
+      "overprint",
+      "gild",
+      "wipe",
+      "calibrate",
+      "ink",
+      "arrive",
+      "draw",
+      "tracking",
+      "popdown"
+    ]);
+    ARRIVALS = Object.freeze(["boot", "card"]);
+    STATE = Object.freeze({
+      // The pastel headline [S48, LIFT_PLAN row 6]: the overprint layer
+      // springs from a wide mis-registration into its rest position once.
+      registering: "is-registering",
+      // The light headline [S48, A1]: the clip window opening once.
+      revealing: "is-revealing",
+      // The grotesk headline [S48, LIFT_PLAN row 12]: Hiroto Sato's
+      // blur+brightness resolve, a one-shot optical sweep on the whole,
+      // unsplit line — no word-splitting, so it is its own routine rather
+      // than the shared `focus` word-stagger group the removed Shade (dark) theme owned.
+      sharpening: "is-sharpening",
+      in: "is-in",
+      cleared: "is-cleared",
+      deciphered: "is-deciphered",
+      glitching: "is-glitching",
+      noise: "is-noise",
+      // The synthwave routines [SW2]: the tracking wipe and the shine of a
+      // headline, and the boot overlay switching off.
+      tracking: "is-tracking",
+      shine: "is-shine",
+      off: "is-off",
+      // The lift routines [S48, LIFT_PLAN rows 2–5]: a headline whose words
+      // arrive one after another (phantom's shout, brutalism's slam), one that
+      // clears out of a dither (retro), one that types itself (terminal).
+      words: "is-words",
+      dissolving: "is-dissolving",
+      typing: "is-typing",
+      // The nostromo headline [S48, LIFT_PLAN row 19]: the whole line popping
+      // down under a clip-path, its text never touched.
+      popping: "is-popping",
+      // The Sepia headline (theme removed 2026-10-08) [S48, LIFT_PLAN row 9]: the ghost look before the
+      // ink-in settle, on only while the transition runs.
+      settling: "is-settling",
+      // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
+      // bands wiping away once over text that never moves.
+      calibrating: "is-calibrating",
+      // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
+      // across the whole, unsplit line once.
+      revealed: "is-revealed",
+      // The Lapis headline (theme removed 2026-10-06) [S48, LIFT_PLAN row 6]: a single wipe over the
+      // whole clause, once — the gilder's burnishing pass, not a per-word or
+      // per-glyph reveal, so it earns its own routine rather than reusing
+      // `dissolve` or `type` [S49].
+      gilding: "is-gilding"
+    });
+    ROUTINES = Object.freeze({
+      headline: "--kp-reveal-headline",
+      emphasis: "--kp-reveal-emphasis",
+      rule: "--kp-reveal-rule",
+      // How the page arrives, read from the root [SW2]: `boot` builds the
+      // overlay below; anything else, or nothing, is quiet.
+      arrival: "--kp-arrival"
+    });
+    ARRIVAL = Object.freeze({ root: "kp-boot", line: "kp-boot__line", skip: "kp-boot__skip", bar: "kp-boot__bar" });
+  }
+});
+
+// js/effects-core/registry.js
+function unknownEffects() {
+  return [...unknownReported];
+}
+var started, carets, arrivalsOnScreen, unknownReported;
+var init_registry = __esm({
+  "js/effects-core/registry.js"() {
+    "use strict";
+    started = /* @__PURE__ */ new WeakSet();
+    carets = /* @__PURE__ */ new WeakSet();
+    arrivalsOnScreen = /* @__PURE__ */ new WeakMap();
+    unknownReported = /* @__PURE__ */ new Set();
+  }
+});
+
+// js/effects/headline-special.js
+function tracking(run) {
+  const { ctx, el: el16 } = run;
+  ctx.state.pending++;
+  const shine = run.once(() => {
+    el16.classList.remove(STATE.tracking);
+    el16.classList.add(STATE.shine);
+    const off = () => el16.classList.remove(STATE.shine);
+    el16.addEventListener("animationend", off, { once: true });
+    ctx.later(off, TIMINGS["kp-shine"].durationMs + END_GRACE_MS);
+  });
+  el16.classList.add(STATE.tracking);
+  run.whenHeard("animationend", shine, (e) => (
+    /** @type {AnimationEvent} */
+    e.animationName === "kp-tracking"
+  ));
+  ctx.later(shine, TIMINGS["kp-tracking"].durationMs + END_GRACE_MS);
+}
+function draw(run) {
+  const { ctx, el: el16, routine } = run;
+  const { state: state12, view, cfg, announce: announce4, done, finishers } = ctx;
+  if (!view || typeof view.IntersectionObserver !== "function") {
+    el16.classList.add(STATE.in);
+    announce4(el16, "headline", routine, true);
+    return;
+  }
+  state12.pending++;
+  finishers.push(() => {
+    el16.classList.add(STATE.in);
+    announce4(el16, "headline", routine, false);
+  });
+  state12.ioHeadline ??= new view.IntersectionObserver(
+    (entries2) => {
+      for (const entry of entries2) {
+        if (!entry.isIntersecting) continue;
+        state12.ioHeadline?.unobserve(entry.target);
+        entry.target.classList.add(STATE.in);
+        announce4(entry.target, "headline", routine, false);
+        state12.pending--;
+        done();
+      }
+    },
+    { threshold: cfg.threshold }
+  );
+  state12.ioHeadline?.observe(el16);
+}
+function arrive2(run) {
+  const { ctx } = run;
+  const { view } = ctx;
+  ctx.state.pending++;
+  const finish2 = run.once();
+  const arm = () => ctx.later(finish2, ARRIVE_HOLD_MS);
+  if (view) view.requestAnimationFrame(() => view.requestAnimationFrame(arm));
+  else arm();
+}
+function ink(run) {
+  const { ctx, el: el16 } = run;
+  const { view } = ctx;
+  ctx.state.pending++;
+  el16.classList.add(STATE.settling);
+  const finish2 = run.once(() => el16.classList.remove(STATE.settling));
+  run.whenHeard("transitionend", finish2, (e) => (
+    /** @type {TransitionEvent} */
+    e.propertyName === "filter" && e.target === el16
+  ));
+  const off = () => el16.classList.remove(STATE.settling);
+  if (view) view.requestAnimationFrame(off);
+  else off();
+  ctx.later(finish2, INK_MS + END_GRACE_MS);
+}
+var END_GRACE_MS, ARRIVE_HOLD_MS, INK_MS;
+var init_headline_special = __esm({
+  "js/effects/headline-special.js"() {
+    "use strict";
+    init_effects();
+    END_GRACE_MS = 50;
+    ARRIVE_HOLD_MS = 500;
+    INK_MS = 1050;
+  }
+});
+
+// js/effects/headline-text.js
+function words(run) {
+  const { ctx, el: el16, text, routine } = run;
+  const { doc, cfg } = ctx;
+  ctx.state.pending++;
+  const parts2 = text.split(/(\s+)/);
+  let index = 0;
+  const nodes = parts2.map((part7) => {
+    if (part7 === "") return null;
+    if (/^\s+$/.test(part7)) return doc.createTextNode(part7);
+    const span4 = doc.createElement("span");
+    span4.setAttribute("data-word", "");
+    span4.setAttribute("aria-hidden", "true");
+    span4.style.setProperty("--kp-i", String(index++));
+    span4.textContent = part7;
+    return span4;
+  });
+  el16.replaceChildren(...nodes.filter((n) => n !== null));
+  el16.classList.add(STATE.words);
+  const finish2 = run.once(() => el16.classList.remove(STATE.words));
+  ctx.later(finish2, TIMINGS[wordKeyframe(routine)].durationMs + index * cfg.wordStagger + END_GRACE_MS);
+}
+function typeOut(run) {
+  const { ctx, el: el16, text } = run;
+  const { doc, cfg } = ctx;
+  ctx.state.pending++;
+  const chars = [...text];
+  const caret = doc.createElement("span");
+  caret.setAttribute("data-caret", "");
+  caret.setAttribute("aria-hidden", "true");
+  el16.classList.add(STATE.typing);
+  el16.textContent = "";
+  el16.append(caret);
+  let typed = 0;
+  let ended = false;
+  const finish2 = run.once(() => {
+    ended = true;
+    el16.classList.remove(STATE.typing);
+  });
+  const perChar = 1e3 / Math.max(1, cfg.cps);
+  const step = () => {
+    if (ended) return;
+    typed++;
+    el16.textContent = chars.slice(0, typed).join("");
+    if (typed < chars.length) {
+      el16.append(caret);
+      ctx.later(step, perChar);
+    } else finish2();
+  };
+  ctx.later(step, cfg.lead);
+}
+function glyphSpan(doc, ch) {
+  const span4 = doc.createElement("span");
+  span4.setAttribute("data-glyph", "");
+  span4.setAttribute("aria-hidden", "true");
+  if (/\s/.test(ch)) span4.textContent = ch;
+  else {
+    span4.textContent = randomGlyph();
+    span4.classList.add(STATE.noise);
+  }
+  return span4;
+}
+function decipher(run) {
+  const { ctx, el: el16, text } = run;
+  const { doc, view, cfg, state: state12, frames, finishers } = ctx;
+  state12.pending++;
+  const chars = [...text];
+  const spans = chars.map((ch) => glyphSpan(doc, ch));
+  el16.replaceChildren(...spans);
+  const perChar = 1e3 / Math.max(1, cfg.cps);
+  let start = 0;
+  let finished = false;
+  const finish2 = () => {
+    if (finished) return;
+    finished = true;
+    run.rest(false);
+    el16.classList.add(STATE.glitching);
+    const off = () => el16.classList.remove(STATE.glitching);
+    el16.addEventListener("animationend", off, { once: true });
+    ctx.later(off, TIMINGS["kp-slice-1"].durationMs + END_GRACE_MS);
+    state12.pending--;
+    ctx.done();
+  };
+  finishers.push(finish2);
+  let id = 0;
+  const schedule = () => {
+    const next2 = view ? view.requestAnimationFrame(tick6) : 0;
+    frames.add(next2);
+    return next2;
+  };
+  const tick6 = (now) => {
+    frames.delete(id);
+    if (state12.detached || finished) return;
+    if (start === 0) start = now;
+    if (settleGlyphs(spans, chars, now - start, cfg, perChar)) finish2();
+    else id = schedule();
+  };
+  id = schedule();
+}
+function settleGlyphs(spans, chars, t, cfg, perChar) {
+  let all = true;
+  spans.forEach((span4, i) => {
+    const ch = chars[i] ?? "";
+    if (/\s/.test(ch)) return;
+    if (t > cfg.lead + i * perChar) {
+      if (span4.classList.contains(STATE.noise)) {
+        span4.textContent = ch;
+        span4.classList.remove(STATE.noise);
+      }
+    } else {
+      all = false;
+      if (Math.random() < cfg.swap) span4.textContent = randomGlyph();
+    }
+  });
+  return all;
+}
+var WORD_ROUTINES, randomGlyph, wordKeyframe;
+var init_headline_text = __esm({
+  "js/effects/headline-text.js"() {
+    "use strict";
+    init_effects();
+    init_headline_special();
+    WORD_ROUTINES = ["shout", "slam", "focus", "resolve", "blur"];
+    randomGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+    wordKeyframe = (routine) => routine === "blur" ? "kp-word-in" : routine === "shout" ? "kp-sig-phantom-fly" : `kp-${routine}`;
+  }
+});
+
+// js/effects/headline-run.js
+var TIMED_CLASS, HeadlineRun;
+var init_headline_run = __esm({
+  "js/effects/headline-run.js"() {
+    "use strict";
+    init_effects();
+    init_headline_special();
+    init_headline_text();
+    TIMED_CLASS = {
+      // The nostromo headline [S48, LIFT_PLAN nostromo row]: the text stays whole throughout — no glyph or word is ever touched —
+      // under a clip-path the register sweeps open top-down; the class runs it, then the element rests.
+      popdown: { cls: STATE.popping, keyframe: "kp-popdown" },
+      // The solstice headline [S49, A1]: the text is whole and solid under a mix-blend-mode overlay the register paints; the
+      // class runs the overlay's one wipe, then the element rests.
+      calibrate: { cls: STATE.calibrating, keyframe: "kp-cal-slide" },
+      // The mono headline [S48, LIFT_PLAN row 6]: the text stays whole, never split into words or glyphs; the register sweeps a
+      // hard-edge mask across it once, left to right — rauno.me's verticalFade, adapted from opacity to mask-position so nothing
+      // ever flashes. The class arms the register's own animation.
+      wipe: { cls: STATE.revealed, keyframe: "kp-wipe" },
+      // The Lapis headline [S48, LIFT_PLAN row 6]: the text is whole and already gold; the class runs one clip-path wipe left to
+      // right (the register's `kp-burnish` keyframe), then the element rests — same shape as `dissolve`, a different keyframe,
+      // because the demo's mechanism is neither a dither nor a per-glyph type [S49].
+      gild: { cls: STATE.gilding, keyframe: "kp-burnish" },
+      // The grotesk headline [S49, LIFT_PLAN row 12]: the text is whole under a blur+brightness the register paints; the class
+      // runs the one-shot optical resolve, then the element rests. Its own routine name and keyframe, distinct from the `focus`
+      // word-stagger group and `kp-focus` Shade (dark) already owns.
+      sharpen: { cls: STATE.sharpening, keyframe: "kp-sharpen-in" },
+      // The light headline [S48, LIFT_PLAN, A1]: the text is whole the entire time — no noise, no dither, no per-word stagger —
+      // and the register opens a rounded clip window around it once.
+      clip: { cls: STATE.revealing, keyframe: "kp-clip-reveal" },
+      // The pastel headline [S48, LIFT_PLAN row 6]: the text is whole; the register's ::before duplicate (the second-ink layer,
+      // already there at its rest offset for a no-script page) springs from a wide mis-registration into that rest position once.
+      overprint: { cls: STATE.registering, keyframe: "kp-registration" },
+      // The Retro headline (theme removed 2026-10-09) [RT2]: the text is whole under a dither the register paints; the class runs
+      // the dither's clearing, then the element rests.
+      dissolve: { cls: STATE.dissolving, keyframe: "kp-dither-clear" }
+    };
+    HeadlineRun = class {
+      /** @param {EffectsContext} ctx @param {Element} el @param {boolean} atRest straight to rest, as a detach does for a reveal it never started */
+      constructor(ctx, el16, atRest) {
+        this.ctx = ctx;
+        this.el = el16;
+        this.atRest = atRest;
+        this.text = el16.textContent ?? "";
+        this.routine = "";
+      }
+      /** The headline: decipher, then one slice burst [TH119], or the routine the theme asked for. */
+      play() {
+        const { ctx, el: el16 } = this;
+        el16.setAttribute(TEXT_ATTRIBUTE, this.text);
+        if (!el16.hasAttribute("aria-label")) el16.setAttribute("aria-label", this.text);
+        const asked = ctx.routineOf(el16, "headline");
+        this.routine = asked === "" || HEADLINE_ROUTINES.includes(asked) ? asked : ctx.reportUnknownRoutine(el16, ROUTINES.headline, asked, HEADLINE_ROUTINES);
+        if (this.atRest || this.routine === "" || ctx.reduced() || ctx.seen(el16, "headline")) {
+          this.rest(true);
+          return;
+        }
+        this.perform();
+      }
+      /** Hand the element to the routine it asked for. */
+      perform() {
+        const { routine } = this;
+        const timed = TIMED_CLASS[routine];
+        if (timed) this.timedClass(timed.cls, timed.keyframe);
+        else if (routine === "tracking") tracking(this);
+        else if (routine === "draw") draw(this);
+        else if (routine === "arrive") arrive2(this);
+        else if (routine === "ink") ink(this);
+        else if (WORD_ROUTINES.includes(routine)) words(this);
+        else if (routine === "type") typeOut(this);
+        else decipher(this);
+      }
+      /** The element ends as its own text, announced as played or skipped. @param {boolean} skipped */
+      rest(skipped) {
+        const { ctx, el: el16 } = this;
+        el16.textContent = this.text;
+        el16.classList.add(STATE.deciphered);
+        ctx.announce(el16, "headline", this.routine, skipped);
+      }
+      /**
+       * A finish that runs once: `undo`, then the rest state, then one less pending reveal. It is registered with the finishers, so
+       * a detach or a switch to reduced motion ends the reveal at rest.
+       * @param {() => void} [undo]
+       */
+      once(undo = () => {
+      }) {
+        const { ctx } = this;
+        let ended = false;
+        const finish2 = () => {
+          if (ended) return;
+          ended = true;
+          undo();
+          this.rest(false);
+          ctx.state.pending--;
+          ctx.done();
+        };
+        ctx.finishers.push(finish2);
+        return finish2;
+      }
+      /** Finish when an event of the element matches. @param {string} type @param {() => void} finish @param {(event: Event) => boolean} matching */
+      whenHeard(type, finish2, matching) {
+        const { el: el16 } = this;
+        const onEnd = (e) => {
+          if (!matching(e)) return;
+          el16.removeEventListener(type, onEnd);
+          finish2();
+        };
+        el16.addEventListener(type, onEnd);
+      }
+      /** One class the register animates by `keyframe`; without an animation the class comes off by the table's duration. @param {string} cls @param {string} keyframe */
+      timedClass(cls, keyframe) {
+        const { ctx, el: el16 } = this;
+        ctx.state.pending++;
+        el16.classList.add(cls);
+        const finish2 = this.once(() => el16.classList.remove(cls));
+        this.whenHeard("animationend", finish2, (e) => (
+          /** @type {AnimationEvent} */
+          e.animationName === keyframe
+        ));
+        ctx.later(finish2, TIMINGS[keyframe].durationMs + END_GRACE_MS);
+      }
+    };
+  }
+});
+
 // js/effects/headline.js
 var headline_exports = {};
 __export(headline_exports, {
   install: () => install
 });
 function install(ctx) {
-  const { state: state12, doc, view, reduced: reduced4, cfg, frames, finishers, done, announce: announce4, later, routineOf, seen, reportUnknownRoutine } = ctx;
-  const headline = (el16, atRest = false) => {
-    const text = el16.textContent ?? "";
-    el16.setAttribute(TEXT_ATTRIBUTE, text);
-    if (!el16.hasAttribute("aria-label")) el16.setAttribute("aria-label", text);
-    const asked = routineOf(el16, "headline");
-    const routine = asked === "" || HEADLINE_ROUTINES.includes(asked) ? asked : reportUnknownRoutine(el16, ROUTINES.headline, asked, HEADLINE_ROUTINES);
-    const rest = (skipped) => {
-      el16.textContent = text;
-      el16.classList.add(STATE.deciphered);
-      announce4(el16, "headline", routine, skipped);
-    };
-    if (atRest || routine === "" || reduced4() || seen(el16, "headline")) {
-      rest(true);
-      return;
-    }
-    if (routine === "tracking") {
-      state12.pending++;
-      let ended = false;
-      const shine = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.tracking);
-        el16.classList.add(STATE.shine);
-        const off = () => el16.classList.remove(STATE.shine);
-        el16.addEventListener("animationend", off, { once: true });
-        later(off, TIMINGS["kp-shine"].durationMs + 50);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(shine);
-      el16.classList.add(STATE.tracking);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-tracking"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        shine();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(shine, TIMINGS["kp-tracking"].durationMs + 50);
-      return;
-    }
-    if (routine === "popdown") {
-      state12.pending++;
-      el16.classList.add(STATE.popping);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.popping);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-popdown"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(finish3, TIMINGS["kp-popdown"].durationMs + 50);
-      return;
-    }
-    if (routine === "draw") {
-      if (!view || typeof view.IntersectionObserver !== "function") {
-        el16.classList.add(STATE.in);
-        announce4(el16, "headline", routine, true);
-        return;
-      }
-      state12.pending++;
-      finishers.push(() => {
-        el16.classList.add(STATE.in);
-        announce4(el16, "headline", routine, false);
-      });
-      state12.ioHeadline ??= new view.IntersectionObserver(
-        (entries2) => {
-          for (const entry of entries2) {
-            if (!entry.isIntersecting) continue;
-            state12.ioHeadline?.unobserve(entry.target);
-            entry.target.classList.add(STATE.in);
-            announce4(entry.target, "headline", routine, false);
-            state12.pending--;
-            done();
-          }
-        },
-        { threshold: cfg.threshold }
-      );
-      state12.ioHeadline?.observe(el16);
-      return;
-    }
-    if (routine === "arrive") {
-      state12.pending++;
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const arm = () => later(finish3, 500);
-      if (view) view.requestAnimationFrame(() => view.requestAnimationFrame(arm));
-      else arm();
-      return;
-    }
-    if (routine === "ink") {
-      state12.pending++;
-      el16.classList.add(STATE.settling);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.settling);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {TransitionEvent} */
-          e.propertyName !== "filter" || e.target !== el16
-        ) return;
-        el16.removeEventListener("transitionend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("transitionend", onEnd);
-      const off = () => el16.classList.remove(STATE.settling);
-      if (view) view.requestAnimationFrame(off);
-      else off();
-      later(finish3, 1050 + 50);
-      return;
-    }
-    if (routine === "calibrate") {
-      state12.pending++;
-      el16.classList.add(STATE.calibrating);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.calibrating);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-cal-slide"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(finish3, TIMINGS["kp-cal-slide"].durationMs + 50);
-      return;
-    }
-    if (routine === "wipe") {
-      state12.pending++;
-      el16.classList.add(STATE.revealed);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.revealed);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-wipe"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(finish3, TIMINGS["kp-wipe"].durationMs + 50);
-      return;
-    }
-    if (routine === "gild") {
-      state12.pending++;
-      el16.classList.add(STATE.gilding);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.gilding);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-burnish"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(finish3, TIMINGS["kp-burnish"].durationMs + 50);
-      return;
-    }
-    if (routine === "sharpen") {
-      state12.pending++;
-      el16.classList.add(STATE.sharpening);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.sharpening);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-sharpen-in"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(finish3, TIMINGS["kp-sharpen-in"].durationMs + 50);
-      return;
-    }
-    if (routine === "clip") {
-      state12.pending++;
-      el16.classList.add(STATE.revealing);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.revealing);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-clip-reveal"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(finish3, TIMINGS["kp-clip-reveal"].durationMs + 50);
-      return;
-    }
-    if (routine === "overprint") {
-      state12.pending++;
-      el16.classList.add(STATE.registering);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.registering);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-registration"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(finish3, TIMINGS["kp-registration"].durationMs + 50);
-      return;
-    }
-    if (routine === "shout" || routine === "slam" || routine === "focus" || routine === "resolve" || routine === "blur") {
-      state12.pending++;
-      const parts2 = text.split(/(\s+)/);
-      let index = 0;
-      const nodes = parts2.map((part7) => {
-        if (part7 === "") return null;
-        if (/^\s+$/.test(part7)) return doc.createTextNode(part7);
-        const span4 = doc.createElement("span");
-        span4.setAttribute("data-word", "");
-        span4.setAttribute("aria-hidden", "true");
-        span4.style.setProperty("--kp-i", String(index++));
-        span4.textContent = part7;
-        return span4;
-      });
-      el16.replaceChildren(...nodes.filter((n) => n !== null));
-      el16.classList.add(STATE.words);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.words);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const keyframe = routine === "blur" ? "kp-word-in" : routine === "shout" ? "kp-sig-phantom-fly" : `kp-${routine}`;
-      later(finish3, TIMINGS[keyframe].durationMs + index * cfg.wordStagger + 50);
-      return;
-    }
-    if (routine === "dissolve") {
-      state12.pending++;
-      el16.classList.add(STATE.dissolving);
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.dissolving);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const onEnd = (e) => {
-        if (
-          /** @type {AnimationEvent} */
-          e.animationName !== "kp-dither-clear"
-        ) return;
-        el16.removeEventListener("animationend", onEnd);
-        finish3();
-      };
-      el16.addEventListener("animationend", onEnd);
-      later(finish3, TIMINGS["kp-dither-clear"].durationMs + 50);
-      return;
-    }
-    if (routine === "type") {
-      state12.pending++;
-      const chars2 = [...text];
-      const caret = doc.createElement("span");
-      caret.setAttribute("data-caret", "");
-      caret.setAttribute("aria-hidden", "true");
-      el16.classList.add(STATE.typing);
-      el16.textContent = "";
-      el16.append(caret);
-      let typed = 0;
-      let ended = false;
-      const finish3 = () => {
-        if (ended) return;
-        ended = true;
-        el16.classList.remove(STATE.typing);
-        rest(false);
-        state12.pending--;
-        done();
-      };
-      finishers.push(finish3);
-      const perChar2 = 1e3 / Math.max(1, cfg.cps);
-      const step = () => {
-        if (ended) return;
-        typed++;
-        el16.textContent = chars2.slice(0, typed).join("");
-        if (typed < chars2.length) {
-          el16.append(caret);
-          later(step, perChar2);
-        } else finish3();
-      };
-      later(step, cfg.lead);
-      return;
-    }
-    state12.pending++;
-    const chars = [...text];
-    const spans = chars.map((ch) => {
-      const span4 = doc.createElement("span");
-      span4.setAttribute("data-glyph", "");
-      span4.setAttribute("aria-hidden", "true");
-      if (/\s/.test(ch)) span4.textContent = ch;
-      else {
-        span4.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        span4.classList.add(STATE.noise);
-      }
-      return span4;
-    });
-    el16.replaceChildren(...spans);
-    const perChar = 1e3 / Math.max(1, cfg.cps);
-    let start = 0;
-    let finished = false;
-    const finish2 = () => {
-      if (finished) return;
-      finished = true;
-      rest(false);
-      el16.classList.add(STATE.glitching);
-      const off = () => el16.classList.remove(STATE.glitching);
-      el16.addEventListener("animationend", off, { once: true });
-      later(off, TIMINGS["kp-slice-1"].durationMs + 50);
-      state12.pending--;
-      done();
-    };
-    finishers.push(finish2);
-    const tick6 = (now) => {
-      frames.delete(id);
-      if (state12.detached || finished) return;
-      if (start === 0) start = now;
-      const t = now - start;
-      let all = true;
-      spans.forEach((span4, i) => {
-        const ch = chars[i] ?? "";
-        if (/\s/.test(ch)) return;
-        if (t > cfg.lead + i * perChar) {
-          if (span4.classList.contains(STATE.noise)) {
-            span4.textContent = ch;
-            span4.classList.remove(STATE.noise);
-          }
-        } else {
-          all = false;
-          if (Math.random() < cfg.swap) span4.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        }
-      });
-      if (all) finish2();
-      else id = schedule();
-    };
-    let id = 0;
-    const schedule = () => {
-      const next2 = view ? view.requestAnimationFrame(tick6) : 0;
-      frames.add(next2);
-      return next2;
-    };
-    id = schedule();
-  };
+  const headline = (el16, atRest = false) => new HeadlineRun(ctx, el16, atRest).play();
   return { headline };
 }
 var init_headline = __esm({
   "js/effects/headline.js"() {
     "use strict";
-    init_effects();
+    init_headline_run();
   }
 });
 
@@ -7318,16 +7417,16 @@ function install3(ctx) {
   const { state: state12, view, reduced: reduced4, cfg, finishers, done, announce: announce4, routineOf, seen } = ctx;
   const rule = (el16) => {
     const routine = routineOf(el16, "rule");
-    const draw7 = (skipped) => {
+    const draw8 = (skipped) => {
       el16.classList.add(STATE.in);
       announce4(el16, "rule", routine, skipped);
     };
     if (routine === "" || reduced4() || seen(el16, "rule") || !view || typeof view.IntersectionObserver !== "function") {
-      draw7(true);
+      draw8(true);
       return;
     }
     state12.pending++;
-    finishers.push(() => draw7(false));
+    finishers.push(() => draw8(false));
     state12.io ??= new view.IntersectionObserver(
       (entries2) => {
         for (const entry of entries2) {
@@ -7717,7 +7816,7 @@ function install7(ctx) {
   const measure = () => {
     const routine = rootStyle ? rootStyle.getPropertyValue(MEASURE_KNOB).trim() : "";
     if (routine !== "live" || !view) return;
-    const words2 = getStrings();
+    const words3 = getStrings();
     const headlines = [...root.querySelectorAll(`[${HOOKS.reveal}='headline']`)].filter((h2) => !h2.closest("[data-kp-measured]"));
     for (const h1 of headlines) {
       const wrap = doc.createElement("span");
@@ -7733,12 +7832,12 @@ function install7(ctx) {
       const readout = doc.createElement("span");
       readout.setAttribute("data-kp-measure", "");
       readout.setAttribute("aria-hidden", "true");
-      readout.textContent = words2.measureLoading;
+      readout.textContent = words3.measureLoading;
       wrap.append(readout);
       let timer2;
       const update2 = () => {
         const box = h1.getBoundingClientRect();
-        readout.textContent = words2.measureBox(Math.round(box.width), Math.round(box.height));
+        readout.textContent = words3.measureBox(Math.round(box.width), Math.round(box.height));
         wrap.setAttribute("data-kp-measured", "live");
       };
       update2();
@@ -7851,13 +7950,13 @@ function install9(ctx) {
       arrivalsOnScreen2.delete(doc);
       if (held2) for (const go of [...held2]) go();
     };
-    const words2 = getStrings();
+    const words3 = getStrings();
     const theme = html.getAttribute("data-theme") ?? "";
-    const own = words2.arrivalWordsByTheme?.[theme] ?? {};
+    const own = words3.arrivalWordsByTheme?.[theme] ?? {};
     const said = {
-      line: own.line ?? words2.arrivalLine,
-      progress: own.progress ?? words2.arrivalProgress,
-      ready: own.ready ?? words2.arrivalReady
+      line: own.line ?? words3.arrivalLine,
+      progress: own.progress ?? words3.arrivalProgress,
+      ready: own.ready ?? words3.arrivalReady
     };
     const askedRate = parseFloat(rootStyle?.getPropertyValue(KNOBS.arrivalRate) ?? "");
     const rate = Number.isFinite(askedRate) && askedRate > 0 ? askedRate : 1;
@@ -7875,7 +7974,7 @@ function install9(ctx) {
     const skip = doc.createElement("button");
     skip.type = "button";
     skip.className = ARRIVAL.skip;
-    skip.textContent = words2.arrivalSkip;
+    skip.textContent = words3.arrivalSkip;
     const bar = rootStyle?.getPropertyValue(KNOBS.arrivalBar).trim() === "block" ? doc.createElement("div") : null;
     if (bar) {
       bar.className = ARRIVAL.bar;
@@ -7918,7 +8017,7 @@ function install9(ctx) {
       if (pct === 100) paced(end, 220);
       else paced(step, 110);
     };
-    const lines = words2.arrivalLinesByTheme?.[theme] ?? null;
+    const lines = words3.arrivalLinesByTheme?.[theme] ?? null;
     let shown5 = 0;
     const total = Number(rootStyle?.getPropertyValue(KNOBS.arrivalCount)) || 640;
     const lineStep = () => {
@@ -7955,512 +8054,465 @@ var init_arrival = __esm({
   }
 });
 
-// js/effects.js
-var effects_exports = {};
-__export(effects_exports, {
-  ARRIVAL: () => ARRIVAL,
-  ARRIVALS: () => ARRIVALS,
-  BOOT_PROGRESS: () => BOOT_PROGRESS,
-  CARET_KNOB: () => CARET_KNOB,
-  COUNT_FROM_KNOB: () => COUNT_FROM_KNOB,
-  COUNT_KNOB: () => COUNT_KNOB,
-  DONE_ATTRIBUTE: () => DONE_ATTRIBUTE,
-  GLYPHS: () => GLYPHS,
-  HEADLINE_ROUTINES: () => HEADLINE_ROUTINES,
-  HOOKS: () => HOOKS,
-  KNOBS: () => KNOBS,
-  LIGHT: () => LIGHT,
-  LIGHT_FAR: () => LIGHT_FAR,
-  LIGHT_KNOB: () => LIGHT_KNOB,
-  LIGHT_REACH: () => LIGHT_REACH,
-  LIGHT_SELECTOR: () => LIGHT_SELECTOR,
-  MARQUEE_KNOB: () => MARQUEE_KNOB,
-  MARQUEE_PAUSE_KNOB: () => MARQUEE_PAUSE_KNOB,
-  MEASURE_KNOB: () => MEASURE_KNOB,
-  MEMO_PREFIX: () => MEMO_PREFIX,
-  POINTER: () => POINTER,
-  POINTER_KNOB: () => POINTER_KNOB,
-  PRESS: () => PRESS,
-  PRESS_HELD: () => PRESS_HELD,
-  PRESS_HOLD: () => PRESS_HOLD,
-  PRESS_HOLD_MS: () => PRESS_HOLD_MS,
-  PRESS_KNOB: () => PRESS_KNOB,
-  PRESS_SIZE: () => PRESS_SIZE,
-  REVEALS: () => REVEALS,
-  REVEAL_EVENT: () => REVEAL_EVENT,
-  REVEAL_STATE: () => REVEAL_STATE,
-  ROOT_ATTRIBUTE: () => ROOT_ATTRIBUTE,
-  ROUTINES: () => ROUTINES,
-  STATE: () => STATE,
-  SURFACES: () => SURFACES,
-  TEXT_ATTRIBUTE: () => TEXT_ATTRIBUTE,
-  TIMINGS: () => TIMINGS,
-  UNKNOWN_EVENT: () => UNKNOWN_EVENT,
-  attachEffects: () => attachEffects,
-  unknownEffects: () => unknownEffects
-});
-function unknownEffects() {
-  return [...unknownReported];
-}
-function attachEffects(root = document, options = {}) {
-  const doc = root.ownerDocument ?? /** @type {Document} */
-  root;
-  const html = doc.documentElement;
-  const manageRoot = options.manageRoot ?? true;
-  const view = doc.defaultView;
-  const query = view && typeof view.matchMedia === "function" ? view.matchMedia("(prefers-reduced-motion: reduce)") : null;
-  const reduced4 = () => options.reduceMotion ?? ((query ? query.matches : false) || html.hasAttribute("data-kp-calm"));
-  const rootStyle = view ? view.getComputedStyle(html) : null;
-  const knob = (name, fallback2) => {
-    const n = rootStyle ? parseFloat(rootStyle.getPropertyValue(name)) : NaN;
-    return Number.isFinite(n) ? n : fallback2;
-  };
-  const cfg = {
-    threshold: options.threshold ?? knob("--kp-reveal-threshold", 0.6),
-    cps: options.cps ?? knob("--kp-decipher-cps", 26),
-    lead: knob("--kp-decipher-lead", 260),
-    swap: knob("--kp-decipher-swap", 0.5),
-    stagger: options.stagger ?? knob("--kp-reveal-stagger", 260),
-    delay: options.delay ?? knob("--kp-classified-delay", 1500),
-    // The word routines: ms between one word arriving and the next.
-    wordStagger: knob("--kp-word-stagger", 60),
-    // The card arrival: how long the word holds after its bar has run.
-    cardHold: knob("--kp-card-hold", 300)
-  };
-  if (manageRoot) html.setAttribute(ROOT_ATTRIBUTE, "");
-  const timers = /* @__PURE__ */ new Set();
-  const frames = /* @__PURE__ */ new Set();
-  const cleanups = [];
-  const finishers = [];
-  const state12 = { detached: false, io: null, ioHeadline: null, pending: 0 };
-  const done = () => {
-    if (state12.detached || state12.pending > 0) return;
-    html.setAttribute(DONE_ATTRIBUTE, "");
-  };
-  const announce4 = (el16, reveal, routine, skipped) => {
-    el16.setAttribute(REVEAL_STATE, skipped ? "rest" : "played");
-    el16.dispatchEvent(new CustomEvent(REVEAL_EVENT, { bubbles: true, detail: { reveal, routine, skipped } }));
-  };
-  const later = (fn, ms) => {
-    const id = setTimeout(() => {
-      timers.delete(id);
-      if (!state12.detached) fn();
-    }, ms);
-    timers.add(id);
-  };
-  const routineOf = (el16, reveal) => view ? view.getComputedStyle(el16).getPropertyValue(ROUTINES[reveal]).trim() : "";
-  const memoKey = (el16, reveal) => {
-    if (reveal === "emphasis" && el16.matches("mark")) return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:loose`;
-    const id = el16.getAttribute("id");
-    const own = id || (el16.textContent ?? "").trim().slice(0, 64);
-    const siblings = id ? [] : [...doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].filter((n) => (n.textContent ?? "").trim().slice(0, 64) === own);
-    const kind = siblings.length > 1 ? `${own}#${siblings.indexOf(el16)}` : own;
-    return `${MEMO_PREFIX}${view?.location.pathname ?? ""}:${reveal}:${kind}`;
-  };
-  const seen = (el16, reveal) => {
-    if (el16.getAttribute(HOOKS.revealEvery) === "load") return false;
-    try {
-      const key = memoKey(el16, reveal);
-      const storage2 = view?.sessionStorage;
-      if (!storage2) return false;
-      if (storage2.getItem(key)) return true;
-      storage2.setItem(key, "1");
-      return false;
-    } catch {
-      return false;
-    }
-  };
-  const reportUnknownRoutine = (el16, knob2, value, accepted) => {
-    const key = `${knob2}=${value}`;
-    if (!unknownReported.has(key)) {
-      unknownReported.add(key);
-      el16.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook: knob2, value, accepted: [...accepted] } }));
-    }
-    return "";
-  };
-  const checkValues = (el16) => {
-    const pairs = [
-      [HOOKS.surface, SURFACES],
-      [HOOKS.reveal, REVEALS]
-    ];
-    for (const [hook, accepted] of pairs) {
-      const value = el16.getAttribute(hook);
-      if (value === null || accepted.includes(value)) continue;
-      const key = `${hook}=${value}`;
-      if (unknownReported.has(key)) continue;
-      unknownReported.add(key);
-      el16.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value, accepted: [...accepted] } }));
-    }
-  };
-  const loaders = {
-    headline: () => Promise.resolve().then(() => (init_headline(), headline_exports)),
-    emphasis: () => Promise.resolve().then(() => (init_emphasis(), emphasis_exports)),
-    rule: () => Promise.resolve().then(() => (init_rule(), rule_exports)),
-    count: () => Promise.resolve().then(() => (init_count(), count_exports)),
-    caret: () => Promise.resolve().then(() => (init_caret(), caret_exports)),
-    pointer: () => Promise.resolve().then(() => (init_pointer(), pointer_exports)),
-    measure: () => Promise.resolve().then(() => (init_measure(), measure_exports)),
-    marquee: () => Promise.resolve().then(() => (init_marquee(), marquee_exports)),
-    arrival: () => Promise.resolve().then(() => (init_arrival(), arrival_exports))
-  };
-  const installed = {};
-  let ctx;
-  const use = (name) => installed[name] ??= loaders[name]().then((module) => module.install(ctx));
-  const arriving = [];
-  let present = null;
-  const run = (name, fn) => {
-    state12.pending++;
-    const asked2 = present;
-    const arrived = use(name).then((hook) => {
-      if (state12.detached) return;
-      if (asked2) asOf(root, asked2, () => fn(hook));
-      else fn(hook);
-    }).catch((error) => console.error(error)).finally(() => {
-      state12.pending = Math.max(0, state12.pending - 1);
-      done();
-    });
-    arriving.push(arrived);
-  };
-  const startOne = (el16) => {
-    if (started.has(el16)) return;
-    checkValues(el16);
-    const reveal = el16.getAttribute(HOOKS.reveal);
-    if (reveal === null || !REVEALS.includes(reveal)) return;
-    started.add(el16);
-    if (reveal === "headline") {
-      const held2 = arrivalsOnScreen.get(doc);
-      if (!held2) {
-        run("headline", (hook) => hook.headline(el16));
-        return;
+// js/effects-core/base.js
+var DEFAULTS, LOADERS, MEMO_TEXT, EffectsBase;
+var init_base = __esm({
+  "js/effects-core/base.js"() {
+    "use strict";
+    init_as_of();
+    init_knobs();
+    init_vocabulary();
+    init_registry();
+    DEFAULTS = { threshold: 0.6, cps: 26, lead: 260, swap: 0.5, stagger: 260, delay: 1500, wordStagger: 60, cardHold: 300 };
+    LOADERS = {
+      headline: () => Promise.resolve().then(() => (init_headline(), headline_exports)),
+      emphasis: () => Promise.resolve().then(() => (init_emphasis(), emphasis_exports)),
+      rule: () => Promise.resolve().then(() => (init_rule(), rule_exports)),
+      count: () => Promise.resolve().then(() => (init_count(), count_exports)),
+      caret: () => Promise.resolve().then(() => (init_caret(), caret_exports)),
+      pointer: () => Promise.resolve().then(() => (init_pointer(), pointer_exports)),
+      measure: () => Promise.resolve().then(() => (init_measure(), measure_exports)),
+      marquee: () => Promise.resolve().then(() => (init_marquee(), marquee_exports)),
+      arrival: () => Promise.resolve().then(() => (init_arrival(), arrival_exports))
+    };
+    MEMO_TEXT = 64;
+    EffectsBase = class {
+      /** @param {Document | Element} root @param {EffectsOptions} options */
+      constructor(root, options) {
+        this.root = root;
+        this.options = options;
+        this.doc = root.ownerDocument ?? /** @type {Document} */
+        root;
+        this.html = this.doc.documentElement;
+        this.manageRoot = options.manageRoot ?? true;
+        this.view = this.doc.defaultView;
+        const { view } = this;
+        this.query = view && typeof view.matchMedia === "function" ? view.matchMedia("(prefers-reduced-motion: reduce)") : null;
+        this.rootStyle = view ? view.getComputedStyle(this.html) : null;
+        this.cfg = {
+          threshold: options.threshold ?? this.knob("--kp-reveal-threshold", DEFAULTS.threshold),
+          cps: options.cps ?? this.knob("--kp-decipher-cps", DEFAULTS.cps),
+          lead: this.knob("--kp-decipher-lead", DEFAULTS.lead),
+          swap: this.knob("--kp-decipher-swap", DEFAULTS.swap),
+          stagger: options.stagger ?? this.knob("--kp-reveal-stagger", DEFAULTS.stagger),
+          delay: options.delay ?? this.knob("--kp-classified-delay", DEFAULTS.delay),
+          // The word routines: ms between one word arriving and the next.
+          wordStagger: this.knob("--kp-word-stagger", DEFAULTS.wordStagger),
+          // The card arrival: how long the word holds after its bar has run.
+          cardHold: this.knob("--kp-card-hold", DEFAULTS.cardHold)
+        };
+        this.timers = /* @__PURE__ */ new Set();
+        this.frames = /* @__PURE__ */ new Set();
+        this.cleanups = [];
+        this.finishers = [];
+        this.state = { detached: false, io: null, ioHeadline: null, pending: 0 };
+        this.installed = {};
+        this.arriving = [];
+        this.present = null;
+        this.ctx = null;
       }
-      state12.pending++;
-      let waiting = true;
-      const go = () => {
-        if (!waiting) return;
-        waiting = false;
-        held2.delete(go);
-        state12.pending--;
-        if (state12.detached) use("headline").then((hook) => hook.headline(el16, true));
-        else run("headline", (hook) => hook.headline(el16));
-      };
-      held2.add(go);
-      finishers.push(go);
-    } else if (reveal === "emphasis") run("emphasis", (hook) => hook.emphasis(el16));
-    else run("rule", (hook) => hook.rule(el16));
-  };
-  const scan = (scope) => {
-    if (scope instanceof Element && scope.hasAttribute(HOOKS.reveal)) startOne(scope);
-    if (scope instanceof Element && scope.hasAttribute(HOOKS.surface)) checkValues(scope);
-    for (const el16 of scope.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) startOne(el16);
-    if (scope instanceof Element && scope.hasAttribute(HOOKS.count) && !started.has(scope)) {
-      started.add(scope);
-      run("count", (hook) => hook.countUp(scope));
-    }
-    for (const el16 of scope.querySelectorAll(`[${HOOKS.count}]`)) {
-      if (started.has(el16)) continue;
-      started.add(el16);
-      run("count", (hook) => hook.countUp(el16));
-    }
-    if (scope instanceof Element && scope.matches("mark") || scope.querySelector("mark")) run("emphasis", (hook) => hook.looseMarks(scope));
-    done();
-  };
-  const onPreference = () => {
-    if (!reduced4()) return;
-    for (const id of timers) clearTimeout(id);
-    timers.clear();
-    for (const id of frames) view?.cancelAnimationFrame(id);
-    frames.clear();
-    state12.io?.disconnect();
-    state12.io = null;
-    state12.ioHeadline?.disconnect();
-    state12.ioHeadline = null;
-    for (const cleanup of cleanups.splice(0)) cleanup();
-    for (const finish2 of finishers.splice(0)) finish2();
-    state12.pending = 0;
-    done();
-  };
-  if (query) query.addEventListener("change", onPreference);
-  const arrivalAsked = rootStyle ? rootStyle.getPropertyValue(ROUTINES.arrival).trim() : "";
-  const arrivalRoutine = arrivalAsked === "" || ARRIVALS.includes(arrivalAsked) ? arrivalAsked : reportUnknownRoutine(html, ROUTINES.arrival, arrivalAsked, ARRIVALS);
-  const arrivalPerformed = (arrivalRoutine === "boot" || arrivalRoutine === "card") && Boolean(doc.body);
-  const arrivalPlays = arrivalPerformed && !reduced4() && !seen(html, "arrival");
-  if (arrivalPlays && !arrivalsOnScreen.has(doc)) arrivalsOnScreen.set(doc, /* @__PURE__ */ new Set());
-  ctx = {
-    state: state12,
-    root,
-    options,
-    doc,
-    html,
-    manageRoot,
-    view,
-    query,
-    reduced: reduced4,
-    rootStyle,
-    knob,
-    cfg,
-    timers,
-    frames,
-    cleanups,
-    finishers,
-    done,
-    announce: announce4,
-    later,
-    routineOf,
-    memoKey,
-    seen,
-    reportUnknownRoutine,
-    checkValues,
-    startOne,
-    scan,
-    onPreference,
-    arrivalRoutine,
-    arrivalPerformed,
-    arrivalPlays,
+      /** @param {WeakSet<Element> | null} present the page as attach found it, or null once attach is over */
+      holdPresent(present) {
+        this.present = present;
+      }
+      /** @param {EffectsContext} ctx */
+      setContext(ctx) {
+        this.ctx = ctx;
+      }
+      reduced() {
+        return this.options.reduceMotion ?? ((this.query ? this.query.matches : false) || this.html.hasAttribute("data-kp-calm"));
+      }
+      /** @param {string} name @param {number} fallback */
+      knob(name, fallback2) {
+        const n = this.rootStyle ? parseFloat(this.rootStyle.getPropertyValue(name)) : NaN;
+        return Number.isFinite(n) ? n : fallback2;
+      }
+      done() {
+        if (this.state.detached || this.state.pending > 0) return;
+        this.html.setAttribute(DONE_ATTRIBUTE, "");
+      }
+      /** @param {Element} el @param {string} reveal @param {string} routine @param {boolean} skipped */
+      announce(el16, reveal, routine, skipped) {
+        el16.setAttribute(REVEAL_STATE, skipped ? "rest" : "played");
+        el16.dispatchEvent(new CustomEvent(REVEAL_EVENT, { bubbles: true, detail: { reveal, routine, skipped } }));
+      }
+      /** @param {() => void} fn @param {number} ms */
+      later(fn, ms) {
+        const id = setTimeout(() => {
+          this.timers.delete(id);
+          if (!this.state.detached) fn();
+        }, ms);
+        this.timers.add(id);
+      }
+      /** @param {Element} el @param {'headline' | 'emphasis' | 'rule' | 'arrival'} reveal */
+      routineOf(el16, reveal) {
+        return this.view ? this.view.getComputedStyle(el16).getPropertyValue(ROUTINES[reveal]).trim() : "";
+      }
+      /**
+       * The memo key: the path, the hook, and the element's position among
+       * its kind — so the hero's marks and the dossier's are two memos, and
+       * a second headline on the page is its own [AR44].
+       *
+       * @param {Element} el @param {string} reveal
+       */
+      memoKey(el16, reveal) {
+        const path = this.view?.location.pathname ?? "";
+        if (reveal === "emphasis" && el16.matches("mark")) return `${MEMO_PREFIX}${path}:${reveal}:loose`;
+        const id = el16.getAttribute("id");
+        const own = id || (el16.textContent ?? "").trim().slice(0, MEMO_TEXT);
+        const siblings = id ? [] : [...this.doc.querySelectorAll(`[${HOOKS.reveal}='${reveal}']`)].filter((n) => (n.textContent ?? "").trim().slice(0, MEMO_TEXT) === own);
+        const kind = siblings.length > 1 ? `${own}#${siblings.indexOf(el16)}` : own;
+        return `${MEMO_PREFIX}${path}:${reveal}:${kind}`;
+      }
+      /** @param {Element} el @param {string} reveal @returns {boolean} true when this page already ran the reveal this session */
+      seen(el16, reveal) {
+        if (el16.getAttribute(HOOKS.revealEvery) === "load") return false;
+        try {
+          const key = this.memoKey(el16, reveal);
+          const storage2 = this.view?.sessionStorage;
+          if (!storage2) return false;
+          if (storage2.getItem(key)) return true;
+          storage2.setItem(key, "1");
+          return false;
+        } catch {
+          return false;
+        }
+      }
+      // ── Unknown values [AR44] ─────────────────────────────────────────
+      /**
+       * Report a routine name nothing answers to, once per name, and hand
+       * back the empty string so the element rests [G6, 2026-09-08]. Same
+       * event and same shape as an unknown surface or reveal: heard, never
+       * thrown [AR44].
+       *
+       * @param {Element} el @param {string} knob @param {string} value @param {readonly string[]} accepted
+       * @returns {string}
+       */
+      reportUnknownRoutine(el16, knob, value, accepted) {
+        const key = `${knob}=${value}`;
+        if (!unknownReported.has(key)) {
+          unknownReported.add(key);
+          el16.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook: knob, value, accepted: [...accepted] } }));
+        }
+        return "";
+      }
+      /** @param {Element} el */
+      checkValues(el16) {
+        const pairs = [
+          [HOOKS.surface, SURFACES],
+          [HOOKS.reveal, REVEALS]
+        ];
+        for (const [hook, accepted] of pairs) {
+          const value = el16.getAttribute(hook);
+          if (value === null || accepted.includes(value)) continue;
+          const key = `${hook}=${value}`;
+          if (unknownReported.has(key)) continue;
+          unknownReported.add(key);
+          el16.dispatchEvent(new CustomEvent(UNKNOWN_EVENT, { bubbles: true, detail: { hook, value, accepted: [...accepted] } }));
+        }
+      }
+      // ── The hooks, fetched when asked for [scope-117] ──────────────────
+      // Each hook lives in js/effects/<hook>.js. A page that carries no
+      // headline never downloads the decipher; a theme that declares no
+      // pointer never downloads the light. A hook's module is fetched the
+      // first time something asks for it and installed once; `state.pending`
+      // is held while it is on its way, so the done attribute still waits for
+      // every reveal that has not started yet.
+      /** @param {string} name */
+      use(name) {
+        return this.installed[name] ??= LOADERS[name]().then((module) => module.install(
+          /** @type {EffectsContext} */
+          this.ctx
+        ));
+      }
+      /** @param {string} name @param {(hook: Record<string, any>) => void} fn */
+      run(name, fn) {
+        const { state: state12, root } = this;
+        state12.pending++;
+        const asked = this.present;
+        const arrived = this.use(name).then((hook) => {
+          if (state12.detached) return;
+          if (asked) asOf(root, asked, () => fn(hook));
+          else fn(hook);
+        }).catch((error) => console.error(error)).finally(() => {
+          state12.pending = Math.max(0, state12.pending - 1);
+          this.done();
+        });
+        this.arriving.push(arrived);
+      }
+    };
+  }
+});
+
+// js/effects-core/context.js
+function buildContext(e) {
+  return {
+    state: e.state,
+    root: e.root,
+    options: e.options,
+    doc: e.doc,
+    html: e.html,
+    manageRoot: e.manageRoot,
+    view: e.view,
+    query: e.query,
+    reduced: () => e.reduced(),
+    rootStyle: e.rootStyle,
+    knob: (name, fallback2) => e.knob(name, fallback2),
+    cfg: e.cfg,
+    timers: e.timers,
+    frames: e.frames,
+    cleanups: e.cleanups,
+    finishers: e.finishers,
+    done: () => e.done(),
+    announce: (el16, reveal, routine, skipped) => e.announce(el16, reveal, routine, skipped),
+    later: (fn, ms) => e.later(fn, ms),
+    routineOf: (el16, reveal) => e.routineOf(el16, reveal),
+    memoKey: (el16, reveal) => e.memoKey(el16, reveal),
+    seen: (el16, reveal) => e.seen(el16, reveal),
+    reportUnknownRoutine: (el16, knob, value, accepted) => e.reportUnknownRoutine(el16, knob, value, accepted),
+    checkValues: (el16) => e.checkValues(el16),
+    startOne: (el16) => e.startOne(el16),
+    scan: (scope) => e.scan(scope),
+    onPreference: e.preferenceHandler,
+    arrivalRoutine: e.arrival.routine,
+    arrivalPerformed: e.arrival.performed,
+    arrivalPlays: e.arrival.plays,
     started,
     carets,
     arrivalsOnScreen,
     unknownReported
   };
-  present = presentUnder(root);
-  scan(root);
-  const asked = (name) => rootStyle ? rootStyle.getPropertyValue(name).trim() : "";
-  let pointerArmed = false;
-  let pressArmed = false;
-  const armThemeBuses = () => {
-    const wantPointer = !pointerArmed && asked(POINTER_KNOB) === "track";
-    const wantPress = !pressArmed && ["point", "size", "hold"].includes(asked(PRESS_KNOB));
-    if (!wantPointer && !wantPress) return;
-    pointerArmed ||= wantPointer;
-    pressArmed ||= wantPress;
-    run("pointer", (hook) => {
-      if (wantPointer) hook.pointerBus();
-      if (wantPress) hook.pressBus();
-    });
-  };
-  if (asked(CARET_KNOB) === "block" && root.querySelector("input.kp-field__input")) run("caret", (hook) => hook.caret());
-  armThemeBuses();
-  if (rootStyle && typeof MutationObserver === "function") {
-    const watch2 = new MutationObserver(() => armThemeBuses());
-    watch2.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
-    const onRegister = () => armThemeBuses();
-    html.addEventListener("kp-register-load", onRegister);
-    cleanups.push(() => {
-      watch2.disconnect();
-      html.removeEventListener("kp-register-load", onRegister);
-    });
-  }
-  if (asked(MEASURE_KNOB) === "live" && root.querySelector(`[${HOOKS.reveal}='headline']`)) run("measure", (hook) => hook.measure());
-  if (root.querySelector(`[${HOOKS.marquee}]`)) run("marquee", (hook) => hook.marquee());
-  if (arrivalPerformed) run("arrival", (hook) => hook.arrival());
-  present = null;
-  return {
-    // Every hook asked for so far has arrived and run [scope-117]. A
-    // reveal still plays over its own time after that; this is only the
-    // moment the code is in, which a caller that reads straight after
-    // attach — a test, a wrapper counting listeners — waits for.
-    get ready() {
-      return Promise.all(arriving).then(() => void 0);
-    },
-    detach() {
-      if (state12.detached) return;
-      state12.detached = true;
-      for (const id of timers) clearTimeout(id);
-      timers.clear();
-      for (const id of frames) view?.cancelAnimationFrame(id);
-      frames.clear();
-      state12.io?.disconnect();
-      state12.io = null;
-      state12.ioHeadline?.disconnect();
-      state12.ioHeadline = null;
-      for (const cleanup of cleanups.splice(0)) cleanup();
-      query?.removeEventListener("change", onPreference);
-      for (const finish2 of finishers.splice(0)) finish2();
-      state12.pending = 0;
-      if (manageRoot) html.removeAttribute(ROOT_ATTRIBUTE);
-    },
-    observe(element) {
-      if (state12.detached) return;
-      scan(element);
-    }
-  };
 }
-var HOOKS, SURFACES, REVEALS, HEADLINE_ROUTINES, ARRIVALS, STATE, ROUTINES, ARRIVAL, CARET_KNOB, KNOBS, COUNT_KNOB, COUNT_FROM_KNOB, BOOT_PROGRESS, MARQUEE_KNOB, MARQUEE_PAUSE_KNOB, MEASURE_KNOB, POINTER_KNOB, POINTER, LIGHT_KNOB, LIGHT, LIGHT_SELECTOR, LIGHT_REACH, LIGHT_FAR, PRESS_KNOB, PRESS, PRESS_SIZE, PRESS_HOLD, PRESS_HELD, PRESS_HOLD_MS, ROOT_ATTRIBUTE, DONE_ATTRIBUTE, REVEAL_STATE, TEXT_ATTRIBUTE, UNKNOWN_EVENT, REVEAL_EVENT, MEMO_PREFIX, GLYPHS, TIMINGS, started, carets, arrivalsOnScreen, unknownReported;
-var init_effects = __esm({
-  "js/effects.js"() {
+var init_context = __esm({
+  "js/effects-core/context.js"() {
     "use strict";
+    init_registry();
+  }
+});
+
+// js/effects-core/engine.js
+var PRESS_STYLES, EffectsEngine;
+var init_engine = __esm({
+  "js/effects-core/engine.js"() {
+    "use strict";
+    init_base();
+    init_context();
+    init_knobs();
+    init_registry();
+    init_vocabulary();
     init_as_of();
-    HOOKS = Object.freeze({
-      surface: "data-kp-surface",
-      reveal: "data-kp-reveal",
-      revealTrigger: "data-kp-reveal-trigger",
-      revealEvery: "data-kp-reveal-every",
-      divider: "data-kp-divider",
-      /** A row of items a theme may run [M1, 2026-09-08]. */
-      marquee: "data-kp-marquee",
-      label: "data-kp-label",
-      /** The label a stamp takes once the file is open [S49, A11]. */
-      labelOpen: "data-kp-label-open",
-      /** Set on the container while the file is open. */
-      openState: "data-kp-open",
-      navSide: "data-kp-nav-side",
+    PRESS_STYLES = ["point", "size", "hold"];
+    EffectsEngine = class extends EffectsBase {
+      /** @param {Document | Element} root @param {EffectsOptions} options */
+      constructor(root, options) {
+        super(root, options);
+        this.arrival = { routine: "", performed: false, plays: false };
+        this.pointerArmed = false;
+        this.pressArmed = false;
+        this.preferenceHandler = () => this.onPreference();
+      }
+      /** Attach the reveals under the root and return the handle. @returns {EffectsHandle} */
+      start() {
+        const { root, html, query } = this;
+        if (this.manageRoot) html.setAttribute(ROOT_ATTRIBUTE, "");
+        if (query) query.addEventListener("change", this.preferenceHandler);
+        this.decideArrival();
+        this.setContext(buildContext(this));
+        this.holdPresent(presentUnder(root));
+        this.scan(root);
+        this.askForHooks();
+        this.holdPresent(null);
+        return this.handle();
+      }
+      /** @param {string} name */
+      asked(name) {
+        return this.rootStyle ? this.rootStyle.getPropertyValue(name).trim() : "";
+      }
       /**
-       * A number that counts up to what it already says [feat-count-1].
-       *
-       * The element's authored text is the truth and the module never
-       * invents one: it reads the number out of that text, counts to it,
-       * and puts the text back exactly as written. A page that never
-       * attaches this module, or a reader who asked for less movement,
-       * sees the final number and nothing else — which is the frozen bar.
+       * Whether this attach puts up the arrival, decided before the scan so
+       * the headline the scan finds already knows to wait for it [scope-86].
+       * The arrival itself is built at the end of attach, as before.
        */
-      count: "data-kp-count",
-      /** `armed` | `running` | `done`, readable at any moment [KT16]. */
-      countState: "data-kp-count-state"
-    });
-    SURFACES = Object.freeze(["hero", "app"]);
-    REVEALS = Object.freeze(["headline", "emphasis", "rule"]);
-    HEADLINE_ROUTINES = Object.freeze([
-      "decipher",
-      "type",
-      "dissolve",
-      "shout",
-      "slam",
-      "focus",
-      "resolve",
-      "blur",
-      "sharpen",
-      "clip",
-      "overprint",
-      "gild",
-      "wipe",
-      "calibrate",
-      "ink",
-      "arrive",
-      "draw",
-      "tracking",
-      "popdown"
-    ]);
-    ARRIVALS = Object.freeze(["boot", "card"]);
-    STATE = Object.freeze({
-      // The pastel headline [S48, LIFT_PLAN row 6]: the overprint layer
-      // springs from a wide mis-registration into its rest position once.
-      registering: "is-registering",
-      // The light headline [S48, A1]: the clip window opening once.
-      revealing: "is-revealing",
-      // The grotesk headline [S48, LIFT_PLAN row 12]: Hiroto Sato's
-      // blur+brightness resolve, a one-shot optical sweep on the whole,
-      // unsplit line — no word-splitting, so it is its own routine rather
-      // than the shared `focus` word-stagger group the removed Shade (dark) theme owned.
-      sharpening: "is-sharpening",
-      in: "is-in",
-      cleared: "is-cleared",
-      deciphered: "is-deciphered",
-      glitching: "is-glitching",
-      noise: "is-noise",
-      // The synthwave routines [SW2]: the tracking wipe and the shine of a
-      // headline, and the boot overlay switching off.
-      tracking: "is-tracking",
-      shine: "is-shine",
-      off: "is-off",
-      // The lift routines [S48, LIFT_PLAN rows 2–5]: a headline whose words
-      // arrive one after another (phantom's shout, brutalism's slam), one that
-      // clears out of a dither (retro), one that types itself (terminal).
-      words: "is-words",
-      dissolving: "is-dissolving",
-      typing: "is-typing",
-      // The nostromo headline [S48, LIFT_PLAN row 19]: the whole line popping
-      // down under a clip-path, its text never touched.
-      popping: "is-popping",
-      // The Sepia headline (theme removed 2026-10-08) [S48, LIFT_PLAN row 9]: the ghost look before the
-      // ink-in settle, on only while the transition runs.
-      settling: "is-settling",
-      // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
-      // bands wiping away once over text that never moves.
-      calibrating: "is-calibrating",
-      // The mono headline [S48, LIFT_PLAN row 11]: a hard-edge mask sweeping
-      // across the whole, unsplit line once.
-      revealed: "is-revealed",
-      // The Lapis headline (theme removed 2026-10-06) [S48, LIFT_PLAN row 6]: a single wipe over the
-      // whole clause, once — the gilder's burnishing pass, not a per-word or
-      // per-glyph reveal, so it earns its own routine rather than reusing
-      // `dissolve` or `type` [S49].
-      gilding: "is-gilding"
-    });
-    ROUTINES = Object.freeze({
-      headline: "--kp-reveal-headline",
-      emphasis: "--kp-reveal-emphasis",
-      rule: "--kp-reveal-rule",
-      // How the page arrives, read from the root [SW2]: `boot` builds the
-      // overlay below; anything else, or nothing, is quiet.
-      arrival: "--kp-arrival"
-    });
-    ARRIVAL = Object.freeze({ root: "kp-boot", line: "kp-boot__line", skip: "kp-boot__skip", bar: "kp-boot__bar" });
-    CARET_KNOB = "--kp-caret";
-    KNOBS = Object.freeze({
-      /** `block` builds the segmented bar retro's POST counts along. */
-      arrivalBar: "--kp-arrival-bar",
-      /** What a `{count}` in a boot line counts up to. Default 640, as a memory test reads. */
-      arrivalCount: "--kp-arrival-count",
+      decideArrival() {
+        const { html, doc } = this;
+        const arrivalAsked = this.asked(ROUTINES.arrival);
+        const routine = arrivalAsked === "" || ARRIVALS.includes(arrivalAsked) ? arrivalAsked : this.reportUnknownRoutine(html, ROUTINES.arrival, arrivalAsked, ARRIVALS);
+        const performed = (routine === "boot" || routine === "card") && Boolean(doc.body);
+        const plays = performed && !this.reduced() && !this.seen(html, "arrival");
+        if (plays && !arrivalsOnScreen.has(doc)) arrivalsOnScreen.set(doc, /* @__PURE__ */ new Set());
+        this.arrival = { routine, performed, plays };
+      }
+      /** @param {Element} el */
+      startOne(el16) {
+        if (started.has(el16)) return;
+        this.checkValues(el16);
+        const reveal = el16.getAttribute(HOOKS.reveal);
+        if (reveal === null || !REVEALS.includes(reveal)) return;
+        started.add(el16);
+        if (reveal === "headline") this.startHeadline(el16);
+        else if (reveal === "emphasis") this.run("emphasis", (hook) => hook.emphasis(el16));
+        else this.run("rule", (hook) => hook.rule(el16));
+      }
       /**
-       * Whether a click anywhere on the arrival overlay ends it [CP1].
-       *
-       * `anywhere` (the default since 6.0.0) or `skip-only` for what it did
-       * before. The overlay is `position: fixed; inset: 0`, so until now it
-       * ate every click for up to 1100ms and only the Skip button ended it —
-       * a click elsewhere did nothing and gave no sign it had been lost.
-       * JobTracker reported that as "the theme picker does not work on
-       * phantom"; the picker was fine.
+       * The headline waits for the arrival [scope-86]: started under
+       * the overlay it was over before the overlay went, so a first
+       * visit never saw it. It starts when the overlay is removed,
+       * whether the arrival ran its course, was skipped or clicked
+       * away; with no arrival on screen it starts now, as before.
+       * @param {Element} el
        */
-      arrivalDismiss: "--kp-arrival-dismiss",
+      startHeadline(el16) {
+        const { state: state12 } = this;
+        const held2 = arrivalsOnScreen.get(this.doc);
+        if (!held2) {
+          this.run("headline", (hook) => hook.headline(el16));
+          return;
+        }
+        state12.pending++;
+        let waiting = true;
+        const go = () => {
+          if (!waiting) return;
+          waiting = false;
+          held2.delete(go);
+          state12.pending--;
+          if (state12.detached) this.use("headline").then((hook) => hook.headline(el16, true));
+          else this.run("headline", (hook) => hook.headline(el16));
+        };
+        held2.add(go);
+        this.finishers.push(go);
+      }
+      /** @param {ParentNode | Element} scope */
+      scan(scope) {
+        if (scope instanceof Element && scope.hasAttribute(HOOKS.reveal)) this.startOne(scope);
+        if (scope instanceof Element && scope.hasAttribute(HOOKS.surface)) this.checkValues(scope);
+        for (const el16 of scope.querySelectorAll(`[${HOOKS.surface}], [${HOOKS.reveal}]`)) this.startOne(el16);
+        this.scanCounts(scope);
+        if (scope instanceof Element && scope.matches("mark") || scope.querySelector("mark")) this.run("emphasis", (hook) => hook.looseMarks(scope));
+        this.done();
+      }
       /**
-       * How fast the arrival plays, as a factor [scope-84]. Default 1.
-       *
-       * Every wait of the arrival — a boot line's step, a percentage's step,
-       * the card's hold, the pause before it switches off — is divided by
-       * it, and every CSS animation on the overlay (the CRT switching off,
-       * the card's bar and its shove) plays at it as its playback rate. So
-       * `0.5` takes twice as long and `2` half as long, and the sequence
-       * stays the same sequence. A value that is not a number above zero
-       * reads as 1. The catalogue's intro inspector (catalogue/intros.html)
-       * sets it on the root of a frame; no register declares it, and a page
-       * that never sets it plays exactly as before.
+       * Counting numbers [feat-count-1]. Armed once each: an element
+       * already counted keeps its number when the module is attached a
+       * second time, which js/auto.js does over React.
+       * @param {ParentNode | Element} scope
        */
-      arrivalRate: "--kp-arrival-rate"
-    });
-    COUNT_KNOB = "--kp-count";
-    COUNT_FROM_KNOB = "--kp-count-from";
-    BOOT_PROGRESS = "--kp-boot-progress";
-    MARQUEE_KNOB = "--kp-marquee";
-    MARQUEE_PAUSE_KNOB = "--kp-marquee-pause";
-    MEASURE_KNOB = "--kp-measure";
-    POINTER_KNOB = "--kp-pointer";
-    POINTER = Object.freeze({ x: "--kp-px", y: "--kp-py" });
-    LIGHT_KNOB = "--kp-light";
-    LIGHT = Object.freeze({
-      x: "--kp-light-x",
-      y: "--kp-light-y",
-      near: "--kp-light-near",
-      lift: "--kp-light-lift",
-      atX: "--kp-light-at-x",
-      atY: "--kp-light-at-y"
-    });
-    LIGHT_SELECTOR = ".kp-card, .kp-button:not([class*='kp-button--']), [data-kp-surface='hero']";
-    LIGHT_REACH = 240;
-    LIGHT_FAR = 560;
-    PRESS_KNOB = "--kp-press";
-    PRESS = Object.freeze({ x: "--kp-press-x", y: "--kp-press-y" });
-    PRESS_SIZE = "data-kp-press-size";
-    PRESS_HOLD = "--kp-press-hold";
-    PRESS_HELD = ".kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend, .kp-calendar__day";
-    PRESS_HOLD_MS = 400;
-    ROOT_ATTRIBUTE = "data-kp-effects";
-    DONE_ATTRIBUTE = "data-kp-effects-done";
-    REVEAL_STATE = "data-kp-reveal-state";
-    TEXT_ATTRIBUTE = "data-kp-text";
-    UNKNOWN_EVENT = "kp-effect-unknown";
-    REVEAL_EVENT = "kp-reveal";
-    MEMO_PREFIX = "kp-effects:";
-    GLYPHS = "01<>/\\|=+*#%@&$?!ZXKQ";
-    TIMINGS = Object.freeze({
+      scanCounts(scope) {
+        if (scope instanceof Element && scope.hasAttribute(HOOKS.count) && !started.has(scope)) {
+          started.add(scope);
+          this.run("count", (hook) => hook.countUp(scope));
+        }
+        for (const el16 of scope.querySelectorAll(`[${HOOKS.count}]`)) {
+          if (started.has(el16)) continue;
+          started.add(el16);
+          this.run("count", (hook) => hook.countUp(el16));
+        }
+      }
+      /** Stop the timers, frames and observers the reveals started. */
+      stopRunning() {
+        const { state: state12 } = this;
+        for (const id of this.timers) clearTimeout(id);
+        this.timers.clear();
+        for (const id of this.frames) this.view?.cancelAnimationFrame(id);
+        this.frames.clear();
+        state12.io?.disconnect();
+        state12.io = null;
+        state12.ioHeadline?.disconnect();
+        state12.ioHeadline = null;
+        for (const cleanup of this.cleanups.splice(0)) cleanup();
+      }
+      /** Reduced motion switched on mid-session: every running reveal resolves to its rest state at once [DI7]. */
+      onPreference() {
+        if (!this.reduced()) return;
+        this.stopRunning();
+        for (const finish2 of this.finishers.splice(0)) finish2();
+        this.state.pending = 0;
+        this.done();
+      }
+      /**
+       * The pointer and press buses depend on the theme, and a theme can
+       * arrive after attach: the reader switches, a lazily loaded register
+       * lands, a framework renders its own switcher. They used to be armed
+       * only if the theme active at attach asked, so dark's oxide film stood
+       * still in every app that attached before dark was on [fix-81]. Each is
+       * armed once, the first time a theme asks for it.
+       */
+      armThemeBuses() {
+        const wantPointer = !this.pointerArmed && this.asked(POINTER_KNOB) === "track";
+        const wantPress = !this.pressArmed && PRESS_STYLES.includes(this.asked(PRESS_KNOB));
+        if (!wantPointer && !wantPress) return;
+        this.pointerArmed ||= wantPointer;
+        this.pressArmed ||= wantPress;
+        this.run("pointer", (hook) => {
+          if (wantPointer) hook.pointerBus();
+          if (wantPress) hook.pressBus();
+        });
+      }
+      /** Watch for a theme that arrives after attach. */
+      watchThemes() {
+        const { html } = this;
+        if (!this.rootStyle || typeof MutationObserver !== "function") return;
+        const watch2 = new MutationObserver(() => this.armThemeBuses());
+        watch2.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
+        const onRegister = () => this.armThemeBuses();
+        html.addEventListener("kp-register-load", onRegister);
+        this.cleanups.push(() => {
+          watch2.disconnect();
+          html.removeEventListener("kp-register-load", onRegister);
+        });
+      }
+      /**
+       * The hooks a theme or the page asks for once, in the order the closure
+       * always ran them. Each module still decides for itself; the checks here
+       * only save the download when the answer is certainly no.
+       */
+      askForHooks() {
+        const { root } = this;
+        if (this.asked(CARET_KNOB) === "block" && root.querySelector("input.kp-field__input")) this.run("caret", (hook) => hook.caret());
+        this.armThemeBuses();
+        this.watchThemes();
+        if (this.asked(MEASURE_KNOB) === "live" && root.querySelector(`[${HOOKS.reveal}='headline']`)) this.run("measure", (hook) => hook.measure());
+        if (root.querySelector(`[${HOOKS.marquee}]`)) this.run("marquee", (hook) => hook.marquee());
+        if (this.arrival.performed) this.run("arrival", (hook) => hook.arrival());
+      }
+      /** Stop everything the module started and remove the root attribute; safe to call twice. */
+      detach() {
+        const { state: state12 } = this;
+        if (state12.detached) return;
+        state12.detached = true;
+        this.stopRunning();
+        this.query?.removeEventListener("change", this.preferenceHandler);
+        for (const finish2 of this.finishers.splice(0)) finish2();
+        state12.pending = 0;
+        if (this.manageRoot) this.html.removeAttribute(ROOT_ATTRIBUTE);
+      }
+      /** @returns {EffectsHandle} */
+      handle() {
+        const engine = this;
+        return {
+          // Every hook asked for so far has arrived and run [scope-117]. A
+          // reveal still plays over its own time after that; this is only the
+          // moment the code is in, which a caller that reads straight after
+          // attach — a test, a wrapper counting listeners — waits for.
+          get ready() {
+            return Promise.all(engine.arriving).then(() => void 0);
+          },
+          detach: () => engine.detach(),
+          observe(element) {
+            if (engine.state.detached) return;
+            engine.scan(element);
+          }
+        };
+      }
+    };
+  }
+});
+
+// js/effects-core/timings-early.js
+var TIMINGS_EARLY;
+var init_timings_early = __esm({
+  "js/effects-core/timings-early.js"() {
+    "use strict";
+    TIMINGS_EARLY = {
       // The 5.0.0 register [S41, C2]: the navbar strip entering, the hover
       // glitch (two steps, once), the headline's slice burst (one burst of
       // six bands, once) and the charge sweep (a transform, no luminance).
@@ -8637,7 +8689,17 @@ var init_effects = __esm({
       // mechanics). The confirmation dialog's one-shot open reuses the
       // `kp-dialog-in` row above, which nostromo (and the removed academia and Shade (dark))
       // already share.
-      "kp-sharpen-in": { durationMs: 640, cycles: 1, property: "filter", luminanceSteps: [] },
+      "kp-sharpen-in": { durationMs: 640, cycles: 1, property: "filter", luminanceSteps: [] }
+    };
+  }
+});
+
+// js/effects-core/timings-formal.js
+var TIMINGS_FORMAL;
+var init_timings_formal = __esm({
+  "js/effects-core/timings-formal.js"() {
+    "use strict";
+    TIMINGS_FORMAL = {
       // The blueprint register [S48, LIFT_PLAN row 6]: the headline settling
       // in, and the two dimension lines extending like a tape measure (a
       // transform each, no luminance change) with their labels fading in.
@@ -8765,7 +8827,17 @@ var init_effects = __esm({
       "kp-sig-synthwave-size-rise": { durationMs: 225, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
       "kp-sig-synthwave-sink": { durationMs: 225, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
       "kp-sig-synthwave-sun": { durationMs: 225, cycles: 1, property: "translate, visibility", luminanceSteps: [] },
-      "kp-sig-synthwave-update-laser": { durationMs: 225, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+      "kp-sig-synthwave-update-laser": { durationMs: 225, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] }
+    };
+  }
+});
+
+// js/effects-core/timings-grammars.js
+var TIMINGS_GRAMMARS;
+var init_timings_grammars = __esm({
+  "js/effects-core/timings-grammars.js"() {
+    "use strict";
+    TIMINGS_GRAMMARS = {
       // The Phantom throw (theme removed 2026-10-16): the `shout` headline
       // routine in js/effects/headline.js still times its words by this row.
       "kp-sig-phantom-fly": { durationMs: 700, cycles: 1, property: "translate, rotate, scale, visibility", luminanceSteps: [] },
@@ -8938,11 +9010,77 @@ var init_effects = __esm({
       "kp-sig-solstice-size-rise": { durationMs: 480, cycles: 1, property: "opacity", luminanceSteps: [0] },
       "kp-sig-solstice-leave": { durationMs: 540, cycles: 1, property: "opacity", luminanceSteps: [0] }
       // ── end of the port session's rows
-    });
-    started = /* @__PURE__ */ new WeakSet();
-    carets = /* @__PURE__ */ new WeakSet();
-    arrivalsOnScreen = /* @__PURE__ */ new WeakMap();
-    unknownReported = /* @__PURE__ */ new Set();
+    };
+  }
+});
+
+// js/effects-core/timings.js
+var TIMINGS;
+var init_timings = __esm({
+  "js/effects-core/timings.js"() {
+    "use strict";
+    init_timings_early();
+    init_timings_formal();
+    init_timings_grammars();
+    TIMINGS = Object.freeze({ ...TIMINGS_EARLY, ...TIMINGS_FORMAL, ...TIMINGS_GRAMMARS });
+  }
+});
+
+// js/effects.js
+var effects_exports = {};
+__export(effects_exports, {
+  ARRIVAL: () => ARRIVAL,
+  ARRIVALS: () => ARRIVALS,
+  BOOT_PROGRESS: () => BOOT_PROGRESS,
+  CARET_KNOB: () => CARET_KNOB,
+  COUNT_FROM_KNOB: () => COUNT_FROM_KNOB,
+  COUNT_KNOB: () => COUNT_KNOB,
+  DONE_ATTRIBUTE: () => DONE_ATTRIBUTE,
+  GLYPHS: () => GLYPHS,
+  HEADLINE_ROUTINES: () => HEADLINE_ROUTINES,
+  HOOKS: () => HOOKS,
+  KNOBS: () => KNOBS,
+  LIGHT: () => LIGHT,
+  LIGHT_FAR: () => LIGHT_FAR,
+  LIGHT_KNOB: () => LIGHT_KNOB,
+  LIGHT_REACH: () => LIGHT_REACH,
+  LIGHT_SELECTOR: () => LIGHT_SELECTOR,
+  MARQUEE_KNOB: () => MARQUEE_KNOB,
+  MARQUEE_PAUSE_KNOB: () => MARQUEE_PAUSE_KNOB,
+  MEASURE_KNOB: () => MEASURE_KNOB,
+  MEMO_PREFIX: () => MEMO_PREFIX,
+  POINTER: () => POINTER,
+  POINTER_KNOB: () => POINTER_KNOB,
+  PRESS: () => PRESS,
+  PRESS_HELD: () => PRESS_HELD,
+  PRESS_HOLD: () => PRESS_HOLD,
+  PRESS_HOLD_MS: () => PRESS_HOLD_MS,
+  PRESS_KNOB: () => PRESS_KNOB,
+  PRESS_SIZE: () => PRESS_SIZE,
+  REVEALS: () => REVEALS,
+  REVEAL_EVENT: () => REVEAL_EVENT,
+  REVEAL_STATE: () => REVEAL_STATE,
+  ROOT_ATTRIBUTE: () => ROOT_ATTRIBUTE,
+  ROUTINES: () => ROUTINES,
+  STATE: () => STATE,
+  SURFACES: () => SURFACES,
+  TEXT_ATTRIBUTE: () => TEXT_ATTRIBUTE,
+  TIMINGS: () => TIMINGS,
+  UNKNOWN_EVENT: () => UNKNOWN_EVENT,
+  attachEffects: () => attachEffects,
+  unknownEffects: () => unknownEffects
+});
+function attachEffects(root = document, options = {}) {
+  return new EffectsEngine(root, options).start();
+}
+var init_effects = __esm({
+  "js/effects.js"() {
+    "use strict";
+    init_engine();
+    init_vocabulary();
+    init_knobs();
+    init_timings();
+    init_registry();
   }
 });
 
@@ -9119,10 +9257,10 @@ function showAlarm(options) {
     }
   });
 }
-function writeCountdown(dialog, left, share, stepped, words2) {
+function writeCountdown(dialog, left, share, stepped, words3) {
   dialog.style.setProperty("--kp-alarm-left", String(share));
   dialog.style.setProperty("--kp-alarm-left-step", String(stepped));
-  if (left && left.textContent !== words2) left.textContent = words2;
+  if (left && left.textContent !== words3) left.textContent = words3;
 }
 function attachAlarms(root = document, { strings } = {}) {
   const cleanups = [];
@@ -11160,11 +11298,11 @@ function drawArt(doc, kind) {
   for (const [name, set] of Object.entries(ART_SETS)) {
     const group = doc.createElementNS(SVG, "g");
     group.setAttribute("data-kp-art-set", name);
-    set[kind].forEach(([ink, d], i) => {
+    set[kind].forEach(([ink2, d], i) => {
       const path = doc.createElementNS(SVG, "path");
       path.setAttribute("d", d);
       path.setAttribute("pathLength", "1");
-      path.setAttribute("class", `kp-art__${ink}`);
+      path.setAttribute("class", `kp-art__${ink2}`);
       path.style.setProperty("--kp-art-i", String(i));
       group.append(path);
     });
@@ -11277,16 +11415,16 @@ function paintItem(el16, item) {
     el16.prepend(icon);
   }
   if (icon.textContent !== GLYPH[severity]) icon.textContent = GLYPH[severity];
-  let words2 = el16.querySelector(":scope > .kp-attention__text");
-  if (!words2) {
-    words2 = doc.createElement("div");
-    words2.className = "kp-attention__text";
-    icon.after(words2);
+  let words3 = el16.querySelector(":scope > .kp-attention__text");
+  if (!words3) {
+    words3 = doc.createElement("div");
+    words3.className = "kp-attention__text";
+    icon.after(words3);
   }
-  let title = words2.querySelector(":scope > strong");
+  let title = words3.querySelector(":scope > strong");
   if (!title) {
     title = doc.createElement("strong");
-    words2.prepend(title);
+    words3.prepend(title);
   }
   let sr = title.querySelector(":scope > .kp-sr-only");
   if (!sr) {
@@ -11301,11 +11439,11 @@ function paintItem(el16, item) {
     for (const n of titleText) n.remove();
     title.append(item.title);
   }
-  let line = words2.querySelector(":scope > span");
+  let line = words3.querySelector(":scope > span");
   if (item.text) {
     if (!line) {
       line = doc.createElement("span");
-      words2.append(line);
+      words3.append(line);
     }
     if (line.textContent !== item.text) line.textContent = item.text;
   } else line?.remove();
@@ -11603,7 +11741,7 @@ function paint(el16, ctx) {
     announce(el16, stale ? strings.agoStale(text) : strings.agoFresh(text));
   state12.stale = stale;
 }
-function announce(el16, words2) {
+function announce(el16, words3) {
   let voice = el16.nextElementSibling;
   if (!(voice instanceof HTMLElement) || !voice.hasAttribute("data-kp-ago-voice")) {
     voice = el16.ownerDocument.createElement("span");
@@ -11612,7 +11750,7 @@ function announce(el16, words2) {
     voice.setAttribute("data-kp-ago-voice", "");
     el16.after(voice);
   }
-  voice.textContent = words2;
+  voice.textContent = words3;
 }
 function tick() {
   for (const [el16, ctx] of live) if (el16.isConnected) paint(el16, ctx);
@@ -12817,15 +12955,15 @@ var init_roving = __esm({
 // js/segmented/tri.js
 function triWords(item) {
   const strings = getStrings();
-  const words2 = { any: strings.triAny, include: strings.triInclude, exclude: strings.triExclude };
+  const words3 = { any: strings.triAny, include: strings.triInclude, exclude: strings.triExclude };
   const raw = item.parentElement?.closest(SEGMENTED)?.getAttribute("data-kp-segmented-words");
-  if (!raw) return words2;
+  if (!raw) return words3;
   try {
     const own = JSON.parse(raw);
-    for (const state12 of TRI_STATES) if (typeof own?.[state12] === "string") words2[state12] = own[state12];
+    for (const state12 of TRI_STATES) if (typeof own?.[state12] === "string") words3[state12] = own[state12];
   } catch {
   }
-  return words2;
+  return words3;
 }
 function writeTri(item, state12) {
   if (state12 === "any") item.removeAttribute(TRI_ATTRIBUTE);
@@ -13550,8 +13688,8 @@ var init_labels = __esm({
       paintTitle() {
         const doc = this.el.ownerDocument;
         const slotted = this.slotted;
-        const words2 = (this.el.getAttribute("data-kp-refresh-title") ?? "").trim();
-        if (!words2 && !slotted) {
+        const words3 = (this.el.getAttribute("data-kp-refresh-title") ?? "").trim();
+        if (!words3 && !slotted) {
           this.titleCell?.remove();
           this.titleCell = null;
           return;
@@ -13563,18 +13701,18 @@ var init_labels = __esm({
           if (slotted) this.titleCell.append(slotted);
         }
         const cell = this.titleCell;
-        if (words2) {
+        if (words3) {
           if (slotted?.parentElement === cell) slotted.hidden = true;
           cell.querySelector(":scope > .kp-refresh__title-words")?.remove();
           const text = make(doc, "span", "kp-refresh__title-words");
-          text.textContent = words2;
+          text.textContent = words3;
           cell.append(text);
         } else if (slotted) slotted.hidden = false;
       }
       /** Draw or take away the label cell. */
       paintLabel() {
-        const words2 = (this.el.getAttribute("data-kp-refresh-label") ?? "").trim();
-        if (!words2) {
+        const words3 = (this.el.getAttribute("data-kp-refresh-label") ?? "").trim();
+        if (!words3) {
           this.labelCell?.remove();
           this.labelCell = null;
           return;
@@ -13583,7 +13721,7 @@ var init_labels = __esm({
           this.labelCell = make(this.el.ownerDocument, "span", "kp-refresh__label kp-formgrid__label");
           this.bar.insertBefore(this.labelCell, this.titleCell ? this.titleCell.nextSibling : this.bar.firstChild);
         }
-        this.labelCell.textContent = words2;
+        this.labelCell.textContent = words3;
       }
     };
   }
@@ -13959,8 +14097,8 @@ function refreshDone(element, ok) {
 function setRefreshInterval(element, seconds) {
   refreshOf(element)?.setInterval(seconds, "script");
 }
-function setRefreshTitle(element, words2) {
-  if (words2) element.setAttribute("data-kp-refresh-title", words2);
+function setRefreshTitle(element, words3) {
+  if (words3) element.setAttribute("data-kp-refresh-title", words3);
   else element.removeAttribute("data-kp-refresh-title");
 }
 function attachRefresh(root = document, { now = () => Date.now() } = {}) {
@@ -15590,11 +15728,11 @@ function numericTime(timeZone = CHART_TIME_ZONE) {
     return `${date(w)} ${clock4(w)}`;
   };
 }
-function trendAxis(points, { now, step = 6e5, timeZone = CHART_TIME_ZONE, time, words: words2 }) {
+function trendAxis(points, { now, step = 6e5, timeZone = CHART_TIME_ZONE, time, words: words3 }) {
   if (points.length < 2) return [BLANK, BLANK];
   const print = time ?? numericTime(timeZone);
   const s2 = getStrings();
-  const say18 = words2 ?? { now: s2.chartNow, today: s2.chartToday, yesterday: s2.chartYesterday };
+  const say18 = words3 ?? { now: s2.chartNow, today: s2.chartToday, yesterday: s2.chartYesterday };
   const w = wallTime(now, timeZone);
   const today = dayKeyOf(w);
   const yesterday = dayKeyOf(wallTime(Date.UTC(w.year, w.month - 1, w.day - 1, 12), "UTC"));
@@ -16271,8 +16409,8 @@ function trendChart(host, group, locale, ctx) {
     const shown5 = fmt(value, "spark");
     cross.style.insetInlineStart = `${x}px`;
     cross.hidden = false;
-    const words2 = () => [h(doc, "span", { class: "kp-kpi__chart-at" }, moment), h(doc, "span", { class: "kp-kpi__chart-value" }, shown5)];
-    chip.replaceChildren(...words2());
+    const words3 = () => [h(doc, "span", { class: "kp-kpi__chart-at" }, moment), h(doc, "span", { class: "kp-kpi__chart-value" }, shown5)];
+    chip.replaceChildren(...words3());
     chip.hidden = false;
     chip.removeAttribute("data-kp-stacked");
     let chipWidth = chip.offsetWidth;
@@ -16284,7 +16422,7 @@ function trendChart(host, group, locale, ctx) {
     if (!toAxis) chip.style.insetInlineStart = `${Math.max(0, Math.min(width - chipWidth, x - chipWidth / 2))}px`;
     chip.hidden = toAxis;
     if (axis) {
-      axis.read.replaceChildren(...toAxis ? words2() : []);
+      axis.read.replaceChildren(...toAxis ? words3() : []);
       axis.read.hidden = !toAxis;
       axis.from.hidden = toAxis;
       axis.to.hidden = toAxis;
@@ -16315,7 +16453,7 @@ function trendChart(host, group, locale, ctx) {
     );
     host.append(plate);
   }
-  function draw7() {
+  function draw8() {
     const series = data?.series[0];
     const k = kind();
     host.setAttribute("data-kp-state", k);
@@ -16406,7 +16544,7 @@ function trendChart(host, group, locale, ctx) {
     host,
     spark: true,
     group,
-    draw: draw7,
+    draw: draw8,
     setData: (next2) => {
       data = next2;
       if (data.key != null) host.setAttribute("data-kp-key", data.key);
@@ -16416,11 +16554,11 @@ function trendChart(host, group, locale, ctx) {
         leaving = true;
         void card.close().then(() => {
           leaving = false;
-          draw7();
+          draw8();
         });
         return;
       }
-      if (!leaving) draw7();
+      if (!leaving) draw8();
     },
     select: () => false,
     // The trend reads on its own crosshair, not the group's.
@@ -16482,7 +16620,7 @@ function sparkChart(host, group, locale, ctx) {
   host.append(...parts2);
   if (data.key != null) host.setAttribute("data-kp-key", data.key);
   decorateWith(decorate2, plot, { kind: "plot", host, key: data.key ?? host.getAttribute("data-kp-key") ?? void 0 });
-  function draw7() {
+  function draw8() {
     const series = data.series[0];
     name.textContent = label();
     if (axis) [axis.from.textContent, axis.to.textContent] = trendWords(pts, series, ctx);
@@ -16551,19 +16689,19 @@ function sparkChart(host, group, locale, ctx) {
     data = next2;
     if (data.key != null) host.setAttribute("data-kp-key", data.key);
     pts = data.series[0] ? pointsOf(data.series[0]) : [];
-    draw7();
+    draw8();
   };
   pts = data.series[0] ? pointsOf(data.series[0]) : [];
   const state12 = {
     host,
     spark: true,
     group,
-    draw: draw7,
+    draw: draw8,
     setData,
     select: () => false,
     cursorAt: (t) => {
       cursor = t;
-      draw7();
+      draw8();
     },
     lastTime: () => pts[pts.length - 1]?.[0] ?? null,
     destroy: () => {
@@ -16859,8 +16997,8 @@ function installLegend(c) {
     const note2 = annKey.querySelector('[data-kp-note="median"]');
     if (note2 && c.medians.length === 1) {
       const m = c.medians[0];
-      const words2 = note2.querySelector(".kp-chart__annkey-median");
-      if (words2) words2.textContent = `${medianWords(opt3)} ${fmt(m.v, "tip")}`;
+      const words3 = note2.querySelector(".kp-chart__annkey-median");
+      if (words3) words3.textContent = `${medianWords(opt3)} ${fmt(m.v, "tip")}`;
     }
   }
   const medianWords = (opt3) => opt3.medianWords || strings.median;
@@ -16967,7 +17105,7 @@ function installDraw(c) {
     toneOf: toneOf4,
     visible: visible3
   } = c;
-  c.draw = draw7;
+  c.draw = draw8;
   function drawState(kind, H) {
     c.geo = null;
     host.setAttribute("data-kp-state", kind);
@@ -16982,13 +17120,13 @@ function installDraw(c) {
     });
     box.style.boxSizing = "border-box";
     box.style.blockSize = `${H}px`;
-    const words2 = kind === "loading" ? strings.loading : kind === "error" ? c.data.error ?? "" : strings.empty;
-    if (kind === "loading") box.append(h(doc, "span", { class: "kp-sr-only" }, words2));
+    const words3 = kind === "loading" ? strings.loading : kind === "error" ? c.data.error ?? "" : strings.empty;
+    if (kind === "loading") box.append(h(doc, "span", { class: "kp-sr-only" }, words3));
     else if (kind === "error") {
       box.append(
         statePlate(doc, {
           kind: "error",
-          title: words2,
+          title: words3,
           actionLabel: strings.retry,
           onAction: () => {
             plot.focus({ preventScroll: true });
@@ -16996,14 +17134,14 @@ function installDraw(c) {
           }
         })
       );
-    } else box.append(h(doc, "div", { class: "kp-chart__state-text" }, words2));
+    } else box.append(h(doc, "div", { class: "kp-chart__state-text" }, words3));
     plot.replaceChildren(box);
-    if (c.shown !== `${kind} ${words2}`) {
-      c.shown = `${kind} ${words2}`;
-      if (kind !== "loading") readout.textContent = `${label()}: ${words2}`;
+    if (c.shown !== `${kind} ${words3}`) {
+      c.shown = `${kind} ${words3}`;
+      if (kind !== "loading") readout.textContent = `${label()}: ${words3}`;
     }
   }
-  function draw7() {
+  function draw8() {
     const H = chartHeight(host, c.data);
     c.drawnWindow = "";
     c.drawnFor = drawnKey();
@@ -17334,7 +17472,7 @@ function installDraw(c) {
     if (afterCount) aria.push(strings.edgeAfter(afterCount));
     plot.setAttribute("aria-label", aria.join(", "));
     if (few) {
-      const words2 = strings.few(have, opt3.minPoints, opt3.minUnit || strings.fewUnit);
+      const words3 = strings.few(have, opt3.minPoints, opt3.minUnit || strings.fewUnit);
       svg2.setAttribute("data-kp-faint", "");
       c.geo = null;
       tip.hidden = true;
@@ -17344,12 +17482,12 @@ function installDraw(c) {
         doc,
         "div",
         { class: "kp-chart__few" },
-        h(doc, "div", { class: "kp-chart__few-ground" }, h(doc, "p", { class: "kp-empty kp-chart__few-plate", role: "status" }, words2))
+        h(doc, "div", { class: "kp-chart__few-ground" }, h(doc, "p", { class: "kp-empty kp-chart__few-plate", role: "status" }, words3))
       );
       plot.append(plate);
-      if (c.shown !== `few ${words2}`) {
-        c.shown = `few ${words2}`;
-        readout.textContent = `${label()}: ${words2}`;
+      if (c.shown !== `few ${words3}`) {
+        c.shown = `few ${words3}`;
+        readout.textContent = `${label()}: ${words3}`;
       }
       c.paintLegend();
       return;
@@ -17521,7 +17659,7 @@ var init_tip = __esm({
 
 // js/chart/plot/pointer.js
 function installPointer(c) {
-  const { announce: announce4, draw: draw7, group, plot, range, setSel, tip, visible: visible3 } = c;
+  const { announce: announce4, draw: draw8, group, plot, range, setSel, tip, visible: visible3 } = c;
   const timeAt = (e) => {
     if (!c.geo) return null;
     return c.geo.inv(e.clientX - c.geo.svg.getBoundingClientRect().left);
@@ -17546,7 +17684,7 @@ function installPointer(c) {
     if (!c.geo) return;
     if (c.brush) {
       c.brush.x1 = Math.max(c.geo.P.l, Math.min(c.geo.W - c.geo.P.r, e.clientX - c.geo.svg.getBoundingClientRect().left));
-      draw7();
+      draw8();
       return;
     }
     const mark = (
@@ -17570,13 +17708,13 @@ function installPointer(c) {
       const t = timeAt(e);
       if (t == null) return;
       c.pinned = c.pinned != null && Math.abs(c.geo.x(c.pinned) - c.geo.x(t)) < 4 ? null : t;
-      draw7();
+      draw8();
       announce4();
     }
   });
   plot.addEventListener("pointercancel", () => {
     c.brush = null;
-    draw7();
+    draw8();
   });
   plot.addEventListener("pointerleave", () => {
     if (!c.brush && group.owner === c.state) group.cursor(null, c.state);
@@ -17604,7 +17742,7 @@ function installPointer(c) {
       if (c.pinned != null) c.pinned = null;
       else if (c.sel.size) setSel(/* @__PURE__ */ new Set());
       else if (group.zoom) group.setZoom(null);
-      draw7();
+      draw8();
       return;
     } else return;
     e.preventDefault();
@@ -17641,10 +17779,10 @@ var init_pointer2 = __esm({
 
 // js/chart/plot/api.js
 function installApi(c) {
-  const { buildLegend, decorateOwn, doc, draw: draw7, drawnKey, group, host, key, label, legend, parts: parts2, plot, range, setSel, strings } = c;
+  const { buildLegend, decorateOwn, doc, draw: draw8, drawnKey, group, host, key, label, legend, parts: parts2, plot, range, setSel, strings } = c;
   const watch2 = new (doc.defaultView ?? globalThis).MutationObserver(() => {
     const asked = `${host.hasAttribute("data-kp-chart-loading")} ${host.getAttribute("data-kp-chart-sources")}`;
-    if (!c.drawnFor.endsWith(asked)) draw7();
+    if (!c.drawnFor.endsWith(asked)) draw8();
   });
   watch2.observe(host, { attributes: true, attributeFilter: ["data-kp-chart-loading", "data-kp-chart-sources"] });
   const setData = (next2) => {
@@ -17664,7 +17802,7 @@ function installApi(c) {
       plot.setAttribute("aria-label", strings.plot(label()));
     }
     if (key() !== keyBefore) decorateOwn();
-    draw7();
+    draw8();
     for (const c2 of group.charts) if (c2 !== state12 && (!c2.stale || c2.stale())) c2.draw();
   };
   if (c.data.key != null) host.setAttribute("data-kp-key", c.data.key);
@@ -17675,13 +17813,13 @@ function installApi(c) {
     host,
     spark: false,
     group,
-    draw: draw7,
+    draw: draw8,
     view: (inView) => {
       c.held = !inView;
-      if (inView && c.behind) draw7();
+      if (inView && c.behind) draw8();
     },
     resize: () => {
-      if (drawnKey() !== c.drawnFor) draw7();
+      if (drawnKey() !== c.drawnFor) draw8();
     },
     stale: () => {
       if (!c.drawnWindow) return false;
@@ -17693,13 +17831,13 @@ function installApi(c) {
       const next2 = nextSelection(c.sel, i, c.data.series.length, on);
       if (!next2) return false;
       setSel(next2);
-      draw7();
+      draw8();
       return true;
     },
     cursorAt: (t, own) => {
       c.cursor = t;
       if (!own && t == null) c.hot = null;
-      draw7();
+      draw8();
     },
     lastTime: () => {
       const last = c.points.map((p) => p[p.length - 1]?.[0] ?? -Infinity);
@@ -17983,7 +18121,7 @@ function foldNav(nav, { strings } = {}) {
   if (!list || !view) return () => {
   };
   const doc = nav.ownerDocument;
-  const words2 = () => resolveStrings(strings);
+  const words3 = () => resolveStrings(strings);
   const more = doc.createElement("li");
   more.className = "kp-nav__more";
   more.setAttribute("data-kp-nav-more", "");
@@ -18009,7 +18147,7 @@ function foldNav(nav, { strings } = {}) {
   alertText.hidden = true;
   button6.append(label, dot, alertText);
   const writeWords = () => {
-    const s2 = words2();
+    const s2 = words3();
     label.textContent = s2.navMore;
     alertText.textContent = ` ${s2.navMoreAlert}`;
     menu.setAttribute("aria-label", s2.navMoreMenu);
@@ -18034,7 +18172,7 @@ function foldNav(nav, { strings } = {}) {
     return toggle2 !== null && view.getComputedStyle(toggle2).display !== "none";
   };
   const groupsOf2 = (folded2) => {
-    const s2 = words2();
+    const s2 = words3();
     const groups = [];
     let plain2 = null;
     let rule = false;
@@ -18691,8 +18829,8 @@ function syncCard(card, { announce: announce4 = false, options } = {}) {
   }
   const busy = cards.get(card);
   if (loading && !busy) {
-    const words2 = opts.words ?? card.getAttribute("data-kp-loading-words") ?? getStrings().cardLoading;
-    cards.set(card, openBusyCard(stage, { words: words2, area: () => [stage], className: "kp-card__busy", arrive: drawn.has(card) }));
+    const words3 = opts.words ?? card.getAttribute("data-kp-loading-words") ?? getStrings().cardLoading;
+    cards.set(card, openBusyCard(stage, { words: words3, area: () => [stage], className: "kp-card__busy", arrive: drawn.has(card) }));
   } else if (!loading && busy) {
     cards.delete(card);
     void busy.close();
@@ -18963,10 +19101,10 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     field2.append(line);
     built.push(line);
   }
-  const words2 = make31("span", "kp-secret__words");
+  const words3 = make31("span", "kp-secret__words");
   const drain = make31("span", "kp-secret__drain");
   drain.setAttribute("aria-hidden", "true");
-  line.replaceChildren(words2, drain);
+  line.replaceChildren(words3, drain);
   const spoken = make31("span", "kp-sr-only kp-secret__live");
   spoken.setAttribute("role", "status");
   spoken.setAttribute("aria-live", "polite");
@@ -19020,7 +19158,7 @@ function wireSecretInput(field2, { copiedMs, clearAfterMs }) {
     if (copy3 && !copy3.hasAttribute("data-kp-copied")) copy3.textContent = s2.secretCopy;
     if (copy3) copy3.disabled = why !== void 0 || empty;
     const text = why !== void 0 ? why : bad !== void 0 ? bad : pasteProblem || (shown5 ? seconds === 0 ? s2.secretStaysShown : s2.secretHidesIn(left) : empty ? s2.secretInputHint : s2.secretInputCount(input.value.length));
-    words2.textContent = text;
+    words3.textContent = text;
   };
   const hide2 = (reason = "press") => {
     if (!shown5) return;
@@ -19262,10 +19400,10 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       field2.append(line);
       built.push(line);
     }
-    const words2 = make31("span", "kp-secret__words");
+    const words3 = make31("span", "kp-secret__words");
     const drain = make31("span", "kp-secret__drain");
     drain.setAttribute("aria-hidden", "true");
-    line.replaceChildren(words2, drain);
+    line.replaceChildren(words3, drain);
     const spoken = make31("span", "kp-sr-only kp-secret__live");
     spoken.setAttribute("role", "status");
     spoken.setAttribute("aria-live", "polite");
@@ -19313,16 +19451,16 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       const why = disabledWhy();
       if (why !== void 0) {
         field2.dataset.kpSecretState = "disabled";
-        words2.textContent = why;
+        words3.textContent = why;
         return;
       }
       if (state12 === "loading") {
-        words2.replaceChildren();
+        words3.replaceChildren();
         const spinner = make31("span", "kp-spinner kp-secret__spinner");
         spinner.setAttribute("aria-hidden", "true");
-        words2.append(spinner, doc.createTextNode(s2.secretReading));
-      } else if (state12 === "shown") words2.textContent = seconds === 0 ? s2.secretStaysShown : paused ? s2.secretPaused : s2.secretHidesIn(left);
-      else if (state12 !== "error") words2.textContent = "";
+        words3.append(spinner, doc.createTextNode(s2.secretReading));
+      } else if (state12 === "shown") words3.textContent = seconds === 0 ? s2.secretStaysShown : paused ? s2.secretPaused : s2.secretHidesIn(left);
+      else if (state12 !== "error") words3.textContent = "";
     };
     const stop = () => {
       window.clearInterval(timer2);
@@ -19387,8 +19525,8 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS, clearAfter
       } catch (error) {
         if (mine !== ticket) return;
         setState3("error");
-        words2.textContent = s2.secretFailed(reasonOf2(error));
-        say18(words2.textContent);
+        words3.textContent = s2.secretFailed(reasonOf2(error));
+        say18(words3.textContent);
         return;
       }
       if (mine !== ticket) return;
@@ -19813,14 +19951,14 @@ function undoToast(text, options = {}) {
     ring.append(circles);
     body.append(ring);
   }
-  const words2 = doc.createElement("span");
-  words2.className = "kp-undo__text";
-  words2.setAttribute("aria-hidden", "true");
-  words2.textContent = text;
+  const words3 = doc.createElement("span");
+  words3.className = "kp-undo__text";
+  words3.setAttribute("aria-hidden", "true");
+  words3.textContent = text;
   const said = doc.createElement("span");
   said.className = "kp-sr-only";
   said.textContent = ms > 0 ? strings.undoToastAnnounce(text, seconds) : text;
-  body.append(words2, said);
+  body.append(words3, said);
   if (clock4 === "text" || clock4 === "ring") {
     secs = doc.createElement("span");
     secs.className = clock4 === "ring" ? "kp-undo__secs" : "kp-undo__clock";
@@ -19866,7 +20004,7 @@ function undoToast(text, options = {}) {
     view?.clearInterval(tick6);
   };
   const setLine = (line) => {
-    words2.textContent = line;
+    words3.textContent = line;
     said.textContent = line;
   };
   const announce4 = (how) => {
@@ -20456,12 +20594,12 @@ function countStatus(list) {
   }
   return counts;
 }
-function setTodayState(card, state12, words2 = {}) {
+function setTodayState(card, state12, words3 = {}) {
   const s2 = getStrings();
-  if (state12 === "empty") setCardState(card, "empty", { title: words2.title ?? s2.statusTodayEmptyTitle, text: words2.text ?? s2.statusTodayEmptyText });
+  if (state12 === "empty") setCardState(card, "empty", { title: words3.title ?? s2.statusTodayEmptyTitle, text: words3.text ?? s2.statusTodayEmptyText });
   else if (state12 === "error")
-    setCardState(card, "error", { title: words2.title ?? s2.statusTodayFailedTitle, text: words2.text ?? s2.statusTodayFailedText });
-  else if (state12 === "loading") setCardState(card, "loading", { words: words2.words ?? s2.statusTodayLoading });
+    setCardState(card, "error", { title: words3.title ?? s2.statusTodayFailedTitle, text: words3.text ?? s2.statusTodayFailedText });
+  else if (state12 === "loading") setCardState(card, "loading", { words: words3.words ?? s2.statusTodayLoading });
   else setCardState(card, "ready");
   for (const retry of card.querySelectorAll(".kp-card__retry")) {
     retry.classList.remove("kp-button--sm");
@@ -20945,9 +21083,9 @@ function hashOf(name) {
   return hash >>> 0;
 }
 function idmarkLetters(name, count2 = 2) {
-  const words2 = name.normalize("NFKC").split(/[^\p{L}\p{N}]+/u).filter(Boolean);
-  if (words2.length === 0) return "";
-  const letters = words2.length > 1 ? words2.slice(0, count2).map((word) => [...word][0]) : [...words2[0]].slice(0, count2);
+  const words3 = name.normalize("NFKC").split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+  if (words3.length === 0) return "";
+  const letters = words3.length > 1 ? words3.slice(0, count2).map((word) => [...word][0]) : [...words3[0]].slice(0, count2);
   return letters.join("").toLocaleUpperCase();
 }
 function idmarkFor(name) {
@@ -22293,8 +22431,8 @@ var init_nav_menus = __esm({
 
 // js/components/state-word.js
 function setStateWord(el16, word) {
-  const words2 = (el16.getAttribute("data-kp-words") ?? "").split("\n").filter(Boolean);
-  if (!words2.includes(word)) el16.setAttribute("data-kp-words", [...words2, word].join("\n"));
+  const words3 = (el16.getAttribute("data-kp-words") ?? "").split("\n").filter(Boolean);
+  if (!words3.includes(word)) el16.setAttribute("data-kp-words", [...words3, word].join("\n"));
   el16.textContent = word;
 }
 var init_state_word = __esm({
@@ -22698,7 +22836,7 @@ function restoreFocus(c, key, act) {
   );
   if (again2 && !c.renaming) again2.focus({ preventScroll: true });
 }
-function draw(c) {
+function draw2(c) {
   const el16 = c.host;
   const doc = el16.ownerDocument;
   const strings = getStrings();
@@ -22794,7 +22932,7 @@ var init_controller5 = __esm({
         }
         if (spec.rows) this.rows = [...spec.rows];
         if (!this.card) {
-          draw(this);
+          draw2(this);
           return;
         }
         const card = this.card;
@@ -22803,7 +22941,7 @@ var init_controller5 = __esm({
         void card.close().then(() => {
           if (this.pending !== spec) return;
           this.pending = null;
-          draw(this);
+          draw2(this);
         });
       }
       /** The row a control sits in. @param {Element} inside */
@@ -22868,7 +23006,7 @@ var init_controller5 = __esm({
         const strings = getStrings();
         this.busy.add(row.key);
         this.refused.delete(row.key);
-        draw(this);
+        draw2(this);
         try {
           const given2 = this.spec.remove;
           if (given2) await given2(row);
@@ -22883,11 +23021,11 @@ var init_controller5 = __esm({
           this.busy.delete(row.key);
           this.announce = strings.passkeysRemoved(row.label);
           if (this.rows.length === 0) this.spec = { ...this.spec, state: "empty" };
-          draw(this);
+          draw2(this);
         } catch (error) {
           this.busy.delete(row.key);
           this.refused.set(row.key, strings.passkeysRefused(reasonOf(error, strings.passkeysRefusedFallback)));
-          draw(this);
+          draw2(this);
           actionOf(this.host, row.key, "remove")?.focus();
         }
       }
@@ -22896,7 +23034,7 @@ var init_controller5 = __esm({
         if (this.busy.has(row.key)) return;
         this.renaming = row.key;
         this.refused.delete(row.key);
-        draw(this);
+        draw2(this);
         const input = (
           /** @type {HTMLInputElement | null} */
           this.host.querySelector(".kp-passkeys__rename-input")
@@ -22907,7 +23045,7 @@ var init_controller5 = __esm({
       /** @param {string} key @param {boolean} focus whether the Rename button takes the focus back */
       stopRename(key, focus) {
         this.renaming = null;
-        draw(this);
+        draw2(this);
         if (focus) actionOf(this.host, key, "rename")?.focus();
       }
       /** The rename field, when one is drawn. */
@@ -22925,7 +23063,7 @@ var init_controller5 = __esm({
         const label = input.value.trim();
         if (label === "") {
           this.refused.set(row.key, strings.passkeysNameRequired);
-          draw(this);
+          draw2(this);
           this.renameInput()?.focus();
           return;
         }
@@ -22934,7 +23072,7 @@ var init_controller5 = __esm({
           return;
         }
         this.busy.add(row.key);
-        draw(this);
+        draw2(this);
         try {
           const given2 = this.spec.rename;
           if (given2) await given2(row, label);
@@ -22947,7 +23085,7 @@ var init_controller5 = __esm({
         } catch (error) {
           this.busy.delete(row.key);
           this.refused.set(row.key, strings.passkeysRenameRefused(reasonOf(error, strings.passkeysRefusedFallback)));
-          draw(this);
+          draw2(this);
           this.renameInput()?.focus();
         }
       }
@@ -23766,11 +23904,11 @@ function setStackbar(el16, spec) {
     }
   } else if (state12 === "empty" || state12 === "error" || calc.parts.length === 0) {
     const failed = state12 === "error";
-    const words2 = spec.message ?? (failed ? strings.stackbarError : strings.stackbarEmpty);
+    const words3 = spec.message ?? (failed ? strings.stackbarError : strings.stackbarEmpty);
     if (!noted) {
       bar.setAttribute("role", "img");
-      bar.setAttribute("aria-label", words2);
-      bar.setAttribute("data-kp-hovercard", words2);
+      bar.setAttribute("aria-label", words3);
+      bar.setAttribute("data-kp-hovercard", words3);
       bar.setAttribute("tabindex", "0");
     } else {
       refocus = el16.querySelector(":scope > .kp-stackbar__note")?.contains(doc.activeElement) ?? false;
@@ -23778,7 +23916,7 @@ function setStackbar(el16, spec) {
       if (memory.height > 0) note2.style.minBlockSize = `${memory.height}px`;
       note2.setAttribute("role", failed ? "alert" : "status");
       const said = make5(doc, "kp-empty__title kp-stackbar__note-title", "p");
-      said.textContent = words2;
+      said.textContent = words3;
       note2.append(said);
       if (failed && spec.retry !== false) {
         const retry = make5(doc, "kp-button kp-stackbar__retry", "button");
@@ -23796,7 +23934,7 @@ function setStackbar(el16, spec) {
     const legend = legendWanted ? make5(doc, "kp-stackbar__legend", "ul") : null;
     calc.parts.forEach((part7, i) => {
       const colour = part7.tone ? `var(--${part7.tone})` : `var(--chart-${i % 5 + 1})`;
-      const words2 = part7.tip ?? strings.stackbarPart(part7.label, format(part7.value), shareText(part7.share, lang));
+      const words3 = part7.tip ?? strings.stackbarPart(part7.label, format(part7.value), shareText(part7.share, lang));
       spoken.push(strings.stackbarPart(part7.label, format(part7.value), shareText(part7.share, lang)));
       const seg = make5(doc, "kp-stackbar__seg");
       seg.dataset.kpStackbarKey = part7.key;
@@ -23805,8 +23943,8 @@ function setStackbar(el16, spec) {
         seg.setAttribute("aria-pressed", String(pickedKeys.has(part7.key)));
         seg.toggleAttribute("data-kp-stackbar-picked", pickedKeys.has(part7.key));
       }
-      seg.setAttribute("aria-label", words2);
-      seg.setAttribute("data-kp-hovercard", words2);
+      seg.setAttribute("aria-label", words3);
+      seg.setAttribute("data-kp-hovercard", words3);
       seg.setAttribute("tabindex", "-1");
       seg.style.setProperty("--kp-share", String(part7.width));
       seg.style.setProperty("--kp-stackbar-colour", colour);
@@ -24024,11 +24162,11 @@ function setBullets(el16, spec) {
     void card.close().then(() => {
       if (memory.pending !== spec) return;
       memory.pending = null;
-      draw2(el16, spec, memory);
+      draw3(el16, spec, memory);
     });
     return;
   }
-  draw2(el16, spec, memory);
+  draw3(el16, spec, memory);
 }
 function drawLoading2(el16, spec, memory) {
   const doc = el16.ownerDocument;
@@ -24070,7 +24208,7 @@ function drawLoading2(el16, spec, memory) {
   });
   memory.drawn = true;
 }
-function draw2(el16, spec, memory) {
+function draw3(el16, spec, memory) {
   const doc = el16.ownerDocument;
   const strings = getStrings();
   const state12 = spec.state ?? "ready";
@@ -24700,13 +24838,13 @@ function buildCode(ctl, lines, json) {
   code.setAttribute("aria-label", spec.title ?? spec.language ?? getStrings().codeLabel);
   for (const line of lines) {
     const row = make7(doc, "kp-code__line");
-    const words2 = make7(doc, "kp-code__text");
-    if (line === "") words2.textContent = " ";
-    else if (json) words2.append(...jsonLine(doc, line));
-    else if (colour === "toml") words2.append(...apart(tomlLine(doc, line, tomlState)));
-    else if (colour === "shell") words2.append(...apart(shellLine(doc, line)));
-    else words2.textContent = line;
-    row.append(words2);
+    const words3 = make7(doc, "kp-code__text");
+    if (line === "") words3.textContent = " ";
+    else if (json) words3.append(...jsonLine(doc, line));
+    else if (colour === "toml") words3.append(...apart(tomlLine(doc, line, tomlState)));
+    else if (colour === "shell") words3.append(...apart(shellLine(doc, line)));
+    else words3.textContent = line;
+    row.append(words3);
     code.append(row);
   }
   return code;
@@ -25971,7 +26109,7 @@ function parts(bar, memory) {
   void memory;
   return { panel, count: count2, names, offer, result, actions, toggle: toggle2, clear, live: live4 };
 }
-function draw3(bar, memory) {
+function draw4(bar, memory) {
   const strings = getStrings();
   const p = parts(bar, memory);
   const { items } = memory;
@@ -25985,9 +26123,9 @@ function draw3(bar, memory) {
     p.count.replaceChildren();
     const wheel = make8(bar.ownerDocument, "kp-spinner", "span");
     wheel.setAttribute("aria-hidden", "true");
-    const words2 = make8(bar.ownerDocument, "kp-selection__busy", "span");
-    words2.textContent = strings.selectionBusy(memory.busy);
-    p.count.append(wheel, words2);
+    const words3 = make8(bar.ownerDocument, "kp-selection__busy", "span");
+    words3.textContent = strings.selectionBusy(memory.busy);
+    p.count.append(wheel, words3);
     if (memory.progress) {
       const far = make8(bar.ownerDocument, "kp-selection__progress", "span");
       far.textContent = strings.selectionProgress(memory.progress.done, memory.progress.total);
@@ -26125,7 +26263,7 @@ function sync(bar, memory) {
   }
   if (memory.items.length === 0) memory.namesOpen = false;
   const changed2 = before.length !== memory.items.length || before.some((item, i) => item.key !== memory.items[i]?.key);
-  draw3(bar, memory);
+  draw4(bar, memory);
   if (changed2) {
     for (const mark of bar.ownerDocument.querySelectorAll("[data-kp-refused]")) {
       mark.removeAttribute("data-kp-refused");
@@ -26225,7 +26363,7 @@ var init_controller9 = __esm({
       onOptions() {
         this.memory.matchingTotal = Number(this.host.getAttribute("data-kp-select-matching")) || 0;
         if (!this.memory.matchingTotal) this.memory.matching = false;
-        draw3(this.host, this.memory);
+        draw4(this.host, this.memory);
       }
       /** Read the sources again at the end of this task, once for a burst. */
       refresh() {
@@ -26270,14 +26408,14 @@ var init_controller9 = __esm({
         memory.matching = false;
         if (memory.manual) {
           memory.items = [];
-          draw3(bar, memory);
+          draw4(bar, memory);
           bar.dispatchEvent(new CustomEvent(SELECTION_EVENT, { bubbles: true, detail: { keys: [], items: [], count: 0, matching: false } }));
         } else untick(memory);
         bar.dispatchEvent(new CustomEvent(SELECTION_CLEAR_EVENT, { bubbles: true, detail: { keys } }));
       }
       toggleNames() {
         this.memory.namesOpen = !this.memory.namesOpen;
-        draw3(this.host, this.memory);
+        draw4(this.host, this.memory);
         this.host.querySelector(".kp-selection__more")?.focus();
       }
       /** Take, or give back, the offer for every matching row. @param {boolean} on */
@@ -26285,7 +26423,7 @@ var init_controller9 = __esm({
         const bar = this.host;
         const memory = this.memory;
         memory.matching = on;
-        draw3(bar, memory);
+        draw4(bar, memory);
         bar.dispatchEvent(new CustomEvent(SELECTION_MATCHING_EVENT, { bubbles: true, detail: { matching: memory.matching, total: memory.matchingTotal } }));
         say5(bar, memory, memory.matching ? getStrings().selectionMatchingOn(memory.matchingTotal) : getStrings().selectionCount(memory.items.length));
         bar.querySelector(".kp-selection__take")?.focus();
@@ -26342,14 +26480,14 @@ function getSelection(bar) {
     matching: memory.matching
   };
 }
-function setSelectionBusy(bar, words2 = "") {
+function setSelectionBusy(bar, words3 = "") {
   const memory = memoryOf(bar);
   if (!memory) return;
-  memory.busy = words2 ? words2 : "";
+  memory.busy = words3 ? words3 : "";
   memory.progress = null;
   const live4 = bar.querySelector(":scope > .kp-selection__live");
   if (live4 && memory.busy) live4.textContent = memory.busy;
-  draw3(bar, memory);
+  draw4(bar, memory);
 }
 function setSelectionProgress(bar, progress) {
   const memory = memoryOf(bar);
@@ -26362,7 +26500,7 @@ function setSelectionProgress(bar, progress) {
   const quarter = (n) => total > 0 ? Math.floor(n / total * 4) : 0;
   const live4 = bar.querySelector(":scope > .kp-selection__live");
   if (live4 && (!before || quarter(done) > quarter(before.done) || done === total)) live4.textContent = getStrings().selectionProgress(done, total);
-  draw3(bar, memory);
+  draw4(bar, memory);
 }
 function setSelectionResult(bar, result) {
   const memory = memoryOf(bar);
@@ -26370,7 +26508,7 @@ function setSelectionResult(bar, result) {
   const strings = getStrings();
   memory.busy = "";
   memory.progress = null;
-  draw3(bar, memory);
+  draw4(bar, memory);
   const p = parts(bar, memory);
   const why = [...new Set(result.refused.map((r) => r.reason))].join("; ");
   p.result.textContent = result.refused.length ? `${strings.selectionResult(result.done, result.refused.length)}: ${why}` : strings.selectionResult(result.done, 0);
@@ -26401,7 +26539,7 @@ function setSelectionRules(bar, rules) {
   const memory = memoryOf(bar);
   if (!memory) return;
   memory.rules = rules;
-  draw3(bar, memory);
+  draw4(bar, memory);
 }
 var memoryOf;
 var init_api6 = __esm({
@@ -26544,7 +26682,7 @@ function attachOne3(el16, options) {
     pill.addEventListener("animationend", finish2, { once: true });
     view?.setTimeout(finish2, 700);
   };
-  const draw7 = () => {
+  const draw8 = () => {
     const n = count2();
     show(n > 0);
     if (n > 0) {
@@ -26580,13 +26718,13 @@ function attachOne3(el16, options) {
     following = true;
     unseen.clear();
     toEnd();
-    draw7();
+    draw8();
     el16.dispatchEvent(new CustomEvent(NEWPILL_JUMP_EVENT, { bubbles: true, detail: { unseen: 0 } }));
   };
   const pause = () => {
     paused = true;
     following = false;
-    draw7();
+    draw8();
   };
   let hiddenAt = 0;
   let firstAway = null;
@@ -26608,7 +26746,7 @@ function attachOne3(el16, options) {
     }
     if (!added) return;
     if (following && !paused) toEnd();
-    draw7();
+    draw8();
   }) : null;
   observer?.observe(el16, inTbody ? { childList: true, subtree: true } : { childList: true });
   const onScroll = () => {
@@ -26618,11 +26756,11 @@ function attachOne3(el16, options) {
         paused = false;
         following = true;
         unseen.clear();
-        draw7();
+        draw8();
       }
     } else if (following) {
       following = false;
-      draw7();
+      draw8();
     }
   };
   const onKey5 = (event) => {
@@ -26677,7 +26815,7 @@ function attachOne3(el16, options) {
   doc.addEventListener("click", onToggle);
   doc.addEventListener("visibilitychange", onVisibility2);
   view?.requestAnimationFrame(() => view.requestAnimationFrame(() => following && !paused && el16.scrollHeight > el16.clientHeight && toEnd()));
-  draw7();
+  draw8();
   HANDLES2.set(el16, { pause, resume: jump, jump, unseen: count2, following: () => following && !paused });
   return () => {
     stopOptions();
@@ -28277,7 +28415,7 @@ function partsOf2(el16) {
     list
   };
 }
-function draw4(el16, memory) {
+function draw5(el16, memory) {
   memory.options = { ...readOptions(el16), ...memory.given };
   const strings = getStrings();
   const doc = el16.ownerDocument;
@@ -28377,9 +28515,9 @@ var init_controller11 = __esm({
         el16.style.setProperty("--kp-card-stage-min", "var(--kp-inspector-min, 22rem)");
         el16.setAttribute("data-kp-state", el16.getAttribute("data-kp-state") ?? "loading");
         this.own(attachCardStates(el16));
-        draw4(el16, this.memory);
+        draw5(el16, this.memory);
         const view = el16.ownerDocument.defaultView;
-        if (view && "MutationObserver" in view) this.observe(new view.MutationObserver(() => draw4(el16, this.memory))).observe(el16, { attributes: true, attributeFilter: OPTIONS2 });
+        if (view && "MutationObserver" in view) this.observe(new view.MutationObserver(() => draw5(el16, this.memory))).observe(el16, { attributes: true, attributeFilter: OPTIONS2 });
         this.listen(el16, "click", (event) => this.onClick(event));
         this.listen(el16, "kp-segmented-change", (event) => this.onFilter(event));
         this.listen(el16, "kp-card-retry", () => el16.dispatchEvent(new CustomEvent(REQUESTS_RETRY_EVENT, { bubbles: true })));
@@ -28401,7 +28539,7 @@ var init_controller11 = __esm({
         if (secret) return this.flipSecret(secret);
         if (target.closest("[data-kp-requests-older]")) {
           this.memory.shown += this.memory.options.max ?? REQUESTS_MAX;
-          return draw4(el16, this.memory);
+          return draw5(el16, this.memory);
         }
         const filter = (
           /** @type {HTMLElement | null} */
@@ -28409,7 +28547,7 @@ var init_controller11 = __esm({
         );
         if (filter) {
           this.memory.filter = filter.dataset.kpRequestsFilter ?? "all";
-          return draw4(el16, this.memory);
+          return draw5(el16, this.memory);
         }
         if (target.closest("[data-kp-requests-send]")) el16.dispatchEvent(new CustomEvent(REQUESTS_TEST_EVENT, { bubbles: true }));
       }
@@ -28437,7 +28575,7 @@ var init_controller11 = __esm({
         );
         this.memory.filter = detail?.value ?? "all";
         this.memory.shown = this.memory.options.max ?? REQUESTS_MAX;
-        draw4(this.host, this.memory);
+        draw5(this.host, this.memory);
       }
     };
   }
@@ -28449,7 +28587,7 @@ function setRequests(el16, requests) {
   if (!memory) return;
   memory.list = [...requests];
   memory.shown = memory.options.max ?? REQUESTS_MAX;
-  draw4(el16, memory);
+  draw5(el16, memory);
   setRequestsState(el16, requests.length === 0 ? "empty" : "ready");
 }
 function setRequestsState(el16, state12, options = {}) {
@@ -29845,14 +29983,14 @@ var init_clock = __esm({
 });
 
 // js/countdown/parts.js
-function timerButton(doc, className, words2, title) {
+function timerButton(doc, className, words3, title) {
   const button6 = doc.createElement("button");
   button6.type = "button";
   button6.className = `kp-button kp-button--sm ${className}`;
   const label = doc.createElement("span");
   label.className = "kp-button__text kp-state-word kp-state-word--center";
-  label.setAttribute("data-kp-words", words2.join("\n"));
-  label.textContent = words2[0];
+  label.setAttribute("data-kp-words", words3.join("\n"));
+  label.textContent = words3[0];
   button6.append(label);
   if (title) button6.title = title;
   return { button: button6, label };
@@ -30327,7 +30465,7 @@ function paintLanes(root, lanes = laneSummaries(root)) {
       list.children[i]
     );
     const total = lane.track.order.length;
-    const words2 = lane.status === "running" && lane.timer ? strings.focusLaneRunning(lane.timer.name) : lane.status === "paused" && lane.timer ? strings.focusLanePaused(lane.timer.name) : lane.status === "waiting" ? strings.focusLaneWaiting(blockerNames(state12, lane.blocks)) : lane.status === "ringing" ? strings.focusLaneRinging : lane.status === "finished" ? strings.focusLaneFinished : lane.active ? strings.focusLaneHere : strings.focusLaneReady;
+    const words3 = lane.status === "running" && lane.timer ? strings.focusLaneRunning(lane.timer.name) : lane.status === "paused" && lane.timer ? strings.focusLanePaused(lane.timer.name) : lane.status === "waiting" ? strings.focusLaneWaiting(blockerNames(state12, lane.blocks)) : lane.status === "ringing" ? strings.focusLaneRinging : lane.status === "finished" ? strings.focusLaneFinished : lane.active ? strings.focusLaneHere : strings.focusLaneReady;
     setText(button6, ".kp-focus-steps__lane-name", lane.name);
     setText(
       button6,
@@ -30335,7 +30473,7 @@ function paintLanes(root, lanes = laneSummaries(root)) {
       lane.timer ? lane.status === "ringing" ? clockOfTimer({ ...lane.timer, remaining: 0 }) : clockOfTimer(lane.timer) : ""
     );
     setText(button6, ".kp-focus-steps__lane-step", stepLabel(state12, lane.track.order[lane.track.pos] ?? 0));
-    setText(button6, ".kp-focus-steps__lane-state", words2);
+    setText(button6, ".kp-focus-steps__lane-state", words3);
     setText(button6, ".kp-focus-steps__lane-count", strings.focusLaneStep(lane.track.pos + 1, total));
     if (button6.getAttribute("data-kp-lane-status") !== lane.status) button6.setAttribute("data-kp-lane-status", lane.status);
     const selected = String(lane.active);
@@ -30380,7 +30518,7 @@ var init_lanes = __esm({
 });
 
 // js/focus-steps/paint.js
-function paint4(root, arrive2) {
+function paint4(root, arrive3) {
   const strings = getStrings();
   const state12 = stateOf2(root);
   const { steps, index } = state12;
@@ -30604,7 +30742,7 @@ function paint4(root, arrive2) {
     paintLanes(root);
     paintLive(root, timers);
   }
-  if (arrive2) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => holder.isConnected && m.arriveShown(holder));
+  if (arrive3) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => holder.isConnected && m.arriveShown(holder));
 }
 var init_paint3 = __esm({
   "js/focus-steps/paint.js"() {
@@ -30953,8 +31091,8 @@ function buildAnswer(root, holder, step, text) {
         );
         button6.type = "button";
         button6.dataset.kpSame = which;
-        const words2 = wordsOf2(answer2, value);
-        button6.textContent = which === "usual" ? strings.focusSameUsual(words2) : strings.focusSameYesterday(words2);
+        const words3 = wordsOf2(answer2, value);
+        button6.textContent = which === "usual" ? strings.focusSameUsual(words3) : strings.focusSameYesterday(words3);
         same.append(button6);
       }
       if (same.childElementCount > 0) wrap.append(same);
@@ -31058,8 +31196,8 @@ function waitLine(state12, blocks, timers, index) {
   return blocks.map((b) => {
     const timer2 = timers.find((t) => t.id === timerIdOf(state12, b.index));
     const where = b.track && b.track !== trackOfStep(state12, index) ? b.track.name : "";
-    const words2 = isOpen(timer2) && timer2 ? strings.focusTrackWaitLeft(clockOfTimer(timer2)) : strings.focusTrackWaitOpen;
-    return where ? `${where}, ${words2}` : words2;
+    const words3 = isOpen(timer2) && timer2 ? strings.focusTrackWaitLeft(clockOfTimer(timer2)) : strings.focusTrackWaitOpen;
+    return where ? `${where}, ${words3}` : words3;
   }).join(" \xB7 ");
 }
 var suggestion;
@@ -31157,8 +31295,8 @@ function paintLive(root, timers) {
     const timer2 = timers.find((t) => t.id === timerIdOf(state12, state12.index));
     const minutes = Math.round(step.timer.seconds / 60);
     const base = strings.focusTimer(step.timer.seconds < 60 ? `${step.timer.seconds} s` : `${minutes} min`);
-    const words2 = !timer2 ? base : timer2.state === "running" ? strings.focusTimerRunning(clockOfTimer(timer2)) : timer2.state === "paused" ? strings.focusTimerPaused(clockOfTimer(timer2)) : strings.focusTimerDone;
-    if (button6.textContent !== words2) button6.textContent = words2;
+    const words3 = !timer2 ? base : timer2.state === "running" ? strings.focusTimerRunning(clockOfTimer(timer2)) : timer2.state === "paused" ? strings.focusTimerPaused(clockOfTimer(timer2)) : strings.focusTimerDone;
+    if (button6.textContent !== words3) button6.textContent = words3;
   }
   const line = holder.querySelector(".kp-focus-steps__wait-line");
   if (line) {
@@ -32398,10 +32536,10 @@ function attachFocusSteps(scope = document) {
         run: tap(".kp-focus-steps__skip")
       }
     ]);
-    const tracking = () => tracksOn(root) && (root.contains(document.activeElement) || document.activeElement === document.body);
+    const tracking2 = () => tracksOn(root) && (root.contains(document.activeElement) || document.activeElement === document.body);
     const unkeyTracks = registerShortcuts(root, [
-      { keys: "t", what: getStrings().focusTrackKeyNext, group: "Tracks", when: tracking, run: () => stepTrack(root, 1) },
-      { keys: "Shift T", what: getStrings().focusTrackKeyPrevious, group: "Tracks", when: tracking, run: () => stepTrack(root, -1) }
+      { keys: "t", what: getStrings().focusTrackKeyNext, group: "Tracks", when: tracking2, run: () => stepTrack(root, 1) },
+      { keys: "Shift T", what: getStrings().focusTrackKeyPrevious, group: "Tracks", when: tracking2, run: () => stepTrack(root, -1) }
     ]);
     const stopWatch = watchOptions(
       root,
@@ -34406,8 +34544,8 @@ function installTip2(c) {
   c.hideTip = hideTip;
   const showTip = (item) => {
     clearTimeout(c.tipTimer);
-    const words2 = (item.querySelector(".kp-sidenav__label")?.textContent ?? "").trim();
-    if (!isRail() || !on(OPTIONS3.railTips, true) || words2 === "") return;
+    const words3 = (item.querySelector(".kp-sidenav__label")?.textContent ?? "").trim();
+    if (!isRail() || !on(OPTIONS3.railTips, true) || words3 === "") return;
     if (c.tip === null) {
       c.tip = doc.createElement("span");
       c.tip.className = "kp-popover kp-tooltip kp-sidenav__tip";
@@ -34421,7 +34559,7 @@ function installTip2(c) {
       tipGoing = false;
       stopReversing(box);
     }
-    box.textContent = words2;
+    box.textContent = words3;
     const place3 = () => floatBeside(box, item, "centre");
     if (box.matches(":popover-open")) place3();
     else show(box, place3);
@@ -38188,9 +38326,9 @@ function installBusy(c) {
     layer.setAttribute("aria-hidden", "true");
     const panel = make31("div", "kp-datatable__busy-panel");
     const spinner = make31("span", "kp-spinner");
-    const words2 = make31("span", "kp-datatable__busy-words");
-    words2.textContent = c.busyText ?? s2.busy;
-    panel.append(spinner, words2);
+    const words3 = make31("span", "kp-datatable__busy-words");
+    words3.textContent = c.busyText ?? s2.busy;
+    panel.append(spinner, words3);
     if (c.busySince !== null) {
       c.overlayClock = make31("span", "kp-datatable__busy-clock");
       c.overlayClock.textContent = s2.tableBusyElapsed(busySeconds());
@@ -39633,10 +39771,10 @@ function installLayoutSetup(c) {
   if (c.empty !== null) {
     for (const node of [...c.empty.childNodes]) {
       if (node.nodeType !== Node.TEXT_NODE || (node.textContent ?? "").trim() === "") continue;
-      const words2 = make31("span", "kp-stateplate__text");
-      node.replaceWith(words2);
-      words2.append(node);
-      undo.push(() => words2.replaceWith(node));
+      const words3 = make31("span", "kp-stateplate__text");
+      node.replaceWith(words3);
+      words3.append(node);
+      undo.push(() => words3.replaceWith(node));
     }
   }
   if (c.failedSlot !== null && c.failedSlot.querySelector(".kp-stateplate__title") === null) {
@@ -40381,9 +40519,9 @@ function installSync(c) {
       if (row.matches(DETAIL) || row.matches(GROUP_ROW) || row.matches(SKELETON_ROW)) continue;
       for (const cell of row.cells) {
         if (cell.hasAttribute("data-label")) continue;
-        const words2 = labelOf7(cell.cellIndex);
-        if (words2 === "") continue;
-        cell.setAttribute("data-label", words2);
+        const words3 = labelOf7(cell.cellIndex);
+        if (words3 === "") continue;
+        cell.setAttribute("data-label", words3);
         derivedLabels.add(cell);
       }
     }
@@ -40485,9 +40623,9 @@ function installRender(c) {
         c.busyClock.textContent = s2.tableBusyElapsed(busySeconds());
         status.append(" ", c.busyClock);
         c.busyTimer = setInterval(() => {
-          const words2 = getStrings().tableBusyElapsed(busySeconds());
-          if (c.busyClock !== null) c.busyClock.textContent = words2;
-          if (c.overlayClock !== null) c.overlayClock.textContent = words2;
+          const words3 = getStrings().tableBusyElapsed(busySeconds());
+          if (c.busyClock !== null) c.busyClock.textContent = words3;
+          if (c.overlayClock !== null) c.overlayClock.textContent = words3;
         }, 1e3);
       }
     }
@@ -42348,8 +42486,8 @@ function installHandle2(c) {
       c.state = "failed";
       render7();
     },
-    busy: (words2) => {
-      const given2 = typeof words2 === "object" && words2 !== null ? words2 : { text: words2 };
+    busy: (words3) => {
+      const given2 = typeof words3 === "object" && words3 !== null ? words3 : { text: words3 };
       c.busyText = given2.text ?? null;
       c.busySince = given2.since === void 0 || given2.since === null ? null : Number(given2.since);
       c.busyOverlay = "overlay" in given2 && given2.overlay !== void 0 ? Boolean(given2.overlay) : wrap.hasAttribute("data-kp-busy-overlay");
@@ -42877,7 +43015,7 @@ function visibleItems(tree) {
     })
   );
 }
-var TREE, REORDER, SPLIT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, REORDER_EVENT2, SPLIT_EVENT, DEFAULTS;
+var TREE, REORDER, SPLIT, TREE_EXPAND_EVENT, TREE_SELECT_EVENT, REORDER_EVENT2, SPLIT_EVENT, DEFAULTS2;
 var init_shared = __esm({
   "js/structure/shared.js"() {
     "use strict";
@@ -42888,7 +43026,7 @@ var init_shared = __esm({
     TREE_SELECT_EVENT = "kp-tree-select";
     REORDER_EVENT2 = "kp-reorder";
     SPLIT_EVENT = "kp-split";
-    DEFAULTS = Object.freeze({
+    DEFAULTS2 = Object.freeze({
       typeahead: true,
       /** How long typed letters keep adding up before the search starts again [ms]. */
       typeaheadMs: 500,
@@ -42922,7 +43060,7 @@ var init_reorder2 = __esm({
         return element.dataset.kpReorderAttached !== void 0;
       }
       /** @param {HTMLElement} list @param {import('./shared.js').StructureOptions} [options] */
-      constructor(list, options = DEFAULTS) {
+      constructor(list, options = DEFAULTS2) {
         super(list, options);
         this.pointer = list.dataset.kpPointer === void 0 ? options.reorderPointer : list.dataset.kpPointer !== "false";
         this.original = [...list.children];
@@ -43077,7 +43215,7 @@ var init_split = __esm({
         return element.dataset.kpSplitAttached !== void 0;
       }
       /** @param {HTMLElement} split @param {import('./shared.js').StructureOptions} [options] */
-      constructor(split, options = DEFAULTS) {
+      constructor(split, options = DEFAULTS2) {
         super(split, options);
         this.o = options;
         this.separator = null;
@@ -43209,7 +43347,7 @@ var init_tree = __esm({
         return element.dataset.kpTreeAttached !== void 0;
       }
       /** @param {HTMLElement} tree @param {import('./shared.js').StructureOptions} [options] */
-      constructor(tree, options = DEFAULTS) {
+      constructor(tree, options = DEFAULTS2) {
         super(tree, options);
         this.o = options;
         this.before = [];
@@ -43406,7 +43544,7 @@ function structure(element) {
   return (controllerOf(element, TreeControl) ?? controllerOf(element, ReorderControl) ?? controllerOf(element, SplitControl))?.handle ?? null;
 }
 function attachStructure(root = document, options = {}) {
-  const o = { ...DEFAULTS, ...options };
+  const o = { ...DEFAULTS2, ...options };
   const made7 = [];
   const created = [];
   for (const [selector, Kind] of KINDS2) {
@@ -44472,19 +44610,19 @@ function leaveBusyLayers(layers) {
     a.effect?.target === layer);
     const done = () => {
       layer.removeAttribute("data-kp-leaving");
-      const words2 = layer.querySelector(":scope > .kp-calendar__busy-text");
-      if (words2 !== null && layer.hasAttribute("data-kp-busy-words-held")) {
+      const words3 = layer.querySelector(":scope > .kp-calendar__busy-text");
+      if (words3 !== null && layer.hasAttribute("data-kp-busy-words-held")) {
         layer.removeAttribute("data-kp-busy-words-held");
-        words2.textContent = "";
+        words3.textContent = "";
       }
     };
     if (plays.length === 0) done();
     else void Promise.all(plays.map((a) => a.finished)).then(done, done);
   }
 }
-function writeBusyWords(c, words2) {
+function writeBusyWords(c, words3) {
   if (!c.busyText) return;
-  const next2 = words2 || (c.state === "loading" ? c.strings.loading ?? "Loading\u2026" : "");
+  const next2 = words3 || (c.state === "loading" ? c.strings.loading ?? "Loading\u2026" : "");
   const card = c.busyText.parentElement;
   const held2 = next2 === "" && card !== null && c.grid.getAttribute("aria-busy") === "true" && card.getClientRects().length > 0 && getComputedStyle(card).getPropertyValue("--kp-calendar-busy-words").trim() === "hold";
   if (held2) card.setAttribute("data-kp-busy-words-held", "");
@@ -44636,22 +44774,22 @@ var init_build = __esm({
 // js/calendar/day.js
 function calmDayFor(c, iso, today) {
   const s2 = c.strings;
-  const words2 = c.el.getAttribute("data-kp-quiet-words") === "none" ? "" : calmWord("quiet") ?? "";
+  const words3 = c.el.getAttribute("data-kp-quiet-words") === "none" ? "" : calmWord("quiet") ?? "";
   if (c.state === "loading") return { tone: "loading", label: s2.calendarLoading };
-  if (c.state === "empty" || c.state === "error") return { tone: "quiet", label: words2 };
+  if (c.state === "empty" || c.state === "error") return { tone: "quiet", label: words3 };
   const given2 = c.days[iso];
   if (iso > today && !given2) return { tone: "future", label: s2.calendarFuture };
   const tone = given2 ? calmTone(given2.tone, c.el) : "quiet";
   if (tone === "quiet" || tone === "paused") {
     const paused = tone === "paused" || inPausedRange(c.el.getAttribute("data-kp-paused-range"), iso);
-    return paused ? { tone: "paused", label: calmWord("paused") ?? "" } : { tone: "quiet", label: words2 };
+    return paused ? { tone: "paused", label: calmWord("paused") ?? "" } : { tone: "quiet", label: words3 };
   }
   if (tone === "logged")
     return { tone: "logged", label: given2?.label || (calmWord("logged") ?? ""), ...given2?.count ? { count: given2.count } : {} };
   return given2 ? { ...given2, tone: (
     /** @type {CalendarTone} */
     tone
-  ) } : { tone: "quiet", label: words2 };
+  ) } : { tone: "quiet", label: words3 };
 }
 function dayFor(c, iso, today) {
   if (isCalmTones(c.el) && c.el.getAttribute("data-kp-calm-map") !== "none") return calmDayFor(c, iso, today);
@@ -44723,8 +44861,8 @@ function syncStatePlate(c) {
     return;
   }
   const s2 = getStrings();
-  const words2 = c.stateLine.textContent ?? "";
-  const key = `${kind}|${calm ? "calm" : words2}`;
+  const words3 = c.stateLine.textContent ?? "";
+  const key = `${kind}|${calm ? "calm" : words3}`;
   if (old?.getAttribute("data-kp-plate-key") === key) return;
   old?.remove();
   const retry = () => c.el.dispatchEvent(new CustomEvent(CALENDAR_RETRY_EVENT, { bubbles: true }));
@@ -44735,7 +44873,7 @@ function syncStatePlate(c) {
     ...kind === "error" ? { actionLabel: s2.calmRetry, onAction: retry } : {}
   }) : hostStatePlate(c.el, {
     kind,
-    title: words2 || (kind === "error" ? s2.heatFailed : s2.heatEmpty),
+    title: words3 || (kind === "error" ? s2.heatFailed : s2.heatEmpty),
     retryEvent: CALENDAR_RETRY_EVENT
   });
   const plate = make11(c.el.ownerDocument, "div", "kp-calendar__plate");
@@ -44792,9 +44930,9 @@ function paintCell(c, i, iso, today, stop, monthChanged) {
     /** @type {string} */
     day.count
   ) : " ";
-  const words2 = day.label === "" ? formatDayKey(iso) : c.strings.calendarDay(formatDayKey(iso), day.label);
-  cell.button.setAttribute("aria-label", words2);
-  cell.button.title = words2;
+  const words3 = day.label === "" ? formatDayKey(iso) : c.strings.calendarDay(formatDayKey(iso), day.label);
+  cell.button.setAttribute("aria-label", words3);
+  cell.button.title = words3;
   cell.td.setAttribute("aria-selected", String(iso === c.selected));
   cell.button.tabIndex = iso === stop ? 0 : -1;
   if (monthChanged) c.decorate?.(cell.button, { kind: "day", host: c.el, key: keyOf4(c.el), index: i, value: iso });
@@ -45009,11 +45147,11 @@ var init_controller16 = __esm({
         paintCalendar(this);
       }
       /** @param {CalendarState} state @param {string} words */
-      setState(state12, words2) {
+      setState(state12, words3) {
         this.state = state12;
-        this.stateLine.textContent = words2;
+        this.stateLine.textContent = words3;
         this.stateLine.dataset.kpState = state12;
-        writeBusyWords(this, words2);
+        writeBusyWords(this, words3);
         paintCalendar(this);
       }
       /** @param {string | null} iso */
@@ -45049,8 +45187,8 @@ var init_controller16 = __esm({
 function setCalendarDays(el16, days) {
   calendarOf(el16)?.setDays(days);
 }
-function setCalendarState(el16, state12, words2 = "") {
-  calendarOf(el16)?.setState(state12, words2);
+function setCalendarState(el16, state12, words3 = "") {
+  calendarOf(el16)?.setState(state12, words3);
 }
 function calendarSelect(el16, iso) {
   calendarOf(el16)?.select(iso);
@@ -45145,7 +45283,7 @@ var init_constants22 = __esm({
 });
 
 // js/heat/card.js
-function waitForCard(el16, spec, loading, draw7) {
+function waitForCard(el16, spec, loading, draw8) {
   const waiting = WAITING.get(el16);
   if (loading) {
     if (waiting) {
@@ -45166,11 +45304,11 @@ function waitForCard(el16, spec, loading, draw7) {
   void card.close().then(() => {
     if (WAITING.get(el16) !== entry) return;
     WAITING.delete(el16);
-    draw7(el16, entry.spec);
+    draw8(el16, entry.spec);
   });
   return true;
 }
-function syncCard2(el16, loading, words2, area, className) {
+function syncCard2(el16, loading, words3, area, className) {
   const first = !DRAWN3.has(el16);
   markDrawn(el16);
   const card = CARDS.get(el16);
@@ -45186,7 +45324,7 @@ function syncCard2(el16, loading, words2, area, className) {
     card.place();
     return;
   }
-  CARDS.set(el16, openBusyCard(el16, { words: words2, area, className, arrive: !first }));
+  CARDS.set(el16, openBusyCard(el16, { words: words3, area, className, arrive: !first }));
 }
 function markDrawn(el16) {
   if (DRAWN3.has(el16)) return;
@@ -45363,9 +45501,9 @@ function setHeatPaging(el16, paging = {}) {
     if (!el16.parentNode) return null;
     bar = make12(doc, "div", "kp-heat__pager", { role: "group" });
     const button6 = (part7) => make12(doc, "button", `kp-button kp-button--ghost kp-button--sm kp-heat__pager-${part7}`, { type: "button", "data-kp-heat-page": part7 });
-    const words2 = make12(doc, "span", "kp-heat__pager-label");
-    words2.setAttribute("aria-live", "polite");
-    bar.append(button6("earlier"), button6("today"), button6("later"), words2);
+    const words3 = make12(doc, "span", "kp-heat__pager-label");
+    words3.setAttribute("aria-live", "polite");
+    bar.append(button6("earlier"), button6("today"), button6("later"), words3);
     el16.before(bar);
     bar.addEventListener("click", (event) => {
       const target = event.target instanceof Element ? event.target.closest("[data-kp-heat-page]") : null;
@@ -45396,7 +45534,7 @@ function setHeatPaging(el16, paging = {}) {
   ];
   bar.setAttribute("aria-label", s2.heatPagerLabel);
   for (
-    const [part7, words2, off] of
+    const [part7, words3, off] of
     /** @type {[string, string, boolean][]} */
     text
   ) {
@@ -45404,7 +45542,7 @@ function setHeatPaging(el16, paging = {}) {
       /** @type {HTMLButtonElement} */
       bar.querySelector(`[data-kp-heat-page="${part7}"]`)
     );
-    if (b.textContent !== words2) b.textContent = words2;
+    if (b.textContent !== words3) b.textContent = words3;
     b.disabled = off;
     const decorate2 = DECORATE.get(el16);
     if (decorate2 && !MARKED.has(b)) {
@@ -45413,7 +45551,7 @@ function setHeatPaging(el16, paging = {}) {
       decorate2(b, { kind: (
         /** @type {'pager-earlier' | 'pager-today' | 'pager-later'} */
         `pager-${part7}`
-      ), host: el16, ...key === null ? {} : { key }, label: words2 });
+      ), host: el16, ...key === null ? {} : { key }, label: words3 });
     }
   }
   const label = (
@@ -47694,9 +47832,9 @@ function paintUpcoming(c, items) {
     list.append(empty);
   }
   if (empty && !none) empty.remove();
-  const words2 = c.el.dataset.kpWeekUpcomingEmpty || c.strings.weekEmpty;
+  const words3 = c.el.dataset.kpWeekUpcomingEmpty || c.strings.weekEmpty;
   const none2 = empty?.querySelector(".kp-week__none");
-  if (none && none2 && none2.textContent !== words2) none2.textContent = words2;
+  if (none && none2 && none2.textContent !== words3) none2.textContent = words3;
 }
 var modeOf, upcomingOn, NOT_UPCOMING;
 var init_upcoming = __esm({
@@ -47803,12 +47941,12 @@ function paint7(c) {
   }
   c.el.dataset.kpState = c.state;
   c.grid.toggleAttribute("aria-busy", c.state === "loading");
-  const words2 = c.state === "loading" ? s2.weekLoading : c.state === "empty" ? c.stateLine.dataset.kpWords || s2.weekEmpty : c.stateLine.dataset.kpWords || s2.heatFailed;
-  const said = c.state === "loading" ? words2 : "";
+  const words3 = c.state === "loading" ? s2.weekLoading : c.state === "empty" ? c.stateLine.dataset.kpWords || s2.weekEmpty : c.stateLine.dataset.kpWords || s2.heatFailed;
+  const said = c.state === "loading" ? words3 : "";
   if ((c.stateLine.textContent ?? "") !== said) c.stateLine.textContent = said;
   c.stateLine.dataset.kpState = c.state;
   const plateKind = c.state === "empty" || c.state === "error" ? c.state : null;
-  const plateKey = plateKind ? `${plateKind}|${words2}|${c.plateText}` : "";
+  const plateKey = plateKind ? `${plateKind}|${words3}|${c.plateText}` : "";
   if (c.plateKey !== plateKey) {
     c.plateKey = plateKey;
     c.plate.replaceChildren();
@@ -47816,7 +47954,7 @@ function paint7(c) {
       c.plate.append(
         hostStatePlate(c.el, {
           kind: plateKind,
-          title: words2,
+          title: words3,
           ...c.plateText ? { text: c.plateText } : {},
           art: c.plateArt,
           retryEvent: WEEK_RETRY_EVENT
@@ -47936,12 +48074,12 @@ function setWeekEvents(el16, events) {
   else if (c.state === "ready" && !events.length) c.state = "empty";
   paint7(c);
 }
-function setWeekState(el16, state12, words2 = "", { text = "", art = null } = {}) {
+function setWeekState(el16, state12, words3 = "", { text = "", art = null } = {}) {
   const c = weeks.get(el16);
   if (!c) return;
   if (state12 === "loading") watchArrivals(c);
   c.state = state12;
-  c.stateLine.dataset.kpWords = words2;
+  c.stateLine.dataset.kpWords = words3;
   c.plateText = text;
   c.plateArt = art;
   paint7(c);
@@ -48625,7 +48763,7 @@ var init_timeline = __esm({
 function summary(c, item) {
   const lane = c.lanes.find((l) => l.id === item.lane)?.label ?? item.lane;
   const partner = item.with ? c.view.find((i) => i.id === item.with)?.label ?? null : null;
-  return c.strings.sequencerItem(item.label, lane, words(c, item.start), words(c, item.duration), partner);
+  return c.strings.sequencerItem(item.label, lane, words2(c, item.start), words2(c, item.duration), partner);
 }
 function announce2(c, text) {
   c.announcer.textContent = "";
@@ -48647,7 +48785,7 @@ function readOptions3(c) {
   c.hint.textContent = c.editable ? c.strings.sequencerHint : c.strings.sequencerHintReadonly;
   c.selection.hidden = !c.editable && d.kpSequencerSelection === "off";
 }
-var sequencers, make15, px2, words, labelOf6, emit4, outItems, planOptions;
+var sequencers, make15, px2, words2, labelOf6, emit4, outItems, planOptions;
 var init_instance2 = __esm({
   "js/sequencer/instance.js"() {
     "use strict";
@@ -48660,7 +48798,7 @@ var init_instance2 = __esm({
       return el16;
     };
     px2 = (n) => `${Math.round(n * 100) / 100}px`;
-    words = (c, value) => c.strings.sequencerSpan(value, c.unit.name);
+    words2 = (c, value) => c.strings.sequencerSpan(value, c.unit.name);
     labelOf6 = (c, id) => c.view.find((i) => i.id === id)?.label ?? id;
     emit4 = (c, name, detail) => c.el.dispatchEvent(new CustomEvent(name, { bubbles: true, detail }));
     outItems = (c, list) => list.map((i) => ({ id: i.id, lane: i.lane, start: i.start, duration: i.duration, with: i.with ?? null }));
@@ -49006,7 +49144,7 @@ function syncTicks(c) {
   c.axis.replaceChildren();
   c.lines.replaceChildren();
   for (const v of values) {
-    const tick6 = make15(doc, "span", "kp-gantt__tick", words(c, v));
+    const tick6 = make15(doc, "span", "kp-gantt__tick", words2(c, v));
     tick6.style.setProperty("--kp-g-t", String(v));
     if (v >= c.span - step / 2 && v > 0) tick6.setAttribute("data-kp-gantt-edge", "");
     c.axis.append(tick6);
@@ -49090,7 +49228,7 @@ function paintWindow(c, list, fit2) {
   c.body.style.setProperty("--kp-tl-zoom", String(c.zoom));
   c.endLine.style.setProperty("--kp-g-t", String(total));
   c.endLine.hidden = total <= 0;
-  c.total.textContent = list.length ? c.strings.sequencerTotal(words(c, total)) : "";
+  c.total.textContent = list.length ? c.strings.sequencerTotal(words2(c, total)) : "";
   c.zoomValue.textContent = c.strings.sequencerZoomValue(Math.round(c.zoom * 100));
   const [out, fitButton, zin] = (
     /** @type {[HTMLButtonElement, HTMLButtonElement, HTMLButtonElement]} */
@@ -49104,7 +49242,7 @@ function paintWindow(c, list, fit2) {
     c.nowLine.hidden = false;
     c.body.style.setProperty("--kp-g-now", String(c.nowAt));
     c.nowLine.toggleAttribute("data-kp-out", c.nowAt < 0 || c.nowAt > c.span);
-    c.nowLine.setAttribute("aria-label", c.strings.sequencerNow(words(c, c.nowAt)));
+    c.nowLine.setAttribute("aria-label", c.strings.sequencerNow(words2(c, c.nowAt)));
   }
 }
 function paintSelection(c) {
@@ -49215,7 +49353,7 @@ function drawDraft(c, list, ids, refit = false) {
   } else {
     const total = sequencerTotalOf(list);
     c.endLine.style.setProperty("--kp-g-t", String(total));
-    c.total.textContent = c.strings.sequencerTotal(words(c, total));
+    c.total.textContent = c.strings.sequencerTotal(words2(c, total));
   }
   for (const id of ids) {
     const item = list.find((i) => i.id === id);
@@ -49429,7 +49567,7 @@ function showDragMarks(c, list, id, refused) {
   c.guide.hidden = hit === void 0;
   if (hit !== void 0) c.guide.style.setProperty("--kp-g-t", String(hit));
   c.readout.hidden = false;
-  c.readout.textContent = refused ? c.strings.sequencerReadoutRefused : c.strings.sequencerReadout(words(c, item.start), words(c, item.duration));
+  c.readout.textContent = refused ? c.strings.sequencerReadoutRefused : c.strings.sequencerReadout(words2(c, item.start), words2(c, item.duration));
   c.readout.toggleAttribute("data-kp-refused", refused);
   c.readout.style.setProperty("--kp-g-s", String(item.start));
   c.readout.style.setProperty("--kp-g-e", String(round(item.start + item.duration)));
@@ -49872,11 +50010,11 @@ function getSequencerTotal(el16) {
   const c = sequencers.get(el16);
   return c ? sequencerTotalOf(c.items) : 0;
 }
-function setSequencerState(el16, state12, words2 = "", { text = "", art = null } = {}) {
+function setSequencerState(el16, state12, words3 = "", { text = "", art = null } = {}) {
   const c = sequencers.get(el16);
   if (!c) return;
   c.state = state12;
-  c.stateWords = words2;
+  c.stateWords = words3;
   c.stateText = text;
   c.stateArt = art;
   if (c.press || c.kb) cancelEdit(c, "quiet");
@@ -50145,9 +50283,9 @@ function build6(c) {
   c.ranges.setAttribute("data-kp-segmented", "single");
   c.ranges.setAttribute("role", "radiogroup");
   c.ranges.setAttribute("aria-label", s2.ganttRange);
-  const words2 = (c.el.dataset.kpGanttRanges ?? (c.line ? "all" : "1h 6h 24h 7d")).split(/[\s,]+/).filter((w) => w === "all" || Number.isFinite(rangeSeconds(w)));
-  const wanted = c.el.dataset.kpGanttRange ?? (c.line ? "all" : words2[Math.min(1, words2.length - 1)] ?? "6h");
-  for (const word of words2) {
+  const words3 = (c.el.dataset.kpGanttRanges ?? (c.line ? "all" : "1h 6h 24h 7d")).split(/[\s,]+/).filter((w) => w === "all" || Number.isFinite(rangeSeconds(w)));
+  const wanted = c.el.dataset.kpGanttRange ?? (c.line ? "all" : words3[Math.min(1, words3.length - 1)] ?? "6h");
+  for (const word of words3) {
     const item = make16(doc, "button", "kp-segmented__item");
     item.type = "button";
     item.dataset.value = word;
@@ -50449,13 +50587,13 @@ function fillLaneLabel(c, label, lane) {
     holder = link;
   }
   if (lane.sub) {
-    const words2 = make16(doc, "span", "kp-gantt__words");
-    if (holder === name) words2.append(name, make16(doc, "span", "kp-gantt__sub", lane.sub));
+    const words3 = make16(doc, "span", "kp-gantt__words");
+    if (holder === name) words3.append(name, make16(doc, "span", "kp-gantt__sub", lane.sub));
     else {
       holder.append(make16(doc, "span", "kp-gantt__sub", lane.sub));
-      words2.append(holder);
+      words3.append(holder);
     }
-    holder = words2;
+    holder = words3;
   }
   label.replaceChildren(holder);
 }
@@ -50497,9 +50635,9 @@ function paintPoints(c, lanes) {
     else delete el16.dataset.kpTone;
     el16.toggleAttribute("data-kp-planned", point2.planned === true);
     el16.style.setProperty("--kp-g-s", rel(c, toMs2(point2.at)).toFixed(2));
-    const words2 = pointWords(c, point2);
-    el16.dataset.kpName = words2.name;
-    el16.dataset.kpCard = words2.card;
+    const words3 = pointWords(c, point2);
+    el16.dataset.kpName = words3.name;
+    el16.dataset.kpCard = words3.card;
     live4.add(point2.id);
     const list = byLane.get(point2.lane) ?? [];
     list.push(el16);
@@ -51163,12 +51301,12 @@ function paint9(c) {
   c.body.toggleAttribute("aria-busy", c.state === "loading");
   drawBusy2(c);
   const empty = c.state === "ready" && c.runs.length === 0 && c.points.length === 0 && lanes.length === 0;
-  const words2 = c.state === "loading" ? s2.ganttLoading : c.state === "empty" || empty ? c.stateLine.dataset.kpWords || s2.ganttEmpty : c.stateLine.dataset.kpWords || s2.heatFailed;
+  const words3 = c.state === "loading" ? s2.ganttLoading : c.state === "empty" || empty ? c.stateLine.dataset.kpWords || s2.ganttEmpty : c.stateLine.dataset.kpWords || s2.heatFailed;
   c.nowLine.hidden = c.el.hasAttribute("data-kp-gantt-points") && (c.state === "error" || c.state === "empty" || empty);
   const plateKind = c.state === "error" || c.state === "empty" || c.state === "ready" && empty ? c.state : null;
-  c.stateLine.textContent = c.state === "loading" && c.leaving === null ? words2 : "";
+  c.stateLine.textContent = c.state === "loading" && c.leaving === null ? words3 : "";
   c.stateLine.dataset.kpState = empty && c.state === "ready" ? "empty" : c.state;
-  const plateKey = plateKind ? `${plateKind}|${words2}|${c.plateText}` : "";
+  const plateKey = plateKind ? `${plateKind}|${words3}|${c.plateText}` : "";
   if (c.plateKey !== plateKey) {
     c.plateKey = plateKey;
     c.plate.replaceChildren();
@@ -51176,7 +51314,7 @@ function paint9(c) {
       c.plate.append(
         hostStatePlate(c.el, {
           kind: plateKind === "error" ? "error" : "empty",
-          title: words2,
+          title: words3,
           ...c.plateText ? { text: c.plateText } : {},
           art: c.plateArt,
           retryEvent: GANTT_RETRY_EVENT
@@ -51242,11 +51380,11 @@ function setGanttRuns(el16, runs2, lanes) {
   paint9(c);
   tick4(c);
 }
-function setGanttState(el16, state12, words2 = "", { text = "", art = null } = {}) {
+function setGanttState(el16, state12, words3 = "", { text = "", art = null } = {}) {
   const c = gantts.get(el16);
   if (!c) return;
   c.state = state12;
-  c.stateLine.dataset.kpWords = words2;
+  c.stateLine.dataset.kpWords = words3;
   c.plateText = text;
   c.plateArt = art;
   paint9(c);
@@ -52052,11 +52190,11 @@ function setPipeline(el16, { lanes, cards: cards2 }) {
   if (c.state === "loading" || c.state === "empty") c.state = "ready";
   paint10(c);
 }
-function setPipelineState(el16, state12, words2 = "") {
+function setPipelineState(el16, state12, words3 = "") {
   const c = boards.get(el16);
   if (!c) return;
   c.state = state12;
-  c.words = words2;
+  c.words = words3;
   paint10(c);
 }
 function setPipelineSelected(el16, id) {
@@ -52231,7 +52369,7 @@ function groupHost(el16) {
   parent.setAttribute("data-kp-uptime-group", "auto");
   return parent;
 }
-function joinGroupCard(el16, host, words2, first) {
+function joinGroupCard(el16, host, words3, first) {
   let group = GROUPS2.get(host);
   if (group?.closing) {
     group.card.remove();
@@ -52244,7 +52382,7 @@ function joinGroupCard(el16, host, words2, first) {
       /** @type {HTMLElement} */
       host,
       {
-        words: words2,
+        words: words3,
         area: () => [...loading].filter((strip) => strip.isConnected),
         className: "kp-uptime__busy kp-uptime__busy--group",
         arrive: !first
@@ -52320,7 +52458,7 @@ function setUptime(el16, spec) {
     const card = CARDS2.get(el16);
     const left = card ? leaveGroupCard(el16) : null;
     if (left && !left.last) {
-      draw5(el16, spec);
+      draw6(el16, spec);
       return;
     }
     if (card) {
@@ -52335,14 +52473,14 @@ function setUptime(el16, spec) {
         if (left && GROUPS2.get(left.host)?.card === card) GROUPS2.delete(left.host);
         if (WAITING2.get(el16) !== entry) return;
         WAITING2.delete(el16);
-        draw5(el16, entry.spec);
+        draw6(el16, entry.spec);
       });
       return;
     }
   }
-  draw5(el16, spec);
+  draw6(el16, spec);
 }
-function draw5(el16, spec) {
+function draw6(el16, spec) {
   const s2 = getStrings();
   const periods = spec.periods ?? [];
   const state12 = spec.state ?? (periods.length === 0 ? "empty" : "ready");
@@ -52449,9 +52587,9 @@ function draw5(el16, spec) {
         cell.dataset.kpKey = period.key;
         const share = typeof period.uptime === "number" ? s2.uptimePercent(uptimePercent(period.uptime)) : null;
         const n = typeof period.incidents === "number" ? period.incidents : null;
-        const words2 = s2.uptimeCell(period.label, wordFor(el16, tone), share, n);
-        cell.setAttribute("aria-label", words2);
-        cell.setAttribute("data-kp-hovercard", period.tip ?? words2);
+        const words3 = s2.uptimeCell(period.label, wordFor(el16, tone), share, n);
+        cell.setAttribute("aria-label", words3);
+        cell.setAttribute("data-kp-hovercard", period.tip ?? words3);
       } else {
         cell.setAttribute("aria-label", s2.uptimeStateWord("none"));
         cell.dataset.kpKey = `none-${i}`;
@@ -52563,9 +52701,9 @@ function attachUptimes(root = document) {
       for (const c of el16.querySelectorAll(".kp-uptime__cell")) {
         const from = on ? "data-kp-uptime-tip" : HOVERCARD_ATTRIBUTE;
         const to = on ? HOVERCARD_ATTRIBUTE : "data-kp-uptime-tip";
-        const words2 = c.getAttribute(from);
-        if (words2 === null) continue;
-        c.setAttribute(to, words2);
+        const words3 = c.getAttribute(from);
+        if (words3 === null) continue;
+        c.setAttribute(to, words3);
         c.removeAttribute(from);
       }
     };
@@ -53062,7 +53200,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
     let frame3 = 0;
     let filling = null;
     const scaleMs = () => scaleSeconds > 0 ? scaleSeconds * 1e3 : clock4.total();
-    const draw7 = (force = false) => {
+    const draw8 = (force = false) => {
       const ms = clock4.remaining();
       let share = discShare(ms, scaleMs());
       if (still() && clock4.state() === "running") {
@@ -53099,7 +53237,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
     const loop = () => {
       cancelAnimationFrame(frame3);
       if (clock4.state() !== "running") return;
-      draw7();
+      draw8();
       const m = Math.ceil(clock4.remaining() / 6e4);
       if (m !== minute) {
         minute = m;
@@ -53112,7 +53250,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
       now,
       onChange: (state12) => {
         if (state12 === "ended") return;
-        draw7(true);
+        draw8(true);
         show();
         if (state12 === "running") loop();
         el16.dispatchEvent(
@@ -53120,7 +53258,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
         );
       },
       onEnd: () => {
-        draw7(true);
+        draw8(true);
         show();
         said.textContent = name ? s2.timerEndedNamed(name) : s2.timerEnded;
         el16.dispatchEvent(new CustomEvent(COUNTDOWN_END_EVENT, { bubbles: true, detail: { total: clock4.total() } }));
@@ -53142,7 +53280,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
       const from = drawn2;
       clock4.reset(seconds);
       said.textContent = "";
-      draw7(true);
+      draw8(true);
       if (!still() && typeof el16.animate === "function" && registered && from < drawn2) {
         const style = view.getComputedStyle(el16);
         const raw = style.getPropertyValue("--fx-duration").trim();
@@ -53182,7 +53320,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
     const startUntil = () => {
       if (until !== null && seconds > 0) clock4.start();
     };
-    draw7(true);
+    draw8(true);
     show();
     startUntil();
     const onVisible = () => {
@@ -53213,7 +53351,7 @@ function attachTimerDiscs(root = document, { now, wall } = {}) {
           clock4.reset(seconds);
           startUntil();
         } else {
-          draw7(true);
+          draw8(true);
           show();
         }
       }
@@ -53577,10 +53715,10 @@ function attachRanges(root = document, { now = () => Date.now() } = {}) {
         const a = read(from);
         const b = read(to);
         const bad = [];
-        const words2 = [];
+        const words3 = [];
         const wrong = (word, ...inputs) => {
           bad.push(...inputs);
-          words2.push(word);
+          words3.push(word);
         };
         if (a === "date") wrong(s2.rangeErrorDate(s2.rangeFrom), from.date);
         if (a === "time" || a === null) wrong(s2.rangeErrorTime(s2.rangeFrom), from.time);
@@ -53593,8 +53731,8 @@ function attachRanges(root = document, { now = () => Date.now() } = {}) {
             if (fault === "span") wrong(s2.rangeErrorSpan(maxDays), from.date, to.date);
           }
         }
-        if (words2.length > 0) {
-          error.textContent = words2.join(" ");
+        if (words3.length > 0) {
+          error.textContent = words3.join(" ");
           mark(bad);
           bad[0]?.focus();
           return;
@@ -53980,7 +54118,7 @@ function attachLedes(root = document) {
     let toggle2 = null;
     let rest = null;
     let plain2 = "";
-    const draw7 = () => {
+    const draw8 = () => {
       plain2 = lede.childElementCount === 0 ? (lede.textContent ?? "").trim().replace(/\s+/g, " ") : "";
       const href = lede.getAttribute("data-kp-lede-link");
       if (href) {
@@ -54030,10 +54168,10 @@ function attachLedes(root = document) {
       if (rest) lede.textContent = plain2;
       rest = null;
     };
-    draw7();
+    draw8();
     const stop = watchOptions(lede, ["data-kp-lede-collapsible", "data-kp-lede-link"], () => {
       undraw();
-      draw7();
+      draw8();
     });
     cleanups.push(() => {
       stop();
@@ -54102,9 +54240,9 @@ function paintParts(host, p, remedyLabel) {
   }
   const sr = `${severity === "critical" ? s2.attentionCritical : severity === "warning" ? s2.attentionWarning : s2.attentionInfo}: `;
   setText2(word, sr);
-  const words2 = [...what.childNodes].filter((n) => n !== word);
-  if (words2.map((n) => n.textContent).join("") !== p.what) {
-    for (const n of words2) n.remove();
+  const words3 = [...what.childNodes].filter((n) => n !== word);
+  if (words3.map((n) => n.textContent).join("") !== p.what) {
+    for (const n of words3) n.remove();
     what.append(p.what);
   }
   if (what.parentElement !== host) host.prepend(what);
@@ -54495,8 +54633,8 @@ function wire3(button6, options) {
   const stack = doc.createElement("span");
   stack.className = "kp-flash__stack";
   stack.append(rest, busy, result);
-  const words2 = (button6.getAttribute("data-kp-flash-words") ?? `${attr3(button6, "data-kp-flash-word", s2.flashDone)},${attr3(button6, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
-  for (const word of words2) {
+  const words3 = (button6.getAttribute("data-kp-flash-words") ?? `${attr3(button6, "data-kp-flash-word", s2.flashDone)},${attr3(button6, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
+  for (const word of words3) {
     const ghost = doc.createElement("span");
     ghost.className = "kp-flash__ghost";
     ghost.setAttribute("aria-hidden", "true");
@@ -54769,7 +54907,7 @@ var init_detail_state = __esm({
        * [kyugaps-1019, gap kyu 48].
        * @param {boolean} arrive
        */
-      layBusy(arrive2) {
+      layBusy(arrive3) {
         this.unwatchList();
         const root = this.root;
         const onDetail = this.detailShown();
@@ -54780,7 +54918,7 @@ var init_detail_state = __esm({
           words: this.busyWords,
           area: () => onDetail ? [body.hidden ? detail : stateBox.hidden ? body : stateBox] : lists(),
           className: "kp-pane__busy",
-          arrive: arrive2
+          arrive: arrive3
         });
         if (!onDetail && typeof ResizeObserver === "function") {
           const watcher = new ResizeObserver(() => card.place());
@@ -55447,10 +55585,10 @@ function wire4(el16) {
     attempt += 1;
     stopTick();
     nextAt = 0;
-    draw7("reconnecting");
+    draw8("reconnecting");
     el16.dispatchEvent(new CustomEvent(CONNECTION_RETRY_EVENT, { bubbles: true, detail: { attempt, auto } }));
   }
-  function draw7(state12) {
+  function draw8(state12) {
     const previous = shown5;
     shown5 = state12;
     el16.setAttribute("data-kp-state", state12);
@@ -55523,13 +55661,13 @@ function wire4(el16) {
       if (state12 === "offline" && shown5 === "online" && grace() > 0) {
         graceTimer = view.setTimeout(() => {
           show();
-          draw7("offline");
+          draw8("offline");
         }, grace());
         return;
       }
       if (state12 === "refused") attempt = 0;
       show();
-      draw7(state12);
+      draw8(state12);
       return;
     }
     if (state12 === "online") {
@@ -55542,7 +55680,7 @@ function wire4(el16) {
         return;
       }
       show();
-      draw7("back");
+      draw8("back");
       backTimer = view.setTimeout(() => {
         shown5 = "online";
         el16.setAttribute("data-kp-state", "online");
@@ -55798,9 +55936,9 @@ function setTransfer(row, sample, { now } = {}) {
     const note2 = row.ownerDocument.createElement("div");
     note2.className = "kp-alert kp-alert--destructive kp-transfer__failure";
     note2.setAttribute("role", "alert");
-    const words2 = row.ownerDocument.createElement("span");
-    words2.className = "kp-alert__body";
-    words2.textContent = `${s2.transferFailed}: ${sample.failed}`;
+    const words3 = row.ownerDocument.createElement("span");
+    words3.className = "kp-alert__body";
+    words3.textContent = `${s2.transferFailed}: ${sample.failed}`;
     const retry = row.ownerDocument.createElement("button");
     retry.type = "button";
     retry.className = "kp-button kp-button--sm kp-transfer__retry";
@@ -55812,7 +55950,7 @@ function setTransfer(row, sample, { now } = {}) {
       note2.remove();
       row.dispatchEvent(new CustomEvent(TRANSFER_RETRY_EVENT, { bubbles: true, detail: {} }));
     });
-    note2.append(words2, retry);
+    note2.append(words3, retry);
     row.append(note2);
     return;
   }
@@ -56623,7 +56761,7 @@ function attachOne5(nav) {
   const queueSpy = () => {
     if (!raf) raf = view.requestAnimationFrame(spy);
   };
-  const draw7 = () => {
+  const draw8 = () => {
     const next2 = read();
     const state12 = nav.getAttribute("data-kp-state");
     title.hidden = nav.getAttribute("data-kp-contents-title") === "none";
@@ -56700,23 +56838,23 @@ function attachOne5(nav) {
     pane?.addEventListener("scroll", queueSpy, { passive: true });
   };
   const changes = new view.MutationObserver((records) => {
-    if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw7);
+    if (records.some((r) => !nav.contains(r.target))) queueMicrotask(draw8);
   });
   changes.observe(scope(), { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ["hidden", "id"] });
-  const options = new view.MutationObserver(draw7);
+  const options = new view.MutationObserver(draw8);
   options.observe(nav, {
     attributes: true,
     attributeFilter: ["data-kp-contents-for", "data-kp-contents-headings", "data-kp-contents-min", "data-kp-contents-title", "data-kp-state", "data-kp-contents-offset"]
   });
   HANDLES4.set(nav, {
     current: () => current2,
-    refresh: draw7,
+    refresh: draw8,
     setItems(items) {
       given2 = items ? [...items] : null;
-      draw7();
+      draw8();
     }
   });
-  draw7();
+  draw8();
   return () => {
     view.cancelAnimationFrame(raf);
     nav.removeEventListener("click", onClick);
@@ -57825,7 +57963,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
       /** @type {(number | 'last')[]} */
       picked().map((v) => v === "last" ? "last" : Number(v)).sort((a, b) => a === "last" ? 1 : b === "last" ? -1 : a - b)
     ) : picked().map(Number).sort((a, b) => (a - firstDay + 7) % 7 - (b - firstDay + 7) % 7);
-    const words2 = () => month ? monthSummary(values()) : weekdaySummary(
+    const words3 = () => month ? monthSummary(values()) : weekdaySummary(
       /** @type {number[]} */
       values(),
       { firstDay, names: dayNames("short", locale) }
@@ -57833,7 +57971,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     const valid = () => values().length >= min;
     const paint15 = () => {
       const have = values();
-      summary2.textContent = words2();
+      summary2.textContent = words3();
       const ok = have.length >= min;
       why.hidden = ok;
       why.textContent = ok ? "" : s2.weekdaysMin(min);
@@ -57861,7 +57999,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     const change2 = (fire2) => {
       paint15();
       if (fire2)
-        el16.dispatchEvent(new CustomEvent(WEEKDAYS_EVENT, { bubbles: true, detail: { values: values(), summary: words2(), valid: valid() } }));
+        el16.dispatchEvent(new CustomEvent(WEEKDAYS_EVENT, { bubbles: true, detail: { values: values(), summary: words3(), valid: valid() } }));
     };
     const onChips = (event) => {
       if (event.target !== group) return;
@@ -57883,7 +58021,7 @@ function attachWeekdays(root = document, { locale: localeOption, weekStartsOn: w
     const initial = (el16.dataset.kpValue ?? "").split(/[\s,]+/).map((v) => v.trim()).filter(Boolean);
     set(initial);
     paint15();
-    const handle = { element: el16, values, set, summary: words2, valid };
+    const handle = { element: el16, values, set, summary: words3, valid };
     HANDLES5.set(el16, handle);
     cleanups.push(() => {
       group.removeEventListener(SEGMENTED_EVENT, onChips);
@@ -57978,8 +58116,8 @@ function attachOne6(root) {
     return node;
   };
   const severities = () => (root.getAttribute("data-kp-quiet-severities") || QUIET_SEVERITIES.join(",")).split(/\s*,\s*/).filter(Boolean).map((part7) => {
-    const [key, ...words2] = part7.split("=");
-    return { key: key.trim(), label: words2.join("=").trim() || severityWord2(key.trim()) };
+    const [key, ...words3] = part7.split("=");
+    return { key: key.trim(), label: words3.join("=").trim() || severityWord2(key.trim()) };
   });
   const onLabel = (
     /** @type {HTMLLabelElement} */
@@ -58049,9 +58187,9 @@ function attachOne6(root) {
         box.type = "checkbox";
         box.value = key;
         box.checked = value.through.includes(key);
-        const words2 = make31("kp-field__option-title", "span");
-        words2.textContent = label;
-        row.append(box, words2);
+        const words3 = make31("kp-field__option-title", "span");
+        words3.textContent = label;
+        row.append(box, words3);
         return row;
       })
     );
@@ -59351,8 +59489,8 @@ function sourceSwitch(doc, t, src) {
   input.setAttribute("role", "switch");
   input.checked = src.muted === true;
   input.setAttribute("data-kp-source", src.key);
-  const words2 = make20(doc, "span", "kp-notices__source-label", src.label);
-  label.append(input, words2, make20(doc, "span", "kp-notices__source-state", input.checked ? t.noticesMuted : t.noticesNotMuted));
+  const words3 = make20(doc, "span", "kp-notices__source-label", src.label);
+  label.append(input, words3, make20(doc, "span", "kp-notices__source-state", input.checked ? t.noticesMuted : t.noticesNotMuted));
   return label;
 }
 var severityWord3;
@@ -60939,12 +61077,12 @@ function setQuote(el16, spec) {
   card.expanded = false;
   render2(card);
 }
-function setQuoteState(el16, state12, words2 = {}) {
+function setQuoteState(el16, state12, words3 = {}) {
   if (!controllerOf(el16, QuoteController)) return;
   const s2 = getStrings();
-  if (state12 === "empty") setCardState(el16, "empty", { title: words2.title ?? s2.quoteEmptyTitle, text: words2.text ?? s2.quoteEmptyText });
-  else if (state12 === "error") setCardState(el16, "error", { title: words2.title ?? s2.quoteFailedTitle, text: words2.text ?? s2.quoteFailedText });
-  else if (state12 === "loading") setCardState(el16, "loading", { words: words2.words ?? s2.quoteLoading });
+  if (state12 === "empty") setCardState(el16, "empty", { title: words3.title ?? s2.quoteEmptyTitle, text: words3.text ?? s2.quoteEmptyText });
+  else if (state12 === "error") setCardState(el16, "error", { title: words3.title ?? s2.quoteFailedTitle, text: words3.text ?? s2.quoteFailedText });
+  else if (state12 === "loading") setCardState(el16, "loading", { words: words3.words ?? s2.quoteLoading });
   else setCardState(el16, "ready");
   for (const retry of el16.querySelectorAll(".kp-card__retry")) {
     retry.classList.remove("kp-button--sm");
@@ -61395,14 +61533,14 @@ function syncCheck(m) {
         pair.setAttribute("aria-labelledby", name.id);
         pair.dataset.value = value;
         for (
-          const [kind, words2] of
+          const [kind, words3] of
           /** @type {const} */
           [
             ["had", s2.usualHadIt],
             ["not", s2.usualNotToday]
           ]
         ) {
-          const button6 = make23("button", "kp-segmented__item", words2);
+          const button6 = make23("button", "kp-segmented__item", words3);
           button6.type = "button";
           button6.dataset.value = kind;
           button6.setAttribute("aria-pressed", "false");
@@ -61591,7 +61729,7 @@ function addName(m, label, nearTo) {
     if (ms > 0) undoToast(s2.usualAddedToast(label), { mode: "revert", ms, undo });
     return;
   }
-  const words2 = make23("span", "kp-usual__note-text", s2.usualAddedNote(label));
+  const words3 = make23("span", "kp-usual__note-text", s2.usualAddedNote(label));
   const button6 = make23("button", "kp-button kp-button--ghost kp-button--sm kp-usual__undo", s2.usualUndo);
   button6.type = "button";
   button6.setAttribute("aria-label", s2.usualUndoName(label));
@@ -61599,7 +61737,7 @@ function addName(m, label, nearTo) {
     undo();
     m.input.focus();
   });
-  m.noteEl.replaceChildren(words2, button6);
+  m.noteEl.replaceChildren(words3, button6);
   m.noteEl.hidden = false;
 }
 var init_add = __esm({
@@ -62665,10 +62803,10 @@ function summarizeDeltas(list, options = {}) {
   const s2 = getStrings();
   const counts = { same: 0, other: 0, patch: 0, minor: 0, major: 0, downgrade: 0, unknown: 0 };
   for (const item of list) counts[versionLevel(item.from, item.to, { ...options, app: item.app ?? "", level: item.level ?? "auto" })] += 1;
-  const words2 = { major: s2.versionMajor, minor: s2.versionMinor, patch: s2.versionPatch, other: s2.versionOther, downgrade: s2.versionDowngrade };
+  const words3 = { major: s2.versionMajor, minor: s2.versionMinor, patch: s2.versionPatch, other: s2.versionOther, downgrade: s2.versionDowngrade };
   const parts2 = (
     /** @type {(keyof typeof words)[]} */
-    ["major", "minor", "patch", "other", "downgrade"].filter((level) => counts[level] > 0).map((level) => `${counts[level]} ${words2[level]}`)
+    ["major", "minor", "patch", "other", "downgrade"].filter((level) => counts[level] > 0).map((level) => `${counts[level]} ${words3[level]}`)
   );
   return { total: list.length, counts, text: parts2.length > 0 ? parts2.join(", ") : s2.versionNoUpdates };
 }
@@ -62689,7 +62827,7 @@ function toneMap(text) {
   }
   return map;
 }
-function draw6(el16, defaults = {}) {
+function draw7(el16, defaults = {}) {
   const doc = el16.ownerDocument;
   const s2 = getStrings();
   const from = (el16.getAttribute("data-kp-version-from") ?? "").trim();
@@ -62829,8 +62967,8 @@ function attachVersionDeltas(root = document, options = {}) {
   for (const el16 of found) {
     el16.dataset.kpVersionAttached = "";
     const before = el16.className;
-    draw6(el16, options);
-    const watch2 = new MutationObserver(() => draw6(el16, options));
+    draw7(el16, options);
+    const watch2 = new MutationObserver(() => draw7(el16, options));
     watch2.observe(el16, { attributes: true, attributeFilter: [...ATTRIBUTES] });
     const onClick = async (event) => {
       if (!event.shiftKey || event.target instanceof Element && event.target.closest("a")) return;
@@ -62967,7 +63105,7 @@ function attachOne7(el16) {
     holder.lastElementChild.textContent = name;
     return holder;
   };
-  const draw7 = () => {
+  const draw8 = () => {
     const s2 = getStrings();
     const numbers2 = attr16("data-kp-dep-order", "numbers") !== "none";
     const self = attr16("data-kp-dep-self", "hide") === "show";
@@ -63094,7 +63232,7 @@ function attachOne7(el16) {
       more.textContent = folded2 ? s2.deplistMore(rowEls.length) : s2.deplistFewer;
       more.addEventListener("click", () => {
         expanded = !expanded;
-        draw7();
+        draw8();
         el16.querySelector(".kp-deplist__more")?.focus();
       });
       foot.append(more);
@@ -63119,7 +63257,7 @@ function attachOne7(el16) {
   const go = (next2) => {
     if (state12 === "ready" && next2 !== "ready" && list.offsetHeight > 0) body.dataset.kpKeep = String(list.offsetHeight);
     state12 = next2;
-    draw7();
+    draw8();
     if (state12 !== "ready" && state12 !== "loading" && body.dataset.kpKeep) body.style.setProperty("min-block-size", `${body.dataset.kpKeep}px`);
     if (state12 === "loading" && body.dataset.kpKeep) body.style.setProperty("min-block-size", `${body.dataset.kpKeep}px`);
   };
@@ -63129,7 +63267,7 @@ function attachOne7(el16) {
       items = next2;
       state12 = "ready";
       delete body.dataset.kpKeep;
-      draw7();
+      draw8();
     },
     setState(next2, options = {}) {
       stateMessage = options.message ?? "";
@@ -63142,7 +63280,7 @@ function attachOne7(el16) {
     busy?.remove();
     HANDLES7.delete(el16);
   });
-  const watch2 = new MutationObserver(() => draw7());
+  const watch2 = new MutationObserver(() => draw8());
   watch2.observe(el16, {
     attributes: true,
     attributeFilter: [
@@ -63161,7 +63299,7 @@ function attachOne7(el16) {
     ]
   });
   undo.push(() => watch2.disconnect());
-  draw7();
+  draw8();
   return () => undo.reverse().forEach((u) => u());
 }
 function attachDeplists(root = document) {
@@ -63262,7 +63400,7 @@ function attachOne8(el16) {
   let busy = null;
   let kept = 0;
   const attr16 = (name, fallback2) => el16.getAttribute(name) ?? fallback2;
-  const draw7 = () => {
+  const draw8 = () => {
     const s2 = getStrings();
     const stop = attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal";
     const ruleMode = attr16("data-kp-trace-rule", "chip");
@@ -63372,14 +63510,14 @@ function attachOne8(el16) {
       hops = next2;
       state12 = "ready";
       kept = 0;
-      draw7();
+      draw8();
       kept = stage.offsetHeight;
     },
     setState(next2, options = {}) {
       if (state12 === "ready" && stage.offsetHeight > 0) kept = stage.offsetHeight;
       state12 = next2;
       message = options.message ?? "";
-      draw7();
+      draw8();
     },
     text: () => traceText(hops, attr16("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
@@ -63388,7 +63526,7 @@ function attachOne8(el16) {
     busy?.remove();
     HANDLES8.delete(el16);
   });
-  const watch2 = new MutationObserver(draw7);
+  const watch2 = new MutationObserver(draw8);
   watch2.observe(el16, {
     attributes: true,
     attributeFilter: [
@@ -63417,7 +63555,7 @@ function attachOne8(el16) {
     );
     undo.push(off);
   }
-  draw7();
+  draw8();
   return () => undo.reverse().forEach((u) => u());
 }
 function attachTraces(root = document) {
@@ -66905,10 +67043,10 @@ function tileFor(gallery, item) {
     play.setAttribute("aria-hidden", "true");
     open4.append(play);
   }
-  const words2 = item.uploader || item.caption;
-  if (attr9(el16, "data-kp-caption", "hover") !== "none" && words2) {
+  const words3 = item.uploader || item.caption;
+  if (attr9(el16, "data-kp-caption", "hover") !== "none" && words3) {
     const caption = make26(doc, "span", "kp-gallery__caption");
-    caption.textContent = words2;
+    caption.textContent = words3;
     open4.append(caption);
   }
   open4.addEventListener("click", () => gallery.openItem(item.id));
@@ -68050,10 +68188,10 @@ var init_controller26 = __esm({
         this.host.removeAttribute("data-kp-dragging");
       }
       /** @param {HTMLInputElement} box @param {string} words */
-      invalid(box, words2) {
+      invalid(box, words3) {
         box.setAttribute("aria-invalid", "true");
         box.setAttribute("aria-describedby", this.why.id);
-        this.why.textContent = words2;
+        this.why.textContent = words3;
         this.why.hidden = false;
         return false;
       }
@@ -68274,8 +68412,8 @@ function wordsBefore(field2) {
   const before = [];
   for (let n = field2.previousSibling; n && before.length < NAME_WORDS; n = n.previousSibling) {
     if (n.nodeType !== Node.TEXT_NODE) break;
-    const words2 = (n.textContent ?? "").trim().split(/\s+/).filter(Boolean);
-    before.unshift(...words2.reverse().slice(0, NAME_WORDS - before.length).reverse());
+    const words3 = (n.textContent ?? "").trim().split(/\s+/).filter(Boolean);
+    before.unshift(...words3.reverse().slice(0, NAME_WORDS - before.length).reverse());
   }
   return before;
 }
@@ -69275,7 +69413,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       if (index === 0) li.dataset.kpRunsNext = "";
       return li;
     };
-    const draw7 = () => {
+    const draw8 = () => {
       const shown5 = expanded ? all : all.slice(0, count2);
       let rows;
       if (state12 === "loading" && shown5.length === 0) {
@@ -69317,7 +69455,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
       }
     };
     const sync3 = () => {
-      draw7();
+      draw8();
       paintNote2();
       el16.dataset.kpState = state12;
       if (state12 === "loading" && !busy) {
@@ -69359,11 +69497,11 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     };
     const onMore = () => {
       expanded = !expanded;
-      draw7();
+      draw8();
     };
     el16.addEventListener("click", onClick);
     button6.addEventListener("click", onMore);
-    const tick6 = Number.isFinite(fixed) || nowOption ? 0 : window.setInterval(() => state12 === "ready" && draw7(), 6e4);
+    const tick6 = Number.isFinite(fixed) || nowOption ? 0 : window.setInterval(() => state12 === "ready" && draw8(), 6e4);
     const initial = (el16.dataset.kpRunsValues ?? "").split(",").map((v) => v.trim()).filter(Boolean);
     if (el16.dataset.kpState === "loading") handle.setState("loading");
     else handle.set(initial);
@@ -69407,8 +69545,8 @@ function clock2(text, fallback2) {
   return parseTime(text ?? "") ?? /** @type {{ hour: number, minute: number }} */
   parseTime(fallback2);
 }
-function registerSnoozeWords(name, words2) {
-  WORD_SETS.set(name, words2);
+function registerSnoozeWords(name, words3) {
+  WORD_SETS.set(name, words3);
 }
 function snoozeWords(el16) {
   const set = WORD_SETS.get(el16.getAttribute("data-kp-snooze-words") ?? "") ?? {};
@@ -70482,9 +70620,9 @@ function placeChrome(g) {
 }
 function sayHint(g) {
   const { options: o, strings: s2 } = g;
-  const words2 = [s2.graphHint, ...o.zoom ? [s2.graphZoomHint] : [], ...o.detail ? [s2.graphDetailHint] : []].join(" ");
-  if (g.hint.textContent !== words2) g.hint.textContent = words2;
-  g.svg.setAttribute("aria-label", `${g.el.getAttribute("aria-label") ?? s2.graphUnnamed}. ${words2}`);
+  const words3 = [s2.graphHint, ...o.zoom ? [s2.graphZoomHint] : [], ...o.detail ? [s2.graphDetailHint] : []].join(" ");
+  if (g.hint.textContent !== words3) g.hint.textContent = words3;
+  g.svg.setAttribute("aria-label", `${g.el.getAttribute("aria-label") ?? s2.graphUnnamed}. ${words3}`);
 }
 function renderDetail(g) {
   const { panel } = g;
@@ -70777,10 +70915,10 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
     );
     const wrapped = below ? wraps.get(id) : void 0;
     if (wrapped) {
-      for (const [row, words2] of wrapped.entries()) {
+      for (const [row, words3] of wrapped.entries()) {
         const tspan = svgEl(doc, "tspan", { x: lx.toFixed(1) });
         if (row > 0) tspan.setAttribute("dy", "16");
-        tspan.textContent = words2;
+        tspan.textContent = words3;
         text.append(tspan);
       }
     } else text.textContent = n.label;
@@ -70861,11 +70999,11 @@ function setGraphData(el16, data) {
   drawGraph(g);
   if (g.selected.size !== before || g.detail !== detailBefore) graphChanged(g);
 }
-function setGraphState(el16, state12, words2 = "", { text = "", art = null } = {}) {
+function setGraphState(el16, state12, words3 = "", { text = "", art = null } = {}) {
   const g = graphs.get(el16);
   if (!g) return;
   g.state = state12;
-  g.words = words2;
+  g.words = words3;
   g.text = text;
   g.art = art;
   drawGraph(g);
@@ -71466,15 +71604,15 @@ function undress(el16) {
 function dress(el16) {
   const kind = kindOf3(el16);
   const name = kind ? piecesOf(el16) : "";
-  const draw7 = DRAW[name];
-  if (!kind || !draw7 || el16.getClientRects().length === 0) {
+  const draw8 = DRAW[name];
+  if (!kind || !draw8 || el16.getClientRects().length === 0) {
     if (el16.hasAttribute(PIECES_ATTRIBUTE)) undress(el16);
     return false;
   }
   const size2 = `${name} ${kind} ${el16.clientWidth}x${el16.clientHeight}`;
   if (measured.get(el16) === size2 && el16.querySelector(":scope > .kp-pieces")) return true;
   for (const old of el16.querySelectorAll(":scope > .kp-pieces")) old.remove();
-  const { html, q } = draw7(el16, kind);
+  const { html, q } = draw8(el16, kind);
   const box = document.createElement("span");
   box.className = `kp-pieces kp-pieces--${kind}`;
   box.setAttribute("aria-hidden", "true");
@@ -71757,9 +71895,9 @@ function fillRow(list, row, item) {
       const gap = el10("kp-claim__gap");
       const glyph3 = el10("kp-claim__glyph", "span");
       glyph3.setAttribute("aria-hidden", "true");
-      const words2 = el10("kp-claim__nobody", "span");
-      words2.textContent = s2.claimNobody;
-      gap.append(glyph3, words2);
+      const words3 = el10("kp-claim__nobody", "span");
+      words3.textContent = s2.claimNobody;
+      gap.append(glyph3, words3);
       people.append(gap);
     } else {
       for (const p of by) {
@@ -74498,16 +74636,16 @@ var init_state27 = __esm({
 function palette2(root) {
   if (attr12(root, "look", "plate") === "theme") {
     const cs = getComputedStyle(root);
-    const ink = cs.color;
+    const ink2 = cs.color;
     const ground = cs.getPropertyValue("--card").trim() || "#ffffff";
-    if (qrContrast(ink, ground) >= THEME_CONTRAST) return { ink, ground, look: "theme" };
+    if (qrContrast(ink2, ground) >= THEME_CONTRAST) return { ink: ink2, ground, look: "theme" };
   }
   return { ink: QR_PLATE.ink, ground: QR_PLATE.ground, look: "plate" };
 }
 function drawSvg(root, m) {
   const quiet = Math.max(0, Number(attr12(root, "quiet", QUIET2)) || Number(QUIET2));
   const shape = attr12(root, "modules", "square") === "round" ? "round" : "square";
-  const { ink, ground } = palette2(root);
+  const { ink: ink2, ground } = palette2(root);
   const total = m.size + 2 * quiet;
   const ns = "http://www.w3.org/2000/svg";
   const svg2 = document.createElementNS(ns, "svg");
@@ -74522,13 +74660,13 @@ function drawSvg(root, m) {
   back.setAttribute("fill", ground);
   const path = document.createElementNS(ns, "path");
   path.setAttribute("d", modulesPath(m.rows, quiet, shape));
-  path.setAttribute("fill", ink);
+  path.setAttribute("fill", ink2);
   svg2.append(back, path);
   return svg2;
 }
 function drawCanvas(root, m) {
   const quiet = Math.max(0, Number(attr12(root, "quiet", QUIET2)) || Number(QUIET2));
-  const { ink, ground } = palette2(root);
+  const { ink: ink2, ground } = palette2(root);
   const total = m.size + 2 * quiet;
   const scale = Math.max(CANVAS_SCALE_MIN, Math.round((window.devicePixelRatio || 1) * CANVAS_SCALE));
   const canvas = document.createElement("canvas");
@@ -74538,7 +74676,7 @@ function drawCanvas(root, m) {
   if (ctx) {
     ctx.fillStyle = ground;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = ink;
+    ctx.fillStyle = ink2;
     m.rows.forEach((row, y) => row.forEach((on, x) => on && ctx.fillRect((x + quiet) * scale, (y + quiet) * scale, scale, scale)));
   }
   canvas.setAttribute("aria-hidden", "true");
@@ -76153,15 +76291,15 @@ function ensureParts4(root) {
   field2.setAttribute("aria-label", s2.logviewerSearch);
   field2.placeholder = s2.logviewerSearchHint;
   const matches2 = el14("kp-logviewer__matches", "span");
-  const stepper = (step, glyph3, words2) => {
+  const stepper = (step, glyph3, words3) => {
     const button6 = (
       /** @type {HTMLButtonElement} */
       el14("kp-button kp-button--ghost kp-button--sm kp-logviewer__step", "button")
     );
     button6.type = "button";
     button6.setAttribute("data-kp-logviewer-step", step);
-    button6.setAttribute("aria-label", words2);
-    button6.title = words2;
+    button6.setAttribute("aria-label", words3);
+    button6.title = words3;
     const mark = el14("kp-logviewer__glyph", "span");
     mark.setAttribute("aria-hidden", "true");
     mark.textContent = glyph3;
@@ -76200,7 +76338,7 @@ function ensureParts4(root) {
   time.setAttribute("role", "radiogroup");
   time.setAttribute("aria-label", s2.logviewerTimeLabel);
   for (
-    const [value, words2] of
+    const [value, words3] of
     /** @type {const} */
     [
       ["time", s2.logviewerTimeShort],
@@ -76216,7 +76354,7 @@ function ensureParts4(root) {
     item.setAttribute("role", "radio");
     item.setAttribute("data-value", value);
     const label = el14("kp-segmented__label", "span");
-    label.textContent = words2;
+    label.textContent = words3;
     item.append(label);
     time.append(item);
   }
@@ -76229,7 +76367,7 @@ function ensureParts4(root) {
     el14("kp-field__input kp-logviewer__level", "select")
   );
   level.id = `${id}-level`;
-  for (const [value, words2] of [
+  for (const [value, words3] of [
     ["debug", s2.logviewerLevelAll],
     ["info", s2.logviewerLevelFrom("info")],
     ["warning", s2.logviewerLevelFrom("warning")],
@@ -76237,7 +76375,7 @@ function ensureParts4(root) {
   ]) {
     const option = document.createElement("option");
     option.value = value;
-    option.textContent = words2;
+    option.textContent = words3;
     level.append(option);
   }
   levelWrap.append(levelLabel, level);
@@ -77022,10 +77160,10 @@ function wordPairs(lines) {
     let k = j;
     while (k < lines.length && lines[k].kind === "added") k += 1;
     for (let p = 0; p < Math.min(j - i, k - j); p += 1) {
-      const words2 = diffWords(lines[i + p].text, lines[j + p].text);
-      if (words2.changed) {
-        out.set(lines[i + p], words2.old);
-        out.set(lines[j + p], words2.new);
+      const words3 = diffWords(lines[i + p].text, lines[j + p].text);
+      if (words3.changed) {
+        out.set(lines[i + p], words3.old);
+        out.set(lines[j + p], words3.new);
       }
     }
     i = Math.max(k, i + 1);
@@ -77225,7 +77363,7 @@ function lineEl(line, segments) {
   row.append(number, sign, textOf3(line.text, segments));
   return row;
 }
-function rowButton(className, words2) {
+function rowButton(className, words3) {
   const button6 = (
     /** @type {HTMLButtonElement} */
     el15(`${className} kp-diff__row-button`, "button")
@@ -77234,7 +77372,7 @@ function rowButton(className, words2) {
   const glyph3 = el15("kp-diff__row-glyph", "span");
   glyph3.setAttribute("aria-hidden", "true");
   const label = el15("kp-diff__row-label", "span");
-  label.textContent = words2;
+  label.textContent = words3;
   button6.append(glyph3, el15("kp-diff__row-gap", "span"), label);
   return button6;
 }
@@ -77255,12 +77393,12 @@ function fillBody(root, st, file, body) {
     return;
   }
   const keep = count(root, "context", DIFF_CONTEXT);
-  const words2 = attr15(root, "words", "on") !== "off";
+  const words3 = attr15(root, "words", "on") !== "off";
   const cap = st.all.has(file.path) ? 0 : count(root, "max-lines", DIFF_MAX_LINES);
   const surface = el15("kp-diff");
   let drawn2 = 0;
   let left = 0;
-  const draw7 = (line, pairs) => {
+  const draw8 = (line, pairs) => {
     if (cap > 0 && drawn2 >= cap) {
       left += 1;
       return;
@@ -77283,10 +77421,10 @@ function fillBody(root, st, file, body) {
       }
       surface.append(head);
     }
-    const pairs = words2 ? wordPairs(hunk.lines) : /* @__PURE__ */ new Map();
+    const pairs = words3 ? wordPairs(hunk.lines) : /* @__PURE__ */ new Map();
     for (const part7 of foldContext(hunk.lines, keep)) {
       if (part7.kind === "lines") {
-        for (const line of part7.lines) draw7(line, pairs);
+        for (const line of part7.lines) draw8(line, pairs);
         continue;
       }
       if (cap > 0 && drawn2 >= cap) {
@@ -77301,7 +77439,7 @@ function fillBody(root, st, file, body) {
       fold2.setAttribute("data-kp-diff-fold-lines", String(part7.lines.length));
       if (!open4) fold2.setAttribute("aria-label", s2.diffUnchangedName(part7.lines.length));
       surface.append(fold2);
-      if (open4) for (const line of part7.lines) draw7(line, pairs);
+      if (open4) for (const line of part7.lines) draw8(line, pairs);
     }
   });
   if (left > 0) {
@@ -77458,7 +77596,7 @@ function barEl(root, st) {
   bar.append(summary2);
   if (st.files.length > 1) {
     const tools = el15("kp-diffview__tools");
-    for (const [name, words2] of [
+    for (const [name, words3] of [
       ["expand", s2.diffExpandAll],
       ["collapse", s2.diffCollapseAll]
     ]) {
@@ -77467,7 +77605,7 @@ function barEl(root, st) {
         el15("kp-button kp-button--ghost kp-button--sm", "button")
       );
       button6.type = "button";
-      button6.textContent = words2;
+      button6.textContent = words3;
       button6.setAttribute("data-kp-diff-all", name);
       tools.append(button6);
     }
@@ -79818,13 +79956,10 @@ export {
   ALARM_CLOSE_EVENT,
   ALARM_OPEN_EVENT,
   ALARM_SECONDS,
-  ARRIVAL,
-  ARRIVALS,
   ATTENTION,
   BAR_CELL,
   BEFORE_STEP_EVENT,
   BEFORE_THEME_EVENT,
-  BOOT_PROGRESS,
   BULLETS,
   BULLETS_PICK_EVENT,
   BULLETS_RETRY_EVENT,
@@ -79839,7 +79974,6 @@ export {
   CARD_STATE,
   CARD_STATES,
   CARD_STATE_EVENT,
-  CARET_KNOB,
   CHOOSE_EVENT,
   CODE_FIELD,
   CODE_FIELD_CARET_EVENT,
@@ -79861,8 +79995,6 @@ export {
   CONNECTION_STATE_EVENT,
   CONTENTS,
   CONTENTS_EVENT,
-  COUNT_FROM_KNOB,
-  COUNT_KNOB,
   DEFAULT_THEME,
   DEPLIST,
   DEPLIST_COLLAPSE,
@@ -79870,7 +80002,6 @@ export {
   DISABLED_REASON,
   DOC_GLYPH,
   DOC_KINDS,
-  DONE_ATTRIBUTE,
   EFFECTS_ATTRIBUTE,
   FACETS,
   FACET_EVENT,
@@ -79887,13 +80018,10 @@ export {
   FOOTPRINT_HOSTS,
   FOOTPRINT_MAX,
   FRESHNESS_TIME_ZONE,
-  GLYPHS,
-  HEADLINE_ROUTINES,
   HIGHLIGHT_EVENT,
   HOLD_DELAY,
   HOLD_FAST,
   HOLD_SLOW,
-  HOOKS,
   HOVERCARD_ATTRIBUTE,
   HOVERCARD_CARD,
   HOVERCARD_EVENT,
@@ -79906,23 +80034,13 @@ export {
   JOBLINE,
   JOBLINE_EVENT,
   KEYS,
-  KNOBS,
   KPI_STRIP,
   KPI_TOGGLE,
   KPI_TOGGLE_EVENT,
   LAYOUT_COMMIT_EVENT,
   LAYOUT_EVENT,
   LEDE,
-  LIGHT,
-  LIGHT_FAR,
-  LIGHT_KNOB,
-  LIGHT_REACH,
-  LIGHT_SELECTOR,
   MARKDOWN_LIMIT,
-  MARQUEE_KNOB,
-  MARQUEE_PAUSE_KNOB,
-  MEASURE_KNOB,
-  MEMO_PREFIX,
   METER,
   MOD_CAP,
   NAMES_PROPERTY,
@@ -79945,14 +80063,6 @@ export {
   PIPELINE_MORE_EVENT,
   PIPELINE_OPEN_EVENT,
   PIPELINE_RETRY_EVENT,
-  POINTER,
-  POINTER_KNOB,
-  PRESS,
-  PRESS_HELD,
-  PRESS_HOLD,
-  PRESS_HOLD_MS,
-  PRESS_KNOB,
-  PRESS_SIZE,
   PREVIEW,
   PREVIEW_EVENT,
   PREVIEW_LEAVE_MS,
@@ -79988,11 +80098,6 @@ export {
   REGISTER_PATTERN_DEFAULT,
   REJECT_EVENT,
   REMOVE_EVENT,
-  REVEALS,
-  REVEAL_EVENT,
-  REVEAL_STATE,
-  ROOT_ATTRIBUTE,
-  ROUTINES,
   ROW_ACTIONS,
   ROW_KEYS,
   ROW_OPEN_EVENT,
@@ -80005,20 +80110,17 @@ export {
   STACKBAR,
   STACKBAR_PICK_EVENT,
   STACKBAR_RETRY_EVENT,
-  STATE,
   STEPLIST_EVENT,
   STEPLIST_SELECTOR,
   STEP_EVENT,
   STEP_ID_ATTRIBUTE,
   STEP_STATES,
   STORAGE_KEY,
-  SURFACES,
   TAB,
   TABBAR,
   TABBAR_HEIGHT_PROPERTY,
   TAB_COUNT_EVENT,
   TAB_COUNT_TONES,
-  TEXT_ATTRIBUTE,
   THEMES,
   THEME_ATTRIBUTE,
   THEME_EVENT,
@@ -80029,7 +80131,6 @@ export {
   TICK_MS2 as TICK_MS,
   TIMER_DISC,
   TIMER_DISC_LEFT,
-  TIMINGS,
   TOOLBAR,
   TOOLBAR_CLEAR_EVENT,
   TOOLBAR_REMOVE_EVENT,
@@ -80047,7 +80148,6 @@ export {
   UNDO_RESTORED_MS,
   UNDO_TOAST,
   UNDO_TOAST_EVENT,
-  UNKNOWN_EVENT,
   UNKNOWN_THEME_EVENT,
   UPDATE_PROPERTY,
   UPDATE_STYLE,
@@ -80522,7 +80622,6 @@ export {
   transferRate,
   undoToast,
   undo_toast_exports as undoToastExports,
-  unknownEffects,
   unmarkUpdating,
   unsaved,
   unsaved_exports as unsavedExports,
