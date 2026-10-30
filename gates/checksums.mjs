@@ -162,6 +162,7 @@ export const FILES = [
     'js/shortcuts.js',
     'js/lede.js',
     'js/footprint.js',
+    'js/controller.js',
     'js/live-options.js',
     'js/problems.js',
     'js/flash.js',

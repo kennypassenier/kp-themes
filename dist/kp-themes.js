@@ -25789,7 +25789,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       /** @type {HTMLElement | null} */
       picker.querySelector("[data-kp-colorpicker-value]")
     );
-    const report = (
+    const report2 = (
       /** @type {HTMLElement | null} */
       picker.querySelector("[data-kp-colorpicker-contrast]")
     );
@@ -25803,7 +25803,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       /** @type {HTMLInputElement | null} */
       picker.querySelector(`[data-kp-channel="${channel}"]`)
     );
-    const before = { swatch: swatch?.style.background ?? "", value: value?.textContent ?? "", report: report?.textContent ?? "" };
+    const before = { swatch: swatch?.style.background ?? "", value: value?.textContent ?? "", report: report2?.textContent ?? "" };
     const read = () => ({ h: Number(slider2("h")?.value ?? 0), s: Number(slider2("s")?.value ?? 0), l: Number(slider2("l")?.value ?? 0) });
     const update2 = (announce4) => {
       const colour = read();
@@ -25818,12 +25818,12 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       let ok = null;
       const s2 = getStrings();
       if (ground === null) {
-        if (report !== null) report.textContent = s2.contrastMissing(against);
+        if (report2 !== null) report2.textContent = s2.contrastMissing(against);
         delete picker.dataset.kpContrastOk;
       } else {
         ratio = contrast(hslToRgb(colour), ground);
         ok = meets(ratio, kind);
-        if (report !== null) report.textContent = s2.contrastReport(ratio.toFixed(2), against, ok ? s2.contrastPasses : s2.contrastFails);
+        if (report2 !== null) report2.textContent = s2.contrastReport(ratio.toFixed(2), against, ok ? s2.contrastPasses : s2.contrastFails);
         if (ok) picker.dataset.kpContrastOk = "";
         else delete picker.dataset.kpContrastOk;
       }
@@ -25860,7 +25860,7 @@ function attachColorPickers(root = document, { followTheme = true } = {}) {
       picker.style.removeProperty("--kp-color");
       if (swatch !== null) swatch.style.background = before.swatch;
       if (value !== null) value.textContent = before.value;
-      if (report !== null) report.textContent = before.report;
+      if (report2 !== null) report2.textContent = before.report;
       delete picker.dataset.kpContrastOk;
       handles12.delete(picker);
       delete picker.dataset.kpColorpickerAttached;
@@ -33957,6 +33957,113 @@ var init_bullets = __esm({
   }
 });
 
+// js/controller.js
+function hostsOf(root, selector) {
+  const self = root instanceof Element && root.matches(selector) ? [root] : [];
+  return (
+    /** @type {HTMLElement[]} */
+    [...self, ...root.querySelectorAll(selector)]
+  );
+}
+function controllerOf(host, Ctor) {
+  return (
+    /** @type {C | undefined} */
+    LIVE.get(Ctor)?.get(host)
+  );
+}
+function attachOne2(host, Ctor, options = {}) {
+  let live4 = LIVE.get(Ctor);
+  if (!live4) LIVE.set(Ctor, live4 = /* @__PURE__ */ new WeakMap());
+  const existing = (
+    /** @type {C | undefined} */
+    live4.get(host)
+  );
+  if (existing) return existing;
+  const controller = new Ctor(host, options);
+  live4.set(host, controller);
+  try {
+    controller.connect();
+    return controller;
+  } catch (error) {
+    controller.destroy();
+    report(error);
+    return void 0;
+  }
+}
+function attachAll(root, selector, Ctor, options = {}) {
+  const made6 = hostsOf(root, selector).filter((host) => !controllerOf(host, Ctor)).map((host) => attachOne2(host, Ctor, options)).filter((controller) => controller !== void 0);
+  return () => {
+    for (const controller of made6) controller.destroy();
+  };
+}
+var LIVE, report, Controller;
+var init_controller = __esm({
+  "js/controller.js"() {
+    "use strict";
+    LIVE = /* @__PURE__ */ new WeakMap();
+    report = (error) => typeof globalThis.reportError === "function" ? globalThis.reportError(error) : console.error(error);
+    Controller = class {
+      /**
+       * @param {HTMLElement} host
+       * @param {Record<string, unknown>} [options]
+       */
+      constructor(host, options = {}) {
+        this.host = host;
+        this.options = options;
+        this.teardown = [];
+        this.destroyed = false;
+      }
+      /**
+       * Register an undo step for `destroy()`.
+       * @template {() => void} F
+       * @param {F} undo
+       * @returns {F}
+       */
+      own(undo) {
+        this.teardown.push(undo);
+        return undo;
+      }
+      /**
+       * Add an event listener that `destroy()` removes.
+       * @param {EventTarget} target
+       * @param {string} type
+       * @param {EventListenerOrEventListenerObject} handler
+       * @param {AddEventListenerOptions | boolean} [options]
+       */
+      listen(target, type, handler, options) {
+        target.addEventListener(type, handler, options);
+        this.own(() => target.removeEventListener(type, handler, options));
+      }
+      /**
+       * Start an observer that `destroy()` disconnects.
+       * @template {{ disconnect(): void }} O
+       * @param {O} observer
+       * @returns {O}
+       */
+      observe(observer) {
+        this.own(() => observer.disconnect());
+        return observer;
+      }
+      /** Wire the host: listeners, observers, first render. Subclasses override it; the base has nothing to wire. */
+      connect() {
+      }
+      /** Undo everything the controller set up, newest first; an undo step that throws is reported and the rest still run. */
+      destroy() {
+        if (this.destroyed) return;
+        this.destroyed = true;
+        for (const undo of this.teardown.splice(0).reverse()) {
+          try {
+            undo();
+          } catch (error) {
+            report(error);
+          }
+        }
+        LIVE.get(this.constructor)?.delete(this.host);
+      }
+    };
+  }
+});
+
 // js/footprint.js
 var footprint_exports = {};
 __export(footprint_exports, {
@@ -33966,110 +34073,14 @@ __export(footprint_exports, {
   holdFootprint: () => holdFootprint
 });
 function holdFootprint(host) {
-  const existing = HELD.get(host);
-  if (existing) return existing;
-  let border = 0;
-  let content = 0;
-  let holding = false;
-  let ownInline = "";
-  let ownPriority = "";
-  let ownComputed = "";
-  const state2 = () => host.getAttribute("data-kp-state-covered") ?? (host.getAttribute("data-kp-state") === "failed" ? "error" : host.getAttribute("data-kp-state") ?? "ready");
-  let guess = 0;
-  const rowsHint = () => {
-    const given2 = Number.parseInt(host.getAttribute("data-kp-footprint-rows") ?? "", 10);
-    if (given2 > 0) return given2;
-    if (!host.matches("[data-kp-datatable]")) return 0;
-    const size2 = Number.parseInt(host.getAttribute("data-kp-page-size") ?? "", 10);
-    return size2 > 0 ? size2 : 10;
-  };
-  const cardRow = (rem) => {
-    if (!host.matches("[data-kp-datatable]") || !(host.hasAttribute("data-kp-cards") || host.querySelector("table[data-kp-cards]"))) return 0;
-    if (host.getBoundingClientRect().width > 40 * rem) return 0;
-    const lines = [...host.querySelectorAll("thead th")].filter((th) => (th.textContent ?? "").trim() !== "").length;
-    return lines > 0 ? (1.75 + lines * 2.5) * rem : 0;
-  };
-  const hasRows = () => !host.matches("[data-kp-datatable]") || host.querySelector("tbody > tr:not([data-kp-skeleton-row])") !== null;
-  const estimate = () => {
-    const rows = rowsHint();
-    if (!rows) return 0;
-    const view = host.ownerDocument.defaultView;
-    const rem = parseFloat(view?.getComputedStyle(host.ownerDocument.documentElement).fontSize ?? "16") || 16;
-    const raw = getComputedStyle(host).getPropertyValue("--kp-footprint-row").trim();
-    const unit2 = /^(\d+(?:\.\d+)?)(px|rem)?$/.exec(raw);
-    const row = unit2 ? Number(unit2[1]) * (unit2[2] === "px" ? 1 : rem) : cardRow(rem) || 2.75 * rem;
-    const inPlace = [...host.querySelectorAll("tbody, .kp-stateplate, [data-kp-datatable-empty]")].reduce(
-      (sum, e) => sum + (e.parentElement?.closest(".kp-stateplate, [data-kp-datatable-empty]") ? 0 : e.getBoundingClientRect().height),
-      0
-    );
-    return Math.max(0, host.getBoundingClientRect().height - inPlace) + rows * row;
-  };
-  const height = () => {
-    const loaded = getComputedStyle(host).boxSizing === "border-box" ? border : content;
-    return loaded || guess;
-  };
-  const release = () => {
-    guess = 0;
-    if (!holding) return;
-    holding = false;
-    if (ownInline) host.style.setProperty("min-block-size", ownInline, ownPriority);
-    else host.style.removeProperty("min-block-size");
-  };
-  const hold = () => {
-    if (!holding && !border && !guess) guess = estimate();
-    const wanted = height();
-    if (!wanted) return release();
-    if (!holding) {
-      ownInline = host.style.getPropertyValue("min-block-size");
-      ownPriority = host.style.getPropertyPriority("min-block-size");
-      ownComputed = ownInline ? "" : getComputedStyle(host).minBlockSize;
-      holding = true;
-    }
-    const own = ownInline || ownComputed;
-    const kept = own && own !== "auto" && own !== "normal" && parseFloat(own) !== 0 ? own : "";
-    const held2 = `min(${wanted}px, var(--kp-footprint-max, ${FOOTPRINT_MAX}))`;
-    host.style.setProperty("min-block-size", kept ? `max(${held2}, ${kept})` : held2);
-  };
-  const sync4 = () => HOLDING.has(state2()) ? hold() : release();
-  const sizes = new ResizeObserver((entries3) => {
-    if (!host.isConnected) return detach();
-    if (HOLDING.has(state2())) return;
-    if (!hasRows()) return;
-    const entry = entries3[entries3.length - 1];
-    const rect = host.getBoundingClientRect();
-    border = entry?.borderBoxSize?.[0]?.blockSize ?? rect.height;
-    content = entry?.contentBoxSize?.[0]?.blockSize ?? rect.height;
-  });
-  const states3 = new MutationObserver(sync4);
-  sizes.observe(host);
-  states3.observe(host, { attributes: true, attributeFilter: ["data-kp-state", "data-kp-state-covered"] });
-  sync4();
-  function detach() {
-    sizes.disconnect();
-    states3.disconnect();
-    release();
-    HELD.delete(host);
-  }
-  HELD.set(host, detach);
-  return detach;
+  const hold = attachOne2(host, FootprintHold);
+  return () => hold?.destroy();
 }
-function attachFootprints(root = document) {
-  const hosts = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(FOOTPRINT_HOSTS) ? [root] : [],
-      ...root.querySelectorAll(FOOTPRINT_HOSTS)
-    ]
-  );
-  const detaches = hosts.filter((host) => !HELD.has(host)).map(holdFootprint);
-  return () => {
-    for (const detach of detaches) detach();
-  };
-}
-var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, HELD;
+var FOOTPRINT_HOSTS, FOOTPRINT_MAX, HOLDING, STATE_ATTRIBUTES, DEFAULT_ROWS, ROW_REM, CARDS_BELOW_REM, CARD_FRAME_REM, CARD_LINE_REM, FALLBACK_REM_PX, FootprintHold, attachFootprints;
 var init_footprint = __esm({
   "js/footprint.js"() {
     "use strict";
+    init_controller();
     FOOTPRINT_HOSTS = [
       "[data-kp-matrix]",
       "[data-kp-heat]",
@@ -34097,7 +34108,143 @@ var init_footprint = __esm({
     ].join(", ");
     FOOTPRINT_MAX = "48rem";
     HOLDING = /* @__PURE__ */ new Set(["loading", "empty", "error"]);
-    HELD = /* @__PURE__ */ new WeakMap();
+    STATE_ATTRIBUTES = ["data-kp-state", "data-kp-state-covered"];
+    DEFAULT_ROWS = 10;
+    ROW_REM = 2.75;
+    CARDS_BELOW_REM = 40;
+    CARD_FRAME_REM = 1.75;
+    CARD_LINE_REM = 2.5;
+    FALLBACK_REM_PX = 16;
+    FootprintHold = class extends Controller {
+      /** @param {HTMLElement} host */
+      constructor(host) {
+        super(host);
+        this.border = 0;
+        this.content = 0;
+        this.guess = 0;
+        this.holding = false;
+        this.ownInline = "";
+        this.ownPriority = "";
+        this.ownComputed = "";
+        this.laidOut = false;
+      }
+      connect() {
+        this.observe(new ResizeObserver((entries3) => this.measure(entries3))).observe(this.host);
+        this.observe(new MutationObserver(() => this.sync())).observe(this.host, { attributes: true, attributeFilter: STATE_ATTRIBUTES });
+        this.own(() => this.release());
+        this.sync();
+      }
+      /**
+       * The host's state. The data table writes `loading`, `failed` and `ready` as its state, and `data-kp-state-covered` (`empty` or
+       * `error`) while its plate stands in the rows' place [states-check-1019]; the covered plate wins, because the table is `ready` with
+       * no rows when empty.
+       */
+      state() {
+        const covered = this.host.getAttribute("data-kp-state-covered");
+        if (covered !== null) return covered;
+        const own = this.host.getAttribute("data-kp-state");
+        return own === "failed" ? "error" : own ?? "ready";
+      }
+      sync() {
+        if (HOLDING.has(this.state())) this.hold();
+        else this.release();
+      }
+      /** @param {ResizeObserverEntry[]} entries */
+      measure(entries3) {
+        if (!this.host.isConnected) return this.destroy();
+        const entry = entries3[entries3.length - 1];
+        if (!this.laidOut && (entry?.contentRect.height ?? 0) > 0) {
+          this.laidOut = true;
+          if (HOLDING.has(this.state())) return this.sync();
+        }
+        if (HOLDING.has(this.state())) return;
+        if (!this.hasRows()) return;
+        const rect = this.host.getBoundingClientRect();
+        this.border = entry?.borderBoxSize?.[0]?.blockSize ?? rect.height;
+        this.content = entry?.contentBoxSize?.[0]?.blockSize ?? rect.height;
+      }
+      hold() {
+        if (!this.holding && !this.border && !this.guess && this.laidOut) this.guess = this.estimate();
+        const wanted = this.height();
+        if (!wanted) return this.release();
+        const style = this.host.style;
+        if (!this.holding) {
+          this.ownInline = style.getPropertyValue("min-block-size");
+          this.ownPriority = style.getPropertyPriority("min-block-size");
+          this.ownComputed = this.ownInline ? "" : getComputedStyle(this.host).minBlockSize;
+          this.holding = true;
+        }
+        const own = this.ownInline || this.ownComputed;
+        const kept = own && own !== "auto" && own !== "normal" && parseFloat(own) !== 0 ? own : "";
+        const held2 = `min(${wanted}px, var(--kp-footprint-max, ${FOOTPRINT_MAX}))`;
+        style.setProperty("min-block-size", kept ? `max(${held2}, ${kept})` : held2);
+      }
+      release() {
+        this.guess = 0;
+        if (!this.holding) return;
+        this.holding = false;
+        if (this.ownInline) this.host.style.setProperty("min-block-size", this.ownInline, this.ownPriority);
+        else this.host.style.removeProperty("min-block-size");
+      }
+      /** The height to hold, for the host's own box model: the loaded height, else the first-load estimate. */
+      height() {
+        const loaded = getComputedStyle(this.host).boxSizing === "border-box" ? this.border : this.content;
+        return loaded || this.guess;
+      }
+      /** Whether a table has rows of data to be measured: a table with none has no loaded height to remember. */
+      hasRows() {
+        return !this.host.matches("[data-kp-datatable]") || this.host.querySelector("tbody > tr:not([data-kp-skeleton-row])") !== null;
+      }
+      /**
+       * A host that fails or turns up empty on its very first read has no loaded height to hold [statestwo-1019, almanac 26]. A table
+       * (and any host that says so with `data-kp-footprint-rows="N"`) is held at what N rows would make it: its own frame (toolbar, head
+       * and foot: the host less what stands in the rows' place) plus N rows of `--kp-footprint-row`; N is the hint, else the table's
+       * `data-kp-page-size`, else DEFAULT_ROWS. A loaded height, once there is one, wins.
+       */
+      estimate() {
+        const rows = this.rowsHint();
+        if (!rows) return 0;
+        return Math.max(0, this.host.getBoundingClientRect().height - this.inPlace()) + rows * this.rowHeight();
+      }
+      rowsHint() {
+        const given2 = Number.parseInt(this.host.getAttribute("data-kp-footprint-rows") ?? "", 10);
+        if (given2 > 0) return given2;
+        if (!this.host.matches("[data-kp-datatable]")) return 0;
+        const size2 = Number.parseInt(this.host.getAttribute("data-kp-page-size") ?? "", 10);
+        return size2 > 0 ? size2 : DEFAULT_ROWS;
+      }
+      /** One row [px]: `--kp-footprint-row` when the page sets it, else a card in the card layout, else ROW_REM. */
+      rowHeight() {
+        const doc = this.host.ownerDocument;
+        const rem = parseFloat(doc.defaultView?.getComputedStyle(doc.documentElement).fontSize ?? "") || FALLBACK_REM_PX;
+        const raw = getComputedStyle(this.host).getPropertyValue("--kp-footprint-row").trim();
+        const unit2 = /^(\d+(?:\.\d+)?)(px|rem)?$/.exec(raw);
+        if (unit2) return Number(unit2[1]) * (unit2[2] === "px" ? 1 : rem);
+        return this.cardRow(rem) || ROW_REM * rem;
+      }
+      /**
+       * What one row is as a card [px], or 0 when the table is not laid out as cards: the card layout is on while the table's own
+       * width is under CARDS_BELOW_REM and the markup asked for it with `data-kp-cards`.
+       * @param {number} rem
+       */
+      cardRow(rem) {
+        const host = this.host;
+        if (!host.matches("[data-kp-datatable]") || !(host.hasAttribute("data-kp-cards") || host.querySelector("table[data-kp-cards]"))) return 0;
+        if (host.getBoundingClientRect().width > CARDS_BELOW_REM * rem) return 0;
+        const lines = [...host.querySelectorAll("thead th")].filter((th) => (th.textContent ?? "").trim() !== "").length;
+        return lines > 0 ? (CARD_FRAME_REM + lines * CARD_LINE_REM) * rem : 0;
+      }
+      /** What stands in the rows' place now (skeleton rows, the plate, the empty slot) [px]: not frame. */
+      inPlace() {
+        const parts2 = this.host.querySelectorAll("tbody, .kp-stateplate, [data-kp-datatable-empty]");
+        let sum = 0;
+        for (const part7 of parts2) {
+          if (!part7.parentElement?.closest(".kp-stateplate, [data-kp-datatable-empty]")) sum += part7.getBoundingClientRect().height;
+        }
+        return sum;
+      }
+    };
+    attachFootprints = (root = document) => attachAll(root, FOOTPRINT_HOSTS, FootprintHold);
   }
 });
 
@@ -34839,7 +34986,7 @@ function rowSelectKeys(el16) {
 function rowSelect(el16) {
   return HANDLES2.get(el16) ?? null;
 }
-function attachOne2(el16, options = {}) {
+function attachOne3(el16, options = {}) {
   if (HANDLES2.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const isRange = () => (options.range ?? el16.getAttribute("data-kp-select-range") ?? "shift") !== "off";
@@ -35160,7 +35307,7 @@ function attachRowSelect(root = document, options = {}) {
   const undo = [];
   for (const el16 of found) {
     if (el16.getAttribute("data-kp-select-keys") === "false") continue;
-    undo.push(attachOne2(el16, options));
+    undo.push(attachOne3(el16, options));
   }
   return () => undo.forEach((u) => u());
 }
@@ -35494,7 +35641,7 @@ function sync(bar, memory) {
     );
   }
 }
-function attachOne3(bar, options) {
+function attachOne4(bar, options) {
   if (MEMORY6.has(bar)) return () => void 0;
   const doc = bar.ownerDocument;
   const placement = options.placement ?? bar.getAttribute("data-kp-placement") ?? "sticky-top";
@@ -35649,7 +35796,7 @@ function attachSelectionBars(root = document, options = {}) {
       ...root.querySelectorAll(SELECTION)
     ]
   );
-  const undo = bars.map((bar) => attachOne3(bar, options));
+  const undo = bars.map((bar) => attachOne4(bar, options));
   return () => undo.forEach((u) => u());
 }
 function setSelection(bar, items, options = {}) {
@@ -35780,7 +35927,7 @@ __export(newpill_exports, {
 function newPill(el16) {
   return HANDLES3.get(el16) ?? null;
 }
-function attachOne4(el16, options) {
+function attachOne5(el16, options) {
   if (HANDLES3.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const view = doc.defaultView;
@@ -36019,7 +36166,7 @@ function attachNewPills(root = document, options = {}) {
       ...root.querySelectorAll(FOLLOW)
     ]
   );
-  const undo = found.map((el16) => attachOne4(el16, options));
+  const undo = found.map((el16) => attachOne5(el16, options));
   return () => undo.forEach((u) => u());
 }
 var FOLLOW, FOLLOW_EVENT, NEWPILL_JUMP_EVENT, FOLLOW_THRESHOLD, NEWPILL_SAY_MS, HANDLES3, isRow, isTableRow, rowKeyOf;
@@ -36079,7 +36226,7 @@ function explainJson(text) {
     return { ok: false, why, line, column };
   }
 }
-function attachOne5(area, options) {
+function attachOne6(area, options) {
   if (HANDLES4.has(area)) return () => void 0;
   const doc = area.ownerDocument;
   const view = doc.defaultView;
@@ -36480,7 +36627,7 @@ function attachJsonFields(root = document, options = {}) {
       ...root.querySelectorAll(JSON_FIELD)
     ]
   );
-  const undo = found.map((area) => attachOne5(area, options));
+  const undo = found.map((area) => attachOne6(area, options));
   return () => undo.forEach((u) => u());
 }
 var JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, JSON_CHECK_MS, JSON_MAX_ROWS, JSON_COPIED_MS, HANDLES4, serial4;
@@ -36889,7 +37036,7 @@ async function copy(el16, memory, button) {
   }
   view?.setTimeout(() => word.textContent = idle, REQUESTS_COPIED_MS);
 }
-function attachOne6(el16, given2) {
+function attachOne7(el16, given2) {
   if (MEMORY7.has(el16)) return () => void 0;
   const options = { ...readOptions(el16), ...given2 };
   const memory = { list: [], filter: "all", shown: options.max ?? REQUESTS_MAX, opened: /* @__PURE__ */ new Set(), closed: /* @__PURE__ */ new Set(), options, given: given2 };
@@ -36983,7 +37130,7 @@ function attachRequestInspectors(root = document, options = {}) {
       ...root.querySelectorAll(REQUESTS)
     ]
   );
-  const undo = found.map((el16) => attachOne6(el16, options));
+  const undo = found.map((el16) => attachOne7(el16, options));
   return () => undo.forEach((u) => u());
 }
 function setRequests(el16, requests) {
@@ -52661,10 +52808,10 @@ function sharedSize(done, total, base) {
   const scaled = new Intl.NumberFormat(void 0, { maximumFractionDigits: power === 0 ? 0 : 1 }).format(done / base ** power);
   return getStrings().jobLineBytes(scaled, all);
 }
-function jobLineText(report, { base = 1e3 } = {}) {
+function jobLineText(report2, { base = 1e3 } = {}) {
   const s2 = getStrings();
   const parts2 = [];
-  const { step, steps, done, total } = report;
+  const { step, steps, done, total } = report2;
   if (Number.isFinite(step) && Number.isFinite(steps) && /** @type {number} */
   steps > 0)
     parts2.push(s2.jobLineStep(
@@ -52692,16 +52839,16 @@ function jobLineText(report, { base = 1e3 } = {}) {
     void 0,
     { base }
   )));
-  let eta = report.etaSeconds;
-  if (!Number.isFinite(eta) && Number.isFinite(report.rate) && /** @type {number} */
-  report.rate > 0 && Number.isFinite(total) && Number.isFinite(done)) {
+  let eta = report2.etaSeconds;
+  if (!Number.isFinite(eta) && Number.isFinite(report2.rate) && /** @type {number} */
+  report2.rate > 0 && Number.isFinite(total) && Number.isFinite(done)) {
     eta = Math.max(
       0,
       /** @type {number} */
       total - /** @type {number} */
       done
     ) / /** @type {number} */
-    report.rate;
+    report2.rate;
   }
   if (Number.isFinite(eta)) parts2.push(s2.transferLeft(transferEta(
     /** @type {number} */
@@ -52717,12 +52864,12 @@ function stepPosition(list) {
   const index = at >= 0 ? at : waiting >= 0 ? waiting : items.length - 1;
   return { step: Math.max(0, index) + 1, steps: items.length };
 }
-function paint13(line, report) {
+function paint13(line, report2) {
   const base = (
     /** @type {1000 | 1024} */
     line.getAttribute("data-kp-bytes-base") === "1024" ? 1024 : 1e3
   );
-  const text = jobLineText(report, { base });
+  const text = jobLineText(report2, { base });
   if (line.textContent !== text) {
     line.textContent = text;
     line.dispatchEvent(new CustomEvent(JOBLINE_EVENT, { bubbles: true, detail: { text } }));
@@ -52733,16 +52880,16 @@ function listOf3(line) {
   const found = target ? document.querySelector(target) : null;
   return found?.matches(STEPLIST_SELECTOR) ? found : null;
 }
-function setJobLine(line, report) {
+function setJobLine(line, report2) {
   const next2 = { ...reports.get(line) ?? {} };
-  for (const [key, value] of Object.entries(report)) {
+  for (const [key, value] of Object.entries(report2)) {
     if (value === null || value === void 0) delete /** @type {any} */
     next2[key];
     else next2[key] = value;
   }
   reports.set(line, next2);
   const list = listOf3(line);
-  paint13(line, list && !("step" in report) ? { ...next2, ...stepPosition(list) } : next2);
+  paint13(line, list && !("step" in report2) ? { ...next2, ...stepPosition(list) } : next2);
 }
 function buildJobLine({ label, steplist } = {}) {
   const line = document.createElement("p");
@@ -52805,7 +52952,7 @@ function caretPosition(text, offset) {
   const line = before.split("\n").length;
   return { line, column: before.length - before.lastIndexOf("\n") };
 }
-function attachOne7(area) {
+function attachOne8(area) {
   if (HANDLES5.has(area)) return () => void 0;
   const doc = area.ownerDocument;
   const view = doc.defaultView;
@@ -53152,7 +53299,7 @@ function attachCodeFields(root = document) {
       ...root.querySelectorAll(CODE_FIELD)
     ]
   );
-  const undo = found.map((area) => attachOne7(area));
+  const undo = found.map((area) => attachOne8(area));
   return () => undo.forEach((u) => u());
 }
 var CODE_FIELD, CODE_FIELD_CHECK_EVENT, CODE_FIELD_STATE_EVENT, CODE_FIELD_CARET_EVENT, CODE_FIELD_CHECK_MS, CODE_FIELD_MAX_ROWS, HANDLES5, serial6;
@@ -53196,7 +53343,7 @@ function currentSection(boxes, offset, atEnd) {
   });
   return found;
 }
-function attachOne8(nav) {
+function attachOne9(nav) {
   if (HANDLES6.has(nav)) return () => void 0;
   const doc = nav.ownerDocument;
   const view = (
@@ -53449,7 +53596,7 @@ function attachContents(root = document) {
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(CONTENTS) ? [root] : [], ...root.querySelectorAll(CONTENTS)]
   );
-  const undo = found.map((nav) => attachOne8(nav));
+  const undo = found.map((nav) => attachOne9(nav));
   return () => undo.forEach((u) => u());
 }
 var CONTENTS, CONTENTS_EVENT, HANDLES6, serial7;
@@ -54465,7 +54612,7 @@ function severityWord2(key) {
     { critical: s2.quietCritical, warning: s2.quietWarning, info: s2.quietInfo, ok: s2.quietOk }[key] ?? key
   );
 }
-function attachOne9(root) {
+function attachOne10(root) {
   if (HANDLES8.has(root)) return () => void 0;
   const doc = root.ownerDocument;
   const s2 = getStrings();
@@ -54653,7 +54800,7 @@ function attachQuietHours(root = document) {
     /** @type {HTMLElement[]} */
     [...root instanceof HTMLElement && root.matches(QUIET) ? [root] : [], ...root.querySelectorAll(QUIET)]
   );
-  const undo = found.map((el16) => attachOne9(el16));
+  const undo = found.map((el16) => attachOne10(el16));
   return () => undo.forEach((u) => u());
 }
 var QUIET, QUIET_EVENT, QUIET_SEVERITIES, DEFAULT, serial9, HANDLES8;
@@ -57909,7 +58056,7 @@ function togglePressedKeys(anyMember) {
   const list = g ? g.members : [anyMember];
   return list.filter((m) => !m.hasAttribute("data-kp-toggle-all") && stateOf4(m) === "true").map(toggleKey);
 }
-function attachOne10(button, options) {
+function attachOne11(button, options) {
   if (HANDLES9.has(button)) return () => void 0;
   const doc = button.ownerDocument;
   const s2 = getStrings();
@@ -58376,7 +58523,7 @@ function attachToggles(root = document, options = {}) {
       ...root.querySelectorAll(TOGGLE)
     ]
   );
-  const undo = found.map((el16) => attachOne10(el16, options));
+  const undo = found.map((el16) => attachOne11(el16, options));
   return () => undo.forEach((u) => u());
 }
 var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, HANDLES9, stateOf4, toggleKey, storeKey, readStore, writeStore, made2;
@@ -58745,7 +58892,7 @@ function orderDependencies(items, { numbers: numbers2 = true } = {}) {
 function deplist(el16) {
   return HANDLES10.get(el16) ?? null;
 }
-function attachOne11(el16) {
+function attachOne12(el16) {
   if (HANDLES10.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
@@ -58985,11 +59132,11 @@ function attachDeplists(root = document) {
       ...root.querySelectorAll(DEPLIST)
     ]
   );
-  const undo = found.map((el16) => attachOne11(el16));
+  const undo = found.map((el16) => attachOne12(el16));
   return () => undo.forEach((u) => u());
 }
 function setDeplist(el16, items) {
-  if (!HANDLES10.has(el16)) attachOne11(el16);
+  if (!HANDLES10.has(el16)) attachOne12(el16);
   HANDLES10.get(el16)?.set(items);
 }
 var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES10, made3;
@@ -59057,7 +59204,7 @@ function traceText(hops, stop = "first-refusal") {
 function trace(el16) {
   return HANDLES11.get(el16) ?? null;
 }
-function attachOne12(el16) {
+function attachOne13(el16) {
   if (HANDLES11.has(el16)) return () => void 0;
   const doc = el16.ownerDocument;
   const undo = [];
@@ -59241,11 +59388,11 @@ function attachTraces(root = document) {
       ...root.querySelectorAll(TRACE)
     ]
   );
-  const undo = found.map((el16) => attachOne12(el16));
+  const undo = found.map((el16) => attachOne13(el16));
   return () => undo.forEach((u) => u());
 }
 function setTrace(el16, hops) {
-  if (!HANDLES11.has(el16)) attachOne12(el16);
+  if (!HANDLES11.has(el16)) attachOne13(el16);
   HANDLES11.get(el16)?.set(hops);
 }
 var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES11, made4;
@@ -61003,7 +61150,7 @@ function attachAutosize(root = document, options = {}) {
         const most = rows === null ? "none" : `${Math.ceil(Math.min(rows * lh + chrome, cap ?? Number.POSITIVE_INFINITY))}px`;
         area.style.setProperty("--kp-autosize-max", most);
         const result2 = fitTextarea(area, { minRows: minRows(), maxRows: rows, ...cap !== void 0 ? { maxPx: cap } : {}, apply: false });
-        report(result2.height, result2.lines, result2.capped);
+        report2(result2.height, result2.lines, result2.capped);
         return;
       }
       area.style.removeProperty("--kp-autosize-min");
@@ -61015,9 +61162,9 @@ function attachAutosize(root = document, options = {}) {
         keepPx: shrinks() ? 0 : tallest
       });
       tallest = Math.max(tallest, result.height);
-      report(result.height, result.lines, result.capped);
+      report2(result.height, result.lines, result.capped);
     };
-    const report = (height, lines, capped) => {
+    const report2 = (height, lines, capped) => {
       area.toggleAttribute("data-kp-autosize-capped", capped);
       if (height === lastHeight) return;
       lastHeight = height;
@@ -72477,7 +72624,7 @@ var auto_exports = {};
 __export(auto_exports, {
   NEEDS: () => NEEDS,
   READY_ATTRIBUTE: () => READY_ATTRIBUTE,
-  attachAll: () => attachAll
+  attachAll: () => attachAll2
 });
 
 // js/no-flash.js
@@ -73371,7 +73518,7 @@ var drawing = (root, drawn2, attach) => {
     watch2.disconnect();
   }
 };
-function attachAll(root = document) {
+function attachAll2(root = document) {
   restoreRemembered(root);
   const detaches = [
     attachRemembered(root),
@@ -73441,7 +73588,7 @@ if (typeof document !== "undefined") {
     }
   }
   const start = () => {
-    const attached3 = attachAll();
+    const attached3 = attachAll2();
     attached3.ready.then(() => document.documentElement.setAttribute(READY_ATTRIBUTE, attached3.modules.join(" ")));
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true });
@@ -73539,22 +73686,22 @@ function scriptSide() {
 function diagnose(stylesheet, script, strings = getStrings()) {
   const onlyInStylesheet = stylesheet.themes.filter((name) => !script.themes.includes(name));
   const onlyInScript = script.themes.filter((name) => !stylesheet.themes.includes(name));
-  const report = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
-  if (stylesheet.version === null) return report("no-version", strings.diagnosticsNoVersion);
+  const report2 = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
+  if (stylesheet.version === null) return report2("no-version", strings.diagnosticsNoVersion);
   const order2 = compareVersions(stylesheet.version, script.version ?? "");
   if (order2 === null || order2 === 0) {
-    if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report("match", strings.diagnosticsMatch);
-    return report("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
+    if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report2("match", strings.diagnosticsMatch);
+    return report2("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
   }
-  if (order2 < 0) return report("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
-  return report("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
+  if (order2 < 0) return report2("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
+  return report2("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
 }
 function diagnostics({ root, strings } = {}) {
   return diagnose(stylesheetSide({ root }), scriptSide(), strings ?? getStrings());
 }
 function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
   const s2 = strings ?? getStrings();
-  const report = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
+  const report2 = diagnose(stylesheet ?? stylesheetSide({ root }), script ?? scriptSide(), s2);
   const unknown = s2.diagnosticsUnknownVersion;
   const heading = document.createElement("h2");
   heading.textContent = s2.diagnosticsHeading;
@@ -73586,29 +73733,29 @@ function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
   thead.append(head);
   const tbody = document.createElement("tbody");
   tbody.append(
-    row(s2.diagnosticsVersion, report.stylesheet.version ?? unknown, report.script.version ?? unknown, "version"),
-    row(s2.diagnosticsThemes, report.stylesheet.themes.join(" "), report.script.themes.join(" "), "themes"),
+    row(s2.diagnosticsVersion, report2.stylesheet.version ?? unknown, report2.script.version ?? unknown, "version"),
+    row(s2.diagnosticsThemes, report2.stylesheet.themes.join(" "), report2.script.themes.join(" "), "themes"),
     row(
       s2.diagnosticsEffects,
       "\u2014",
-      report.script.unknownEffects?.length ? report.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
+      report2.script.unknownEffects?.length ? report2.script.unknownEffects.join(" ") : s2.diagnosticsEffectsNone,
       "effects"
     )
   );
   table.append(thead, tbody);
   const verdict = document.createElement("p");
-  verdict.className = report.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
+  verdict.className = report2.status === "match" ? "kp-alert kp-alert--success" : "kp-alert kp-alert--warning";
   verdict.dataset.kpDiagnostic = "verdict";
-  verdict.dataset.kpStatus = report.status;
-  verdict.textContent = report.verdict;
+  verdict.dataset.kpStatus = report2.status;
+  verdict.textContent = report2.verdict;
   const detail = document.createElement("ul");
   detail.dataset.kpDiagnostic = "detail";
   for (
     const [names, sentence2] of
     /** @type {[string[], (n: string) => string][]} */
     [
-      [report.onlyInStylesheet, s2.diagnosticsOnlyInStylesheet],
-      [report.onlyInScript, s2.diagnosticsOnlyInScript]
+      [report2.onlyInStylesheet, s2.diagnosticsOnlyInStylesheet],
+      [report2.onlyInScript, s2.diagnosticsOnlyInScript]
     ]
   ) {
     if (names.length === 0) continue;
@@ -73617,7 +73764,7 @@ function renderDiagnostics(target, { root, stylesheet, script, strings } = {}) {
     detail.append(li);
   }
   target.replaceChildren(heading, verdict, table, detail);
-  return report;
+  return report2;
 }
 
 // kp-themes-entry.js
@@ -73754,7 +73901,7 @@ function attachLazyRegisters({ pattern = REGISTER_PATTERN, hold = true, prune = 
   const doc = root?.ownerDocument ?? document;
   const html = root ?? doc.documentElement;
   const options = { pattern, doc };
-  const report = (error) => console.error(error instanceof Error ? error.message : error);
+  const report2 = (error) => console.error(error instanceof Error ? error.message : error);
   const onBefore = (e) => {
     if (!hold || e.defaultPrevented) return;
     const { theme } = (
@@ -73775,14 +73922,14 @@ function attachLazyRegisters({ pattern = REGISTER_PATTERN, hold = true, prune = 
       },
       (error) => {
         if (element.getAttribute(PENDING_THEME_ATTRIBUTE) === theme) element.removeAttribute(PENDING_THEME_ATTRIBUTE);
-        report(error);
+        report2(error);
       }
     );
   };
   html.addEventListener(BEFORE_THEME_EVENT, onBefore);
   const unsubscribe = onThemeChange(
     (theme, { previous }) => {
-      ensureRegister(theme, options).catch(report);
+      ensureRegister(theme, options).catch(report2);
       if (prune && previous && previous !== theme) {
         const link = registerLink(previous, options);
         if (link) {
@@ -73795,7 +73942,7 @@ function attachLazyRegisters({ pattern = REGISTER_PATTERN, hold = true, prune = 
     },
     { root: html }
   );
-  ensureRegister(currentTheme({ root: html }), options).catch(report);
+  ensureRegister(currentTheme({ root: html }), options).catch(report2);
   return () => {
     html.removeEventListener(BEFORE_THEME_EVENT, onBefore);
     for (const el16 of [html, ...html.querySelectorAll(`[${PENDING_THEME_ATTRIBUTE}]`)]) el16.removeAttribute(PENDING_THEME_ATTRIBUTE);
@@ -74905,7 +75052,7 @@ export {
   attachActionTiles,
   attachAgo,
   attachAlarms,
-  attachAll,
+  attachAll2 as attachAll,
   attachAnchors,
   attachAttention,
   attachAutosize,

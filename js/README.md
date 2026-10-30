@@ -17,6 +17,10 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
   A part reads what an earlier part published with `const { … } = c`, reads what changes (`let` values) as `c.name`, and
   `context.js` types the whole context from the fields each part adds (`<Part>Fields`). The order of the calls is the order
   the code ran in before the split; keep it.
+- **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
+  module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
+  the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.

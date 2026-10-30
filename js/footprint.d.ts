@@ -15,4 +15,4 @@ export declare function holdFootprint(host: HTMLElement): () => void;
  * @param {ParentNode} [root]
  * @returns {() => void} detach
  */
-export declare function attachFootprints(root?: ParentNode): () => void;
+export declare const attachFootprints: (root?: ParentNode) => () => void;

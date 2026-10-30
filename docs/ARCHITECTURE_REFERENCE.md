@@ -47,6 +47,8 @@ js/effects/*.js      the hooks: headline, marks,│
                      measure, marquee, arrival  │
 js/as-of.js          a late module attaches to  │
                      the page as it was asked   │
+js/controller.js     the base every component   │
+                     class extends: attachAll   │
 js/sidenav.js        the side navigation        │
 js/forms.js          validation and its wording │
 js/tables.js         sorting, regions           │

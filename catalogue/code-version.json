@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "7b7abae111c73d4c",
+    "base": "1d39d664d7b267d6",
     "modules": {
         "js/ack-gate.js": { "digest": "79d0ae91bb3024b3", "when": "[data-kp-ack]" },
         "js/action-tiles.js": { "digest": "8b991575d50cd0aa", "when": ".kp-action" },
@@ -45,7 +45,7 @@
         "js/flash.js": { "digest": "044b7e057d3bd243", "when": "[data-kp-flash-button], [data-kp-post]" },
         "js/focus-steps.js": { "digest": "042ea0647eb664e0", "when": "[data-kp-focus-steps]" },
         "js/footprint.js": {
-            "digest": "bfb6d1a7530d2b76",
+            "digest": "7f5462d0ee338abf",
             "when": "[data-kp-matrix], [data-kp-heat], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-feed], [data-kp-gallery], [data-kp-availability], [data-kp-requests], [data-kp-pipeline], [data-kp-diffview], [data-kp-datatable], [data-kp-runs], [data-kp-gantt], [data-kp-sequencer], [data-kp-graph], [data-kp-week], [data-kp-chart], [data-kp-deplist], [data-kp-code], .kp-ops"
         },
         "js/forms.js": { "digest": "3ae2fd69f6eb6f31", "when": "[data-kp-form], [data-kp-submit], .kp-switch, [data-kp-formgrid-stage]" },
