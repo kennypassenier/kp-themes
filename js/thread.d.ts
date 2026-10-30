@@ -1,15 +1,4 @@
-/** A thread the page fills with setThread(). */
-export declare const THREAD = "[data-kp-thread]";
-/** Fired on the root when Retry (a failed list, or a message that was not sent) is pressed: `{ key? }`. */
-export declare const THREAD_RETRY_EVENT = "kp-thread-retry";
-/** Fired on the root when the Add button of an empty thread is pressed. */
-export declare const THREAD_ADD_EVENT = "kp-thread-add";
-/** Fired on the root when a message's own action is pressed: `{ key, id }`. */
-export declare const THREAD_ACTION_EVENT = "kp-thread-action";
-/** Fired on the root when a message is folded or shown whole: `{ key, expanded }`. */
-export declare const THREAD_FOLD_EVENT = "kp-thread-fold";
-/** The zone every time is written in. */
-export declare const THREAD_TIME_ZONE = "Europe/Brussels";
+export { THREAD, THREAD_RETRY_EVENT, THREAD_ADD_EVENT, THREAD_ACTION_EVENT, THREAD_FOLD_EVENT, THREAD_TIME_ZONE, threadOptions, dayLabel, groupMessages } from './thread/options.js';
 export type ThreadAttachment = {
     name: string;
     /**
@@ -78,49 +67,40 @@ export type ThreadSpec = {
      */
     label?: string;
 };
-export type Memory = {
-    spec: ThreadSpec;
-    height: number;
-    card: import('./busy-card.js').BusyCard | null;
-    drawn: boolean;
-    pending: ThreadSpec | null;
-    wired: boolean;
-    /**
-     * keys shown whole by the reader
-     */
-    expanded: Set<string>;
-    watcher: ResizeObserver | null;
-    /**
-     * the width the folds were last measured at
-     */
-    width: number;
-};
 /**
- * The options as the page wrote them: the spec first, then the attribute, then the default.
- * @param {HTMLElement} el @param {ThreadSpec} spec
+ * @typedef {object} ThreadAttachment
+ * @property {string} name
+ * @property {number} [size] bytes
+ * @property {string} [href]
+ * @typedef {object} ThreadMessage
+ * @property {string} key
+ * @property {'in' | 'out' | 'system'} dir
+ * @property {number} at ms
+ * @property {string} text
+ * @property {string} [sender] who wrote it (the mark and the header); `out` says "You" without it
+ * @property {string} [src] the sender's photo
+ * @property {ThreadAttachment[]} [attachments]
+ * @property {'sent' | 'sending' | 'failed'} [status]
+ * @property {string} [error] why a failed message was not sent
+ * @typedef {object} ThreadSpec
+ * @property {ThreadMessage[]} [messages]
+ * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
+ * @property {string} [message] the sentence of a failed thread
+ * @property {boolean} [retry] false leaves Retry out of a failed thread
+ * @property {string} [emptyTitle]
+ * @property {string} [emptyText]
+ * @property {boolean} [add] false leaves the Add button out of the empty thread
+ * @property {'oldest' | 'newest'} [order]
+ * @property {'newest' | 'full' | number} [fold]
+ * @property {number} [foldLines]
+ * @property {number} [group] minutes
+ * @property {boolean} [days]
+ * @property {'in' | 'both' | 'none'} [avatar]
+ * @property {'tinted' | 'plain' | 'filled'} [bubble]
+ * @property {{ id: string, label: string }[]} [actions]
+ * @property {string} [loadingWords]
+ * @property {string} [label] the thread's name for a screen reader
  */
-export declare function threadOptions(el: HTMLElement, spec: ThreadSpec): {
-    bubble: 'tinted' | 'plain' | 'filled';
-    order: 'oldest' | 'newest';
-    fold: number | "full" | "newest";
-    foldLines: number;
-    group: number;
-    days: boolean;
-    avatar: 'in' | 'both' | 'none';
-};
-/**
- * "Monday 13/10/2026".
- * @param {number} ms @param {string} locale
- */
-export declare function dayLabel(ms: number, locale: string): string;
-/**
- * Split messages (oldest first) into runs that share one header: the same
- * side and sender, the same day, each within `minutes` of the one before.
- * System lines stand alone.
- * @param {readonly ThreadMessage[]} messages @param {number} minutes
- * @returns {ThreadMessage[][]}
- */
-export declare function groupMessages(messages: readonly ThreadMessage[], minutes: number): ThreadMessage[][];
 /**
  * Draw (or redraw) a thread.
  * @param {HTMLElement} el the root, a `.kp-thread`
