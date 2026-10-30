@@ -55,6 +55,7 @@ import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import process from 'node:process';
 import * as esbuild from 'esbuild';
+import { declaredNames } from './bundle-names.mjs';
 import { stylesheets } from './stylesheets.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -109,11 +110,7 @@ export function declarations(read) {
     const out = new Map();
     for (const module of MODULES) {
         const source = read(module);
-        for (const match of source.matchAll(/^export\s+(?:async\s+)?(?:function|class|const|let|var)\s+([A-Za-z0-9_$]+)/gm)) {
-            const name = match[1];
-            if (!name) continue;
-            out.set(name, [...(out.get(name) ?? []), module]);
-        }
+        for (const name of declaredNames(module, source)) out.set(name, [...(out.get(name) ?? []), module]);
     }
     return out;
 }

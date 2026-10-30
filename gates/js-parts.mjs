@@ -15,7 +15,7 @@ const SEPARATE = new Set(['effects', 'vendor']);
  * Facades whose parts sit in a folder of another name, because the folder of their own name holds something else:
  * `js/effects/` is the hooks, each scanned as a module of its own, so the parts of `js/effects.js` are in `js/effects-core/`.
  */
-const PARTS_FOLDER = new Map([['effects', 'effects-core']]);
+export const PARTS_FOLDER = new Map([['effects', 'effects-core']]);
 
 /**
  * Every `.js` file under `dir`, relative to it, sorted.
