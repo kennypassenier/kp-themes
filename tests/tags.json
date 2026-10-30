@@ -320,6 +320,7 @@
         { "path": "js/notices.js", "tags": ["@component:overlays"], "why": "the notification centre [kpadopt5-ops]" },
         { "path": "js/notices/*.js", "tags": ["@component:overlays"], "why": "the notification centre [kpadopt5-ops]" },
         { "path": "js/question-card.js", "tags": ["@component:feedback"], "why": "the question card [kpadopt5-ops]" },
+        { "path": "js/question-card/*.js", "tags": ["@component:feedback"], "why": "the question card [kpadopt5-ops]" },
         { "path": "js/transfer.js", "tags": ["@component:feedback"], "why": "a transfer with its speed and the time left [kpadopt5-ops]" },
         { "path": "js/transfer/*.js", "tags": ["@component:feedback"], "why": "a transfer with its speed and the time left [kpadopt5-ops]" },
         {

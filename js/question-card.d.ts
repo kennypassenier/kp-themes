@@ -1,13 +1,4 @@
-/** A container of questions. */
-export declare const QUESTIONS = "[data-kp-questions]";
-/** Fired when an answer was chosen. */
-export declare const QUESTION_ANSWER_EVENT = "kp-question-answer";
-/** Fired when the time ran out. */
-export declare const QUESTION_EXPIRE_EVENT = "kp-question-expire";
-/** Fired when a finished card was dismissed. */
-export declare const QUESTION_DISMISS_EVENT = "kp-question-dismiss";
-/** Seconds before the end from which a card is urgent. */
-export declare const QUESTION_URGENT_AT = 30;
+export { QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_DISMISS_EVENT, QUESTION_URGENT_AT } from './question-card/values.js';
 export type QuestionAnswer = {
     value: string;
     label: string;
@@ -52,8 +43,37 @@ export type QuestionHandle = {
     answer: (value: string) => void;
     dismiss: () => void;
 };
-/** The handle of a card. @param {Element} element */
-export declare const questionOf: (element: Element) => (QuestionHandle & {
+/**
+ * @typedef {object} QuestionAnswer
+ * @property {string} value
+ * @property {string} label
+ * @property {string} [consequence] what this answer sets in motion
+ * @property {string} [outcome] what the card says once it is chosen and sent
+ * @property {'destructive' | 'primary' | ''} [tone] a destructive answer is drawn as one
+ * @typedef {object} QuestionSpec
+ * @property {string} id
+ * @property {string} question
+ * @property {string} [text]
+ * @property {number | string} deadline ISO or epoch ms
+ * @property {number | string} [asked]
+ * @property {QuestionAnswer[]} [answers] default: Allow and Stop
+ * @property {string} [defaultAnswer]
+ * @property {number} [urgentAt]
+ * @property {'keep' | 'remove'} [expired]
+ * @property {'bar' | 'ring' | 'text'} [countdown]
+ * @typedef {object} QuestionHandle
+ * @property {HTMLElement} element
+ * @property {string} id
+ * @property {() => string} state
+ * @property {(value: string) => void} answer choose an answer as if the person had
+ * @property {() => void} dismiss
+ */
+/**
+ * The handle of a card.
+ * @param {Element} element
+ * @returns {(QuestionHandle & { stop: () => void }) | null}
+ */
+export declare function questionOf(element: Element): (QuestionHandle & {
     stop: () => void;
 }) | null;
 /**
