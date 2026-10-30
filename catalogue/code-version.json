@@ -118,7 +118,7 @@
         "js/tiles.js": { "digest": "8318ace37b833416", "when": "[data-kp-tiles-set]" },
         "js/timefield.js": { "digest": "a59b8c1d42b14163", "when": "[data-kp-time]" },
         "js/timer-disc.js": { "digest": "7e7cf5f976812b90", "when": "[data-kp-timer-disc], [data-kp-timer-disc-until]" },
-        "js/timer.js": { "digest": "6ac699d7c93858cf", "when": "[data-kp-timers], [data-kp-timer-start]" },
+        "js/timer.js": { "digest": "d6d05fe47804e925", "when": "[data-kp-timers], [data-kp-timer-start]" },
         "js/toggle.js": { "digest": "51e547f7c4a417b9", "when": "[data-kp-toggle]" },
         "js/toolbar.js": { "digest": "a89e8b2c4fc81573", "when": "[data-kp-toolbar]" },
         "js/transfer.js": { "digest": "299493b3bb8d006d", "when": "[data-kp-transfer]" },

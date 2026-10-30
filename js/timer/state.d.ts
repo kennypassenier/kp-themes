@@ -4,8 +4,6 @@ export type Timer = import('./types.js').Timer;
 export declare const LISTS: WeakMap<Element, Map<string, Timer>>;
 /** Per list: its ticker. @type {WeakMap<Element, ReturnType<typeof setInterval>>} */
 export declare const TICKERS: WeakMap<Element, ReturnType<typeof setInterval>>;
-/** Lists already wired. @type {WeakSet<Element>} */
-export declare const WIRED: WeakSet<Element>;
 /** Starter presses already handled, when two attached roots hear the same one. @type {WeakSet<Event>} */
 export declare const HANDLED: WeakSet<Event>;
 /** The mutable values the parts of this module share. */

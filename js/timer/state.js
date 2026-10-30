@@ -5,8 +5,6 @@
 export const LISTS = new WeakMap();
 /** Per list: its ticker. @type {WeakMap<Element, ReturnType<typeof setInterval>>} */
 export const TICKERS = new WeakMap();
-/** Lists already wired. @type {WeakSet<Element>} */
-export const WIRED = new WeakSet();
 /** Starter presses already handled, when two attached roots hear the same one. @type {WeakSet<Event>} */
 export const HANDLED = new WeakSet();
 /** The mutable values the parts of this module share. */
