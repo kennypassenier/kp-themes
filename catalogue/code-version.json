@@ -12236,7 +12236,7 @@
             ]
         },
         "datatable": {
-            "modules": "25bb2c698977d796",
+            "modules": "42a98cf47836d739",
             "families": [
                 "data-kp-align",
                 "data-kp-arrive",
@@ -12409,7 +12409,7 @@
             ]
         },
         "datepicker": {
-            "modules": "96a2b6793ecc92fc",
+            "modules": "d4ad6769b8f143ef",
             "families": [
                 "data-kp-align",
                 "data-kp-close-on-select",
@@ -14550,7 +14550,7 @@
             ]
         },
         "upload": {
-            "modules": "abd335cc03e69d37",
+            "modules": "b0d41c0ee229fd8f",
             "families": [
                 "data-kp-arrive",
                 "data-kp-arriving",

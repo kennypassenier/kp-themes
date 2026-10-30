@@ -173,6 +173,7 @@
         { "path": "js/datepicker.js", "tags": ["@component:datepicker", "@component:datatable"] },
         { "path": "js/datepicker/*.js", "tags": ["@component:datepicker", "@component:datatable"] },
         { "path": "js/locale.js", "tags": ["@component:datepicker", "@component:datatable", "@component:upload"] },
+        { "path": "js/locale/*.js", "tags": ["@component:datepicker", "@component:datatable", "@component:upload"] },
         { "path": "js/combobox.js", "tags": ["@component:combobox", "@component:field", "@component:datatable"] },
         { "path": "js/combobox/*.js", "tags": ["@component:combobox", "@component:field", "@component:datatable"] },
         { "path": "js/listbox.js", "tags": ["@component:combobox", "@component:field", "@component:page"] },

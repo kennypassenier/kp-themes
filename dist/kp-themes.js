@@ -15989,9 +15989,9 @@ function tileName(tile) {
 }
 function letterTile(names, from, typed) {
   if (!typed || !names.length) return null;
-  const same = [...typed].every((c) => c === typed[0]);
-  const want = same ? typed[0] : typed;
-  for (let step = same ? 1 : 0; step <= names.length; step += 1) {
+  const same2 = [...typed].every((c) => c === typed[0]);
+  const want = same2 ? typed[0] : typed;
+  for (let step = same2 ? 1 : 0; step <= names.length; step += 1) {
     const i = (from + step + names.length) % names.length;
     if (names[i].startsWith(want)) return i;
   }
@@ -17186,13 +17186,13 @@ var init_api3 = __esm({
   }
 });
 
-// js/locale.js
+// js/locale/resolve.js
 function resolveLocale(explicit, element = null) {
   if (explicit) return explicit;
   const declared2 = element?.closest("[lang]")?.getAttribute("lang");
   if (declared2) return declared2;
   if (typeof navigator !== "undefined" && navigator.language) return navigator.language;
-  return "en-GB";
+  return FALLBACK_LOCALE;
 }
 function weekStartsOn(locale, explicit) {
   if (explicit !== void 0) return explicit;
@@ -17203,17 +17203,31 @@ function weekStartsOn(locale, explicit) {
       new Intl.Locale(resolveLocale(locale))
     );
     const first = info.getWeekInfo?.().firstDay ?? info.weekInfo?.firstDay;
-    if (typeof first === "number") return first % 7;
+    if (typeof first === "number") return first % INTL_SUNDAY;
   } catch {
   }
-  return 1;
+  return DEFAULT_WEEK_START;
 }
+function collator(locale) {
+  return new Intl.Collator(resolveLocale(locale), { numeric: true, sensitivity: "base" });
+}
+var FALLBACK_LOCALE, DEFAULT_WEEK_START, INTL_SUNDAY;
+var init_resolve = __esm({
+  "js/locale/resolve.js"() {
+    "use strict";
+    FALLBACK_LOCALE = "en-GB";
+    DEFAULT_WEEK_START = 1;
+    INTL_SUNDAY = 7;
+  }
+});
+
+// js/locale/dates.js
 function datePattern(locale, format = "locale") {
   if (format === "rule52") return { parts: ["day", "month", "year"], separator: "/", hint: "dd/mm/yyyy" };
-  const formatter = new Intl.DateTimeFormat(resolveLocale(locale), { year: "numeric", month: "2-digit", day: "2-digit" });
+  const formatter = new Intl.DateTimeFormat(resolveLocale(locale), NUMERIC_DATE);
   const parts2 = [];
   let separator = "-";
-  for (const part7 of formatter.formatToParts(new Date(2001, 11, 25))) {
+  for (const part7 of formatter.formatToParts(PROBE_DATE)) {
     if (part7.type === "day" || part7.type === "month" || part7.type === "year") parts2.push(part7.type);
     else if (part7.type === "literal" && separator === "-" && part7.value.trim() !== "") separator = part7.value.trim();
   }
@@ -17227,14 +17241,10 @@ function formatDate(date, locale, format = "locale") {
     const mm = String(date.getMonth() + 1).padStart(2, "0");
     return `${dd}/${mm}/${String(date.getFullYear()).padStart(4, "0")}`;
   }
-  return new Intl.DateTimeFormat(resolveLocale(locale), { year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
+  return new Intl.DateTimeFormat(resolveLocale(locale), NUMERIC_DATE).format(date);
 }
 function parseDate(text, locale, format = "locale") {
   const trimmed = text.trim();
-  const exact = (y, m, d) => {
-    const date = new Date(y, m - 1, d);
-    return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d ? date : null;
-  };
   const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed);
   if (iso) return exact(Number(iso[1]), Number(iso[2]), Number(iso[3]));
   const loose = /^(\d{1,4})[-/. ](\d{1,2})[-/. ](\d{1,4})$/.exec(trimmed);
@@ -17246,36 +17256,70 @@ function parseDate(text, locale, format = "locale") {
     by[part7] = numbers2[i] ?? Number.NaN;
   });
   let year = by.year ?? Number.NaN;
-  if (year < 100) year += 2e3;
+  if (year < 100) year += CENTURY;
   return exact(year, by.month ?? Number.NaN, by.day ?? Number.NaN);
+}
+var PROBE_DATE, CENTURY, NUMERIC_DATE, exact;
+var init_dates = __esm({
+  "js/locale/dates.js"() {
+    "use strict";
+    init_resolve();
+    PROBE_DATE = new Date(2001, 11, 25);
+    CENTURY = 2e3;
+    NUMERIC_DATE = { year: "numeric", month: "2-digit", day: "2-digit" };
+    exact = (y, m, d) => {
+      const date = new Date(y, m - 1, d);
+      return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d ? date : null;
+    };
+  }
+});
+
+// js/locale/calendar.js
+function isEnglish(resolved) {
+  try {
+    return new Intl.Locale(resolved).language === "en";
+  } catch {
+    return true;
+  }
+}
+function fromIntl(resolved, english, options, date, count2) {
+  if (english) return null;
+  try {
+    const format = new Intl.DateTimeFormat(resolved, options);
+    return Array.from({ length: count2 }, (_, i) => format.format(date(i)));
+  } catch {
+    return null;
+  }
 }
 function calendarNames(dictionary, defaults, locale) {
   const resolved = resolveLocale(locale);
-  let english = true;
-  try {
-    english = new Intl.Locale(resolved).language === "en";
-  } catch {
-  }
-  const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
-  const fromIntl = (options, date, count2) => {
-    if (english) return null;
-    try {
-      const format = new Intl.DateTimeFormat(resolved, options);
-      return Array.from({ length: count2 }, (_, i) => format.format(date(i)));
-    } catch {
-      return null;
-    }
-  };
+  const english = isEnglish(resolved);
+  const intl = (options, date, count2) => fromIntl(resolved, english, options, date, count2);
   const ownMonths = same(dictionary.months, defaults.months);
-  const months = (ownMonths ? fromIntl({ month: "long" }, (i) => new Date(2001, i, 1), 12) : null) ?? dictionary.months;
+  const months = (ownMonths ? intl({ month: "long" }, (i) => new Date(PROBE_YEAR, i, 1), MONTHS_IN_YEAR) : null) ?? dictionary.months;
   const shortDefaults = defaults.monthsShort;
   const ownShort = shortDefaults !== void 0 && same(dictionary.monthsShort ?? shortDefaults, shortDefaults);
-  const monthsShort = !ownShort ? dictionary.monthsShort ?? months : !ownMonths ? dictionary.months : fromIntl({ month: "short" }, (i) => new Date(2001, i, 1), 12) ?? shortDefaults ?? months;
-  const sundayFirst = [6, 0, 1, 2, 3, 4, 5].map((i) => dictionary.weekdays[i] ?? "");
-  const weekdays2 = (same(dictionary.weekdays, defaults.weekdays) ? fromIntl({ weekday: "short" }, (i) => new Date(2001, 0, 7 + i), 7) : null) ?? sundayFirst;
+  const monthsShort = !ownShort ? dictionary.monthsShort ?? months : !ownMonths ? dictionary.months : intl({ month: "short" }, (i) => new Date(PROBE_YEAR, i, 1), MONTHS_IN_YEAR) ?? shortDefaults ?? months;
+  const sundayFirst = SUNDAY_FIRST.map((i) => dictionary.weekdays[i] ?? "");
+  const weekdays2 = (same(dictionary.weekdays, defaults.weekdays) ? intl({ weekday: "short" }, (i) => new Date(PROBE_YEAR, 0, SUNDAY_PROBE + i), DAYS_IN_WEEK) : null) ?? sundayFirst;
   return { months, monthsShort, weekdays: weekdays2 };
 }
-function formatBytes(bytes, locale, { base = 1e3, units = ["B", "kB", "MB", "GB", "TB"] } = {}) {
+var same, SUNDAY_FIRST, PROBE_YEAR, SUNDAY_PROBE, MONTHS_IN_YEAR, DAYS_IN_WEEK;
+var init_calendar = __esm({
+  "js/locale/calendar.js"() {
+    "use strict";
+    init_resolve();
+    same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
+    SUNDAY_FIRST = [6, 0, 1, 2, 3, 4, 5];
+    PROBE_YEAR = 2001;
+    SUNDAY_PROBE = 7;
+    MONTHS_IN_YEAR = 12;
+    DAYS_IN_WEEK = 7;
+  }
+});
+
+// js/locale/numbers.js
+function formatBytes(bytes, locale, { base = 1e3, units = BYTE_UNITS2 } = {}) {
   let value = bytes;
   let unit2 = 0;
   while (value >= base && unit2 < units.length - 1) {
@@ -17285,22 +17329,34 @@ function formatBytes(bytes, locale, { base = 1e3, units = ["B", "kB", "MB", "GB"
   const digits = unit2 === 0 ? 0 : 1;
   return `${new Intl.NumberFormat(resolveLocale(locale), { maximumFractionDigits: digits, minimumFractionDigits: 0 }).format(value)} ${units[unit2]}`;
 }
+function escape(s2) {
+  return s2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 function parseNumber(text, locale) {
   const parts2 = new Intl.NumberFormat(resolveLocale(locale)).formatToParts(1234.5);
   const decimal = parts2.find((p) => p.type === "decimal")?.value ?? ".";
   const group = parts2.find((p) => p.type === "group")?.value ?? ",";
-  const cleaned = text.replace(new RegExp(`[${escape(group)}\\s\xA0\u202F]`, "g"), "").replace(decimal, ".").replace(/[^\d.+-]/g, "");
+  const cleaned = text.replace(new RegExp(`[${escape(group)}\\s${NUMBER_SPACES}]`, "g"), "").replace(decimal, ".").replace(/[^\d.+-]/g, "");
   return Number.parseFloat(cleaned);
 }
-function escape(s2) {
-  return s2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-function collator(locale) {
-  return new Intl.Collator(resolveLocale(locale), { numeric: true, sensitivity: "base" });
-}
+var BYTE_UNITS2, NUMBER_SPACES;
+var init_numbers = __esm({
+  "js/locale/numbers.js"() {
+    "use strict";
+    init_resolve();
+    BYTE_UNITS2 = ["B", "kB", "MB", "GB", "TB"];
+    NUMBER_SPACES = "\xA0\u202F";
+  }
+});
+
+// js/locale.js
 var init_locale = __esm({
   "js/locale.js"() {
     "use strict";
+    init_resolve();
+    init_dates();
+    init_calendar();
+    init_numbers();
   }
 });
 
@@ -33194,7 +33250,7 @@ function buildAnswer(root, holder, step, text) {
     wrap.append(group);
     const sameMode = opt(root, "same", "both");
     if (sameMode !== "off") {
-      const same = el6("kp-focus-steps__sames");
+      const same2 = el6("kp-focus-steps__sames");
       const kinds = [
         ["yesterday", sameMode === "usual" ? void 0 : answer2.previous],
         ["usual", sameMode === "yesterday" ? void 0 : answer2.usual]
@@ -33209,9 +33265,9 @@ function buildAnswer(root, holder, step, text) {
         button6.dataset.kpSame = which;
         const words3 = wordsOf2(answer2, value);
         button6.textContent = which === "usual" ? strings.focusSameUsual(words3) : strings.focusSameYesterday(words3);
-        same.append(button6);
+        same2.append(button6);
       }
-      if (same.childElementCount > 0) wrap.append(same);
+      if (same2.childElementCount > 0) wrap.append(same2);
     }
   }
   if (opt(root, "skip") !== "off") {
@@ -40992,7 +41048,7 @@ function jumpMove(key, index) {
   };
   return moves[key] ?? null;
 }
-var init_dates = __esm({
+var init_dates2 = __esm({
   "js/datepicker/dates.js"() {
     "use strict";
     init_locale();
@@ -41243,7 +41299,7 @@ var init_grid2 = __esm({
     init_strings();
     init_locale();
     init_constants20();
-    init_dates();
+    init_dates2();
   }
 });
 
@@ -41331,7 +41387,7 @@ var init_keys9 = __esm({
   "js/datepicker/keys.js"() {
     "use strict";
     init_constants20();
-    init_dates();
+    init_dates2();
     jumpCellOf = (target) => (
       /** @type {HTMLElement | null} */
       target.closest("[data-kp-month], [data-kp-year]")
@@ -41475,7 +41531,7 @@ var init_views = __esm({
     init_strings();
     init_locale();
     init_constants20();
-    init_dates();
+    init_dates2();
     init_grid2();
     init_place();
     DateViews = class {
@@ -41572,7 +41628,7 @@ var init_controller27 = __esm({
     init_controller();
     init_motion();
     init_constants20();
-    init_dates();
+    init_dates2();
     init_grid2();
     init_keys9();
     init_opening();
@@ -41778,7 +41834,7 @@ var init_datepicker = __esm({
   "js/datepicker.js"() {
     "use strict";
     init_constants20();
-    init_dates();
+    init_dates2();
     init_place();
     init_attach12();
   }
@@ -47234,7 +47290,7 @@ function monthCells(year, month, firstDay = 1) {
   return Array.from({ length: GRID_CELLS }, (_, i) => shiftDay(start, i));
 }
 var two2, isoOf, formatDayKey, weekday;
-var init_dates2 = __esm({
+var init_dates3 = __esm({
   "js/calendar/dates.js"() {
     "use strict";
     init_chart();
@@ -47548,7 +47604,7 @@ var init_keys10 = __esm({
   "js/calendar/keys.js"() {
     "use strict";
     init_constants21();
-    init_dates2();
+    init_dates3();
   }
 });
 
@@ -47663,7 +47719,7 @@ var init_paint6 = __esm({
     init_calm_tones();
     init_busy3();
     init_day();
-    init_dates2();
+    init_dates3();
     init_dom6();
     init_plate2();
     monthKey = (c) => `${c.year}-${two2(c.month)}`;
@@ -47684,7 +47740,7 @@ var init_controller31 = __esm({
     init_busy3();
     init_build6();
     init_day();
-    init_dates2();
+    init_dates3();
     init_dom6();
     init_keys10();
     init_paint6();
@@ -47955,11 +48011,11 @@ __export(calendar_exports, {
   shiftDay: () => shiftDay,
   shiftMonth: () => shiftMonth
 });
-var init_calendar = __esm({
+var init_calendar2 = __esm({
   "js/calendar.js"() {
     "use strict";
     init_constants21();
-    init_dates2();
+    init_dates3();
     init_api15();
   }
 });
@@ -50309,7 +50365,7 @@ function buildDays(c) {
 var init_build7 = __esm({
   "js/week/build.js"() {
     "use strict";
-    init_calendar();
+    init_calendar2();
     init_constants24();
     init_helpers3();
   }
@@ -50543,7 +50599,7 @@ var modeOf, upcomingOn, NOT_UPCOMING;
 var init_upcoming = __esm({
   "js/week/upcoming.js"() {
     "use strict";
-    init_calendar();
+    init_calendar2();
     init_helpers3();
     modeOf = (c) => getComputedStyle(c.grid).getPropertyValue("--kp-week-mode").trim() === "list" ? "list" : "grid";
     upcomingOn = (c) => c.upcoming.n > 0 && c.upcoming.list !== null && modeOf(c) === "list";
@@ -50676,8 +50732,8 @@ function paint7(c) {
     const nodes = c.state === "loading" || c.leaving || c.upcoming.on ? [] : col.items.map((item) => item.button);
     const wanted = [col.now, ...nodes];
     const have = [...col.track.children].filter((n) => n !== col.moreButton?.parentElement);
-    const same = wanted.length === have.length && wanted.every((n, i) => n === have[i]);
-    if (!same) {
+    const same2 = wanted.length === have.length && wanted.every((n, i) => n === have[i]);
+    if (!same2) {
       const keep = new Set(
         /** @type {Element[]} */
         wanted
@@ -50748,7 +50804,7 @@ function tick3(c) {
 var init_paint7 = __esm({
   "js/week/paint.js"() {
     "use strict";
-    init_calendar();
+    init_calendar2();
     init_state_plate();
     init_busy4();
     init_constants24();
@@ -50987,7 +51043,7 @@ var init_attach15 = __esm({
   "js/week/attach.js"() {
     "use strict";
     init_chart();
-    init_calendar();
+    init_calendar2();
     init_locale();
     init_strings();
     init_api16();
@@ -51337,7 +51393,7 @@ function sequencerPlan(items, edit, options = {}) {
     /** @type {SequencerItem[]} */
     items
   ), changed: [], pushed: [], reason, blocker });
-  const same = () => ({ ok: true, items: (
+  const same2 = () => ({ ok: true, items: (
     /** @type {SequencerItem[]} */
     items
   ), changed: [], pushed: [], reason: null, blocker: null });
@@ -51370,7 +51426,7 @@ function sequencerPlan(items, edit, options = {}) {
     }
     const lane = edit.lane ?? item.lane;
     if (lane !== item.lane && (!o.laneMove || o.lanes && !o.lanes.includes(lane))) return fail("lane");
-    if (delta === 0 && lane === item.lane) return clamped && o.strict ? fail("edge") : same();
+    if (delta === 0 && lane === item.lane) return clamped && o.strict ? fail("edge") : same2();
     for (const m of grouped) m.start = round(m.start + delta);
     item.lane = lane;
     moved = new Set(delta === 0 ? [item.id] : group);
@@ -51380,7 +51436,7 @@ function sequencerPlan(items, edit, options = {}) {
     let end = sequencerSnap(edit.end ?? item.start + item.duration, step, cands, o.reach);
     end = Math.min(end, Math.max(o.max, item.start + item.duration));
     const duration2 = Math.max(least(item), round(end - item.start));
-    if (Math.abs(duration2 - item.duration) < EPS) return o.strict ? fail("edge") : same();
+    if (Math.abs(duration2 - item.duration) < EPS) return o.strict ? fail("edge") : same2();
     item.duration = duration2;
     moved = /* @__PURE__ */ new Set([item.id]);
   } else {
@@ -51392,7 +51448,7 @@ function sequencerPlan(items, edit, options = {}) {
     if (lowest + delta < -EPS) delta = -lowest;
     const room = Math.min(...grouped.map((m) => round(m.duration - least(m))));
     if (delta > room) delta = room;
-    if (Math.abs(delta) < EPS) return o.strict ? fail("edge") : same();
+    if (Math.abs(delta) < EPS) return o.strict ? fail("edge") : same2();
     for (const m of grouped) {
       m.start = round(m.start + delta);
       m.duration = round(m.duration - delta);
@@ -52881,7 +52937,7 @@ var stateWord3, rel;
 var init_scale = __esm({
   "js/gantt/scale.js"() {
     "use strict";
-    init_calendar();
+    init_calendar2();
     init_chart();
     init_constants26();
     stateWord3 = (c, state12) => ({
@@ -53407,7 +53463,7 @@ function clusterPoints(c) {
 var init_points = __esm({
   "js/gantt/points.js"() {
     "use strict";
-    init_calendar();
+    init_calendar2();
     init_constants26();
     init_scale();
   }
@@ -53641,7 +53697,7 @@ function edgeTicks(c, w) {
 var init_axis = __esm({
   "js/gantt/axis.js"() {
     "use strict";
-    init_calendar();
+    init_calendar2();
     init_chart();
     init_scale();
     init_constants26();
@@ -61992,10 +62048,10 @@ function weekdaySummary(days, { firstDay = 1, names = dayNames("short") } = {}) 
   const s2 = getStrings();
   const on = new Set(days);
   if (on.size === 0) return s2.weekdaysNone;
-  const same = (set) => set.length === on.size && set.every((d) => on.has(d));
-  if (same(SETS.every)) return s2.weekdaysEvery;
-  if (same(SETS.weekdays)) return s2.weekdaysWeekdays;
-  if (same(SETS.weekend)) return s2.weekdaysWeekend;
+  const same2 = (set) => set.length === on.size && set.every((d) => on.has(d));
+  if (same2(SETS.every)) return s2.weekdaysEvery;
+  if (same2(SETS.weekdays)) return s2.weekdaysWeekdays;
+  if (same2(SETS.weekend)) return s2.weekdaysWeekend;
   const ordered2 = SETS.every.map((i) => (i + firstDay) % WEEK2).filter((d) => on.has(d));
   return joinWords(ordered2.map((d) => names[d] ?? ""));
 }
@@ -62178,8 +62234,8 @@ var init_controller42 = __esm({
           /** @type {keyof typeof SETS} */
           button6.dataset.kpWeekdaysPreset
         );
-        const same = button6.getAttribute("aria-pressed") === "true";
-        this.set(same ? [] : SETS[name]);
+        const same2 = button6.getAttribute("aria-pressed") === "true";
+        this.set(same2 ? [] : SETS[name]);
         this.change(true);
       }
     };
@@ -65796,7 +65852,7 @@ function paintTail(m, typed) {
   if (typed === "") return;
   const empty = m.list.querySelector("[data-kp-combobox-empty]");
   const picked = new Set(pickedValues(m));
-  const exact = exactItem(m, typed);
+  const exact2 = exactItem(m, typed);
   const row2 = (cls, text, option) => {
     const li = make26("li", `kp-usual__tail ${cls}`, text);
     li.setAttribute("data-kp-synth", "");
@@ -65808,8 +65864,8 @@ function paintTail(m, typed) {
     return li;
   };
   const head = [];
-  if (exact) {
-    if (picked.has(exact.value)) head.push(row2("kp-usual__already", s2.usualAlreadyPicked(exact.label), false));
+  if (exact2) {
+    if (picked.has(exact2.value)) head.push(row2("kp-usual__already", s2.usualAlreadyPicked(exact2.label), false));
     if (head.length) m.list.prepend(...head);
     return;
   }
@@ -66285,8 +66341,8 @@ function wire(box) {
     },
     status: (query) => {
       if (query !== "") {
-        const same = exactItem(m, query);
-        return same && pickedValues(m).includes(same.value) ? getStrings().usualAlreadyPicked(same.label) : null;
+        const same2 = exactItem(m, query);
+        return same2 && pickedValues(m).includes(same2.value) ? getStrings().usualAlreadyPicked(same2.label) : null;
       }
       const band = bandValues(m).length;
       return band > 0 ? getStrings().usualStatus(band, m.items.length - band) : null;
@@ -66366,12 +66422,12 @@ function wire(box) {
     if (!list.hidden && input.getAttribute("aria-activedescendant")) return;
     const s2 = getStrings();
     const picked = new Set(pickedValues(m));
-    const exact = exactItem(m, typed);
-    if (exact) {
+    const exact2 = exactItem(m, typed);
+    if (exact2) {
       event.preventDefault();
-      if (picked.has(exact.value)) return already(exact);
-      pick(m, exact.value, "typed");
-      sayAfter(m, s2.usualSelectedExisting(exact.label));
+      if (picked.has(exact2.value)) return already(exact2);
+      pick(m, exact2.value, "typed");
+      sayAfter(m, s2.usualSelectedExisting(exact2.label));
       return;
     }
     const near2 = attr7(m, "near", "ask") ?? "ask";
@@ -78092,14 +78148,14 @@ function availabilityRange(start, end) {
   const b = /* @__PURE__ */ new Date(`${end}T12:00:00Z`);
   const month = new Intl.DateTimeFormat("en-GB", { month: "short", timeZone: "UTC" });
   const days = Math.round((b.getTime() - a.getTime()) / 864e5) + 1;
-  const same = a.getUTCMonth() === b.getUTCMonth();
+  const same2 = a.getUTCMonth() === b.getUTCMonth();
   return {
     key: `${start}/${end}`,
-    label: same ? `${a.getUTCDate()} to ${b.getUTCDate()} ${month.format(b)}` : `${a.getUTCDate()} ${month.format(a)} to ${b.getUTCDate()} ${month.format(b)}`,
+    label: same2 ? `${a.getUTCDate()} to ${b.getUTCDate()} ${month.format(b)}` : `${a.getUTCDate()} ${month.format(a)} to ${b.getUTCDate()} ${month.format(b)}`,
     sub: getStrings().availabilityDaysLong(days)
   };
 }
-var init_dates3 = __esm({
+var init_dates4 = __esm({
   "js/availability/dates.js"() {
     "use strict";
     init_strings();
@@ -79236,7 +79292,7 @@ var init_availability = __esm({
   "js/availability.js"() {
     "use strict";
     init_constants40();
-    init_dates3();
+    init_dates4();
     init_facts();
     init_api28();
     init_attach23();
@@ -84182,7 +84238,7 @@ var PAGE_NEEDS = [
 var WIDGET_NEEDS = [
   // The month heatmap [scope-143]: a month of days, each a plate in the
   // colour of its state; the page gives the days with setCalendarDays().
-  { name: "calendar", when: "[data-kp-calendar]", load: () => Promise.resolve().then(() => (init_calendar(), calendar_exports)), attach: (m, root) => [m.attachCalendars(root)] },
+  { name: "calendar", when: "[data-kp-calendar]", load: () => Promise.resolve().then(() => (init_calendar2(), calendar_exports)), attach: (m, root) => [m.attachCalendars(root)] },
   // The heat grid, the matrix and the value with a bar in a table cell [kpadopt2-grids].
   { name: "heat", when: "[data-kp-heat]", load: () => Promise.resolve().then(() => (init_heat(), heat_exports)), attach: (m, root) => [m.attachHeats(root)] },
   { name: "matrix", when: "[data-kp-matrix]", load: () => Promise.resolve().then(() => (init_heat(), heat_exports)), attach: (m, root) => [m.attachMatrices(root)] },
@@ -84486,7 +84542,7 @@ init_availability();
 init_barcell();
 init_bullets();
 init_busy_card();
-init_calendar();
+init_calendar2();
 init_calm_tones();
 init_calm();
 init_card_state();
@@ -85572,7 +85628,7 @@ init_availability();
 init_barcell();
 init_bullets();
 init_busy_card();
-init_calendar();
+init_calendar2();
 init_calm_tones();
 init_calm();
 init_card_state();
