@@ -270,6 +270,7 @@
         { "path": "js/rating/*.js", "tags": ["@component:field"] },
         { "path": "js/calm.js", "tags": ["@component:foundations"], "why": "calm mode [kpadopt5]" },
         { "path": "js/shortcuts.js", "tags": ["@component:foundations"], "why": "the shortcut engine [kpadopt5]" },
+        { "path": "js/shortcuts/*.js", "tags": ["@component:foundations"], "why": "the shortcut engine [kpadopt5]" },
         { "path": "js/lede.js", "tags": ["@component:foundations"], "why": "the lede [kpadopt5]" },
         {
             "path": "js/live-options.js",

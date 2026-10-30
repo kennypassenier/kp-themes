@@ -1,17 +1,5 @@
-/** The chord's wait for its second key, in ms (homelab's tested value). */
-export declare const CHORD_MS = 1500;
-/** How long the "no shortcut on g x" line stays, in ms. */
-export declare const UNKNOWN_MS = 1500;
-/** A sheet that is filled from the registry. */
-export declare const SHORTCUTS_LIVE_SHEET = "[data-kp-shortcuts][data-kp-shortcuts-live]";
-/** Fired on the document, bubbling, when a registered shortcut ran: `{ keys, what }`. */
-export declare const SHORTCUT_EVENT = "kp-shortcut-run";
-/** Fired on the document when a chord starts or stops waiting for its next key: `{ keys, waiting, ms }`. */
-export declare const SHORTCUT_PENDING_EVENT = "kp-shortcut-pending";
-/** Where the chord's cap stands: the middle of the screen (default) or the middle of its foot. */
-export declare const SHORTCUT_HINT_PLACES: readonly ['centre', 'bottom-centre'];
-/** Keys that need AltGr on an AZERTY keyboard. */
-export declare const ALTGR_KEYS: readonly string[];
+export { CHORD_MS, UNKNOWN_MS, SHORTCUTS_LIVE_SHEET, SHORTCUT_EVENT, SHORTCUT_PENDING_EVENT, SHORTCUT_HINT_PLACES, ALTGR_KEYS, } from './shortcuts/constants.js';
+export { parseShortcutKeys, displayShortcutKeys } from './shortcuts/keys.js';
 export type Shortcut = {
     /**
      * "g s", "Mod K", "?", "j"
@@ -78,11 +66,6 @@ export type EngineOptions = {
      */
     hintPlace?: 'centre' | 'bottom-centre';
 };
-/**
- * Change the engine's defaults for the whole page.
- * @param {EngineOptions} next
- */
-export declare function configureShortcuts(next: EngineOptions): void;
 export type Step = {
     /**
      * sorted modifier names: `alt`, `mod`, `shift`
@@ -93,14 +76,6 @@ export type Step = {
      */
     key: string;
 };
-/**
- * Read "g s" or "Mod K" into steps.
- * @param {string} keys
- * @returns {Step[]}
- */
-export declare function parseShortcutKeys(keys: string): Step[];
-/** The keys as the sheet spells them. @param {string} keys */
-export declare function displayShortcutKeys(keys: string): string;
 export type Entry = {
     shortcut: Shortcut;
     steps: Step[];
@@ -108,6 +83,11 @@ export type Entry = {
     scope: string | Element;
     order: number;
 };
+/**
+ * Change the engine's defaults for the whole page.
+ * @param {EngineOptions} next
+ */
+export declare function configureShortcuts(next: EngineOptions): void;
 /**
  * Whether the engine would take this key: a chord waits for its next key, or a registered shortcut that is on screen
  * starts with it (a letter not while a person types in a field). For a page embedded in another, which hands its

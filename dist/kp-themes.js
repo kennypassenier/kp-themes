@@ -3355,8 +3355,8 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
       if (running2 === mine) running2 = null;
     }).catch(() => void 0);
   };
-  const sizes = new ResizeObserver((entries3) => {
-    if (entries3.some((entry) => entry.target !== box)) settle2();
+  const sizes = new ResizeObserver((entries2) => {
+    if (entries2.some((entry) => entry.target !== box)) settle2();
     else if (!running2) last = box.offsetHeight;
   });
   const watch2 = () => {
@@ -4634,7 +4634,7 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
       });
       all[index]?.focus();
     };
-    const onKey6 = (e) => {
+    const onKey5 = (e) => {
       const all = tabs();
       const current2 = all.indexOf(
         /** @type {HTMLElement} */
@@ -4676,11 +4676,11 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
     });
     const stopWatching = watchTabOverflow(list, () => tabs().find((t) => t.getAttribute("aria-selected") === "true"));
     revealTab(list, tabs()[initial]);
-    list.addEventListener("keydown", onKey6);
+    list.addEventListener("keydown", onKey5);
     list.addEventListener("click", onClick);
     handles.set(list, { tabs, select: select2 });
     cleanups.push(() => {
-      list.removeEventListener("keydown", onKey6);
+      list.removeEventListener("keydown", onKey5);
       list.removeEventListener("click", onClick);
       stopWatching();
       handles.delete(list);
@@ -5509,7 +5509,7 @@ function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100
     };
     const onFocusIn = () => schedule(true, 0);
     const onFocusOut = () => schedule(false, 0);
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       if (escapes && event.key === "Escape" && !tooltip.hidden) set(false);
     };
     tooltip.hidden = true;
@@ -5517,7 +5517,7 @@ function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100
     anchor.addEventListener("pointerleave", onLeave);
     anchor.addEventListener("focusin", onFocusIn);
     anchor.addEventListener("focusout", onFocusOut);
-    document.addEventListener("keydown", onKey6);
+    document.addEventListener("keydown", onKey5);
     cleanups.push(() => {
       clearTimeout(timer2);
       going = false;
@@ -5526,7 +5526,7 @@ function attachTooltips(root = document, { openDelayMs = 300, closeDelayMs = 100
       anchor.removeEventListener("pointerleave", onLeave);
       anchor.removeEventListener("focusin", onFocusIn);
       anchor.removeEventListener("focusout", onFocusOut);
-      document.removeEventListener("keydown", onKey6);
+      document.removeEventListener("keydown", onKey5);
       tooltip.hidden = before.hidden;
       if (before.id === null) tooltip.removeAttribute("id");
       if (before.describedby === null) trigger.removeAttribute("aria-describedby");
@@ -6510,19 +6510,19 @@ function rowRoles(buttons) {
   });
 }
 function mergeRoles(rows) {
-  const order2 = [];
+  const order = [];
   for (const roles of rows) {
     let at = -1;
     for (const role of roles) {
-      const found = order2.indexOf(role);
+      const found = order.indexOf(role);
       if (found >= 0) at = found;
       else {
-        order2.splice(at + 1, 0, role);
+        order.splice(at + 1, 0, role);
         at += 1;
       }
     }
   }
-  return order2;
+  return order;
 }
 function fitActionColumns(list) {
   if (!(list instanceof HTMLElement)) return;
@@ -6536,17 +6536,17 @@ function fitActionColumns(list) {
     [...box.children].filter((child) => !child.hidden)
   ));
   const roles = rows.map((row) => rowRoles(row.map((button6) => ({ role: button6.dataset.kpAction ?? null }))));
-  const order2 = mergeRoles(roles);
+  const order = mergeRoles(roles);
   const named = rows.some((row) => row.some((button6) => button6.dataset.kpAction !== void 0));
   for (const row of rows) for (const button6 of row) button6.style.removeProperty("--kp-action-col");
   for (const name of ["--kp-action-count", "--kp-action-widths", "--kp-action-stack"]) list.style.removeProperty(name);
-  if (order2.length === 0 || !isTable && !named) return;
+  if (order.length === 0 || !isTable && !named) return;
   if (isTable) {
     list.dataset.kpActionMeasuring = "";
-    const widths2 = order2.map(() => 0);
+    const widths2 = order.map(() => 0);
     rows.forEach(
       (row, r) => row.forEach((button6, b) => {
-        const k = order2.indexOf(roles[r][b]);
+        const k = order.indexOf(roles[r][b]);
         const style = getComputedStyle(button6);
         const margins = (parseFloat(style.marginInlineStart) || 0) + (parseFloat(style.marginInlineEnd) || 0);
         widths2[k] = Math.max(widths2[k], button6.getBoundingClientRect().width + margins);
@@ -6556,9 +6556,9 @@ function fitActionColumns(list) {
     list.style.setProperty("--kp-action-widths", widths2.map((w) => `${Math.ceil(w)}px`).join(" "));
     list.style.setProperty("--kp-action-stack", `${Math.ceil(Math.max(...widths2))}px`);
   } else {
-    list.style.setProperty("--kp-action-count", String(order2.length));
+    list.style.setProperty("--kp-action-count", String(order.length));
   }
-  rows.forEach((row, r) => row.forEach((button6, b) => button6.style.setProperty("--kp-action-col", String(order2.indexOf(roles[r][b]) + 1))));
+  rows.forEach((row, r) => row.forEach((button6, b) => button6.style.setProperty("--kp-action-col", String(order.indexOf(roles[r][b]) + 1))));
 }
 function attachActionColumns(root = document) {
   const doc = root instanceof Document ? root : root.ownerDocument ?? document;
@@ -6569,11 +6569,11 @@ function attachActionColumns(root = document) {
     const lists = new Set([...root.querySelectorAll(ROW_ACTIONS)].map((box) => box.closest(ACTION_LIST)));
     for (const list of lists) if (list) fitActionColumns(list);
   };
-  let queued2 = 0;
+  let queued = 0;
   const queue = () => {
-    if (queued2) return;
-    queued2 = view.requestAnimationFrame(() => {
-      queued2 = 0;
+    if (queued) return;
+    queued = view.requestAnimationFrame(() => {
+      queued = 0;
       fitAll();
     });
   };
@@ -6602,7 +6602,7 @@ function attachActionColumns(root = document) {
     rows.disconnect();
     theme.disconnect();
     doc.fonts?.removeEventListener?.("loadingdone", queue);
-    if (queued2) view.cancelAnimationFrame(queued2);
+    if (queued) view.cancelAnimationFrame(queued);
   };
 }
 function setRowBusy(row, busy = true, button6 = null) {
@@ -6853,8 +6853,8 @@ function install(ctx) {
         announce4(el16, "headline", routine, false);
       });
       state12.ioHeadline ??= new view.IntersectionObserver(
-        (entries3) => {
-          for (const entry of entries3) {
+        (entries2) => {
+          for (const entry of entries2) {
             if (!entry.isIntersecting) continue;
             state12.ioHeadline?.unobserve(entry.target);
             entry.target.classList.add(STATE.in);
@@ -7329,8 +7329,8 @@ function install3(ctx) {
     state12.pending++;
     finishers.push(() => draw7(false));
     state12.io ??= new view.IntersectionObserver(
-      (entries3) => {
-        for (const entry of entries3) {
+      (entries2) => {
+        for (const entry of entries2) {
           if (!entry.isIntersecting) continue;
           state12.io?.unobserve(entry.target);
           entry.target.classList.add(STATE.in);
@@ -7496,7 +7496,7 @@ function install6(ctx) {
     let lit = [];
     let at = null;
     let recollect = 0;
-    let queued2 = 0;
+    let queued = 0;
     const clear = (el16) => {
       for (const prop of Object.values(LIGHT)) el16.style.removeProperty(prop);
     };
@@ -7533,13 +7533,13 @@ function install6(ctx) {
       }
     };
     const schedule = () => {
-      if (queued2) return;
-      queued2 = view.requestAnimationFrame(() => {
-        frames.delete(queued2);
-        queued2 = 0;
+      if (queued) return;
+      queued = view.requestAnimationFrame(() => {
+        frames.delete(queued);
+        queued = 0;
         paint15();
       });
-      frames.add(queued2);
+      frames.add(queued);
     };
     const away = () => {
       at = null;
@@ -7548,7 +7548,7 @@ function install6(ctx) {
     const onDown2 = (event) => {
       if (event.pointerType === "touch") away();
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       if (event.key === "Tab") away();
     };
     const themes = new MutationObserver(() => {
@@ -7563,13 +7563,13 @@ function install6(ctx) {
     });
     themes.observe(html, { attributes: true, attributeFilter: ["data-theme"] });
     doc.addEventListener("pointerdown", onDown2, { passive: true });
-    doc.addEventListener("keydown", onKey6, { passive: true });
+    doc.addEventListener("keydown", onKey5, { passive: true });
     html.addEventListener("pointerleave", away, { passive: true });
     view.addEventListener("scroll", schedule, { passive: true });
     cleanups.push(() => {
       themes.disconnect();
       doc.removeEventListener("pointerdown", onDown2);
-      doc.removeEventListener("keydown", onKey6);
+      doc.removeEventListener("keydown", onKey5);
       html.removeEventListener("pointerleave", away);
       view.removeEventListener("scroll", schedule);
       for (const el16 of lit) clear(el16);
@@ -7661,7 +7661,7 @@ function install6(ctx) {
       button6.style.setProperty(PRESS.y, `${Math.round(pointer.clientY - box.top)}px`);
       marked.add(button6);
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       const key = (
         /** @type {KeyboardEvent} */
         event.key
@@ -7681,10 +7681,10 @@ function install6(ctx) {
       marked.delete(button6);
     };
     doc.addEventListener("pointerdown", onDown2, { passive: true });
-    doc.addEventListener("keydown", onKey6);
+    doc.addEventListener("keydown", onKey5);
     cleanups.push(() => {
       doc.removeEventListener("pointerdown", onDown2);
-      doc.removeEventListener("keydown", onKey6);
+      doc.removeEventListener("keydown", onKey5);
       for (const el16 of marked) {
         el16.style.removeProperty(PRESS.x);
         el16.style.removeProperty(PRESS.y);
@@ -7796,8 +7796,8 @@ function install8(ctx) {
       const pause = (rootStyle ? rootStyle.getPropertyValue(MARQUEE_PAUSE_KNOB).trim() : "") || "offscreen";
       if (pause !== "offscreen" || !view || !("IntersectionObserver" in view)) continue;
       const observer = new view.IntersectionObserver(
-        (entries3) => {
-          for (const entry of entries3) entry.target.toggleAttribute("data-kp-paused", !entry.isIntersecting);
+        (entries2) => {
+          for (const entry of entries2) entry.target.toggleAttribute("data-kp-paused", !entry.isIntersecting);
         },
         { threshold: 0 }
       );
@@ -9044,9 +9044,9 @@ function buildAlarm({ title, detail = "", code = "", mode: mode2 = "ack", second
     el("button", "kp-button kp-alarm__ack", label)
   );
   ack.type = "button";
-  const hint2 = el("span", "kp-alarm__hint", s2.alarmHint);
-  hint2.setAttribute("aria-hidden", "true");
-  actions.append(ack, hint2);
+  const hint = el("span", "kp-alarm__hint", s2.alarmHint);
+  hint.setAttribute("aria-hidden", "true");
+  actions.append(ack, hint);
   panel.append(actions);
   const countdown = el("div", "kp-alarm__countdown");
   const track = el("span", "kp-alarm__track");
@@ -9172,42 +9172,128 @@ var init_alarm = __esm({
   }
 });
 
-// js/shortcuts.js
-var shortcuts_exports = {};
-__export(shortcuts_exports, {
-  ALTGR_KEYS: () => ALTGR_KEYS,
-  CHORD_MS: () => CHORD_MS,
-  SHORTCUTS_LIVE_SHEET: () => SHORTCUTS_LIVE_SHEET,
-  SHORTCUT_EVENT: () => SHORTCUT_EVENT,
-  SHORTCUT_HINT_PLACES: () => SHORTCUT_HINT_PLACES,
-  SHORTCUT_PENDING_EVENT: () => SHORTCUT_PENDING_EVENT,
-  UNKNOWN_MS: () => UNKNOWN_MS,
-  attachShortcuts: () => attachShortcuts,
-  configureShortcuts: () => configureShortcuts,
-  displayShortcutKeys: () => displayShortcutKeys,
-  listShortcuts: () => listShortcuts,
-  parseShortcutKeys: () => parseShortcutKeys,
-  registerShortcuts: () => registerShortcuts,
-  renderShortcutSheet: () => renderShortcutSheet,
-  shortcutClaims: () => shortcutClaims
+// js/shortcuts/constants.js
+var CHORD_MS, UNKNOWN_MS, SHORTCUTS_LIVE_SHEET, SHORTCUT_EVENT, SHORTCUT_PENDING_EVENT, SHORTCUT_HINT_PLACES, ALTGR_KEYS, RESERVED, DEFAULT_TYPING_SELECTOR;
+var init_constants3 = __esm({
+  "js/shortcuts/constants.js"() {
+    "use strict";
+    CHORD_MS = 1500;
+    UNKNOWN_MS = 1500;
+    SHORTCUTS_LIVE_SHEET = "[data-kp-shortcuts][data-kp-shortcuts-live]";
+    SHORTCUT_EVENT = "kp-shortcut-run";
+    SHORTCUT_PENDING_EVENT = "kp-shortcut-pending";
+    SHORTCUT_HINT_PLACES = /** @type {const} */
+    ["centre", "bottom-centre"];
+    ALTGR_KEYS = Object.freeze(["[", "]", "{", "}", "@", "#", "\\", "|", "~", "\u20AC", "`", "^"]);
+    RESERVED = ["mod+k", "?"];
+    DEFAULT_TYPING_SELECTOR = 'input, textarea, select, [role="textbox"]';
+  }
 });
-function configureShortcuts(next2) {
-  Object.assign(config2, next2);
-  placeHint();
-  queueSheets();
+
+// js/shortcuts/entries.js
+function scopeActive(entry) {
+  const scope = entry.scope;
+  if (typeof scope === "string") return true;
+  if (!scope.isConnected) return false;
+  const hidden2 = scope.closest("[hidden], [inert]");
+  return hidden2 === null && (scope.getClientRects().length > 0 || scope.hasAttribute("data-kp-keys-always"));
 }
-function inDevelopment() {
-  if (config2.dev !== void 0) return config2.dev;
+function available(entry) {
   try {
-    return /^(localhost|127\.0\.0\.1|\[::1\]|)$/.test(location.hostname);
+    return entry.shortcut.when ? entry.shortcut.when() !== false : true;
   } catch {
     return false;
   }
 }
-function warn(message) {
-  if (config2.onWarn) config2.onWarn(message);
-  else console.warn(`[kp-shortcuts] ${message}`);
-}
+var inFieldsToo;
+var init_entries = __esm({
+  "js/shortcuts/entries.js"() {
+    "use strict";
+    inFieldsToo = (entry, index) => entry.steps[index].mods.includes("mod") || entry.shortcut.inFields === true;
+  }
+});
+
+// js/shortcuts/hint.js
+var ChordHint;
+var init_hint = __esm({
+  "js/shortcuts/hint.js"() {
+    "use strict";
+    init_strings();
+    init_constants3();
+    ChordHint = class {
+      /** @param {EngineOptions} config the board's settings, read each time */
+      constructor(config4) {
+        this.config = config4;
+        this.el = null;
+        this.timer = 0;
+      }
+      /** @param {string} text @param {string} [role] */
+      show(text, role = "status") {
+        if (typeof document === "undefined") return;
+        if (!this.el) {
+          this.el = document.createElement("div");
+          this.el.className = "kp-shortcuts-pending";
+          this.el.setAttribute("role", role);
+        }
+        const modal = [...document.querySelectorAll("dialog")].filter((d) => d.matches(":modal")).pop();
+        const home = modal ?? document.body;
+        if (this.el.parentElement !== home) home.append(this.el);
+        this.place();
+        this.el.textContent = text;
+        this.el.hidden = false;
+      }
+      /** The cap's place: the engine's option, else the root's attribute (read by the stylesheet as well), else centre. */
+      place() {
+        if (!this.el) return;
+        const wanted = this.config.hintPlace ?? document.documentElement.getAttribute("data-kp-shortcuts-hint") ?? "centre";
+        this.el.setAttribute("data-kp-shortcuts-place", SHORTCUT_HINT_PLACES.includes(
+          /** @type {any} */
+          wanted
+        ) ? wanted : "centre");
+      }
+      hide() {
+        window.clearTimeout(this.timer);
+        if (this.el) this.el.hidden = true;
+      }
+      /** Run `end` after `ms`, replacing any timer that was running. @param {() => void} end @param {number} ms */
+      arm(end, ms) {
+        window.clearTimeout(this.timer);
+        this.timer = window.setTimeout(end, ms);
+      }
+      /** @param {string[]} typed @param {boolean} unknown */
+      chord(typed, unknown) {
+        if (!this.el) this.show("");
+        const hint = this.el;
+        if (!hint) return;
+        this.place();
+        hint.replaceChildren();
+        for (const key of typed) {
+          const cap = document.createElement("kbd");
+          cap.className = "kp-kbd";
+          cap.textContent = key;
+          hint.append(cap);
+        }
+        if (unknown) hint.replaceChildren(getStrings().shortcutsUnknown(typed.join(" ")));
+        else this.appendWaiting(hint);
+        hint.hidden = false;
+      }
+      /** The "…" cap and its words for a screen reader. @param {HTMLElement} hint */
+      appendWaiting(hint) {
+        const more = document.createElement("kbd");
+        more.className = "kp-kbd kp-kbd--wait";
+        more.textContent = "\u2026";
+        more.setAttribute("aria-hidden", "true");
+        hint.append(more);
+        const sr = document.createElement("span");
+        sr.className = "kp-sr-only";
+        sr.textContent = getStrings().shortcutsPending;
+        hint.append(sr);
+      }
+    };
+  }
+});
+
+// js/shortcuts/keys.js
 function parseShortcutKeys(keys) {
   const steps = [];
   let mods = /* @__PURE__ */ new Set();
@@ -9246,258 +9332,33 @@ function matches(step, event) {
   if (!letter && step.mods.includes("shift") && !event.shiftKey) return false;
   return key.toLowerCase() === step.key.toLowerCase();
 }
-function scopeActive(entry) {
-  const scope = entry.scope;
-  if (typeof scope === "string") return true;
-  if (!scope.isConnected) return false;
-  const hidden2 = scope.closest("[hidden], [inert]");
-  return hidden2 === null && (scope.getClientRects().length > 0 || scope.hasAttribute("data-kp-keys-always"));
+function ignoredKey(event) {
+  return event.isComposing || event.repeat || event.key === "Dead" || event.key === "Shift" || event.key === "Control" || event.key === "Alt" || event.key === "Meta";
 }
-function available(entry) {
-  try {
-    return entry.shortcut.when ? entry.shortcut.when() !== false : true;
-  } catch {
-    return false;
+var MODIFIERS, normal;
+var init_keys = __esm({
+  "js/shortcuts/keys.js"() {
+    "use strict";
+    MODIFIERS = /* @__PURE__ */ new Set(["mod", "ctrl", "control", "alt", "shift", "meta", "cmd"]);
+    normal = (steps) => steps.map((s2) => [...s2.mods, s2.key === " " ? "space" : s2.key.toLowerCase()].join("+")).join(" ");
   }
-}
-function typing(target) {
-  return target instanceof HTMLElement && (target.isContentEditable || target.matches(config2.typingSelector));
-}
-function showHint(text, role = "status") {
-  if (typeof document === "undefined") return;
-  if (!hint) {
-    hint = document.createElement("div");
-    hint.className = "kp-shortcuts-pending";
-    hint.setAttribute("role", role);
-  }
-  const modal = [...document.querySelectorAll("dialog")].filter((d) => d.matches(":modal")).pop();
-  const home = modal ?? document.body;
-  if (hint.parentElement !== home) home.append(hint);
-  placeHint();
-  hint.textContent = text;
-  hint.hidden = false;
-}
-function placeHint() {
-  if (!hint) return;
-  const wanted = config2.hintPlace ?? document.documentElement.getAttribute("data-kp-shortcuts-hint") ?? "centre";
-  hint.setAttribute("data-kp-shortcuts-place", SHORTCUT_HINT_PLACES.includes(
-    /** @type {any} */
-    wanted
-  ) ? wanted : "centre");
-}
-function announcePending() {
-  if (typeof document === "undefined") return;
-  document.dispatchEvent(
-    new CustomEvent(SHORTCUT_PENDING_EVENT, { detail: { keys: pending?.shown ?? "", waiting: pending !== null, ms: pending ? config2.chordMs : 0 } })
-  );
-}
-function shortcutClaims(event) {
-  if (!listening || event.isComposing) return false;
-  const now = event.timeStamp || Date.now();
-  if (pending && now - pending.at <= config2.chordMs) return true;
-  const hits = [...entries].filter(scopeActive).filter((entry) => entry.steps[0] && matches(entry.steps[0], event));
-  if (hits.length === 0) return false;
-  return !typing(event.target) || hits.every((entry) => inFieldsToo(entry, 0));
-}
-function hideHint() {
-  window.clearTimeout(hintTimer);
-  if (hint) hint.hidden = true;
-}
-function chordHint(typed, unknown) {
-  if (!hint) showHint("");
-  if (!hint) return;
-  placeHint();
-  hint.replaceChildren();
-  for (const key of typed) {
-    const cap = document.createElement("kbd");
-    cap.className = "kp-kbd";
-    cap.textContent = key;
-    hint.append(cap);
-  }
-  if (unknown) {
-    hint.replaceChildren(getStrings().shortcutsUnknown(typed.join(" ")));
-  } else {
-    const more = document.createElement("kbd");
-    more.className = "kp-kbd kp-kbd--wait";
-    more.textContent = "\u2026";
-    more.setAttribute("aria-hidden", "true");
-    hint.append(more);
-    const sr = document.createElement("span");
-    sr.className = "kp-sr-only";
-    sr.textContent = getStrings().shortcutsPending;
-    hint.append(sr);
-  }
-  hint.hidden = false;
-}
-function onKey(event) {
-  const before = pending;
-  handleKey(event);
-  if (pending !== before) announcePending();
-}
-function handleKey(event) {
-  if (event.isComposing || event.repeat || event.key === "Dead" || event.key === "Shift" || event.key === "Control" || event.key === "Alt" || event.key === "Meta")
-    return;
-  const now = event.timeStamp || Date.now();
-  if (event.key === "Escape" && pending) {
-    pending = null;
-    hideHint();
-    return;
-  }
-  const live4 = pending && now - pending.at <= config2.chordMs ? pending : null;
-  const pool = live4 ? live4.candidates : [...entries].filter(scopeActive);
-  const index = live4 ? live4.index : 0;
-  const hits = pool.filter((entry) => entry.steps[index] && matches(entry.steps[index], event)).sort((a, b) => Number(typeof a.scope === "string") - Number(typeof b.scope === "string") || a.order - b.order);
-  const needsMod = hits.length > 0 && hits.every((e) => inFieldsToo(e, index));
-  if (typing(event.target) && !needsMod) {
-    pending = null;
-    hideHint();
-    return;
-  }
-  if (hits.length === 0) {
-    if (live4) {
-      const typed = live4.shown;
-      pending = null;
-      if (config2.unknownHint) {
-        chordHint([...typed.split(" "), event.key], true);
-        window.clearTimeout(hintTimer);
-        hintTimer = window.setTimeout(hideHint, UNKNOWN_MS);
-      } else hideHint();
-      onKeyFresh(event, now);
-    }
-    return;
-  }
-  const done = hits.filter((entry) => entry.steps.length === index + 1);
-  const more = hits.filter((entry) => entry.steps.length > index + 1);
-  if (more.length > 0 && done.length === 0) {
-    pending = { candidates: more, index: index + 1, at: now, shown: [live4?.shown, event.key].filter(Boolean).join(" ") };
-    chordHint(pending.shown.split(" "), false);
-    window.clearTimeout(hintTimer);
-    hintTimer = window.setTimeout(() => {
-      pending = null;
-      hideHint();
-      announcePending();
-    }, config2.chordMs);
-    return;
-  }
-  pending = null;
-  hideHint();
-  const first = done.find(available);
-  if (!first) return;
-  const result = first.shortcut.run(event);
-  if (result !== false) event.preventDefault();
-  document.dispatchEvent(new CustomEvent(SHORTCUT_EVENT, { bubbles: true, detail: { keys: first.shortcut.keys, what: first.shortcut.what } }));
-}
-function onKeyFresh(event, now) {
-  pending = null;
-  const pool = [...entries].filter(scopeActive).filter((entry) => entry.steps[0] && matches(entry.steps[0], event));
-  if (pool.length === 0 || typing(event.target) && !pool.every((entry) => inFieldsToo(entry, 0))) return;
-  const more = pool.filter((entry) => entry.steps.length > 1);
-  if (more.length > 0 && pool.every((entry) => entry.steps.length > 1)) {
-    pending = { candidates: more, index: 1, at: now, shown: event.key };
-    return;
-  }
-  const first = pool.filter((entry) => entry.steps.length === 1).find(available);
-  if (first) {
-    const result = first.shortcut.run(event);
-    if (result !== false) event.preventDefault();
-  }
-}
-function listen() {
-  if (listening || typeof document === "undefined") return;
-  listening = true;
-  document.addEventListener("keydown", onKey);
-}
-function unlisten() {
-  if (!listening || entries.size > 0) return;
-  listening = false;
-  document.removeEventListener("keydown", onKey);
-  pending = null;
-  hideHint();
-}
-function altGrProblem(steps) {
-  const bad = steps.find((s2) => ALTGR_KEYS.includes(s2.key));
-  if (!bad) return null;
-  const suggestion2 = bad.key === "[" || bad.key === "]" ? "Shift ArrowLeft / Shift ArrowRight, or a digit" : 'a letter, a digit, an arrow key or a chord such as "g s"';
-  return getStrings().shortcutsAltGr(bad.key, suggestion2);
-}
-function registerShortcuts(scope, list, options = {}) {
-  const guard = options.layoutGuard ?? config2.layoutGuard;
-  const added = [];
-  const fault = (message) => {
-    if ((options.dev ?? inDevelopment()) === true) {
-      for (const entry of added) entries.delete(entry);
-      throw new Error(message);
-    }
-    console.error(`[kp-shortcuts] ${message}`);
-  };
-  for (const shortcut of list) {
-    const steps = parseShortcutKeys(shortcut.keys);
-    const id = normal(steps);
-    const reserved = RESERVED.includes(id);
-    if (reserved) {
-      fault(`The keys "${shortcut.keys}" belong to the palette and the shortcut sheet.`);
-      continue;
-    }
-    const problem = guard === "off" ? null : altGrProblem(steps);
-    if (problem) {
-      if (guard === "refuse") {
-        fault(problem);
-        continue;
-      }
-      (options.onWarn ?? warn)(problem);
-    }
-    const clash = [...entries, ...added].find(
-      (other) => other.scope === scope && (other.normal === id || other.normal.startsWith(`${id} `) || id.startsWith(`${other.normal} `))
-    );
-    if (clash) {
-      fault(`The keys "${shortcut.keys}" (${shortcut.what}) clash with "${clash.shortcut.keys}" (${clash.shortcut.what}) in the same scope.`);
-      continue;
-    }
-    const entry = { shortcut, steps, normal: id, scope, order: order++ };
-    added.push(entry);
-    entries.add(entry);
-  }
-  listen();
-  queueSheets();
-  return () => {
-    for (const entry of added) entries.delete(entry);
-    added.length = 0;
-    unlisten();
-    queueSheets();
-  };
-}
-function listShortcuts() {
-  return [...entries].map((entry) => ({
-    keys: entry.shortcut.keys,
-    what: entry.shortcut.what,
-    group: entry.shortcut.group ?? "Shortcuts",
-    scope: typeof entry.scope === "string" ? entry.scope : "element",
-    available: scopeActive(entry) && available(entry)
-  }));
-}
-function queueSheets() {
-  if (queued || typeof document === "undefined") return;
-  queued = true;
-  queueMicrotask(() => {
-    queued = false;
-    for (const sheet of document.querySelectorAll(SHORTCUTS_LIVE_SHEET)) renderShortcutSheet(
-      /** @type {HTMLElement} */
-      sheet
-    );
-  });
-}
-function renderShortcutSheet(sheet) {
-  const doc = sheet.ownerDocument;
-  const s2 = getStrings();
+});
+
+// js/shortcuts/sheet.js
+function bodyOf(sheet) {
   let body = (
     /** @type {HTMLElement | null} */
     sheet.querySelector("[data-kp-shortcuts-body]")
   );
   if (!body) {
-    body = doc.createElement("div");
+    body = sheet.ownerDocument.createElement("div");
     body.setAttribute("data-kp-shortcuts-body", "");
     sheet.append(body);
   }
+  return body;
+}
+function collectGroups(board2, sheet, fixed, sorted) {
+  const s2 = getStrings();
   const groups = /* @__PURE__ */ new Map();
   const groupFor = (name, scoped) => {
     let g = groups.get(name);
@@ -9505,125 +9366,430 @@ function renderShortcutSheet(sheet) {
     if (scoped) g.scoped = true;
     return g;
   };
-  const fixed = sheet.getAttribute("data-kp-shortcuts-reserved-group") ?? "Anywhere";
   const fixedGroup = groupFor(fixed, false);
-  if (doc.querySelector("[data-kp-palette]")) fixedGroup.rows.push({ keys: "Mod K", what: s2.shortcutsPalette, off: false, reason: "" });
+  if (sheet.ownerDocument.querySelector("[data-kp-palette]")) fixedGroup.rows.push({ keys: "Mod K", what: s2.shortcutsPalette, off: false, reason: "" });
   fixedGroup.rows.push({ keys: "?", what: s2.shortcutsSheet, off: false, reason: "" });
-  const only = (sheet.getAttribute("data-kp-shortcuts-scope") ?? "").split(",").map((x) => x.trim()).filter(Boolean);
-  const sorted = [...entries].filter((e) => only.length === 0 || typeof e.scope === "string" && only.includes(e.scope)).sort((a, b) => a.order - b.order);
   for (const entry of sorted) {
-    const scopeOn = scopeActive(entry);
-    if (!scopeOn) continue;
+    if (!scopeActive(entry)) continue;
     const group = groupFor(entry.shortcut.group ?? "Shortcuts", typeof entry.scope !== "string");
-    const on = available(entry);
-    group.rows.push({ keys: entry.shortcut.keys, what: entry.shortcut.what, off: !on, reason: entry.shortcut.reason ?? s2.shortcutsUnavailable });
+    group.rows.push({ keys: entry.shortcut.keys, what: entry.shortcut.what, off: !available(entry), reason: entry.shortcut.reason ?? s2.shortcutsUnavailable });
   }
-  const wanted = (sheet.getAttribute("data-kp-shortcuts-group") ?? "").split(",").map((x) => x.trim()).filter(Boolean).concat(config2.groupOrder ?? []);
-  const list = [...groups.values()].filter((g) => g.rows.length > 0);
+  return [...groups.values()].filter((g) => g.rows.length > 0);
+}
+function sortGroups(list, wanted, fixed) {
   const rank2 = (g) => {
     if (g.group === fixed) return wanted.includes(fixed) ? wanted.indexOf(fixed) + 1 : 0;
-    if (g.scoped) return 0.5;
+    if (g.scoped) return SCOPED_RANK;
     const at = wanted.indexOf(g.group);
-    return at < 0 ? 1e3 : at + 1;
+    return at < 0 ? UNRANKED : at + 1;
   };
   list.sort((a, b) => a.scoped === b.scoped ? rank2(a) - rank2(b) : a.scoped ? -1 : 1);
+}
+function emptyPlate(doc) {
+  const s2 = getStrings();
+  const empty = doc.createElement("div");
+  empty.className = "kp-empty kp-shortcuts__empty";
+  const title = doc.createElement("p");
+  title.className = "kp-empty__title";
+  title.textContent = s2.shortcutsEmptyTitle;
+  const text = doc.createElement("p");
+  text.className = "kp-empty__body";
+  text.textContent = s2.shortcutsEmptyText;
+  empty.append(title, text);
+  return empty;
+}
+function rowOf(doc, row) {
+  const wrap = doc.createElement("div");
+  wrap.className = row.off ? "kp-shortcuts__row kp-shortcuts__row--off" : "kp-shortcuts__row";
+  const dt = doc.createElement("dt");
+  const kbd = doc.createElement("kbd");
+  kbd.className = "kp-palette__keys";
+  kbd.textContent = displayShortcutKeys(row.keys);
+  dt.append(kbd);
+  const dd = doc.createElement("dd");
+  dd.append(row.what);
+  if (row.off) {
+    const why = doc.createElement("span");
+    why.className = "kp-shortcuts__reason";
+    why.textContent = row.reason;
+    dd.append(why);
+  }
+  wrap.append(dt, dd);
+  return wrap;
+}
+function sectionOf(doc, g) {
+  const section = doc.createElement("section");
+  const heading = doc.createElement("h3");
+  heading.className = "kp-shortcuts__group-label";
+  heading.textContent = g.group;
+  const dl = doc.createElement("dl");
+  dl.className = "kp-shortcuts__list";
+  for (const row of g.rows) dl.append(rowOf(doc, row));
+  section.append(heading, dl);
+  return section;
+}
+function renderSheet(board2, sheet) {
+  const doc = sheet.ownerDocument;
+  const body = bodyOf(sheet);
+  const fixed = sheet.getAttribute("data-kp-shortcuts-reserved-group") ?? "Anywhere";
+  const only = listOf(sheet.getAttribute("data-kp-shortcuts-scope"));
+  const sorted = [...board2.entries].filter((e) => only.length === 0 || typeof e.scope === "string" && only.includes(e.scope)).sort((a, b) => a.order - b.order);
+  const list = collectGroups(board2, sheet, fixed, sorted);
+  sortGroups(list, listOf(sheet.getAttribute("data-kp-shortcuts-group")).concat(board2.config.groupOrder ?? []), fixed);
   const registered2 = sorted.some(scopeActive);
   body.replaceChildren();
   if (!registered2 && sheet.getAttribute("data-kp-shortcuts-empty") !== "off") {
-    const empty = doc.createElement("div");
-    empty.className = "kp-empty kp-shortcuts__empty";
-    const title = doc.createElement("p");
-    title.className = "kp-empty__title";
-    title.textContent = s2.shortcutsEmptyTitle;
-    const text = doc.createElement("p");
-    text.className = "kp-empty__body";
-    text.textContent = s2.shortcutsEmptyText;
-    empty.append(title, text);
-    body.append(empty);
+    body.append(emptyPlate(doc));
     return;
   }
-  for (const g of list) {
-    const section = doc.createElement("section");
-    const heading = doc.createElement("h3");
-    heading.className = "kp-shortcuts__group-label";
-    heading.textContent = g.group;
-    const dl = doc.createElement("dl");
-    dl.className = "kp-shortcuts__list";
-    for (const row of g.rows) {
-      const wrap = doc.createElement("div");
-      wrap.className = row.off ? "kp-shortcuts__row kp-shortcuts__row--off" : "kp-shortcuts__row";
-      const dt = doc.createElement("dt");
-      const kbd = doc.createElement("kbd");
-      kbd.className = "kp-palette__keys";
-      kbd.textContent = displayShortcutKeys(row.keys);
-      dt.append(kbd);
-      const dd = doc.createElement("dd");
-      dd.append(row.what);
-      if (row.off) {
-        const why = doc.createElement("span");
-        why.className = "kp-shortcuts__reason";
-        why.textContent = row.reason;
-        dd.append(why);
-      }
-      wrap.append(dt, dd);
-      dl.append(wrap);
-    }
-    section.append(heading, dl);
-    body.append(section);
+  for (const g of list) body.append(sectionOf(doc, g));
+}
+var UNRANKED, SCOPED_RANK, listOf;
+var init_sheet = __esm({
+  "js/shortcuts/sheet.js"() {
+    "use strict";
+    init_strings();
+    init_entries();
+    init_keys();
+    UNRANKED = 1e3;
+    SCOPED_RANK = 0.5;
+    listOf = (value) => (value ?? "").split(",").map((x) => x.trim()).filter(Boolean);
   }
+});
+
+// js/shortcuts/board.js
+var ShortcutBoard;
+var init_board = __esm({
+  "js/shortcuts/board.js"() {
+    "use strict";
+    init_constants3();
+    init_entries();
+    init_hint();
+    init_keys();
+    init_sheet();
+    ShortcutBoard = class {
+      constructor() {
+        this.config = { chordMs: CHORD_MS, layoutGuard: "warn", typingSelector: DEFAULT_TYPING_SELECTOR, unknownHint: false };
+        this.entries = /* @__PURE__ */ new Set();
+        this.order = 0;
+        this.pending = null;
+        this.listening = false;
+        this.queued = false;
+        this.hint = new ChordHint(this.config);
+        this.handler = (event) => this.onKey(event);
+      }
+      /** Change the engine's defaults for the whole page. @param {EngineOptions} next */
+      configure(next2) {
+        Object.assign(this.config, next2);
+        this.hint.place();
+        this.queueSheets();
+      }
+      /** @returns {boolean} */
+      inDevelopment() {
+        if (this.config.dev !== void 0) return this.config.dev;
+        try {
+          return /^(localhost|127\.0\.0\.1|\[::1\]|)$/.test(location.hostname);
+        } catch {
+          return false;
+        }
+      }
+      /** @param {string} message */
+      warn(message) {
+        if (this.config.onWarn) this.config.onWarn(message);
+        else console.warn(`[kp-shortcuts] ${message}`);
+      }
+      /** @param {EventTarget | null} target */
+      typing(target) {
+        return target instanceof HTMLElement && (target.isContentEditable || target.matches(this.config.typingSelector));
+      }
+      /** The entries whose scope is on screen. */
+      active() {
+        return [...this.entries].filter(scopeActive);
+      }
+      /** The active entries whose first step this event presses. @param {KeyboardEvent} event */
+      startedBy(event) {
+        return this.active().filter((entry) => entry.steps[0] && matches(entry.steps[0], event));
+      }
+      /** The registered shortcuts, for a consumer's own listing. @returns {{ keys: string, what: string, group: string, scope: string, available: boolean }[]} */
+      list() {
+        return [...this.entries].map((entry) => ({
+          keys: entry.shortcut.keys,
+          what: entry.shortcut.what,
+          group: entry.shortcut.group ?? "Shortcuts",
+          scope: typeof entry.scope === "string" ? entry.scope : "element",
+          available: scopeActive(entry) && available(entry)
+        }));
+      }
+      /** Tells the page whether a chord waits for its next key. */
+      announcePending() {
+        if (typeof document === "undefined") return;
+        const { pending: pending4 } = this;
+        document.dispatchEvent(
+          new CustomEvent(SHORTCUT_PENDING_EVENT, { detail: { keys: pending4?.shown ?? "", waiting: pending4 !== null, ms: pending4 ? this.config.chordMs : 0 } })
+        );
+      }
+      /**
+       * Whether the engine would take this key: a chord waits for its next key, or a registered shortcut that is on screen
+       * starts with it (a letter not while a person types in a field).
+       * @param {KeyboardEvent} event
+       * @returns {boolean}
+       */
+      claims(event) {
+        if (!this.listening || event.isComposing) return false;
+        const now = event.timeStamp || Date.now();
+        if (this.pending && now - this.pending.at <= this.config.chordMs) return true;
+        const hits = this.startedBy(event);
+        if (hits.length === 0) return false;
+        return !this.typing(event.target) || hits.every((entry) => inFieldsToo(entry, 0));
+      }
+      /** @param {KeyboardEvent} event */
+      onKey(event) {
+        const before = this.pending;
+        this.handleKey(event);
+        if (this.pending !== before) this.announcePending();
+      }
+      /** Drop the chord and its cap. */
+      clearChord() {
+        this.pending = null;
+        this.hint.hide();
+      }
+      /** @param {KeyboardEvent} event */
+      handleKey(event) {
+        if (ignoredKey(event)) return;
+        const now = event.timeStamp || Date.now();
+        if (event.key === "Escape" && this.pending) return this.clearChord();
+        const live4 = this.pending && now - this.pending.at <= this.config.chordMs ? this.pending : null;
+        const pool = live4 ? live4.candidates : this.active();
+        const index = live4 ? live4.index : 0;
+        const hits = pool.filter((entry) => entry.steps[index] && matches(entry.steps[index], event)).sort((a, b) => Number(typeof a.scope === "string") - Number(typeof b.scope === "string") || a.order - b.order);
+        const needsMod = hits.length > 0 && hits.every((e) => inFieldsToo(e, index));
+        if (this.typing(event.target) && !needsMod) return this.clearChord();
+        if (hits.length === 0) return live4 ? this.chordMissed(live4, event, now) : void 0;
+        const done = hits.filter((entry) => entry.steps.length === index + 1);
+        const more = hits.filter((entry) => entry.steps.length > index + 1);
+        if (more.length > 0 && done.length === 0) return this.waitForNext(more, index, live4, event, now);
+        this.clearChord();
+        this.runFirst(done, event);
+      }
+      /** The chord's next key matched nothing: say so if asked, then let the key begin a shortcut of its own. @param {Pending} live @param {KeyboardEvent} event @param {number} now */
+      chordMissed(live4, event, now) {
+        const typed = live4.shown;
+        this.pending = null;
+        if (this.config.unknownHint) {
+          this.hint.chord([...typed.split(" "), event.key], true);
+          this.hint.arm(() => this.hint.hide(), UNKNOWN_MS);
+        } else this.hint.hide();
+        this.startFresh(event, now);
+      }
+      /** More than one step is left: show the cap and wait for the next key. @param {Entry[]} more @param {number} index @param {Pending | null} live @param {KeyboardEvent} event @param {number} now */
+      waitForNext(more, index, live4, event, now) {
+        const pending4 = { candidates: more, index: index + 1, at: now, shown: [live4?.shown, event.key].filter(Boolean).join(" ") };
+        this.pending = pending4;
+        this.hint.chord(pending4.shown.split(" "), false);
+        this.hint.arm(() => {
+          this.pending = null;
+          this.hint.hide();
+          this.announcePending();
+        }, this.config.chordMs);
+      }
+      /** Run the first available shortcut of a finished chord. @param {Entry[]} done @param {KeyboardEvent} event */
+      runFirst(done, event) {
+        const first = done.find(available);
+        if (!first) return;
+        const result = first.shortcut.run(event);
+        if (result !== false) event.preventDefault();
+        document.dispatchEvent(new CustomEvent(SHORTCUT_EVENT, { bubbles: true, detail: { keys: first.shortcut.keys, what: first.shortcut.what } }));
+      }
+      /** @param {KeyboardEvent} event @param {number} now */
+      startFresh(event, now) {
+        this.pending = null;
+        const pool = this.startedBy(event);
+        if (pool.length === 0 || this.typing(event.target) && !pool.every((entry) => inFieldsToo(entry, 0))) return;
+        const more = pool.filter((entry) => entry.steps.length > 1);
+        if (more.length > 0 && pool.every((entry) => entry.steps.length > 1)) {
+          this.pending = { candidates: more, index: 1, at: now, shown: event.key };
+          return;
+        }
+        const first = pool.filter((entry) => entry.steps.length === 1).find(available);
+        if (first) {
+          const result = first.shortcut.run(event);
+          if (result !== false) event.preventDefault();
+        }
+      }
+      /** The key listener goes on with the first registration. */
+      listen() {
+        if (this.listening || typeof document === "undefined") return;
+        this.listening = true;
+        document.addEventListener("keydown", this.handler);
+      }
+      /** ... and off with the last. */
+      unlisten() {
+        if (!this.listening || this.entries.size > 0) return;
+        this.listening = false;
+        document.removeEventListener("keydown", this.handler);
+        this.clearChord();
+      }
+      /** Refill every live sheet once, after the current task. */
+      queueSheets() {
+        if (this.queued || typeof document === "undefined") return;
+        this.queued = true;
+        queueMicrotask(() => {
+          this.queued = false;
+          for (const sheet of document.querySelectorAll(SHORTCUTS_LIVE_SHEET)) renderSheet(
+            this,
+            /** @type {HTMLElement} */
+            sheet
+          );
+        });
+      }
+    };
+  }
+});
+
+// js/shortcuts/live.js
+var LiveSheet;
+var init_live = __esm({
+  "js/shortcuts/live.js"() {
+    "use strict";
+    init_controller();
+    init_sheet();
+    LiveSheet = class extends Controller {
+      connect() {
+        const sheet = this.host;
+        const board2 = (
+          /** @type {any} */
+          this.options.board
+        );
+        sheet.dataset.kpShortcutsLiveAttached = "";
+        this.own(() => {
+          sheet.querySelector("[data-kp-shortcuts-body]")?.remove();
+          delete sheet.dataset.kpShortcutsLiveAttached;
+        });
+        this.listen(sheet, "kp-palette-open", () => renderSheet(board2, sheet));
+        renderSheet(board2, sheet);
+      }
+    };
+  }
+});
+
+// js/shortcuts/register.js
+function altGrProblem(steps) {
+  const bad = steps.find((s2) => ALTGR_KEYS.includes(s2.key));
+  if (!bad) return null;
+  const suggestion2 = bad.key === "[" || bad.key === "]" ? "Shift ArrowLeft / Shift ArrowRight, or a digit" : 'a letter, a digit, an arrow key or a chord such as "g s"';
+  return getStrings().shortcutsAltGr(bad.key, suggestion2);
+}
+function registerOn(board2, scope, list, options = {}) {
+  const guard = options.layoutGuard ?? board2.config.layoutGuard;
+  const added = [];
+  const fault = (message) => {
+    if ((options.dev ?? board2.inDevelopment()) === true) {
+      for (const entry of added) board2.entries.delete(entry);
+      throw new Error(message);
+    }
+    console.error(`[kp-shortcuts] ${message}`);
+  };
+  for (const shortcut of list) {
+    const entry = entryFor(board2, scope, shortcut, guard, options, added, fault);
+    if (!entry) continue;
+    added.push(entry);
+    board2.entries.add(entry);
+  }
+  board2.listen();
+  board2.queueSheets();
+  return () => {
+    for (const entry of added) board2.entries.delete(entry);
+    added.length = 0;
+    board2.unlisten();
+    board2.queueSheets();
+  };
+}
+function entryFor(board2, scope, shortcut, guard, options, added, fault) {
+  const steps = parseShortcutKeys(shortcut.keys);
+  const id = normal(steps);
+  if (RESERVED.includes(id)) return void fault(`The keys "${shortcut.keys}" belong to the palette and the shortcut sheet.`);
+  const problem = guard === "off" ? null : altGrProblem(steps);
+  if (problem) {
+    if (guard === "refuse") return void fault(problem);
+    (options.onWarn ?? ((message) => board2.warn(message)))(problem);
+  }
+  const clash = [...board2.entries, ...added].find(
+    (other) => other.scope === scope && (other.normal === id || other.normal.startsWith(`${id} `) || id.startsWith(`${other.normal} `))
+  );
+  if (clash) return void fault(`The keys "${shortcut.keys}" (${shortcut.what}) clash with "${clash.shortcut.keys}" (${clash.shortcut.what}) in the same scope.`);
+  return { shortcut, steps, normal: id, scope, order: board2.order++ };
+}
+var init_register = __esm({
+  "js/shortcuts/register.js"() {
+    "use strict";
+    init_strings();
+    init_constants3();
+    init_keys();
+  }
+});
+
+// js/shortcuts.js
+var shortcuts_exports = {};
+__export(shortcuts_exports, {
+  ALTGR_KEYS: () => ALTGR_KEYS,
+  CHORD_MS: () => CHORD_MS,
+  SHORTCUTS_LIVE_SHEET: () => SHORTCUTS_LIVE_SHEET,
+  SHORTCUT_EVENT: () => SHORTCUT_EVENT,
+  SHORTCUT_HINT_PLACES: () => SHORTCUT_HINT_PLACES,
+  SHORTCUT_PENDING_EVENT: () => SHORTCUT_PENDING_EVENT,
+  UNKNOWN_MS: () => UNKNOWN_MS,
+  attachShortcuts: () => attachShortcuts,
+  configureShortcuts: () => configureShortcuts,
+  displayShortcutKeys: () => displayShortcutKeys,
+  listShortcuts: () => listShortcuts,
+  parseShortcutKeys: () => parseShortcutKeys,
+  registerShortcuts: () => registerShortcuts,
+  renderShortcutSheet: () => renderShortcutSheet,
+  shortcutClaims: () => shortcutClaims
+});
+function configureShortcuts(next2) {
+  board.configure(next2);
+}
+function shortcutClaims(event) {
+  return board.claims(event);
+}
+function registerShortcuts(scope, list, options = {}) {
+  return registerOn(board, scope, list, options);
+}
+function listShortcuts() {
+  return board.list();
+}
+function renderShortcutSheet(sheet) {
+  renderSheet(board, sheet);
 }
 function attachShortcuts(root = document) {
-  const cleanups = [];
+  const made7 = [];
   for (const found of root.querySelectorAll(SHORTCUTS_LIVE_SHEET)) {
     const sheet = (
       /** @type {HTMLElement} */
       found
     );
     if (sheet.dataset.kpShortcutsLiveAttached !== void 0) continue;
-    sheet.dataset.kpShortcutsLiveAttached = "";
-    const refresh3 = () => renderShortcutSheet(sheet);
-    sheet.addEventListener("kp-palette-open", refresh3);
-    refresh3();
-    cleanups.push(() => {
-      sheet.removeEventListener("kp-palette-open", refresh3);
-      sheet.querySelector("[data-kp-shortcuts-body]")?.remove();
-      delete sheet.dataset.kpShortcutsLiveAttached;
-    });
+    const live4 = attachOne(sheet, LiveSheet, { board });
+    if (live4) made7.push(live4);
   }
   return () => {
-    for (const clean of cleanups) clean();
+    for (const live4 of made7) live4.destroy();
   };
 }
-var CHORD_MS, UNKNOWN_MS, SHORTCUTS_LIVE_SHEET, SHORTCUT_EVENT, SHORTCUT_PENDING_EVENT, SHORTCUT_HINT_PLACES, ALTGR_KEYS, MODIFIERS, RESERVED, config2, inFieldsToo, normal, entries, order, pending, listening, hint, hintTimer, queued;
+var board;
 var init_shortcuts = __esm({
   "js/shortcuts.js"() {
     "use strict";
-    init_strings();
-    CHORD_MS = 1500;
-    UNKNOWN_MS = 1500;
-    SHORTCUTS_LIVE_SHEET = "[data-kp-shortcuts][data-kp-shortcuts-live]";
-    SHORTCUT_EVENT = "kp-shortcut-run";
-    SHORTCUT_PENDING_EVENT = "kp-shortcut-pending";
-    SHORTCUT_HINT_PLACES = /** @type {const} */
-    ["centre", "bottom-centre"];
-    ALTGR_KEYS = Object.freeze(["[", "]", "{", "}", "@", "#", "\\", "|", "~", "\u20AC", "`", "^"]);
-    MODIFIERS = /* @__PURE__ */ new Set(["mod", "ctrl", "control", "alt", "shift", "meta", "cmd"]);
-    RESERVED = ["mod+k", "?"];
-    config2 = {
-      chordMs: CHORD_MS,
-      layoutGuard: "warn",
-      typingSelector: 'input, textarea, select, [role="textbox"]',
-      unknownHint: false
-    };
-    inFieldsToo = (entry, index) => entry.steps[index].mods.includes("mod") || entry.shortcut.inFields === true;
-    normal = (steps) => steps.map((s2) => [...s2.mods, s2.key === " " ? "space" : s2.key.toLowerCase()].join("+")).join(" ");
-    entries = /* @__PURE__ */ new Set();
-    order = 0;
-    pending = null;
-    listening = false;
-    hint = null;
-    hintTimer = 0;
-    queued = false;
+    init_controller();
+    init_board();
+    init_constants3();
+    init_live();
+    init_register();
+    init_sheet();
+    init_constants3();
+    init_keys();
+    board = new ShortcutBoard();
   }
 });
 
@@ -10136,7 +10302,7 @@ var init_anchors = __esm({
 
 // js/art/constants.js
 var ART, ART_KINDS, SVG;
-var init_constants3 = __esm({
+var init_constants4 = __esm({
   "js/art/constants.js"() {
     "use strict";
     ART = "[data-kp-art]";
@@ -11010,7 +11176,7 @@ var isKind;
 var init_draw = __esm({
   "js/art/draw.js"() {
     "use strict";
-    init_constants3();
+    init_constants4();
     init_sets();
     isKind = (value) => (
       /** @type {readonly string[]} */
@@ -11054,7 +11220,7 @@ function attachArt(root = document) {
 var init_attach2 = __esm({
   "js/art/attach.js"() {
     "use strict";
-    init_constants3();
+    init_constants4();
     init_draw();
   }
 });
@@ -11071,7 +11237,7 @@ __export(art_exports, {
 var init_art = __esm({
   "js/art.js"() {
     "use strict";
-    init_constants3();
+    init_constants4();
     init_sets();
     init_draw();
     init_attach2();
@@ -11190,9 +11356,9 @@ function setAttention(band, items) {
       going.add(el16);
       void leave(el16);
     }
-  const order2 = wanted.map((el16, at) => ({ el: el16, at })).sort((a, b) => rank(a.el) - rank(b.el) || a.at - b.at);
+  const order = wanted.map((el16, at) => ({ el: el16, at })).sort((a, b) => rank(a.el) - rank(b.el) || a.at - b.at);
   let before = null;
-  for (const { el: el16 } of order2) {
+  for (const { el: el16 } of order) {
     let prev = el16.isConnected && el16.parentElement === band ? el16.previousElementSibling : null;
     while (prev && (!prev.classList.contains("kp-attention__item") || prev.hasAttribute("data-kp-leaving") || going.has(prev)))
       prev = prev.previousElementSibling;
@@ -11284,7 +11450,7 @@ var init_attention = __esm({
 
 // js/auto-refresh/constants.js
 var REFRESH, REFRESH_EVENT, REFRESH_INTERVAL_EVENT, REFRESH_DEFAULT, REFRESH_CHOICES, MIN_STALE_S, STALE_INTERVALS, BLOCKED_RETRY_MS, MAX_BACKOFF_POWER, SECOND_MS, ID_RADIX, ID_START, ID_END, WATCHED_ATTRIBUTES, TYPING_SELECTOR;
-var init_constants4 = __esm({
+var init_constants5 = __esm({
   "js/auto-refresh/constants.js"() {
     "use strict";
     REFRESH = "[data-kp-refresh]";
@@ -11532,18 +11698,18 @@ function attachAgo(root = document, { timeZone = FRESHNESS_TIME_ZONE, now = () =
   const theme = new view.MutationObserver(remeasure);
   theme.observe(doc.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   doc.fonts?.addEventListener?.("loadingdone", remeasure);
-  if (listening2++ === 0) doc.addEventListener("visibilitychange", onVisibility);
+  if (listening++ === 0) doc.addEventListener("visibilitychange", onVisibility);
   steer();
   return () => {
     watcher.disconnect();
     theme.disconnect();
     doc.fonts?.removeEventListener?.("loadingdone", remeasure);
-    if (--listening2 === 0) doc.removeEventListener("visibilitychange", onVisibility);
+    if (--listening === 0) doc.removeEventListener("visibilitychange", onVisibility);
     for (const [el16, own] of live) if (own.owner === owner) live.delete(el16);
     steer();
   };
 }
-var AGO, FRESHNESS_TIME_ZONE, unitsOf, FORMATS, live, states, timer, warned, listening2, widths, defaultContext, onVisibility;
+var AGO, FRESHNESS_TIME_ZONE, unitsOf, FORMATS, live, states, timer, warned, listening, widths, defaultContext, onVisibility;
 var init_freshness = __esm({
   "js/freshness.js"() {
     "use strict";
@@ -11556,7 +11722,7 @@ var init_freshness = __esm({
     states = /* @__PURE__ */ new WeakMap();
     timer = null;
     warned = false;
-    listening2 = 0;
+    listening = 0;
     widths = /* @__PURE__ */ new Map();
     defaultContext = () => ({ timeZone: FRESHNESS_TIME_ZONE, now: () => Date.now(), overrides: void 0, owner: {} });
     onVisibility = () => {
@@ -11679,13 +11845,13 @@ var init_bar = __esm({
   "js/auto-refresh/bar.js"() {
     "use strict";
     init_strings();
-    init_constants4();
+    init_constants5();
   }
 });
 
 // js/menu-button/constants.js
 var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, MENU_GUTTER;
-var init_constants5 = __esm({
+var init_constants6 = __esm({
   "js/menu-button/constants.js"() {
     "use strict";
     MENU_BUTTON = "[data-kp-menu-button]";
@@ -11711,7 +11877,7 @@ function countMenu(menu) {
 var init_count2 = __esm({
   "js/menu-button/count.js"() {
     "use strict";
-    init_constants5();
+    init_constants6();
   }
 });
 
@@ -11770,7 +11936,7 @@ function menuKeyTarget(event, at, labels) {
   }
   return null;
 }
-var init_keys = __esm({
+var init_keys2 = __esm({
   "js/menu-button/keys.js"() {
     "use strict";
   }
@@ -12097,7 +12263,7 @@ var init_placement = __esm({
   "js/menu-button/placement.js"() {
     "use strict";
     init_top_layer();
-    init_constants5();
+    init_constants6();
     PLACED = ["left", "right", "top", "bottom", "width", "max-block-size", "max-inline-size", "--kp-menu-anchor-x"];
     ANCHOR_EDGE = 14;
   }
@@ -12122,10 +12288,10 @@ function menuEntry(doc, item) {
   el16.append(label);
   const described = [];
   if (item.hint) {
-    const hint2 = make2(doc, "span", "kp-menu__hint", item.hint);
-    hint2.id = nextId("kp-menu-hint");
-    described.push(hint2.id);
-    el16.append(hint2);
+    const hint = make2(doc, "span", "kp-menu__hint", item.hint);
+    hint.id = nextId("kp-menu-hint");
+    described.push(hint.id);
+    el16.append(hint);
   }
   if (item.disabled) {
     const reason = make2(doc, "span", "kp-menu__hint kp-menu__reason", item.disabled);
@@ -12358,7 +12524,7 @@ var init_open = __esm({
   "js/menu-button/open.js"() {
     "use strict";
     init_motion();
-    init_constants5();
+    init_constants6();
     init_count2();
     init_items();
     init_model();
@@ -12477,10 +12643,10 @@ var attached;
 var init_attach3 = __esm({
   "js/menu-button/attach.js"() {
     "use strict";
-    init_constants5();
+    init_constants6();
     init_count2();
     init_items();
-    init_keys();
+    init_keys2();
     init_model();
     init_open();
     attached = /* @__PURE__ */ new WeakSet();
@@ -12508,10 +12674,10 @@ __export(menu_button_exports, {
 var init_menu_button = __esm({
   "js/menu-button.js"() {
     "use strict";
-    init_constants5();
+    init_constants6();
     init_count2();
     init_model();
-    init_keys();
+    init_keys2();
     init_placement();
     init_open();
     init_attach3();
@@ -12520,7 +12686,7 @@ var init_menu_button = __esm({
 
 // js/segmented/constants.js
 var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, TRI_ATTRIBUTE, TRI_STATES, OVERFLOW_ATTRIBUTE, MORE_ATTRIBUTE, SCROLL_SLOP_PX, SAY_DELAY_MS2;
-var init_constants6 = __esm({
+var init_constants7 = __esm({
   "js/segmented/constants.js"() {
     "use strict";
     SEGMENTED = "[data-kp-segmented]";
@@ -12566,7 +12732,7 @@ var isMulti, isTri, triOf, isAll, labelOf2, isOn, groupDisabled, itemDisabled;
 var init_read = __esm({
   "js/segmented/read.js"() {
     "use strict";
-    init_constants6();
+    init_constants7();
     isMulti = (group) => group.getAttribute("data-kp-segmented") === "multi";
     isTri = (group) => group.getAttribute("data-kp-segmented") === "tri";
     triOf = (item) => {
@@ -12613,7 +12779,7 @@ function layout(group) {
 var init_plate = __esm({
   "js/segmented/plate.js"() {
     "use strict";
-    init_constants6();
+    init_constants7();
     init_read();
   }
 });
@@ -12734,7 +12900,7 @@ var init_tri = __esm({
   "js/segmented/tri.js"() {
     "use strict";
     init_strings();
-    init_constants6();
+    init_constants7();
     init_read();
     init_roving();
   }
@@ -12820,7 +12986,7 @@ function rewriteForMode(group, was) {
 var init_mode = __esm({
   "js/segmented/mode.js"() {
     "use strict";
-    init_constants6();
+    init_constants7();
     init_read();
     init_tri();
   }
@@ -12951,7 +13117,7 @@ var init_api = __esm({
   "js/segmented/api.js"() {
     "use strict";
     init_strings();
-    init_constants6();
+    init_constants7();
     init_read();
     init_group();
     init_plate();
@@ -13003,7 +13169,7 @@ function setSegmentedItems(group, items) {
 var init_items2 = __esm({
   "js/segmented/items.js"() {
     "use strict";
-    init_constants6();
+    init_constants7();
     init_state3();
     init_read();
     init_group();
@@ -13047,7 +13213,7 @@ var init_actions2 = __esm({
   "js/segmented/actions.js"() {
     "use strict";
     init_strings();
-    init_constants6();
+    init_constants7();
     init_read();
     init_api();
     init_paint();
@@ -13077,7 +13243,7 @@ function targetIndex(event, group, at, count2) {
   const step = stepFor(event, group);
   return step === 0 ? -1 : (at + step + count2) % count2;
 }
-var init_keys2 = __esm({
+var init_keys3 = __esm({
   "js/segmented/keys.js"() {
     "use strict";
   }
@@ -13098,12 +13264,12 @@ var init_root = __esm({
   "js/segmented/root.js"() {
     "use strict";
     init_controller();
-    init_constants6();
+    init_constants7();
     init_state3();
     init_read();
     init_group();
     init_actions2();
-    init_keys2();
+    init_keys3();
     init_roving();
     SegmentedRoot = class extends Controller {
       /** @param {ParentNode} root */
@@ -13234,7 +13400,7 @@ __export(segmented_exports, {
 var init_segmented = __esm({
   "js/segmented.js"() {
     "use strict";
-    init_constants6();
+    init_constants7();
     init_read();
     init_plate();
     init_api();
@@ -13455,7 +13621,7 @@ async function regionRefresh(el16) {
 var init_region = __esm({
   "js/auto-refresh/region.js"() {
     "use strict";
-    init_constants4();
+    init_constants5();
   }
 });
 
@@ -13471,7 +13637,7 @@ var init_controller3 = __esm({
     init_strings();
     init_bar();
     init_chooser();
-    init_constants4();
+    init_constants5();
     init_labels();
     init_region();
     init_words();
@@ -13805,7 +13971,7 @@ var init_api2 = __esm({
   "js/auto-refresh/api.js"() {
     "use strict";
     init_controller();
-    init_constants4();
+    init_constants5();
     init_controller3();
     refreshOf = (element) => controllerOf(
       /** @type {HTMLElement} */
@@ -13832,7 +13998,7 @@ __export(auto_refresh_exports, {
 var init_auto_refresh = __esm({
   "js/auto-refresh.js"() {
     "use strict";
-    init_constants4();
+    init_constants5();
     init_api2();
   }
 });
@@ -14315,9 +14481,9 @@ function attachToTop(root = document, { strings, after } = {}) {
       return null;
     };
     let shown5 = false;
-    let queued2 = false;
+    let queued = false;
     const decide = () => {
-      queued2 = false;
+      queued = false;
       const box = scroller();
       const next2 = (box ? box.scrollTop : view.scrollY) > threshold;
       if (next2 === shown5) return;
@@ -14326,8 +14492,8 @@ function attachToTop(root = document, { strings, after } = {}) {
       button6.dispatchEvent(new CustomEvent(TO_TOP_EVENT, { bubbles: true, detail: { shown: next2 } }));
     };
     const onScroll = () => {
-      if (queued2) return;
-      queued2 = true;
+      if (queued) return;
+      queued = true;
       view.requestAnimationFrame(decide);
     };
     const onClick = () => {
@@ -14420,7 +14586,7 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
     };
     write2(nav.hasAttribute("data-kp-nav-open"));
     const onClick = () => set(!nav.hasAttribute("data-kp-nav-open") && !closing2);
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       if (event.key !== "Escape" || !nav.hasAttribute("data-kp-nav-open")) return;
       set(false);
       button6.focus();
@@ -14437,7 +14603,7 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
     nav.addEventListener(
       "keydown",
       /** @type {EventListener} */
-      onKey6
+      onKey5
     );
     document.addEventListener("click", onOutside, true);
     cleanups.push(() => {
@@ -14445,7 +14611,7 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
       nav.removeEventListener(
         "keydown",
         /** @type {EventListener} */
-        onKey6
+        onKey5
       );
       document.removeEventListener("click", onOutside, true);
       nav.removeAttribute("data-kp-nav-open");
@@ -14512,14 +14678,14 @@ function stickyNav(wrap, after) {
   scroller.setAttribute("data-kp-nav-sticky-root", "");
   let compact = wrap.hasAttribute("data-kp-nav-compact");
   let restHeight = wrap.getBoundingClientRect().height;
-  let queued2 = false;
+  let queued = false;
   const measure = () => {
     const height = wrap.getBoundingClientRect().height;
     if (!compact) restHeight = height;
     scroller.style.setProperty("--kp-nav-sticky-height", `${height}px`);
   };
   const decide = () => {
-    queued2 = false;
+    queued = false;
     const attribute = wrap.getAttribute("data-kp-nav-sticky-after");
     const asked = after ?? (attribute !== null && attribute !== "" ? Number(attribute) : 0);
     const threshold = Math.max(restHeight, Number.isFinite(asked) ? asked : 0);
@@ -14531,8 +14697,8 @@ function stickyNav(wrap, after) {
     wrap.dispatchEvent(new CustomEvent(NAV_COMPACT_EVENT, { bubbles: true, detail: { compact: next2 } }));
   };
   const onScroll = () => {
-    if (queued2) return;
-    queued2 = true;
+    if (queued) return;
+    queued = true;
     view.requestAnimationFrame(decide);
   };
   const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
@@ -14727,7 +14893,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       );
       set(button6, button6.getAttribute("aria-expanded") !== "true");
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       const button6 = openButton();
       if (event.key !== "Escape" || !button6) return;
       set(button6, false);
@@ -14758,7 +14924,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
     nav.addEventListener(
       "keydown",
       /** @type {EventListener} */
-      onKey6
+      onKey5
     );
     nav.addEventListener(
       "focusout",
@@ -14779,7 +14945,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       nav.removeEventListener(
         "keydown",
         /** @type {EventListener} */
-        onKey6
+        onKey5
       );
       nav.removeEventListener(
         "focusout",
@@ -14880,7 +15046,7 @@ var init_components = __esm({
 
 // js/sidenav/constants.js
 var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles2, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN;
-var init_constants7 = __esm({
+var init_constants8 = __esm({
   "js/sidenav/constants.js"() {
     "use strict";
     SIDENAV_TOGGLE_EVENT = "kp-sidenav-toggle";
@@ -15096,7 +15262,7 @@ function parseChord(chord, mac) {
     ].join("+")
   };
 }
-function typing2(target) {
+function typing(target) {
   if (!(target instanceof Element)) return false;
   return target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])') !== null;
 }
@@ -15148,7 +15314,7 @@ var FOCUSABLE;
 var init_helpers = __esm({
   "js/sidenav/helpers.js"() {
     "use strict";
-    init_constants7();
+    init_constants8();
     FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   }
 });
@@ -15278,7 +15444,7 @@ var init_geometry = __esm({
   "js/sidenav/attach/geometry.js"() {
     "use strict";
     init_options();
-    init_constants7();
+    init_constants8();
   }
 });
 
@@ -15363,7 +15529,7 @@ var init_shift = __esm({
     "use strict";
     init_helpers();
     init_options();
-    init_constants7();
+    init_constants8();
   }
 });
 
@@ -15423,7 +15589,7 @@ function installLaunchers(c) {
 var init_launchers = __esm({
   "js/sidenav/attach/launchers.js"() {
     "use strict";
-    init_constants7();
+    init_constants8();
     init_options();
     init_strings();
     init_helpers();
@@ -15585,7 +15751,7 @@ function installOpen(c) {
 var init_open2 = __esm({
   "js/sidenav/attach/open.js"() {
     "use strict";
-    init_constants7();
+    init_constants8();
     init_options();
     init_calm();
     init_helpers();
@@ -15642,7 +15808,7 @@ var init_slim = __esm({
     init_options();
     init_strings();
     init_helpers();
-    init_constants7();
+    init_constants8();
   }
 });
 
@@ -15760,7 +15926,7 @@ function installTip(c) {
 var init_tip = __esm({
   "js/sidenav/attach/tip.js"() {
     "use strict";
-    init_constants7();
+    init_constants8();
     init_motion();
     init_options();
   }
@@ -15866,7 +16032,7 @@ var init_flyout = __esm({
     "use strict";
     init_options();
     init_helpers();
-    init_constants7();
+    init_constants8();
   }
 });
 
@@ -15939,7 +16105,7 @@ function installControls(c) {
   const chord = chordText !== null && chordText.trim() !== "" ? parseChord(chordText, mac) : null;
   c.chord = chord;
   const onShortcut = (event) => {
-    if (chord === null || event.defaultPrevented || event.repeat || typing2(event.target)) return;
+    if (chord === null || event.defaultPrevented || event.repeat || typing(event.target)) return;
     if (event.key.toLowerCase() !== chord.key) return;
     if (event.ctrlKey !== chord.ctrl || event.metaKey !== chord.meta || event.altKey !== chord.alt || event.shiftKey !== chord.shift) return;
     event.preventDefault();
@@ -16106,7 +16272,7 @@ var init_narrow = __esm({
   "js/sidenav/attach/narrow.js"() {
     "use strict";
     init_options();
-    init_constants7();
+    init_constants8();
   }
 });
 
@@ -16220,7 +16386,7 @@ var init_resizer = __esm({
     "use strict";
     init_options();
     init_strings();
-    init_constants7();
+    init_constants8();
   }
 });
 
@@ -16296,7 +16462,7 @@ function installRail(c) {
 var init_rail = __esm({
   "js/sidenav/attach/rail.js"() {
     "use strict";
-    init_constants7();
+    init_constants8();
     init_options();
   }
 });
@@ -16600,7 +16766,7 @@ var init_handle = __esm({
   "js/sidenav/attach/handle.js"() {
     "use strict";
     init_options();
-    init_constants7();
+    init_constants8();
   }
 });
 
@@ -16644,7 +16810,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
 var init_attach4 = __esm({
   "js/sidenav/attach.js"() {
     "use strict";
-    init_constants7();
+    init_constants8();
     init_basics();
     init_geometry();
     init_shift();
@@ -16683,7 +16849,7 @@ __export(sidenav_exports, {
 var init_sidenav = __esm({
   "js/sidenav.js"() {
     "use strict";
-    init_constants7();
+    init_constants8();
     init_options();
     init_helpers();
     init_attach4();
@@ -16692,7 +16858,7 @@ var init_sidenav = __esm({
 
 // js/combobox/constants.js
 var COMBOBOX, INPUT, LIST, STATUS2, TAGS, EMPTY, RESULTS_TEXT, CHANGE_EVENT, OPEN_EVENT;
-var init_constants8 = __esm({
+var init_constants9 = __esm({
   "js/combobox/constants.js"() {
     "use strict";
     init_strings();
@@ -16878,8 +17044,8 @@ function createListbox({
           bufferTimer = window.setTimeout(() => buffer = "", typeaheadMs);
           const all = options();
           const from = buffer.length > 1 ? 0 : index + 1;
-          const order2 = [...all.slice(from), ...all.slice(0, from)];
-          const found = order2.find((o) => (o.textContent ?? "").trim().toLowerCase().startsWith(buffer));
+          const order = [...all.slice(from), ...all.slice(0, from)];
+          const found = order.find((o) => (o.textContent ?? "").trim().toLowerCase().startsWith(buffer));
           if (found) highlight(all.indexOf(found));
         }
         break;
@@ -17245,15 +17411,15 @@ function attachComboboxes(root = document, {
       onChoose: (_, option) => take(option),
       onDismiss: close
     });
-    let pending5 = 0;
+    let pending4 = 0;
     const onInput = () => {
-      clearTimeout(pending5);
+      clearTimeout(pending4);
       const run = () => {
         const visible3 = filter();
         if (visible3 > 0 || showsEmpty && input.value.trim() !== "") open4();
         else close();
       };
-      if (debounce > 0) pending5 = window.setTimeout(run, debounce);
+      if (debounce > 0) pending4 = window.setTimeout(run, debounce);
       else run();
     };
     const onKeyDown = (event) => {
@@ -17343,7 +17509,7 @@ function attachComboboxes(root = document, {
     handles3.set(box, handle);
     created.push(handle);
     cleanups.push(() => {
-      clearTimeout(pending5);
+      clearTimeout(pending4);
       lower();
       listbox.destroy();
       input.removeEventListener("input", onInput);
@@ -17381,7 +17547,7 @@ var init_attach5 = __esm({
     init_listbox();
     init_strings();
     init_top_layer();
-    init_constants8();
+    init_constants9();
     init_handle2();
     init_helpers2();
     init_matchers();
@@ -17604,7 +17770,7 @@ var init_select = __esm({
     "use strict";
     init_listbox();
     init_top_layer();
-    init_constants8();
+    init_constants9();
     init_state4();
     selectHandles = /* @__PURE__ */ new WeakMap();
   }
@@ -17626,7 +17792,7 @@ __export(combobox_exports, {
 var init_combobox = __esm({
   "js/combobox.js"() {
     "use strict";
-    init_constants8();
+    init_constants9();
     init_matchers();
     init_handle2();
     init_attach5();
@@ -17636,7 +17802,7 @@ var init_combobox = __esm({
 
 // js/palette/constants.js
 var PALETTE, SHEET, INPUT2, LIST2, STATUS3, GROUP, OPENER, KEYS_SLOT, RUN_EVENT, OPEN_EVENT2, RESULTS_TEXT2;
-var init_constants9 = __esm({
+var init_constants10 = __esm({
   "js/palette/constants.js"() {
     "use strict";
     init_strings();
@@ -17787,12 +17953,12 @@ function rankCommands(commands, query, { context: context2 = null, maxShown = IN
   }
   return [...groups].map(([group, list]) => ({ group, commands: list }));
 }
-function noMatchText(query, { verbs = [], subjects = [], noun = "", hint: hint2 = "" } = {}, options = {}) {
+function noMatchText(query, { verbs = [], subjects = [], noun = "", hint = "" } = {}, options = {}) {
   const s2 = getStrings();
   const want = queryWords(query, options);
   const verb = verbs.find((v) => want.length > 1 && intentWords(v, options)[0]?.startsWith(want[0]));
   if (verb && subjects.length > 0) return s2.intentNoSubject(want.slice(1).join(" "), verb, [...subjects], noun);
-  return hint2 || s2.intentNoMatch;
+  return hint || s2.intentNoMatch;
 }
 var INTENT_MAX_SHOWN, fold, intentWords;
 var init_intent = __esm({
@@ -17822,7 +17988,7 @@ function isTyping(target, typingSelector) {
   return target.isContentEditable || target.matches(typingSelector);
 }
 var MATCHERS2;
-var init_keys3 = __esm({
+var init_keys4 = __esm({
   "js/palette/keys.js"() {
     "use strict";
     init_listbox();
@@ -17874,7 +18040,7 @@ function openerFor(event, dialog, answersKey) {
 var init_outside = __esm({
   "js/palette/outside.js"() {
     "use strict";
-    init_constants9();
+    init_constants10();
   }
 });
 
@@ -17975,17 +18141,17 @@ function createIntentFilter(dialog, list, status) {
   };
   const textsOf = (option) => {
     const label = [];
-    const hint2 = [];
+    const hint = [];
     const walk = (node, inHint) => {
       for (const child of node.childNodes) {
         if (child instanceof HTMLElement) {
           if (child.tagName === "KBD") continue;
           walk(child, inHint || child.matches(".kp-palette__description, [data-kp-hint-text]"));
-        } else if (child.nodeType === Node.TEXT_NODE) (inHint ? hint2 : label).push(child.textContent ?? "");
+        } else if (child.nodeType === Node.TEXT_NODE) (inHint ? hint : label).push(child.textContent ?? "");
       }
     };
     walk(option, false);
-    return { label: label.join(""), hint: `${hint2.join(" ")} ${option.dataset.kpHint ?? ""}`.trim() };
+    return { label: label.join(""), hint: `${hint.join(" ")} ${option.dataset.kpHint ?? ""}`.trim() };
   };
   const assignOrigins = (options) => {
     let previous = -1;
@@ -18143,12 +18309,12 @@ function createIntentFilter(dialog, list, status) {
     const items = options.map((option) => {
       clearMarks3(option);
       if (!option.querySelector(":scope > .kp-palette__label")) wrapLabel(option);
-      const { label, hint: hint2 } = textsOf(option);
+      const { label, hint } = textsOf(option);
       const value = valueOf3(option);
       const inContext = context2 !== null && option.dataset.kpContextOf === context2;
       const featured = option.hasAttribute("data-kp-featured");
       const recency = recent.indexOf(value);
-      const base = intentScore({ label, hint: hint2, words: option.dataset.kpWords ?? "" }, want, mode2);
+      const base = intentScore({ label, hint, words: option.dataset.kpWords ?? "" }, want, mode2);
       const score = base < 0 ? -1 : base + (inContext ? 3 : 0) + (want.length === 0 && recency >= 0 ? 2 : 0);
       return { option, base, score, inContext, featured, recency, at: origin.get(option) ?? 0 };
     });
@@ -18456,14 +18622,14 @@ function attachPalettes(root = document, {
     };
     dialog.addEventListener("close", onClose);
     const releaseOutside = closeOnOutsidePress(dialog);
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       if (key === null || !isHotkey(event, key)) return;
       if (!answers(PALETTE, dialog)) return;
       event.preventDefault();
       if (dialog.open) dialog.close();
       else openWith();
     };
-    if (key !== null) document.addEventListener("keydown", onKey6);
+    if (key !== null) document.addEventListener("keydown", onKey5);
     const onOpener = (event) => {
       if (!openerFor(event, dialog, answers(PALETTE, dialog))) return;
       openWith();
@@ -18521,7 +18687,7 @@ function attachPalettes(root = document, {
       input.removeEventListener("input", onInput);
       dialog.removeEventListener("close", onClose);
       releaseOutside();
-      document.removeEventListener("keydown", onKey6);
+      document.removeEventListener("keydown", onKey5);
       document.removeEventListener("click", onOpener);
       for (const el16 of list.querySelectorAll(OPTION_SELECTOR)) el16.hidden = false;
       for (const el16 of list.querySelectorAll(GROUP)) el16.hidden = false;
@@ -18542,7 +18708,7 @@ function attachPalettes(root = document, {
       sheet.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: true } }));
     };
     const onClose = () => sheet.dispatchEvent(new CustomEvent(OPEN_EVENT2, { bubbles: true, detail: { open: false } }));
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       if (key === null || event.key !== key || event.ctrlKey || event.metaKey || event.altKey) return;
       if (isTyping(event.target, typingSelector)) return;
       if (!answers(SHEET, sheet)) return;
@@ -18550,7 +18716,7 @@ function attachPalettes(root = document, {
       if (sheet.open) sheet.close();
       else openSheet();
     };
-    if (key !== null) document.addEventListener("keydown", onKey6);
+    if (key !== null) document.addEventListener("keydown", onKey5);
     const onOpener = (event) => {
       if (openerFor(event, sheet, false)) openSheet();
     };
@@ -18563,7 +18729,7 @@ function attachPalettes(root = document, {
     handles4.set(sheet, handle);
     created.push(handle);
     cleanups.push(() => {
-      document.removeEventListener("keydown", onKey6);
+      document.removeEventListener("keydown", onKey5);
       document.removeEventListener("click", onOpener);
       sheet.removeEventListener("close", onClose);
       releaseOutside();
@@ -18584,9 +18750,9 @@ var init_attach6 = __esm({
     init_strings();
     init_live_options();
     init_api3();
-    init_constants9();
+    init_constants10();
     init_intent_filter();
-    init_keys3();
+    init_keys4();
     init_outside();
   }
 });
@@ -18607,8 +18773,8 @@ __export(palette_exports, {
 var init_palette = __esm({
   "js/palette.js"() {
     "use strict";
-    init_constants9();
-    init_keys3();
+    init_constants10();
+    init_keys4();
     init_outside();
     init_api3();
     init_attach6();
@@ -18717,8 +18883,8 @@ function datePattern(locale, format = "locale") {
     else if (part7.type === "literal" && separator === "-" && part7.value.trim() !== "") separator = part7.value.trim();
   }
   if (parts2.length !== 3) return { parts: ["day", "month", "year"], separator: "-", hint: "dd-mm-yyyy" };
-  const hint2 = parts2.map((p) => p === "day" ? "dd" : p === "month" ? "mm" : "yyyy").join(separator);
-  return { parts: parts2, separator, hint: hint2 };
+  const hint = parts2.map((p) => p === "day" ? "dd" : p === "month" ? "mm" : "yyyy").join(separator);
+  return { parts: parts2, separator, hint };
 }
 function formatDate(date, locale, format = "locale") {
   if (format === "rule52") {
@@ -18819,10 +18985,10 @@ function compare(a, b, kind, locale) {
   }
   return collator(locale).compare(a, b);
 }
-function compareByOrder(order2, a, b, fallback2) {
+function compareByOrder(order, a, b, fallback2) {
   const rank2 = (value) => {
-    const at = order2.findIndex((entry) => entry.trim().toLowerCase() === value.trim().toLowerCase());
-    return at === -1 ? order2.length : at;
+    const at = order.findIndex((entry) => entry.trim().toLowerCase() === value.trim().toLowerCase());
+    return at === -1 ? order.length : at;
   };
   return rank2(a) - rank2(b) || fallback2(a, b);
 }
@@ -19093,7 +19259,7 @@ function attachGrid(table, { pageRows = GRID_PAGE_ROWS, onMove: onMove2 } = {}) 
     const bodyIndex = r < header ? 0 : list.slice(header, r + 1).filter((tr) => !tr.matches(DETAIL) && !tr.matches(GROUP_ROW)).length;
     onMove2?.({ row: bodyIndex, rows: bodyRows, column: c, cell });
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     const target = (
       /** @type {HTMLElement} */
       event.target
@@ -19138,14 +19304,14 @@ function attachGrid(table, { pageRows = GRID_PAGE_ROWS, onMove: onMove2 } = {}) 
     if (r === -1 || c === -1) return;
     move(r, c, false);
   };
-  table.addEventListener("keydown", onKey6);
+  table.addEventListener("keydown", onKey5);
   table.addEventListener("focusin", onFocusIn);
   sync3();
   return {
     sync: sync3,
     focus: (row, column) => move(row, column),
     detach: () => {
-      table.removeEventListener("keydown", onKey6);
+      table.removeEventListener("keydown", onKey5);
       table.removeEventListener("focusin", onFocusIn);
       for (const [element, was] of touched) {
         if (was === null) element.removeAttribute("tabindex");
@@ -19858,7 +20024,7 @@ var init_chrome = __esm({
 
 // js/datepicker/constants.js
 var PICKER2, DATE_EVENT, OPEN_EVENT3, MONTH_EVENT, JUMP_COLUMNS, MONTHS_PER_YEAR, YEARS_PER_BLOCK, JUMP_PAGE, DAYS_PER_WEEK, LAST_WEEKDAY;
-var init_constants10 = __esm({
+var init_constants11 = __esm({
   "js/datepicker/constants.js"() {
     "use strict";
     PICKER2 = "[data-kp-datepicker]";
@@ -19919,7 +20085,7 @@ var init_dates = __esm({
   "js/datepicker/dates.js"() {
     "use strict";
     init_locale();
-    init_constants10();
+    init_constants11();
   }
 });
 
@@ -20165,7 +20331,7 @@ var init_grid2 = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_constants10();
+    init_constants11();
     init_dates();
   }
 });
@@ -20250,10 +20416,10 @@ function onPanelClick(ctl, event) {
   ctl.choose(/* @__PURE__ */ new Date(`${day.dataset.kpDay}T00:00:00`));
 }
 var jumpCellOf, dayCellOf, isChoose;
-var init_keys4 = __esm({
+var init_keys5 = __esm({
   "js/datepicker/keys.js"() {
     "use strict";
-    init_constants10();
+    init_constants11();
     init_dates();
     jumpCellOf = (target) => (
       /** @type {HTMLElement | null} */
@@ -20273,7 +20439,7 @@ var init_opening = __esm({
   "js/datepicker/opening.js"() {
     "use strict";
     init_motion();
-    init_constants10();
+    init_constants11();
     init_place();
     PanelOpening = class {
       /** @param {import('./controller.js').DatePickerController} ctl */
@@ -20397,7 +20563,7 @@ var init_views = __esm({
     "use strict";
     init_strings();
     init_locale();
-    init_constants10();
+    init_constants11();
     init_dates();
     init_grid2();
     init_place();
@@ -20494,10 +20660,10 @@ var init_controller4 = __esm({
     init_locale();
     init_controller();
     init_motion();
-    init_constants10();
+    init_constants11();
     init_dates();
     init_grid2();
-    init_keys4();
+    init_keys5();
     init_opening();
     init_settings();
     init_views();
@@ -20672,7 +20838,7 @@ var init_attach7 = __esm({
   "js/datepicker/attach.js"() {
     "use strict";
     init_controller();
-    init_constants10();
+    init_constants11();
     init_controller4();
   }
 });
@@ -20700,7 +20866,7 @@ __export(datepicker_exports, {
 var init_datepicker = __esm({
   "js/datepicker.js"() {
     "use strict";
-    init_constants10();
+    init_constants11();
     init_dates();
     init_place();
     init_attach7();
@@ -20858,8 +21024,8 @@ function installFilterUi(c) {
     const declared2 = splitList2(headers[at]?.dataset.kpFilterOptions);
     if (declared2.length > 0) return declared2;
     const values = [...new Set(c.all.map((row) => choiceText(row, at)).filter((v) => v !== ""))];
-    const order2 = orders[at];
-    return values.sort((a, b) => order2 ? compareByOrder(order2, a, b, collator(locale).compare) : collator(locale).compare(a, b));
+    const order = orders[at];
+    return values.sort((a, b) => order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b));
   }
   function fillChoices(set, at, ticked) {
     const values = [...choiceValues(at)];
@@ -21442,7 +21608,7 @@ function installGroups(c) {
     cell.prepend(button6);
     decoratePart(button6, { kind: "row-group-toggle", value: key, label: name });
   };
-  const collectGroups = () => {
+  const collectGroups2 = () => {
     if (serverMode) return;
     groups.clear();
     for (const row of body.rows) {
@@ -21485,8 +21651,8 @@ function installGroups(c) {
       if (!row.matches(GROUP_ROW)) blockOf.set(row, block);
     }
   };
-  c.collectGroups = collectGroups;
-  collectGroups();
+  c.collectGroups = collectGroups2;
+  collectGroups2();
   const layoutAtAttach = groups.size > 0 ? [...body.rows] : null;
   c.layoutAtAttach = layoutAtAttach;
   const arrange2 = (rows) => {
@@ -22559,11 +22725,11 @@ function installApply(c) {
   const compareRows = (a, b) => {
     for (const key of c.sorts) {
       const kind = headers[key.column]?.dataset.kpSort ?? "text";
-      const order2 = orders[key.column];
+      const order = orders[key.column];
       const by = (x, y) => compareFn(x, y, kind, locale);
       const left = cellValue(a, key.column);
       const right = cellValue(b, key.column);
-      const c2 = order2 ? compareByOrder(order2, left, right, by) : by(left, right);
+      const c2 = order ? compareByOrder(order, left, right, by) : by(left, right);
       if (c2 !== 0) return key.direction === "ascending" ? c2 : -c2;
     }
     return 0;
@@ -23731,7 +23897,7 @@ function installHandle2(c) {
     clearFilters,
     closeFilterEditor,
     collectDetails,
-    collectGroups,
+    collectGroups: collectGroups2,
     columnAt,
     commitEdit,
     commitSorts,
@@ -23864,7 +24030,7 @@ function installHandle2(c) {
         builtDetails.delete(detail);
         details.delete(row);
       }
-      collectGroups();
+      collectGroups2();
       syncColumns();
       refreshChoices();
       applyFilter({ keepPage: options?.keepPage === true });
@@ -23882,17 +24048,17 @@ function installHandle2(c) {
   handles5.set(wrap, handle);
   created.push(handle);
   if (!serverMode) {
-    let queued2 = false;
+    let queued = false;
     const resync = () => {
-      queued2 = false;
+      queued = false;
       holdRows2();
       const now = [...body.rows].filter(isRow2);
       if (now.length === c.all.length && now.every((row, at) => c.all.includes(row))) return;
       handles5.get(wrap)?.refresh({ keepPage: true });
     };
     const onBody = () => {
-      if (queued2) return;
-      queued2 = true;
+      if (queued) return;
+      queued = true;
       queueMicrotask(resync);
     };
     const rowsWatch = new MutationObserver(onBody);
@@ -24090,12 +24256,12 @@ function installUnwire(c) {
           if (detail !== void 0 && stand.has(detail)) append(detail);
         }
       }
-      const order2 = [...stand.keys()].sort((a, b) => (
+      const order = [...stand.keys()].sort((a, b) => (
         /** @type {number} */
         stand.get(a) - /** @type {number} */
         stand.get(b)
       ));
-      body.replaceChildren(...order2);
+      body.replaceChildren(...order);
     }
     syncFixedColumns(table, 0);
     headers.forEach((header, i) => {
@@ -24341,7 +24507,7 @@ var init_datatable = __esm({
 
 // js/forms/constants.js
 var FORM, SUMMARY, FIELD_ERROR, SUBMIT, VALID_EVENT, INVALID_EVENT, FIELD_EVENT, DONE_EVENT, SWITCH, SWITCH_STATE, FORMGRID_STAGE, FORMGRID_BLOCK, FORMGRID_BLOCK_DEPTH, WIDE_BLOCKS, FIT_SLACK_PX;
-var init_constants11 = __esm({
+var init_constants12 = __esm({
   "js/forms/constants.js"() {
     "use strict";
     FORM = "[data-kp-form]";
@@ -24428,7 +24594,7 @@ var init_errors = __esm({
   "js/forms/errors.js"() {
     "use strict";
     init_strings();
-    init_constants11();
+    init_constants12();
     init_state6();
     fallback = () => getStrings().formInvalid;
   }
@@ -24482,7 +24648,7 @@ var init_form = __esm({
   "js/forms/form.js"() {
     "use strict";
     init_controller();
-    init_constants11();
+    init_constants12();
     init_errors();
     init_summary();
     FormController = class extends Controller {
@@ -24648,7 +24814,7 @@ var init_formgrid_columns = __esm({
   "js/forms/formgrid-columns.js"() {
     "use strict";
     init_controller();
-    init_constants11();
+    init_constants12();
     FormgridColumnsController = class extends Controller {
       connect() {
         const grid2 = this.host;
@@ -24706,7 +24872,7 @@ var init_formgrid_stage = __esm({
   "js/forms/formgrid-stage.js"() {
     "use strict";
     init_controller();
-    init_constants11();
+    init_constants12();
     FormgridStageController = class extends Controller {
       connect() {
         const stage = this.host;
@@ -24736,7 +24902,7 @@ var init_submit = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_constants11();
+    init_constants12();
     SubmitController = class extends Controller {
       /**
        * @param {HTMLElement} host the button
@@ -24830,7 +24996,7 @@ var init_api4 = __esm({
   "js/forms/api.js"() {
     "use strict";
     init_controller();
-    init_constants11();
+    init_constants12();
     init_form();
     init_formgrid_columns();
     init_formgrid_stage();
@@ -24864,7 +25030,7 @@ var init_switches = __esm({
   "js/forms/switches.js"() {
     "use strict";
     init_strings();
-    init_constants11();
+    init_constants12();
   }
 });
 
@@ -24887,7 +25053,7 @@ __export(forms_exports, {
 var init_forms = __esm({
   "js/forms.js"() {
     "use strict";
-    init_constants11();
+    init_constants12();
     init_errors();
     init_api4();
     init_switches();
@@ -24907,7 +25073,7 @@ function clearDelay(attribute, fallback2) {
   ) * (CLEAR_UNITS[match[2] ?? "s"] ?? 1e3);
 }
 var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_CLIPBOARD_EVENT, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, CLEAR_AFTER_MS, CLEAR_UNITS, COPY_EVENT, COPY_FAILED_EVENT;
-var init_constants12 = __esm({
+var init_constants13 = __esm({
   "js/patterns/constants.js"() {
     "use strict";
     COPY = "[data-kp-copy]";
@@ -24975,7 +25141,7 @@ var init_clipboard = __esm({
   "js/patterns/clipboard.js"() {
     "use strict";
     init_strings();
-    init_constants12();
+    init_constants13();
   }
 });
 
@@ -25280,7 +25446,7 @@ var init_secret_input = __esm({
     init_strings();
     init_live_options();
     init_clipboard();
-    init_constants12();
+    init_constants13();
     init_secret_api();
   }
 });
@@ -25682,7 +25848,7 @@ var init_secrets = __esm({
     init_strings();
     init_live_options();
     init_clipboard();
-    init_constants12();
+    init_constants13();
     init_secret_api();
     init_secret_input();
   }
@@ -25813,7 +25979,7 @@ var init_copy = __esm({
     "use strict";
     init_overlays();
     init_strings();
-    init_constants12();
+    init_constants13();
     init_secrets();
   }
 });
@@ -25844,7 +26010,7 @@ __export(patterns_exports, {
 var init_patterns = __esm({
   "js/patterns.js"() {
     "use strict";
-    init_constants12();
+    init_constants13();
     init_copy();
     init_secret_api();
     init_secrets();
@@ -27188,7 +27354,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       place(tile);
       announce4();
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       const tile = (
         /** @type {HTMLElement | null} */
         /** @type {HTMLElement} */
@@ -27247,7 +27413,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
       );
     };
     placeAll();
-    grid2.addEventListener("keydown", onKey6);
+    grid2.addEventListener("keydown", onKey5);
     grid2.addEventListener("pointerdown", onPointerDown);
     const handle = {
       element: grid2,
@@ -27262,7 +27428,7 @@ function attachGrids(root = document, { step = 1, rows = Infinity, commitMs = CO
     created.push(handle);
     cleanups.push(() => {
       clearTimeout(timer2);
-      grid2.removeEventListener("keydown", onKey6);
+      grid2.removeEventListener("keydown", onKey5);
       grid2.removeEventListener("pointerdown", onPointerDown);
       for (const element2 of grid2.querySelectorAll(TILE)) {
         const tile = (
@@ -27555,16 +27721,16 @@ function regionOf(list) {
 function say2(list, message) {
   const fresh = !(list.nextElementSibling?.classList.contains("kp-steplist__live") ?? false);
   const region = regionOf(list);
-  const queue = pending2.get(region);
+  const queue = pending.get(region);
   if (queue) {
     queue.push(message);
     return;
   }
-  pending2.set(region, [message]);
+  pending.set(region, [message]);
   setTimeout(
     () => {
-      region.textContent = (pending2.get(region) ?? []).join(". ");
-      pending2.delete(region);
+      region.textContent = (pending.get(region) ?? []).join(". ");
+      pending.delete(region);
     },
     fresh ? 100 : 0
   );
@@ -27604,7 +27770,7 @@ function attachSteplists(root = document) {
   for (const list of lists) watch2.observe(list, { attributes: true, attributeFilter: ["data-state"], subtree: true });
   return () => watch2.disconnect();
 }
-var STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEPLIST_EVENT, STEP_STATES, synced2, pending2, known, stateWord, span2;
+var STEPLIST_SELECTOR, STEP_ID_ATTRIBUTE, STEPLIST_EVENT, STEP_STATES, synced2, pending, known, stateWord, span2;
 var init_steplist = __esm({
   "js/steplist.js"() {
     "use strict";
@@ -27615,7 +27781,7 @@ var init_steplist = __esm({
     STEP_STATES = /** @type {const} */
     ["pending", "running", "done", "failed", "skipped", "current"];
     synced2 = /* @__PURE__ */ new WeakMap();
-    pending2 = /* @__PURE__ */ new WeakMap();
+    pending = /* @__PURE__ */ new WeakMap();
     known = (state12) => STEP_STATES.includes(
       /** @type {any} */
       state12
@@ -27871,8 +28037,8 @@ function attachKpiStrips(root = document) {
   if (!view) return () => {
   };
   const watched = /* @__PURE__ */ new Set();
-  const sizes = new view.ResizeObserver((entries3) => {
-    for (const entry of entries3) {
+  const sizes = new view.ResizeObserver((entries2) => {
+    for (const entry of entries2) {
       const size2 = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
       fitKpiStrip(
         /** @type {HTMLElement} */
@@ -28145,7 +28311,7 @@ function attachHoverCards(root = document, options = {}) {
     open4(anchor);
     if (current2 === anchor && isControl(anchor)) event.preventDefault();
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     if (event.key !== "Escape" || current2 === null) return;
     if (cfg.closeOnEscape === false || current2.getAttribute("data-kp-close-on-escape") === "false") return;
     hide2();
@@ -28176,7 +28342,7 @@ function attachHoverCards(root = document, options = {}) {
     /** @type {EventListener} */
     onCardLeave
   );
-  doc.addEventListener("keydown", onKey6);
+  doc.addEventListener("keydown", onKey5);
   root.addEventListener(
     "click",
     /** @type {EventListener} */
@@ -28210,7 +28376,7 @@ function attachHoverCards(root = document, options = {}) {
       /** @type {EventListener} */
       onFocusOut
     );
-    doc.removeEventListener("keydown", onKey6);
+    doc.removeEventListener("keydown", onKey5);
     root.removeEventListener(
       "click",
       /** @type {EventListener} */
@@ -28273,9 +28439,9 @@ function tileStop(tile) {
   const first = [...tile.querySelectorAll(STOP_CANDIDATES)].find((el16) => !el16.hasAttribute("data-kp-tile-secondary"));
   return first instanceof HTMLElement ? first : null;
 }
-function keyTiles(board) {
+function keyTiles(board2) {
   const GRIDS = ".kp-tiles, [data-kp-entity-grid]";
-  const grids = [...board.matches(GRIDS) ? [board] : [], ...board.querySelectorAll(GRIDS)];
+  const grids = [...board2.matches(GRIDS) ? [board2] : [], ...board2.querySelectorAll(GRIDS)];
   return grids.flatMap((grid2) => [...grid2.children].filter((tile) => !grid2.matches("[data-kp-entity-grid]") || tile.matches("[data-kp-entity]"))).filter((tile) => tile instanceof HTMLElement && visible(tile) && tileStop(tile) !== null).map((tile) => (
     /** @type {HTMLElement} */
     tile
@@ -28350,7 +28516,7 @@ var init_geometry2 = __esm({
 
 // js/tiles/keys.js
 var LETTERS_MS, ROW_GAP_PX, WATCHED, TileBoard;
-var init_keys5 = __esm({
+var init_keys6 = __esm({
   "js/tiles/keys.js"() {
     "use strict";
     init_controller();
@@ -28360,10 +28526,10 @@ var init_keys5 = __esm({
     WATCHED = ["hidden", "open", "class", "data-kp-tiles-keys", "data-kp-folding", "data-kp-tile-stop"];
     TileBoard = class extends Controller {
       /** @param {HTMLElement} board @param {{ view: Window & typeof globalThis }} options */
-      constructor(board, options) {
-        super(board, options);
+      constructor(board2, options) {
+        super(board2, options);
         this.view = options.view;
-        this.doc = board.ownerDocument;
+        this.doc = board2.ownerDocument;
         this.stop = null;
         this.taken = /* @__PURE__ */ new Map();
         this.queued = 0;
@@ -28371,17 +28537,17 @@ var init_keys5 = __esm({
         this.forget = 0;
       }
       connect() {
-        const board = this.host;
+        const board2 = this.host;
         this.own(() => {
           if (this.queued) this.view.cancelAnimationFrame(this.queued);
           this.restore();
         });
-        this.observe(new this.view.MutationObserver(() => this.queue())).observe(board, { childList: true, subtree: true, attributes: true, attributeFilter: WATCHED });
-        if (typeof this.view.ResizeObserver === "function") this.observe(new this.view.ResizeObserver(() => this.queue())).observe(board);
-        this.listen(board, "toggle", () => this.queue(), true);
-        this.listen(board, "focusin", (event) => this.onFocus(event));
+        this.observe(new this.view.MutationObserver(() => this.queue())).observe(board2, { childList: true, subtree: true, attributes: true, attributeFilter: WATCHED });
+        if (typeof this.view.ResizeObserver === "function") this.observe(new this.view.ResizeObserver(() => this.queue())).observe(board2);
+        this.listen(board2, "toggle", () => this.queue(), true);
+        this.listen(board2, "focusin", (event) => this.onFocus(event));
         this.own(() => this.view.clearTimeout(this.forget));
-        this.listen(board, "keydown", (event) => this.onKey(
+        this.listen(board2, "keydown", (event) => this.onKey(
           /** @type {KeyboardEvent} */
           event
         ));
@@ -28507,9 +28673,9 @@ var init_keys5 = __esm({
       }
       /** Up from the first row: say so, and hand the focus to the element the board names. */
       leave() {
-        const board = this.host;
-        board.dispatchEvent(new CustomEvent(TILES_EXIT_EVENT, { bubbles: true, detail: { direction: "up" } }));
-        const named = board.getAttribute("data-kp-tiles-keys-exit");
+        const board2 = this.host;
+        board2.dispatchEvent(new CustomEvent(TILES_EXIT_EVENT, { bubbles: true, detail: { direction: "up" } }));
+        const named = board2.getAttribute("data-kp-tiles-keys-exit");
         if (!named) return;
         let aim = this.doc.getElementById(named);
         if (!aim) {
@@ -28760,19 +28926,19 @@ function attachTileKeys(root = document) {
   const boards2 = [...root instanceof HTMLElement && root.matches(TILES_KEYS) ? [root] : [], .../** @type {NodeListOf<HTMLElement>} */
   root.querySelectorAll(TILES_KEYS)];
   const made7 = [];
-  for (const board of boards2) {
-    if (controllerOf(board, TileBoard)) continue;
-    const fresh = attachOne(board, TileBoard, { view });
+  for (const board2 of boards2) {
+    if (controllerOf(board2, TileBoard)) continue;
+    const fresh = attachOne(board2, TileBoard, { view });
     if (fresh) made7.push(fresh);
   }
-  return () => made7.splice(0).forEach((board) => board.destroy());
+  return () => made7.splice(0).forEach((board2) => board2.destroy());
 }
 var init_tiles = __esm({
   "js/tiles.js"() {
     "use strict";
     init_controller();
     init_geometry2();
-    init_keys5();
+    init_keys6();
     init_sets2();
     init_geometry2();
     init_sets2();
@@ -28781,7 +28947,7 @@ var init_tiles = __esm({
 
 // js/chart/constants.js
 var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_TIME_ZONE, TREND_CHART;
-var init_constants13 = __esm({
+var init_constants14 = __esm({
   "js/chart/constants.js"() {
     "use strict";
     CHART = "[data-kp-chart]";
@@ -29119,7 +29285,7 @@ var init_time = __esm({
   "js/chart/time.js"() {
     "use strict";
     init_strings();
-    init_constants13();
+    init_constants14();
     MINUTE = 6e4;
     HOUR = 60 * MINUTE;
     DAY = 24 * HOUR;
@@ -29219,7 +29385,7 @@ var init_dom = __esm({
   "js/chart/dom.js"() {
     "use strict";
     init_api5();
-    init_constants13();
+    init_constants14();
     SVGNS = "http://www.w3.org/2000/svg";
     pendingEnds = [];
   }
@@ -29233,7 +29399,7 @@ var init_group2 = __esm({
     init_stats();
     init_api5();
     init_dom();
-    init_constants13();
+    init_constants14();
     init_time();
     ChartGroup = class {
       /**
@@ -29663,7 +29829,7 @@ function trendChart(host, group, locale, ctx) {
     press2 = null;
     if (!dragged && link && event.button === 0) link.click();
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     const n = pts.length;
     if (n < 2) return;
     const shown5 = !cross.hidden;
@@ -29688,7 +29854,7 @@ function trendChart(host, group, locale, ctx) {
   plot.addEventListener("pointerleave", onLeave);
   plot.addEventListener("pointercancel", onCancel2);
   plot.addEventListener("click", onClick);
-  plot.addEventListener("keydown", onKey6);
+  plot.addEventListener("keydown", onKey5);
   plot.addEventListener("blur", hide2);
   const state12 = {
     host,
@@ -29739,7 +29905,7 @@ var init_trend = __esm({
     init_attach9();
     init_spark();
     init_selection2();
-    init_constants13();
+    init_constants14();
   }
 });
 
@@ -29957,14 +30123,14 @@ function installSetup(c) {
   const showAll = h(doc, "button", { type: "button", class: "kp-chart__show-all", title: strings.showAllTitle }, strings.showAll);
   c.showAll = showAll;
   showAll.hidden = true;
-  const hint2 = h(
+  const hint = h(
     doc,
     "p",
     { class: "kp-chart__hint" },
     h(doc, "span", { "data-kp-when": "pointer" }, strings.hintPointer),
     h(doc, "span", { "data-kp-when": "touch" }, strings.hintTouch)
   );
-  c.hint = hint2;
+  c.hint = hint;
   const annKey = h(doc, "div", { class: "kp-chart__annkey", role: "group" });
   c.annKey = annKey;
   annKey.hidden = true;
@@ -29976,7 +30142,7 @@ function installSetup(c) {
   c.tipMedian = tipMedian;
   tipMedian.hidden = true;
   tip.append(tipMedian);
-  const parts2 = [annKey, plot, tip, note2, readout, legend, hint2];
+  const parts2 = [annKey, plot, tip, note2, readout, legend, hint];
   c.parts = parts2;
   host.append(...parts2);
   c.items = [];
@@ -30050,7 +30216,7 @@ var init_readers = __esm({
   "js/chart/plot/readers.js"() {
     "use strict";
     init_time();
-    init_constants13();
+    init_constants14();
     init_dom();
   }
 });
@@ -30236,7 +30402,7 @@ function installDraw(c) {
     doc,
     drawnKey,
     fmt,
-    hint: hint2,
+    hint,
     host,
     label,
     legend,
@@ -30263,7 +30429,7 @@ function installDraw(c) {
     else annKey.hidden = true;
     tip.hidden = true;
     note2.hidden = true;
-    hint2.hidden = true;
+    hint.hidden = true;
     const box = h(doc, "div", {
       class: kind === "loading" ? "kp-chart__state kp-skeleton kp-skeleton--block" : "kp-chart__state",
       "data-kp-state": kind
@@ -30321,7 +30487,7 @@ function installDraw(c) {
     c.behind = false;
     c.shown = "";
     host.setAttribute("data-kp-state", "ready");
-    hint2.hidden = c.data.series.length <= 1;
+    hint.hidden = c.data.series.length <= 1;
     const { from, to } = win;
     c.drawnWindow = `${from} ${to}`;
     const W = Math.max(240, plot.clientWidth);
@@ -30626,7 +30792,7 @@ function installDraw(c) {
       svg2.setAttribute("data-kp-faint", "");
       c.geo = null;
       tip.hidden = true;
-      hint2.hidden = true;
+      hint.hidden = true;
       note2.hidden = true;
       const plate = h(
         doc,
@@ -30652,7 +30818,7 @@ var init_draw2 = __esm({
   "js/chart/plot/draw.js"() {
     "use strict";
     init_dom();
-    init_constants13();
+    init_constants14();
     init_state_plate();
     init_attach9();
     init_format();
@@ -31071,16 +31237,16 @@ function attachMatching(root, options, selector) {
   );
   const watching = lazy !== false && typeof view.IntersectionObserver === "function" && hosts.length >= (lazy === true ? 1 : lazy);
   const seen = watching ? new view.IntersectionObserver(
-    (entries3) => {
-      for (const entry of entries3) CHARTS.get(
+    (entries2) => {
+      for (const entry of entries2) CHARTS.get(
         /** @type {HTMLElement} */
         entry.target
       )?.view?.(entry.isIntersecting);
     },
     { rootMargin: "200px 0px" }
   ) : null;
-  const resize = new view.ResizeObserver((entries3) => {
-    for (const entry of entries3) {
+  const resize = new view.ResizeObserver((entries2) => {
+    for (const entry of entries2) {
       const state12 = CHARTS.get(entry.target);
       if (state12?.resize) state12.resize();
       else state12?.draw();
@@ -31145,7 +31311,7 @@ var init_attach9 = __esm({
     "use strict";
     init_locale();
     init_group2();
-    init_constants13();
+    init_constants14();
     init_words2();
     init_time();
     init_api5();
@@ -31198,7 +31364,7 @@ __export(chart_exports, {
 var init_chart = __esm({
   "js/chart.js"() {
     "use strict";
-    init_constants13();
+    init_constants14();
     init_words2();
     init_stats();
     init_format();
@@ -32072,7 +32238,7 @@ __export(undo_toast_exports, {
   UNDO_TOAST_EVENT: () => UNDO_TOAST_EVENT,
   undoToast: () => undoToast
 });
-function onKey2(event) {
+function onKey(event) {
   if (!(event.ctrlKey || event.metaKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== "z") return;
   const target = event.target instanceof Element ? event.target : null;
   if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
@@ -32086,17 +32252,17 @@ function onKey2(event) {
 }
 function enter(entry) {
   live2.push(entry);
-  if (!listening3 && typeof document !== "undefined") {
-    document.addEventListener("keydown", onKey2);
-    listening3 = true;
+  if (!listening2 && typeof document !== "undefined") {
+    document.addEventListener("keydown", onKey);
+    listening2 = true;
   }
 }
 function leaveStack(handle) {
   const at = live2.findIndex((e) => e.handle === handle);
   if (at >= 0) live2.splice(at, 1);
-  if (live2.length === 0 && listening3) {
-    document.removeEventListener("keydown", onKey2);
-    listening3 = false;
+  if (live2.length === 0 && listening2) {
+    document.removeEventListener("keydown", onKey);
+    listening2 = false;
   }
 }
 function declared(name, region) {
@@ -32369,7 +32535,7 @@ function undoToast(text, options = {}) {
   run();
   return handle;
 }
-var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, live2, listening3, isMac3, keyName;
+var UNDO_TOAST, UNDO_TOAST_EVENT, UNDO_RESTORED_MS, UNDO_MAX, live2, listening2, isMac3, keyName;
 var init_undo_toast = __esm({
   "js/undo-toast.js"() {
     "use strict";
@@ -32381,7 +32547,7 @@ var init_undo_toast = __esm({
     UNDO_RESTORED_MS = 1500;
     UNDO_MAX = 3;
     live2 = [];
-    listening3 = false;
+    listening2 = false;
     isMac3 = () => typeof navigator !== "undefined" && /mac|iphone|ipad/i.test(
       /** @type {any} */
       navigator.userAgentData?.platform ?? navigator.platform ?? ""
@@ -32415,7 +32581,7 @@ function known3(state12, calm = false) {
   }
   return "unknown";
 }
-var STATUS_LIST, STATUS_ID_ATTRIBUTE, STATUS_EVENT, STATUS_RETRY_EVENT, STATUS_RESUME_EVENT, STATUS_PAUSE_EVENT, STATUS_UNDO_EVENT, STATUS_STATES, CALM_STATUS_STATES, synced4, pending3, isCalm2, warned2, stateWord2, el3;
+var STATUS_LIST, STATUS_ID_ATTRIBUTE, STATUS_EVENT, STATUS_RETRY_EVENT, STATUS_RESUME_EVENT, STATUS_PAUSE_EVENT, STATUS_UNDO_EVENT, STATUS_STATES, CALM_STATUS_STATES, synced4, pending2, isCalm2, warned2, stateWord2, el3;
 var init_state8 = __esm({
   "js/statusrow/state.js"() {
     "use strict";
@@ -32432,7 +32598,7 @@ var init_state8 = __esm({
     CALM_STATUS_STATES = /** @type {const} */
     ["open", "done", "paused", "unknown", "loading"];
     synced4 = /* @__PURE__ */ new WeakMap();
-    pending3 = /* @__PURE__ */ new WeakMap();
+    pending2 = /* @__PURE__ */ new WeakMap();
     isCalm2 = (list) => list?.getAttribute("data-kp-status-vocab") === "calm";
     warned2 = /* @__PURE__ */ new Set();
     stateWord2 = (state12) => {
@@ -32477,18 +32643,18 @@ function regionOf2(list) {
 function say3(list, entry) {
   const fresh = !(list.nextElementSibling?.classList.contains("kp-statuslist__live") ?? false);
   const region = regionOf2(list);
-  const queue = pending3.get(region);
+  const queue = pending2.get(region);
   if (queue) {
     queue.push(entry);
     return;
   }
-  pending3.set(region, [entry]);
+  pending2.set(region, [entry]);
   setTimeout(
     () => {
-      const entries3 = pending3.get(region) ?? [];
-      pending3.delete(region);
+      const entries2 = pending2.get(region) ?? [];
+      pending2.delete(region);
       const s2 = getStrings();
-      region.textContent = entries3.length > 3 ? s2.statusAnnounceMany(entries3.length, entries3.filter((e) => e.state === "failed").length) : entries3.map((e) => s2.statusAnnounce(e.label, stateWord2(e.state), e.detail)).join(". ");
+      region.textContent = entries2.length > 3 ? s2.statusAnnounceMany(entries2.length, entries2.filter((e) => e.state === "failed").length) : entries2.map((e) => s2.statusAnnounce(e.label, stateWord2(e.state), e.detail)).join(". ");
     },
     fresh ? 100 : 0
   );
@@ -33022,7 +33188,7 @@ function drawPattern(swatch, seed) {
   if (old) old.replaceWith(svg2);
   else swatch.append(svg2);
 }
-function listOf(group) {
+function listOf2(group) {
   let list = (
     /** @type {HTMLElement | null} */
     group.querySelector(".kp-facets__list")
@@ -33109,7 +33275,7 @@ function ensureAll(group) {
   option.append(check, el4("kp-facet__name"), el4("kp-facet__count"));
   row.append(option);
   row.querySelector(".kp-facet__name")?.replaceChildren(word || getStrings().facetAll);
-  listOf(group).prepend(row);
+  listOf2(group).prepend(row);
   wireRow(row);
   return row;
 }
@@ -33152,7 +33318,7 @@ function setFacetCounts(group, counts, { all } = {}) {
   group.removeAttribute("aria-busy");
 }
 function setFacetItems(group, items) {
-  const list = listOf(group);
+  const list = listOf2(group);
   ensureAll(group);
   const existing = new Map(rowsOf(group).map((row) => [row.getAttribute("data-value") ?? "", row]));
   let previous = (
@@ -33541,15 +33707,15 @@ function attachIdmarks(root = document) {
   const View = (root instanceof Document ? root : root.ownerDocument)?.defaultView;
   if (!View?.MutationObserver) return () => {
   };
-  let queued2 = false;
+  let queued = false;
   const observer = new View.MutationObserver((records) => {
     const relevant = records.some(
       (record) => record.type === "attributes" || [...record.addedNodes].some((node) => node instanceof View.Element && (node.matches(IDMARK) || node.querySelector(IDMARK) !== null))
     );
-    if (!relevant || queued2) return;
-    queued2 = true;
+    if (!relevant || queued) return;
+    queued = true;
     View.queueMicrotask(() => {
-      queued2 = false;
+      queued = false;
       paint15();
     });
   });
@@ -33578,7 +33744,7 @@ var init_idmark = __esm({
 
 // js/passkeys/constants.js
 var PASSKEYS, PASSKEYS_REGISTER_EVENT, PASSKEYS_RETRY_EVENT, PASSKEYS_REMOVE_EVENT, PASSKEYS_RENAME_EVENT, PASSKEY_KINDS, DAY_MS, DEFAULT_NEVER_USED_DAYS, DEFAULT_WAIT_ROWS, GLYPH_BOX, SVG_NS3, GLYPHS2;
-var init_constants14 = __esm({
+var init_constants15 = __esm({
   "js/passkeys/constants.js"() {
     "use strict";
     PASSKEYS = "[data-kp-passkeys]";
@@ -33639,7 +33805,7 @@ function unusedDays(row, now, limit) {
 var init_options2 = __esm({
   "js/passkeys/options.js"() {
     "use strict";
-    init_constants14();
+    init_constants15();
   }
 });
 
@@ -33657,11 +33823,11 @@ function glyph(doc, kind) {
   svg2.append(path);
   return svg2;
 }
-var make3, actionButton, rowOf, actionOf;
+var make3, actionButton, rowOf2, actionOf;
 var init_dom2 = __esm({
   "js/passkeys/dom.js"() {
     "use strict";
-    init_constants14();
+    init_constants15();
     make3 = (doc, className, tag = "span") => {
       const node = doc.createElement(tag);
       if (className) node.className = className;
@@ -33674,10 +33840,10 @@ var init_dom2 = __esm({
       button6.textContent = text;
       return button6;
     };
-    rowOf = (el16, key) => [...el16.querySelectorAll("[data-kp-passkey]")].find((li) => li.getAttribute("data-kp-passkey") === key);
+    rowOf2 = (el16, key) => [...el16.querySelectorAll("[data-kp-passkey]")].find((li) => li.getAttribute("data-kp-passkey") === key);
     actionOf = (el16, key, act) => (
       /** @type {HTMLElement | null | undefined} */
-      rowOf(el16, key)?.querySelector(`[data-kp-passkeys-act="${act}"]`)
+      rowOf2(el16, key)?.querySelector(`[data-kp-passkeys-act="${act}"]`)
     );
   }
 });
@@ -33766,19 +33932,19 @@ function flagsOf(doc, row, { options, now }) {
 }
 function hintOf(doc, id, refused, { options, last }) {
   const strings = getStrings();
-  const hint2 = make3(doc, "kp-passkeys__hint", "p");
-  hint2.setAttribute("id", `${id}-hint`);
+  const hint = make3(doc, "kp-passkeys__hint", "p");
+  hint.setAttribute("id", `${id}-hint`);
   if (refused) {
-    hint2.setAttribute("role", "alert");
-    hint2.setAttribute("data-kp-tone", "error");
-    hint2.textContent = refused;
+    hint.setAttribute("role", "alert");
+    hint.setAttribute("data-kp-tone", "error");
+    hint.textContent = refused;
   } else if (last && options.protectLast === "refuse") {
-    hint2.setAttribute("data-kp-tone", "warning");
-    hint2.textContent = strings.passkeysLastWay;
+    hint.setAttribute("data-kp-tone", "warning");
+    hint.textContent = strings.passkeysLastWay;
   } else if (last && options.protectLast === "confirm") {
-    hint2.textContent = strings.passkeysLastWayWarn;
-  } else hint2.hidden = true;
-  return hint2;
+    hint.textContent = strings.passkeysLastWayWarn;
+  } else hint.hidden = true;
+  return hint;
 }
 function renameButtons(doc, busy) {
   const strings = getStrings();
@@ -33863,7 +34029,7 @@ var init_row = __esm({
     "use strict";
     init_strings();
     init_freshness();
-    init_constants14();
+    init_constants15();
     init_dom2();
     init_options2();
     init_state9();
@@ -33981,7 +34147,7 @@ function drawNote(c, failed) {
   }
 }
 function restoreFocus(c, key, act) {
-  const li = rowOf(c.host, key);
+  const li = rowOf2(c.host, key);
   const again2 = (
     /** @type {HTMLElement | null} */
     (act ? li?.querySelector(`[data-kp-passkeys-act="${act}"]`) : null) ?? li?.querySelector(".kp-passkeys__rename-input")
@@ -34036,7 +34202,7 @@ var init_controller6 = __esm({
     init_controller();
     init_strings();
     init_components();
-    init_constants14();
+    init_constants15();
     init_dom2();
     init_options2();
     init_paint2();
@@ -34274,7 +34440,7 @@ var init_api7 = __esm({
   "js/passkeys/api.js"() {
     "use strict";
     init_controller();
-    init_constants14();
+    init_constants15();
     init_controller6();
   }
 });
@@ -34297,7 +34463,7 @@ __export(passkeys_exports, {
 var init_passkeys = __esm({
   "js/passkeys.js"() {
     "use strict";
-    init_constants14();
+    init_constants15();
     init_options2();
     init_api7();
   }
@@ -34306,7 +34472,7 @@ var init_passkeys = __esm({
 // js/thread/options.js
 function threadOptions(el16, spec) {
   const attr16 = (name) => el16.getAttribute(`data-kp-thread-${name}`);
-  const order2 = spec.order ?? attr16("order");
+  const order = spec.order ?? attr16("order");
   const foldRaw = spec.fold ?? attr16("fold");
   let fold2 = "newest";
   if (foldRaw === "full" || foldRaw === "none") fold2 = "full";
@@ -34323,7 +34489,7 @@ function threadOptions(el16, spec) {
     ),
     order: (
       /** @type {'oldest' | 'newest'} */
-      order2 === "newest" ? "newest" : "oldest"
+      order === "newest" ? "newest" : "oldest"
     ),
     fold: fold2,
     foldLines: Number.isFinite(lines) && lines > 0 ? Math.floor(lines) : 3,
@@ -34379,7 +34545,7 @@ var init_options3 = __esm({
       "data-kp-thread-bubble": "bubble"
     };
     NEAR_PX = 24;
-    atNewest = (box, order2) => order2 === "newest" ? box.scrollTop <= NEAR_PX : box.scrollHeight - box.clientHeight - box.scrollTop <= NEAR_PX;
+    atNewest = (box, order) => order === "newest" ? box.scrollTop <= NEAR_PX : box.scrollHeight - box.clientHeight - box.scrollTop <= NEAR_PX;
   }
 });
 
@@ -34552,9 +34718,9 @@ var init_view = __esm({
           this.host.querySelector(".kp-thread__scroll")
         );
         if (!box) return;
-        const order2 = threadOptions(this.host, this.spec).order;
+        const order = threadOptions(this.host, this.spec).order;
         const reduced4 = this.host.ownerDocument.defaultView?.matchMedia("(prefers-reduced-motion: reduce)").matches ?? false;
-        box.scrollTo({ top: order2 === "newest" ? 0 : box.scrollHeight, behavior: smooth && !reduced4 ? "smooth" : "auto" });
+        box.scrollTo({ top: order === "newest" ? 0 : box.scrollHeight, behavior: smooth && !reduced4 ? "smooth" : "auto" });
       }
       /** Draw now, or, while the busy card is up, once it has closed (a later spec wins). @param {ThreadSpec} spec */
       drawAfterCard(spec) {
@@ -35513,7 +35679,7 @@ var init_bullets = __esm({
 
 // js/code/constants.js
 var CODE, CODE_COPIED_MS, CELL_LINES, LOADING_LINES_MIN, LOADING_LINES_MAX;
-var init_constants15 = __esm({
+var init_constants16 = __esm({
   "js/code/constants.js"() {
     "use strict";
     CODE = "[data-kp-code]";
@@ -35616,7 +35782,7 @@ var init_footprint = __esm({
         this.laidOut = false;
       }
       connect() {
-        this.observe(new ResizeObserver((entries3) => this.measure(entries3))).observe(this.host);
+        this.observe(new ResizeObserver((entries2) => this.measure(entries2))).observe(this.host);
         this.observe(new MutationObserver(() => this.sync())).observe(this.host, { attributes: true, attributeFilter: STATE_ATTRIBUTES });
         this.own(() => this.release());
         this.sync();
@@ -35637,9 +35803,9 @@ var init_footprint = __esm({
         else this.release();
       }
       /** @param {ResizeObserverEntry[]} entries */
-      measure(entries3) {
+      measure(entries2) {
         if (!this.host.isConnected) return this.destroy();
-        const entry = entries3[entries3.length - 1];
+        const entry = entries2[entries2.length - 1];
         if (!this.laidOut && (entry?.contentRect.height ?? 0) > 0) {
           this.laidOut = true;
           if (HOLDING.has(this.state())) return this.sync();
@@ -36345,7 +36511,7 @@ var init_actions3 = __esm({
   "js/code/actions.js"() {
     "use strict";
     init_strings();
-    init_constants15();
+    init_constants16();
     init_body();
     init_dialog();
     init_head();
@@ -36407,7 +36573,7 @@ var init_loading = __esm({
     "use strict";
     init_strings();
     init_busy_card();
-    init_constants15();
+    init_constants16();
     init_dom3();
   }
 });
@@ -36419,7 +36585,7 @@ var init_controller8 = __esm({
     "use strict";
     init_controller();
     init_footprint();
-    init_constants15();
+    init_constants16();
     init_actions3();
     init_body();
     init_head();
@@ -36556,7 +36722,7 @@ var init_attach10 = __esm({
     "use strict";
     init_controller();
     init_locale();
-    init_constants15();
+    init_constants16();
     init_controller8();
   }
 });
@@ -36573,7 +36739,7 @@ __export(code_exports, {
 var init_code = __esm({
   "js/code.js"() {
     "use strict";
-    init_constants15();
+    init_constants16();
     init_language();
     init_attach10();
   }
@@ -36627,7 +36793,7 @@ function attachKeys(root = document) {
   return () => void 0;
 }
 var MOD_CAP, KEYS, capText;
-var init_keys6 = __esm({
+var init_keys7 = __esm({
   "js/keys.js"() {
     "use strict";
     init_strings();
@@ -36643,7 +36809,7 @@ function markCursor(row, on) {
   if (on) row.setAttribute("aria-current", "true");
   else row.removeAttribute("aria-current");
 }
-var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, ROW_LIKE, CONTROLS, LABEL_MAX, onByDefault, boxesOf, rowOf2, boxOf, keyOfRow, labelOfRow, shown3, tickable;
+var ROW_SELECT, ROW_SELECT_AUTO, SELECT_BOX, ROW_SELECT_EVENT, ROW_OPEN_EVENT2, CURSOR_CLASS, LONG_PRESS_MS, ROW_LIKE, CONTROLS, LABEL_MAX, onByDefault, boxesOf, rowOf3, boxOf, keyOfRow, labelOfRow, shown3, tickable;
 var init_rows = __esm({
   "js/row-select/rows.js"() {
     "use strict";
@@ -36662,7 +36828,7 @@ var init_rows = __esm({
       /** @type {HTMLInputElement[]} */
       [...el16.querySelectorAll(SELECT_BOX)].filter((b) => b instanceof HTMLInputElement)
     );
-    rowOf2 = (box) => (
+    rowOf3 = (box) => (
       /** @type {HTMLElement | null} */
       box.closest(ROW_LIKE)
     );
@@ -36732,7 +36898,7 @@ var init_core = __esm({
       allRows() {
         const out = [];
         for (const box of boxesOf(this.host)) {
-          const row = rowOf2(box);
+          const row = rowOf3(box);
           if (row && !out.includes(row)) out.push(row);
         }
         return out;
@@ -36746,7 +36912,7 @@ var init_core = __esm({
         return key === null ? null : this.rows().find((r, i) => keyOfRow(r, i) === key) ?? null;
       }
       keys() {
-        return boxesOf(this.host).filter((b) => b.checked).map((b, i) => keyOfRow(rowOf2(b) ?? this.host, i));
+        return boxesOf(this.host).filter((b) => b.checked).map((b, i) => keyOfRow(rowOf3(b) ?? this.host, i));
       }
       count() {
         return boxesOf(this.host).filter((b) => b.checked).length;
@@ -36839,7 +37005,7 @@ var TEXT_ENTRY, RowSelector;
 var init_controller9 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
-    init_keys6();
+    init_keys7();
     init_strings();
     init_core();
     init_rows();
@@ -36908,11 +37074,11 @@ var init_controller9 = __esm({
       /** The keys, written as a `.kp-keys` line into the element's `data-kp-select-hint`. */
       writeHint() {
         const el16 = this.host;
-        const hint2 = (
+        const hint = (
           /** @type {HTMLElement | null} */
           el16.querySelector("[data-kp-select-hint]") ?? this.doc.querySelector(`[data-kp-select-hint="${el16.id}"]`)
         );
-        if (!hint2) return;
+        if (!hint) return;
         const strings = getStrings();
         const pairs = [
           [["j", "k"], strings.rowKeysMove],
@@ -36922,7 +37088,7 @@ var init_controller9 = __esm({
           ["Enter", strings.rowKeysOpen]
         ];
         if (this.useAllKey()) pairs.push([["Mod", "A"], strings.rowKeysAll]);
-        setKeys(hint2, pairs);
+        setKeys(hint, pairs);
       }
       // --- The keys. ---
       /** @param {KeyboardEvent} event */
@@ -37010,7 +37176,7 @@ var init_controller9 = __esm({
       /** Follows the box the reader ticks with the mouse: the next range starts here. @param {Event} event */
       onChange(event) {
         if (!_RowSelector.isBox(event.target)) return;
-        const row = rowOf2(event.target);
+        const row = rowOf3(event.target);
         if (row && event.target.checked) this.anchorAt(row);
         if (this.count() === 0) this.host.removeAttribute("data-kp-selecting");
       }
@@ -37018,7 +37184,7 @@ var init_controller9 = __esm({
       onClick(event) {
         const box = event.target;
         if (!_RowSelector.isBox(box)) return;
-        const row = rowOf2(box);
+        const row = rowOf3(box);
         if (!row) return;
         this.place(row, { focus: false });
         if (!this.isRange() || !event.shiftKey || this.anchorKey === null) return;
@@ -37098,7 +37264,7 @@ function rowSelectKeys(el16) {
   const known4 = rowSelect(el16);
   if (known4) return known4.keys();
   return boxesOf(el16).filter((b) => b.checked).map((b, i) => {
-    const row = rowOf2(b);
+    const row = rowOf3(b);
     return row ? keyOfRow(row, i) : "";
   });
 }
@@ -37152,7 +37318,7 @@ function readSources(memory) {
       /** @type {NodeListOf<HTMLInputElement>} */
       source.querySelectorAll(BOX)
     ) {
-      const row = rowOf3(box);
+      const row = rowOf4(box);
       if (!row) continue;
       const key = keyOf2(row, index++);
       known4.add(key);
@@ -37166,7 +37332,7 @@ function readSources(memory) {
   }
   return { items: [...items.values()], known: known4, shown: shown5, shownTicked };
 }
-var SELECTION, BOX, SELECTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_MATCHING_EVENT, SELECTION_ACTION_EVENT, SELECTION_NAMES, SELECTION_SAY_MS, make8, labelOf5, rowOf3, keyOf2, shownRow;
+var SELECTION, BOX, SELECTION_EVENT, SELECTION_CLEAR_EVENT, SELECTION_MATCHING_EVENT, SELECTION_ACTION_EVENT, SELECTION_NAMES, SELECTION_SAY_MS, make8, labelOf5, rowOf4, keyOf2, shownRow;
 var init_model3 = __esm({
   "js/selection-bar/model.js"() {
     "use strict";
@@ -37188,7 +37354,7 @@ var init_model3 = __esm({
       const named = row.dataset.kpRowLabel ?? box?.getAttribute("aria-label")?.replace(/^select\s+/i, "");
       return (named ?? row.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 80);
     };
-    rowOf3 = (box) => (
+    rowOf4 = (box) => (
       /** @type {HTMLElement | null} */
       box.closest('[data-kp-row-key], tr, li, [role="row"]')
     );
@@ -37670,7 +37836,7 @@ function setSelectionResult(bar, result) {
   for (const source of memory.sources) {
     let index = 0;
     for (const box of source.querySelectorAll(BOX)) {
-      const row = rowOf3(box);
+      const row = rowOf4(box);
       if (!row) continue;
       const refusal = result.refused.find((r) => r.key === keyOf2(row, index++));
       if (!refusal) continue;
@@ -37915,7 +38081,7 @@ function attachOne3(el16, options) {
       draw7();
     }
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     const target = event.target instanceof Element ? event.target : null;
     if (target?.closest("input, textarea, select, button, a")) return;
@@ -37962,7 +38128,7 @@ function attachOne3(el16, options) {
     row.before(line);
   };
   el16.addEventListener("scroll", onScroll, { passive: true });
-  el16.addEventListener("keydown", onKey6);
+  el16.addEventListener("keydown", onKey5);
   pill.addEventListener("click", jump);
   doc.addEventListener("click", onToggle);
   doc.addEventListener("visibilitychange", onVisibility2);
@@ -37973,7 +38139,7 @@ function attachOne3(el16, options) {
     stopOptions();
     observer?.disconnect();
     el16.removeEventListener("scroll", onScroll);
-    el16.removeEventListener("keydown", onKey6);
+    el16.removeEventListener("keydown", onKey5);
     doc.removeEventListener("click", onToggle);
     doc.removeEventListener("visibilitychange", onVisibility2);
     view?.clearTimeout(sayLater);
@@ -38017,7 +38183,7 @@ var init_newpill = __esm({
 
 // js/json-field/constants.js
 var JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, JSON_CHECK_MS, JSON_MAX_ROWS, JSON_COPIED_MS, DEFAULT_ROWS2, MIN_ROWS, FALLBACK_LINE_HEIGHT, INDENT_NARROW, INDENT_WIDE, WATCHED_ATTRIBUTES2;
-var init_constants16 = __esm({
+var init_constants17 = __esm({
   "js/json-field/constants.js"() {
     "use strict";
     JSON_FIELD = "textarea[data-kp-json]";
@@ -38150,7 +38316,7 @@ function indentHere(c) {
   area.setRangeText(c.indent(), area.selectionStart, area.selectionEnd, "end");
   area.dispatchEvent(new Event("input", { bubbles: true }));
 }
-function handleKey2(c, event) {
+function handleKey(c, event) {
   const mod = event.ctrlKey || event.metaKey;
   if (event.key === "Escape") {
     c.escaped = true;
@@ -38173,10 +38339,10 @@ function handleKey2(c, event) {
   }
   c.escaped = false;
 }
-var init_keys7 = __esm({
+var init_keys8 = __esm({
   "js/json-field/keys.js"() {
     "use strict";
-    init_constants16();
+    init_constants17();
   }
 });
 
@@ -38243,7 +38409,7 @@ function grow(c) {
 var init_layout = __esm({
   "js/json-field/layout.js"() {
     "use strict";
-    init_constants16();
+    init_constants17();
   }
 });
 
@@ -38298,7 +38464,7 @@ function lockTools(c) {
 var init_tools = __esm({
   "js/json-field/tools.js"() {
     "use strict";
-    init_constants16();
+    init_constants17();
     init_layout();
   }
 });
@@ -38371,7 +38537,7 @@ var init_validation = __esm({
   "js/json-field/validation.js"() {
     "use strict";
     init_forms();
-    init_constants16();
+    init_constants17();
     init_explain();
     init_layout();
   }
@@ -38384,10 +38550,10 @@ var init_controller11 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_constants16();
+    init_constants17();
     init_explain();
     init_frame();
-    init_keys7();
+    init_keys8();
     init_layout();
     init_state11();
     init_tools();
@@ -38503,7 +38669,7 @@ var init_controller11 = __esm({
           /** @type {WheelEvent} */
           event
         ), { passive: false });
-        this.listen(area, "keydown", (event) => handleKey2(
+        this.listen(area, "keydown", (event) => handleKey(
           this,
           /** @type {KeyboardEvent} */
           event
@@ -38620,7 +38786,7 @@ var init_api9 = __esm({
   "js/json-field/api.js"() {
     "use strict";
     init_controller();
-    init_constants16();
+    init_constants17();
     init_controller11();
   }
 });
@@ -38641,7 +38807,7 @@ __export(json_field_exports, {
 var init_json_field = __esm({
   "js/json-field.js"() {
     "use strict";
-    init_constants16();
+    init_constants17();
     init_explain();
     init_api9();
   }
@@ -38784,7 +38950,7 @@ function drawRequest(el16, memory, request3, index, slot) {
   const ensure = () => {
     if (built) return;
     built = true;
-    item.append(bodyOf(doc, request3, options));
+    item.append(bodyOf2(doc, request3, options));
   };
   if (open4) ensure();
   item.addEventListener("toggle", () => {
@@ -38832,7 +38998,7 @@ function summaryOf2(doc, request3, tone) {
   summary2.setAttribute("aria-label", strings.reqSummary(request3.method.toUpperCase(), request3.path, status.textContent ?? ""));
   return summary2;
 }
-function bodyOf(doc, request3, options) {
+function bodyOf2(doc, request3, options) {
   const body = make10(doc, "kp-accordion__body kp-inspector__body");
   const secret = new Set((options.secretHeaders ?? SECRET_HEADERS).map((h2) => h2.toLowerCase()));
   const pairs = pairsOf(request3.headers);
@@ -39701,13 +39867,13 @@ var init_draw4 = __esm({
 async function glideTo(root) {
   const state12 = stateOf(root);
   const target = new Map(state12.items.map((item) => [item.id, weightOf(item)]));
-  const order2 = state12.items.map((item) => item.id);
+  const order = state12.items.map((item) => item.id);
   state12.order.forEach((id, at) => {
     if (target.has(id)) return;
-    const before = state12.order.slice(0, at).reverse().find((other) => order2.includes(other));
-    order2.splice(before ? order2.indexOf(before) + 1 : 0, 0, id);
+    const before = state12.order.slice(0, at).reverse().find((other) => order.includes(other));
+    order.splice(before ? order.indexOf(before) + 1 : 0, 0, id);
   });
-  const from = new Map(order2.map((id) => [id, state12.shown.get(id) ?? 0]));
+  const from = new Map(order.map((id) => [id, state12.shown.get(id) ?? 0]));
   const first = state12.order.length === 0 || [...from.values()].every((w) => w <= 1e-4);
   let duration2 = 0;
   let easing = "ease";
@@ -39722,7 +39888,7 @@ async function glideTo(root) {
   };
   cancelAnimationFrame(state12.glide);
   if (duration2 <= 0) return done();
-  state12.order = order2;
+  state12.order = order;
   const probe = document.createElement("i").animate([{ opacity: 0 }, { opacity: 1 }], { duration: duration2, easing, fill: "both" });
   probe.pause();
   const start = performance.now();
@@ -39731,7 +39897,7 @@ async function glideTo(root) {
     probe.currentTime = t * duration2;
     const style = probe.effect?.getComputedTiming().progress ?? t;
     const k = typeof style === "number" ? style : t;
-    state12.shown = new Map(order2.map((id) => [id, (from.get(id) ?? 0) + ((target.get(id) ?? 0) - (from.get(id) ?? 0)) * k]));
+    state12.shown = new Map(order.map((id) => [id, (from.get(id) ?? 0) + ((target.get(id) ?? 0) - (from.get(id) ?? 0)) * k]));
     drawDisc(root, false);
     if (t < 1) state12.glide = requestAnimationFrame(frame3);
     else {
@@ -39937,7 +40103,7 @@ var init_wheel = __esm({
 
 // js/focus-steps/constants.js
 var FOCUS_STEPS, FOCUS_STEPS_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_WAKE_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_EMPTY_ACTION_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_TRACK_EVENT, FOCUS_STEPS_TRACK_ATTENTION_EVENT, SWIPE_DISTANCE, STATES2, WIRED;
-var init_constants17 = __esm({
+var init_constants18 = __esm({
   "js/focus-steps/constants.js"() {
     "use strict";
     FOCUS_STEPS = "[data-kp-focus-steps]";
@@ -40047,7 +40213,7 @@ var init_dom4 = __esm({
     init_progressbar();
     init_strings();
     init_state13();
-    init_constants17();
+    init_constants18();
     el6 = (className, tag = "div") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -40192,7 +40358,7 @@ var init_tracks = __esm({
 
 // js/countdown/constants.js
 var COUNTDOWN, COUNTDOWN_EVENT, COUNTDOWN_END_EVENT, COUNTDOWN_STEP, SECOND_MS2, MINUTE_MS, MINUTE_S, HOUR_S, DAY_S, HOUR_MS, DAY_HOURS, EPOCH_MS_DIGITS, END_SLACK_MS, ROUND_EPSILON, WATCHED_ATTRIBUTES3;
-var init_constants18 = __esm({
+var init_constants19 = __esm({
   "js/countdown/constants.js"() {
     "use strict";
     COUNTDOWN = "[data-kp-countdown], [data-kp-countdown-until]";
@@ -40255,7 +40421,7 @@ var init_duration = __esm({
   "js/countdown/duration.js"() {
     "use strict";
     init_strings();
-    init_constants18();
+    init_constants19();
   }
 });
 
@@ -40325,7 +40491,7 @@ var ZONE_FORMATS;
 var init_zones = __esm({
   "js/countdown/zones.js"() {
     "use strict";
-    init_constants18();
+    init_constants19();
     ZONE_FORMATS = /* @__PURE__ */ new Map();
   }
 });
@@ -40367,7 +40533,7 @@ function untilLabel(ms, nowMs, zone = null) {
 var init_until = __esm({
   "js/countdown/until.js"() {
     "use strict";
-    init_constants18();
+    init_constants19();
     init_zones();
   }
 });
@@ -40446,7 +40612,7 @@ function countdownClock({ seconds, now = () => performance.now(), onEnd, onChang
 var init_clock = __esm({
   "js/countdown/clock.js"() {
     "use strict";
-    init_constants18();
+    init_constants19();
   }
 });
 
@@ -40534,7 +40700,7 @@ var init_controller14 = __esm({
     init_components();
     init_live_options();
     init_strings();
-    init_constants18();
+    init_constants19();
     init_clock();
     init_digits();
     init_duration();
@@ -40760,7 +40926,7 @@ var init_api11 = __esm({
   "js/countdown/api.js"() {
     "use strict";
     init_controller();
-    init_constants18();
+    init_constants19();
     init_controller14();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
@@ -40793,7 +40959,7 @@ __export(countdown_exports, {
 var init_countdown = __esm({
   "js/countdown.js"() {
     "use strict";
-    init_constants18();
+    init_constants19();
     init_duration();
     init_zones();
     init_until();
@@ -40879,10 +41045,10 @@ function ensureLanes(root) {
   list.setAttribute("role", "tablist");
   list.setAttribute("aria-orientation", "vertical");
   list.setAttribute("aria-labelledby", title.id);
-  const hint2 = el6("kp-focus-steps__lanes-hint", "p");
-  hint2.textContent = strings.focusTracksHint;
+  const hint = el6("kp-focus-steps__lanes-hint", "p");
+  hint.textContent = strings.focusTracksHint;
   lanes.setAttribute("aria-labelledby", title.id);
-  lanes.append(title, done, list, hint2);
+  lanes.append(title, done, list, hint);
   const band = el6("kp-attention kp-focus-steps__band");
   band.setAttribute("aria-label", strings.focusTrackBand);
   const head = part2(root, "head");
@@ -41330,7 +41496,7 @@ var init_memory = __esm({
     init_paint3();
     init_track_nav();
     init_flow();
-    init_constants17();
+    init_constants18();
     memoryOf3 = (root) => root.hasAttribute("data-kp-remember") ? memoryFor(root, "focus-steps") : null;
     hasMoved = (stored) => Object.keys(stored.answers).length > 0 || stored.index > 0 || (stored.done?.length ?? 0) > 0 || Object.values(stored.positions ?? {}).some((pos) => pos > 0);
   }
@@ -41510,9 +41676,9 @@ function buildAnswer(root, holder, step, text) {
     const short = choices.length <= 3 && choices.every((c) => c.label.length <= 14);
     group.setAttribute("data-kp-layout", wanted === "row" || wanted === "stack" ? wanted : short ? "row" : "stack");
     if (answer2.kind === "multi") {
-      const hint2 = el6("kp-focus-steps__hint", "p");
-      hint2.textContent = strings.focusMultiHint;
-      wrap.append(hint2);
+      const hint = el6("kp-focus-steps__hint", "p");
+      hint.textContent = strings.focusMultiHint;
+      wrap.append(hint);
     }
     for (const choice of choices) {
       const button6 = (
@@ -41606,7 +41772,7 @@ var init_flow = __esm({
     init_strings();
     init_state13();
     init_dom4();
-    init_constants17();
+    init_constants18();
     init_memory();
     init_resume();
     init_tracks();
@@ -41678,7 +41844,7 @@ var init_band = __esm({
     init_dom4();
     init_resume();
     init_flow();
-    init_constants17();
+    init_constants18();
     init_tracks();
     suggestion = (lanes) => lanes.find((l) => !l.active && l.status === "ringing") ?? lanes.find((l) => !l.active && l.status === "ready");
   }
@@ -41907,7 +42073,7 @@ var init_track_nav = __esm({
     init_paint3();
     init_memory();
     init_flow();
-    init_constants17();
+    init_constants18();
     init_resume();
     init_blockers();
     init_lanes();
@@ -41916,7 +42082,7 @@ var init_track_nav = __esm({
 
 // js/timer/constants.js
 var TIMERS, TIMER_START, TIMER_START_EVENT, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_STOP_EVENT, TIMERS_RETRY_EVENT, TIMER_TICK_MS;
-var init_constants19 = __esm({
+var init_constants20 = __esm({
   "js/timer/constants.js"() {
     "use strict";
     TIMERS = "[data-kp-timers]";
@@ -41975,7 +42141,7 @@ function say7(list, message, where = "live") {
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
 }
-var clockOf, leftOf, stateOf3, el7, listOf2;
+var clockOf, leftOf, stateOf3, el7, listOf3;
 var init_model4 = __esm({
   "js/timer/model.js"() {
     "use strict";
@@ -41997,7 +42163,7 @@ var init_model4 = __esm({
       node.className = className;
       return node;
     };
-    listOf2 = (list) => {
+    listOf3 = (list) => {
       let timers = LISTS.get(list);
       if (!timers) {
         timers = /* @__PURE__ */ new Map();
@@ -42233,7 +42399,7 @@ var init_sound = __esm({
 
 // js/timer/sync.js
 function sync2(list) {
-  const timers = listOf2(list);
+  const timers = listOf3(list);
   const empty = part3(list, "empty");
   const strings = getStrings();
   const error = list.getAttribute("data-kp-timers-error");
@@ -42287,7 +42453,7 @@ function setTimersState(list, state12, message) {
   sync2(list);
 }
 function tick2(list) {
-  for (const timer2 of listOf2(list).values()) {
+  for (const timer2 of listOf3(list).values()) {
     if (timer2.state !== "running") continue;
     const left = leftOf(timer2);
     if (left <= 0) finish(list, timer2);
@@ -42315,7 +42481,7 @@ function finish(list, timer2, { quiet = false } = {}) {
       const length = playTimerSound(sound);
       if (speak)
         setTimeout(
-          () => listOf2(list).get(timer2.id) === timer2 && timer2.state === "done" && speakTimerMessage(timer2.say || strings.timerSpoken(timer2.name)),
+          () => listOf3(list).get(timer2.id) === timer2 && timer2.state === "done" && speakTimerMessage(timer2.say || strings.timerSpoken(timer2.name)),
           length * 1e3
         );
     };
@@ -42349,7 +42515,7 @@ var init_sync3 = __esm({
     init_busy_card();
     init_state_plate();
     init_card();
-    init_constants19();
+    init_constants20();
     init_model4();
     init_sound();
     init_state14();
@@ -42366,7 +42532,7 @@ async function askTimerNotifications() {
 }
 function startTimer(list, { name, seconds, id, say: message = "" }) {
   if (!(list instanceof HTMLElement) || !(seconds > 0)) return null;
-  const timers = listOf2(list);
+  const timers = listOf3(list);
   const key = id ?? `t${Date.now().toString(36)}${timerState.serial += 1}`;
   const existing = timers.get(key);
   if (existing && existing.state !== "done") return key;
@@ -42444,7 +42610,7 @@ function stopTimerRing(list, id) {
 }
 function removeCard(list, timer2, animate) {
   stopRing(timer2);
-  listOf2(list).delete(timer2.id);
+  listOf3(list).delete(timer2.id);
   const { card } = timer2;
   if (animate) void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => m.leave(card)).catch(() => card.remove());
   else card.remove();
@@ -42460,7 +42626,7 @@ function stopTimer(list, id) {
 }
 function restoreTimers(list, saved) {
   if (!(list instanceof HTMLElement)) return;
-  const timers = listOf2(list);
+  const timers = listOf3(list);
   for (const s2 of saved) {
     if (timers.has(s2.id)) continue;
     const card = buildCard(s2.id);
@@ -42489,7 +42655,7 @@ var init_run = __esm({
     "use strict";
     init_strings();
     init_card();
-    init_constants19();
+    init_constants20();
     init_model4();
     init_sound();
     init_state14();
@@ -42552,7 +42718,7 @@ function attachTimers(root = document) {
       const ticker2 = TICKERS.get(list);
       if (ticker2) clearInterval(ticker2);
       TICKERS.delete(list);
-      for (const timer2 of listOf2(list).values()) stopRing(timer2);
+      for (const timer2 of listOf3(list).values()) stopRing(timer2);
     });
   }
   const start = (event) => {
@@ -42603,7 +42769,7 @@ var init_attach11 = __esm({
     "use strict";
     init_strings();
     init_countdown();
-    init_constants19();
+    init_constants20();
     init_model4();
     init_run();
     init_sound();
@@ -42642,7 +42808,7 @@ __export(timer_exports, {
 var init_timer = __esm({
   "js/timer.js"() {
     "use strict";
-    init_constants19();
+    init_constants20();
     init_model4();
     init_sync3();
     init_sound();
@@ -42739,7 +42905,7 @@ function setFocusStepsState(root, kind, message) {
   }
   paint4(root, false);
 }
-var getStepIndex, getSteps, typing3;
+var getStepIndex, getSteps, typing2;
 var init_api12 = __esm({
   "js/focus-steps/api.js"() {
     "use strict";
@@ -42753,10 +42919,10 @@ var init_api12 = __esm({
     init_paint3();
     init_flow();
     init_memory();
-    init_constants17();
+    init_constants18();
     getStepIndex = (root) => stateOf2(root).index;
     getSteps = (root) => stateOf2(root).steps.map((step) => ({ ...step }));
-    typing3 = (target) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+    typing2 = (target) => target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
   }
 });
 
@@ -42819,7 +42985,7 @@ var init_wake = __esm({
     "use strict";
     init_strings();
     init_dom4();
-    init_constants17();
+    init_constants18();
     init_resume();
   }
 });
@@ -42908,7 +43074,7 @@ function attachFocusSteps(scope = document) {
       }
     };
     const key = (event) => {
-      if (event.altKey || event.ctrlKey || event.metaKey || typing3(event.target)) return;
+      if (event.altKey || event.ctrlKey || event.metaKey || typing2(event.target)) return;
       const onButton = event.target instanceof Element && event.target.closest('button, a, [role="button"]');
       const rtl = getComputedStyle(root).direction === "rtl";
       if ((event.key === "ArrowUp" || event.key === "ArrowDown") && onButton instanceof HTMLElement && onButton.closest(".kp-focus-steps__answer")) {
@@ -43090,7 +43256,7 @@ var init_attach12 = __esm({
     init_strings();
     init_shortcuts();
     init_live_options();
-    init_constants17();
+    init_constants18();
     init_dom4();
     init_paint3();
     init_wake();
@@ -43132,7 +43298,7 @@ __export(focus_steps_exports, {
 var init_focus_steps = __esm({
   "js/focus-steps.js"() {
     "use strict";
-    init_constants17();
+    init_constants18();
     init_api12();
     init_attach12();
   }
@@ -43951,7 +44117,7 @@ function attachQuantities(scope = document) {
       event.preventDefault();
       change(root, to, "key");
     };
-    const typing4 = () => {
+    const typing3 = () => {
       const input = inputOf(root);
       if (!input) return;
       const read = parseQuantity(input.value);
@@ -43968,7 +44134,7 @@ function attachQuantities(scope = document) {
     root.addEventListener("pointerdown", down);
     root.addEventListener("click", click);
     root.addEventListener("keydown", key);
-    root.addEventListener("input", typing4);
+    root.addEventListener("input", typing3);
     root.addEventListener("focusout", commit3);
     for (const type of ["pointerup", "pointerleave", "pointercancel", "blur"]) root.addEventListener(type, up, true);
     undo.push(() => {
@@ -43977,7 +44143,7 @@ function attachQuantities(scope = document) {
       root.removeEventListener("pointerdown", down);
       root.removeEventListener("click", click);
       root.removeEventListener("keydown", key);
-      root.removeEventListener("input", typing4);
+      root.removeEventListener("input", typing3);
       root.removeEventListener("focusout", commit3);
       for (const type of ["pointerup", "pointerleave", "pointercancel", "blur"]) root.removeEventListener(type, up, true);
     });
@@ -44088,7 +44254,7 @@ function setToolbarActive(toolbar, filters, { clearAll = true, removeGlyph = "\x
 }
 function attachToolbars(root = document) {
   const toolbarOf = (event) => event.target instanceof Element ? event.target.closest(TOOLBAR) : null;
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     const toolbar = toolbarOf(event);
     if (!toolbar || HANDLED3.has(event) || event.key !== "Escape") return;
     const input = toolbarSearch(toolbar);
@@ -44148,7 +44314,7 @@ function attachToolbars(root = document) {
   root.addEventListener(
     "keydown",
     /** @type {EventListener} */
-    onKey6
+    onKey5
   );
   root.addEventListener(
     "click",
@@ -44160,7 +44326,7 @@ function attachToolbars(root = document) {
     root.removeEventListener(
       "keydown",
       /** @type {EventListener} */
-      onKey6
+      onKey5
     );
     root.removeEventListener(
       "click",
@@ -44189,7 +44355,7 @@ var init_toolbar = __esm({
 
 // js/calendar/constants.js
 var CALENDAR, CALENDAR_PICK_EVENT, CALENDAR_MONTH_EVENT, CALENDAR_RETRY_EVENT, DAY_MS2, DAYS_PER_WEEK2, GRID_WEEKS, GRID_CELLS, MONTHS_PER_YEAR2, SUNDAY_REFERENCE;
-var init_constants20 = __esm({
+var init_constants21 = __esm({
   "js/calendar/constants.js"() {
     "use strict";
     CALENDAR = "[data-kp-calendar]";
@@ -44231,7 +44397,7 @@ var init_dates2 = __esm({
   "js/calendar/dates.js"() {
     "use strict";
     init_chart();
-    init_constants20();
+    init_constants21();
     two2 = (n) => String(n).padStart(2, "0");
     isoOf = (y, m, d) => new Date(Date.UTC(y, m - 1, d)).toISOString().slice(0, 10);
     formatDayKey = (iso) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}/${iso.slice(0, 4)}`;
@@ -44461,7 +44627,7 @@ function buildCalendar(el16, s2, locale, firstDay) {
 var init_build = __esm({
   "js/calendar/build.js"() {
     "use strict";
-    init_constants20();
+    init_constants21();
     init_dom5();
     init_state16();
   }
@@ -44537,10 +44703,10 @@ function targetDay(key, shift, iso, firstDay) {
       return null;
   }
 }
-var init_keys8 = __esm({
+var init_keys9 = __esm({
   "js/calendar/keys.js"() {
     "use strict";
-    init_constants20();
+    init_constants21();
     init_dates2();
   }
 });
@@ -44584,7 +44750,7 @@ var init_plate2 = __esm({
     init_strings();
     init_state_plate();
     init_calm_tones();
-    init_constants20();
+    init_constants21();
     init_dom5();
   }
 });
@@ -44673,13 +44839,13 @@ var init_controller16 = __esm({
     init_strings();
     init_calm_tones();
     init_chart();
-    init_constants20();
+    init_constants21();
     init_busy2();
     init_build();
     init_day();
     init_dates2();
     init_dom5();
-    init_keys8();
+    init_keys9();
     init_paint4();
     WATCHED3 = ["data-kp-tones", "data-kp-paused-range", "data-kp-quiet-words", "data-kp-calm-map", "data-kp-legend"];
     CalendarController = class extends Controller {
@@ -44861,10 +45027,10 @@ var init_controller16 = __esm({
         paintCalendar(this);
       }
       /** @param {{ tone: CalendarTone, label: string }[]} entries */
-      setLegend(entries3) {
+      setLegend(entries2) {
         const doc = this.legend.ownerDocument;
         this.legend.replaceChildren(
-          ...entries3.map(({ tone, label }) => {
+          ...entries2.map(({ tone, label }) => {
             const li = make11(doc, "li");
             const swatch = make11(doc, "span", "kp-calendar__swatch");
             swatch.dataset.kpTone = tone;
@@ -44873,7 +45039,7 @@ var init_controller16 = __esm({
             return li;
           })
         );
-        this.legend.hidden = entries3.length === 0;
+        this.legend.hidden = entries2.length === 0;
       }
     };
   }
@@ -44892,8 +45058,8 @@ function calendarSelect(el16, iso) {
 function calendarMonth(el16, { year, month }) {
   calendarOf(el16)?.showMonth(year, month, false);
 }
-function setCalendarLegend(el16, entries3) {
-  calendarOf(el16)?.setLegend(entries3);
+function setCalendarLegend(el16, entries2) {
+  calendarOf(el16)?.setLegend(entries2);
 }
 function setCalendarCaption(el16, text) {
   const caption = (
@@ -44918,7 +45084,7 @@ var init_api14 = __esm({
   "js/calendar/api.js"() {
     "use strict";
     init_controller();
-    init_constants20();
+    init_constants21();
     init_controller16();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
@@ -44951,7 +45117,7 @@ __export(calendar_exports, {
 var init_calendar = __esm({
   "js/calendar.js"() {
     "use strict";
-    init_constants20();
+    init_constants21();
     init_dates2();
     init_api14();
   }
@@ -44959,7 +45125,7 @@ var init_calendar = __esm({
 
 // js/heat/constants.js
 var HEAT, MATRIX, HEAT_PICK_EVENT, HEAT_ROW_EVENT, HEAT_PAGE_EVENT, MATRIX_PICK_EVENT, HEAT_RETRY_EVENT, MATRIX_RETRY_EVENT, MATRIX_LIGHT_EVENT, TONES, HEAT_CELL, MATRIX_CELL, GLYPHS3;
-var init_constants21 = __esm({
+var init_constants22 = __esm({
   "js/heat/constants.js"() {
     "use strict";
     HEAT = "[data-kp-heat]";
@@ -45057,7 +45223,7 @@ var toneOf2, unit;
 var init_dom6 = __esm({
   "js/heat/dom.js"() {
     "use strict";
-    init_constants21();
+    init_constants22();
     toneOf2 = (tone) => TONES.includes(tone ?? "") ? (
       /** @type {GridTone} */
       tone
@@ -45107,14 +45273,14 @@ function syncCalmLegend(el16) {
   if (isCalmTones(el16) && el16.getAttribute("data-kp-legend") !== "hide") {
     const present = new Set([...el16.querySelectorAll(".kp-heat__cell[data-kp-tone]")].map((c) => c.getAttribute("data-kp-tone")));
     const all = el16.getAttribute("data-kp-legend") === "all" || !["logged", "quiet", "paused"].some((t) => present.has(t));
-    const entries3 = calmLegendEntries().filter((e) => all || present.has(e.tone));
-    const signature2 = entries3.map((e) => e.tone).join(" ");
+    const entries2 = calmLegendEntries().filter((e) => all || present.has(e.tone));
+    const signature2 = entries2.map((e) => e.tone).join(" ");
     if (own && !legend?.hidden && legend?.getAttribute("data-kp-legend-tones") === signature2) return;
-    const made7 = setHeatLegend(el16, entries3, { source: "auto" });
+    const made7 = setHeatLegend(el16, entries2, { source: "auto" });
     made7?.setAttribute("data-kp-legend-tones", signature2);
   } else if (own) removeLegend(el16);
 }
-function setHeatLegend(el16, entries3, options = {}) {
+function setHeatLegend(el16, entries2, options = {}) {
   const doc = el16.ownerDocument;
   const s2 = getStrings();
   let legend = legendOf(el16);
@@ -45129,7 +45295,7 @@ function setHeatLegend(el16, entries3, options = {}) {
   if (options.source) legend.setAttribute("data-kp-legend-source", options.source);
   else legend.removeAttribute("data-kp-legend-source");
   const items = [];
-  for (const entry of entries3) {
+  for (const entry of entries2) {
     const li = make12(doc, "li");
     if (entry.ramp) {
       const steps = Math.min(9, Math.max(2, Math.trunc(entry.steps ?? 5)));
@@ -45172,7 +45338,7 @@ var init_legend2 = __esm({
     "use strict";
     init_strings();
     init_calm_tones();
-    init_keys6();
+    init_keys7();
     init_dom6();
     legendCount = 0;
   }
@@ -45269,7 +45435,7 @@ var init_paging = __esm({
   "js/heat/paging.js"() {
     "use strict";
     init_strings();
-    init_constants21();
+    init_constants22();
     init_dom6();
     init_grid_state();
     MARKED = /* @__PURE__ */ new WeakSet();
@@ -45517,7 +45683,7 @@ var init_draw5 = __esm({
     init_state_plate();
     init_calm_tones();
     init_card2();
-    init_constants21();
+    init_constants22();
     init_dom6();
     init_grid_state();
     init_legend2();
@@ -45596,7 +45762,7 @@ function wireHeat(el16) {
       new CustomEvent(HEAT_PICK_EVENT, { bubbles: true, detail: { rowKey: cell.dataset.rowKey, colKey: key, cell, picked: !already } })
     );
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     const cell = (
       /** @type {HTMLElement | null} */
       (event.target instanceof Element ? event.target : null)?.closest(HEAT_CELL) ?? null
@@ -45659,7 +45825,7 @@ function wireHeat(el16) {
     if (now?.r !== at.r || now?.c !== at.c) placeStop(el16, HEAT_CELL, at);
   };
   el16.addEventListener("click", onClick);
-  el16.addEventListener("keydown", onKey6);
+  el16.addEventListener("keydown", onKey5);
   el16.addEventListener("focusin", onFocus);
   syncCalmLegend(el16);
   const legendWatch = new MutationObserver(() => syncCalmLegend(el16));
@@ -45674,7 +45840,7 @@ function wireHeat(el16) {
   }
   return () => {
     el16.removeEventListener("click", onClick);
-    el16.removeEventListener("keydown", onKey6);
+    el16.removeEventListener("keydown", onKey5);
     el16.removeEventListener("focusin", onFocus);
     legendWatch.disconnect();
   };
@@ -45706,7 +45872,7 @@ var init_wire3 = __esm({
   "js/heat/wire.js"() {
     "use strict";
     init_hovercard();
-    init_constants21();
+    init_constants22();
     init_draw5();
     init_grid_state();
     init_legend2();
@@ -45718,7 +45884,7 @@ var init_wire3 = __esm({
 
 // js/uses-map/constants.js
 var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW;
-var init_constants22 = __esm({
+var init_constants23 = __esm({
   "js/uses-map/constants.js"() {
     "use strict";
     USES_MAP = '[data-kp-view="lines"]';
@@ -45889,7 +46055,7 @@ var init_model5 = __esm({
   "js/uses-map/model.js"() {
     "use strict";
     init_strings();
-    init_constants22();
+    init_constants23();
     init_dom7();
     init_relation();
     SKELETON_NODES = 4;
@@ -46072,7 +46238,7 @@ function keyTarget(m, root, card, key, kind, pressed) {
   return void 0;
 }
 var cardsOf;
-var init_keys9 = __esm({
+var init_keys10 = __esm({
   "js/uses-map/keys.js"() {
     "use strict";
     cardsOf = (root, kind) => [...root.querySelectorAll(`.kp-uses__node[data-side="${kind}"] .kp-uses__card`)].filter((n) => n instanceof HTMLElement);
@@ -46238,8 +46404,8 @@ var init_wire4 = __esm({
   "js/uses-map/wire.js"() {
     "use strict";
     init_controller();
-    init_constants22();
-    init_keys9();
+    init_constants23();
+    init_keys10();
     init_lines();
     init_memory2();
     UsesWire = class extends Controller {
@@ -46501,7 +46667,7 @@ var init_draw6 = __esm({
   "js/uses-map/draw.js"() {
     "use strict";
     init_state_plate();
-    init_constants22();
+    init_constants23();
     init_dom7();
     init_memory2();
     init_model5();
@@ -46528,7 +46694,7 @@ __export(uses_map_exports, {
 var init_uses_map = __esm({
   "js/uses-map.js"() {
     "use strict";
-    init_constants22();
+    init_constants23();
     init_memory2();
     init_relation();
     init_draw6();
@@ -46759,7 +46925,7 @@ var init_matrix = __esm({
     init_state_plate();
     init_uses_map();
     init_card2();
-    init_constants21();
+    init_constants22();
     init_dom6();
     init_draw5();
     init_grid_state();
@@ -46805,7 +46971,7 @@ function wireMatrix(el16) {
     );
     if (cell && el16.contains(cell) && !cell.hasAttribute("aria-disabled")) pin(cell, "pointer");
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     const cell = (
       /** @type {HTMLElement | null} */
       (event.target instanceof Element ? event.target : null)?.closest(MATRIX_CELL) ?? null
@@ -46874,7 +47040,7 @@ function wireMatrix(el16) {
     if (now?.r !== at.r || now?.c !== at.c) placeStop(el16, MATRIX_CELL, at);
   };
   el16.addEventListener("click", onClick);
-  el16.addEventListener("keydown", onKey6);
+  el16.addEventListener("keydown", onKey5);
   el16.addEventListener("focusin", onFocus);
   if (el16.querySelector(MATRIX_CELL)) {
     const lit = (
@@ -46887,7 +47053,7 @@ function wireMatrix(el16) {
   }
   return () => {
     el16.removeEventListener("click", onClick);
-    el16.removeEventListener("keydown", onKey6);
+    el16.removeEventListener("keydown", onKey5);
     el16.removeEventListener("focusin", onFocus);
   };
 }
@@ -46918,7 +47084,7 @@ var init_matrix_wire = __esm({
   "js/heat/matrix-wire.js"() {
     "use strict";
     init_hovercard();
-    init_constants21();
+    init_constants22();
     init_draw5();
     init_grid_state();
     init_matrix();
@@ -46954,7 +47120,7 @@ __export(heat_exports, {
 var init_heat = __esm({
   "js/heat.js"() {
     "use strict";
-    init_constants21();
+    init_constants22();
     init_draw5();
     init_pick();
     init_paging();
@@ -47077,7 +47243,7 @@ var init_barcell = __esm({
 
 // js/week/constants.js
 var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, WEEK_RETRY_EVENT, GAP, AXIS_HOURS;
-var init_constants23 = __esm({
+var init_constants24 = __esm({
   "js/week/constants.js"() {
     "use strict";
     WEEK = "[data-kp-week]";
@@ -47160,7 +47326,7 @@ function pillFor(c, e) {
 var init_pills2 = __esm({
   "js/week/pills.js"() {
     "use strict";
-    init_constants23();
+    init_constants24();
     init_helpers3();
   }
 });
@@ -47303,7 +47469,7 @@ var init_build2 = __esm({
   "js/week/build.js"() {
     "use strict";
     init_calendar();
-    init_constants23();
+    init_constants24();
     init_helpers3();
   }
 });
@@ -47452,7 +47618,7 @@ var menuModule;
 var init_menu = __esm({
   "js/week/menu.js"() {
     "use strict";
-    init_constants23();
+    init_constants24();
     init_helpers3();
     menuModule = /** @type {Promise<typeof import('../menu-button.js')> | null} */
     null;
@@ -47744,7 +47910,7 @@ var init_paint5 = __esm({
     init_calendar();
     init_state_plate();
     init_busy3();
-    init_constants23();
+    init_constants24();
     init_helpers3();
     init_menu();
     init_pills2();
@@ -47787,12 +47953,12 @@ function setWeekStart(el16, iso) {
   buildDays(c);
   paint7(c);
 }
-function setWeekLegend(el16, entries3) {
+function setWeekLegend(el16, entries2) {
   const c = weeks.get(el16);
   if (!c) return;
   const doc = c.el.ownerDocument;
   c.legend.replaceChildren(
-    ...entries3.map(({ series, label }) => {
+    ...entries2.map(({ series, label }) => {
       const li = make14(doc, "li");
       const swatch = make14(doc, "span", "kp-week__swatch");
       swatch.dataset.kpSeries = String(series);
@@ -47801,7 +47967,7 @@ function setWeekLegend(el16, entries3) {
       return li;
     })
   );
-  c.legend.hidden = entries3.length === 0;
+  c.legend.hidden = entries2.length === 0;
 }
 var init_api15 = __esm({
   "js/week/api.js"() {
@@ -47884,7 +48050,7 @@ function attachWeeks(root = document, options = {}) {
       syncTabStops(c);
       open2(c, item, event.detail === 0 ? "keyboard" : "pointer");
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       const pill = pillOf(event);
       if (!pill || event.altKey || event.ctrlKey || event.metaKey) return;
       if (c.upcoming.on && c.upcoming.list?.contains(pill)) {
@@ -47943,7 +48109,7 @@ function attachWeeks(root = document, options = {}) {
       el16.dispatchEvent(new CustomEvent(WEEK_RANGE_EVENT, { bubbles: true, detail: { start: next2, source: "nav" } }));
     };
     el16.addEventListener("click", onClick);
-    el16.addEventListener("keydown", onKey6);
+    el16.addEventListener("keydown", onKey5);
     el16.addEventListener("click", onNav);
     c.timer = window.setInterval(() => tick3(c), WEEK_TICK_MS);
     if (typeof ResizeObserver !== "undefined") {
@@ -47965,7 +48131,7 @@ function attachWeeks(root = document, options = {}) {
     }
     undo.push(() => {
       el16.removeEventListener("click", onClick);
-      el16.removeEventListener("keydown", onKey6);
+      el16.removeEventListener("keydown", onKey5);
       el16.removeEventListener("click", onNav);
       window.clearInterval(c.timer);
       c.observer?.disconnect();
@@ -47986,7 +48152,7 @@ var init_attach13 = __esm({
     init_api15();
     init_build2();
     init_busy3();
-    init_constants23();
+    init_constants24();
     init_menu();
     init_paint5();
     init_state17();
@@ -48013,7 +48179,7 @@ __export(week_exports, {
 var init_week = __esm({
   "js/week.js"() {
     "use strict";
-    init_constants23();
+    init_constants24();
     init_pills2();
     init_attach13();
     init_api15();
@@ -48022,7 +48188,7 @@ var init_week = __esm({
 
 // js/sequencer/constants.js
 var SEQUENCER, SEQUENCER_CHANGE_EVENT, SEQUENCER_SELECT_EVENT, SEQUENCER_REFUSE_EVENT, SEQUENCER_RETRY_EVENT, SEQUENCER_UNITS, SEQUENCER_OVERLAPS, SEQUENCER_ZOOM_MIN, SEQUENCER_ZOOM_MAX, TICK_STEPS, EPS, REACH_PX, DRAG_PX, HEADROOM;
-var init_constants24 = __esm({
+var init_constants25 = __esm({
   "js/sequencer/constants.js"() {
     "use strict";
     SEQUENCER = "[data-kp-sequencer]";
@@ -48115,7 +48281,7 @@ var round, num;
 var init_units = __esm({
   "js/sequencer/units.js"() {
     "use strict";
-    init_constants24();
+    init_constants25();
     round = (n) => Math.round(n * 1e6) / 1e6;
     num = (v, fallback2 = 0) => typeof v === "number" && Number.isFinite(v) ? v : Number.isFinite(Number(v)) && v !== "" && v != null ? Number(v) : fallback2;
   }
@@ -48184,9 +48350,9 @@ function sequencerApplyKey(items, id, action, options = {}) {
   const opt3 = { ...options, edges: false, strict: true };
   if (!item) return sequencerPlan(items, { id, kind: "move" }, opt3);
   if (action.kind === "lane") {
-    const order2 = options.lanes ?? [];
-    const next2 = order2[order2.indexOf(item.lane) + action.by];
-    if (order2.indexOf(item.lane) < 0 || next2 === void 0)
+    const order = options.lanes ?? [];
+    const next2 = order[order.indexOf(item.lane) + action.by];
+    if (order.indexOf(item.lane) < 0 || next2 === void 0)
       return { ok: false, items: (
         /** @type {SequencerItem[]} */
         items
@@ -48201,7 +48367,7 @@ function sequencerApplyKey(items, id, action, options = {}) {
 var init_links = __esm({
   "js/sequencer/links.js"() {
     "use strict";
-    init_constants24();
+    init_constants25();
     init_plan();
     init_units();
   }
@@ -48401,7 +48567,7 @@ var init_plan = __esm({
   "js/sequencer/plan.js"() {
     "use strict";
     init_units();
-    init_constants24();
+    init_constants25();
     init_links();
     overlaps = (a, b) => a.start < b.start + b.duration - EPS && b.start < a.start + a.duration - EPS;
   }
@@ -48450,7 +48616,7 @@ function sequencerClampZoom(zoom) {
 var init_timeline = __esm({
   "js/sequencer/timeline.js"() {
     "use strict";
-    init_constants24();
+    init_constants25();
     init_units();
   }
 });
@@ -48577,7 +48743,7 @@ function build5(el16, strings) {
   const cancelButton = action("cancel", strings.sequencerLinkCancel);
   actions.append(linkButton, unlinkButton, cancelButton);
   selection.append(selectionText, actions);
-  const hint2 = make15(doc, "p", "kp-gantt__hint kp-sequencer__hint");
+  const hint = make15(doc, "p", "kp-gantt__hint kp-sequencer__hint");
   const help = make15(doc, "p", "kp-gantt__announce", strings.sequencerItemHelp);
   help.id = `${id}-help`;
   const announcer2 = make15(doc, "p", "kp-gantt__announce");
@@ -48589,7 +48755,7 @@ function build5(el16, strings) {
   const probe = make15(doc, "span", "kp-sequencer__probe");
   probe.setAttribute("aria-hidden", "true");
   layer.append(measure, ruler, probe);
-  el16.replaceChildren(bar, frame3, selection, hint2, help, announcer2);
+  el16.replaceChildren(bar, frame3, selection, hint, help, announcer2);
   el16.dataset.kpSequencerId = id;
   return {
     el: el16,
@@ -48617,7 +48783,7 @@ function build5(el16, strings) {
     linkButton,
     unlinkButton,
     cancelButton,
-    hint: hint2,
+    hint,
     help,
     announcer: announcer2,
     measure,
@@ -49034,7 +49200,7 @@ var init_paint6 = __esm({
     init_busy_card();
     init_timeline();
     init_instance2();
-    init_constants24();
+    init_constants25();
     init_lanes2();
     init_bars();
   }
@@ -49089,10 +49255,10 @@ function commit(c, list, source) {
   return true;
 }
 function flushPending(c) {
-  const pending5 = c.pending;
-  if (!pending5 || c.press || c.kb) return;
+  const pending4 = c.pending;
+  if (!pending4 || c.press || c.kb) return;
   c.pending = null;
-  apply(c, pending5.items, pending5.lanes);
+  apply(c, pending4.items, pending4.lanes);
 }
 function apply(c, raw, lanes) {
   c.items = sequencerClean(raw);
@@ -49155,7 +49321,7 @@ var init_edit2 = __esm({
     init_instance2();
     init_lanes2();
     init_links();
-    init_constants24();
+    init_constants25();
     init_plan();
   }
 });
@@ -49166,7 +49332,7 @@ function focusItem(c, id) {
   for (const [key, bar] of c.bars) bar.tabIndex = key === id ? 0 : -1;
   c.bars.get(id)?.focus();
 }
-function onKey3(c, e) {
+function onKey2(c, e) {
   const target = (
     /** @type {HTMLElement} */
     e.target
@@ -49372,9 +49538,9 @@ function navigate(c, id, e) {
   else if (e.key === "Home") to = inLane[0];
   else if (e.key === "End") to = inLane[inLane.length - 1];
   else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-    const order2 = c.lanes.map((l) => l.id);
-    for (let k = order2.indexOf(item.lane) + (e.key === "ArrowDown" ? 1 : -1); k >= 0 && k < order2.length && !to; k += e.key === "ArrowDown" ? 1 : -1) {
-      const near2 = c.items.filter((i) => i.lane === order2[k]);
+    const order = c.lanes.map((l) => l.id);
+    for (let k = order.indexOf(item.lane) + (e.key === "ArrowDown" ? 1 : -1); k >= 0 && k < order.length && !to; k += e.key === "ArrowDown" ? 1 : -1) {
+      const near2 = c.items.filter((i) => i.lane === order[k]);
       to = near2.sort((a, b) => Math.abs(a.start - item.start) - Math.abs(b.start - item.start))[0];
     }
   } else return false;
@@ -49385,7 +49551,7 @@ var reachNow;
 var init_drag = __esm({
   "js/sequencer/drag.js"() {
     "use strict";
-    init_constants24();
+    init_constants25();
     init_plan();
     init_units();
     init_instance2();
@@ -49526,7 +49692,7 @@ var init_pointer3 = __esm({
     "use strict";
     init_drag();
     init_edit2();
-    init_constants24();
+    init_constants25();
     init_instance2();
     init_plan();
   }
@@ -49575,7 +49741,7 @@ function attachSequencers(root = document, options = {}) {
         else select(c, null);
       }
     };
-    const keydown = (e) => onKey3(c, e);
+    const keydown = (e) => onKey2(c, e);
     const down = (e) => onDown(c, e);
     const move = (e) => onMove(c, e);
     const up = (e) => onUp(c, e);
@@ -49676,7 +49842,7 @@ var init_attach14 = __esm({
     "use strict";
     init_strings();
     init_live_options();
-    init_constants24();
+    init_constants25();
     init_instance2();
     init_build3();
     init_timeline();
@@ -49786,7 +49952,7 @@ __export(sequencer_exports, {
 var init_sequencer = __esm({
   "js/sequencer.js"() {
     "use strict";
-    init_constants24();
+    init_constants25();
     init_units();
     init_plan();
     init_links();
@@ -49798,7 +49964,7 @@ var init_sequencer = __esm({
 
 // js/gantt/constants.js
 var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_RETRY_EVENT, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, OPENED, gantts, two4, make16, toMs2, keyOf6;
-var init_constants25 = __esm({
+var init_constants26 = __esm({
   "js/gantt/constants.js"() {
     "use strict";
     GANTT = "[data-kp-gantt]";
@@ -49876,7 +50042,7 @@ var init_scale = __esm({
     "use strict";
     init_calendar();
     init_chart();
-    init_constants25();
+    init_constants26();
     stateWord3 = (c, state12) => ({
       queued: c.strings.ganttQueued,
       running: c.strings.ganttRunning,
@@ -49951,7 +50117,7 @@ var restOn, RESTS;
 var init_window = __esm({
   "js/gantt/window.js"() {
     "use strict";
-    init_constants25();
+    init_constants26();
     init_scale();
     restOn = (c) => c.el.getAttribute("data-kp-gantt-rest") !== "off";
     RESTS = /* @__PURE__ */ new WeakMap();
@@ -50043,7 +50209,7 @@ function build6(c) {
   c.plate = make16(doc, "div", "kp-gantt__plate");
   c.plate.hidden = true;
   frame3.append(c.scroll, c.stateLine, c.plate);
-  const hint2 = make16(doc, "p", "kp-gantt__hint", c.el.hasAttribute("data-kp-gantt-points") ? s2.ganttPointsHint : s2.ganttHint);
+  const hint = make16(doc, "p", "kp-gantt__hint", c.el.hasAttribute("data-kp-gantt-points") ? s2.ganttPointsHint : s2.ganttHint);
   const legend = make16(doc, "ul", "kp-gantt__legend");
   c.legend = legend;
   for (
@@ -50058,7 +50224,7 @@ function build6(c) {
     li.append(swatch, make16(doc, "span", "", stateWord3(c, state12)));
     legend.append(li);
   }
-  c.el.replaceChildren(bar, frame3, legend, hint2, c.announcer);
+  c.el.replaceChildren(bar, frame3, legend, hint, c.announcer);
   c.el.dataset.kpGanttId = String(idSeq2 += 1);
 }
 function frame(c) {
@@ -50077,7 +50243,7 @@ var init_build4 = __esm({
     "use strict";
     init_scale();
     init_window();
-    init_constants25();
+    init_constants26();
     idSeq2 = 0;
   }
 });
@@ -50258,7 +50424,7 @@ var MEASURERS, OUTSIDE_GAP_PX, MARK_GAP_PX, RUN_GAP_PX, NOW_GAP_PX;
 var init_labels2 = __esm({
   "js/gantt/labels.js"() {
     "use strict";
-    init_constants25();
+    init_constants26();
     MEASURERS = /* @__PURE__ */ new WeakMap();
     OUTSIDE_GAP_PX = 6;
     MARK_GAP_PX = 2;
@@ -50401,7 +50567,7 @@ var init_points = __esm({
   "js/gantt/points.js"() {
     "use strict";
     init_calendar();
-    init_constants25();
+    init_constants26();
     init_scale();
   }
 });
@@ -50464,13 +50630,13 @@ function paintChrome(c) {
   c.ranges.toggleAttribute("hidden", bare);
   c.liveButton.toggleAttribute("hidden", bare);
   syncLegend(c);
-  const hint2 = (
+  const hint = (
     /** @type {HTMLElement | null} */
     c.el.querySelector(":scope > .kp-gantt__hint")
   );
-  if (hint2) {
-    hint2.hidden = c.el.getAttribute("data-kp-gantt-hint") === "off";
-    hint2.textContent = c.el.hasAttribute("data-kp-gantt-points") ? c.strings.ganttPointsHint : bare ? c.strings.ganttHintOpen : c.strings.ganttHint;
+  if (hint) {
+    hint.hidden = c.el.getAttribute("data-kp-gantt-hint") === "off";
+    hint.textContent = c.el.hasAttribute("data-kp-gantt-points") ? c.strings.ganttPointsHint : bare ? c.strings.ganttHintOpen : c.strings.ganttHint;
   }
 }
 function paintKinds(c) {
@@ -50502,7 +50668,7 @@ function paintKinds(c) {
 var init_chrome2 = __esm({
   "js/gantt/chrome.js"() {
     "use strict";
-    init_constants25();
+    init_constants26();
     init_scale();
   }
 });
@@ -50637,7 +50803,7 @@ var init_axis = __esm({
     init_calendar();
     init_chart();
     init_scale();
-    init_constants25();
+    init_constants26();
   }
 });
 
@@ -50739,7 +50905,7 @@ var init_selection3 = __esm({
     init_build4();
     init_axis();
     init_scale();
-    init_constants25();
+    init_constants26();
   }
 });
 
@@ -50851,7 +51017,7 @@ var init_busy4 = __esm({
   "js/gantt/busy.js"() {
     "use strict";
     init_busy_card();
-    init_constants25();
+    init_constants26();
     init_paint7();
     init_selection3();
   }
@@ -51056,7 +51222,7 @@ var init_paint7 = __esm({
     "use strict";
     init_state_plate();
     init_window();
-    init_constants25();
+    init_constants26();
     init_scale();
     init_labels2();
     init_points();
@@ -51115,12 +51281,12 @@ function setGanttSelection(el16, selection) {
   c.selected = selection;
   paintSelection2(c);
 }
-function setGanttLegend(el16, entries3) {
+function setGanttLegend(el16, entries2) {
   const c = gantts.get(el16);
   if (!c) return;
   const doc = c.el.ownerDocument;
   for (const old of c.legend.querySelectorAll(":scope > .kp-gantt__legend-series")) old.remove();
-  for (const { series, label } of entries3) {
+  for (const { series, label } of entries2) {
     const li = make16(doc, "li", "kp-gantt__legend-series");
     const swatch = make16(doc, "span", "kp-gantt__swatch");
     swatch.dataset.kpState = "ok";
@@ -51155,7 +51321,7 @@ function setGanttZones(el16, zones) {
 var init_api17 = __esm({
   "js/gantt/api.js"() {
     "use strict";
-    init_constants25();
+    init_constants26();
     init_paint7();
     init_selection3();
     init_scale();
@@ -51338,7 +51504,7 @@ function attachGantts(root = document, options = {}) {
       freshWindow(c);
       announceWindow(c, "range");
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       const dayButton = event.target instanceof HTMLButtonElement && event.target.hasAttribute("data-kp-gantt-day") ? event.target : null;
       if (dayButton && !(event.altKey || event.ctrlKey || event.metaKey)) {
         const buttons = (
@@ -51429,7 +51595,7 @@ function attachGantts(root = document, options = {}) {
     const onCancel2 = () => endDrag(false);
     c.ranges.addEventListener("kp-segmented-change", onRange);
     el16.addEventListener("click", onClick);
-    el16.addEventListener("keydown", onKey6);
+    el16.addEventListener("keydown", onKey5);
     c.scroll.addEventListener("pointerdown", onDown2);
     c.scroll.addEventListener("pointermove", onMove2);
     c.scroll.addEventListener("pointerup", onUp2);
@@ -51466,7 +51632,7 @@ function attachGantts(root = document, options = {}) {
     undo.push(() => {
       c.ranges.removeEventListener("kp-segmented-change", onRange);
       el16.removeEventListener("click", onClick);
-      el16.removeEventListener("keydown", onKey6);
+      el16.removeEventListener("keydown", onKey5);
       c.scroll.removeEventListener("pointerdown", onDown2);
       c.scroll.removeEventListener("pointermove", onMove2);
       c.scroll.removeEventListener("pointerup", onUp2);
@@ -51512,7 +51678,7 @@ var init_attach15 = __esm({
     init_chart();
     init_strings();
     init_live_options();
-    init_constants25();
+    init_constants26();
     init_build4();
     init_window();
     init_paint7();
@@ -51550,7 +51716,7 @@ __export(gantt_exports, {
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
-    init_constants25();
+    init_constants26();
     init_scale();
     init_attach15();
     init_api17();
@@ -51842,7 +52008,7 @@ function attachPipelines(root = document, options = {}) {
         })
       );
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       if (event.altKey || event.ctrlKey || event.metaKey) return;
       const from = event.target instanceof HTMLElement ? event.target.closest(".kp-pipeline__card, .kp-pipeline__more") : null;
       if (!(from instanceof HTMLElement)) return;
@@ -51868,10 +52034,10 @@ function attachPipelines(root = document, options = {}) {
       to.focus();
     };
     el16.addEventListener("click", onClick);
-    el16.addEventListener("keydown", onKey6);
+    el16.addEventListener("keydown", onKey5);
     undo.push(() => {
       el16.removeEventListener("click", onClick);
-      el16.removeEventListener("keydown", onKey6);
+      el16.removeEventListener("keydown", onKey5);
       c.busy?.remove();
       boards.delete(el16);
     });
@@ -51926,7 +52092,7 @@ var init_pipeline = __esm({
 
 // js/uptime/constants.js
 var UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, UPTIME_RETRY_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT;
-var init_constants26 = __esm({
+var init_constants27 = __esm({
   "js/uptime/constants.js"() {
     "use strict";
     UPTIME = "[data-kp-uptime]";
@@ -51969,7 +52135,7 @@ function uptimeFit(count2, width, min, gap) {
 var init_figures = __esm({
   "js/uptime/figures.js"() {
     "use strict";
-    init_constants26();
+    init_constants27();
   }
 });
 
@@ -52050,7 +52216,7 @@ var init_fit = __esm({
   "js/uptime/fit.js"() {
     "use strict";
     init_strings();
-    init_constants26();
+    init_constants27();
     init_figures();
     init_state18();
   }
@@ -52120,7 +52286,7 @@ var init_helpers4 = __esm({
     "use strict";
     init_strings();
     init_calm_tones();
-    init_constants26();
+    init_constants27();
     toneFor = (el16, state12) => isCalmTones(el16) ? state12 === "down" ? "quiet" : state12 === "none" ? "none" : "logged" : state12;
     wordFor = (el16, tone) => (isCalmTones(el16) ? calmWord(tone) : null) ?? getStrings().uptimeStateWord(
       /** @type {any} */
@@ -52335,7 +52501,7 @@ var init_draw7 = __esm({
     init_busy_card();
     init_calm_tones();
     init_state_plate();
-    init_constants26();
+    init_constants27();
     init_figures();
     init_fit();
     init_group3();
@@ -52508,7 +52674,7 @@ function attachUptimes(root = document) {
       panel?.remove();
       panel = null;
     });
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       if (event.key === "Escape" && shown5) {
         event.preventDefault();
         event.stopPropagation();
@@ -52572,7 +52738,7 @@ function attachUptimes(root = document) {
       const next2 = event.relatedTarget;
       if (shown5 && next2 instanceof Node && !el16.contains(next2)) void closeInfo(false);
     };
-    el16.addEventListener("keydown", onKey6);
+    el16.addEventListener("keydown", onKey5);
     el16.addEventListener("click", onClick);
     el16.addEventListener("focusout", onFocusOut);
     doc2.addEventListener("pointerdown", onOutside, true);
@@ -52581,7 +52747,7 @@ function attachUptimes(root = document) {
       relaid?.disconnect();
       el16.removeEventListener("scroll", onScroll, { capture: true });
       cancelAnimationFrame(frame3);
-      el16.removeEventListener("keydown", onKey6);
+      el16.removeEventListener("keydown", onKey5);
       el16.removeEventListener("click", onClick);
       el16.removeEventListener("focusout", onFocusOut);
       doc2.removeEventListener("pointerdown", onOutside, true);
@@ -52608,7 +52774,7 @@ var init_attach16 = __esm({
     init_hovercard();
     init_motion();
     init_top_layer();
-    init_constants26();
+    init_constants27();
     init_draw7();
     init_figures();
     init_fit();
@@ -52636,7 +52802,7 @@ __export(uptime_exports, {
 var init_uptime = __esm({
   "js/uptime.js"() {
     "use strict";
-    init_constants26();
+    init_constants27();
     init_figures();
     init_draw7();
     init_attach16();
@@ -53442,7 +53608,7 @@ function attachRanges(root = document, { now = () => Date.now() } = {}) {
         ) }, true);
         void closePanel();
       };
-      const onKey6 = (event) => {
+      const onKey5 = (event) => {
         if (event.key === "Escape" && !panel.hidden) {
           if (panel.querySelector("[data-kp-date-panel]:not([hidden])")) return;
           event.preventDefault();
@@ -53465,7 +53631,7 @@ function attachRanges(root = document, { now = () => Date.now() } = {}) {
       customButton.addEventListener("click", onCustom);
       cancel.addEventListener("click", () => void closePanel());
       apply2.addEventListener("click", onApply);
-      panel.addEventListener("keydown", onKey6);
+      panel.addEventListener("keydown", onKey5);
       doc.addEventListener("pointerdown", onOutside, true);
       teardownCustom = () => {
         lower?.();
@@ -53648,7 +53814,7 @@ function attachCompares(root = document) {
       el16.removeAttribute("data-kp-compare-dragging");
       if (el16.hasPointerCapture(event.pointerId)) el16.releasePointerCapture(event.pointerId);
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       const flip = rtl() && (event.key === "ArrowLeft" || event.key === "ArrowRight");
       const key = flip ? event.key === "ArrowLeft" ? "ArrowRight" : "ArrowLeft" : event.key;
       const next2 = compareKey(key, position, event.shiftKey);
@@ -53660,7 +53826,7 @@ function attachCompares(root = document) {
     el16.addEventListener("pointermove", onMove2);
     el16.addEventListener("pointerup", onUp2);
     el16.addEventListener("pointercancel", onUp2);
-    handle.addEventListener("keydown", onKey6);
+    handle.addEventListener("keydown", onKey5);
     const images = (
       /** @type {HTMLImageElement[]} */
       [...before.querySelectorAll("img"), ...after.querySelectorAll("img")]
@@ -54543,7 +54709,7 @@ var init_flash = __esm({
 
 // js/master-detail/constants.js
 var MASTER_DETAIL, PANE_SELECT_EVENT, PANE_OPEN_EVENT, PANE_CLOSE_EVENT, PANE_RETRY_EVENT, PANE_WIDTHS, PANE_ASIDE_WIDTH, PANE_FOLD_AT, PANE_ASIDE_FOLD_AT, DEFAULT_LIST_WIDTH, ITEM, OWN_FAILURE;
-var init_constants27 = __esm({
+var init_constants28 = __esm({
   "js/master-detail/constants.js"() {
     "use strict";
     MASTER_DETAIL = "[data-kp-master-detail]";
@@ -54570,7 +54736,7 @@ var init_detail_state = __esm({
     init_motion();
     init_state_plate();
     init_strings();
-    init_constants27();
+    init_constants28();
     DetailState = class {
       /**
        * @param {HTMLElement} root
@@ -54736,7 +54902,7 @@ var Folding;
 var init_folding = __esm({
   "js/master-detail/folding.js"() {
     "use strict";
-    init_constants27();
+    init_constants28();
     Folding = class {
       /** @param {HTMLElement} root */
       constructor(root) {
@@ -54867,7 +55033,7 @@ var init_controller17 = __esm({
     init_controller();
     init_listbox();
     init_motion();
-    init_constants27();
+    init_constants28();
     init_detail_state();
     init_folding();
     init_parts3();
@@ -55147,7 +55313,7 @@ var init_api18 = __esm({
   "js/master-detail/api.js"() {
     "use strict";
     init_controller();
-    init_constants27();
+    init_constants28();
     init_controller17();
     init_parts3();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
@@ -55177,7 +55343,7 @@ __export(master_detail_exports, {
 var init_master_detail = __esm({
   "js/master-detail.js"() {
     "use strict";
-    init_constants27();
+    init_constants28();
     init_api18();
   }
 });
@@ -55256,7 +55422,7 @@ function wire4(el16) {
   el16.replaceChildren(band, voice);
   if (el16.getAttribute("data-kp-placement") !== "top") el16.setAttribute("data-kp-placement", "bottom");
   let shown5 = "online";
-  let pending5 = Number(el16.getAttribute("data-kp-pending") ?? 0) || 0;
+  let pending4 = Number(el16.getAttribute("data-kp-pending") ?? 0) || 0;
   let attempt = 0;
   let nextAt = 0;
   let graceTimer = 0;
@@ -55276,7 +55442,7 @@ function wire4(el16) {
       tryNow(true);
     }
   };
-  const pendingText = () => pending5 > 0 ? s2().connPending(pending5) : "";
+  const pendingText = () => pending4 > 0 ? s2().connPending(pending4) : "";
   function tryNow(auto) {
     attempt += 1;
     stopTick();
@@ -55295,7 +55461,7 @@ function wire4(el16) {
     if (state12 === "reconnecting") mark.append(make31("span", "kp-spinner"));
     else mark.textContent = state12 === "back" ? "\u2713" : "!";
     const t = s2();
-    const text = state12 === "offline" ? [t.connOffline, t.connOfflineWhy] : state12 === "reconnecting" ? [t.connReconnecting, attempt > 1 ? t.connAttempt(attempt) : t.connReconnectingWhy] : state12 === "back" ? [t.connBack, pending5 > 0 ? t.connBackSending(pending5) : t.connBackWhy] : [t.connRefused, refusedWhy || t.connRefusedWhy];
+    const text = state12 === "offline" ? [t.connOffline, t.connOfflineWhy] : state12 === "reconnecting" ? [t.connReconnecting, attempt > 1 ? t.connAttempt(attempt) : t.connReconnectingWhy] : state12 === "back" ? [t.connBack, pending4 > 0 ? t.connBackSending(pending4) : t.connBackWhy] : [t.connRefused, refusedWhy || t.connRefusedWhy];
     title.textContent = text[0] ?? "";
     why.textContent = text[1] ?? "";
     meta.textContent = state12 === "back" ? "" : pendingText();
@@ -55318,7 +55484,7 @@ function wire4(el16) {
       voice.setAttribute("role", state12 === "offline" ? "alert" : "status");
       voice.textContent = `${text[0]}. ${text[1]}`;
     }
-    if (previous !== state12) el16.dispatchEvent(new CustomEvent(CONNECTION_STATE_EVENT, { bubbles: true, detail: { state: state12, previous, pending: pending5 } }));
+    if (previous !== state12) el16.dispatchEvent(new CustomEvent(CONNECTION_STATE_EVENT, { bubbles: true, detail: { state: state12, previous, pending: pending4 } }));
   }
   let refusedWhy = "";
   const show = () => {
@@ -55348,7 +55514,7 @@ function wire4(el16) {
   };
   const set = (state12, detail = {}) => {
     if (!CONNECTION_STATES.includes(state12)) return;
-    if (detail.pending !== void 0) pending5 = Math.max(0, Math.round(detail.pending));
+    if (detail.pending !== void 0) pending4 = Math.max(0, Math.round(detail.pending));
     if (detail.attempt !== void 0) attempt = detail.attempt;
     refusedWhy = detail.why ?? (state12 === "refused" ? refusedWhy : "");
     view.clearTimeout(graceTimer);
@@ -55381,7 +55547,7 @@ function wire4(el16) {
         shown5 = "online";
         el16.setAttribute("data-kp-state", "online");
         hide2();
-        el16.dispatchEvent(new CustomEvent(CONNECTION_STATE_EVENT, { bubbles: true, detail: { state: "online", previous: "back", pending: pending5 } }));
+        el16.dispatchEvent(new CustomEvent(CONNECTION_STATE_EVENT, { bubbles: true, detail: { state: "online", previous: "back", pending: pending4 } }));
       }, backMs());
     }
   };
@@ -55854,7 +56020,7 @@ function paint13(line, report2) {
     line.dispatchEvent(new CustomEvent(JOBLINE_EVENT, { bubbles: true, detail: { text } }));
   }
 }
-function listOf3(line) {
+function listOf4(line) {
   const target = line.getAttribute("data-kp-jobline-for");
   const found = target ? document.querySelector(target) : null;
   return found?.matches(STEPLIST_SELECTOR) ? found : null;
@@ -55867,7 +56033,7 @@ function setJobLine(line, report2) {
     else next2[key] = value;
   }
   reports.set(line, next2);
-  const list = listOf3(line);
+  const list = listOf4(line);
   paint13(line, list && !("step" in report2) ? { ...next2, ...stepPosition(list) } : next2);
 }
 function buildJobLine({ label, steplist } = {}) {
@@ -55887,13 +56053,13 @@ function attachJobLines(root = document) {
     line.setAttribute("role", "status");
     line.setAttribute("aria-live", "off");
     line.setAttribute("aria-atomic", "true");
-    const list = listOf3(line);
+    const list = listOf4(line);
     paint13(line, list ? { ...reports.get(line) ?? {}, ...stepPosition(list) } : reports.get(line) ?? {});
   }
   const onStep = (event) => {
     const list = event.target instanceof Element ? event.target.closest(STEPLIST_SELECTOR) : null;
     if (!list) return;
-    for (const line of lines) if (listOf3(line) === list) setJobLine(line, {});
+    for (const line of lines) if (listOf4(line) === list) setJobLine(line, {});
   };
   document.addEventListener(STEPLIST_EVENT, onStep);
   return () => document.removeEventListener(STEPLIST_EVENT, onStep);
@@ -56138,7 +56304,7 @@ function attachOne4(area) {
   const onScroll = () => {
     numbers2.style.transform = `translateY(${-area.scrollTop}px)`;
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     const mod = event.ctrlKey || event.metaKey;
     if (event.key === "Escape") {
       escaped = true;
@@ -56224,7 +56390,7 @@ function attachOne4(area) {
   area.addEventListener("focus", drawReadout);
   doc.addEventListener("selectionchange", drawReadout);
   gutter.addEventListener("wheel", onGutterWheel, { passive: false });
-  area.addEventListener("keydown", onKey6);
+  area.addEventListener("keydown", onKey5);
   area.addEventListener("pointerdown", () => escaped = false);
   tools.addEventListener("click", onTool);
   lock();
@@ -56250,7 +56416,7 @@ function attachOne4(area) {
     area.removeEventListener("focus", drawReadout);
     doc.removeEventListener("selectionchange", drawReadout);
     gutter.removeEventListener("wheel", onGutterWheel);
-    area.removeEventListener("keydown", onKey6);
+    area.removeEventListener("keydown", onKey5);
     area.form?.removeEventListener("reset", reset);
     attrs?.disconnect();
     resize?.disconnect();
@@ -56348,7 +56514,7 @@ function attachOne5(nav) {
   }
   nav.replaceChildren(title, list, wait);
   let given2 = null;
-  let entries3 = [];
+  let entries2 = [];
   let current2 = null;
   let raf = 0;
   const lookup = (selector) => {
@@ -56385,7 +56551,7 @@ function attachOne5(nav) {
   const scroller = () => {
     const found = lookup(nav.getAttribute("data-kp-contents-scroller"));
     if (found instanceof HTMLElement) return found;
-    const first = entries3[0]?.target;
+    const first = entries2[0]?.target;
     return first ? scrollParent(first) : null;
   };
   const motion = () => view.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
@@ -56425,34 +56591,34 @@ function attachOne5(nav) {
   const mark = (next2) => {
     const previous = current2;
     current2 = next2;
-    for (const { item, link } of entries3) {
+    for (const { item, link } of entries2) {
       const on = item.id === next2;
       link.toggleAttribute("data-kp-current", on);
       if (on) link.setAttribute("aria-current", "location");
       else link.removeAttribute("aria-current");
     }
     if (previous !== next2 && next2 !== null) {
-      const hit = entries3.find((e) => e.item.id === next2);
+      const hit = entries2.find((e) => e.item.id === next2);
       nav.dispatchEvent(new CustomEvent(CONTENTS_EVENT, { bubbles: true, detail: { id: next2, label: hit?.item.label ?? "", previous } }));
     }
   };
   const spy = () => {
     raf = 0;
-    if (!entries3.length) return;
+    if (!entries2.length) return;
     bindPane();
     const own = scroller();
     const root = own ?? doc.scrollingElement ?? doc.documentElement;
     const atEnd = own ? own.scrollTop + own.clientHeight >= own.scrollHeight - 2 && own.scrollTop > 0 : root.scrollTop + view.innerHeight >= root.scrollHeight - 2 && root.scrollTop > 0;
     const edge = own ? own.getBoundingClientRect().top : 0;
     const at = currentSection(
-      entries3.map((e) => {
+      entries2.map((e) => {
         const box = e.target.getBoundingClientRect();
         return { top: box.top - edge, bottom: box.bottom - edge };
       }),
       offset(),
       atEnd
     );
-    mark(at < 0 ? entries3[0]?.item.id ?? null : entries3[at].item.id);
+    mark(at < 0 ? entries2[0]?.item.id ?? null : entries2[at].item.id);
   };
   const queueSpy = () => {
     if (!raf) raf = view.requestAnimationFrame(spy);
@@ -56471,7 +56637,7 @@ function attachOne5(nav) {
       return queueSpy();
     }
     nav.setAttribute("data-kp-contents-sig", signature2);
-    entries3 = next2.map(({ item, target }) => {
+    entries2 = next2.map(({ item, target }) => {
       const li = doc.createElement("li");
       li.className = "kp-contents__item";
       li.dataset.kpLevel = String(item.level ?? 0);
@@ -56492,7 +56658,7 @@ function attachOne5(nav) {
       return { item, target, link, li };
     });
     list.replaceChildren(.../** @type {any[]} */
-    entries3.map((e) => e.li));
+    entries2.map((e) => e.li));
     current2 = null;
     bindPane();
     queueSpy();
@@ -56504,7 +56670,7 @@ function attachOne5(nav) {
     );
     const link = event.target instanceof Element ? event.target.closest(".kp-contents__link") : null;
     if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const hit = entries3.find((e) => e.link === link);
+    const hit = entries2.find((e) => e.link === link);
     if (!hit) return;
     event.preventDefault();
     const own = scroller();
@@ -56592,7 +56758,7 @@ var init_page_contents = __esm({
 
 // js/timefield/constants.js
 var TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, MINUTES_PER_HOUR, MINUTES_PER_DAY, DEFAULT_STEP, DEFAULT_NEAR_WIDTH, SAY_DELAY_MS3, NARROW_QUERY, POPUP_EDGE_PX, POPUP_GAP_PX, POPUP_MIN_WIDTH_PX, BARE_DIGITS;
-var init_constants28 = __esm({
+var init_constants29 = __esm({
   "js/timefield/constants.js"() {
     "use strict";
     TIME = "[data-kp-time]";
@@ -56663,7 +56829,7 @@ var pad;
 var init_parse = __esm({
   "js/timefield/parse.js"() {
     "use strict";
-    init_constants28();
+    init_constants29();
     pad = (n) => String(n).padStart(2, "0");
   }
 });
@@ -56677,7 +56843,7 @@ function presetsFromAttribute(root) {
     return b === void 0 ? { label: a, value: a } : { label: a, value: b };
   }).filter((p) => /^\d{2}:\d{2}/.test(p.value));
 }
-function entries2(root) {
+function entries(root) {
   const step = stepOf(root);
   const min = root.getAttribute("data-kp-time-min");
   const max = root.getAttribute("data-kp-time-max");
@@ -56710,7 +56876,7 @@ var attr4, stepOf, hasSeconds;
 var init_attributes = __esm({
   "js/timefield/attributes.js"() {
     "use strict";
-    init_constants28();
+    init_constants29();
     init_parse();
     attr4 = (root, name, fallback2) => root.getAttribute(`data-kp-time-${name}`) ?? fallback2;
     stepOf = (root) => {
@@ -56816,7 +56982,7 @@ var init_list3 = __esm({
     init_strings();
     init_top_layer();
     init_calm();
-    init_constants28();
+    init_constants29();
     init_attributes();
     init_build5();
     init_parse();
@@ -56929,7 +57095,7 @@ var init_list3 = __esm({
         list.setAttribute("role", "listbox");
         list.setAttribute("aria-label", s2.timeList);
         list.id = `${popup.id}-list`;
-        const items = entries2(field2.root);
+        const items = entries(field2.root);
         items.forEach((item, index) => list.append(this.buildOption(item, index)));
         popup.append(list);
         const best = this.nearestIndex(items);
@@ -57027,7 +57193,7 @@ var init_field = __esm({
     "use strict";
     init_strings();
     init_remember();
-    init_constants28();
+    init_constants29();
     init_attributes();
     init_build5();
     init_state19();
@@ -57238,7 +57404,7 @@ function stepValue(field2, event, up) {
   input.select();
   if (result.wrapped) field2.say(up ? getStrings().timeWrappedNext(next2) : getStrings().timeWrappedPrevious(next2));
 }
-function onKey4(field2, event) {
+function onKey3(field2, event) {
   if (event.key === "Enter") return onEnter(field2, event);
   if (event.key === "Escape") return onEscape(field2, event);
   if (event.key === "ArrowDown" && event.altKey) {
@@ -57258,11 +57424,11 @@ function onKey4(field2, event) {
   }
   stepValue(field2, event, up);
 }
-var init_keys10 = __esm({
+var init_keys11 = __esm({
   "js/timefield/keys.js"() {
     "use strict";
     init_strings();
-    init_constants28();
+    init_constants29();
     init_attributes();
     init_parse();
   }
@@ -57277,10 +57443,10 @@ var init_controller18 = __esm({
     init_strings();
     init_reason();
     init_remember();
-    init_constants28();
+    init_constants29();
     init_attributes();
     init_field();
-    init_keys10();
+    init_keys11();
     init_parse();
     WATCHED4 = [
       "disabled",
@@ -57333,7 +57499,7 @@ var init_controller18 = __esm({
           /** @type {ClipboardEvent} */
           event
         ));
-        this.listen(field2.input, "keydown", (event) => onKey4(
+        this.listen(field2.input, "keydown", (event) => onKey3(
           field2,
           /** @type {KeyboardEvent} */
           event
@@ -57476,7 +57642,7 @@ var init_api19 = __esm({
   "js/timefield/api.js"() {
     "use strict";
     init_controller();
-    init_constants28();
+    init_constants29();
     init_controller18();
     init_field();
     init_state19();
@@ -57505,7 +57671,7 @@ __export(timefield_exports, {
 var init_timefield = __esm({
   "js/timefield.js"() {
     "use strict";
-    init_constants28();
+    init_constants29();
     init_parse();
     init_api19();
   }
@@ -58302,7 +58468,7 @@ var init_question_card = __esm({
 
 // js/feed/constants.js
 var FEED, FEED_RETRY_EVENT, FEED_EARLIER_EVENT, FEED_OPEN_EVENT, FEED_ROW_STATES, FEED_STATES, FEED_EARLIER, FEED_TIME_ZONE, FEED_RELATIVE_MS, FEED_TICK_MS, ANNOUNCE_GAP_MS, HOUR_MS2, YESTERDAY_PROBES_H, DEFAULT_DAY_LEVEL, MIN_DAY_LEVEL, MAX_DAY_LEVEL, SKELETON_DAYS, SKELETON_ROWS, MOMENT_CLOCK_AT, MOMENT_DATE_LENGTH, OPTION_ATTRIBUTES2, OPTIONS4;
-var init_constants29 = __esm({
+var init_constants30 = __esm({
   "js/feed/constants.js"() {
     "use strict";
     FEED = "[data-kp-feed]";
@@ -58408,7 +58574,7 @@ function skeletonRows(doc) {
 var init_frame2 = __esm({
   "js/feed/frame.js"() {
     "use strict";
-    init_constants29();
+    init_constants30();
     init_dom8();
   }
 });
@@ -58438,7 +58604,7 @@ var init_options4 = __esm({
     "use strict";
     init_strings();
     init_freshness();
-    init_constants29();
+    init_constants30();
     optionAttr = (el16, name) => el16.getAttribute(OPTION_ATTRIBUTES2[name]) ?? "";
     dayKey3 = (ms, zone) => agoMoment(ms, zone).slice(0, MOMENT_DATE_LENGTH).split("/").reverse().join("-");
   }
@@ -58491,7 +58657,7 @@ var init_words3 = __esm({
   "js/feed/words.js"() {
     "use strict";
     init_strings();
-    init_constants29();
+    init_constants30();
     init_options4();
     counted = (n, unit2) => `${n} ${n === 1 ? unit2.one : unit2.many}`;
   }
@@ -58613,7 +58779,7 @@ var init_row2 = __esm({
     init_freshness();
     init_idmark();
     init_strings();
-    init_constants29();
+    init_constants30();
     init_dom8();
     init_options4();
     init_state20();
@@ -58668,7 +58834,7 @@ var init_days = __esm({
     init_freshness();
     init_idmark();
     init_strings();
-    init_constants29();
+    init_constants30();
     init_dom8();
     init_options4();
     init_row2();
@@ -58809,7 +58975,7 @@ var init_render3 = __esm({
     init_busy_card();
     init_state_plate();
     init_strings();
-    init_constants29();
+    init_constants30();
     init_days();
     init_dom8();
     init_frame2();
@@ -58825,7 +58991,7 @@ var init_controller19 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_constants29();
+    init_constants30();
     init_frame2();
     init_options4();
     init_render3();
@@ -58978,7 +59144,7 @@ var init_api20 = __esm({
     "use strict";
     init_freshness();
     init_controller();
-    init_constants29();
+    init_constants30();
     init_controller19();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
@@ -59008,7 +59174,7 @@ __export(feed_exports, {
 var init_feed = __esm({
   "js/feed.js"() {
     "use strict";
-    init_constants29();
+    init_constants30();
     init_api20();
   }
 });
@@ -59559,7 +59725,7 @@ var init_notices = __esm({
 
 // js/rating/constants.js
 var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, MIN_STARS, MAX_STARS, DEFAULT_STARS, DEFAULT_UNDO_MS, DEFAULT_FLASH_MS, SAY_DELAY_MS4, DISPLAY_STEP;
-var init_constants30 = __esm({
+var init_constants31 = __esm({
   "js/rating/constants.js"() {
     "use strict";
     RATING = "[data-kp-rating]";
@@ -59693,7 +59859,7 @@ var make21;
 var init_build6 = __esm({
   "js/rating/build.js"() {
     "use strict";
-    init_constants30();
+    init_constants31();
     init_state21();
     make21 = (tag, className, text) => {
       const node = document.createElement(tag);
@@ -59806,7 +59972,7 @@ function paintCaption(m, shown5) {
 function paintActions(m) {
   const s2 = getStrings();
   const item = itemName(m);
-  const pending5 = m.draft !== m.value;
+  const pending4 = m.draft !== m.value;
   const clearButton = (
     /** @type {HTMLButtonElement} */
     m.actions.querySelector(".kp-rating__clear")
@@ -59814,7 +59980,7 @@ function paintActions(m) {
   clearButton.textContent = s2.ratingClear;
   clearButton.setAttribute("aria-label", item ? s2.ratingClearName(item) : s2.ratingClear);
   const canClear = m.mode === "input" && attr5(m, "clear") !== "off";
-  const clearNow = canClear && interactive(m) && m.value > 0 && !pending5;
+  const clearNow = canClear && interactive(m) && m.value > 0 && !pending4;
   clearButton.hidden = !canClear;
   clearButton.toggleAttribute("data-kp-off", !clearNow);
   clearButton.disabled = !clearNow;
@@ -59828,9 +59994,9 @@ function paintActions(m) {
   );
   save2.textContent = s2.ratingConfirm;
   drop.textContent = s2.ratingCancel;
-  save2.hidden = drop.hidden = !pending5;
+  save2.hidden = drop.hidden = !pending4;
   m.actions.hidden = clearButton.hidden && save2.hidden;
-  if (pending5) m.caption.textContent = s2.ratingPending(plain(m.draft), m.max);
+  if (pending4) m.caption.textContent = s2.ratingPending(plain(m.draft), m.max);
   if (m.field) m.field.value = m.value > 0 ? String(plain(m.value)) : "";
 }
 function paint14(m) {
@@ -59958,7 +60124,7 @@ var init_commit = __esm({
     init_strings();
     init_calm();
     init_undo_toast();
-    init_constants30();
+    init_constants31();
     init_paint8();
     init_read2();
     init_math();
@@ -59983,7 +60149,7 @@ function targetValue(m, event) {
   if (event.key === "End") return m.max;
   return null;
 }
-function onKey5(m, event) {
+function onKey4(m, event) {
   if (!interactive(m) || event.altKey || event.ctrlKey || event.metaKey) return;
   const to = targetValue(m, event);
   if (to === null) {
@@ -60001,7 +60167,7 @@ function onKey5(m, event) {
   window.setTimeout(() => focusStar(m), 0);
 }
 var starNumber;
-var init_keys11 = __esm({
+var init_keys12 = __esm({
   "js/rating/keys.js"() {
     "use strict";
     init_math();
@@ -60018,10 +60184,10 @@ var init_controller21 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_constants30();
+    init_constants31();
     init_build6();
     init_commit();
-    init_keys11();
+    init_keys12();
     init_math();
     init_paint8();
     init_read2();
@@ -60128,7 +60294,7 @@ var init_controller21 = __esm({
           /** @type {MouseEvent} */
           event
         ));
-        this.listen(parts2.row, "keydown", (event) => onKey5(
+        this.listen(parts2.row, "keydown", (event) => onKey4(
           this,
           /** @type {KeyboardEvent} */
           event
@@ -60282,7 +60448,7 @@ var init_api21 = __esm({
   "js/rating/api.js"() {
     "use strict";
     init_controller();
-    init_constants30();
+    init_constants31();
     init_controller21();
     init_build6();
     init_commit();
@@ -60309,7 +60475,7 @@ __export(rating_exports, {
 var init_rating = __esm({
   "js/rating.js"() {
     "use strict";
-    init_constants30();
+    init_constants31();
     init_math();
     init_api21();
   }
@@ -60317,7 +60483,7 @@ var init_rating = __esm({
 
 // js/quote/constants.js
 var QUOTE, QUOTE_LIST, QUOTE_HIDE_EVENT, QUOTE_RETRY_EVENT, QUOTE_FOLD_EVENT, QUOTE_STATES, QUOTE_LINES, QUOTE_LIST_MAX, LIST_MAX_CAP, DEFAULT_UNDO_MS2, COPY_RESET_MS, ANNOUNCE_DELAY_MS, DAY_MS3, FOLD_SLACK_PX, WATCHED_ATTRIBUTES4;
-var init_constants31 = __esm({
+var init_constants32 = __esm({
   "js/quote/constants.js"() {
     "use strict";
     QUOTE = "[data-kp-quote]";
@@ -60371,7 +60537,7 @@ var init_when = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_constants31();
+    init_constants32();
   }
 });
 
@@ -60487,7 +60653,7 @@ var init_render4 = __esm({
     "use strict";
     init_freshness();
     init_strings();
-    init_constants31();
+    init_constants32();
     init_dom9();
     init_when();
   }
@@ -60563,7 +60729,7 @@ var init_actions4 = __esm({
     "use strict";
     init_undo_toast();
     init_strings();
-    init_constants31();
+    init_constants32();
     init_dom9();
     init_render4();
   }
@@ -60579,7 +60745,7 @@ var init_controller22 = __esm({
     init_shortcuts();
     init_strings();
     init_actions4();
-    init_constants31();
+    init_constants32();
     init_dom9();
     init_render4();
     QuoteController = class extends Controller {
@@ -60675,7 +60841,7 @@ var init_list4 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_constants31();
+    init_constants32();
     init_dom9();
     QuoteListController = class extends Controller {
       /**
@@ -60803,7 +60969,7 @@ var init_api22 = __esm({
     init_card_state();
     init_strings();
     init_actions4();
-    init_constants31();
+    init_constants32();
     init_controller22();
     init_list4();
     init_render4();
@@ -60830,7 +60996,7 @@ __export(quote_exports, {
 var init_quote = __esm({
   "js/quote.js"() {
     "use strict";
-    init_constants31();
+    init_constants32();
     init_when();
     init_api22();
   }
@@ -60838,7 +61004,7 @@ var init_quote = __esm({
 
 // js/usual-picker/constants.js
 var USUAL, USUAL_PICK_EVENT, USUAL_ADD_EVENT, USUAL_NOT_TODAY_EVENT, USUAL_RETRY_EVENT, USUAL_STATES, USUAL_FOLD_ABOVE;
-var init_constants32 = __esm({
+var init_constants33 = __esm({
   "js/usual-picker/constants.js"() {
     "use strict";
     USUAL = "[data-kp-usual]";
@@ -60897,26 +61063,26 @@ function readPinned(m) {
   }
 }
 function bandValues(m) {
-  let entries3 = [];
+  let entries2 = [];
   const raw = attr7(m, "usual", "") ?? "";
-  if (m.given) entries3 = m.given;
+  if (m.given) entries2 = m.given;
   else if (raw.trim().startsWith("[")) {
     try {
       const list = JSON.parse(raw);
       if (Array.isArray(list))
-        entries3 = list.map((e) => typeof e === "string" ? { value: e } : { value: String(e.value), uses: Number(e.uses) || 0 });
+        entries2 = list.map((e) => typeof e === "string" ? { value: e } : { value: String(e.value), uses: Number(e.uses) || 0 });
     } catch {
-      entries3 = [];
+      entries2 = [];
     }
   } else
-    entries3 = raw.split(",").map((v) => ({ value: v.trim() })).filter((e) => e.value !== "");
+    entries2 = raw.split(",").map((v) => ({ value: v.trim() })).filter((e) => e.value !== "");
   if (attr7(m, "usual-source") === "counts") {
     const label = (v) => m.items.find((i) => i.value === v)?.label ?? v;
-    entries3 = [...entries3].sort((a, b) => (b.uses ?? 0) - (a.uses ?? 0) || label(a.value).localeCompare(label(b.value)));
+    entries2 = [...entries2].sort((a, b) => (b.uses ?? 0) - (a.uses ?? 0) || label(a.value).localeCompare(label(b.value)));
   }
   const have = new Set(m.items.map((i) => i.value));
   const max = clamp2(Number(attr7(m, "usual-max")) || 5, 1, 7);
-  return entries3.map((e) => e.value).filter((v) => have.has(v)).slice(0, max);
+  return entries2.map((e) => e.value).filter((v) => have.has(v)).slice(0, max);
 }
 function folded(m) {
   const mode2 = attr7(m, "all");
@@ -60935,7 +61101,7 @@ var init_model7 = __esm({
   "js/usual-picker/model.js"() {
     "use strict";
     init_listbox();
-    init_constants32();
+    init_constants33();
     models = /* @__PURE__ */ new WeakMap();
     make23 = (tag, className, text) => {
       const node = document.createElement(tag);
@@ -61004,7 +61170,7 @@ function arrange(m) {
     item.el.toggleAttribute("data-kp-band", inBand.has(item.value));
     item.el.toggleAttribute("data-kp-rest", !inBand.has(item.value));
   }
-  const order2 = [];
+  const order = [];
   const pinned = readPinned(m);
   for (const p of pinned) {
     const row = make23("li", "kp-combobox__option kp-usual__pinned", p.label);
@@ -61013,7 +61179,7 @@ function arrange(m) {
     row.setAttribute("data-kp-pinned", "");
     row.setAttribute("data-kp-synth", "");
     row.dataset.value = p.value;
-    order2.push(row);
+    order.push(row);
   }
   const header = (text, kind) => {
     const h2 = make23("li", "kp-usual__group", text);
@@ -61022,22 +61188,22 @@ function arrange(m) {
     h2.setAttribute("data-kp-group", kind);
     return h2;
   };
-  if (band.length > 0) order2.push(header(attr7(m, "usual-label") ?? s2.usualLabel, "usual"));
+  if (band.length > 0) order.push(header(attr7(m, "usual-label") ?? s2.usualLabel, "usual"));
   for (const v of band) {
     const item = byValue.get(v);
-    if (item) order2.push(item.el);
+    if (item) order.push(item.el);
   }
-  if (band.length > 0 && rest.length > 0) order2.push(header(s2.usualAll, "all"));
-  for (const item of rest) order2.push(item.el);
+  if (band.length > 0 && rest.length > 0) order.push(header(s2.usualAll, "all"));
+  for (const item of rest) order.push(item.el);
   const more = make23("li", "kp-combobox__option kp-usual__more");
   more.setAttribute("role", "option");
   more.setAttribute("data-kp-option", "");
   more.setAttribute("data-kp-synth", "");
   more.setAttribute("data-kp-more", "");
   more.textContent = m.expanded ? s2.usualShowFewer : s2.usualShowAll(m.items.length);
-  order2.push(more);
+  order.push(more);
   const empty = m.list.querySelector("[data-kp-combobox-empty]");
-  m.list.append(...order2);
+  m.list.append(...order);
   if (empty) m.list.append(empty);
 }
 function paintTail(m, typed) {
@@ -61385,7 +61551,7 @@ var init_sync4 = __esm({
     init_state_plate();
     init_busy_card();
     init_segmented();
-    init_constants32();
+    init_constants33();
     init_layout2();
     init_model7();
     init_picking();
@@ -61441,7 +61607,7 @@ var init_add = __esm({
     "use strict";
     init_strings();
     init_undo_toast();
-    init_constants32();
+    init_constants33();
     init_layout2();
     init_model7();
     init_picking();
@@ -61601,7 +61767,7 @@ function wire5(box) {
     flashTag(m, item.value);
     sayAfter(m, getStrings().usualAlreadyPicked(item.label));
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     if (event.key === "Enter") typedAtEnter = input.value.trim();
     if (event.altKey && (event.code === "KeyU" || event.key.toLowerCase() === "u") && input.value === "") {
       event.preventDefault();
@@ -61651,7 +61817,7 @@ function wire5(box) {
     addName(m, typed, close0(near2, typed));
   };
   const close0 = (near2, typed) => near2 === "off" ? null : nearOf2(m, typed)[0]?.label ?? null;
-  input.addEventListener("keydown", onKey6, { capture: true });
+  input.addEventListener("keydown", onKey5, { capture: true });
   const onClick = (event) => {
     const target = event.target instanceof Element ? event.target : null;
     if (target?.closest("[data-kp-usual-retry]")) box.dispatchEvent(new CustomEvent(USUAL_RETRY_EVENT, { bubbles: true }));
@@ -61717,7 +61883,7 @@ function wire5(box) {
     unkey();
     box.removeEventListener(CHANGE_EVENT, onChange);
     box.removeEventListener("click", onClick);
-    input.removeEventListener("keydown", onKey6, { capture: true });
+    input.removeEventListener("keydown", onKey5, { capture: true });
     input.removeEventListener("input", onInput);
     handle.extend(null);
     m.busy?.remove();
@@ -61739,7 +61905,7 @@ var init_wire5 = __esm({
     init_shortcuts();
     init_remember();
     init_add();
-    init_constants32();
+    init_constants33();
     init_layout2();
     init_lookup();
     init_model7();
@@ -61797,7 +61963,7 @@ function usualNotToday(element) {
 var init_attach17 = __esm({
   "js/usual-picker/attach.js"() {
     "use strict";
-    init_constants32();
+    init_constants33();
     init_model7();
     init_sync4();
     init_wire5();
@@ -61826,7 +61992,7 @@ __export(usual_picker_exports, {
 var init_usual_picker = __esm({
   "js/usual-picker.js"() {
     "use strict";
-    init_constants32();
+    init_constants33();
     init_names();
     init_attach17();
   }
@@ -63294,7 +63460,7 @@ var init_path_trace = __esm({
 
 // js/entity-card/constants.js
 var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_STAR_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT;
-var init_constants33 = __esm({
+var init_constants34 = __esm({
   "js/entity-card/constants.js"() {
     "use strict";
     ENTITY_GRID = "[data-kp-entity-grid]";
@@ -63351,7 +63517,7 @@ var DRAWN5, opt2, starKeyOf, made6, sig, SLOTS, kindOf2, slotOf;
 var init_helpers5 = __esm({
   "js/entity-card/helpers.js"() {
     "use strict";
-    init_constants33();
+    init_constants34();
     DRAWN5 = /* @__PURE__ */ new WeakMap();
     opt2 = (el16, name) => el16.getAttribute(name) ?? el16.closest(ENTITY_GRID)?.getAttribute(name) ?? null;
     starKeyOf = (card) => (opt2(card, "data-kp-entity-star-key") ?? (card.closest('[data-kp-tiles-keys="letters"]') ? "." : "s")).toLowerCase();
@@ -63467,7 +63633,7 @@ var init_star = __esm({
     init_idmark();
     init_toggle();
     init_strings();
-    init_constants33();
+    init_constants34();
     init_helpers5();
     KEYED = /* @__PURE__ */ new WeakSet();
   }
@@ -63585,7 +63751,7 @@ var init_tile = __esm({
     "use strict";
     init_kpi();
     init_footprint();
-    init_constants33();
+    init_constants34();
     init_helpers5();
     init_star();
   }
@@ -63876,7 +64042,7 @@ var init_set = __esm({
     init_kpi();
     init_menu_button();
     init_strings();
-    init_constants33();
+    init_constants34();
     init_helpers5();
     init_star();
     init_tile();
@@ -64053,7 +64219,7 @@ var init_grid3 = __esm({
     init_strings();
     init_busy_card();
     init_state_plate();
-    init_constants33();
+    init_constants34();
     init_helpers5();
     init_set();
     BUSY3 = /* @__PURE__ */ new WeakMap();
@@ -64080,7 +64246,7 @@ __export(entity_card_exports, {
 var init_entity_card = __esm({
   "js/entity-card.js"() {
     "use strict";
-    init_constants33();
+    init_constants34();
     init_set();
     init_grid3();
   }
@@ -64088,7 +64254,7 @@ var init_entity_card = __esm({
 
 // js/unsaved/config.js
 function configureUnsaved(next2) {
-  if (next2.storage !== void 0) config4.storage = next2.storage;
+  if (next2.storage !== void 0) config3.storage = next2.storage;
 }
 function readSettings2(el16, id) {
   const doc = el16.ownerDocument;
@@ -64112,11 +64278,11 @@ function readSettings2(el16, id) {
     storeKey: `kp-unsaved:${win.location?.pathname ?? ""}:${el16.dataset.kpName ?? id}`
   };
 }
-var config4, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, UNDO_MS_DEFAULT, ANNOUNCE_DELAY_MS2, RESTORED_TOAST_MS, SAVED_TOAST_MS, PANEL_GAP_PX, PANEL_EDGE_PX, COMPACT_BELOW_PX, WARN_MODES;
+var config3, UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, UNDO_MS_DEFAULT, ANNOUNCE_DELAY_MS2, RESTORED_TOAST_MS, SAVED_TOAST_MS, PANEL_GAP_PX, PANEL_EDGE_PX, COMPACT_BELOW_PX, WARN_MODES;
 var init_config = __esm({
   "js/unsaved/config.js"() {
     "use strict";
-    config4 = { storage: void 0 };
+    config3 = { storage: void 0 };
     UNSAVED = "[data-kp-unsaved]";
     UNSAVED_CHANGE_EVENT = "kp-unsaved-change";
     UNSAVED_SAVE_EVENT = "kp-unsaved-save";
@@ -64682,7 +64848,7 @@ var init_keeper = __esm({
           /** @type {Storage | null} */
           options.storage
         );
-        if (config4.storage !== void 0) return config4.storage;
+        if (config3.storage !== void 0) return config3.storage;
         try {
           return settings.keepAttribute === "local" ? win.localStorage : win.sessionStorage;
         } catch {
@@ -64824,8 +64990,8 @@ var init_dock = __esm({
         if (typeof IntersectionObserver !== "undefined" && settings.placement === "header+sticky") {
           this.ctl.observe(
             new IntersectionObserver(
-              (entries3) => {
-                const entry = entries3[entries3.length - 1];
+              (entries2) => {
+                const entry = entries2[entries2.length - 1];
                 if (!entry) return;
                 this.headerOut = !entry.isIntersecting;
                 this.dock();
@@ -64900,8 +65066,8 @@ var init_leave2 = __esm({
       }
       /** @param {BeforeUnloadEvent} event */
       onBeforeUnload(event) {
-        const { warn: warn2 } = this.ctl.settings;
-        if ((warn2 === "browser" || warn2 === "both") && this.ctl.tracker.changes().length > 0 && !this.leaving) {
+        const { warn } = this.ctl.settings;
+        if ((warn === "browser" || warn === "both") && this.ctl.tracker.changes().length > 0 && !this.leaving) {
           event.preventDefault();
           event.returnValue = "";
         }
@@ -65200,7 +65366,7 @@ var init_unsaved = __esm({
 
 // js/autosize/constants.js
 var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, PHONE_HEIGHT_SHARE, NORMAL_LINE_HEIGHT, FALLBACK_FONT_PX, COUNTER_WARN_SHARE, LEVEL_NONE, LEVEL_NEAR, LEVEL_FULL;
-var init_constants34 = __esm({
+var init_constants35 = __esm({
   "js/autosize/constants.js"() {
     "use strict";
     AUTOSIZE = "textarea[data-kp-autosize]";
@@ -65281,7 +65447,7 @@ var px3, WRAP_PROPS, TWIN_STYLE, TWINS;
 var init_fit2 = __esm({
   "js/autosize/fit.js"() {
     "use strict";
-    init_constants34();
+    init_constants35();
     px3 = (value, fallback2 = 0) => {
       const n = Number.parseFloat(value);
       return Number.isFinite(n) ? n : fallback2;
@@ -65327,7 +65493,7 @@ var CounterLine;
 var init_counter = __esm({
   "js/autosize/counter.js"() {
     "use strict";
-    init_constants34();
+    init_constants35();
     CounterLine = class {
       /**
        * @param {HTMLTextAreaElement} area
@@ -65544,7 +65710,7 @@ var init_controller25 = __esm({
     init_controller();
     init_locale();
     init_strings();
-    init_constants34();
+    init_constants35();
     init_counter();
     init_draft();
     init_fit2();
@@ -65842,7 +66008,7 @@ var init_api23 = __esm({
   "js/autosize/api.js"() {
     "use strict";
     init_controller();
-    init_constants34();
+    init_constants35();
     init_controller25();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
@@ -65868,7 +66034,7 @@ __export(autosize_exports, {
 var init_autosize = __esm({
   "js/autosize.js"() {
     "use strict";
-    init_constants34();
+    init_constants35();
     init_fit2();
     init_api23();
   }
@@ -66568,7 +66734,7 @@ var init_docpreview = __esm({
 
 // js/gallery/constants.js
 var GALLERY, GALLERY_OPEN_EVENT, GALLERY_CLOSE_EVENT, GALLERY_RETRY_EVENT, GALLERY_ADD_EVENT, GALLERY_PICTURE_FAILED_EVENT, GALLERY_STATES, GALLERY_CHROME_MS, SWIPE, SWIPE_CLOSE_FACTOR, DEFAULT_SKELETON, PRELOAD_MAX, COLUMNS_PATTERN;
-var init_constants35 = __esm({
+var init_constants36 = __esm({
   "js/gallery/constants.js"() {
     "use strict";
     GALLERY = "[data-kp-gallery]";
@@ -66784,7 +66950,7 @@ var init_render5 = __esm({
     "use strict";
     init_strings();
     init_state_plate();
-    init_constants35();
+    init_constants36();
     init_dom10();
     pickFiles = (el16) => (
       /** @type {HTMLInputElement | null} */
@@ -66904,7 +67070,7 @@ var init_lightbox_input = __esm({
   "js/gallery/lightbox-input.js"() {
     "use strict";
     init_calm();
-    init_constants35();
+    init_constants36();
   }
 });
 
@@ -66918,7 +67084,7 @@ var init_lightbox = __esm({
     init_viewer();
     init_reason();
     init_locale();
-    init_constants35();
+    init_constants36();
     init_dom10();
     init_lightbox_info();
     init_lightbox_input();
@@ -67355,7 +67521,7 @@ var init_attach18 = __esm({
   "js/gallery/attach.js"() {
     "use strict";
     init_controller();
-    init_constants35();
+    init_constants36();
     init_dom10();
     init_gallery();
     galleryOf = (el16) => controllerOf(el16, Gallery) ?? attachOne(el16, Gallery);
@@ -67383,7 +67549,7 @@ __export(gallery_exports, {
 var init_gallery2 = __esm({
   "js/gallery.js"() {
     "use strict";
-    init_constants35();
+    init_constants36();
     init_attach18();
   }
 });
@@ -68369,7 +68535,7 @@ var init_sentence = __esm({
 
 // js/dated-options/constants.js
 var DATED, DATED_EVENT, DATED_RETRY_EVENT, DATED_STATES, DEFAULT_INLINE_MAX, DEFAULT_ROWS3, COMBOBOX_ROWS, TYPEAHEAD_MS, MINUTE_S2, DAY_S2, SECOND_MS3;
-var init_constants36 = __esm({
+var init_constants37 = __esm({
   "js/dated-options/constants.js"() {
     "use strict";
     DATED = "[data-kp-dated]";
@@ -68394,15 +68560,15 @@ function datedAge(ms, now, strings = getStrings()) {
   if (seconds >= DAY_S2) return strings.datedAgo(strings.agoDays(Math.floor(seconds / DAY_S2)));
   return strings.datedAgo(humanDuration(seconds, strings));
 }
-function orderDated(options, order2 = "newest") {
+function orderDated(options, order = "newest") {
   const list = options.slice();
-  if (order2 === "given") return list;
+  if (order === "given") return list;
   const at = (o) => o.when === void 0 ? NaN : new Date(o.when).getTime();
   return list.map((o, i) => ({ o, i, t: at(o) })).sort((a, b) => {
     const an = Number.isNaN(a.t);
     const bn = Number.isNaN(b.t);
     if (an || bn) return an === bn ? a.i - b.i : an ? 1 : -1;
-    return order2 === "oldest" ? a.t - b.t : b.t - a.t;
+    return order === "oldest" ? a.t - b.t : b.t - a.t;
   }).map((x) => x.o);
 }
 var init_time2 = __esm({
@@ -68410,7 +68576,7 @@ var init_time2 = __esm({
     "use strict";
     init_strings();
     init_freshness();
-    init_constants36();
+    init_constants37();
   }
 });
 
@@ -68543,7 +68709,7 @@ var init_combobox_draw = __esm({
 });
 
 // js/dated-options/note.js
-function emptyPlate(c) {
+function emptyPlate2(c) {
   const doc = c.host.ownerDocument;
   const plate = doc.createElement("div");
   plate.className = "kp-empty kp-dated__empty";
@@ -68590,7 +68756,7 @@ function paintNote(c) {
   note2.hidden = c.state !== "empty" && c.state !== "error";
   note2.removeAttribute("role");
   if (c.state === "empty") {
-    note2.append(emptyPlate(c));
+    note2.append(emptyPlate2(c));
     note2.setAttribute("role", "status");
   } else if (c.state === "error") {
     note2.append(failureAlert(c));
@@ -68625,11 +68791,11 @@ function radioRow(c, o, i) {
   const hintText = hintOf2(c, o);
   row.append(input, title);
   if (hintText) {
-    const hint2 = doc.createElement("span");
-    hint2.className = "kp-field__option-hint kp-dated__hint";
-    hint2.id = `${id}-hint-${i}`;
-    hint2.textContent = hintText;
-    row.append(hint2);
+    const hint = doc.createElement("span");
+    hint.className = "kp-field__option-hint kp-dated__hint";
+    hint.id = `${id}-hint-${i}`;
+    hint.textContent = hintText;
+    row.append(hint);
   } else row.dataset.kpNoHint = "";
   const meta = metaOf(doc, o);
   if (meta) row.append(meta);
@@ -68694,7 +68860,7 @@ var init_settings2 = __esm({
     "use strict";
     init_chart();
     init_strings();
-    init_constants36();
+    init_constants37();
     init_state25();
   }
 });
@@ -68708,7 +68874,7 @@ var init_controller28 = __esm({
     init_busy_card();
     init_combobox();
     init_strings();
-    init_constants36();
+    init_constants37();
     init_combobox_draw();
     init_note();
     init_radios();
@@ -68951,7 +69117,7 @@ var init_api24 = __esm({
   "js/dated-options/api.js"() {
     "use strict";
     init_controller();
-    init_constants36();
+    init_constants37();
     init_controller28();
   }
 });
@@ -68974,7 +69140,7 @@ __export(dated_options_exports, {
 var init_dated_options = __esm({
   "js/dated-options.js"() {
     "use strict";
-    init_constants36();
+    init_constants37();
     init_time2();
     init_api24();
   }
@@ -69044,7 +69210,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
     const count2 = Math.max(1, Number(el16.dataset.kpRunsCount) || 3);
     const more = Math.max(0, Number(el16.dataset.kpRunsMore) || 0);
     const relative = el16.dataset.kpRunsRelative !== "false";
-    const warn2 = el16.dataset.kpRunsWarn !== "false";
+    const warn = el16.dataset.kpRunsWarn !== "false";
     const fixed = Date.parse(el16.dataset.kpNow ?? "");
     const now = nowOption ?? (Number.isFinite(fixed) ? () => fixed : () => Date.now());
     el16.classList.add("kp-runs");
@@ -69094,7 +69260,7 @@ function attachRuns(root = document, { now: nowOption } = {}) {
         rel2.textContent = runsRelative(run.at, now(), s2);
         li.append(rel2);
       }
-      if (warn2) {
+      if (warn) {
         const shift = clockShift(before ?? now(), run.at, zone);
         const marks = [];
         if (shift !== 0) marks.push(s2.runsClockChange(shift));
@@ -69823,7 +69989,7 @@ var init_snooze = __esm({
 
 // js/graph/constants.js
 var GRAPH, GRAPH_CHANGE_EVENT, GRAPH_RETRY_EVENT, GRAPH_DETAIL_EVENT, GRAPH_OPTION_ATTRIBUTES;
-var init_constants37 = __esm({
+var init_constants38 = __esm({
   "js/graph/constants.js"() {
     "use strict";
     GRAPH = "[data-kp-graph]";
@@ -70208,11 +70374,11 @@ function ghostOf(doc, last, W, H, layoutOptions, base) {
   };
   const at = graphLayout(data, W, H, layoutOptions);
   const hub = hubOf(data);
-  const order2 = [...hub ? [hub] : [], ...ringOf(data, hub).map((n) => n.id)];
+  const order = [...hub ? [hub] : [], ...ringOf(data, hub).map((n) => n.id)];
   const bends = graphBends(data.edges);
   const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
   const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
-  const root = svgEl(doc, "g", { class: "kp-graph__ghost", "aria-hidden": "true", style: `--n: ${order2.length}` });
+  const root = svgEl(doc, "g", { class: "kp-graph__ghost", "aria-hidden": "true", style: `--n: ${order.length}` });
   const edges2 = svgEl(doc, "g", { class: "kp-graph__edges" });
   data.edges.forEach((e, i) => {
     const a = at.get(e.from);
@@ -70229,12 +70395,12 @@ function ghostOf(doc, last, W, H, layoutOptions, base) {
         pathLength: "100",
         "data-kp-kind": e.kind,
         "data-kp-style": kind?.style ?? "solid",
-        style: `--i: ${Math.max(0, order2.indexOf(e.from === hub ? e.to : e.from))}${kind?.colour ? `; --kp-graph-edge-colour: ${kind.colour}` : ""}`
+        style: `--i: ${Math.max(0, order.indexOf(e.from === hub ? e.to : e.from))}${kind?.colour ? `; --kp-graph-edge-colour: ${kind.colour}` : ""}`
       })
     );
   });
   root.append(edges2);
-  order2.forEach((id, i) => {
+  order.forEach((id, i) => {
     const n = data.nodes.find((x) => x.id === id);
     const p = at.get(id);
     if (!n || !p) return;
@@ -70357,7 +70523,7 @@ var detailCount, insetOf;
 var init_view3 = __esm({
   "js/graph/view.js"() {
     "use strict";
-    init_constants37();
+    init_constants38();
     init_labels3();
     init_layout3();
     init_instance3();
@@ -70574,9 +70740,9 @@ function drawGraph(g, attempt = 0, tried = { best: 0, count: Infinity, locked: f
   const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
   const labels = [];
   const ring = ringOf(data, hub);
-  const order2 = [...hub ? [hub] : [], ...ring.map((n) => n.id)];
-  if (!g.focus || !order2.includes(g.focus)) g.focus = order2[0] ?? null;
-  order2.forEach((id, index) => {
+  const order = [...hub ? [hub] : [], ...ring.map((n) => n.id)];
+  if (!g.focus || !order.includes(g.focus)) g.focus = order[0] ?? null;
+  order.forEach((id, index) => {
     const n = (
       /** @type {GraphNode} */
       byId.get(id)
@@ -70672,7 +70838,7 @@ var init_draw8 = __esm({
     init_view3();
     init_instance3();
     init_layout3();
-    init_constants37();
+    init_constants38();
     init_labels3();
     SIDE_ROOM = [1, 1.1, 1.2, 1.3, 1.4].flatMap(
       (height) => [1, 0.9, 1.1, 0.8, 1.2].flatMap((stretch) => [0, 0.25, 0.5, 0.75].map((phase) => ({ height, stretch, phase })))
@@ -70815,8 +70981,8 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
     panel.setAttribute("role", "region");
     panel.hidden = true;
     box.append(svg2, note2, plate, zoomBox, panel);
-    const hint2 = make29(doc, "p", "kp-graph__hint", s2.graphHint);
-    el16.replaceChildren(bar, box, hint2, ...script ? [script] : []);
+    const hint = make29(doc, "p", "kp-graph__hint", s2.graphHint);
+    el16.replaceChildren(bar, box, hint, ...script ? [script] : []);
     const g = {
       el: el16,
       data: null,
@@ -70837,7 +71003,7 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       drawn: false,
       text: "",
       art: null,
-      hint: hint2,
+      hint,
       decorate: decorate2,
       strings: s2,
       labels: [],
@@ -70905,12 +71071,12 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       if (refocus) svg2.querySelector(`[data-kp-id="${CSS.escape(id)}"]`)?.focus();
       return true;
     };
-    const order2 = () => (
+    const order = () => (
       /** @type {SVGGElement[]} */
       [...svg2.querySelectorAll(".kp-graph__node")]
     );
     const focusNode = (node) => {
-      for (const other of order2()) other.setAttribute("tabindex", other === node ? "0" : "-1");
+      for (const other of order()) other.setAttribute("tabindex", other === node ? "0" : "-1");
       g.focus = node.getAttribute("data-kp-id");
       node.focus({ preventScroll: false });
       revealNode(g, g.focus);
@@ -70943,7 +71109,7 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       const node = nodeOf(event.target);
       if (!node) return;
       const id = node.getAttribute("data-kp-id") ?? "";
-      for (const other of order2()) other.setAttribute("tabindex", other === node ? "0" : "-1");
+      for (const other of order()) other.setAttribute("tabindex", other === node ? "0" : "-1");
       g.focus = id;
       toggle2(id);
     };
@@ -71051,11 +71217,11 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       if (!button6 || button6.getAttribute("aria-disabled") === "true") return;
       graphZoom(el16, button6 === zoomIn ? "in" : button6 === zoomOut ? "out" : "reset");
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       const node = nodeOf(event.target);
       if (!node) return;
       if (zoomKey(event)) return;
-      const nodes = order2();
+      const nodes = order();
       const at = nodes.indexOf(node);
       const hasHub = !!svg2.querySelector(".kp-graph__node--hub");
       const ringStart = hasHub ? 1 : 0;
@@ -71116,7 +71282,7 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
     svg2.addEventListener("focusout", onBlur);
     svg2.addEventListener("click", onClickCapture, true);
     svg2.addEventListener("click", onClick);
-    svg2.addEventListener("keydown", onKey6);
+    svg2.addEventListener("keydown", onKey5);
     svg2.addEventListener("pointerdown", onDown2);
     svg2.addEventListener("pointermove", onMove2);
     svg2.addEventListener("pointerup", onUp2);
@@ -71156,7 +71322,7 @@ function attachGraphs(root = document, { decorate: decorate2, strings, detail } 
       svg2.removeEventListener("focusout", onBlur);
       svg2.removeEventListener("click", onClickCapture, true);
       svg2.removeEventListener("click", onClick);
-      svg2.removeEventListener("keydown", onKey6);
+      svg2.removeEventListener("keydown", onKey5);
       svg2.removeEventListener("pointerdown", onDown2);
       svg2.removeEventListener("pointermove", onMove2);
       svg2.removeEventListener("pointerup", onUp2);
@@ -71177,7 +71343,7 @@ var init_attach19 = __esm({
   "js/graph/attach.js"() {
     "use strict";
     init_strings();
-    init_constants37();
+    init_constants38();
     init_instance3();
     init_api25();
     init_options5();
@@ -71216,7 +71382,7 @@ __export(graph_exports, {
 var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
-    init_constants37();
+    init_constants38();
     init_options5();
     init_layout3();
     init_labels3();
@@ -71328,7 +71494,7 @@ function attachLoadingPieces(root = document) {
   if (typeof MutationObserver !== "function" || typeof getComputedStyle !== "function") return () => {
   };
   const dressed = /* @__PURE__ */ new Set();
-  const sizes = typeof ResizeObserver === "function" ? new ResizeObserver((entries3) => entries3.forEach((e) => queue(e.target))) : null;
+  const sizes = typeof ResizeObserver === "function" ? new ResizeObserver((entries2) => entries2.forEach((e) => queue(e.target))) : null;
   const waiting = /* @__PURE__ */ new Set();
   let frame3 = 0;
   let everything = false;
@@ -71456,7 +71622,7 @@ var init_loading_pieces = __esm({
 
 // js/claim/constants.js
 var CLAIM, CLAIM_EVENT, CLAIM_FILTER_EVENT, CLAIM_RETRY_EVENT, CLAIM_FILTERS, CLAIM_REFUSED_MS, CLAIM_UNDO_MS;
-var init_constants38 = __esm({
+var init_constants39 = __esm({
   "js/claim/constants.js"() {
     "use strict";
     CLAIM = "[data-kp-checklist-claim]";
@@ -71773,10 +71939,10 @@ function decorate(list) {
         const rank2 = (r) => r.hasAttribute("data-kp-claim-gap") ? 0 : 1;
         const wanted = [...open4].sort((a, b) => rank2(a) - rank2(b) || members.indexOf(a) - members.indexOf(b));
         const done = members.filter((r) => r.hasAttribute("data-kp-checklist-checked"));
-        const order2 = [...wanted, ...done];
-        if (order2.some((r, i) => list_.children[i] !== r)) {
+        const order = [...wanted, ...done];
+        if (order.some((r, i) => list_.children[i] !== r)) {
           const focused = document.activeElement instanceof HTMLElement && list_.contains(document.activeElement) ? document.activeElement : null;
-          list_.append(...order2);
+          list_.append(...order);
           focused?.focus({ preventScroll: true });
         }
       }
@@ -71910,7 +72076,7 @@ var init_decorate = __esm({
     init_checklist();
     init_remember();
     init_state_plate();
-    init_constants38();
+    init_constants39();
     init_model8();
     init_rows4();
   }
@@ -72006,7 +72172,7 @@ var init_bulk = __esm({
     init_strings();
     init_checklist();
     init_undo_toast();
-    init_constants38();
+    init_constants39();
     init_model8();
   }
 });
@@ -72132,7 +72298,7 @@ var init_request2 = __esm({
     init_strings();
     init_checklist();
     init_undo_toast();
-    init_constants38();
+    init_constants39();
     init_decorate();
     init_model8();
     init_rows4();
@@ -72201,7 +72367,7 @@ function attachClaims(root = document) {
       const item = itemOf(list, id);
       void request(list, id, among(person, byOf(item ?? {})) ? "unassign" : "assign", person);
     };
-    const onKey6 = (event) => {
+    const onKey5 = (event) => {
       const target = event.target;
       if (event.key !== "c" || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey || event.repeat) return;
       if (!(target instanceof HTMLInputElement) || target.type !== "checkbox" || mode(list) !== "claim") return;
@@ -72210,7 +72376,7 @@ function attachClaims(root = document) {
       event.preventDefault();
       press(list, row);
     };
-    list.addEventListener("keydown", onKey6);
+    list.addEventListener("keydown", onKey5);
     list.addEventListener(CHECKLIST_RENDER_EVENT, onRender);
     let lastSort = attr10(list, "gap-sort", "keep");
     const watcher = new MutationObserver(() => {
@@ -72271,7 +72437,7 @@ function attachClaims(root = document) {
     st.off = [
       () => list.removeEventListener(CHECKLIST_RENDER_EVENT, onRender),
       () => watcher.disconnect(),
-      () => list.removeEventListener("keydown", onKey6),
+      () => list.removeEventListener("keydown", onKey5),
       () => list.removeEventListener("click", onClick),
       () => list.removeEventListener(CHECKLIST_RETRY_EVENT, onRetry),
       () => list.removeEventListener(MENU_SELECT_EVENT, onMenu),
@@ -72297,7 +72463,7 @@ var init_attach20 = __esm({
     init_shortcuts();
     init_remember();
     init_bulk();
-    init_constants38();
+    init_constants39();
     init_decorate();
     init_model8();
     init_request2();
@@ -72327,7 +72493,7 @@ __export(claim_exports, {
 var init_claim2 = __esm({
   "js/claim.js"() {
     "use strict";
-    init_constants38();
+    init_constants39();
     init_model8();
     init_api26();
     init_decorate();
@@ -72337,7 +72503,7 @@ var init_claim2 = __esm({
 
 // js/availability/constants.js
 var AVAILABILITY, AVAILABILITY_EVENT, AVAILABILITY_CHOOSE_EVENT, AVAILABILITY_UNIT_EVENT, AVAILABILITY_RETRY_EVENT, AVAILABILITY_ANSWERS, AVAILABILITY_REFUSED_MS, AVAILABILITY_UNDO_MS;
-var init_constants39 = __esm({
+var init_constants40 = __esm({
   "js/availability/constants.js"() {
     "use strict";
     AVAILABILITY = "[data-kp-availability]";
@@ -73126,7 +73292,7 @@ var init_request3 = __esm({
     init_strings();
     init_undo_toast();
     init_api27();
-    init_constants39();
+    init_constants40();
     init_facts();
     init_paint10();
   }
@@ -73134,10 +73300,10 @@ var init_request3 = __esm({
 
 // js/availability/menu.js
 function next(root, now) {
-  const order2 = allowed(root);
-  if (!now) return order2[0];
-  const i = order2.indexOf(now);
-  return i + 1 < order2.length ? order2[i + 1] : null;
+  const order = allowed(root);
+  if (!now) return order[0];
+  const i = order.indexOf(now);
+  return i + 1 < order.length ? order[i + 1] : null;
 }
 function closeMenu2(root) {
   const st = STATE5.get(root);
@@ -73481,7 +73647,7 @@ var init_attach21 = __esm({
     init_remember();
     init_reason();
     init_api27();
-    init_constants39();
+    init_constants40();
     init_facts();
     init_menu2();
     init_paint10();
@@ -73511,7 +73677,7 @@ __export(availability_exports, {
 var init_availability = __esm({
   "js/availability.js"() {
     "use strict";
-    init_constants39();
+    init_constants40();
     init_dates3();
     init_facts();
     init_api27();
@@ -74548,18 +74714,18 @@ function renderActions(root, value, full, state12, drawn2, hidden2, st, s2) {
   attachDisabledReasons(actions);
 }
 function renderWarn(root, bytes, state12, s2) {
-  let warn2 = (
+  let warn = (
     /** @type {HTMLElement | null} */
     root.querySelector(":scope > .kp-qr__warn")
   );
   const limit = Number(attr12(root, "max", String(DENSE_BYTES))) || DENSE_BYTES;
   if (state12 === "ready" && bytes > limit) {
-    if (!warn2) {
-      warn2 = el12("kp-qr__warn", "p");
-      root.append(warn2);
+    if (!warn) {
+      warn = el12("kp-qr__warn", "p");
+      root.append(warn);
     }
-    warn2.textContent = s2.qrDense(bytes);
-  } else warn2?.remove();
+    warn.textContent = s2.qrDense(bytes);
+  } else warn?.remove();
 }
 var TIMER_MAX_MS, SIZE_DEFAULT, SIZE_LG, DENSE_BYTES, PLATE_ATTRIBUTES, serial8;
 var init_render6 = __esm({
@@ -74784,7 +74950,7 @@ var init_qr = __esm({
 
 // js/console/constants.js
 var CONSOLE2, CONSOLE_RUN_EVENT, CONSOLE_BLOCK_EVENT, CONSOLE_RETRY_EVENT, CONSOLE_STATES, CONSOLE_HISTORY, CONSOLE_MAX_BYTES;
-var init_constants40 = __esm({
+var init_constants41 = __esm({
   "js/console/constants.js"() {
     "use strict";
     CONSOLE2 = "[data-kp-console]";
@@ -74935,17 +75101,17 @@ function ensureParts3(root) {
   );
   run.type = "submit";
   line.append(prompt, input, run);
-  const hint2 = el13("kp-console__hint", "p");
-  hint2.id = `kp-console-${consoleState.serial}-hint`;
+  const hint = el13("kp-console__hint", "p");
+  hint.id = `kp-console-${consoleState.serial}-hint`;
   const complete = el13("kp-console__complete");
   complete.hidden = true;
-  form2.append(context2, line, complete, hint2);
+  form2.append(context2, line, complete, hint);
   bar.append(form2);
   if (full) {
     if (attr13(root, "order", "newest-last") === "newest-first") root.append(bar, stage);
     else root.append(stage, bar);
   } else root.append(bar);
-  input.setAttribute("aria-describedby", hint2.id);
+  input.setAttribute("aria-describedby", hint.id);
 }
 function drawBar(root) {
   const st = stateOf8(root);
@@ -74962,7 +75128,7 @@ function drawBar(root) {
     /** @type {HTMLElement} */
     root.querySelector(".kp-console__prompt")
   );
-  const hint2 = (
+  const hint = (
     /** @type {HTMLElement} */
     root.querySelector(".kp-console__hint")
   );
@@ -74998,10 +75164,10 @@ function drawBar(root) {
   }
   if (st.pending === null) run.textContent = s2.consoleRun;
   else run.textContent = s2.consoleRunAnyway;
-  if (st.barState === "ready") st.hintHeight = hint2.offsetHeight;
-  hint2.textContent = blocked && why ? why : attr13(root, "hint", "") || s2.consoleHint;
-  hint2.toggleAttribute("data-kp-console-why", blocked && Boolean(why));
-  hint2.style.minBlockSize = state12 !== "ready" && st.hintHeight > 0 ? `${st.hintHeight}px` : "";
+  if (st.barState === "ready") st.hintHeight = hint.offsetHeight;
+  hint.textContent = blocked && why ? why : attr13(root, "hint", "") || s2.consoleHint;
+  hint.toggleAttribute("data-kp-console-why", blocked && Boolean(why));
+  hint.style.minBlockSize = state12 !== "ready" && st.hintHeight > 0 ? `${st.hintHeight}px` : "";
   st.barState = state12;
   const wantsContext = attr13(root, "context", "none") === "select";
   contextWrap.hidden = !wantsContext;
@@ -75353,7 +75519,7 @@ function saveHistory(root) {
 var init_history = __esm({
   "js/console/history.js"() {
     "use strict";
-    init_constants40();
+    init_constants41();
     init_model9();
   }
 });
@@ -75480,7 +75646,7 @@ var init_run2 = __esm({
     init_newpill();
     init_bar2();
     init_blocks();
-    init_constants40();
+    init_constants41();
     init_history();
     init_model9();
   }
@@ -75623,7 +75789,7 @@ function attachConsoles(root = document, options = {}) {
       event.preventDefault();
       void submit(el_);
     };
-    const onKey6 = async (event) => {
+    const onKey5 = async (event) => {
       if (event.isComposing) return;
       if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         if (st.history.length === 0) return;
@@ -75703,15 +75869,15 @@ function attachConsoles(root = document, options = {}) {
       st.context.value = select2.value;
     };
     form2.addEventListener("submit", onSubmit);
-    input.addEventListener("keydown", onKey6);
+    input.addEventListener("keydown", onKey5);
     el_.addEventListener("click", onClick);
     select2.addEventListener("change", onContext);
-    let order2 = attr13(el_, "order", "newest-last");
+    let order = attr13(el_, "order", "newest-last");
     let stopPillNow = stopPill;
     const observer = new MutationObserver(() => {
       const now = attr13(el_, "order", "newest-last");
-      if (now !== order2) {
-        order2 = now;
+      if (now !== order) {
+        order = now;
         const stage = (
           /** @type {HTMLElement} */
           el_.querySelector(":scope > .kp-console__stage")
@@ -75763,7 +75929,7 @@ function attachConsoles(root = document, options = {}) {
     startTicker(el_);
     st.off = [
       () => form2.removeEventListener("submit", onSubmit),
-      () => input.removeEventListener("keydown", onKey6),
+      () => input.removeEventListener("keydown", onKey5),
       () => el_.removeEventListener("click", onClick),
       () => select2.removeEventListener("change", onContext),
       () => observer.disconnect(),
@@ -75789,7 +75955,7 @@ var init_attach22 = __esm({
     init_api28();
     init_bar2();
     init_blocks();
-    init_constants40();
+    init_constants41();
     init_history();
     init_model9();
     init_run2();
@@ -75818,7 +75984,7 @@ __export(console_exports, {
 var init_console3 = __esm({
   "js/console.js"() {
     "use strict";
-    init_constants40();
+    init_constants41();
     init_api28();
     init_attach22();
   }
@@ -75826,7 +75992,7 @@ var init_console3 = __esm({
 
 // js/logviewer/constants.js
 var LOGVIEWER, LOGVIEWER_EVENT, LOGVIEWER_RETRY_EVENT, LOGVIEWER_MAX, LOG_LEVELS;
-var init_constants41 = __esm({
+var init_constants42 = __esm({
   "js/logviewer/constants.js"() {
     "use strict";
     LOGVIEWER = "[data-kp-logviewer]";
@@ -75939,7 +76105,7 @@ var signature, logOf, maxOf, floorOf, queryOf, textOf2;
 var init_reads = __esm({
   "js/logviewer/reads.js"() {
     "use strict";
-    init_constants41();
+    init_constants42();
     init_levels();
     init_model10();
     signature = (root) => ["max", "wrap", "time", "level", "search", "search-only", "tools", "error", "error-title"].map((n) => attr14(root, n, "")).join("") + `${root.getAttribute("data-kp-state") ?? ""}`;
@@ -76243,7 +76409,7 @@ var init_rows5 = __esm({
     "use strict";
     init_strings();
     init_log();
-    init_constants41();
+    init_constants42();
     init_levels();
     init_model10();
     init_reads();
@@ -76391,7 +76557,7 @@ var init_refresh = __esm({
     init_strings();
     init_state_plate();
     init_busy_card();
-    init_constants41();
+    init_constants42();
     init_model10();
     init_reads();
     init_rows5();
@@ -76745,7 +76911,7 @@ var init_attach23 = __esm({
     init_shortcuts();
     init_flash();
     init_api29();
-    init_constants41();
+    init_constants42();
     init_model10();
     init_parts7();
     init_reads();
@@ -76774,7 +76940,7 @@ __export(logviewer_exports, {
 var init_logviewer = __esm({
   "js/logviewer.js"() {
     "use strict";
-    init_constants41();
+    init_constants42();
     init_levels();
     init_api29();
     init_attach23();
@@ -76783,7 +76949,7 @@ var init_logviewer = __esm({
 
 // js/diff/constants.js
 var DIFF, DIFF_TOGGLE_EVENT, DIFF_EXPAND_EVENT, DIFF_COPY_EVENT, DIFF_RETRY_EVENT, DIFF_CONTEXT, DIFF_FOLD_MIN, DIFF_MAX_LINES, DIFF_WORD_LIMIT, DIFF_WORD_SHARE, DIFF_STATUSES;
-var init_constants42 = __esm({
+var init_constants43 = __esm({
   "js/diff/constants.js"() {
     "use strict";
     DIFF = "[data-kp-diffview]";
@@ -76870,7 +77036,7 @@ var TOKENS, tokensOf;
 var init_words4 = __esm({
   "js/diff/words.js"() {
     "use strict";
-    init_constants42();
+    init_constants43();
     TOKENS = /[A-Za-z0-9_]+(?:[.-][A-Za-z0-9_]+)*|\s+|[^\sA-Za-z0-9_]/g;
     tokensOf = (text) => text.match(TOKENS) ?? [];
   }
@@ -76907,7 +77073,7 @@ function foldContext(lines, keep = DIFF_CONTEXT, min = DIFF_FOLD_MIN) {
 var init_fold2 = __esm({
   "js/diff/fold.js"() {
     "use strict";
-    init_constants42();
+    init_constants43();
   }
 });
 
@@ -77042,7 +77208,7 @@ var kindOf4;
 var init_read3 = __esm({
   "js/diff/read.js"() {
     "use strict";
-    init_constants42();
+    init_constants43();
     init_model11();
     kindOf4 = (kind) => kind === "added" || kind === "removed" ? kind : "same";
   }
@@ -77150,7 +77316,7 @@ var init_lines2 = __esm({
     "use strict";
     init_strings();
     init_state_plate();
-    init_constants42();
+    init_constants43();
     init_fold2();
     init_model11();
     init_read3();
@@ -77501,7 +77667,7 @@ var init_actions7 = __esm({
     "use strict";
     init_strings();
     init_flash();
-    init_constants42();
+    init_constants43();
     init_file();
     init_lines2();
     init_model11();
@@ -77584,16 +77750,16 @@ function attachDiffs(root = document) {
       if (t.closest("[data-kp-diff-retry-action]")) el_.dispatchEvent(new CustomEvent(DIFF_RETRY_EVENT, { bubbles: true }));
     };
     el_.addEventListener("click", onClick);
-    let queued2 = 0;
+    let queued = 0;
     const watcher = new MutationObserver(() => {
-      window.cancelAnimationFrame(queued2);
-      queued2 = window.requestAnimationFrame(() => render6(el_));
+      window.cancelAnimationFrame(queued);
+      queued = window.requestAnimationFrame(() => render6(el_));
     });
     watcher.observe(el_, {
       attributes: true,
       attributeFilter: ["open", "context", "words", "bar", "copy", "max-lines", "label"].map((name) => `data-kp-diff-${name}`)
     });
-    st.off = [() => el_.removeEventListener("click", onClick), () => watcher.disconnect(), () => window.cancelAnimationFrame(queued2)];
+    st.off = [() => el_.removeEventListener("click", onClick), () => watcher.disconnect(), () => window.cancelAnimationFrame(queued)];
     undo.push(() => {
       for (const stop of st.off) stop();
       st.off = [];
@@ -77607,7 +77773,7 @@ var init_attach24 = __esm({
     "use strict";
     init_strings();
     init_actions7();
-    init_constants42();
+    init_constants43();
     init_lines2();
     init_model11();
     init_read3();
@@ -77637,7 +77803,7 @@ __export(diff_exports, {
 var init_diff = __esm({
   "js/diff.js"() {
     "use strict";
-    init_constants42();
+    init_constants43();
     init_words4();
     init_fold2();
     init_actions7();
@@ -77784,7 +77950,7 @@ var BEFORE_THEME_EVENT = "kp-theme-before-change";
 var UNKNOWN_THEME_EVENT = "kp-theme-unknown";
 var PENDING_THEME_ATTRIBUTE = "data-theme-pending";
 var PREVIEW_THEME_ATTRIBUTE = "data-theme-preview-from";
-var config3 = { root: (
+var config2 = { root: (
   /** @type {Element | null} */
   null
 ), darkClass: (
@@ -77792,11 +77958,11 @@ var config3 = { root: (
   "dark"
 ), storageKey: STORAGE_KEY };
 function configureTheme(next2) {
-  if (next2.root !== void 0) config3.root = next2.root;
-  if (next2.darkClass !== void 0) config3.darkClass = next2.darkClass;
-  if (next2.storageKey !== void 0) config3.storageKey = next2.storageKey;
+  if (next2.root !== void 0) config2.root = next2.root;
+  if (next2.darkClass !== void 0) config2.darkClass = next2.darkClass;
+  if (next2.storageKey !== void 0) config2.storageKey = next2.storageKey;
 }
-var rootOf = (root) => root ?? config3.root ?? document.documentElement;
+var rootOf = (root) => root ?? config2.root ?? document.documentElement;
 var NAMES = (
   /** @type {readonly string[]} */
   THEMES.map((t) => t.name)
@@ -77866,7 +78032,7 @@ function applyTheme(theme, { root, darkClass, strict = false, announce: announce
   element.removeAttribute(PREVIEW_THEME_ATTRIBUTE);
   element.setAttribute("data-theme", next2);
   element.removeAttribute(PENDING_THEME_ATTRIBUTE);
-  const cls = darkClass === void 0 ? config3.darkClass : darkClass;
+  const cls = darkClass === void 0 ? config2.darkClass : darkClass;
   if (cls) element.classList.toggle(cls, DARK.has(next2));
   if (announce4 && previous !== next2) {
     element.dispatchEvent(new CustomEvent(THEME_EVENT, { bubbles: true, detail: { theme: next2, previous, root: element } }));
@@ -77884,7 +78050,7 @@ function previewTheme(theme, { root, darkClass } = {}) {
   }
   element.setAttribute(PREVIEW_THEME_ATTRIBUTE, real);
   element.setAttribute("data-theme", known4);
-  const cls = darkClass === void 0 ? config3.darkClass : darkClass;
+  const cls = darkClass === void 0 ? config2.darkClass : darkClass;
   if (cls) element.classList.toggle(cls, DARK.has(known4));
   return known4;
 }
@@ -77896,7 +78062,7 @@ function endPreview({ root, darkClass } = {}) {
   element.removeAttribute(PREVIEW_THEME_ATTRIBUTE);
   if (real) {
     element.setAttribute("data-theme", real);
-    const cls = darkClass === void 0 ? config3.darkClass : darkClass;
+    const cls = darkClass === void 0 ? config2.darkClass : darkClass;
     if (cls) element.classList.toggle(cls, DARK.has(real));
   }
   return true;
@@ -77908,7 +78074,7 @@ function previewedTheme({ root } = {}) {
 }
 function storeTheme(theme, { key, storage: storage2 } = {}) {
   try {
-    (storage2 ?? localStorage).setItem(key ?? config3.storageKey, theme);
+    (storage2 ?? localStorage).setItem(key ?? config2.storageKey, theme);
     return true;
   } catch {
     return false;
@@ -77917,7 +78083,7 @@ function storeTheme(theme, { key, storage: storage2 } = {}) {
 function storedTheme({ key, storage: storage2 } = {}) {
   let raw = null;
   try {
-    raw = (storage2 ?? localStorage).getItem(key ?? config3.storageKey);
+    raw = (storage2 ?? localStorage).getItem(key ?? config2.storageKey);
   } catch {
     return null;
   }
@@ -77939,7 +78105,7 @@ function onThemeChange(listener, { crossTab = true, root, key } = {}) {
     listener(detail.theme, { previous: detail.previous, root: detail.root });
   };
   const onStorage = (e) => {
-    if (e.key !== (key ?? config3.storageKey)) return;
+    if (e.key !== (key ?? config2.storageKey)) return;
     if (isDropped(e.newValue)) {
       reportUnknown(e.newValue, currentTheme({ root }), "cross-tab", rootOf(root));
       return;
@@ -78367,7 +78533,7 @@ var NEEDS = [
   // A quantity with minus and plus, the kitchen timers, the checklist, one step at a time and the wheel [kpadopt4].
   { name: "quantity", when: "[data-kp-quantity]", load: () => Promise.resolve().then(() => (init_quantity(), quantity_exports)), attach: (m, root) => [m.attachQuantities(root)] },
   { name: "toolbar", when: "[data-kp-toolbar]", load: () => Promise.resolve().then(() => (init_toolbar(), toolbar_exports)), attach: (m, root) => [m.attachToolbars(root)] },
-  { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys6(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] },
+  { name: "keys", when: ".kp-kbd[data-kp-key]", load: () => Promise.resolve().then(() => (init_keys7(), keys_exports)), attach: (m, root) => [m.attachKeys(root)] },
   // The month heatmap [scope-143]: a month of days, each a plate in the
   // colour of its state; the page gives the days with setCalendarDays().
   { name: "calendar", when: "[data-kp-calendar]", load: () => Promise.resolve().then(() => (init_calendar(), calendar_exports)), attach: (m, root) => [m.attachCalendars(root)] },
@@ -78578,14 +78744,14 @@ function attachAll2(root = document) {
     detaches.push(...drawing(root, drawn2, () => asOf(root, asked, () => need.attach(module, root))));
   });
   const prefetched = /* @__PURE__ */ new Map();
-  const pending5 = [];
+  const pending4 = [];
   for (const need of NEEDS) {
     if (!carries(root, need.when)) continue;
     modules.push(need.name);
     if (need.late) prefetched.set(need, need.load());
-    else pending5.push(attachOnce(need, need.load(), present));
+    else pending4.push(attachOnce(need, need.load(), present));
   }
-  const ready = Promise.all(pending5).then(() => {
+  const ready = Promise.all(pending4).then(() => {
     const late = NEEDS.filter((need) => need.late && (prefetched.has(need) || carries(root, need.when)));
     if (detached || !late.length) return void 0;
     const asked = new WeakSet(everyUnder(root).filter((element) => present.has(element) || drawn2.has(element)));
@@ -78724,12 +78890,12 @@ function diagnose(stylesheet, script, strings = getStrings()) {
   const onlyInScript = script.themes.filter((name) => !stylesheet.themes.includes(name));
   const report2 = (status, verdict) => ({ status, stylesheet, script, onlyInStylesheet, onlyInScript, verdict });
   if (stylesheet.version === null) return report2("no-version", strings.diagnosticsNoVersion);
-  const order2 = compareVersions(stylesheet.version, script.version ?? "");
-  if (order2 === null || order2 === 0) {
+  const order = compareVersions(stylesheet.version, script.version ?? "");
+  if (order === null || order === 0) {
     if (onlyInStylesheet.length === 0 && onlyInScript.length === 0) return report2("match", strings.diagnosticsMatch);
     return report2("themes-differ", strings.diagnosticsThemesDiffer(stylesheet.version));
   }
-  if (order2 < 0) return report2("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
+  if (order < 0) return report2("stylesheet-behind", strings.diagnosticsStylesheetBehind(stylesheet.version, script.version ?? ""));
   return report2("script-behind", strings.diagnosticsScriptBehind(stylesheet.version, script.version ?? ""));
 }
 function diagnostics({ root, strings } = {}) {
@@ -78825,7 +78991,7 @@ init_idmark();
 init_intent();
 init_job_line();
 init_json_field();
-init_keys6();
+init_keys7();
 init_kpi();
 
 // js/lazy-register.js
@@ -79141,15 +79307,15 @@ function glideSpark({ svg: svg2, parts: parts2, from, to }, timing) {
   }
   return out;
 }
-var pending4 = /* @__PURE__ */ new Map();
+var pending3 = /* @__PURE__ */ new Map();
 function enqueue(job) {
-  if (pending4.size === 0) queueMicrotask(flush);
-  pending4.get(job.host)?.resolve(0);
-  pending4.set(job.host, job);
+  if (pending3.size === 0) queueMicrotask(flush);
+  pending3.get(job.host)?.resolve(0);
+  pending3.set(job.host, job);
 }
 function flush() {
-  const jobs = [...pending4.values()];
-  pending4.clear();
+  const jobs = [...pending3.values()];
+  pending3.clear();
   const started2 = performance.now();
   const read = jobs.map((job) => {
     const idea = updateIdea(getComputedStyle(job.el).getPropertyValue(UPDATE_PROPERTY));
@@ -79429,7 +79595,7 @@ function startTour(steps, { start = 0, remember: remember3, decorate: decorate2,
       stopReversing(card);
       if (back?.isConnected) back.focus();
     });
-    view.removeEventListener("keydown", onKey6, true);
+    view.removeEventListener("keydown", onKey5, true);
     view.removeEventListener("resize", onMove2);
     doc.removeEventListener("scroll", onMove2, true);
     endRunning = null;
@@ -79444,7 +79610,7 @@ function startTour(steps, { start = 0, remember: remember3, decorate: decorate2,
       place3();
     });
   };
-  const onKey6 = (event) => {
+  const onKey5 = (event) => {
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
@@ -79466,7 +79632,7 @@ function startTour(steps, { start = 0, remember: remember3, decorate: decorate2,
   nextButton.addEventListener("click", () => index >= live4.length - 1 ? finish2(true) : show(index + 1));
   backButton.addEventListener("click", () => index > 0 && show(index - 1));
   skipButton.addEventListener("click", () => finish2(false));
-  view.addEventListener("keydown", onKey6, true);
+  view.addEventListener("keydown", onKey5, true);
   view.addEventListener("resize", onMove2);
   doc.addEventListener("scroll", onMove2, true);
   endRunning = () => finish2(false);
@@ -79524,7 +79690,7 @@ init_hovercard();
 init_idmark();
 init_intent();
 init_job_line();
-init_keys6();
+init_keys7();
 init_kpi();
 init_lede();
 init_listbox();
@@ -79588,7 +79754,6 @@ export {
   ALARM_CLOSE_EVENT,
   ALARM_OPEN_EVENT,
   ALARM_SECONDS,
-  ALTGR_KEYS,
   ARRIVAL,
   ARRIVALS,
   ATTENTION,
@@ -79612,7 +79777,6 @@ export {
   CARD_STATE_EVENT,
   CARET_KNOB,
   CHOOSE_EVENT,
-  CHORD_MS,
   CODE_FIELD,
   CODE_FIELD_CARET_EVENT,
   CODE_FIELD_CHECK_EVENT,
@@ -79773,10 +79937,6 @@ export {
   RUNS_RETRY_EVENT,
   RUNS_STATES,
   SEVERITIES,
-  SHORTCUTS_LIVE_SHEET,
-  SHORTCUT_EVENT,
-  SHORTCUT_HINT_PLACES,
-  SHORTCUT_PENDING_EVENT,
   SORT_VALUE_ATTRIBUTE,
   SPARK,
   STACKBAR,
@@ -79825,7 +79985,6 @@ export {
   UNDO_TOAST,
   UNDO_TOAST_EVENT,
   UNKNOWN_EVENT,
-  UNKNOWN_MS,
   UNKNOWN_THEME_EVENT,
   UPDATE_PROPERTY,
   UPDATE_STYLE,
@@ -80008,7 +80167,6 @@ export {
   diff_exports as diffExports,
   discShare,
   discardUnsaved,
-  displayShortcutKeys,
   docGlyph,
   docKindOf,
   docpreview_exports as docpreviewExports,
@@ -80113,7 +80271,6 @@ export {
   palette_exports as paletteExports,
   parseHsl,
   parseQuantity,
-  parseShortcutKeys,
   parseTick,
   parseTime,
   passkeys_exports as passkeysExports,
