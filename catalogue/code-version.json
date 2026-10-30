@@ -74,7 +74,7 @@
             "digest": "51082fa600b9791f",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
-        "js/nav-fold.js": { "digest": "07714ea842f5bae8", "when": "[data-kp-nav-fold]" },
+        "js/nav-fold.js": { "digest": "2eca5d0e82887f01", "when": "[data-kp-nav-fold]" },
         "js/newpill.js": { "digest": "246504af4e4fa59b", "when": "[data-kp-follow]" },
         "js/notices.js": { "digest": "487e5c7a5f863fda", "when": "[data-kp-notices]" },
         "js/page-contents.js": { "digest": "a7259de005d36727", "when": "[data-kp-contents]" },

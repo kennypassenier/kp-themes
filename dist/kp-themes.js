@@ -18059,37 +18059,7 @@ var init_chart = __esm({
   }
 });
 
-// js/nav-fold.js
-var nav_fold_exports = {};
-__export(nav_fold_exports, {
-  NAV_FOLD: () => NAV_FOLD,
-  NAV_FOLD_EVENT: () => NAV_FOLD_EVENT,
-  NAV_FOLD_OWNED: () => NAV_FOLD_OWNED,
-  NAV_MORE: () => NAV_MORE,
-  NAV_SEP: () => NAV_SEP,
-  attachNavFolds: () => attachNavFolds,
-  foldNav: () => foldNav,
-  planFold: () => planFold,
-  planSeparators: () => planSeparators
-});
-function planFold({ widths: widths2, gap, room, moreWidth, keep = [] }) {
-  const n = widths2.length;
-  const total = widths2.reduce((sum, w) => sum + w, 0) + gap * Math.max(0, n - 1);
-  if (total <= room) return widths2.map(() => false);
-  const budget = room - moreWidth - gap;
-  const fits = widths2.map((_, i) => keep[i] === true);
-  let count2 = fits.filter(Boolean).length;
-  let used = widths2.reduce((sum, w, i) => fits[i] ? sum + w : sum, 0) + gap * Math.max(0, count2 - 1);
-  for (let i = 0; i < n; i += 1) {
-    if (fits[i]) continue;
-    const next2 = used + widths2[i] + (count2 > 0 ? gap : 0);
-    if (next2 > budget) break;
-    fits[i] = true;
-    used = next2;
-    count2 += 1;
-  }
-  return fits.map((f) => !f);
-}
+// js/nav-fold/read.js
 function wordsOf(el16) {
   const copy3 = (
     /** @type {Element} */
@@ -18102,26 +18072,116 @@ function counterOf(el16) {
   const badge = el16.querySelector(".kp-badge:not([hidden])");
   return (badge?.textContent ?? "").replace(/\s+/g, " ").trim();
 }
-function planSeparators(plan, seps) {
-  const shown5 = plan.map((folds2, i) => !folds2 && !seps[i]);
-  if (!plan.some((folds2, i) => folds2 && !seps[i])) return plan.map((folds2, i) => seps[i] ? false : folds2);
-  return plan.map((folds2, i) => {
-    if (!seps[i]) return folds2;
-    return !(shown5.slice(0, i).includes(true) && shown5.slice(i + 1).includes(true));
-  });
-}
-function foldNav(nav, { strings } = {}) {
-  if (folds.has(nav)) return () => {
-  };
-  const list = (
-    /** @type {HTMLElement | null} */
-    nav.querySelector(":scope > .kp-nav__links")
-  );
-  const view = nav.ownerDocument.defaultView;
-  if (!list || !view) return () => {
-  };
-  const doc = nav.ownerDocument;
-  const words3 = () => resolveStrings(strings);
+var NAV_FOLD, NAV_FOLD_EVENT, NAV_MORE, NAV_SEP, NAV_FOLD_OWNED, isSep, unavailable;
+var init_read2 = __esm({
+  "js/nav-fold/read.js"() {
+    "use strict";
+    NAV_FOLD = "[data-kp-nav-fold]";
+    NAV_FOLD_EVENT = "kp-nav-fold";
+    NAV_MORE = "[data-kp-nav-more]";
+    NAV_SEP = ".kp-nav__sep";
+    NAV_FOLD_OWNED = "[data-kp-nav-owner]";
+    isSep = (li) => li.matches(NAV_SEP);
+    unavailable = (el16) => el16.hasAttribute("disabled") || el16.getAttribute("aria-disabled") === "true";
+  }
+});
+
+// js/nav-fold/groups.js
+var FoldGroups;
+var init_groups = __esm({
+  "js/nav-fold/groups.js"() {
+    "use strict";
+    init_read2();
+    FoldGroups = class {
+      /** @param {() => import('../strings.js').Strings} words the dictionary this bar speaks */
+      constructor(words3) {
+        this.words = words3;
+        this.sources = [];
+        this.ruled = /* @__PURE__ */ new Set();
+        this.ruledAt = [];
+        this.groups = [];
+        this.plain = null;
+        this.rule = false;
+        this.s = words3();
+      }
+      /**
+       * The menu's groups for the folded items; `sources` keeps the real link behind each entry.
+       * @param {HTMLElement[]} folded
+       * @returns {MenuGroup[]}
+       */
+      build(folded2) {
+        this.s = this.words();
+        this.groups = [];
+        this.plain = null;
+        this.rule = false;
+        this.ruled = /* @__PURE__ */ new Set();
+        this.sources = [];
+        for (const li of folded2) {
+          if (isSep(li)) {
+            this.plain = null;
+            this.rule = true;
+            continue;
+          }
+          this.take(li);
+        }
+        this.ruledAt = this.groups.filter((g) => g.items.length).map((g, i) => this.ruled.has(g) ? i : -1).filter((i) => i > 0);
+        return this.groups;
+      }
+      /** One folded item: a plain link joins the open group, an item with a panel is a group of its own. @param {HTMLElement} li */
+      take(li) {
+        const primary = (
+          /** @type {HTMLElement | null} */
+          li.querySelector(":scope > a, :scope > button")
+        );
+        const panel = li.querySelector(":scope > .kp-nav__menu");
+        if (!panel) {
+          if (!primary) return;
+          if (!this.plain) {
+            this.plain = [];
+            this.open({ group: "", items: this.plain });
+          }
+          this.plain.push(this.entry(primary));
+          return;
+        }
+        this.plain = null;
+        const items = [];
+        if (primary?.matches("a[href]")) items.push(this.entry(primary));
+        for (
+          const link of
+          /** @type {HTMLElement[]} */
+          [...panel.querySelectorAll("a[href], button")]
+        ) {
+          if (link.closest("[hidden]")) continue;
+          if (link.matches("[data-kp-nav-disclosure]")) continue;
+          items.push(this.entry(link));
+        }
+        this.open({ group: primary ? wordsOf(primary) : "", items });
+      }
+      /** @param {HTMLElement} el @returns {MenuItem} */
+      entry(el16) {
+        const name = wordsOf(el16) || (el16.getAttribute("aria-label") ?? "");
+        const count2 = counterOf(el16);
+        const item = { label: count2 ? `${name} \xB7 ${count2}` : name, value: String(this.sources.length) };
+        const href = el16.getAttribute("href");
+        if (href && el16.tagName === "A") item.href = href;
+        const current2 = el16.getAttribute("aria-current");
+        if (current2 && current2 !== "false") item.attrs = { "aria-current": current2 };
+        if (unavailable(el16)) item.disabled = this.s.navMoreUnavailable;
+        this.sources.push(el16);
+        return item;
+      }
+      /** @param {MenuGroup} group */
+      open(group) {
+        if (this.rule && this.groups.some((g) => g.items.length)) this.ruled.add(group);
+        this.rule = false;
+        this.groups.push(group);
+      }
+    };
+  }
+});
+
+// js/nav-fold/more.js
+function buildMore(doc) {
   const more = doc.createElement("li");
   more.className = "kp-nav__more";
   more.setAttribute("data-kp-nav-more", "");
@@ -18146,260 +18206,347 @@ function foldNav(nav, { strings } = {}) {
   alertText.className = "kp-sr-only";
   alertText.hidden = true;
   button6.append(label, dot, alertText);
-  const writeWords = () => {
-    const s2 = words3();
-    label.textContent = s2.navMore;
-    alertText.textContent = ` ${s2.navMoreAlert}`;
-    menu.setAttribute("aria-label", s2.navMoreMenu);
-  };
-  writeWords();
-  list.append(more);
-  const detachMenu = attachMenuButtons(more, { strings });
-  let sources = [];
-  let ruled = /* @__PURE__ */ new Set();
-  let ruledAt = [];
-  let signature2 = "";
-  let foldedNow = (
-    /** @type {HTMLElement[]} */
-    []
-  );
-  const itemsOf2 = () => (
-    /** @type {HTMLElement[]} */
-    [...list.children].filter((li) => li !== more && !li.hidden)
-  );
-  const toggled = () => {
-    const toggle2 = nav.querySelector(":scope > .kp-nav__toggle");
-    return toggle2 !== null && view.getComputedStyle(toggle2).display !== "none";
-  };
-  const groupsOf2 = (folded2) => {
-    const s2 = words3();
-    const groups = [];
-    let plain2 = null;
-    let rule = false;
-    ruled = /* @__PURE__ */ new Set();
-    sources = [];
-    const entry = (el16) => {
-      const name = wordsOf(el16) || (el16.getAttribute("aria-label") ?? "");
-      const count2 = counterOf(el16);
-      const item = { label: count2 ? `${name} \xB7 ${count2}` : name, value: String(sources.length) };
-      const href = el16.getAttribute("href");
-      if (href && el16.tagName === "A") item.href = href;
-      const current2 = el16.getAttribute("aria-current");
-      if (current2 && current2 !== "false") item.attrs = { "aria-current": current2 };
-      if (unavailable(el16)) item.disabled = s2.navMoreUnavailable;
-      sources.push(el16);
-      return item;
-    };
-    const open4 = (group) => {
-      if (rule && groups.some((g) => g.items.length)) ruled.add(group);
-      rule = false;
-      groups.push(group);
-    };
-    for (const li of folded2) {
-      if (isSep(li)) {
-        plain2 = null;
-        rule = true;
-        continue;
+  return { more, wrapper, button: button6, menu, label, dot, alertText };
+}
+var init_more = __esm({
+  "js/nav-fold/more.js"() {
+    "use strict";
+  }
+});
+
+// js/nav-fold/plan.js
+function planFold({ widths: widths2, gap, room, moreWidth, keep = [] }) {
+  const n = widths2.length;
+  const total = widths2.reduce((sum, w) => sum + w, 0) + gap * Math.max(0, n - 1);
+  if (total <= room) return widths2.map(() => false);
+  const budget = room - moreWidth - gap;
+  const fits = widths2.map((_, i) => keep[i] === true);
+  let count2 = fits.filter(Boolean).length;
+  let used = widths2.reduce((sum, w, i) => fits[i] ? sum + w : sum, 0) + gap * Math.max(0, count2 - 1);
+  for (let i = 0; i < n; i += 1) {
+    if (fits[i]) continue;
+    const next2 = used + widths2[i] + (count2 > 0 ? gap : 0);
+    if (next2 > budget) break;
+    fits[i] = true;
+    used = next2;
+    count2 += 1;
+  }
+  return fits.map((f) => !f);
+}
+function planSeparators(plan, seps) {
+  const shown5 = plan.map((folds, i) => !folds && !seps[i]);
+  if (!plan.some((folds, i) => folds && !seps[i])) return plan.map((folds, i) => seps[i] ? false : folds);
+  return plan.map((folds, i) => {
+    if (!seps[i]) return folds;
+    return !(shown5.slice(0, i).includes(true) && shown5.slice(i + 1).includes(true));
+  });
+}
+var init_plan = __esm({
+  "js/nav-fold/plan.js"() {
+    "use strict";
+  }
+});
+
+// js/nav-fold/core.js
+var ROOM_SAFETY_PX, NavFoldCore;
+var init_core = __esm({
+  "js/nav-fold/core.js"() {
+    "use strict";
+    init_controller();
+    init_menu_button();
+    init_strings();
+    init_groups();
+    init_more();
+    init_plan();
+    init_read2();
+    ROOM_SAFETY_PX = 1;
+    NavFoldCore = class extends Controller {
+      /**
+       * @param {HTMLElement} nav the `.kp-nav` carrying `data-kp-nav-fold`
+       * @param {{ strings?: Partial<import('../strings.js').Strings> }} [options]
+       */
+      constructor(nav, options = {}) {
+        super(nav, options);
+        const list = (
+          /** @type {HTMLElement | null} */
+          nav.querySelector(":scope > .kp-nav__links")
+        );
+        const view = nav.ownerDocument.defaultView;
+        if (!list || !view) throw new Error("A folding bar needs a `.kp-nav__links` list and a window.");
+        this.list = list;
+        this.view = view;
+        this.doc = nav.ownerDocument;
+        this.strings = options.strings;
+        const parts2 = buildMore(this.doc);
+        this.more = parts2.more;
+        this.wrapper = parts2.wrapper;
+        this.button = parts2.button;
+        this.menu = parts2.menu;
+        this.label = parts2.label;
+        this.dot = parts2.dot;
+        this.alertText = parts2.alertText;
+        this.groups = new FoldGroups(() => this.words());
+        this.signature = "";
+        this.foldedNow = [];
+        this.resize = null;
       }
-      const primary = (
-        /** @type {HTMLElement | null} */
-        li.querySelector(":scope > a, :scope > button")
-      );
-      const panel = li.querySelector(":scope > .kp-nav__menu");
-      if (!panel) {
-        if (!primary) continue;
-        if (!plain2) {
-          plain2 = [];
-          open4({ group: "", items: plain2 });
+      /** The dictionary this bar speaks. */
+      words() {
+        return resolveStrings(this.strings);
+      }
+      /** The label, the counter's words and the menu's name, in the bar's own words. */
+      writeWords() {
+        const s2 = this.words();
+        this.label.textContent = s2.navMore;
+        this.alertText.textContent = ` ${s2.navMoreAlert}`;
+        this.menu.setAttribute("aria-label", s2.navMoreMenu);
+      }
+      /** @returns {HTMLElement[]} the bar's own items, in order */
+      itemsOf() {
+        return (
+          /** @type {HTMLElement[]} */
+          [...this.list.children].filter((li) => li !== this.more && !li.hidden)
+        );
+      }
+      /** The toggle the narrow bar collapses into, when it is what the bar shows now. */
+      toggled() {
+        const toggle2 = this.host.querySelector(":scope > .kp-nav__toggle");
+        return toggle2 !== null && this.view.getComputedStyle(toggle2).display !== "none";
+      }
+      /** Per item: true when it leaves the bar, separators decided. @param {HTMLElement[]} items */
+      plan(items) {
+        const { list, view, more } = this;
+        let plan = items.map(() => false);
+        if (!this.toggled() && list.getClientRects().length > 0) {
+          plan = planFold({
+            widths: items.map((li) => li.offsetWidth),
+            gap: Number.parseFloat(view.getComputedStyle(list).columnGap) || 0,
+            room: list.clientWidth - ROOM_SAFETY_PX,
+            moreWidth: more.offsetWidth,
+            keep: items.map((li) => li.hasAttribute("data-kp-nav-keep"))
+          });
         }
-        plain2.push(entry(primary));
-        continue;
+        const seps = items.map(isSep);
+        return seps.includes(true) ? planSeparators(plan, seps) : plan;
       }
-      plain2 = null;
-      const items = [];
-      if (primary?.matches("a[href]")) items.push(entry(primary));
-      for (
-        const link of
-        /** @type {HTMLElement[]} */
-        [...panel.querySelectorAll("a[href], button")]
-      ) {
-        if (link.closest("[hidden]")) continue;
-        if (link.matches("[data-kp-nav-disclosure]")) continue;
-        items.push(entry(link));
+      /** What the visible items use of the list, for a register that paints the list itself. */
+      publishUsed() {
+        const { list, more, view } = this;
+        const shown5 = this.itemsOf().filter((li) => !li.hasAttribute("data-kp-nav-folded"));
+        const last = more.hasAttribute("data-kp-nav-idle") ? shown5[shown5.length - 1] : more;
+        const box = list.getBoundingClientRect();
+        const end = last ? last.getBoundingClientRect() : box;
+        const rtl = view.getComputedStyle(list).direction === "rtl";
+        list.style.setProperty("--kp-nav-fold-used", `${Math.max(0, Math.round(rtl ? box.right - end.left : end.right - box.left))}px`);
       }
-      open4({ group: primary ? wordsOf(primary) : "", items });
-    }
-    return groups;
+      /**
+       * The menu's separators where the bar had one: the menu's own `.kp-menu__separator` before each group that followed a
+       * folded separator. The menu draws its groups itself (and later, while it is open), so this runs after every draw.
+       */
+      ruleMenu() {
+        const { menu, doc } = this;
+        const ruledAt = this.groups.ruledAt;
+        const blocks = (
+          /** @type {HTMLElement[]} */
+          [...menu.children].filter((n) => n.classList.contains("kp-menu__group"))
+        );
+        for (const old of menu.querySelectorAll(":scope > .kp-menu__separator[data-kp-nav-sep]")) {
+          const at = blocks.indexOf(
+            /** @type {HTMLElement} */
+            old.nextElementSibling
+          );
+          if (!ruledAt.includes(at)) old.remove();
+        }
+        for (const at of ruledAt) {
+          const block = blocks[at];
+          if (!block || block.previousElementSibling?.matches(".kp-menu__separator[data-kp-nav-sep]")) continue;
+          const line = doc.createElement("div");
+          line.className = "kp-menu__separator";
+          line.setAttribute("role", "separator");
+          line.setAttribute("data-kp-nav-sep", "");
+          block.before(line);
+        }
+      }
+      /**
+       * Mark the items that left the bar and the bar itself; the menu closes when nothing is folded any more.
+       * @param {HTMLElement[]} items @param {HTMLElement[]} leaving everything that leaves, separators too @param {HTMLElement[]} folded the links among them
+       */
+      markItems(items, leaving, folded2) {
+        const { more, host, doc } = this;
+        if (folded2.length) this.list.style.setProperty("--kp-nav-fold-more", `${more.offsetWidth}px`);
+        else this.list.style.removeProperty("--kp-nav-fold-more");
+        for (const li of items) li.toggleAttribute("data-kp-nav-folded", leaving.includes(li));
+        more.toggleAttribute("data-kp-nav-idle", folded2.length === 0);
+        host.toggleAttribute("data-kp-nav-folding", folded2.length > 0);
+        if (folded2.length === 0 && this.foldedNow.length > 0) closeMenu(this.wrapper);
+        const active = doc.activeElement;
+        if (active && folded2.some((li) => li.contains(active))) this.button.focus();
+      }
+      /** The More item's marks: the current page behind it, a counter behind it. @param {HTMLElement[]} folded */
+      markMore(folded2) {
+        const { more, button: button6 } = this;
+        more.toggleAttribute(
+          "data-kp-nav-more-current",
+          folded2.some((li) => li.querySelector('[aria-current]:not([aria-current="false"])') !== null)
+        );
+        const alert = folded2.some((li) => counterOf(li) !== "");
+        more.toggleAttribute("data-kp-nav-more-alert", alert);
+        this.dot.hidden = !alert;
+        this.alertText.hidden = !alert;
+        if (more.hasAttribute("data-kp-nav-more-current")) button6.setAttribute("aria-current", "true");
+        else button6.removeAttribute("aria-current");
+      }
+      /** Draw the More menu from the groups when they changed. @param {import('../menu-button.js').MenuGroup[]} groups */
+      drawMenu(groups) {
+        const next2 = JSON.stringify([groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? "", i.disabled ?? "", i.attrs ?? null])]), this.groups.ruledAt]);
+        if (next2 !== this.signature) {
+          this.signature = next2;
+          if (groups.length) setMenu(this.wrapper, groups);
+        }
+        if (this.menu.hidden) this.ruleMenu();
+      }
+      /** Whether the folded set is another than the one last announced. @param {HTMLElement[]} items @param {HTMLElement[]} folded */
+      changed(items, folded2) {
+        const at = (list) => list.map((li) => items.indexOf(li)).join(",");
+        return at(folded2) !== at(this.foldedNow) || folded2.length !== this.foldedNow.length;
+      }
+      fit() {
+        const { list, more, host } = this;
+        if (list.lastElementChild !== more) list.append(more);
+        const items = this.itemsOf();
+        const plan = this.plan(items);
+        const leaving = items.filter((_, i) => plan[i]);
+        const folded2 = leaving.filter((li) => !isSep(li));
+        const changed2 = this.changed(items, folded2);
+        this.markItems(items, leaving, folded2);
+        this.foldedNow = folded2;
+        const groups = this.groups.build(leaving);
+        this.markMore(folded2);
+        this.drawMenu(groups);
+        host.setAttribute("data-kp-nav-fold-ready", "");
+        this.publishUsed();
+        if (changed2) host.dispatchEvent(new CustomEvent(NAV_FOLD_EVENT, { bubbles: true, detail: { folded: folded2.length, items: folded2 } }));
+      }
+    };
+  }
+});
+
+// js/nav-fold/controller.js
+var NavFold;
+var init_controller4 = __esm({
+  "js/nav-fold/controller.js"() {
+    "use strict";
+    init_menu_button();
+    init_core();
+    NavFold = class extends NavFoldCore {
+      connect() {
+        const { list, menu, more, doc, view } = this;
+        this.writeWords();
+        list.append(more);
+        this.own(() => this.unfold());
+        this.own(attachMenuButtons(more, { strings: this.strings }));
+        this.observe(new MutationObserver(() => this.ruleMenu())).observe(menu, { childList: true });
+        this.listen(menu, "click", (event) => this.onPick(
+          /** @type {MouseEvent} */
+          event
+        ), true);
+        this.watchSizes();
+        this.watchList();
+        doc.fonts?.ready.then(() => {
+          if (!this.destroyed) this.fit();
+        });
+        this.listen(view, "resize", () => this.fit());
+        this.fit();
+      }
+      /** Takes the More item and the marks the bar added off it again. */
+      unfold() {
+        const { host, list } = this;
+        this.more.remove();
+        for (const li of this.itemsOf()) li.removeAttribute("data-kp-nav-folded");
+        host.removeAttribute("data-kp-nav-folding");
+        host.removeAttribute("data-kp-nav-fold-ready");
+        list.style.removeProperty("--kp-nav-fold-used");
+        list.style.removeProperty("--kp-nav-fold-more");
+      }
+      /** Fit again when the list, an item or the More item changes size. */
+      watchSizes() {
+        this.resize = typeof ResizeObserver === "undefined" ? null : this.observe(new ResizeObserver(() => this.fit()));
+        this.resize?.observe(this.list);
+        this.watchItems();
+        this.resize?.observe(this.more);
+      }
+      /** The items whose natural width the fit reads: a font that loads, a counter that grows. */
+      watchItems() {
+        for (const li of this.itemsOf()) this.resize?.observe(li);
+      }
+      /** The list changing (a render adds a link, a router moves aria-current) is a reason to fit again; the More item's own menu is not. */
+      watchList() {
+        const mutations = new MutationObserver((records) => {
+          if (records.every((r) => this.more.contains(r.target))) return;
+          this.watchItems();
+          this.fit();
+        });
+        this.observe(mutations).observe(this.list, {
+          subtree: true,
+          childList: true,
+          characterData: true,
+          attributes: true,
+          attributeFilter: ["aria-current", "hidden", "disabled", "aria-disabled", "data-kp-nav-keep"]
+        });
+      }
+      /** @param {MouseEvent} event */
+      onPick(event) {
+        const entryEl = event.target instanceof Element ? event.target.closest('[role="menuitem"]') : null;
+        const source = entryEl ? this.groups.sources[Number(
+          /** @type {HTMLElement} */
+          entryEl.dataset.kpValue
+        )] : void 0;
+        if (!source || entryEl?.getAttribute("aria-disabled") === "true") return;
+        if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        source.click();
+        queueMicrotask(() => {
+          if (this.doc.activeElement === this.doc.body || this.doc.activeElement === null) this.button.focus();
+        });
+      }
+    };
+  }
+});
+
+// js/nav-fold.js
+var nav_fold_exports = {};
+__export(nav_fold_exports, {
+  NAV_FOLD: () => NAV_FOLD,
+  NAV_FOLD_EVENT: () => NAV_FOLD_EVENT,
+  NAV_FOLD_OWNED: () => NAV_FOLD_OWNED,
+  NAV_MORE: () => NAV_MORE,
+  NAV_SEP: () => NAV_SEP,
+  attachNavFolds: () => attachNavFolds,
+  foldNav: () => foldNav,
+  planFold: () => planFold,
+  planSeparators: () => planSeparators
+});
+function foldNav(nav, { strings } = {}) {
+  if (controllerOf(nav, NavFold)) return () => {
   };
-  const publishUsed = () => {
-    const shown5 = itemsOf2().filter((li) => !li.hasAttribute("data-kp-nav-folded"));
-    const last = more.hasAttribute("data-kp-nav-idle") ? shown5[shown5.length - 1] : more;
-    const box = list.getBoundingClientRect();
-    const end = last ? last.getBoundingClientRect() : box;
-    const rtl = view.getComputedStyle(list).direction === "rtl";
-    list.style.setProperty("--kp-nav-fold-used", `${Math.max(0, Math.round(rtl ? box.right - end.left : end.right - box.left))}px`);
+  if (!nav.querySelector(":scope > .kp-nav__links") || !nav.ownerDocument.defaultView) return () => {
   };
-  const ruleMenu = () => {
-    const blocks = (
-      /** @type {HTMLElement[]} */
-      [...menu.children].filter((n) => n.classList.contains("kp-menu__group"))
-    );
-    for (const old of menu.querySelectorAll(":scope > .kp-menu__separator[data-kp-nav-sep]")) {
-      const at = blocks.indexOf(
-        /** @type {HTMLElement} */
-        old.nextElementSibling
-      );
-      if (!ruledAt.includes(at)) old.remove();
-    }
-    for (const at of ruledAt) {
-      const block = blocks[at];
-      if (!block || block.previousElementSibling?.matches(".kp-menu__separator[data-kp-nav-sep]")) continue;
-      const line = doc.createElement("div");
-      line.className = "kp-menu__separator";
-      line.setAttribute("role", "separator");
-      line.setAttribute("data-kp-nav-sep", "");
-      block.before(line);
-    }
-  };
-  const drawn2 = new MutationObserver(ruleMenu);
-  drawn2.observe(menu, { childList: true });
-  const fit2 = () => {
-    if (list.lastElementChild !== more) list.append(more);
-    const items = itemsOf2();
-    let plan = items.map(() => false);
-    if (!toggled() && list.getClientRects().length > 0) {
-      const gap = Number.parseFloat(view.getComputedStyle(list).columnGap) || 0;
-      plan = planFold({
-        widths: items.map((li) => li.offsetWidth),
-        gap,
-        // A pixel of safety: offsetWidth rounds each item to whole pixels.
-        room: list.clientWidth - 1,
-        moreWidth: more.offsetWidth,
-        keep: items.map((li) => li.hasAttribute("data-kp-nav-keep"))
-      });
-    }
-    const seps = items.map(isSep);
-    if (seps.includes(true)) plan = planSeparators(plan, seps);
-    const leaving = items.filter((_, i) => plan[i]);
-    const folded2 = leaving.filter((li) => !isSep(li));
-    if (folded2.length) list.style.setProperty("--kp-nav-fold-more", `${more.offsetWidth}px`);
-    else list.style.removeProperty("--kp-nav-fold-more");
-    const now = items.map((li, i) => plan[i] && !seps[i] ? i : -1).filter((i) => i >= 0);
-    const same = now.join(",") === foldedNow.map((li) => items.indexOf(li)).join(",") && folded2.length === foldedNow.length;
-    for (const li of items) li.toggleAttribute("data-kp-nav-folded", leaving.includes(li));
-    more.toggleAttribute("data-kp-nav-idle", folded2.length === 0);
-    nav.toggleAttribute("data-kp-nav-folding", folded2.length > 0);
-    if (folded2.length === 0 && foldedNow.length > 0) closeMenu(wrapper);
-    const active = doc.activeElement;
-    if (active && folded2.some((li) => li.contains(active))) button6.focus();
-    foldedNow = folded2;
-    const groups = groupsOf2(leaving);
-    ruledAt = groups.filter((g) => g.items.length).map((g, i) => ruled.has(g) ? i : -1).filter((i) => i > 0);
-    more.toggleAttribute(
-      "data-kp-nav-more-current",
-      folded2.some((li) => li.querySelector('[aria-current]:not([aria-current="false"])') !== null)
-    );
-    const alert = folded2.some((li) => counterOf(li) !== "");
-    more.toggleAttribute("data-kp-nav-more-alert", alert);
-    dot.hidden = !alert;
-    alertText.hidden = !alert;
-    if (more.hasAttribute("data-kp-nav-more-current")) button6.setAttribute("aria-current", "true");
-    else button6.removeAttribute("aria-current");
-    const next2 = JSON.stringify([
-      groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? "", i.disabled ?? "", i.attrs ?? null])]),
-      ruledAt
-    ]);
-    if (next2 !== signature2) {
-      signature2 = next2;
-      if (groups.length) setMenu(wrapper, groups);
-    }
-    if (menu.hidden) ruleMenu();
-    nav.setAttribute("data-kp-nav-fold-ready", "");
-    publishUsed();
-    if (!same) nav.dispatchEvent(new CustomEvent(NAV_FOLD_EVENT, { bubbles: true, detail: { folded: folded2.length, items: folded2 } }));
-  };
-  const onPick = (event) => {
-    const entryEl = event.target instanceof Element ? event.target.closest('[role="menuitem"]') : null;
-    const source = entryEl ? sources[Number(
-      /** @type {HTMLElement} */
-      entryEl.dataset.kpValue
-    )] : void 0;
-    if (!source || entryEl?.getAttribute("aria-disabled") === "true") return;
-    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    source.click();
-    queueMicrotask(() => {
-      if (doc.activeElement === doc.body || doc.activeElement === null) button6.focus();
-    });
-  };
-  menu.addEventListener("click", onPick, true);
-  const resize = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(fit2);
-  resize?.observe(list);
-  const watchItems = () => {
-    for (const li of itemsOf2()) resize?.observe(li);
-  };
-  watchItems();
-  resize?.observe(more);
-  const mutations = new MutationObserver((records) => {
-    if (records.every((r) => more.contains(r.target))) return;
-    watchItems();
-    fit2();
-  });
-  mutations.observe(list, {
-    subtree: true,
-    childList: true,
-    characterData: true,
-    attributes: true,
-    attributeFilter: ["aria-current", "hidden", "disabled", "aria-disabled", "data-kp-nav-keep"]
-  });
-  doc.fonts?.ready.then(fit2);
-  view.addEventListener("resize", fit2);
-  folds.set(nav, true);
-  fit2();
-  return () => {
-    resize?.disconnect();
-    mutations.disconnect();
-    drawn2.disconnect();
-    view.removeEventListener("resize", fit2);
-    menu.removeEventListener("click", onPick, true);
-    detachMenu();
-    more.remove();
-    for (const li of itemsOf2()) li.removeAttribute("data-kp-nav-folded");
-    nav.removeAttribute("data-kp-nav-folding");
-    nav.removeAttribute("data-kp-nav-fold-ready");
-    list.style.removeProperty("--kp-nav-fold-used");
-    list.style.removeProperty("--kp-nav-fold-more");
-    folds.delete(nav);
-  };
+  const controller = attachOne(nav, NavFold, { strings });
+  return () => controller?.destroy();
 }
 function attachNavFolds(root = document, { ownedBy = NAV_FOLD_OWNED, ...options } = {}) {
-  const undo = [];
-  const found = [];
-  if (root instanceof HTMLElement && root.matches(NAV_FOLD)) found.push(root);
-  for (const el16 of root.querySelectorAll(NAV_FOLD)) found.push(
-    /** @type {HTMLElement} */
-    el16
-  );
-  for (const nav of found) {
-    if (ownedBy !== "" && nav.matches(ownedBy)) continue;
-    undo.push(foldNav(nav, options));
-  }
+  const bars = hostsOf(root, NAV_FOLD).filter((nav) => ownedBy === "" || !nav.matches(ownedBy));
+  const undo = bars.map((nav) => foldNav(nav, options));
   return () => undo.splice(0).forEach((off) => off());
 }
-var NAV_FOLD, NAV_FOLD_EVENT, NAV_MORE, NAV_SEP, isSep, unavailable, folds, NAV_FOLD_OWNED;
 var init_nav_fold = __esm({
   "js/nav-fold.js"() {
     "use strict";
-    init_strings();
-    init_menu_button();
-    NAV_FOLD = "[data-kp-nav-fold]";
-    NAV_FOLD_EVENT = "kp-nav-fold";
-    NAV_MORE = "[data-kp-nav-more]";
-    NAV_SEP = ".kp-nav__sep";
-    isSep = (li) => li.matches(NAV_SEP);
-    unavailable = (el16) => el16.hasAttribute("disabled") || el16.getAttribute("aria-disabled") === "true";
-    folds = /* @__PURE__ */ new WeakMap();
-    NAV_FOLD_OWNED = "[data-kp-nav-owner]";
+    init_controller();
+    init_controller4();
+    init_read2();
+    init_read2();
+    init_plan();
   }
 });
 
@@ -20640,7 +20787,7 @@ var init_list = __esm({
 
 // js/statusrow/controller.js
 var CALM_OPTIONS, ROWS, StatusList;
-var init_controller4 = __esm({
+var init_controller5 = __esm({
   "js/statusrow/controller.js"() {
     "use strict";
     init_controller();
@@ -20772,7 +20919,7 @@ var init_statusrow = __esm({
   "js/statusrow.js"() {
     "use strict";
     init_controller();
-    init_controller4();
+    init_controller5();
     init_state5();
     init_state5();
     init_list();
@@ -22878,7 +23025,7 @@ var init_paint2 = __esm({
 
 // js/passkeys/controller.js
 var reasonOf, PasskeysController;
-var init_controller5 = __esm({
+var init_controller6 = __esm({
   "js/passkeys/controller.js"() {
     "use strict";
     init_controller();
@@ -23123,7 +23270,7 @@ var init_api5 = __esm({
     "use strict";
     init_controller();
     init_constants10();
-    init_controller5();
+    init_controller6();
   }
 });
 
@@ -23653,7 +23800,7 @@ async function copyText2(button6, text) {
   }, COPIED_MS2);
 }
 var COPIED_MS2, ThreadControl;
-var init_controller6 = __esm({
+var init_controller7 = __esm({
   "js/thread/controller.js"() {
     "use strict";
     init_strings();
@@ -23790,7 +23937,7 @@ var init_thread = __esm({
   "js/thread.js"() {
     "use strict";
     init_controller();
-    init_controller6();
+    init_controller7();
     init_options2();
     init_options2();
   }
@@ -25262,7 +25409,7 @@ var init_loading = __esm({
 
 // js/code/controller.js
 var CodeBlock;
-var init_controller7 = __esm({
+var init_controller8 = __esm({
   "js/code/controller.js"() {
     "use strict";
     init_controller();
@@ -25405,7 +25552,7 @@ var init_attach5 = __esm({
     init_controller();
     init_locale();
     init_constants11();
-    init_controller7();
+    init_controller8();
   }
 });
 
@@ -25531,7 +25678,7 @@ var init_rows = __esm({
 
 // js/row-select/core.js
 var RowSelectCore;
-var init_core = __esm({
+var init_core2 = __esm({
   "js/row-select/core.js"() {
     "use strict";
     init_controller();
@@ -25684,12 +25831,12 @@ var init_core = __esm({
 
 // js/row-select/controller.js
 var TEXT_ENTRY, RowSelector;
-var init_controller8 = __esm({
+var init_controller9 = __esm({
   "js/row-select/controller.js"() {
     "use strict";
     init_keys5();
     init_strings();
-    init_core();
+    init_core2();
     init_rows();
     TEXT_ENTRY = "textarea, select, [contenteditable]";
     RowSelector = class _RowSelector extends RowSelectCore {
@@ -25971,7 +26118,7 @@ var init_row_select = __esm({
   "js/row-select.js"() {
     "use strict";
     init_controller();
-    init_controller8();
+    init_controller9();
     init_rows();
     init_rows();
   }
@@ -26299,7 +26446,7 @@ var init_draw3 = __esm({
 
 // js/selection-bar/controller.js
 var UNDO_MS2, OPTIONS, SOURCE_EVENTS, SelectionBar;
-var init_controller9 = __esm({
+var init_controller10 = __esm({
   "js/selection-bar/controller.js"() {
     "use strict";
     init_controller();
@@ -26547,7 +26694,7 @@ var init_api6 = __esm({
     "use strict";
     init_controller();
     init_strings();
-    init_controller9();
+    init_controller10();
     init_draw3();
     init_model2();
     memoryOf = (bar) => controllerOf(bar, SelectionBar)?.memory;
@@ -26579,7 +26726,7 @@ var init_selection_bar = __esm({
   "js/selection-bar.js"() {
     "use strict";
     init_controller();
-    init_controller9();
+    init_controller10();
     init_model2();
     init_model2();
     init_api6();
@@ -27782,7 +27929,7 @@ var init_validation = __esm({
 
 // js/json-field/controller.js
 var JsonFieldController;
-var init_controller10 = __esm({
+var init_controller11 = __esm({
   "js/json-field/controller.js"() {
     "use strict";
     init_controller();
@@ -28024,7 +28171,7 @@ var init_api8 = __esm({
     "use strict";
     init_controller();
     init_constants12();
-    init_controller10();
+    init_controller11();
   }
 });
 
@@ -28492,7 +28639,7 @@ var init_list2 = __esm({
 
 // js/request-inspector/controller.js
 var OPTIONS2, RequestInspector;
-var init_controller11 = __esm({
+var init_controller12 = __esm({
   "js/request-inspector/controller.js"() {
     "use strict";
     init_card_state();
@@ -28617,7 +28764,7 @@ var init_api9 = __esm({
     init_card_state();
     init_controller();
     init_strings();
-    init_controller11();
+    init_controller12();
     init_format2();
     init_list2();
     memoryOf2 = (el16) => controllerOf(el16, RequestInspector)?.memory;
@@ -28649,7 +28796,7 @@ var init_request_inspector = __esm({
   "js/request-inspector.js"() {
     "use strict";
     init_controller();
-    init_controller11();
+    init_controller12();
     init_format2();
     init_format2();
     init_api9();
@@ -29266,7 +29413,7 @@ var init_spin = __esm({
 
 // js/wheel/controller.js
 var WheelControl;
-var init_controller12 = __esm({
+var init_controller13 = __esm({
   "js/wheel/controller.js"() {
     "use strict";
     init_controller();
@@ -29331,7 +29478,7 @@ var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
     init_controller();
-    init_controller12();
+    init_controller13();
     init_state10();
     init_state10();
     init_spin();
@@ -30059,7 +30206,7 @@ var init_digits = __esm({
 
 // js/countdown/controller.js
 var CountdownController;
-var init_controller13 = __esm({
+var init_controller14 = __esm({
   "js/countdown/controller.js"() {
     "use strict";
     init_controller();
@@ -30293,7 +30440,7 @@ var init_api10 = __esm({
     "use strict";
     init_controller();
     init_constants15();
-    init_controller13();
+    init_controller14();
     countdownOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -33067,7 +33214,7 @@ var init_api12 = __esm({
 
 // js/checklist/controller.js
 var Checklist;
-var init_controller14 = __esm({
+var init_controller15 = __esm({
   "js/checklist/controller.js"() {
     "use strict";
     init_controller();
@@ -33214,7 +33361,7 @@ var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
     init_controller();
-    init_controller14();
+    init_controller15();
     init_state13();
     init_state13();
     init_api12();
@@ -39150,7 +39297,7 @@ function partsOf3(picker) {
   return input === null || open4 === null || panel === null ? null : { input, open: open4, panel };
 }
 var DatePickerController;
-var init_controller15 = __esm({
+var init_controller16 = __esm({
   "js/datepicker/controller.js"() {
     "use strict";
     init_locale();
@@ -39335,7 +39482,7 @@ var init_attach11 = __esm({
     "use strict";
     init_controller();
     init_constants20();
-    init_controller15();
+    init_controller16();
   }
 });
 
@@ -40237,7 +40384,7 @@ function installGroups(c) {
   };
   c.syncGroups = syncGroups;
 }
-var init_groups = __esm({
+var init_groups2 = __esm({
   "js/datatable/attach/groups.js"() {
     "use strict";
     init_selectors();
@@ -42937,7 +43084,7 @@ var init_attach12 = __esm({
     init_sort_setup();
     init_layout_setup();
     init_reorder();
-    init_groups();
+    init_groups2();
     init_sync3();
     init_render2();
     init_pills();
@@ -44969,7 +45116,7 @@ var init_paint4 = __esm({
 
 // js/calendar/controller.js
 var WATCHED3, CalendarController;
-var init_controller16 = __esm({
+var init_controller17 = __esm({
   "js/calendar/controller.js"() {
     "use strict";
     init_controller();
@@ -45223,7 +45370,7 @@ var init_api14 = __esm({
     "use strict";
     init_controller();
     init_constants21();
-    init_controller16();
+    init_controller17();
     calendarOf = (el16) => controllerOf(
       /** @type {HTMLElement} */
       el16,
@@ -48506,7 +48653,7 @@ var init_links = __esm({
   "js/sequencer/links.js"() {
     "use strict";
     init_constants25();
-    init_plan();
+    init_plan2();
     init_units();
   }
 });
@@ -48701,7 +48848,7 @@ function sequencerPlan(items, edit, options = {}) {
   return { ok: true, items: list, changed: changedIds(items, list), pushed: verdict.pushed, reason: null, blocker: null };
 }
 var overlaps;
-var init_plan = __esm({
+var init_plan2 = __esm({
   "js/sequencer/plan.js"() {
     "use strict";
     init_units();
@@ -49460,7 +49607,7 @@ var init_edit2 = __esm({
     init_lanes2();
     init_links();
     init_constants25();
-    init_plan();
+    init_plan2();
   }
 });
 
@@ -49690,7 +49837,7 @@ var init_drag = __esm({
   "js/sequencer/drag.js"() {
     "use strict";
     init_constants25();
-    init_plan();
+    init_plan2();
     init_units();
     init_instance2();
     init_edit2();
@@ -49832,7 +49979,7 @@ var init_pointer3 = __esm({
     init_edit2();
     init_constants25();
     init_instance2();
-    init_plan();
+    init_plan2();
   }
 });
 
@@ -50092,7 +50239,7 @@ var init_sequencer = __esm({
     "use strict";
     init_constants25();
     init_units();
-    init_plan();
+    init_plan2();
     init_links();
     init_timeline();
     init_attach14();
@@ -53567,7 +53714,7 @@ var init_build5 = __esm({
 
 // js/range/core.js
 var seq2, DEFAULT_PRESET_AT, RangeCore;
-var init_core2 = __esm({
+var init_core3 = __esm({
   "js/range/core.js"() {
     "use strict";
     init_controller();
@@ -53821,11 +53968,11 @@ var init_panel = __esm({
 
 // js/range/controller.js
 var RangeController;
-var init_controller17 = __esm({
+var init_controller18 = __esm({
   "js/range/controller.js"() {
     "use strict";
     init_segmented();
-    init_core2();
+    init_core3();
     init_panel();
     RangeController = class extends RangeCore {
       connect() {
@@ -53902,7 +54049,7 @@ var init_range = __esm({
   "js/range.js"() {
     "use strict";
     init_controller();
-    init_controller17();
+    init_controller18();
     init_values();
     init_values();
   }
@@ -55258,7 +55405,7 @@ var init_parts3 = __esm({
 
 // js/master-detail/controller.js
 var MasterDetailController;
-var init_controller18 = __esm({
+var init_controller19 = __esm({
   "js/master-detail/controller.js"() {
     "use strict";
     init_controller();
@@ -55545,7 +55692,7 @@ var init_api18 = __esm({
     "use strict";
     init_controller();
     init_constants28();
-    init_controller18();
+    init_controller19();
     init_parts3();
     masterDetail = (element) => controllerOf(element, MasterDetailController)?.handle ?? null;
     wireable2 = (el16) => Boolean(paneOf(el16, "list") && paneOf(el16, "detail") && el16.ownerDocument.defaultView);
@@ -57667,7 +57814,7 @@ var init_keys11 = __esm({
 
 // js/timefield/controller.js
 var WATCHED4, TimeController;
-var init_controller19 = __esm({
+var init_controller20 = __esm({
   "js/timefield/controller.js"() {
     "use strict";
     init_controller();
@@ -57874,7 +58021,7 @@ var init_api19 = __esm({
     "use strict";
     init_controller();
     init_constants29();
-    init_controller19();
+    init_controller20();
     init_field();
     init_state19();
     attachTimes = (root = document) => attachAll(root, TIME, TimeController);
@@ -59217,7 +59364,7 @@ var init_render3 = __esm({
 
 // js/feed/controller.js
 var FeedController;
-var init_controller20 = __esm({
+var init_controller21 = __esm({
   "js/feed/controller.js"() {
     "use strict";
     init_controller();
@@ -59376,7 +59523,7 @@ var init_api20 = __esm({
     init_freshness();
     init_controller();
     init_constants30();
-    init_controller20();
+    init_controller21();
     feedOf = (element) => controllerOf(
       /** @type {HTMLElement} */
       element,
@@ -59807,7 +59954,7 @@ var init_view2 = __esm({
 
 // js/notices/controller.js
 var idSeq3, NoticesCentre;
-var init_controller21 = __esm({
+var init_controller22 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
@@ -59948,7 +60095,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller21();
+    init_controller22();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -60116,7 +60263,7 @@ function wordsOf4(m, value) {
   return label ?? s2.ratingOutOf(plain(value), m.max);
 }
 var attr5, itemName, disabled, readonly, state8, interactive, focusable, announceLevel;
-var init_read2 = __esm({
+var init_read3 = __esm({
   "js/rating/read.js"() {
     "use strict";
     init_strings();
@@ -60242,7 +60389,7 @@ var init_paint8 = __esm({
   "js/rating/paint.js"() {
     "use strict";
     init_strings();
-    init_read2();
+    init_read3();
     init_math();
   }
 });
@@ -60357,7 +60504,7 @@ var init_commit = __esm({
     init_undo_toast();
     init_constants31();
     init_paint8();
-    init_read2();
+    init_read3();
     init_math();
   }
 });
@@ -60403,14 +60550,14 @@ var init_keys12 = __esm({
     "use strict";
     init_math();
     init_commit();
-    init_read2();
+    init_read3();
     starNumber = (target) => target instanceof HTMLElement ? Number(target.closest(".kp-rating__star")?.getAttribute("data-kp-star")) : 0;
   }
 });
 
 // js/rating/controller.js
 var REDRAW, WATCHED5, RatingController;
-var init_controller22 = __esm({
+var init_controller23 = __esm({
   "js/rating/controller.js"() {
     "use strict";
     init_controller();
@@ -60421,7 +60568,7 @@ var init_controller22 = __esm({
     init_keys12();
     init_math();
     init_paint8();
-    init_read2();
+    init_read3();
     REDRAW = ["data-kp-rating-max", "data-kp-rating-step", "data-kp-rating-mode"];
     WATCHED5 = [
       ...REDRAW,
@@ -60680,7 +60827,7 @@ var init_api21 = __esm({
     "use strict";
     init_controller();
     init_constants31();
-    init_controller22();
+    init_controller23();
     init_build7();
     init_commit();
     init_math();
@@ -60795,14 +60942,14 @@ function measureFold(c) {
   const { textEl, more } = c;
   if (!textEl || !more) return;
   const lines = attr6(c.el, "lines") ?? String(QUOTE_LINES);
-  const folds2 = lines !== "all" && Number(lines) > 0;
-  const open4 = c.expanded || !folds2;
+  const folds = lines !== "all" && Number(lines) > 0;
+  const open4 = c.expanded || !folds;
   textEl.removeAttribute("data-kp-folded");
   const whole = textEl.getBoundingClientRect().height;
   textEl.toggleAttribute("data-kp-folded", !open4);
   const shown5 = textEl.getBoundingClientRect().height;
   const overflows = open4 ? c.expanded : whole - shown5 > FOLD_SLACK_PX;
-  more.hidden = !(folds2 && overflows);
+  more.hidden = !(folds && overflows);
   more.setAttribute("aria-expanded", String(c.expanded));
   more.textContent = c.expanded ? getStrings().quoteShowLess : getStrings().quoteShowAll;
 }
@@ -60968,7 +61115,7 @@ var init_actions4 = __esm({
 
 // js/quote/controller.js
 var QuoteController;
-var init_controller23 = __esm({
+var init_controller24 = __esm({
   "js/quote/controller.js"() {
     "use strict";
     init_controller();
@@ -61201,7 +61348,7 @@ var init_api22 = __esm({
     init_strings();
     init_actions4();
     init_constants32();
-    init_controller23();
+    init_controller24();
     init_list4();
     init_render4();
   }
@@ -62644,7 +62791,7 @@ var init_handle4 = __esm({
 
 // js/toggle/controller.js
 var ToggleControl;
-var init_controller24 = __esm({
+var init_controller25 = __esm({
   "js/toggle/controller.js"() {
     "use strict";
     init_reason();
@@ -62835,7 +62982,7 @@ var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
     init_controller();
-    init_controller24();
+    init_controller25();
     init_group4();
     init_group4();
   }
@@ -65336,7 +65483,7 @@ var init_leave2 = __esm({
 
 // js/unsaved/controller.js
 var UnsavedController;
-var init_controller25 = __esm({
+var init_controller26 = __esm({
   "js/unsaved/controller.js"() {
     "use strict";
     init_strings();
@@ -65589,7 +65736,7 @@ var init_unsaved = __esm({
     "use strict";
     init_controller();
     init_config();
-    init_controller25();
+    init_controller26();
     init_config();
     attachUnsaved = (root = document, options = {}) => attachAll(root, UNSAVED, UnsavedController, options);
   }
@@ -65935,7 +66082,7 @@ var init_status = __esm({
 
 // js/autosize/controller.js
 var attr8, AutosizeController;
-var init_controller26 = __esm({
+var init_controller27 = __esm({
   "js/autosize/controller.js"() {
     "use strict";
     init_controller();
@@ -66240,7 +66387,7 @@ var init_api23 = __esm({
     "use strict";
     init_controller();
     init_constants35();
-    init_controller26();
+    init_controller27();
     init_status();
     controllerFor = (element) => controllerOf(element, AutosizeController);
   }
@@ -68010,7 +68157,7 @@ var init_build8 = __esm({
 
 // js/slider/core.js
 var seq4, SliderCore;
-var init_core3 = __esm({
+var init_core4 = __esm({
   "js/slider/core.js"() {
     "use strict";
     init_controller();
@@ -68131,11 +68278,11 @@ var init_core3 = __esm({
 
 // js/slider/controller.js
 var BIG_STEP, PAGE_SHARE, KNOBS2, SliderControl;
-var init_controller27 = __esm({
+var init_controller28 = __esm({
   "js/slider/controller.js"() {
     "use strict";
     init_build8();
-    init_core3();
+    init_core4();
     init_values3();
     BIG_STEP = 10;
     PAGE_SHARE = 10;
@@ -68361,7 +68508,7 @@ var init_slider = __esm({
   "js/slider.js"() {
     "use strict";
     init_controller();
-    init_controller27();
+    init_controller28();
     init_values3();
     init_values3();
   }
@@ -68529,7 +68676,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq5, SAY_AFTER_MS2, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller28 = __esm({
+var init_controller29 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -68758,7 +68905,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller28();
+    init_controller29();
     init_fields();
     init_fields();
   }
@@ -69098,7 +69245,7 @@ var init_settings2 = __esm({
 
 // js/dated-options/controller.js
 var DatedController;
-var init_controller29 = __esm({
+var init_controller30 = __esm({
   "js/dated-options/controller.js"() {
     "use strict";
     init_controller();
@@ -69349,7 +69496,7 @@ var init_api24 = __esm({
     "use strict";
     init_controller();
     init_constants37();
-    init_controller29();
+    init_controller30();
   }
 });
 
@@ -69954,7 +70101,7 @@ var init_panel3 = __esm({
 
 // js/snooze/controller.js
 var TICK_MS3, SnoozePicker;
-var init_controller30 = __esm({
+var init_controller31 = __esm({
   "js/snooze/controller.js"() {
     "use strict";
     init_datepicker();
@@ -70213,7 +70360,7 @@ var init_snooze = __esm({
     "use strict";
     init_controller();
     init_choices();
-    init_controller30();
+    init_controller31();
     init_choices();
   }
 });
@@ -75067,7 +75214,7 @@ var init_actions6 = __esm({
 
 // js/qr/controller.js
 var LIVE_OPTIONS, QrControl;
-var init_controller31 = __esm({
+var init_controller32 = __esm({
   "js/qr/controller.js"() {
     "use strict";
     init_controller();
@@ -75171,7 +75318,7 @@ var init_qr = __esm({
   "js/qr.js"() {
     "use strict";
     init_controller();
-    init_controller31();
+    init_controller32();
     init_state27();
     init_state27();
     init_matrix2();
@@ -77436,7 +77583,7 @@ function textOf3(text, segments) {
   return node;
 }
 var kindOf4;
-var init_read3 = __esm({
+var init_read4 = __esm({
   "js/diff/read.js"() {
     "use strict";
     init_constants43();
@@ -77550,7 +77697,7 @@ var init_lines2 = __esm({
     init_constants43();
     init_fold2();
     init_model11();
-    init_read3();
+    init_read4();
     init_words4();
   }
 });
@@ -77731,7 +77878,7 @@ var init_file = __esm({
     init_strings();
     init_lines2();
     init_model11();
-    init_read3();
+    init_read4();
     init_state30();
   }
 });
@@ -77834,7 +77981,7 @@ var init_render7 = __esm({
     init_reason();
     init_file();
     init_model11();
-    init_read3();
+    init_read4();
   }
 });
 
@@ -77902,7 +78049,7 @@ var init_actions7 = __esm({
     init_file();
     init_lines2();
     init_model11();
-    init_read3();
+    init_read4();
     init_render7();
   }
 });
@@ -78007,7 +78154,7 @@ var init_attach24 = __esm({
     init_constants43();
     init_lines2();
     init_model11();
-    init_read3();
+    init_read4();
     init_render7();
   }
 });
@@ -80137,11 +80284,6 @@ export {
   METER,
   MOD_CAP,
   NAMES_PROPERTY,
-  NAV_FOLD,
-  NAV_FOLD_EVENT,
-  NAV_FOLD_OWNED,
-  NAV_MORE,
-  NAV_SEP,
   NEWPILL_JUMP_EVENT,
   NEWPILL_SAY_MS,
   NO_FLASH_SNIPPET,
@@ -80531,8 +80673,6 @@ export {
   pendingTheme,
   pipeline_exports as pipelineExports,
   plainFileName,
-  planFold,
-  planSeparators,
   preparePrint,
   previewTheme,
   previewTypeOf,
