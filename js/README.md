@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`, `qr.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -614,3 +614,16 @@ The checklist whose ticked items sink, as a Checklist controller over a per-list
 | `render.js`     | Draws the list in place (groups, rows, bar, empty plate) and glides the rows that moved.  |
 | `rows.js`       | Grouping the items, a group's shown order, and one row built or updated in place.         |
 | `state.js`      | The selector, the events, the per-list registry (items, Undo, plate, busy card), the ids. |
+
+## js/qr.js → js/qr/
+
+The QR code, as a QrControl controller over a per-code state. 6 files.
+
+| File            | Does                                                                                     |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| `actions.js`    | Give a code its link or state, read its SVG, copy the link, download the picture.        |
+| `controller.js` | QrControl: the buttons, Shift+C and a draw again when a live option changes.             |
+| `draw.js`       | The ink and ground, and the code as an SVG or a canvas.                                  |
+| `matrix.js`     | The matrix for a text, the WCAG contrast of two colours and the path of the dark modules. |
+| `render.js`     | The plate, the stand-ins, the caption, the actions, the density warning and the expiry.  |
+| `state.js`      | The selector, events and numbers, the per-code state registry and the shared helpers.    |
