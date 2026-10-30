@@ -3222,8 +3222,8 @@ function arrival(scope) {
     const style = getComputedStyle(probe);
     if (!style.animationName || style.animationName === "none") return null;
     const name = style.animationName.split(",")[0].trim();
-    const cap = msOf(scope.ownerDocument?.documentElement ?? document.documentElement, "--kp-size-max", 480);
-    const duration2 = Math.min(firstMs(style.animationDuration), cap);
+    const cap2 = msOf(scope.ownerDocument?.documentElement ?? document.documentElement, "--kp-size-max", 480);
+    const duration2 = Math.min(firstMs(style.animationDuration), cap2);
     if (duration2 <= 0) return null;
     const ease = style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim();
     return `${name} ${duration2}ms ${ease} backwards`;
@@ -9821,10 +9821,10 @@ var init_hint = __esm({
         this.place();
         hint.replaceChildren();
         for (const key of typed) {
-          const cap = document.createElement("kbd");
-          cap.className = "kp-kbd";
-          cap.textContent = key;
-          hint.append(cap);
+          const cap2 = document.createElement("kbd");
+          cap2.className = "kp-kbd";
+          cap2.textContent = key;
+          hint.append(cap2);
         }
         if (unknown) hint.replaceChildren(getStrings().shortcutsUnknown(typed.join(" ")));
         else this.appendWaiting(hint);
@@ -12736,17 +12736,20 @@ var init_keys3 = __esm({
   }
 });
 
-// js/top-layer.js
+// js/top-layer/rect.js
 function unturnedRect(el16, style) {
   const box = el16.getBoundingClientRect();
   const match = /^(-?[\d.]+)(deg|rad|turn|grad)$/.exec(style.rotate ?? "");
   if (!match) return box;
-  const unit2 = { deg: Math.PI / 180, rad: 1, turn: 2 * Math.PI, grad: Math.PI / 200 }[match[2]] ?? 0;
+  const unit2 = RADIANS_PER[
+    /** @type {keyof typeof RADIANS_PER} */
+    match[2]
+  ] ?? 0;
   const a = Number.parseFloat(match[1]) * unit2;
   const c = Math.abs(Math.cos(a));
   const s2 = Math.abs(Math.sin(a));
   const det = c * c - s2 * s2;
-  if (a === 0 || Math.abs(det) < 0.05) return box;
+  if (a === 0 || Math.abs(det) < NEAR_DIAGONAL) return box;
   const w = (c * box.width - s2 * box.height) / det;
   const h2 = (c * box.height - s2 * box.width) / det;
   const [ox, oy] = style.transformOrigin.split(/\s+/).map((n) => Number.parseFloat(n) || 0);
@@ -12758,6 +12761,23 @@ function unturnedRect(el16, style) {
   const top = box.top + box.height / 2 - oy - (dx * sin + dy * cos);
   return new DOMRect(left, top, w, h2);
 }
+function offsetOf(el16, style, box) {
+  let x = 0;
+  let y = 0;
+  if (style.translate && style.translate !== "none") {
+    const parts2 = style.translate.split(/\s+/);
+    x += lengthOf(parts2[0], el16.offsetWidth ?? box.width);
+    y += lengthOf(parts2[1], el16.offsetHeight ?? box.height);
+  }
+  if (style.transform && style.transform !== "none" && typeof DOMMatrixReadOnly === "function") {
+    const m = new DOMMatrixReadOnly(style.transform);
+    if (m.is2D && m.a === 1 && m.b === 0 && m.c === 0 && m.d === 1) {
+      x += m.e;
+      y += m.f;
+    }
+  }
+  return { x, y };
+}
 function layoutRect(element) {
   const view = element.ownerDocument.defaultView;
   if (!view) return element.getBoundingClientRect();
@@ -12767,55 +12787,29 @@ function layoutRect(element) {
     element
   );
   const box = unturnedRect(el16, style);
-  let x = 0;
-  let y = 0;
-  if (style.translate && style.translate !== "none") {
-    const parts2 = style.translate.split(/\s+/);
-    const length = (part7, size2) => {
+  const { x, y } = offsetOf(el16, style, box);
+  if (x === 0 && y === 0) return box;
+  return new DOMRect(box.x - x, box.y - y, box.width, box.height);
+}
+var NEAR_DIAGONAL, RADIANS_PER, lengthOf;
+var init_rect = __esm({
+  "js/top-layer/rect.js"() {
+    "use strict";
+    NEAR_DIAGONAL = 0.05;
+    RADIANS_PER = { deg: Math.PI / 180, rad: 1, turn: 2 * Math.PI, grad: Math.PI / 200 };
+    lengthOf = (part7, size2) => {
       if (!part7) return 0;
       const n = Number.parseFloat(part7);
       if (!Number.isFinite(n)) return 0;
       return part7.endsWith("%") ? n / 100 * size2 : n;
     };
-    x += length(parts2[0], el16.offsetWidth ?? box.width);
-    y += length(parts2[1], el16.offsetHeight ?? box.height);
   }
-  if (style.transform && style.transform !== "none" && typeof DOMMatrixReadOnly === "function") {
-    const m = new DOMMatrixReadOnly(style.transform);
-    if (m.is2D && m.a === 1 && m.b === 0 && m.c === 0 && m.d === 1) {
-      x += m.e;
-      y += m.f;
-    }
-  }
-  if (x === 0 && y === 0) return box;
-  return new DOMRect(box.x - x, box.y - y, box.width, box.height);
-}
-function raiseOverlay(element, place3) {
-  if (typeof element.showPopover !== "function" || !element.isConnected) {
-    place3(element);
-    return () => {
-    };
-  }
-  const added = !element.hasAttribute("popover");
-  if (added) element.setAttribute("popover", "manual");
-  if (!element.matches(":popover-open")) element.showPopover();
-  const follow3 = () => {
-    if (element.isConnected && !element.hidden && !element.matches(":popover-open")) element.showPopover();
-    place3(element);
-  };
-  follow3();
-  window.addEventListener("scroll", follow3, { capture: true, passive: true });
-  window.addEventListener("resize", follow3);
-  const resized = typeof ResizeObserver === "function" ? new ResizeObserver(follow3) : null;
-  resized?.observe(element);
-  return () => {
-    resized?.disconnect();
-    window.removeEventListener("scroll", follow3, { capture: true });
-    window.removeEventListener("resize", follow3);
-    if (element.matches(":popover-open")) element.hidePopover();
-    if (added) element.removeAttribute("popover");
-    clearBlockSide(element);
-  };
+});
+
+// js/top-layer/side.js
+function cap(element, room, outside) {
+  element.style.maxBlockSize = `${Math.max(0, Math.floor(room - outside))}px`;
+  element.style.overflowY = "auto";
 }
 function placeBlockSide(element, field2) {
   clearBlockSide(element);
@@ -12823,24 +12817,49 @@ function placeBlockSide(element, field2) {
   const style = getComputedStyle(element);
   const height = drawn.height;
   const outside = style.boxSizing === "border-box" ? 0 : height - (Number.parseFloat(style.height) || 0);
-  const cap = (room) => {
-    element.style.maxBlockSize = `${Math.max(0, Math.floor(room - outside))}px`;
-    element.style.overflowY = "auto";
-  };
   const gap = Math.max(0, drawn.top - field2.bottom);
   const view = document.documentElement.clientHeight;
   const below = view - drawn.top;
   const above = field2.top - gap;
   if (height <= below || below >= above) {
-    if (height > below) cap(below);
+    if (height > below) cap(element, below, outside);
     return "below";
   }
   const size2 = Math.min(height, above);
   const top = Number.parseFloat(element.style.top) || 0;
   element.style.top = `${top + (field2.top - gap - size2 - drawn.top)}px`;
-  if (height > above) cap(above);
+  if (height > above) cap(element, above, outside);
   element.dataset.kpOverlaySide = "above";
   return "above";
+}
+var clearBlockSide;
+var init_side = __esm({
+  "js/top-layer/side.js"() {
+    "use strict";
+    init_rect();
+    clearBlockSide = (element) => {
+      element.style.removeProperty("max-block-size");
+      element.style.removeProperty("overflow-y");
+      delete element.dataset.kpOverlaySide;
+    };
+  }
+});
+
+// js/top-layer/raise.js
+function raiseOverlay(element, place3) {
+  if (typeof element.showPopover !== "function" || !element.isConnected) {
+    place3(element);
+    return () => {
+    };
+  }
+  const raise = new OverlayRaise(element, { place: place3 });
+  try {
+    raise.connect();
+  } catch (error) {
+    raise.destroy();
+    throw error;
+  }
+  return () => raise.destroy();
 }
 function raiseInPlace(element, anchor, field2 = anchor) {
   const drawn = layoutRect(element);
@@ -12863,16 +12882,56 @@ function raiseInPlace(element, anchor, field2 = anchor) {
     element.style.removeProperty("width");
   };
 }
-var clearBlockSide, raised;
+var OverlayRaise, raised;
+var init_raise = __esm({
+  "js/top-layer/raise.js"() {
+    "use strict";
+    init_controller();
+    init_rect();
+    init_side();
+    OverlayRaise = class extends Controller {
+      /**
+       * @param {HTMLElement} host the overlay, already visible (not `hidden`)
+       * @param {{ place: (element: HTMLElement) => void }} options place puts it in window coordinates
+       */
+      constructor(host, options) {
+        super(host, options);
+        this.place = options.place;
+      }
+      connect() {
+        const element = this.host;
+        const added = !element.hasAttribute("popover");
+        this.own(() => {
+          if (element.matches(":popover-open")) element.hidePopover();
+          if (added) element.removeAttribute("popover");
+          clearBlockSide(element);
+        });
+        if (added) element.setAttribute("popover", "manual");
+        if (!element.matches(":popover-open")) element.showPopover();
+        const follow3 = () => this.follow();
+        follow3();
+        this.listen(window, "scroll", follow3, { capture: true, passive: true });
+        this.listen(window, "resize", follow3);
+        if (typeof ResizeObserver === "function") this.observe(new ResizeObserver(follow3)).observe(element);
+      }
+      follow() {
+        if (this.destroyed) return;
+        const element = this.host;
+        if (element.isConnected && !element.hidden && !element.matches(":popover-open")) element.showPopover();
+        this.place(element);
+      }
+    };
+    raised = (element) => element.matches(":popover-open");
+  }
+});
+
+// js/top-layer.js
 var init_top_layer = __esm({
   "js/top-layer.js"() {
     "use strict";
-    clearBlockSide = (element) => {
-      element.style.removeProperty("max-block-size");
-      element.style.removeProperty("overflow-y");
-      delete element.dataset.kpOverlaySide;
-    };
-    raised = (element) => element.matches(":popover-open");
+    init_rect();
+    init_side();
+    init_raise();
   }
 });
 
@@ -13027,10 +13086,10 @@ function placeMenu(s2, view, covered) {
   }
   const box = layoutRect(menu);
   const style = view.getComputedStyle(menu);
-  const cap = parseFloat(style.maxBlockSize);
+  const cap2 = parseFloat(style.maxBlockSize);
   const borders = box.height - menu.clientHeight;
   const whole = menu.scrollHeight + borders;
-  const height = Number.isFinite(cap) ? Math.min(whole, cap) : whole;
+  const height = Number.isFinite(cap2) ? Math.min(whole, cap2) : whole;
   const at = menuPlacement({ button: button6, menu: box, height, gap: Math.max(0, box.top - button6.bottom), room });
   if (Math.abs(at.left - box.left) > 0.5 || at.width != null) {
     const usedLeft = parseFloat(style.left);
@@ -27427,11 +27486,11 @@ function setKeys(el16, pairs) {
       item.className = "kp-keys__item";
       const list = typeof keys === "string" ? [keys] : [...keys];
       const caps = list.map((key) => {
-        const cap = document.createElement("kbd");
-        cap.className = "kp-kbd";
-        cap.textContent = capText(key);
-        if (key.toLowerCase() === "mod") cap.setAttribute("data-kp-key", "mod");
-        return cap;
+        const cap2 = document.createElement("kbd");
+        cap2.className = "kp-kbd";
+        cap2.textContent = capText(key);
+        if (key.toLowerCase() === "mod") cap2.setAttribute("data-kp-key", "mod");
+        return cap2;
       });
       if (caps.length > 1) {
         const group = document.createElement("span");
@@ -27445,7 +27504,7 @@ function setKeys(el16, pairs) {
   );
 }
 function attachKeys(root = document) {
-  for (const cap of root.querySelectorAll(MOD_CAP)) cap.textContent = capText("mod");
+  for (const cap2 of root.querySelectorAll(MOD_CAP)) cap2.textContent = capText("mod");
   return () => void 0;
 }
 var MOD_CAP, KEYS, capText;
@@ -38325,7 +38384,7 @@ function attachComboboxes(root = document, {
     const backspaces = flag("kpBackspaceRemoves", backspaceRemoves);
     const stays = flag("kpStayOpen", stayOpen);
     const duplicates = flag("kpDuplicates", allowDuplicates);
-    const cap = Number.parseInt(box.dataset.kpMaxTags ?? "", 10) || maxTags;
+    const cap2 = Number.parseInt(box.dataset.kpMaxTags ?? "", 10) || maxTags;
     const debounce = Number.parseInt(box.dataset.kpDebounce ?? "", 10) || debounceMs;
     const matcher = typeof match === "function" ? match : MATCHERS[box.dataset.kpMatch ?? match] ?? MATCHERS.substring;
     const showsEmpty = flag("kpEmptyRow", emptyRow);
@@ -38439,7 +38498,7 @@ function attachComboboxes(root = document, {
       return tag;
     };
     const addTag = (value, label) => {
-      if (chosen.length >= cap) return;
+      if (chosen.length >= cap2) return;
       if (duplicates || !chosen.includes(value)) {
         chosen.push(value);
         if (tagList !== null) tagList.append(tagElement(value, label));
@@ -38565,7 +38624,7 @@ function attachComboboxes(root = document, {
         if (isTags) {
           chosen.splice(0, chosen.length);
           if (tagList) tagList.replaceChildren();
-          for (const value of values.slice(0, cap)) {
+          for (const value of values.slice(0, cap2)) {
             if (!duplicates && chosen.includes(value)) continue;
             chosen.push(value);
             const option = optionFor(value);
@@ -70971,25 +71030,25 @@ var init_controller53 = __esm({
         const lh = lineHeightOf(cs);
         const chrome = chromeOf(cs);
         const rows = this.maxRows();
-        const cap = this.phoneCap();
+        const cap2 = this.phoneCap();
         area.style.blockSize = "";
         area.style.overflowY = "";
         area.style.setProperty("--kp-autosize-min", `${Math.ceil(this.minRows() * lh + chrome)}px`);
-        const most = rows === null ? "none" : `${Math.ceil(Math.min(rows * lh + chrome, cap ?? Number.POSITIVE_INFINITY))}px`;
+        const most = rows === null ? "none" : `${Math.ceil(Math.min(rows * lh + chrome, cap2 ?? Number.POSITIVE_INFINITY))}px`;
         area.style.setProperty("--kp-autosize-max", most);
-        const result = fitTextarea(area, { minRows: this.minRows(), maxRows: rows, ...cap !== void 0 ? { maxPx: cap } : {}, apply: false });
+        const result = fitTextarea(area, { minRows: this.minRows(), maxRows: rows, ...cap2 !== void 0 ? { maxPx: cap2 } : {}, apply: false });
         this.report(result.height, result.lines, result.capped);
       }
       /** The package sizes the field itself, from the twin's measure. */
       measureJs() {
         const area = this.area;
-        const cap = this.phoneCap();
+        const cap2 = this.phoneCap();
         area.style.removeProperty("--kp-autosize-min");
         area.style.removeProperty("--kp-autosize-max");
         const result = fitTextarea(area, {
           minRows: this.minRows(),
           maxRows: this.maxRows(),
-          ...cap !== void 0 ? { maxPx: cap } : {},
+          ...cap2 !== void 0 ? { maxPx: cap2 } : {},
           keepPx: this.shrinks() ? 0 : this.tallest
         });
         this.tallest = Math.max(this.tallest, result.height);
@@ -82870,12 +82929,12 @@ function fillBody(root, st, file, body) {
   }
   const keep = count(root, "context", DIFF_CONTEXT);
   const words3 = attr15(root, "words", "on") !== "off";
-  const cap = st.all.has(file.path) ? 0 : count(root, "max-lines", DIFF_MAX_LINES);
+  const cap2 = st.all.has(file.path) ? 0 : count(root, "max-lines", DIFF_MAX_LINES);
   const surface = el15("kp-diff");
   let drawn = 0;
   let left = 0;
   const draw6 = (line, pairs) => {
-    if (cap > 0 && drawn >= cap) {
+    if (cap2 > 0 && drawn >= cap2) {
       left += 1;
       return;
     }
@@ -82883,7 +82942,7 @@ function fillBody(root, st, file, body) {
     surface.append(lineEl(line, pairs.get(line)));
   };
   file.hunks.forEach((hunk, h2) => {
-    if (cap > 0 && drawn >= cap) {
+    if (cap2 > 0 && drawn >= cap2) {
       left += hunk.lines.length;
       return;
     }
@@ -82903,7 +82962,7 @@ function fillBody(root, st, file, body) {
         for (const line of part7.lines) draw6(line, pairs);
         continue;
       }
-      if (cap > 0 && drawn >= cap) {
+      if (cap2 > 0 && drawn >= cap2) {
         left += part7.lines.length;
         continue;
       }
