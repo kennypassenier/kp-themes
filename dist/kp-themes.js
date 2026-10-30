@@ -41004,25 +41004,7 @@ var init_focus_steps = __esm({
   }
 });
 
-// js/checklist.js
-var checklist_exports = {};
-__export(checklist_exports, {
-  CHECKLIST: () => CHECKLIST,
-  CHECKLIST_CLEAR_EVENT: () => CHECKLIST_CLEAR_EVENT,
-  CHECKLIST_EVENT: () => CHECKLIST_EVENT,
-  CHECKLIST_RENDER_EVENT: () => CHECKLIST_RENDER_EVENT,
-  CHECKLIST_RETRY_EVENT: () => CHECKLIST_RETRY_EVENT,
-  CHECKLIST_UNDO_EVENT: () => CHECKLIST_UNDO_EVENT,
-  CHECKLIST_UNDO_MS: () => CHECKLIST_UNDO_MS,
-  attachChecklists: () => attachChecklists,
-  getChecklistItems: () => getChecklistItems,
-  setChecklistChecked: () => setChecklistChecked,
-  setChecklistItems: () => setChecklistItems,
-  setChecklistState: () => setChecklistState
-});
-function getChecklistItems(list) {
-  return (ITEMS.get(list) ?? []).map((item) => ({ ...item }));
-}
+// js/checklist/parts.js
 function part4(list, name) {
   let node = (
     /** @type {HTMLElement | null} */
@@ -41077,6 +41059,44 @@ function say8(list, message) {
   region.textContent = "";
   setTimeout(() => region.textContent = message, 60);
 }
+var el8;
+var init_parts = __esm({
+  "js/checklist/parts.js"() {
+    "use strict";
+    el8 = (className, tag = "div") => {
+      const node = document.createElement(tag);
+      node.className = className;
+      return node;
+    };
+  }
+});
+
+// js/checklist/state.js
+function getChecklistItems(list) {
+  return (ITEMS.get(list) ?? []).map((item) => ({ ...item }));
+}
+var CHECKLIST, CHECKLIST_EVENT, CHECKLIST_CLEAR_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_RETRY_EVENT, CHECKLIST_RENDER_EVENT, CHECKLIST_UNDO_MS, ITEMS, UNDO2, PLATE2, BUSY2, serial5, nextSerial, sinks;
+var init_state8 = __esm({
+  "js/checklist/state.js"() {
+    "use strict";
+    CHECKLIST = "[data-kp-checklist]";
+    CHECKLIST_EVENT = "kp-checklist-change";
+    CHECKLIST_CLEAR_EVENT = "kp-checklist-clear";
+    CHECKLIST_UNDO_EVENT = "kp-checklist-undo";
+    CHECKLIST_RETRY_EVENT = "kp-checklist-retry";
+    CHECKLIST_RENDER_EVENT = "kp-checklist-render";
+    CHECKLIST_UNDO_MS = 6e3;
+    ITEMS = /* @__PURE__ */ new WeakMap();
+    UNDO2 = /* @__PURE__ */ new WeakMap();
+    PLATE2 = /* @__PURE__ */ new WeakMap();
+    BUSY2 = /* @__PURE__ */ new WeakMap();
+    serial5 = 0;
+    nextSerial = () => serial5 += 1;
+    sinks = (list) => list.getAttribute("data-kp-checklist-sink") !== "false";
+  }
+});
+
+// js/checklist/rows.js
 function groupsOf(items) {
   const groups = /* @__PURE__ */ new Map();
   for (const item of items) {
@@ -41095,11 +41115,11 @@ function rowFor(row, item) {
       el8("kp-field__check kp-checklist__check", "input")
     );
     check2.type = "checkbox";
-    serial5 += 1;
+    const serial13 = nextSerial();
     const text2 = el8("kp-checklist__label", "span");
-    text2.id = `kp-checklist-${serial5}-label`;
+    text2.id = `kp-checklist-${serial13}-label`;
     const detail2 = el8("kp-checklist__detail", "span");
-    detail2.id = `kp-checklist-${serial5}-detail`;
+    detail2.id = `kp-checklist-${serial13}-detail`;
     check2.setAttribute("aria-labelledby", text2.id);
     label.append(check2, text2, detail2);
     row.append(label);
@@ -41126,6 +41146,17 @@ function rowFor(row, item) {
   else check.removeAttribute("aria-describedby");
   return row;
 }
+var shownOrder;
+var init_rows2 = __esm({
+  "js/checklist/rows.js"() {
+    "use strict";
+    init_parts();
+    init_state8();
+    shownOrder = (list, items) => sinks(list) ? [...items.filter((i) => !i.checked), ...items.filter((i) => i.checked)] : items;
+  }
+});
+
+// js/checklist/render.js
 function render(list) {
   const strings = getStrings();
   const items = ITEMS.get(list) ?? [];
@@ -41141,6 +41172,13 @@ function render(list) {
     rows.set(id, row);
     before.set(id, row.getBoundingClientRect());
   }
+  renderGroups(list, body, items, rows, strings);
+  renderBar(list, items, strings);
+  renderEmpty(list, body, items.length, strings);
+  list.dispatchEvent(new CustomEvent(CHECKLIST_RENDER_EVENT));
+  return before;
+}
+function renderGroups(list, body, items, rows, strings) {
   const sections = /* @__PURE__ */ new Map();
   for (
     const section of
@@ -41149,53 +41187,24 @@ function render(list) {
   ) {
     sections.set(section.getAttribute("data-group") ?? "", section);
   }
-  const level = Math.min(6, Math.max(2, Number(list.getAttribute("data-kp-checklist-heading")) || 3));
+  const level = Math.min(HEADING_MAX, Math.max(HEADING_MIN, Number(list.getAttribute("data-kp-checklist-heading")) || HEADING_LEVEL));
   let previous = null;
   for (const [key, members] of groupsOf(items)) {
-    let section = sections.get(key) ?? null;
+    const section = sections.get(key) ?? newSection(key, level);
     sections.delete(key);
-    if (!section) {
-      section = el8("kp-checklist__group", "section");
-      section.setAttribute("data-group", key);
-      if (key) {
-        const head = el8("kp-checklist__head", `h${level}`);
-        serial5 += 1;
-        head.id = `kp-checklist-${serial5}-head`;
-        head.append(el8("kp-checklist__title", "span"), el8("kp-checklist__count", "span"));
-        section.append(head);
-        section.setAttribute("aria-labelledby", head.id);
-      }
-      section.append(el8("kp-checklist__list", "ul"));
-    }
-    const done2 = members.filter((i) => i.checked).length;
-    const title2 = section.querySelector(".kp-checklist__title");
-    if (title2) title2.textContent = key;
+    const done = members.filter((i) => i.checked).length;
+    const title = section.querySelector(".kp-checklist__title");
+    if (title) title.textContent = key;
     const count2 = section.querySelector(".kp-checklist__count");
-    if (count2) count2.textContent = strings.checklistCount(done2, members.length);
-    section.toggleAttribute("data-kp-checklist-done", done2 === members.length);
-    const ul = (
+    if (count2) count2.textContent = strings.checklistCount(done, members.length);
+    section.toggleAttribute("data-kp-checklist-done", done === members.length);
+    placeRows(
+      list,
       /** @type {HTMLElement} */
-      section.querySelector(".kp-checklist__list")
+      section.querySelector(".kp-checklist__list"),
+      members,
+      rows
     );
-    let last = null;
-    for (const item of shownOrder(list, members)) {
-      const row = rowFor(rows.get(item.id) ?? null, item);
-      rows.delete(item.id);
-      const expected = (
-        /** @type {Element | null} */
-        last ? last.nextElementSibling : ul.firstElementChild
-      );
-      if (row !== expected) {
-        const focused = row.contains(document.activeElement) ? (
-          /** @type {HTMLElement} */
-          document.activeElement
-        ) : null;
-        if (last) last.after(row);
-        else ul.prepend(row);
-        focused?.focus({ preventScroll: true });
-      }
-      last = row;
-    }
     const placeAfter = (
       /** @type {Element | null} */
       previous ? previous.nextElementSibling : body.firstElementChild
@@ -41208,6 +41217,42 @@ function render(list) {
   }
   for (const gone of rows.values()) gone.remove();
   for (const gone of sections.values()) gone.remove();
+}
+function newSection(key, level) {
+  const section = el8("kp-checklist__group", "section");
+  section.setAttribute("data-group", key);
+  if (key) {
+    const head = el8("kp-checklist__head", `h${level}`);
+    head.id = `kp-checklist-${nextSerial()}-head`;
+    head.append(el8("kp-checklist__title", "span"), el8("kp-checklist__count", "span"));
+    section.append(head);
+    section.setAttribute("aria-labelledby", head.id);
+  }
+  section.append(el8("kp-checklist__list", "ul"));
+  return section;
+}
+function placeRows(list, ul, members, rows) {
+  let last = null;
+  for (const item of shownOrder(list, members)) {
+    const row = rowFor(rows.get(item.id) ?? null, item);
+    rows.delete(item.id);
+    const expected = (
+      /** @type {Element | null} */
+      last ? last.nextElementSibling : ul.firstElementChild
+    );
+    if (row !== expected) {
+      const focused = row.contains(document.activeElement) ? (
+        /** @type {HTMLElement} */
+        document.activeElement
+      ) : null;
+      if (last) last.after(row);
+      else ul.prepend(row);
+      focused?.focus({ preventScroll: true });
+    }
+    last = row;
+  }
+}
+function renderBar(list, items, strings) {
   const total = items.length;
   const done = items.filter((i) => i.checked).length;
   const rest = list.hasAttribute("aria-busy") || list.hasAttribute("data-kp-checklist-error");
@@ -41217,29 +41262,22 @@ function render(list) {
     bar.querySelector(".kp-checklist__said")
   );
   if (!UNDO2.has(list)) said.textContent = total ? strings.checklistSummary(done, total) : "";
-  const all = (
+  const button2 = (name) => (
     /** @type {HTMLButtonElement} */
-    bar.querySelector(".kp-checklist__all")
+    bar.querySelector(`.kp-checklist__${name}`)
   );
+  const all = button2("all");
   all.textContent = strings.checklistCheckAll;
   all.disabled = total === 0 || done === total || rest;
-  const none = (
-    /** @type {HTMLButtonElement} */
-    bar.querySelector(".kp-checklist__none")
-  );
+  const none = button2("none");
   none.textContent = strings.checklistUncheckAll;
   none.disabled = done === 0 || rest;
-  const clear = (
-    /** @type {HTMLButtonElement} */
-    bar.querySelector(".kp-checklist__clear")
-  );
+  const clear = button2("clear");
   clear.textContent = strings.checklistClear;
   clear.disabled = done === 0 || rest;
-  const undo = (
-    /** @type {HTMLButtonElement} */
-    bar.querySelector(".kp-checklist__undo")
-  );
-  undo.textContent = strings.checklistUndo;
+  button2("undo").textContent = strings.checklistUndo;
+}
+function renderEmpty(list, body, total, strings) {
   const empty = part4(list, "empty");
   const error = list.getAttribute("data-kp-checklist-error");
   const shown4 = list.getAttribute("data-kp-state");
@@ -41256,8 +41294,6 @@ function render(list) {
   empty.hidden = !(error !== null || total === 0 && !list.hasAttribute("aria-busy"));
   empty.toggleAttribute("data-kp-checklist-failed", error !== null);
   body.append(empty);
-  list.dispatchEvent(new CustomEvent(CHECKLIST_RENDER_EVENT));
-  return before;
 }
 async function glide2(list, before) {
   if (!motionAllowed()) return;
@@ -41271,13 +41307,31 @@ async function glide2(list, before) {
   ) {
     const was = before.get(row.getAttribute("data-id") ?? "");
     if (!was) continue;
-    const now = row.getBoundingClientRect();
-    const dy = was.top - now.top;
-    if (Math.abs(dy) < 1) continue;
-    const duration2 = Math.min(size2 * 2, size2 + Math.abs(dy) * 0.6);
+    const dy = was.top - row.getBoundingClientRect().top;
+    if (Math.abs(dy) < GLIDE_MIN_PX) continue;
+    const duration2 = Math.min(size2 * 2, size2 + Math.abs(dy) * GLIDE_MS_PER_PX);
     row.animate([{ translate: `0 ${dy}px` }, { translate: "0 0" }], { duration: duration2, easing: ease });
   }
 }
+var HEADING_LEVEL, HEADING_MIN, HEADING_MAX, GLIDE_MIN_PX, GLIDE_MS_PER_PX;
+var init_render2 = __esm({
+  "js/checklist/render.js"() {
+    "use strict";
+    init_calm();
+    init_state_plate();
+    init_strings();
+    init_parts();
+    init_rows2();
+    init_state8();
+    HEADING_LEVEL = 3;
+    HEADING_MIN = 2;
+    HEADING_MAX = 6;
+    GLIDE_MIN_PX = 1;
+    GLIDE_MS_PER_PX = 0.6;
+  }
+});
+
+// js/checklist/api.js
 function setChecklistItems(list, items) {
   if (!(list instanceof HTMLElement)) return;
   ITEMS.set(
@@ -41332,72 +41386,106 @@ function endUndo(list) {
   if (hadFocus)
     part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
 }
-function attachChecklists(root = document) {
-  const lists = (
-    /** @type {HTMLElement[]} */
-    [
-      ...root instanceof HTMLElement && root.matches(CHECKLIST) ? [root] : [],
-      ...root.querySelectorAll(CHECKLIST)
-    ]
-  );
-  const undo = [];
-  for (const list of lists) {
-    if (WIRED4.has(list)) continue;
-    WIRED4.add(list);
-    if (!ITEMS.has(list)) ITEMS.set(list, []);
-    render(list);
-    let byKey = false;
-    const key = (event) => {
-      byKey = event.key === " " || event.key === "Enter";
-    };
-    const pointer = () => {
-      byKey = false;
-    };
-    const change2 = (event) => {
-      const check = event.target instanceof HTMLInputElement && event.target.classList.contains("kp-checklist__check") ? event.target : null;
-      const row = check?.closest(".kp-checklist__item");
-      if (!check || !row || !list.contains(row)) return;
-      const id = row.getAttribute("data-id") ?? "";
-      const items = ITEMS.get(list) ?? [];
-      const item = items.find((i) => i.id === id);
-      if (!item) return;
-      const group = items.filter((i) => (i.group ?? "") === (item.group ?? ""));
-      const placeBefore = shownOrder(list, group).indexOf(item);
-      item.checked = check.checked;
-      const before = render(list);
-      void glide2(list, before);
-      const strings = getStrings();
-      if (byKey && check.checked && sinks(list)) {
-        const next2 = shownOrder(list, group)[placeBefore];
-        const target = next2 && !next2.checked ? list.querySelector(`.kp-checklist__item[data-id="${CSS.escape(next2.id)}"] .kp-checklist__check`) : null;
-        if (target instanceof HTMLElement) target.focus();
-        say8(list, strings.checklistDoneMoved(item.label));
-      } else {
-        say8(list, check.checked ? strings.checklistDone(item.label) : strings.checklistOpen(item.label));
+var emit3;
+var init_api5 = __esm({
+  "js/checklist/api.js"() {
+    "use strict";
+    init_busy_card();
+    init_strings();
+    init_parts();
+    init_render2();
+    init_state8();
+    emit3 = (list, type, detail) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { ...detail, items: getChecklistItems(list) } }));
+  }
+});
+
+// js/checklist/controller.js
+var Checklist;
+var init_controller3 = __esm({
+  "js/checklist/controller.js"() {
+    "use strict";
+    init_controller();
+    init_strings();
+    init_api5();
+    init_parts();
+    init_render2();
+    init_rows2();
+    init_state8();
+    Checklist = class extends Controller {
+      /** @param {HTMLElement} list */
+      constructor(list) {
+        super(list);
+        this.byKey = false;
       }
-      emit3(list, CHECKLIST_EVENT, { id, checked: check.checked });
-    };
-    const click = (event) => {
-      const target = event.target instanceof Element ? event.target : null;
-      if (!target) return;
-      const items = ITEMS.get(list) ?? [];
-      const strings = getStrings();
-      if (target.closest(".kp-checklist__all")) {
-        for (const item of items) item.checked = true;
+      connect() {
+        const list = this.host;
+        if (!ITEMS.has(list)) ITEMS.set(list, []);
+        render(list);
+        this.listen(list, "keydown", (event) => this.byKey = /** @type {KeyboardEvent} */
+        event.key === " " || /** @type {KeyboardEvent} */
+        event.key === "Enter", true);
+        this.listen(list, "pointerdown", () => this.byKey = false, true);
+        this.listen(list, "change", (event) => this.onChange(event));
+        this.listen(list, "click", (event) => this.onClick(event));
+      }
+      items() {
+        return ITEMS.get(this.host) ?? [];
+      }
+      /** A row ticked or unticked. @param {Event} event */
+      onChange(event) {
+        const list = this.host;
+        const check = event.target instanceof HTMLInputElement && event.target.classList.contains("kp-checklist__check") ? event.target : null;
+        const row = check?.closest(".kp-checklist__item");
+        if (!check || !row || !list.contains(row)) return;
+        const id = row.getAttribute("data-id") ?? "";
+        const items = this.items();
+        const item = items.find((i) => i.id === id);
+        if (!item) return;
+        const group = items.filter((i) => (i.group ?? "") === (item.group ?? ""));
+        const placeBefore = shownOrder(list, group).indexOf(item);
+        item.checked = check.checked;
         void glide2(list, render(list));
-        if (document.activeElement === document.body || target.closest(".kp-checklist__all")?.matches(":disabled"))
-          part4(list, "bar").querySelector(".kp-checklist__none:not(:disabled)")?.focus();
-        say8(list, strings.checklistSummary(items.length, items.length));
-        emit3(list, CHECKLIST_EVENT, { id: null, checked: true });
-      } else if (target.closest(".kp-checklist__none")) {
-        if (!items.some((item) => item.checked)) return;
-        for (const item of items) item.checked = false;
+        const strings = getStrings();
+        if (this.byKey && check.checked && sinks(list)) {
+          const next2 = shownOrder(list, group)[placeBefore];
+          const target = next2 && !next2.checked ? list.querySelector(`.kp-checklist__item[data-id="${CSS.escape(next2.id)}"] .kp-checklist__check`) : null;
+          if (target instanceof HTMLElement) target.focus();
+          say8(list, strings.checklistDoneMoved(item.label));
+        } else {
+          say8(list, check.checked ? strings.checklistDone(item.label) : strings.checklistOpen(item.label));
+        }
+        emit3(list, CHECKLIST_EVENT, { id, checked: check.checked });
+      }
+      /** The bar's buttons. @param {Event} event */
+      onClick(event) {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target) return;
+        if (target.closest(".kp-checklist__all")) this.tickAll(target, true);
+        else if (target.closest(".kp-checklist__none")) this.tickAll(target, false);
+        else if (target.closest(".kp-checklist__clear")) this.clearChecked();
+        else if (target.closest(".kp-checklist__undo")) this.undo();
+      }
+      /**
+       * Check all, or Uncheck all. The pressed button is dimmed afterwards: the focus goes to its opposite, not to the page's top.
+       * @param {Element} target @param {boolean} on
+       */
+      tickAll(target, on) {
+        const list = this.host;
+        const items = this.items();
+        if (!on && !items.some((item) => item.checked)) return;
+        for (const item of items) item.checked = on;
         void glide2(list, render(list));
-        if (document.activeElement === document.body || target.closest(".kp-checklist__none")?.matches(":disabled"))
-          part4(list, "bar").querySelector(".kp-checklist__all:not(:disabled)")?.focus();
-        say8(list, strings.checklistSummary(0, items.length));
-        emit3(list, CHECKLIST_EVENT, { id: null, checked: false });
-      } else if (target.closest(".kp-checklist__clear")) {
+        const pressed = on ? ".kp-checklist__all" : ".kp-checklist__none";
+        const opposite = on ? ".kp-checklist__none:not(:disabled)" : ".kp-checklist__all:not(:disabled)";
+        if (document.activeElement === document.body || target.closest(pressed)?.matches(":disabled"))
+          part4(list, "bar").querySelector(opposite)?.focus();
+        say8(list, getStrings().checklistSummary(on ? items.length : 0, items.length));
+        emit3(list, CHECKLIST_EVENT, { id: null, checked: on });
+      }
+      /** Clear checked: the ticked items leave, and Undo is on offer for a while. */
+      clearChecked() {
+        const list = this.host;
+        const items = this.items();
         const removed = items.filter((i) => i.checked);
         if (!removed.length) return;
         endUndo(list);
@@ -41408,6 +41496,7 @@ function attachChecklists(root = document) {
         );
         const ms = Number(list.getAttribute("data-kp-checklist-undo-ms")) || CHECKLIST_UNDO_MS;
         UNDO2.set(list, { removed, at, timer: setTimeout(() => endUndo(list), ms) });
+        const strings = getStrings();
         const bar = part4(list, "bar");
         bar.querySelector(".kp-checklist__said").textContent = strings.checklistCleared(removed.length);
         const button2 = (
@@ -41419,60 +41508,50 @@ function attachChecklists(root = document) {
         button2.focus();
         say8(list, strings.checklistCleared(removed.length));
         emit3(list, CHECKLIST_CLEAR_EVENT, { removed: removed.map((i) => ({ ...i })) });
-      } else if (target.closest(".kp-checklist__undo")) {
+      }
+      /** Undo: the cleared items come back at the places they had. */
+      undo() {
+        const list = this.host;
         const offer = UNDO2.get(list);
         if (!offer) return;
-        const restored = [...items];
+        const restored = [...this.items()];
         for (const item of offer.removed) restored.splice(Math.min(offer.at.get(item.id) ?? restored.length, restored.length), 0, item);
         ITEMS.set(list, restored);
         endUndo(list);
-        say8(list, strings.checklistRestored(offer.removed.length));
+        say8(list, getStrings().checklistRestored(offer.removed.length));
         emit3(list, CHECKLIST_UNDO_EVENT, { restored: offer.removed.map((i) => ({ ...i })) });
       }
     };
-    list.addEventListener("keydown", key, true);
-    list.addEventListener("pointerdown", pointer, true);
-    list.addEventListener("change", change2);
-    list.addEventListener("click", click);
-    undo.push(() => {
-      WIRED4.delete(list);
-      list.removeEventListener("keydown", key, true);
-      list.removeEventListener("pointerdown", pointer, true);
-      list.removeEventListener("change", change2);
-      list.removeEventListener("click", click);
-    });
   }
-  return () => undo.forEach((u) => u());
+});
+
+// js/checklist.js
+var checklist_exports = {};
+__export(checklist_exports, {
+  CHECKLIST: () => CHECKLIST,
+  CHECKLIST_CLEAR_EVENT: () => CHECKLIST_CLEAR_EVENT,
+  CHECKLIST_EVENT: () => CHECKLIST_EVENT,
+  CHECKLIST_RENDER_EVENT: () => CHECKLIST_RENDER_EVENT,
+  CHECKLIST_RETRY_EVENT: () => CHECKLIST_RETRY_EVENT,
+  CHECKLIST_UNDO_EVENT: () => CHECKLIST_UNDO_EVENT,
+  CHECKLIST_UNDO_MS: () => CHECKLIST_UNDO_MS,
+  attachChecklists: () => attachChecklists,
+  getChecklistItems: () => getChecklistItems,
+  setChecklistChecked: () => setChecklistChecked,
+  setChecklistItems: () => setChecklistItems,
+  setChecklistState: () => setChecklistState
+});
+function attachChecklists(root = document) {
+  return attachAll(root, CHECKLIST, Checklist);
 }
-var CHECKLIST, CHECKLIST_EVENT, CHECKLIST_CLEAR_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_RETRY_EVENT, CHECKLIST_RENDER_EVENT, CHECKLIST_UNDO_MS, ITEMS, UNDO2, PLATE2, BUSY2, WIRED4, serial5, el8, sinks, shownOrder, emit3;
 var init_checklist = __esm({
   "js/checklist.js"() {
     "use strict";
-    init_strings();
-    init_busy_card();
-    init_state_plate();
-    init_calm();
-    CHECKLIST = "[data-kp-checklist]";
-    CHECKLIST_EVENT = "kp-checklist-change";
-    CHECKLIST_CLEAR_EVENT = "kp-checklist-clear";
-    CHECKLIST_UNDO_EVENT = "kp-checklist-undo";
-    CHECKLIST_RETRY_EVENT = "kp-checklist-retry";
-    CHECKLIST_RENDER_EVENT = "kp-checklist-render";
-    CHECKLIST_UNDO_MS = 6e3;
-    ITEMS = /* @__PURE__ */ new WeakMap();
-    UNDO2 = /* @__PURE__ */ new WeakMap();
-    PLATE2 = /* @__PURE__ */ new WeakMap();
-    BUSY2 = /* @__PURE__ */ new WeakMap();
-    WIRED4 = /* @__PURE__ */ new WeakSet();
-    serial5 = 0;
-    el8 = (className, tag = "div") => {
-      const node = document.createElement(tag);
-      node.className = className;
-      return node;
-    };
-    sinks = (list) => list.getAttribute("data-kp-checklist-sink") !== "false";
-    shownOrder = (list, items) => sinks(list) ? [...items.filter((i) => !i.checked), ...items.filter((i) => i.checked)] : items;
-    emit3 = (list, type, detail) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { ...detail, items: getChecklistItems(list) } }));
+    init_controller();
+    init_controller3();
+    init_state8();
+    init_state8();
+    init_api5();
   }
 });
 
@@ -41670,8 +41749,8 @@ function attachQuantities(scope = document) {
   );
   const undo = [];
   for (const root of roots) {
-    if (WIRED5.has(root)) continue;
-    WIRED5.add(root);
+    if (WIRED4.has(root)) continue;
+    WIRED4.add(root);
     paint6(root, getQuantity(root));
     let timer2 = null;
     let pressed = null;
@@ -41760,7 +41839,7 @@ function attachQuantities(scope = document) {
     for (const type of ["pointerup", "pointerleave", "pointercancel", "blur"]) root.addEventListener(type, up, true);
     undo.push(() => {
       stop();
-      WIRED5.delete(root);
+      WIRED4.delete(root);
       root.removeEventListener("pointerdown", down);
       root.removeEventListener("click", click);
       root.removeEventListener("keydown", key);
@@ -41771,7 +41850,7 @@ function attachQuantities(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, WIRED5, numberAt, inputOf, isDisabled, unitFor;
+var QUANTITY, QUANTITY_EVENT, HOLD_DELAY, HOLD_SLOW, HOLD_FAST, WIRED4, numberAt, inputOf, isDisabled, unitFor;
 var init_quantity = __esm({
   "js/quantity.js"() {
     "use strict";
@@ -41782,7 +41861,7 @@ var init_quantity = __esm({
     HOLD_DELAY = 450;
     HOLD_SLOW = 160;
     HOLD_FAST = 70;
-    WIRED5 = /* @__PURE__ */ new WeakSet();
+    WIRED4 = /* @__PURE__ */ new WeakSet();
     numberAt = (root, name, fallback2) => {
       const raw = root.getAttribute(name);
       const value = raw === null || raw.trim() === "" ? NaN : Number(raw);
@@ -43258,17 +43337,17 @@ function attachHeats(root = document) {
     [...root instanceof Element && root.matches(HEAT) ? [root] : [], ...root.querySelectorAll(HEAT)]
   );
   for (const el16 of all) {
-    if (WIRED6.has(el16)) continue;
+    if (WIRED5.has(el16)) continue;
     const off = wireHeat(el16);
-    WIRED6.set(el16, off);
+    WIRED5.set(el16, off);
     undo.push(() => {
       off();
-      WIRED6.delete(el16);
+      WIRED5.delete(el16);
     });
   }
   return () => undo.forEach((fn) => fn());
 }
-var WIRED6;
+var WIRED5;
 var init_wire3 = __esm({
   "js/heat/wire.js"() {
     "use strict";
@@ -43279,7 +43358,7 @@ var init_wire3 = __esm({
     init_legend2();
     init_paging();
     init_pick();
-    WIRED6 = /* @__PURE__ */ new WeakMap();
+    WIRED5 = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -45085,7 +45164,7 @@ var init_paint2 = __esm({
 
 // js/week/state.js
 var weeks;
-var init_state8 = __esm({
+var init_state9 = __esm({
   "js/week/state.js"() {
     "use strict";
     weeks = /* @__PURE__ */ new WeakMap();
@@ -45134,13 +45213,13 @@ function setWeekLegend(el16, entries3) {
   );
   c.legend.hidden = entries3.length === 0;
 }
-var init_api5 = __esm({
+var init_api6 = __esm({
   "js/week/api.js"() {
     "use strict";
     init_build();
     init_helpers3();
     init_paint2();
-    init_state8();
+    init_state9();
   }
 });
 
@@ -45314,13 +45393,13 @@ var init_attach11 = __esm({
     init_calendar();
     init_locale();
     init_strings();
-    init_api5();
+    init_api6();
     init_build();
     init_busy2();
     init_constants13();
     init_menu();
     init_paint2();
-    init_state8();
+    init_state9();
     init_upcoming();
   }
 });
@@ -45347,7 +45426,7 @@ var init_week = __esm({
     init_constants13();
     init_pills2();
     init_attach11();
-    init_api5();
+    init_api6();
   }
 });
 
@@ -47067,7 +47146,7 @@ function setSequencerSelection(el16, id) {
   c.focusId = c.selected ?? c.focusId;
   paint8(c, { fit: false });
 }
-var init_api6 = __esm({
+var init_api7 = __esm({
   "js/sequencer/api.js"() {
     "use strict";
     init_instance2();
@@ -47123,7 +47202,7 @@ var init_sequencer = __esm({
     init_links();
     init_timeline();
     init_attach12();
-    init_api6();
+    init_api7();
   }
 });
 
@@ -48483,7 +48562,7 @@ function setGanttZones(el16, zones) {
   c.zones = zones;
   paint9(c);
 }
-var init_api7 = __esm({
+var init_api8 = __esm({
   "js/gantt/api.js"() {
     "use strict";
     init_constants15();
@@ -48849,7 +48928,7 @@ var init_attach13 = __esm({
     init_paint4();
     init_selection3();
     init_axis();
-    init_api7();
+    init_api8();
     init_scale();
     init_chrome2();
   }
@@ -48884,7 +48963,7 @@ var init_gantt = __esm({
     init_constants15();
     init_scale();
     init_attach13();
-    init_api7();
+    init_api8();
   }
 });
 
@@ -49306,7 +49385,7 @@ var init_figures = __esm({
 
 // js/uptime/state.js
 var SPECS, CARDS2, WAITING2, GROUPS2, GROUP_OF, UNPINNED, DRAWN4, INFO, uptimeState;
-var init_state9 = __esm({
+var init_state10 = __esm({
   "js/uptime/state.js"() {
     "use strict";
     SPECS = /* @__PURE__ */ new WeakMap();
@@ -49383,7 +49462,7 @@ var init_fit = __esm({
     init_strings();
     init_constants16();
     init_figures();
-    init_state9();
+    init_state10();
   }
 });
 
@@ -49439,7 +49518,7 @@ var init_group2 = __esm({
   "js/uptime/group.js"() {
     "use strict";
     init_busy_card();
-    init_state9();
+    init_state10();
     infoMode = (el16) => (SPECS.get(el16)?.open ?? el16.dataset.kpUptimeOpen) === "info";
   }
 });
@@ -49671,7 +49750,7 @@ var init_draw4 = __esm({
     init_fit();
     init_group2();
     init_helpers4();
-    init_state9();
+    init_state10();
   }
 });
 
@@ -49945,7 +50024,7 @@ var init_attach14 = __esm({
     init_fit();
     init_group2();
     init_helpers4();
-    init_state9();
+    init_state10();
   }
 });
 
@@ -55796,7 +55875,7 @@ function mountParts(el16, p, isPage) {
   p.panel.append(p.head, p.body, p.sourcesBox, p.foot);
   el16.replaceChildren(p.trigger, p.panel, p.voice);
 }
-var init_parts = __esm({
+var init_parts2 = __esm({
   "js/notices/parts.js"() {
     "use strict";
   }
@@ -55890,7 +55969,7 @@ var init_row = __esm({
   "js/notices/row.js"() {
     "use strict";
     init_freshness();
-    init_parts();
+    init_parts2();
     severityWord3 = (t, severity) => severity === "critical" ? t.attentionCritical : severity === "warning" ? t.attentionWarning : t.attentionInfo;
   }
 });
@@ -55908,7 +55987,7 @@ var init_view = __esm({
     init_strings();
     init_events2();
     init_model4();
-    init_parts();
+    init_parts2();
     init_row();
     DATE_LENGTH = 10;
     TIME_START = 11;
@@ -56106,12 +56185,12 @@ var init_view = __esm({
 
 // js/notices/controller.js
 var idSeq5, NoticesCentre;
-var init_controller3 = __esm({
+var init_controller4 = __esm({
   "js/notices/controller.js"() {
     "use strict";
     init_strings();
     init_events2();
-    init_parts();
+    init_parts2();
     init_view();
     idSeq5 = 0;
     NoticesCentre = class extends NoticesView {
@@ -56247,7 +56326,7 @@ var init_notices = __esm({
     init_controller();
     init_freshness();
     init_events2();
-    init_controller3();
+    init_controller4();
     init_events2();
     noticesOf = (element) => controllerOf(element, NoticesCentre)?.handle ?? null;
   }
@@ -57372,7 +57451,7 @@ var init_lookup = __esm({
 
 // js/usual-picker/state.js
 var usualState;
-var init_state10 = __esm({
+var init_state11 = __esm({
   "js/usual-picker/state.js"() {
     "use strict";
     usualState = {
@@ -57515,7 +57594,7 @@ var init_layout = __esm({
     init_strings();
     init_lookup();
     init_model5();
-    init_state10();
+    init_state11();
   }
 });
 
@@ -57792,7 +57871,7 @@ var init_sync3 = __esm({
     init_layout();
     init_model5();
     init_picking();
-    init_state10();
+    init_state11();
   }
 });
 
@@ -58148,7 +58227,7 @@ var init_wire4 = __esm({
     init_model5();
     init_names();
     init_picking();
-    init_state10();
+    init_state11();
     init_sync3();
   }
 });
@@ -63659,7 +63738,7 @@ var init_fields = __esm({
 
 // js/sentence/controller.js
 var seq8, SAY_AFTER_MS, STACK_BELOW_PX, OWN_LINE_RATIO, OWN_LINE_RATIO_MIN, NAMEABLE, ENTERABLE, CHANGE_EVENTS, Sentence;
-var init_controller4 = __esm({
+var init_controller5 = __esm({
   "js/sentence/controller.js"() {
     "use strict";
     init_controller();
@@ -63888,7 +63967,7 @@ var init_sentence = __esm({
   "js/sentence.js"() {
     "use strict";
     init_controller();
-    init_controller4();
+    init_controller5();
     init_fields();
     init_fields();
   }
@@ -66060,7 +66139,7 @@ function dataChild(el16) {
     return null;
   }
 }
-var init_api8 = __esm({
+var init_api9 = __esm({
   "js/graph/api.js"() {
     "use strict";
     init_instance3();
@@ -66492,7 +66571,7 @@ var init_attach16 = __esm({
     init_strings();
     init_constants19();
     init_instance3();
-    init_api8();
+    init_api9();
     init_options2();
     init_layout2();
     init_draw5();
@@ -66533,7 +66612,7 @@ var init_graph = __esm({
     init_options2();
     init_layout2();
     init_labels2();
-    init_api8();
+    init_api9();
     init_attach16();
   }
 });
@@ -66999,7 +67078,7 @@ function fillRow(list, row, item) {
   }
 }
 var mode, among;
-var init_rows2 = __esm({
+var init_rows3 = __esm({
   "js/claim/rows.js"() {
     "use strict";
     init_strings();
@@ -67225,7 +67304,7 @@ var init_decorate = __esm({
     init_state_plate();
     init_constants20();
     init_model6();
-    init_rows2();
+    init_rows3();
   }
 });
 
@@ -67250,7 +67329,7 @@ function setClaim(list, id, claim) {
     getChecklistItems(list).map((i) => i.id === id ? { ...i, claim: { ...claim, by: claimPeople(claim.by) } } : i)
   );
 }
-var init_api9 = __esm({
+var init_api10 = __esm({
   "js/claim/api.js"() {
     "use strict";
     init_checklist();
@@ -67448,13 +67527,13 @@ var init_request = __esm({
     init_constants20();
     init_decorate();
     init_model6();
-    init_rows2();
+    init_rows3();
   }
 });
 
 // js/claim/state.js
 var claimState;
-var init_state11 = __esm({
+var init_state12 = __esm({
   "js/claim/state.js"() {
     "use strict";
     claimState = {
@@ -67614,8 +67693,8 @@ var init_attach17 = __esm({
     init_decorate();
     init_model6();
     init_request();
-    init_rows2();
-    init_state11();
+    init_rows3();
+    init_state12();
   }
 });
 
@@ -67642,7 +67721,7 @@ var init_claim2 = __esm({
     "use strict";
     init_constants20();
     init_model6();
-    init_api9();
+    init_api10();
     init_decorate();
     init_attach17();
   }
@@ -68290,7 +68369,7 @@ function paintKeys(root, person, keys) {
   }
   paintSummary(root);
 }
-var init_api10 = __esm({
+var init_api11 = __esm({
   "js/availability/api.js"() {
     "use strict";
     init_strings();
@@ -68438,7 +68517,7 @@ var init_request2 = __esm({
     "use strict";
     init_strings();
     init_undo_toast();
-    init_api10();
+    init_api11();
     init_constants21();
     init_facts();
     init_paint5();
@@ -68793,7 +68872,7 @@ var init_attach18 = __esm({
     init_shortcuts();
     init_remember();
     init_reason();
-    init_api10();
+    init_api11();
     init_constants21();
     init_facts();
     init_menu2();
@@ -68827,7 +68906,7 @@ var init_availability = __esm({
     init_constants21();
     init_dates();
     init_facts();
-    init_api10();
+    init_api11();
     init_attach18();
   }
 });
@@ -70115,7 +70194,7 @@ var init_model7 = __esm({
 
 // js/console/state.js
 var consoleState;
-var init_state12 = __esm({
+var init_state13 = __esm({
   "js/console/state.js"() {
     "use strict";
     consoleState = {
@@ -70295,7 +70374,7 @@ var init_bar = __esm({
     "use strict";
     init_strings();
     init_model7();
-    init_state12();
+    init_state13();
   }
 });
 
@@ -70806,7 +70885,7 @@ async function useTool(root, tool, b, button2) {
     }
   });
 }
-var init_api11 = __esm({
+var init_api12 = __esm({
   "js/console/api.js"() {
     "use strict";
     init_strings();
@@ -71026,7 +71105,7 @@ var init_attach19 = __esm({
     init_shortcuts();
     init_newpill();
     init_reason();
-    init_api11();
+    init_api12();
     init_bar();
     init_blocks();
     init_constants22();
@@ -71059,7 +71138,7 @@ var init_console3 = __esm({
   "js/console.js"() {
     "use strict";
     init_constants22();
-    init_api11();
+    init_api12();
     init_attach19();
   }
 });
@@ -71196,7 +71275,7 @@ var init_reads = __esm({
 
 // js/logviewer/state.js
 var logViewerState;
-var init_state13 = __esm({
+var init_state14 = __esm({
   "js/logviewer/state.js"() {
     "use strict";
     logViewerState = {
@@ -71391,13 +71470,13 @@ function applyTools(root) {
   search.hidden = !wanted.includes("search");
   bar.hidden = tools.hidden && search.hidden;
 }
-var init_parts2 = __esm({
+var init_parts3 = __esm({
   "js/logviewer/parts.js"() {
     "use strict";
     init_strings();
     init_model8();
     init_reads();
-    init_state13();
+    init_state14();
   }
 });
 
@@ -71478,7 +71557,7 @@ function collect(root, reset = false) {
   for (const mark of log.querySelectorAll("mark[data-kp-current]")) mark.removeAttribute("data-kp-current");
   if (st.at >= 0) st.matches[st.at].setAttribute("data-kp-current", "");
 }
-var init_rows3 = __esm({
+var init_rows4 = __esm({
   "js/logviewer/rows.js"() {
     "use strict";
     init_strings();
@@ -71634,7 +71713,7 @@ var init_refresh = __esm({
     init_constants23();
     init_model8();
     init_reads();
-    init_rows3();
+    init_rows4();
   }
 });
 
@@ -71772,16 +71851,16 @@ function syncOptions(root) {
   const log = logOf(root);
   if (newPill(log)?.following()) log.scrollTop = log.scrollHeight;
 }
-var init_api12 = __esm({
+var init_api13 = __esm({
   "js/logviewer/api.js"() {
     "use strict";
     init_newpill();
     init_levels();
     init_model8();
-    init_parts2();
+    init_parts3();
     init_reads();
     init_refresh();
-    init_rows3();
+    init_rows4();
   }
 });
 
@@ -71984,12 +72063,12 @@ var init_attach20 = __esm({
     init_reason();
     init_shortcuts();
     init_flash();
-    init_api12();
+    init_api13();
     init_constants23();
     init_model8();
-    init_parts2();
+    init_parts3();
     init_reads();
-    init_rows3();
+    init_rows4();
   }
 });
 
@@ -72016,7 +72095,7 @@ var init_logviewer = __esm({
     "use strict";
     init_constants23();
     init_levels();
-    init_api12();
+    init_api13();
     init_attach20();
   }
 });
@@ -72400,7 +72479,7 @@ var init_lines = __esm({
 
 // js/diff/state.js
 var diffState;
-var init_state14 = __esm({
+var init_state15 = __esm({
   "js/diff/state.js"() {
     "use strict";
     diffState = {
@@ -72575,7 +72654,7 @@ var init_file = __esm({
     init_lines();
     init_model9();
     init_read();
-    init_state14();
+    init_state15();
   }
 });
 
@@ -72668,7 +72747,7 @@ function render6(root) {
     root.append(stage);
   }
 }
-var init_render2 = __esm({
+var init_render3 = __esm({
   "js/diff/render.js"() {
     "use strict";
     init_strings();
@@ -72746,7 +72825,7 @@ var init_actions2 = __esm({
     init_lines();
     init_model9();
     init_read();
-    init_render2();
+    init_render3();
   }
 });
 
@@ -72851,7 +72930,7 @@ var init_attach21 = __esm({
     init_lines();
     init_model9();
     init_read();
-    init_render2();
+    init_render3();
   }
 });
 
@@ -74888,13 +74967,6 @@ export {
   CARD_STATES,
   CARD_STATE_EVENT,
   CARET_KNOB,
-  CHECKLIST,
-  CHECKLIST_CLEAR_EVENT,
-  CHECKLIST_EVENT,
-  CHECKLIST_RENDER_EVENT,
-  CHECKLIST_RETRY_EVENT,
-  CHECKLIST_UNDO_EVENT,
-  CHECKLIST_UNDO_MS,
   CHOOSE_EVENT,
   CHORD_MS,
   CODE,
@@ -75535,7 +75607,6 @@ export {
   galleryItems,
   galleryLast,
   gantt_exports as ganttExports,
-  getChecklistItems,
   getFacetValues,
   getQuantity,
   getSegmentedTri,
@@ -75750,9 +75821,6 @@ export {
   setCalendarState,
   setCalm,
   setCardState,
-  setChecklistChecked,
-  setChecklistItems,
-  setChecklistState,
   setCode,
   setCodeFieldError,
   setCompare,

@@ -20,7 +20,7 @@ always exported (and its `@typedef`s), over a folder `js/<name>/` of single-purp
 - **Controller classes** (closure-pattern B, Kenny 2026-10-30) replace both the long closures and the install functions, module by
   module: one class per component instance extends `Controller` from `js/controller.js`, keeps its state on the instance, wires
   the host in `connect()` with `this.listen()` / `this.observe()` / `this.own()`, and is undone by `destroy()`. The public
-  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`.
+  `attachX(root, options)` becomes `attachAll(root, SELECTOR, XController, options)`. Converted so far: `footprint.js`, `notices.js`, `row-select.js`, `sentence.js`, `checklist.js`.
 - Values that several parts of one module change (a counter, a lazily loaded module) live in `<name>/state.js`.
 - The loader (`auto.js`), the digests (`gates/generate-code-version.mjs`) and the gates that read module text
   (`gates/js-parts.mjs`) treat a facade and its folder as one module.
@@ -601,3 +601,16 @@ The sentence form, as a Sentence controller. 2 files.
 | --------------- | --------------------------------------------------------------------------------------------- |
 | `controller.js` | Sentence: the lines, control names, phrases, computed fields, placing, summary and Enter.     |
 | `fields.js`     | The words: names, computed fields, summary, invalid marks, the line, loading, control values. |
+
+## js/checklist.js → js/checklist/
+
+The checklist whose ticked items sink, as a Checklist controller over a per-list model. 6 files.
+
+| File            | Does                                                                                      |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| `api.js`        | Give a list items, tick one, set its state, fire its events and end the Undo.             |
+| `controller.js` | Checklist: the ticks, Check all, Uncheck all, Clear checked and Undo.                     |
+| `parts.js`      | The bar, the body, the voice and the empty line, made on first use, and the voice.        |
+| `render.js`     | Draws the list in place (groups, rows, bar, empty plate) and glides the rows that moved.  |
+| `rows.js`       | Grouping the items, a group's shown order, and one row built or updated in place.         |
+| `state.js`      | The selector, the events, the per-list registry (items, Undo, plate, busy card), the ids. |
